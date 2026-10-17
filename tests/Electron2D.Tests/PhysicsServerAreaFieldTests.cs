@@ -94,6 +94,7 @@ internal sealed class PhysicsServerAreaFieldTests(PhysicsServer.Backend backend)
     private void VerifyServerResponseAndSpaceDefaults()
     {
         var server = PhysicsServer.Service; var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true); Check(PhysicsServer.SpaceGetBackend(space) == backend, "Server field fixture uses its explicitly selected backend."); var body = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate(); var shape = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(shape, initialShapeData);
         try
         {
             PhysicsServer.BodyAddShape(body, shape); PhysicsServer.AreaAddShape(area, shape); PhysicsServer.BodySetSpace(body, space); PhysicsServer.AreaSetSpace(area, space);
@@ -125,6 +126,7 @@ internal sealed class PhysicsServerAreaFieldTests(PhysicsServer.Backend backend)
     private void VerifyPointGravityAndFailures()
     {
         var server = PhysicsServer.Service; var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true); Check(PhysicsServer.SpaceGetBackend(space) == backend, "Server field fixture uses its explicitly selected backend."); var body = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate(); var shape = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(shape, initialShapeData);
         try
         {
             PhysicsServer.AreaAddShape(area, shape); PhysicsServer.BodyAddShape(body, shape); PhysicsServer.AreaSetSpace(area, space); PhysicsServer.BodySetSpace(body, space);
@@ -178,6 +180,7 @@ internal sealed class PhysicsServerAreaFieldTests(PhysicsServer.Backend backend)
             Task.Run(() => Capture(() => PhysicsServer.AreaSetGravity(space, 2))).Result is InvalidOperationException, "Area and default Area access enforces owner thread.");
         var body = new RigidBody { CanSleep = false, CollisionMask = 0 }; Add(body, circle); root.AddChild(body);
         var rawArea = PhysicsServer.AreaCreate(); var rawShape = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(rawShape, initialShapeData);
         try
         {
             PhysicsServer.AreaAddShape(rawArea, rawShape); PhysicsServer.AreaSetSpace(rawArea, space);

@@ -4,7 +4,9 @@ namespace Electron2D;
 /// <remarks>A <see cref="CollisionShape"/> borrows caller-owned geometry. Geometry obtained from a server-backed
 /// scene owner slot is borrowed from that server RID and cannot be disposed separately; data replacement retires that view.
 /// During a resource or selected shape-pair query, both operands reject geometry/policy mutation, inherited reset/copy and disposal.
-/// Server data reads, replacements and owned RID release also freeze the resource's collision consumers until their guarded operation ends.</remarks>
+/// Server data reads, replacements and owned RID release also freeze the resource's collision consumers until their guarded operation ends.
+/// Ordinary Shape constructors supply usable geometry. A private view obtained from an unconfigured server RID
+/// retains template fields but cannot participate in collision queries or simulation until ShapeSetData succeeds.</remarks>
 public abstract partial class Shape : Resource
 {
     private float _customSolverBias;
@@ -58,6 +60,7 @@ public abstract partial class Shape : Resource
     private readonly object _queryRIDGate = new();
     private RID _queryRID;
     private bool _serverOwned;
+    internal bool HasServerData { get; private set; } = true;
     private int _serverReleaseThread;
 
     /// <summary>Gets the local bounding rectangle of the shape.</summary>
@@ -81,11 +84,12 @@ public abstract partial class Shape : Resource
     private bool _readingGeometry;
     private int _collisionUses;
     private readonly object _geometryGate = new();
-    internal void BeginCollisionUse()
+    internal void BeginCollisionUse(bool allowUnconfigured = false)
     {
         lock (_geometryGate)
         {
             ThrowIfDisposed();
+            if (!allowUnconfigured && !HasServerData) throw new InvalidOperationException("Server shape data must be configured before collision geometry is borrowed.");
             if (_checkingAuthoringAccess) throw new InvalidOperationException("Collision geometry cannot be borrowed during an authoring access hook.");
             _collisionUses++;
         }
@@ -127,9 +131,9 @@ public abstract partial class Shape : Resource
         }
     }
 
-    internal void BindServerOwnedRID(RID rid)
+    internal void BindServerOwnedRID(RID rid, bool configured = true)
     {
-        lock (_queryRIDGate) { _queryRID = rid; _serverOwned = true; }
+        lock (_queryRIDGate) { _queryRID = rid; _serverOwned = true; HasServerData = configured; }
     }
 
     internal void EnsureServerBindingAccess()

@@ -61,6 +61,7 @@ public sealed partial class PhysicsServer
         var owners = ShapeOwners(rid, isArea, writing: true);
         var resource = GetShape(shape);
         resource.EnsureBindingAccess();
+        if (!resource.Geometry.HasServerData) throw new InvalidOperationException("Replacement shape data must be configured first.");
         if (owners.Scene is { } scene)
         {
             var slot = scene.GlobalShapeSlot(index);

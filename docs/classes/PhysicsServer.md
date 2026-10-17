@@ -1,6 +1,6 @@
 # PhysicsServer
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 **Inherits:** ElectronObject · **Source:** [PhysicsServer.cs](../../src/Servers/Physics/PhysicsServer.cs), [PhysicsServer.Resources.cs](../../src/Servers/Physics/PhysicsServer.Resources.cs), [PhysicsServer.Mass.cs](../../src/Servers/Physics/PhysicsServer.Mass.cs)
 
@@ -9,6 +9,15 @@ and [`PhysicsServer.Sleep.API.cs`](../../src/Servers/Physics/PhysicsServer.Sleep
 Explicit CPU/GPU selection and startup diagnostics are in
 [`PhysicsServer.Backends.cs`](../../src/Servers/Physics/PhysicsServer.Backends.cs).
 The pose batch is in [`PhysicsServer.BodyTransforms.cs`](../../src/Servers/Physics/PhysicsServer.BodyTransforms.cs).
+
+## Raw shape initialization
+
+The eight built-in PhysicsServer shape factories return unconfigured RIDs. ShapeGetType works immediately. ShapeGetData and using that RID or a pending borrowed view as a collision-query source throw InvalidOperationException until ShapeSetData succeeds. Ordinary Shape constructors and CustomShapeCreate still supply initialized data.
+
+Body/Area add operations accept pending shapes and keep their logical indices, transforms and disabled policy. Those slots supply no geometry, mass contribution, sensors or contacts until configuration. Disposed borrowed resources also produce inactive numerical descriptors while retaining logical slots and empty RID getters, including after disable/re-enable. Replacement operations require configured data. The first successful ShapeSetData activates enabled scene/raw users with stable RID/index/owner identity; a failed first configuration restores the pending state and can retry. Data copies, old-view retirement and shared-world borrowing keep their existing guarantees.
+
+Private checkpoints preserve pending slots. Portable authoring compatibility distinguishes pending and configured data, so applying an old pending snapshot after configuration rejects before mutation. The encoded snapshot layout and hashes for previously configured shapes stay unchanged. This is headless authoring/simulation behavior; hardware GPU, rendered output, native allocator and full physics acceptance remain separate gates.
+
 
 ## Description
 
@@ -55,12 +64,12 @@ Parameterless creation remains CPU. See [backend lifetime and verified scope](..
 | `public static bool BodyTestMotion(RID body, PhysicsTestMotionParameters parameters, PhysicsTestMotionResult? result = null)` | Test a scene or server body against its current space without moving it; optionally fill typed output. |
 | `public static void BodyAddCollisionException(RID body, RID exceptedBody)` / `BodyRemoveCollisionException(RID body, RID exceptedBody)` | Change a one-sided body-owned RID exception affecting both solver contacts and motion tests. |
 | `public static RID BodyCreate()` / `AreaCreate()` | Detached rigid body or sensor Area with default layer/mask one. |
-| `public static RID CircleShapeCreate()` / `RectangleShapeCreate()` | Default concrete geometry RIDs. |
-| `public static RID CapsuleShapeCreate()` / `SegmentShapeCreate()` | Default concrete geometry RIDs. |
-| `public static RID SeparationRayShapeCreate()` | Twenty-unit downward directed ray, SlideOnSlope false. |
-| `public static RID ConvexPolygonShapeCreate()` / `ConcavePolygonShapeCreate()` | Empty polygon geometry RIDs. |
+| `public static RID CircleShapeCreate()` / `RectangleShapeCreate()` | Unconfigured typed shape RIDs; configure with ShapeSetData. |
+| `public static RID CapsuleShapeCreate()` / `SegmentShapeCreate()` | Unconfigured typed shape RIDs; configure with ShapeSetData. |
+| `public static RID SeparationRayShapeCreate()` | Unconfigured directed-ray RID. |
+| `public static RID ConvexPolygonShapeCreate()` / `ConcavePolygonShapeCreate()` | Unconfigured polygon RIDs. |
 | `public static void ShapeSetData(RID shape, Shape data)` | Copy same-kind caller geometry into a server shape and rebuild users. |
-| `public static Shape ShapeGetData(RID shape)` | Caller-owned independent geometry copy. |
+| `public static Shape ShapeGetData(RID shape)` | Caller-owned independent geometry copy; rejects an unconfigured RID. |
 | `public static void BodyAddShape(RID body, RID shape, Transform? transform = null, bool disabled = false)` | Add one indexed body shape slot; null transform is identity. |
 | `public static void AreaAddShape(RID area, RID shape, Transform? transform = null, bool disabled = false)` | Add one indexed sensor shape slot. |
 | `public static int BodyGetShapeCount(RID body)` / `AreaGetShapeCount(RID area)` | Count slots, including disabled ones. |
@@ -90,7 +99,7 @@ Parameterless creation remains CPU. See [backend lifetime and verified scope](..
 <a id="colliders"></a>
 ### Collider creation, shapes and ownership
 
-`BodyCreate` defaults to rigid mode; `AreaCreate` defaults to a stationary nonresponding sensor. Neither has a space until `BodySetSpace` or `AreaSetSpace`. The eight built-in shape constructors cover circle, rectangle, capsule, segment, convex/concave polygon, directed separation ray and world boundary resources. `ShapeSetData` rejects a disposed or different-kind Shape, copies represented geometry and rebuilds attached users; `ShapeGetData` returns an independent concrete resource. Procedural imports and borrowed-RID exports consume canonical geometry without requiring a subclass duplicate factory. Each `BodyAddShape` or `AreaAddShape` appends an indexed slot with a finite unit-scale, zero-skew local transform, default identity, and optional disabled state. Slot-count, disabled-toggle and removal methods make those indices executable after attachment; invalid indices throw before mutation. Compound fixtures from one slot share its public static query ShapeIndex. An explicit collider may be moved into the SceneTree's `World.Space`; direct queries then see it beside scene nodes. Queries return its RID with a null scene Collider.
+`BodyCreate` defaults to rigid mode; `AreaCreate` defaults to a stationary nonresponding sensor. Neither has a space until `BodySetSpace` or `AreaSetSpace`. The eight built-in shape factories allocate unconfigured circle, rectangle, capsule, segment, convex/concave polygon, directed separation ray and world boundary RIDs. Their type and logical slots exist immediately; enabled slots supply no numerical geometry until ShapeSetData succeeds. Ordinary resource constructors remain initialized. `ShapeSetData` rejects a disposed or different-kind Shape, copies represented geometry and rebuilds attached users; `ShapeGetData` returns an independent concrete resource. Procedural imports and borrowed-RID exports consume canonical geometry without requiring a subclass duplicate factory. Each `BodyAddShape` or `AreaAddShape` appends an indexed slot with a finite unit-scale, zero-skew local transform, default identity, and optional disabled state. Slot-count, disabled-toggle and removal methods make those indices executable after attachment; invalid indices throw before mutation. Compound fixtures from one slot share its public static query ShapeIndex. An explicit collider may be moved into the SceneTree's `World.Space`; direct queries then see it beside scene nodes. Queries return its RID with a null scene Collider.
 
 <a id="body-state"></a>
 ### Body state and filters
@@ -134,7 +143,7 @@ with ArgumentException after space free. See [resource retirement evidence](../c
 
 [PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) checks scene/server shared world, explicit stepping, six shape families, filters, modes, cross-space moves and RID lifecycle. [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks direct shape operations; [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks body motion; [PhysicsCollisionExceptionTests](../../tests/Electron2D.Tests/PhysicsCollisionExceptionTests.cs) checks unilateral scene/server lists, live solver and motion filtering, owner/target lifetime and warmed allocation. Full inherited and registered numerical conformance remains open; the [contract audit](../components/physics-contract-audit.md) tracks both backend obligations. Scene Area field/event delivery does not yet represent server-only colliders in typed object-level events. Queries use their selected CPU/GPU geometry pipelines; native allocator accounting, other platforms and large-world throughput remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
 
-`SeparationRayShapeCreate()` returns caller-owned default directed geometry. ShapeSetData copies length and slope policy; ShapeGetData returns an independent copy. Direct shape/body motion, sensing and ordinary directed solver impulses execute on the [resource class](SeparationRayShape.md), including raw body material, sleep and contact views.
+`SeparationRayShapeCreate()` returns a caller-owned pending directed RID; ShapeSetData configures it. ShapeSetData copies length and slope policy; ShapeGetData returns an independent copy. Direct shape/body motion, sensing and ordinary directed solver impulses execute on the [resource class](SeparationRayShape.md), including raw body material, sleep and contact views.
 
 ## Body state and callbacks
 

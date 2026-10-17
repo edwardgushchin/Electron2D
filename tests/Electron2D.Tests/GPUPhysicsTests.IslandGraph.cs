@@ -172,6 +172,7 @@ internal static partial class GPUPhysicsTests
         tree.Dispose();
 
         var spaceRID = PhysicsServer.SpaceCreate(); var shapeRID = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(shapeRID, initialShapeData);
         var bodies = new[] { PhysicsServer.BodyCreate(), PhysicsServer.BodyCreate(), PhysicsServer.BodyCreate() };
         var jointRID = PhysicsServer.JointCreate(); var areaRID = PhysicsServer.AreaCreate();
         try

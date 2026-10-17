@@ -1,6 +1,6 @@
 # PhysicsServerBackend
 
-Last updated: 2026-10-14
+Last updated: 2026-10-17
 
 [Curved custom contacts](../components/physics-registered-adapter.md#curved-custom-contacts)
 verify the independent implementation's response and complete frame publication
@@ -9,6 +9,10 @@ motor/counterpart motion and strict warm frame bytes pass in both numerical mode
 arbitrary geometry and full extension acceptance remain open.
 
 **Declaration:** `public abstract class PhysicsServerBackend : ElectronObject` · **Source:** [PhysicsServerBackend.cs](../../src/Servers/Physics/PhysicsServerBackend.cs) · **Component:** [Registered solver adapter](../components/physics-registered-adapter.md)
+
+## Pending server geometry
+
+GetShapeGeometry rejects a pending raw shape before invoking its geometry supplier. After ShapeSetData commits, the helper returns the configured immutable canonical data. Backend RebuildShapes receives pending slots as Enabled=false; implementation algorithms must honor that flag.
 
 ## Description
 

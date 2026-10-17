@@ -60,6 +60,7 @@ internal sealed class PhysicsServerJointTests(PhysicsServer.Backend backend)
         var source = PhysicsServer.SpaceCreate(backend);
         var replacement = PhysicsServer.SpaceCreate(backend);
         var shape = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(shape, initialShapeData);
         var first = CreateBody(server, shape, Vector2.Zero, stationary: true);
         var second = CreateBody(server, shape, Vector2.Zero);
         var joint = PhysicsServer.JointCreate();
@@ -138,6 +139,7 @@ internal sealed class PhysicsServerJointTests(PhysicsServer.Backend backend)
     {
         var server = PhysicsServer.Service;
         var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true); var shape = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(shape, initialShapeData);
         var first = CreateBody(server, shape, Vector2.Zero, stationary: true);
         var second = CreateBody(server, shape, new(0, 100), mass: 2);
         var joint = PhysicsServer.JointCreate();
@@ -290,6 +292,7 @@ internal sealed class PhysicsServerJointTests(PhysicsServer.Backend backend)
     {
         var server = PhysicsServer.Service;
         var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true); var other = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(other, true); var shape = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(shape, initialShapeData);
         var first = CreateBody(server, shape, Vector2.Zero, stationary: true);
         var second = CreateBody(server, shape, new(0, 20));
         var joint = PhysicsServer.JointCreate(); var area = PhysicsServer.AreaCreate();

@@ -20,6 +20,11 @@ internal sealed partial class PhysicsReplayEntry
             var slot = _shapes[i]; schema.Add(slot.Pose); schema.Add(slot.Active); schema.Add(slot.Index); schema.Add(slot.OneWay);
             schema.Add(slot.Margin); schema.Add(slot.Direction); schema.Add(slot.Bias); schema.Add(slot.Shape.IsDisposed);
             if (slot.Shape.IsDisposed) continue;
+            if (!slot.Shape.HasServerData)
+            {
+                schema.Add(-1); schema.Add((int)slot.Shape.GetGeometryData().Type);
+                continue;
+            }
             var geometry = slot.Shape.GetGeometry(); schema.Add((int)geometry.Kind); schema.Add(geometry.A); schema.Add(geometry.B);
             schema.Add(geometry.Radius); schema.Add(geometry.SlideOnSlope); schema.Add(geometry.Points.Length);
             foreach (var point in geometry.Points) schema.Add(point);

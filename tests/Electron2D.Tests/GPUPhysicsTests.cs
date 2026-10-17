@@ -298,6 +298,7 @@ internal static partial class GPUPhysicsTests
     {
         var owned = new World(); var rid = owned.Space;
         var body = PhysicsServer.BodyCreate(); var shape = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(shape, initialShapeData);
         try
         {
             PhysicsServer.BodyAddShape(body, shape); PhysicsServer.BodySetSpace(body, rid);

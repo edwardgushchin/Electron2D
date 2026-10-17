@@ -33,7 +33,7 @@ public abstract partial class CollisionObject
         internal Transform Transform => TransformOverride ?? Owner.Transform;
         internal int Index = index;
         internal ulong Revision => Shape.IsDisposed ? ulong.MaxValue : Shape.GeometryRevision;
-        internal bool Active => !(DisabledOverride ?? Owner.Disabled) && !Shape.IsDisposed;
+        internal bool Active => !(DisabledOverride ?? Owner.Disabled) && !Shape.IsDisposed && Shape.HasServerData;
         private OneWayContactData? _oneWay;
         internal OneWayContactData? OneWay => (OneWayOverride ?? Owner.OneWay)
             ? OneWayContactData.Capture(ref _oneWay, (OneWayOverride.HasValue ? DirectionOverride : Owner.Direction).Rotated(Transform.Rotation),

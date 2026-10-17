@@ -19,6 +19,7 @@ internal sealed class PhysicsAreaMonitorTests(PhysicsServer.Backend backend)
     {
         var server = PhysicsServer.Service; using var world = new World(backend); using var tree = SceneSpace(world, out var space);
         var area = PhysicsServer.AreaCreate(); var body = PhysicsServer.BodyCreate(); var other = PhysicsServer.AreaCreate(); var shape = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(shape, initialShapeData);
         var events = new List<(PhysicsServer.AreaBodyStatus Status, RID Other, ulong ID, int Remote, int Local, bool Area)>();
         try
         {
@@ -80,6 +81,7 @@ internal sealed class PhysicsAreaMonitorTests(PhysicsServer.Backend backend)
     {
         var server = PhysicsServer.Service; using var world = new World(backend); using var tree = SceneSpace(world, out var space); var area = PhysicsServer.AreaCreate();
         var body = PhysicsServer.BodyCreate(); var shape = PhysicsServer.CircleShapeCreate(); var added = 0; var removed = 0;
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(shape, initialShapeData);
         try
         {
             PhysicsServer.AreaAddShape(area, shape); PhysicsServer.AreaAddShape(area, shape, new(0, Vector2.One, 0, new(10, 0)));
@@ -115,6 +117,7 @@ internal sealed class PhysicsAreaMonitorTests(PhysicsServer.Backend backend)
     {
         var server = PhysicsServer.Service; using var world = new World(backend); using var tree = SceneSpace(world, out var space);
         var area = PhysicsServer.AreaCreate(); var body = PhysicsServer.BodyCreate(); var shape = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(shape, initialShapeData);
         var entries = 0; var exits = 0; var freed = false;
         try
         {
@@ -138,6 +141,7 @@ internal sealed class PhysicsAreaMonitorTests(PhysicsServer.Backend backend)
     private void VerifyWarmTransitions()
     {
         var server = PhysicsServer.Service; using var world = new World(backend); using var tree = SceneSpace(world, out var space); var area = PhysicsServer.AreaCreate(); var body = PhysicsServer.BodyCreate(); var shape = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(shape, initialShapeData);
         var entries = 0; var exits = 0;
         try
         {

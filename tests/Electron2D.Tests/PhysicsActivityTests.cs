@@ -33,6 +33,7 @@ internal static class PhysicsActivityTests
     {
         var server = PhysicsServer.Service;
         var space = PhysicsServer.SpaceCreate(); var body = MovingBody(server, space); var shape = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(shape, initialShapeData);
         var calls = 0;
         try
         {

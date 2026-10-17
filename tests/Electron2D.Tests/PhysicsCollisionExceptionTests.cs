@@ -102,6 +102,7 @@ internal sealed class PhysicsCollisionExceptionTests(PhysicsServer.Backend backe
         var floor = PhysicsServer.BodyCreate();
         var sensor = PhysicsServer.AreaCreate();
         var circle = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(circle, initialShapeData);
         var rectangle = PhysicsServer.RectangleShapeCreate();
         using var floorGeometry = new RectangleShape { Size = new(200, 20) };
         try

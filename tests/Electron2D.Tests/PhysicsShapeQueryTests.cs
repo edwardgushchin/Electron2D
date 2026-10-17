@@ -190,6 +190,7 @@ internal sealed class PhysicsShapeQueryTests(PhysicsServer.Backend backend)
 
         var area = PhysicsServer.AreaCreate();
         var areaRID = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(areaRID, initialShapeData);
         PhysicsServer.AreaAddShape(area, areaRID);
         PhysicsServer.AreaSetTransform(area, new(0, Vector2.One, 0, new(0, 40)));
         PhysicsServer.AreaSetSpace(area, space);

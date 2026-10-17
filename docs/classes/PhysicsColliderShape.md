@@ -1,6 +1,6 @@
 # PhysicsColliderShape
 
-Last updated: 2026-10-11
+Last updated: 2026-10-17
 
 **Declaration:** `public readonly record struct PhysicsColliderShape`
 **Source:** [PhysicsColliderShape.cs](../../src/Servers/Physics/PhysicsColliderShape.cs)
@@ -18,3 +18,7 @@ The shape-input fixture checks actual CPU/GPU bodies/Areas, public query indices
 one-way rotation and recovery after recursive preparation failure.
 
 This immutable value is now public and crosses the [registered implementation boundary](../components/physics-registered-adapter.md); complete sampled fields retain the contracts above. No backend storage or native handles are exposed.
+
+## Pending server geometry
+
+Enabled describes effective numerical participation. A disabled, disposed or unconfigured logical slot supplies no active geometry. The slot still retains its authored index and resource identity; first successful server-data configuration makes ordinary enabled slots active.

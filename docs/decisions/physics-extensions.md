@@ -1,6 +1,6 @@
 # Physics backend extension decisions
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 <a id="adr-0103"></a>
 ## ADR 0103: Registered world backends and typed extension dispatch
@@ -247,6 +247,8 @@ interception would leave scene behavior and direct queries outside the extension
   or transferring a body; it never substitutes a supported primitive. Custom
   geometry mutation retains RID identity, invalidates compilation and private
   checkpoints, and rejects incompatible portable correction before mutation.
+
+- Built-in raw shape construction preserves the unconfigured lifetime defined by ADR 0088. Shared engine ownership of RID/type authoring does not authorize activating resource-constructor defaults before ShapeSetData. Both built-in and registered implementations receive inactive logical descriptors until configuration commits; protected GetShapeGeometry rejects an unconfigured source. This preserves the full factory/type/data capability without a second backend registry or public configuration switch.
 
 - ShapeSetData matches the represented ShapeType, not the caller's CLR subclass.
   A procedural resource supplies its immutable ShapeGeometry and solver bias;

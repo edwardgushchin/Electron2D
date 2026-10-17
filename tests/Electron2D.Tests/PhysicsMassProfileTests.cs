@@ -150,6 +150,7 @@ internal static class PhysicsMassProfileTests
     {
         var server = PhysicsServer.Service;
         var body = PhysicsServer.BodyCreate(); var shape = PhysicsServer.CircleShapeCreate(); var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true);
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(shape, initialShapeData);
         try
         {
             Check(PhysicsServer.BodyGetMass(body) == 1 && PhysicsServer.BodyGetInertia(body) == 0 && PhysicsServer.BodyGetCenterOfMass(body) == Vector2.Zero,

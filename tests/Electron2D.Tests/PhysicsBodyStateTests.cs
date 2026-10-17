@@ -372,6 +372,7 @@ internal sealed class PhysicsBodyStateTests(PhysicsServer.Backend backend)
         using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body fixture uses the explicitly selected backend.");
         var server = PhysicsServer.Service;
         var body = PhysicsServer.BodyCreate(); var circle = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(circle, initialShapeData);
         PhysicsServer.BodyAddShape(body, circle); PhysicsServer.BodySetSpace(body, area.GetWorld()!.Space);
         var state = PhysicsServer.BodyGetDirectState(body)!;
         state.LinearVelocity = new(100, 0);

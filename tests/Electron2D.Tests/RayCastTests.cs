@@ -225,6 +225,7 @@ internal static class RayCastTests
         var server = PhysicsServer.Service;
         var body = PhysicsServer.BodyCreate();
         var shape = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(shape, initialShapeData);
         PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
         PhysicsServer.BodyAddShape(body, shape);
         PhysicsServer.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 30)));

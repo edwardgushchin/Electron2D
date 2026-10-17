@@ -1,12 +1,16 @@
 # Shape
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 **Inherits:** [Resource](Resource.md) · **Inherited By:** [CircleShape](CircleShape.md), [CapsuleShape](CapsuleShape.md), [SegmentShape](SegmentShape.md), [SeparationRayShape](SeparationRayShape.md), [ConvexPolygonShape](ConvexPolygonShape.md), [ConcavePolygonShape](ConcavePolygonShape.md), [RectangleShape](RectangleShape.md), [WorldBoundaryShape](WorldBoundaryShape.md)
 
 - **Source:** [Shape.cs](../../src/Scene/Resources/Shape.cs), [Shape.Collision.cs](../../src/Scene/Resources/Shape.Collision.cs), [Shape.Drawing.cs](../../src/Scene/Resources/Shape.Drawing.cs)
 - **Declaration:** `public abstract class Shape : Resource`
 - **Component:** [Collision shapes](../components/physics-shapes.md)
+
+## Pending server geometry
+
+Ordinary resource constructors retain initialized geometry. A pending server-owned view has template fields but its RID cannot be read with ShapeGetData or used in collision queries until ShapeSetData succeeds. Body/Area slots referencing that RID remain numerically inactive while keeping their logical identity.
 
 ## Description
 

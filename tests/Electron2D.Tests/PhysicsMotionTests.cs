@@ -24,6 +24,7 @@ internal sealed class PhysicsMotionTests(PhysicsServer.Backend backend)
         var mover = PhysicsServer.BodyCreate();
         var obstacle = PhysicsServer.BodyCreate();
         var circleRID = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(circleRID, initialShapeData);
         var floorRID = PhysicsServer.RectangleShapeCreate();
         using var floor = new RectangleShape { Size = new(200, 20) };
         PhysicsServer.ShapeSetData(floorRID, floor);

@@ -12,7 +12,7 @@ internal sealed partial class PhysicsServerCollider
     }
     internal PhysicsReplayEntry.ShapeState ReplayShape(int index)
     {
-        var slot = _slots[index]; return new(slot.Shape.Geometry, slot.LocalTransform, !slot.Disabled, index, slot.OneWay,
+        var slot = _slots[index]; return new(slot.Shape.Geometry, slot.LocalTransform, !slot.Disabled && !slot.Shape.Geometry.IsDisposed && slot.Shape.Geometry.HasServerData, index, slot.OneWay,
             slot.Margin, slot.Direction, slot.Shape.Geometry.IsDisposed ? ulong.MaxValue : slot.Shape.Geometry.GeometryRevision,
             slot.Shape.Geometry.IsDisposed ? 0 : slot.Shape.Geometry.CustomSolverBias, Identity: slot.HistoryIdentity);
     }

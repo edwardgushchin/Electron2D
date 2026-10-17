@@ -1,6 +1,6 @@
 # PhysicsServerExtension
 
-Last updated: 2026-10-14
+Last updated: 2026-10-17
 
 Caller-derived scoped numerical implementation base inheriting the full protected PhysicsServerBackend family. Implement real body, joint, geometry, query, observation and history operations; the world supplies engine identities and owns lifetime.
 
@@ -156,3 +156,7 @@ contact/pin convergence use nineteen complete 128-warmup/128-measured brackets
 at zero managed allocation. Registered contact-cache, arbitrary coupled/custom,
 full inherited/extension/network and native/platform/performance acceptance remain
 open.
+
+## Pending server geometry
+
+The shared factory/type/data family preserves unconfigured raw RIDs. The selected implementation receives inactive logical slots until ShapeSetData commits and GetShapeGeometry rejects pending query sources. See [raw shape initialization](../components/physics-registered-adapter.md#raw-shape-initialization).

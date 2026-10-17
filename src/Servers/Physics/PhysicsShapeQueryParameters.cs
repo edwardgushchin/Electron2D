@@ -30,6 +30,7 @@ public sealed class PhysicsShapeQueryParameters : ElectronObject
     /// <value>Null by default. A successful assignment also sets ShapeRID.</value>
     /// <exception cref="ArgumentNullException">The assigned resource is null.</exception>
     /// <exception cref="ObjectDisposedException">The assigned resource was disposed.</exception>
+    /// <exception cref="InvalidOperationException">The assigned server-owned view has not been configured with ShapeSetData.</exception>
     public Shape? Shape
     {
         get { ThrowIfDisposed(); return _shape; }
@@ -38,6 +39,7 @@ public sealed class PhysicsShapeQueryParameters : ElectronObject
             ThrowIfDisposed();
             ArgumentNullException.ThrowIfNull(value);
             if (value.IsDisposed) throw new ObjectDisposedException(nameof(value));
+            if (!value.HasServerData) throw new InvalidOperationException("Shape data must be configured before a query resource is assigned.");
             var rid = value.GetRID();
             _shape = value;
             _shapeRID = rid;

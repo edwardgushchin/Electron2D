@@ -274,6 +274,8 @@ Each world now retains a distinct internal solver implementation owning either t
 
 `PhysicsServer.BodyGetTransform(space, bodies, transforms)` now provides a caller-owned CPU/GPU pose batch for render consumers. It preserves scalar scene/raw semantics and shared guards; dynamic raw GPU bodies transfer only compact poses without publishing other state. [Contract and measured costs](../components/gpu-demand-publication.md#explicit-pose-batches).
 
+[Raw shape initialization](../components/physics-shapes.md#raw-shape-initialization) now distinguishes declared raw RIDs from configured numerical geometry, including scene/raw slot identity, failure rollback and private/portable state. Resource constructors remain initialized.
+
 ## Tile grid and terrain integration
 
 [Tile resources and layers](../components/tiles.md) now connect square, isometric, half-offset and hexagonal atlas authoring and typed storage to actual merged static/kinematic bodies in CPU/GPU worlds, with tile-owner queries/events, runtime data callbacks and real retained-canvas output. All layouts, animated atlas storage/drawing and navigation now execute; terrain definitions, modes, weighted connect/path painting and fresh file graphs now execute; pattern/proxy painting and occlusion retain explicit prerequisites under [ADR 0101](../decisions/tiles.md#adr-0101).

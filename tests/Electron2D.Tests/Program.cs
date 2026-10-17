@@ -328,6 +328,19 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_VISIBILITY") == "
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CURSOR_REFRESH_NATIVE") == "1") { CursorRefreshTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CURSOR_REFRESH") == "1") { CursorRefreshTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_CONNECTIONS_NATIVE") == "1") { SceneConnectionTests.RunNative(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHAPE_SLOT_CONSUMERS") is { } slotConsumerProfile)
+{
+    var backend = slotConsumerProfile == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;
+    PhysicsServerShapeSlotTests.Run(backend); ShapePairEventTests.Run(backend);
+    if (backend == PhysicsServer.Backend.CPU) { PhysicsActivityTests.Run(); RayCastTests.Run(); ShapeCastTests.Run(); }
+    return;
+}
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHAPE_INITIALIZATION") is { } initializationProfile)
+{
+    if (initializationProfile == "all") { BackendChecks.RunShapeInitialization(); BackendChecks.RunShapeInitialization(PhysicsServer.Backend.CPU); BackendChecks.RunShapeInitialization(PhysicsServer.Backend.GPU); return; }
+    BackendChecks.RunShapeInitialization(initializationProfile == "cpu" ? PhysicsServer.Backend.CPU : initializationProfile == "gpu" ? PhysicsServer.Backend.GPU : null,
+        Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_THREAD") == "1"); return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_EDITOR_STATE") is { } editorProfile)
 {
     if (editorProfile == "all") { BackendChecks.RunEditorState(); BackendChecks.RunEditorState(PhysicsServer.Backend.CPU); BackendChecks.RunEditorState(PhysicsServer.Backend.GPU); return; }
@@ -1643,6 +1656,7 @@ ObjectSignalBlockingTests.Run();
 ObjectDisposalRegistryTests.Run();
 BackendChecks.RunDisposalVeto(); BackendChecks.RunDisposalVeto(PhysicsServer.Backend.CPU); BackendChecks.RunDisposalVeto(PhysicsServer.Backend.GPU);
 BackendChecks.RunEditorState(); BackendChecks.RunEditorState(PhysicsServer.Backend.CPU); BackendChecks.RunEditorState(PhysicsServer.Backend.GPU);
+BackendChecks.RunShapeInitialization(); BackendChecks.RunShapeInitialization(PhysicsServer.Backend.CPU); BackendChecks.RunShapeInitialization(PhysicsServer.Backend.GPU);
 BackendChecks.RunQueuedObservation(); BackendChecks.RunQueuedObservation(PhysicsServer.Backend.CPU); BackendChecks.RunQueuedObservation(PhysicsServer.Backend.GPU);
 SignalBlockingPhysicsTests.Run(PhysicsServer.Backend.CPU, false); SignalBlockingPhysicsTests.Run(PhysicsServer.Backend.GPU, false);
 EventConnectionPhysicsTests.Run(PhysicsServer.Backend.CPU); EventConnectionPhysicsTests.Run(PhysicsServer.Backend.GPU);

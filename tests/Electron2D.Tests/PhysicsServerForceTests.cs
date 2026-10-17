@@ -22,6 +22,7 @@ internal sealed class PhysicsServerForceTests(PhysicsServer.Backend backend)
         using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld }; var area = ZeroField(); area.AddChild(new CollisionShape { Shape = region }); root.AddChild(area);
         using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Body fixture uses the explicitly selected backend.");
         var server = PhysicsServer.Service; var body = PhysicsServer.BodyCreate(); var shape = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(shape, initialShapeData);
         try
         {
             PhysicsServer.BodyAddShape(body, shape, new(0, Vector2.One, 0, new(20, 0)));

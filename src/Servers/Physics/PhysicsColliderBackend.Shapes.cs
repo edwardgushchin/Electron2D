@@ -51,7 +51,7 @@ internal sealed partial class PhysicsColliderBackend
             for (var index = 0; index < count; index++)
             {
                 var slot = slots[index];
-                if (!slot.Disabled)
+                if (!slot.Disabled && slot.Shape.Geometry.HasServerData)
                 {
                     PhysicsServerCollider.ValidateTransform(slot.LocalTransform);
                     if (!slot.Shape.Geometry.IsDisposed) _ = slot.Shape.Geometry.GetGeometryData();
@@ -60,9 +60,10 @@ internal sealed partial class PhysicsColliderBackend
             for (var index = 0; index < count; index++)
             {
                 var slot = slots[index]; var shape = slot.Shape.Geometry;
-                var oneWay = !sensor && !slot.Disabled && !shape.IsDisposed && slot.OneWay
+                var enabled = !slot.Disabled && !shape.IsDisposed && shape.HasServerData;
+                var oneWay = !sensor && enabled && !shape.IsDisposed && slot.OneWay
                     ? OneWayContactData.Capture(ref _oneWayInputs[index], slot.Direction.Rotated(slot.LocalTransform.Rotation), slot.Margin) : null;
-                _shapeInputs[index] = new(shape, slot.LocalTransform, index, !slot.Disabled, oneWay);
+                _shapeInputs[index] = new(shape, slot.LocalTransform, index, enabled, oneWay);
             }
             Attached.RebuildShapes(_shapeInputs.AsSpan(0, count), layer, mask, sensor, density, friction, bounce);
             _filterDirty = false;

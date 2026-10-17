@@ -326,7 +326,7 @@ def main():
     boundary_rows = [row for row in pages[CLASS_PAGES / "WorldBoundaryShape2D.md"].splitlines() if row.startswith("| [`")]
     assert len(boundary_rows) == 3 and all(" | Implemented | " in row for row in boundary_rows)
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
-               for name in ("world_boundary_shape_create", "shape_get_type"))
+               for name in ("world_boundary_shape_create", "shape_get_type", "shape_get_data", "shape_set_data"))
     for setting in ("sleep_threshold_linear", "sleep_threshold_angular", "time_before_sleep", "solver/default_contact_bias", "solver/contact_max_allowed_penetration", "solver/solver_iterations", "solver/contact_recycle_radius", "solver/contact_max_separation"):
         assert " | Implemented | " in next(row for row in pages[CLASS_PAGES / "ProjectSettings.md"].splitlines()
                                             if row.startswith("| [`property") and f"physics/2d/{setting}" in row)
@@ -338,7 +338,7 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 154, "Partial": 6, "Unimplemented": 0, "Blocked": 0, "Excluded": 55}
+                "Implemented": 156, "Partial": 4, "Unimplemented": 0, "Blocked": 0, "Excluded": 55}
     for name in ("body_set_mode", "body_get_mode"):
         row = next(row for row in server_rows if f"method {name}(" in row)
         assert " | Implemented | " in row and "all five scene siblings" in row

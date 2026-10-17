@@ -95,8 +95,7 @@ internal sealed class SeparationRayShapeTests(PhysicsServer.Backend backend)
             "Slide mode uses the rotated surface normal.");
 
         var rayRID = PhysicsServer.SeparationRayShapeCreate();
-        using var defaultData = PhysicsServer.ShapeGetData(rayRID);
-        Check(defaultData is SeparationRayShape { Length: 20, SlideOnSlope: false }, "Server creation defaults.");
+        Reject<InvalidOperationException>(() => PhysicsServer.ShapeGetData(rayRID));
         PhysicsServer.ShapeSetData(rayRID, ray);
         var holder = PhysicsServer.BodyCreate();
         PhysicsServer.BodySetMode(holder, PhysicsServer.BodyMode.Static);

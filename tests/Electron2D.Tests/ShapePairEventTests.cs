@@ -66,6 +66,7 @@ internal sealed class ShapePairEventTests(PhysicsServer.Backend backend)
         sequence.Clear(); other.Monitorable = false; tree.PhysicsFrame(1d / 60);
         Check(sequence.SequenceEqual(new[] { "object-", "shape-" }), "Monitorable policy generates pair/object departures.");
         var server = PhysicsServer.Service; var body = PhysicsServer.BodyCreate(); var shape = PhysicsServer.RectangleShapeCreate();
+        using (var initialShapeData = new RectangleShape()) PhysicsServer.ShapeSetData(shape, initialShapeData);
         PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static); PhysicsServer.BodyAddShape(body, shape); PhysicsServer.BodySetSpace(body, area.GetWorld()!.Space);
         area.BodyShapeEntered += (rid, node, remote, local) =>
         { Check(rid == body && node is null && remote == 0 && local == 0, "Server body payload uses RID and null scene object."); entered++; };

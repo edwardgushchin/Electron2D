@@ -141,6 +141,7 @@ internal sealed class PhysicsQueryTests(PhysicsServer.Backend backend)
         var server = PhysicsServer.Service;
         var serverBody = PhysicsServer.BodyCreate();
         var serverShape = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(serverShape, initialShapeData);
         PhysicsServer.BodySetMode(serverBody, PhysicsServer.BodyMode.Static);
         PhysicsServer.BodyAddShape(serverBody, serverShape);
         PhysicsServer.BodySetTransform(serverBody, new(0, Vector2.One, 0, new(50, 50)));
@@ -322,6 +323,7 @@ internal sealed class PhysicsQueryTests(PhysicsServer.Backend backend)
         Check(shape.IsValid(), "Freeing a resource does not turn its copied RID value into zero.");
         Reject<ArgumentException>(() => PhysicsServer.ShapeGetData(shape));
         var newer = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(newer, initialShapeData);
         Check(newer > shape, "A freed RID is never reassigned to a later shape.");
         PhysicsServer.FreeRID(newer);
         PhysicsServer.FreeRID(space);
