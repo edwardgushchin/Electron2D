@@ -1,6 +1,6 @@
 # Compiled C# source assets
 
-Last updated: 2026-10-14
+Last updated: 2026-10-18
 
 [Script](../classes/Script.md) describes a compiled project Node or Resource and its source/type/schema association under [ADR 0091](../decisions/scripting.md#adr-0091). C# callbacks execute directly on the constructed project class. Source text and shared resource metadata remain separate from the state of a player or effect instance.
 
@@ -13,6 +13,12 @@ ResourceLoader recognizes `.cs` and compatible Script/Resource views. Uncached l
 Script.New returns the exact project type through its static factory, or through a caller's typed constructor expression. It validates actual type, lifetime and user schema and disposes an incompatible returned instance. Native inherited descriptors use the existing object/property pipeline. Metadata query arrays/maps are copied and remain cold operations. Type/method/event discovery uses ordinary CLR metadata, without string invocation or an interpreter. Constants use caller-selected exact value types. Defaults use registered typed descriptors and a live owner context so borrowed resource defaults retain a meaningful lifetime.
 
 Ordinary nested resource copies keep the same Script asset for all deep modes, including builtin/external paths and scalar/array/dictionary references. Explicit force/root copies retain independent text with the same compiled association; their cached targets do not replace ordinary edges. Scene-local flags govern acquired per-scene wrappers and their disposal, while ordinary non-local code remains borrowed and observes source edits. The actual RESET save-authoring path isolates source snapshots. [Public graph consumers](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.ScriptGraphs.cs) exercise both force orders and these scene/physical lifetime paths; ScriptTests passes the real registered asset through the same matrix and constructs the actual compiled project Node.
+
+## Remaining owner association
+
+The Script asset/catalog prerequisite is implemented. Script.New constructs and validates the exact CLR instance, but neither that path nor file reconstruction records an owner-to-Script resource association. ElectronObject has no script getter or assignment operation. Their next prerequisite is the typed live-binding identity/lifetime/initialization contract in ADR 0091, rather than creating another Script resource or type catalog. Existing constructed objects continue to execute after an asset wrapper is disposed.
+
+The pinned [Object initialization callback](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Object.xml) runs when an owner's script is instantiated and can follow object construction. Ordinary C# constructors and typed New are executable construction paths, but they do not certify the missing associated-script initialization/assignment behavior. Required arguments, file/duplication creation, ordering and failure semantics must accompany that binding. The inherited initialization and getter/assignment rows remain open; no additional initializer is called from a base constructor.
 
 ## Storage, lifetime and consumers
 

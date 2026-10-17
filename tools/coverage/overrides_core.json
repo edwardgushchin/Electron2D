@@ -1665,10 +1665,17 @@
     {"godot": ["FileAccess::method:open_compressed(String:,int:FileAccess.ModeFlags,int:FileAccess.CompressionMode)"], "state": "Implemented", "reason": "ADR 0020 retains the engine-owned E2DCMP envelope and whole-file/atomic semantics; default FastLZ and all five codecs execute seek/read/write/flush/reopen. Native 64 KiB blocks validate structure, exact decode, padding and SHA-256. FileCompressionTests verifies tiny/boundary/random/repeated data, edits, virtual paths, corruption, atomic failure and fresh-process reads; direct codec oracle and GPU/compatibility compressed-PNG pixels exercise Linux x64 with the matching native bundle. No reference container binary compatibility or foreign-host acceptance is claimed."},
     {
       "godot": [
+        "Object::method:_init()"
+      ],
+      "state": "Unimplemented",
+      "reason": "The pinned callback initializes an instantiated owner Script, potentially after owner construction; it is not only CLR base construction. Ordinary C# constructors and Script.New already execute. A typed owner/script initialization projection with argument, scene/duplication, identity, callback-order and failure behavior remains required under ADR 0091. Do not dispatch a virtual initializer from ElectronObject construction."
+    },
+    {
+      "godot": [
         "Object::method:get_script()"
       ],
       "state": "Blocked",
-      "reason": "Trigger: ADR 0091 Script resource/type-catalog slice and executable owner-to-script metadata association for supported C# objects. The single concrete Script identity is accepted, but neither the resource nor this getter is implemented; a Node subtype or reserved ScriptChanged event is not that association."
+      "reason": "Trigger: accepted typed owner-to-Script association and its executable identity/lifetime/initialization contract under ADR 0091. The concrete Script resource, source/type catalog and typed New construction already execute. Script.New creates an exact CLR instance without retaining a per-owner Script association; GetScript remains absent. Compiled type metadata or a reserved ScriptChanged event does not establish that binding."
     },
     {
       "godot": [

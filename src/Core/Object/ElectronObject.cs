@@ -177,7 +177,7 @@ public abstract partial class ElectronObject : IDisposable
     /// <summary>Occurs when a derived scripting component reports that this object's script attachment changed.</summary>
     /// <remarks>
     /// Electron2D does not yet provide a script attachment. The event reserves the typed notification contract for a
-    /// future scripting component and is currently raised only through <see cref="NotifyScriptChanged"/>.
+    /// future live script-assignment workflow and is currently raised only through <see cref="NotifyScriptChanged"/>.
     /// </remarks>
     public event Action<ElectronObject>? ScriptChanged;
 
@@ -435,7 +435,7 @@ public abstract partial class ElectronObject : IDisposable
     }
 
     /// <summary>Synchronously raises <see cref="ScriptChanged"/>.</summary>
-    /// <remarks>A future scripting component should call this when its script reference changes.</remarks>
+    /// <remarks>A future live script-assignment workflow should call this when its script reference changes.</remarks>
     /// <exception cref="ObjectDisposedException">The object is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">An event handler throws.</exception>
     protected void NotifyScriptChanged()
