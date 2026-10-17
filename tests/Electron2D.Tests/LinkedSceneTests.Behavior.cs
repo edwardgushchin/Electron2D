@@ -151,6 +151,27 @@ internal static partial class LinkedSceneTests
                 var next = new PackedScene(); next.LoadFileData(new([Record("Root", -1), Record("Child", 0, last)])); scenes.Add(next); last = next;
             }
             Reject<InvalidOperationException>(() => last.Instantiate()); Check(_budgetFactories == 0, "Unsafe template depth rejects before any construction.");
+            last = leaf;
+            for (var i = 0; i < 20; i++)
+            {
+                var next = new PackedScene(); next.LoadFileData(new([Record("Root", -1), Record("Child", 0, last)])); scenes.Add(next); last = next;
+            }
+            var shared = last; PackedScene? boundary = null;
+            for (var i = 0; i < 110; i++)
+            {
+                var next = new PackedScene(); next.LoadFileData(new([Record("Root", -1), Record("Child", 0, last)])); scenes.Add(next); last = next;
+                if (i == 105) boundary = next;
+            }
+            foreach (var shortFirst in new[] { true, false })
+            {
+                var diamond = new PackedScene(); scenes.Add(diamond);
+                diamond.LoadFileData(new([Record("Root", -1), Record("First", 0, shortFirst ? shared : boundary), Record("Second", 0, shortFirst ? boundary : shared)]));
+                using (var valid = diamond.Instantiate()) Check(_budgetFactories > 0, "Exactly 128 template levels remain instantiable with shared references.");
+                _budgetFactories = 0;
+                diamond.LoadFileData(new([Record("Root", -1), Record("First", 0, shortFirst ? shared : last), Record("Second", 0, shortFirst ? last : shared)]));
+                Reject<InvalidOperationException>(() => { using var unexpected = diamond.Instantiate(); });
+                Check(_budgetFactories == 0, "Shared template depth rejects before construction regardless of reference order.");
+            }
         }
         finally { foreach (var scene in scenes) scene.Dispose(); }
     }

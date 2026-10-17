@@ -253,9 +253,17 @@ internal sealed partial class PhysicsSpace : IDisposable
     private void PreparePendingColliderMetadata()
     {
         if (!_colliderMetadataDirty) return;
-        foreach (var body in _bodies) body.Backend.PrepareMetadata(body.EffectiveCollisionLayer, body.EffectiveCollisionMask);
+        foreach (var body in _bodies)
+        {
+            body.PreparePendingServerMode();
+            body.Backend.PrepareMetadata(body.EffectiveCollisionLayer, body.EffectiveCollisionMask);
+        }
         foreach (var area in _areas) area.Backend.PrepareMetadata(area.CollisionLayer, area.CollisionMask);
-        foreach (var collider in _serverColliders) collider.Backend.PrepareMetadata(collider.CollisionLayer, collider.CollisionMask);
+        foreach (var collider in _serverColliders)
+        {
+            collider.PreparePendingMode();
+            collider.Backend.PrepareMetadata(collider.CollisionLayer, collider.CollisionMask);
+        }
         _colliderMetadataDirty = false;
     }
 

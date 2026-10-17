@@ -83,11 +83,12 @@ public abstract partial class PhysicsBody : CollisionObject
         List<Exception>? errors = null;
         PhysicsSpace.Cleanup(() =>
         {
-            if (!space.HasBackendFailure && this is RigidBody rigid && Backend.HasMotionMode(PhysicsServer.BodyMode.Rigid))
+            if (!space.HasBackendFailure && !_serverModeDirty && this is RigidBody rigid && Backend.HasMotionMode(PhysicsServer.BodyMode.Rigid))
                 rigid.OnBackendAdvanced();
             if (!space.HasBackendFailure) CaptureServerMotion();
         }, ref errors);
         PhysicsSpace.Cleanup(Backend.Detach, ref errors);
+        _serverModeDirty = false;
         _appliedShapeRevisions.Clear();
         _shapesDirty = true;
         PhysicsSpace.FinishCleanup(errors);

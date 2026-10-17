@@ -265,7 +265,9 @@ public sealed partial class PhysicsServer
     /// <returns>A cached view tied to this backend attachment; caller disposal invalidates only that view.</returns>
     /// <remarks>Synchronizes the requested body's pending pose and geometry. Whole-space queries synchronize
     /// their world separately; acquiring body views does not scan other bodies. GPU views refresh the selected
-    /// body's resolved fields and participate in current completion while live; unobserved raw bodies remain resident.</remarks>
+    /// body's resolved fields and participate in current completion while live; unobserved raw bodies remain resident.
+    /// Incomplete body-mode preparation finishes before resolved fields or a selected view factory are invoked.
+    /// A repeated preparation failure preserves its original error and does not create a view or advance the step tick.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
     /// <exception cref="InvalidOperationException">The caller is off-owner or the solver is stepping.</exception>
     public static PhysicsDirectBodyState? BodyGetDirectState(RID body) => Service.BodyGetDirectStateCore(body);
@@ -1226,7 +1228,10 @@ public sealed partial class PhysicsServer
     /// <exception cref="InvalidOperationException">Attached mutation is off-owner, during solver ownership or a numerical implementation hook.</exception>
     /// <remarks>A scene assignment retains a direct runtime mode without changing its concrete type, Freeze or LockRotation descriptors.
     /// Later scene role edits restore scene control; MakeStatic temporarily overrides the retained mode.
-    /// Direct assignments survive reentry and participate in checkpoints and portable state; scene packing uses its configured descriptors.</remarks>
+    /// Direct assignments survive reentry and participate in checkpoints and portable state; scene packing uses its configured descriptors.
+    /// A selected publication failure preserves the committed mode and queues full mode, motion and geometry preparation.
+    /// Numerical body access, live space queries and nonzero steps retry preparation; failure leaves the step tick unchanged.
+    /// Detachment discards retired attachment debt without sampling its incomplete motion.</remarks>
     public static void BodySetMode(RID body, BodyMode mode) => Service.BodySetModeCore(body, mode);
 
     /// <summary>Gets the body's current motion mode.</summary>

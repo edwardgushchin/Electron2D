@@ -8,26 +8,32 @@ public sealed partial class PackedScene
     {
         var snapshots = new Dictionary<PackedScene, PackedSceneData>(ReferenceEqualityComparer.Instance);
         var active = new HashSet<PackedScene>(ReferenceEqualityComparer.Instance);
-        var counts = new Dictionary<PackedScene, long>(ReferenceEqualityComparer.Instance);
+        var counts = new Dictionary<PackedScene, (long Nodes, int Height)>(ReferenceEqualityComparer.Instance);
         Visit(root, data, 0);
         return snapshots;
-        long Visit(PackedScene scene, PackedSceneData snapshot, int depth)
+        (long Nodes, int Height) Visit(PackedScene scene, PackedSceneData snapshot, int depth)
         {
             scene.ThrowIfDisposed();
             if (depth >= 128 || !active.Add(scene)) throw new InvalidOperationException("Linked scene templates contain a cycle or exceed the nesting budget.");
             try
             {
-                if (counts.TryGetValue(scene, out var known)) return known;
+                if (counts.TryGetValue(scene, out var known))
+                {
+                    if (depth + known.Height >= 128) throw new InvalidOperationException("Linked scene templates exceed the nesting budget.");
+                    return known;
+                }
                 if (snapshot.Nodes.Length == 0) throw new InvalidOperationException("A linked scene template is empty.");
                 snapshots.Add(scene, snapshot);
                 long count = snapshot.Nodes.Count(n => n.Instance is null && n.InstanceRootIndex < 0);
+                var height = 0;
                 foreach (var node in snapshot.Nodes)
                     if (node.Instance is { } child)
                     {
-                        count += Visit(child, child.FileData, depth + 1);
+                        var childCount = Visit(child, child.FileData, depth + 1);
+                        count += childCount.Nodes; height = Math.Max(height, childCount.Height + 1);
                         if (count > 65536) throw new InvalidOperationException("Linked scene expansion exceeds the node budget.");
                     }
-                counts.Add(scene, count); return count;
+                counts.Add(scene, (count, height)); return (count, height);
             }
             finally { active.Remove(scene); }
         }

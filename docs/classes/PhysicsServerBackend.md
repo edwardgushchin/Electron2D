@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-17
 
+## Prepared body view acquisition
+
+Body view acquisition now finishes pending direct-mode preparation before reading resolved fields, selecting a cached view or invoking its selected factory. The same boundary serves caller-created body-state extensions. A repeated preparation error creates no view, publishes no fields and does not advance the tick. Successful recovery preserves cached identity or creates one generation-qualified view; stale attachments remain rejected. See [the preparation contract](../components/physics-registered-adapter.md#body-view-acquisition-after-mode-failure).
+
 [Curved custom contacts](../components/physics-registered-adapter.md#curved-custom-contacts)
 verify the independent implementation's response and complete frame publication
 when positional recovery retires a transient overlap. Private restore/replay,

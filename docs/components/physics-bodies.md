@@ -1,6 +1,8 @@
 # Scene physics bodies component
 
-Last updated: 2026-10-16
+[Failed direct-mode publication](physics-registered-adapter.md#failed-body-mode-publication) retains authored mode/motion and retries complete numerical preparation before body access, space queries or steps. Detachment preserves that authored state, and scene role takeover prepares the prior direct profile before changing descriptors.
+
+Last updated: 2026-10-17
 
 [Per-body CCD](cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; the selected world also dispatches independent GPU CCD. Complete contract and platform acceptance remain open.
 

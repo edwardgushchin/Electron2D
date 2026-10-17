@@ -46,6 +46,7 @@ public sealed partial class PhysicsServer
         var space = runtime.Space;
         if (space is null) return runtime;
         space.EnsureQueryAccess();
+        runtime.PreparePendingMode();
         var owner = runtime.Owners;
         if (owner.Scene is { } scene) scene.PrepareBackend(); else owner.Server!.PrepareBackend();
         runtime.PublishFields();

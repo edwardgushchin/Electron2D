@@ -1,5 +1,7 @@
 # Caller-created body-state extensions
 
+[Body view acquisition](physics-registered-adapter.md#body-view-acquisition-after-mode-failure) completes pending mode preparation before resolved-field publication or selected factory invocation. Cached acquisition and caller-created construction share that boundary; repeated failure creates no view and advances no tick.
+
 Last updated: 2026-10-13
 
 ## Responsibility and types

@@ -29,7 +29,7 @@ public static partial class BackendChecks
             if (DebugPointCount < DebugLimit) DebugPoints[DebugPointCount++] = point;
         }
         internal RID ContactFailure;
-        internal Action<RID>? IdentityHook, ColliderFactoryHook;
+        internal Action<RID>? IdentityHook, ColliderFactoryHook, ModeHook, RotationHook, SurfaceHook;
         internal Action<RID>? ShapeHook, FilterHook;
         internal Action<RID>? BodyHook;
         internal Action<RID>? JointHook;
@@ -303,7 +303,7 @@ public static partial class BackendChecks
             if (configuration.ApplyPersistentForces) { Force += configuration.ConstantForce; if (!Locked) Torque += configuration.ConstantTorque; }
         }
         protected override bool HasMotionMode(PhysicsServer.BodyMode mode) => Mode == mode || mode == PhysicsServer.BodyMode.Rigid && Mode == PhysicsServer.BodyMode.RigidLinear;
-        protected override void SetMotionMode(PhysicsServer.BodyMode mode) => Mode = mode;
+        protected override void SetMotionMode(PhysicsServer.BodyMode mode) { solver.ModeHook?.Invoke(rid); Mode = mode; }
         protected override void SetContactReporting(bool enabled) { }
         protected override void PrepareContactPolicy()
         {
@@ -371,7 +371,7 @@ public static partial class BackendChecks
         protected override void ClearVelocity() { Velocity = default; Angular = 0; }
         protected override void SetAwake(bool awake) { Awake = awake; SleepTime = 0; if (!awake) ClearVelocity(); else solver.WakeConnected(this); }
         protected override void SetCanSleep(bool canSleep) { CanSleep = canSleep; if (!canSleep) { Awake = true; SleepTime = 0; solver.WakeConnected(this); } }
-        protected override void SetRotationLocked(bool locked) => Locked = locked;
+        protected override void SetRotationLocked(bool locked) { solver.RotationHook?.Invoke(rid); Locked = locked; }
         protected override void SetGravityScale(float scale) { }
         protected override void ApplyCentralForce(Vector2 force, bool wake) { Force += force; Awake |= wake; }
         protected override void ApplyTorque(float torque, bool wake) { Torque += torque; Awake |= wake; }
@@ -391,7 +391,7 @@ public static partial class BackendChecks
         protected override Vector2 GetWorldPointVelocity(Vector2 point) => GetPointVelocity(point - Position);
         protected override void ApplyImpulse(Vector2 impulse, float moment) { AddImpulse(impulse, moment); if (Dynamic) { Awake = true; SleepTime = 0; solver.WakeConnected(this); } }
         protected override void SetSurfaceVelocity(Vector2 linear, float angular)
-        { if (Surface == linear && SurfaceAngular == angular) return; Surface = linear; SurfaceAngular = angular; solver.WakeConnected(this); }
+        { solver.SurfaceHook?.Invoke(rid); if (Surface == linear && SurfaceAngular == angular) return; Surface = linear; SurfaceAngular = angular; solver.WakeConnected(this); }
         protected override int ReadContacts(Span<PhysicsBodyContact> contacts)
         {
             if (solver.ContactFailure == rid) throw new InvalidOperationException("Injected contact publication failure.");

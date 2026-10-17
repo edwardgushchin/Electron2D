@@ -24,7 +24,10 @@ public abstract class PhysicsBackendCollider
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract bool HasMotionMode(PhysicsServer.BodyMode mode);
     /// <summary>Supplies the selected implementation operation: set motion mode.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units.
+    /// Direct mode authoring commits before publication. A failed mode, rotation, motion or geometry call causes the complete transition
+    /// to retry before later numerical access, queries or steps; support idempotent preparation after a partial failure.
+    /// Recursive mode preparation rejects; this recovery never replays a failed numerical step.</remarks>
     protected internal abstract void SetMotionMode(PhysicsServer.BodyMode mode);
     /// <summary>Supplies the selected implementation operation: set contact reporting.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>

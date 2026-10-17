@@ -24,7 +24,7 @@ Template and stored-resource references retain ordinary Resource lifetime. Dispo
 
 ## Reconstruction and failure
 
-Before factories run, a template snapshot graph checks disposed/empty templates, cycles, at most 128 template levels and at most 65,536 expanded nodes for linked graphs. A child finishes typed restoration, local setup and its root notification before outer overrides. The construction barrier stays active through the enclosing operation, so callbacks cannot activate or dispose an unfinished nested graph.
+Before factories run, a template snapshot graph checks disposed/empty templates, cycles, at most 128 template levels on every reference path (including reused shared templates) and at most 65,536 expanded nodes for linked graphs. A child finishes typed restoration, local setup and its root notification before outer overrides. The construction barrier stays active through the enclosing operation, so callbacks cannot activate or dispose an unfinished nested graph.
 
 Reused nodes retain their template identity, children and ordinary owner. Added nodes follow stored parent/owner/sibling records. Typed node references resolve after names and topology are complete. Original paths select reused nodes even after an authored name swap; a path that vanished from a changed template rejects explicitly. Stable-ID recovery across independently renamed asset files is not implemented.
 
