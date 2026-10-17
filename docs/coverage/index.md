@@ -1,5 +1,7 @@
 # API coverage register
 
+The current unique [physics declaration ledger](physics-status.md) has 223 open declarations: 187 Partial, 17 Unimplemented and 19 Blocked. Older slice counts below are historical. Scene-role publication recovery fixes implemented behavior without changing these states; its 70 managed/NativeAOT focused and related profiles cover failure recovery and strict warmed managed-allocation gates. The frozen ordinary software suite now passes on the same runtime sources; sixteen current [network regression profiles](../components/physics-network-example.md#scene-role-recovery-network-regression-2026-10-18) also pass with the rejected concurrent paced deadline preserved separately. Complete inherited/extension/numerical, native/foreign, target hardware/window/FPS and performance acceptance remain separate requirements.
+
 [Linked runtime scenes](../components/linked-scenes.md) now reconstruct actual subscene templates, preserve nested local-resource and event identities and persist version-5 links/overlays. SceneState instance/index/type queries have executable fresh-file and GPU/Compatibility evidence; inherited roots, deferred replacement and non-Disabled editing retain their separate prerequisites.
 
 [Ordinary texture placeholders](../components/texture-placeholders.md) now execute dimension-only factory output, typed resource/scene archives, scene-local ownership and diagnostic object/RID drawing on GPU and Compatibility. The four reference declarations are implemented; version-4 missing-texture recovery additionally retains original graph fields and missing-payload provenance, with available-factory restoration and explicit strict/tolerant results.
@@ -20,7 +22,7 @@ current-group writes; six stored callback switches, signed priorities, typed
 frame/input dispatch, error continuation and fresh-file motion have public
 CPU/software-Vulkan/registered CoreCLR/NativeAOT serial/separate evidence.
 Retained schedule comparisons and actual work-gate contention preparation preserve
-strict warmed allocation budgets. The unique physics census is 286 open declarations:
+strict warmed allocation budgets. At that processing slice the unique physics census was 286 open declarations:
 226 Partial, 43 Unimplemented, 17 Blocked. General worker physical authoring,
 complete inheritance/extension, native/device and hardware/window/performance
 acceptance remain open.
@@ -35,7 +37,7 @@ owner expiry and detached unique-name scope, callback-failed transfer, virtual
 placement, cross-world RID/pose and fresh scene activation have public
 CPU/software-Vulkan/registered CoreCLR/NativeAOT serial/separate evidence.
 That membership slice left 303 open declarations; the complete processing slice
-above records the current census. Native/device, foreign, hardware/window/performance and full inherited
+above records its next historical census; the current [physics ledger](physics-status.md) supersedes both. Native/device, foreign, hardware/window/performance and full inherited
 or extension acceptance remain open.
 
 [Node tree transitions](../components/scene-hierarchy.md#entry-readiness-and-departure)
@@ -44,7 +46,7 @@ node-added/removed events. Exact ordering, repeated attachment, ready requests,
 worker metadata, failure cleanup and physical binding lifetime have public
 CoreCLR/NativeAOT CPU/software-Vulkan/registered serial/separate evidence.
 That lifecycle slice left 311 open declarations; the membership slice above
-records the current census. Full inheritance, extension, native/device and
+records its later historical census; the current [physics ledger](physics-status.md) supersedes it. Full inheritance, extension, native/device and
 hardware/window gates remain open.
 
 [CPU pool lifetime](../components/cpu-checkpoints.md#retired-pool-payloads) now clears
@@ -67,7 +69,7 @@ status changes; full retained/native/device history budgets remain open.
 
 [Resident GPU buffer accounting](../components/gpu-memory.md) now covers all storage/transfer allocations, growth peaks and replay retirement. This internal measurement changes no public declaration status and leaves complete retained/native/device budgets open.
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
 
 [Per-referrer resource IDs](../components/resources.md#per-referrer-path-ids) now
 have executable public cache and custom-format consumers. The two inherited
