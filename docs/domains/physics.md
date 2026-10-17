@@ -44,6 +44,10 @@ first interval. Complete retained-memory budgets remain open.
 
 Last updated: 2026-10-18
 
+## Scene role publication recovery
+
+[Configured role changes](../components/physics-registered-adapter.md#failed-scene-role-publication) retain committed descriptors through partial selected errors and repair the complete role before numerical use. Rotation locking preserves actual selected linear motion; direct server role publication retains its own surface policy. Precondition rejection remains separate from accepted authoring followed by a publication error.
+
 [Angular normal/friction coupling](../components/gpu-contact-solver.md#angular-normalfriction-coupling-2026-10-16) now preserves oblique rotating-ray response through colored and high-degree resident contacts, without increasing solver sweeps or the CCD budget. The public reset/full-frame fixture checks actual motion and reported impulse balance.
 
 [Multi-impact CCD history](../components/physics-snapshots.md#multi-impact-ccd-contact-history)

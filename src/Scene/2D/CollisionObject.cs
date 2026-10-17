@@ -58,7 +58,8 @@ public abstract partial class CollisionObject : Entity
     /// <value><see cref="CollisionDisableMode.Remove"/> by default.</value>
     /// <remarks>Applies synchronously to attached objects, including inherited disabled processing.
     /// Pausing the scene alone does not apply this policy. Area remains a sensor in MakeStatic mode.
-    /// Removal retains RID and shape owners, invalidates live body views and reports peer overlap exits.</remarks>
+    /// Removal retains RID and shape owners, invalidates live body views and reports peer overlap exits.
+    /// A partial selected Body role-publication error retains the committed policy and retries complete role preparation before numerical use.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The mode is undefined.</exception>
     /// <exception cref="InvalidOperationException">Attached mutation is off the owner thread or the world is stepping.</exception>
     /// <exception cref="ObjectDisposedException">The object is disposed.</exception>
@@ -69,9 +70,10 @@ public abstract partial class CollisionObject : Entity
         set
         {
             EnsureMutable();
-            if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value));
-            if (_disableMode == value) return;
+            if (value is not CollisionDisableMode.Remove and not CollisionDisableMode.MakeStatic and not CollisionDisableMode.KeepActive) throw new ArgumentOutOfRangeException(nameof(value));
             EnsurePhysicsParticipationChange();
+            if (this is PhysicsBody body) body.PreparePendingServerMode(writing: true);
+            if (_disableMode == value) return;
             _disableMode = value;
             if (IsInsideTree) UpdatePhysicsParticipation();
         }

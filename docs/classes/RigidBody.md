@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-18
 
+## Failed scene role publication
+
+Freeze, FreezeMode and LockRotation retain committed descriptors if selected role publication partially fails. Numerical reads, queries, nonzero steps and repeated assignment to these properties retry the complete role, rotation, motion and shape/mass policy. A lock transition captures current selected motion, preserving linear impulse effects and zeroing locked angular motion; this limited role-transition readback does not affect ordinary velocity writes. A native frozen lock edit only stores future rotation policy, preserving its deferred kinematic target. See [scene role publication](../components/physics-registered-adapter.md#failed-scene-role-publication).
+
 ## Failed motion publication
 
 Failed velocity/sleep/policy publication retains the complete requested write for retry before numerical access, body views, live queries or a nonzero step. Ordinary authored reads stay non-preparing. Linear/angular edits preserve the other selected motion channel, including impulse-derived values. Retirement overlays requested channels on retained selected motion without repairing the discarded attachment. See [motion publication](../components/physics-registered-adapter.md#failed-motion-publication) for executable scope and limits.

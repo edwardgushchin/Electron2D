@@ -4,6 +4,10 @@
 
 Last updated: 2026-10-18
 
+## Scene role publication recovery
+
+Freeze/freeze-mode, rotation lock, effective disabled participation and physical-bone activation now use the same complete retry boundary as direct server modes. Committed configuration survives partial selected errors; body views, queries, nonzero steps and repeated explicit role-property assignments prepare it before use. Numeric hook/owner/solver guards reject new authoring before mutation. [Registered adapter details](physics-registered-adapter.md#failed-scene-role-publication) distinguish this bounded failure/lifecycle contract from full numerical and hardware acceptance.
+
 [Motion publication recovery](physics-registered-adapter.md#failed-motion-publication) retains incomplete velocity/sleep/policy writes across selected errors, prepares numerical access and preserves requested plus untouched selected motion during retirement. This covers regular scene roles and direct server profiles; ordinary authored getters remain non-preparing.
 
 [Failed authored pose publication](physics-registered-adapter.md#failed-pose-publication) retains current input through partial selected errors, including authoring returned to the previous prepared pose. Numerical preparation retries before live queries/nonzero steps; body views also prepare incomplete body publication. Scene/Area transform presentation remains non-preparing, and retirement retains authoring without repairing the discarded attachment.

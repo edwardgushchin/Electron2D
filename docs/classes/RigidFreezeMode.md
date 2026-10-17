@@ -1,6 +1,10 @@
 # RigidFreezeMode
 
-Last updated: 2026-09-26
+Last updated: 2026-10-18
+
+## Role publication errors
+
+A partial selected error during a frozen role change retains the requested FreezeMode. Numerical preparation or repeated assignment retries that role before use; editing the mode on an unfrozen body without a direct server profile causes no unnecessary motion readback. See [scene role publication](../components/physics-registered-adapter.md#failed-scene-role-publication).
 
 - **Source:** [RigidBody.Freeze.cs](../../src/Scene/2D/RigidBody.Freeze.cs)
 - **Namespace:** `Electron2D`

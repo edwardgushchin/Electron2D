@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-18
 
+## Failed scene role publication
+
+Configured freeze, rotation lock, effective MakeStatic participation and physical-bone activation share complete recoverable role preparation with direct server modes. Numerical body/view/query access and nonzero steps repair incomplete selected publication without replaying Solve. Retirement retains committed configuration and invalidates old views. See [scene role publication](../components/physics-registered-adapter.md#failed-scene-role-publication) for the tested scope and limits.
+
 ## Failed motion publication
 
 Failed velocity/sleep/policy publication retains the complete requested write for retry before numerical access, body views, live queries or a nonzero step. Ordinary authored reads stay non-preparing. Linear/angular edits preserve the other selected motion channel, including impulse-derived values. Retirement overlays requested channels on retained selected motion without repairing the discarded attachment. See [motion publication](../components/physics-registered-adapter.md#failed-motion-publication) for executable scope and limits.

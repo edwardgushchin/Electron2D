@@ -444,7 +444,7 @@ def main():
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("body_get_collision_priority", "body_set_collision_priority"))
     freeze_rows = [row for row in pages[CLASS_PAGES / "RigidBody2D.md"].splitlines()
-                   if row.startswith("| [`") and ("FreezeMode" in row or "freeze_mode" in row)]
+                   if row.startswith("| [`") and ("FreezeMode" in row.split("|")[1] or "freeze_mode" in row.split("|")[1])]
     assert len(freeze_rows) == 4 and all(" | Implemented | " in row for row in freeze_rows)
     static_rows = pages[CLASS_PAGES / "StaticBody2D.md"].splitlines()
     assert all(" | Implemented | " in next(row for row in static_rows if f"property {typ} {name}" in row)

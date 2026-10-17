@@ -29,7 +29,7 @@ public static partial class BackendChecks
             if (DebugPointCount < DebugLimit) DebugPoints[DebugPointCount++] = point;
         }
         internal RID ContactFailure;
-        internal Action<RID>? IdentityHook, ColliderFactoryHook, ModeHook, RotationHook, SurfaceHook, PoseHook, AngularHook, AwakeHook, CanSleepHook;
+        internal Action<RID>? IdentityHook, ColliderFactoryHook, ModeHook, RotationHook, SurfaceHook, PoseHook, AngularHook, AwakeHook, CanSleepHook, MassHook;
         internal Action<RID>? ShapeHook, FilterHook;
         internal Action<RID>? BodyHook;
         internal Action<RID>? JointHook;
@@ -382,7 +382,7 @@ public static partial class BackendChecks
         protected override float InverseMass => Dynamic ? 1 / Mass : 0;
         protected override float InverseInertia => Dynamic && !Locked && Inertia > 0 ? 1 / Inertia : 0;
         protected override PhysicsMassProperties ApplyMassProfile(float mass, float inertia, Vector2? center)
-        => PartMass(mass, inertia, center);
+        { solver.MassHook?.Invoke(rid); return PartMass(mass, inertia, center); }
         protected override void WakeTouching() => solver.WakeConnected(this);
         protected override Vector2 GetPointVelocity(Vector2 offset)
         {

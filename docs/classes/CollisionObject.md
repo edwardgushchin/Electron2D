@@ -1,6 +1,10 @@
 # CollisionObject
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
+
+## Disabled body role recovery
+
+Effective disabled processing and DisableMode changes retain committed policy through selected MakeStatic role errors. Queries, body views and nonzero steps repair the complete role before numerical use. Repeating DisableMode prepares outstanding work; repeating Node.ProcessMode retains ordinary Node equality semantics and is not itself a preparation producer. Removal retires its attachment without repairing discarded work. See [scene role publication](../components/physics-registered-adapter.md#failed-scene-role-publication).
 
 [Retained slot history](../components/physics-snapshots.md#capture-after-topology-edits)
 keeps sampled public values while rejecting portable capture of retired/reindexed

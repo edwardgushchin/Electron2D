@@ -26,23 +26,39 @@ public abstract partial class PhysicsBody
         _serverLinear = mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic ? default : linear;
         _serverAngular = mode == PhysicsServer.BodyMode.Rigid ? angular : 0;
         Runtime.GPUParametersDirty = true;
+        PublishBodyMode();
+    }
+
+    internal void PublishBodyMode()
+    {
         if (!HasBackend) return;
         _serverModeDirty = true;
         PreparePendingServerMode();
     }
 
-    internal void PreparePendingServerMode()
+    internal void PreparePendingServerMode(bool writing = false)
     {
+        if (writing || _serverModeDirty)
+        {
+            Space?.EnsureImplementationWriteAccess();
+            Space?.BackendImplementation.EnsureAccess();
+        }
         Backend.PreparePendingMotion();
         if (!_serverModeDirty || Space is null) return;
         if (_preparingServerMode) throw new InvalidOperationException("Body mode preparation cannot reenter its own transition.");
         _preparingServerMode = true;
         try
         {
+            if (PhysicsMadeStatic) OnMadeStatic();
             Backend.SetMotionMode(EffectiveBodyMode);
-            Backend.SetRotationLocked(EffectiveBodyMode == PhysicsServer.BodyMode.RigidLinear);
-            if (EffectiveBodyMode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear) Backend.SetAwake(true);
-            ApplyServerMotion(); MarkShapesDirty(); PrepareBackend();
+            if (HasServerMode)
+            {
+                Backend.SetRotationLocked(EffectiveBodyMode == PhysicsServer.BodyMode.RigidLinear);
+                if (EffectiveBodyMode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear) Backend.SetAwake(true);
+                ApplyServerMotion();
+            }
+            else { OnBodyTypeChanged(); Runtime.RestoreSceneState(); }
+            MarkShapesDirty(); PrepareBackend();
             _serverModeDirty = false;
         }
         catch { Space.MarkColliderMetadataDirty(); throw; }
@@ -51,10 +67,10 @@ public abstract partial class PhysicsBody
 
     internal void RestoreSceneMode()
     {
-        Backend.PreparePendingMotion();
-        if (!HasServerMode) return;
         PreparePendingServerMode();
         PreparePendingPose();
+        if (this is RigidBody rigid) rigid.CaptureRoleMotion();
+        if (!HasServerMode) return;
         _serverMode = null; _serverModeDirty = false; _hasServerTarget = false; Runtime.GPUParametersDirty = true; MarkShapesDirty();
     }
 
@@ -70,7 +86,7 @@ public abstract partial class PhysicsBody
 
     internal void SetServerLinearVelocity(Vector2 value)
     {
-        PreparePendingServerMode();
+        PreparePendingServerMode(writing: true);
         _serverLinear = value;
         var dynamic = EffectiveBodyMode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear;
         if (dynamic) _serverSleeping = false;
@@ -79,7 +95,7 @@ public abstract partial class PhysicsBody
     }
     internal void SetServerAngularVelocity(float value)
     {
-        PreparePendingServerMode();
+        PreparePendingServerMode(writing: true);
         _serverAngular = value;
         var dynamic = EffectiveBodyMode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear;
         if (dynamic) _serverSleeping = false;
@@ -88,14 +104,14 @@ public abstract partial class PhysicsBody
     }
     internal void SetServerSleeping(bool value)
     {
-        PreparePendingServerMode();
+        PreparePendingServerMode(writing: true);
         _serverSleeping = value;
         if (value) { _serverLinear = default; _serverAngular = 0; }
         if (HasBackend) Backend.PublishMotion(awake: !value);
     }
     internal void SetServerCanSleep(bool value)
     {
-        PreparePendingServerMode();
+        PreparePendingServerMode(writing: true);
         var wake = !value && EffectiveBodyMode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear;
         if (wake) _serverSleeping = false;
         if (HasBackend) Backend.PublishMotion(canSleep: value, awake: wake ? true : null);

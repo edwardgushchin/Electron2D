@@ -4,7 +4,8 @@ namespace Electron2D;
 /// <remarks>Attach it to a SceneTree and add one or more direct CollisionShape children. The tree owns the physics
 /// step; caller code can change forces and velocity during a physics callback before that step.
 /// Failed selected velocity/sleep publication retains requested input for retry before numerical access, queries or a nonzero step.
-/// Retirement preserves requested channels and other selected motion without repairing the discarded attachment.</remarks>
+/// Retirement preserves requested channels and other selected motion without repairing the discarded attachment.
+/// Scene role changes retain committed configuration through selected publication errors and retry the complete role before numerical use.</remarks>
 public partial class RigidBody : PhysicsBody
 {
     /// <summary>Determines whether the body's damping adds to or replaces resolved world and area damping.</summary>
@@ -102,7 +103,7 @@ public partial class RigidBody : PhysicsBody
             EnsureMutable();
             if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value));
             Space?.EnsureImplementationWriteAccess();
-            PreparePendingServerMode();
+            PreparePendingServerMode(writing: true);
             _linearVelocity = value;
             if (HasServerMode) SetServerLinearVelocity(value);
             else if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.PublishMotion(linear: value, awake: true);
@@ -118,7 +119,7 @@ public partial class RigidBody : PhysicsBody
     public float AngularVelocity
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return HasServerMode ? ServerAngularVelocity : _angularVelocity; }
-        set { EnsureMutable(); Finite(value); Space?.EnsureImplementationWriteAccess(); PreparePendingServerMode(); _angularVelocity = value; if (HasServerMode) SetServerAngularVelocity(value); else if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.PublishMotion(angular: value, awake: true); }
+        set { EnsureMutable(); Finite(value); Space?.EnsureImplementationWriteAccess(); PreparePendingServerMode(writing: true); _angularVelocity = value; if (HasServerMode) SetServerAngularVelocity(value); else if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.PublishMotion(angular: value, awake: true); }
     }
 
     /// <summary>Gets or sets finite signed linear damping per second.</summary>
@@ -159,7 +160,8 @@ public partial class RigidBody : PhysicsBody
 
     /// <summary>Gets or sets whether gravity and forces are disabled under the selected freeze role.</summary>
     /// <remarks>The configured freeze flag is independent of the inherited disable policy.
-    /// Attached changes during solver ownership or a numerical implementation hook reject before changing this flag.</remarks>
+    /// Attached changes during solver ownership or a numerical implementation hook reject before changing this flag.
+    /// A selected publication error retains the new flag; numerical reads, queries, steps and repeated assignments repair its role.</remarks>
     /// <value>False by default.</value>
     public bool Freeze
     {
@@ -168,6 +170,7 @@ public partial class RigidBody : PhysicsBody
         {
             EnsureMutable();
             Space?.EnsureImplementationWriteAccess();
+            PreparePendingServerMode(writing: true);
             if (_freeze == value) return;
             EnsurePhysicsParticipationChange();
             if (HasBackend) PrepareBackend();
@@ -180,7 +183,9 @@ public partial class RigidBody : PhysicsBody
     /// <summary>Gets or sets whether the solver prevents rotation.</summary>
     /// <value>False by default.</value>
     /// <remarks>An unfrozen body selects RigidLinear when true and Rigid when false.
-    /// Freeze and the inherited disable policy temporarily override that motion role.</remarks>
+    /// Freeze and the inherited disable policy temporarily override that motion role.
+    /// Role changes preserve actual selected linear motion, including pending impulse effects; locked angular motion is zero.
+    /// Selected publication errors retain configuration for complete preparation retry.</remarks>
     /// <exception cref="InvalidOperationException">Attached mutation is off-owner, during solver ownership or a numerical implementation hook.</exception>
     public bool LockRotation
     {
@@ -189,12 +194,12 @@ public partial class RigidBody : PhysicsBody
         {
             EnsureMutable(); EnsurePhysicsParticipationChange();
             Space?.EnsureImplementationWriteAccess();
+            PreparePendingServerMode(writing: true);
             if (_lockRotation == value) return;
+            var serverMode = HasServerMode;
             RestoreSceneMode();
             _lockRotation = value; GPUParametersDirty = true;
-            if (!HasBackend) return;
-            if (!_freeze && !PhysicsMadeStatic) Backend.SetMotionMode(RequestedBodyMode);
-            Backend.SetRotationLocked(!_freeze && value);
+            if (serverMode || !_freeze && !PhysicsMadeStatic) PublishBodyMode();
         }
     }
 
@@ -209,7 +214,7 @@ public partial class RigidBody : PhysicsBody
         set
         {
             EnsureMutable(); Space?.EnsureImplementationWriteAccess();
-            PreparePendingServerMode();
+            PreparePendingServerMode(writing: true);
             _canSleep = value;
             if (!value && !_freeze) _sleeping = false;
             if (HasServerMode) SetServerCanSleep(value);
@@ -227,7 +232,7 @@ public partial class RigidBody : PhysicsBody
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); PreparePendingServerMode(); return HasServerMode ? ServerSleeping : HasBackend ? !Backend.IsAwake : _sleeping; }
         set
         {
-            EnsureMutable(); Space?.EnsureImplementationWriteAccess(); PreparePendingServerMode(); _sleeping = value; _sleepChangePending = false;
+            EnsureMutable(); Space?.EnsureImplementationWriteAccess(); PreparePendingServerMode(writing: true); _sleeping = value; _sleepChangePending = false;
             if (value && !_freeze && !PhysicsMadeStatic) { _linearVelocity = Vector2.Zero; _angularVelocity = 0; }
             if (HasServerMode) SetServerSleeping(value);
             else if (HasBackend) Backend.PublishMotion(awake: !value);
@@ -265,6 +270,13 @@ public partial class RigidBody : PhysicsBody
         _angularVelocity = 0;
     }
 
+    internal void CaptureRoleMotion()
+    {
+        if (!HasBackend || !Backend.IsDynamic) return;
+        var motion = Backend.GetRetainedSolverMotion();
+        _linearVelocity = motion.LinearVelocity; _angularVelocity = motion.AngularVelocity;
+    }
+
     internal override void OnBodyTypeChanged()
     {
         Backend.SetRotationLocked(!_freeze && _lockRotation);
@@ -272,7 +284,7 @@ public partial class RigidBody : PhysicsBody
         ResetFrozenSolverPose();
         if (_freeze || PhysicsMadeStatic) return;
         Backend.SetLinearVelocity(_linearVelocity);
-        Backend.SetAngularVelocity(_angularVelocity);
+        Backend.SetAngularVelocity(_lockRotation ? 0 : _angularVelocity);
     }
 
     internal override bool MovesWithSimulation => !_freeze || FrozenKinematic;
@@ -288,7 +300,7 @@ public partial class RigidBody : PhysicsBody
         _frozenSolverPose = GlobalTransform;
         _frozenQueryPoseApplied = false;
         return new(RequestedBodyMode, FrozenKinematic ? default : _linearVelocity,
-            FrozenKinematic ? 0 : _angularVelocity, _customIntegrator ? 0 : _gravityScale,
+            FrozenKinematic || !_freeze && _lockRotation ? 0 : _angularVelocity, _customIntegrator ? 0 : _gravityScale,
             _canSleep, _sleeping, !_freeze && _lockRotation);
     }
 

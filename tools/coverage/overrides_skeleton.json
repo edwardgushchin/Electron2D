@@ -1316,7 +1316,6 @@
         "PhysicalBone2D::property:bone2d_index",
         "PhysicalBone2D::property:bone2d_nodepath",
         "PhysicalBone2D::property:follow_bone_when_simulating",
-        "PhysicalBone2D::property:simulate_physics",
         "class:SkeletonModification2DPhysicalBones",
         "SkeletonModification2DPhysicalBones::method:fetch_physical_bones()",
         "SkeletonModification2DPhysicalBones::method:get_physical_bone_node(int:)",
@@ -1327,6 +1326,13 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0004/0008/0014/0063/0084/0092: actual RigidBody-backed PhysicalBone ownership, authored joint configuration, request/active/follower state, retained configured versus effective collision filters and solved body-to-bone transient pose transfer. Typed copied paths/names, BFS fetch, independent fresh scenes and weighted Polygon consumers execute. Unit-scale/skew physics restrictions, cold transitions and native/platform acceptance limits remain explicit. The complete common PhysicalBoneTests now executes on explicitly selected public CPU/GPU worlds, including separate-process restored scenes, unchanged bounds and 128 warmup/128 complete physics/pose/weighted Polygon cycles at 0/0 owner/all-thread bytes. Four CPU/GPU-physics by hardware GPU/compatibility-renderer native hosts assert actual selections and changed skin pixels; their 64 zero-owner-byte draw/update intervals remain distinct from full physical measurement. Larger rigs, native allocation, foreign platforms, inherited/extension and final network/performance acceptance remain open."
+    },
+    {
+      "godot": [
+        "PhysicalBone2D::property:simulate_physics"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0004/0008/0014/0063/0084/0092: actual RigidBody-backed PhysicalBone ownership, authored joint configuration, request/active/follower state, retained configured versus effective collision filters and solved body-to-bone transient pose transfer. Typed copied paths/names, BFS fetch, independent fresh scenes and weighted Polygon consumers execute. Unit-scale/skew physics restrictions, cold transitions and native/platform acceptance limits remain explicit. The complete common PhysicalBoneTests now executes on explicitly selected public CPU/GPU worlds, including separate-process restored scenes, unchanged bounds and 128 warmup/128 complete physics/pose/weighted Polygon cycles at 0/0 owner/all-thread bytes. Four CPU/GPU-physics by hardware GPU/compatibility-renderer native hosts assert actual selections and changed skin pixels; their 64 zero-owner-byte draw/update intervals remain distinct from full physical measurement. Larger rigs, native allocation, foreign platforms, inherited/extension and final network/performance acceptance remain open. Scene role publication retains authored Freeze/FreezeMode/LockRotation, effective disable participation and bone activation after partial selected errors. The common pending-mode path retries mode/rotation/motion/surface/mass/shape preparation before numerical access, queries or nonzero steps; equal explicit role-property assignments prepare prior debt. Retirement preserves authoring and invalidates old views without repairing retired state. Owner/solver/failed-world/numerical-borrow preconditions reject before authoring. Public-only --scene-mode-transactions exercises native scene roles, one/two failures, five recovery routes, disabled logical gaps and reentry, plus 128 warm full frames at strict zero owner/all-thread bytes. Actual selected motion is sampled only for role takeover, preserving impulse-derived translation; locked angular motion is zero. Full numerical/native/network/hardware acceptance stays open."
     }
   ]
 }

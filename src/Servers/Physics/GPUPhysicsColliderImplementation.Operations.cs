@@ -13,7 +13,10 @@ internal sealed partial class GPUPhysicsColliderImplementation
     internal override bool HasMotionMode(PhysicsServer.BodyMode mode) => MotionMode(GPU.GetMode(GPUHandle)) == MotionMode(mode);
     internal override void SetMotionMode(PhysicsServer.BodyMode mode)
     {
-        GPU.SetMode(GPUHandle, mode); _gpuSurfaceLinear = default; _gpuSurfaceAngular = 0; _gpuParametersPrepared = false; Space.InvalidateGPUStates();
+        var enteringDynamic = mode >= PhysicsServer.BodyMode.Rigid && GPU.GetMode(GPUHandle) < PhysicsServer.BodyMode.Rigid;
+        GPU.SetMode(GPUHandle, mode);
+        if (enteringDynamic) { _gpuSurfaceLinear = default; _gpuSurfaceAngular = 0; }
+        _gpuParametersPrepared = false; Space.InvalidateGPUStates();
     }
     internal override void Detach()
     {

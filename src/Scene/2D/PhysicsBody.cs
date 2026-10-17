@@ -101,7 +101,7 @@ public abstract partial class PhysicsBody : CollisionObject
     internal void PrepareBackend()
     {
         if (Space is null) return;
-        Backend.PreparePendingMotion();
+        if (!_preparingServerMode) PreparePendingServerMode();
         Backend.PrepareContactPolicy();
         var transform = GlobalTransform;
         var geometryEpoch = Shape.GeometryEpoch;
@@ -197,17 +197,8 @@ public abstract partial class PhysicsBody : CollisionObject
         }
         if (!HasBackend) { Tree?.RegisterPhysicsBody(this); return; }
         var mode = EffectiveBodyMode;
-        if (Backend.HasMotionMode(mode)) return;
-        if (PhysicsMadeStatic) OnMadeStatic();
-        Backend.SetMotionMode(mode);
-        if (HasServerMode)
-        {
-            Backend.SetRotationLocked(mode == PhysicsServer.BodyMode.RigidLinear);
-            ApplyServerMotion();
-        }
-        else OnBodyTypeChanged();
-        Runtime.RestoreSceneState();
-        MarkShapesDirty();
+        if (!_serverModeDirty && Backend.HasMotionMode(mode)) return;
+        PublishBodyMode();
     }
 
     internal virtual PhysicsBodyConfiguration CreateBodyConfiguration() => new(RequestedBodyMode);

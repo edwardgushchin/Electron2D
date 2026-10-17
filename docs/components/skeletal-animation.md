@@ -1,6 +1,10 @@
 # Skeletal animation
 
-Last updated: 2026-10-13
+Last updated: 2026-10-18
+
+## Physical activation publication
+
+SimulatePhysics and inherited freeze/lock/disabled participation retain committed role requests through partial selected publication errors. [Complete role preparation](physics-registered-adapter.md#failed-scene-role-publication) repairs numerical access before use; retiring an attachment preserves authored configuration without repairing discarded work. The tree-reentry fixture explicitly requests Ready to execute the binding producer and does not change Node Ready semantics.
 
 ## Scope and types
 

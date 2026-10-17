@@ -26,8 +26,9 @@ public class PhysicalBone : RigidBody
     public string BoneNodePath
     { get { ReadPhysical(); return _bonePath; } set { EnsureMutable(); EnsurePhysicsParticipationChange(); Space?.EnsureImplementationWriteAccess(); SkeletonIKBinding.Path(value); _bonePath = value; InvalidateBinding(); Reconcile(); NotifyPropertyListChanged(); } }
     /// <summary>Gets or requests rigid simulation; disabled bodies follow their bone without collision response.</summary><value>False initially. Detached or missing bindings retain the request but cannot simulate.</value>
+    /// <remarks>A selected role-publication error retains the committed request. Complete role preparation retries before numerical use or a repeated assignment.</remarks>
     public bool SimulatePhysics
-    { get { ReadPhysical(); return _simulate; } set { EnsureMutable(); EnsurePhysicsParticipationChange(); Space?.EnsureImplementationWriteAccess(); if (_simulate == value) return; _simulate = value; Reconcile(); } }
+    { get { ReadPhysical(); return _simulate; } set { EnsureMutable(); EnsurePhysicsParticipationChange(); Space?.EnsureImplementationWriteAccess(); PreparePendingServerMode(writing: true); if (_simulate == value) return; _simulate = value; Reconcile(); } }
     /// <summary>Gets or sets whether each physics callback aligns even an active simulator to its bone.</summary><value>False initially; switching this reseeds the active body from the current bone.</value>
     /// <remarks>Inherited forces/contacts may move it during the solver interval. Physical pose transfer skips this follower.</remarks>
     public bool FollowBoneWhenSimulating

@@ -6468,13 +6468,19 @@
       "godot": [
         "RigidBody2D::method:apply_central_force(Vector2:)",
         "RigidBody2D::method:apply_central_impulse(Vector2:)",
-        "RigidBody2D::property:freeze",
         "RigidBody2D::property:gravity_scale",
-        "RigidBody2D::property:lock_rotation",
         "RigidBody2D::property:mass"
       ],
       "state": "Implemented",
       "reason": "Pinned defaults and typed behavior execute on explicitly selected public CPU/GPU scene worlds; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal. The complete common suite now runs both variants in the ordinary full entry, retaining numerical bounds and 64-frame warm resting/active/moving gates at 0/0 owner/all-thread bytes. SIMD/worker internals remain CPU diagnostics; wider inherited/extension/platform/performance acceptance stays open."
+    },
+    {
+      "godot": [
+        "RigidBody2D::property:freeze",
+        "RigidBody2D::property:lock_rotation"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned defaults and typed behavior execute on explicitly selected public CPU/GPU scene worlds; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal. The complete common suite now runs both variants in the ordinary full entry, retaining numerical bounds and 64-frame warm resting/active/moving gates at 0/0 owner/all-thread bytes. SIMD/worker internals remain CPU diagnostics; wider inherited/extension/platform/performance acceptance stays open. Scene role publication retains authored Freeze/FreezeMode/LockRotation, effective disable participation and bone activation after partial selected errors. The common pending-mode path retries mode/rotation/motion/surface/mass/shape preparation before numerical access, queries or nonzero steps; equal explicit role-property assignments prepare prior debt. Retirement preserves authoring and invalidates old views without repairing retired state. Owner/solver/failed-world/numerical-borrow preconditions reject before authoring. Public-only --scene-mode-transactions exercises native scene roles, one/two failures, five recovery routes, disabled logical gaps and reentry, plus 128 warm full frames at strict zero owner/all-thread bytes. Actual selected motion is sampled only for role takeover, preserving impulse-derived translation; locked angular motion is zero. Full numerical/native/network/hardware acceptance stays open."
     },
     {
       "godot": [
@@ -6697,11 +6703,17 @@
         "CollisionObject2D::enum:DisableMode",
         "CollisionObject2D::enum_value:DisableMode.DISABLE_MODE_REMOVE",
         "CollisionObject2D::enum_value:DisableMode.DISABLE_MODE_MAKE_STATIC",
-        "CollisionObject2D::enum_value:DisableMode.DISABLE_MODE_KEEP_ACTIVE",
-        "CollisionObject2D::property:disable_mode"
+        "CollisionObject2D::enum_value:DisableMode.DISABLE_MODE_KEEP_ACTIVE"
       ],
       "state": "Implemented",
       "reason": "ADR 0072: Remove/MakeStatic/KeepActive integrate inherited ProcessMode.Disabled with selected-world membership and retained body roles. Shared CollisionDisableModeTests runs explicit CPU/GPU worlds through entry/reparent/reentry, RID/owner/view lifetime, real queries/contacts/sensors, scaled temporary-static/frozen scene/direct fields, Area removal/world fallback, freeze/mass/locks/velocity restoration, callback failures, phase/thread guards, packing and 64 warmed full frames with zero owner/all-thread managed bytes. Pause alone does not disable physics."
+    },
+    {
+      "godot": [
+        "CollisionObject2D::property:disable_mode"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0072: Remove/MakeStatic/KeepActive integrate inherited ProcessMode.Disabled with selected-world membership and retained body roles. Shared CollisionDisableModeTests runs explicit CPU/GPU worlds through entry/reparent/reentry, RID/owner/view lifetime, real queries/contacts/sensors, scaled temporary-static/frozen scene/direct fields, Area removal/world fallback, freeze/mass/locks/velocity restoration, callback failures, phase/thread guards, packing and 64 warmed full frames with zero owner/all-thread managed bytes. Pause alone does not disable physics. Scene role publication retains authored Freeze/FreezeMode/LockRotation, effective disable participation and bone activation after partial selected errors. The common pending-mode path retries mode/rotation/motion/surface/mass/shape preparation before numerical access, queries or nonzero steps; equal explicit role-property assignments prepare prior debt. Retirement preserves authoring and invalidates old views without repairing retired state. Owner/solver/failed-world/numerical-borrow preconditions reject before authoring. Public-only --scene-mode-transactions exercises native scene roles, one/two failures, five recovery routes, disabled logical gaps and reentry, plus 128 warm full frames at strict zero owner/all-thread bytes. Actual selected motion is sampled only for role takeover, preserving impulse-derived translation; locked angular motion is zero. Full numerical/native/network/hardware acceptance stays open."
     },
     {
       "godot": [
@@ -6747,11 +6759,17 @@
       "godot": [
         "RigidBody2D::enum:FreezeMode",
         "RigidBody2D::enum_value:FreezeMode.FREEZE_MODE_STATIC",
-        "RigidBody2D::enum_value:FreezeMode.FREEZE_MODE_KINEMATIC",
-        "RigidBody2D::property:freeze_mode"
+        "RigidBody2D::enum_value:FreezeMode.FREEZE_MODE_KINEMATIC"
       ],
       "state": "Implemented",
       "reason": "ADR 0075: typed Static=0/default and Kinematic=1 choose the frozen physical role. RigidFreezeModeTests runs on public CPU and independent GPU worlds and verifies unaffected unfrozen dynamics, current mass/locks restoration, manual query/zero-step targets, angular velocity tolerance and idle stability, ordinary/fast dynamic path contacts, full outer-step force and single callback duration, disable override/reentry, packed state, input/thread/phase rejection and zero warmed managed allocation. PackedScene explicitly receives the selected World, and public BodyGetMode assertions plus 64 warmed moving full frames at 0/0 owner/all-thread bytes close the formerly implicit CPU storage check."
+    },
+    {
+      "godot": [
+        "RigidBody2D::property:freeze_mode"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0075: typed Static=0/default and Kinematic=1 choose the frozen physical role. RigidFreezeModeTests runs on public CPU and independent GPU worlds and verifies unaffected unfrozen dynamics, current mass/locks restoration, manual query/zero-step targets, angular velocity tolerance and idle stability, ordinary/fast dynamic path contacts, full outer-step force and single callback duration, disable override/reentry, packed state, input/thread/phase rejection and zero warmed managed allocation. PackedScene explicitly receives the selected World, and public BodyGetMode assertions plus 64 warmed moving full frames at 0/0 owner/all-thread bytes close the formerly implicit CPU storage check. Scene role publication retains authored Freeze/FreezeMode/LockRotation, effective disable participation and bone activation after partial selected errors. The common pending-mode path retries mode/rotation/motion/surface/mass/shape preparation before numerical access, queries or nonzero steps; equal explicit role-property assignments prepare prior debt. Retirement preserves authoring and invalidates old views without repairing retired state. Owner/solver/failed-world/numerical-borrow preconditions reject before authoring. Public-only --scene-mode-transactions exercises native scene roles, one/two failures, five recovery routes, disabled logical gaps and reentry, plus 128 warm full frames at strict zero owner/all-thread bytes. Actual selected motion is sampled only for role takeover, preserving impulse-derived translation; locked angular motion is zero. Full numerical/native/network/hardware acceptance stays open."
     },
     {
       "godot": [
@@ -6759,7 +6777,7 @@
         "StaticBody2D::property:constant_angular_velocity"
       ],
       "state": "Implemented",
-      "reason": "Finite stored surface velocity drives CPU scalar/SIMD and GPU contacts without pose integration; inherited kinematic target motion is additive. Point/contact queries, character carry, wakeup, packing, reentry and zero all-thread warmed allocation are covered on public CPU/GPU worlds and the historical stage host by PhysicsSurfaceVelocityTests (ADR 0075). The full CPU/GPU suite and independent GPU-kinematic profile now run the complete shared surface suite with backend assertions and 64 warm active contact frames at 0/0 owner/all-thread bytes. Historical staged controls remain diagnostics; final acceptance stays open. Authored velocity/sleep/policy writes now retain a failure-only complete requested publication for numerical/view/query/checkpoint/nonzero-step retry. Writes preserve untouched selected motion, including impulses, without host readback for ordinary edits. Retirement overlays requested channels on selected motion, discards the request without repair and invalidates views; authored CanSleep/scene/surface getters remain non-preparing. Public-only --motion-transactions covers scene/raw modes, ordinary scene roles, six preparation routes, partial errors, retirement/transfer and strict 0/0 warmed full changed-motion frames. See docs/components/physics-registered-adapter.md#failed-motion-publication and bin/physics-motion-transactions/2026-10-17/validation.json. Complete numerical/custom/network/native/foreign/hardware acceptance remains open."
+      "reason": "Finite stored surface velocity drives CPU scalar/SIMD and GPU contacts without pose integration; inherited kinematic target motion is additive. Point/contact queries, character carry, wakeup, packing, reentry and zero all-thread warmed allocation are covered on public CPU/GPU worlds and the historical stage host by PhysicsSurfaceVelocityTests (ADR 0075). The full CPU/GPU suite and independent GPU-kinematic profile now run the complete shared surface suite with backend assertions and 64 warm active contact frames at 0/0 owner/all-thread bytes. Historical staged controls remain diagnostics; final acceptance stays open. Authored velocity/sleep/policy writes now retain a failure-only complete requested publication for numerical/view/query/checkpoint/nonzero-step retry. Writes preserve untouched selected motion, including impulses, without host readback for ordinary edits. Retirement overlays requested channels on selected motion, discards the request without repair and invalidates views; authored CanSleep/scene/surface getters remain non-preparing. Public-only --motion-transactions covers scene/raw modes, ordinary scene roles, six preparation routes, partial errors, retirement/transfer and strict 0/0 warmed full changed-motion frames. See docs/components/physics-registered-adapter.md#failed-motion-publication and bin/physics-motion-transactions/2026-10-17/validation.json. Complete numerical/custom/network/native/foreign/hardware acceptance remains open. Owner/numerical-borrow/native solver/failure preconditions reject changed and equal writes before authoring. Partial accepted publication remains recoverable; static/animatable shape rebuilds preserve active direct server surface motion instead of restoring native descriptors. Explicit CPU/GPU surface tests and public-only scene-mode transactions cover these boundaries; full numerical/native/hardware acceptance remains open."
     },
     {
       "godot": [

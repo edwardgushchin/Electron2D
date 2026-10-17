@@ -1,11 +1,15 @@
 # CollisionDisableMode
 
-Last updated: 2026-09-26
+Last updated: 2026-10-18
 
 - **Source:** [CollisionDisableMode.cs](../../src/Scene/2D/CollisionDisableMode.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public enum CollisionDisableMode`
 - **Used by:** [CollisionObject.DisableMode](CollisionObject.md#disablemode)
+
+## Role publication errors
+
+Body MakeStatic transitions retain committed disabled policy through selected publication errors. Numerical preparation retries complete role state before use; Remove discards attachment debt. See [scene role recovery](../components/physics-registered-adapter.md#failed-scene-role-publication).
 
 ## Description
 

@@ -18,7 +18,8 @@ public partial class RigidBody
     /// <summary>Gets or sets how a frozen body participates in physics.</summary>
     /// <value><see cref="RigidFreezeMode.Static"/> by default. The value has no effect while Freeze is false.</value>
     /// <remarks>Kinematic derives velocity from manual global pose changes over the next nonzero fixed step.
-    /// Gravity and force response remain disabled; inherited MakeStatic can temporarily override this role.</remarks>
+    /// Gravity and force response remain disabled; inherited MakeStatic can temporarily override this role.
+    /// A partial selected role-publication error retains the requested mode and retries before numerical use or repeated assignment.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The assigned enum value is undefined.</exception>
     /// <exception cref="InvalidOperationException">Attached mutation is off-owner, during solver ownership or a numerical implementation hook.</exception>
     /// <exception cref="ObjectDisposedException">The body is disposed.</exception>
@@ -29,11 +30,12 @@ public partial class RigidBody
         {
             EnsureMutable();
             Space?.EnsureImplementationWriteAccess();
-            if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value));
+            if (value is not RigidFreezeMode.Static and not RigidFreezeMode.Kinematic) throw new ArgumentOutOfRangeException(nameof(value));
+            PreparePendingServerMode(writing: true);
             if (_freezeMode == value) return;
             EnsurePhysicsParticipationChange();
             if (HasBackend) PrepareBackend();
-            RestoreSceneMode();
+            if (_freeze || HasServerMode) RestoreSceneMode();
             _freezeMode = value;
             UpdatePhysicsParticipation();
         }

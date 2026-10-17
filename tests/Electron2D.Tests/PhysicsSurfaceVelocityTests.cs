@@ -35,7 +35,15 @@ internal sealed class PhysicsSurfaceVelocityTests(bool gpu, PhysicsServer.Backen
         if (backend == PhysicsServer.Backend.CPU)
         {
             var world = B2Worlds.b2GetWorldFromId(floor.Space!.WorldID); world.locked = true;
-            try { Reject<InvalidOperationException>(() => floor.ConstantLinearVelocity = Vector2.One); }
+            try
+            {
+                Reject<InvalidOperationException>(() => floor.ConstantLinearVelocity = Vector2.One);
+                Reject<InvalidOperationException>(() => floor.ConstantAngularVelocity = 2);
+                Reject<InvalidOperationException>(() => floor.ConstantLinearVelocity = new(30, -4));
+                Reject<InvalidOperationException>(() => floor.ConstantAngularVelocity = .5f);
+                Check(floor.ConstantLinearVelocity == new Vector2(30, -4) && floor.ConstantAngularVelocity == .5f,
+                    "Rejected solver-owned writes preserve both authored surface channels, including equal assignments.");
+            }
             finally { world.locked = false; }
         }
         root.RemoveChild(floor); Reject<ObjectDisposedException>(() => _ = view.LinearVelocity);

@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-18
 
+## Surface mutation preconditions
+
+Owner, numerical-borrow and native solver/failure guards reject constant-surface edits before changing authored values, including unchanged assignments. After these preconditions succeed, a partial selected publication error retains accepted authoring for retry. Authored getters remain non-preparing; retirement does not repair discarded work. Shape rebuilds preserve the active direct PhysicsServer surface profile instead of restoring native constant-surface descriptors over it. See [motion and role publication](../components/physics-registered-adapter.md#failed-scene-role-publication).
+
 ## Failed motion publication
 
 Failed velocity/sleep/policy publication retains the complete requested write for retry before numerical access, body views, live queries or a nonzero step. Ordinary authored reads stay non-preparing. Linear/angular edits preserve the other selected motion channel, including impulse-derived values. Retirement overlays requested channels on retained selected motion without repairing the discarded attachment. See [motion publication](../components/physics-registered-adapter.md#failed-motion-publication) for executable scope and limits.

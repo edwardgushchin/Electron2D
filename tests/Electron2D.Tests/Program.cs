@@ -681,6 +681,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_STATE_CONTRACT") is { } 
     PhysicsServerStateTests.Run(backend); PhysicsSurfaceVelocityTests.Run(backend); return;
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BODY_SERVER_STATE") == "1") { PhysicsServerStateTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SURFACE_CONTRACT") is { } surfaceContract) { PhysicsSurfaceVelocityTests.Run(surfaceContract == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SURFACE_VELOCITY") == "1") { PhysicsSurfaceVelocityTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_JOINT_CONTRACT") == "1")
 {

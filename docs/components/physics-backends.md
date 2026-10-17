@@ -1,8 +1,11 @@
 # Physics backend selection and shared worlds
 
+[Scene role recovery](physics-registered-adapter.md#failed-scene-role-publication) shares complete mode preparation across configured scene and direct server roles. The GPU collider's retained surface cache follows the resident store's actual fixed-to-dynamic consumption; unchanged and fixed-to-fixed mode calls keep the cache until explicit surface publication, with no device readback. Static/animatable geometry rebuilds preserve the active direct surface profile.
+
+
 [Polygon point containment](physics-point-containment.md) corrects CPU GJK false-inside observations across points, ray origins, Area audio and directed proxy regions. CPU/GPU tests use equal authored poses and independent geometric controls.
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 [Same-revision mass measurements](physics-current-performance.md) record complete
 CPU/GPU headless steps and real-window frames at 65,536 awake bodies on

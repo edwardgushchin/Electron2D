@@ -1,6 +1,10 @@
 # PhysicalBone
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
+
+## Activation role recovery
+
+SimulatePhysics retains the committed request after a selected role-publication error and retries before numerical use or repeated assignment. Freeze/lock/disabled participation use the inherited recovery boundary. A tree-reentry test explicitly calls RequestReady before AddChild to run the binding producer; this does not change Node Ready timing or promise immediate rebinding without it. See [scene role publication](../components/physics-registered-adapter.md#failed-scene-role-publication).
 
 - Declaration: `public class PhysicalBone : RigidBody`
 - Source: [PhysicalBone.cs](../../src/Scene/2D/PhysicalBone.cs)

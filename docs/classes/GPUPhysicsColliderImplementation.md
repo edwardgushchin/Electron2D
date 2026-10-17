@@ -1,6 +1,9 @@
 # GPUPhysicsColliderImplementation
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
+
+Mode publication keeps its retained surface cache aligned with the resident store: only entry from a fixed role into a dynamic role consumes and clears virtual surface motion. Fixed-to-fixed and unchanged-mode requests retain it until explicit surface publication. This uses retained role metadata and adds no device readback; the common scene-role fixture checks direct surface clearing, shape rebuilds and fixed/dynamic transitions.
+
 
 **Declaration:** `internal sealed partial class GPUPhysicsColliderImplementation : PhysicsColliderImplementation` · **Source:** [GPUPhysicsColliderImplementation.cs](../../src/Servers/Physics/GPUPhysicsColliderImplementation.cs) · **Component:** [Physics backends](../components/physics-backends.md#runtime-flow-and-ownership)
 
