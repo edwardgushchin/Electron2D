@@ -79,7 +79,10 @@ public static partial class BackendChecks
             base.Dispose(disposing);
             if (disposing && FailDisposal) throw new InvalidOperationException("Disposal failure");
         }
-        protected override void SetActive(bool active) { LifecycleHook?.Invoke(LifecyclePhase.Active); WorldPolicy(); }
+        internal bool SelectedActive;
+        internal Action? ActivePublishedHook;
+        protected override void SetActive(bool active)
+        { LifecycleHook?.Invoke(LifecyclePhase.Active); WorldPolicy(); SelectedActive = active; ActivePublishedHook?.Invoke(); }
         private PhysicsSleepSettings _sleepSettings;
         protected override void SetSleepSettings(in PhysicsSleepSettings settings)
         {
@@ -162,6 +165,7 @@ public static partial class BackendChecks
         internal long SolveAllocatedBytes;
         protected override void Solve(double delta)
         {
+            if (!SelectedActive) return;
             var allocated = CountSolveAllocations ? GC.GetAllocatedBytesForCurrentThread() : 0;
             try
             {

@@ -165,10 +165,12 @@ external operation dispatch and custom algorithm geometry remain open.
 
 ## Selected lifecycle and activity
 
+[Local activation recovery](physics-registered-adapter.md#failed-local-activation) preserves the committed public flag after a partial selected hook error. Explicit writes retry their supplied value; space queries, history and active positive intervals restore pending committed policy before numerical work. Metadata and skipped intervals do not prepare; cleanup retires without retry.
+
 The retained owner now receives Initialize after its immutable space RID and
 selected implementation are published internally, before activation/attachment.
-Local active state belongs to that owner. ApplyActive runs before commit; unchanged
-writes skip implementation work and a throwing hook preserves the previous policy.
+Local active state belongs to that owner. ApplyActive runs before commit; completed
+unchanged writes skip implementation work and a throwing hook preserves the previous public policy while retaining its preparation.
 Initialization, activation, selected query flush and end-sync borrow the world
 context, rejecting recursive steps, own release and scene hierarchy changes.
 Cleanup borrowing uses lifetime/thread guards even for a failed world.
@@ -194,8 +196,8 @@ observer/end-sync errors, solved-tick retention, failed initialization cleanup a
 empty-world dispatch. CPU/GPU/no-device lifecycle fixtures retain 0/0 owner/all-thread
 managed bytes over 64 warmed complete intervals after blocking GC fixture
 preparation; this setup is confined to tests. Activity and public GPU checkpoint
-profiles also pass. Named public registration and the complete external server
-family remain open under ADR 0103.
+profiles also pass. Named public registration and typed operation dispatch now execute;
+complete numerical/extension acceptance remains open under ADR 0103.
 
 ## Public selection
 

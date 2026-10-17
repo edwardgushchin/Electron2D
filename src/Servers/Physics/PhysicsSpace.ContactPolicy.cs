@@ -40,6 +40,7 @@ internal sealed partial class PhysicsSpace
     }
     private void PrepareWorldPolicies()
     {
+        _backend.PrepareActive();
         PrepareSleepSettings();
         PrepareContactSettings();
         PrepareSolverIterations();

@@ -13,7 +13,9 @@ public sealed partial class PhysicsServer
     /// <param name="space">A live physics space RID.</param>
     /// <param name="active">Whether subsequent nonzero steps may advance this space.</param>
     /// <remarks>SpaceCreate starts inactive; the SceneTree activates its own world. Local policy survives global
-    /// suspension. Queries and configuration work while inactive; reactivation consumes no skipped time.</remarks>
+    /// suspension. Queries and configuration work while inactive; reactivation consumes no skipped time. A failed selected publication preserves the last committed flag.
+    /// An equal assignment retries incomplete publication; space queries, history and active positive steps restore
+    /// that committed policy before numerical use. Skipped intervals and cleanup do not retry.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or not a physics space.</exception>
     /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules, or a numerical implementation hook is borrowed. Borrowed writes reject before mutation, including equal values.</exception>
     public static void SpaceSetActive(RID space, bool active) => Service.SpaceSetActiveCore(space, active);
@@ -22,6 +24,7 @@ public sealed partial class PhysicsServer
     /// <param name="space">A live scene or caller-owned space RID.</param>
     /// <returns>The local flag, independent of the process-wide suspension policy.</returns>
     /// <exception cref="ArgumentException">The RID is stale or not a physics space.</exception>
+    /// <remarks>Observes the committed local policy without retrying an incomplete selected activation.</remarks>
     /// <exception cref="InvalidOperationException">The space is off-owner or currently solving.</exception>
     public static bool SpaceIsActive(RID space) => Service.SpaceIsActiveCore(space);
 

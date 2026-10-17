@@ -1,6 +1,6 @@
 # Physics world activity decisions
 
-Last updated: 2026-10-09
+Last updated: 2026-10-18
 
 <a id="adr-0089"></a>
 ## ADR 0089: Global and local simulation activation
@@ -15,6 +15,7 @@ Last updated: 2026-10-09
 - SpaceStep remains the explicit host operation for caller-owned worlds; SceneTree advances only its own world. Both enter the same PhysicsSpace.Step gate. Simulation requires local active=true, global active=true and a nonzero delta. Inactive intervals do not prepare/apply forces, run native solver/body callbacks, update contact/sensor snapshots or consume queued one-step force. They preserve native handles, body state, joints, cached direct views and previous interval data. Skipped time is not accumulated; reactivation integrates only the supplied current delta.
 - Queries, configuration and resource cleanup remain available while inactive. Query preparation applies pending geometry/poses independently of simulation. Scene physics callbacks, timers/tweens, frame counters and input/render lanes continue according to existing SceneTree policy. SceneTree.Paused/process modes remain distinct: world suspension changes the solver lane, not scene scheduling.
 - The global policy is an atomic process-wide value and can change on any thread, without touching native state. Each world samples it at its own interval boundary. A running interval completes, including its queued deliveries; a callback toggle affects later intervals/worlds. Local world reads/writes require that world's owner and reject while its solver is running. A post-solver body callback may change local policy for later intervals. Global suspension does not overwrite local flags.
+- Selected local activation commits only after its hook succeeds. Failure retains the previous public flag and marks that committed policy for complete preparation, because a hook may already have changed its private activity. An explicit retry applies its supplied choice; an equal completed write is silent. Live space queries, checkpoint/portable preparation and active positive intervals restore incomplete committed activation before numerical use. Repeated errors preserve their identity before Solve/tick advancement. Metadata reads, zero/inactive/globally suspended intervals and retirement do not repair. A post-solver activation error preserves the completed interval and never replays its callbacks.
 - No public global activity getter or inactive compatibility state is added. No additional simulation loop or backlog timer is introduced. Completed-step statistics follow the publication contract below.
 
 ### Verification and limits
@@ -26,8 +27,8 @@ PhysicsActivityTests checks default inactive/scene active, real motion and retai
 - Expose the three SpaceGet/SetBodyLinearVelocitySleepThreshold,
   SpaceGet/SetBodyAngularVelocitySleepThreshold and SpaceGet/SetBodyTimeToSleep
   operation pairs beside SpaceGet/SetConstraintDefaultBias. These are concrete typed
-  branches of the pinned SpaceParameter dispatcher; remaining contact/iteration
-  branches stay open. Public numeric selectors are unnecessary under ADR 0087.
+  branches of the pinned SpaceParameter dispatcher. Contact and iteration
+  branches have their own implemented typed operations and separate acceptance gates. Public numeric selectors are unnecessary under ADR 0087.
 - Sample typed Physics2DSleepThresholdLinear, Physics2DSleepThresholdAngular and
   Physics2DTimeBeforeSleep project settings at world creation, including feature
   overrides. Defaults are 2 scene units/s, 0.13962634 rad/s and 0.5 s. Existing worlds

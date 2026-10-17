@@ -2,7 +2,7 @@ namespace Electron2D;
 
 internal abstract partial class PhysicsWorldBackend
 {
-    private bool _active, _synchronizing, _flushing;
+    private bool _active, _activeDirty, _synchronizing, _flushing;
     internal bool IsActive => Volatile.Read(ref _active);
     internal bool IsSynchronizing => _synchronizing;
     internal bool IsFlushingQueries => _flushing;
@@ -10,11 +10,18 @@ internal abstract partial class PhysicsWorldBackend
     internal void SetActive(bool active)
     {
         EnsureAccess();
-        if (IsActive == active) return;
+        if (IsActive == active && !_activeDirty) return;
         Space.BeginBackendCallback();
-        try { ApplyActive(active); }
+        try { _activeDirty = true; ApplyActive(active); }
         finally { Space.EndExtensionCallback(); }
         Volatile.Write(ref _active, active);
+        _activeDirty = false;
+    }
+    internal void PrepareActive()
+    {
+        if (!_activeDirty) return;
+        Space.EnsureImplementationWriteAccess();
+        SetActive(IsActive);
     }
     internal virtual void ApplyActive(bool active) => EnsureAccess();
     internal void SynchronizeResults()

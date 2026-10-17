@@ -1,6 +1,10 @@
 # PhysicsWorldBackend
 
-Last updated: 2026-10-12
+Last updated: 2026-10-18
+
+## Failed local activation
+
+A failed selected activation leaves the prior public flag committed. Equal writes retry incomplete publication; live space queries, local/portable history and active positive intervals restore that committed policy before numerical use. Explicit writes may instead commit a different supplied choice. Metadata reads and skipped intervals remain non-preparing. Post-solver failure keeps its completed tick and callbacks; retirement discards pending activation. See [activation recovery](../components/physics-registered-adapter.md#failed-local-activation) for exercised scope and limits.
 
 **Declaration:** `internal abstract partial class PhysicsWorldBackend : IDisposable` · **Source:** [PhysicsWorldBackend.cs](../../src/Servers/Physics/PhysicsWorldBackend.cs) · **Component:** [Physics backends](../components/physics-backends.md)
 
@@ -19,11 +23,11 @@ existing motion-restore sleep write. Common collider metadata retains no CPU han
 
 Owns selection metadata and full interval dispatch for one internal implementation. Space RID registration and sampled-setting validation precede selected creation/initialization. Create makes a fresh CPUPhysicsWorldBackend or GPUPhysicsWorldBackend; optional startup fallback constructs an actual CPU implementation and retains the GPU request and failure message. It never changes a running implementation.
 
-CreateDirectSpaceState and CreateDirectBodyState supply the actual cached views to common World/server queries and scene/raw callbacks. Creation executes outside solver/worker borrowing and the service registry lock; library context/generation validation precedes cache publication. Built-in owners return ordinary views. The internal selected-owner fixture returns real executing extensions. Public registered factories and complete server operation dispatch remain open; see [the ownership route](../components/physics-backends.md#selected-direct-state-construction).
+CreateDirectSpaceState and CreateDirectBodyState supply the actual cached views to common World/server queries and scene/raw callbacks. Creation executes outside solver/worker borrowing and the service registry lock; library context/generation validation precedes cache publication. Built-in owners return ordinary views. The internal selected-owner fixture returns real executing extensions. Public named registration and typed server operation dispatch now execute through RegisteredPhysicsWorldBackend; complete numerical/extension acceptance remains open. See [the ownership route](../components/physics-backends.md#selected-direct-state-construction).
 
 Kind, Requested and FallbackReason describe immutable selection. EnsureAccess performs implementation-specific idle/failure/lifetime checks. Step dispatches the complete CPU/GPU interval; StepNative is the CPU discrete/CCD endpoint. WorldID, Tasks and diagnostic stage controls are internal CPU-only facets and reject for a resident GPU implementation. GPUStore is present only for the resident implementation. Dispose releases owned solver resources.
 
-IntersectRay, CollectPointHits, CollectShapeHits, CastMotion, CollectShapeContacts and GetRestInfo dispatch every direct-space query to the same selected owner. Public access guards and output projection stay in PhysicsDirectSpaceState; concrete implementations own retained query scratch. These internal operations do not yet expose the public extension context under ADR 0103.
+IntersectRay, CollectPointHits, CollectShapeHits, CastMotion, CollectShapeContacts and GetRestInfo dispatch every direct-space query to the same selected owner. Public access guards and output projection stay in PhysicsDirectSpaceState; concrete implementations own retained query scratch. RegisteredPhysicsWorldBackend forwards them to the public PhysicsServerBackend hooks through the owning context under ADR 0103; complete numerical/custom-geometry acceptance remains open.
 
 CreateCollider constructs a fresh selected CPU/GPU PhysicsColliderImplementation for each body/Area attachment. The retained collider identity facade delegates all engine-unit body and shape operations to that concrete owner; reattachment never retargets its immutable world.
 

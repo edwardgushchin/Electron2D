@@ -47,6 +47,8 @@ first interval. Complete retained-memory budgets remain open.
 
 Last updated: 2026-10-18
 
+[Local activation recovery](../components/physics-registered-adapter.md#failed-local-activation) restores the last committed selected flag after partial hook errors, before space query/history or active-step preparation. Metadata, skipped intervals and cleanup retain their non-preparing rules.
+
 [World policy publication recovery](../components/physics-registered-adapter.md#failed-world-policy-publication) retains complete current profiles after partial selected errors, retries before numerical preparation and preserves skipped-interval and cleanup behavior.
 
 ## Scene role publication recovery

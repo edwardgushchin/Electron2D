@@ -128,7 +128,7 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// Hooks use the guarded owning thread; spans and values retain their existing engine-unit contracts.</remarks>
     protected internal abstract void Initialize();
     /// <summary>Supplies the selected implementation operation: set active.</summary>
-    /// <remarks>Runs before a changed local active flag commits; unchanged assignments do not dispatch. Failure preserves the old flag. Shared process suspension gates later intervals independently.
+    /// <remarks>Runs before local activation commits. Completed unchanged assignments do not dispatch. Failure preserves the old public flag and retains preparation of that committed value after partial implementation changes. Equal writes, live space queries and history/active-step preparation may retry; skipped steps and retirement do not. Shared process suspension remains independent.
     /// Hooks use the guarded owning thread; spans and values retain their existing engine-unit contracts.</remarks>
     protected internal abstract void SetActive(bool active);
     /// <summary>Supplies the selected implementation operation: prepare checkpoint.</summary>
