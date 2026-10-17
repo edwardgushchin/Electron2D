@@ -2,11 +2,14 @@ namespace Electron2D;
 
 /// <summary>Retains ordinary texture dimensions without retaining image data.</summary>
 /// <remarks>Useful for headless scene layout and stripped assets. Rendering uses diagnostic pixels;
-/// this resource does not promise ordinary texture coordinates in shaders or materials.</remarks>
+/// this resource does not promise ordinary texture coordinates in shaders or materials. Tolerant archive loading
+/// retains unavailable ordinary texture factories and dependencies here. Opaque original fields survive copying
+/// and saving; missing-payload provenance prevents reconstruction without the absent data.</remarks>
 public sealed class PlaceholderTexture : Texture
 {
     private readonly object _gate = new();
     private Vector2i _size = Vector2i.One;
+    internal MissingResourceData Data = new();
 
     /// <summary>Creates a one-by-one texture placeholder with no image.</summary>
     public PlaceholderTexture() { }
@@ -23,12 +26,17 @@ public sealed class PlaceholderTexture : Texture
             lock (_gate)
             {
                 ThrowIfDisposed();
-                if (!value.IsFinite() || (double)value.X < int.MinValue || (double)value.X > int.MaxValue || (double)value.Y < int.MinValue || (double)value.Y > int.MaxValue)
-                    throw new ArgumentOutOfRangeException(nameof(value), "Placeholder dimensions must be finite signed 32-bit pixel values.");
-                _size = new((int)value.X, (int)value.Y);
+                _size = ToPixelSize(value);
             }
             EmitChanged();
         }
+    }
+
+    internal static Vector2i ToPixelSize(Vector2 value)
+    {
+        if (!value.IsFinite() || (double)value.X < int.MinValue || (double)value.X > int.MaxValue || (double)value.Y < int.MinValue || (double)value.Y > int.MaxValue)
+            throw new ArgumentOutOfRangeException(nameof(value), "Placeholder dimensions must be finite signed 32-bit pixel values.");
+        return new((int)value.X, (int)value.Y);
     }
 
     /// <inheritdoc />
@@ -52,5 +60,10 @@ public sealed class PlaceholderTexture : Texture
         Vector2i size;
         lock (_gate) { ThrowIfDisposed(); size = _size; }
         lock (copy._gate) { copy.ThrowIfDisposed(); copy._size = size; }
+        copy.Data = Data.Copy(duplicateSubresource);
     }
+    /// <inheritdoc />
+    protected override void RemapResourceReferences(Func<Resource, Resource> remap) { base.RemapResourceReferences(remap); Data.Remap(remap); }
+    /// <inheritdoc />
+    protected override void Dispose(bool disposing) { Data.Fields.Clear(); base.Dispose(disposing); }
 }

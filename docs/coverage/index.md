@@ -1,6 +1,6 @@
 # API coverage register
 
-[Ordinary texture placeholders](../components/texture-placeholders.md) now execute dimension-only factory output, typed resource/scene archives, scene-local ownership and diagnostic object/RID drawing on GPU and Compatibility. The four reference declarations are implemented; automatic missing-texture-class recovery retains its separate role/payload prerequisite.
+[Ordinary texture placeholders](../components/texture-placeholders.md) now execute dimension-only factory output, typed resource/scene archives, scene-local ownership and diagnostic object/RID drawing on GPU and Compatibility. The four reference declarations are implemented; version-4 missing-texture recovery additionally retains original graph fields and missing-payload provenance, with available-factory restoration and explicit strict/tolerant results.
 
 [Project shader globals](../components/global-shader-parameters.md#project-authored-globals) now connect all 25 applicable logical roles to typed saved settings, feature-aware startup before Ready, and session-owned image resources. Scene overrides compose over these bases. Public JIT/NativeAOT consumers exercise saved-project shader pixels; the separate global-buffer pool-size setting retains its exact arena/ABI prerequisite.
 

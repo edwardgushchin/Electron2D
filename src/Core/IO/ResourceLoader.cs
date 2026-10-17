@@ -30,8 +30,10 @@ public sealed partial class ResourceLoader : ElectronObject
     [ThreadStatic] private static bool? _archiveMissingPolicy;
     internal static bool AbortOnMissingResources => ResourceLoadGraph.Current?.AbortOnMissingResources ?? _archiveMissingPolicy ?? Volatile.Read(ref Runtime._abortOnMissing);
     /// <summary>Selects whether newly loaded archive graphs reject absent resource factories/dependencies.</summary>
-    /// <param name="abort">True for strict failure, the default; false enables bounded version-2 placeholders.</param>
-    /// <remarks>Captured once for each load graph/request. Corruption, incompatible typed references and factory/codec failures always reject.</remarks>
+    /// <param name="abort">True for strict failure, the default; false enables bounded generic, mesh and ordinary texture placeholders.</param>
+    /// <remarks>Captured once for each load graph/request. Version 4 preserves missing-payload provenance across saves;
+    /// an available factory cannot replace absent data with an empty concrete resource. Corruption, incompatible
+    /// typed references and factory/codec failures always reject.</remarks>
     public static void SetAbortOnMissingResources(bool abort) => Volatile.Write(ref Runtime._abortOnMissing, abort);
     internal readonly ResourceFileRegistry FileTypes = new();
     private readonly object _loadGate = new();

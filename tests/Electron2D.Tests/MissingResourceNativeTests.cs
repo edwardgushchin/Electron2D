@@ -19,7 +19,7 @@ internal static class MissingResourceNativeTests
         foreach (var backend in new[] { "gpu", "compatibility" })
         {
             ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
-            using var root = scene.Instantiate(); using var window = new Window { Size = new(128, 80), MinSize = new(128, 80), MaxSize = new(128, 80), Visible = true }; window.AddChild(root);
+            using var root = scene.Instantiate(); using var window = new Window { Size = new(128, 80), Unresizable = true, Visible = true }; window.AddChild(root);
             var absent = (MeshInstance)root.GetChild(1); var placeholder = absent.Mesh as PlaceholderMesh; var frame = 0; long before = 0, allocated = 0; var deltas = new long[152];
             window.Ready += _ => { Check(RenderingServer.GetCurrentRenderingMethod() == backend, "Exact recovery backend without fallback."); RenderingServer.SetDefaultClearColor(Colors.Black); window.Tree!.ProcessFrameStarted += _ => { if (frame >= 24) before = GC.GetAllocatedBytesForCurrentThread(); }; RenderingServer.FramePreDraw += Pre; RenderingServer.FramePostDraw += Post; };
             void Pre() { if (frame == 16) GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); if (frame >= 6 && frame < 88 && placeholder is not null) placeholder.AABB = new(0, 0, frame % 2 == 0 ? 32 : 36, 32); }

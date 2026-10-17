@@ -10,7 +10,9 @@ public sealed class MissingResource : Resource
     public MissingResource() { }
     /// <summary>Gets or sets the stable factory identity written when this resource is saved.</summary>
     /// <value>An ordinal ID; empty uses the ordinary MissingResource registration.</value>
-    public string OriginalClass { get { ThrowIfDisposed(); return Data.OriginalClass; } set { ArgumentNullException.ThrowIfNull(value); ThrowIfDisposed(); if (value.Length > 65536) throw new ArgumentException("Factory ID exceeds file budget.", nameof(value)); Data.OriginalClass = value; EmitChanged(); } }
+    /// <remarks>Explicit assignment authors a recorded-state binding and clears unavailable-payload provenance.
+    /// Automatic copying and file persistence preserve that provenance.</remarks>
+    public string OriginalClass { get { ThrowIfDisposed(); return Data.OriginalClass; } set { ArgumentNullException.ThrowIfNull(value); ThrowIfDisposed(); if (value.Length > 65536) throw new ArgumentException("Factory ID exceeds file budget.", nameof(value)); Data.OriginalClass = value; Data.MissingPayload = false; EmitChanged(); } }
     /// <summary>Gets or selects whether previously absent recorded fields may be added.</summary>
     /// <value>False initially. Existing fields retain writable exact-schema storage in either mode.</value>
     public bool RecordingProperties { get { ThrowIfDisposed(); return Data.Recording; } set { ThrowIfDisposed(); Data.Recording = value; } }

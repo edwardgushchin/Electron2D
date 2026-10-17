@@ -10,7 +10,9 @@ Preserves an unavailable compiled resource factory and its bounded portable fiel
 
 SetRecordedProperty/GetRecordedProperty use closed typed codecs/schemas, with no CLR property dispatch. Scalar descriptors expose copied encoded bytes; resource/array descriptors expose typed base-resource identities. A missing concrete subtype cannot satisfy an incompatible requested type. Duplication and scene-local construction preserve aliases/cycles through the existing Resource session. Disposal clears this producer without disposing manually borrowed children; file ownership follows Resource.
 
-Version-2 strict/tolerant loading is described in [resource files](../components/resource-files.md#missing-resource-recovery). Version-1 known graphs load; unknown legacy fields and absent Node/signal schemas retain explicit prerequisites.
+Version-4 strict/tolerant loading is described in [resource files](../components/resource-files.md#missing-resource-recovery). Version-1 known graphs load; unknown legacy fields and absent Node/signal schemas retain explicit prerequisites.
+
+Empty OriginalClass uses this concrete resource type and retains recorded fields, including graph references. A placeholder for an absent external payload keeps that provenance through copies and saves; an available factory alone cannot reconstruct absent data. Explicit OriginalClass assignment authors a new binding and clears that provenance.
 
 ## Member summary
 

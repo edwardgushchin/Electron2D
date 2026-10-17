@@ -543,7 +543,7 @@ def main():
         if "load_threaded_" in row or "ThreadLoadStatus" in row:
             assert " | Implemented | " in row, row
     abort_row = next(row for row in loader_rows if "set_abort_on_missing_resources" in row)
-    assert " | Implemented | " in abort_row and "version-2" in abort_row
+    assert " | Implemented | " in abort_row and "version-4" in abort_row and "ordinary-texture" in abort_row
     for name in ("MissingResource", "PlaceholderMesh"):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
         assert rows and all(" | Implemented | " in row for row in rows), name

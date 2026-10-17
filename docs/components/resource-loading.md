@@ -18,7 +18,7 @@ The GPU payload is managed by the existing texture renderer when the resource is
 - Cache modes have their pinned numeric identities. Deep modes equal ordinary modes for dependency-free image files.
 - Malformed input, unsupported types/extensions and invalid paths fail explicitly. Failed decoding preserves a cached texture and its pixels; callback failure can propagate after committed replacement.
 - `Exists` may return true for a cached resource after its source file is removed. Discovery returns caller-owned extension arrays.
-- Further concrete resource formats, tolerant missing-resource policy retains its own coverage trigger. Generic load/exists/discovery remain Partial across the full applicable asset API.
+- Further concrete resource formats retain their own coverage triggers. Generic, mesh and ordinary-texture tolerant archives execute under the [resource file contract](resource-files.md#missing-resource-recovery). Generic load/exists/discovery remain Partial across the full applicable asset API.
 
 ## Verification
 

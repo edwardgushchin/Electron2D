@@ -9,6 +9,10 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length == 3 && args[0] == "--missing-texture") { MissingTextureTests.RunChild(args[1], args[2]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MISSING_TEXTURE") == "managed") { MissingTextureTests.RunManaged(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MISSING_TEXTURE") is "gpu" or "compatibility" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MISSING_TEXTURE") is { } missingTextureBackend) { MissingTextureTests.RunNative(missingTextureBackend); return; }
+
 if (args.Length == 2 && args[0] == "--texture-placeholder-archive") { TexturePlaceholderTests.ReadArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_PLACEHOLDER") is { } placeholderMode)
 {
@@ -1534,6 +1538,7 @@ RenderingCanvasTests.Run();
 NavigationTopologyTests.Run();
 TextureArrayTests.Run();
 TexturePlaceholderTests.RunManaged();
+MissingTextureTests.RunManaged();
 IntegerSourceTextureTests.RunManaged();
 CompressedTextureTests.RunManaged();
 CompressedArrayTests.RunManaged();

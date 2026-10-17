@@ -41,7 +41,7 @@ Concrete TwoBoneIK/CCDIK/FABRIK resources retain copied bounded joint configurat
 
 ## Responsibility
 
-Ordinary [texture placeholders](../components/texture-placeholders.md) execute explicit pixel stripping through `Texture.CreatePlaceholder`, typed dimension archives and scene-local instances. They retain layout size and use diagnostic GPU/Compatibility pixels. Automatic unknown-texture substitution still requires a role-aware missing-payload recovery extension.
+Ordinary [texture placeholders](../components/texture-placeholders.md) execute explicit pixel stripping through `Texture.CreatePlaceholder`, typed dimension archives and scene-local instances. They retain layout size and use diagnostic GPU/Compatibility pixels. Version-4 tolerant archives preserve unknown texture fields and missing dependency metadata, retaining missing-payload provenance across saves.
 
 Shader import retains logical bool and boolean vectors/arrays in validated SPIR-V metadata. Materials expose bool scalars and int vector masks; raw unsigned fields retain their numeric types. Both source languages and compatible external artifacts share reflection and backend checks. See [the boolean contract](../components/shader-materials.md#boolean-type-information).
 
@@ -232,7 +232,7 @@ The active GPU renderer now retains a RenderingDevice and directly samples its o
 
 Integer device image consumers now validate float/signed/unsigned sampled scalar types and array roles, migrate reload bindings and use nearest native integer sampling. Cold snapshots expose raw-valued float32 RGBA; byte device readback preserves all integer bits. See [the integer canvas checkpoint](../components/local-compute.md#integer-canvas-sampling-checkpoint) for executable evidence and the connected scalar-aware lighting and alpha-mask behavior.
 
-[Missing-resource recovery](../components/resource-files.md#missing-resource-recovery) executes typed opaque field storage, version-2 identity relocation and strict/tolerant synchronous/threaded policy. Unknown mesh factories retain bounded surface-free placeholders and can recover actual geometry in a later compiled process. Legacy unknown schemas, missing Node/signal schemas and other exact asset-family substitutions remain explicit dependencies.
+[Missing-resource recovery](../components/resource-files.md#missing-resource-recovery) executes typed opaque field storage, version-4 identity relocation and typed ordinary-texture fallback and strict/tolerant synchronous/threaded policy. Unknown mesh factories retain bounded surface-free placeholders and can recover actual geometry in a later compiled process. Legacy unknown schemas, missing Node/signal schemas and other exact asset-family substitutions remain explicit dependencies.
 
 ## Font support policy
 

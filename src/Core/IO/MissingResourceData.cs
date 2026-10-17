@@ -1,14 +1,15 @@
 namespace Electron2D;
 
 internal enum ResourceFieldRole : byte { Scalar, Resource, ResourceArray, Node }
-internal enum ResourceArchiveRole : byte { Resource, Mesh }
+internal enum ResourceArchiveRole : byte { Resource, Mesh, Texture }
 internal sealed class MissingResourceData
 {
-    internal static MissingResourceData? For(Resource resource) => resource switch { MissingResource missing => missing.Data, PlaceholderMesh mesh => mesh.Data, _ => null };
+    internal static MissingResourceData? For(Resource resource) => resource switch { MissingResource missing => missing.Data, PlaceholderMesh mesh => mesh.Data, PlaceholderTexture texture => texture.Data, _ => null };
     internal sealed record Field(string Name, string Schema, ResourceFieldRole Role, bool BigEndian, byte[] Bytes, Resource?[] References, bool NullArray);
     internal readonly Dictionary<string, Field> Fields = new(StringComparer.Ordinal);
     private long _bytes;
     internal string OriginalClass = "";
+    internal bool MissingPayload;
     internal bool Recording;
     internal static ResourceFieldRole Role(Type type) => typeof(Node).IsAssignableFrom(type) ? ResourceFieldRole.Node : typeof(Resource).IsAssignableFrom(type) ? ResourceFieldRole.Resource : typeof(Resource[]).IsAssignableFrom(type) ? ResourceFieldRole.ResourceArray : ResourceFieldRole.Scalar;
     internal void Put(Field field)
@@ -53,7 +54,7 @@ internal sealed class MissingResourceData
     }
     internal MissingResourceData Copy(Func<Resource?, Resource?> duplicate)
     {
-        var result = new MissingResourceData { OriginalClass = OriginalClass, Recording = Recording, _bytes = _bytes };
+        var result = new MissingResourceData { OriginalClass = OriginalClass, MissingPayload = MissingPayload, Recording = Recording, _bytes = _bytes };
         foreach (var f in Fields.Values) result.Fields.Add(f.Name, f with { Bytes = (byte[])f.Bytes.Clone(), References = f.References.Select(duplicate).ToArray() });
         return result;
     }

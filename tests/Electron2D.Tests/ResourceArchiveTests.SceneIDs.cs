@@ -43,7 +43,7 @@ internal static partial class ResourceArchiveTests
         using var output = new StreamPeerBuffer { BigEndian = endian }; output.Put32(count);
         foreach (var d in definitions)
         {
-            ResourceArchiveStrings.Write(output, d.Type.ID); ResourceArchive.WriteRole(output, d);
+            ResourceArchiveStrings.Write(output, d.Type.ID); ResourceArchive.WriteRole(output, d, version);
             ResourceArchiveStrings.Write(output, d.Name); output.PutU8(d.Local ? (byte)1 : (byte)0);
             ResourceArchiveStrings.Write(output, d.SceneID); ResourceArchiveStrings.Write(output, d.Path);
             output.Put64(d.UID); output.Put32(d.Payload.Length); output.PutData(d.Payload);
