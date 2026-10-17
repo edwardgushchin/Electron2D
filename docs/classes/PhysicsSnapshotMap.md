@@ -1,6 +1,6 @@
 # PhysicsSnapshotMap
 
-Last updated: 2026-10-15
+Last updated: 2026-10-17
 
 [Portable joint continuation](../components/physics-snapshots.md#portable-joint-continuation)
 now verifies CPU/CPU, CPU/GPU and CPU/registered scene/raw sampled frames, silent correction, atomic
@@ -75,6 +75,10 @@ exercise portable application and numbered-input replay across three actual
 processes with serial/separate numerical execution. Lifecycle recipes and
 exact-once confirmed effects remain the application's policy; these checks retain
 GPU, native and broader platform/performance limits.
+
+## Pending server geometry
+
+Portable compatibility records the pending kind of an unconfigured raw shape. Pending-to-configured transitions change authored compatibility and older snapshots reject before state writes. No encoded field or hash for live configured geometry changes; pending worlds can capture/apply while their logical slots remain inactive.
 
 ## Selected fields, exceptions and portable observation
 

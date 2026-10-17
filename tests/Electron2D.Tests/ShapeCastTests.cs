@@ -260,6 +260,7 @@ internal static class ShapeCastTests
         var server = PhysicsServer.Service;
         var body = PhysicsServer.BodyCreate();
         var shapeRID = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(shapeRID, initialShapeData);
         PhysicsServer.BodyAddShape(body, shapeRID);
         PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
         PhysicsServer.BodySetTransform(body, new(0, Vector2.One, 0, new(-40, 0)));

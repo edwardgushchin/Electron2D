@@ -24,6 +24,7 @@ public static partial class BackendChecks
         Check(shape.CustomSolverBias == .2f && changes == 0 && shape.GetRID() == id && ReferenceEquals(shape.GetGeometryData(), geometry),
             "Rejected foreign-thread shape policy preserves geometry, identity and observers");
         var raw = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate(); var ownedID = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(ownedID, initialShapeData);
         var bridge = new StaticBody { Position = new(100, 0) };
         root.AddChild(bridge);
         PhysicsServer.BodyAddShape(bridge.GetRID(), ownedID);

@@ -690,6 +690,8 @@ def render():
             updated = "2026-10-15"
         if name in {"Node", "SceneTree", "ImageTextureLayered", "Texture2DArray", "CompressedTexture2D", "CompressedTexture2DArray", "CompressedTextureLayered", "RenderingServer"}:
             updated = "2026-10-16"
+        if name in {"PhysicsServer2D", "PhysicsServer2DExtension"}:
+            updated = "2026-10-17"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

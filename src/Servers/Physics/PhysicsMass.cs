@@ -23,7 +23,7 @@ internal static class PhysicsMass
         internal void Clear() { _solid.Clear(); _all.Clear(); _custom.Clear(); }
         internal void Append(Shape shape, Transform pose, bool sensor)
         {
-            if (shape.IsDisposed) return;
+            if (shape.IsDisposed || !shape.HasServerData) return;
             var geometry = shape.GetGeometryData();
             if (geometry.Type == PhysicsServer.ShapeType.Custom)
             {
@@ -69,7 +69,7 @@ internal static class PhysicsMass
 
     internal static void AppendGeometry(Shape shape, Transform pose, List<B2ShapeProxy> proxies)
     {
-        if (shape.IsDisposed || shape.GetGeometry().Kind is PhysicsShapeGeometry.ShapeKind.SeparationRay or PhysicsShapeGeometry.ShapeKind.WorldBoundary) return;
+        if (shape.IsDisposed || !shape.HasServerData || shape.GetGeometry().Kind is PhysicsShapeGeometry.ShapeKind.SeparationRay or PhysicsShapeGeometry.ShapeKind.WorldBoundary) return;
         AppendProxies(shape, pose, proxies);
     }
 

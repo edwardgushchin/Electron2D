@@ -1,8 +1,12 @@
 # PhysicsShapeQueryParameters
 
-Last updated: 2026-10-05
+Last updated: 2026-10-17
 
 **Inherits:** ElectronObject · **Source:** [PhysicsShapeQueryParameters.cs](../../src/Servers/Physics/PhysicsShapeQueryParameters.cs) · **Component:** [Physics queries](../components/physics-queries.md)
+
+## Pending server geometry
+
+Assigning an unconfigured server-owned Shape view rejects before changing Shape/ShapeRID. An assigned pending ShapeRID remains a request identity; executing a world query rejects until ShapeSetData succeeds. Ordinary initialized resources are unchanged.
 
 ## Description
 

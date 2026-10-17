@@ -29,8 +29,10 @@ public static partial class BackendChecks
                 try
                 {
                     Check(PhysicsServer.ShapeGetType(id) == item.Kind, "Every factory assigns the exact common geometry type");
+                    Reject<InvalidOperationException>(() => PhysicsServer.ShapeGetData(id));
+                    PhysicsServer.ShapeSetData(id, item.Data);
                     using var defaults = PhysicsServer.ShapeGetData(id);
-                    Check(defaults.GetType() == item.Data.GetType() && defaults.CustomSolverBias == 0, "Factory data is an independent initialized typed resource");
+                    Check(defaults.GetType() == item.Data.GetType() && defaults.CustomSolverBias == 0, "Explicitly configured data is an independent typed resource");
                     PhysicsServer.BodyAddShape(scene.GetRID(), id, disabled: true);
                     var owner = scene.GetShapeOwners().Single(ownerID => scene.ShapeOwnerGetShapeCount(ownerID) != 0); var old = scene.ShapeOwnerGetShape(owner, 0); var retained = old.GetGeometryData();
                     Reject<InvalidOperationException>(() => old.Dispose());

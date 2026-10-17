@@ -961,42 +961,50 @@ public sealed partial class PhysicsServer
     /// <returns>A caller-owned Area RID.</returns>
     public static RID AreaCreate() => Service.AreaCreateCore();
 
-    /// <summary>Creates a caller-owned circle shape with its default geometry.</summary>
+    /// <summary>Creates a caller-owned unconfigured circle shape.</summary>
     /// <returns>A live circle-shape RID.</returns>
+    /// <remarks>Call ShapeSetData to configure geometry. ShapeGetType is available immediately. Added slots remain inactive until configuration succeeds.</remarks>
     public static RID CircleShapeCreate() => Service.CircleShapeCreateCore();
 
-    /// <summary>Creates a caller-owned rectangle shape with its default geometry.</summary>
+    /// <summary>Creates a caller-owned unconfigured rectangle shape.</summary>
     /// <returns>A live rectangle-shape RID.</returns>
+    /// <remarks>Call ShapeSetData to configure geometry. ShapeGetType is available immediately. Added slots remain inactive until configuration succeeds.</remarks>
     public static RID RectangleShapeCreate() => Service.RectangleShapeCreateCore();
 
-    /// <summary>Creates a caller-owned capsule shape with its default geometry.</summary>
+    /// <summary>Creates a caller-owned unconfigured capsule shape.</summary>
     /// <returns>A live capsule-shape RID.</returns>
+    /// <remarks>Call ShapeSetData to configure geometry. ShapeGetType is available immediately. Added slots remain inactive until configuration succeeds.</remarks>
     public static RID CapsuleShapeCreate() => Service.CapsuleShapeCreateCore();
 
-    /// <summary>Creates a caller-owned segment shape with its default geometry.</summary>
+    /// <summary>Creates a caller-owned unconfigured segment shape.</summary>
     /// <returns>A live segment-shape RID.</returns>
+    /// <remarks>Call ShapeSetData to configure geometry. ShapeGetType is available immediately. Added slots remain inactive until configuration succeeds.</remarks>
     public static RID SegmentShapeCreate() => Service.SegmentShapeCreateCore();
 
-    /// <summary>Creates a caller-owned twenty-unit directed separation ray.</summary>
+    /// <summary>Creates a caller-owned unconfigured directed separation ray.</summary>
     /// <returns>A live separation-ray shape RID.</returns>
+    /// <remarks>Call ShapeSetData to configure geometry. ShapeGetType is available immediately. Added slots remain inactive until configuration succeeds.</remarks>
     public static RID SeparationRayShapeCreate() => Service.SeparationRayShapeCreateCore();
 
-    /// <summary>Creates an owned infinite half-plane shape, upward normal and zero distance by default.</summary>
+    /// <summary>Creates a caller-owned unconfigured infinite half-plane shape.</summary>
     /// <returns>A shape RID released with FreeRID; typed data can be copied through ShapeSetData.</returns>
+    /// <remarks>Call ShapeSetData to configure geometry. ShapeGetType is available immediately. Added slots remain inactive until configuration succeeds.</remarks>
     public static RID WorldBoundaryShapeCreate() => Service.WorldBoundaryShapeCreateCore();
 
     /// <summary>Returns the concrete geometry type of an owned or borrowed shape RID.</summary>
     /// <param name="shape">A live physics shape RID.</param>
-    /// <returns>The geometry type, independent of attached bodies and their current backend.</returns>
+    /// <returns>The declared geometry type, including before the first ShapeSetData call, independent of attached bodies and backend.</returns>
     /// <exception cref="ArgumentException">The RID is stale or does not identify a shape.</exception>
     public static ShapeType ShapeGetType(RID shape) => Service.ShapeGetTypeCore(shape);
 
-    /// <summary>Creates a caller-owned empty convex polygon shape.</summary>
+    /// <summary>Creates a caller-owned unconfigured convex polygon shape.</summary>
     /// <returns>A live convex-polygon-shape RID.</returns>
+    /// <remarks>Call ShapeSetData to configure geometry. ShapeGetType is available immediately. Added slots remain inactive until configuration succeeds.</remarks>
     public static RID ConvexPolygonShapeCreate() => Service.ConvexPolygonShapeCreateCore();
 
-    /// <summary>Creates a caller-owned empty paired-segment shape.</summary>
+    /// <summary>Creates a caller-owned unconfigured paired-segment shape.</summary>
     /// <returns>A live concave-polygon-shape RID.</returns>
+    /// <remarks>Call ShapeSetData to configure geometry. ShapeGetType is available immediately. Added slots remain inactive until configuration succeeds.</remarks>
     public static RID ConcavePolygonShapeCreate() => Service.ConcavePolygonShapeCreateCore();
 
     /// <summary>Copies typed geometry into a server-owned shape RID.</summary>
@@ -1025,7 +1033,7 @@ public sealed partial class PhysicsServer
     /// including incoming resource/RID bindings from unrelated worlds.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or does not identify a shape.</exception>
     /// <exception cref="ObjectDisposedException">The service or source resource is disposed.</exception>
-    /// <exception cref="InvalidOperationException">A using world is inaccessible or the procedural supplier violates its geometry contract.</exception>
+    /// <exception cref="InvalidOperationException">The raw shape is unconfigured, a using world is inaccessible or the procedural supplier violates its geometry contract.</exception>
     public static Shape ShapeGetData(RID shape) => Service.ShapeGetDataCore(shape);
 
     /// <summary>Adds a typed server shape to a body as one indexed owner slot.</summary>

@@ -60,14 +60,14 @@ public sealed partial class PhysicsServer
 
     internal RID AreaCreateCore() => CreateCollider(isArea: true);
 
-    internal RID CircleShapeCreateCore() => CreateShape(new CircleShape());
-    internal RID RectangleShapeCreateCore() => CreateShape(new RectangleShape());
-    internal RID CapsuleShapeCreateCore() => CreateShape(new CapsuleShape());
-    internal RID SegmentShapeCreateCore() => CreateShape(new SegmentShape());
-    internal RID WorldBoundaryShapeCreateCore() => CreateShape(new WorldBoundaryShape());
-    internal RID SeparationRayShapeCreateCore() => CreateShape(new SeparationRayShape());
-    internal RID ConvexPolygonShapeCreateCore() => CreateShape(new ConvexPolygonShape());
-    internal RID ConcavePolygonShapeCreateCore() => CreateShape(new ConcavePolygonShape());
+    internal RID CircleShapeCreateCore() => CreateShape(new CircleShape(), configured: false);
+    internal RID RectangleShapeCreateCore() => CreateShape(new RectangleShape(), configured: false);
+    internal RID CapsuleShapeCreateCore() => CreateShape(new CapsuleShape(), configured: false);
+    internal RID SegmentShapeCreateCore() => CreateShape(new SegmentShape(), configured: false);
+    internal RID WorldBoundaryShapeCreateCore() => CreateShape(new WorldBoundaryShape(), configured: false);
+    internal RID SeparationRayShapeCreateCore() => CreateShape(new SeparationRayShape(), configured: false);
+    internal RID ConvexPolygonShapeCreateCore() => CreateShape(new ConvexPolygonShape(), configured: false);
+    internal RID ConcavePolygonShapeCreateCore() => CreateShape(new ConcavePolygonShape(), configured: false);
 
     private (List<PhysicsServerCollider> Users, List<CollisionObject> SceneUsers, List<PhysicsSpace> Spaces) ShapeWriteUsers(PhysicsServerShape entry)
     {
@@ -158,7 +158,7 @@ public sealed partial class PhysicsServer
         try
         {
             foreach (var space in spaces) { space.BeginImplementationCallback(); borrowed++; }
-            previous.BeginCollisionUse();
+            previous.BeginCollisionUse(allowUnconfigured: true);
             try
             {
                 data.BeginCollisionUse();
@@ -202,6 +202,7 @@ public sealed partial class PhysicsServer
     {
         ThrowIfDisposed();
         var entry = GetShape(shape);
+        if (!entry.Geometry.HasServerData) throw new InvalidOperationException("Shape data must be configured before it can be read.");
         var spaces = new List<PhysicsSpace>();
         var users = SnapshotColliders(); var sceneUsers = SceneShapeUsers(entry);
         foreach (var collider in users)
@@ -481,11 +482,11 @@ public sealed partial class PhysicsServer
         return rid;
     }
 
-    private RID CreateShape(Shape geometry)
+    private RID CreateShape(Shape geometry, bool configured = true)
     {
         ThrowIfDisposed();
         var rid = RID.Allocate();
-        geometry.BindServerOwnedRID(rid);
+        geometry.BindServerOwnedRID(rid, configured);
         lock (_registryGate) _serverShapes.Add(rid, new(rid, geometry));
         return rid;
     }
@@ -498,7 +499,12 @@ public sealed partial class PhysicsServer
                 throw new ArgumentException("The RID is not a live server shape.", nameof(rid));
     }
 
-    internal Shape GetShapeGeometry(RID rid) => GetShape(rid).Geometry;
+    internal Shape GetShapeGeometry(RID rid)
+    {
+        var geometry = GetShape(rid).Geometry;
+        if (!geometry.HasServerData) throw new InvalidOperationException("Shape data must be configured before a geometry query.");
+        return geometry;
+    }
     internal void EnsureShapeBindingAccess(RID rid)
     {
         lock (_registryGate)

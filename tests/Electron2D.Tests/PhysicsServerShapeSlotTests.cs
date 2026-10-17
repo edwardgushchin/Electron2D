@@ -99,6 +99,7 @@ internal sealed class PhysicsServerShapeSlotTests(PhysicsServer.Backend backend)
         Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Indexed scene fixture uses the requested backend.");
         var bodyRID = body.GetRID(); var areaRID = area.GetRID(); var space = body.GetWorld()!.Space;
         var serverShape = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(serverShape, initialShapeData);
         try
         {
             using (Resource custom = new RIDResource(serverShape)) Check(custom.GetRID() == serverShape, "Typed resource override dispatch projects a configured backend role.");
@@ -175,6 +176,7 @@ internal sealed class PhysicsServerShapeSlotTests(PhysicsServer.Backend backend)
     {
         var physics = PhysicsServer.Service;
         var segment = PhysicsServer.SegmentShapeCreate(); var circle = PhysicsServer.CircleShapeCreate(); var moving = PhysicsServer.BodyCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(circle, initialShapeData);
         StaticBody? sceneBody = sceneMode ? new() { Position = new(0, 100) } : null;
         using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld }; if (sceneBody is not null) root.AddChild(sceneBody);
         using var tree = new SceneTree(root);
@@ -224,6 +226,7 @@ internal sealed class PhysicsServerShapeSlotTests(PhysicsServer.Backend backend)
     private void VerifyGuardsAndLifetime()
     {
         var physics = PhysicsServer.Service; var serverShape = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(serverShape, initialShapeData);
         using var selectedWorld = new World(backend); var root = new SubViewport { World = selectedWorld }; var body = new RigidBody { GravityScale = 0, LinearVelocity = new(60, 0), NotifyLocalTransformChanges = true };
         var area = new Area(); root.AddChild(body); root.AddChild(area);
         using var tree = new SceneTree(root);

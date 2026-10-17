@@ -63,6 +63,7 @@ internal static class PhysicsBodyParameterTests
         };
         Add(area, region); root.AddChild(area); using var tree = new SceneTree(root);
         var server = PhysicsServer.Service; var body = PhysicsServer.BodyCreate(); var circle = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(circle, initialShapeData);
         try
         {
             PhysicsServer.BodyAddShape(body, circle); PhysicsServer.BodySetSpace(body, area.GetWorld()!.Space);
@@ -93,6 +94,7 @@ internal static class PhysicsBodyParameterTests
         var floor = new StaticBody { Name = "floor", Position = new(0, 100) }; Add(floor, floorShape); root.AddChild(floor);
         using var tree = new SceneTree(root); var server = PhysicsServer.Service;
         var bouncy = PhysicsServer.BodyCreate(); var absorbent = PhysicsServer.BodyCreate(); var shape = PhysicsServer.CircleShapeCreate();
+        using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(shape, initialShapeData);
         try
         {
             foreach (var rid in new[] { bouncy, absorbent }) { PhysicsServer.BodyAddShape(rid, shape); PhysicsServer.BodySetSpace(rid, floor.GetWorld()!.Space); }
