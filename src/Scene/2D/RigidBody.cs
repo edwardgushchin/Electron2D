@@ -2,7 +2,9 @@ namespace Electron2D;
 
 /// <summary>A collision body moved by the fixed-step two-dimensional physics simulation.</summary>
 /// <remarks>Attach it to a SceneTree and add one or more direct CollisionShape children. The tree owns the physics
-/// step; caller code can change forces and velocity during a physics callback before that step.</remarks>
+/// step; caller code can change forces and velocity during a physics callback before that step.
+/// Failed selected velocity/sleep publication retains requested input for retry before numerical access, queries or a nonzero step.
+/// Retirement preserves requested channels and other selected motion without repairing the discarded attachment.</remarks>
 public partial class RigidBody : PhysicsBody
 {
     /// <summary>Determines whether the body's damping adds to or replaces resolved world and area damping.</summary>
@@ -103,7 +105,7 @@ public partial class RigidBody : PhysicsBody
             PreparePendingServerMode();
             _linearVelocity = value;
             if (HasServerMode) SetServerLinearVelocity(value);
-            else if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.SetLinearVelocity(value);
+            else if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.PublishMotion(linear: value, awake: true);
         }
     }
 
@@ -116,7 +118,7 @@ public partial class RigidBody : PhysicsBody
     public float AngularVelocity
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return HasServerMode ? ServerAngularVelocity : _angularVelocity; }
-        set { EnsureMutable(); Finite(value); Space?.EnsureImplementationWriteAccess(); PreparePendingServerMode(); _angularVelocity = value; if (HasServerMode) SetServerAngularVelocity(value); else if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.SetAngularVelocity(value); }
+        set { EnsureMutable(); Finite(value); Space?.EnsureImplementationWriteAccess(); PreparePendingServerMode(); _angularVelocity = value; if (HasServerMode) SetServerAngularVelocity(value); else if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.PublishMotion(angular: value, awake: true); }
     }
 
     /// <summary>Gets or sets finite signed linear damping per second.</summary>
@@ -207,10 +209,12 @@ public partial class RigidBody : PhysicsBody
         set
         {
             EnsureMutable(); Space?.EnsureImplementationWriteAccess();
+            PreparePendingServerMode();
             _canSleep = value;
-            if (HasBackend) Backend.SetCanSleep(value);
-            if (!value && HasServerMode && EffectiveBodyMode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear) SetServerSleeping(false);
-            else if (!value && !_freeze) _sleeping = false;
+            if (!value && !_freeze) _sleeping = false;
+            if (HasServerMode) SetServerCanSleep(value);
+            else if (HasBackend) Backend.PublishMotion(canSleep: value,
+                awake: !value && EffectiveBodyMode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear ? true : null);
         }
     }
 
@@ -220,13 +224,13 @@ public partial class RigidBody : PhysicsBody
     /// <value>False by default.</value>
     public bool Sleeping
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return HasServerMode ? ServerSleeping : HasBackend ? !Backend.IsAwake : _sleeping; }
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); PreparePendingServerMode(); return HasServerMode ? ServerSleeping : HasBackend ? !Backend.IsAwake : _sleeping; }
         set
         {
             EnsureMutable(); Space?.EnsureImplementationWriteAccess(); PreparePendingServerMode(); _sleeping = value; _sleepChangePending = false;
-            if (HasServerMode) SetServerSleeping(value);
-            else if (HasBackend) Backend.SetAwake(!value);
             if (value && !_freeze && !PhysicsMadeStatic) { _linearVelocity = Vector2.Zero; _angularVelocity = 0; }
+            if (HasServerMode) SetServerSleeping(value);
+            else if (HasBackend) Backend.PublishMotion(awake: !value);
         }
     }
 
@@ -293,7 +297,7 @@ public partial class RigidBody : PhysicsBody
     internal override void OnBackendAdvanced()
     {
         if (FrozenKinematic && !HasServerMode) ResetFrozenSolverPose();
-        var motion = Backend.GetSolverMotion();
+        var motion = Backend.GetRetainedSolverMotion();
         _linearVelocity = motion.LinearVelocity;
         _angularVelocity = motion.AngularVelocity;
         var sleeping = motion.Sleeping;

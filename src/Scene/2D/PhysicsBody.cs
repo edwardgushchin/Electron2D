@@ -101,6 +101,7 @@ public abstract partial class PhysicsBody : CollisionObject
     internal void PrepareBackend()
     {
         if (Space is null) return;
+        Backend.PreparePendingMotion();
         Backend.PrepareContactPolicy();
         var transform = GlobalTransform;
         var geometryEpoch = Shape.GeometryEpoch;

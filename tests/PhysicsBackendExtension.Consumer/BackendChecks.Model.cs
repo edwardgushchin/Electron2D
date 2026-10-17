@@ -29,7 +29,7 @@ public static partial class BackendChecks
             if (DebugPointCount < DebugLimit) DebugPoints[DebugPointCount++] = point;
         }
         internal RID ContactFailure;
-        internal Action<RID>? IdentityHook, ColliderFactoryHook, ModeHook, RotationHook, SurfaceHook, PoseHook;
+        internal Action<RID>? IdentityHook, ColliderFactoryHook, ModeHook, RotationHook, SurfaceHook, PoseHook, AngularHook, AwakeHook, CanSleepHook;
         internal Action<RID>? ShapeHook, FilterHook;
         internal Action<RID>? BodyHook;
         internal Action<RID>? JointHook;
@@ -368,10 +368,10 @@ public static partial class BackendChecks
         protected override void SavePose() => _saved = GetTransform();
         protected override void RestorePose() { Position = _saved.Origin; Rotation = _saved.Rotation; }
         protected override void SetLinearVelocity(Vector2 velocity) { solver.BodyHook?.Invoke(rid); Velocity = velocity; }
-        protected override void SetAngularVelocity(float velocity) => Angular = velocity;
+        protected override void SetAngularVelocity(float velocity) { solver.AngularHook?.Invoke(rid); Angular = velocity; }
         protected override void ClearVelocity() { Velocity = default; Angular = 0; }
-        protected override void SetAwake(bool awake) { Awake = awake; SleepTime = 0; if (!awake) ClearVelocity(); else solver.WakeConnected(this); }
-        protected override void SetCanSleep(bool canSleep) { CanSleep = canSleep; if (!canSleep) { Awake = true; SleepTime = 0; solver.WakeConnected(this); } }
+        protected override void SetAwake(bool awake) { solver.AwakeHook?.Invoke(rid); Awake = awake; SleepTime = 0; if (!awake) ClearVelocity(); else solver.WakeConnected(this); }
+        protected override void SetCanSleep(bool canSleep) { solver.CanSleepHook?.Invoke(rid); CanSleep = canSleep; if (!canSleep) { Awake = true; SleepTime = 0; solver.WakeConnected(this); } }
         protected override void SetRotationLocked(bool locked) { solver.RotationHook?.Invoke(rid); Locked = locked; }
         protected override void SetGravityScale(float scale) { }
         protected override void ApplyCentralForce(Vector2 force, bool wake) { Force += force; Awake |= wake; }

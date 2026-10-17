@@ -1,6 +1,8 @@
 # Portable physics snapshots
 
-Last updated: 2026-10-15
+Last updated: 2026-10-18
+
+[Publication recovery](physics-registered-adapter.md#failed-motion-publication) keeps incomplete motion writes retryable before capture. A successful local rewind discards superseded motion/pose/mode publication without invoking that failed request again. Portable apply retains its existing preparation of prior local authoring; a preparation failure leaves incoming state unapplied and the tick unchanged, and a later successful apply supplies authoritative state.
 
 `PhysicsSnapshotMap` connects caller-assigned network identities to one live CPU,
 GPU or registered world. `PhysicsSnapshot` owns a bounded reusable byte encoding. Together they

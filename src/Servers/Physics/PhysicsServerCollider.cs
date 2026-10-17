@@ -59,6 +59,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
 
     internal void PrepareBackend()
     {
+        _backend.PreparePendingMotion();
         PreparePendingPose();
         _backend.PrepareContactPolicy();
         if (_shapesDirty) RebuildShapes();
@@ -325,31 +326,31 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
     internal void SetAngularVelocity(float velocity)
     {
         if (!float.IsFinite(velocity)) throw new ArgumentOutOfRangeException(nameof(velocity));
+        _backend.PreparePendingMotion();
+        _angularVelocity = velocity;
+        var dynamic = _mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear;
+        if (dynamic) _sleeping = false;
         if (Space is not null && !IsArea)
         {
             if (_mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic)
-            {
-                _backend.SetAngularVelocity(0);
-                _backend.SetSurfaceVelocity(_linearVelocity, velocity);
-            }
-            else _backend.SetAngularVelocity(velocity);
+                _backend.PublishMotion(angular: 0, surface: (_linearVelocity, velocity));
+            else _backend.PublishMotion(angular: velocity, awake: true);
         }
-        _angularVelocity = velocity;
     }
 
     internal void SetLinearVelocity(Vector2 velocity)
     {
         if (!velocity.IsFinite()) throw new ArgumentOutOfRangeException(nameof(velocity));
+        _backend.PreparePendingMotion();
+        _linearVelocity = velocity;
+        var dynamic = _mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear;
+        if (dynamic) _sleeping = false;
         if (Space is not null && !IsArea)
         {
             if (_mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic)
-            {
-                _backend.SetLinearVelocity(default);
-                _backend.SetSurfaceVelocity(velocity, _angularVelocity);
-            }
-            else _backend.SetLinearVelocity(velocity);
+                _backend.PublishMotion(linear: Vector2.Zero, surface: (velocity, _angularVelocity));
+            else _backend.PublishMotion(linear: velocity, awake: true);
         }
-        _linearVelocity = velocity;
     }
 
     internal bool GetSleeping() => Space is not null ? !_backend.IsAwake :
@@ -358,17 +359,20 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
     internal void SetSleeping(bool sleeping)
     {
         if (_mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic) return;
-        if (Space is not null) _backend.SetAwake(!sleeping);
+        _backend.PreparePendingMotion();
         _sleeping = sleeping;
         if (sleeping) { _linearVelocity = Vector2.Zero; _angularVelocity = 0; }
+        if (Space is not null) _backend.PublishMotion(awake: !sleeping);
     }
 
     internal bool GetCanSleep() => _canSleep;
     internal void SetCanSleep(bool canSleep)
     {
-        if (Space is not null) _backend.SetCanSleep(canSleep);
+        _backend.PreparePendingMotion();
         _canSleep = canSleep;
         if (!canSleep) _sleeping = false;
+        if (Space is not null) _backend.PublishMotion(canSleep: canSleep,
+            awake: !canSleep && _mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear ? true : null);
     }
 
     internal void SetFilter(uint layer, uint mask)
@@ -387,9 +391,10 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
             return;
         if (!_poseDirty) _transform = GetTransform();
         if (_mode == PhysicsServer.BodyMode.Kinematic) return;
-        _sleeping = !_backend.IsAwake;
-        _linearVelocity = _backend.LinearVelocity;
-        _angularVelocity = _backend.AngularVelocity;
+        var motion = _backend.GetRetainedSolverMotion();
+        _sleeping = motion.Sleeping;
+        _linearVelocity = motion.LinearVelocity;
+        _angularVelocity = motion.AngularVelocity;
     }
 
     internal void RebuildShapes()

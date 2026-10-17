@@ -1,6 +1,9 @@
 namespace Electron2D;
 
 /// <summary>A stationary collision body that constrains simulated dynamic bodies.</summary>
+/// <remarks>Surface velocity authoring commits before selected publication. A partial failure retries current requested values
+/// before numerical access, live queries or a nonzero step, including an equal-property assignment after failure.
+/// Authoring getters remain non-preparing; detachment retains the requested values without repairing the retired attachment.</remarks>
 public partial class StaticBody : PhysicsBody
 {
     private static readonly PropertyDescriptor[] BodyProperties =
@@ -30,9 +33,9 @@ public partial class StaticBody : PhysicsBody
         {
             EnsureMutable();
             if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value));
+            Backend.PreparePendingMotion();
             if (_constantLinearVelocity == value) return;
-            if (HasBackend) Backend.SetSurfaceVelocity(value, _constantAngularVelocity);
-            _constantLinearVelocity = value;
+            SetSurfaceLinearVelocity(value, false);
         }
     }
 
@@ -50,10 +53,21 @@ public partial class StaticBody : PhysicsBody
         {
             EnsureMutable();
             if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value));
+            Backend.PreparePendingMotion();
             if (_constantAngularVelocity == value) return;
-            if (HasBackend) Backend.SetSurfaceVelocity(_constantLinearVelocity, value);
-            _constantAngularVelocity = value;
+            SetSurfaceAngularVelocity(value, false);
         }
+    }
+
+    internal void SetSurfaceLinearVelocity(Vector2 value, bool clearSolver)
+    {
+        Backend.PreparePendingMotion(); _constantLinearVelocity = value;
+        if (HasBackend) Backend.PublishMotion(linear: clearSolver ? Vector2.Zero : null, surface: (value, _constantAngularVelocity));
+    }
+    internal void SetSurfaceAngularVelocity(float value, bool clearSolver)
+    {
+        Backend.PreparePendingMotion(); _constantAngularVelocity = value;
+        if (HasBackend) Backend.PublishMotion(angular: clearSolver ? 0 : null, surface: (_constantLinearVelocity, value));
     }
 
     internal override void OnShapesRebuilt()

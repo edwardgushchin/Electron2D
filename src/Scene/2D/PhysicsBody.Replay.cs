@@ -36,6 +36,7 @@ public abstract partial class PhysicsBody
     }
     internal void RestoreReplay(BodyReplay state)
     {
+        _serverModeDirty = false; _poseDirty = false;
         _lastPosition = state._lastPosition;
         _lastRotation = state._lastRotation;
         _validatedTransform = state._validatedTransform;

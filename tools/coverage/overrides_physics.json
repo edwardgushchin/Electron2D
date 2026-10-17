@@ -5792,15 +5792,12 @@
         "PhysicsDirectBodyState2D::method:integrate_forces()",
         "PhysicsDirectBodyState2D::method:set_constant_force(Vector2:)",
         "PhysicsDirectBodyState2D::method:set_constant_torque(float:)",
-        "PhysicsDirectBodyState2D::property:angular_velocity",
         "PhysicsDirectBodyState2D::property:center_of_mass",
         "PhysicsDirectBodyState2D::property:center_of_mass_local",
         "PhysicsDirectBodyState2D::property:collision_layer",
         "PhysicsDirectBodyState2D::property:collision_mask",
         "PhysicsDirectBodyState2D::property:inverse_inertia",
         "PhysicsDirectBodyState2D::property:inverse_mass",
-        "PhysicsDirectBodyState2D::property:linear_velocity",
-        "PhysicsDirectBodyState2D::property:sleeping",
         "PhysicsDirectBodyState2D::property:step",
         "PhysicsDirectBodyState2D::property:total_angular_damp",
         "PhysicsDirectBodyState2D::property:total_gravity",
@@ -6277,7 +6274,7 @@
         "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)"
       ],
       "state": "Implemented",
-      "reason": "All five typed state branches execute for scene/server bodies: transform, linear/angular velocity, sleep and automatic sleep permission. Raw kinematic targets defer to a nonzero active step; virtual velocity stays separate. PhysicsServerStateTests covers CPU/GPU motion, lifecycle, wakeup, guards and warmed allocation (ADR 0070). The complete shared suite now executes on explicitly selected independent CPU/GPU worlds with backend assertions, unchanged numerical bounds and 64 warm state/read/step cycles at 0/0 owner/all-thread bytes; native lock injection remains a CPU diagnostic. Broader inherited/extension/platform/performance acceptance stays open. Failed authored Body/Area pose publication retains committed input and retries numerical access without replaying Solve. Public-only --pose-transactions covers 312 retry, 52 retirement/transfer and two scene-role takeover cases, same-pose edits, direct-view writes, scalar/batch/view semantics, stale views and deferred kinematic targets, with strict 0/0 warmed complete changed-pose frames. See docs/components/physics-registered-adapter.md#failed-pose-publication and bin/physics-pose-transactions/2026-10-17/validation.json. Other state-setter failure publication, complete numerical/custom/network/native/foreign/hardware acceptance remain open."
+      "reason": "All five typed state branches execute for scene/server bodies: transform, linear/angular velocity, sleep and automatic sleep permission. Raw kinematic targets defer to a nonzero active step; virtual velocity stays separate. PhysicsServerStateTests covers CPU/GPU motion, lifecycle, wakeup, guards and warmed allocation (ADR 0070). The complete shared suite now executes on explicitly selected independent CPU/GPU worlds with backend assertions, unchanged numerical bounds and 64 warm state/read/step cycles at 0/0 owner/all-thread bytes; native lock injection remains a CPU diagnostic. Broader inherited/extension/platform/performance acceptance stays open. Failed authored Body/Area pose publication retains committed input and retries numerical access without replaying Solve. Public-only --pose-transactions covers 312 retry, 52 retirement/transfer and two scene-role takeover cases, same-pose edits, direct-view writes, scalar/batch/view semantics, stale views and deferred kinematic targets, with strict 0/0 warmed complete changed-pose frames. See docs/components/physics-registered-adapter.md#failed-pose-publication and bin/physics-pose-transactions/2026-10-17/validation.json. Other state-setter failure publication, complete numerical/custom/network/native/foreign/hardware acceptance remain open. Authored velocity/sleep/policy writes now retain a failure-only complete requested publication for numerical/view/query/checkpoint/nonzero-step retry. Writes preserve untouched selected motion, including impulses, without host readback for ordinary edits. Retirement overlays requested channels on selected motion, discards the request without repair and invalidates views; authored CanSleep/scene/surface getters remain non-preparing. Public-only --motion-transactions covers scene/raw modes, ordinary scene roles, six preparation routes, partial errors, retirement/transfer and strict 0/0 warmed full changed-motion frames. See docs/components/physics-registered-adapter.md#failed-motion-publication and bin/physics-motion-transactions/2026-10-17/validation.json. Complete numerical/custom/network/native/foreign/hardware acceptance remains open."
     },
     {
       "godot": [
@@ -6471,14 +6468,10 @@
       "godot": [
         "RigidBody2D::method:apply_central_force(Vector2:)",
         "RigidBody2D::method:apply_central_impulse(Vector2:)",
-        "RigidBody2D::property:angular_velocity",
-        "RigidBody2D::property:can_sleep",
         "RigidBody2D::property:freeze",
         "RigidBody2D::property:gravity_scale",
-        "RigidBody2D::property:linear_velocity",
         "RigidBody2D::property:lock_rotation",
-        "RigidBody2D::property:mass",
-        "RigidBody2D::property:sleeping"
+        "RigidBody2D::property:mass"
       ],
       "state": "Implemented",
       "reason": "Pinned defaults and typed behavior execute on explicitly selected public CPU/GPU scene worlds; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal. The complete common suite now runs both variants in the ordinary full entry, retaining numerical bounds and 64-frame warm resting/active/moving gates at 0/0 owner/all-thread bytes. SIMD/worker internals remain CPU diagnostics; wider inherited/extension/platform/performance acceptance stays open."
@@ -6766,7 +6759,7 @@
         "StaticBody2D::property:constant_angular_velocity"
       ],
       "state": "Implemented",
-      "reason": "Finite stored surface velocity drives CPU scalar/SIMD and GPU contacts without pose integration; inherited kinematic target motion is additive. Point/contact queries, character carry, wakeup, packing, reentry and zero all-thread warmed allocation are covered on public CPU/GPU worlds and the historical stage host by PhysicsSurfaceVelocityTests (ADR 0075). The full CPU/GPU suite and independent GPU-kinematic profile now run the complete shared surface suite with backend assertions and 64 warm active contact frames at 0/0 owner/all-thread bytes. Historical staged controls remain diagnostics; final acceptance stays open."
+      "reason": "Finite stored surface velocity drives CPU scalar/SIMD and GPU contacts without pose integration; inherited kinematic target motion is additive. Point/contact queries, character carry, wakeup, packing, reentry and zero all-thread warmed allocation are covered on public CPU/GPU worlds and the historical stage host by PhysicsSurfaceVelocityTests (ADR 0075). The full CPU/GPU suite and independent GPU-kinematic profile now run the complete shared surface suite with backend assertions and 64 warm active contact frames at 0/0 owner/all-thread bytes. Historical staged controls remain diagnostics; final acceptance stays open. Authored velocity/sleep/policy writes now retain a failure-only complete requested publication for numerical/view/query/checkpoint/nonzero-step retry. Writes preserve untouched selected motion, including impulses, without host readback for ordinary edits. Retirement overlays requested channels on selected motion, discards the request without repair and invalidates views; authored CanSleep/scene/surface getters remain non-preparing. Public-only --motion-transactions covers scene/raw modes, ordinary scene roles, six preparation routes, partial errors, retirement/transfer and strict 0/0 warmed full changed-motion frames. See docs/components/physics-registered-adapter.md#failed-motion-publication and bin/physics-motion-transactions/2026-10-17/validation.json. Complete numerical/custom/network/native/foreign/hardware acceptance remains open."
     },
     {
       "godot": [
@@ -6964,7 +6957,7 @@
         "PhysicsServer2D::method:body_set_axis_velocity(RID:,Vector2:)"
       ],
       "state": "Implemented",
-      "reason": "Finite axis projection uses the shared scene/server velocity and wakeup path, preserving the perpendicular component and rejecting overflow before mutation; PhysicsServerStateTests verifies CPU/GPU behavior (ADR 0070). The complete shared suite now executes on explicitly selected independent CPU/GPU worlds with backend assertions, unchanged numerical bounds and 64 warm state/read/step cycles at 0/0 owner/all-thread bytes; native lock injection remains a CPU diagnostic. Broader inherited/extension/platform/performance acceptance stays open."
+      "reason": "Finite axis projection uses the shared scene/server velocity and wakeup path, preserving the perpendicular component and rejecting overflow before mutation; PhysicsServerStateTests verifies CPU/GPU behavior (ADR 0070). The complete shared suite now executes on explicitly selected independent CPU/GPU worlds with backend assertions, unchanged numerical bounds and 64 warm state/read/step cycles at 0/0 owner/all-thread bytes; native lock injection remains a CPU diagnostic. Broader inherited/extension/platform/performance acceptance stays open. Authored velocity/sleep/policy writes now retain a failure-only complete requested publication for numerical/view/query/checkpoint/nonzero-step retry. Writes preserve untouched selected motion, including impulses, without host readback for ordinary edits. Retirement overlays requested channels on selected motion, discards the request without repair and invalidates views; authored CanSleep/scene/surface getters remain non-preparing. Public-only --motion-transactions covers scene/raw modes, ordinary scene roles, six preparation routes, partial errors, retirement/transfer and strict 0/0 warmed full changed-motion frames. See docs/components/physics-registered-adapter.md#failed-motion-publication and bin/physics-motion-transactions/2026-10-17/validation.json. Complete numerical/custom/network/native/foreign/hardware acceptance remains open."
     },
     {
       "godot": [
@@ -7421,7 +7414,6 @@
         "PhysicsDirectBodyState2DExtension::method:_apply_impulse(Vector2:,Vector2:)",
         "PhysicsDirectBodyState2DExtension::method:_apply_torque(float:)",
         "PhysicsDirectBodyState2DExtension::method:_apply_torque_impulse(float:)",
-        "PhysicsDirectBodyState2DExtension::method:_get_angular_velocity()",
         "PhysicsDirectBodyState2DExtension::method:_get_center_of_mass()",
         "PhysicsDirectBodyState2DExtension::method:_get_center_of_mass_local()",
         "PhysicsDirectBodyState2DExtension::method:_get_collision_layer()",
@@ -7442,7 +7434,6 @@
         "PhysicsDirectBodyState2DExtension::method:_get_contact_local_velocity_at_position(int:)",
         "PhysicsDirectBodyState2DExtension::method:_get_inverse_inertia()",
         "PhysicsDirectBodyState2DExtension::method:_get_inverse_mass()",
-        "PhysicsDirectBodyState2DExtension::method:_get_linear_velocity()",
         "PhysicsDirectBodyState2DExtension::method:_get_space_state()",
         "PhysicsDirectBodyState2DExtension::method:_get_step()",
         "PhysicsDirectBodyState2DExtension::method:_get_total_angular_damp()",
@@ -7451,14 +7442,10 @@
         "PhysicsDirectBodyState2DExtension::method:_get_transform()",
         "PhysicsDirectBodyState2DExtension::method:_get_velocity_at_local_position(Vector2:)",
         "PhysicsDirectBodyState2DExtension::method:_integrate_forces()",
-        "PhysicsDirectBodyState2DExtension::method:_is_sleeping()",
-        "PhysicsDirectBodyState2DExtension::method:_set_angular_velocity(float:)",
         "PhysicsDirectBodyState2DExtension::method:_set_collision_layer(int:)",
         "PhysicsDirectBodyState2DExtension::method:_set_collision_mask(int:)",
         "PhysicsDirectBodyState2DExtension::method:_set_constant_force(Vector2:)",
         "PhysicsDirectBodyState2DExtension::method:_set_constant_torque(float:)",
-        "PhysicsDirectBodyState2DExtension::method:_set_linear_velocity(Vector2:)",
-        "PhysicsDirectBodyState2DExtension::method:_set_sleep_state(bool:)",
         "PhysicsDirectBodyState2DExtension::method:_set_transform(Transform2D:)"
       ],
       "state": "Implemented",
@@ -7512,7 +7499,7 @@
         "PhysicsServer2DExtension::method:_body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)"
       ],
       "state": "Partial",
-      "reason": "ADR 0070/0103: all five typed state pairs share scene/raw selected state, non-preparing initial/live reads, inherited scene pose/sleep numerical guards and detached/live wake requests for every scene body type. Independent public-only checks include actual motion, direct views and zero warm allocations. Complete numerical-extension acceptance remains open. Configured body inputs now remain readable during actual registered Solve without numerical preparation or failure-hook reentry; --parameter-reads verifies all eighteen scene/raw getters, equal-value write/numerical-query rejection, automatic geometry guards, stale/kind/owner/failed-world errors and 128 active full frames with 0/0 owner/all-thread managed bytes. Complete numerical-extension acceptance remains open. Shared registered/CPU/GPU --sleep checks now verify actual strict thresholds/duration, zero policy, CanSleep, policy/impulse wake, inactive intervals, quiet-clock replay and dynamic contact/joint groups with static-support separation. Independent sleep consumes retained settings; 128 replay cycles (1920 frames) and 128 actual group sleep/wake cycles (896 frames) each measure strict 0/0 owner/all-thread bytes. General geometry/CCD, portable networking and final native/performance acceptance remain open. Failed authored Body/Area pose publication retains committed input and retries numerical access without replaying Solve. Public-only --pose-transactions covers 312 retry, 52 retirement/transfer and two scene-role takeover cases, same-pose edits, direct-view writes, scalar/batch/view semantics, stale views and deferred kinematic targets, with strict 0/0 warmed complete changed-pose frames. See docs/components/physics-registered-adapter.md#failed-pose-publication and bin/physics-pose-transactions/2026-10-17/validation.json. Other state-setter failure publication, complete numerical/custom/network/native/foreign/hardware acceptance remain open."
+      "reason": "ADR 0070/0103: all five typed state pairs share scene/raw selected state, non-preparing initial/live reads, inherited scene pose/sleep numerical guards and detached/live wake requests for every scene body type. Independent public-only checks include actual motion, direct views and zero warm allocations. Complete numerical-extension acceptance remains open. Configured body inputs now remain readable during actual registered Solve without numerical preparation or failure-hook reentry; --parameter-reads verifies all eighteen scene/raw getters, equal-value write/numerical-query rejection, automatic geometry guards, stale/kind/owner/failed-world errors and 128 active full frames with 0/0 owner/all-thread managed bytes. Complete numerical-extension acceptance remains open. Shared registered/CPU/GPU --sleep checks now verify actual strict thresholds/duration, zero policy, CanSleep, policy/impulse wake, inactive intervals, quiet-clock replay and dynamic contact/joint groups with static-support separation. Independent sleep consumes retained settings; 128 replay cycles (1920 frames) and 128 actual group sleep/wake cycles (896 frames) each measure strict 0/0 owner/all-thread bytes. General geometry/CCD, portable networking and final native/performance acceptance remain open. Failed authored Body/Area pose publication retains committed input and retries numerical access without replaying Solve. Public-only --pose-transactions covers 312 retry, 52 retirement/transfer and two scene-role takeover cases, same-pose edits, direct-view writes, scalar/batch/view semantics, stale views and deferred kinematic targets, with strict 0/0 warmed complete changed-pose frames. See docs/components/physics-registered-adapter.md#failed-pose-publication and bin/physics-pose-transactions/2026-10-17/validation.json. Other state-setter failure publication, complete numerical/custom/network/native/foreign/hardware acceptance remain open. Authored velocity/sleep/policy writes now retain a failure-only complete requested publication for numerical/view/query/checkpoint/nonzero-step retry. Writes preserve untouched selected motion, including impulses, without host readback for ordinary edits. Retirement overlays requested channels on selected motion, discards the request without repair and invalidates views; authored CanSleep/scene/surface getters remain non-preparing. Public-only --motion-transactions covers scene/raw modes, ordinary scene roles, six preparation routes, partial errors, retirement/transfer and strict 0/0 warmed full changed-motion frames. See docs/components/physics-registered-adapter.md#failed-motion-publication and bin/physics-motion-transactions/2026-10-17/validation.json. Complete numerical/custom/network/native/foreign/hardware acceptance remains open."
     },
     {
       "godot": [
@@ -7567,7 +7554,6 @@
         "PhysicsServer2DExtension::method:_body_apply_torque_impulse(RID:,float:)",
         "PhysicsServer2DExtension::method:_body_get_constant_force(RID:)",
         "PhysicsServer2DExtension::method:_body_get_constant_torque(RID:)",
-        "PhysicsServer2DExtension::method:_body_set_axis_velocity(RID:,Vector2:)",
         "PhysicsServer2DExtension::method:_body_set_constant_force(RID:,Vector2:)",
         "PhysicsServer2DExtension::method:_body_set_constant_torque(RID:,float:)"
       ],
@@ -7841,6 +7827,44 @@
       ],
       "state": "Partial",
       "reason": "ADRs 0077/0103: scene/raw Area transforms validate finite unit-scale zero-skew authoring; getters retain common authored input without numerical preparation. Selected publication reaches actual query geometry with stable RID and logical disabled gaps. Failed raw SetPose publication retries current authored input before live queries/nonzero steps; retirement preserves authored pose without repairing the discarded attachment. Failed authored Body/Area pose publication retains committed input and retries numerical access without replaying Solve. Public-only --pose-transactions covers 312 retry, 52 retirement/transfer and two scene-role takeover cases, same-pose edits, direct-view writes, scalar/batch/view semantics, stale views and deferred kinematic targets, with strict 0/0 warmed complete changed-pose frames. See docs/components/physics-registered-adapter.md#failed-pose-publication and bin/physics-pose-transactions/2026-10-17/validation.json. Other state-setter failure publication, complete numerical/custom/network/native/foreign/hardware acceptance remain open."
+    },
+    {
+      "godot": [
+        "PhysicsDirectBodyState2D::property:angular_velocity",
+        "PhysicsDirectBodyState2D::property:linear_velocity",
+        "PhysicsDirectBodyState2D::property:sleeping"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0070/0075/0103: typed scene/server and direct-state velocity/sleep/policy operations retain common guarded authoring, selected numerical ownership, surface-channel distinctions and attachment lifetime. Existing CPU/GPU state/force/sleep and public-only selected-dispatch checks supply their bounded contract evidence. Authored velocity/sleep/policy writes now retain a failure-only complete requested publication for numerical/view/query/checkpoint/nonzero-step retry. Writes preserve untouched selected motion, including impulses, without host readback for ordinary edits. Retirement overlays requested channels on selected motion, discards the request without repair and invalidates views; authored CanSleep/scene/surface getters remain non-preparing. Public-only --motion-transactions covers scene/raw modes, ordinary scene roles, six preparation routes, partial errors, retirement/transfer and strict 0/0 warmed full changed-motion frames. See docs/components/physics-registered-adapter.md#failed-motion-publication and bin/physics-motion-transactions/2026-10-17/validation.json. Complete numerical/custom/network/native/foreign/hardware acceptance remains open."
+    },
+    {
+      "godot": [
+        "RigidBody2D::property:angular_velocity",
+        "RigidBody2D::property:can_sleep",
+        "RigidBody2D::property:linear_velocity",
+        "RigidBody2D::property:sleeping"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0070/0075/0103: typed scene/server and direct-state velocity/sleep/policy operations retain common guarded authoring, selected numerical ownership, surface-channel distinctions and attachment lifetime. Existing CPU/GPU state/force/sleep and public-only selected-dispatch checks supply their bounded contract evidence. Authored velocity/sleep/policy writes now retain a failure-only complete requested publication for numerical/view/query/checkpoint/nonzero-step retry. Writes preserve untouched selected motion, including impulses, without host readback for ordinary edits. Retirement overlays requested channels on selected motion, discards the request without repair and invalidates views; authored CanSleep/scene/surface getters remain non-preparing. Public-only --motion-transactions covers scene/raw modes, ordinary scene roles, six preparation routes, partial errors, retirement/transfer and strict 0/0 warmed full changed-motion frames. See docs/components/physics-registered-adapter.md#failed-motion-publication and bin/physics-motion-transactions/2026-10-17/validation.json. Complete numerical/custom/network/native/foreign/hardware acceptance remains open."
+    },
+    {
+      "godot": [
+        "PhysicsDirectBodyState2DExtension::method:_get_angular_velocity()",
+        "PhysicsDirectBodyState2DExtension::method:_get_linear_velocity()",
+        "PhysicsDirectBodyState2DExtension::method:_is_sleeping()",
+        "PhysicsDirectBodyState2DExtension::method:_set_angular_velocity(float:)",
+        "PhysicsDirectBodyState2DExtension::method:_set_linear_velocity(Vector2:)",
+        "PhysicsDirectBodyState2DExtension::method:_set_sleep_state(bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0070/0075/0103: typed scene/server and direct-state velocity/sleep/policy operations retain common guarded authoring, selected numerical ownership, surface-channel distinctions and attachment lifetime. Existing CPU/GPU state/force/sleep and public-only selected-dispatch checks supply their bounded contract evidence. Authored velocity/sleep/policy writes now retain a failure-only complete requested publication for numerical/view/query/checkpoint/nonzero-step retry. Writes preserve untouched selected motion, including impulses, without host readback for ordinary edits. Retirement overlays requested channels on selected motion, discards the request without repair and invalidates views; authored CanSleep/scene/surface getters remain non-preparing. Public-only --motion-transactions covers scene/raw modes, ordinary scene roles, six preparation routes, partial errors, retirement/transfer and strict 0/0 warmed full changed-motion frames. See docs/components/physics-registered-adapter.md#failed-motion-publication and bin/physics-motion-transactions/2026-10-17/validation.json. Complete numerical/custom/network/native/foreign/hardware acceptance remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_body_set_axis_velocity(RID:,Vector2:)"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0070/0075/0103: typed scene/server and direct-state velocity/sleep/policy operations retain common guarded authoring, selected numerical ownership, surface-channel distinctions and attachment lifetime. Existing CPU/GPU state/force/sleep and public-only selected-dispatch checks supply their bounded contract evidence. Authored velocity/sleep/policy writes now retain a failure-only complete requested publication for numerical/view/query/checkpoint/nonzero-step retry. Writes preserve untouched selected motion, including impulses, without host readback for ordinary edits. Retirement overlays requested channels on selected motion, discards the request without repair and invalidates views; authored CanSleep/scene/surface getters remain non-preparing. Public-only --motion-transactions covers scene/raw modes, ordinary scene roles, six preparation routes, partial errors, retirement/transfer and strict 0/0 warmed full changed-motion frames. See docs/components/physics-registered-adapter.md#failed-motion-publication and bin/physics-motion-transactions/2026-10-17/validation.json. Complete numerical/custom/network/native/foreign/hardware acceptance remains open."
     }
   ]
 }

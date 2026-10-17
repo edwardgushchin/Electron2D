@@ -1178,6 +1178,8 @@ public sealed partial class PhysicsServer
     public static Transform BodyGetTransform(RID body) => Service.BodyGetTransformCore(body);
 
     /// <summary>Sets finite linear velocity, or virtual surface velocity for a static or kinematic body.</summary>
+    /// <remarks>Preserves the other selected motion channel, including motion added by impulses.
+    /// Incomplete selected publication retains this requested write for retry before numerical access, queries or a nonzero step.</remarks>
     /// <param name="body">A live scene or server body RID.</param>
     /// <param name="velocity">Finite global scene units per second.</param>
     public static void BodySetLinearVelocity(RID body, Vector2 velocity) => Service.BodySetLinearVelocityCore(body, velocity);
@@ -1188,6 +1190,8 @@ public sealed partial class PhysicsServer
     public static Vector2 BodyGetLinearVelocity(RID body) => Service.BodyGetLinearVelocityCore(body);
 
     /// <summary>Sets finite angular velocity, or virtual surface rotation for a static or kinematic body.</summary>
+    /// <remarks>Preserves selected linear motion. Incomplete publication retains the requested write for preparation retry.
+    /// Retirement retains requested channels and unaffected selected motion without repairing the discarded attachment.</remarks>
     /// <param name="body">A live scene or server body RID.</param>
     /// <param name="velocity">Finite radians per second.</param>
     /// <exception cref="ArgumentOutOfRangeException">The velocity is nonfinite.</exception>
@@ -1199,6 +1203,8 @@ public sealed partial class PhysicsServer
     public static float BodyGetAngularVelocity(RID body) => Service.BodyGetAngularVelocityCore(body);
 
     /// <summary>Sets dynamic sleep state; sleeping clears velocity and waking retains pending forces.</summary>
+    /// <remarks>Commits requested sleep input before selected publication. A partial failure retries the complete requested write
+    /// before numerical access or a nonzero step; a failed retry preserves its error and does not advance the tick.</remarks>
     /// <param name="body">A live scene or server body RID.</param>
     /// <param name="sleeping">True to sleep; false to wake. Static and kinematic roles ignore this assignment.</param>
     public static void BodySetSleeping(RID body, bool sleeping) => Service.BodySetSleepingCore(body, sleeping);
@@ -1209,6 +1215,8 @@ public sealed partial class PhysicsServer
     public static bool BodyGetSleeping(RID body) => Service.BodyGetSleepingCore(body);
 
     /// <summary>Sets automatic sleep permission, waking a dynamic body when disabled.</summary>
+    /// <remarks>Retains authored permission before selected publication; its getter stays non-preparing after failure.
+    /// Incomplete permission/wake publication retries as one requested write before numerical preparation.</remarks>
     /// <param name="body">A live scene or server body RID.</param>
     /// <param name="canSleep">Whether an idle dynamic body may sleep.</param>
     public static void BodySetCanSleep(RID body, bool canSleep) => Service.BodySetCanSleepCore(body, canSleep);

@@ -103,7 +103,7 @@ internal sealed partial class PhysicsBodyRuntime
     internal void Wake()
     {
         if (!Dynamic) return;
-        if (Space is not null) Backend.SetAwake(true);
+        if (Space is not null) Backend.PublishMotion(awake: true);
         else SetSleeping(false);
     }
 

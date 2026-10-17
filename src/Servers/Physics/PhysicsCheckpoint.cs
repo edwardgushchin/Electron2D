@@ -32,6 +32,7 @@ public sealed class PhysicsCheckpoint : IDisposable
     /// <remarks>Preserves live object/direct-view identity and restores contact/overlap history. Physics pose
     /// interpolation is reset. This does not rewind scene timers, scripts or other worlds. Replayed future
     /// intervals emit their ordinary events again; applications must reconcile predicted and confirmed effects.
+    /// Successful restoration discards superseded incomplete motion, pose and mode publication without invoking it again.
     /// Validation rejects before mutation. A failure after restoration starts fails the world until disposal.</remarks>
     /// <exception cref="ObjectDisposedException">The point or source world has been disposed.</exception>
     /// <exception cref="InvalidOperationException">Capture is incomplete, identity/configuration changed, the world failed,

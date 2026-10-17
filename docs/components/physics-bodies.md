@@ -2,7 +2,9 @@
 
 [Failed direct-mode publication](physics-registered-adapter.md#failed-body-mode-publication) retains authored mode/motion and retries complete numerical preparation before body access, space queries or steps. Detachment preserves that authored state, and scene role takeover prepares the prior direct profile before changing descriptors.
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
+
+[Motion publication recovery](physics-registered-adapter.md#failed-motion-publication) retains incomplete velocity/sleep/policy writes across selected errors, prepares numerical access and preserves requested plus untouched selected motion during retirement. This covers regular scene roles and direct server profiles; ordinary authored getters remain non-preparing.
 
 [Failed authored pose publication](physics-registered-adapter.md#failed-pose-publication) retains current input through partial selected errors, including authoring returned to the previous prepared pose. Numerical preparation retries before live queries/nonzero steps; body views also prepare incomplete body publication. Scene/Area transform presentation remains non-preparing, and retirement retains authoring without repairing the discarded attachment.
 

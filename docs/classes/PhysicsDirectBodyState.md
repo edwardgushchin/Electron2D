@@ -1,6 +1,10 @@
 # PhysicsDirectBodyState
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
+
+## Failed motion publication
+
+Failed velocity/sleep/policy publication retains the complete requested write for retry before numerical access, body views, live queries or a nonzero step. Ordinary authored reads stay non-preparing. Linear/angular edits preserve the other selected motion channel, including impulse-derived values. Retirement overlays requested channels on retained selected motion without repairing the discarded attachment. See [motion publication](../components/physics-registered-adapter.md#failed-motion-publication) for executable scope and limits.
 
 ## Failed pose publication
 

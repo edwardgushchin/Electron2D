@@ -57,6 +57,7 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
 
     internal void PreparePendingMode()
     {
+        Backend.PreparePendingMotion();
         var owners = Owners;
         if (owners.Scene is { } scene) scene.PreparePendingServerMode();
         else { owners.Server!.PreparePendingMode(); owners.Server.PreparePendingPose(); }

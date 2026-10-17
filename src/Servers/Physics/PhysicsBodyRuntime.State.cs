@@ -30,21 +30,14 @@ internal sealed partial class PhysicsBodyRuntime
         if (owner.Scene is { HasServerMode: true } direct) direct.SetServerLinearVelocity(velocity);
         else if (owner.Scene is RigidBody rigid) rigid.LinearVelocity = velocity;
         else if (owner.Scene is StaticBody surface)
-        {
-            if (Space is not null) Backend.SetLinearVelocity(default);
-            surface.ConstantLinearVelocity = velocity;
-        }
+            surface.SetSurfaceLinearVelocity(velocity, true);
         else if (owner.Scene is not null)
         {
-            if (Space is not null)
-            {
-                Backend.SetLinearVelocity(default);
-                Backend.SetSurfaceVelocity(velocity, _surfaceAngular);
-            }
             _surfaceLinear = velocity;
+            if (Space is not null) Backend.PublishMotion(linear: Vector2.Zero, surface: (velocity, _surfaceAngular));
         }
         else owner.Server!.SetLinearVelocity(velocity);
-        Wake();
+        if (Space is null) Wake();
     }
 
     internal void SetAngularVelocity(float velocity)
@@ -54,21 +47,14 @@ internal sealed partial class PhysicsBodyRuntime
         if (owner.Scene is { HasServerMode: true } direct) direct.SetServerAngularVelocity(velocity);
         else if (owner.Scene is RigidBody rigid) rigid.AngularVelocity = velocity;
         else if (owner.Scene is StaticBody surface)
-        {
-            if (Space is not null) Backend.SetAngularVelocity(0);
-            surface.ConstantAngularVelocity = velocity;
-        }
+            surface.SetSurfaceAngularVelocity(velocity, true);
         else if (owner.Scene is not null)
         {
-            if (Space is not null)
-            {
-                Backend.SetAngularVelocity(0);
-                Backend.SetSurfaceVelocity(_surfaceLinear, velocity);
-            }
             _surfaceAngular = velocity;
+            if (Space is not null) Backend.PublishMotion(angular: 0, surface: (_surfaceLinear, velocity));
         }
         else owner.Server!.SetAngularVelocity(velocity);
-        Wake();
+        if (Space is null) Wake();
     }
 
     internal void SetAxisVelocity(Vector2 axisVelocity) => SetLinearVelocity(ProjectAxisVelocity(GetLinearVelocity(), axisVelocity));
@@ -110,9 +96,9 @@ internal sealed partial class PhysicsBodyRuntime
         else if (owner.Server is { } server) server.SetCanSleep(canSleep);
         else
         {
-            if (Space is not null) Backend.SetCanSleep(canSleep);
             _canSleep = canSleep;
-            if (!canSleep && Dynamic && owner.Scene is { HasServerMode: true } scene) scene.SetServerSleeping(false);
+            if (owner.Scene is { HasServerMode: true } scene) scene.SetServerCanSleep(canSleep);
+            else if (Space is not null) Backend.PublishMotion(canSleep: canSleep);
         }
     }
 

@@ -1,6 +1,8 @@
 # PhysicsSnapshotMap
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
+
+[Publication recovery](../components/physics-registered-adapter.md#failed-motion-publication) distinguishes local rewind from portable preparation. Successful local restore discards superseded motion/pose/mode publication without invoking the failed request. Portable apply first prepares pre-existing local authoring; a preparation failure leaves incoming state unapplied and the tick unchanged, and a later successful apply supplies authoritative state.
 
 [Portable joint continuation](../components/physics-snapshots.md#portable-joint-continuation)
 now verifies CPU/CPU, CPU/GPU and CPU/registered scene/raw sampled frames, silent correction, atomic

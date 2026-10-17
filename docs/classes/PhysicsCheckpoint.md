@@ -1,6 +1,8 @@
 # PhysicsCheckpoint
 
-Last updated: 2026-10-15
+Last updated: 2026-10-18
+
+[Publication recovery](../components/physics-registered-adapter.md#failed-motion-publication) distinguishes local rewind from portable preparation. Successful local restore discards superseded motion/pose/mode publication without invoking the failed request. Portable apply first prepares pre-existing local authoring; a preparation failure leaves incoming state unapplied and the tick unchanged, and a later successful apply supplies authoritative state.
 
 Capturing a moved character now retains its prepared query pose, query flag and
 separate solver pose. These are mutable replay state rather than fixed authoring.

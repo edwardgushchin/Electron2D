@@ -24,6 +24,7 @@ public partial class Area
     }
     internal void RestoreReplay(AreaReplay state)
     {
+        _poseDirty = false;
         _lastPosition = state._lastPosition;
         _lastRotation = state._lastRotation;
         _shapesDirty = false;

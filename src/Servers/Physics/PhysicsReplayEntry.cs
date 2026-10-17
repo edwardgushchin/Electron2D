@@ -108,6 +108,7 @@ internal sealed partial class PhysicsReplayEntry
     }
     internal void Restore()
     {
+        Backend.DiscardPendingMotion();
         if (Scene is PhysicsBody body) body.RestoreReplay(_body!);
         if (Scene is RigidBody rigid) rigid.RestoreReplay(_rigid!);
         if (Scene is StaticBody surface) surface.RestoreReplay(_surface!);

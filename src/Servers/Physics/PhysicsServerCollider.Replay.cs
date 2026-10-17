@@ -7,6 +7,7 @@ internal sealed partial class PhysicsServerCollider
     internal ReplayState CaptureReplay() => new(_transform, _linearVelocity, _angularVelocity, _sleeping, _canSleep, _firstKinematicTransform, _hasKinematicTarget, _kinematicTarget);
     internal void RestoreReplay(in ReplayState state)
     {
+        _modeDirty = false; _poseDirty = false;
         _transform = state.Transform; _linearVelocity = state.Linear; _angularVelocity = state.Angular; _sleeping = state.Sleeping; _canSleep = state.CanSleep;
         _firstKinematicTransform = state.FirstTarget; _hasKinematicTarget = state.HasTarget; _kinematicTarget = state.Target; _shapesDirty = false;
     }
