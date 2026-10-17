@@ -241,22 +241,22 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void PrepareForQuery()
     {
         EnsureQueryAccess();
-        PreparePendingFilters();
+        PreparePendingColliderMetadata();
         foreach (var body in _bodies) body.PrepareBackend();
         foreach (var area in _areas) area.PrepareBackend();
         foreach (var collider in _serverColliders) collider.PrepareBackend();
         _backend.SynchronizeCollisionExceptions();
     }
 
-    private bool _filtersDirty;
-    internal void MarkFiltersDirty() => _filtersDirty = true;
-    private void PreparePendingFilters()
+    private bool _colliderMetadataDirty;
+    internal void MarkColliderMetadataDirty() => _colliderMetadataDirty = true;
+    private void PreparePendingColliderMetadata()
     {
-        if (!_filtersDirty) return;
-        foreach (var body in _bodies) body.Backend.PrepareFilter(body.EffectiveCollisionLayer, body.EffectiveCollisionMask);
-        foreach (var area in _areas) area.Backend.PrepareFilter(area.CollisionLayer, area.CollisionMask);
-        foreach (var collider in _serverColliders) collider.Backend.PrepareFilter(collider.CollisionLayer, collider.CollisionMask);
-        _filtersDirty = false;
+        if (!_colliderMetadataDirty) return;
+        foreach (var body in _bodies) body.Backend.PrepareMetadata(body.EffectiveCollisionLayer, body.EffectiveCollisionMask);
+        foreach (var area in _areas) area.Backend.PrepareMetadata(area.CollisionLayer, area.CollisionMask);
+        foreach (var collider in _serverColliders) collider.Backend.PrepareMetadata(collider.CollisionLayer, collider.CollisionMask);
+        _colliderMetadataDirty = false;
     }
 
     internal void PrepareMonitoringCapacity()
@@ -462,7 +462,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (_stepping || DispatchingCallbacks) throw new InvalidOperationException("A physics world cannot step recursively.");
         if (!IsActive || !PhysicsServer.Service.IsActive || delta == 0) return;
         if (Tick == ulong.MaxValue) throw new InvalidOperationException("The physics world tick counter is exhausted.");
-        PreparePendingFilters();
+        PreparePendingColliderMetadata();
         ResetDebugContacts();
         _backend.Step(delta);
     }

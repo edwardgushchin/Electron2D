@@ -14,7 +14,7 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live body RID, including a detached body.</param>
     /// <param name="priority">A finite positive relative weight.</param>
     /// <remarks>Applies to penetration recovery in BodyTestMotion and scene movement. It does not change
-    /// rigid contact impulses, sleep or fixture identity. Scene-owned bodies expose the same value.</remarks>
+    /// rigid contact impulses, sleep or fixture identity. Scene-owned bodies expose the same value. A selected publication failure retains committed authoring and object lifetime guards; live query or nonzero-step preparation retries the complete current metadata.</remarks>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The weight is nonfinite or not positive.</exception>
     /// <exception cref="InvalidOperationException">Attached access violates owner-thread or solver-phase rules.</exception>

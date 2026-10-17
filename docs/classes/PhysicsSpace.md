@@ -1,6 +1,6 @@
 # PhysicsSpace
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 **Declaration:** `internal sealed partial class PhysicsSpace : IDisposable`
 
@@ -13,6 +13,10 @@ Last updated: 2026-10-16
 The [common step boundary](../../src/Servers/Physics/PhysicsSpace.Step.cs) now dispatches owner phases for preparation, solve, result synchronization, body completion, contacts and Areas. Shared callback/event ordering and always-released step guards replace separate CPU/GPU outer-step implementations. The selected owner retains actual numerical work, completion readiness and GPU failure policy.
 
 Scene and raw colliders use the same public space-assignment transition. Actual scene attachments can differ from their render-world descriptor; direct changes retain this space's existing driver. Partial additions are removed before a failed transfer restores its old attachment. See [common space bindings](../components/physics-registered-adapter.md#common-space-bindings).
+
+## Pending collider metadata
+
+Object/canvas/priority authoring and reverse node membership commit before selected publication. Initial factory/attachment hooks already borrow the target world and node. Failed live publication queues complete metadata repair before live queries/nonzero steps; repeated preparation failure keeps the tick unchanged. Failed initial creation retires partial bindings. See [the contract and executable limits](../components/physics-registered-adapter.md#failed-collider-metadata-publication).
 
 ## Description and internal flow
 

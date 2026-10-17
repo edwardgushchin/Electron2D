@@ -10,6 +10,10 @@ arbitrary geometry and full extension acceptance remain open.
 
 **Declaration:** `public abstract class PhysicsServerBackend : ElectronObject` · **Source:** [PhysicsServerBackend.cs](../../src/Servers/Physics/PhysicsServerBackend.cs) · **Component:** [Registered solver adapter](../components/physics-registered-adapter.md)
 
+## Initial collider ownership
+
+Object/canvas/priority authoring and reverse node membership commit before selected publication. Initial factory/attachment hooks already borrow the target world and node. Failed live publication queues complete metadata repair before live queries/nonzero steps; repeated preparation failure keeps the tick unchanged. Failed initial creation retires partial bindings. See [the contract and executable limits](../components/physics-registered-adapter.md#failed-collider-metadata-publication).
+
 ## Prepared collider inputs
 
 The eleven Body/Area world/filter/object/canvas/priority getters read prepared common authoring in selected numerical/status hooks, including the borrowed numerical thread. Weak target disposal preserves assigned numeric IDs; transfer reports the actual current world. See [the executable contract and limits](../components/physics-registered-adapter.md#prepared-collider-metadata-reads).

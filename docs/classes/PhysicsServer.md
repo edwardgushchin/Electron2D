@@ -10,6 +10,10 @@ Explicit CPU/GPU selection and startup diagnostics are in
 [`PhysicsServer.Backends.cs`](../../src/Servers/Physics/PhysicsServer.Backends.cs).
 The pose batch is in [`PhysicsServer.BodyTransforms.cs`](../../src/Servers/Physics/PhysicsServer.BodyTransforms.cs).
 
+## Failed metadata publication
+
+Object/canvas/priority authoring and reverse node membership commit before selected publication. Initial factory/attachment hooks already borrow the target world and node. Failed live publication queues complete metadata repair before live queries/nonzero steps; repeated preparation failure keeps the tick unchanged. Failed initial creation retires partial bindings. See [the contract and executable limits](../components/physics-registered-adapter.md#failed-collider-metadata-publication).
+
 ## Raw shape initialization
 
 The eight built-in PhysicsServer shape factories return unconfigured RIDs. ShapeGetType works immediately. ShapeGetData and using that RID or a pending borrowed view as a collision-query source throw InvalidOperationException until ShapeSetData succeeds. Ordinary Shape constructors and CustomShapeCreate still supply initialized data.
