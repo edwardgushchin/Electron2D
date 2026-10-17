@@ -190,16 +190,16 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// The capped subset and its order need not agree across implementations. Do not retain the span.</remarks>
     protected internal abstract int ReadDebugContacts(Span<Vector2> output);
     /// <summary>Supplies the selected implementation operation: set sleep settings.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Invoked under the world owner guard with engine-unit values. Publication errors retain current authored input for this complete family; preparation may retry it before queries, history or a positive active step. Apply the complete supplied profile on retry.</remarks>
     protected internal abstract void SetSleepSettings(in PhysicsSleepSettings settings);
     /// <summary>Supplies the selected implementation operation: set contact settings.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Invoked under the world owner guard with engine-unit values. Publication errors retain current authored input for this complete family; preparation may retry it before queries, history or a positive active step. Apply the complete supplied profile on retry.</remarks>
     protected internal abstract void SetContactSettings(in PhysicsContactSettings settings);
     /// <summary>Supplies the selected implementation operation: set solver iterations.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Invoked under the world owner guard with engine-unit values. Publication errors retain current authored input for this complete family; preparation may retry it before queries, history or a positive active step. Apply the complete supplied profile on retry.</remarks>
     protected internal abstract void SetSolverIterations(int value);
     /// <summary>Supplies the selected implementation operation: set constraint default bias.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Invoked under the world owner guard with engine-unit values. Publication errors retain current authored input for this complete family; preparation may retry it before queries, history or a positive active step. Apply the complete supplied profile on retry.</remarks>
     protected internal abstract void SetConstraintDefaultBias(float value);
     /// <summary>Supplies the selected implementation operation: prepare solver capacity.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>

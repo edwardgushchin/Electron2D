@@ -80,7 +80,7 @@ public sealed partial class PhysicsServer
     /// <summary>Sets the world's outer-tick contact correction fraction.</summary>
     /// <param name="space">A live scene-owned or server-created space RID.</param>
     /// <param name="value">A finite value as a fraction in [0,1], within the backend range.</param>
-    /// <remarks>Changed values wake dynamics without replacing shapes, contacts or borrowed views. Equal writes are silent.
+    /// <remarks>Changed values wake dynamics without replacing shapes, contacts or borrowed views. Equal completed writes are silent; an incomplete publication retries the current family.
     /// Shape.CustomSolverBias overrides the default fraction. Slack affects only positional correction, not collision/query eligibility.
     /// Positional correction is distributed over the tick's actual substep durations.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or does not identify a space.</exception>
@@ -98,7 +98,7 @@ public sealed partial class PhysicsServer
     /// <summary>Sets the world's contact penetration slack.</summary>
     /// <param name="space">A live scene-owned or server-created space RID.</param>
     /// <param name="value">A finite value as a nonnegative scene-unit distance, within the backend range.</param>
-    /// <remarks>Changed values wake dynamics without replacing shapes, contacts or borrowed views. Equal writes are silent.
+    /// <remarks>Changed values wake dynamics without replacing shapes, contacts or borrowed views. Equal completed writes are silent; an incomplete publication retries the current family.
     /// Shape.CustomSolverBias overrides the default fraction. Slack affects only positional correction, not collision/query eligibility.
     /// Positional correction is distributed over the tick's actual substep durations.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or does not identify a space.</exception>

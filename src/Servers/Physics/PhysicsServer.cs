@@ -12,7 +12,10 @@ namespace Electron2D;
 /// Shared shape correction policy preflights every scene/raw user before mutation, including equal writes; accepted edits preserve exact geometry.
 /// Guarded authored reads remain available; ordinary body-state extension forwarding and post-solver callbacks keep their write access.
 /// Caller-owned release preflights access before mutation, then completes retirement and preserves all cleanup errors.
-/// Departure observers cannot rebind or recursively release the retiring collider.</remarks>
+/// Departure observers cannot rebind or recursively release the retiring collider.
+/// World sleep/contact profiles, solver iterations and default constraint bias retain accepted input through publication errors.
+/// Equal writes retry an incomplete family; live queries, checkpoint/portable preparation and active positive steps finish
+/// pending policy before numerical use. Authored getters remain non-preparing; skipped steps and retirement do not retry.</remarks>
 public sealed partial class PhysicsServer : ElectronObject
 {
     private static readonly PhysicsServer SharedInstance = new();

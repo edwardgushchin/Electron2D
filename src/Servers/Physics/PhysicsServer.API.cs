@@ -604,7 +604,9 @@ public sealed partial class PhysicsServer
     /// <summary>Sets the joint positional correction fraction.</summary>
     /// <param name="space">A live space RID.</param>
     /// <param name="value">A finite fraction from zero to one; initially sampled from ProjectSettings.Physics2DDefaultConstraintBias.</param>
-    /// <remarks>Updates and wakes zero-bias joints. Explicit nonzero joint bias is preserved; contact-separation bias is separate.</remarks>
+    /// <remarks>Updates and wakes zero-bias joints. Explicit nonzero joint bias is preserved; contact-separation bias is separate.
+    /// Publication errors retain the requested bias for retry before live queries, history preparation or an active positive step.
+    /// An equal write retries incomplete publication.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or has the wrong resource or joint role.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is outside the documented finite range.</exception>
     /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules, or a numerical implementation hook is borrowed. Borrowed writes reject before mutation, including equal values.</exception>

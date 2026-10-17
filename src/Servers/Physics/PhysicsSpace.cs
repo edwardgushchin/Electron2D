@@ -13,11 +13,21 @@ internal sealed partial class PhysicsSpace : IDisposable
     private readonly List<Joint> _joints = [];
     private readonly List<PhysicsJointRuntime> _jointRuntimes = [];
     internal float ConstraintDefaultBias { get; private set; }
+    private bool _constraintDefaultBiasDirty;
     internal void SetConstraintDefaultBias(float value)
     {
         EnsureQueryAccess(); EnsureImplementationWriteAccess(); PhysicsJointRuntime.ValidateBias(value);
-        if (ConstraintDefaultBias == value) return;
-        ConstraintDefaultBias = value; _backend.SetConstraintDefaultBias(value);
+        if (ConstraintDefaultBias == value && !_constraintDefaultBiasDirty) return;
+        ConstraintDefaultBias = value;
+        _constraintDefaultBiasDirty = true;
+        PrepareConstraintDefaultBias();
+    }
+    private void PrepareConstraintDefaultBias()
+    {
+        if (!_constraintDefaultBiasDirty) return;
+        EnsureImplementationWriteAccess();
+        _backend.SetConstraintDefaultBias(ConstraintDefaultBias);
+        _constraintDefaultBiasDirty = false;
     }
     private readonly List<Area> _areas = [];
     private readonly List<PhysicsServerCollider> _serverColliders = [];
@@ -246,6 +256,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void PrepareForQuery()
     {
         EnsureQueryAccess();
+        PrepareWorldPolicies();
         PreparePendingColliderMetadata();
         foreach (var body in _bodies) body.PrepareBackend();
         foreach (var area in _areas) area.PrepareBackend();
@@ -479,6 +490,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (_stepping || DispatchingCallbacks) throw new InvalidOperationException("A physics world cannot step recursively.");
         if (!IsActive || !PhysicsServer.Service.IsActive || delta == 0) return;
         if (Tick == ulong.MaxValue) throw new InvalidOperationException("The physics world tick counter is exhausted.");
+        PrepareWorldPolicies();
         PreparePendingColliderMetadata();
         ResetDebugContacts();
         _backend.Step(delta);

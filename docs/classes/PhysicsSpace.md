@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-18
 
+## Failed world policy publication
+
+World sleep/contact profiles, solver iterations and default constraint bias retain accepted input when selected publication fails. An equal setter retries its complete current family; live queries, checkpoint/portable preparation and active positive steps finish incomplete families before numerical use. Completed families do not replay when a later family fails. Authored getters remain non-preparing; skipped steps and retirement do not publish pending settings. Local restore validates fixed configuration before this preparation. See [world policy recovery](../components/physics-registered-adapter.md#failed-world-policy-publication) for execution evidence and limits.
+
 ## Terminal world access
 
 Terminal simulation or local/portable restore failure rejects attached motion/role writes before changing authored values, including equal assignments. Numerical scene sleep and direct-profile motion reads use the same common failure gate; ordinary native authored velocity/policy and constant-surface reads remain non-preparing. The gate does not impose public-query phase rules on otherwise valid force/state callbacks. Detachment and cleanup remain available. See [terminal world authoring](../components/physics-registered-adapter.md#terminal-world-authoring) for the public regression scope and limits.

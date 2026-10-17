@@ -1,5 +1,7 @@
 # Physics contract and backend audit
 
+[World policy publication](physics-registered-adapter.md#failed-world-policy-publication) now retains all nine common typed inputs through selected errors and finishes incomplete families before numerical query/step and history preparation. A frozen public RED reproduced an authored sleep threshold of 100 with no selected retry and a still-moving body. All 111 final profiles pass, including 126 failure cases per registered profile, strict zero warmed edited-frame managed bytes, strict NativeAOT and exact source proof. The preceding full run remains bound to 34481fb3 and does not verify this newer repair. Coverage states remain unchanged.
+
 [Terminal world authoring](physics-registered-adapter.md#terminal-world-authoring) now applies the common simulation/local/portable failure gate before attached motion/role writes and numerical scene reads. A public registered history-restore RED reproduced a surface setter changing authoring after the world had already failed. The repair preserves healthy callback phases and cleanup. All 86 final managed/NativeAOT focused and related profiles pass with exact source/PDB proof and strict zero warmed managed-byte gates; a new full run remains required. It changes no coverage status; the separate deferred-scene commit 73b34c8d closed two inherited placeholder rows, so the current ledger is 221 open declarations (187 Partial, 17 Unimplemented, 17 Blocked). The preceding be4567bc full/network passes below retain their source-bound scope.
 
 

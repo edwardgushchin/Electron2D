@@ -7,18 +7,7 @@ public static partial class BackendChecks
         Solver? solver = null;
         PhysicsServerManager.RegisterServer("WorldPolicy", () => solver = new());
         using var world = new World("WorldPolicy"); var space = world.Space;
-        (Action<float> Set, Func<float> Get, float First, float Second)[] policies =
-        [
-            (v => PhysicsServer.SpaceSetBodyLinearVelocitySleepThreshold(space, v), () => PhysicsServer.SpaceGetBodyLinearVelocitySleepThreshold(space), 3, 4),
-            (v => PhysicsServer.SpaceSetBodyAngularVelocitySleepThreshold(space, v), () => PhysicsServer.SpaceGetBodyAngularVelocitySleepThreshold(space), .2f, .3f),
-            (v => PhysicsServer.SpaceSetBodyTimeToSleep(space, v), () => PhysicsServer.SpaceGetBodyTimeToSleep(space), .75f, .8f),
-            (v => PhysicsServer.SpaceSetContactRecycleRadius(space, v), () => PhysicsServer.SpaceGetContactRecycleRadius(space), 2, 3),
-            (v => PhysicsServer.SpaceSetContactMaxSeparation(space, v), () => PhysicsServer.SpaceGetContactMaxSeparation(space), 3, 4),
-            (v => PhysicsServer.SpaceSetContactDefaultBias(space, v), () => PhysicsServer.SpaceGetContactDefaultBias(space), .4f, .5f),
-            (v => PhysicsServer.SpaceSetContactMaxAllowedPenetration(space, v), () => PhysicsServer.SpaceGetContactMaxAllowedPenetration(space), .3f, .4f),
-            (v => PhysicsServer.SpaceSetSolverIterations(space, (int)v), () => PhysicsServer.SpaceGetSolverIterations(space), 7, 8),
-            (v => PhysicsServer.SpaceSetConstraintDefaultBias(space, v), () => PhysicsServer.SpaceGetConstraintDefaultBias(space), .4f, .5f)
-        ];
+        var policies = WorldPolicies(space);
         foreach (var policy in policies) { policy.Set(policy.First); Check(policy.Get() == policy.First, "World policies retain authored values"); }
         var raw = PhysicsServer.BodyCreate();
         using var circle = new CircleShape { Radius = 3 };

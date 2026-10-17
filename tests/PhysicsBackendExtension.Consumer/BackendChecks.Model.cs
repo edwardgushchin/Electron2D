@@ -56,7 +56,7 @@ public static partial class BackendChecks
         internal Action? StepHook, StatusHook;
         internal Action? FlushHook, SyncHook;
         internal Action<RID>? MotionHook;
-        internal Action? WorldPolicyHook;
+        internal Action? WorldPolicyHook, WorldPolicyPublishedHook;
         internal Action? CapacityHook;
         internal Action? MonitorCapacityHook;
         internal int WorldPolicyCalls;
@@ -85,15 +85,29 @@ public static partial class BackendChecks
         {
             WorldPolicy(); _sleepSettings = settings;
             foreach (var body in Bodies.Values) if (!body.IsArea && body.Mode != PhysicsServer.BodyMode.Static) { body.Awake = true; body.SleepTime = 0; }
+            WorldPolicyPublishedHook?.Invoke();
         }
         private PhysicsContactSettings _contactSettings;
         protected override void SetContactSettings(in PhysicsContactSettings settings)
-        { WorldPolicy(); if (_contactSettings == settings) return; _contactSettings = settings; WakeDynamics(); }
+        { WorldPolicy(); if (_contactSettings != settings) { _contactSettings = settings; WakeDynamics(); } WorldPolicyPublishedHook?.Invoke(); }
         private void WakeDynamics() { foreach (var body in Bodies.Values) if (body.Dynamic) { body.Awake = true; body.SleepTime = 0; } }
         internal int Iterations = 16;
         internal float ConstraintBias = .2f;
-        protected override void SetSolverIterations(int value) { WorldPolicy(); if (Iterations == value) return; Iterations = value; WakeDynamics(); }
-        protected override void SetConstraintDefaultBias(float value) { WorldPolicy(); ConstraintBias = value; }
+        protected override void SetSolverIterations(int value) { WorldPolicy(); if (Iterations != value) { Iterations = value; WakeDynamics(); } WorldPolicyPublishedHook?.Invoke(); }
+        protected override void SetConstraintDefaultBias(float value) { WorldPolicy(); ConstraintBias = value; WorldPolicyPublishedHook?.Invoke(); }
+        internal float ReadWorldPolicy(int index) => index switch
+        {
+            0 => _sleepSettings.LinearThreshold,
+            1 => _sleepSettings.AngularThreshold,
+            2 => _sleepSettings.TimeToSleep,
+            3 => _contactSettings.RecycleRadius,
+            4 => _contactSettings.MaxSeparation,
+            5 => _contactSettings.Bias,
+            6 => _contactSettings.AllowedPenetration,
+            7 => Iterations,
+            8 => ConstraintBias,
+            _ => throw new ArgumentOutOfRangeException(nameof(index))
+        };
         private void WorldPolicy() { WorldPolicyCalls++; WorldPolicyHook?.Invoke(); }
         protected override void PrepareSolverCapacity(int bodies, int shapes, int joints) => CapacityHook?.Invoke();
         protected override void PrepareMonitoringCapacity(int bodies, int shapes) => MonitorCapacityHook?.Invoke();

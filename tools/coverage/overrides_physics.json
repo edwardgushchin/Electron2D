@@ -7533,7 +7533,6 @@
     },
     {
       "godot": [
-        "PhysicsServer2DExtension::method:_space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)",
         "PhysicsServer2DExtension::method:_space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)",
         "PhysicsServer2DExtension::method:_space_set_active(RID:,bool:)",
         "PhysicsServer2DExtension::method:_space_is_active(RID:)"
@@ -7883,6 +7882,13 @@
       ],
       "state": "Partial",
       "reason": "ADRs 0070/0075/0103: typed scene/server and direct-state velocity/sleep/policy operations retain common guarded authoring, selected numerical ownership, surface-channel distinctions and attachment lifetime. Existing CPU/GPU state/force/sleep and public-only selected-dispatch checks supply their bounded contract evidence. Authored velocity/sleep/policy writes now retain a failure-only complete requested publication for numerical/view/query/checkpoint/nonzero-step retry. Writes preserve untouched selected motion, including impulses, without host readback for ordinary edits. Retirement overlays requested channels on selected motion, discards the request without repair and invalidates views; authored CanSleep/scene/surface getters remain non-preparing. Public-only --motion-transactions covers scene/raw modes, ordinary scene roles, six preparation routes, partial errors, retirement/transfer and strict 0/0 warmed full changed-motion frames. See docs/components/physics-registered-adapter.md#failed-motion-publication and bin/physics-motion-transactions/2026-10-17/validation.json. Complete numerical/custom/network/native/foreign/hardware acceptance remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open. Shared registered/CPU/GPU --sleep checks now verify actual strict thresholds/duration, zero policy, CanSleep, policy/impulse wake, inactive intervals, quiet-clock replay and dynamic contact/joint groups with static-support separation. Independent sleep consumes retained settings; 128 replay cycles (1920 frames) and 128 actual group sleep/wake cycles (896 frames) each measure strict 0/0 owner/all-thread bytes. General geometry/CCD, portable networking and final native/performance acceptance remain open. The independent public-only --contact-policy fixture now executes mixed world/shape correction and slack, shared contact/joint sweeps, dense/CCD budget, full physical impulses and live identity/sleep/observer behavior on seven source families in both numerical thread modes. Nineteen complete 128-frame brackets allocate 0/0 managed bytes. Registered contact-cache/arbitrary coupled/custom and full numerical/network/native/platform/performance acceptance remain open. World-parameter publication now retains each complete current sleep/contact/sweep/constraint profile after errors and retries equal writes, live queries and local/portable preparation or active positive steps. The public-only --world-policy-transactions fixture checks nine values, two error stages and seven routes (126 cases per registered profile), partial batch progress, actual sleep, skipped intervals, retirement and strict warmed frames. Activation retains its separate commit-after-hook semantics; complete acceptance remains open."
     }
   ]
 }

@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-18
 
+## Failed world policy publication
+
+World sleep/contact profiles, solver iterations and default constraint bias retain accepted input when selected publication fails. An equal setter retries its complete current family; live queries, checkpoint/portable preparation and active positive steps finish incomplete families before numerical use. Completed families do not replay when a later family fails. Authored getters remain non-preparing; skipped steps and retirement do not publish pending settings. Local restore validates fixed configuration before this preparation. See [world policy recovery](../components/physics-registered-adapter.md#failed-world-policy-publication) for execution evidence and limits.
+
 ## Failed motion publication
 
 Failed velocity/sleep/policy publication retains the complete requested write for retry before numerical access, body views, live queries or a nonzero step. Ordinary authored reads stay non-preparing. Linear/angular edits preserve the other selected motion channel, including impulse-derived values. Retirement overlays requested channels on retained selected motion without repairing the discarded attachment. See [motion publication](../components/physics-registered-adapter.md#failed-motion-publication) for executable scope and limits.

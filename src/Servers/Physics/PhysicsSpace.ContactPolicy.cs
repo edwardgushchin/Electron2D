@@ -3,21 +3,46 @@ namespace Electron2D;
 internal sealed partial class PhysicsSpace
 {
     internal int SolverIterations { get; private set; }
+    private bool _solverIterationsDirty, _contactSettingsDirty;
     internal void SetSolverIterations(int value)
     {
         EnsureQueryAccess();
         EnsureImplementationWriteAccess();
         if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value));
-        if (SolverIterations == value) return;
+        if (SolverIterations == value && !_solverIterationsDirty) return;
         SolverIterations = value;
-        _backend.SetSolverIterations(value);
+        _solverIterationsDirty = true;
+        PrepareSolverIterations();
     }
 
     internal PhysicsContactSettings ContactSettings { get; private set; }
     internal void SetContactSettings(in PhysicsContactSettings settings)
     {
-        EnsureQueryAccess(); EnsureImplementationWriteAccess(); settings.Validate(); if (ContactSettings == settings) return;
+        EnsureQueryAccess(); EnsureImplementationWriteAccess(); settings.Validate();
+        if (ContactSettings == settings && !_contactSettingsDirty) return;
         ContactSettings = settings;
-        _backend.SetContactSettings(settings);
+        _contactSettingsDirty = true;
+        PrepareContactSettings();
+    }
+    private void PrepareSolverIterations()
+    {
+        if (!_solverIterationsDirty) return;
+        EnsureImplementationWriteAccess();
+        _backend.SetSolverIterations(SolverIterations);
+        _solverIterationsDirty = false;
+    }
+    private void PrepareContactSettings()
+    {
+        if (!_contactSettingsDirty) return;
+        EnsureImplementationWriteAccess();
+        _backend.SetContactSettings(ContactSettings);
+        _contactSettingsDirty = false;
+    }
+    private void PrepareWorldPolicies()
+    {
+        PrepareSleepSettings();
+        PrepareContactSettings();
+        PrepareSolverIterations();
+        PrepareConstraintDefaultBias();
     }
 }

@@ -12,7 +12,7 @@ public sealed partial class PhysicsServer
     /// <summary>Sets the world's quiet velocity threshold in scene units per second.</summary>
     /// <param name="space">A live scene-owned or server-created space RID.</param>
     /// <param name="value">A finite nonnegative value within the backend's representable range.</param>
-    /// <remarks>Changed settings wake dynamic bodies and restart their quiet timers. Equal writes are silent.
+    /// <remarks>Changed settings wake dynamic bodies and restart their quiet timers. Equal completed writes are silent; an incomplete publication retries the current family.
     /// Automatic sleep requires both speeds strictly below their thresholds for longer than the duration.
     /// A zero velocity threshold disables automatic sleep; zero duration allows sleep after one eligible positive step.
     /// Explicit body sleep and CanSleep remain independent. Inactive worlds do not accumulate quiet time.</remarks>
@@ -31,7 +31,7 @@ public sealed partial class PhysicsServer
     /// <summary>Sets the world's quiet velocity threshold in radians per second.</summary>
     /// <param name="space">A live scene-owned or server-created space RID.</param>
     /// <param name="value">A finite nonnegative value within the backend's representable range.</param>
-    /// <remarks>Changed settings wake dynamic bodies and restart their quiet timers. Equal writes are silent.
+    /// <remarks>Changed settings wake dynamic bodies and restart their quiet timers. Equal completed writes are silent; an incomplete publication retries the current family.
     /// Automatic sleep requires both speeds strictly below their thresholds for longer than the duration.
     /// A zero velocity threshold disables automatic sleep; zero duration allows sleep after one eligible positive step.
     /// Explicit body sleep and CanSleep remain independent. Inactive worlds do not accumulate quiet time.</remarks>
@@ -50,7 +50,7 @@ public sealed partial class PhysicsServer
     /// <summary>Sets the world's quiet duration in seconds.</summary>
     /// <param name="space">A live scene-owned or server-created space RID.</param>
     /// <param name="value">A finite nonnegative value within the backend's representable range.</param>
-    /// <remarks>Changed settings wake dynamic bodies and restart their quiet timers. Equal writes are silent.
+    /// <remarks>Changed settings wake dynamic bodies and restart their quiet timers. Equal completed writes are silent; an incomplete publication retries the current family.
     /// Automatic sleep requires both speeds strictly below their thresholds for longer than the duration.
     /// A zero velocity threshold disables automatic sleep; zero duration allows sleep after one eligible positive step.
     /// Explicit body sleep and CanSleep remain independent. Inactive worlds do not accumulate quiet time.</remarks>

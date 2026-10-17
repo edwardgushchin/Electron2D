@@ -1,6 +1,8 @@
 # World and shape contact policy
 
-Last updated: 2026-10-14
+Last updated: 2026-10-18
+
+[World policy publication recovery](physics-registered-adapter.md#failed-world-policy-publication) retains complete current profiles after partial selected errors, retries before numerical preparation and preserves skipped-interval and cleanup behavior.
 
 ## Authored policy
 
