@@ -496,7 +496,7 @@ PhysicsServer.FreeRID(geometry);
 
 <a id="bodygetshape"></a>
 <a id="areagetshape"></a>
-**BodyGetShape / AreaGetShape:** Return the effective slot's shape identity. Caller-created shape IDs remain caller-owned; managed Shape IDs remain resource-owned. Getters confer no release ownership. An absent index throws ArgumentOutOfRangeException; wrong/stale collider identities throw ArgumentException. An active world requires its owner thread outside solver/sync phases.
+**BodyGetShape / AreaGetShape:** Return the effective slot's shape identity. Caller-created shape IDs remain caller-owned; managed Shape IDs remain resource-owned. Getters confer no release ownership. An absent index throws ArgumentOutOfRangeException; wrong/stale collider identities throw ArgumentException. Body/Area count, RID and local-pose getters read common prepared authoring without querying numerical state. A selected implementation may use them during its numerical hook on the owner or its exact borrowed solver thread. Ordinary access retains owner-thread and failed-world guards; unrelated threads, geometry writes and live solver queries retain their existing restrictions.
 
 <a id="bodysetshape"></a>
 <a id="areasetshape"></a>

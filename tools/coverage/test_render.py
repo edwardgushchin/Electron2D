@@ -323,6 +323,10 @@ def main():
     server_rows = [row for row in pages[CLASS_PAGES / "PhysicsServer2D.md"].splitlines()
                    if row.startswith("| [`") and "github.com/godotengine" in row]
     assert "../../classes/PhysicsServer.md" in class_rows["PhysicsServer2D"]
+    extension_shape_reads = [row for row in pages[CLASS_PAGES / "PhysicsServer2DExtension.md"].splitlines()
+                             if any(f"method _{kind}_get_shape{suffix}(" in row
+                                    for kind in ("body", "area") for suffix in ("", "_count", "_transform"))]
+    assert len(extension_shape_reads) == 6 and all(" | Implemented | " in row for row in extension_shape_reads)
     boundary_rows = [row for row in pages[CLASS_PAGES / "WorldBoundaryShape2D.md"].splitlines() if row.startswith("| [`")]
     assert len(boundary_rows) == 3 and all(" | Implemented | " in row for row in boundary_rows)
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)

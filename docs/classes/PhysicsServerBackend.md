@@ -10,6 +10,10 @@ arbitrary geometry and full extension acceptance remain open.
 
 **Declaration:** `public abstract class PhysicsServerBackend : ElectronObject` · **Source:** [PhysicsServerBackend.cs](../../src/Servers/Physics/PhysicsServerBackend.cs) · **Component:** [Registered solver adapter](../components/physics-registered-adapter.md)
 
+## Prepared slot inputs
+
+Body/Area GetShapeCount, GetShape and GetShapeTransform expose common prepared logical slots during numerical hooks, including the exact borrowed solver thread. These reads do not enter the solver or change resource ownership. Pending/disabled and disposed slots keep their logical meaning. See [the executable scope and guards](../components/physics-registered-adapter.md#prepared-logical-shape-reads).
+
 ## Pending server geometry
 
 GetShapeGeometry rejects a pending raw shape before invoking its geometry supplier. After ShapeSetData commits, the helper returns the configured immutable canonical data. Backend RebuildShapes receives pending slots as Enabled=false; implementation algorithms must honor that flag.

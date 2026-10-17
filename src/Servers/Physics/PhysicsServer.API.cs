@@ -1061,11 +1061,15 @@ public sealed partial class PhysicsServer
     /// <summary>Gets the number of indexed shape slots on a body, including disabled slots.</summary>
     /// <param name="body">A live scene or server body RID.</param>
     /// <returns>The current slot count.</returns>
+    /// <remarks>Reads common prepared authoring without a solver query. The selected implementation may read it during its numerical hook, including on its borrowed solver thread.</remarks>
+    /// <exception cref="InvalidOperationException">The attached world has failed or access is outside its owner or borrowed numerical hook.</exception>
     public static int BodyGetShapeCount(RID body) => Service.BodyGetShapeCountCore(body);
 
     /// <summary>Gets the number of indexed shape slots on an Area, including disabled slots.</summary>
     /// <param name="area">A live scene or server Area RID.</param>
     /// <returns>The current slot count.</returns>
+    /// <remarks>Reads common prepared authoring without a solver query. The selected implementation may read it during its numerical hook, including on its borrowed solver thread.</remarks>
+    /// <exception cref="InvalidOperationException">The attached world has failed or access is outside its owner or borrowed numerical hook.</exception>
     public static int AreaGetShapeCount(RID area) => Service.AreaGetShapeCountCore(area);
 
     /// <summary>Enables or disables one indexed body shape slot.</summary>
@@ -1306,7 +1310,8 @@ public sealed partial class PhysicsServer
     /// <returns>The borrowed shape RID, or empty for a retained disposed resource slot.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The index is absent.</exception>
     /// <exception cref="ArgumentException">The owner RID is stale or not a body.</exception>
-    /// <exception cref="InvalidOperationException">The attached world is off-owner or stepping.</exception>
+    /// <remarks>Reads common prepared authoring without a solver query, including from the selected implementation's borrowed numerical hook.</remarks>
+    /// <exception cref="InvalidOperationException">The attached world has failed or access is outside its owner or borrowed numerical hook.</exception>
     public static RID BodyGetShape(RID body, int index) => Service.BodyGetShapeCore(body, index);
 
     /// <summary>Returns the current shape resource RID at an Area's global logical index.</summary>
@@ -1315,7 +1320,8 @@ public sealed partial class PhysicsServer
     /// <returns>The borrowed shape RID, or empty for a retained disposed resource slot.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The index is absent.</exception>
     /// <exception cref="ArgumentException">The owner RID is stale or not an Area.</exception>
-    /// <exception cref="InvalidOperationException">The attached world is off-owner or stepping.</exception>
+    /// <remarks>Reads common prepared authoring without a solver query, including from the selected implementation's borrowed numerical hook.</remarks>
+    /// <exception cref="InvalidOperationException">The attached world has failed or access is outside its owner or borrowed numerical hook.</exception>
     public static RID AreaGetShape(RID area, int index) => Service.AreaGetShapeCore(area, index);
 
     /// <summary>Returns a body's effective slot-local translation and rotation.</summary>
@@ -1324,7 +1330,8 @@ public sealed partial class PhysicsServer
     /// <returns>The configured local pose, including a raw per-slot override.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The index is absent.</exception>
     /// <exception cref="ArgumentException">The owner RID is stale or not a body.</exception>
-    /// <exception cref="InvalidOperationException">The attached world is off-owner or stepping.</exception>
+    /// <remarks>Reads common prepared authoring without a solver query, including from the selected implementation's borrowed numerical hook.</remarks>
+    /// <exception cref="InvalidOperationException">The attached world has failed or access is outside its owner or borrowed numerical hook.</exception>
     public static Transform BodyGetShapeTransform(RID body, int index) => Service.BodyGetShapeTransformCore(body, index);
 
     /// <summary>Returns an Area's effective slot-local translation and rotation.</summary>
@@ -1333,7 +1340,8 @@ public sealed partial class PhysicsServer
     /// <returns>The configured local pose, including a raw per-slot override.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The index is absent.</exception>
     /// <exception cref="ArgumentException">The owner RID is stale or not an Area.</exception>
-    /// <exception cref="InvalidOperationException">The attached world is off-owner or stepping.</exception>
+    /// <remarks>Reads common prepared authoring without a solver query, including from the selected implementation's borrowed numerical hook.</remarks>
+    /// <exception cref="InvalidOperationException">The attached world has failed or access is outside its owner or borrowed numerical hook.</exception>
     public static Transform AreaGetShapeTransform(RID area, int index) => Service.AreaGetShapeTransformCore(area, index);
 
     /// <summary>Replaces one body's slot resource while retaining its index and local policies.</summary>

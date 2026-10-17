@@ -1,5 +1,7 @@
 # Physics domain
 
+[Prepared logical shape reads](../components/physics-registered-adapter.md#prepared-logical-shape-reads) now expose Body/Area slot counts, effective RIDs and local poses to the selected implementation during owner/separate numerical hooks. Common scene/raw lifetime, failure and thread guards remain enforced. Public CPU/software-Vulkan/registered consumers verify the six-getter family with actual motion/queries and zero warmed managed bytes.
+
 [Process policy and physics pause](../components/scene-tree.md#process-policy-and-physics-pause) now preserve inherited eligibility notifications, root policy, nested failure handling and worker reads. Paused tree frames stop numerical integration while eligible callbacks continue; explicit owned spaces retain independent clocks. Public CPU/software-Vulkan/registered serial/separate managed and NativeAOT checks cover the slice. Full inherited physics, independent hardware GPU, networking and performance gates remain open.
 
 [Scene and network history memory](../components/physics-network-memory.md) now

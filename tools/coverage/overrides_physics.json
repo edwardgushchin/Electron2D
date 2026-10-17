@@ -1848,17 +1848,17 @@
     {
       "godot": "PhysicsServer2DExtension::method:_area_get_shape(RID:,int:)",
       "electron2d": "method:Electron2D.PhysicsServer.AreaGetShape(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+      "reason": "ADRs 0088/0103: the complete Body/Area count, effective RID and local-pose read family projects common logical authoring, independent of numerical geometry. Public-only --shape-inputs verifies six scene collider roles plus raw Body/Area, disabled pending gaps, disposed borrowed resources, owned-shape free/reindex, exact poses and bounds/kind guards. Registered Solve and status hooks read prepared inputs in owner/separate modes without a live solver query; unrelated threads, mutation, recursive queries and failed-world reads reject. CPU/software-Vulkan/registered profiles each retain 128 warmed full frames with actual motion/queries at 0/0 owner/all-thread managed bytes. Wider shape mutations, numerical/custom geometry, native/foreign/network and hardware/performance acceptance remain open."
     },
     {
       "godot": "PhysicsServer2DExtension::method:_area_get_shape_count(RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.AreaGetShapeCount(Electron2D.RID)",
-      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+      "reason": "ADRs 0088/0103: the complete Body/Area count, effective RID and local-pose read family projects common logical authoring, independent of numerical geometry. Public-only --shape-inputs verifies six scene collider roles plus raw Body/Area, disabled pending gaps, disposed borrowed resources, owned-shape free/reindex, exact poses and bounds/kind guards. Registered Solve and status hooks read prepared inputs in owner/separate modes without a live solver query; unrelated threads, mutation, recursive queries and failed-world reads reject. CPU/software-Vulkan/registered profiles each retain 128 warmed full frames with actual motion/queries at 0/0 owner/all-thread managed bytes. Wider shape mutations, numerical/custom geometry, native/foreign/network and hardware/performance acceptance remain open."
     },
     {
       "godot": "PhysicsServer2DExtension::method:_area_get_shape_transform(RID:,int:)",
       "electron2d": "method:Electron2D.PhysicsServer.AreaGetShapeTransform(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+      "reason": "ADRs 0088/0103: the complete Body/Area count, effective RID and local-pose read family projects common logical authoring, independent of numerical geometry. Public-only --shape-inputs verifies six scene collider roles plus raw Body/Area, disabled pending gaps, disposed borrowed resources, owned-shape free/reindex, exact poses and bounds/kind guards. Registered Solve and status hooks read prepared inputs in owner/separate modes without a live solver query; unrelated threads, mutation, recursive queries and failed-world reads reject. CPU/software-Vulkan/registered profiles each retain 128 warmed full frames with actual motion/queries at 0/0 owner/all-thread managed bytes. Wider shape mutations, numerical/custom geometry, native/foreign/network and hardware/performance acceptance remain open."
     },
     {
       "godot": "PhysicsServer2DExtension::method:_area_remove_shape(RID:,int:)",
@@ -1913,17 +1913,17 @@
     {
       "godot": "PhysicsServer2DExtension::method:_body_get_shape(RID:,int:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetShape(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+      "reason": "ADRs 0088/0103: the complete Body/Area count, effective RID and local-pose read family projects common logical authoring, independent of numerical geometry. Public-only --shape-inputs verifies six scene collider roles plus raw Body/Area, disabled pending gaps, disposed borrowed resources, owned-shape free/reindex, exact poses and bounds/kind guards. Registered Solve and status hooks read prepared inputs in owner/separate modes without a live solver query; unrelated threads, mutation, recursive queries and failed-world reads reject. CPU/software-Vulkan/registered profiles each retain 128 warmed full frames with actual motion/queries at 0/0 owner/all-thread managed bytes. Wider shape mutations, numerical/custom geometry, native/foreign/network and hardware/performance acceptance remain open."
     },
     {
       "godot": "PhysicsServer2DExtension::method:_body_get_shape_count(RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetShapeCount(Electron2D.RID)",
-      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+      "reason": "ADRs 0088/0103: the complete Body/Area count, effective RID and local-pose read family projects common logical authoring, independent of numerical geometry. Public-only --shape-inputs verifies six scene collider roles plus raw Body/Area, disabled pending gaps, disposed borrowed resources, owned-shape free/reindex, exact poses and bounds/kind guards. Registered Solve and status hooks read prepared inputs in owner/separate modes without a live solver query; unrelated threads, mutation, recursive queries and failed-world reads reject. CPU/software-Vulkan/registered profiles each retain 128 warmed full frames with actual motion/queries at 0/0 owner/all-thread managed bytes. Wider shape mutations, numerical/custom geometry, native/foreign/network and hardware/performance acceptance remain open."
     },
     {
       "godot": "PhysicsServer2DExtension::method:_body_get_shape_transform(RID:,int:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetShapeTransform(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+      "reason": "ADRs 0088/0103: the complete Body/Area count, effective RID and local-pose read family projects common logical authoring, independent of numerical geometry. Public-only --shape-inputs verifies six scene collider roles plus raw Body/Area, disabled pending gaps, disposed borrowed resources, owned-shape free/reindex, exact poses and bounds/kind guards. Registered Solve and status hooks read prepared inputs in owner/separate modes without a live solver query; unrelated threads, mutation, recursive queries and failed-world reads reject. CPU/software-Vulkan/registered profiles each retain 128 warmed full frames with actual motion/queries at 0/0 owner/all-thread managed bytes. Wider shape mutations, numerical/custom geometry, native/foreign/network and hardware/performance acceptance remain open."
     },
     {
       "godot": "PhysicsServer2DExtension::method:_body_remove_shape(RID:,int:)",
@@ -7789,6 +7789,18 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0063/0088/0103: typed canonical Shape import/export executes for all nine represented data kinds, independent resource ownership and metadata, source/type/lifetime errors, unconfigured raw RID rejection, first configuration and shared scene/raw Body/Area activation. Data operations borrow every using world and freeze incoming/existing membership through copies, rebuilding, rollback/retry and retirement. Both public operations use the same verified implementation as their extension projections. Public-only CPU/software-Vulkan/registered owner/separate JIT/strict NativeAOT procedural/shared-data and eight-kind initialization matrices retain real queries/motion, private/portable state and strict warmed owner/all-thread zero managed bytes. This closes the data operations; remaining slot/extension methods, arbitrary numerical/custom algorithms and full native/foreign/network/hardware/performance acceptance stay open. Evidence: bin/physics-shape-conformance/2026-10-17."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_body_get_shape(RID:,int:)",
+        "PhysicsServer2DExtension::method:_body_get_shape_count(RID:)",
+        "PhysicsServer2DExtension::method:_body_get_shape_transform(RID:,int:)",
+        "PhysicsServer2DExtension::method:_area_get_shape(RID:,int:)",
+        "PhysicsServer2DExtension::method:_area_get_shape_count(RID:)",
+        "PhysicsServer2DExtension::method:_area_get_shape_transform(RID:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0088/0103: the complete Body/Area count, effective RID and local-pose read family projects common logical authoring, independent of numerical geometry. Public-only --shape-inputs verifies six scene collider roles plus raw Body/Area, disabled pending gaps, disposed borrowed resources, owned-shape free/reindex, exact poses and bounds/kind guards. Registered Solve and status hooks read prepared inputs in owner/separate modes without a live solver query; unrelated threads, mutation, recursive queries and failed-world reads reject. CPU/software-Vulkan/registered profiles each retain 128 warmed full frames with actual motion/queries at 0/0 owner/all-thread managed bytes. Wider shape mutations, numerical/custom geometry, native/foreign/network and hardware/performance acceptance remain open."
     }
   ]
 }

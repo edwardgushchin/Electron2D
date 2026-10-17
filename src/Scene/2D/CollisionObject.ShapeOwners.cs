@@ -228,7 +228,8 @@ public abstract partial class CollisionObject
     internal ShapeSlot GlobalShapeSlot(int index)
     {
         // Validated publication and failed-world retirement also inspect slots internally.
-        ThrowIfDisposed(); Tree?.EnsureOwnerThread();
+        ThrowIfDisposed();
+        if (Backend.Space?.IsNumericalInputThread != true) Tree?.EnsureOwnerThread();
         return (uint)index < (uint)_shapeSlots.Count ? _shapeSlots[index] : throw new ArgumentOutOfRangeException(nameof(index));
     }
 

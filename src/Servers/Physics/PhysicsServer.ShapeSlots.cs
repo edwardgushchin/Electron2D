@@ -2,7 +2,7 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
-    private (CollisionObject? Scene, PhysicsServerCollider? Server) ShapeOwners(RID rid, bool isArea, bool writing = false, bool contactResult = false)
+    private (CollisionObject? Scene, PhysicsServerCollider? Server) ShapeOwners(RID rid, bool isArea, bool writing = false, bool contactResult = false, bool input = false)
     {
         ThrowIfDisposed();
         var scene = ResolveSceneObject(rid);
@@ -13,11 +13,18 @@ public sealed partial class PhysicsServer
                 scene!.Tree?.EnsureOwnerThread();
                 (scene is PhysicsBody body ? body.Space : ((Area)scene).Space)?.EnsureContactResultAccess();
             }
+            else if (input)
+            {
+                var space = scene!.Backend.Space;
+                if (space?.IsNumericalInputThread != true) scene.Tree?.EnsureOwnerThread();
+                space?.EnsureImplementationInputReadAccess();
+            }
             else EnsureSceneShapeAccess(scene!, writing);
             return (scene, null);
         }
         var server = GetCollider(rid, isArea);
         if (contactResult) server.Space?.EnsureContactResultAccess();
+        else if (input) server.Space?.EnsureImplementationInputReadAccess();
         else EnsureColliderSpaceAccessible(server, writing);
         return (null, server);
     }
@@ -40,7 +47,7 @@ public sealed partial class PhysicsServer
 
     private RID GetSlotShape(RID rid, int index, bool isArea)
     {
-        var owners = ShapeOwners(rid, isArea);
+        var owners = ShapeOwners(rid, isArea, input: true);
         if (owners.Scene is { } scene)
         {
             var slot = scene.GlobalShapeSlot(index);
@@ -52,7 +59,7 @@ public sealed partial class PhysicsServer
 
     private Transform GetSlotTransform(RID rid, int index, bool isArea)
     {
-        var owners = ShapeOwners(rid, isArea);
+        var owners = ShapeOwners(rid, isArea, input: true);
         return owners.Scene?.GlobalShapeSlot(index).Transform ?? owners.Server!.GetShapeTransform(index);
     }
 

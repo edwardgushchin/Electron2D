@@ -243,13 +243,13 @@ public sealed partial class PhysicsServer
 
     internal int BodyGetShapeCountCore(RID body)
     {
-        var owners = ShapeOwners(body, isArea: false);
+        var owners = ShapeOwners(body, isArea: false, input: true);
         return owners.Scene?.ShapeSlots.Count ?? owners.Server!.ShapeCount;
     }
 
     internal int AreaGetShapeCountCore(RID area)
     {
-        var owners = ShapeOwners(area, isArea: true);
+        var owners = ShapeOwners(area, isArea: true, input: true);
         return owners.Scene?.ShapeSlots.Count ?? owners.Server!.ShapeCount;
     }
 

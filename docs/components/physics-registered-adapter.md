@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-17
 
+## Prepared logical shape reads
+
+The Body/Area GetShapeCount, GetShape and GetShapeTransform family reads the engine-owned logical slots. Registered numerical hooks can inspect those prepared inputs on their owner or exact borrowed solver thread; no solver query, GPU transfer or second geometry store is involved. Pending/disabled slots retain count, RID and local pose; a disposed borrowed resource retains its slot and pose with an empty RID. Owned shape release removes and reindexes slots. Ordinary reads keep owner/failure guards, while queries, mutation and unrelated threads remain guarded.
+
+The public-only --shape-inputs fixture covers all six scene collider roles and raw Body/Area, status-hook reads, both numerical thread policies, retirement/reindexing, invalid indices and all six getter guards after failure. Managed and NativeAOT CPU, private software Vulkan and registered profiles each warm 128 and measure 128 actual motion/query/full frames at zero owner/all-thread managed bytes. Native/foreign, complete numerical/network and target hardware/performance gates remain open. Evidence: bin/physics-shape-inputs/2026-10-17.
+
 ## Raw shape initialization
 
 The eight built-in PhysicsServer shape factories return unconfigured RIDs. ShapeGetType works immediately. ShapeGetData and using that RID or a pending borrowed view as a collision-query source throw InvalidOperationException until ShapeSetData succeeds. Ordinary Shape constructors and CustomShapeCreate still supply initialized data.
