@@ -3,6 +3,8 @@ namespace Electron2D;
 /// <summary>A two-dimensional region that reports physics bodies and other areas crossing its shapes.</summary>
 /// <remarks>Attach direct <see cref="CollisionShape"/> children and add the area to a scene tree.
 /// Overlap snapshots update after each nonzero fixed physics step; changing a transform does not update a snapshot immediately.
+/// Failed pose publication retries current authoring before live queries or a nonzero step, including a return to the previous pose.
+/// Authored transform reads do not force numerical preparation; detachment discards incomplete attachment publication.
 /// The sensor remains bound through TreeExiting and releases during engine membership cleanup before NodeRemoved and TreeExited.</remarks>
 public sealed partial class Area : CollisionObject
 {
@@ -58,6 +60,7 @@ public sealed partial class Area : CollisionObject
     private Vector2 _lastPosition;
     private float _lastRotation;
     private volatile bool _shapesDirty = true;
+    private bool _poseDirty;
     private bool _monitoring = true;
     private bool _monitorable = true;
 
@@ -238,7 +241,7 @@ public sealed partial class Area : CollisionObject
         PhysicsServer.Service.FindAreaRuntime(PhysicsRID)?.Reset();
         if (Space is null) return;
         try { Backend.Detach(); }
-        finally { _appliedShapeRevisions.Clear(); _shapesDirty = true; }
+        finally { _appliedShapeRevisions.Clear(); _shapesDirty = true; _poseDirty = false; }
     }
 
     internal void PrepareBackend()
@@ -252,9 +255,11 @@ public sealed partial class Area : CollisionObject
         if (_shapesDirty) RebuildShapes();
         var position = GlobalPosition;
         var rotation = GlobalRotation;
-        if (position != _lastPosition || rotation != _lastRotation)
+        if (_poseDirty || position != _lastPosition || rotation != _lastRotation)
         {
+            _poseDirty = true;
             Backend.SetPose(position, rotation);
+            _poseDirty = false;
             _lastPosition = position;
             _lastRotation = rotation;
         }

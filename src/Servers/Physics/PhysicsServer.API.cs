@@ -1158,13 +1158,18 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live scene or server body RID.</param>
     /// <param name="transform">Finite global pose with unit scale and zero skew.</param>
     /// <remarks>Server kinematic targets after the first pose take effect on the next nonzero active step.
-    /// Scene synchronization policy is retained. Moving a static support wakes touching bodies.</remarks>
+    /// Scene synchronization policy is retained. Moving a static support wakes touching bodies.
+    /// A selected pose-publication failure retains authored input for retry before numerical queries, body-view access
+    /// or a nonzero step. Scene presentation reads remain non-preparing; raw body reads repair incomplete publication.
+    /// Detachment preserves the authored pose and discards the retired attachment's pending publication.</remarks>
     /// <exception cref="ArgumentException">The pose is invalid or the RID is not a live body.</exception>
     public static void BodySetTransform(RID body, Transform transform) => Service.BodySetTransformCore(body, transform);
 
     /// <summary>Changes an Area's translation and rotation in scene units.</summary>
     /// <param name="area">A live scene or server Area RID.</param>
     /// <param name="transform">Finite global pose with unit scale and zero skew.</param>
+    /// <remarks>Authored reads remain non-preparing. Failed selected publication retries before live queries or a nonzero step;
+    /// detachment retains the authored pose without repairing the retired attachment.</remarks>
     public static void AreaSetTransform(RID area, Transform transform) => Service.AreaSetTransformCore(area, transform);
 
     /// <summary>Returns current scene presentation or the server body's current solver transform.</summary>

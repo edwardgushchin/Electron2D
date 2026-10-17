@@ -256,12 +256,14 @@ internal sealed partial class PhysicsSpace : IDisposable
         foreach (var body in _bodies)
         {
             body.PreparePendingServerMode();
+            body.PreparePendingPose();
             body.Backend.PrepareMetadata(body.EffectiveCollisionLayer, body.EffectiveCollisionMask);
         }
         foreach (var area in _areas) area.Backend.PrepareMetadata(area.CollisionLayer, area.CollisionMask);
         foreach (var collider in _serverColliders)
         {
             collider.PreparePendingMode();
+            collider.PreparePendingPose();
             collider.Backend.PrepareMetadata(collider.CollisionLayer, collider.CollisionMask);
         }
         _colliderMetadataDirty = false;

@@ -1,5 +1,7 @@
 # Physics domain
 
+[Failed pose publication](../components/physics-registered-adapter.md#failed-pose-publication) now retains authored Body/Area poses across partial selected errors, repairs numerical access and preserves authored pose during retirement. Scene/Area presentation reads and later kinematic targets retain their existing preparation timing.
+
 [Prepared body view acquisition](../components/physics-registered-adapter.md#body-view-acquisition-after-mode-failure) now repairs incomplete modes before field publication or selected view construction. Cached and caller-created paths retain identity/error/tick guarantees. The body-view factory operation is accounted separately from complete numerical-extension acceptance.
 
 [Failed body-mode publication](../components/physics-registered-adapter.md#failed-body-mode-publication) now retains authored mode/motion and repairs complete numerical preparation before body access, space queries or nonzero steps. Detachment does not capture the failed owner's partial motion, and scene role takeover prepares the prior direct profile first.
@@ -38,7 +40,7 @@ first interval. Complete retained-memory budgets remain open.
 
 [Resident GPU buffer accounting](../components/gpu-memory.md) now distinguishes storage, transfer and transient growth capacity, including replay copies and failed preparation. Full CPU/managed/native/driver memory budgets remain open.
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 [Angular normal/friction coupling](../components/gpu-contact-solver.md#angular-normalfriction-coupling-2026-10-16) now preserves oblique rotating-ray response through colored and high-degree resident contacts, without increasing solver sweeps or the CCD budget. The public reset/full-frame fixture checks actual motion and reported impulse balance.
 

@@ -4,6 +4,7 @@ namespace Electron2D;
 /// <remarks>Writes reject before mutation while a selected numerical implementation hook is borrowed.
 /// Ordinary post-solver callbacks and caller-created body-state extension forwarding retain their guarded write access.
 /// Construction and access retry incomplete direct body-mode preparation before acquiring, reading or changing numerical state.
+/// Numerical access also retries incomplete authored pose publication; repeated failures retain the pending pose and tick.
 /// The selected world owner creates cached views; caller-created consumer implementations derive from PhysicsDirectBodyStateExtension. It owns no body or world. Detachment, replacement or
 /// disposal invalidates access; a later attachment receives a new view. Access is permitted outside
 /// solver execution, including post-solver integration callbacks. Backend storage and contact traversal stay inside the attachment adapter;
@@ -80,6 +81,7 @@ public class PhysicsDirectBodyState : ElectronObject
         if (_callerCreated) _runtime.ValidateAttachment(_space, _boundBackend, _boundAttachment);
         else _runtime.ValidateView(this, _space);
         _runtime.PreparePendingMode();
+        _runtime.Owners.Scene?.PreparePendingPose();
     }
     private static void ValidateTransform(Transform value)
     {

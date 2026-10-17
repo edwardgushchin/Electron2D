@@ -1,6 +1,8 @@
 # Physics areas component
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
+
+[Failed authored pose publication](physics-registered-adapter.md#failed-pose-publication) retains current input through partial selected errors, including authoring returned to the previous prepared pose. Numerical preparation retries before live queries/nonzero steps; body views also prepare incomplete body publication. Scene/Area transform presentation remains non-preparing, and retirement retains authoring without repairing the discarded attachment.
 
 ## Scope and owned types
 

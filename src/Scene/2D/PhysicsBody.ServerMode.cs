@@ -52,6 +52,7 @@ public abstract partial class PhysicsBody
     {
         if (!HasServerMode) return;
         PreparePendingServerMode();
+        PreparePendingPose();
         _serverMode = null; _serverModeDirty = false; _hasServerTarget = false; Runtime.GPUParametersDirty = true; MarkShapesDirty();
     }
 
@@ -100,7 +101,8 @@ public abstract partial class PhysicsBody
     internal void SetServerTransform(Transform value)
     {
         GlobalTransform = value;
-        ApplyServerTransform(value);
+        try { ApplyServerTransform(value); }
+        catch { MarkPoseDirty(); throw; }
     }
     private void ApplyServerTransform(Transform value)
     {

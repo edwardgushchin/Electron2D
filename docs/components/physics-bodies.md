@@ -4,6 +4,8 @@
 
 Last updated: 2026-10-17
 
+[Failed authored pose publication](physics-registered-adapter.md#failed-pose-publication) retains current input through partial selected errors, including authoring returned to the previous prepared pose. Numerical preparation retries before live queries/nonzero steps; body views also prepare incomplete body publication. Scene/Area transform presentation remains non-preparing, and retirement retains authoring without repairing the discarded attachment.
+
 [Per-body CCD](cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; the selected world also dispatches independent GPU CCD. Complete contract and platform acceptance remain open.
 
 Body runtime mass/forces and direct views now use engine-valued attachment operations.
