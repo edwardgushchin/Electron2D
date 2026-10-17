@@ -5,8 +5,9 @@ public sealed partial class PhysicsServer
     /// <summary>Gets a scene or server body's relative penetration-recovery priority.</summary>
     /// <param name="body">A live body RID, including a detached body.</param>
     /// <returns>The finite positive weight, initially one.</returns>
+    /// <remarks>Reads common prepared authoring without a solver query, including from the selected implementation's owner or borrowed numerical hook.</remarks>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access violates owner-thread or solver-phase rules.</exception>
+    /// <exception cref="InvalidOperationException">The attached world has failed or access is outside its owner or borrowed numerical hook.</exception>
     public static float BodyGetCollisionPriority(RID body) => Service.BodyGetCollisionPriorityCore(body);
 
     /// <summary>Sets how strongly body-motion recovery favors separation from this body.</summary>

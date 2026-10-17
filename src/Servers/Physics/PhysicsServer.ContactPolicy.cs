@@ -2,12 +2,7 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
-    internal float BodyGetCollisionPriorityCore(RID body)
-    {
-        ThrowIfDisposed(); var owner = ResolveBodyOwners(body);
-        if (owner.Scene is { } scene) return scene.CollisionPriority;
-        var backend = owner.Server!.Backend; backend.Space?.EnsureQueryAccess(); return backend.CollisionPriority;
-    }
+    internal float BodyGetCollisionPriorityCore(RID body) => ColliderBackend(body, false, input: true).CollisionPriority;
     internal void BodySetCollisionPriorityCore(RID body, float value)
     {
         ThrowIfDisposed(); var owner = ResolveBodyOwners(body);

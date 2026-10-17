@@ -27,6 +27,8 @@ The process-wide registry for typed 2D physics RIDs. It registers each SceneTree
 
 World sleep/contact parameters, solver iterations, default constraint bias and local activation reject writes while that world's numerical implementation hook is borrowed, before changing authoring or calling another hook. Equal writes follow the same guard. Authored getters and ordinary post-solver callback edits remain available; process-wide `SetActive` retains its separate atomic policy. [World policy checks](../components/physics-registered-adapter.md#borrowed-world-policies) exercise this boundary through a public-only consumer.
 
+Body/Area world, layer/mask, object/canvas ID and body-priority getters expose common prepared authoring inside selected numerical/status hooks, including the exact borrowed numerical thread. They do not query solver state or change ownership. Ordinary owner/failure guards and mutation/query restrictions remain in force; see [the complete eleven-getter scope](../components/physics-registered-adapter.md#prepared-collider-metadata-reads).
+
 Body/AreaGetSpace and Body/AreaSetSpace accept all live scene/raw collider RIDs. They report/change actual physics membership while preserving scene hierarchy and the World descriptor. Scene entry or viewport world replacement reclaims the scene-selected attachment. Source geometry and both world owners are validated before detachment; failed partial target additions are retired before restoring the old attachment, with cleanup/restoration errors aggregated. A resource world keeps its scene driver, while caller-owned spaces use SpaceStep. [Common space bindings](../components/physics-registered-adapter.md#common-space-bindings) records verification and failure limits.
 
 ## Example
