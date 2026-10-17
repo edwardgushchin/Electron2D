@@ -34,6 +34,9 @@ internal sealed class MissingResourceData
         _bytes = bytes + field.Bytes.Length + field.References.Length * 8L + (field.Name.Length + field.Schema.Length) * 2L;
     }
     internal void Set<T>(string name, T value)
+        => Put(Capture(name, value));
+
+    internal static Field Capture<T>(string name, T value)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         var role = Role(typeof(T)); if (role == ResourceFieldRole.Node) throw new NotSupportedException("Node references require scene endpoint storage.");
@@ -41,7 +44,7 @@ internal sealed class MissingResourceData
         if (role == ResourceFieldRole.Resource) references = [value as Resource];
         else if (role == ResourceFieldRole.ResourceArray) { nullArray = value is null; references = value is Resource[] resources ? resources.Length <= 65536 ? (Resource?[])resources.Clone() : throw new InvalidDataException("Recorded resource array budget exceeded.") : []; }
         else { using var stream = new StreamPeerBuffer(); ResourceFileTypes.Codec<T>().Write(stream, value); bytes = stream.DataArray; }
-        Put(new(name, ResourceFileTypes.ValueID(typeof(T)), role, false, bytes, references, nullArray));
+        return new(name, ResourceFileTypes.ValueID(typeof(T)), role, false, bytes, references, nullArray);
     }
     internal T Get<T>(string name)
     {

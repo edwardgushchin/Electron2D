@@ -31,7 +31,7 @@ Stores a reusable in-memory node hierarchy and creates independent runtime insta
 The snapshot owns no source [`Node`](Node.md). It retains source-independent static node factories, immutable node metadata, typed stored-property values, and references to resources used by those values. Shared resources in an in-memory capture remain caller-owned. A loaded file root owns its newly decoded graph; copies and instances retain it through private ownership leases. During instantiation, the returned root owns all created child nodes and every duplicated scene resource; disposing that root disposes the complete hierarchy and those duplicates.
 
 Runtime packing is typed and uses storage-enabled [`PropertyDescriptor`](PropertyDescriptor.md) instances. Scene
-files use the typed archive; editor metadata, inheritance authoring and placeholders belong to later domains. Authored persistent event endpoints use registered compiled SceneConnectionBinding factories under ADR 0010.
+files use the typed archive; inherited-root authoring and editor instantiation modes belong to later domains. Deferred runtime instances use InstancePlaceholder. Authored persistent event endpoints use registered compiled SceneConnectionBinding factories under ADR 0010.
 
 The node automatic-translation mode is stored. Translation domains are stored only when explicitly assigned; an inheriting descendant continues to resolve the current parent domain after instantiation.
 
@@ -208,7 +208,7 @@ For each included node, capture stores:
 - a source-independent static factory for the exact runtime type and the source instance identity used to reject source reuse;
 - the node name, relative path, parent/owner indices, and persistent groups;
 - every writable [`PropertyDescriptor`](PropertyDescriptor.md) whose `IsStored` flag is `true`, except `Name`, which has its dedicated field;
-- typed nonroot instance origin/editable flags, actual linked templates, reused-child paths and sibling placement; deferred placeholder records remain empty.
+- typed nonroot instance origin/editable flags, actual linked templates, reused-child paths and sibling placement; deferred paths and typed pending fields execute through [InstancePlaceholder](InstancePlaceholder.md).
 
 Supported stored values are strings, `Resource` subtypes, value types that contain no managed references, and copied `string[]`, `int[]`, `float[]`, `Vector2[]`, `Color[]`, and nested `int[][]` contour arrays. This includes [`Color`](Color.md), [`Vector2`](Vector2.md), [`Vector2i`](Vector2i.md), [`Vector3`](Vector3.md), [`Vector3i`](Vector3i.md), [`Vector4`](Vector4.md), [`Vector4i`](Vector4i.md), [`Rect2`](Rect2.md), [`Rect2i`](Rect2i.md), [`Transform`](Transform.md), and enums such as [`ProcessPhase`](ProcessPhase.md), whose numeric, ordinary/HDR, negative, integer, affine, or enum components are copied exactly. Other reference-shaped values such as arbitrary objects, collections and delegates are rejected; supported typed Node references use relative paths with `NotSupportedException`; no reflection-driven discovery or invocation, dynamic value container, or string-addressed property call is used.
 
@@ -260,7 +260,7 @@ No hard real-time or allocation-free guarantee is made for packing or instantiat
 
 `tests/Electron2D.Tests/Program.cs` covers empty state, runtime and invalid edit modes, owned-branch pruning, paths/owners/groups, typed state queries including `Color`, all six vector values, `Rect2`, `Rect2i`, `Transform`, and Timer configuration restoration, source disposal independence, scene-local aliasing and setup, repeated independent instances, packed-scene duplication, live-state replacement and disposal races, concurrent path updates, failed capture clearing, capture mutation rejection, capturing/source-returning/wrong-type/reused factories, detached-parent and active-tree escape rollback, setup failure cleanup, and state survival after packed-scene disposal.
 
-Typed `.e2dscene` persistence, registered authored connections and generic/mesh/ordinary-texture missing-resource recovery execute through the version-5 resource archive. Actual linked templates, complete typed runtime overrides and editable-owner capture execute. Root inheritance, import remapping, deferred scene placeholders, script state, non-Disabled edit modes and full editor UI remain absent. SceneState exposes origin/flag fields through typed property queries; unsupported inherited-base and deferred-placeholder categories retain empty/null answers.
+Typed `.e2dscene` persistence, registered authored connections and generic/mesh/ordinary-texture missing-resource recovery execute through the version-6 resource archive. Actual linked templates, complete typed runtime overrides and editable-owner capture execute. Root inheritance, import remapping, script state, non-Disabled edit modes and full editor UI remain absent. Deferred scene materialization executes through [deferred scenes](../components/deferred-scenes.md). SceneState exposes origin/flag fields through typed property queries; unsupported inherited-base metadata retains its empty/null answer; deferred records expose actual paths and markers.
 
 ## Decision
 

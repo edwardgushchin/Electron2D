@@ -24,7 +24,7 @@ Provides read-only typed metadata for the current contents of a [`PackedScene`](
 
 Stored `Vector2[]`, `Color[]`, and nested `int[][]` contour properties are returned as independent copies on each typed read. Resource values remain borrowed references.
 
-Callers cannot construct a state directly. The object owns no nodes or resources and cannot instantiate or mutate a scene. It retains the immutable packed-data reference currently published to it; resource-valued properties are borrowed references governed by normal [`Resource`](Resource.md) ownership.
+Callers cannot construct a state directly. The object owns no nodes and cannot instantiate or mutate a scene. An exported file-backed view privately retains its underlying resource graph; returned resource values remain borrowed. It retains the immutable packed-data reference currently published to it; resource-valued properties are borrowed references governed by normal [`Resource`](Resource.md) ownership.
 
 Instances are created by [`PackedScene.GetState`](PackedScene.md#m-electron2d-packedscene-getstate). A live state object tracks every content and path
 transition of its source resource, while retaining its final snapshot if that resource is later disposed.
@@ -153,7 +153,7 @@ Gets the resource path represented by a node placeholder.
 
 - `nodeIndex`: The zero-based node index.
 
-**Returns:** An empty string because runtime-authored placeholders are not supported.
+**Returns:** The late scene path for a deferred root, or empty for other records.
 
 **Exceptions**
 
@@ -300,7 +300,7 @@ Gets whether a stored node is an instance placeholder.
 
 - `nodeIndex`: The zero-based node index.
 
-**Returns:** `false` for every runtime-authored node.
+**Returns:** True when the record stores a deferred scene path.
 
 **Exceptions**
 
@@ -333,7 +333,7 @@ Disposing the source packed scene does not dispose externally held states. Such 
 
 The executable harness verifies empty/live state identity, path propagation, node ordering and paths, owner/group metadata, registered connection and absent placeholder/inheritance metadata, typed property name/type/value access including Timer configuration, invalid indices/casts, successful repack observation, concurrent cached-state disposal and path updates, and survival after source disposal.
 
-Registered connection accessors and typed captured Node authoring fields execute. Linked template identity, inserted sibling positions and reused-node type omission execute; inherited base state and placeholder loading remain absent; file-format internals stay private. `GetNodeType()` is a diagnostic unqualified name, not a reflection-based factory key.
+Registered connection accessors and typed captured Node authoring fields execute. Linked template identity, inserted sibling positions and reused-node type omission execute; deferred path/marker and typed pending queries execute through [deferred scenes](../components/deferred-scenes.md); inherited base state remains absent; file-format internals stay private. `GetNodeType()` is a diagnostic unqualified name, not a reflection-based factory key.
 
 ## Decision
 

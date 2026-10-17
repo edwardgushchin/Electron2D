@@ -213,6 +213,7 @@ public sealed partial class ThemeDB
         ["InputEventShortcut"] = ["InputEventShortcut", "InputEvent", "Resource", "ElectronObject"],
         ["InputEventWithModifiers"] = ["InputEventWithModifiers", "InputEventFromWindow", "InputEvent", "Resource", "ElectronObject"],
         ["InputMap"] = ["InputMap", "ElectronObject"],
+        ["InstancePlaceholder"] = ["InstancePlaceholder", "Node", "ElectronObject"],
         ["IntervalTweener"] = ["IntervalTweener", "Tweener", "ElectronObject"],
         ["ItemList"] = ["ItemList", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["JSON"] = ["JSON", "Resource", "ElectronObject"],

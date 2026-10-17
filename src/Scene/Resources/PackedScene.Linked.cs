@@ -24,10 +24,11 @@ public sealed partial class PackedScene
                 }
                 if (snapshot.Nodes.Length == 0) throw new InvalidOperationException("A linked scene template is empty.");
                 snapshots.Add(scene, snapshot);
-                long count = snapshot.Nodes.Count(n => n.Instance is null && n.InstanceRootIndex < 0);
+                var skipped = DeferredSkippedNodes(snapshot);
+                long count = snapshot.Nodes.Where((node, index) => !skipped[index] && node.Instance is null && node.InstanceRootIndex < 0).LongCount();
                 var height = 0;
-                foreach (var node in snapshot.Nodes)
-                    if (node.Instance is { } child)
+                for (var i = 0; i < snapshot.Nodes.Length; i++)
+                    if (!skipped[i] && snapshot.Nodes[i].Instance is { } child)
                     {
                         var childCount = Visit(child, child.FileData, depth + 1);
                         count += childCount.Nodes; height = Math.Max(height, childCount.Height + 1);
@@ -50,16 +51,27 @@ public sealed partial class PackedScene
         var inherited = new Dictionary<int, Dictionary<string, Node>>();
         var topology = new SceneTopology();
         var connections = new HashSet<SceneConnectionRuntime>(ReferenceEqualityComparer.Instance);
+        var skipped = DeferredSkippedNodes(data);
         try
         {
             for (var i = 0; i < nodes.Length; i++)
             {
                 var stored = data.Nodes[i]; Node node;
-                if (stored.InstanceRootIndex >= 0)
+                if (skipped[i]) continue;
+                if (stored.InstanceRootIndex < 0 && stored.Factory.RuntimeType == typeof(InstancePlaceholder))
+                {
+                    var placeholder = new InstancePlaceholder(); node = placeholder; created.Add(node); node.BeginSceneInstantiation();
+                    topology.Track(node); ConfigurePlaceholder(placeholder, stored, resources);
+                }
+                else if (stored.InstanceRootIndex >= 0)
                 {
                     if (!inherited.TryGetValue(stored.InstanceRootIndex, out var original) || !original.TryGetValue(stored.InstancePath, out node!))
                         throw new InvalidOperationException("An overridden node is absent from its linked template.");
                     if (node.GetType() != stored.Factory.RuntimeType) throw new InvalidOperationException("A linked node's compiled type no longer matches its stored schema.");
+                    if (node is InstancePlaceholder placeholder && stored.DeferredProperties is not null)
+                    {
+                        ConfigurePlaceholder(placeholder, stored, resources);
+                    }
                 }
                 else if (stored.Instance is { } instance)
                 {
@@ -108,15 +120,18 @@ public sealed partial class PackedScene
             }
             for (var i = 0; i < nodes.Length; i++)
             {
+                if (skipped[i]) continue;
                 var owner = data.Nodes[i].OwnerIndex >= 0 ? nodes[data.Nodes[i].OwnerIndex] : null;
                 topology.SetOwner(nodes[i], owner); nodes[i].Owner = owner;
             }
-            for (var i = 0; i < nodes.Length; i++) RestoreProperties(nodes[i], data.Nodes[i], resources, nodeReferences: true);
+            for (var i = 0; i < nodes.Length; i++) if (!skipped[i]) RestoreProperties(nodes[i], data.Nodes[i], resources, nodeReferences: true);
             var root = nodes[0];
             if (!IsBuiltInPath(path)) root.SetSceneFilePath(path);
             foreach (var node in created) node.ValidateSceneInstance();
             foreach (var connection in data.Connections)
             {
+                if (skipped[connection.PublisherIndex] || skipped[connection.SubscriberIndex])
+                    throw new InvalidOperationException("An authored connection targets a node absent under a deferred instance.");
                 var publisher = nodes[connection.PublisherIndex];
                 var token = connection.Schema.Subscribe(publisher, nodes[connection.SubscriberIndex], connection.Bindings.TransformResources(resources.Resolve));
                 foreach (var runtime in publisher.CaptureSceneConnections()) if (ReferenceEquals(runtime.Token, token)) connections.Add(runtime);
@@ -130,6 +145,9 @@ public sealed partial class PackedScene
             }
             root.AdoptSceneResources(resources.ReleaseCreated());
             foreach (var (localRoot, scope) in scopes) localRoot.AppendSceneResources(scope.ReleaseCreated());
+            if (lease is not null)
+                foreach (var node in created)
+                    if (node is InstancePlaceholder && !ReferenceEquals(node, root)) node.AdoptSceneFileLease(ResourceFileOwnership.RetainLease(lease));
             root.AdoptSceneFileLease(lease); lease = null;
             topology.Validate(); root.SceneInstanceConnections = connections;
             if (setupLocalResources) root.Notify(Node.NotificationSceneInstantiated);

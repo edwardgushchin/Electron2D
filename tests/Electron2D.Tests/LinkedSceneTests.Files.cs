@@ -79,9 +79,11 @@ internal static partial class LinkedSceneTests
     private static bool PixelValue(Image image, Color expected) { using (image) return image.GetPixel(0, 0) == expected; }
     private static void LegacyScenes(string folder)
     {
-        foreach (var version in new[] { 1, 2, 3, 4 })
+        foreach (var version in new[] { 1, 2, 3, 4, 5 })
         {
-            using var scene = new StreamPeerBuffer(); scene.Put32(1); ResourceArchiveStrings.Write(scene, "Entity"); ResourceArchiveStrings.Write(scene, "Legacy"); scene.Put32(-1); scene.Put32(-1); scene.Put32(-1); scene.Put32(0); scene.Put32(0); if (version >= 3) scene.Put32(0);
+            using var scene = new StreamPeerBuffer(); scene.Put32(1); ResourceArchiveStrings.Write(scene, "Entity"); ResourceArchiveStrings.Write(scene, "Legacy"); scene.Put32(-1); scene.Put32(-1); scene.Put32(-1);
+            if (version >= 5) { scene.Put32(-1); scene.Put32(-1); ResourceArchiveStrings.Write(scene, ""); }
+            scene.Put32(0); scene.Put32(0); if (version >= 3) scene.Put32(0);
             using var body = new StreamPeerBuffer(); body.Put32(1); ResourceArchiveStrings.Write(body, "PackedScene"); if (version >= 2) body.PutU8(0); if (version >= 4) body.PutU8(0); ResourceArchiveStrings.Write(body, ""); body.PutU8(0); ResourceArchiveStrings.Write(body, ""); ResourceArchiveStrings.Write(body, ""); body.Put64(-1); body.Put32(scene.GetSize()); body.PutData(scene.DataArray);
             var path = At(folder, "legacy-" + version + ".e2dscene"); Envelope(path, body.DataArray, version);
             using var loaded = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.IgnoreDeep); using var root = loaded.Instantiate(); Check(root.Name == "Legacy" && root.GetChildCount() == 0, "Known legacy scene layout remains readable at version " + version);

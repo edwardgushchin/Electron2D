@@ -5940,6 +5940,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.InstancePlaceholder",
+    "kind": "type",
+    "declaringType": "Electron2D.InstancePlaceholder",
+    "name": "InstancePlaceholder",
+    "signature": "public sealed class Electron2D.InstancePlaceholder",
+    "visibility": "public",
+    "baseType": "Electron2D.Node",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.InterpolationMode",
     "kind": "type",
     "declaringType": "Electron2D.InterpolationMode",
@@ -19009,6 +19024,19 @@
     "name": ".ctor",
     "signature": "protected InputEventWithModifiers()",
     "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.InstancePlaceholder..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.InstancePlaceholder",
+    "name": ".ctor",
+    "signature": "public InstancePlaceholder()",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -109192,6 +109220,101 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.InstancePlaceholder.CreateInstance(System.Boolean,Electron2D.PackedScene)",
+    "kind": "method",
+    "declaringType": "Electron2D.InstancePlaceholder",
+    "name": "CreateInstance",
+    "signature": "public Electron2D.Node CreateInstance(System.Boolean replace = false, Electron2D.PackedScene customScene = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "replace",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "customScene",
+        "type": "Electron2D.PackedScene",
+        "default": "null"
+      }
+    ],
+    "returnType": "Electron2D.Node",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.InstancePlaceholder.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.InstancePlaceholder",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.InstancePlaceholder.GetInstancePath()",
+    "kind": "method",
+    "declaringType": "Electron2D.InstancePlaceholder",
+    "name": "GetInstancePath",
+    "signature": "public System.String GetInstancePath()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.InstancePlaceholder.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.InstancePlaceholder",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.InstancePlaceholder.GetStoredPropertyNames()",
+    "kind": "method",
+    "declaringType": "Electron2D.InstancePlaceholder",
+    "name": "GetStoredPropertyNames",
+    "signature": "public System.String[] GetStoredPropertyNames()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.InstancePlaceholder.GetStoredValue\u00601(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.InstancePlaceholder",
+    "name": "GetStoredValue",
+    "signature": "public TValue GetStoredValue\u003CTValue\u003E(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "TValue",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ItemList.AddIconItem(Electron2D.Texture,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.ItemList",
@@ -126167,6 +126290,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Node.GetSceneInstanceLoadPlaceholder()",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "GetSceneInstanceLoadPlaceholder",
+    "signature": "public System.Boolean GetSceneInstanceLoadPlaceholder()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Node.GetTreeString()",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -127009,6 +127145,25 @@
         "name": "recursive",
         "type": "System.Boolean",
         "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.SetSceneInstanceLoadPlaceholder(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "SetSceneInstanceLoadPlaceholder",
+    "signature": "public System.Void SetSceneInstanceLoadPlaceholder(System.Boolean loadPlaceholder)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "loadPlaceholder",
+        "type": "System.Boolean",
+        "default": null
       }
     ],
     "returnType": "System.Void",
@@ -129841,6 +129996,25 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PackedScene.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PackedScene",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {

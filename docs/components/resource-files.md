@@ -156,4 +156,10 @@ Mounted res:// resources now share [resource pack resolution](resource-packs.md)
 
 ## Version 5 linked scene records
 
-The current writer uses version 5. Resource definitions retain version-4 role/provenance layout. Each scene node adds its PackedScene resource reference, source-root record index and original relative path after the sibling index; -1 denotes an absent reference/index. Ordinary versions 1–4 remain readable. The shared metadata reader validates the same header for class discovery and decoding; linked graphs validate before publication and construction. See [linked runtime scenes](linked-scenes.md#file-layout).
+Version 5 introduced linked scene headers; the current writer uses version 6 as described below. Resource definitions retain version-4 role/provenance layout. Each scene node adds its PackedScene resource reference, source-root record index and original relative path after the sibling index; -1 denotes an absent reference/index. Ordinary versions 1–4 remain readable. The shared metadata reader validates the same header for class discovery and decoding; linked graphs validate before publication and construction. See [linked runtime scenes](linked-scenes.md#file-layout).
+
+## Version 6 deferred scene records
+
+[Deferred scenes](deferred-scenes.md) adds a late path after the version-5 linked header and a second typed field table after ordinary node properties. Deferred roots and skipped inherited records use this self-describing table without running a node prototype. It retains ordered scalar payloads with explicit encoding endianness, resource edges, resource arrays and node paths. Ordinary nodes write an empty second table. Readers retain versions 1–5, including UID and class discovery. Deferred paths are lookup strings and are not eager dependencies or bundled templates.
+
+Internal leases retain pending file graphs across parent disposal and retain automatically loaded scene wrappers across instances, captures and exported SceneState views. Existing caller-owned cache entries stay borrowed; the weak cache does not own the template. File scene changes and reload use the same bounded lifetime transition.

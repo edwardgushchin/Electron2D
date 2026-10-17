@@ -89,6 +89,12 @@ public abstract partial class PropertyDescriptor
     internal virtual void WriteFileValue(ElectronObject owner, StoredPropertyValue value, ResourceArchiveWrite context, StreamPeerBuffer stream) => throw new NotSupportedException("Descriptor has no file schema.");
     internal virtual StoredPropertyValue ReadFileValue(ResourceArchiveRead context, StreamPeerBuffer stream) => throw new NotSupportedException("Descriptor has no file schema.");
 
+    internal virtual StoredPropertyValue ReadDeferredValue(MissingResourceData.Field field) =>
+        throw new NotSupportedException("Descriptor has no deferred field schema.");
+
+    internal virtual void RestoreNodeReference(Node owner, StoredNodeReferenceValue value, Func<string, Node?> resolve) =>
+        throw new NotSupportedException("Descriptor has no typed node reference accessor.");
+
     internal void EnsureCompatible(ElectronObject owner)
     {
         ArgumentNullException.ThrowIfNull(owner);
@@ -289,6 +295,25 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
         if (StoredSetter is { } setter) setter(target, restored); else SetValue(target, restored);
     }
 
+    internal override StoredPropertyValue ReadDeferredValue(MissingResourceData.Field field)
+    {
+        if (field.Schema != ResourceFileTypes.ValueID(typeof(TValue)) || field.Role != MissingResourceData.Role(typeof(TValue)))
+            throw new InvalidDataException("Deferred property schema does not match its compiled target.");
+        var value = new DeferredPropertyValue(field);
+        if (field.Role == ResourceFieldRole.Node)
+            return new StoredNodeReferenceValue(typeof(TValue), value.ReadNodePath());
+        if (!value.TryGetValue<TValue>(out var typed)) throw new InvalidDataException("Deferred property value does not match its compiled target.");
+        return new StoredPropertyValue<TValue>(typed);
+    }
+
+    internal override void RestoreNodeReference(Node owner, StoredNodeReferenceValue value, Func<string, Node?> resolve)
+    {
+        var resolved = value.Path is null ? null : resolve(value.Path);
+        if (resolved is not null && resolved is not TValue)
+            throw new InvalidOperationException($"Stored node reference '{Name}' resolves to an incompatible node type.");
+        SetValue(GetOwner(owner), resolved is null ? default! : (TValue)(object)resolved);
+    }
+
     private static void EnsureAlive(TOwner owner)
     {
         ArgumentNullException.ThrowIfNull(owner);
@@ -343,6 +368,7 @@ internal abstract class StoredPropertyValue
 
     internal abstract StoredPropertyValue TransformResources(Func<Resource, Resource> transform);
     internal virtual bool HasResourceReferences => false;
+    internal abstract MissingResourceData.Field CaptureField(string name);
 }
 
 internal sealed class StoredNodeReferenceValue(Type type, string? path) : StoredPropertyValue
@@ -355,10 +381,16 @@ internal sealed class StoredNodeReferenceValue(Type type, string? path) : Stored
         value = default!; return false;
     }
     internal override StoredPropertyValue TransformResources(Func<Resource, Resource> transform) => this;
+    internal override MissingResourceData.Field CaptureField(string name)
+    {
+        using var stream = new StreamPeerBuffer(); ResourceFileTypes.Codec<string>().Write(stream, Path!);
+        return new(name, ResourceFileTypes.ValueID(ValueType), ResourceFieldRole.Node, false, stream.DataArray, [], false);
+    }
 }
 
 internal sealed class StoredPropertyValue<TValue>(TValue value) : StoredPropertyValue
 {
+    internal override MissingResourceData.Field CaptureField(string name) => MissingResourceData.Capture(name, Value);
     internal override bool HasResourceReferences => Value is Resource or Resource?[];
     internal override Type ValueType => typeof(TValue);
 

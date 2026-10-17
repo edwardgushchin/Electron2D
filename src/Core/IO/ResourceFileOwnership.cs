@@ -10,6 +10,9 @@ internal sealed class ResourceFileOwnership(Resource[] resources, ResourceFileOw
         lock (_gate) { if (_leases == 0) throw new ObjectDisposedException(nameof(ResourceFileOwnership)); _leases++; return this; }
     }
     internal IDisposable Retain() => new Lease(RetainOwner());
+    internal IDisposable TransferToLease() => new Lease(this);
+    internal static IDisposable RetainLease(IDisposable lease) => lease is Lease retained
+        ? retained.Retain() : throw new InvalidOperationException("Unknown scene file lease.");
     internal void ReleaseOwner() => Release();
     private void Release()
     {
@@ -32,6 +35,7 @@ internal sealed class ResourceFileOwnership(Resource[] resources, ResourceFileOw
     private sealed class Lease(ResourceFileOwnership owner) : IDisposable
     {
         private ResourceFileOwnership? _owner = owner;
+        internal IDisposable Retain() => (_owner ?? throw new ObjectDisposedException(nameof(Lease))).Retain();
         public void Dispose() => Interlocked.Exchange(ref _owner, null)?.Release();
     }
 }

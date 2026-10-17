@@ -81,13 +81,34 @@ public sealed partial class ResourceLoader : ElectronObject
     }
 
     internal static Resource LoadImmediate(string path, CacheMode cacheMode, Type requestedType, bool isolated = false, CacheMode? hookMode = null)
+        => LoadImmediateTracked(path, cacheMode, requestedType, out _, isolated, hookMode);
+
+    internal static PackedScene LoadSceneTemplate(string path, out IDisposable? retention, CacheMode cacheMode = CacheMode.Reuse)
     {
+        if (ResourceLoadGraph.Current is not null) throw new InvalidOperationException("Scene activation cannot be nested in a resource staging graph.");
+        lock (LoadGate)
+        {
+            var scene = (PackedScene)LoadImmediateTracked(path, cacheMode, typeof(PackedScene), out var owned);
+            if (Runtime._sceneTemplateOwners.TryGetValue(scene, out var owner)) retention = owner.Retain();
+            else if (owned)
+            {
+                owner = new ResourceFileOwnership([scene]); Runtime._sceneTemplateOwners.Add(scene, owner);
+                retention = owner.TransferToLease();
+            }
+            else retention = null;
+            return scene;
+        }
+    }
+
+    private static Resource LoadImmediateTracked(string path, CacheMode cacheMode, Type requestedType, out bool owned, bool isolated = false, CacheMode? hookMode = null)
+    {
+        owned = false;
         CheckFilePath(path);
         if ((uint)cacheMode > 4) throw new ArgumentOutOfRangeException(nameof(cacheMode));
         path = ResourceUID.EnsurePath(path);
         foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path, requestedType))
             {
-                if (loader is ResourceArchiveLoader) return LoadFileResource(path, cacheMode, requestedType);
+                if (loader is ResourceArchiveLoader) return LoadFileResourceTracked(path, cacheMode, out owned, requestedType);
                 lock (isolated ? ResourceLoadGraph.Current!.EntryGate : LoadGate)
                 {
                     var cached = isolated ? null : Resource.GetRegisteredPath(path);
@@ -104,7 +125,7 @@ public sealed partial class ResourceLoader : ElectronObject
                         {
                             if (!requestedType.IsInstanceOfType(loaded) || loaded.IsDisposed) throw new InvalidDataException("Format loader returned an incompatible resource.");
                             if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached?.GetType() == loaded.GetType()) { cached.CopyFromResource(loaded); loaded.Dispose(); return cached; }
-                            if (cacheMode is CacheMode.Ignore or CacheMode.IgnoreDeep) loaded.SetPathCache(path); else loaded.TakeOverPath(path); return loaded;
+                            if (cacheMode is CacheMode.Ignore or CacheMode.IgnoreDeep) loaded.SetPathCache(path); else loaded.TakeOverPath(path); owned = true; return loaded;
                         }
                         catch { loaded.Dispose(); throw; }
                     }
@@ -180,6 +201,7 @@ public sealed partial class ResourceLoader : ElectronObject
                     loaded.TakeOverPath(path);
                 else
                     loaded.ResourcePath = path;
+                owned = true;
                 return loaded;
             }
             catch
@@ -192,7 +214,11 @@ public sealed partial class ResourceLoader : ElectronObject
 
     [ThreadStatic] private static HashSet<string>? _fileLoads;
     internal static Resource LoadFileResource(string path, CacheMode cacheMode, Type? expectedType = null)
+        => LoadFileResourceTracked(path, cacheMode, out _, expectedType);
+
+    private static Resource LoadFileResourceTracked(string path, CacheMode cacheMode, out bool owned, Type? expectedType = null)
     {
+        owned = false;
         ArgumentException.ThrowIfNullOrEmpty(path); if ((uint)cacheMode > 4) throw new ArgumentOutOfRangeException(nameof(cacheMode)); path = ResourceUID.EnsurePath(path);
         if (ResourceLoadGraph.Current is { } stage) return stage.Load(path, cacheMode, expectedType ?? typeof(Resource));
         if (!ResourceArchive.IsPath(path)) return LoadCore(path, cacheMode, expectedType ?? typeof(Resource));
@@ -209,7 +235,7 @@ public sealed partial class ResourceLoader : ElectronObject
                     context.RedirectRoot(cached); using var source = context.ReleaseRoot(); cached.CopyFromResource(source);
                     ResourceUID.SetID(ResourceArchive.ReadUID(path), path); return cached;
                 }
-                var loaded = context.ReleaseRoot(); try { if (cacheMode is CacheMode.Ignore or CacheMode.IgnoreDeep) loaded.SetPathCache(path); else if (cached is not null) loaded.TakeOverPath(path); else loaded.ResourcePath = path; ResourceUID.SetID(ResourceArchive.ReadUID(path), path); return loaded; } catch { loaded.Dispose(); throw; }
+                var loaded = context.ReleaseRoot(); try { if (cacheMode is CacheMode.Ignore or CacheMode.IgnoreDeep) loaded.SetPathCache(path); else if (cached is not null) loaded.TakeOverPath(path); else loaded.ResourcePath = path; ResourceUID.SetID(ResourceArchive.ReadUID(path), path); owned = true; return loaded; } catch { loaded.Dispose(); throw; }
             }
             finally { _archiveMissingPolicy = previousPolicy; _fileLoads.Remove(fileKey); }
         }

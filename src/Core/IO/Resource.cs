@@ -109,8 +109,8 @@ public class Resource : ElectronObject
     internal bool FilePathRegistered { get { lock (PathCacheGate) return _pathIsRegistered; } }
     internal void AdoptFileOwnership(ResourceFileOwnership? ownership) { var old = _fileOwnership; _fileOwnership = ownership; old?.ReleaseOwner(); OnFileOwnershipChanged(); }
     internal virtual void OnFileOwnershipChanged() { }
-    internal IDisposable? RetainFileResources() => _fileOwnership?.Retain();
-    internal ResourceFileOwnership? RetainFileOwnership() => _fileOwnership?.RetainOwner();
+    internal IDisposable? RetainFileResources() => RetainFileOwnership()?.TransferToLease();
+    internal virtual ResourceFileOwnership? RetainFileOwnership() => _fileOwnership?.RetainOwner();
     internal void AppendFileOwnerships(ResourceFileOwnership[] owners)
     {
         if (owners.Length == 0) return;

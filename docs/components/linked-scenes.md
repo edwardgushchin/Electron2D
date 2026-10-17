@@ -4,7 +4,7 @@ Last updated: 2026-10-17
 
 ## Scope and selection
 
-PackedScene now retains actual runtime subscene templates, reconstructs their complete branches and overlays the selected typed state. This extends executable reuse and scene files on the existing node, resource and rendering backends. Root inheritance, deferred placeholders and non-Disabled PackedSceneEditState modes retain their separate contracts.
+PackedScene now retains actual runtime subscene templates, reconstructs their complete branches and overlays the selected typed state. This extends executable reuse and scene files on the existing node, resource and rendering backends. Deferred materialization now executes through [deferred scenes](deferred-scenes.md). Root inheritance and non-Disabled PackedSceneEditState modes retain their separate contracts.
 
 | Candidate | Public value and dependent slices | Current feasibility |
 | --- | --- | --- |

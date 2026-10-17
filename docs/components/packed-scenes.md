@@ -60,12 +60,12 @@ User factories, descriptor delegates, resource copy/setup callbacks, node notifi
 
 Implemented and covered locally: in-memory owned-branch capture, storage-enabled typed properties, derived node factories, persistent groups, owner/path metadata, live typed state inspection, independent detached instantiation, root-only scene notification, scene-local resource duplication/setup/ownership, packed-resource duplication/reset/copy behavior, capture and instantiation barriers, factory identity checks, callback topology validation, and failure rollback.
 
-The implemented runtime treats any valid owned hierarchy uniformly: callers can pack and repeatedly instantiate a small composed game object or a complete level. Composition currently uses ordinary Node parenting before packing; no nested-scene authoring metadata or editor workflow is implied.
+The implemented runtime treats any valid owned hierarchy uniformly: callers can pack and repeatedly instantiate a small composed game object or a complete level. Composition uses ordinary Node parenting, actual linked runtime templates and deferred scene paths. Inherited-root authoring and editor instantiation modes remain separate.
 
 ## Exclusions
 
 - The first binary typed archive loader/saver and UID/dependency path layer execute. Exported-pack mounts, import remapping and tolerant missing-resource recovery remain absent.
-- No inherited/nested scene authoring, editable-instance metadata, placeholders, pinned properties, script preservation, or implemented editor edit state.
+- No inherited-root authoring, pinned properties, script preservation, or implemented editor edit state. Linked runtime instances, editable metadata and deferred materialization execute through their connected components.
 - Authored persistent connections use registered typed endpoint schemas. Ordinary runtime event subscriptions and tokens are not copied.
 - Typed node references use the implemented relative-path profile; no arbitrary reference-shaped stored property values are accepted. `byte[]`, `string[]`, `int[]`, `float[]`, `Vector2[]`, `Color[]`, `int[][]`, typed resource arrays and string/int dictionaries are explicit snapshot profiles; application codecs must be registered explicitly.
 - No hidden scene activation: `Instantiate()` returns detached; `SceneTree` lifecycle remains explicit.
@@ -108,7 +108,7 @@ Exported SceneState views also retain their file-backed graph snapshot through a
 
 SceneState exposes source/target paths, diagnostic signal/method labels, persistent/deferred/one-shot bits, omitted argument count, and `GetConnectionBinds<TBindings>` snapshots. Labels never dispatch members by name. The registered factory implements argument adaptation and delivery policy; the returned token policy is checked. Bound Resource values use the same duplication/local-scene/file ownership graph as node properties.
 
-Resource archives write version 5, retaining the version-3 connection table and version-4 ordinary texture roles/provenance, and adding linked template/override records. Versions 3 and 4 remain readable; versions 1 and 2 remain readable with no connections. Registration must exist in every loading process. Unknown binding IDs, incompatible endpoint types, malformed payloads and trailing bytes fail before publication.
+Resource archives write version 6, adding deferred paths/fields and retaining the version-3 connection table and version-4 ordinary texture roles/provenance, and adding linked template/override records. Versions 3 and 4 remain readable; versions 1 and 2 remain readable with no connections. Registration must exist in every loading process. Unknown binding IDs, incompatible endpoint types, malformed payloads and trailing bytes fail before publication.
 
 `SceneConnectionTests` checks duplicate subscriptions, consumed one-shots, deferred cancellation, selected endpoints, metadata bounds/types, resource duplication, file binding identity failures, RESET preparation and owner-thread access. Its native profile loads an archived subscription and verifies moved Sprite pixels plus receiver cleanup on both GPU and compatibility rendering. Platform and owner acceptance remain separate.
 
@@ -118,4 +118,4 @@ The final active-body cohort also passes strict current-source NativeAOT publica
 
 ## Linked runtime instances
 
-[Linked scenes](linked-scenes.md) retain actual borrowed templates, reconstruct implicit children and apply complete selected typed state to original relative identities. Nested local-resource ownership, stable fallback aliases/RIDs, inherited connection omission, sibling placement, fresh external/bundled files and construction rollback execute on current backends. Root inheritance, deferred placeholders and non-Disabled editor modes remain separate gaps.
+[Linked scenes](linked-scenes.md) retain actual borrowed templates, reconstruct implicit children and apply complete selected typed state to original relative identities. Nested local-resource ownership, stable fallback aliases/RIDs, inherited connection omission, sibling placement, fresh external/bundled files and construction rollback execute on current backends. Deferred materialization now executes through [deferred scenes](deferred-scenes.md). Root inheritance and non-Disabled editor modes remain separate gaps.

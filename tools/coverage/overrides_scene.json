@@ -5852,6 +5852,46 @@
       "godot": "Node::signal:editor_state_changed()",
       "electron2d": "event:Electron2D.Node.EditorStateChanged()",
       "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Flattened capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; linked nested/inherited overrides and non-Disabled PackedSceneEditState remain separate gaps. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
+    },
+    {
+      "godot": "class:InstancePlaceholder",
+      "electron2d": "T:Electron2D.InstancePlaceholder",
+      "reason": "ADRs 0001/0005/0013/0014/0023: executable deferred scene records, transform-free Node placeholders, ordered typed pending values, late template load, local-resource aliases/cycles and failure-safe sibling creation/replacement. Fresh-process v6 files, v1–5 readers, malformed fields, source/template retention, owner/reentry/lifecycle failures and nested recapture are exercised. GPU and Compatibility render actual lazy/materialized pixels, body motion/point queries and 64 prepared render frames at zero owner-thread managed bytes on Linux software backends. Hardware, foreign platforms and full editor modes remain separate gates."
+    },
+    {
+      "godot": "InstancePlaceholder::method:create_instance(bool:,PackedScene:)",
+      "electron2d": "method:Electron2D.InstancePlaceholder.CreateInstance(System.Boolean,Electron2D.PackedScene)",
+      "reason": "ADRs 0001/0005/0013/0014/0023: executable deferred scene records, transform-free Node placeholders, ordered typed pending values, late template load, local-resource aliases/cycles and failure-safe sibling creation/replacement. Fresh-process v6 files, v1–5 readers, malformed fields, source/template retention, owner/reentry/lifecycle failures and nested recapture are exercised. GPU and Compatibility render actual lazy/materialized pixels, body motion/point queries and 64 prepared render frames at zero owner-thread managed bytes on Linux software backends. Hardware, foreign platforms and full editor modes remain separate gates."
+    },
+    {
+      "godot": "InstancePlaceholder::method:get_instance_path()",
+      "electron2d": "method:Electron2D.InstancePlaceholder.GetInstancePath()",
+      "reason": "ADRs 0001/0005/0013/0014/0023: executable deferred scene records, transform-free Node placeholders, ordered typed pending values, late template load, local-resource aliases/cycles and failure-safe sibling creation/replacement. Fresh-process v6 files, v1–5 readers, malformed fields, source/template retention, owner/reentry/lifecycle failures and nested recapture are exercised. GPU and Compatibility render actual lazy/materialized pixels, body motion/point queries and 64 prepared render frames at zero owner-thread managed bytes on Linux software backends. Hardware, foreign platforms and full editor modes remain separate gates."
+    },
+    {
+      "godot": "InstancePlaceholder::method:get_stored_values(bool:)",
+      "electron2d": "method:Electron2D.InstancePlaceholder.GetStoredValue`1(System.String)",
+      "reason": "ADRs 0001/0005/0013/0014/0023: executable deferred scene records, transform-free Node placeholders, ordered typed pending values, late template load, local-resource aliases/cycles and failure-safe sibling creation/replacement. Fresh-process v6 files, v1–5 readers, malformed fields, source/template retention, owner/reentry/lifecycle failures and nested recapture are exercised. GPU and Compatibility render actual lazy/materialized pixels, body motion/point queries and 64 prepared render frames at zero owner-thread managed bytes on Linux software backends. Hardware, foreign platforms and full editor modes remain separate gates. The dictionary is projected as a typed value query plus GetStoredPropertyNames, always retaining application order; no universal values or synthetic .order property."
+    },
+    {
+      "godot": "Node::method:get_scene_instance_load_placeholder()",
+      "electron2d": "method:Electron2D.Node.GetSceneInstanceLoadPlaceholder()",
+      "reason": "ADRs 0001/0005/0013/0014/0023: executable deferred scene records, transform-free Node placeholders, ordered typed pending values, late template load, local-resource aliases/cycles and failure-safe sibling creation/replacement. Fresh-process v6 files, v1–5 readers, malformed fields, source/template retention, owner/reentry/lifecycle failures and nested recapture are exercised. GPU and Compatibility render actual lazy/materialized pixels, body motion/point queries and 64 prepared render frames at zero owner-thread managed bytes on Linux software backends. Hardware, foreign platforms and full editor modes remain separate gates."
+    },
+    {
+      "godot": "Node::method:set_scene_instance_load_placeholder(bool:)",
+      "electron2d": "method:Electron2D.Node.SetSceneInstanceLoadPlaceholder(System.Boolean)",
+      "reason": "ADRs 0001/0005/0013/0014/0023: executable deferred scene records, transform-free Node placeholders, ordered typed pending values, late template load, local-resource aliases/cycles and failure-safe sibling creation/replacement. Fresh-process v6 files, v1–5 readers, malformed fields, source/template retention, owner/reentry/lifecycle failures and nested recapture are exercised. GPU and Compatibility render actual lazy/materialized pixels, body motion/point queries and 64 prepared render frames at zero owner-thread managed bytes on Linux software backends. Hardware, foreign platforms and full editor modes remain separate gates."
+    },
+    {
+      "godot": "SceneState::method:get_node_instance_placeholder(int:)",
+      "electron2d": "method:Electron2D.SceneState.GetNodeInstancePlaceholder(System.Int32)",
+      "reason": "ADRs 0001/0005/0013/0014/0023: executable deferred scene records, transform-free Node placeholders, ordered typed pending values, late template load, local-resource aliases/cycles and failure-safe sibling creation/replacement. Fresh-process v6 files, v1–5 readers, malformed fields, source/template retention, owner/reentry/lifecycle failures and nested recapture are exercised. GPU and Compatibility render actual lazy/materialized pixels, body motion/point queries and 64 prepared render frames at zero owner-thread managed bytes on Linux software backends. Hardware, foreign platforms and full editor modes remain separate gates."
+    },
+    {
+      "godot": "SceneState::method:is_node_instance_placeholder(int:)",
+      "electron2d": "method:Electron2D.SceneState.IsNodeInstancePlaceholder(System.Int32)",
+      "reason": "ADRs 0001/0005/0013/0014/0023: executable deferred scene records, transform-free Node placeholders, ordered typed pending values, late template load, local-resource aliases/cycles and failure-safe sibling creation/replacement. Fresh-process v6 files, v1–5 readers, malformed fields, source/template retention, owner/reentry/lifecycle failures and nested recapture are exercised. GPU and Compatibility render actual lazy/materialized pixels, body motion/point queries and 64 prepared render frames at zero owner-thread managed bytes on Linux software backends. Hardware, foreign platforms and full editor modes remain separate gates."
     }
   ],
   "extras": [
@@ -8299,6 +8339,36 @@
       "state": "Implemented",
       "adr": "adr-0010",
       "reason": "Typed compiled authoring and portable reconstruction of persistent scene connections; projects the accepted event identity/subscription concept without string dispatch."
+    },
+    {
+      "electron2d": "constructor:Electron2D.InstancePlaceholder..ctor()",
+      "state": "Implemented",
+      "adr": "adr-0023",
+      "reason": "Compiled construction of the reference placeholder Node role; a manual empty placeholder can use a supplied template."
+    },
+    {
+      "electron2d": "method:Electron2D.InstancePlaceholder.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "adr": "adr-0023",
+      "reason": "Compiled factory projection for placeholder capture and detached reconstruction."
+    },
+    {
+      "electron2d": "method:Electron2D.InstancePlaceholder.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "adr": "adr-0005",
+      "reason": "Typed metadata projection for ordered pending values and inherited Node descriptors; preserves the original field schema without dynamic dispatch."
+    },
+    {
+      "electron2d": "method:Electron2D.InstancePlaceholder.GetStoredPropertyNames()",
+      "state": "Implemented",
+      "adr": "adr-0023",
+      "reason": "Ordered-name projection of get_stored_values(with_order); paired with GetStoredValue<T> under the accepted typed-value contract."
+    },
+    {
+      "electron2d": "method:Electron2D.PackedScene.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "adr": "adr-0014",
+      "reason": "Inherited deterministic cleanup projection releases internally retained auto-loaded scene templates without a public reference-counting API."
     }
   ],
   "statusGroups": [
@@ -11802,11 +11872,17 @@
     },
     {
       "godot": [
+        "class:InstancePlaceholder",
+        "InstancePlaceholder::method:create_instance(bool:,PackedScene:)",
+        "InstancePlaceholder::method:get_instance_path()",
+        "InstancePlaceholder::method:get_stored_values(bool:)",
         "Node::method:get_scene_instance_load_placeholder()",
-        "Node::method:set_scene_instance_load_placeholder(bool:)"
+        "Node::method:set_scene_instance_load_placeholder(bool:)",
+        "SceneState::method:get_node_instance_placeholder(int:)",
+        "SceneState::method:is_node_instance_placeholder(int:)"
       ],
-      "state": "Blocked",
-      "reason": "Actual linked runtime templates and complete typed overrides execute under ADR 0023. Prerequisite: deferred scene-record storage, typed pending-property queries and failure-safe node replacement/ownership together with InstancePlaceholder; both Node flag producers enter that same executable slice. A standalone flag cannot defer a scene."
+      "state": "Implemented",
+      "reason": "ADRs 0001/0005/0013/0014/0023: executable deferred scene records, transform-free Node placeholders, ordered typed pending values, late template load, local-resource aliases/cycles and failure-safe sibling creation/replacement. Fresh-process v6 files, v1–5 readers, malformed fields, source/template retention, owner/reentry/lifecycle failures and nested recapture are exercised. GPU and Compatibility render actual lazy/materialized pixels, body motion/point queries and 64 prepared render frames at zero owner-thread managed bytes on Linux software backends. Hardware, foreign platforms and full editor modes remain separate gates. Public-only JIT and strict NativeAOT consumers execute fresh-file production/load, pending scalar/resource values, local pixels and final shared-template retirement."
     }
   ]
 }

@@ -12,9 +12,11 @@ public static partial class ResourceFileTypes
     private static Dictionary<Type, ResourceFileType> ByType => ResourceLoader.Runtime.FileTypes.ByType;
     private static Dictionary<Type, ResourceValueCodec> Codecs => ResourceLoader.Runtime.FileTypes.Codecs;
     private static Dictionary<Type, ResourceArrayCodec> ResourceArrays => ResourceLoader.Runtime.FileTypes.ResourceArrays;
+    private static InstancePlaceholder CreateInstancePlaceholder() => new();
     static ResourceFileTypes()
     {
         RegisterNode("Node", CreateNode);
+        RegisterNode("InstancePlaceholder", CreateInstancePlaceholder);
         RegisterNode("Entity", CreateEntity);
         RegisterNode("CanvasModulate", CreateCanvasModulate);
         RegisterNode("ShaderGlobalsOverride", CreateShaderGlobalsOverride);
@@ -333,11 +335,19 @@ internal sealed class ResourceFileType(string id, Type type, Func<ElectronObject
         return value;
     }
 }
-internal abstract class ResourceValueCodec { internal abstract void ValidateEncoded(StreamPeerBuffer stream); }
+internal abstract class ResourceValueCodec
+{
+    internal abstract void ValidateEncoded(StreamPeerBuffer stream);
+    internal abstract StoredPropertyValue ReadStoredValue(StreamPeerBuffer stream);
+    internal abstract PropertyDescriptor CreateDeferredDescriptor(string name);
+}
 internal sealed class ResourceValueCodec<T>(Action<StreamPeerBuffer, T> write, Func<StreamPeerBuffer, T> read) : ResourceValueCodec
 {
     internal void Write(StreamPeerBuffer stream, T value) => write(stream, value);
     internal T Read(StreamPeerBuffer stream) => read(stream);
+    internal override StoredPropertyValue ReadStoredValue(StreamPeerBuffer stream) => new StoredPropertyValue<T>(read(stream));
+    internal override PropertyDescriptor CreateDeferredDescriptor(string name) => new PropertyDescriptor<InstancePlaceholder, T>(name,
+        node => node.GetStoredValue<T>(name), (node, value) => node.SetPendingField(name, MissingResourceData.Capture(name, value)), stored: true);
     internal override void ValidateEncoded(StreamPeerBuffer stream) { _ = read(stream); if (stream.GetAvailableBytes() != 0) throw new InvalidDataException("Trailing scalar data."); }
 }
 

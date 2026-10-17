@@ -8,7 +8,7 @@ namespace Electron2D;
 /// <see cref="ResourceSaver"/> persists registered factories/properties as typed scene archives;
 /// loaded instances retain their owned file graphs. Authored typed event endpoints use their registered binding schemas.
 /// Linked templates reconstruct nested scenes and apply captured typed overrides to original node identities.
-/// Root inheritance, editor instantiation modes and placeholders belong to later domains.
+/// Root inheritance and editor instantiation modes belong to later domains.
 /// An inherited node translation domain is omitted from storage so it continues to track its parent after instantiation.
 /// </remarks>
 public sealed partial class PackedScene : Resource
@@ -78,6 +78,18 @@ public sealed partial class PackedScene : Resource
 
     private Node InstantiateCore(PackedSceneEditState editState, bool setupLocalResources, List<Node>? parentNodes = null, Dictionary<PackedScene, PackedSceneData>? templates = null)
     {
+        var retention = ResourceLoader.RetainSceneTemplate(this);
+        try
+        {
+            var root = InstantiateRetained(editState, setupLocalResources, parentNodes, templates);
+            if (retention is not null) { root.AdoptSceneFileLease(retention); retention = null; }
+            return root;
+        }
+        finally { retention?.Dispose(); }
+    }
+
+    private Node InstantiateRetained(PackedSceneEditState editState, bool setupLocalResources, List<Node>? parentNodes, Dictionary<PackedScene, PackedSceneData>? templates)
+    {
         ThrowIfDisposed();
 
         if (!Enum.IsDefined(editState))
@@ -100,7 +112,7 @@ public sealed partial class PackedScene : Resource
 
         templates ??= PrepareTemplates(this, data);
         data = templates[this];
-        if (data.Nodes.Any(node => node.Instance is not null || node.InstanceRootIndex >= 0))
+        if (data.Nodes.Any(node => node.Instance is not null || node.InstanceRootIndex >= 0 || node.Factory.RuntimeType == typeof(InstancePlaceholder)))
             return InstantiateLinked(data, resourcePath, setupLocalResources, parentNodes, templates);
 
         IDisposable? fileLease = RetainFileResources();
@@ -184,7 +196,7 @@ public sealed partial class PackedScene : Resource
     /// Descriptions are stored, folding is transient, and nonroot instance origins/editable flags round-trip
     /// with the typed graph. Actual subscene roots retain borrowed PackedScene links; selected inherited nodes
     /// reuse their original relative identities, while unselected contents come from the current linked template.
-    /// Selected properties retain complete snapshot capture. Root inheritance and placeholder loading remain unsupported.
+    /// Selected properties retain complete snapshot capture, including deferred instance values. Root inheritance remains unsupported.
     /// Consumer descriptors cannot use reserved __SceneInstanceOrigin or __EditableInstance names.
     /// After capture starts, any failure leaves this resource empty.
     /// Unrequested Window.Position is omitted to preserve automatic native placement; explicit zero remains stored.
@@ -372,12 +384,15 @@ public sealed partial class PackedScene : Resource
             if (index > 0)
                 for (var ancestor = node.Parent; ancestor is not null; ancestor = ancestor.Parent)
                 {
-                    if (indices.TryGetValue(ancestor, out var candidate) && nodes[candidate].Instance is not null &&
+                    if (indices.TryGetValue(ancestor, out var candidate) && (nodes[candidate].Instance is not null || nodes[candidate].InstancePlaceholder.Length != 0) &&
                         ancestor.SceneInstancePaths is { } origins && origins.TryGetValue(node.InstanceID, out var originalPath))
                     { instanceRoot = candidate; instancePath = originalPath; break; }
                     if (ReferenceEquals(ancestor, root)) break;
                 }
             var instance = index > 0 && instanceRoot < 0 ? node.SpawnSceneIdentity : null;
+            var placeholderPath = instanceRoot < 0 && (node is InstancePlaceholder || index > 0 && node.GetSceneInstanceLoadPlaceholder())
+                ? node is InstancePlaceholder placeholder ? placeholder.GetInstancePath() : node.SceneFilePath : string.Empty;
+            if (placeholderPath.Length != 0) instance = null;
             if (instance is not null) ObjectDisposedException.ThrowIf(instance.IsDisposed, instance);
             var sibling = index > 0 && (instanceRoot >= 0 || parentIndex >= 0 && (nodes[parentIndex].Instance is not null || nodes[parentIndex].InstanceRootIndex >= 0) || node.Parent != root && node.Parent?.Owner != root) ? node.GetIndex() : -1;
 
@@ -393,7 +408,18 @@ public sealed partial class PackedScene : Resource
                 node.GetPersistentGroups(),
                 properties,
                 instance,
-                string.Empty, instanceRoot, instanceRoot < 0 ? string.Empty : instancePath);
+                placeholderPath, instanceRoot, instanceRoot < 0 ? string.Empty : instancePath);
+            if (placeholderPath.Length != 0 || node is InstancePlaceholder)
+            {
+                var fields = new MissingResourceData { Recording = true };
+                var pendingNames = node is InstancePlaceholder pending ? pending.PendingFields.Fields.Keys.ToHashSet(StringComparer.Ordinal) : null;
+                foreach (var property in properties)
+                    if (pendingNames?.Contains(property.Name) != true) fields.Put(property.Value.CaptureField(property.Name));
+                if (node is InstancePlaceholder existing)
+                    foreach (var field in existing.PendingFields.Fields.Values) fields.Put(field);
+                fields.Recording = false;
+                nodes[index] = nodes[index] with { Factory = new SceneFactoryData(CreateDeferredPlaceholder, typeof(InstancePlaceholder), 0), Properties = [], DeferredProperties = fields };
+            }
         }
 
         var inheritedConnections = selected.Where(node => !ReferenceEquals(node, root) && node.SpawnSceneIdentity is not null)
@@ -402,7 +428,16 @@ public sealed partial class PackedScene : Resource
             .Where(c => indices.ContainsKey(c.Publisher) && indices.ContainsKey(c.Subscriber) && !inheritedConnections.Contains(c))
             .Select(c => new SceneConnectionData(c.Schema, indices[c.Publisher], indices[c.Subscriber], c.Bindings))
             .ToArray();
-        return new PackedSceneData(nodes, connections);
+        var captured = new PackedSceneData(nodes, connections);
+        var skipped = DeferredSkippedNodes(captured);
+        for (var i = 0; i < nodes.Length; i++)
+            if (skipped[i] && nodes[i].DeferredProperties is null)
+            {
+                var fields = new MissingResourceData { Recording = true };
+                foreach (var property in nodes[i].Properties) fields.Put(property.Value.CaptureField(property.Name));
+                fields.Recording = false; nodes[i] = nodes[i] with { Properties = [], DeferredProperties = fields };
+            }
+        return captured;
     }
 
     private static void AddOwnedChildren(Node parent, Node root, List<Node> selected)
@@ -418,6 +453,8 @@ public sealed partial class PackedScene : Resource
             AddOwnedChildren(child, root, selected);
         }
     }
+
+    private static Node CreateDeferredPlaceholder() => new InstancePlaceholder();
 
     private static bool IsBuiltInPath(string path) =>
         path.Length == 0 || path.Contains("::", StringComparison.Ordinal) || path.StartsWith("local://", StringComparison.Ordinal);
@@ -441,13 +478,14 @@ public sealed partial class PackedScene : Resource
         Node node,
         SceneNodeData stored,
         Resource.SceneDuplicationScope resources,
-        bool nodeReferences = false, Node? localRoot = null)
+        bool? nodeReferences = false, Node? localRoot = null, Func<string, Node?>? externalReference = null)
     {
         Node.ValidateEditorPropertyNames(node.GetPropertyList());
         var descriptors = node.GetPropertyList().ToDictionary(property => property.Name, StringComparer.Ordinal);
         foreach (var property in stored.Properties)
         {
-            if ((property.Value is StoredNodeReferenceValue) != nodeReferences) continue;
+            if (nodeReferences is { } referenceFilter &&
+                (property.Value is StoredNodeReferenceValue || property.Value is DeferredPropertyValue { Field.Role: ResourceFieldRole.Node }) != referenceFilter) continue;
             if (!descriptors.TryGetValue(property.Name, out var descriptor))
             {
                 // A preceding stored count can expose indexed typed properties on this same node.
@@ -463,15 +501,18 @@ public sealed partial class PackedScene : Resource
             if (node is ShaderGlobalsOverride && descriptor?.IsStored != true) descriptor = ShaderGlobalParameters.StoredSceneParameter(node, property.Name, property.Value.ValueType) ?? descriptor;
             descriptor ??= Node.StoredEditorProperty(property.Name, property.Value.ValueType);
             if (descriptor is null || !descriptor.IsStored ||
-                descriptor.ValueType != property.Value.ValueType)
+                property.Value is not DeferredPropertyValue && descriptor.ValueType != property.Value.ValueType)
             {
                 throw new InvalidOperationException(
                     $"Stored property '{property.Name}' is not available with the captured schema on {stored.Factory.RuntimeType.Name}.");
             }
 
-            if (localRoot is not null && property.Value.HasResourceReferences)
-                resources.PrepareFallbacks(property.Value, descriptor.CaptureStoredValue(node), localRoot);
-            descriptor.RestoreStoredValue(node, property.Value, descriptor.AlwaysDuplicateResource ? resources.ResolveForced : resources.Resolve);
+            var value = property.Value is DeferredPropertyValue deferred ? descriptor.ReadDeferredValue(deferred.Field) : property.Value;
+            if (localRoot is not null && value.HasResourceReferences)
+                resources.PrepareFallbacks(value, descriptor.CaptureStoredValue(node), localRoot);
+            if (value is StoredNodeReferenceValue reference && externalReference is not null)
+                descriptor.RestoreNodeReference(node, reference, path => node.GetNodeOrNull(path) ?? externalReference(path));
+            else descriptor.RestoreStoredValue(node, value, descriptor.AlwaysDuplicateResource ? resources.ResolveForced : resources.Resolve);
         }
     }
 
@@ -583,23 +624,30 @@ public sealed partial class PackedScene : Resource
 
     private void ReplaceDataUnderLock(PackedSceneData data)
     {
+        var previous = _capturedTemplateOwnership;
+        _capturedTemplateOwnership = RetainCapturedTemplates(data);
         _data = data;
-        var path = ResourcePath;
-
-        var state = _state;
-        if (state.IsDisposed)
-        {
-            _state = new SceneState(data, path); _stateExported = false;
-            return;
-        }
-
         try
         {
-            state.Replace(data, path);
+            var path = ResourcePath;
+
+            var state = _state;
+            if (state.IsDisposed)
+            {
+                _state = new SceneState(data, path); _stateExported = false;
+                return;
+            }
+
+            try
+            {
+                state.Replace(data, path);
+            }
+            catch (ObjectDisposedException) when (state.IsDisposed && ReferenceEquals(_state, state))
+            {
+                _state = new SceneState(data, path); _stateExported = false;
+            }
+            if (_stateExported && !_state.IsDisposed) _state.UpdateFileLease(RetainFileResources());
         }
-        catch (ObjectDisposedException) when (state.IsDisposed && ReferenceEquals(_state, state))
-        {
-            _state = new SceneState(data, path); _stateExported = false;
-        }
+        finally { previous?.ReleaseOwner(); }
     }
 }

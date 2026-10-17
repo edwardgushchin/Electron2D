@@ -9,6 +9,15 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length == 3 && args[0] == "--deferred-scene") { DeferredSceneTests.RunChild(args[1], args[2]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEFERRED_SCENES") is { } deferredMode)
+{
+    if (deferredMode == "managed") DeferredSceneTests.RunManaged();
+    else if (deferredMode is "gpu" or "compatibility") DeferredSceneTests.RunNative(deferredMode);
+    else throw new ArgumentException("Unknown deferred-scene profile.");
+    return;
+}
+
 if (args.Length == 3 && args[0] == "--linked-scene") { LinkedSceneTests.RunChild(args[1], args[2]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINKED_SCENES") is { } linkedMode)
 {
@@ -1550,6 +1559,7 @@ TextureArrayTests.Run();
 TexturePlaceholderTests.RunManaged();
 MissingTextureTests.RunManaged();
 LinkedSceneTests.RunManaged();
+DeferredSceneTests.RunManaged();
 IntegerSourceTextureTests.RunManaged();
 CompressedTextureTests.RunManaged();
 CompressedArrayTests.RunManaged();

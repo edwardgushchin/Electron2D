@@ -113,7 +113,7 @@ public sealed class SceneState : ElectronObject
 
     /// <summary>Gets the resource path represented by a node placeholder.</summary>
     /// <param name="nodeIndex">The zero-based node index.</param>
-    /// <returns>An empty string because runtime-authored placeholders are not supported.</returns>
+    /// <returns>The late scene path for a deferred root, or empty for other records.</returns>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="nodeIndex"/> is outside the state.</exception>
     /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>
     public string GetNodeInstancePlaceholder(int nodeIndex) => ReadNode(nodeIndex).InstancePlaceholder;
@@ -149,7 +149,7 @@ public sealed class SceneState : ElectronObject
     /// <returns>The property count.</returns>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="nodeIndex"/> is outside the state.</exception>
     /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>
-    public int GetNodePropertyCount(int nodeIndex) => ReadNode(nodeIndex).Properties.Length;
+    public int GetNodePropertyCount(int nodeIndex) => ReadNode(nodeIndex).StoredPropertyCount;
 
     /// <summary>Gets the name of a stored node property.</summary>
     /// <param name="nodeIndex">The zero-based node index.</param>
@@ -196,7 +196,7 @@ public sealed class SceneState : ElectronObject
     public string GetNodeType(int nodeIndex)
     {
         var node = ReadNode(nodeIndex);
-        return node.Instance is not null || node.InstanceRootIndex >= 0 ? string.Empty : node.Factory.RuntimeType.Name;
+        return node.Instance is not null || node.InstanceRootIndex >= 0 || node.InstancePlaceholder.Length != 0 ? string.Empty : node.Factory.RuntimeType.Name;
     }
 
     /// <summary>Gets the resource path associated with this state.</summary>
@@ -214,7 +214,7 @@ public sealed class SceneState : ElectronObject
 
     /// <summary>Gets whether a stored node is an instance placeholder.</summary>
     /// <param name="nodeIndex">The zero-based node index.</param>
-    /// <returns><see langword="false"/> for every runtime-authored node.</returns>
+    /// <returns>True when this record stores a deferred scene path.</returns>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="nodeIndex"/> is outside the state.</exception>
     /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>
     public bool IsNodeInstancePlaceholder(int nodeIndex) => ReadNode(nodeIndex).InstancePlaceholder.Length != 0;
@@ -263,8 +263,8 @@ public sealed class SceneState : ElectronObject
     private ScenePropertyData ReadProperty(int nodeIndex, int propertyIndex)
     {
         var node = ReadNode(nodeIndex);
-        return (uint)propertyIndex < (uint)node.Properties.Length
-            ? node.Properties[propertyIndex]
+        return (uint)propertyIndex < (uint)node.StoredPropertyCount
+            ? node.ReadStoredProperty(propertyIndex)
             : throw new ArgumentOutOfRangeException(
                 nameof(propertyIndex), propertyIndex, "Property index is outside the stored node.");
     }
@@ -282,6 +282,7 @@ internal sealed record PackedSceneData(SceneNodeData[] Nodes, SceneConnectionDat
             Nodes.Select(node => node with
             {
                 Instance = node.Instance is { } instance ? transform(instance) as PackedScene ?? throw new InvalidOperationException("A linked scene reference must remain a PackedScene.") : null,
+                DeferredProperties = node.DeferredProperties?.Copy(resource => resource is null ? null : transform(resource)),
                 Properties = node.Properties
                     .Select(property => property with { Value = property.Value.TransformResources(transform) })
                     .ToArray()
@@ -303,7 +304,18 @@ internal sealed record SceneNodeData(
     PackedScene? Instance,
     string InstancePlaceholder,
     int InstanceRootIndex = -1,
-    string InstancePath = "");
+    string InstancePath = "",
+    MissingResourceData? DeferredProperties = null)
+{
+    internal int StoredPropertyCount => Properties.Length + (DeferredProperties?.Fields.Count ?? 0);
+    internal ScenePropertyData ReadStoredProperty(int index)
+    {
+        if ((uint)index >= (uint)StoredPropertyCount) throw new ArgumentOutOfRangeException(nameof(index));
+        if (index < Properties.Length) return Properties[index];
+        var field = DeferredProperties!.Fields.Values.ElementAt(index - Properties.Length);
+        return new(field.Name, new DeferredPropertyValue(field));
+    }
+}
 
 internal sealed record ScenePropertyData(string Name, StoredPropertyValue Value);
 

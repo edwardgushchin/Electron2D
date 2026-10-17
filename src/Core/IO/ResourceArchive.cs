@@ -45,7 +45,7 @@ internal static partial class ResourceArchive
         if (uid == ResourceUID.InvalidID) uid = ResourceUID.CreateID();
         var file = new byte[checked(64 + encoded.Length)];
         "E2DASSET"u8.CopyTo(file);
-        BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(8), 5);
+        BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(8), 6);
         BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(12), (int)flags);
         BinaryPrimitives.WriteInt64LittleEndian(file.AsSpan(16), uid);
         BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(24), payload.Length);
@@ -62,7 +62,7 @@ internal static partial class ResourceArchive
         using var stream = ResourcePacks.OpenRead(path);
         Span<byte> header = stackalloc byte[24];
         if (stream.Read(header) != header.Length || !header[..8].SequenceEqual("E2DASSET"u8)) return ResourceUID.InvalidID;
-        if (BinaryPrimitives.ReadInt32LittleEndian(header[8..]) is not (1 or 2 or 3 or 4 or 5) || stream.Length < 64) throw new InvalidDataException("Unsupported resource UID header.");
+        if (BinaryPrimitives.ReadInt32LittleEndian(header[8..]) is not (1 or 2 or 3 or 4 or 5 or 6) || stream.Length < 64) throw new InvalidDataException("Unsupported resource UID header.");
         var id = BinaryPrimitives.ReadInt64LittleEndian(header[16..]);
         return id >= 0 ? id : throw new InvalidDataException("Invalid resource UID.");
     }
@@ -81,7 +81,7 @@ internal static partial class ResourceArchive
         var length = FileAccess.GetSize(path);
         if (length is < 64 or > Limit + 64) throw new InvalidDataException("Invalid resource file size.");
         var bytes = FileAccess.GetFileAsBytes(path);
-        if (!bytes.AsSpan(0, 8).SequenceEqual("E2DASSET"u8) || BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(8)) is not (1 or 2 or 3 or 4 or 5)) throw new InvalidDataException("Unsupported resource archive version.");
+        if (!bytes.AsSpan(0, 8).SequenceEqual("E2DASSET"u8) || BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(8)) is not (1 or 2 or 3 or 4 or 5 or 6)) throw new InvalidDataException("Unsupported resource archive version.");
         if (BinaryPrimitives.ReadInt64LittleEndian(bytes.AsSpan(16)) < 0) throw new InvalidDataException("Invalid archive UID.");
         return bytes;
     }
@@ -398,7 +398,9 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
         stream.Put32(data.Nodes.Length);
         foreach (var node in data.Nodes)
         {
-            var type = ResourceFileTypes.Get(node.Factory.RuntimeType);
+            // Skipped inherited records do not require the deferred scene's compiled factories.
+            var type = ResourceFileTypes.Get(node.DeferredProperties is not null && node.Factory.RuntimeType != typeof(InstancePlaceholder)
+                ? typeof(Node) : node.Factory.RuntimeType);
             ResourceArchiveStrings.Write(stream, type.ID);
             ResourceArchiveStrings.Write(stream, node.Name);
             stream.Put32(node.ParentIndex);
@@ -406,8 +408,14 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
             stream.Put32(node.SiblingIndex);
             stream.Put32(Reference(node.Instance)); stream.Put32(node.InstanceRootIndex);
             ResourceArchiveStrings.Write(stream, node.InstancePath);
+            ResourceArchiveStrings.Write(stream, node.InstancePlaceholder);
             stream.Put32(node.Groups.Count);
             foreach (var group in node.Groups) ResourceArchiveStrings.Write(stream, group);
+            if (node.DeferredProperties is not null)
+            {
+                if (node.Properties.Length != 0) throw new InvalidDataException("Deferred records use their self-describing fields.");
+                stream.Put32(0); WriteMissing(stream, node.DeferredProperties); continue;
+            }
             var temporary = Node.InvokeSceneInstanceFactory(() => (Node)type.Factory());
             try
             {
@@ -417,6 +425,7 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
             {
                 temporary.Dispose();
             }
+            stream.Put32(0);
         }
         stream.Put32(data.Connections.Length);
         foreach (var connection in data.Connections)
@@ -650,6 +659,7 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
         var count = Count(stream);
         var nodes = new SceneNodeData[count];
         var linkedRoots = new bool[count];
+        var skipped = new bool[count];
         for (var i = 0; i < count; i++)
         {
             var type = ResourceFileTypes.Get(ResourceArchiveStrings.Read(stream));
@@ -663,22 +673,28 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
             var link = ResourceArchive.ReadSceneLink(stream, version, i, linkedRoots, _definitions.Length);
             var instance = Reference(link.Reference); var instanceRoot = link.Root; var instancePath = link.Path;
             if (instance is not null && instance is not PackedScene) throw new InvalidDataException("A linked resource is not a packed scene.");
+            if (link.Placeholder.Length != 0 && type.Type != typeof(InstancePlaceholder)) throw new InvalidDataException("A deferred record requires the placeholder node role.");
+            skipped[i] = parent >= 0 && skipped[parent] || instanceRoot >= 0 && (skipped[instanceRoot] || nodes[instanceRoot].InstancePlaceholder.Length != 0);
             var groupCount = Count(stream);
             var groups = new string[groupCount];
             for (var g = 0; g < groupCount; g++) groups[g] = ResourceArchiveStrings.Read(stream);
-            var temporary = Node.InvokeSceneInstanceFactory(() => (Node)type.Factory());
             ScenePropertyData[] properties;
-            try
+            MissingResourceData? deferred = null;
+            if (version >= 6 && (link.Placeholder.Length != 0 || skipped[i] || type.Type == typeof(InstancePlaceholder)))
             {
-                properties = ReadProperties(stream, temporary).Select(p => new ScenePropertyData(p.Descriptor.Name, p.Value)).ToArray();
+                if (Count(stream) != 0) throw new InvalidDataException("Deferred records cannot contain eager property schemas.");
+                properties = []; deferred = new MissingResourceData(); ReadMissing(stream, deferred, allowNodes: true);
             }
-            finally
+            else
             {
-                temporary.Dispose();
+                var temporary = Node.InvokeSceneInstanceFactory(() => (Node)type.Factory());
+                try { properties = ReadProperties(stream, temporary).Select(p => new ScenePropertyData(p.Descriptor.Name, p.Value)).ToArray(); }
+                finally { temporary.Dispose(); }
+                if (version >= 6 && Count(stream) != 0) throw new InvalidDataException("An ordinary node cannot contain deferred fields.");
             }
             var nodePath = i == 0 ? "." : parent == 0 ? name : nodes[parent].Path + "/" + name;
             var factory = new SceneFactoryData(() => (Node)type.Factory(), type.Type, 0);
-            nodes[i] = new(factory, name, parent, owner, sibling, nodePath, parent < 0 ? "." : nodes[parent].Path, owner < 0 ? "" : owner == 0 ? "." : "", groups, properties, (PackedScene?)instance, "", instanceRoot, instancePath);
+            nodes[i] = new(factory, name, parent, owner, sibling, nodePath, parent < 0 ? "." : nodes[parent].Path, owner < 0 ? "" : owner == 0 ? "." : "", groups, properties, (PackedScene?)instance, link.Placeholder, instanceRoot, instancePath, deferred);
         }
         if (count == 0)
         {

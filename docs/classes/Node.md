@@ -4,13 +4,17 @@ Last updated: 2026-10-17
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
-**Inherited By:** [AudioStreamPlayer](AudioStreamPlayer.md), [CanvasItem](CanvasItem.md), [CanvasLayer](CanvasLayer.md), [ShaderGlobalsOverride](ShaderGlobalsOverride.md), [Timer](Timer.md), [Viewport](Viewport.md)
+**Inherited By:** [InstancePlaceholder](InstancePlaceholder.md), [AudioStreamPlayer](AudioStreamPlayer.md), [CanvasItem](CanvasItem.md), [CanvasLayer](CanvasLayer.md), [ShaderGlobalsOverride](ShaderGlobalsOverride.md), [Timer](Timer.md), [Viewport](Viewport.md)
 
 - **Source:** [Node.cs](../../src/Scene/Main/Node.cs), [Node.Replacement.cs](../../src/Scene/Main/Node.Replacement.cs), [Node.PhysicsInterpolation.cs](../../src/Scene/Main/Node.PhysicsInterpolation.cs), [Node.Diagnostics.cs](../../src/Scene/Main/Node.Diagnostics.cs), [Node.Names.cs](../../src/Scene/Main/Node.Names.cs), [Node.TreeMembership.cs](../../src/Scene/Main/Node.TreeMembership.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public partial class Node : ElectronObject`
 
 Authoring guards inspect affected scene colliders and their actual physical attachments, including detached descendants and colliders imported into caller-owned spaces. Numerical hooks cannot mutate their node/subtree authoring; hierarchy, entry and disposal reject borrowed physical contexts before structural changes. Engine pose publication retains its ordinary step phase. [Common space bindings](../components/physics-registered-adapter.md#common-space-bindings) verifies these paths.
+
+## Deferred scene authoring
+
+`GetSceneInstanceLoadPlaceholder()` and `SetSceneInstanceLoadPlaceholder(bool)` control future capture of an actual nonroot scene instance with a scene file path. The setter changes authoring state; it does not replace the live node. [Deferred scenes](../components/deferred-scenes.md) restores a transform-free InstancePlaceholder and later explicitly materializes its sibling through the existing scene/resource lifecycle.
 
 ## Retained canvas presentation
 

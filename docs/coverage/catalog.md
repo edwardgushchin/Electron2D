@@ -400,7 +400,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [InputEventShortcut](classes/InputEventShortcut.md) | InputEvent | Implemented | 1 |
 | [InputEventWithModifiers](classes/InputEventWithModifiers.md) | InputEventFromWindow | Implemented | 8 |
 | [InputMap](classes/InputMap.md) | Object | Implemented | 15 |
-| [InstancePlaceholder](classes/InstancePlaceholder.md) | Node | Blocked | 3 |
+| [InstancePlaceholder](classes/InstancePlaceholder.md) | Node | Implemented | 3 |
 | [IntervalTweener](classes/IntervalTweener.md) | Tweener | Implemented | 0 |
 | [ItemList](classes/ItemList.md) | Control | Partial | 114 |
 | [IterateIK3D](classes/IterateIK3D.md) | ChainIK3D | Excluded | 19 |

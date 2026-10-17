@@ -344,10 +344,8 @@ def reason_for_type(item, lookup):
         return "Blocked", "Trigger: typed mesh topology/adjacency and incremental geometry editing, attribute conversion and transactional commit to the now executable ArrayMesh; missing advanced channels enter their own shader/skeleton producer slices (ADR 0092)."
     if name in {"ImporterMesh", "MeshLibrary"}:
         return "Blocked", "Trigger: concrete applicable 2D mesh import/library entry model, owned resource graphs and loader/authoring format integration over the implemented mesh resources (ADRs 0013/0092); audit 3D-only entry fields separately."
-    if name == "InstancePlaceholder":
-        return "Blocked", "Loader and actual linked runtime templates/overrides exist under ADRs 0013/0023; prerequisite: deferred scene-record storage, typed pending-property queries and failure-safe instance replacement/ownership together with Node load-placeholder flag producers. A path flag alone cannot defer a concrete scene. Raw Dictionary values remain excluded by ADR 0017; typed property queries must preserve stored order."
     blocked_slices = (
-        ({"ResourceFormatSaver", "ResourceImporter", "ResourcePreloader", "ResourceUID", "MissingResource", "MissingNode", "InstancePlaceholder", "PCKPacker", "ZIPReader", "ZIPPacker"},
+        ({"ResourceFormatSaver", "ResourceImporter", "ResourcePreloader", "ResourceUID", "MissingResource", "MissingNode", "PCKPacker", "ZIPReader", "ZIPPacker"},
          "first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023)"),
         ({"ResourceFormatLoader"},
          "first public typed loader-plugin registration and callback slice after the concrete internal image-texture loader (ADR 0013)"),
@@ -692,7 +690,9 @@ def render():
             updated = "2026-10-15"
         if name in {"Node", "SceneTree", "ImageTextureLayered", "Texture2DArray", "CompressedTexture2D", "CompressedTexture2DArray", "CompressedTextureLayered", "RenderingServer"}:
             updated = "2026-10-16"
-        if name in {"RenderingServer", "ProjectSettings", "Viewport", "PhysicsServer2D", "PhysicsServer2DExtension", "Texture2D", "PlaceholderTexture2D", "InstancePlaceholder"}:
+        if name in {"Node", "PackedScene", "SceneState", "InstancePlaceholder"}:
+            updated = "2026-10-18"
+        if name in {"RenderingServer", "ProjectSettings", "Viewport", "PhysicsServer2D", "PhysicsServer2DExtension", "Texture2D", "PlaceholderTexture2D"}:
             updated = "2026-10-17"
         if name == "Object":
             updated = "2026-10-18"

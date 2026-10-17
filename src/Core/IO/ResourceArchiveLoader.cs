@@ -43,20 +43,25 @@ internal sealed class ResourceArchiveLoader : ResourceFormatLoader
                 var groups = stream.Get32();
                 if (groups is < 0 or > 65536) throw new InvalidDataException();
                 for (var g = 0; g < groups; g++) _ = ResourceArchiveStrings.Read(stream);
-                var fields = stream.Get32();
-                if (fields is < 0 or > 65536) throw new InvalidDataException();
-                for (var f = 0; f < fields; f++)
-                {
-                    _ = ResourceArchiveStrings.Read(stream);
-                    _ = ResourceArchiveStrings.Read(stream);
-                    if (version >= 2) { _ = stream.GetU8(); _ = stream.GetU8(); }
-                    var size = stream.Get32();
-                    if (size < 0 || size > stream.GetAvailableBytes()) throw new InvalidDataException();
-                    stream.Seek(stream.GetPosition() + size);
-                }
+                SkipFields(stream, version);
+                if (version >= 6) SkipFields(stream, version);
             }
         }
         return types.ToArray();
+    }
+    private static void SkipFields(StreamPeerBuffer stream, int version)
+    {
+        var fields = stream.Get32();
+        if (fields is < 0 or > 65536) throw new InvalidDataException();
+        for (var f = 0; f < fields; f++)
+        {
+            _ = ResourceArchiveStrings.Read(stream);
+            _ = ResourceArchiveStrings.Read(stream);
+            if (version >= 2) { _ = stream.GetU8(); _ = stream.GetU8(); }
+            var size = stream.Get32();
+            if (size < 0 || size > stream.GetAvailableBytes()) throw new InvalidDataException();
+            stream.Seek(stream.GetPosition() + size);
+        }
     }
     public override string GetResourceScriptClass(string path)
     {
