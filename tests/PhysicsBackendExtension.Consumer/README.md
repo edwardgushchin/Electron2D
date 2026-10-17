@@ -315,3 +315,5 @@ fresh process. Use `--cpu`, `--gpu` or the default registered provider, with
 optional `--threaded`. Each full-frame bracket alternates existing unique names
 while simulating, after preparation, and requires 0/0 managed bytes. New collision
 strings and first snapshot capacity growth remain cold authoring work.
+
+`--pose-transactions`, optionally `--cpu`, `--gpu` and `--threaded`, covers failed authored Body/Area pose publication across all five scene body siblings, raw bodies and both Area roles. It checks 312 retry cases, 52 retirement/transfer cases and two scene-role takeovers for the registered provider, current query geometry, scalar/batch/view semantics, same-pose edits, direct-view writes, stale views and deferred kinematic targets. Each profile measures 128 complete changed-pose frames after 128 warmups and full collection at strict 0/0 owner/all-thread managed bytes. This bounded failure fixture does not establish all state-setter failures, arbitrary numerical behavior or native/hardware/performance acceptance.

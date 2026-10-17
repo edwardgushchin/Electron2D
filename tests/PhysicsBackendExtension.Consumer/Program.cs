@@ -24,6 +24,8 @@ else if (args.Contains("--filter-transactions")) BackendChecks.RunFilterTransact
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--area-callback-transactions")) BackendChecks.RunAreaCallbackTransactions(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Contains("--pose-transactions")) BackendChecks.RunPoseTransactions(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--mode-transactions")) BackendChecks.RunModeTransactions(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--metadata-transactions")) BackendChecks.RunMetadataTransactions(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :

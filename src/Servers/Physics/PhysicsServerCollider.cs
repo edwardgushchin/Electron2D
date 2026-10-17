@@ -53,11 +53,13 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
     internal int ShapeCount => _slots.Count;
     private volatile bool _shapesDirty;
     private bool _modeDirty, _preparingMode;
+    private bool _poseDirty, _preparingPose;
 
     internal void MarkShapesDirty() => _shapesDirty = true;
 
     internal void PrepareBackend()
     {
+        PreparePendingPose();
         _backend.PrepareContactPolicy();
         if (_shapesDirty) RebuildShapes();
     }
@@ -91,6 +93,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
         PhysicsSpace.Cleanup(() => { if (!space.HasBackendFailure) CaptureMotion(); }, ref errors);
         PhysicsSpace.Cleanup(_backend.Detach, ref errors);
         _modeDirty = false;
+        _poseDirty = false;
         PhysicsSpace.FinishCleanup(errors);
     }
 
@@ -248,7 +251,20 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
         }
         _transform = transform;
         if (Space is not null)
-            _backend.SetPose(transform);
+        {
+            _poseDirty = true;
+            PreparePendingPose();
+        }
+    }
+
+    internal void PreparePendingPose()
+    {
+        if (!_poseDirty || Space is null) return;
+        if (_preparingPose) throw new InvalidOperationException("Collider pose preparation cannot reenter its own publication.");
+        _preparingPose = true;
+        try { _backend.SetPose(_transform); _poseDirty = false; }
+        catch { Space.MarkColliderMetadataDirty(); throw; }
+        finally { _preparingPose = false; }
     }
 
     internal void PrepareMotion(double delta)
@@ -369,7 +385,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
     {
         if (Space is null || IsArea || _modeDirty || _mode == PhysicsServer.BodyMode.Static)
             return;
-        _transform = GetTransform();
+        if (!_poseDirty) _transform = GetTransform();
         if (_mode == PhysicsServer.BodyMode.Kinematic) return;
         _sleeping = !_backend.IsAwake;
         _linearVelocity = _backend.LinearVelocity;

@@ -1,6 +1,10 @@
 # Area
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
+
+## Failed pose publication
+
+Failed scene/raw Area pose publication retains committed authoring, including a return to the previous cached pose after a partial error. Failed body pose publication uses the same recovery boundaries. Live queries and nonzero steps retry current authored input; raw body scalar/batch reads and acquired or retained direct-body views also prepare incomplete publication. Scene presentation and Area pose getters remain non-preparing. Repeated errors retain their original exception and leave the tick unchanged. Detachment preserves authored pose instead of sampling a partially changed raw solver pose, discards retired attachment debt and invalidates old views. Later kinematic targets still wait for a nonzero active step. See [pose publication](../components/physics-registered-adapter.md#failed-pose-publication) for the executable scope and limits.
 
 [Retained slot history](../components/physics-snapshots.md#capture-after-topology-edits)
 keeps sampled public values while rejecting portable capture of retired/reindexed

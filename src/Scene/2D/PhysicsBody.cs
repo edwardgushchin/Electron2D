@@ -2,7 +2,9 @@ namespace Electron2D;
 
 /// <summary>A spatial collision object that participates in a scene tree's physics world.</summary>
 /// <remarks>Scene departure releases the physical binding after TreeExiting, before NodeRemoved and TreeExited,
-/// even when a user exit callback throws. The inherited OnExitTree hook does not own backend retirement.</remarks>
+/// even when a user exit callback throws. The inherited OnExitTree hook does not own backend retirement.
+/// Incomplete authored pose publication retries before live queries, direct-body-view access and a nonzero step.
+/// Scene presentation reads retain authored state without forcing numerical preparation.</remarks>
 public abstract partial class PhysicsBody : CollisionObject
 {
     private readonly List<ulong> _appliedShapeRevisions = [];
@@ -13,6 +15,7 @@ public abstract partial class PhysicsBody : CollisionObject
     private Transform _preparedTransform;
     private long _preparedGeometryEpoch = -1;
     private volatile bool _shapesDirty = true;
+    private bool _poseDirty, _preparingPose;
     private PhysicsMaterial? _materialOverride;
     private ulong _appliedMaterialRevision;
 
@@ -89,6 +92,7 @@ public abstract partial class PhysicsBody : CollisionObject
         }, ref errors);
         PhysicsSpace.Cleanup(Backend.Detach, ref errors);
         _serverModeDirty = false;
+        _poseDirty = false;
         _appliedShapeRevisions.Clear();
         _shapesDirty = true;
         PhysicsSpace.FinishCleanup(errors);
@@ -100,7 +104,7 @@ public abstract partial class PhysicsBody : CollisionObject
         Backend.PrepareContactPolicy();
         var transform = GlobalTransform;
         var geometryEpoch = Shape.GeometryEpoch;
-        if (!_shapesDirty && geometryEpoch == _preparedGeometryEpoch && transform == _preparedTransform &&
+        if (!_poseDirty && !_shapesDirty && geometryEpoch == _preparedGeometryEpoch && transform == _preparedTransform &&
             (_materialOverride is null || !_materialOverride.IsDisposed && _materialOverride.Revision == _appliedMaterialRevision)) return;
         ValidatePhysicsTransform(transform);
         if (_materialOverride is { IsDisposed: true })
@@ -120,15 +124,30 @@ public abstract partial class PhysicsBody : CollisionObject
         if (_shapesDirty) RebuildShapes();
         var position = transform.Origin;
         var rotation = _validatedRotation;
-        if (position != _lastPosition || rotation != _lastRotation)
+        if (_poseDirty || position != _lastPosition || rotation != _lastRotation)
         {
-            if (HasServerMode) ApplyServerTransform(transform);
-            else ApplySceneTransform(position, rotation);
+            try
+            {
+                if (HasServerMode) ApplyServerTransform(transform);
+                else ApplySceneTransform(position, rotation);
+                _poseDirty = false;
+            }
+            catch { MarkPoseDirty(); throw; }
             _lastPosition = position;
             _lastRotation = rotation;
         }
         _preparedTransform = transform;
         _preparedGeometryEpoch = geometryEpoch;
+    }
+
+    private void MarkPoseDirty() { _poseDirty = true; Space?.MarkColliderMetadataDirty(); }
+    internal void PreparePendingPose()
+    {
+        if (!_poseDirty || Space is null) return;
+        if (_preparingPose) throw new InvalidOperationException("Body pose preparation cannot reenter its own publication.");
+        _preparingPose = true;
+        try { PrepareBackend(); }
+        finally { _preparingPose = false; }
     }
 
     internal void PollMaterialRevision()

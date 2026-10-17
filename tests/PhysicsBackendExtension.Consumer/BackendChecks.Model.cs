@@ -29,7 +29,7 @@ public static partial class BackendChecks
             if (DebugPointCount < DebugLimit) DebugPoints[DebugPointCount++] = point;
         }
         internal RID ContactFailure;
-        internal Action<RID>? IdentityHook, ColliderFactoryHook, ModeHook, RotationHook, SurfaceHook;
+        internal Action<RID>? IdentityHook, ColliderFactoryHook, ModeHook, RotationHook, SurfaceHook, PoseHook;
         internal Action<RID>? ShapeHook, FilterHook;
         internal Action<RID>? BodyHook;
         internal Action<RID>? JointHook;
@@ -360,6 +360,7 @@ public static partial class BackendChecks
         protected override bool IsAwake => Awake;
         protected override void SetPose(Vector2 position, float rotation)
         {
+            solver.PoseHook?.Invoke(rid);
             if (Position == position && Rotation == rotation) return;
             Position = position; Rotation = rotation; solver.WakeConnected(this);
         }
