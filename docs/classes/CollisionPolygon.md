@@ -92,3 +92,5 @@ receding/tangent and angular-only velocities do not enlarge recovery depth.
 PhysicsMovingOneWayTests checks raw/scene callers, roles, rotated slots, six finite
 source families and eight 128-warmup/128-measured complete-frame brackets at zero
 managed allocation. Native/platform/hardware/performance acceptance remains open.
+
+Manual Parent/Unparent notifications require the scene owner before inherited canvas callbacks or physical shape-owner metadata can change. A worker failure preserves the existing shape owner and its query identity. Custom notifications and interpolation resets retain inherited own-group delivery.

@@ -154,3 +154,5 @@ Occurs after replacing the borrowed texture and scheduling redraw.
 ## Procedural mesh integration
 
 Generated source geometry follows item and instance transforms with native/expanded submission and explicit visibility bounds. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).
+
+Inherited interpolation reset resets the borrowed instance resource even before the first canvas command is prepared. The source is reset once; cached commands using that same resource do not copy its history again. Other captured instance resources retain their resets. This preserves an explicit reset endpoint followed by another instance pose within the same physics tick.

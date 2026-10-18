@@ -105,3 +105,5 @@ owner additions and CollisionShape assignments of borrowed views reject before
 changing storage. Detached existing consumers also reject edits and release.
 The guard is released on supplier/status failure and before committed old-view
 retirement, so later ordinary bindings remain available.
+
+Manual Parent/Unparent notifications require the scene owner before inherited canvas callbacks or physical shape-owner metadata can change. A worker failure preserves the existing shape owner and its query identity. Custom notifications and interpolation resets retain inherited own-group delivery.

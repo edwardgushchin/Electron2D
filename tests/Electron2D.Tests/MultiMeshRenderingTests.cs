@@ -121,7 +121,7 @@ internal static class MultiMeshRenderingTests
         using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new() { Vertices = [Vector2.Zero, new(6, 0), new(0, 6)], Colors = [Colors.Red, Colors.Red, Colors.Red] });
         using var resource = new MultiMesh { Mesh = mesh, InstanceCount = 1 }; resource.SetInstanceTransform2D(0, new Transform(0, new(10, 40)));
         var window = new Window { Size = new(240, 120) }; window.AddChild(new MultiMeshInstance { MultiMesh = resource }); var mover = new Mover(resource); window.AddChild(mover);
-        var frames = 0; var sampled = false; ulong firstTick = 0;
+        var frames = 0; var sampled = 0; ulong firstTick = 0;
         try
         {
             window.Ready += _ =>
@@ -133,18 +133,24 @@ internal static class MultiMeshRenderingTests
                     var fraction = Engine.PhysicsInterpolationFraction;
                     if (Engine.PhysicsFrames - firstTick < 3 || fraction is < .2 or > .6) return;
                     var logical = resource.GetInstanceTransform2D(0).Origin.X; using var image = renderer.Readback();
-                    Pixel(image, window, logical - 24 + 24 * (float)fraction + 1, 41, Colors.Red); Pixel(image, window, logical + 1, 41, Colors.Black);
-                    sampled = true; window.Tree!.Quit();
+                    Pixel(image, window, mover.PreviousX + (logical - mover.PreviousX) * (float)fraction + 1, 41, Colors.Red); Pixel(image, window, logical + 1, 41, Colors.Black);
+                    sampled |= logical > mover.PreviousX ? 1 : 2; if (sampled == 3) window.Tree!.Quit();
                 };
             };
-            Engine.Run(window); Check(sampled && window.IsDisposed, "Native output presents the instance pose between actual physics ticks.");
+            Engine.Run(window); Check(sampled == 3 && window.IsDisposed, "Native output presents both instance directions between actual physics ticks.");
         }
         finally { if (!window.IsDisposed) window.Dispose(); Engine.MaxFPS = fps; Engine.PhysicsTicksPerSecond = ticks; ProjectSettings.Set(ProjectSettings.PhysicsInterpolation, old); }
     }
     private sealed class Mover(MultiMesh resource) : Node
     {
+        internal float PreviousX { get; private set; } = 10;
         protected override void OnReady() => PhysicsProcessEnabled = true;
-        protected override void OnPhysicsProcess(double delta) { var pose = resource.GetInstanceTransform2D(0); pose.Origin.X += 24; resource.SetInstanceTransform2D(0, pose); }
+        protected override void OnPhysicsProcess(double delta)
+        {
+            // Keep the pixel oracle inside the viewport when native warmup advances many physics ticks.
+            var pose = resource.GetInstanceTransform2D(0); PreviousX = pose.Origin.X;
+            pose.Origin.X = PreviousX == 10 ? 34 : 10; resource.SetInstanceTransform2D(0, pose);
+        }
     }
     private static Shader LoadShader()
     {

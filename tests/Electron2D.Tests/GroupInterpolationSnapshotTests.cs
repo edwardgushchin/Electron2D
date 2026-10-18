@@ -12,7 +12,7 @@ internal static class GroupInterpolationSnapshotTests
         internal Action? Write;
         protected override void OnPhysicsProcess(double delta) => Write!();
     }
-    internal static void Run(PhysicsServer.Backend backend)
+    internal static void Run(PhysicsServer.Backend backend, bool propagated = false)
     {
         using var world = new World(backend); using var root = new SubViewport { World = world, Size = new(128, 80) };
         var writer = new Writer { ProcessThreadGroup = Node.ProcessThreadGroupMode.SubThread };
@@ -20,6 +20,13 @@ internal static class GroupInterpolationSnapshotTests
         var camera = new Camera { AnchorMode = AnchorMode.FixedTopLeft, LimitEnabled = false, ProcessCallback = ProcessPhase.Physics };
         writer.AddChild(item); writer.AddChild(retained); writer.AddChild(control); writer.AddChild(camera); root.AddChild(writer);
         using var tree = new SceneTree(root); tree.PhysicsInterpolation = true;
+        using var instances = new MultiMesh { InstanceCount = 1 };
+        var undrawn = new MultiMeshInstance { MultiMesh = instances }; root.AddChild(undrawn);
+        instances.PhysicsTick(true); instances.SetInstanceTransform2D(0, new Transform(0, new(10, 0))); Reset(undrawn);
+        instances.SetInstanceTransform2D(0, new Transform(0, new(20, 0))); instances.PhysicsTick(false);
+        instances.Presentation(0, .5f, out var pose, out _, out _);
+        Check(pose.Origin.X == 15, "Undrawn MultiMesh reset preserves the explicit previous endpoint before any drawing command exists");
+        root.RemoveChild(undrawn); undrawn.Dispose();
         var inactive = new ObservedCamera(); root.AddChild(inactive); inactive.Position = Vector2.One;
         var inactiveReads = inactive.Reads; inactive.Offset = Vector2.One;
         Check(inactive.Reads == inactiveReads, "Inactive tracking returns before reading a virtual scene transform");
@@ -33,10 +40,10 @@ internal static class GroupInterpolationSnapshotTests
             Check(!control.IsPhysicsInterpolatedAndEnabled(), "Control retains its explicit Off default under an On group");
             control.PhysicsInterpolationMode = PhysicsInterpolationMode.Inherit; Check(control.IsPhysicsInterpolatedAndEnabled(), "Control explicitly inherits the group policy");
             control.PhysicsInterpolationMode = PhysicsInterpolationMode.Off;
-            item.Position = new(origin + 10, 0); item.ResetPhysicsInterpolation();
+            item.Position = new(origin + 10, 0); Reset(item);
             Check(item.GetInterpolatedVisualTransform(0) == item.Transform, "Reset commits the logical previous endpoint before the worker returns"); immediate++;
             item.Position = new(origin + 20, 0);
-            camera.GetGlobalTransform(); camera.Position = new(origin + 10, 0); camera.ForceUpdateTransform(); camera.ResetPhysicsInterpolation();
+            camera.GetGlobalTransform(); camera.Position = new(origin + 10, 0); camera.ForceUpdateTransform(); Reset(camera);
             camera.GetGlobalTransform(); camera.Position = new(origin + 20, 0); camera.ForceUpdateTransform();
         };
         for (var i = 0; i < 3; i++)
@@ -54,6 +61,12 @@ internal static class GroupInterpolationSnapshotTests
         writer.Write = () => { disabled++; writer.ResetPhysicsInterpolation(); };
         tree.PhysicsFrame(.01); Check(disabled == 1, "Scene-wide disabled reset remains legal in a processing group");
         Console.WriteLine($"Group interpolation snapshots {backend}: immediate logical history, ordered camera endpoints, Control defaults/override and retained renderer policy passed.");
+        void Reset(Node node)
+        {
+            if (propagated) node.PropagateNotification(Node.NotificationResetPhysicsInterpolation);
+            else node.ResetPhysicsInterpolation();
+        }
     }
+
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
 }

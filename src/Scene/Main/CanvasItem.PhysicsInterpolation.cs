@@ -71,7 +71,9 @@ public abstract partial class CanvasItem
     private void ResetInterpolationSnapshot()
     {
         if (ServerState is { } state) state.Interpolation.Reset(state.Transform ?? GetVisualTransform());
-        if (_multiMeshes is not null) for (var i = 0; i < _multiMeshCount; i++) _multiMeshes[i].ResetInterpolation();
+        var source = (this as MultiMeshInstance)?.MultiMesh;
+        if (source is { IsDisposed: false }) source.ResetInstancesPhysicsInterpolation();
+        if (_multiMeshes is not null) for (var i = 0; i < _multiMeshCount; i++) _multiMeshes[i].ResetInterpolation(source);
         _interpolationPrevious = _interpolationCurrent = GetVisualTransform();
         _interpolationValid = true;
         _interpolationFirstTick = false;

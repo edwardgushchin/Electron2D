@@ -596,7 +596,7 @@ Writes `GetTreeStringPretty()` followed by an additional line break to standard 
 <a id="m-electron2d-node-propagatenotification-system-int32"></a>
 ### `public void PropagateNotification(int what)`
 
-Delivers the notification to this node first, then each current descendant in depth-first order. The traversed node's direct children cannot be inserted, removed, reordered or disposed while it is visited. Callback failures are collected after other descendants have been attempted. Attached delivery requires the owner thread. Manual notification does not change scene lifecycle state.
+Delivers the notification to this node first, then each current descendant in depth-first order. The traversed node's direct children cannot be inserted, removed, reordered or disposed while it is visited. Callback failures are collected after other descendants have been attempted. Attached delivery permits the owner/current processing group and runs callbacks immediately. An inaccessible explicit-group branch rejects without visiting its descendants; later siblings continue before errors aggregate. Pure custom delivery is allowed during capture; callback mutations retain their capture validation. Individual built-in handlers keep their renderer, GUI and physics guards. Manual notification does not change scene lifecycle state. Reserved handlers that still require owner publication remain an explicit Partial coverage obligation.
 
 <a id="diagnostics-updateconfigurationwarnings"></a>
 ### `public void UpdateConfigurationWarnings()`
