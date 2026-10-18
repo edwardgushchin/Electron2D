@@ -1,6 +1,8 @@
 # Physics contract and backend audit
 
-[One-way input preparation](physics-shapes.md#one-way-input-preparation) now captures changed immutable scene slot policies during authoring, before numerical preparation. A reproduced 8192-byte/128-frame deferred allocation becomes strict 0/0 owner/all-thread physical frames; changed authoring retains its explicit 32-byte-per-slot cost. Public signatures and coverage states are unchanged; the unique physics ledger remains 180 open declarations (149 Partial, 14 Unimplemented, 17 Blocked). Full numerical-extension, native/platform/network and target-GPU/window performance acceptance remain open.
+[One-way slot policy](physics-shapes.md#one-way-slot-operation-audit) now has a complete pinned five-argument/default/deprecation and selected-operation audit. Public-only CPU/software-GPU/registered checks cover raw/manual/child slots, normalized/zero directions, margin recovery, group reclaim, guards, exact failure/retry and strict zero-allocation full query/physics intervals. One extension setter row becomes Implemented; the unique physics ledger has 179 open declarations (148 Partial, 14 Unimplemented, 17 Blocked). Runtime code and public API are unchanged. Complete numerical-extension/native/platform/network/hardware performance acceptance remain open; earlier counts below are historical.
+
+[One-way input preparation](physics-shapes.md#one-way-input-preparation) now captures changed immutable scene slot policies during authoring, before numerical preparation. A reproduced 8192-byte/128-frame deferred allocation becomes strict 0/0 owner/all-thread physical frames; changed authoring retains its explicit 32-byte-per-slot cost. At revision `868302d3`, public signatures and coverage states were unchanged; its unique physics ledger retained 180 open declarations (149 Partial, 14 Unimplemented, 17 Blocked). Full numerical-extension, native/platform/network and target-GPU/window performance acceptance remain open.
 
 ## Material allocation measurement
 
@@ -30,7 +32,7 @@ and software-only execution. Both material brackets passed at 0/0 owner/all-thre
 bytes. This closes that revision's ordinary-suite run; it predates the subsequent
 one-way input fix above and does not explain the historical owner burst or establish
 hardware/native/foreign or complete-goal acceptance. Runtime API and coverage states
-are unchanged; the ledger below still has 180 open declarations.
+were unchanged; that revision retained 180 open declarations.
 
 [Indexed Body/Area slot edits](physics-shapes.md#indexed-slot-operation-audit) now have a complete registered operation audit, including repeated deferred scene preparation failures and retained owner/child topology. Ten extension rows become Implemented; the current unique physics ledger has 180 open declarations: 149 Partial, 14 Unimplemented and 17 Blocked. Full numerical and native/platform/network/hardware performance acceptance remain open; older counts below are historical.
 

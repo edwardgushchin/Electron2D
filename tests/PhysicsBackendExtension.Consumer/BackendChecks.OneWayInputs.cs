@@ -25,6 +25,7 @@ public static partial class BackendChecks
             moving.AddChild(new CollisionShape { Shape = circle }); root.AddChild(moving);
             using var tree = new SceneTree(root);
             Check(world.PhysicsBackendName == (backend?.ToString() ?? "OneWayInputs"), "One-way input preparation uses the selected implementation");
+            OneWaySlotPolicyChecks(world, root, tree, solver, circle);
             for (var role = 0; role < 3; role++)
             {
                 using var body = new StaticBody { Position = new(100, 0) };

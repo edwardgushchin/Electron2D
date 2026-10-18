@@ -1,5 +1,52 @@
 # Collision shapes component
 
+## One-way slot operation audit
+
+The current five-argument `BodySetShapeAsOneWayCollision` and its registered
+`RebuildShapes` projection have complete operation-level accounting under ADRs
+0065, 0071, 0088 and 0103. Both pinned declarations and their owners have no
+`deprecated` metadata. The header's guarded four-argument compatibility binding
+is excluded; no alias or reduced direction contract is exposed.
+
+The operation changes exactly one global logical slot's enabled flag, finite
+nonnegative scene-unit margin and finite normalized local direction. Null means
+down; zero remains zero, and very large finite components normalize safely.
+Effective slot/body rotations carry the direction into the numerical world.
+Borrowed resource identity, sibling policy and logical indices remain intact.
+Disabled slots retain authoring and reenable with the selected policy. Invalid
+values, indices, wrong/stale RIDs, foreign-thread access and writes from a borrowed
+selected rebuild reject before mutation.
+
+Raw attached edits rebuild immediately. Apply/restoration failure retains both
+original errors, restores prior logical authoring and retries numerical debt before
+a query. Scene edits defer numerical preparation and retain committed authoring
+across repeated selected failures. A manual-group one-way edit or a changed child
+one-way property reclaims the full stored group policy, without changing the child
+or group fields when only the raw slot override is edited.
+
+The public-only `--one-way-inputs` profile now checks raw bodies, manual three-slot
+groups and CollisionShape-owned slots. Actual selected motion queries verify both
+approaches, rotated direction, zero direction, two-sided response after disabling,
+margin-controlled initial recovery and exact collider/local logical indices.
+The 40-unit approach sweeps begin 20 units from the target. Initial recovery
+starts with .5 scene units of overlap and compares zero/one-unit policy margins
+against a .001-unit query margin, keeping expected outcomes away from skin-depth
+thresholds. Direction projection uses ordinary approximate vector comparison for
+trigonometric rounding; logical identities and allocation counters remain exact.
+Registered owners also verify the immutable transformed values and unaffected
+siblings, equal normalized-write reuse, borrowed reentry and exact apply/rollback/
+deferred error identity. Each role warms 128 and measures 128 full unchanged-policy
+query/physics intervals at strict 0/0 owner/all-thread managed bytes. The existing
+nine changed-policy preparation brackets retain their separate authoring boundary.
+The root filter-contract group adds real built-in contact/polygon/exception checks.
+
+Evidence: `bin/physics-one-way-slot-audit/2026-10-19/validation.json`. One registered
+setter row becomes Implemented; the unique physics ledger has 179 open declarations:
+148 Partial, 14 Unimplemented and 17 Blocked. Runtime code and public API are
+unchanged by this audit. Arbitrary registered solver response, complete numerical
+extension, native/foreign/network and target-GPU/window performance acceptance
+remain open; these are distinct from the audited setter's input/lifecycle contract.
+
 ## One-way input preparation
 
 Scene body dirtying captures every resolved immutable `OneWayContactData` value

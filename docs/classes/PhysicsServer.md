@@ -4,7 +4,7 @@ The [indexed slot operation audit](../components/physics-shapes.md#indexed-slot-
 
 The [Body/Area append audit](../components/physics-shapes.md#bodyarea-append-contract-audit) closes both public append operations and their registered projections under the accepted rigid-pose contract. Pending/disabled slots, exact logical indices, canonical geometry, ownership, rollback/retry and zero warmed managed frames are covered; overall physics acceptance remains separate.
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 ## Failed local activation
 
@@ -1216,3 +1216,11 @@ participating world through removal and private-view retirement. Status failure
 preserves live data; committed cleanup attempts all users, retains exact errors
 and unregisters the RID. Public-only checks retain unrelated slots, exact Area
 entry/exit histories and zero warmed managed bytes. Wider acceptance stays open.
+
+The [one-way slot operation audit](../components/physics-shapes.md#one-way-slot-operation-audit)
+checks complete per-slot policy delivery, raw rollback and deferred scene retry,
+full stored-group reclaim, normalized/default/zero direction and actual selected
+motion/recovery. Warm unchanged-policy query/full-frame intervals require 0/0
+managed bytes; changed immutable authoring remains a separate measured cost.
+Complete registered numerical response and native/platform/network/performance
+acceptance retain their independent gates.

@@ -4,7 +4,7 @@ The [indexed slot operation audit](../components/physics-shapes.md#indexed-slot-
 
 The [Body/Area append operation](../components/physics-shapes.md#bodyarea-append-contract-audit) projects through the complete existing `RebuildShapes` span. Engine-owned slots retain exact indices, enabled policy, resource and pose identity across scene/raw callers; this operation is accounted as implemented without certifying every other extension operation or provider algorithm.
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 ## Failed body-mode publication
 
@@ -167,3 +167,11 @@ the current effective bits with wakeBody=false; implement complete replacement
 even after partial failure. Implementations own consistency of any additional
 private side effects. The [shared profile](../components/physics-filters.md#failed-updates-and-effective-sensing)
 checks 160 registered failures, repeated retry, topology and logical history.
+
+The [one-way slot operation audit](../components/physics-shapes.md#one-way-slot-operation-audit)
+checks complete per-slot policy delivery, raw rollback and deferred scene retry,
+full stored-group reclaim, normalized/default/zero direction and actual selected
+motion/recovery. Warm unchanged-policy query/full-frame intervals require 0/0
+managed bytes; changed immutable authoring remains a separate measured cost.
+Complete registered numerical response and native/platform/network/performance
+acceptance retain their independent gates.

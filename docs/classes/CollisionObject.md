@@ -1,6 +1,6 @@
 # CollisionObject
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 ## Disabled body role recovery
 
@@ -310,3 +310,11 @@ the next numerical preparation. The [one-way input profile](../components/physic
 checks edits without an intervening query, retained immutable values and strict
 zero-allocation physical frames; changed authoring measured 32 bytes per
 logical slot on Linux x64. Area sensing policy is unchanged.
+
+The [one-way slot operation audit](../components/physics-shapes.md#one-way-slot-operation-audit)
+checks complete per-slot policy delivery, raw rollback and deferred scene retry,
+full stored-group reclaim, normalized/default/zero direction and actual selected
+motion/recovery. Warm unchanged-policy query/full-frame intervals require 0/0
+managed bytes; changed immutable authoring remains a separate measured cost.
+Complete registered numerical response and native/platform/network/performance
+acceptance retain their independent gates.

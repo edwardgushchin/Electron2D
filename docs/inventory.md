@@ -2,7 +2,7 @@
 
 CanvasItem TopLevel rebinding now connects to the existing recursive presentation reset, with allocation-free sampling propagation and [physical/pixel verification](components/canvas-rendering.md#toplevel-transition-resets-2026-10-18). This adds no production type or public declaration.
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 Private native libraries are owned by the Linux/macOS/Windows native packages in ordinary desktop builds; [native delivery](native-packaging.md) records source production and target verification limits. Windows resolution/full-suite checks are connected with execution pending. No public runtime type or managed backend assembly is added; internal floating-point atomics preserve Engine/audio snapshots on 32-bit hosts.
 
@@ -1868,3 +1868,9 @@ General notification traversal now runs immediately in the owner/current process
 [Physical canvas notification publication](components/scene-hierarchy.md#physical-canvas-notifications-from-processing-groups) now preserves current-group body/Area/tile identity requests and effective participation through the joined owner phase. Logical canvas-layer reads accept active groups; attachment epochs and exact generated RID targets protect owner reentry. General reserved notification consumers remain Partial.
 
 [Scene cast group access](components/physics-queries.md#scene-cast-metadata-and-cached-observations-from-groups) now covers local options, exceptions and held results. Numerical sampling remains owner-only, as in the pinned server; it is no longer misclassified as an absent reserved notification consumer. Other reserved consumers remain Partial.
+
+The [one-way slot operation audit](components/physics-shapes.md#one-way-slot-operation-audit)
+completes the existing PhysicsServer/PhysicsBackendCollider setter projection;
+no production type or runtime behavior is added. Raw/manual/child failure/retry,
+full policy reclaim, selected motion/recovery and strict warmed full frames are
+verified separately from complete numerical-extension acceptance.
