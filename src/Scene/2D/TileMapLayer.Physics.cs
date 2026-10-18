@@ -223,5 +223,19 @@ public partial class TileMapLayer
         foreach (var bodies in _quadrants.Values) foreach (var body in bodies) PhysicsServer.BodySetTransform(body.RID, BodyTransform(body.Quadrant));
     }
     private void UpdateCanvas(ulong id)
-    { foreach (var bodies in _quadrants.Values) foreach (var body in bodies) PhysicsServer.BodyAttachCanvasInstanceID(body.RID, id); }
+    {
+        Tree?.EnsureProcessingAccess(this);
+        List<Exception>? errors = null;
+        foreach (var bodies in _quadrants.Values) foreach (var body in bodies)
+            {
+                if (Tree is { IsProcessingWorkerStage: true } tree) tree.QueueCanvasIdentity(this, id, body.RID);
+                else try { PhysicsServer.BodyAttachCanvasInstanceID(body.RID, id); }
+                    catch (Exception error) { CollectException(ref errors, error); }
+            }
+        ThrowCollected("Tile canvas identity publication failed.", errors);
+    }
+    internal void PublishCanvasIdentity(RID body, ulong id)
+    {
+        if (_bodyCoords.ContainsKey(body)) PhysicsServer.BodyAttachCanvasInstanceID(body, id);
+    }
 }

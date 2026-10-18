@@ -17,10 +17,11 @@ public abstract partial class CanvasItem
 
     /// <summary>Returns the canvas layer associated with this item's actual canvas membership.</summary>
     /// <returns>A borrowed CanvasLayer, or null for the default canvas and detached items.</returns>
-    /// <remarks>Search stops at the containing viewport. Neutral parents and TopLevel do not remove layer membership.</remarks>
-    /// <exception cref="InvalidOperationException">The attached item is queried off-owner.</exception>
+    /// <remarks>Search stops at the containing viewport. Neutral parents and TopLevel do not remove layer membership.
+    /// Logical membership may be read by the scene owner or an active processing group with caller coordination.</remarks>
+    /// <exception cref="InvalidOperationException">The attached item is queried outside the owner or active processing groups.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
-    public CanvasLayer? GetCanvasLayerNode() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _canvasLayer; }
+    public CanvasLayer? GetCanvasLayerNode() { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _canvasLayer; }
 
     /// <summary>Returns this item's local-to-viewport transform, including its canvas.</summary>
     /// <returns>CanvasTransform times GetGlobalTransform while attached; otherwise the logical global transform.</returns>

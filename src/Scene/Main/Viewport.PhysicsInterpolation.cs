@@ -11,7 +11,7 @@ public abstract partial class Viewport
 
     internal void ResetCanvasInterpolationSnapshot()
     {
-        if (Tree is { IsProcessingWorkerStage: true } tree) { tree.QueueInterpolationPublication(this, SceneTree.InterpolationPublicationKind.ViewportReset); return; }
+        if (Tree is { IsProcessingWorkerStage: true } tree) { tree.QueueScenePublication(this, SceneTree.ScenePublicationKind.ViewportReset); return; }
         _canvasInterpolationPrevious = _canvasInterpolationCurrent = _canvasTransform;
         _canvasInterpolationValid = true;
         _canvasInterpolationFirstTick = false;

@@ -89,7 +89,7 @@ if (inputEvent is InputEventMouse mouse)
 
 `public CanvasLayer? GetCanvasLayerNode()`
 
-Returns the borrowed layer associated with actual canvas membership, or null while detached/on the default canvas. The nearest enclosing layer is used up to the containing Viewport; neutral nodes and TopLevel preserve that association. Reparenting/tree transitions refresh membership, while manual notifications do not. Attached off-owner access throws InvalidOperationException; disposed access throws ObjectDisposedException.
+Returns the borrowed layer associated with actual canvas membership, or null while detached/on the default canvas. The nearest enclosing layer is used up to the containing Viewport; neutral nodes and TopLevel preserve that association. Reparenting/tree transitions refresh membership, while manual notifications do not. The owner or any active processing group may read this logical association with caller coordination, including foreign groups. Ordinary worker access throws InvalidOperationException; disposed access throws ObjectDisposedException.
 
 ### GetViewportRect
 
@@ -145,7 +145,7 @@ Returns inverse `C` times the owning viewport's current mouse position. The view
 
 Applies inverse `G` to GetGlobalMousePosition. A singular logical global transform throws InvalidOperationException. Viewport membership and its native/emulated/isolated section policy are inherited.
 
-All coordinate queries require a live item and enforce its attached owner thread. Except GetCanvasLayerNode and the detached fallback of GetGlobalTransformWithCanvas, they require active viewport membership; missing membership/off-owner access throws InvalidOperationException and disposal throws ObjectDisposedException. Queries preserve logical node state and do not emit notifications.
+All coordinate queries require a live item. GetCanvasLayerNode permits the owner or any active processing group; the remaining canvas/viewport queries enforce the attached owner thread. Except GetCanvasLayerNode and the detached fallback of GetGlobalTransformWithCanvas, they require active viewport membership; missing membership/off-owner access throws InvalidOperationException and disposal throws ObjectDisposedException. Queries preserve logical node state and do not emit notifications.
 
 Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../../tests/Electron2D.Tests/CanvasCoordinateTests.cs); [Wayland GPU/compatibility and dummy rendering/input checks](../../tests/Electron2D.Tests/CanvasCoordinateRenderingTests.cs). Native readback includes noncommuting viewport transforms, independent canvas roots, retained commands, pixel snapping and HLSL/GLSL materials. Camera and CanvasLayer are integrated; Control layout is present, while GUI input, themes, nested viewports and content scaling remain absent; no physical-input/visual or other-platform acceptance is claimed.
 

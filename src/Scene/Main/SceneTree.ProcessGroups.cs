@@ -12,20 +12,24 @@ public partial class SceneTree
     private static readonly Comparison<ScheduledNode> ProcessingNodeOrder = static (left, right) => left.CompareTo(right);
     private readonly List<GroupEntry> _groupFrame = [];
     private readonly List<ProcessingGroup> _groupStage = [];
-    private readonly List<CanvasItem> _transformPublications = [];
-    internal enum InterpolationPublicationKind { CanvasPolicy, CameraPolicy, CameraScroll, ViewportReset }
-    private readonly record struct InterpolationPublication(Node Node, InterpolationPublicationKind Kind, Vector2 Position = default, float Rotation = 0);
-    private readonly List<InterpolationPublication> _interpolationPublications = [];
-    internal void QueueInterpolationPublication(Node node, InterpolationPublicationKind kind)
+    private readonly List<(CanvasItem Item, ulong Attachment)> _transformPublications = [];
+    internal enum ScenePublicationKind { CanvasPolicy, CameraPolicy, CameraScroll, ViewportReset, CanvasIdentity, PhysicsParticipation }
+    private readonly record struct ScenePublication(Node Node, ScenePublicationKind Kind, ulong Attachment, Vector2 Position = default, float Rotation = 0, ulong CanvasID = 0, RID Body = default, ulong CanvasAttachment = 0);
+    private readonly List<ScenePublication> _scenePublications = [];
+    internal void QueueScenePublication(Node node, ScenePublicationKind kind)
     {
-        lock (_workGate) _interpolationPublications.Add(new(node, kind));
+        lock (_workGate) _scenePublications.Add(new(node, kind, node.TreeAttachmentVersion));
+    }
+    internal void QueueCanvasIdentity(CanvasItem node, ulong canvasID, RID body = default)
+    {
+        lock (_workGate) _scenePublications.Add(new(node, ScenePublicationKind.CanvasIdentity, node.TreeAttachmentVersion, CanvasID: canvasID, Body: body, CanvasAttachment: node.CanvasAttachmentVersion));
     }
     internal void QueueCameraScroll(Camera camera, Vector2 position, float rotation)
     {
         lock (_workGate)
         {
-            _interpolationPublications.Add(new(camera, InterpolationPublicationKind.CameraScroll, position, rotation));
-            if (!_transformPublications.Contains(camera)) _transformPublications.Add(camera);
+            _scenePublications.Add(new(camera, ScenePublicationKind.CameraScroll, camera.TreeAttachmentVersion, position, rotation));
+            RetainTransformPublication(camera);
         }
     }
     private Action<int>? _runGroupWorker;
@@ -34,32 +38,44 @@ public partial class SceneTree
     internal bool IsProcessingWorkerStage => _processingWorkerStage;
     internal void QueueTransformPublication(CanvasItem item)
     {
-        lock (_workGate)
-            if (!_transformPublications.Contains(item)) _transformPublications.Add(item);
+        lock (_workGate) RetainTransformPublication(item);
     }
-    private void PublishProcessingTransforms(ref List<Exception>? errors)
+    private void RetainTransformPublication(CanvasItem item)
+    {
+        foreach (var pending in _transformPublications)
+            if (ReferenceEquals(pending.Item, item) && pending.Attachment == item.TreeAttachmentVersion) return;
+        _transformPublications.Add((item, item.TreeAttachmentVersion));
+    }
+    private void PublishProcessingChanges(ref List<Exception>? errors)
     {
         try
         {
-            foreach (var publication in _interpolationPublications)
+            foreach (var publication in _scenePublications)
             {
                 var node = publication.Node;
-                if (node.IsDisposed || !ReferenceEquals(node.Tree, this)) continue;
+                if (node.IsDisposed || !ReferenceEquals(node.Tree, this) || node.TreeAttachmentVersion != publication.Attachment) continue;
                 try
                 {
                     switch (publication.Kind)
                     {
-                        case InterpolationPublicationKind.CanvasPolicy: ((CanvasItem)node).PublishInterpolationPolicy(); break;
-                        case InterpolationPublicationKind.CameraPolicy: ((Camera)node).RefreshInterpolationProcessing(); break;
-                        case InterpolationPublicationKind.CameraScroll: ((Camera)node).PublishScroll(publication.Position, publication.Rotation); break;
-                        case InterpolationPublicationKind.ViewportReset: ((Viewport)node).ResetCanvasInterpolationSnapshot(); break;
+                        case ScenePublicationKind.CanvasPolicy: ((CanvasItem)node).PublishInterpolationPolicy(); break;
+                        case ScenePublicationKind.CameraPolicy: ((Camera)node).RefreshInterpolationProcessing(); break;
+                        case ScenePublicationKind.CameraScroll: ((Camera)node).PublishScroll(publication.Position, publication.Rotation); break;
+                        case ScenePublicationKind.ViewportReset: ((Viewport)node).ResetCanvasInterpolationSnapshot(); break;
+                        case ScenePublicationKind.CanvasIdentity:
+                            if (((CanvasItem)node).CanvasAttachmentVersion != publication.CanvasAttachment) break;
+                            if (node is CollisionObject collider) collider.PublishCanvasIdentity(publication.CanvasID);
+                            else ((TileMapLayer)node).PublishCanvasIdentity(publication.Body, publication.CanvasID);
+                            break;
+                        case ScenePublicationKind.PhysicsParticipation: ((CollisionObject)node).PublishPhysicsParticipation(); break;
                     }
                 }
                 catch (Exception error) { CollectException(ref errors, error); }
             }
-            foreach (var item in _transformPublications)
+            foreach (var publication in _transformPublications)
             {
-                if (item.IsDisposed || !ReferenceEquals(item.Tree, this)) continue;
+                var item = publication.Item;
+                if (item.IsDisposed || !ReferenceEquals(item.Tree, this) || item.TreeAttachmentVersion != publication.Attachment) continue;
                 try
                 {
                     if (item is Camera camera) camera.PublishFinalScroll();
@@ -68,7 +84,7 @@ public partial class SceneTree
                 catch (Exception error) { CollectException(ref errors, error); }
             }
         }
-        finally { _interpolationPublications.Clear(); _transformPublications.Clear(); }
+        finally { _scenePublications.Clear(); _transformPublications.Clear(); }
     }
     private double _groupUnscaledDelta;
     private ulong _groupTreeOrderPath = ulong.MaxValue;
@@ -227,7 +243,7 @@ public partial class SceneTree
                 foreach (var failure in failures) CollectException(ref errors, failure);
                 failures.Clear();
             }
-            if (first.Worker) PublishProcessingTransforms(ref errors);
+            if (first.Worker) PublishProcessingChanges(ref errors);
             from = end;
         }
         _groupStage.Clear(); _groupFrame.Clear();

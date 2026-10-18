@@ -22,7 +22,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
     internal ulong CanvasInstanceID
     {
         get => _canvasInstanceID;
-        set { Space?.EnsureExtensionHierarchyChange(); _canvasInstanceID = value; RefreshIdentity(); }
+        set { Space?.EnsureImplementationWriteAccess(); Space?.EnsureExtensionHierarchyChange(); _canvasInstanceID = value; RefreshIdentity(); }
     }
     internal ObjectIdentity ObjectIdentity { get; private set; } = sceneOwner?.BorrowIdentity() ?? default;
 

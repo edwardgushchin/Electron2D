@@ -178,6 +178,7 @@ public abstract partial class CanvasItem : Node
 
     private bool _inCanvas;
     internal bool IsInsideCanvas => _inCanvas;
+    internal ulong CanvasAttachmentVersion { get; private set; }
     private bool _parentVisible;
     private bool _rebindingCanvas;
     private CanvasLayer? _canvasLayer;
@@ -208,6 +209,7 @@ public abstract partial class CanvasItem : Node
     {
         if (IsDisposed || _inCanvas || !IsInsideTree) return;
         _inCanvas = true;
+        CanvasAttachmentVersion++;
         if (ServerState is { } state) state.ParentAssigned = false;
         _canvasLayer = GetParentItem()?._canvasLayer;
         if (_canvasLayer is null)
@@ -222,6 +224,7 @@ public abstract partial class CanvasItem : Node
     {
         if (!_inCanvas) return;
         _inCanvas = false;
+        CanvasAttachmentVersion++;
         if (ServerState is { } state) { state.ParentAssigned = true; state.Parent = default; }
         try { DispatchNotification(NotificationExitCanvas); }
         finally { _canvasLayer = null; }

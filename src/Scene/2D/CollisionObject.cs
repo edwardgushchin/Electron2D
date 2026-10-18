@@ -141,13 +141,28 @@ public abstract partial class CollisionObject : Entity
         base.GetPropertyDescriptors().Concat(CollisionProperties);
 
     /// <inheritdoc />
+    /// <remarks>Canvas identity and enabled/disabled participation requests from the current processing group
+    /// publish on the scene owner after the group joins. Numeric notifications do not change effective ProcessMode.</remarks>
     protected override void OnNotification(int what)
     {
         base.OnNotification(what);
-        if (what == NotificationEnterCanvas) Backend.CanvasInstanceID = GetCanvasLayerNode()?.InstanceID ?? 0;
-        else if (what == NotificationExitCanvas) Backend.CanvasInstanceID = 0;
+        if (what == NotificationEnterCanvas) PublishCanvasIdentity(GetCanvasLayerNode()?.InstanceID ?? 0);
+        else if (what == NotificationExitCanvas) PublishCanvasIdentity(0);
         if (what is NotificationDisabled or NotificationEnabled && IsInsideTree)
-            UpdatePhysicsParticipation();
+            PublishPhysicsParticipation();
+    }
+
+    internal void PublishCanvasIdentity(ulong id)
+    {
+        Tree?.EnsureProcessingAccess(this);
+        if (Tree is { IsProcessingWorkerStage: true } tree) { tree.QueueCanvasIdentity(this, id); return; }
+        Backend.CanvasInstanceID = id;
+    }
+    internal void PublishPhysicsParticipation()
+    {
+        Tree?.EnsureProcessingAccess(this);
+        if (Tree is { IsProcessingWorkerStage: true } tree) { tree.QueueScenePublication(this, SceneTree.ScenePublicationKind.PhysicsParticipation); return; }
+        UpdatePhysicsParticipation();
     }
 
     internal void EnsurePhysicsParticipationChange()
