@@ -33,9 +33,9 @@ public abstract partial class CanvasItem
         return IsInsideTree ? GetCanvasTransform() * GetGlobalTransform() : GetGlobalTransform();
     }
 
-    /// <summary>Returns the transform from this item's canvas to the containing window's client coordinates.</summary>
+    /// <summary>Returns the transform from this item's canvas to its owning viewport's output coordinates.</summary>
     /// <returns>The viewport final transform times this item's canvas transform.</returns>
-    /// <remarks>Does not include this item's own transform, native desktop placement or framebuffer pixel density.</remarks>
+    /// <remarks>Does not include this item's own transform, ancestor viewport/container placement, native desktop placement or framebuffer pixel density.</remarks>
     /// <exception cref="InvalidOperationException">The item has no active viewport or is queried off-owner.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public Transform GetViewportTransform() { var viewport = RequireCanvasViewport(); return viewport.GetFinalTransform() * GetCanvasTransform(); }

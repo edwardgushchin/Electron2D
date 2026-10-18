@@ -568,7 +568,7 @@ Decisions: [0004](../decisions/product.md#adr-0004), [0008](../decisions/scene.m
 
 A changed Title requests configuration-warning refresh after native/managed title state commits. Equal assignments do nothing; subscriber errors propagate without restoring the previous title. PathRenderingTests verifies selection, repetition, committed native title and failures through Engine.Run.
 
-Inherited [viewport transforms and pointer coordinates](Viewport.md#canvas-transforms-and-pointer-coordinates) participate in root rendering and native input. GetVisibleRect stays in client-sized viewport units. Native desktop position remains a platform capability, including for CanvasItem.GetScreenTransform.
+Inherited [viewport transforms and pointer coordinates](Viewport.md#canvas-transforms-and-pointer-coordinates) participate in root rendering and native input. Embedded pointer reads and warps resolve the native root through every embedding boundary; the viewport composes the screen transform once, and unavailable native hosts or pointer capabilities reject explicitly. GetVisibleRect stays in client-sized viewport units. Native desktop position remains a platform capability, including for CanvasItem.GetScreenTransform.
 
 ## Canvas render time
 

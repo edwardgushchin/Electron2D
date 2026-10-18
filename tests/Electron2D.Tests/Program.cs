@@ -220,6 +220,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES") == "1") 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_BACKBUFFER") is { } copyProfile) { if (copyProfile == "managed") CanvasBackBufferTests.RunManaged(); else CanvasBackBufferTests.RunNative(copyProfile); return; }
 if (args.Length == 2 && args[0] == "--hdr-storage") { CanvasHDRTests.ReadStorage(args[1]); return; }
 if (args.Length == 2 && args[0] == "--msaa-scene") { CanvasMSAATests.ReadFile(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_COORDINATES") is { } coordinates) { var backend = coordinates.StartsWith("gpu", StringComparison.Ordinal) ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU; CanvasViewportCoordinateTests.Run(() => new World(backend), backend.ToString(), coordinates.Contains("threaded", StringComparison.Ordinal), coordinates.Contains("native", StringComparison.Ordinal)); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TOP_LEVEL_RELATED") == "1") { CanvasSamplingTests.Run(); CanvasTransformNotificationTests.Run(); CanvasLifecycleTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TOP_LEVEL_PIXELS") == "1") { PhysicsInterpolationNativeTests.Run(topLevelOnly: true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INTERPOLATION_NATIVE") == "1")

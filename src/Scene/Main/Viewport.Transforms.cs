@@ -84,7 +84,8 @@ public abstract partial class Viewport
     /// <param name="position">Finite viewport coordinates, transformed to the window client area before the request.</param>
     /// <remarks>The final transform is applied; CanvasTransform is not. The native request truncates fractional client
     /// coordinates to integer units. Embedded viewports resolve their containing Window and include container/stretch
-    /// transforms. Platform input policy may prevent movement even when the request is supported.</remarks>
+    /// transforms. Embedded Windows forward the already transformed client position to the native root.
+    /// Platform input policy may prevent movement even when the request is supported.</remarks>
     /// <exception cref="ArgumentException">The input or transformed position is nonfinite or outside native integer coordinates.</exception>
     /// <exception cref="NotSupportedException">The active backend does not support pointer warping.</exception>
     /// <exception cref="InvalidOperationException">No containing native window is active, or the caller is not its owner.</exception>

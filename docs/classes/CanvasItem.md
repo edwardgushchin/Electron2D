@@ -68,7 +68,7 @@ Source: [CanvasItem.Coordinates.cs](../../src/Scene/Main/CanvasItem.Coordinates.
 | `public Rect2 GetViewportRect()` | [Visible viewport rectangle](#getviewportrect) |
 | `public Transform GetCanvasTransform()` | [Canvas-to-viewport transform](#getcanvastransform) |
 | `public Transform GetGlobalTransformWithCanvas()` | [Local-to-viewport transform](#getglobaltransformwithcanvas) |
-| `public Transform GetViewportTransform()` | [Canvas-to-client transform](#getviewporttransform) |
+| `public Transform GetViewportTransform()` | [Canvas-to-viewport-output transform](#getviewporttransform) |
 | `public Transform GetScreenTransform()` | [Local-to-desktop transform](#getscreentransform) |
 | `public Vector2 MakeCanvasPositionLocal(Vector2 viewportPoint)` | [Convert a viewport point](#makecanvaspositionlocal) |
 | `public InputEvent MakeInputLocal(InputEvent inputEvent)` | [Convert a viewport event](#makeinputlocal) |
@@ -113,7 +113,7 @@ Returns `C * G` while attached, or the logical global transform while detached (
 
 `public Transform GetViewportTransform()`
 
-Returns `F * C`. Does not include this item's transform or native desktop placement.
+Returns `F * C` for this item's owning viewport output. Does not include this item's transform, ancestor viewport/container placement or native desktop placement. Use the viewport's GetScreenTransform for the complete containing-client chain.
 
 ### GetScreenTransform
 

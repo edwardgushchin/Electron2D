@@ -309,8 +309,18 @@ public partial class Window : Viewport
         _display.SetGraphicsHandleQuery(_renderer.GetNativeHandle);
     }
 
-    internal Vector2 GetClientMousePosition() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); if (Embedder is { } embedder) return embedder.GetWindow()!.GetClientMousePosition(); EnsureNativeOpen(); return _display!.GetClientMousePosition(); }
-    internal void WarpClientMouse(Vector2i position) { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); EnsureNativeOpen(); _display!.WarpMouseCore(position); }
+    internal Vector2 GetClientMousePosition()
+    {
+        ThrowIfDisposed(); Tree?.EnsureOwnerThread();
+        if (Embedder is { } embedder) return (embedder.GetWindow() ?? throw new InvalidOperationException("Pointer queries require an active containing native Window.")).GetClientMousePosition();
+        EnsureNativeOpen(); return _display!.GetClientMousePosition();
+    }
+    internal void WarpClientMouse(Vector2i position)
+    {
+        ThrowIfDisposed(); Tree?.EnsureOwnerThread();
+        if (Embedder is { } embedder) { (embedder.GetWindow() ?? throw new InvalidOperationException("Pointer warping requires an active containing native Window.")).WarpClientMouse(position); return; }
+        EnsureNativeOpen(); _display!.WarpMouseCore(position);
+    }
 
     internal void EnsureNativeOpen()
     {
