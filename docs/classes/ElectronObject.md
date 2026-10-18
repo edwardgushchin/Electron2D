@@ -122,7 +122,7 @@ sealed class Meter : ElectronObject
 | [`protected virtual IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-electronobject-getpropertydescriptors) | Returns the typed properties exposed to tooling before validation. |
 | [`protected virtual PropertyDescriptor ValidateProperty(PropertyDescriptor property)`](#m-electron2d-electronobject-validateproperty-electron2d-propertydescriptor) | Validates or customizes one property before it is exposed to tooling. |
 | [`protected virtual bool CanRevertProperty(PropertyDescriptor property)`](#m-electron2d-electronobject-canrevertproperty-electron2d-propertydescriptor) | Determines whether a property has a distinct revert value. |
-| [`protected void NotifyPropertyListChanged()`](#m-electron2d-electronobject-notifypropertylistchanged) | Synchronously raises [`ElectronObject.PropertyListChanged`](ElectronObject.md#e-electron2d-electronobject-propertylistchanged). |
+| [`public void NotifyPropertyListChanged()`](#m-electron2d-electronobject-notifypropertylistchanged) | Synchronously raises [`ElectronObject.PropertyListChanged`](ElectronObject.md#e-electron2d-electronobject-propertylistchanged). |
 | [`protected void NotifyScriptChanged()`](#m-electron2d-electronobject-notifyscriptchanged) | Synchronously raises [`ElectronObject.ScriptChanged`](ElectronObject.md#e-electron2d-electronobject-scriptchanged). |
 | [`protected virtual void Dispose(bool disposing)`](#m-electron2d-electronobject-dispose-system-boolean) | Releases resources owned by a derived class. |
 | [`protected virtual void ValidateDisposal()`](#m-electron2d-electronobject-validatedisposal) | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
@@ -437,9 +437,9 @@ Determines whether a property has a distinct revert value.
 **Returns:** `true` when the property can currently be reverted; otherwise `false`.
 
 <a id="m-electron2d-electronobject-notifypropertylistchanged"></a>
-### `protected void NotifyPropertyListChanged()`
+### `public void NotifyPropertyListChanged()`
 
-Synchronously raises [`ElectronObject.PropertyListChanged`](ElectronObject.md#e-electron2d-electronobject-propertylistchanged).
+Synchronously raises [`ElectronObject.PropertyListChanged`](ElectronObject.md#e-electron2d-electronobject-propertylistchanged). The public publisher runs on the calling thread, honors signal blocking and preserves sender identity. It changes neither properties nor Resource.Changed. Handlers keep ordinary capture, lifetime and numerical access guards. Exact teardown-thread metadata remains readable; terminal/foreign teardown access rejects.
 
 **Exceptions**
 

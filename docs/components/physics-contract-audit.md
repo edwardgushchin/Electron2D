@@ -1,5 +1,7 @@
 # Physics contract and backend audit
 
+[Public property-list metadata](object-lifecycle.md#public-property-list-notification) now exposes the inherited notification publisher to external Node/body/resource callers, retaining signal blocking, caller-thread delivery, ordinary connection/error behavior and teardown guards. The two owning Object rows become Implemented; the current unique physics ledger has 194 open declarations: 163 Partial, 14 Unimplemented and 17 Blocked. Earlier slice counts below are historical. The focused public JIT/NativeAOT profiles and their compiled-source proof are separate from the frozen whole-main and network cohort at a3fff00e. Evidence: `bin/physics-main-acceptance/2026-10-18/a3fff00e/publisher-validation.json`.
+
 [Prepared grouped skeletal execution](skeletal-animation.md#prepared-modifications-in-processing-groups) now covers all implemented modifier families, immediate own-group overrides and active-group stack observations, with target preflight, callback gate release, rollback and owner-only numerical queries. Scheduled/propagated/direct public paths and real skin/body rendering retain explicit software/native/hardware limits. The general reserved-consumer row remains Partial for GUI/world handlers; no declaration counts change. Evidence: `bin/physics-group-skeleton/2026-10-18/implementation-validation.json`.
 
 [Grouped physical bones](skeletal-animation.md#physical-bones-in-processing-groups) now preserve immediate logical following and joint poses, with owner publication of actual selected activation/filters, complete retry and attachment retirement. Thirty root/public JIT/strict NativeAOT CPU/software-Vulkan/registered profiles execute 360 binding cases and measure 3840 complete moving physics/query frames at 0/0 managed bytes. Eight Wayland windows retain 16 changed-pose captures; 27 adjacent profiles pass. The current unique physics register remains 196 open declarations (165 Partial, 14 Unimplemented, 17 Blocked); remaining GUI/world reserved notification handlers and full hardware/network/foreign acceptance stay open. Evidence: `bin/physics-group-bones/2026-10-18/implementation-validation.json`.
@@ -336,12 +338,20 @@ API are outside this contract. General tile authoring, shared scene/resource and
 rendering prerequisites retain their owning coverage pages; missing inherited
 operations remain open in the ledger.
 
+## Frozen main regression at a3fff00e, 2026-10-18
+
+The ordinary root executable for 3282 verified authored inputs (including its consumer/example dependencies) runs on private software Vulkan and Mesa. It finishes many paired CPU/GPU physics families, portable contact/CCD histories, constraint/field/state tests and then aborts after 1265.732213 seconds in ColorPickerTests.PaletteUI: the connected file-browser Save action does not create its palette resource. The same frozen binary reproduces that assertion in the isolated headless ColorPicker profile after 4.327483 seconds. This is an unresolved GUI regression; no whole-suite pass is recorded. The same test child ran throughout; only its external observation window was extended, retaining actual exit status and software-driver maps.
+
+Ten public network profiles on the frozen pre-publication runtime pass: eight ordinary managed/strict NativeAOT CPU/GPU early-client and owner/separate-lane profiles, plus two CPU phase-paced managed profiles. All keep 900 authority ticks, admission at 310, 250-ms early polling and original impairment, physical, state, event and warm-allocation checks. A phase-paced GPU owner attempt during concurrent builds and focused software-GPU checks fails after 144.709470 seconds, with authority tick 498, early client tick 512, zero malformed packets and 112188 authority input waits. Cause is unproven; no accepted report or timing measurement is taken from that failure, and the subsequent GPU separate-lane paced profile was not started. No deadline or workload was relaxed.
+
+The public publisher correction below has its own freshly compiled source proof and focused regressions. These baseline executions do not certify that later binary, hardware performance, native/foreign memory ownership or the full goal. Evidence: `bin/physics-main-acceptance/2026-10-18/a3fff00e/baseline-validation.json`.
+
 ## Current requirement audit
 
 The complete generated ledger remains the per-declaration list. Current own
-physics families contain 687 Implemented, 150 Partial and 55 Excluded rows,
+physics families contain 723 Implemented, 114 Partial and 55 Excluded rows,
 with no own Blocked or Unimplemented rows. The 491 shared inherited declarations
-contain 288 Implemented, 118 Partial, 17 Blocked, 45 Unimplemented and 23 Excluded
+contain 376 Implemented, 47 Partial, 17 Blocked, 14 Unimplemented and 37 Excluded
 rows. The 78 selected cross-domain consumer declarations contain 76 Implemented
 and two Partial rows. These are declaration counts, including class and enum rows,
 not a claim that all numerical behaviors pass. The exact inherited names and

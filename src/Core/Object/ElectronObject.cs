@@ -429,9 +429,11 @@ public abstract partial class ElectronObject : IDisposable
     protected virtual bool CanRevertProperty(PropertyDescriptor property) => property.CanRevert(this);
 
     /// <summary>Synchronously raises <see cref="PropertyListChanged"/>.</summary>
+    /// <remarks>Publishes a tooling metadata notification on the caller's thread. Signal blocking suppresses delivery.
+    /// This does not change properties, emit resource changes or grant additional access to event handlers.</remarks>
     /// <exception cref="ObjectDisposedException">The object is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">An event handler throws.</exception>
-    protected void NotifyPropertyListChanged()
+    public void NotifyPropertyListChanged()
     {
         ThrowIfDisposed();
         BeginEventEmission(PropertyListChanged)?.Invoke(this);

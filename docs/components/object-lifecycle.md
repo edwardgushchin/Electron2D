@@ -1,6 +1,6 @@
 # Object lifecycle component
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 ## Scope
 
@@ -104,3 +104,11 @@ Typed property inspection uses the exact teardown-thread exception from ADR 0009
 The inherited [ElectronObject delivery policy](../classes/ElectronObject.md#ordinary-event-delivery) applies at publication, including direct C# subscribers and EventConnection tokens. A blocked publisher drops new ordinary emissions without removing listeners, consuming one-shot tokens or submitting deferred calls. Existing accepted deferred work retains its usual cancellation rules. Each emission selects once; changing the flag inside a handler affects the next emission. Unblocking does not replay suppressed transitions.
 
 Numeric notifications, virtual callbacks, operation callbacks, committed state and resource revisions remain active. Deterministic Disposed cleanup remains independent. Physical handler buffers select an empty snapshot while blocked, preserving existing payloads, per-handler eligibility, exception policy and subscription capacity. Resource geometry/material polling still observes committed edits. Static facades use their retained service object's policy.
+
+## Public property-list notification
+
+ElectronObject.NotifyPropertyListChanged is public for every inherited node, body and resource. It synchronously publishes PropertyListChanged on the caller thread with the existing typed sender, ordinary multicast subscription/error behavior and signal blocking. It does not mutate properties, advance physics, wake bodies or emit Resource.Changed. Observers can request a fresh validated GetPropertyList snapshot without changing an earlier snapshot.
+
+A notification grants no additional access to a subscriber. Exact teardown-thread inspection remains available before cleanup; completed disposal and foreign teardown-thread access reject. Owned one-shot/deferred EventConnection subscriptions retain accepted deliveries when later emissions are blocked. ScriptChanged retains its separate live-script binding prerequisite.
+
+BackendChecks.RunPropertyList exercises public calls on Node, RigidBody, Area, CircleShape and PhysicsMaterial, synchronous thread/sender identity, blocking, duplicate subscriptions, deferred one-shot delivery, dynamic descriptor discovery, original callback errors, teardown and actual grouped physical nodes. Warm measurements include metadata emissions, a numerical step and a real moving-collider point query. A body at one scene unit per second with zero damping must travel 1.28 units during 128 steps of 0.01 seconds, within 0.001 scene unit; the bound permits accumulated float rounding while detecting a lost or overwritten velocity. Evidence: bin/physics-main-acceptance/2026-10-18/a3fff00e/publisher-validation.json. Numerical/native/foreign and whole-goal acceptance remain separate.
