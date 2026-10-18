@@ -1,6 +1,6 @@
 # SkeletonModification
 
-Last updated: 2026-10-07
+Last updated: 2026-10-18
 
 - Declaration: `public abstract class SkeletonModification : Resource`
 - Source: [SkeletonModification.cs](../../src/Scene/Resources/SkeletonModification.cs)
@@ -13,13 +13,17 @@ Last updated: 2026-10-07
 
 SkeletonModificationPhysicalBones is the concrete real-body pose consumer, reusing this setup/phase/strength and owner transaction without adding a backend interface.
 
+## Processing access
+
+Prepared pose execution and local override requests allow the skeleton's owner or current processing group. Logical stack metadata also allows another active group; direct execution and writes to another group reject. Configuration, binding/setup, disposal, numerical queries and palette replay retain scene-owner access. Every target Bone is checked before a pose transaction. Stack setup/execution callbacks run outside its metadata gate with topology/reentry guards retained; callback failure restores authored poses and prior override requests. See [grouped execution and verification](../components/skeletal-animation.md#prepared-modifications-in-processing-groups).
+
 ## Description
 
 [SkeletonModificationJiggle](SkeletonModificationJiggle.md) and [SkeletonModificationStackHolder](SkeletonModificationStackHolder.md) add actual dynamic joint and nested graph behavior. Internal OnUnbindStack cleanup runs after raw binding drops and releases weak child leases or transient history. Bound reset and disposal validate owner/running state before changing lifetime, so execution cannot silently lose a borrowed graph.
 
 Concrete [TwoBoneIK](SkeletonModificationTwoBoneIK.md), [CCDIK](SkeletonModificationCCDIK.md) and [FABRIK](SkeletonModificationFABRIK.md) resources now execute through the existing phase/enable/setup callbacks. Their relative path/index caches use an internal direct weak BoundSkeleton owner accessor for configuration checks, avoiding reverse stack-gate lookup. The shared base public API is unchanged.
 
-Typed resource extension point for actual pose modifications. Enabled defaults true and ExecutionMode defaults ProcessPhase.Idle. A stack borrows this resource, binding weak transient stack/skeleton references before calling OnSetupModification. OnExecute receives finite nonnegative seconds on the scene owner thread. Override it to request a local pose through Skeleton.SetBoneLocalPoseOverride. Implement the existing Resource factory/copy and registered typed schema contract to persist a custom derived resource; arbitrary types are never constructed from archive text.
+Typed resource extension point for actual pose modifications. Enabled defaults true and ExecutionMode defaults ProcessPhase.Idle. A stack borrows this resource, binding weak transient stack/skeleton references before calling OnSetupModification. OnExecute receives finite nonnegative seconds on the skeleton owner or current processing group. Override it to request a local pose through Skeleton.SetBoneLocalPoseOverride. Implement the existing Resource factory/copy and registered typed schema contract to persist a custom derived resource; arbitrary types are never constructed from archive text.
 
 ClampAngle normalizes finite multi-turn radians, sorts normalized limits and uses nearest circular chord distance when clamping (min wins a tie). A positive exact full turn remains the upper bound. Inversion selects the interval complement. EnsureModificationMutable and CopyModificationState are real protected extension helpers for lifetime/thread guards and copied base settings. Setup state is transient; setters support typed initialization/retry. Runtime editor-gizmo callbacks/state are absent pending the actual editor drawing owner.
 
@@ -63,7 +67,7 @@ sealed class OffsetBone : SkeletonModification
 | `public System.Boolean GetIsSetup()` | [Inherited lifecycle/schema override.](#getissetup) |
 | `public Electron2D.SkeletonModificationStack GetModificationStack()` | [Inherited lifecycle/schema override.](#getmodificationstack) |
 | `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` | [Inherited lifecycle/schema override.](#getpropertydescriptors) |
-| `protected abstract System.Void OnExecute(System.Double delta)` | [Runs this modification's concrete pose behavior on the skeleton owner thread.](#onexecute) |
+| `protected abstract System.Void OnExecute(System.Double delta)` | [Runs this modification's concrete pose behavior on the skeleton owner or current processing group.](#onexecute) |
 | `protected override System.Void OnResetState()` | [Inherited lifecycle/schema override.](#onresetstate) |
 | `protected virtual System.Void OnSetupModification(Electron2D.SkeletonModificationStack modificationStack)` | [Receives a committed binding for initialization.](#onsetupmodification) |
 | `public System.Void SetIsSetup(System.Boolean isSetup)` | [Authors setup state for derived initialization and retry.](#setissetup) |
@@ -131,7 +135,7 @@ Inherited lifecycle/schema override; see the linked base type.
 
 `protected abstract System.Void OnExecute(System.Double delta)`
 
-Runs this modification's concrete pose behavior on the skeleton owner thread.
+Runs this modification's concrete pose behavior on the skeleton owner or current processing group.
 
 - `delta`: Finite nonnegative seconds.
 
@@ -175,7 +179,7 @@ Idle initially; raw source integers project to the shared semantic ProcessPhase 
 
 ## Lifecycle, errors and verification
 
-Scene-bound calls follow the skeleton's owner thread. Cold structure/rest/path edits prepare new arrays and weak bindings; ordinary pose updates and retained replay reuse capacity. All numeric configuration requires finite values; strengths range from zero to one and phase selections use the existing ProcessPhase semantics. Invalid indices, disposed values, competing live bindings and structural reentry reject. User callbacks run after binding or setup commitment. Execution failures attempt every authored-pose restoration and release guards; setup failures keep GetIsSetup false for explicit retry. Resource graph persistence excludes transient setup, target references, palette RIDs and simulation history.
+Scene-bound configuration follows the skeleton's owner thread; prepared pose execution also allows its current processing group. Cold structure/rest/path edits prepare new arrays and weak bindings; ordinary pose updates and retained replay reuse capacity. All numeric configuration requires finite values; strengths range from zero to one and phase selections use the existing ProcessPhase semantics. Invalid indices, disposed values, competing live bindings and structural reentry reject. User callbacks run after binding or setup commitment. Execution failures attempt every authored-pose restoration and release guards; setup failures keep GetIsSetup false for explicit retry. Resource graph persistence excludes transient setup, target references, palette RIDs and simulation history.
 
 SkeletonTests exercises DFS membership/rest/indices, auto endpoints, persistent/transient/physics overrides, AnimationPlayer tracks, presentation interpolation, noncommuting and TopLevel coordinate transforms, strongest-four skin weights, path rename/reconnect, constraints, callback failures/reentry, owner guards, unique scene copies, fresh-process files and actual native pixels. 128 warmed managed pose/redraw/skin/replay iterations and 64 prepared native GPU/compatibility intervals allocate zero managed bytes. Native/backend allocations, large-rig performance, other platforms and owner acceptance are unverified. Editor gizmos, physics synchronization and general Mesh skin channels retain exact coverage triggers.
 

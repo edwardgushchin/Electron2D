@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>Typed extension point for executable skeletal pose modifications.</summary>
 /// <remarks>The stack borrows modifications. Scene bindings are weak and transient; derived types opt into exact
-/// resource copying and storage. Editor gizmos require the editor owner and are not runtime switches.</remarks>
+/// resource copying and storage. Configuration and setup require the scene owner; prepared pose execution also allows
+/// the skeleton's current processing group. Editor gizmos require the editor owner and are not runtime switches.</remarks>
 public abstract class SkeletonModification : Resource
 {
     internal readonly object ModificationGate = new();
@@ -23,7 +24,7 @@ public abstract class SkeletonModification : Resource
     /// <summary>Returns its borrowed live stack, if bound.</summary><returns>Null after detachment or stack disposal.</returns>
     public SkeletonModificationStack? GetModificationStack() { lock (ModificationGate) { ThrowIfDisposed(); return Stack(); } }
     private SkeletonModificationStack? Stack() => _stack is not null && _stack.TryGetTarget(out var stack) && !stack.IsDisposed ? stack : null;
-    internal Skeleton? BoundSkeleton { get { EnsureModificationMutable(); return _owner is not null && _owner.TryGetTarget(out var owner) && !owner.IsDisposed ? owner : null; } }
+    internal Skeleton? BoundSkeleton { get { ThrowIfDisposed(); var owner = _owner is not null && _owner.TryGetTarget(out var skeleton) && !skeleton.IsDisposed ? skeleton : null; owner?.Tree?.EnsureProcessingReadAccess(); return owner; } }
     /// <summary>Validates resource lifetime and its current scene owner before derived configuration edits.</summary>
     protected void EnsureModificationMutable() { ThrowIfDisposed(); if (_owner is not null && _owner.TryGetTarget(out var skeleton) && !skeleton.IsDisposed) skeleton.Tree?.EnsureOwnerThread(); }
     internal void ValidateBinding(SkeletonModificationStack stack)
@@ -49,7 +50,7 @@ public abstract class SkeletonModification : Resource
         lock (ModificationGate) { ThrowIfDisposed(); if (!_setup || Stack() is null) throw new InvalidOperationException("Modification is not setup."); if (!_enabled) return; }
         OnExecute(delta);
     }
-    /// <summary>Runs this modification's concrete pose behavior on the skeleton owner thread.</summary><param name="delta">Finite nonnegative seconds.</param>
+    /// <summary>Runs this modification's concrete pose behavior on the skeleton owner or current processing group.</summary><param name="delta">Finite nonnegative seconds.</param>
     protected abstract void OnExecute(double delta);
     /// <summary>Receives a committed binding for initialization.</summary><param name="modificationStack">Borrowed live stack.</param>
     protected virtual void OnSetupModification(SkeletonModificationStack modificationStack) { }

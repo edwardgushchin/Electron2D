@@ -1509,3 +1509,5 @@ The [complete Node processing contract](../components/scene-tree.md#complete-pro
 ## Collapsed pointer-query canvases
 
 [Physics picking](../components/physics-picking.md#collapsed-canvas-mappings) now skips only a noninvertible or numerically unusable canvas map before CPU/GPU point queries. Other canvases, queued event disposal, hover departure/reentry and scene processing continue through the existing owner/lifetime path. Authored zero-scale CanvasLayer/follow states remain valid scene values.
+
+Prepared grouped skeletal execution now consumes solved PhysicalBone poses alongside ordinary IK/Jiggle/held stacks; real selected body following and point queries observe joined authored bone poses. Numerical collider-enabled Jiggle remains owner-only. [The grouped execution contract](../components/skeletal-animation.md#prepared-modifications-in-processing-groups) records functional and rendered evidence separately from hardware performance.

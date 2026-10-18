@@ -1,11 +1,15 @@
 # SkeletonModificationStackHolder
 
-Last updated: 2026-10-07
+Last updated: 2026-10-18
 
 - Declaration: `public sealed class SkeletonModificationStackHolder : SkeletonModification`
 - Source: [SkeletonModificationStackHolder.cs](../../src/Scene/Resources/SkeletonModificationStackHolder.cs)
 - Inherits: [SkeletonModification](SkeletonModification.md)
 - Component: [Skeletal animation](../components/skeletal-animation.md)
+
+## Processing access
+
+Prepared pose execution and local override requests allow the skeleton's owner or current processing group. Logical stack metadata also allows another active group; direct execution and writes to another group reject. Configuration, binding/setup, disposal, numerical queries and palette replay retain scene-owner access. Every target Bone is checked before a pose transaction. Stack setup/execution callbacks run outside its metadata gate with topology/reentry guards retained; callback failure restores authored poses and prior override requests. See [grouped execution and verification](../components/skeletal-animation.md#prepared-modifications-in-processing-groups).
 
 ## Description
 

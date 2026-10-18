@@ -2,9 +2,10 @@ namespace Electron2D;
 
 /// <summary>Owns the prepared bind/pose palette of a scene bone hierarchy and executes skeletal modifications.</summary>
 /// <remarks>Bones and the optional modification stack are borrowed. Depth-first order includes only uninterrupted
-/// direct Bone chains. Bone-list and stored-override reads allow the owner or an active processing group;
+/// direct Bone chains. Bone-list, stored-override and stack reads allow the owner or an active processing group;
 /// lazy setup commits before subscribers run, without holding its metadata gate across those callbacks.
-/// Scene configuration, modification execution and palette replay use the scene owner thread. Retained polygons observe
+/// Prepared modification execution and local override requests allow the skeleton's current group, checking all target bones.
+/// Scene configuration, binding/setup, numerical queries and palette replay use the scene owner thread. Retained polygons observe
 /// live poses without rebuilding their triangulation. Resource/editor and native backend ownership remain separate.</remarks>
 public class Skeleton : Entity
 {
@@ -68,16 +69,16 @@ public class Skeleton : Entity
     public RID GetSkeleton() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); if (!_rid.IsValid()) _rid = RenderingSkeletonRegistry.Register(this); return _rid; }
     /// <summary>Stores a finite local bone override with an interpolation strength.</summary>
     /// <param name="boneIndex">Current bone index.</param><param name="overridePose">Finite local transform.</param><param name="strength">Interpolation amount from zero through one.</param><param name="persistent">Retain the override across later process applications.</param>
-    /// <remarks>Applied during idle execution, including without a modification stack. Transient overrides are consumed once.</remarks>
+    /// <remarks>Allows the owner or skeleton's current group. Applied during idle execution, including without a modification stack. Transient overrides are consumed once.</remarks>
     public void SetBoneLocalPoseOverride(int boneIndex, Transform overridePose, float strength, bool persistent)
     {
-        EnsureMutable(); EnsureSetup(); GetBone(boneIndex); if (!overridePose.IsFinite()) throw new ArgumentException("Override pose must be finite.", nameof(overridePose)); ValidateStrength(strength);
-        _overrides[boneIndex] = overridePose; _strength[boneIndex] = strength; _persistent[boneIndex] = persistent;
+        EnsureTransformMutable(); EnsureSetup(); GetBone(boneIndex); if (!overridePose.IsFinite()) throw new ArgumentException("Override pose must be finite.", nameof(overridePose)); ValidateStrength(strength);
+        lock (_bones) { _overrides[boneIndex] = overridePose; _strength[boneIndex] = strength; _persistent[boneIndex] = persistent; }
     }
     /// <summary>Returns the latest stored local override, initially the bone's local Rest.</summary><param name="boneIndex">Current bone index.</param><returns>The stored local pose.</returns>
     public Transform GetBoneLocalPoseOverride(int boneIndex) { EnsureSetup(); lock (_bones) { if (!IsInsideTree || (uint)boneIndex >= (uint)_bones.Count) throw new ArgumentOutOfRangeException(nameof(boneIndex)); return _overrides[boneIndex]; } }
     /// <summary>Returns the borrowed modification stack.</summary><returns>The assigned live stack or null.</returns>
-    public SkeletonModificationStack? GetModificationStack() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _stack; }
+    public SkeletonModificationStack? GetModificationStack() { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _stack; }
     /// <summary>Assigns a borrowed modification stack and prepares it while attached.</summary><param name="modificationStack">Live stack or null.</param>
     /// <remarks>One attached skeleton can bind a stack at a time. Replacement commits before setup callbacks; resources stay caller-owned.</remarks>
     public void SetModificationStack(SkeletonModificationStack? modificationStack)
@@ -87,15 +88,17 @@ public class Skeleton : Entity
         if (_stack is { IsDisposed: false }) _stack.Bind(null); _stack = modificationStack; if (IsInsideTree) _stack?.Bind(this);
     }
     /// <summary>Executes the matching stack phase and applies idle local overrides.</summary><param name="delta">Finite nonnegative seconds.</param><param name="executionMode">Existing idle or physics phase domain.</param>
-    /// <remarks>Physics prepares overrides; idle applies them. Authored bone poses are retained independently of modification writes.
+    /// <remarks>Allows the owner or skeleton's current group; every target bone must allow the same access.
+    /// Physics prepares overrides; idle applies them. Authored bone poses are retained independently of modification writes.
     /// Reentry and structural mutation during execution reject; callback failure restores authored poses, prior override requests and execution guards.</remarks>
     public void ExecuteModifications(double delta, ProcessPhase executionMode)
         => ExecuteStack(_stack, delta, executionMode);
     internal void ExecuteStack(SkeletonModificationStack? stack, double delta, ProcessPhase executionMode)
     {
-        EnsureMutable(); EnsureSetup(); ValidateExecution(delta, executionMode); if (_executing) throw new InvalidOperationException("Skeleton execution cannot reenter.");
+        EnsureTransformMutable(); EnsureSetup(); ValidateExecution(delta, executionMode); if (_executing) throw new InvalidOperationException("Skeleton execution cannot reenter.");
+        foreach (var bone in _bones) bone.Tree?.EnsureProcessingAccess(bone);
         _executing = true;
-        _overrides.CopyTo(_savedOverrides, 0); _strength.CopyTo(_savedStrength, 0); _persistent.CopyTo(_savedPersistent, 0);
+        lock (_bones) { _overrides.CopyTo(_savedOverrides, 0); _strength.CopyTo(_savedStrength, 0); _persistent.CopyTo(_savedPersistent, 0); }
         try
         {
             for (var i = 0; i < _bones.Count; i++) _bones[i].ApplyModifiedPose(_bones[i].AuthoredPose);
@@ -105,14 +108,16 @@ public class Skeleton : Entity
             if (executionMode == ProcessPhase.Idle)
                 for (var i = 0; i < _bones.Count; i++)
                 {
-                    var bone = _bones[i]; bone.ApplyModifiedPose(_strength[i] > 0 ? bone.AuthoredPose.InterpolateWith(_overrides[i], _strength[i]) : bone.AuthoredPose);
-                    if (!_persistent[i]) _strength[i] = 0;
+                    var bone = _bones[i]; Transform pose;
+                    lock (_bones) pose = _strength[i] > 0 ? bone.AuthoredPose.InterpolateWith(_overrides[i], _strength[i]) : bone.AuthoredPose;
+                    bone.ApplyModifiedPose(pose);
+                    lock (_bones) if (!_persistent[i]) _strength[i] = 0;
                 }
             else for (var i = 0; i < _bones.Count; i++) _bones[i].ApplyModifiedPose(_bones[i].AuthoredPose);
         }
         catch (Exception executionError)
         {
-            _savedOverrides.CopyTo(_overrides, 0); _savedStrength.CopyTo(_strength, 0); _savedPersistent.CopyTo(_persistent, 0);
+            lock (_bones) { _savedOverrides.CopyTo(_overrides, 0); _savedStrength.CopyTo(_strength, 0); _savedPersistent.CopyTo(_persistent, 0); }
             List<Exception>? cleanup = null;
             foreach (var bone in _bones) if (!bone.IsDisposed) try { bone.ApplyModifiedPose(bone.AuthoredPose); } catch (Exception error) { (cleanup ??= []).Add(error); }
             if (cleanup is not null) { cleanup.Insert(0, executionError); throw new AggregateException("Modification execution and pose restoration failed.", cleanup); }

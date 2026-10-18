@@ -1,7 +1,8 @@
 namespace Electron2D;
 
 /// <summary>Stores ordered borrowed skeletal modifications with one transient scene binding.</summary>
-/// <remarks>Structural edits are cold resource operations. Bound access follows the skeleton owner thread;
+/// <remarks>Structural edits are cold resource operations on the bound skeleton owner thread. Logical reads allow
+/// active processing groups and prepared execution allows the skeleton's current group;
 /// executing/setup callbacks cannot restructure or reenter the list. Cloning always copies modification resources,
 /// preserving aliases through the existing resource duplication session. Bound skeletons are weak references.</remarks>
 public sealed class SkeletonModificationStack : Resource
@@ -23,12 +24,12 @@ public sealed class SkeletonModificationStack : Resource
     /// <summary>Gets or resizes the ordered list, growing with null slots.</summary><value>Zero initially; bounded to 4096 slots.</value>
     public int ModificationCount { get { lock (_gate) { Read(); return _mods.Count; } } set { lock (_gate) { Edit(true); if (value < 0 || value > 4096) throw new ArgumentOutOfRangeException(nameof(value)); while (_mods.Count < value) _mods.Add(null); if (_mods.Count > value) { for (var i = value; i < _mods.Count; i++) if (_mods[i] is { } mod && _mods.IndexOf(mod) >= value) Detach(mod); _mods.RemoveRange(value, _mods.Count - value); } } NotifyPropertyListChanged(); EmitChanged(); } }
     private Skeleton? Owner() => _skeleton is not null && _skeleton.TryGetTarget(out var skeleton) && !skeleton.IsDisposed ? skeleton : null;
-    private void Read() { ThrowIfDisposed(); Owner()?.Tree?.EnsureOwnerThread(); }
-    private void Edit(bool structure = false) { Read(); if (structure && (_executing || _preparing)) throw new InvalidOperationException("A running modification list cannot restructure."); }
+    private void Read() { ThrowIfDisposed(); Owner()?.Tree?.EnsureProcessingReadAccess(); }
+    private void Edit(bool structure = false) { Read(); Owner()?.Tree?.EnsureOwnerThread(); if (structure && (_executing || _preparing)) throw new InvalidOperationException("A running modification list cannot restructure."); }
     internal void ValidateBinding(Skeleton skeleton) { lock (_gate) { Read(); if (Owner() is { IsInsideTree: true } old && !ReferenceEquals(old, skeleton)) throw new InvalidOperationException("A stack already belongs to another attached skeleton."); } }
     internal void Bind(Skeleton? skeleton)
     {
-        lock (_gate) { Read(); _directBinding = skeleton is not null; if (skeleton is null && _holders.Count > 0) return; }
+        lock (_gate) { Read(); Owner()?.Tree?.EnsureOwnerThread(); if (_executing || _preparing) throw new InvalidOperationException("A running stack cannot rebind."); _directBinding = skeleton is not null; if (skeleton is null && _holders.Count > 0) return; }
         BindCore(skeleton);
     }
     internal void AcquireHolder(SkeletonModificationStackHolder holder, Skeleton owner)
@@ -64,43 +65,60 @@ public sealed class SkeletonModificationStack : Resource
     /// <summary>Returns whether binding/setup completed.</summary><returns>False initially.</returns>
     public bool GetIsSetup() { lock (_gate) { Read(); return _setup; } }
     /// <summary>Prepares all present modifications after binding to a skeleton.</summary>
-    /// <remarks>Binding is required. Every setup is attempted; failures leave setup false for explicit retry.</remarks>
+    /// <remarks>Requires the bound scene owner. Every setup is attempted outside the metadata gate; failures leave setup false for explicit retry.</remarks>
     public void Setup()
     {
+        Owner()?.Tree?.EnsureOwnerThread();
         lock (_gate)
         {
             Read(); if (_setup) return; if (Owner() is null) throw new InvalidOperationException("Stack setup requires a bound skeleton."); if (_preparing || _executing) throw new InvalidOperationException("Stack setup cannot reenter."); if (_setupDepth == 128) throw new InvalidOperationException("Stack nesting exceeds 128 levels."); _preparing = true; _setupDepth++;
-            List<Exception>? errors = null;
-            try { foreach (var mod in _mods) if (mod is not null) try { mod.Bind(this); } catch (Exception error) { (errors ??= []).Add(error); } _setup = errors is null; }
-            finally { _preparing = false; _setupDepth--; }
-            if (errors is not null) throw new AggregateException("Modification setup failed.", errors);
         }
+        List<Exception>? errors = null;
+        try
+        {
+            foreach (var mod in _mods) if (mod is not null) try { mod.Bind(this); } catch (Exception error) { (errors ??= []).Add(error); }
+            lock (_gate) _setup = errors is null;
+        }
+        finally { lock (_gate) { _preparing = false; _setupDepth--; } }
+        if (errors is not null) throw new AggregateException("Modification setup failed.", errors);
     }
     /// <summary>Executes matching enabled modifications in index order.</summary><param name="delta">Nonnegative finite seconds.</param><param name="executionMode">Idle or physics phase.</param>
-    /// <remarks>Requires an attached prepared skeleton. Null slots are skipped. Guard cleanup permits retry after user failure.</remarks>
+    /// <remarks>Requires an attached prepared skeleton and its owner or current processing group. Callbacks run outside the
+    /// metadata gate under the topology guard. Null slots are skipped. Guard cleanup permits retry after user failure.</remarks>
     public void Execute(double delta, ProcessPhase executionMode)
     {
         Skeleton.ValidateExecution(delta, executionMode);
-        var owner = GetSkeleton(); if (owner is { Executing: false }) { owner.ExecuteStack(this, delta, executionMode); return; }
+        var owner = GetSkeleton(); if (owner is not null) owner.Tree?.EnsureProcessingAccess(owner);
+        if (owner is { Executing: false }) { owner.ExecuteStack(this, delta, executionMode); return; }
         lock (_gate)
         {
             Read(); if (!_setup || Owner() is not { IsInsideTree: true }) throw new InvalidOperationException("Stack is not prepared on an attached skeleton."); if (!_enabled) return; if (_executing || _preparing) throw new InvalidOperationException("Stack execution cannot reenter."); if (_executeDepth == 128) throw new InvalidOperationException("Stack nesting exceeds 128 levels."); _executing = true; _executeDepth++;
-            try { for (var i = 0; i < _mods.Count; i++) if (_mods[i] is { } mod && mod.ExecutionMode == executionMode) mod.Run(delta); }
-            finally { _executing = false; _executeDepth--; }
         }
+        try { for (var i = 0; i < _mods.Count; i++) if (_mods[i] is { } mod && mod.ExecutionMode == executionMode) mod.Run(delta); }
+        finally { lock (_gate) { _executing = false; _executeDepth--; } }
     }
     /// <summary>Enables or disables all present modifications.</summary><param name="enabled">Requested enable state.</param>
     public void EnableAllModifications(bool enabled) { lock (_gate) { Edit(); foreach (var mod in _mods) if (mod is not null) mod.Enabled = enabled; } }
     /// <summary>Returns a borrowed modification from a slot.</summary><param name="index">Valid slot.</param><returns>The modification or null.</returns>
     public SkeletonModification? GetModification(int index) { lock (_gate) { Read(); return _mods[Index(index)]; } }
     /// <summary>Appends a borrowed nonnull modification, preparing it when already bound.</summary><param name="modification">Live resource, caller-owned.</param>
-    public void AddModification(SkeletonModification modification) { ArgumentNullException.ThrowIfNull(modification); lock (_gate) { Edit(true); if (modification.IsDisposed) throw new ObjectDisposedException(nameof(modification)); if (_setup) modification.ValidateBinding(this); if (_mods.Count == 4096) throw new InvalidOperationException("Modification capacity exceeded."); _mods.Add(modification); if (_setup) PrepareAdded(modification); } EmitChanged(); }
+    public void AddModification(SkeletonModification modification)
+    {
+        ArgumentNullException.ThrowIfNull(modification); bool prepare;
+        lock (_gate) { Edit(true); if (modification.IsDisposed) throw new ObjectDisposedException(nameof(modification)); if (_setup) modification.ValidateBinding(this); if (_mods.Count == 4096) throw new InvalidOperationException("Modification capacity exceeded."); _mods.Add(modification); prepare = _setup; if (prepare) _preparing = true; }
+        if (prepare) PrepareAdded(modification); EmitChanged();
+    }
     /// <summary>Removes an indexed slot and detaches a resource no longer present in the list.</summary><param name="index">Valid slot.</param>
     public void DeleteModification(int index) { lock (_gate) { Edit(true); var old = _mods[Index(index)]; _mods.RemoveAt(index); if (old is not null && !_mods.Contains(old)) Detach(old); } EmitChanged(); }
     /// <summary>Replaces a borrowed slot, allowing null.</summary><param name="index">Valid slot.</param><param name="modification">Live resource or null.</param>
-    public void SetModification(int index, SkeletonModification? modification) { lock (_gate) { Edit(true); Index(index); if (modification is { IsDisposed: true }) throw new ObjectDisposedException(nameof(modification)); if (_setup) modification?.ValidateBinding(this); var old = _mods[index]; _mods[index] = modification; if (old is not null && !_mods.Contains(old)) Detach(old); if (_setup && modification is not null) PrepareAdded(modification); } EmitChanged(); }
+    public void SetModification(int index, SkeletonModification? modification)
+    {
+        bool prepare;
+        lock (_gate) { Edit(true); Index(index); if (modification is { IsDisposed: true }) throw new ObjectDisposedException(nameof(modification)); if (_setup) modification?.ValidateBinding(this); var old = _mods[index]; _mods[index] = modification; if (old is not null && !_mods.Contains(old)) Detach(old); prepare = _setup && modification is not null; if (prepare) _preparing = true; }
+        if (prepare) PrepareAdded(modification!); EmitChanged();
+    }
     private void Detach(SkeletonModification mod) => mod.Unbind(this);
-    private void PrepareAdded(SkeletonModification modification) { _preparing = true; try { modification.Bind(this); } catch { _setup = false; throw; } finally { _preparing = false; } }
+    private void PrepareAdded(SkeletonModification modification) { try { modification.Bind(this); } catch { lock (_gate) _setup = false; throw; } finally { lock (_gate) _preparing = false; } }
     private int Index(int index) { if ((uint)index >= (uint)_mods.Count) throw new ArgumentOutOfRangeException(nameof(index)); return index; }
     private SkeletonModification?[] StoredMods { get { lock (_gate) { Read(); return _mods.ToArray(); } } set { ArgumentNullException.ThrowIfNull(value); if (value.Length > 4096 || value.Any(m => m is { IsDisposed: true })) throw new ArgumentException("Invalid modification array.", nameof(value)); lock (_gate) { Edit(true); foreach (var mod in _mods) if (mod is { IsDisposed: false }) Detach(mod); _mods.Clear(); _mods.AddRange(value); _setup = false; } } }
     private static readonly PropertyDescriptor[] StackProperties =

@@ -294,3 +294,5 @@ The [KTX image slice](../components/image-ktx.md) adds flat KTX1/KTX2 file/buffe
 ## Fixed sampled descriptor arrays
 
 [Canvas sampled descriptor arrays](../components/shader-materials.md#fixed-sampled-descriptor-arrays) now execute through GLSL/HLSL, typed resource and static RID access, indexed shader defaults, complete validation, graph storage and derived scalar native bindings. Paired stages and existing lighting/glyph/instance/HDR/MSAA consumers share the same physical capacity and resource lifetime. See the component for measured software-Vulkan checks and the separate hardware/platform gates.
+
+Prepared skeletal stacks now expose logical metadata to active processing groups and execute pose callbacks in their skeleton's current group. Binding/setup and resource configuration stay with the owner; callbacks release the stack metadata gate while topology/reentry guards remain active. See [grouped skeletal execution](../components/skeletal-animation.md#prepared-modifications-in-processing-groups).
