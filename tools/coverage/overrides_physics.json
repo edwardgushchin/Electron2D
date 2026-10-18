@@ -3,12 +3,12 @@
     {
       "godot": "Joint2D::property:node_a",
       "electron2d": "property:Electron2D.Joint.NodeA()",
-      "reason": "Node paths project to the accepted string-based Node.GetNodeOrNull path contract (ADR 0008)."
+      "reason": "Node paths project to the accepted string-based Node.GetNodeOrNull path contract (ADR 0008). NodeA/NodeB also accept current-group managed path input; connection preparation remains on the owner before stepping and unchanged values preserve anchor sampling. GroupBones verifies PhysicalBone automatic endpoints, foreign/capture/numerical guards and real constraints through selected CPU/GPU/registered worlds."
     },
     {
       "godot": "Joint2D::property:node_b",
       "electron2d": "property:Electron2D.Joint.NodeB()",
-      "reason": "Node paths project to the accepted string-based Node.GetNodeOrNull path contract (ADR 0008)."
+      "reason": "Node paths project to the accepted string-based Node.GetNodeOrNull path contract (ADR 0008). NodeA/NodeB also accept current-group managed path input; connection preparation remains on the owner before stepping and unchanged values preserve anchor sampling. GroupBones verifies PhysicalBone automatic endpoints, foreign/capture/numerical guards and real constraints through selected CPU/GPU/registered worlds."
     },
     {
       "godot": "Area2D::signal:area_shape_entered(RID:,Area2D:,int:,int:)",
@@ -5708,8 +5708,6 @@
     {
       "godot": [
         "Joint2D::property:disable_collision",
-        "Joint2D::property:node_a",
-        "Joint2D::property:node_b",
         "PinJoint2D::property:angular_limit_enabled",
         "PinJoint2D::property:angular_limit_lower",
         "PinJoint2D::property:angular_limit_upper",
@@ -5718,6 +5716,14 @@
       ],
       "state": "Implemented",
       "reason": "PinJointTests checks actual constraints, typed path resolution, connected-body contacts, angular limits, motor speed and torque, live edits, tree exit/reentry, packing and warmed zero managed allocation under ADR 0084."
+    },
+    {
+      "godot": [
+        "Joint2D::property:node_a",
+        "Joint2D::property:node_b"
+      ],
+      "state": "Implemented",
+      "reason": "PinJointTests checks actual constraints, typed path resolution, connected-body contacts, angular limits, motor speed and torque, live edits, tree exit/reentry, packing and warmed zero managed allocation under ADR 0084. NodeA/NodeB also accept current-group managed path input; connection preparation remains on the owner before stepping and unchanged values preserve anchor sampling. GroupBones verifies PhysicalBone automatic endpoints, foreign/capture/numerical guards and real constraints through selected CPU/GPU/registered worlds."
     },
     {
       "godot": [

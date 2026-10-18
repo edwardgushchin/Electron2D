@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>A skeletal canvas bone with an authored rest pose and an ordinary animated local transform.</summary>
 /// <remarks>Bones form an uninterrupted chain below Skeleton. The skeleton borrows them through scene membership.
-/// Rest starts as the zero transform, indicating an unset bind pose. Configuration is scene-owner work.</remarks>
+/// Rest starts as the zero transform, indicating an unset bind pose. Configuration is scene-owner work.
+/// Logical rest, endpoint and index reads allow the owner or an active processing group.</remarks>
 public class Bone : Entity
 {
     private Transform _rest;
@@ -17,7 +18,7 @@ public class Bone : Entity
     /// <value>Zero initially. Singular rest poses remain authored but do not contribute skin deformation.</value>
     /// <exception cref="ArgumentException">The transform is nonfinite.</exception>
     public Transform Rest { get { ReadBone(); return _rest; } set { EnsureMutable(); if (!value.IsFinite()) throw new ArgumentException("Rest must be finite.", nameof(value)); _rest = value; SkeletonOwner?.InvalidateSetup(); UpdateConfigurationWarnings(); } }
-    private void ReadBone() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
+    private void ReadBone() { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); }
     /// <summary>Assigns the rest transform to this bone's ordinary local transform.</summary>
     public void ApplyRest() { EnsureMutable(); Transform = _rest; }
     /// <summary>Returns the accumulated rest transform through its direct parent-bone chain.</summary>
@@ -25,7 +26,7 @@ public class Bone : Entity
     public Transform GetSkeletonRest() { ReadBone(); var result = Parent is Bone parent ? parent.GetSkeletonRest() * _rest : _rest; if (!result.IsFinite()) throw new InvalidOperationException("Rest hierarchy overflowed."); return result; }
     /// <summary>Returns the index assigned by its attached skeleton's depth-first bone order.</summary>
     /// <returns>Minus one without an attached valid chain.</returns>
-    public int GetIndexInSkeleton() { ReadBone(); SkeletonOwner?.EnsureSetup(); return SkeletonIndex; }
+    public int GetIndexInSkeleton() { ReadBone(); return SkeletonOwner?.GetBoneIndex(this) ?? -1; }
     /// <summary>Returns whether automatic length and angle calculation is enabled.</summary>
     /// <returns>True initially.</returns>
     public bool GetAutocalculateLengthAndAngle() { ReadBone(); return _auto; }
@@ -67,6 +68,7 @@ public class Bone : Entity
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
+        Tree?.EnsureProcessingAccess(this);
         if (what == NotificationLocalTransformChanged && _copyPose) AuthoredPose = Transform;
         if (what == NotificationChildOrderChanged) SkeletonOwner?.InvalidateSetup();
         base.OnNotification(what);

@@ -7,7 +7,9 @@ namespace Electron2D;
 /// Path, geometry and parameter writes reject while a selected numerical hook is borrowed, including initial
 /// attachment and unchanged assignments. Server clear and connection replacement share this guard.
 /// Ordinary game callbacks may author the next interval. Scene departure retains the joint through TreeExiting;
-/// engine membership cleanup then releases it even when a user exit callback fails.</remarks>
+/// engine membership cleanup then releases it even when a user exit callback fails.
+/// NodeA/NodeB also allow managed path authoring from the current processing group. Native connection work
+/// remains on the owner before the next fixed step; other joint parameters retain their numerical guards.</remarks>
 public abstract class Joint : Entity
 {
     private static readonly PropertyDescriptor[] JointProperties =
@@ -81,13 +83,13 @@ public abstract class Joint : Entity
     /// <remarks>The path uses <see cref="Node.GetNodeOrNull(string)"/> syntax. A changed attached path is resolved
     /// before the next fixed step; later body entry or rename can satisfy an unresolved path.</remarks>
     /// <exception cref="ArgumentNullException">The assigned path is null.</exception>
-    /// <exception cref="InvalidOperationException">An attached write is off the owner thread or occurs during a solver step.</exception>
+    /// <exception cref="InvalidOperationException">The joint is outside the current processing group or a numerical hook is borrowed.</exception>
     public string NodeA
     {
         get { ThrowIfDisposed(); return _nodeA; }
         set
         {
-            EnsureJointChange();
+            EnsureJointPathChange();
             ArgumentNullException.ThrowIfNull(value);
             if (_nodeA == value) return;
             _nodeA = value;
@@ -99,13 +101,13 @@ public abstract class Joint : Entity
     /// <value>An empty path by default. Both paths must resolve to distinct attached bodies.</value>
     /// <remarks>Uses the same resolution and fixed-step timing as <see cref="NodeA"/>.</remarks>
     /// <exception cref="ArgumentNullException">The assigned path is null.</exception>
-    /// <exception cref="InvalidOperationException">An attached write is off the owner thread or occurs during a solver step.</exception>
+    /// <exception cref="InvalidOperationException">The joint is outside the current processing group or a numerical hook is borrowed.</exception>
     public string NodeB
     {
         get { ThrowIfDisposed(); return _nodeB; }
         set
         {
-            EnsureJointChange();
+            EnsureJointPathChange();
             ArgumentNullException.ThrowIfNull(value);
             if (_nodeB == value) return;
             _nodeB = value;
@@ -227,6 +229,13 @@ public abstract class Joint : Entity
         Runtime.EnsureWriteAccess();
         _space?.EnsureQueryAccess();
         Runtime.EnsureAccess();
+    }
+
+    private void EnsureJointPathChange()
+    {
+        if (Tree is not { IsProcessingWorkerStage: true }) { EnsureJointChange(); return; }
+        EnsureTransformMutable();
+        Runtime.EnsureScenePathChangeAccess(Tree);
     }
 
     internal void MarkJointDirty() { InvalidateCanvas(); _serverOverride = false; _dirty = true; }

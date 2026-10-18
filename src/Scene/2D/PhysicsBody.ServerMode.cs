@@ -38,6 +38,7 @@ public abstract partial class PhysicsBody
 
     internal void PreparePendingServerMode(bool writing = false)
     {
+        if (this is PhysicalBone physical) physical.PreparePendingActivation();
         if (writing || _serverModeDirty)
         {
             Space?.EnsureImplementationWriteAccess();

@@ -1,6 +1,6 @@
 # Skeleton
 
-Last updated: 2026-10-07
+Last updated: 2026-10-18
 
 - Declaration: `public class Skeleton : Entity`
 - Source: [Skeleton.cs](../../src/Scene/2D/Skeleton.cs)
@@ -12,6 +12,8 @@ Last updated: 2026-10-07
 SkeletonModificationPhysicalBones now transfers actual solved PhysicalBone world poses into selected bones using the existing transient local override/strength/rollback transaction. Physics nodes keep separate scene ownership and inherited rigid-body restrictions.
 
 ## Description
+
+Bone-list, bone-index and stored-override reads allow the scene owner or an active processing group. Lazy setup commits its list/indices under a metadata gate, then releases that gate before BoneSetupChanged subscribers. Configuration, modification execution and palette replay remain owner work.
 
 [Jiggle and held stacks](../components/skeletal-animation.md#jiggle-and-nested-stacks) now use this same pose transaction. Internal ExecuteStack selects the explicitly requested child for a direct Stack.Execute call, preventing unrelated root siblings from running; ordinary ExecuteModifications still selects the assigned root. Nested calls retain the outer authored-pose/request transaction.
 
@@ -182,7 +184,7 @@ One attached skeleton can bind a stack at a time. Replacement commits before set
 
 ## Lifecycle, errors and verification
 
-Scene-bound calls follow the skeleton's owner thread. Cold structure/rest/path edits prepare new arrays and weak bindings; ordinary pose updates and retained replay reuse capacity. All numeric configuration requires finite values; strengths range from zero to one and phase selections use the existing ProcessPhase semantics. Invalid indices, disposed values, competing live bindings and structural reentry reject. User callbacks run after binding or setup commitment. Execution failures attempt every authored-pose restoration and release guards; setup failures keep GetIsSetup false for explicit retry. Resource graph persistence excludes transient setup, target references, palette RIDs and simulation history.
+Scene-bound configuration, modification execution and palette replay follow the skeleton's owner thread. Logical rest/endpoint/index, bone-list and stored-override reads also allow an active processing group. Cold structure/rest/path edits prepare new arrays and weak bindings; ordinary pose updates and retained replay reuse capacity. All numeric configuration requires finite values; strengths range from zero to one and phase selections use the existing ProcessPhase semantics. Invalid indices, disposed values, competing live bindings and structural reentry reject. User callbacks run after binding or setup commitment. Execution failures attempt every authored-pose restoration and release guards; setup failures keep GetIsSetup false for explicit retry. Resource graph persistence excludes transient setup, target references, palette RIDs and simulation history.
 
 SkeletonTests exercises DFS membership/rest/indices, auto endpoints, persistent/transient/physics overrides, AnimationPlayer tracks, presentation interpolation, noncommuting and TopLevel coordinate transforms, strongest-four skin weights, path rename/reconnect, constraints, callback failures/reentry, owner guards, unique scene copies, fresh-process files and actual native pixels. 128 warmed managed pose/redraw/skin/replay iterations and 64 prepared native GPU/compatibility intervals allocate zero managed bytes. Native/backend allocations, large-rig performance, other platforms and owner acceptance are unverified. Editor gizmos, physics synchronization and general Mesh skin channels retain exact coverage triggers.
 

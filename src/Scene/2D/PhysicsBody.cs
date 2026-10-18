@@ -85,6 +85,7 @@ public abstract partial class PhysicsBody : CollisionObject
         PhysicsServer.Service.InvalidateBodyView(PhysicsRID);
         var space = Space;
         if (space is null) return;
+        if (this is PhysicalBone physical) physical.DiscardPendingActivation();
         List<Exception>? errors = null;
         PhysicsSpace.Cleanup(() =>
         {

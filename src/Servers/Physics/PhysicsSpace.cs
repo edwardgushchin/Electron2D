@@ -169,6 +169,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void BeginSceneTransformAuthoring(SceneTree tree)
     {
         EnsureInitializationComplete(); EnsureReleaseAccess(); EnsureImplementationWriteAccess();
+        EnsureBackendAccess();
         if (_extensionCallbackDepth != 0 || DispatchingCallbacks) throw new InvalidOperationException("Scene transform authoring cannot overlap a backend or body-state callback.");
         if (!tree.HasOwnerThread(_ownerThreadID)) throw new InvalidOperationException("A scene transform stage requires the same world owner.");
         _sceneTransformTree = tree;

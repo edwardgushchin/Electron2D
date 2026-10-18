@@ -13,7 +13,7 @@ public partial class SceneTree
     private readonly List<GroupEntry> _groupFrame = [];
     private readonly List<ProcessingGroup> _groupStage = [];
     private readonly List<(CanvasItem Item, ulong Attachment)> _transformPublications = [];
-    internal enum ScenePublicationKind { CanvasPolicy, CameraPolicy, CameraScroll, ViewportReset, CanvasIdentity, PhysicsParticipation }
+    internal enum ScenePublicationKind { CanvasPolicy, CameraPolicy, CameraScroll, ViewportReset, CanvasIdentity, PhysicsParticipation, PhysicalBoneActivation }
     private readonly record struct ScenePublication(Node Node, ScenePublicationKind Kind, ulong Attachment, Vector2 Position = default, float Rotation = 0, ulong CanvasID = 0, RID Body = default, ulong CanvasAttachment = 0);
     private readonly List<ScenePublication> _scenePublications = [];
     internal void QueueScenePublication(Node node, ScenePublicationKind kind)
@@ -68,6 +68,7 @@ public partial class SceneTree
                             else ((TileMapLayer)node).PublishCanvasIdentity(publication.Body, publication.CanvasID);
                             break;
                         case ScenePublicationKind.PhysicsParticipation: ((CollisionObject)node).PublishPhysicsParticipation(); break;
+                        case ScenePublicationKind.PhysicalBoneActivation: ((PhysicalBone)node).PreparePendingActivation(); break;
                     }
                 }
                 catch (Exception error) { CollectException(ref errors, error); }

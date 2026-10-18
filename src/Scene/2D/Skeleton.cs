@@ -2,7 +2,9 @@ namespace Electron2D;
 
 /// <summary>Owns the prepared bind/pose palette of a scene bone hierarchy and executes skeletal modifications.</summary>
 /// <remarks>Bones and the optional modification stack are borrowed. Depth-first order includes only uninterrupted
-/// direct Bone chains. Scene mutation and palette replay use the scene owner thread. Retained polygons observe
+/// direct Bone chains. Bone-list and stored-override reads allow the owner or an active processing group;
+/// lazy setup commits before subscribers run, without holding its metadata gate across those callbacks.
+/// Scene configuration, modification execution and palette replay use the scene owner thread. Retained polygons observe
 /// live poses without rebuilding their triangulation. Resource/editor and native backend ownership remain separate.</remarks>
 public class Skeleton : Entity
 {
@@ -25,26 +27,30 @@ public class Skeleton : Entity
     /// <summary>Occurs after committing a changed bone/rest layout and indices.</summary>
     /// <remarks>Reads during a handler observe the committed setup. Handler failure does not replay the transition.</remarks>
     public event Action? BoneSetupChanged;
-    internal ulong SetupGeneration { get { EnsureSetup(); return _generation; } }
-    internal void InvalidateSetup() { _dirty = true; }
+    internal ulong SetupGeneration { get { EnsureSetup(); lock (_bones) return _generation; } }
+    internal void InvalidateSetup() { lock (_bones) _dirty = true; }
     internal void EnsureSetup()
     {
-        ThrowIfDisposed(); Tree?.EnsureOwnerThread(); if (!_dirty || _settingUp || !IsInsideTree) return;
-        if (_executing) throw new InvalidOperationException("Bone setup changed during modification execution.");
-        _settingUp = true;
-        try
+        ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess();
+        lock (_bones)
         {
-            _build.Clear(); Collect(this);
-            var count = _build.Count;
-            var inverse = new Transform[count]; var valid = new bool[count]; var pose = new Transform[count]; var overrides = new Transform[count];
-            for (var i = 0; i < count; i++) { var rest = _build[i].GetSkeletonRest(); valid[i] = rest.Determinant() != 0; inverse[i] = valid[i] ? rest.AffineInverse() : Transform.Identity; overrides[i] = _build[i].Rest; }
-            foreach (var old in _bones) old.SkeletonIndex = -1;
-            _bones.Clear(); _bones.AddRange(_build); _inverse = inverse; _valid = valid; _pose = pose; _skinPalette = new Transform[count]; _overrides = overrides; _strength = new float[count]; _persistent = new bool[count];
-            for (var i = 0; i < count; i++) _bones[i].SkeletonIndex = i;
-            _savedOverrides = new Transform[count]; _savedStrength = new float[count]; _savedPersistent = new bool[count];
-            _dirty = false; _generation++;
+            if (!_dirty || _settingUp || !IsInsideTree) return;
+            if (_executing) throw new InvalidOperationException("Bone setup changed during modification execution.");
+            _settingUp = true;
+            try
+            {
+                _build.Clear(); Collect(this);
+                var count = _build.Count;
+                var inverse = new Transform[count]; var valid = new bool[count]; var pose = new Transform[count]; var overrides = new Transform[count];
+                for (var i = 0; i < count; i++) { var rest = _build[i].GetSkeletonRest(); valid[i] = rest.Determinant() != 0; inverse[i] = valid[i] ? rest.AffineInverse() : Transform.Identity; overrides[i] = _build[i].Rest; }
+                foreach (var old in _bones) old.SkeletonIndex = -1;
+                _bones.Clear(); _bones.AddRange(_build); _inverse = inverse; _valid = valid; _pose = pose; _skinPalette = new Transform[count]; _overrides = overrides; _strength = new float[count]; _persistent = new bool[count];
+                for (var i = 0; i < count; i++) _bones[i].SkeletonIndex = i;
+                _savedOverrides = new Transform[count]; _savedStrength = new float[count]; _savedPersistent = new bool[count];
+                _dirty = false; _generation++;
+            }
+            finally { _settingUp = false; }
         }
-        finally { _settingUp = false; }
         BeginEventEmission(BoneSetupChanged)?.Invoke();
     }
     private void Collect(Node parent)
@@ -53,10 +59,11 @@ public class Skeleton : Entity
             if (parent.GetChild(i, includeInternal: true) is Bone bone && !bone.IsDisposed && ReferenceEquals(bone.Tree, Tree)) { _build.Add(bone); Collect(bone); }
     }
     /// <summary>Returns the number of attached bones after refreshing a changed setup.</summary><returns>Zero while detached.</returns>
-    public int GetBoneCount() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); EnsureSetup(); return IsInsideTree ? _bones.Count : 0; }
+    public int GetBoneCount() { EnsureSetup(); lock (_bones) return IsInsideTree ? _bones.Count : 0; }
     /// <summary>Returns a borrowed bone by current depth-first index.</summary><param name="index">Index in the attached hierarchy.</param><returns>The live scene-owned bone.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The index is outside the current attached palette.</exception>
-    public Bone GetBone(int index) { EnsureSetup(); if (!IsInsideTree || (uint)index >= (uint)_bones.Count) throw new ArgumentOutOfRangeException(nameof(index)); return _bones[index]; }
+    public Bone GetBone(int index) { EnsureSetup(); lock (_bones) { if (!IsInsideTree || (uint)index >= (uint)_bones.Count) throw new ArgumentOutOfRangeException(nameof(index)); return _bones[index]; } }
+    internal int GetBoneIndex(Bone bone) { EnsureSetup(); lock (_bones) return bone.SkeletonIndex; }
     /// <summary>Returns the borrowed stable palette identity used by retained skin commands.</summary><returns>A logical RID valid until disposal, independent of graphics startup.</returns>
     public RID GetSkeleton() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); if (!_rid.IsValid()) _rid = RenderingSkeletonRegistry.Register(this); return _rid; }
     /// <summary>Stores a finite local bone override with an interpolation strength.</summary>
@@ -68,7 +75,7 @@ public class Skeleton : Entity
         _overrides[boneIndex] = overridePose; _strength[boneIndex] = strength; _persistent[boneIndex] = persistent;
     }
     /// <summary>Returns the latest stored local override, initially the bone's local Rest.</summary><param name="boneIndex">Current bone index.</param><returns>The stored local pose.</returns>
-    public Transform GetBoneLocalPoseOverride(int boneIndex) { GetBone(boneIndex); return _overrides[boneIndex]; }
+    public Transform GetBoneLocalPoseOverride(int boneIndex) { EnsureSetup(); lock (_bones) { if (!IsInsideTree || (uint)boneIndex >= (uint)_bones.Count) throw new ArgumentOutOfRangeException(nameof(boneIndex)); return _overrides[boneIndex]; } }
     /// <summary>Returns the borrowed modification stack.</summary><returns>The assigned live stack or null.</returns>
     public SkeletonModificationStack? GetModificationStack() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _stack; }
     /// <summary>Assigns a borrowed modification stack and prepares it while attached.</summary><param name="modificationStack">Live stack or null.</param>
@@ -133,6 +140,7 @@ public class Skeleton : Entity
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
+        Tree?.EnsureProcessingAccess(this);
         if (what == NotificationChildOrderChanged) InvalidateSetup();
         base.OnNotification(what); if (IsDisposed) return;
         if (what is NotificationReady or NotificationPostEnterTree) { EnsureSetup(); _stack?.Bind(this); }

@@ -13,13 +13,15 @@ SimulatePhysics retains the committed request after a selected role-publication 
 
 ## Description
 
+Metadata getters, GetJoint and IsSimulatingPhysics allow the scene owner or an active processing group. Current-group notifications update body/child-joint poses immediately; activation changes publish native mode/filters on the owner after joining. A failed selected publication retains the request and retries before numerical use on the same attachment. Tree departure or physical retirement discards stale pending work. Binding and role setters stay on the owner.
+
 A real RigidBody that selects a separate scene Bone. Skeleton ownership comes from a direct Skeleton parent or a chain of PhysicalBone parents; neutral nodes interrupt ownership. BoneNodePath is relative to the physical body and overrides numeric selection. Attached numeric selection authors a stable path; -1 clears selection. Missing, renamed, removed or foreign bones cannot activate simulation; the request survives and a repaired binding restarts from the current bone pose. Parent-first Ready reconciliation seeds nested body transforms before child setup.
 
 SimulatePhysics stores the request; IsSimulatingPhysics reports an active attached backend with a valid selection. Inherited Freeze, Sleeping and disable policies still control actual movement. An inactive physical body follows its bone, uses a static backend and effective collision layer/mask zero. The configured public CollisionLayer/CollisionMask remain unchanged. Starting or stopping reseeds from the current bone, changes backend participation and refreshes fixture filters; these transitions are cold preparation boundaries. FollowBoneWhenSimulating aligns before each physics step, retains ordinary rigid forces/contacts during that step, and excludes body-to-bone transfer. It also follows in idle.
 
 GetJoint borrows the first live direct Joint child; no joint or collision shape is created. AutoConfigureJoint=true aligns that joint origin with the physical body. A PhysicalBone parent supplies NodeA/NodeB paths; a Skeleton parent preserves authored endpoints. Existing attached anchors retain ADR 0084 sampling semantics: moving the Joint alone does not rebuild the constraint. Author a collision shape with an offset center of mass when a hinge at the physical origin should produce pendulum rotation.
 
-Physics remains world-owned and subject to ordinary unit global scale and zero skew, material/mass/force/contact/exception, owner-thread and solver-mutation gates. Invalid transform preparation fails visibly and can be corrected. This type is not a Bone subclass and does not replace pose hierarchy/rest storage. SkeletonModificationPhysicalBones is the actual pose consumer.
+Physics remains world-owned and subject to ordinary unit global scale and zero skew, material/mass/force/contact/exception, the documented thread and solver-mutation gates. Invalid transform preparation fails visibly and can be corrected. This type is not a Bone subclass and does not replace pose hierarchy/rest storage. SkeletonModificationPhysicalBones is the actual pose consumer.
 
 ## Example
 
@@ -55,7 +57,7 @@ physical.SimulatePhysics = true;
 | `public override System.String[] GetConfigurationWarnings()` | [Returns current inherited physics and missing ownership/selection/child-joint warnings.](#getconfigurationwarnings) |
 | `public Electron2D.Joint GetJoint()` | [Returns the borrowed first live direct Joint child, or null. Does not generate or dispose it.](#getjoint) |
 | `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` | [Extends inherited typed schema with the described configuration; live bindings are not stored.](#getpropertydescriptors) |
-| `public System.Boolean IsSimulatingPhysics()` | [Pure owner-thread read of active attached valid selection; inherited Freeze/Sleep still control motion.](#issimulatingphysics) |
+| `public System.Boolean IsSimulatingPhysics()` | [Logical owner/active-group read of attached valid activation; inherited Freeze/Sleep still control motion.](#issimulatingphysics) |
 | `protected override System.Void OnNotification(System.Int32 what)` | [Reconciles Ready/internal physics/idle following and child-joint invalidation through the existing scene lifecycle.](#onnotification) |
 
 ## Member descriptions
@@ -94,7 +96,7 @@ Extends inherited typed schema with the described configuration; live bindings a
 
 `public System.Boolean IsSimulatingPhysics()`
 
-Pure owner-thread read of active attached valid selection; inherited Freeze/Sleep still control motion.
+Logical owner/active-group read of attached valid activation; inherited Freeze/Sleep still control motion.
 
 ### OnNotification
 

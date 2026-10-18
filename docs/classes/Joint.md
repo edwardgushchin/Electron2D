@@ -1,6 +1,6 @@
 # Joint
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 [Shared joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance)
 exercises this family through explicitly selected CPU and independent GPU worlds.
@@ -18,6 +18,8 @@ The report records force/motion regressions, numerical tolerances and failure li
 PhysicalBone can configure an authored direct child joint to its physical parent/body and align its origin. The existing connection-time anchor contract remains unchanged; moving the joint alone does not rebuild it.
 
 ## Description
+
+NodeA/NodeB also allow managed endpoint authoring from the joint's current processing group. Changed paths prepare the actual constraint on the owner before the next fixed step. Unchanged assignments still validate capture/group/selected-hook access and preserve existing anchors. Solver parameters retain their ordinary numerical guards.
 
 Scene joint nodes and the shared PhysicsJointRuntime retain paths, engine-valued
 local frames, settings and common lifetime policy. PhysicsJointBackend owns the
@@ -88,7 +90,7 @@ Checks attached scene and all related active world ownership/phases before the n
 
 Returns a caller-owned array, including base warnings. While attached, it reports missing/non-body endpoints, a duplicate body, or endpoints outside the same active world. Detached joints return only base warnings. It does not force a solver step or cache a warning snapshot.
 
-The scene owner thread owns attached mutation and queries. Property writes reject during a solver step. Joint creation needs finite unit-scale, zero-skew global geometry; invalid geometry fails the frame and can be corrected before the next one. A completed joint keeps both body-local anchors until a path change or tree reentry rebuilds it. Fixed-step callbacks run before joint preparation, so a path edit in a callback affects that step. Native allocation, non-Linux platforms and visual acceptance are unverified.
+The scene owner thread owns numerical mutation and queries. NodeA/NodeB also allow managed path authoring from the current processing group; solver-step and selected-hook writes reject before changing paths. Joint creation needs finite unit-scale, zero-skew global geometry; invalid geometry fails the frame and can be corrected before the next one. A completed joint keeps both body-local anchors until a path change or tree reentry rebuilds it. Fixed-step callbacks run before joint preparation, so a path edit in a callback affects that step. Native allocation, non-Linux platforms and visual acceptance are unverified.
 
 ## Verification and decisions
 

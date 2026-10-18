@@ -62,7 +62,7 @@ CanvasItem.GetCanvasItem now supplies a stable weak scene-owned identity for act
 
 ## Physical skeletal integration
 
-[PhysicalBone and its modification consumer](../components/skeletal-animation.md#physics-driven-bones) now connect authored body/joint nodes to actual scene Bone poses. Weak path/ownership repair and parent-first startup execute; editor generation remains separate.
+[PhysicalBone and its modification consumer](../components/skeletal-animation.md#physics-driven-bones) now connect authored body/joint nodes to actual scene Bone poses. Weak path/ownership repair, parent-first startup and current-group physical following with owner native activation publication execute. Logical bone metadata is readable by active groups; editor generation remains separate.
 
 ## Jiggle controller integration
 

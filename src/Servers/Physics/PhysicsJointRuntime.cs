@@ -167,6 +167,14 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
         if (BodyB.IsValid()) BodySpace(BodyB)?.EnsureImplementationWriteAccess();
     }
 
+    internal void EnsureScenePathChangeAccess(SceneTree? tree)
+    {
+        if (Scene is { } weak && weak.TryGetTarget(out var node)) node.AttachmentSpace?.EnsureSceneTransformWriteAccess(tree);
+        Space?.EnsureSceneTransformWriteAccess(tree);
+        if (BodyA.IsValid()) BodySpace(BodyA)?.EnsureSceneTransformWriteAccess(tree);
+        if (BodyB.IsValid()) BodySpace(BodyB)?.EnsureSceneTransformWriteAccess(tree);
+    }
+
     internal void SetDisableCollision(bool value)
     {
         EnsureWriteAccess();

@@ -1,13 +1,13 @@
 # Electron2D physics joint decisions
 
-Last updated: 2026-10-10
+Last updated: 2026-10-18
 
 This bounded document owns scene/server joint identity, geometry, constraint lifetime and force integration. [The decision index](index.md) routes other domains.
 
 <a id="adr-0084"></a>
 ## ADR 0084: Scene-owned pin constraints
 
-Last updated: 2026-10-10
+Last updated: 2026-10-18
 
 - Status: Accepted
 - Scope: Joint and PinJoint scene-node ownership, collision policy, angular limits and motor
@@ -21,6 +21,8 @@ Last updated: 2026-10-10
 - A warmed static/dynamic pin step reuses the solver's read-only identity state; the pinned backend patch is proposed upstream in [Box2D.NET#102](https://github.com/ikpil/Box2D.NET/pull/102). The checked Linux/.NET 10 path allocates zero managed bytes over 64 active frames; no native or cross-platform allocation claim is made.
 
 ### Consequences
+
+NodeA/NodeB are managed endpoint inputs and may also be authored from the joint's current processing group, including PhysicalBone auto configuration. Unchanged assignments still validate group/capture/selected-hook access, but do not invalidate an existing connection. Changed paths retain the ordinary owner preparation before the next step; native joint parameters, collision contributions and anchor sampling keep their existing guards and timing.
 
 PinJointTests covers a real pendulum, angular limit and motor response, collision changes on an already-overlapping pair, live edits, path and body exit/reentry, invalid-input recovery, PackedScene, owner-thread rejection and warmed allocation. Native allocator accounting, other platforms and owner acceptance remain unverified.
 
