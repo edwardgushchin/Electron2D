@@ -9,7 +9,7 @@ public sealed partial class SceneTree
     private readonly Dictionary<(Viewport, int), Window> _embeddedTouchCapture = [];
     private void ReleaseEmbeddedHost(Viewport host)
     { _embeddedWindowHover.Remove(host); _embeddedFocus.Remove(host); _embeddedMouseCapture.Remove(host); _embeddedDecorDrag.Remove(host); foreach (var entry in _embeddedTouchCapture.ToArray()) if (entry.Key.Item1 == host) _embeddedTouchCapture.Remove(entry.Key); }
-    private void UpdateEmbeddedWindowHover(Viewport host, Vector2 point)
+    private void UpdateEmbeddedWindowHover(Viewport host, Vector2 point, bool updatePosition = true)
     {
         Window? hovered = null;
         for (var i = host.EmbeddedWindows.Count - 1; i >= 0; i--)
@@ -28,7 +28,17 @@ public sealed partial class SceneTree
         if (hovered is { IsDisposed: false, Visible: true } && _embeddedWindowHover.GetValueOrDefault(host) == hovered)
             try
             {
-                if (new Rect2(hovered.Position, hovered.Size).HasPoint(point)) hovered.NotifyMouseEntered();
+                if (new Rect2(hovered.Position, hovered.Size).HasPoint(point))
+                {
+                    hovered.NotifyMouseEntered();
+                    if (updatePosition && !hovered.IsDisposed && hovered.Visible && !hovered.GUIDisableInput && _embeddedWindowHover.GetValueOrDefault(host) == hovered)
+                    {
+                        var local = hovered.GetFinalTransform().AffineInverse() * (point - (Vector2)hovered.Position);
+                        using var scope = SelectGUI(hovered);
+                        try { CaptureInputNodes(); UpdateGUIHover(hovered, local, ref errors); }
+                        finally { _gui.InputTraversal.Clear(); }
+                    }
+                }
                 else hovered.NotifyMouseExited();
             }
             catch (Exception error) { CollectException(ref errors, error); }
@@ -73,7 +83,11 @@ public sealed partial class SceneTree
     internal Window GetEmbeddedTextWindow(Window root) { var window = root; while (_embeddedFocus.GetValueOrDefault(window) is { IsDisposed: false, Visible: true } next) window = next; return window; }
     private InputEvent? RouteEmbeddedInput(Viewport host, InputEvent input, out Viewport target, ref List<Exception>? errors)
     {
-        if (input is InputEventMouse windowMouse) UpdateEmbeddedWindowHover(host, windowMouse.Position);
+        if (input is InputEventMouse windowMouse)
+        {
+            if (!host.IsAttachedToViewport) host.SetLastMousePosition(windowMouse.Position);
+            UpdateEmbeddedWindowHover(host, windowMouse.Position, updatePosition: !host.IsAttachedToViewport);
+        }
         target = host; if (host.EmbeddedWindows.Count == 0) return RoutePopupInput(host, input, ref errors);
         Vector2? point = input switch { InputEventMouse mouse => mouse.Position, InputEventScreenTouch touch => touch.Position, InputEventScreenDrag drag => drag.Position, InputEventGesture gesture => gesture.Position, _ => null };
         if (_embeddedDecorDrag.TryGetValue(host, out var decor))

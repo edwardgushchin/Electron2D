@@ -6,6 +6,8 @@ public sealed partial class Input
 
     internal CursorShape DefaultCursorShape => (CursorShape)Volatile.Read(ref _defaultCursorShape);
 
+    internal Vector2 GetLastMousePositionCore() { lock (_gate) return _lastMousePosition; }
+
     internal MouseMode MouseModeCore
     {
         get => RequireDisplay().MouseGetModeCore();

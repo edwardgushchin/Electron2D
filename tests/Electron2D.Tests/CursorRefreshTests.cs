@@ -36,7 +36,7 @@ internal static class CursorRefreshTests
         root.PushInput(motion, true); root.PushInput(motion, true);
         Check(probe.Motions == 2 && probe.Enters == 1 && probe.Inputs == 0 && probe.Unhandled == 0 && !motion.IsDisposed, "Internal motion reaches GUI only and does not repeat enter.");
         motion.Device = InputEvent.DeviceIdMouse; root.PushInput(motion, true); Check(probe.Inputs == 1 && probe.Unhandled == 1, "Ordinary input still reaches Node callbacks.");
-        using var inactive = new Window(); Throws<InvalidOperationException>(inactive.UpdateMouseCursorState);
+        using var inactive = new Window(); inactive.UpdateMouseCursorState(); Check(!inactive.IsInsideTree, "Detached windows have no containing native host to refresh.");
         using var dead = new SubViewport(); dead.Dispose(); Throws<ObjectDisposedException>(dead.UpdateMouseCursorState);
         using var parsed = new InputEventMouseMotion { Position = new(7, 9), GlobalPosition = new(7, 9), ButtonMask = MouseButtonMask.Left, Velocity = new(2, 3), ScreenVelocity = new(4, 5) };
         Input.ParseInputEvent(parsed); using var refresh = Input.Service.CreateCursorRefreshEvent();

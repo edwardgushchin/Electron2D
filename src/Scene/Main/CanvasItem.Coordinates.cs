@@ -86,13 +86,15 @@ public abstract partial class CanvasItem
 
     /// <summary>Returns the current pointer in this item's canvas coordinates.</summary>
     /// <returns>The viewport pointer transformed by the inverse canvas transform.</returns>
-    /// <exception cref="InvalidOperationException">There is no active native viewport, the caller is off-owner or the canvas transform is singular.</exception>
+    /// <remarks>Uses the owning viewport's native, emulated or isolated-section pointer policy.</remarks>
+    /// <exception cref="InvalidOperationException">There is no active viewport, the caller is off-owner or the canvas transform is singular.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public Vector2 GetGlobalMousePosition() => GetCanvasTransform().AffineInverse() * RequireCanvasViewport().GetMousePosition();
 
     /// <summary>Returns the current pointer in this item's local coordinates.</summary>
     /// <returns>The inverse logical global transform applied to GetGlobalMousePosition.</returns>
-    /// <exception cref="InvalidOperationException">There is no active native viewport, the caller is off-owner or an inverse transform is singular.</exception>
+    /// <remarks>Uses the owning viewport's native, emulated or isolated-section pointer policy.</remarks>
+    /// <exception cref="InvalidOperationException">There is no active viewport, the caller is off-owner or an inverse transform is singular.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public Vector2 GetLocalMousePosition() => GetGlobalTransform().AffineInverse() * GetGlobalMousePosition();
 

@@ -953,6 +953,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_CHILD") is { } menu
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU") == "1") { PopupMenuTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POPUP_CHILD") is { } popupPath) { PopupTests.RunChild(popupPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_COORDINATE_CONTRACTS") == "1") { CanvasCoordinateTests.Run(); ControlInputTests.Run(); ControlPointerTests.Run(); CursorRefreshTests.Run(); SubViewportContainerTests.Run(); GUIDragTests.Run(); PopupTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POPUP_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POPUP") == "1") { PopupTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TABS_CHILD") is { } tabsPath) { TabBarTests.RunChild(tabsPath); return; }

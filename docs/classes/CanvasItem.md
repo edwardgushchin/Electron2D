@@ -137,13 +137,13 @@ Applies InputEvent.XformedBy with the inverse `C * G`. The live input must alrea
 
 `public Vector2 GetGlobalMousePosition()`
 
-Returns inverse `C` times the viewport's current native pointer position. Requires an active native Window; does not use the last synthetic event. A singular canvas transform throws InvalidOperationException.
+Returns inverse `C` times the owning viewport's current mouse position. The viewport selects native/emulated root polling or a disconnected section's retained local mouse point. A singular canvas transform throws InvalidOperationException.
 
 ### GetLocalMousePosition
 
 `public Vector2 GetLocalMousePosition()`
 
-Applies inverse `G` to GetGlobalMousePosition. A singular logical global transform throws InvalidOperationException. The native window requirement and pointer semantics are inherited.
+Applies inverse `G` to GetGlobalMousePosition. A singular logical global transform throws InvalidOperationException. Viewport membership and its native/emulated/isolated section policy are inherited.
 
 All coordinate queries require a live item and enforce its attached owner thread. Except GetCanvasLayerNode and the detached fallback of GetGlobalTransformWithCanvas, they require active viewport membership; missing membership/off-owner access throws InvalidOperationException and disposal throws ObjectDisposedException. Queries preserve logical node state and do not emit notifications.
 

@@ -98,10 +98,10 @@ internal static class WindowNotificationTests
         var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; var allBytes = GC.GetTotalAllocatedBytes(true) - all;
         Check(ownerBytes == 0 && allBytes == 0 && delivered == 1152, "Warmed complete notification plus event path allocates zero owner/all-thread bytes.");
         Console.WriteLine($"Window notification warm gate: operations=1024, ownerBytes={ownerBytes}, allBytes={allBytes}.");
-        var hover = typeof(SceneTree).GetMethod("UpdateEmbeddedWindowHover", BindingFlags.Instance | BindingFlags.NonPublic)!.CreateDelegate<Action<Viewport, Vector2>>(tree);
-        for (var i = 0; i < 128; i++) { hover(host, new(200, 170)); hover(host, new(399, 299)); }
+        var hover = typeof(SceneTree).GetMethod("UpdateEmbeddedWindowHover", BindingFlags.Instance | BindingFlags.NonPublic)!.CreateDelegate<Action<Viewport, Vector2, bool>>(tree);
+        for (var i = 0; i < 128; i++) { hover(host, new(200, 170), true); hover(host, new(399, 299), true); }
         owner = GC.GetAllocatedBytesForCurrentThread(); all = GC.GetTotalAllocatedBytes(true);
-        for (var i = 0; i < 128; i++) { hover(host, new(200, 170)); hover(host, new(399, 299)); }
+        for (var i = 0; i < 128; i++) { hover(host, new(200, 170), true); hover(host, new(399, 299), true); }
         ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; allBytes = GC.GetTotalAllocatedBytes(true) - all;
         Check(ownerBytes == 0 && allBytes == 0, "Warmed active embedded hover, content signals and physical notifications allocate zero owner/all-thread bytes.");
         Console.WriteLine($"Embedded window pointer warm gate: operations=256, ownerBytes={ownerBytes}, allBytes={allBytes}.");

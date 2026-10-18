@@ -77,6 +77,8 @@ public sealed partial class SceneTree
 
     private void UpdateGUIHover(Viewport viewport, Vector2 position, ref List<Exception>? errors)
     {
+        viewport.SetLastMousePosition(position);
+        try { UpdateEmbeddedWindowHover(viewport, position); } catch (Exception error) { CollectException(ref errors, error); }
         _gui.GuiHoverViewport = viewport;
         _gui.GuiHoverPosition = position;
         _gui.GuiHoverKnown = true;

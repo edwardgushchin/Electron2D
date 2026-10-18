@@ -898,7 +898,7 @@ public sealed partial class SceneTree : MainLoop
             {
                 localized = inLocalCoordinates ? inputEvent : viewport.MakeViewportInputLocal(inputEvent);
                 routed = RouteEmbeddedInput(viewport, localized, out var target, ref errors);
-                if (routed is not null) try { DispatchLocalInputEvent(routed, target, executionOwned: true); } catch (Exception error) { CollectException(ref errors, error); }
+                if (routed is not null) try { DispatchLocalInputEvent(routed, target, executionOwned: true, updateMouseHover: !viewport.IsAttachedToViewport); } catch (Exception error) { CollectException(ref errors, error); }
             }
             ThrowCollected("Window input callbacks failed.", errors);
         }
@@ -920,7 +920,7 @@ public sealed partial class SceneTree : MainLoop
         finally { if (routed is not null && !ReferenceEquals(routed, localized)) routed.Dispose(); if (!ReferenceEquals(localized, input)) localized.Dispose(); }
     }
     private Viewport? _inputViewport;
-    private void DispatchLocalInputEvent(InputEvent @event, Viewport? inputViewport = null, bool embedded = false, bool executionOwned = false)
+    private void DispatchLocalInputEvent(InputEvent @event, Viewport? inputViewport = null, bool embedded = false, bool executionOwned = false, bool updateMouseHover = true)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(@event);
@@ -941,10 +941,10 @@ public sealed partial class SceneTree : MainLoop
         {
             _inputViewport = inputViewport;
             CaptureInputNodes();
-            DispatchInputStage(@event, InputStage.Input, ref errors);
-
-            if (!embedded && inputViewport is { } hoverViewport && @event is InputEventMouse hoverMouse)
+            if (!embedded && updateMouseHover && inputViewport is { } hoverViewport && @event is InputEventMouse hoverMouse)
                 UpdateGUIHover(hoverViewport, hoverMouse.Position, ref errors);
+
+            DispatchInputStage(@event, InputStage.Input, ref errors);
 
             if (!_inputHandled && inputViewport is { } viewport)
             {

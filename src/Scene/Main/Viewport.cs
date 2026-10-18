@@ -68,6 +68,8 @@ public abstract partial class Viewport : Node
     /// are copied and disposed after synchronous dispatch; mouse GlobalPosition becomes its localized Position.
     /// Local input and non-positional events remain borrowed. Direct injection bypasses WindowInput on the receiving window;
     /// popup actions still run on the final localized receiver, and forwarded embedded children receive their window event.
+    /// Mouse hover and isolated pointer state are published before Node input callbacks. Attached container/window
+    /// viewports obtain pointer state from their section's hover route; direct input does not replace it.
     /// Nested dispatch is rejected. CanvasTransform is removed
     /// separately by CanvasItem.MakeInputLocal when translating to an item's local coordinates.</remarks>
     /// <exception cref="ArgumentNullException">The event is null.</exception>

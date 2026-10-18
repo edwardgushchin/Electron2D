@@ -1036,6 +1036,8 @@ The viewport-free fallback runtime captures active-feature `Physics2DEngine` and
 See [the selection checks](../components/physics-backends.md#project-physics-selection).
 
 
+Mouse hover and each isolated viewport's local pointer point publish before Node input callbacks. The hover route updates container/window descendants independently of input consumption; direct PushInput into an attached viewport keeps the enclosing section's pointer. Root-connected queries poll native or headless emulated input, while disconnected sections retain their own point. See [viewport coordinates](Viewport.md#canvas-transforms-and-pointer-coordinates).
+
 Embedded window pointer routing tracks actual window hover separately from input
 capture and viewport content hover. Decorations can receive containing-window
 notifications without entering content. Moving or hiding an entered window clears

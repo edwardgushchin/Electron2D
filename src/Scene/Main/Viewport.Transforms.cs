@@ -4,6 +4,13 @@ public abstract partial class Viewport
 {
     private Transform _canvasTransform = Transform.Identity;
     private Transform _globalCanvasTransform = Transform.Identity;
+    private Vector2 _lastMousePosition;
+    internal bool IsAttachedToViewport => this is Window { Embedder: not null } || this is SubViewport { Parent: SubViewportContainer };
+    internal void SetLastMousePosition(Vector2 position)
+    {
+        if (!position.IsFinite()) throw new ArgumentOutOfRangeException(nameof(position));
+        _lastMousePosition = position;
+    }
     private static readonly PropertyDescriptor[] CanvasTransformProperties =
     [
         new PropertyDescriptor<Viewport, Transform>(nameof(CanvasTransform), n => n.CanvasTransform, (n, v) => n.CanvasTransform = v, _ => Transform.Identity),
@@ -66,16 +73,28 @@ public abstract partial class Viewport
     }
 
     /// <summary>Returns the current pointer position in viewport coordinates.</summary>
-    /// <returns>The native client pointer transformed by the inverse final transform; zero when it is singular.</returns>
-    /// <remarks>Requires a containing native Window. Does not alter input polling or use the last event supplied to PushInput.
-    /// Fractional client coordinates are retained. CanvasTransform is not removed by this query.</remarks>
-    /// <exception cref="InvalidOperationException">No containing native window is active, or the caller is not its owner.</exception>
+    /// <returns>The section's current pointer in viewport units. A disconnected section retains its last local mouse point, initially zero.</returns>
+    /// <remarks>Sections connected to the scene root poll its native pointer, or the global input position for a headless/emulated host,
+    /// then remove GetScreenTransform; a singular screen transform returns zero. Other sections use their own retained hover position.
+    /// Mouse hover is published before node input callbacks. Attached containers/windows obtain it from their section's hover route;
+    /// direct PushInput on an attached viewport does not replace it. This query does not alter global Input state.
+    /// Fractional coordinates are retained. CanvasTransform is not removed by this query.</remarks>
+    /// <exception cref="InvalidOperationException">The viewport is detached or the caller is not its owner.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
     public Vector2 GetMousePosition()
     {
         CheckTransformQuery();
-        var window = GetWindow() ?? throw new InvalidOperationException("Pointer queries require an active containing native Window.");
-        var position = window.GetClientMousePosition();
+        var tree = Tree ?? throw new InvalidOperationException("Pointer queries require an active viewport.");
+        var section = this;
+        while (true)
+        {
+            if (section is Window { Embedder: { } embedder }) section = embedder;
+            else if (section is SubViewport { Parent: SubViewportContainer container } && container.GetViewport() is { } parent) section = parent;
+            else break;
+        }
+        if (!ReferenceEquals(section, tree.Root)) return _lastMousePosition;
+        var position = tree.Root is Window window && DisplayServer.IsAvailable && DisplayServer.HasFeature(DisplayServer.Feature.Mouse)
+            ? window.GetClientMousePosition() : Input.Service.GetLastMousePositionCore();
         var transform = GetScreenTransform();
         return transform.Determinant() == 0 ? Vector2.Zero : transform.AffineInverse() * position;
     }
