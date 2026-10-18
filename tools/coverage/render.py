@@ -760,6 +760,13 @@ def render():
                     adapted = f"default({owners[0]})"
                 elif len(parameters) == 1 and parameters[0]["type"] == name:
                     adapted = f"{owners[0]} copy assignment"
+            if not matches and name == "Object":
+                # ADR 0005 maps only this family to the existing C# enumeration protocol.
+                adapted = {
+                    "Object::method:_iter_init(Array:)": "C# GetEnumerator() and first MoveNext()",
+                    "Object::method:_iter_next(Array:)": "C# IEnumerator<T>.MoveNext()",
+                    "Object::method:_iter_get(Variant:)": "C# IEnumerator<T>.Current",
+                }.get(member["id"], adapted)
             if matches:
                 used_engine.update(match["id"] for match in matches)
                 used_local.update(match["id"] for match in matches)

@@ -45,6 +45,14 @@ def check_physics_report(pages):
             if state in {"Partial", "Blocked", "Unimplemented"}:
                 expected[declaration["id"]] = state
     assert dict(actual) == expected, "Physics ledger must retain every open row from the class classifier"
+    object_page = pages[CLASS_PAGES / "Object.md"]
+    projections = {"_iter_init": "GetEnumerator() and first MoveNext()", "_iter_next": "IEnumerator<T>.MoveNext()", "_iter_get": "IEnumerator<T>.Current"}
+    for method, projection in projections.items():
+        rows = [row for row in object_page.splitlines() if row.startswith("| [`method " + method + "(")]
+        assert len(rows) == 1 and " | Implemented | " in rows[0] and "C# " + projection in rows[0], "Iteration must name its actual typed C# protocol"
+        assert not any(key.startswith("Object::method:" + method + "(") for key in expected), "Verified iteration must not remain open"
+    assert expected["Object::method:_init()"] == "Unimplemented", "The enumeration projection must not hide script initialization"
+    assert expected["Object::method:get_script()"] == "Blocked", "Enumeration must not close live script binding"
     assert "Joint2D::property:bias" not in expected
     assert "PinJoint2D::property:softness" not in expected
     assert "RigidBody2D::property:continuous_cd" not in expected

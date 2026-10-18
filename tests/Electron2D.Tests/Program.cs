@@ -155,6 +155,13 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_EVENT_CONNECTION
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OBJECT_ITERATION") is { } iterationProfile)
+{
+    ObjectIterationTests.Run(iterationProfile == "gpu" ? PhysicsServer.Backend.GPU : iterationProfile == "cpu" ? PhysicsServer.Backend.CPU :
+        throw new ArgumentException("Use cpu or gpu for object iteration."), Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1");
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OBJECT_PROPERTIES") is { } propertyProfile)
 {
     ObjectPropertyTests.Run(propertyProfile switch
@@ -1684,6 +1691,7 @@ CanvasTimingTests.Run();
 VerifyInstanceIds();
 VerifyLifetime();
 ObjectIdentityTests.Run(PhysicsServer.Backend.CPU); ObjectIdentityTests.Run(PhysicsServer.Backend.GPU);
+ObjectIterationTests.Run(PhysicsServer.Backend.CPU, false); ObjectIterationTests.Run(PhysicsServer.Backend.GPU, false);
 ObjectPropertyTests.Run(PhysicsServer.Backend.CPU); ObjectPropertyTests.Run(PhysicsServer.Backend.GPU);
 WeakRefTests.Run();
 VerifyNotificationsAndProperties();

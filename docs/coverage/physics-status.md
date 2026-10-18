@@ -185,11 +185,11 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 12 | 6 | 0 | 0 | 0 |
 | [Node](classes/Node.md) | [Object](classes/Object.md) | 178 | 17 | 6 | 12 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
-| [Object](classes/Object.md) | — | 23 | 15 | 2 | 5 | 29 |
+| [Object](classes/Object.md) | — | 26 | 15 | 2 | 2 | 29 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 22 | 5 | 0 | 0 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 349 | 71 | 17 | 17 | 37 |
+| **Total** | | 352 | 71 | 17 | 14 | 37 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -272,9 +272,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`class:Object`](classes/Object.md) | Partial | Typed C# type exists; inheritance, signatures and behavior require row-level audit. |
 | [`Object::constant:NOTIFICATION_EXTENSION_RELOADED`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:_init()`](classes/Object.md) | Unimplemented | The pinned callback initializes an instantiated owner Script, potentially after owner construction; it is not only CLR base construction. Ordinary C# constructors and Script.New already execute. A typed owner/script initialization projection with argument, scene/duplication, identity, callback-order and failure behavior remains required under ADR 0091. Do not dispatch a virtual initializer from ElectronObject construction. |
-| [`Object::method:_iter_get(Variant:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
-| [`Object::method:_iter_init(Array:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
-| [`Object::method:_iter_next(Array:)`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:_notification(int:)`](classes/Object.md) | Partial | ADR 0005 retains ordinary C# virtual OnNotification dispatch and explicit base calls. Notify has no reversed parameter or per-class reversal mechanism; reserved post-initialization 0 is not automatically emitted. These remain explicit inherited capability/ordering gaps, not completion inferred from the numeric callback declarations. Existing Node/Timer/SceneTree hooks retain their documented typed lifecycle behavior. |
 | [`Object::method:call_deferred(StringName:)`](classes/Object.md) | Partial | Typed Action scheduling replaces dynamic deferred call; ADRs 0001/0006. Return type differs: Variant → System.Void; audit observable contract. |
 | [`Object::method:can_translate_messages()`](classes/Object.md) | Partial | C# property form of upstream Object operation (ADRs 0005 and 0007). |

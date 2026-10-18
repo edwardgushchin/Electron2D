@@ -53,6 +53,12 @@ A failure in notification or cleanup is rethrown after state publication; simult
 
 Weak identity stores distinguish temporary pre-delete closure from committed cleanup. Read-side unavailability never retires a veto-capable target. Sweep/registration cleanup retains physical/rendering RIDs, ResourcePath ownership, owner reverse records and unique namespaces, group membership and writer registrations until commit or collection. Name/path reservations stay occupied during notification; ordinary live lookup still hides the closed target. Registry probes cover in-notification lookups, 256-registration sweeps, restoration and terminal release.
 
+## Custom typed iteration
+
+Object iteration uses the existing C# compiler/BCL protocol under ADR 0005. A concrete compiled object or scene/resource subtype supplies its own typed enumerator. The first `MoveNext` combines initialization/end detection, later calls advance, and `Current` reads without advancing. Per-cursor state preserves independent/nested loops. No second engine value system, universal enumerable base, cursor field or dynamic method registry is added.
+
+`ObjectIterationTests` is shared with the public-only registered-backend consumer. It checks empty/repeated/nested/explicit cursors, typed object identity, BCL interface consumers, early break, construction/move/current/cleanup/body errors and caller-owned lifetime guards. Real force and state callbacks enumerate a physical-body subtype and a borrowed typed owner during complete moving frames. All 18 final profiles pass: six managed and six strict NativeAOT public-consumer profiles, both complete default consumer regressions, and four CPU/GPU owner/separate root profiles. Sixteen 128-frame brackets measure 2048 complete moving intervals at 0/0 owner/all-thread managed bytes. Seven exact portable-PDB proofs match 2273 runtime, 166 consumer and 756 root documents; 3189 unique authored inputs are retained. Evidence: bin/physics-object-iteration/2026-10-18/validation.json; SHA-256 0c8e5b533fc235f2b1aced4cbed5b6536f10af6ab3b3f27a546f6b83273b7e6a. Initial fixture errors (invalid Action expression and an incorrect assumption of unwrapped callback errors) and a rejected wrapper selecting the older host are retained separately; they are not numerical runtime failures or accepted final evidence. This verifies the exercised C# projection; user collection concurrency and arbitrary cursor implementations retain their own policies.
+
 ## Threading
 
 - Instance ID allocation is safe under concurrent construction.

@@ -1,5 +1,7 @@
 # Independent physics backend consumer
 
+`--object-iteration` exercises compiled typed object/body enumeration in actual force/state callbacks. It selects an independent registered provider by default, `--cpu` or `--gpu`, and optional `--threaded`. The protocol checks cover independent/nested cursor state, empty/early/error paths and borrowed lifetime. Warmed complete moving intervals require zero owner/all-thread managed bytes; interface boxing is tested separately outside that hot path.
+
 This executable references only the public Electron2D API. It registers a bounded circle/constraint test solver through PhysicsServerManager and owns numerical bodies, contact/query geometry, constraints and private history. It does not wrap a built-in solver and is not a production physics option.
 
 ```sh

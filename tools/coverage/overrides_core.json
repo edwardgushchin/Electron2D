@@ -2399,6 +2399,15 @@
       ],
       "state": "Partial",
       "reason": "ADRs 0001/0006: existing typed SceneTree.SetDeferred retains individual values in reusable Scene-owned slots, mixed Action FIFO/captured-batch order, atomic lifetime acceptance and error continuation. Warm typed setter and CPU/GPU deferred-event frames retain zero owner/all-thread bytes; execution/failure/discard release reference values. Dynamic property/name resolution remains excluded by the typed projection, and this does not establish arbitrary custom scheduler or full inherited/native/network/platform acceptance."
+    },
+    {
+      "godot": [
+        "Object::method:_iter_get(Variant:)",
+        "Object::method:_iter_init(Array:)",
+        "Object::method:_iter_next(Array:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0001/0004/0005/0091: compiled object subtypes provide ordinary typed C# GetEnumerator/MoveNext/Current and optional IEnumerable<T>. The first MoveNext combines initialization/end detection; Current reads without advancing, and per-cursor state supports independent/nested loops. This is a language/BCL projection, not a universal engine value/cursor API or an exclusion. Public ObjectIterationTests verifies empty/repeated/nested/explicit and interface consumers, typed borrowed identities, early exit and construction/move/current/cleanup/body errors, caller-owned lifetime guards and actual force/state callbacks. CPU/software-Vulkan/registered owner/separate full moving frames require strict zero owner/all-thread managed bytes through unboxed struct-pattern cursors. Interface boxing and user collection/thread/lifetime policies remain explicit; no automatic script binding or arbitrary cursor correctness is inferred."
     }
   ]
 }

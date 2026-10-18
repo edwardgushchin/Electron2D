@@ -12,6 +12,12 @@ Last updated: 2026-10-18
 
 > Provides the common identity, notification, property, localization, and lifetime contract for engine objects.
 
+## Custom typed iteration
+
+Compiled subclasses can supply ordinary C# `GetEnumerator()`/`MoveNext()`/`Current` and optionally `IEnumerable<T>`, retaining their existing object, Resource or Node/body inheritance. The cursor owns its traversal state; acquire a fresh cursor for each independent or nested loop. `foreach` handles ordinary disposal on completion, early exit and exceptions. Use a struct-pattern cursor for allocation-sensitive loops; interface conversion can box that cursor. This is the [typed iteration projection](../decisions/core-object-runtime.md#adr-0005), with no universal element type or dynamic dispatcher on ElectronObject.
+
+The subtype owns element lifetime, mutation/version checks and thread policy. It can apply `ThrowIfDisposed` and existing guarded scene/physics operations, including same-thread teardown inspection. Enumeration does not relax solver or owner-thread restrictions. Interface/iterator-block allocation is distinct from the required zero-allocation warmed physics path.
+
 ## Compiled indexed properties
 
 `ElectronObject.GetIndexed` and `SetIndexed` accept a typed `PropertyDescriptor` for the root owner and result value. The supplied descriptor may describe a direct property or a composition built with `PropertyDescriptor.Through`, `Member`, `Element` or `Key`. Names are metadata labels; there is no runtime string setter, reflection scanner, new path wrapper or universal value container. This follows [ADR 0005](../decisions/core-object-runtime.md#adr-0005).

@@ -1,6 +1,6 @@
 # Electron2D core object and runtime decisions
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 Recording Run/RunAsync overloads and GetWriteMoviePath follow [ADR 0109](movie-writing.md#adr-0109): the existing scheduler accepts explicit fixed cadence without realtime jitter/catch-up dropping, and the same lifecycle owns real rendered capture plus synchronous audio. Ordinary and manual frame scheduling retain their contracts.
 
@@ -61,7 +61,7 @@ The base uses atomic state transitions so concurrent disposal runs cleanup at mo
 <a id="adr-0005"></a>
 ## ADR 0005: Use numeric notifications and typed property descriptors
 
-Last updated: 2026-10-14
+Last updated: 2026-10-18
 
 - Status: Accepted
 - Scope: Engine lifecycle notifications and tooling property exposure
@@ -81,6 +81,12 @@ Godot's `Object` exposes numeric notifications plus Variant-based property disco
 - Derived classes may filter or replace descriptors with `ValidateProperty`; they notify tooling of structural changes through a typed event.
 - Typed getter/setter delegates implement custom property access directly. `TryGetRevertValue` reports whether a default factory exists, including a null or unchanged result; its returned value follows the factory's ownership. Preserve the existing `CanRevert`/`PropertyCanRevert` value-difference policy for tooling, separate from default availability. This is an explicit C# adaptation of the pinned Object property_can_revert presence query. Revert evaluates the current factory then invokes ordinary validation and the setter, without a hidden copy or rollback of a setter that committed before throwing. Typed inspection follows ADR 0009 on the exact teardown thread; writes and restoration still reject once disposal begins. Owner delegates retain their threading, scene-capture and physics-phase checks.
 - Readonly class identity follows the existing CLR projection: `ClassName` is the unqualified actual compiled type name, and `IsClass(string)` compares it and its ElectronObject ancestors ordinally. Compiled subclasses participate; script/file registration aliases, interfaces, qualified names and System.Object do not. Null names reject, empty/unknown names return false. These observations and InstanceID remain available during/after disposal without numerical owner access. This preserves the C# class-name policy rather than introducing a dynamic class resolver. The pinned Object is_class/get_class family ignores script aliases; ordinary compiled inheritance is the accepted C# representation. ToString uses ordinary C# virtual dispatch and keeps the existing ClassName#InstanceID default. Dispose is the free capability under ADR 0003, not a second public alias.
+
+#### Typed custom iteration
+
+The applicable Object `_iter_init`/`_iter_next`/`_iter_get` capability maps to ordinary typed C# enumeration on the concrete compiled object. A game class derives from its normal ElectronObject/Resource/Node/body branch and supplies `GetEnumerator()` (or `IEnumerable<T>` for interface consumers). An acquired cursor owns per-traversal state: its first `MoveNext()` performs initialization and the first end test, later `MoveNext()` calls advance/test, and readonly `Current` supplies the typed value without advancing. Independent and nested traversals acquire independent cursors. Empty sequences fetch no value. C# `foreach` performs ordinary cursor disposal on completion, break and exceptions.
+
+This preserves custom iteration under ADRs 0001/0004/0091 without putting a universal element type, mutable cursor or dynamic callback dispatcher on ElectronObject. It is an executable language/BCL projection, not an exclusion of iteration. Consumers choose their element/state types and ordinary error policy; they retain responsibility for cursor validity, concurrent collection edits and owned/borrowed values. User enumeration is not automatically thread-safe or permitted to bypass scene/physics guards. An owner-bound implementation may use existing `ThrowIfDisposed` and ordinary guarded APIs; teardown inspection retains ADR 0009. Struct-pattern cursors avoid interface boxing on hot paths. Interface enumeration and iterator blocks may allocate and do not establish the full-frame allocation requirement by themselves.
 
 ### Consequences
 
