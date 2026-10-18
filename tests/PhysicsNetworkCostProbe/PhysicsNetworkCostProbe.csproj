@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Electron2D.Tests</AssemblyName>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Optimize>true</Optimize>
+    <TieredCompilation Condition="'$(Configuration)' == 'Release'">false</TieredCompilation>
+    <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../Electron2D.csproj" />
+    <Compile Include="../../examples/PhysicsNetwork/*.cs" Exclude="../../examples/PhysicsNetwork/Program.cs" Link="Example/%(Filename)%(Extension)" />
+    <Compile Include="../Electron2D.Tests/PhysicsNetworkProbe.cs" Link="PhysicsNetworkProbe.cs" />
+  </ItemGroup>
+  <Import Project="../../tools/native-consumer.props" />
+</Project>

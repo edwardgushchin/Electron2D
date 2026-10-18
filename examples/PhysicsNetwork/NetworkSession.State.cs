@@ -32,7 +32,9 @@ internal sealed partial class NetworkSession
     }
     private void SendState(PeerState peer)
     {
+        ProfileForTesting(4, true);
         Simulation.Map.Capture(_snapshot); var length = _snapshot.WriteTo(_physicsBytes);
+        ProfileForTesting(4, false);
         var writer = new WireWriter(_send); writer.Header(3); writer.U64(++_frameSerial); writer.U64(Simulation.Tick); writer.Bool(_finalState);
         writer.U64(peer.Baseline); writer.U64(Simulation.EventSequence);
         var count = Simulation.Describe(_manifest); writer.I32(count);
@@ -96,28 +98,41 @@ internal sealed partial class NetworkSession
             body.Rotation += .45f; body.AngularVelocity += 2; _injectedDrift = true;
         }
         var started = Stopwatch.GetTimestamp();
+        ProfileForTesting(5, true);
         for (var i = 0; i < Simulation.Actors.Length; i++)
         {
             _oldPredicted[i] = Simulation.Actors[i]?.Position ?? default; _oldSpecs[i] = Simulation.Actors[i]?.Spec ?? default;
             _oldRotations[i] = Simulation.Actors[i]?.Body?.GlobalRotation ?? 0;
         }
+        ProfileForTesting(5, false);
         var created = Simulation.Created; var owners = Simulation.OwnershipChanges;
         Simulation.Phase = SimulationPhase.Correction;
         try
         {
-            Simulation.Reconcile(_manifest.AsSpan(0, count)); Simulation.Map.Apply(_snapshot); Simulation.CheckSupportCorrection(); Simulation.CheckGeometryCorrection();
+            ProfileForTesting(6, true);
+            Simulation.Reconcile(_manifest.AsSpan(0, count));
+            ProfileForTesting(6, false);
+            ProfileForTesting(7, true);
+            Simulation.Map.Apply(_snapshot);
+            ProfileForTesting(7, false);
+            ProfileForTesting(8, true);
+            Simulation.CheckSupportCorrection(); Simulation.CheckGeometryCorrection();
+            ProfileForTesting(8, false);
             Simulation.EventSequence = eventEnd;
             for (var i = 0; i < count; i++)
             {
                 var actor = Simulation.Find(_manifest[i].ID)!; actor.Held = _held[i]; actor.LastInputTick = _appliedTicks[i];
             }
+            ProfileForTesting(9, true);
             CapturePresentation(count);
+            ProfileForTesting(9, false);
             while (Simulation.Tick < oldTick)
             {
                 PreparePredictedInputs(Simulation.Tick + 1, replay: true); MeasureStep(SimulationPhase.Replay); ReplayedTicks++;
             }
         }
         catch (Exception error) { throw new InvalidOperationException("Authoritative correction failed; this client must stop.", error); }
+        ProfileForTesting(10, true);
         for (var i = 0; i < Simulation.Actors.Length; i++)
             if (Simulation.Actors[i] is { } actor)
             {
@@ -134,6 +149,7 @@ internal sealed partial class NetworkSession
                         AngularDriftCorrection = Math.Max(AngularDriftCorrection, Math.Abs(Mathf.AngleDifference(_oldRotations[i], collider.GlobalRotation)));
                 }
             }
+        ProfileForTesting(10, false);
         SpawnCorrections += Simulation.Created - created; OwnershipCorrections += Simulation.OwnershipChanges - owners;
         for (var i = 0; i < events; i++)
         {

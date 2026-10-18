@@ -137,7 +137,9 @@ internal sealed partial class NetworkSession : IDisposable
             }
             else if (_now - _finishedAt > 5) throw new TimeoutException("Clients did not acknowledge the final authority state/events.");
         }
+        ProfileForTesting(11, true);
         UpdatePresentation();
+        ProfileForTesting(11, false);
     }
     private void Receive(int sender, ReadOnlySpan<byte> bytes)
     {
@@ -371,6 +373,7 @@ internal sealed partial class NetworkSession : IDisposable
             StepMS += elapsed; if (StepSampleCount < StepSamples.Length) StepSamples[StepSampleCount++] = elapsed;
             if (warm) { StepAllocations += allocated; WarmStepTotalAllocations += allAllocated; WarmSteps++; }
         }
+        ProfileForTesting(3, true);
         for (var i = 0; i < Simulation.Actors.Length; i++)
         {
             if (Simulation.Actors[i] is not { Body: RigidBody body } actor) continue;
@@ -379,6 +382,7 @@ internal sealed partial class NetworkSession : IDisposable
             if (_sleepGenerations[i] == actor.Spec.Generation && _wasSleeping[i] && !sleeping) WakeObservations++;
             _sleepGenerations[i] = actor.Spec.Generation; _wasSleeping[i] = sleeping;
         }
+        ProfileForTesting(3, false);
     }
     public void Dispose()
     {

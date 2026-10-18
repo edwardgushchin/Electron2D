@@ -192,6 +192,7 @@ internal sealed partial class NetworkWorld : IDisposable
     internal void Step(SimulationPhase phase)
     {
         Phase = phase; _stepTick = Tick + 1;
+        ProfileForTesting(0, true);
         foreach (var actor in Actors)
         {
             if (actor?.Body is not RigidBody body || actor.Spec.Owner == 0) continue;
@@ -201,8 +202,13 @@ internal sealed partial class NetworkWorld : IDisposable
         var final = _finalImpulsesPending; _finalImpulsesPending = false;
         if (final) ((RigidBody)Find(10)!.Body!).ApplyTorqueImpulse(800);
         KickJoints(_stepTick); PrepareSupport(_stepTick, final); PrepareGeometry(_stepTick, final);
+        ProfileForTesting(0, false);
+        ProfileForTesting(1, true);
         Tree.PhysicsFrame(FixedStep);
+        ProfileForTesting(1, false);
+        ProfileForTesting(2, true);
         CheckJoints(); CheckSupport(); CheckGeometry();
+        ProfileForTesting(2, false);
         if (Tick != _stepTick) throw new InvalidOperationException("Fixed simulation did not advance exactly one tick.");
     }
     private void Contact(ulong id, Node other, int kind)
@@ -221,4 +227,5 @@ internal sealed partial class NetworkWorld : IDisposable
         foreach (var state in _geometryStates) state?.Dispose();
         Map.Dispose(); Tree.Dispose(); Root.Dispose(); World.Dispose(); _floor.Dispose(); _box.Dispose(); _region.Dispose(); _circle.Dispose(); _supportCircle.Dispose(); _supportFloor.Dispose(); _supportMaterial.Dispose(); DisposeGeometry();
     }
+    partial void ProfileForTesting(int stage, bool begin);
 }

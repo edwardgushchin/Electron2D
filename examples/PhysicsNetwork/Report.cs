@@ -271,7 +271,7 @@ internal sealed partial class NetworkSession
             CommandHistoryBytes = _commands.Length * System.Runtime.CompilerServices.Unsafe.SizeOf<InputCommand>(),
             EventHistoryBytes = (_events.Length + _receivedEvents.Length + _confirmedLog.Length) * System.Runtime.CompilerServices.Unsafe.SizeOf<GameEvent>()
         };
-        FillBackendReport(report); return report;
+        FillBackendReport(report); FillCostReportForTesting(); return report;
     }
     partial void FillBackendReport(SessionReport report);
     internal static double[] Percentiles(double[] values, int count)
@@ -279,4 +279,6 @@ internal sealed partial class NetworkSession
         if (count == 0) return [0, 0, 0]; Array.Sort(values, 0, count);
         return [values[(count - 1) / 2], values[(int)((count - 1) * .95)], values[(int)((count - 1) * .99)]];
     }
+    partial void ProfileForTesting(int stage, bool begin);
+    partial void FillCostReportForTesting();
 }
