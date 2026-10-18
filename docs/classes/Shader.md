@@ -51,7 +51,7 @@ pairedMaterial.SetShaderParameter("offset", new Vector2(16, 0));
 | `IReadOnlyList<PropertyDescriptor> GetShaderUniformList()` | Immutable typed material descriptors for the current program version. |
 | `void SetDefaultTextureParameter(string name, Texture? texture, int index = 0)` | Sets or clears a borrowed default texture. |
 | `Texture? GetDefaultTextureParameter(string name, int index = 0)` | Gets the borrowed default texture. |
-| [Mode](Shader.Mode.md) | Canvas shader domain. |
+| [Mode](Shader.Mode.md) | Canvas, particle compute or writable-texture domain. |
 
 The fragment interface optionally accepts float4 color at location 0 and float2 UV at location 1, raw float4 instance custom at location 2 and secondary float2 UV at location 4, mesh-local float3 normals at location 5 and float4 tangent/orientation at location 6. `TEXTURE` at set 2, binding 0 receives the current command texture or white for untextured geometry. It is reserved and omitted from uniform descriptors/default-parameter APIs. An optional scalar float32 TIME member in any valid fragment uniform buffer receives the renderer clock. Its offset and binding are reflected, not fixed. TIME is omitted from material descriptors and parameter APIs; lowercase time remains an ordinary parameter. See the [shared shader interface](../components/shader-materials.md#current-shader-interface).
 
@@ -63,7 +63,7 @@ Creates the embedded fragment program multiplying the command texture sample by 
 
 ### GetMode
 
-Returns `Shader.Mode.CanvasItem` (1). Throws `ObjectDisposedException` after disposal.
+Returns the executing domain: `CanvasItem` (1), `Particles` (2) or `TextureBlit` (5). Throws `ObjectDisposedException` after disposal.
 
 ### CreateFromSPIRV
 
@@ -75,7 +75,7 @@ Uses the same copied-input validation and errors as creation. No mutation occurs
 
 ### GetSPIRV
 
-The parameterless overload returns copied fragment bytes and never exposes the backing module. It is not a complete export of a paired program. The stage overload copies Vertex or Fragment; Vertex is empty for a fragment-only program. Undefined stage values throw ArgumentOutOfRangeException; other defined stages throw NotSupportedException. The snapshot may safely outlive subsequent reload or disposal. Calling on a disposed shader throws.
+The parameterless overload returns copied fragment bytes for canvas/blit, or compute bytes for particles, and never exposes the backing module. It is not a complete export of a paired program. The stage overload copies Vertex or Fragment for canvas/blit, or Compute for particles; Vertex is empty for a fragment-only program. Undefined stage values throw ArgumentOutOfRangeException; other defined stages throw NotSupportedException. The snapshot may safely outlive subsequent reload or disposal. Calling on a disposed shader throws.
 
 ### GetShaderUniformList
 
@@ -219,3 +219,7 @@ For [position-free mesh surfaces](../components/meshes.md#procedural-surfaces-wi
 Both ordinary and layered default families accept fixed descriptor array indices. Each material element independently overrides its indexed default. Stored array-valued descriptors preserve aliases and original shader payloads. Validation snapshots callback-sensitive input, rejects reentrant default mutation or program replacement, and publishes only after all values pass. A length, image role or sampled scalar change on reload drops the complete incompatible array. See [the descriptor array contract](../components/shader-materials.md#fixed-sampled-descriptor-arrays) and SamplerArrayTests for executable evidence and limits.
 
 Shader.Mode.TextureBlit and the explicit-domain CreateFromSPIRV/SetSPIRV overloads execute writable-texture fragments with the shared typed parameter contract. See [writable textures](../components/drawable-textures.md) for imported inputs, outputs, source bindings and archive semantics.
+
+## Particle compute profile
+
+The [particle shader contract](../components/particle-shaders.md) adds compiled HLSL/GLSL compute modules, typed material parameters, portable state/frame/subemission includes and explicit RenderingDevice execution. Process programs preserve their domain through duplication and file graphs and reject canvas/blit submission. Retained emission, particle nodes and canvas output remain separate dependencies.

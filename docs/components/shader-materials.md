@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-18
 
+[Particle shaders](particle-shaders.md) now execute a validated HLSL/GLSL compute profile through public RenderingDevice, with typed material/archive state and portable bounded-subemission includes. Retained emitters and canvas output remain pending.
+
 [Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Copied byte, normalized/float, block and unsigned-integer images execute; foreign/native-allocation acceptance remains separate.
 
 
@@ -349,7 +351,7 @@ GPU and do not establish rendered or performance acceptance.
 
 ## Authored vertex stages
 
-The paired Shader factory/setter loads one Vertex and one Fragment module, each with a main entry point, under the shared runtime validation contract. The stage-selected getter returns copied authored bytes. Parameterless export remains fragment-only. A fragment-only setter removes the authored vertex stage. Paired publication, material migration and archive storage are atomic across the two stages.
+The paired Shader factory/setter loads one Vertex and one Fragment module, each with a main entry point, under the shared runtime validation contract. The stage-selected getter returns copied authored bytes. Parameterless export returns the fragment for paired/canvas/blit programs, or the compute module for particles. A fragment-only setter removes the authored vertex stage. Paired publication, material migration and archive storage are atomic across the two stages.
 
 Vertex inputs use the native canvas attribute locations: float2 framebuffer-pixel position zero, float4 command color one, float2 UV two, optional float4 raw instance custom three, float2 UV2 seven, float3 normal eight, float4 tangent nine, and float4 mesh custom ten through thirteen. Locations four through six are renderer-owned hardware instance data and cannot be authored inputs. Required outputs are float4 color zero and float2 UV one; optional outputs use the existing fragment varying profile. The engine supplies glyph and lighting channels privately. Hardware instances retain native instanced draws: the engine applies their full prepared transform/tint before invoking the authored function once per vertex. Ordinary geometry already carries its canvas transform. Vertex output position must perform the pixel-to-clip conversion; deformations do not update retained bounds, input geometry or CPU light selection.
 

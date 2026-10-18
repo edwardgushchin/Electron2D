@@ -29,7 +29,7 @@ internal static unsafe partial class SpirvReflection
     }
 
     internal static ShaderProgram Read(byte[] code, bool fragment,
-        IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null, bool blit = false)
+        IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null, bool blit = false, bool particles = false)
     {
         var booleans = ReadBooleans(code);
         if (sourceTypes is not null && booleans.Count != 0)
@@ -50,8 +50,9 @@ internal static unsafe partial class SpirvReflection
         foreach (var kind in new[] { 2, 5, 6, 8, 9, 12, 14, 15 })
         {
             Check(GetResources(resources, kind, out _, out var count));
-            if (count != 0) throw new NotSupportedException("Canvas storage and push-constant resources are not integrated yet.");
+            if (count != 0 && !(particles && kind == 2)) throw new NotSupportedException("The shader domain does not support these storage or push-constant resources.");
         }
+        if (particles) ValidateParticleStorage(compiler, resources);
         Check(GetResources(resources, 1, out var pointer, out var bufferCount));
         if (bufferCount > 4) throw new NotSupportedException("Canvas shaders support at most four uniform buffers per stage.");
         var sizes = new int[(int)bufferCount];
@@ -61,8 +62,8 @@ internal static unsafe partial class SpirvReflection
         foreach (var resource in new ReadOnlySpan<ReflectedResource>((void*)pointer, (int)bufferCount))
         {
             if (HasDecoration(compiler, resource.Id, DescriptorSet) == 0 || HasDecoration(compiler, resource.Id, Binding) == 0 ||
-                GetDecoration(compiler, resource.Id, DescriptorSet) != (fragment ? 3u : 1u))
-                throw new NotSupportedException($"Uniform buffers require an explicit binding and descriptor set {(fragment ? 3 : 1)}.");
+                GetDecoration(compiler, resource.Id, DescriptorSet) != (particles ? 2u : fragment ? 3u : 1u))
+                throw new NotSupportedException($"Uniform buffers require an explicit binding and descriptor set {(particles ? 2 : fragment ? 3 : 1)}.");
             var binding = GetDecoration(compiler, resource.Id, Binding);
             if (binding >= bufferCount || sizes[binding] != 0)
                 throw new NotSupportedException("Uniform buffer bindings must be unique and contiguous, starting at zero.");
@@ -75,6 +76,11 @@ internal static unsafe partial class SpirvReflection
             Check(GetStructSize(compiler, type, out var size));
             if (size == 0 || size > 16384) throw new NotSupportedException("Each canvas uniform buffer must contain between 1 and 16384 bytes.");
             sizes[binding] = checked(((int)size + 15) / 16 * 16);
+            if (particles && binding == 0)
+            {
+                ValidateParticleFrame(compiler, type, typeName, size);
+                continue;
+            }
             var occupied = new bool[sizes[binding]];
             for (uint member = 0; member < GetMemberCount(type); member++)
             {
@@ -170,8 +176,8 @@ internal static unsafe partial class SpirvReflection
         uint TextureBinding(ReflectedResource resource)
         {
             if (HasDecoration(compiler, resource.Id, DescriptorSet) == 0 || HasDecoration(compiler, resource.Id, Binding) == 0 ||
-                GetDecoration(compiler, resource.Id, DescriptorSet) != (fragment ? 2u : 0u))
-                throw new NotSupportedException($"Sampled image resources require explicit bindings in descriptor set {(fragment ? 2 : 0)}.");
+                GetDecoration(compiler, resource.Id, DescriptorSet) != (particles ? 0u : fragment ? 2u : 0u))
+                throw new NotSupportedException($"Sampled image resources require explicit bindings in descriptor set {(particles ? 0 : fragment ? 2 : 0)}.");
             var slot = GetDecoration(compiler, resource.Id, Binding);
             if (slot >= textureCount) throw new NotSupportedException("Texture bindings must be contiguous, starting at zero.");
             var type = GetType(compiler, resource.TypeId);
@@ -254,6 +260,8 @@ internal static unsafe partial class SpirvReflection
                 if (string.IsNullOrWhiteSpace(texture.GlobalName) || globals.ContainsKey(texture.GlobalName) || uniforms.ContainsKey(texture.GlobalName) || instances.ContainsKey(texture.GlobalName))
                     throw new NotSupportedException("Global image names must be nonblank and cannot alias numeric or material fields.");
             }
+        if (particles && (sizes.Length == 0 || sizes[0] != ParticleFrameLayout.ByteSize || instances.Count != 0 || screenPixelSizeUniform is not null || textures.Any(t => t.IsCanvasTexture || t.IsScreenTexture)))
+            throw new NotSupportedException("Particle programs require their renderer-owned frame and have no canvas command, screen or instance bindings.");
         return new ShaderProgram(code, sizes, uniforms, textures, timeUniform, screenPixelSizeUniform, sdfCoordsUniform, instances, globals)
         { NativeCode = CanvasSamplerArrays.Lower(code, textures, needsSampler) };
     }

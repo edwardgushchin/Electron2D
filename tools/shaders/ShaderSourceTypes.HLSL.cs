@@ -4,7 +4,7 @@ using SDL3;
 
 internal static unsafe partial class ShaderSourceTypes
 {
-    internal static Dictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)> HLSL(string source, bool fragment, string? includeDirectory, byte[] bytecode)
+    internal static Dictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)> HLSL(string source, bool fragment, string? includeDirectory, byte[] bytecode, bool particles = false)
     {
         var props = SDL.CreateProperties();
         if (props == 0) throw new InvalidOperationException(SDL.GetError());
@@ -30,12 +30,12 @@ internal static unsafe partial class ShaderSourceTypes
                     Entrypoint = (nint)entry,
                     IncludeDir = (nint)include,
                     Defines = (nint)defines,
-                    ShaderStage = fragment ? ShaderCross.ShaderStage.Fragment : ShaderCross.ShaderStage.Vertex,
+                    ShaderStage = particles ? ShaderCross.ShaderStage.Compute : fragment ? ShaderCross.ShaderStage.Fragment : ShaderCross.ShaderStage.Vertex,
                     Props = props
                 };
                 var memory = ShaderCross.CompileDXILFromHLSL(in info, out var size);
                 if (memory == 0) throw new ArgumentException("HLSL type reflection compilation failed: " + SDL.GetError());
-                try { return ReadDXIL(memory, size, BufferBindings(bytecode, fragment)); }
+                try { return ReadDXIL(memory, size, BufferBindings(bytecode, fragment, particles)); }
                 finally { SDL.Free(memory); }
             }
         }
@@ -105,7 +105,7 @@ internal static unsafe partial class ShaderSourceTypes
         }
     }
 
-    private static Dictionary<string, int> BufferBindings(byte[] code, bool fragment)
+    private static Dictionary<string, int> BufferBindings(byte[] code, bool fragment, bool particles)
     {
         // DXIL ignores Vulkan binding attributes. Match compiler resource names to the actual SPIR-V bindings.
         var words = MemoryMarshal.Cast<byte, uint>(code);
@@ -130,7 +130,7 @@ internal static unsafe partial class ShaderSourceTypes
             }
             at += count;
         }
-        return buffers.Where(id => sets.TryGetValue(id, out var set) && set == (fragment ? 3 : 1) && bindings.ContainsKey(id))
+        return buffers.Where(id => sets.TryGetValue(id, out var set) && set == (particles ? 2 : fragment ? 3 : 1) && bindings.ContainsKey(id))
             .ToDictionary(id => names[id], id => checked((int)bindings[id]), StringComparer.Ordinal);
     }
 

@@ -23,3 +23,7 @@ Direct canvas RID binding accepts both material kinds. Caller-owned server mater
 [Automatic scene lighting](../components/shader-materials.md#automatic-scene-lighting) composes the computed fragment color before blend, preserving parameters, texture roles, discard, returns, reload and hardware instancing. Normal/specular and point-mask samplers share the native sixteen-binding stage capacity; four user uniform slots remain available. Current rendered evidence is Linux/Vulkan.
 
 BlitMaterial supplies built-in writable-texture blend operations; ShaderMaterial supplies programmable TextureBlit fragments. Both retain the existing borrowed logical material RID lifetime. See [writable textures](../components/drawable-textures.md).
+
+## Particle compute profile
+
+The [particle shader contract](../components/particle-shaders.md) adds compiled HLSL/GLSL compute modules, typed material parameters, portable state/frame/subemission includes and explicit RenderingDevice execution. Process programs preserve their domain through duplication and file graphs and reject canvas/blit submission. Retained emission, particle nodes and canvas output remain separate dependencies.

@@ -4,11 +4,12 @@ using Electron2D;
 using SDL3;
 using System.Runtime.InteropServices;
 
+var particleImport = args.Length is 4 or 5 && args[3] == "--particles";
 var blitImport = args.Length is 4 or 5 && args[3] == "--texture-blit";
 var deviceImport = args.Length is 4 or 5 && args[3] == "--device";
-if ((!deviceImport && !blitImport && args.Length != 3) || (blitImport && args[1] != "fragment") || args[1] is not ("vertex" or "fragment" or "compute") || args[1] == "compute" && !deviceImport)
+if ((!deviceImport && !blitImport && !particleImport && args.Length != 3) || (blitImport && args[1] != "fragment") || (particleImport && args[1] != "compute") || args[1] is not ("vertex" or "fragment" or "compute") || args[1] == "compute" && !deviceImport && !particleImport)
 {
-    Console.Error.WriteLine("Usage: ShaderImport <source.hlsl|source.glsl|source.spv> <vertex|fragment|compute> <output.spv> [--device|--texture-blit [include-root]]");
+    Console.Error.WriteLine("Usage: ShaderImport <source.hlsl|source.glsl|source.spv> <vertex|fragment|compute> <output.spv> [--device|--texture-blit|--particles [include-root]]");
     return 2;
 }
 var input = IOPath.GetFullPath(args[0]);
@@ -30,7 +31,7 @@ try
             // Keep original source locations in diagnostics reported by the native compiler.
             var escaped = input.Replace("\\", "/").Replace("\"", "\\\"");
             var code = CompileHLSL("#line 1 \"" + escaped + "\"\n" + source,
-                stage, includeRoot, builtIns!.DirectoryPath, deviceImport, out sourceTypes);
+                stage, includeRoot, builtIns!.DirectoryPath, deviceImport, particleImport, out sourceTypes);
             File.WriteAllBytes(temporary, code);
             break;
         case ".glsl":
@@ -40,8 +41,8 @@ try
             if (!deviceImport)
             {
                 Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.0", "-S",
-                    args[1] == "fragment" ? "frag" : "vert", "-I" + includeRoot, "-I" + builtIns!.DirectoryPath, "-e", "main", "-gV", "-o", debugTemporary, input));
-                sourceTypes = ShaderSourceTypes.GLSL(File.ReadAllBytes(debugTemporary), args[1] == "fragment");
+                    args[1] == "compute" ? "comp" : args[1] == "fragment" ? "frag" : "vert", "-I" + includeRoot, "-I" + builtIns!.DirectoryPath, "-e", "main", "-gV", "-o", debugTemporary, input));
+                sourceTypes = ShaderSourceTypes.GLSL(File.ReadAllBytes(debugTemporary), args[1] == "fragment", particleImport);
             }
             break;
         case ".spv":
@@ -52,12 +53,12 @@ try
     var result = File.ReadAllBytes(temporary);
     if (sourceTypes is not null)
     {
-        result = ShaderSourceTypes.Annotate(result, args[1] == "fragment", sourceTypes, blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
+        result = ShaderSourceTypes.Annotate(result, args[1] == "fragment", sourceTypes, particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
         File.WriteAllBytes(temporary, result);
     }
     Console.Write(await Execute("spirv-val", "--target-env", "vulkan1.0", temporary));
     if (deviceImport) RenderingDevice.ValidateSourceModule(result, stage);
-    else ShaderCompiler.ValidateInterface(result, fragment: args[1] == "fragment", mode: blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
+    else ShaderCompiler.ValidateInterface(result, fragment: args[1] == "fragment", mode: particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
     if (File.Exists(output) && new FileInfo(output).Length == result.Length &&
         File.ReadAllBytes(output).AsSpan().SequenceEqual(result))
     {
@@ -98,7 +99,7 @@ static async Task<string> Execute(string executable, params string[] arguments)
     return diagnostic;
 }
 
-static byte[] CompileHLSL(string source, RenderingDevice.ShaderStage stage, string? includeDirectory, string builtInDirectory, bool deviceImport,
+static byte[] CompileHLSL(string source, RenderingDevice.ShaderStage stage, string? includeDirectory, string builtInDirectory, bool deviceImport, bool particleImport,
     out Dictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? types)
 {
     var previousDirectory = Directory.GetCurrentDirectory();
@@ -112,7 +113,7 @@ static byte[] CompileHLSL(string source, RenderingDevice.ShaderStage stage, stri
             var code = deviceImport ? CompileDeviceHLSL(source, stage, includeDirectory) : ShaderSourceTypes.CompileHLSL(source, stage, includeDirectory);
             // Scalar programs retain the established import payload; descriptor arrays preserve their source shape.
             if (!deviceImport && !ShaderSourceTypes.HasDescriptorArrays(code)) code = CompileDeviceHLSL(source, stage, includeDirectory);
-            types = deviceImport ? null : ShaderSourceTypes.HLSL(source, stage == RenderingDevice.ShaderStage.Fragment, includeDirectory, code);
+            types = deviceImport ? null : ShaderSourceTypes.HLSL(source, stage == RenderingDevice.ShaderStage.Fragment, includeDirectory, code, particleImport);
             return code;
         }
         finally { ShaderCross.Quit(); }

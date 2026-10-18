@@ -1,5 +1,7 @@
 [Portable compressed textures](../components/portable-textures.md) now execute all seven runtime modes with complete mips, ordinary rendering, buffer policy and typed archives. The approved encoder closure also completes ETC/EAC/ASTC Image compression. Seventeen portable rows and two Image rows become Implemented; Linux GPU/Compatibility, package consumers, static linking and adapter sanitizers provide executable evidence. Foreign runtime/native-allocation acceptance remains separate.
 
+[Particle process shaders](../components/particle-shaders.md) now execute HLSL/GLSL import, fixed state/frame ABI validation, typed materials and graph storage, and public RenderingDevice compute dispatch with bounded GPU subemission. This closes the shader-mode prerequisite; retained server emitters, node simulation and canvas output remain open.
+
 [Writable textures](../components/drawable-textures.md) now execute DrawableTexture, BlitMaterial, Shader.Mode.TextureBlit and the static RenderingServer drawable family. Four color formats, one-to-four-target blit, authored GLSL/HLSL, explicit mip writes/generation, native sampling/readback and complete ownership/archive/reset paths close 32 rows. Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte intervals pass; compatibility rejects the GPU family. Hardware/native-memory/foreign-platform acceptance remains open.
 
 # API coverage register

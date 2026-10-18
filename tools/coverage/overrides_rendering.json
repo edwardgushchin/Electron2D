@@ -1,6 +1,11 @@
 {
   "mappings": [
     {
+      "godot": "Shader::enum_value:Mode.MODE_PARTICLES",
+      "electron2d": "enumValue:Electron2D.Shader.Mode.Particles()",
+      "reason": "ADR 0028: the executable particle compute prerequisite provides a validated 64-lane HLSL/GLSL state/frame ABI, optional bounded GPU subemission, import/MSBuild, typed ShaderMaterial state and graph archives, with explicit public RenderingDevice execution. ParticleShaderTests checks source metadata, malformed layouts, atomic reload, copies/lifetime, native state updates and concurrent bounded queues on Linux software Vulkan. Retained particle RID scheduling, GPUParticles, ParticleProcessMaterial, canvas output, hardware/native-memory and foreign-platform acceptance remain separate dependencies."
+    },
+    {
       "godot": "RenderingServer::method:canvas_item_add_msdf_texture_rect_region(RID:,Rect2:,RID:,Rect2:,Color:,int:,float:,float:)",
       "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddMSDFTextureRectRegion(Electron2D.RID,Electron2D.Rect2,Electron2D.RID,Electron2D.Rect2,System.Nullable<Electron2D.Color>,System.Int32,System.Single,System.Single)",
       "reason": "ADRs 0028/0046/0095: executable retained LCD/MSDF regions consume caller-supplied encoded textures through direct backing RIDs, finite/signed geometry and owner/lifetime/recording guards. GPU decodes median/derivative/range/outline or exact-alpha RGB coverage, composes incoming COLOR with full material and automatic lights, then applies LCD final-alpha component blend and command/ancestor constants. Four uniform slots, combined/paired/no-TEXTURE sampler layouts, scalar masks, transparent groups, shader reload, transparency and MSAA execute. Linux pixels and 64 active/64 idle zero-managed-allocation intervals plus 732 glyph/257 lighting module validation are checked; compatibility explicitly rejects the unsupported profile. FontFile image generation, other-platform/native-allocation/owner acceptance remain separate."
@@ -5476,13 +5481,6 @@
         "Shader::enum_value:Mode.MODE_SPATIAL",
         "Shader::enum_value:Mode.MODE_SKY",
         "Shader::enum_value:Mode.MODE_FOG"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: the first GPU 2D particle-simulation slice must implement particle state, compute execution, resource bindings and validation before exposing this mode (ADR 0028).",
-      "godot": [
-        "Shader::enum_value:Mode.MODE_PARTICLES"
       ]
     },
     {

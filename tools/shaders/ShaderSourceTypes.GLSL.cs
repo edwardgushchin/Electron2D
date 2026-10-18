@@ -4,7 +4,7 @@ using Electron2D;
 
 internal static unsafe partial class ShaderSourceTypes
 {
-    internal static Dictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)> GLSL(byte[] debugCode, bool fragment)
+    internal static Dictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)> GLSL(byte[] debugCode, bool fragment, bool particles = false)
     {
         var words = MemoryMarshal.Cast<byte, uint>(debugCode);
         var strings = new Dictionary<uint, string>();
@@ -58,7 +58,7 @@ internal static unsafe partial class ShaderSourceTypes
         foreach (var global in instructions.Values)
         {
             if (global[4] != 18 || !variables.Contains(global[12]) ||
-                !sets.TryGetValue(global[12], out var set) || set != (fragment ? 3 : 1) || !bindings.TryGetValue(global[12], out var binding)) continue;
+                !sets.TryGetValue(global[12], out var set) || set != (particles ? 2 : fragment ? 3 : 1) || !bindings.TryGetValue(global[12], out var binding)) continue;
             var composite = instructions[global[6]];
             if (composite[4] != 10) throw new NotSupportedException("GLSL uniform buffers require reflected structure types.");
             foreach (var memberID in composite.AsSpan(14))

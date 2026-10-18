@@ -1,0 +1,57 @@
+#ifndef ELECTRON2D_PARTICLES_INCLUDED
+#define ELECTRON2D_PARTICLES_INCLUDED
+
+struct Electron2D_Particle
+{
+    vec4 TransformX;
+    vec4 TransformY;
+    vec4 Color;
+    vec4 Custom;
+    vec4 VelocityAge;
+    uvec4 State;
+};
+
+layout(std430, set = 1, binding = 0) buffer ParticleState { Electron2D_Particle PARTICLES[]; };
+layout(std140, set = 2, binding = 0) uniform ParticleFrame
+{
+    uvec4 Counts;
+    vec4 Time;
+    vec4 Cycle;
+    vec4 EmissionX;
+    vec4 EmissionY;
+    vec4 PreviousEmissionX;
+    vec4 PreviousEmissionY;
+    vec4 EmitterVelocity;
+    vec4 SDFRect;
+    vec4 SDFTransformX;
+    vec4 SDFTransformY;
+    uvec4 Options;
+};
+
+#ifdef ELECTRON2D_PARTICLE_SUBEMISSION
+layout(std430, set = 1, binding = 1) buffer ParticleSubemission { Electron2D_Particle SUBPARTICLES[]; };
+
+bool Electron2D_EmitSubparticle(Electron2D_Particle particle)
+{
+    uint length = uint(SUBPARTICLES.length());
+    if (length == 0) return false;
+    uint capacity = min(SUBPARTICLES[0].State.y, length - 1);
+    uint expected = atomicAdd(SUBPARTICLES[0].State.x, 0);
+    for (;;)
+    {
+        if (expected >= capacity)
+        {
+            atomicOr(SUBPARTICLES[0].State.z, 1);
+            return false;
+        }
+        uint observed = atomicCompSwap(SUBPARTICLES[0].State.x, expected, expected + 1);
+        if (observed == expected)
+        {
+            SUBPARTICLES[expected + 1] = particle;
+            return true;
+        }
+        expected = observed;
+    }
+}
+#endif
+#endif

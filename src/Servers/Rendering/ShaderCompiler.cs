@@ -3,7 +3,7 @@ using SDL3;
 
 namespace Electron2D;
 
-internal static unsafe class ShaderCompiler
+internal static unsafe partial class ShaderCompiler
 {
     private static readonly object Gate = new();
     private const int MaximumBytecodeBytes = 16 * 1024 * 1024;
@@ -120,6 +120,7 @@ internal static unsafe class ShaderCompiler
     internal static ShaderProgram ValidateInterface(ReadOnlySpan<byte> bytecode, bool fragment,
         IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null, Shader.Mode mode = Shader.Mode.CanvasItem)
     {
+        if (mode == Shader.Mode.Particles) return ValidateParticleInterface(bytecode, sourceTypes);
         if (mode is not (Shader.Mode.CanvasItem or Shader.Mode.TextureBlit)) throw new ArgumentOutOfRangeException(nameof(mode));
         if (!fragment && mode != Shader.Mode.CanvasItem) throw new NotSupportedException("Blit programs use the built-in vertex stage.");
         ValidateBytecodeLength(bytecode);
@@ -227,7 +228,7 @@ internal static unsafe class ShaderCompiler
             throw new NotSupportedException("Canvas shader color interfaces must be float4 at location zero.");
     }
 
-    private static void ValidateStructure(byte[] code, bool fragment)
+    private static void ValidateStructure(byte[] code, bool fragment, bool particles = false)
     {
         var words = MemoryMarshal.Cast<byte, uint>(code);
         if (words[0] != 0x07230203 || words[1] is < 0x10000 or > 0x10600 || (words[1] & 0xff) != 0 ||
@@ -242,7 +243,7 @@ internal static unsafe class ShaderCompiler
                 throw new ArgumentException("Truncated or zero-length SPIR-V instruction.", nameof(code));
             if (opcode == 15)
             {
-                if (count < 5 || words[offset + 1] != (fragment ? 4u : 0u) || words[offset + 2] == 0 || words[offset + 2] >= words[3] ||
+                if (count < 5 || words[offset + 1] != (particles ? 5u : fragment ? 4u : 0u) || words[offset + 2] == 0 || words[offset + 2] >= words[3] ||
                     words[offset + 3] != 0x6e69616d || words[offset + 4] != 0)
                     throw new NotSupportedException("Canvas SPIR-V requires the selected stage with an entry point named main.");
                 entrypoints++;

@@ -37,15 +37,21 @@ public sealed partial class Shader
     public void SetSPIRV(ReadOnlySpan<byte> vertexBytecode, ReadOnlySpan<byte> fragmentBytecode)
     { ThrowIfDisposed(); PublishProgram(ShaderCompiler.ValidateCanvasProgram(vertexBytecode, fragmentBytecode)); }
 
-    /// <summary>Returns an independent copy of a selected authored canvas stage.</summary>
-    /// <param name="stage">Vertex or Fragment.</param>
+    /// <summary>Returns an independent copy of a selected authored shader stage.</summary>
+    /// <param name="stage">Vertex or Fragment for canvas/blit, Compute for particles.</param>
     /// <returns>The selected module; an empty vertex payload selects the renderer's built-in vertex program.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The stage is undefined.</exception>
-    /// <exception cref="NotSupportedException">The selected stage does not belong to a canvas program.</exception>
+    /// <exception cref="NotSupportedException">The selected stage does not belong to the current shader domain.</exception>
     /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>
     public byte[] GetSPIRV(RenderingDevice.ShaderStage stage)
     {
         var program = GetProgram();
+        if (!Enum.IsDefined(stage)) throw new ArgumentOutOfRangeException(nameof(stage));
+        if (program.Mode == Mode.Particles)
+        {
+            if (stage != RenderingDevice.ShaderStage.Compute) throw new NotSupportedException("Particle programs contain one compute stage.");
+            return (byte[])program.Code.Clone();
+        }
         if (stage is not (RenderingDevice.ShaderStage.Vertex or RenderingDevice.ShaderStage.Fragment))
         {
             if (!Enum.IsDefined(stage)) throw new ArgumentOutOfRangeException(nameof(stage));
@@ -58,10 +64,10 @@ public sealed partial class Shader
     private byte[] GetStoredSPIRV()
     {
         var program = GetProgram();
-        if (program.Mode == Mode.TextureBlit)
+        if (program.Mode is Mode.TextureBlit or Mode.Particles)
         {
             var payload = new byte[8 + program.Code.Length];
-            BinaryPrimitives.WriteUInt32LittleEndian(payload, 0x42534845);
+            BinaryPrimitives.WriteUInt32LittleEndian(payload, program.Mode == Mode.Particles ? 0x50534845u : 0x42534845u);
             BinaryPrimitives.WriteUInt32LittleEndian(payload.AsSpan(4), 1);
             program.Code.CopyTo(payload, 8); return payload;
         }
@@ -77,10 +83,10 @@ public sealed partial class Shader
     private void SetStoredSPIRV(byte[] data)
     {
         ArgumentNullException.ThrowIfNull(data);
-        if (data.Length >= 4 && BinaryPrimitives.ReadUInt32LittleEndian(data) == 0x42534845)
+        if (data.Length >= 4 && BinaryPrimitives.ReadUInt32LittleEndian(data) is 0x42534845 or 0x50534845)
         {
-            if (data.Length < 28 || BinaryPrimitives.ReadUInt32LittleEndian(data.AsSpan(4)) != 1) throw new InvalidDataException("Unsupported stored blit program header.");
-            SetSPIRV(data.AsSpan(8), Mode.TextureBlit); return;
+            if (data.Length < 28 || BinaryPrimitives.ReadUInt32LittleEndian(data.AsSpan(4)) != 1) throw new InvalidDataException("Unsupported stored shader domain header.");
+            SetSPIRV(data.AsSpan(8), BinaryPrimitives.ReadUInt32LittleEndian(data) == 0x50534845 ? Mode.Particles : Mode.TextureBlit); return;
         }
         if (data.Length < 4 || BinaryPrimitives.ReadUInt32LittleEndian(data) != StoredStageMagic) { SetSPIRV(data); return; }
         if (data.Length < 16 || BinaryPrimitives.ReadUInt32LittleEndian(data.AsSpan(4)) != 1)

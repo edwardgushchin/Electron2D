@@ -8,7 +8,7 @@ public sealed class ShaderIncludeDB : ElectronObject
 {
     private static readonly ShaderIncludeDB SharedInstance = new();
     private readonly Dictionary<string, string> _sources = new(StringComparer.Ordinal);
-    private readonly string[] _names = ["electron2d/color.glslinc", "electron2d/color.hlslinc"];
+    private readonly string[] _names = ["electron2d/color.glslinc", "electron2d/color.hlslinc", "electron2d/particles.glslinc", "electron2d/particles.hlslinc"];
     private ShaderIncludeDB()
     {
         foreach (var name in _names)

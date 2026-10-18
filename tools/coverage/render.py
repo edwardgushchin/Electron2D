@@ -317,7 +317,7 @@ def reason_for_type(item, lookup):
     if name.startswith("VisualShader"):
         return "Blocked", "Trigger: first typed 2D visual-shader graph translation and shader-import slice (ADR 0028)."
     if name in {"GPUParticles2D", "ParticleProcessMaterial"}:
-        return "Blocked", "Trigger: actual GPU particle simulation, process-material shader/data integration, native storage and compute/collision/attractor ownership under ADR 0028. CPUParticles baseline does not provide GPU compute or process-material conversion."
+        return "Blocked", "Trigger: retained GPU particle RID/node simulation, scheduling, process-material generation, canvas output and collision/attractor ownership under ADR 0028. The executable Shader.Mode.Particles import/resource/RenderingDevice profile supplies the process ABI; it does not yet supply retained simulation or CPU conversion."
     if name in {"DirectionalLight2D", "Light2D", "LightOccluder2D", "OccluderPolygon2D", "PointLight2D"}:
         return "Blocked", "Trigger: first 2D light and occlusion renderer slice (ADR 0028)."
     if name in {"BackBufferCopy", "CanvasGroup"}:

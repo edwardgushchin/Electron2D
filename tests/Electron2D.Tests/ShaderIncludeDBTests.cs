@@ -8,11 +8,11 @@ internal static class ShaderIncludeDBTests
     {
         Check(!RenderingServer.IsAvailable, "Library lookup works before a renderer exists.");
         var names = ShaderIncludeDB.ListBuiltInIncludeFiles();
-        Check(names.SequenceEqual(new[] { "electron2d/color.glslinc", "electron2d/color.hlslinc" }), "Portable library names are complete and ordinal.");
+        Check(names.SequenceEqual(new[] { "electron2d/color.glslinc", "electron2d/color.hlslinc", "electron2d/particles.glslinc", "electron2d/particles.hlslinc" }), "Portable library names are complete and ordinal.");
         foreach (var name in names)
         {
             var code = ShaderIncludeDB.GetBuiltInIncludeFile(name);
-            Check(ShaderIncludeDB.HasBuiltInIncludeFile(name) && code.Contains("Electron2D_SRGBToLinear", StringComparison.Ordinal) && code.Contains("Electron2D_LinearToSRGB", StringComparison.Ordinal), "Discovered files contain the actual built-in functions.");
+            Check(ShaderIncludeDB.HasBuiltInIncludeFile(name) && (name.Contains("/color.", StringComparison.Ordinal) ? code.Contains("Electron2D_SRGBToLinear", StringComparison.Ordinal) && code.Contains("Electron2D_LinearToSRGB", StringComparison.Ordinal) : code.Contains("Electron2D_EmitSubparticle", StringComparison.Ordinal) && code.Contains("ParticleFrame", StringComparison.Ordinal)), "Discovered files contain the actual built-in functions.");
             using var resource = new ShaderInclude { Code = code }; Check(resource.Code == code, "Library fragments are ordinary portable include source.");
         }
         names[0] = "modified"; Check(ShaderIncludeDB.ListBuiltInIncludeFiles()[0] == "electron2d/color.glslinc", "Discovery results do not expose retained storage.");

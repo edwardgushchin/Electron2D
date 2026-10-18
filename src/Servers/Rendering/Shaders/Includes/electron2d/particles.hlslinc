@@ -1,0 +1,57 @@
+#ifndef ELECTRON2D_PARTICLES_INCLUDED
+#define ELECTRON2D_PARTICLES_INCLUDED
+
+struct Electron2D_Particle
+{
+    float4 TransformX;
+    float4 TransformY;
+    float4 Color;
+    float4 Custom;
+    float4 VelocityAge;
+    uint4 State;
+};
+
+RWStructuredBuffer<Electron2D_Particle> PARTICLES : register(u0, space1);
+cbuffer ParticleFrame : register(b0, space2)
+{
+    uint4 Counts;
+    float4 Time;
+    float4 Cycle;
+    float4 EmissionX;
+    float4 EmissionY;
+    float4 PreviousEmissionX;
+    float4 PreviousEmissionY;
+    float4 EmitterVelocity;
+    float4 SDFRect;
+    float4 SDFTransformX;
+    float4 SDFTransformY;
+    uint4 Options;
+};
+
+#ifdef ELECTRON2D_PARTICLE_SUBEMISSION
+RWStructuredBuffer<Electron2D_Particle> SUBPARTICLES : register(u1, space1);
+
+bool Electron2D_EmitSubparticle(Electron2D_Particle particle)
+{
+    uint length, stride; SUBPARTICLES.GetDimensions(length, stride);
+    if (length == 0) return false;
+    uint capacity = min(SUBPARTICLES[0].State.y, length - 1);
+    uint expected = 0; InterlockedAdd(SUBPARTICLES[0].State.x, 0, expected);
+    for (;;)
+    {
+        if (expected >= capacity)
+        {
+            InterlockedOr(SUBPARTICLES[0].State.z, 1);
+            return false;
+        }
+        uint observed; InterlockedCompareExchange(SUBPARTICLES[0].State.x, expected, expected + 1, observed);
+        if (observed == expected)
+        {
+            SUBPARTICLES[expected + 1] = particle;
+            return true;
+        }
+        expected = observed;
+    }
+}
+#endif
+#endif

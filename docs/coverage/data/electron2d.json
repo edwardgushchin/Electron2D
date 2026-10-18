@@ -47352,6 +47352,19 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.Shader.Mode.Particles()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Shader.Mode",
+    "name": "Particles",
+    "signature": "public const Electron2D.Shader.Mode Particles = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Shader.Mode",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.Shader.Mode.TextureBlit()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Shader.Mode",

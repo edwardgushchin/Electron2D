@@ -29,12 +29,13 @@
                 var input = source.GetMetadata("FullPath");
                 var stage = source.GetMetadata("Stage");
                 var profile = source.GetMetadata("Profile");
-                if (profile.Length != 0 && profile != "canvas" && profile != "device" && profile != "texture-blit")
-                    throw new ArgumentException(input + ": Profile must be canvas, device or texture-blit.");
-                var device = profile == "device";
+                if (profile.Length != 0 && profile != "canvas" && profile != "device" && profile != "texture-blit" && profile != "particles")
+                    throw new ArgumentException(input + ": Profile must be canvas, device, texture-blit or particles.");
+                var device = profile == "device" || profile == "particles";
+                if (profile == "particles" && stage != "compute") throw new ArgumentException(input + ": Particle programs require a compute stage.");
                 if (profile == "texture-blit" && stage != "fragment") throw new ArgumentException(input + ": Blit programs require a fragment stage.");
                 if (stage != "vertex" && stage != "fragment" && !(device && stage == "compute"))
-                    throw new ArgumentException(input + ": Stage must be vertex/fragment, or compute for Profile=device.");
+                    throw new ArgumentException(input + ": Stage must be vertex/fragment, or compute for Profile=device/particles.");
                 var target = source.GetMetadata("TargetPath");
                 if (target.Length == 0)
                 {
@@ -80,6 +81,7 @@
                     arguments.Add(output.ItemSpec);
                     if (output.GetMetadata("Profile") == "device") arguments.Add("--device");
                     if (output.GetMetadata("Profile") == "texture-blit") arguments.Add("--texture-blit");
+                    if (output.GetMetadata("Profile") == "particles") arguments.Add("--particles");
                     using (var process = Process.Start(start))
                     {
                         if (process == null) throw new InvalidOperationException("Cannot start " + tool);

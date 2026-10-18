@@ -38,3 +38,7 @@ Linux x64 Wayland and X11 software-Vulkan runs pass both-language pixels plus HD
 
 - [Rendering and shader import](../decisions/rendering.md#adr-0028)
 - [Static service access](../decisions/singleton-services.md#adr-0095)
+
+## Particle compute profile
+
+The [particle shader contract](../components/particle-shaders.md) adds compiled HLSL/GLSL compute modules, typed material parameters, portable state/frame/subemission includes and explicit RenderingDevice execution. Process programs preserve their domain through duplication and file graphs and reject canvas/blit submission. Retained emission, particle nodes and canvas output remain separate dependencies.

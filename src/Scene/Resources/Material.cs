@@ -3,7 +3,7 @@ using SDL3;
 
 namespace Electron2D;
 
-/// <summary>A resource selecting how canvas geometry or writable texture pixels are shaded.</summary>
+/// <summary>A resource selecting how canvas geometry, writable texture pixels or particle data are shaded.</summary>
 /// <remarks>Materials are borrowed by nodes; disposing a node
 /// does not dispose shared materials. Three-dimensional render priority and next-pass chains are not supported.</remarks>
 public abstract partial class Material : Resource
@@ -13,19 +13,21 @@ public abstract partial class Material : Resource
     internal MaterialState? RequireCanvasState()
     {
         var state = GetCanvasState();
-        if (this is BlitMaterial || state?.Program.Mode == Shader.Mode.TextureBlit) throw new NotSupportedException("A blit material can only draw into writable textures.");
+        if (state is not null && state.Program.Mode != Shader.Mode.CanvasItem || this is BlitMaterial) throw new NotSupportedException("Canvas drawing requires a canvas material program.");
         return state;
     }
     internal virtual BlendMode GetCanvasBlendMode() => BlendMode.Mix;
 }
 
-/// <summary>Applies a compiled shader to canvas commands or writable-texture blit passes.</summary>
+/// <summary>Applies a compiled shader to canvas commands, writable-texture blit passes or particle data.</summary>
 /// <remarks>A null shader uses normal color drawing. An assigned shader requires the GPU backend, including
 /// an identity shader. Shader resources are borrowed; resource duplication follows the requested graph policy.
 /// Reserved TIME and SCREEN_PIXEL_SIZE uniforms and SCREEN_TEXTURE sampling are filled by the renderer
 /// and excluded from parameter access, stored properties and value migration. Scene lights compose the authored fragment color before blend while preserving discard and parameters.
 /// Normal/specular channels and point masks share the native sixteen-sampler stage capacity; overflow rejects
-/// before drawing. All four fragment uniform-buffer slots remain available; an authored vertex stage has three material slots after its renderer-owned Frame. Matching parameter names share typed values across both stages.</remarks>
+/// before drawing. All four fragment uniform-buffer slots remain available; an authored vertex stage has three material slots after its renderer-owned Frame. Matching parameter names share typed values across both stages. Particle shaders retain the same typed material schema,
+/// with three user buffers after ParticleFrame; they reject canvas and writable-texture draw submission.
+/// Explicit RenderingDevice execution binds its own frame, storage and parameter buffers.</remarks>
 public sealed partial class ShaderMaterial : Material
 {
     private readonly object _gate = new();
@@ -35,7 +37,7 @@ public sealed partial class ShaderMaterial : Material
     /// <summary>Creates a material using ordinary canvas colors.</summary>
     public ShaderMaterial() { }
 
-    /// <summary>Gets or sets the borrowed program applied to canvas geometry or writable-texture fragments.</summary>
+    /// <summary>Gets or sets the borrowed program selecting canvas, writable-texture fragments or particle compute.</summary>
     /// <value>Null by default.</value>
     /// <exception cref="ObjectDisposedException">The material or supplied shader is disposed.</exception>
     public Shader? Shader

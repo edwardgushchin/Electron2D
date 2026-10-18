@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-/// <summary>A compiled canvas or writable-texture fragment program, with optional authored canvas vertices.</summary>
+/// <summary>A compiled canvas, writable-texture fragment or particle compute program.</summary>
 /// <remarks>HLSL and GLSL source is compiled during import or build. Runtime loading checks module structure and
 /// reflected interfaces without compiling source; it does not perform full instruction-level semantic validation.
 /// Paired vertex programs preserve original mesh surface indices through gl_VertexIndex or SV_VertexID,
@@ -21,7 +21,11 @@ namespace Electron2D;
 /// Instance arrays, matrices and renderer-owned fields are rejected; supported declaration defaults are zero.
 /// Material uniforms use validated std140 buffers at descriptor
 /// set three and sampled 2D or image-array textures at set two. Named textures use linear/base-level/clamp sampling, independently
-/// of canvas properties. The paired-stage API adds vertex Frame at set one/binding zero, material blocks at set one/bindings one through three and sampled textures at set zero. Shared names use one typed parameter namespace across stages. Sampler configuration and nested uniform structs remain pending. Blit fragments use the explicit TextureBlit domain and have their own source/output interface.</remarks>
+/// of canvas properties. The paired-stage API adds vertex Frame at set one/binding zero, material blocks at set one/bindings one through three and sampled textures at set zero. Shared names use one typed parameter namespace across stages. Sampler configuration and nested uniform structs remain pending. Blit fragments use the explicit TextureBlit domain and have their own source/output interface.
+/// Particles selects a 64-thread compute stage with fixed particle storage at set one, ParticleFrame at set two/binding zero,
+/// three further typed uniform blocks and up to sixteen sampled bindings at set zero. The portable particle includes define
+/// its state and optional bounded subemission ABI. Export its Compute stage to RenderingDevice for explicit execution;
+/// this resource does not schedule emission or draw particles. It cannot be used for canvas or writable-texture drawing.</remarks>
 public sealed partial class Shader : Resource
 {
     /// <summary>Identifies the supported two-dimensional shader domain.</summary>
@@ -29,6 +33,8 @@ public sealed partial class Shader : Resource
     {
         /// <summary>A shader applied to canvas geometry.</summary>
         CanvasItem = 1,
+        /// <summary>A compute program operating on two-dimensional particle state.</summary>
+        Particles = 2,
         /// <summary>A fragment program drawing into writable textures.</summary>
         TextureBlit = 5,
     }
@@ -43,7 +49,7 @@ public sealed partial class Shader : Resource
     public Shader() { }
 
     /// <summary>Gets this shader's executing domain.</summary>
-    /// <returns>CanvasItem or TextureBlit.</returns>
+    /// <returns>CanvasItem, TextureBlit or Particles.</returns>
     /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>
     public Mode GetMode() => GetProgram().Mode;
 
@@ -89,7 +95,7 @@ public sealed partial class Shader : Resource
     }
 
     /// <summary>Returns an independent copy of this program's compiled SPIR-V bytecode.</summary>
-    /// <returns>The copied fragment payload, suitable for fragment-only loading. Use the stage overload to export an authored vertex module.</returns>
+    /// <returns>The copied fragment payload, suitable for fragment-only loading. Particle programs return their compute module. Use the stage overload to export an authored vertex module.</returns>
     /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>
     public byte[] GetSPIRV() => (byte[])GetProgram().Code.Clone();
 
