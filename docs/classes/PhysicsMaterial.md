@@ -1,6 +1,6 @@
 # PhysicsMaterial
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 **Inherits:** [Resource](Resource.md), ElectronObject
 
@@ -48,7 +48,9 @@ Every successful property assignment raises `Changed`, including an assignment o
 
 ## Lifecycle and verification
 
-The caller retains and disposes the resource. Bodies unsubscribe when replaced, disposed, or after the material is disposed. `PhysicsMaterialOverride = null` restores the default surface. A failed earlier `Disposed` subscriber cannot retain a disposed override: its getter reports null and the next step clears the stale reference. Live material changes recreate fixtures before the next step; continuous contacts may be reestablished by that rebuild. [PhysicsMaterialTests](../../tests/Electron2D.Tests/PhysicsMaterialTests.cs) checks defaults, invalid values, notification failure, duplication, packing, bounce/absorbent mixing, rough friction, live edits, borrowed disposal and 64 warmed resting and active-contact frames each with zero managed allocations on Linux/.NET 8. Native allocator counts, other platforms and visual acceptance remain unverified.
+The caller retains and disposes the resource. Bodies unsubscribe when replaced, disposed, or after the material is disposed. `PhysicsMaterialOverride = null` restores the default surface. A failed earlier `Disposed` subscriber cannot retain a disposed override: its getter reports null and the next step clears the stale reference. Live material changes recreate fixtures before the next step; continuous contacts may be reestablished by that rebuild. [PhysicsMaterialTests](../../tests/Electron2D.Tests/PhysicsMaterialTests.cs) checks defaults, invalid values, notification failure, duplication, packing, bounce/absorbent mixing, rough friction, live edits, borrowed disposal and 64 warmed resting and active-contact frames each with zero owner/all-thread managed allocations on Linux/.NET 10. Native allocator counts, other platforms and visual acceptance remain unverified.
+
+Both allocation brackets first drain pending finalizers, including work queued by the final collection. A controlled second-pass finalizer verifies that preparation. The warmup and measured frame counts stay unchanged, and the first post-collection physical frame is measured. This isolates prior cleanup without excluding any allocation during the bracket. [The current audit](../components/physics-contract-audit.md#material-allocation-measurement) preserves the unresolved earlier whole-suite observation and verification limits.
 
 [ADR 0054](../decisions/physics-backends.md#adr-0054) defines the internal physics backend. [PhysicsMaterial coverage](../coverage/classes/PhysicsMaterial.md) records the reference mapping.
 

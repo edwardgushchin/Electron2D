@@ -1,5 +1,7 @@
 # Physics domain
 
+[Material allocation measurement](../components/physics-contract-audit.md#material-allocation-measurement) now drains pending finalizers before both unchanged 64-frame brackets, with a controlled second-pass check and strict 0/0 owner/all-thread assertions. Tracing proves that framework pool cleanup can contaminate global allocation counters; the earlier owner burst remains unattributed and ordinary full-suite acceptance stays open. Runtime API and the 180-declaration open ledger are unchanged.
+
 [Indexed Body/Area slot edits](../components/physics-shapes.md#indexed-slot-operation-audit) now have a complete registered operation audit, including repeated deferred scene preparation failures and retained owner/child topology. Ten extension rows become Implemented; the current unique physics ledger has 180 open declarations: 149 Partial, 14 Unimplemented and 17 Blocked. Full numerical and native/platform/network/hardware performance acceptance remain open; older counts below are historical.
 
 The latest ordinary frozen `02b3328e` full run failed the CPU resting-material allocation gate at 5600/10256 owner/all-thread bytes. The [current audit](../components/physics-contract-audit.md) retains its exact artifact and unresolved cause; passing slot profiles do not close this full-suite gate.

@@ -1,5 +1,29 @@
 # Physics contract and backend audit
 
+## Material allocation measurement
+
+Material allocation brackets now complete both collection/finalization passes
+before counting. The existing controlled `AllocationWarmupCheck` rejects a barrier
+that returns before the second finalizer pass and verifies the actual material
+preparation. No extra physics warmup, excluded measured frames, allocation tolerance
+or owner/all-thread accounting change is introduced: the first post-collection
+frame remains inside each 64-frame resting/active bracket.
+
+The diagnostic software run of frozen `02b3328e` completed successfully in
+1205.594162259993 seconds. Its 155585822-byte EventPipe trace has zero reported lost
+events and identifies finalizer-thread allocations in
+`GC.GetGCMemoryInfo → System.Buffers.Utilities.GetMemoryPressure → SharedArrayPool.Trim
+→ Gen2GcCallback.Finalize`. A separate process without Electron2D reproduced
+4704 all-thread bytes during forced cleanup while its measured owner code allocated
+zero. This proves a source of counter contamination; it does not identify the
+earlier 5600-byte owner burst or establish that all prior failures had this cause.
+
+Evidence: `bin/physics-material-recurrence/2026-10-18/full-analysis/summary.json` and
+`bin/physics-material-measurement/2026-10-18/validation.json`. The ordinary full-suite
+gate remains open pending a fresh uninstrumented run of the prepared fixture.
+Runtime behavior, public API and coverage states are unchanged; the ledger below
+still has 180 open declarations.
+
 [Indexed Body/Area slot edits](physics-shapes.md#indexed-slot-operation-audit) now have a complete registered operation audit, including repeated deferred scene preparation failures and retained owner/child topology. Ten extension rows become Implemented; the current unique physics ledger has 180 open declarations: 149 Partial, 14 Unimplemented and 17 Blocked. Full numerical and native/platform/network/hardware performance acceptance remain open; older counts below are historical.
 
 The ordinary whole-suite run of frozen `02b3328e` failed after 1076.7619472109945 seconds in the CPU resting-material allocation gate: 5600 owner / 10256 all-thread bytes, with the owner allocation at frame 102. Its `bin/physics-shape-append-audit/2026-10-18/full-ordinary-current/check.json` records exit -6 and no hardware driver. This binary predates the new scene-slot checks. Earlier successful full runs and passing focused checks do not resolve the recurring allocation observation; its cause and the full-suite gate remain open.

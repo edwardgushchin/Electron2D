@@ -4,6 +4,7 @@ internal static class PhysicsMaterialTests
 {
     internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU)
     {
+        AllocationWarmupCheck.Verify(Collect);
         using var material = new PhysicsMaterial();
         Check(material.Friction == 1 && material.Bounce == 0 && !material.Rough && !material.Absorbent,
             "Physics material defaults match the reference surface.");
@@ -154,6 +155,7 @@ internal static class PhysicsMaterialTests
         for (var frame = 0; frame < 90; frame++) tree.PhysicsFrame(1d / 60);
         Check(MathF.Abs(body.LinearVelocity.Y) < 2, "The default material does not bounce a settled body.");
         var frameBytes = new long[64];
+        Collect();
         var allBefore = GC.GetTotalAllocatedBytes(true);
         var before = GC.GetAllocatedBytesForCurrentThread();
         for (var frame = 0; frame < frameBytes.Length; frame++)
@@ -172,6 +174,7 @@ internal static class PhysicsMaterialTests
         var restingAll = allAllocated;
         body.CanSleep = false;
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
+        Collect();
         allBefore = GC.GetTotalAllocatedBytes(true); before = GC.GetAllocatedBytesForCurrentThread();
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
         allocated = GC.GetAllocatedBytesForCurrentThread() - before;
@@ -195,6 +198,8 @@ internal static class PhysicsMaterialTests
         Check(floor.PhysicsMaterialOverride is null, "Disposing a borrowed material restores default surface state.");
         Reject<ObjectDisposedException>(() => floor.PhysicsMaterialOverride = floorMaterial);
     }
+
+    private static void Collect() { GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers(); }
 
     private static void Check(bool condition, string message)
     {
