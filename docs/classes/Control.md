@@ -1,6 +1,6 @@
 # Control
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 **Inherits:** [CanvasItem](CanvasItem.md) → [Node](Node.md) → [ElectronObject](ElectronObject.md)
 
@@ -486,3 +486,7 @@ Null assignment throws `ArgumentNullException`; disposed access throws `ObjectDi
 Reparent preserves the inherited [membership/owner and failure contract](../components/scene-hierarchy.md#membership-and-authoring-ownership), including same-parent lifecycle/capture/thread checks. It restores only global position after possible insertion, even when earlier callbacks failed.
 
 The [complete processing metadata contract](../components/scene-tree.md#complete-processing-metadata-and-callbacks) permits coordinated stored-value reads and current-group writes for all callback switches and priorities. All six public callback switches are stored; internal switches are runtime-only. Actual input remains owner-delivered, and this metadata grants no physical/render/hierarchy mutation.
+
+Logical transform observation permits the scene owner or any active processing group, including shared ancestors and nodes in another group. This covers Entity local/global position, transform, rotation/degrees, scale/skew and pure point, angle and relative-chain queries; concrete Control transforms, combined pivots and derived rectangles follow the same logical chain. Coordinate concurrent writes: separate reads do not form an atomic scene snapshot. Ordinary external or pool jobs receive no group permission. Mutations and numerical/renderer operations retain their separate guards and remaining Partial coverage.
+
+A dirty global matrix is computed through virtual getters outside the retained canvas-item gate. One publisher commits the matrix and clears a volatile invalidation flag under that gate. This preserves later transform notification queueing without concurrent matrix writes or a new per-node lock allocation. [Public concurrent physical consumers](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.GroupTransforms.cs) exercise ordinary and pool-owned trees, mixed ancestry, errors, stable identities and complete moving physics/query intervals with zero warmed managed bytes. Evidence: `bin/physics-group-transforms/2026-10-18/validation.json`. See the [logical observation contract](../components/scene-hierarchy.md#logical-transform-observation-from-processing-groups); full worker authoring and hardware performance remain open.

@@ -2,7 +2,7 @@ namespace Electron2D;
 
 public abstract partial class CanvasItem
 {
-    private readonly object _canvasItemRIDGate = new();
+    private readonly object _canvasItemGate = new();
     private RID _canvasItemRID;
     internal void BindOwnedCanvasIdentity(RID rid) { _canvasItemRID = rid; }
     internal RID AttachedSkeleton { get; private set; }
@@ -10,6 +10,6 @@ public abstract partial class CanvasItem
     /// <returns>A borrowed RID valid until node disposal; renderer FreeRID cannot release scene ownership.</returns>
     /// <exception cref="InvalidOperationException">An attached node is read off-owner.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
-    public RID GetCanvasItem() { lock (_canvasItemRIDGate) { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _canvasItemRID.IsValid() ? _canvasItemRID : _canvasItemRID = RenderingCanvasItemRegistry.Register(this); } }
+    public RID GetCanvasItem() { lock (_canvasItemGate) { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _canvasItemRID.IsValid() ? _canvasItemRID : _canvasItemRID = RenderingCanvasItemRegistry.Register(this); } }
     internal void AttachSkeleton(RID skeleton) { EnsureMutable(); AttachedSkeleton = skeleton; }
 }

@@ -694,3 +694,5 @@ The method remains Partial for nonzero native window identities. Exact dependenc
 ## Rendering changes and low-processor scheduling
 
 [Low-processor rendering](low-processor-rendering.md) connects retained change producers, static RenderingServer.HasChanged, the two OS policies and typed startup settings to Engine.Run/RunAsync. Static output skips submissions while processing and input continue; time-driven drawing and capture retain their executing consumers. Verification limits remain explicit in the component.
+
+[Logical transform observation](scene-hierarchy.md#logical-transform-observation-from-processing-groups) now permits active groups to read local/global Entity and Control chains, including inherited physical nodes. Shared dirty matrices publish under the retained canvas-item gate after virtual getters return; notification coalescing, ordinary-worker rejection and owner mutation guards remain distinct. Public parallel ordinary/pool-host physics consumers verify the bounded read contract. General worker mutation remains Partial.

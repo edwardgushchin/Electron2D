@@ -1,6 +1,6 @@
 # Entity
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 **Inherits:** [CanvasItem](CanvasItem.md)
 
@@ -20,9 +20,9 @@ A concrete spatial canvas item with engine-owned Vector2 and Transform values. P
 
 The pinned `Node2D` scale and local-axis slice has managed Linux/.NET 8 behavioral coverage for five members. Setting local or global scale replaces components with magnitude below `1e-5` by positive `1e-5`; global scale preserves the directions of reflected basis axes before converting through the parent. Assigning a raw `Transform` can still store a singular basis. `MoveLocalX` and `MoveLocalY` normalize nonzero basis axes with representable squared length unless `scaled` is true; a zero axis still assigns the unchanged position and emits enabled local notification. The coordinate and angle slices complete the declared spatial member audit.
 
-The coordinate slice audits nine more mapped members. `GlobalPosition` converts only the point through the direct canvas parent's inverse, preserving the local basis exactly; `GlobalTranslate` uses the same setter. Local `Translate` adds in parent coordinates. `Transform` and `GlobalTransform` retain raw finite matrices, including a singular local basis; `ToLocal` requires an invertible global basis. `GetRelativeTransformToParent` multiplies the uninterrupted spatial chain across `TopLevel`, with the typed invalid-ancestor boundary in ADR 0008. Attached reads enforce the scene owner thread. The angle slice closes the remaining members and the type row.
+The coordinate slice audits nine more mapped members. `GlobalPosition` converts only the point through the direct canvas parent's inverse, preserving the local basis exactly; `GlobalTranslate` uses the same setter. Local `Translate` adds in parent coordinates. `Transform` and `GlobalTransform` retain raw finite matrices, including a singular local basis; `ToLocal` requires an invertible global basis. `GetRelativeTransformToParent` multiplies the uninterrupted spatial chain across `TopLevel`, with the typed invalid-ancestor boundary in ADR 0008. Attached logical reads permit the scene owner or any active processing group, with coordinated writes. These owner-side numeric slices retain separate Partial coverage for the missing own-group authoring path.
 
-The final angle slice preserves local scale, skew and position when setting global rotation, and preserves local rotation, scale and position when setting global skew under nonuniform or reflected parents. `GetAngleTo` inverse-transforms and scale-compensates a global target; `LookAt` adds that angle to local rotation, including a zero angle at the current origin. Signed degrees, singular and non-finite failures, owner-thread precedence, stored spatial state and zero warmed managed allocations are checked on Linux/.NET 8. Native ABI, other platforms and visual owner acceptance remain unverified.
+The final angle slice preserves local scale, skew and position when setting global rotation, and preserves local rotation, scale and position when setting global skew under nonuniform or reflected parents. `GetAngleTo` inverse-transforms and scale-compensates a global target; `LookAt` adds that angle to local rotation, including a zero angle at the current origin. Signed degrees, singular and non-finite failures, read-context and mutation-owner precedence, stored spatial state and zero warmed managed allocations are checked on Linux/.NET 8. Native ABI, other platforms and visual owner acceptance remain unverified.
 
 ## Examples
 
@@ -98,7 +98,7 @@ Gets or sets translation in hierarchy-global coordinates.
 
 **System.ArgumentOutOfRangeException:** An assigned component is NaN or infinite.
 
-**System.InvalidOperationException:** The parent transform is singular, or an attached node is read or mutated off the owner thread.
+**System.InvalidOperationException:** The parent transform is singular, or an attached read is outside the owner/processing groups or mutation is off-owner.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
@@ -115,7 +115,7 @@ Gets or sets hierarchy-global rotation in radians.
 
 **System.ArgumentOutOfRangeException:** The assigned angle is NaN or infinite.
 
-**System.InvalidOperationException:** The parent transform is singular, or an attached node is read or mutated off the owner thread.
+**System.InvalidOperationException:** The parent transform is singular, or an attached read is outside the owner/processing groups or mutation is off-owner.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
@@ -130,7 +130,7 @@ Gets or sets hierarchy-global rotation in degrees.
 
 **System.ArgumentOutOfRangeException:** The assigned angle is NaN or infinite.
 
-**System.InvalidOperationException:** The parent transform is singular, or an attached node is read or mutated off the owner thread.
+**System.InvalidOperationException:** The parent transform is singular, or an attached read is outside the owner/processing groups or mutation is off-owner.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
@@ -147,7 +147,7 @@ Gets or sets hierarchy-global scale.
 
 **System.ArgumentOutOfRangeException:** An assigned component is NaN or infinite.
 
-**System.InvalidOperationException:** The parent transform is singular, or an attached node is read or mutated off the owner thread.
+**System.InvalidOperationException:** The parent transform is singular, or an attached read is outside the owner/processing groups or mutation is off-owner.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
@@ -164,7 +164,7 @@ Gets or sets the hierarchy-global skew angle in radians.
 
 **System.ArgumentOutOfRangeException:** The assigned angle is NaN or infinite.
 
-**System.InvalidOperationException:** The parent transform is singular, or an attached node is read or mutated off the owner thread.
+**System.InvalidOperationException:** The parent transform is singular, or an attached read is outside the owner/processing groups or mutation is off-owner.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
@@ -179,7 +179,7 @@ Gets or sets the affine transform in hierarchy-global coordinates.
 
 **System.ArgumentOutOfRangeException:** An assigned transform component is NaN or infinite.
 
-**System.InvalidOperationException:** The parent transform is singular, or an attached node is read or mutated off the owner thread.
+**System.InvalidOperationException:** The parent transform is singular, or an attached read is outside the owner/processing groups or mutation is off-owner.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
@@ -194,7 +194,7 @@ Gets or sets local translation in pixels or other host-defined 2D units.
 
 **System.ArgumentOutOfRangeException:** An assigned component is NaN or infinite.
 
-**System.InvalidOperationException:** An attached node is read or mutated off the owner thread.
+**System.InvalidOperationException:** An attached read is outside the owner/processing groups, or mutation is off-owner.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -209,7 +209,7 @@ Gets or sets local rotation in radians.
 
 **System.ArgumentOutOfRangeException:** The assigned angle is NaN or infinite.
 
-**System.InvalidOperationException:** An attached node is read or mutated off the owner thread.
+**System.InvalidOperationException:** An attached read is outside the owner/processing groups, or mutation is off-owner.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -224,7 +224,7 @@ Gets or sets local rotation in degrees.
 
 **System.ArgumentOutOfRangeException:** The assigned angle is NaN or infinite.
 
-**System.InvalidOperationException:** An attached node is read or mutated off the owner thread.
+**System.InvalidOperationException:** An attached read is outside the owner/processing groups, or mutation is off-owner.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -241,7 +241,7 @@ Gets or sets local scale.
 
 **System.ArgumentOutOfRangeException:** An assigned component is NaN or infinite.
 
-**System.InvalidOperationException:** An attached node is read or mutated off the owner thread.
+**System.InvalidOperationException:** An attached read is outside the owner/processing groups, or mutation is off-owner.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -256,7 +256,7 @@ Gets or sets the local skew angle in radians.
 
 **System.ArgumentOutOfRangeException:** The assigned angle is NaN or infinite.
 
-**System.InvalidOperationException:** An attached node is read or mutated off the owner thread.
+**System.InvalidOperationException:** An attached read is outside the owner/processing groups, or mutation is off-owner.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -308,7 +308,7 @@ Computes the signed local angle toward a global point, compensating for local sc
 
 **Returns:** The angle of the inverse-transformed point multiplied by local scale, in radians.
 
-**System.InvalidOperationException:** The global transform is singular, or an attached node is queried off the owner thread.
+**System.InvalidOperationException:** The global transform is singular, or an attached query is outside the owner/processing groups.
 
 **System.ArgumentOutOfRangeException:** A point component is NaN or infinite.
 
@@ -334,7 +334,7 @@ Returns the product of local transforms up to a spatial ancestor.
 
 **System.ArgumentException:** `parent` is not connected by an uninterrupted spatial-parent chain.
 
-**System.InvalidOperationException:** An attached node is queried off the scene owner thread.
+**System.InvalidOperationException:** An attached query is outside the owner/processing groups.
 
 **System.ObjectDisposedException:** This node, `parent`, or a queried ancestor is disposing on another thread or has finished disposing.
 
@@ -444,7 +444,7 @@ Transforms a point from this node's local coordinates to hierarchy-global coordi
 
 **System.ArgumentOutOfRangeException:** A point component is NaN or infinite.
 
-**System.InvalidOperationException:** An attached node is queried off the owner thread.
+**System.InvalidOperationException:** An attached query is outside the owner/processing groups.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
@@ -459,7 +459,7 @@ Transforms a point from hierarchy-global coordinates to this node's local coordi
 
 **System.ArgumentOutOfRangeException:** A point component is NaN or infinite.
 
-**System.InvalidOperationException:** The global transform is singular, or an attached node is queried off the owner thread.
+**System.InvalidOperationException:** The global transform is singular, or an attached query is outside the owner/processing groups.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
@@ -510,3 +510,7 @@ Inherited transform setters on a physics body reject during a borrowed numerical
 Reparent preserves the inherited [membership/owner and failure contract](../components/scene-hierarchy.md#membership-and-authoring-ownership). Its validated inverse and final transform restoration complete around callback-failed insertion; the neutral base owns topology, borrowed authoring metadata and error collection.
 
 The [complete processing metadata contract](../components/scene-tree.md#complete-processing-metadata-and-callbacks) permits coordinated stored-value reads and current-group writes for all callback switches and priorities. All six public callback switches are stored; internal switches are runtime-only. Actual input remains owner-delivered, and this metadata grants no physical/render/hierarchy mutation.
+
+Logical transform observation permits the scene owner or any active processing group, including shared ancestors and nodes in another group. This covers Entity local/global position, transform, rotation/degrees, scale/skew and pure point, angle and relative-chain queries; concrete Control transforms, combined pivots and derived rectangles follow the same logical chain. Coordinate concurrent writes: separate reads do not form an atomic scene snapshot. Ordinary external or pool jobs receive no group permission. Mutations and numerical/renderer operations retain their separate guards and remaining Partial coverage.
+
+A dirty global matrix is computed through virtual getters outside the retained canvas-item gate. One publisher commits the matrix and clears a volatile invalidation flag under that gate. This preserves later transform notification queueing without concurrent matrix writes or a new per-node lock allocation. [Public concurrent physical consumers](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.GroupTransforms.cs) exercise ordinary and pool-owned trees, mixed ancestry, errors, stable identities and complete moving physics/query intervals with zero warmed managed bytes. Evidence: `bin/physics-group-transforms/2026-10-18/validation.json`. See the [logical observation contract](../components/scene-hierarchy.md#logical-transform-observation-from-processing-groups); full worker authoring and hardware performance remain open.

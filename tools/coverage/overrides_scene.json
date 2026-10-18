@@ -200,7 +200,7 @@
     {
       "godot": "Control::method:get_combined_pivot_offset()",
       "electron2d": "method:Electron2D.Control.GetCombinedPivotOffset()",
-      "reason": "Absolute pivot plus current-size relative pivot under the typed Control transform."
+      "reason": "ADR 0008: owner or any active process-group thread may observe logical Entity/CanvasItem/Control transforms, including foreign-group ancestors and physical nodes; coordinate concurrent writes. All local/global spatial getters, point/angle/relative-chain queries, Control pivot/offset/rectangles preserve owner results. Shared dirty global matrices compute through virtual getters outside the retained canvas-item gate, then publish once and clear a volatile invalidation flag under that gate; reads preserve subsequent notification queueing. Public CPU/software-Vulkan/registered ordinary/pool-host owner/separate root/JIT/strict NativeAOT consumers check two concurrent readers, mixed/TopLevel/neutral ancestry, errors/lifetime, ordinary-worker rejection, actual physical motion/identity/queries and128 complete intervals at0/0 managed bytes. Evidence: bin/physics-group-transforms/2026-10-18/validation.json. General worker authoring remains separately Partial; no atomic scene snapshot or hardware performance acceptance is implied."
     },
     {
       "godot": "Control::method:get_begin()",
@@ -418,7 +418,7 @@
       "electron2d": "method:Electron2D.Control.GetGlobalRect()",
       "godot": "Control::method:get_global_rect()",
       "state": "Partial",
-      "reason": "Control rectangle query uses the composed canvas transform and current layout size; rotation and layout-direction parity remain to audit."
+      "reason": "ADR 0008: owner or any active process-group thread may observe logical Entity/CanvasItem/Control transforms, including foreign-group ancestors and physical nodes; coordinate concurrent writes. All local/global spatial getters, point/angle/relative-chain queries, Control pivot/offset/rectangles preserve owner results. Shared dirty global matrices compute through virtual getters outside the retained canvas-item gate, then publish once and clear a volatile invalidation flag under that gate; reads preserve subsequent notification queueing. Public CPU/software-Vulkan/registered ordinary/pool-host owner/separate root/JIT/strict NativeAOT consumers check two concurrent readers, mixed/TopLevel/neutral ancestry, errors/lifetime, ordinary-worker rejection, actual physical motion/identity/queries and128 complete intervals at0/0 managed bytes. Evidence: bin/physics-group-transforms/2026-10-18/validation.json. General worker authoring remains separately Partial; no atomic scene snapshot or hardware performance acceptance is implied."
     },
     {
       "electron2d": "method:Electron2D.Control.GetParentAreaSize()",
@@ -436,7 +436,7 @@
       "electron2d": "method:Electron2D.Control.GetRect()",
       "godot": "Control::method:get_rect()",
       "state": "Partial",
-      "reason": "Local transformed origin and scale are executable; rotation and layout-direction parity remain to audit."
+      "reason": "ADR 0008: owner or any active process-group thread may observe logical Entity/CanvasItem/Control transforms, including foreign-group ancestors and physical nodes; coordinate concurrent writes. All local/global spatial getters, point/angle/relative-chain queries, Control pivot/offset/rectangles preserve owner results. Shared dirty global matrices compute through virtual getters outside the retained canvas-item gate, then publish once and clear a volatile invalidation flag under that gate; reads preserve subsequent notification queueing. Public CPU/software-Vulkan/registered ordinary/pool-host owner/separate root/JIT/strict NativeAOT consumers check two concurrent readers, mixed/TopLevel/neutral ancestry, errors/lifetime, ordinary-worker rejection, actual physical motion/identity/queries and128 complete intervals at0/0 managed bytes. Evidence: bin/physics-group-transforms/2026-10-18/validation.json. General worker authoring remains separately Partial; no atomic scene snapshot or hardware performance acceptance is implied."
     },
     {
       "electron2d": "constant:Electron2D.CanvasItem.MaximumZIndex()",
@@ -1726,19 +1726,19 @@
       "electron2d": "method:Electron2D.CanvasItem.GetTransform()",
       "godot": "CanvasItem::method:get_transform()",
       "state": "Partial",
-      "reason": "Abstract local transform query owned by CanvasItem; SceneHierarchyTests exercises a direct CanvasItem subtype and a Entity child."
+      "reason": "ADR 0008: owner or any active process-group thread may observe logical Entity/CanvasItem/Control transforms, including foreign-group ancestors and physical nodes; coordinate concurrent writes. All local/global spatial getters, point/angle/relative-chain queries, Control pivot/offset/rectangles preserve owner results. Shared dirty global matrices compute through virtual getters outside the retained canvas-item gate, then publish once and clear a volatile invalidation flag under that gate; reads preserve subsequent notification queueing. Public CPU/software-Vulkan/registered ordinary/pool-host owner/separate root/JIT/strict NativeAOT consumers check two concurrent readers, mixed/TopLevel/neutral ancestry, errors/lifetime, ordinary-worker rejection, actual physical motion/identity/queries and128 complete intervals at0/0 managed bytes. Evidence: bin/physics-group-transforms/2026-10-18/validation.json. General worker authoring remains separately Partial; no atomic scene snapshot or hardware performance acceptance is implied."
     },
     {
       "electron2d": "method:Electron2D.Entity.GetTransform()",
       "godot": "CanvasItem::method:get_transform()",
       "state": "Partial",
-      "reason": "Entity supplies the concrete spatial transform for the inherited CanvasItem query."
+      "reason": "ADR 0008: owner or any active process-group thread may observe logical Entity/CanvasItem/Control transforms, including foreign-group ancestors and physical nodes; coordinate concurrent writes. All local/global spatial getters, point/angle/relative-chain queries, Control pivot/offset/rectangles preserve owner results. Shared dirty global matrices compute through virtual getters outside the retained canvas-item gate, then publish once and clear a volatile invalidation flag under that gate; reads preserve subsequent notification queueing. Public CPU/software-Vulkan/registered ordinary/pool-host owner/separate root/JIT/strict NativeAOT consumers check two concurrent readers, mixed/TopLevel/neutral ancestry, errors/lifetime, ordinary-worker rejection, actual physical motion/identity/queries and128 complete intervals at0/0 managed bytes. Evidence: bin/physics-group-transforms/2026-10-18/validation.json. General worker authoring remains separately Partial; no atomic scene snapshot or hardware performance acceptance is implied."
     },
     {
       "electron2d": "method:Electron2D.CanvasItem.GetGlobalTransform()",
       "godot": "CanvasItem::method:get_global_transform()",
       "state": "Implemented",
-      "reason": "Pinned canvas_item.cpp/.h, node_2d.cpp and scene_tree.cpp audit: cached global composition, valid-to-invalid queueing, initial entry regardless of policy, attached-only synchronous local delivery, enabling resolves state, disabling retains pending entry, force removes only its receiver before notifying and does not resolve invalidation. Typed getter/setter properties and events preserve notification roles under ADR 0008. CanvasTransformNotificationTests covers defaults, equal assignments, hierarchy/cache, force, cancellation/rollback, failures/reentry, phase order, owner/capture/disposal and zero warm allocation. Camera/Path and native Wayland GPU/compatibility, HLSL/GLSL and dummy checks exercise consumers. Pending-list order matches the native loop: appends behind a pending successor can run in the current pass; tail additions wait. Cancellation advances the saved cursor and exceptions continue delivery under ADR 0011. See docs/components/scene-hierarchy.md#transform-invalidation-and-delivery. Physics interpolation remains a separate domain dependency; other native platforms unverified."
+      "reason": "ADR 0008: owner or any active process-group thread may observe logical Entity/CanvasItem/Control transforms, including foreign-group ancestors and physical nodes; coordinate concurrent writes. All local/global spatial getters, point/angle/relative-chain queries, Control pivot/offset/rectangles preserve owner results. Shared dirty global matrices compute through virtual getters outside the retained canvas-item gate, then publish once and clear a volatile invalidation flag under that gate; reads preserve subsequent notification queueing. Public CPU/software-Vulkan/registered ordinary/pool-host owner/separate root/JIT/strict NativeAOT consumers check two concurrent readers, mixed/TopLevel/neutral ancestry, errors/lifetime, ordinary-worker rejection, actual physical motion/identity/queries and128 complete intervals at0/0 managed bytes. Evidence: bin/physics-group-transforms/2026-10-18/validation.json. General worker authoring remains separately Partial; no atomic scene snapshot or hardware performance acceptance is implied."
     },
     {
       "electron2d": "method:Electron2D.Entity.Reparent(Electron2D.Node,System.Boolean)",
@@ -6048,7 +6048,7 @@
     {
       "electron2d": "method:Electron2D.Control.GetTransform()",
       "state": "Partial",
-      "reason": "Control override supplies the inherited CanvasItem local-transform query with pivot, rotation and scale; full transform parity remains to audit."
+      "reason": "ADR 0008: owner or any active process-group thread may observe logical Entity/CanvasItem/Control transforms, including foreign-group ancestors and physical nodes; coordinate concurrent writes. All local/global spatial getters, point/angle/relative-chain queries, Control pivot/offset/rectangles preserve owner results. Shared dirty global matrices compute through virtual getters outside the retained canvas-item gate, then publish once and clear a volatile invalidation flag under that gate; reads preserve subsequent notification queueing. Public CPU/software-Vulkan/registered ordinary/pool-host owner/separate root/JIT/strict NativeAOT consumers check two concurrent readers, mixed/TopLevel/neutral ancestry, errors/lifetime, ordinary-worker rejection, actual physical motion/identity/queries and128 complete intervals at0/0 managed bytes. Evidence: bin/physics-group-transforms/2026-10-18/validation.json. General worker authoring remains separately Partial; no atomic scene snapshot or hardware performance acceptance is implied."
     },
     {
       "electron2d": "method:Electron2D.Control.OnNotification(System.Int32)",
@@ -8530,7 +8530,6 @@
     },
     {
       "godot": [
-        "Control::method:get_combined_pivot_offset()",
         "Control::property:pivot_offset_ratio"
       ],
       "state": "Implemented",
@@ -9042,90 +9041,6 @@
       "reason": "Pinned MoveToFront moves an attached child to the last sibling slot; a root is unchanged. SceneHierarchyTests checks one order notification, already-last no-op, committed order after callback failure and attached owner-thread rejection, including a root. CanvasOrderingTests verifies the final sibling on a Y tie in 31 Wayland compatibility/GPU pixel cases. Detached nodes follow ordinary Node owner-free rules under ADR 0008.",
       "godot": [
         "CanvasItem::method:move_to_front()"
-      ]
-    },
-    {
-      "state": "Implemented",
-      "reason": "All 23 declared Node2D members and the Entity type role have pinned node_2d.cpp/Transform2D, ADR 0008/0029/0034 and managed Linux/.NET 8 audits in VerifyNodeHierarchyAndTransforms, SceneHierarchyTests and CanvasTransformNotificationTests. Stored Position/RotationDegrees/Scale/Skew survive PackedScene; warmed detached angle operations allocate zero managed bytes. Inherited Node/CanvasItem rows, native ABI, other platforms and visual owner acceptance remain separate.",
-      "godot": [
-        "class:Node2D"
-      ]
-    },
-    {
-      "state": "Implemented",
-      "reason": "Pinned Node2D local rotation, degree conversion, skew and Rotate use decomposed local transform components and commit through the common transform notification path. VerifyNodeHierarchyAndTransforms checks identity defaults, signed degrees, additive radians, preservation of other local components, finite failures, owner-thread precedence and packed-scene storage on Linux/.NET 8.",
-      "godot": [
-        "Node2D::property:rotation",
-        "Node2D::property:rotation_degrees",
-        "Node2D::property:skew",
-        "Node2D::method:rotate(float:)"
-      ]
-    },
-    {
-      "state": "Implemented",
-      "reason": "Pinned Node2D global setters modify a temporary global basis, invert through a direct canvas parent, then assign only local Rotation or Skew. VerifyNodeHierarchyAndTransforms checks oblique and reflected parents, local scale/skew/rotation/position preservation, degree conversion, singular-parent rollback and invalid finite inputs on Linux/.NET 8.",
-      "godot": [
-        "Node2D::property:global_rotation",
-        "Node2D::property:global_rotation_degrees",
-        "Node2D::property:global_skew"
-      ]
-    },
-    {
-      "state": "Implemented",
-      "reason": "Pinned GetAngleTo computes angle of ToLocal(target) component-multiplied by local Scale; LookAt adds that angle to local Rotation. VerifyNodeHierarchyAndTransforms checks skewed/reflected bases, scale compensation, coincident-target zero angle with local notification, preserved scale/skew, singular inverse failure, finite rejection and attached owner-thread precedence on Linux/.NET 8.",
-      "godot": [
-        "Node2D::method:get_angle_to(Vector2:)",
-        "Node2D::method:look_at(Vector2:)"
-      ]
-    },
-    {
-      "state": "Implemented",
-      "reason": "Pinned Node2D set_position/translate write only the local origin in parent coordinates. VerifyNodeHierarchyAndTransforms and CanvasTransformNotificationTests cover identity default, preserved basis, parent-space offset, finite validation, owner thread and equal-assignment notifications on Linux/.NET 8.",
-      "godot": [
-        "Node2D::property:position",
-        "Node2D::method:translate(Vector2:)"
-      ]
-    },
-    {
-      "state": "Implemented",
-      "reason": "Pinned Node2D set_global_position inverse-transforms only the requested point through the direct canvas parent; GlobalTranslate adds a world-space offset through that setter. VerifyNodeHierarchyAndTransforms checks an oblique parent without local basis drift, TopLevel, singular-parent failure and invalid rollback on Linux/.NET 8.",
-      "godot": [
-        "Node2D::property:global_position",
-        "Node2D::method:global_translate(Vector2:)"
-      ]
-    },
-    {
-      "state": "Implemented",
-      "reason": "Pinned local/global transform and to_local/to_global formulas use direct affine matrices and the parent inverse. VerifyNodeHierarchyAndTransforms, SceneHierarchyTests and CanvasTransformNotificationTests cover nonorthogonal round trips, top-level/neutral chains, raw singular local matrices, parent inverse failure, finite validation and committed notifications on Linux/.NET 8.",
-      "godot": [
-        "Node2D::property:transform",
-        "Node2D::property:global_transform",
-        "Node2D::method:to_local(Vector2:)",
-        "Node2D::method:to_global(Vector2:)"
-      ]
-    },
-    {
-      "state": "Implemented",
-      "reason": "Pinned Node2D relative query multiplies local matrices through a direct spatial-parent chain, including across TopLevel. VerifyNodeHierarchyAndTransforms and SceneHierarchyTests check self identity, direct and multi-level products, neutral boundary, typed null/disposed/unconnected errors and attached owner-thread access. The managed error adaptation is accepted in ADR 0008; Linux/.NET 8 only.",
-      "godot": [
-        "Node2D::method:get_relative_transform_to_parent(Node:)"
-      ]
-    },
-    {
-      "state": "Implemented",
-      "reason": "Pinned Node2D scale setters replace components with magnitude below native CMP_EPSILON (1e-5) by positive 1e-5 after parent conversion; ApplyScale reuses the local setter. GlobalScale scales the existing global basis columns before inverse conversion, retaining reflection. VerifyNodeHierarchyAndTransforms checks zero/negative-near-zero ratios, reflected/nonuniform parents, invalid rollback and direct raw Transform singularity on Linux/.NET 8. Other-platform native behavior remains unverified.",
-      "godot": [
-        "Node2D::property:scale",
-        "Node2D::property:global_scale",
-        "Node2D::method:apply_scale(Vector2:)"
-      ]
-    },
-    {
-      "state": "Implemented",
-      "reason": "Pinned move_x/move_y normalize the local basis axis unless scaled=true, then always assign Position even for a zero or squared-length-underflow axis. VerifyNodeHierarchyAndTransforms checks tiny, zero, scaled and unscaled X/Y axes, synchronous local notification, invalid delta rollback and Linux/.NET 8 behavior.",
-      "godot": [
-        "Node2D::method:move_local_x(float:,bool:)",
-        "Node2D::method:move_local_y(float:,bool:)"
       ]
     },
     {
@@ -10546,7 +10461,6 @@
         "CanvasItem::method:set_notify_local_transform(bool:)",
         "CanvasItem::method:is_transform_notification_enabled()",
         "CanvasItem::method:set_notify_transform(bool:)",
-        "CanvasItem::method:get_global_transform()",
         "CanvasItem::method:force_update_transform()"
       ]
     },
@@ -11948,6 +11862,47 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0006/0011/0051/0104: stored signed group order and Process1/Physics2/All3 mask (zero valid) preserve defaults, descriptors, packed/fresh-file round trips and actual selected group execution. Owner/current-group writes work on neutral, spatial, UI, body, Area and collision-shape descendants; reads require caller coordination. Changed order starts next captured frame; masks affect later message-only eligibility without interrupting active FIFO drains. Invalid flags, foreign groups, capture/disposal and derived validation reject before mutation; role rebind/hierarchy/render/numerical writes retain their separate guards. Nested synchronous pool helpers preserve the physical worker active group, their own task/group IDs and immediate versus deferred delivery through success/failure; later ordinary jobs have no group permission. Public CPU/software-Vulkan/registered owner/separate JIT and strict NativeAOT profiles exercise actual motion/query/identity and 128 complete warmed frames at zero owner/all-thread managed bytes. Evidence: bin/physics-group-context/2026-10-18/validation.json. Full inherited worker Node/CanvasItem/Entity and physical mutation remain separately Partial; hardware/native-performance acceptance is not established."
+    },
+    {
+      "godot": [
+        "CanvasItem::method:get_global_transform()",
+        "CanvasItem::method:get_transform()",
+        "Control::method:get_combined_pivot_offset()",
+        "Control::method:get_global_rect()",
+        "Control::method:get_rect()",
+        "Node2D::method:get_angle_to(Vector2:)",
+        "Node2D::method:get_relative_transform_to_parent(Node:)",
+        "Node2D::method:to_global(Vector2:)",
+        "Node2D::method:to_local(Vector2:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0008: owner or any active process-group thread may observe logical Entity/CanvasItem/Control transforms, including foreign-group ancestors and physical nodes; coordinate concurrent writes. All local/global spatial getters, point/angle/relative-chain queries, Control pivot/offset/rectangles preserve owner results. Shared dirty global matrices compute through virtual getters outside the retained canvas-item gate, then publish once and clear a volatile invalidation flag under that gate; reads preserve subsequent notification queueing. Public CPU/software-Vulkan/registered ordinary/pool-host owner/separate root/JIT/strict NativeAOT consumers check two concurrent readers, mixed/TopLevel/neutral ancestry, errors/lifetime, ordinary-worker rejection, actual physical motion/identity/queries and128 complete intervals at0/0 managed bytes. Evidence: bin/physics-group-transforms/2026-10-18/validation.json. General worker authoring remains separately Partial; no atomic scene snapshot or hardware performance acceptance is implied."
+    },
+    {
+      "godot": [
+        "Node2D::method:apply_scale(Vector2:)",
+        "Node2D::method:global_translate(Vector2:)",
+        "Node2D::method:look_at(Vector2:)",
+        "Node2D::method:move_local_x(float:,bool:)",
+        "Node2D::method:move_local_y(float:,bool:)",
+        "Node2D::method:rotate(float:)",
+        "Node2D::method:translate(Vector2:)",
+        "Node2D::property:global_position",
+        "Node2D::property:global_rotation",
+        "Node2D::property:global_rotation_degrees",
+        "Node2D::property:global_scale",
+        "Node2D::property:global_skew",
+        "Node2D::property:global_transform",
+        "Node2D::property:position",
+        "Node2D::property:rotation",
+        "Node2D::property:rotation_degrees",
+        "Node2D::property:scale",
+        "Node2D::property:skew",
+        "Node2D::property:transform",
+        "class:Node2D"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0008: owner or any active process-group thread may observe logical Entity/CanvasItem/Control transforms, including foreign-group ancestors and physical nodes; coordinate concurrent writes. All local/global spatial getters, point/angle/relative-chain queries, Control pivot/offset/rectangles preserve owner results. Shared dirty global matrices compute through virtual getters outside the retained canvas-item gate, then publish once and clear a volatile invalidation flag under that gate; reads preserve subsequent notification queueing. Public CPU/software-Vulkan/registered ordinary/pool-host owner/separate root/JIT/strict NativeAOT consumers check two concurrent readers, mixed/TopLevel/neutral ancestry, errors/lifetime, ordinary-worker rejection, actual physical motion/identity/queries and128 complete intervals at0/0 managed bytes. Evidence: bin/physics-group-transforms/2026-10-18/validation.json. General worker authoring remains separately Partial; no atomic scene snapshot or hardware performance acceptance is implied. Existing owner-side finite/singular/scale/angle/placement behavior remains implemented. Missing: own-group transform setters and mutating helpers still require the scene owner, including physical descendants. Trigger: implement safe scene/render invalidation and physical authoring publication/synchronization, preserve immediate observations and callback/error semantics, then exercise that complete path on both backends. This is an implementation gap, not an accepted exclusion."
     }
   ]
 }

@@ -57,7 +57,7 @@ Godot's object surface includes deferred calls and queued deletion, but both req
 <a id="adr-0008"></a>
 ## ADR 0008: Preserve scene inheritance with Node and Entity names
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 - Status: Accepted by the user on 2026-09-23.
 - Scope: Scene inheritance, type naming, and preservation of the corresponding API and responsibilities.
@@ -145,7 +145,9 @@ Disposing/collected nodes are absent, independently of physical space attachment
 These are cold nearby observations rather than atomic or zero-allocation scene
 snapshots; they do not inspect a numerical backend or introduce script binding.
 
-`Entity.GetRelativeTransformToParent` preserves the source's ordered local-transform product through a direct spatial-parent chain, including across `TopLevel`. A null, disposed or unconnected ancestor fails with a typed C# exception instead of the native diagnostic plus identity fallback, because identity is also the valid result for a self query. Attached queries enforce the scene owner thread. This error adaptation does not change valid hierarchy results.
+`Entity.GetRelativeTransformToParent` preserves the source's ordered local-transform product through a direct spatial-parent chain, including across `TopLevel`. A null, disposed or unconnected ancestor fails with a typed C# exception instead of the native diagnostic plus identity fallback, because identity is also the valid result for a self query. Attached queries permit the scene owner or an active processing-group thread. This error adaptation does not change valid hierarchy results.
+
+Logical Entity transform getters and pure ToLocal/ToGlobal/GetAngleTo/GetRelativeTransformToParent queries permit reads from the scene owner or any active processing group, including ancestors and other groups. CanvasItem.GetGlobalTransform and concrete Entity/Control.GetTransform preserve that read policy; Control combined-pivot and derived rectangle reads follow the same logical chain. Callers coordinate concurrent writes; separate reads are not an atomic scene snapshot. Ordinary external/pool work has no group permission. Global cache calculations and virtual transform getters run outside the existing canvas-item gate; one publisher commits the matrix and clears the volatile invalidation flag under that gate. This retains notification coalescing and avoids concurrent writes to a shared dirty cache without new per-node allocation. Mutation, notification forcing, hierarchy, renderer/backend queries and numerical state keep their separate guards; broad worker mutation remains Partial.
 
 `CanvasItem.ZIndex` retains the pinned -4096 through 4096 range. An out-of-range assignment throws `ArgumentOutOfRangeException` and preserves the prior value instead of reporting a native diagnostic and returning. Valid assignments, including equal values, request configuration-warning refresh. Attached Z/order reads and `MoveToFront` enforce the scene owner thread; detached nodes have no bound scene owner and use ordinary `Node` sibling-order rules.
 

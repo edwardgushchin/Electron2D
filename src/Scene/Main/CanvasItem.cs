@@ -42,12 +42,12 @@ public abstract partial class CanvasItem : Node
     }
 
     internal readonly LinkedListNode<CanvasItem> TransformQueueEntry;
-    private bool _globalTransformInvalid = true;
+    private volatile bool _globalTransformInvalid = true;
     private Transform _globalTransform;
 
     /// <summary>Returns the local transform supplied by this item's placement model.</summary>
     /// <returns>The transform relative to the direct canvas parent.</returns>
-    /// <exception cref="InvalidOperationException">An attached item is queried off its scene owner thread; concrete overrides enforce this guard.</exception>
+    /// <exception cref="InvalidOperationException">An attached item is queried outside the scene owner or active processing groups; concrete overrides enforce this guard.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public abstract Transform GetTransform();
 
@@ -57,17 +57,23 @@ public abstract partial class CanvasItem : Node
     /// <summary>Returns the transform composed through the direct canvas-parent chain.</summary>
     /// <returns>The local transform when the parent is non-canvas or TopLevel is enabled.</returns>
     /// <remarks>Resolves global invalidation without consuming an already queued notification. Global values are
-    /// current immediately; ForceUpdateTransform controls notification delivery, not mathematical composition.</remarks>
-    /// <exception cref="InvalidOperationException">An attached item is queried off-owner.</exception>
+    /// current immediately; ForceUpdateTransform controls notification delivery, not mathematical composition.
+    /// The scene owner or any active processing group may read logical transforms. Coordinate concurrent writes;
+    /// these reads are not an atomic hierarchy snapshot. Virtual getters execute before shared cache publication.</remarks>
+    /// <exception cref="InvalidOperationException">An attached query is outside the owner/processing groups.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public Transform GetGlobalTransform()
     {
         ThrowIfDisposed();
-        Tree?.EnsureOwnerThread();
+        Tree?.EnsureProcessingReadAccess();
         if (_globalTransformInvalid)
         {
-            _globalTransform = GetParentItem() is { } parent ? parent.GetGlobalTransform() * GetTransform() : GetTransform();
-            _globalTransformInvalid = false;
+            var global = GetParentItem() is { } parent ? parent.GetGlobalTransform() * GetTransform() : GetTransform();
+            // Virtual getters may reenter; only publication holds the item gate.
+            lock (_canvasItemGate)
+            {
+                if (_globalTransformInvalid) { _globalTransform = global; _globalTransformInvalid = false; }
+            }
         }
         return _globalTransform;
     }
@@ -216,7 +222,7 @@ public abstract partial class CanvasItem : Node
         {
             if (disposing)
             {
-                lock (_canvasItemRIDGate) { if (_canvasItemRID.IsValid()) RenderingCanvasItemRegistry.Remove(_canvasItemRID); _canvasItemRID = AttachedSkeleton = default; }
+                lock (_canvasItemGate) { if (_canvasItemRID.IsValid()) RenderingCanvasItemRegistry.Remove(_canvasItemRID); _canvasItemRID = AttachedSkeleton = default; }
                 ServerState?.VisibilityNotifier?.Cancel(); ServerState?.Commands?.Dispose(); ServerState = null;
                 _canvasCommands?.Clear(); _meshes?.Clear(); _meshCount = 0; _multiMeshes?.Clear(); _multiMeshCount = 0; _polygons?.Clear(); _polygonCount = 0; _strokes?.Clear(); _strokePoints = []; _strokeCount = 0; _material = null; _instanceUniforms = null;
                 VisibilityChanged = null; Hidden = null; Draw = null; ItemRectChanged = null; LocalTransformChanged = null; TransformChanged = null;

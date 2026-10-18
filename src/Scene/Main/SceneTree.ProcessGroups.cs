@@ -50,6 +50,11 @@ public partial class SceneTree
         if (!IsOwnerThread && (CurrentProcessingGroup is null || !ReferenceEquals(CurrentProcessingGroup, node.ActiveProcessingGroup)))
             throw new InvalidOperationException("The node is outside the current processing group.");
     }
+    internal void EnsureProcessingReadAccess()
+    {
+        if (!IsOwnerThread && CurrentProcessingGroup is null)
+            throw new InvalidOperationException("Node observation requires the scene owner or an active processing-group thread.");
+    }
     internal void BindProcessingGroup(Node node)
     {
         lock (_workGate)

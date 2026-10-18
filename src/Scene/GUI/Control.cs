@@ -314,10 +314,13 @@ public partial class Control : CanvasItem
     }
 
     /// <summary>Gets the absolute pivot plus its current size-relative component.</summary>
+    /// <remarks>The scene owner or an active processing-group thread may read this value; coordinate concurrent writes.</remarks>
+    /// <exception cref="InvalidOperationException">An attached query is outside the owner/processing groups.</exception>
+    /// <exception cref="ObjectDisposedException">The control is disposed.</exception>
     public Vector2 GetCombinedPivotOffset()
     {
         ThrowIfDisposed();
-        Tree?.EnsureOwnerThread();
+        Tree?.EnsureProcessingReadAccess();
         return _pivotOffset + _pivotOffsetRatio * _size;
     }
 
@@ -660,7 +663,7 @@ public partial class Control : CanvasItem
     public override Transform GetTransform()
     {
         ThrowIfDisposed();
-        Tree?.EnsureOwnerThread();
+        Tree?.EnsureProcessingReadAccess();
         var pivot = GetCombinedPivotOffset();
         var transform = new Transform(_rotation, _scale, 0f, pivot);
         transform.Origin += _position - transform.BasisXform(pivot);

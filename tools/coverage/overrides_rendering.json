@@ -5098,13 +5098,6 @@
     },
     {
       "state": "Implemented",
-      "reason": "Pinned CanvasItem get_transform is pure virtual; Electron2D CanvasItem exposes the same abstract local-transform role. Entity and Control production overrides return their local matrices with attached owner-thread guards; SceneHierarchyTests and ControlLayoutTests verify concrete values, custom CanvasItem derivation and off-owner rejection, with Wayland mixed-hierarchy pixels. A caller-defined override owns its own guard and math; other platforms remain unverified.",
-      "godot": [
-        "CanvasItem::method:get_transform()"
-      ]
-    },
-    {
-      "state": "Implemented",
       "reason": "Pinned CanvasItem material setter stores a borrowed Resource and refreshes tooling properties on every assignment, including equal values. SceneHierarchyTests checks defaults, disposed-input rejection, readable externally disposed reference, committed state after callback failure, owner-thread reads, direct/neutral/TopLevel inheritance and PackedScene borrowing. CanvasMaterialRenderingTests verifies live Add/Sub/Mix paths on Linux Wayland compatibility/GPU; editor UI and other platforms remain separate.",
       "godot": [
         "CanvasItem::property:material"
