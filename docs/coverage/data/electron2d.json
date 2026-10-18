@@ -9017,6 +9017,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.PortableCompressedTexture",
+    "kind": "type",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": "PortableCompressedTexture",
+    "signature": "public sealed class Electron2D.PortableCompressedTexture",
+    "visibility": "public",
+    "baseType": "Electron2D.Texture",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PortableCompressedTexture.CompressionMode",
+    "kind": "type",
+    "declaringType": "Electron2D.PortableCompressedTexture.CompressionMode",
+    "name": "CompressionMode",
+    "signature": "public enum Electron2D.PortableCompressedTexture.CompressionMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ProcessMode",
     "kind": "type",
     "declaringType": "Electron2D.ProcessMode",
@@ -21458,6 +21491,19 @@
     "declaringType": "Electron2D.PopupPanel",
     "name": ".ctor",
     "signature": "public PopupPanel()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PortableCompressedTexture..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": ".ctor",
+    "signature": "public PortableCompressedTexture()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -40817,6 +40863,97 @@
     "parameters": [],
     "returnType": "Electron2D.PolygonBuildMode",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.PortableCompressedTexture.CompressionMode.ASTC()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PortableCompressedTexture.CompressionMode",
+    "name": "ASTC",
+    "signature": "public const Electron2D.PortableCompressedTexture.CompressionMode ASTC = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PortableCompressedTexture.CompressionMode",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.PortableCompressedTexture.CompressionMode.BPTC()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PortableCompressedTexture.CompressionMode",
+    "name": "BPTC",
+    "signature": "public const Electron2D.PortableCompressedTexture.CompressionMode BPTC = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PortableCompressedTexture.CompressionMode",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.PortableCompressedTexture.CompressionMode.BasisUniversal()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PortableCompressedTexture.CompressionMode",
+    "name": "BasisUniversal",
+    "signature": "public const Electron2D.PortableCompressedTexture.CompressionMode BasisUniversal = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PortableCompressedTexture.CompressionMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.PortableCompressedTexture.CompressionMode.ETC2()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PortableCompressedTexture.CompressionMode",
+    "name": "ETC2",
+    "signature": "public const Electron2D.PortableCompressedTexture.CompressionMode ETC2 = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PortableCompressedTexture.CompressionMode",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.PortableCompressedTexture.CompressionMode.Lossless()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PortableCompressedTexture.CompressionMode",
+    "name": "Lossless",
+    "signature": "public const Electron2D.PortableCompressedTexture.CompressionMode Lossless = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PortableCompressedTexture.CompressionMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.PortableCompressedTexture.CompressionMode.Lossy()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PortableCompressedTexture.CompressionMode",
+    "name": "Lossy",
+    "signature": "public const Electron2D.PortableCompressedTexture.CompressionMode Lossy = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PortableCompressedTexture.CompressionMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.PortableCompressedTexture.CompressionMode.S3TC()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PortableCompressedTexture.CompressionMode",
+    "name": "S3TC",
+    "signature": "public const Electron2D.PortableCompressedTexture.CompressionMode S3TC = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PortableCompressedTexture.CompressionMode",
+    "value": "3"
   },
   {
     "id": "enumValue:Electron2D.ProcessMode.Always()",
@@ -147219,6 +147356,269 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PortableCompressedTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PortableCompressedTexture.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PortableCompressedTexture.CreateFromImage(Electron2D.Image,Electron2D.PortableCompressedTexture.CompressionMode,System.Boolean,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": "CreateFromImage",
+    "signature": "public System.Void CreateFromImage(Electron2D.Image image, Electron2D.PortableCompressedTexture.CompressionMode compressionMode, System.Boolean normalMap = false, System.Single lossyQuality = 0.8f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "image",
+        "type": "Electron2D.Image",
+        "default": null
+      },
+      {
+        "name": "compressionMode",
+        "type": "Electron2D.PortableCompressedTexture.CompressionMode",
+        "default": null
+      },
+      {
+        "name": "normalMap",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "lossyQuality",
+        "type": "System.Single",
+        "default": "0.8f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PortableCompressedTexture.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PortableCompressedTexture.GetCompressionMode()",
+    "kind": "method",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": "GetCompressionMode",
+    "signature": "public Electron2D.PortableCompressedTexture.CompressionMode GetCompressionMode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PortableCompressedTexture.CompressionMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PortableCompressedTexture.GetHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": "GetHeight",
+    "signature": "public override System.Int32 GetHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PortableCompressedTexture.GetImage()",
+    "kind": "method",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": "GetImage",
+    "signature": "public override Electron2D.Image GetImage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PortableCompressedTexture.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PortableCompressedTexture.GetSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": "GetSize",
+    "signature": "public override Electron2D.Vector2 GetSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PortableCompressedTexture.GetWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": "GetWidth",
+    "signature": "public override System.Int32 GetWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PortableCompressedTexture.IsKeepingAllCompressedBuffers()",
+    "kind": "method",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": "IsKeepingAllCompressedBuffers",
+    "signature": "public static System.Boolean IsKeepingAllCompressedBuffers()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PortableCompressedTexture.IsPixelOpaque(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": "IsPixelOpaque",
+    "signature": "public override System.Boolean IsPixelOpaque(System.Int32 x, System.Int32 y)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "x",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "y",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PortableCompressedTexture.SetBASISUCompressorParams(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": "SetBASISUCompressorParams",
+    "signature": "public System.Void SetBASISUCompressorParams(System.Int32 uastcLevel, System.Single rdoQualityLoss)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "uastcLevel",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "rdoQualityLoss",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PortableCompressedTexture.SetKeepAllCompressedBuffers(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": "SetKeepAllCompressedBuffers",
+    "signature": "public static System.Void SetKeepAllCompressedBuffers(System.Boolean keep)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "keep",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ProcessPipes.Dispose()",
     "kind": "method",
     "declaringType": "Electron2D.ProcessPipes",
@@ -235960,6 +236360,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PortableCompressedTexture.HasAlpha()",
+    "kind": "property",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": "HasAlpha",
+    "signature": "public System.Boolean HasAlpha { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PortableCompressedTexture.KeepCompressedBuffer()",
+    "kind": "property",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": "KeepCompressedBuffer",
+    "signature": "public System.Boolean KeepCompressedBuffer { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PortableCompressedTexture.SizeOverride()",
+    "kind": "property",
+    "declaringType": "Electron2D.PortableCompressedTexture",
+    "name": "SizeOverride",
+    "signature": "public Electron2D.Vector2 SizeOverride { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {

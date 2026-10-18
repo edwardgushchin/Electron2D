@@ -36,8 +36,8 @@ internal static partial class ImageBCnTests
     private static void Failure()
     {
         using var image = Source(); var raw = image.GetData(); var changes = 0; image.Changed += _ => changes++;
-        Reject<NotSupportedException>(() => image.Compress(Image.CompressMode.Astc)); Reject<ArgumentOutOfRangeException>(() => image.Compress((Image.CompressMode)99));
-        Check(changes == 0 && image.GetData().AsSpan().SequenceEqual(raw), "Unavailable codec preserves state.");
+        Reject<ArgumentOutOfRangeException>(() => image.Compress((Image.CompressMode)99));
+        Check(changes == 0 && image.GetData().AsSpan().SequenceEqual(raw), "Invalid compression mode preserves state.");
         var bytes = image.SaveDDSToBuffer();
         foreach (var at in new[] { 0, 1, 127, 128, 147, bytes.Length - 1 }) { Reject<InvalidDataException>(() => image.LoadDDSFromBuffer(bytes.AsSpan(0, at))); Check(changes == 0, "Truncated source is never published."); }
         foreach (var field in new[] { 4, 12, 16, 76 }) { var bad = (byte[])bytes.Clone(); BinaryPrimitives.WriteUInt32LittleEndian(bad.AsSpan(field), uint.MaxValue); Reject<InvalidDataException>(() => image.LoadDDSFromBuffer(bad)); }

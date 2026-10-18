@@ -555,7 +555,7 @@ public sealed partial class Image : Resource
             throw new ArgumentOutOfRangeException(nameof(y));
     }
 
-    private static int GetRequiredDataSize(int width, int height, Format format, bool mipmaps)
+    internal static int GetRequiredDataSize(int width, int height, Format format, bool mipmaps)
     {
         ValidateDimensions(width, height);
         ValidateFormat(format);

@@ -13,6 +13,8 @@ in a fresh process; embedded scene IDs and UIDs remain separate.
 
 [File-backed arrays](../components/compressed-arrays.md) load raw/PNG/WebP and Basis LDR/HDR layers with complete mips, atomic source replacement, typed caching/worker loading and embedded archives. They reuse the existing GPU array consumer and borrowed RenderingDevice lifetime; Compatibility keeps its explicit custom-shader gate.
 
+[Portable compressed textures](../components/portable-textures.md) add seven runtime image-encoding modes, complete mip storage, ordinary texture sampling, independent duplication and typed resource/scene archives with explicit buffer-retention policy. The same approved native encoder supplies the remaining ETC/EAC/ASTC Image.Compress capabilities.
+
 ## Tile grid and terrain integration
 
 [Tile resources and layers](../components/tiles.md) now connect square, isometric, half-offset and hexagonal atlas authoring and typed storage to actual merged static/kinematic bodies in CPU/GPU worlds, with tile-owner queries/events, runtime data callbacks and real retained-canvas output. All layouts, animated atlas storage/drawing and navigation now execute; terrain definitions, modes, weighted connect/path painting and fresh file graphs now execute; reusable pattern capture/storage/placement now execute; explicit typed proxy mapping now executes through placed cell consumers; typed custom data now controls executable runtime callbacks and persists actual values independently of configured schemas; occlusion retains its prerequisite under [ADR 0101](../decisions/tiles.md#adr-0101).

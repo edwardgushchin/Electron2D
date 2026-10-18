@@ -18,7 +18,7 @@ class NativePackageTests(unittest.TestCase):
     def test_ktx_bridge_is_required_in_every_profile(self):
         for profile, names in package.LIBRARIES.items():
             name = next(name for name in names if "Electron2DKTX" in name)
-            self.assertEqual(package.required_exports(name), {"e2d_ktx_create", "e2d_ktx_level", "e2d_ktx_destroy", "e2d_basis_create", "e2d_block_decode"})
+            self.assertEqual(package.required_exports(name), {"e2d_ktx_create", "e2d_ktx_level", "e2d_ktx_destroy", "e2d_basis_create", "e2d_block_decode", "e2d_image_encode", "e2d_image_encoded_free"})
 
     def test_ktx_static_symbols_cannot_collide_with_font_codecs(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -309,6 +309,7 @@ public sealed partial class ThemeDB
         ["Popup"] = ["Popup", "Window", "Viewport", "Node", "ElectronObject"],
         ["PopupMenu"] = ["PopupMenu", "Popup", "Window", "Viewport", "Node", "ElectronObject"],
         ["PopupPanel"] = ["PopupPanel", "Popup", "Window", "Viewport", "Node", "ElectronObject"],
+        ["PortableCompressedTexture"] = ["PortableCompressedTexture", "Texture", "Resource", "ElectronObject"],
         ["ProgressBar"] = ["ProgressBar", "Range", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["ProjectSettings"] = ["ProjectSettings", "ProjectSettingsRegistry", "ElectronObject"],
         ["ProjectSettingsRegistry"] = ["ProjectSettingsRegistry", "ElectronObject"],

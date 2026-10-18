@@ -28,6 +28,14 @@ using var exrSource = Image.CreateFromData(1, 1, false, Image.Format.Rgbaf, exrP
 using var exrDecoded = new Image();
 exrDecoded.LoadEXRFromBuffer(exrSource.SaveEXRToBuffer());
 if (exrDecoded.PixelFormat != Image.Format.Rgbaf || !exrDecoded.GetData().AsSpan().SequenceEqual(exrPixels)) throw new Exception("Managed EXR HDR consumer failed");
+foreach (var mode in Enum.GetValues<PortableCompressedTexture.CompressionMode>())
+{
+    using var portableSource = Image.CreateEmpty(4, 4, false, Image.Format.Rgba8); portableSource.Fill(new(.8f, .25f, .125f, 1)); portableSource.GenerateMIPMaps();
+    using var portable = new PortableCompressedTexture(); portable.CreateFromImage(portableSource, mode);
+    using var portableImage = portable.GetImage() ?? throw new Exception("Portable texture has no image");
+    if (portableImage.IsCompressed) portableImage.Decompress();
+    if (portableImage.MIPMapCount != 2 || MathF.Abs(portableImage.GetPixel(0, 0).R - .8f) > .15f) throw new Exception("Portable native consumer failed: " + mode);
+}
 using var importer = new ImporterMesh();
 var cells = 8;
 var points = new Vector2[(cells + 1) * (cells + 1)];

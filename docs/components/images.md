@@ -102,3 +102,5 @@ WebP lossless/lossy saving, live codec settings, compressed-source conversion, a
 The [EXR I/O slice](../components/image-exr.md) supplies precision-preserving HDR file/buffer load and lossless save. Image and texture resource discovery includes DDS and EXR alongside PNG/JPEG/WebP/BMP/TGA/SVG; typed archives also expose their registered extensions. GPU float sampling, explicit Compatibility byte conversion and float-driver rejection are separate exercised profiles.
 
 [UInt16 image texture sources](integer-textures.md) now retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility.
+
+Runtime [portable texture encoding](portable-textures.md) now supplies Image.Compress/CompressFromChannels for ETC1, ETC2/EAC and ASTC 4×4/8×8 LDR/HDR alongside S3TC/BPTC. All channel policies, complete mips and bounded atomic publication share the existing Image contract. Basis UASTC creation is exposed through PortableCompressedTexture.

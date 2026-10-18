@@ -35,4 +35,13 @@
     <Copy SourceFiles="$(Electron2DTextNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerTextName)" />
     <Copy SourceFiles="$(Electron2DTextNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerTextName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
   </Target>
+  <Target Name="CopyElectron2DConsumerKTXOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DKTXNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS' or '$(Electron2DConsumerPlatform)' == 'Windows')">
+    <PropertyGroup>
+      <_Electron2DConsumerKTXName>libElectron2DKTX.so</_Electron2DConsumerKTXName>
+      <_Electron2DConsumerKTXName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2DKTX.dylib</_Electron2DConsumerKTXName>
+      <_Electron2DConsumerKTXName Condition="'$(Electron2DConsumerPlatform)' == 'Windows'">Electron2DKTX.dll</_Electron2DConsumerKTXName>
+    </PropertyGroup>
+    <Copy SourceFiles="$(Electron2DKTXNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerKTXName)" />
+    <Copy SourceFiles="$(Electron2DKTXNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerKTXName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
+  </Target>
 </Project>

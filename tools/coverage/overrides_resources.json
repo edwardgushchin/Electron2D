@@ -483,12 +483,12 @@
     {
       "godot": "Image::method:compress(int:Image.CompressMode,int:Image.CompressSource,int:Image.ASTCFormat)",
       "electron2d": "method:Electron2D.Image.Compress(Electron2D.Image.CompressMode,Electron2D.Image.CompressSource,Electron2D.Image.ASTCFormat)",
-      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; ETC/EAC/ASTC decoding and texture sampling now execute; their remaining compression capability requires portable encoders with source/channel/HDR/mip semantics. Foreign platforms and native allocation are separate gates."
+      "reason": "ADRs 0039/0012: all S3TC, BPTC, ETC1, ETC2/EAC and ASTC 4x4/8x8 compression families execute with explicit/detected channel roles, HDR where applicable, complete ragged mips, codec work budgets and atomic publication. The existing approved private BasisU/astcenc closure supplies portable native encoders. PortableTextureTests, native shared/single-archive adapter checks and GPU/Compatibility consumers verify the connected slice; foreign runtime and native allocation totals remain separate gates."
     },
     {
       "godot": "Image::method:compress_from_channels(int:Image.CompressMode,int:Image.UsedChannels,int:Image.ASTCFormat)",
       "electron2d": "method:Electron2D.Image.CompressFromChannels(Electron2D.Image.CompressMode,Electron2D.Image.UsedChannels,Electron2D.Image.ASTCFormat)",
-      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; ETC/EAC/ASTC decoding and texture sampling now execute; their remaining compression capability requires portable encoders with source/channel/HDR/mip semantics. Foreign platforms and native allocation are separate gates."
+      "reason": "ADRs 0039/0012: all S3TC, BPTC, ETC1, ETC2/EAC and ASTC 4x4/8x8 compression families execute with explicit/detected channel roles, HDR where applicable, complete ragged mips, codec work budgets and atomic publication. The existing approved private BasisU/astcenc closure supplies portable native encoders. PortableTextureTests, native shared/single-archive adapter checks and GPU/Compatibility consumers verify the connected slice; foreign runtime and native allocation totals remain separate gates."
     },
     {
       "godot": "Image::method:decompress()",
@@ -746,15 +746,15 @@
       "godot": [
         "Image::method:compress(int:Image.CompressMode,int:Image.CompressSource,int:Image.ASTCFormat)"
       ],
-      "state": "Partial",
-      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; ETC/EAC/ASTC decoding and texture sampling now execute; their remaining compression capability requires portable encoders with source/channel/HDR/mip semantics. Foreign platforms and native allocation are separate gates."
+      "state": "Implemented",
+      "reason": "ADRs 0039/0012: all S3TC, BPTC, ETC1, ETC2/EAC and ASTC 4x4/8x8 compression families execute with explicit/detected channel roles, HDR where applicable, complete ragged mips, codec work budgets and atomic publication. The existing approved private BasisU/astcenc closure supplies portable native encoders. PortableTextureTests, native shared/single-archive adapter checks and GPU/Compatibility consumers verify the connected slice; foreign runtime and native allocation totals remain separate gates."
     },
     {
       "godot": [
         "Image::method:compress_from_channels(int:Image.CompressMode,int:Image.UsedChannels,int:Image.ASTCFormat)"
       ],
-      "state": "Partial",
-      "reason": "ADRs 0039/0012: mature private BC1\u2013BC7/DDS codecs, exact raw/HDR/full mip layout, bounded preflight and expansion, atomic image/file publication, real GPU/Compatibility texture sampling and native BC array/mip readback. ImageBCnTests checks legacy/DX10 masks, arrays/cubes/volumes, observer/budget/corrupt-source failures and fresh-process archives. S3TC/BPTC execute; ETC/EAC/ASTC decoding and texture sampling now execute; their remaining compression capability requires portable encoders with source/channel/HDR/mip semantics. Foreign platforms and native allocation are separate gates."
+      "state": "Implemented",
+      "reason": "ADRs 0039/0012: all S3TC, BPTC, ETC1, ETC2/EAC and ASTC 4x4/8x8 compression families execute with explicit/detected channel roles, HDR where applicable, complete ragged mips, codec work budgets and atomic publication. The existing approved private BasisU/astcenc closure supplies portable native encoders. PortableTextureTests, native shared/single-archive adapter checks and GPU/Compatibility consumers verify the connected slice; foreign runtime and native allocation totals remain separate gates."
     },
     {
       "godot": [

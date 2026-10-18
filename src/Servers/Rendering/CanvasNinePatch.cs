@@ -19,7 +19,7 @@ internal readonly record struct CanvasNinePatch(Vector2 Begin, Vector2 End, Axis
             if (underlying is null) return;
             texture = underlying;
         }
-        var textureSize = texture.GetSize();
+        var textureSize = texture.DrawingSize;
         if (source.Size == Vector2.Zero) source.Size = textureSize;
         if (textureSize.X <= 0 || textureSize.Y <= 0 || source.Size.X == 0 || source.Size.Y == 0 || destination.Size.X <= 0 || destination.Size.Y <= 0) return;
         if (!textureSize.IsFinite() || !source.IsFinite() || !destination.IsFinite()) throw new InvalidOperationException("Nine-patch geometry must remain finite.");

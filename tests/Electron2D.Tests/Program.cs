@@ -9,6 +9,7 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") is { } portableProfile) { PortableTextureTests.Run(portableProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DRAWABLE") is { } drawableProfile) { DrawableTextureTests.Run(drawableProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_TEXTURE") is { } meshTextureProfile) { MeshTextureTests.Run(meshTextureProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NUMERIC_MATRICES") is { } numericMatrices) { NumericMatrixTests.Run(numericMatrices); return; }

@@ -9,35 +9,37 @@ namespace Electron2D;
 public sealed partial class Image
 {
     /// <summary>Compresses every stored mip level into a supported GPU block format.</summary>
-    /// <param name="mode">S3TC or BPTC compression family.</param>
+    /// <param name="mode">S3TC, ETC1, ETC2/EAC, BPTC or ASTC compression family.</param>
     /// <param name="source">Color/data or normal-map channel policy.</param>
-    /// <param name="astcFormat">Validated ASTC footprint; ASTC encoding requires a separate codec.</param>
-    /// <remarks>Preserves dimensions and existing mip levels. Unsupported families and codec budget failures
+    /// <param name="astcFormat">ASTC block footprint; ignored by other families.</param>
+    /// <remarks>Preserves dimensions and existing mip levels. Invalid inputs and codec budget failures
     /// preserve the previous image. Successful publication emits Changed outside the image locks.</remarks>
-    /// <exception cref="NotSupportedException">The requested family has no installed codec.</exception>
+    /// <exception cref="InvalidDataException">Pixels are nonfinite or the native encoder rejects them.</exception>
+    /// <exception cref="IOException">The native encoder cannot allocate working memory.</exception>
     /// <exception cref="InvalidOperationException">The image is empty, already compressed or exceeds the codec work budget.</exception>
     /// <exception cref="ArgumentOutOfRangeException">An enum value is invalid.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public void Compress(CompressMode mode, CompressSource source = CompressSource.Generic, ASTCFormat astcFormat = ASTCFormat.Format4X4)
     {
-        ValidateBCCompression(mode, astcFormat);
+        ValidateCompression(mode, astcFormat);
         if (!Enum.IsDefined(source)) throw new ArgumentOutOfRangeException(nameof(source));
-        Mutate(state => CompressBCPixels(state, mode, DetectBCChannels(state, source)));
+        Mutate(state => CompressNativePixels(state, mode, DetectBCChannels(state, source), astcFormat));
     }
     /// <summary>Compresses stored mip levels with an explicit channel role.</summary>
-    /// <param name="mode">S3TC or BPTC compression family.</param>
+    /// <param name="mode">S3TC, ETC1, ETC2/EAC, BPTC or ASTC compression family.</param>
     /// <param name="channels">Channels that the encoder must retain.</param>
-    /// <param name="astcFormat">Validated ASTC footprint; ASTC encoding requires a separate codec.</param>
+    /// <param name="astcFormat">ASTC block footprint; ignored by other families.</param>
     /// <remarks>Uses the same atomic publication, mip and work-budget rules as Compress.</remarks>
-    /// <exception cref="NotSupportedException">The requested family has no installed codec.</exception>
+    /// <exception cref="InvalidDataException">Pixels are nonfinite or the native encoder rejects them.</exception>
+    /// <exception cref="IOException">The native encoder cannot allocate working memory.</exception>
     /// <exception cref="InvalidOperationException">The image is empty, already compressed or exceeds the codec work budget.</exception>
     /// <exception cref="ArgumentOutOfRangeException">An enum value is invalid.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public void CompressFromChannels(CompressMode mode, UsedChannels channels, ASTCFormat astcFormat = ASTCFormat.Format4X4)
     {
-        ValidateBCCompression(mode, astcFormat);
+        ValidateCompression(mode, astcFormat);
         if (!Enum.IsDefined(channels)) throw new ArgumentOutOfRangeException(nameof(channels));
-        Mutate(state => CompressBCPixels(state, mode, channels));
+        Mutate(state => CompressNativePixels(state, mode, channels, astcFormat));
     }
     /// <summary>Decompresses BC, ETC/EAC and ASTC pixels while retaining dimensions and every stored mip level.</summary>
     /// <remarks>An uncompressed image is unchanged and emits no notification. Decode failures preserve
@@ -58,11 +60,10 @@ public sealed partial class Image
         }
         EmitChanged();
     }
-    private static void ValidateBCCompression(CompressMode mode, ASTCFormat astcFormat)
+    private static void ValidateCompression(CompressMode mode, ASTCFormat astcFormat)
     {
         if (mode < 0 || mode >= CompressMode.Max) throw new ArgumentOutOfRangeException(nameof(mode));
         if (!Enum.IsDefined(astcFormat)) throw new ArgumentOutOfRangeException(nameof(astcFormat));
-        if (mode is not (CompressMode.S3tc or CompressMode.Bptc)) throw new NotSupportedException("This compression family requires another block codec.");
     }
     private static UsedChannels DetectBCChannels(State state, CompressSource source)
     {
@@ -72,7 +73,7 @@ public sealed partial class Image
     private static State CompressBCPixels(State state, CompressMode mode, UsedChannels channels)
     {
         RequireReadablePixels(state); CheckCodecWork(state);
-        var hdr = mode == CompressMode.Bptc && channels is not (UsedChannels.Rgba or UsedChannels.LuminanceAlpha) && state.Format is >= Format.Rf and <= Format.Rgbah;
+        var hdr = mode == CompressMode.Bptc && channels is not (UsedChannels.Rgba or UsedChannels.LuminanceAlpha) && state.Format is >= Format.Rf and <= Format.Rgbe9995;
         var format = mode == CompressMode.Bptc ? hdr ? HasNegativeBCPixels(state) ? Format.BptcRgbf : Format.BptcRgbfu : Format.BptcRgba
             : channels switch { UsedChannels.Red => Format.RgtcR, UsedChannels.RedGreen => Format.RgtcRg, UsedChannels.Rgba or UsedChannels.LuminanceAlpha => Format.Dxt5, _ => Format.Dxt1 };
         var encoder = new BcEncoder(format == Format.Dxt1 ? CompressionFormat.Bc1 : BCFormat(format)); encoder.Options.IsParallel = false; encoder.OutputOptions.GenerateMipMaps = false;

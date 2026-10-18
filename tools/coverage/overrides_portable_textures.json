@@ -1,0 +1,171 @@
+{
+  "mappings": [
+    {
+      "godot": "class:PortableCompressedTexture2D",
+      "electron2d": "T:Electron2D.PortableCompressedTexture",
+      "reason": "ADRs 0004/0012/0039/0045/0095: seven executable runtime compression modes, complete mip chains, ordinary GPU/Compatibility sampling, bounded atomic publication, retained-buffer policy, original dimensions with rendering overrides, stable identities, independent copies/local graphs and typed fresh-process archives. The approved pinned BasisU/astcenc closure supplies ETC/EAC/ASTC Image compression and Basis creation. See docs/components/portable-textures.md for executed checks and platform/native-memory limits."
+    },
+    {
+      "godot": "PortableCompressedTexture2D::enum:CompressionMode",
+      "electron2d": "T:Electron2D.PortableCompressedTexture.CompressionMode",
+      "reason": "ADRs 0004/0012/0039/0045/0095: seven executable runtime compression modes, complete mip chains, ordinary GPU/Compatibility sampling, bounded atomic publication, retained-buffer policy, original dimensions with rendering overrides, stable identities, independent copies/local graphs and typed fresh-process archives. The approved pinned BasisU/astcenc closure supplies ETC/EAC/ASTC Image compression and Basis creation. See docs/components/portable-textures.md for executed checks and platform/native-memory limits."
+    },
+    {
+      "godot": "PortableCompressedTexture2D::enum_value:CompressionMode.COMPRESSION_MODE_ASTC",
+      "electron2d": "enumValue:Electron2D.PortableCompressedTexture.CompressionMode.ASTC()",
+      "reason": "ADRs 0004/0012/0039/0045/0095: seven executable runtime compression modes, complete mip chains, ordinary GPU/Compatibility sampling, bounded atomic publication, retained-buffer policy, original dimensions with rendering overrides, stable identities, independent copies/local graphs and typed fresh-process archives. The approved pinned BasisU/astcenc closure supplies ETC/EAC/ASTC Image compression and Basis creation. See docs/components/portable-textures.md for executed checks and platform/native-memory limits."
+    },
+    {
+      "godot": "PortableCompressedTexture2D::enum_value:CompressionMode.COMPRESSION_MODE_BASIS_UNIVERSAL",
+      "electron2d": "enumValue:Electron2D.PortableCompressedTexture.CompressionMode.BasisUniversal()",
+      "reason": "ADRs 0004/0012/0039/0045/0095: seven executable runtime compression modes, complete mip chains, ordinary GPU/Compatibility sampling, bounded atomic publication, retained-buffer policy, original dimensions with rendering overrides, stable identities, independent copies/local graphs and typed fresh-process archives. The approved pinned BasisU/astcenc closure supplies ETC/EAC/ASTC Image compression and Basis creation. See docs/components/portable-textures.md for executed checks and platform/native-memory limits."
+    },
+    {
+      "godot": "PortableCompressedTexture2D::enum_value:CompressionMode.COMPRESSION_MODE_BPTC",
+      "electron2d": "enumValue:Electron2D.PortableCompressedTexture.CompressionMode.BPTC()",
+      "reason": "ADRs 0004/0012/0039/0045/0095: seven executable runtime compression modes, complete mip chains, ordinary GPU/Compatibility sampling, bounded atomic publication, retained-buffer policy, original dimensions with rendering overrides, stable identities, independent copies/local graphs and typed fresh-process archives. The approved pinned BasisU/astcenc closure supplies ETC/EAC/ASTC Image compression and Basis creation. See docs/components/portable-textures.md for executed checks and platform/native-memory limits."
+    },
+    {
+      "godot": "PortableCompressedTexture2D::enum_value:CompressionMode.COMPRESSION_MODE_ETC2",
+      "electron2d": "enumValue:Electron2D.PortableCompressedTexture.CompressionMode.ETC2()",
+      "reason": "ADRs 0004/0012/0039/0045/0095: seven executable runtime compression modes, complete mip chains, ordinary GPU/Compatibility sampling, bounded atomic publication, retained-buffer policy, original dimensions with rendering overrides, stable identities, independent copies/local graphs and typed fresh-process archives. The approved pinned BasisU/astcenc closure supplies ETC/EAC/ASTC Image compression and Basis creation. See docs/components/portable-textures.md for executed checks and platform/native-memory limits."
+    },
+    {
+      "godot": "PortableCompressedTexture2D::enum_value:CompressionMode.COMPRESSION_MODE_LOSSLESS",
+      "electron2d": "enumValue:Electron2D.PortableCompressedTexture.CompressionMode.Lossless()",
+      "reason": "ADRs 0004/0012/0039/0045/0095: seven executable runtime compression modes, complete mip chains, ordinary GPU/Compatibility sampling, bounded atomic publication, retained-buffer policy, original dimensions with rendering overrides, stable identities, independent copies/local graphs and typed fresh-process archives. The approved pinned BasisU/astcenc closure supplies ETC/EAC/ASTC Image compression and Basis creation. See docs/components/portable-textures.md for executed checks and platform/native-memory limits."
+    },
+    {
+      "godot": "PortableCompressedTexture2D::enum_value:CompressionMode.COMPRESSION_MODE_LOSSY",
+      "electron2d": "enumValue:Electron2D.PortableCompressedTexture.CompressionMode.Lossy()",
+      "reason": "ADRs 0004/0012/0039/0045/0095: seven executable runtime compression modes, complete mip chains, ordinary GPU/Compatibility sampling, bounded atomic publication, retained-buffer policy, original dimensions with rendering overrides, stable identities, independent copies/local graphs and typed fresh-process archives. The approved pinned BasisU/astcenc closure supplies ETC/EAC/ASTC Image compression and Basis creation. See docs/components/portable-textures.md for executed checks and platform/native-memory limits."
+    },
+    {
+      "godot": "PortableCompressedTexture2D::enum_value:CompressionMode.COMPRESSION_MODE_S3TC",
+      "electron2d": "enumValue:Electron2D.PortableCompressedTexture.CompressionMode.S3TC()",
+      "reason": "ADRs 0004/0012/0039/0045/0095: seven executable runtime compression modes, complete mip chains, ordinary GPU/Compatibility sampling, bounded atomic publication, retained-buffer policy, original dimensions with rendering overrides, stable identities, independent copies/local graphs and typed fresh-process archives. The approved pinned BasisU/astcenc closure supplies ETC/EAC/ASTC Image compression and Basis creation. See docs/components/portable-textures.md for executed checks and platform/native-memory limits."
+    },
+    {
+      "godot": "PortableCompressedTexture2D::method:create_from_image(Image:,int:PortableCompressedTexture2D.CompressionMode,bool:,float:)",
+      "electron2d": "method:Electron2D.PortableCompressedTexture.CreateFromImage(Electron2D.Image,Electron2D.PortableCompressedTexture.CompressionMode,System.Boolean,System.Single)",
+      "reason": "ADRs 0004/0012/0039/0045/0095: seven executable runtime compression modes, complete mip chains, ordinary GPU/Compatibility sampling, bounded atomic publication, retained-buffer policy, original dimensions with rendering overrides, stable identities, independent copies/local graphs and typed fresh-process archives. The approved pinned BasisU/astcenc closure supplies ETC/EAC/ASTC Image compression and Basis creation. See docs/components/portable-textures.md for executed checks and platform/native-memory limits."
+    },
+    {
+      "godot": "PortableCompressedTexture2D::method:get_compression_mode()",
+      "electron2d": "method:Electron2D.PortableCompressedTexture.GetCompressionMode()",
+      "reason": "ADRs 0004/0012/0039/0045/0095: seven executable runtime compression modes, complete mip chains, ordinary GPU/Compatibility sampling, bounded atomic publication, retained-buffer policy, original dimensions with rendering overrides, stable identities, independent copies/local graphs and typed fresh-process archives. The approved pinned BasisU/astcenc closure supplies ETC/EAC/ASTC Image compression and Basis creation. See docs/components/portable-textures.md for executed checks and platform/native-memory limits."
+    },
+    {
+      "godot": "PortableCompressedTexture2D::method:is_keeping_all_compressed_buffers()",
+      "electron2d": "method:Electron2D.PortableCompressedTexture.IsKeepingAllCompressedBuffers()",
+      "reason": "ADRs 0004/0012/0039/0045/0095: seven executable runtime compression modes, complete mip chains, ordinary GPU/Compatibility sampling, bounded atomic publication, retained-buffer policy, original dimensions with rendering overrides, stable identities, independent copies/local graphs and typed fresh-process archives. The approved pinned BasisU/astcenc closure supplies ETC/EAC/ASTC Image compression and Basis creation. See docs/components/portable-textures.md for executed checks and platform/native-memory limits."
+    },
+    {
+      "godot": "PortableCompressedTexture2D::method:set_basisu_compressor_params(int:,float:)",
+      "electron2d": "method:Electron2D.PortableCompressedTexture.SetBASISUCompressorParams(System.Int32,System.Single)",
+      "reason": "ADRs 0004/0012/0039/0045/0095: seven executable runtime compression modes, complete mip chains, ordinary GPU/Compatibility sampling, bounded atomic publication, retained-buffer policy, original dimensions with rendering overrides, stable identities, independent copies/local graphs and typed fresh-process archives. The approved pinned BasisU/astcenc closure supplies ETC/EAC/ASTC Image compression and Basis creation. See docs/components/portable-textures.md for executed checks and platform/native-memory limits."
+    },
+    {
+      "godot": "PortableCompressedTexture2D::method:set_keep_all_compressed_buffers(bool:)",
+      "electron2d": "method:Electron2D.PortableCompressedTexture.SetKeepAllCompressedBuffers(System.Boolean)",
+      "reason": "ADRs 0004/0012/0039/0045/0095: seven executable runtime compression modes, complete mip chains, ordinary GPU/Compatibility sampling, bounded atomic publication, retained-buffer policy, original dimensions with rendering overrides, stable identities, independent copies/local graphs and typed fresh-process archives. The approved pinned BasisU/astcenc closure supplies ETC/EAC/ASTC Image compression and Basis creation. See docs/components/portable-textures.md for executed checks and platform/native-memory limits."
+    },
+    {
+      "godot": "PortableCompressedTexture2D::property:keep_compressed_buffer",
+      "electron2d": "property:Electron2D.PortableCompressedTexture.KeepCompressedBuffer()",
+      "reason": "ADRs 0004/0012/0039/0045/0095: seven executable runtime compression modes, complete mip chains, ordinary GPU/Compatibility sampling, bounded atomic publication, retained-buffer policy, original dimensions with rendering overrides, stable identities, independent copies/local graphs and typed fresh-process archives. The approved pinned BasisU/astcenc closure supplies ETC/EAC/ASTC Image compression and Basis creation. See docs/components/portable-textures.md for executed checks and platform/native-memory limits."
+    },
+    {
+      "godot": "PortableCompressedTexture2D::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "reason": "ADRs 0004/0012/0039/0045/0095: seven executable runtime compression modes, complete mip chains, ordinary GPU/Compatibility sampling, bounded atomic publication, retained-buffer policy, original dimensions with rendering overrides, stable identities, independent copies/local graphs and typed fresh-process archives. The approved pinned BasisU/astcenc closure supplies ETC/EAC/ASTC Image compression and Basis creation. See docs/components/portable-textures.md for executed checks and platform/native-memory limits."
+    },
+    {
+      "godot": "PortableCompressedTexture2D::property:size_override",
+      "electron2d": "property:Electron2D.PortableCompressedTexture.SizeOverride()",
+      "reason": "ADRs 0004/0012/0039/0045/0095: seven executable runtime compression modes, complete mip chains, ordinary GPU/Compatibility sampling, bounded atomic publication, retained-buffer policy, original dimensions with rendering overrides, stable identities, independent copies/local graphs and typed fresh-process archives. The approved pinned BasisU/astcenc closure supplies ETC/EAC/ASTC Image compression and Basis creation. See docs/components/portable-textures.md for executed checks and platform/native-memory limits."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:PortableCompressedTexture2D",
+        "PortableCompressedTexture2D::enum:CompressionMode",
+        "PortableCompressedTexture2D::enum_value:CompressionMode.COMPRESSION_MODE_ASTC",
+        "PortableCompressedTexture2D::enum_value:CompressionMode.COMPRESSION_MODE_BASIS_UNIVERSAL",
+        "PortableCompressedTexture2D::enum_value:CompressionMode.COMPRESSION_MODE_BPTC",
+        "PortableCompressedTexture2D::enum_value:CompressionMode.COMPRESSION_MODE_ETC2",
+        "PortableCompressedTexture2D::enum_value:CompressionMode.COMPRESSION_MODE_LOSSLESS",
+        "PortableCompressedTexture2D::enum_value:CompressionMode.COMPRESSION_MODE_LOSSY",
+        "PortableCompressedTexture2D::enum_value:CompressionMode.COMPRESSION_MODE_S3TC",
+        "PortableCompressedTexture2D::method:create_from_image(Image:,int:PortableCompressedTexture2D.CompressionMode,bool:,float:)",
+        "PortableCompressedTexture2D::method:get_compression_mode()",
+        "PortableCompressedTexture2D::method:is_keeping_all_compressed_buffers()",
+        "PortableCompressedTexture2D::method:set_basisu_compressor_params(int:,float:)",
+        "PortableCompressedTexture2D::method:set_keep_all_compressed_buffers(bool:)",
+        "PortableCompressedTexture2D::property:keep_compressed_buffer",
+        "PortableCompressedTexture2D::property:resource_local_to_scene",
+        "PortableCompressedTexture2D::property:size_override"
+      ],
+      "reason": "ADRs 0004/0012/0039/0045/0095: seven executable runtime compression modes, complete mip chains, ordinary GPU/Compatibility sampling, bounded atomic publication, retained-buffer policy, original dimensions with rendering overrides, stable identities, independent copies/local graphs and typed fresh-process archives. The approved pinned BasisU/astcenc closure supplies ETC/EAC/ASTC Image compression and Basis creation. See docs/components/portable-textures.md for executed checks and platform/native-memory limits."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.PortableCompressedTexture..ctor()",
+      "reason": "Typed construction and existing Texture/Resource metadata, image, opacity, duplication, archive and disposal overrides implement the portable resource lifecycle; no independent compatibility entry point is introduced.",
+      "adr": "ADRs 0004/0012/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.PortableCompressedTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction and existing Texture/Resource metadata, image, opacity, duplication, archive and disposal overrides implement the portable resource lifecycle; no independent compatibility entry point is introduced.",
+      "adr": "ADRs 0004/0012/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.PortableCompressedTexture.CreateDuplicateInstance()",
+      "reason": "Typed construction and existing Texture/Resource metadata, image, opacity, duplication, archive and disposal overrides implement the portable resource lifecycle; no independent compatibility entry point is introduced.",
+      "adr": "ADRs 0004/0012/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.PortableCompressedTexture.Dispose(System.Boolean)",
+      "reason": "Typed construction and existing Texture/Resource metadata, image, opacity, duplication, archive and disposal overrides implement the portable resource lifecycle; no independent compatibility entry point is introduced.",
+      "adr": "ADRs 0004/0012/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.PortableCompressedTexture.GetHeight()",
+      "reason": "Typed construction and existing Texture/Resource metadata, image, opacity, duplication, archive and disposal overrides implement the portable resource lifecycle; no independent compatibility entry point is introduced.",
+      "adr": "ADRs 0004/0012/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.PortableCompressedTexture.GetImage()",
+      "reason": "Typed construction and existing Texture/Resource metadata, image, opacity, duplication, archive and disposal overrides implement the portable resource lifecycle; no independent compatibility entry point is introduced.",
+      "adr": "ADRs 0004/0012/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.PortableCompressedTexture.GetPropertyDescriptors()",
+      "reason": "Typed construction and existing Texture/Resource metadata, image, opacity, duplication, archive and disposal overrides implement the portable resource lifecycle; no independent compatibility entry point is introduced.",
+      "adr": "ADRs 0004/0012/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.PortableCompressedTexture.GetSize()",
+      "reason": "Typed construction and existing Texture/Resource metadata, image, opacity, duplication, archive and disposal overrides implement the portable resource lifecycle; no independent compatibility entry point is introduced.",
+      "adr": "ADRs 0004/0012/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.PortableCompressedTexture.GetWidth()",
+      "reason": "Typed construction and existing Texture/Resource metadata, image, opacity, duplication, archive and disposal overrides implement the portable resource lifecycle; no independent compatibility entry point is introduced.",
+      "adr": "ADRs 0004/0012/0039"
+    },
+    {
+      "electron2d": "method:Electron2D.PortableCompressedTexture.IsPixelOpaque(System.Int32,System.Int32)",
+      "reason": "Typed construction and existing Texture/Resource metadata, image, opacity, duplication, archive and disposal overrides implement the portable resource lifecycle; no independent compatibility entry point is introduced.",
+      "adr": "ADRs 0004/0012/0039"
+    },
+    {
+      "electron2d": "property:Electron2D.PortableCompressedTexture.HasAlpha()",
+      "reason": "Typed construction and existing Texture/Resource metadata, image, opacity, duplication, archive and disposal overrides implement the portable resource lifecycle; no independent compatibility entry point is introduced.",
+      "adr": "ADRs 0004/0012/0039"
+    }
+  ]
+}

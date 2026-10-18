@@ -101,7 +101,7 @@ The destination origin is unchanged by negative dimensions: each negative axis r
 
 ### DrawRectRegion
 
-Source positions and sizes use logical pixels, accounting for ImageTexture size overrides. Negative source dimensions toggle the corresponding destination reflection without moving the source origin. `clipUV` constrains sampling to texel centers within the source region while retaining interior interpolation; disabling it leaves that restriction off. Coordinates outside the full image still clamp to image edges. Transpose, modulation, zero-area behavior and errors follow DrawRect.
+Source positions and sizes use logical pixels, accounting for ImageTexture and PortableCompressedTexture rendering size overrides. Negative source dimensions toggle the corresponding destination reflection without moving the source origin. `clipUV` constrains sampling to texel centers within the source region while retaining interior interpolation; disabling it leaves that restriction off. Coordinates outside the full image still clamp to image edges. Transpose, modulation, zero-area behavior and errors follow DrawRect.
 
 All three methods are virtual. CanvasItem.DrawTexture, DrawTextureRect and DrawTextureRectRegion invoke them so a custom texture can draw its own geometry. Default implementations retain resource references, normalized source coordinates, destination geometry and draw transform. Update and SetImage affect later frames without rerunning OnDraw; changing the destination or recorded logical scale requires QueueRedraw. Disposal before a retained command is consumed fails the frame. Commands do not transfer resource ownership.
 

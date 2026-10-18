@@ -181,7 +181,7 @@ public abstract partial class CanvasItem
     {
         ValidateTextureDraw(texture, rect, color);
         if (source is { } region && !region.IsFinite()) throw new ArgumentException("The texture region must be finite.", nameof(source));
-        var size = texture.GetSize();
+        var size = texture.DrawingSize;
         if (!size.IsFinite() || size.X < 0 || size.Y < 0) throw new InvalidOperationException("Texture dimensions must be finite and nonnegative.");
         if (size.X == 0 || size.Y == 0) return;
         var src = source ?? new Rect2(Vector2.Zero, tile ? rect.Size.Abs() : size);

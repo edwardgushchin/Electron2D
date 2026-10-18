@@ -170,6 +170,8 @@ public abstract class Texture : Resource
 
     private void InvalidatePixels(Resource _) { lock (_snapshotGate) _snapshot = null; }
 
+    internal virtual Vector2 DrawingSize => GetSize();
+
     internal virtual TexturePixels? CapturePixels()
     {
         lock (_snapshotGate)
