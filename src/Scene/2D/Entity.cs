@@ -3,8 +3,10 @@ namespace Electron2D;
 /// <summary>A spatial canvas node with position, rotation, scale and skew.</summary>
 /// <remarks>Use this node as an empty spatial parent or derive a drawable game object from it. Transform setters
 /// commit immediately, including equal assignments. Logical transform reads and pure coordinate/angle queries
-/// permit the scene owner or an active processing-group thread; callers coordinate concurrent writes. Enabled local notifications are synchronous while attached;
-/// global notifications coalesce until scene delivery or ForceUpdateTransform. A physics body rejects transform
+/// permit the scene owner or an active processing-group thread; setters and mutating helpers permit the owner or
+/// this node's current processing group. Callers coordinate concurrent reads and writes. Enabled local notifications are synchronous while attached;
+/// global notifications coalesce until scene delivery or ForceUpdateTransform. Worker pose edits publish to the
+/// retained renderer and selected physics implementation after the joined scene stage, before owner queries or stepping. A physics body rejects transform
 /// assignments from a borrowed numerical implementation call before changing its pose.</remarks>
 public class Entity : CanvasItem
 {
@@ -82,7 +84,7 @@ public class Entity : CanvasItem
     /// <summary>Gets or sets the affine transform relative to the parent.</summary>
     /// <value>A finite <see cref="Electron2D.Transform"/>; the default is <see cref="Electron2D.Transform.Identity"/>.</value>
     /// <exception cref="ArgumentOutOfRangeException">An assigned transform component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached read is outside the owner/processing groups, or mutation is off-owner.</exception>
+    /// <exception cref="InvalidOperationException">An attached read is outside the owner/processing groups, or mutation is outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the transform changes.</exception>
     public Transform Transform
@@ -95,7 +97,7 @@ public class Entity : CanvasItem
         }
         set
         {
-            EnsureMutable();
+            EnsureTransformMutable();
             SetTransform(value);
         }
     }
@@ -103,7 +105,7 @@ public class Entity : CanvasItem
     /// <summary>Gets or sets the affine transform in hierarchy-global coordinates.</summary>
     /// <value>The local transform composed with non-top-level ancestors.</value>
     /// <exception cref="ArgumentOutOfRangeException">An assigned transform component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached read is outside the owner/processing groups or mutation is off-owner.</exception>
+    /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached read is outside the owner/processing groups or mutation is outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the transform changes.</exception>
     public Transform GlobalTransform
@@ -115,7 +117,7 @@ public class Entity : CanvasItem
         }
         set
         {
-            EnsureMutable();
+            EnsureTransformMutable();
             EnsureFinite(value, nameof(value));
             SetTransform(ToLocalTransform(value, Parent, TopLevel));
         }
@@ -124,7 +126,7 @@ public class Entity : CanvasItem
     /// <summary>Gets or sets local translation in pixels or other host-defined 2D units.</summary>
     /// <value>The translation component of <see cref="Transform"/>.</value>
     /// <exception cref="ArgumentOutOfRangeException">An assigned component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached read is outside the owner/processing groups, or mutation is off-owner.</exception>
+    /// <exception cref="InvalidOperationException">An attached read is outside the owner/processing groups, or mutation is outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the position changes.</exception>
     public Vector2 Position
@@ -137,7 +139,7 @@ public class Entity : CanvasItem
         }
         set
         {
-            EnsureMutable();
+            EnsureTransformMutable();
             EnsureFinite(value, nameof(value));
 
             var transform = _transform;
@@ -151,7 +153,7 @@ public class Entity : CanvasItem
     /// <remarks>Assignment converts only the point through the direct canvas parent's inverse and preserves the
     /// local basis exactly. A neutral parent or TopLevel node uses the point directly.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">An assigned component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached read is outside the owner/processing groups or mutation is off-owner.</exception>
+    /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached read is outside the owner/processing groups or mutation is outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the position changes.</exception>
     public Vector2 GlobalPosition
@@ -159,7 +161,7 @@ public class Entity : CanvasItem
         get => GlobalTransform.Origin;
         set
         {
-            EnsureMutable();
+            EnsureTransformMutable();
             EnsureFinite(value, nameof(value));
 
             var local = GetParentItem() is { } parent
@@ -172,7 +174,7 @@ public class Entity : CanvasItem
     /// <summary>Gets or sets local rotation in radians.</summary>
     /// <value>The canonical rotation decomposed from <see cref="Transform"/>.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned angle is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached read is outside the owner/processing groups, or mutation is off-owner.</exception>
+    /// <exception cref="InvalidOperationException">An attached read is outside the owner/processing groups, or mutation is outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the rotation changes.</exception>
     public float Rotation
@@ -180,7 +182,7 @@ public class Entity : CanvasItem
         get => Transform.Rotation;
         set
         {
-            EnsureMutable();
+            EnsureTransformMutable();
             EnsureFinite(value, nameof(value));
             SetTransform(new Transform(value, _transform.Scale, _transform.Skew, _transform.Origin));
         }
@@ -189,7 +191,7 @@ public class Entity : CanvasItem
     /// <summary>Gets or sets local rotation in degrees.</summary>
     /// <value><see cref="Rotation"/> converted between radians and degrees.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned angle is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached read is outside the owner/processing groups, or mutation is off-owner.</exception>
+    /// <exception cref="InvalidOperationException">An attached read is outside the owner/processing groups, or mutation is outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the rotation changes.</exception>
     public float RotationDegrees
@@ -197,7 +199,7 @@ public class Entity : CanvasItem
         get => Mathf.RadToDeg(Rotation);
         set
         {
-            EnsureMutable();
+            EnsureTransformMutable();
             EnsureFinite(value, "degrees");
             Rotation = Mathf.DegToRad(value);
         }
@@ -208,7 +210,7 @@ public class Entity : CanvasItem
     /// <remarks>With a canvas parent, setting this changes only local rotation after converting the rotated global
     /// basis through the parent; local scale, skew, and position stay unchanged.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The assigned angle is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached read is outside the owner/processing groups or mutation is off-owner.</exception>
+    /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached read is outside the owner/processing groups or mutation is outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the rotation changes.</exception>
     public float GlobalRotation
@@ -216,7 +218,7 @@ public class Entity : CanvasItem
         get => GlobalTransform.Rotation;
         set
         {
-            EnsureMutable();
+            EnsureTransformMutable();
             EnsureFinite(value, nameof(value));
             if (GetParentItem() is not { } parent)
             {
@@ -238,7 +240,7 @@ public class Entity : CanvasItem
     /// <summary>Gets or sets hierarchy-global rotation in degrees.</summary>
     /// <value><see cref="GlobalRotation"/> converted between radians and degrees.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned angle is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached read is outside the owner/processing groups or mutation is off-owner.</exception>
+    /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached read is outside the owner/processing groups or mutation is outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the rotation changes.</exception>
     public float GlobalRotationDegrees
@@ -246,7 +248,7 @@ public class Entity : CanvasItem
         get => Mathf.RadToDeg(GlobalRotation);
         set
         {
-            EnsureMutable();
+            EnsureTransformMutable();
             EnsureFinite(value, "degrees");
             GlobalRotation = Mathf.DegToRad(value);
         }
@@ -257,7 +259,7 @@ public class Entity : CanvasItem
     /// <remarks>Components with magnitude below 0.00001 are replaced by positive 0.00001. Equivalent reflected
     /// matrices can decompose to a different but equivalent rotation, scale, and skew tuple.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">An assigned component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached read is outside the owner/processing groups, or mutation is off-owner.</exception>
+    /// <exception cref="InvalidOperationException">An attached read is outside the owner/processing groups, or mutation is outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the scale changes.</exception>
     public Vector2 Scale
@@ -265,7 +267,7 @@ public class Entity : CanvasItem
         get => Transform.Scale;
         set
         {
-            EnsureMutable();
+            EnsureTransformMutable();
             EnsureFinite(value, nameof(value));
             value = new Vector2(
                 Mathf.Abs(value.X) < MinimumScale ? MinimumScale : value.X,
@@ -281,7 +283,7 @@ public class Entity : CanvasItem
     /// as <see cref="Scale"/>. Equivalent reflected matrices can decompose to a
     /// different but equivalent rotation, scale, and skew tuple.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">An assigned component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached read is outside the owner/processing groups or mutation is off-owner.</exception>
+    /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached read is outside the owner/processing groups or mutation is outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the scale changes.</exception>
     public Vector2 GlobalScale
@@ -289,7 +291,7 @@ public class Entity : CanvasItem
         get => GlobalTransform.Scale;
         set
         {
-            EnsureMutable();
+            EnsureTransformMutable();
             EnsureFinite(value, nameof(value));
             if (GetParentItem() is not { } parent)
             {
@@ -308,7 +310,7 @@ public class Entity : CanvasItem
     /// <summary>Gets or sets the local skew angle in radians.</summary>
     /// <value>The canonical angle between the transformed basis axes relative to an unskewed basis.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned angle is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached read is outside the owner/processing groups, or mutation is off-owner.</exception>
+    /// <exception cref="InvalidOperationException">An attached read is outside the owner/processing groups, or mutation is outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the skew changes.</exception>
     public float Skew
@@ -316,7 +318,7 @@ public class Entity : CanvasItem
         get => Transform.Skew;
         set
         {
-            EnsureMutable();
+            EnsureTransformMutable();
             EnsureFinite(value, nameof(value));
             SetTransform(new Transform(_transform.Rotation, _transform.Scale, value, _transform.Origin));
         }
@@ -327,7 +329,7 @@ public class Entity : CanvasItem
     /// <remarks>With a canvas parent, setting this changes only local skew after converting the globally skewed
     /// basis through the parent; local rotation, scale, and position stay unchanged.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The assigned angle is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached read is outside the owner/processing groups or mutation is off-owner.</exception>
+    /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached read is outside the owner/processing groups or mutation is outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the skew changes.</exception>
     public float GlobalSkew
@@ -335,7 +337,7 @@ public class Entity : CanvasItem
         get => GlobalTransform.Skew;
         set
         {
-            EnsureMutable();
+            EnsureTransformMutable();
             EnsureFinite(value, nameof(value));
             if (GetParentItem() is not { } parent)
             {
@@ -355,12 +357,12 @@ public class Entity : CanvasItem
     /// <summary>Component-multiplies the local scale by a ratio.</summary>
     /// <param name="ratio">The finite X and Y scale ratios.</param>
     /// <exception cref="ArgumentOutOfRangeException">A ratio component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is mutated outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the scale changes.</exception>
     public void ApplyScale(Vector2 ratio)
     {
-        EnsureMutable();
+        EnsureTransformMutable();
         EnsureFinite(ratio, nameof(ratio));
         Scale *= ratio;
     }
@@ -368,12 +370,12 @@ public class Entity : CanvasItem
     /// <summary>Adds an angle to the local rotation.</summary>
     /// <param name="radians">The finite angle in radians.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="radians"/> is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is mutated outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the rotation changes.</exception>
     public void Rotate(float radians)
     {
-        EnsureMutable();
+        EnsureTransformMutable();
         EnsureFinite(radians, nameof(radians));
         Rotation += radians;
     }
@@ -382,12 +384,12 @@ public class Entity : CanvasItem
     /// <param name="offset">The finite local-space offset.</param>
     /// <remarks>Scale and skew do not affect the offset.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">An offset component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is mutated outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the position changes.</exception>
     public void Translate(Vector2 offset)
     {
-        EnsureMutable();
+        EnsureTransformMutable();
         EnsureFinite(offset, nameof(offset));
         Position += offset;
     }
@@ -395,12 +397,12 @@ public class Entity : CanvasItem
     /// <summary>Moves this node by a hierarchy-global offset.</summary>
     /// <param name="offset">The finite global-space offset.</param>
     /// <exception cref="ArgumentOutOfRangeException">An offset component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The global transform is singular, or mutation occurs off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">The global transform is singular, or mutation occurs outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the position changes.</exception>
     public void GlobalTranslate(Vector2 offset)
     {
-        EnsureMutable();
+        EnsureTransformMutable();
         EnsureFinite(offset, nameof(offset));
         GlobalPosition += offset;
     }
@@ -410,7 +412,7 @@ public class Entity : CanvasItem
     /// <param name="scaled">Whether scale magnitude is retained. By default the axis is normalized.</param>
     /// <remarks>An exactly zero or underflowed normalized axis causes no displacement, but still assigns Position.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="delta"/> is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is mutated outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the position changes.</exception>
     public void MoveLocalX(float delta, bool scaled = false) => MoveLocal(delta, useXAxis: true, scaled);
@@ -420,7 +422,7 @@ public class Entity : CanvasItem
     /// <param name="scaled">Whether scale magnitude is retained. By default the axis is normalized.</param>
     /// <remarks>An exactly zero or underflowed normalized axis causes no displacement, but still assigns Position.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="delta"/> is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is mutated outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the position changes.</exception>
     public void MoveLocalY(float delta, bool scaled = false) => MoveLocal(delta, useXAxis: false, scaled);
@@ -444,12 +446,12 @@ public class Entity : CanvasItem
     /// <remarks>A target equal to <see cref="GlobalPosition"/> adds a zero angle and leaves rotation unchanged, but
     /// still commits the transform and delivers enabled local notifications.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">A point component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The global transform is singular, or mutation occurs off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">The global transform is singular, or mutation occurs outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the rotation changes.</exception>
     public void LookAt(Vector2 globalPoint)
     {
-        EnsureMutable();
+        EnsureTransformMutable();
         EnsureFinite(globalPoint, nameof(globalPoint));
 
         Rotate(GetAngleTo(globalPoint));
@@ -554,17 +556,17 @@ public class Entity : CanvasItem
 
     private void SetTransform(Transform transform)
     {
-        if (this is PhysicsBody body) body.Space?.EnsureImplementationWriteAccess();
+        if (this is PhysicsBody body) body.Space?.EnsureSceneTransformWriteAccess(Tree);
         EnsureFinite(transform, nameof(transform));
 
         _transform = transform;
 
-        NotifyLocalTransformChanged();
+        CommitLocalTransformChange();
     }
 
     private void MoveLocal(float delta, bool useXAxis, bool scaled)
     {
-        EnsureMutable();
+        EnsureTransformMutable();
         EnsureFinite(delta, nameof(delta));
 
         var axis = useXAxis ? _transform.X : _transform.Y;

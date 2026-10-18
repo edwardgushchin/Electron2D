@@ -1,6 +1,6 @@
 # AnimatableBody
 
-Last updated: 2026-10-12
+Last updated: 2026-10-18
 
 **Inherits:** [StaticBody](StaticBody.md), [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -76,3 +76,5 @@ separates verified motion/lifetime/allocation cases from remaining physics cover
 Attached disposal skips the public local-transform notification setter after the node has been marked disposed, then completes normal target reset and physics/tree departure. Ordinary live exit still disables notifications. Shared reporting-policy conformance exercises disposal and stable retained configuration across all five scene body roles.
 
 The full shared PhysicsSurfaceVelocityTests and PhysicsServerStateTests now execute on explicitly selected public CPU/GPU worlds, retaining additive target/surface motion, stationary idle poses and latest-target, zero/inactive-step and reentry rules. This does not close wider inherited, native/platform or final performance acceptance.
+
+[Current-group Entity pose edits](../components/scene-hierarchy.md#transform-authoring-from-processing-groups) now defer selected backend publication to the joined owner phase. Scene-space borrowing excludes native/query/step/release access during worker callbacks, rolls back partial acquisition and always releases before numerical work. Body identities, child-shape transforms and synchronized AnimatableBody presentation retain their existing semantics; velocity, forces, geometry and other physical operations keep their own owner/borrow guards.

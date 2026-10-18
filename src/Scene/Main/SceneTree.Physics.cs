@@ -4,6 +4,22 @@ public sealed partial class SceneTree
 {
     // ponytail: the distinct world list is tiny for ordinary viewport graphs; index by identity if measured scale requires it.
     private readonly List<WorldRuntime> _physicsWorlds = [];
+    private readonly List<PhysicsSpace> _sceneTransformSpaces = [];
+    private void BeginSceneTransformAuthoring()
+    {
+        _sceneTransformSpaces.EnsureCapacity(_physicsWorlds.Count);
+        try
+        {
+            foreach (var world in _physicsWorlds)
+                if (world.ExistingSpace is { } space) { space.BeginSceneTransformAuthoring(this); _sceneTransformSpaces.Add(space); }
+        }
+        catch { EndSceneTransformAuthoring(); throw; }
+    }
+    private void EndSceneTransformAuthoring()
+    {
+        foreach (var space in _sceneTransformSpaces) space.EndSceneTransformAuthoring();
+        _sceneTransformSpaces.Clear();
+    }
     private World? _physicsWorld;
     private readonly List<CanvasItem> _worldRebindPending = [];
     private WorldRuntime? _defaultWorldRuntime;

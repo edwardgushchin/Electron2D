@@ -161,7 +161,24 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
         if (Environment.CurrentManagedThreadId != _ownerThreadID)
             throw new InvalidOperationException("Physics queries require the space owner thread.");
+        if (_sceneTransformTree is not null) throw new InvalidOperationException("Physics state is borrowed by a parallel scene transform stage.");
         if (_stepping) throw new InvalidOperationException("A physics space cannot be queried while stepping.");
+    }
+
+    private SceneTree? _sceneTransformTree;
+    internal void BeginSceneTransformAuthoring(SceneTree tree)
+    {
+        EnsureInitializationComplete(); EnsureReleaseAccess(); EnsureImplementationWriteAccess();
+        if (_extensionCallbackDepth != 0 || DispatchingCallbacks) throw new InvalidOperationException("Scene transform authoring cannot overlap a backend or body-state callback.");
+        if (!tree.HasOwnerThread(_ownerThreadID)) throw new InvalidOperationException("A scene transform stage requires the same world owner.");
+        _sceneTransformTree = tree;
+    }
+    internal void EndSceneTransformAuthoring() => _sceneTransformTree = null;
+    internal void EnsureSceneTransformWriteAccess(SceneTree? tree)
+    {
+        if (_sceneTransformTree is { } borrowed && ReferenceEquals(borrowed, tree) && ReferenceEquals(SceneTree.CurrentProcessingGroup?.Tree, tree) &&
+            !_stepping && _extensionCallbackDepth == 0) return;
+        EnsureImplementationWriteAccess();
     }
 
     internal bool IsOwnerThread => Environment.CurrentManagedThreadId == _ownerThreadID;
@@ -207,6 +224,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void EnsureImplementationWriteAccess()
     {
         if (Environment.CurrentManagedThreadId != _ownerThreadID) throw new InvalidOperationException("Physics authoring requires the space owner thread.");
+        if (_sceneTransformTree is not null) throw new InvalidOperationException("Native physics authoring cannot overlap a parallel scene transform stage.");
         if (_implementationCallbackDepth != 0) throw new InvalidOperationException("Physics authoring cannot change while a numerical physics implementation hook is borrowed.");
     }
     internal void EnsureImplementationRelease()

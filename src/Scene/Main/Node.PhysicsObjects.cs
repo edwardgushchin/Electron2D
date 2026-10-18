@@ -24,19 +24,21 @@ public partial class Node
         foreach (var child in _children) child.EnsurePhysicsObjectAccess();
     }
 
-    private void EnsurePhysicsAuthoringAccess()
+    private void EnsurePhysicsAuthoringAccess(bool sceneTransform = false)
     {
         if (!PhysicsColliderBackend.HasAnyAttachments && !CollisionObject.HasSpaceGeometryBorrows && !PhysicsServerShape.HasDataUses) return;
-        for (var ancestor = Parent; ancestor is not null; ancestor = ancestor.Parent) Check(ancestor);
-        Descendants(this);
-        static void Check(Node node)
+        var tree = sceneTransform ? Tree : null;
+        for (var ancestor = Parent; ancestor is not null; ancestor = ancestor.Parent) Check(ancestor, tree);
+        Descendants(this, tree);
+        static void Check(Node node, SceneTree? tree)
         {
             if (node is not CollisionObject collider) return;
             collider.EnsureGeometryAuthoringAccess();
-            collider.Backend.Space?.EnsureImplementationWriteAccess();
+            if (tree is null) collider.Backend.Space?.EnsureImplementationWriteAccess();
+            else collider.Backend.Space?.EnsureSceneTransformWriteAccess(tree);
         }
-        static void Descendants(Node node)
-        { Check(node); foreach (var child in node._children) Descendants(child); }
+        static void Descendants(Node node, SceneTree? tree)
+        { Check(node, tree); foreach (var child in node._children) Descendants(child, tree); }
     }
 
     private void NotifyPhysicsObjectBindings(bool entering)

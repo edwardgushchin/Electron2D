@@ -14,6 +14,8 @@ public partial class SceneTree
     private readonly List<ProcessingGroup> _groupStage = [];
     private Action<int>? _runGroupWorker;
     private bool _groupPhysics;
+    private volatile bool _processingWorkerStage;
+    internal bool IsProcessingWorkerStage => _processingWorkerStage;
     private double _groupUnscaledDelta;
     private ulong _groupTreeOrderPath = ulong.MaxValue;
     private ProcessingGroup DefaultProcessingGroup
@@ -153,8 +155,14 @@ public partial class SceneTree
                 {
                     if (!_processingWorkGatePrepared) PrepareProcessingWorkGate();
                     _runGroupWorker ??= index => RunProcessingGroup(_groupStage[index]);
-                    var task = WorkerThreadPool.AddGroupTask(_runGroupWorker, _groupStage.Count, highPriority: true);
-                    WorkerThreadPool.WaitForGroupTaskCompletion(task);
+                    BeginSceneTransformAuthoring();
+                    try
+                    {
+                        _processingWorkerStage = true;
+                        var task = WorkerThreadPool.AddGroupTask(_runGroupWorker, _groupStage.Count, highPriority: true);
+                        WorkerThreadPool.WaitForGroupTaskCompletion(task);
+                    }
+                    finally { _processingWorkerStage = false; EndSceneTransformAuthoring(); }
                 }
                 catch (Exception error) { CollectException(ref errors, error); }
             }

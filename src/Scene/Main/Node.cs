@@ -2677,6 +2677,13 @@ public partial class Node : ElectronObject
         RenderingServer.NotifyRenderMutation();
     }
 
+    internal void EnsureTransformMutable()
+    {
+        ThrowIfDisposed(); EnsureNotSceneCapture(); Tree?.EnsureProcessingAccess(this);
+        EnsurePhysicsAuthoringAccess(sceneTransform: true); ValidateMutation();
+        RenderingServer.NotifyRenderMutation();
+    }
+
     internal void ValidateNodeMutation()
     {
         ThrowIfDisposed();

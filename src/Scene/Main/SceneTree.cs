@@ -1224,7 +1224,8 @@ public sealed partial class SceneTree : MainLoop
         finally { _lifecycleExecutionDepth--; }
     }
 
-    internal bool IsOwnerThread => Environment.CurrentManagedThreadId == _ownerThreadId;
+    internal bool IsOwnerThread => Environment.CurrentManagedThreadId == _ownerThreadId && !_processingWorkerStage;
+    internal bool HasOwnerThread(int threadID) => _ownerThreadId == threadID;
 
     internal void EnsureOwnerThread()
     {
@@ -1975,7 +1976,8 @@ public sealed partial class SceneTree : MainLoop
 
     internal void QueueTransformNotification(CanvasItem item)
     {
-        if (item.TransformQueueEntry.List is null) _transformChanges.AddLast(item.TransformQueueEntry);
+        lock (_workGate)
+            if (item.TransformQueueEntry.List is null) _transformChanges.AddLast(item.TransformQueueEntry);
     }
 
     internal void DeliverTransformNotification(CanvasItem item)
