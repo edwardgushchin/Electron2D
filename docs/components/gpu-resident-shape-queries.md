@@ -1,5 +1,7 @@
 # Resident GPU shape queries
 
+[Cold query geometry](physics-queries.md#cold-query-geometry) is resolved under the using-world numerical/lifetime guard before retained query-cache selection or replacement. Nested queries complete before outer cache preparation; resident algorithms, transfers and result formats are unchanged.
+
 Last updated: 2026-10-12
 
 ## Boundary and ownership

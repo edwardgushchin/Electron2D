@@ -1,5 +1,7 @@
 # PhysicsShapeBackend
 
+`ReadQueryGeometry` borrows the using world as a numerical callback before demanding immutable resource geometry and releases it in finally. CPU/GPU, caller-created direct-space views and both selected shape-pair operands share this preflight; see [cold query geometry](../components/physics-queries.md#cold-query-geometry).
+
 Unrounded convex point containment uses outward fixture half-planes through `ContainsPoint(ref B2Polygon, B2Vec2)`. Native fixed-array references require stable writable storage; rounded polygons keep their distance path. [The shared query regression](../components/physics-point-containment.md) covers points, ray origins, Area audio and directed shape queries.
 
 Last updated: 2026-10-16

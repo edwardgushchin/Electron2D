@@ -8,6 +8,7 @@ namespace Electron2D;
 /// release its world, or capture/restore its checkpoints during a query hook. Configuring a larger destination or deeper nesting may allocate;
 /// unchanged warmed calls reuse storage. Shape-query resources are borrowed through geometry preparation, hooks and validated publication;
 /// geometry/policy writes, reset/copy, disposal and owned RID replacement/retirement reject during this borrow.
+/// Cold geometry suppliers additionally borrow the world against numerical writes before query scratch is used.
 /// Implementations must obey query geometry, filtering and ordering contracts.</remarks>
 public abstract partial class PhysicsDirectSpaceStateExtension : PhysicsDirectSpaceState
 {
@@ -73,7 +74,7 @@ public abstract partial class PhysicsDirectSpaceStateExtension : PhysicsDirectSp
             if (shape is not null)
             {
                 shape.BeginCollisionUse(); frame.BorrowedShape = shape;
-                _ = shape.GetGeometryData();
+                _ = PhysicsShapeBackend.ReadQueryGeometry(_space, shape);
             }
             return frame;
         }

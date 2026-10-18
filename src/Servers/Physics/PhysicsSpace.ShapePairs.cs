@@ -18,7 +18,7 @@ internal sealed partial class PhysicsSpace
                 secondGeometry.BeginCollisionUse();
                 try
                 {
-                    _ = firstGeometry.GetGeometryData(); _ = secondGeometry.GetGeometryData();
+                    _ = PhysicsShapeBackend.ReadQueryGeometry(this, firstGeometry); _ = PhysicsShapeBackend.ReadQueryGeometry(this, secondGeometry);
                     var scratch = _shapePairs.Begin(contacts.Length);
                     try
                     {
@@ -52,7 +52,7 @@ internal sealed partial class PhysicsSpace
                 secondGeometry.BeginCollisionUse();
                 try
                 {
-                    _ = firstGeometry.GetGeometryData(); _ = secondGeometry.GetGeometryData();
+                    _ = PhysicsShapeBackend.ReadQueryGeometry(this, firstGeometry); _ = PhysicsShapeBackend.ReadQueryGeometry(this, secondGeometry);
                     var scratch = _shapePairs.Begin(contacts.Length);
                     try
                     {

@@ -1,5 +1,31 @@
 # Physics server and direct queries component
 
+## Cold query geometry
+
+CPU/GPU shape-query preparation borrows the using world before evaluating a cold
+procedural resource. Caller-created direct-space views and both selected shape-pair
+operands use the same numerical/lifetime guard. A supplier cannot release the
+final world resource, remove or transfer a collider, or write numerical state.
+Its original exception releases the guard for a later retry without changing
+caller output. Pure input reads and nested queries retain their existing rules.
+
+The GPU driver resolves cold geometry before selecting or replacing its retained
+query cache, so a nested query completes before outer cache preparation starts.
+The [public-only query-geometry fixture](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.QueryGeometry.cs)
+exercises array/span shape overlap and contacts, motion fractions and rest queries
+through selected and caller-created views, both resource-pair operand orders and
+body-slot queries. Circle motion checks contain the analytical first-contact
+fraction 0.2 within a bracket no wider than 1/256, matching eight binary refinements
+(with 0.000001 float slack). Identity, errors and lifetime checks are exact.
+Warmed measurements include eleven query routes and a complete moving physics
+frame. Evidence and execution limits are recorded in
+`bin/physics-query-borrow/2026-10-18/validation.json`.
+
+This protects geometry construction; it does not change ordinary query-hook,
+parameter-edit or shared World-wrapper ownership contracts. Complete numerical,
+hardware/FPS, native-memory, network and foreign-platform acceptance remain open.
+
+
 [Terminal world authoring](physics-registered-adapter.md#terminal-world-authoring) now shares common simulation/restore failure validation with numerical body preparation. Motion/role writes reject before authoring; valid healthy callbacks and failed-world cleanup retain their phase/lifetime rules.
 
 

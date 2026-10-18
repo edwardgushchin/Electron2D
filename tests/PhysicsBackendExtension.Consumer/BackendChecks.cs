@@ -6,6 +6,7 @@ public static partial class BackendChecks
     {
         AllocationWarmupCheck.Verify(Collect);
         RunGeometryInputs();
+        RunQueryGeometry();
         RunJointResponse();
         RunHistory();
         RunSleep();

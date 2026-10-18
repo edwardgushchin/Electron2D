@@ -29,6 +29,13 @@ internal static class PhysicsShapeBackend
         if (shape.GetGeometryData().Type == PhysicsServer.ShapeType.Custom)
             throw new NotSupportedException("Custom geometry requires a registered physics implementation.");
     }
+
+    internal static ShapeGeometry ReadQueryGeometry(PhysicsSpace space, Shape shape)
+    {
+        space.BeginImplementationCallback();
+        try { return shape.GetGeometryData(); }
+        finally { space.EndImplementationCallback(); }
+    }
     internal static B2Vec2 ToBackend(Vector2 value) => new(value.X * PhysicsSpace.MetersPerUnit, value.Y * PhysicsSpace.MetersPerUnit);
 
     /// <summary>Converts authored angles without approximating an unbounded collider or query orientation.</summary>

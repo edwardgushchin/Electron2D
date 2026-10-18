@@ -1,5 +1,7 @@
 # PhysicsDirectSpaceStateExtension
 
+Cold world-query geometry now uses the [shared using-world borrow](../components/physics-queries.md#cold-query-geometry) before user suppliers run. Numerical writes, collider retirement/transfer and final world release reject; original supplier failures can retry. Existing pure input reads and nested query behavior are retained.
+
 Last updated: 2026-10-14
 
 **Declaration:** `public abstract partial class PhysicsDirectSpaceStateExtension : PhysicsDirectSpaceState` · **Inherits:** [PhysicsDirectSpaceState](PhysicsDirectSpaceState.md) · **Component:** [Space-query extensions](../components/physics-space-extensions.md)

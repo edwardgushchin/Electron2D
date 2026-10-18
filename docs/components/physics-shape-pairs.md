@@ -1,5 +1,7 @@
 # Selected shape-pair queries
 
+Both cold operands now use [world-query geometry preflight](physics-queries.md#cold-query-geometry) while their existing resource/pair borrows remain active. Numerical authoring rejects during supplier execution; selected pair hooks, staged output validation and nested scratch retain their existing contracts.
+
 Last updated: 2026-10-14
 
 The internal selected-owner bridge executes resource/resource and body-slot/resource

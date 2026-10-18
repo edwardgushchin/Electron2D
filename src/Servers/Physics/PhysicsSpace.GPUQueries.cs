@@ -45,6 +45,7 @@ internal sealed partial class PhysicsSpace
         GPUPhysicsBodyStore.ShapeQueryMode mode, int limit)
     {
         var shape = parameters.Shape ?? PhysicsServer.Service.GetShapeGeometry(parameters.ShapeRID);
+        _ = PhysicsShapeBackend.ReadQueryGeometry(this, shape);
         if (!ReferenceEquals(_gpuQueryShape, shape))
         {
             if (_gpuQueryGeometry is null) _gpuQueryGeometry = GPUStore!.RetainQueryGeometry(shape);

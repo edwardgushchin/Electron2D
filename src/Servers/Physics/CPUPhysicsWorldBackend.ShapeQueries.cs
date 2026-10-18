@@ -181,6 +181,7 @@ internal sealed partial class CPUPhysicsWorldBackend
     {
         var space = Space;
         var shape = parameters.Shape ?? PhysicsServer.Service.GetShapeGeometry(parameters.ShapeRID);
+        _ = PhysicsShapeBackend.ReadQueryGeometry(space, shape);
         var geometry = shape.GetGeometry();
         _queryRaySlide = geometry.Kind == PhysicsShapeGeometry.ShapeKind.SeparationRay ? geometry.SlideOnSlope : null;
         _queryProxies.Clear();
