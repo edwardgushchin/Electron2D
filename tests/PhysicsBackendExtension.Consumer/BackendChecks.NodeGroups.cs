@@ -86,7 +86,7 @@ public static partial class BackendChecks
                 Check(Environment.CurrentManagedThreadId != owner && worker.GetGroups().Contains("worker"), "Worker uses actual group-owned access");
                 Reject<InvalidOperationException>(() => mover.IsInGroup("actors")); Reject<InvalidOperationException>(() => mover.GetGroups());
                 Reject<InvalidOperationException>(() => mover.AddToGroup("bad"));
-                Reject<InvalidOperationException>(() => workerBody.Position = Vector2.Zero); workerRan = true;
+                workerBody.Position = workerBody.Position; workerRan = true;
             };
             long workerBytes = 0;
             var injectAllocation = false; byte[]? allocationSink = null;

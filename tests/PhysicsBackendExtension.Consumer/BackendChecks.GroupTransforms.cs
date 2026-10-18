@@ -75,7 +75,7 @@ public static partial class BackendChecks
         };
         root.AddChild(collector); using var tree = new SceneTree(root);
         var guardChecks = true;
-        a.Read = Read; b.Read = Read;
+        a.Read = () => Read(first, second); b.Read = () => Read(second, first);
         using var barrier = new Barrier(2);
         Snapshot(); parent.Position = parent.Position; parent.ForceUpdateTransform(); var beforeNotices = notices; var calls = parent.Calls;
         parent.Readers = barrier; tree.PhysicsFrame(.01); parent.Readers = null;
@@ -114,7 +114,7 @@ public static partial class BackendChecks
             for (var i = 0; i < targets.Length; i++) { locals[i] = targets[i].Transform; globals[i] = targets[i].GlobalTransform; }
             controlLocal = control.GetTransform(); controlGlobal = control.GetGlobalTransform(); pivot = control.GetCombinedPivotOffset(); relative = leaf.GetRelativeTransformToParent(parent);
         }
-        void Read()
+        void Read(RigidBody own, RigidBody foreign)
         {
             for (var i = 0; i < targets.Length; i++)
             {
@@ -131,17 +131,19 @@ public static partial class BackendChecks
                 "Relative, TopLevel and neutral-boundary chains retain their separate meanings");
             Check(control.GetTransform().IsEqualApprox(controlLocal) && control.GetGlobalTransform().IsEqualApprox(controlGlobal) && control.GetCombinedPivotOffset() == pivot &&
                 control.GetRect().Position.IsEqualApprox(controlLocal.Origin) && control.GetGlobalRect().Position.IsEqualApprox(controlGlobal.Origin), "Control pivot/offset/rectangle observations support mixed ancestry");
-            if (guardChecks && Environment.CurrentManagedThreadId != owner)
-            {
-                Reject<InvalidOperationException>(() => first.Position = first.Position); Reject<InvalidOperationException>(() => leaf.Translate(Vector2.One));
-                Reject<InvalidOperationException>(() => leaf.GlobalTransform = leaf.GlobalTransform); Reject<InvalidOperationException>(() => parent.ForceUpdateTransform());
-                Reject<InvalidOperationException>(() => first.LinearVelocity = Vector2.Zero);
-                foreach (var read in GroupTransformReads) Reject<ObjectDisposedException>(() => read(dead));
-                Reject<InvalidOperationException>(() => singular.ToLocal(Vector2.One)); Reject<InvalidOperationException>(() => singular.GetAngleTo(Vector2.One));
-                Reject<ArgumentNullException>(() => leaf.GetRelativeTransformToParent(null!)); Reject<ArgumentException>(() => leaf.GetRelativeTransformToParent(broken));
-                Reject<ArgumentOutOfRangeException>(() => leaf.ToLocal(new(float.NaN, 0))); Reject<ArgumentOutOfRangeException>(() => leaf.GetAngleTo(new(float.PositiveInfinity, 0)));
-            }
+            if (guardChecks) Guard(own, foreign);
         }
+        void Guard(RigidBody own, RigidBody foreign)
+        {
+            own.Position = own.Position; Reject<InvalidOperationException>(() => foreign.Position = foreign.Position); Reject<InvalidOperationException>(() => leaf.Translate(Vector2.One));
+            Reject<InvalidOperationException>(() => leaf.GlobalTransform = leaf.GlobalTransform); Reject<InvalidOperationException>(() => parent.ForceUpdateTransform());
+            Reject<InvalidOperationException>(() => first.LinearVelocity = Vector2.Zero);
+            foreach (var read in GroupTransformReads) Reject<ObjectDisposedException>(() => read(dead));
+            Reject<InvalidOperationException>(() => singular.ToLocal(Vector2.One)); Reject<InvalidOperationException>(() => singular.GetAngleTo(Vector2.One));
+            Reject<ArgumentNullException>(() => leaf.GetRelativeTransformToParent(null!)); Reject<ArgumentException>(() => leaf.GetRelativeTransformToParent(broken));
+            Reject<ArgumentOutOfRangeException>(() => leaf.ToLocal(new(float.NaN, 0))); Reject<ArgumentOutOfRangeException>(() => leaf.GetAngleTo(new(float.PositiveInfinity, 0)));
+        }
+
         void Frame()
         {
             Snapshot(); parent.Position = parent.Position; parent.ForceUpdateTransform(); var oldNotices = notices; var oldX = first.Position.X;

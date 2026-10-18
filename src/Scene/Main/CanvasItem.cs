@@ -44,6 +44,7 @@ public abstract partial class CanvasItem : Node
     internal readonly LinkedListNode<CanvasItem> TransformQueueEntry;
     private volatile bool _globalTransformInvalid = true;
     private Transform _globalTransform;
+    private long _globalTransformRevision;
 
     /// <summary>Returns the local transform supplied by this item's placement model.</summary>
     /// <returns>The transform relative to the direct canvas parent.</returns>
@@ -66,16 +67,25 @@ public abstract partial class CanvasItem : Node
     {
         ThrowIfDisposed();
         Tree?.EnsureProcessingReadAccess();
-        if (_globalTransformInvalid)
+        while (true)
         {
+            var revision = Volatile.Read(ref _globalTransformRevision);
+            if (!_globalTransformInvalid)
+            {
+                var cached = _globalTransform;
+                if (revision == Volatile.Read(ref _globalTransformRevision) && !_globalTransformInvalid) return cached;
+                continue;
+            }
             var global = GetParentItem() is { } parent ? parent.GetGlobalTransform() * GetTransform() : GetTransform();
             // Virtual getters may reenter; only publication holds the item gate.
             lock (_canvasItemGate)
             {
+                // A getter may mutate; do not publish its observation across invalidation.
+                if (revision != _globalTransformRevision) return global;
                 if (_globalTransformInvalid) { _globalTransform = global; _globalTransformInvalid = false; }
+                return _globalTransform;
             }
         }
-        return _globalTransform;
     }
 
     internal Viewport? CanvasViewport => _canvasLayer?.CanvasViewport ?? GetViewport();
@@ -86,7 +96,7 @@ public abstract partial class CanvasItem : Node
     /// <param name="sizeChanged">Whether to request redraw before delivering the event; defaults to true.</param>
     /// <remarks>Commit the geometry first. Delivery is synchronous, including while hidden or detached, and does not
     /// propagate to children. Redraw follows QueueRedraw rules. A throwing subscriber stops later subscribers.</remarks>
-    /// <exception cref="InvalidOperationException">The caller is not the scene owner or a capture is active.</exception>
+    /// <exception cref="InvalidOperationException">The caller is outside the owner/current processing group, a capture is active, or physical state is borrowed.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     /// <exception cref="Exception">An ItemRectChanged subscriber throws.</exception>
     protected void NotifyItemRectChanged(bool sizeChanged = true)
@@ -99,13 +109,19 @@ public abstract partial class CanvasItem : Node
     /// <summary>Invalidates global transforms and delivers an enabled local-transform notification.</summary>
     /// <remarks>Commit the local transform first. Global invalidation stops at neutral and TopLevel descendants.
     /// Global notifications coalesce in the scene queue; local notification and its typed event are synchronous,
-    /// only while attached and NotifyLocalTransformChanges is enabled. Even equal assignments notify.</remarks>
-    /// <exception cref="InvalidOperationException">The caller is not the scene owner or a capture is active.</exception>
+    /// only while attached and NotifyLocalTransformChanges is enabled. Even equal assignments notify. The owner or
+    /// current processing group may commit placement; callbacks run outside the cache/notification queue gates.</remarks>
+    /// <exception cref="InvalidOperationException">The caller is outside the owner/current processing group, a capture is active, or physical state is borrowed.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     /// <exception cref="Exception">A local notification callback throws after global invalidation.</exception>
     protected void NotifyLocalTransformChanged()
     {
-        EnsureMutable();
+        EnsureTransformMutable();
+        CommitLocalTransformChange();
+    }
+
+    internal void CommitLocalTransformChange()
+    {
         if (ServerState is { } state) state.Transform = null;
         PropagateGlobalTransformChanged();
         if (Tree is { IsPhysicsInterpolationActive: true, IsInPhysicsFrame: false }) ResetInterpolationSnapshot();
@@ -171,12 +187,12 @@ public abstract partial class CanvasItem : Node
         {
             _interpolationValid = false;
             Tree!.CancelTransformNotification(this);
-            _globalTransformInvalid = true;
+            InvalidateGlobalTransformCache();
             try { ExitCanvas(); }
             finally { _parentVisible = false; }
             return;
         }
-        _globalTransformInvalid = true;
+        InvalidateGlobalTransformCache();
         _parentVisible = GetParentVisibility();
         List<Exception>? errors = null;
         try { EnterCanvas(); }
@@ -586,18 +602,28 @@ public abstract partial class CanvasItem : Node
     internal void InvalidatePhysicsReplayTransform()
     {
         if (ServerState is { } state) { state.Transform = null; state.Interpolation.Reset(GetVisualTransform()); }
-        _globalTransformInvalid = true; _interpolationValid = false;
+        InvalidateGlobalTransformCache(); _interpolationValid = false;
         Tree?.CancelTransformNotification(this);
         for (var i = 0; i < GetChildCount(includeInternal: true); i++)
             if (GetChild(i, includeInternal: true) is CanvasItem { TopLevel: false } child && !child.IsDisposed)
                 child.InvalidatePhysicsReplayTransform();
     }
 
+    private bool InvalidateGlobalTransformCache()
+    {
+        lock (_canvasItemGate)
+        {
+            var wasValid = !_globalTransformInvalid;
+            _globalTransformInvalid = true; Interlocked.Increment(ref _globalTransformRevision);
+            return wasValid;
+        }
+    }
+
     private void PropagateGlobalTransformChanged()
     {
-        if (_globalTransformInvalid) return;
-        _globalTransformInvalid = true;
-        if (_notifyTransformChanges && IsInsideTree) Tree!.QueueTransformNotification(this);
+        var wasValid = InvalidateGlobalTransformCache();
+        if (wasValid && _notifyTransformChanges && IsInsideTree) Tree!.QueueTransformNotification(this);
+        if (!wasValid && Tree?.IsProcessingWorkerStage != true) return;
         for (var i = 0; i < GetChildCount(includeInternal: true); i++)
             if (GetChild(i, includeInternal: true) is CanvasItem { TopLevel: false } child && !child.IsDisposed)
                 child.PropagateGlobalTransformChanged();

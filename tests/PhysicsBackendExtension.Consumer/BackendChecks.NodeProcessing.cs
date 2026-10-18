@@ -95,7 +95,7 @@ public static partial class BackendChecks
                     foreach (var control in ProcessingControls)
                         try { control.Write(node); }
                         catch (Exception error) { defects.Add(node.GetType().Name + ": current-group " + control.Name + " write rejected: " + error.GetType().Name); }
-                Reject<InvalidOperationException>(() => worker.Position = Vector2.One);
+                worker.Position = worker.Position;
                 Reject<InvalidOperationException>(() => worker.InputPickable = true);
                 Reject<InvalidOperationException>(() => root.ProcessEnabled = root.ProcessEnabled);
             };

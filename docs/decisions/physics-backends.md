@@ -24,8 +24,8 @@ ADR 0012 selected vendored managed Box2D.NET for CPU physics. Scene/server bodie
   startup; raw spaces capture it at creation. A true value retains one numerical
   solver thread for that world. Owner preparation completes before dispatch;
   the numerical interval joins before synchronization, scene/contact publication,
-  queries and gameplay callbacks. Device creation/retirement and authored edits
-  remain on the original owner. Only that exact solver thread borrows device
+  queries and physical gameplay callbacks. Device creation/retirement and native authored edits
+  remain on the original owner; scene pose metadata follows the stage boundary below. Only that exact solver thread borrows device
   state during its interval, with command acquisition/use/submission on the same
   thread. The independent GPU still owns numerical state; no host solver/mirror
   is introduced. Registered Solve and its immediate failure observation use the
@@ -37,6 +37,8 @@ ADR 0012 selected vendored managed Box2D.NET for CPU physics. Scene/server bodie
   usable without exposing an asynchronous in-flight world. CPU and provider
   verification must be recorded separately from the pending GPU/native gate;
   serial/parallel scheduling alone is not a performance acceptance claim.
+
+- Scene processing groups may author their own Entity poses and child collision transforms as scene metadata. The owner acquires a stage borrow for each existing bound space before parallel dispatch and releases all borrows after joining every runner. Acquisition rolls back earlier spaces on failure. During the stage no numerical step, direct query, native authoring or release may overlap this metadata, including when the physical owner thread helps a group. Scene pose validation still rejects numerical/resource geometry borrows. The world owner publishes the resulting body/Area/shape poses before subsequent queries or solving; workers do not touch numerical handles or issue device commands. This stage boundary is separate from the numerical solver-thread borrow and preserves its failed-step policy.
 
 - Backend implementation registration and complete typed extension dispatch follow [ADR 0103](physics-extensions.md#adr-0103). Named registration requires the connected scene/query/state routing and external consumer defined there; a factory alone does not close the extension requirement. Current operation-specific acceptance remains recorded in coverage.
 - Preserve managed Box2D.NET as the CPU backend and develop an Electron2D-owned GPU backend through the already vendored SDL GPU/ShaderCross interface. Game developers explicitly choose CPU/Box2D or GPU according to their simulation and deployment goals; CPU is a first-class selectable backend. Physical computation and canvas rendering have independent selection; GPU rendering must continue to support CPU physics. Startup fallback to CPU when GPU is unavailable is a separate configurable policy, not a replacement for explicit backend choice. A failed or partially committed GPU step must not silently replay on CPU. Requested and actual backend identity and startup fallback must be observable. Expose `PhysicsServer.Backend` with CPU/GPU, `SpaceCreate(Backend, bool allowCPUFallback = false)` and the parallel `World` constructor. Keep existing parameterless creation CPU-only. Requested/actual backend and a nullable startup fallback reason are readable for spaces and worlds. World physics stays lazy; duplicates retain the same selected runtime. Backend choice is immutable for that runtime; assigning another viewport World uses ordinary detach/reattach. Fallback catches startup capability/native-load failures only during construction, preserving the failure diagnostic, and never catches a begun physics step. Shared-world integration is now in progress; acceptance remains bounded by the executed common tests.

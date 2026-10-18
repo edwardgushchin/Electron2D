@@ -1398,3 +1398,5 @@ Actual solver ownership, GPU residency and query disposal guarantees remain with
 their existing owners. [Shape-edit recovery and allocation checks](physics-queries.md#failed-raw-shape-edits-and-warmed-reuse)
 cover changed geometry and the real full physics step; native/driver totals and
 hardware performance remain separate acceptance gates.
+
+[Current-group Entity pose edits](scene-hierarchy.md#transform-authoring-from-processing-groups) now defer selected backend publication to the joined owner phase. Scene-space borrowing excludes native/query/step/release access during worker callbacks, rolls back partial acquisition and always releases before numerical work. Body identities, child-shape transforms and synchronized AnimatableBody presentation retain their existing semantics; velocity, forces, geometry and other physical operations keep their own owner/borrow guards.
