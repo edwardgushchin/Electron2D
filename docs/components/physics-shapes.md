@@ -1,5 +1,47 @@
 # Collision shapes component
 
+## Body/Area append contract audit
+
+`PhysicsServer.BodyAddShape` and `AreaAddShape`, together with their registered
+implementation projections, now have complete operation-level accounting under
+ADRs 0063, 0071, 0088 and 0103. The existing code already supplies the contract;
+this audit changes documentation and coverage. It adds no runtime API or behavior.
+
+The pinned declarations and their owners have no deprecated metadata. Both take
+an owner RID, shape RID, local transform defaulting to identity and `disabled=false`;
+nullable C# transforms select that same identity. Accepted physics poses remain
+finite translation/rotation with unit scale and zero skew under ADR 0071. An append
+adds one logical index regardless of native decomposition, retains existing slots
+and resource identity, and creates no scene child. Scene raw appends create a
+transient null-owner group; their numerical preparation is deferred. Raw attached
+appends rebuild immediately, restore original logical/history inputs on failure
+and retain exact apply/rollback errors, with dirty retry before numerical use.
+
+Unconfigured built-in RIDs may be appended and stay numerically inactive until
+successful configuration. Disabled and disposed resources retain their accepted
+logical slot semantics. Built-ins execute eight represented kinds and reject
+unsupported enabled Custom input before mutation; registered owners receive all
+nine canonical kinds through their complete borrowed `RebuildShapes` input span.
+The engine owns RID/slot metadata and selected implementations own actual geometry.
+
+Fifty-two fresh public-only JIT/strict NativeAOT profiles on the frozen `02b3328e`
+authored source cohort cover CPU without an available GPU, software Vulkan and a
+registered solver, serial/separate policy, eight-kind pending initialization,
+nine-kind procedural imports, ordinary and injected append/edit rollback, shared
+scene/raw Body/Area membership, and both mixed-world creation orders. Existing
+warm full-frame gates retain strict zero owner/all-thread managed bytes. Explicit
+immutable one-way reauthoring is measured separately at 32 managed bytes per edit;
+its physical steps remain zero. Append/resource construction is cold work, and
+this audit makes no new native-allocation claim. The evidence report at
+`bin/physics-shape-append-audit/2026-10-18/validation.json`
+records artifacts and qualification. The independent fixture's algorithms are test
+implementations; this audit does not certify arbitrary third-party solvers.
+
+The four append declarations are Implemented. Other slot/extension operations,
+full numerical algorithms, native memory, foreign platforms, network/hardware
+performance and complete-goal acceptance retain their own open gates.
+
+
 Last updated: 2026-10-18
 
 ## Raw shape initialization

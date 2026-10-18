@@ -385,7 +385,12 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 156, "Partial": 4, "Unimplemented": 0, "Blocked": 0, "Excluded": 55}
+                "Implemented": 158, "Partial": 2, "Unimplemented": 0, "Blocked": 0, "Excluded": 55}
+    for owner, prefix in (("PhysicsServer2D", ""), ("PhysicsServer2DExtension", "_")):
+        rows = pages[CLASS_PAGES / (owner + ".md")].splitlines()
+        for role in ("body", "area"):
+            row = next(row for row in rows if f"method {prefix}{role}_add_shape(" in row)
+            assert " | Implemented | " in row and "accepted rigid-pose contract" in row and "52 fresh public" in row
     for name in ("body_set_mode", "body_get_mode"):
         row = next(row for row in server_rows if f"method {name}(" in row)
         assert " | Implemented | " in row and "all five scene siblings" in row

@@ -1,5 +1,7 @@
 # PhysicsServer
 
+The [Body/Area append audit](../components/physics-shapes.md#bodyarea-append-contract-audit) closes both public append operations and their registered projections under the accepted rigid-pose contract. Pending/disabled slots, exact logical indices, canonical geometry, ownership, rollback/retry and zero warmed managed frames are covered; overall physics acceptance remains separate.
+
 Last updated: 2026-10-18
 
 ## Failed local activation

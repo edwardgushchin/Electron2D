@@ -1,6 +1,8 @@
 # PhysicsBackendCollider
 
-Last updated: 2026-10-17
+The [Body/Area append operation](../components/physics-shapes.md#bodyarea-append-contract-audit) projects through the complete existing `RebuildShapes` span. Engine-owned slots retain exact indices, enabled policy, resource and pose identity across scene/raw callers; this operation is accounted as implemented without certifying every other extension operation or provider algorithm.
+
+Last updated: 2026-10-18
 
 ## Failed body-mode publication
 
