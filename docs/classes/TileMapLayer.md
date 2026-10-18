@@ -1,6 +1,6 @@
 # TileMapLayer
 
-Last updated: 2026-10-12
+Last updated: 2026-10-18
 
 **Namespace:** `Electron2D`. **Source:** [TileMapLayer.cs](../../src/Scene/2D/TileMapLayer.cs).
 
@@ -905,3 +905,5 @@ Generated tile items consume the layer's [per-item shader parameters](../compone
 Prepared replacement bodies acquire the layer maps before any prior-body departure callback. Every old body and owned shape is retired even if a handler throws; completed replacement ownership is retained and errors escape after cleanup. UpdateInternals marks failed remaining work for retry. Exit/disposal also attempts navigation, drawing, diagnostic and runtime-data cleanup after physics failures. TileMapLayerTests checks replacement, disabling, exit/reentry and disposal with throwing shape-departure handlers on CPU/GPU, including actual navigation-region retirement.
 
 Generated tile bodies retain TileMapLayer owner identity and individual RIDs through Area/rigid object and shape events, point/ray/shape/rest queries, scene casts and scene/server motion results. Object snapshots/events deduplicate multiple bodies for one layer; shape payloads retain remote/local logical indices. Generated server geometry has no scene shape-owner node. Explicit CPU/GPU tests check canvas-qualified point queries, reparenting, sampled weak owner lifetime and 64 warmed full-frame/span-query cycles at zero owner/all-thread managed bytes. Native allocations, other platforms and visual acceptance remain unverified.
+
+[Transform notification policies and forcing](../components/scene-hierarchy.md#transform-notification-policies-and-forcing-from-groups) now accept their processing-group contexts. Forced user notifications remain immediate; camera viewport and generated tile physics/navigation updates publish after the joined worker stage before owner queries/stepping. Shared queue cancellation and lifecycle accounting support concurrent forcing without holding gates across callbacks. Inherited interpolation reads are available to active groups; its remaining worker policy mutation/reset gaps stay open.

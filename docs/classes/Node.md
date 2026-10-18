@@ -363,7 +363,7 @@ Gets the direct structural parent.
 <a id="p-electron2d-node-physicsinterpolationmode"></a>
 ### `public PhysicsInterpolationMode PhysicsInterpolationMode { get; set; }`
 
-Defaults to `Inherit` for ordinary nodes, with a root resolving to On. `Control` starts Off; `Viewport`, including `Window` and `SubViewport`, starts On independently of ancestors. A descendant may opt back in. Changing an attached enabled policy resets presentation history for the subtree. The selected mode is stored by PackedScene. This property does not change logical transforms or processing callbacks.
+Defaults to `Inherit` for ordinary nodes, with a root resolving to On. `Control` starts Off; `Viewport`, including `Window` and `SubViewport`, starts On independently of ancestors. A descendant may opt back in. Changing an attached enabled policy resets presentation history for the subtree. The selected mode is stored by PackedScene. Its getter permits active processing groups; mutation and subtree reset currently require the owner and retain their explicit Partial worker contract. This property does not change logical transforms or processing callbacks.
 
 **ArgumentOutOfRangeException:** The value is not Inherit, On or Off.
 
@@ -547,12 +547,12 @@ Returns whether this node follows `node` in depth-first order. A descendant foll
 <a id="m-electron2d-node-isphysicsinterpolated"></a>
 ### `public bool IsPhysicsInterpolated()`
 
-Returns the inherited node policy without checking the tree-wide switch. An inherited root resolves On; Off on an ancestor propagates until a descendant selects On. Attached reads require the scene owner thread. Disposed nodes throw `ObjectDisposedException`.
+Returns the inherited node policy without checking the tree-wide switch. An inherited root resolves On; Off on an ancestor propagates until a descendant selects On. Attached reads permit the scene owner or any active processing group. Disposed nodes throw `ObjectDisposedException`.
 
 <a id="m-electron2d-node-isphysicsinterpolatedandenabled"></a>
 ### `public bool IsPhysicsInterpolatedAndEnabled()`
 
-Returns true only while this node belongs to a scene tree with `SceneTree.PhysicsInterpolation` enabled and its inherited policy resolves On. Detached nodes return false. Attached reads require the scene owner thread; disposed nodes throw `ObjectDisposedException`.
+Returns true only while this node belongs to a scene tree with `SceneTree.PhysicsInterpolation` enabled and its inherited policy resolves On. Detached nodes return false. Attached reads permit the scene owner or any active processing group; disposed nodes throw `ObjectDisposedException`.
 
 <a id="m-electron2d-node-gettreestring"></a>
 ### `public string GetTreeString()`
@@ -1953,3 +1953,5 @@ Successful EnsureMutable validation conservatively reports a rendering change, i
 Inherited object translation-domain access and plural lookup execute through [scored runtime lookup](../components/localization.md#scored-runtime-lookup). Catalog selection preserves live edits, callback errors and physical identities with strict zero warmed managed bytes. Singular translation now uses verified [Unicode pseudolocalization](../components/localization.md#unicode-pseudolocalization); the plural path intentionally bypasses those transforms.
 
 [Transform authoring from processing groups](../components/scene-hierarchy.md#transform-authoring-from-processing-groups) now covers all Entity pose setters/helpers and inherited physical/drawable nodes. Cache revisions and a short notification queue gate preserve committed pose/error semantics; existing scene spaces are borrowed for metadata edits and released after every joined stage before selected queries/stepping. The original scene owner temporarily uses current-group rights while helping a parallel stage. General inherited worker operations and native physical writes retain separate coverage.
+
+[Transform notification policies and forcing](../components/scene-hierarchy.md#transform-notification-policies-and-forcing-from-groups) now accept their processing-group contexts. Forced user notifications remain immediate; camera viewport and generated tile physics/navigation updates publish after the joined worker stage before owner queries/stepping. Shared queue cancellation and lifecycle accounting support concurrent forcing without holding gates across callbacks. Inherited interpolation reads are available to active groups; its remaining worker policy mutation/reset gaps stay open.

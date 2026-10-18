@@ -12,12 +12,12 @@ public partial class Node
     /// <remarks>The effective policy applies only while the scene tree enables interpolation. A changed active policy
     /// republishes affected scene-item renderer policies and resets canvas snapshots before subsequent presentation.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The value is not a defined mode.</exception>
-    /// <exception cref="InvalidOperationException">An attached mutation is off-owner or scene capture is active.</exception>
+    /// <exception cref="InvalidOperationException">An attached read is outside the owner/active processing groups, or a mutation is off-owner or occurs during capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     /// <exception cref="AggregateException">A retained transform getter or reset callback failed after later policy publications were attempted.</exception>
     public PhysicsInterpolationMode PhysicsInterpolationMode
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _physicsInterpolationMode; }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _physicsInterpolationMode; }
         set
         {
             EnsureMutable();
@@ -48,12 +48,12 @@ public partial class Node
 
     /// <summary>Reports the inherited node policy independently of scene-wide enablement.</summary>
     /// <returns>True when this node selects On or inherits an enabled ancestor; a root inherits On.</returns>
-    /// <exception cref="InvalidOperationException">An attached query is off the scene owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached query is outside the scene owner or active processing groups.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public bool IsPhysicsInterpolated()
     {
         ThrowIfDisposed();
-        Tree?.EnsureOwnerThread();
+        Tree?.EnsureProcessingReadAccess();
         return _physicsInterpolationMode switch
         {
             PhysicsInterpolationMode.On => true,
@@ -64,12 +64,12 @@ public partial class Node
 
     /// <summary>Reports whether physics interpolation currently affects this active node.</summary>
     /// <returns>False while detached or when the scene-wide setting or inherited policy is off.</returns>
-    /// <exception cref="InvalidOperationException">An attached query is off the scene owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached query is outside the scene owner or active processing groups.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public bool IsPhysicsInterpolatedAndEnabled()
     {
         ThrowIfDisposed();
-        Tree?.EnsureOwnerThread();
+        Tree?.EnsureProcessingReadAccess();
         return Tree?.IsPhysicsInterpolationActive == true && IsPhysicsInterpolated();
     }
 

@@ -366,7 +366,7 @@ Configuration setters stage the next iteration; configuration getters report sta
 <a id="regionsettransform"></a>
 ### `public static void RegionSetTransform(RID region, Transform transform)`
 
-Stages a region's finite world transform.
+Stages a region's finite world transform. An equal stored matrix preserves pending changes and does not request another topology iteration; identity and finite/invertible validation still run.
 
 `region`: Live navigation region RID. `transform`: Finite invertible local-to-world transform.
 
@@ -1772,3 +1772,5 @@ Inherited [ordinary event blocking](../classes/ElectronObject.md#ordinary-event-
 ## Scene identity teardown
 
 Scene-owned navigation identities stay registered through node exit on the disposing thread; exit clears map membership before TreeExiting. Synchronization during that callback preserves the identity. Node cleanup attempts exit/children before releasing the RID and aggregates failures without abandoning final cleanup. Other threads cannot access a disposing scene identity, and retired RIDs reject. NavigationDebugTests verifies Agent, Region, Link and Obstacle with a failing exit observer.
+
+Equal RegionSetTransform assignments validate the RID and matrix, preserve existing pending geometry changes and avoid requesting a redundant topology iteration. Repeated camera/tile/physics notification consumers verify unchanged staged region identity/transform/iteration together with complete warmed physical frames; actual changed topology retains its separate iteration construction cost.

@@ -212,9 +212,14 @@ public partial class TileMapLayer : Entity
     {
         base.OnNotification(what);
         if (what == NotificationWorldChanged && IsInsideTree) { MoveWorld(); MoveNavigationWorld(); }
-        else if (what == NotificationTransformChanged && IsInsideTree) { UpdateBodyTransforms(); UpdateNavigationTransforms(); }
+        else if (what == NotificationTransformChanged && IsInsideTree) PublishSceneTransform();
         else if (what == NotificationVisibilityChanged) MarkAll(scenes: false);
         else if (what is NotificationEnterCanvas or NotificationExitCanvas) UpdateCanvas(what == NotificationExitCanvas ? 0 : GetCanvasLayerNode()?.InstanceID ?? 0);
+    }
+    internal void PublishSceneTransform()
+    {
+        if (Tree is { IsProcessingWorkerStage: true } tree) { tree.QueueTransformPublication(this); return; }
+        UpdateBodyTransforms(); UpdateNavigationTransforms();
     }
     /// <inheritdoc />
     protected override void ValidateDisposal() { Tree?.EnsurePhysicsParticipationChange(releasing: true); base.ValidateDisposal(); }

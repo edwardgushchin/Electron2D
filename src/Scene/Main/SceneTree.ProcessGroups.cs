@@ -12,10 +12,33 @@ public partial class SceneTree
     private static readonly Comparison<ScheduledNode> ProcessingNodeOrder = static (left, right) => left.CompareTo(right);
     private readonly List<GroupEntry> _groupFrame = [];
     private readonly List<ProcessingGroup> _groupStage = [];
+    private readonly List<CanvasItem> _transformPublications = [];
     private Action<int>? _runGroupWorker;
     private bool _groupPhysics;
     private volatile bool _processingWorkerStage;
     internal bool IsProcessingWorkerStage => _processingWorkerStage;
+    internal void QueueTransformPublication(CanvasItem item)
+    {
+        lock (_workGate)
+            if (!_transformPublications.Contains(item)) _transformPublications.Add(item);
+    }
+    private void PublishProcessingTransforms(ref List<Exception>? errors)
+    {
+        try
+        {
+            foreach (var item in _transformPublications)
+            {
+                if (item.IsDisposed || !ReferenceEquals(item.Tree, this)) continue;
+                try
+                {
+                    if (item is Camera camera) camera.UpdateScroll();
+                    else if (item is TileMapLayer tiles) tiles.PublishSceneTransform();
+                }
+                catch (Exception error) { CollectException(ref errors, error); }
+            }
+        }
+        finally { _transformPublications.Clear(); }
+    }
     private double _groupUnscaledDelta;
     private ulong _groupTreeOrderPath = ulong.MaxValue;
     private ProcessingGroup DefaultProcessingGroup
@@ -173,6 +196,7 @@ public partial class SceneTree
                 foreach (var failure in failures) CollectException(ref errors, failure);
                 failures.Clear();
             }
+            if (first.Worker) PublishProcessingTransforms(ref errors);
             from = end;
         }
         _groupStage.Clear(); _groupFrame.Clear();

@@ -67,8 +67,9 @@ public partial class Camera
         halfSize.X * _dragHorizontalOffset * _dragMargins[_dragHorizontalOffset < 0 ? (int)Side.Right : (int)Side.Left],
         halfSize.Y * _dragVerticalOffset * _dragMargins[_dragVerticalOffset < 0 ? (int)Side.Bottom : (int)Side.Top]);
 
-    private void UpdateScroll()
+    internal void UpdateScroll()
     {
+        if (Tree is { IsProcessingWorkerStage: true } tree) { tree.QueueTransformPublication(this); return; }
         var viewport = _viewport;
         if (viewport is null || !ReferenceEquals(viewport.GetCamera(), this)) return;
         var size = viewport.GetVisibleRect().Size; var halfSize = size * 0.5f; var scale = Vector2.One / _zoom;

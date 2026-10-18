@@ -461,3 +461,5 @@ Process-group order and message-mask metadata now permit writes by the scene own
 ## Generated mesh geometry
 
 MeshInstance and MultiMeshInstance consume [procedural mesh surfaces](../components/meshes.md#procedural-surfaces-without-positions). Generated positions receive the full item, command, instance and skin transforms. Author-owned visibility rectangles cover the output; CPU faces, input geometry and collision are not reconstructed from shader execution.
+
+[Transform notification policies and forcing](../components/scene-hierarchy.md#transform-notification-policies-and-forcing-from-groups) now accept their processing-group contexts. Forced user notifications remain immediate; camera viewport and generated tile physics/navigation updates publish after the joined worker stage before owner queries/stepping. Shared queue cancellation and lifecycle accounting support concurrent forcing without holding gates across callbacks. Inherited interpolation reads are available to active groups; its remaining worker policy mutation/reset gaps stay open.
