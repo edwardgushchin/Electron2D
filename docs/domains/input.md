@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-18
 
+[Device sensor values](../components/device-sensors.md) add eight typed operations for manual acceleration, gravity, gyroscope and magnetic-field simulation. Four raw values feed ordinary scene callbacks; automatic mobile acquisition remains a separate missing producer.
+
 [Controller motion sensors](../components/gamepad-motion.md) supply actual accelerometer, gravity and calibrated gyroscope data, native enable/rate reporting and typed calibration values through the public Input API.
 
 ## Responsibility

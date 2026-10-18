@@ -9,6 +9,13 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SENSORS") == "1")
+{
+    DeviceSensorContract.Run();
+    StaticServiceTests.Run();
+    VerifyInput();
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JOY_MOTION") is { } joyMotionMode)
 {
     if (joyMotionMode == "managed") { JoyMotionContract.Run(); JoyMotionTests.Run(); }
@@ -1583,6 +1590,7 @@ MissingTextureTests.RunManaged();
 LinkedSceneTests.RunManaged();
 DeferredSceneTests.RunManaged();
 FrameMonitorTests.Run();
+DeviceSensorContract.Run();
 JoyMotionContract.Run();
 JoyMotionTests.Run();
 IntegerSourceTextureTests.RunManaged();

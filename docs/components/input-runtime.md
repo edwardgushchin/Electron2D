@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-18
 
+[Manual device sensor values](device-sensors.md) retain four independent Vector3 snapshots under the Input lock. Their setters are callable from any thread and their values feed headless scene execution; hardware acquisition remains absent.
+
 [Controller motion](gamepad-motion.md) adds native sampling, manual bias calibration and gravity filtering to the retained Input service. Vector3 carries numeric channels; mapped device lifetime, owner mutations and allocation-free snapshots share existing SDL ownership.
 
 ## Scope

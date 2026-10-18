@@ -69,6 +69,46 @@
       "godot": "Input::method:stop_joy_motion_sensors_calibration(int:)",
       "electron2d": "method:Electron2D.Input.StopJoyMotionSensorsCalibration(System.Int32)",
       "reason": "Typed numeric controller sensor/calibration projection under ADRs 0033/0038."
+    },
+    {
+      "godot": "Input::method:get_accelerometer()",
+      "electron2d": "method:Electron2D.Input.GetAccelerometer()",
+      "reason": "ADRs 0033/0038/0095: typed static access to independent retained device sensor values."
+    },
+    {
+      "godot": "Input::method:set_accelerometer(Vector3:)",
+      "electron2d": "method:Electron2D.Input.SetAccelerometer(Electron2D.Vector3)",
+      "reason": "ADRs 0033/0038/0095: typed static access to independent retained device sensor values."
+    },
+    {
+      "godot": "Input::method:get_gravity()",
+      "electron2d": "method:Electron2D.Input.GetGravity()",
+      "reason": "ADRs 0033/0038/0095: typed static access to independent retained device sensor values."
+    },
+    {
+      "godot": "Input::method:set_gravity(Vector3:)",
+      "electron2d": "method:Electron2D.Input.SetGravity(Electron2D.Vector3)",
+      "reason": "ADRs 0033/0038/0095: typed static access to independent retained device sensor values."
+    },
+    {
+      "godot": "Input::method:get_gyroscope()",
+      "electron2d": "method:Electron2D.Input.GetGyroscope()",
+      "reason": "ADRs 0033/0038/0095: typed static access to independent retained device sensor values."
+    },
+    {
+      "godot": "Input::method:set_gyroscope(Vector3:)",
+      "electron2d": "method:Electron2D.Input.SetGyroscope(Electron2D.Vector3)",
+      "reason": "ADRs 0033/0038/0095: typed static access to independent retained device sensor values."
+    },
+    {
+      "godot": "Input::method:get_magnetometer()",
+      "electron2d": "method:Electron2D.Input.GetMagnetometer()",
+      "reason": "ADRs 0033/0038/0095: typed static access to independent retained device sensor values."
+    },
+    {
+      "godot": "Input::method:set_magnetometer(Vector3:)",
+      "electron2d": "method:Electron2D.Input.SetMagnetometer(Electron2D.Vector3)",
+      "reason": "ADRs 0033/0038/0095: typed static access to independent retained device sensor values."
     }
   ],
   "extras": [
@@ -110,17 +150,23 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "ADRs 0033/0038: Vector3 is an accepted numeric sensor tuple, so these are not 3D scene exclusions. The pinned Input.xml setters explicitly support debugging without hardware (lines 571-577, 602-616 and 649-655); input.cpp lines 753-799 and 1335-1356 use synchronized retained numeric fields. A connected manual value setter/getter slice is actionable on desktop without a mobile sensor adapter. Actual mobile acquisition/capabilities/permissions and delivery remain a separate host dependency; no such acquisition is claimed.",
+      "state": "Implemented",
+      "reason": "ADRs 0033/0038/0095: manual device values are copied unchanged into four independent retained fields under the Input lock. Setters work on any thread, including during Engine execution, without a display, controller, input-event synthesis or hardware activation. Public tests cover exact floating-point bits, copies, concurrent snapshots and actual Entity consumers; current verification limits are in docs/components/device-sensors.md.",
       "godot": [
-        "Input::method:get_accelerometer()",
-        "Input::method:get_gravity()",
-        "Input::method:get_gyroscope()",
-        "Input::method:get_magnetometer()",
         "Input::method:set_accelerometer(Vector3:)",
         "Input::method:set_gravity(Vector3:)",
         "Input::method:set_gyroscope(Vector3:)",
         "Input::method:set_magnetometer(Vector3:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Typed copied snapshots, zero defaults and the complete manual override path execute through the public API and headless Engine/SceneTree/Entity consumer. Native automatic device acquisition is absent: the exact prerequisite is the owning Android/iOS sensor host adapter, capabilities/project settings/permissions, acquisition and delivery/retirement lifecycle for accelerometer, gravity, gyroscope and magnetometer. These getters must consume that producer in its first complete mobile sensor slice. Desktop manual verification does not establish hardware delivery; see docs/components/device-sensors.md.",
+      "godot": [
+        "Input::method:get_accelerometer()",
+        "Input::method:get_gravity()",
+        "Input::method:get_gyroscope()",
+        "Input::method:get_magnetometer()"
       ]
     }
   ]

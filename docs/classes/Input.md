@@ -6,13 +6,13 @@ Last updated: 2026-10-18
 
 **Inherited By:** —
 
-- **Source:** [`src/Core/Input/Input.cs`](../../src/Core/Input/Input.cs), [`src/Core/Input/Input.Pointer.cs`](../../src/Core/Input/Input.Pointer.cs), [`src/Core/Input/Input.Gamepads.cs`](../../src/Core/Input/Input.Gamepads.cs)
+- **Source:** [`src/Core/Input/Input.cs`](../../src/Core/Input/Input.cs), [`src/Core/Input/Input.Pointer.cs`](../../src/Core/Input/Input.Pointer.cs), [`src/Core/Input/Input.Gamepads.cs`](../../src/Core/Input/Input.Gamepads.cs), [`src/Core/Input/Input.DeviceSensors.cs`](../../src/Core/Input/Input.DeviceSensors.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public sealed partial class Input : ElectronObject`
 
 > Owns process-wide input state and translates typed events into named actions.
 
-Public static declarations are in [`Input.API.cs`](../../src/Core/Input/Input.API.cs).
+Public static declarations are in [`Input.API.cs`](../../src/Core/Input/Input.API.cs), [`Input.JoyMotion.API.cs`](../../src/Core/Input/Input.JoyMotion.API.cs) and [`Input.DeviceSensors.cs`](../../src/Core/Input/Input.DeviceSensors.cs).
 
 ## Description
 
@@ -54,6 +54,8 @@ if (Input.IsActionPressed("jump"))
 | [`public static Vector2 LastMouseScreenVelocity { get; }`](#p-electron2d-input-lastmousescreenvelocity) | Gets the most recently submitted screen-space mouse velocity. |
 | [`public static MouseMode MouseMode { get; set; }`](#p-electron2d-input-mousemode) | Gets or applies native pointer visibility, capture and confinement. |
 | [`public static bool IgnoreJoypadOnUnfocusedApplication { get; set; }`](#p-electron2d-input-ignorejoypadonunfocusedapplication) | Suppresses controller input and effects while unfocused; defaults to false. |
+
+[Device sensor values](../components/device-sensors.md) provide four independent raw numeric snapshots through eight static methods. They support manual simulation on any thread without a display and survive Engine stop/restart. Automatic mobile hardware acquisition remains absent; controller motion has its own device-indexed state.
 
 ## Methods
 
@@ -97,6 +99,19 @@ if (Input.IsActionPressed("jump"))
 | [`public static void WarpMouse(Vector2 position)`](#m-electron2d-input-warpmouse) | Requests a native pointer warp on supporting backends. |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-input-getpropertydescriptors) | Returns the typed properties exposed to tooling before validation. |
 | [`protected override void ValidateDisposal()`](#m-electron2d-input-validatedisposal) | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
+
+## Device sensor methods
+
+| Member | Contract |
+| --- | --- |
+| [`public static Vector3 GetAccelerometer()`](#m-electron2d-input-getaccelerometer) | Copies the last supplied device acceleration in metres per second squared. |
+| [`public static void SetAccelerometer(Vector3 value)`](#m-electron2d-input-setaccelerometer) | Supplies raw device acceleration in metres per second squared. |
+| [`public static Vector3 GetGravity()`](#m-electron2d-input-getgravity) | Copies the last supplied device gravity in metres per second squared. |
+| [`public static void SetGravity(Vector3 value)`](#m-electron2d-input-setgravity) | Supplies raw device gravity in metres per second squared. |
+| [`public static Vector3 GetGyroscope()`](#m-electron2d-input-getgyroscope) | Copies the last supplied device-axis rotation rates in radians per second. |
+| [`public static void SetGyroscope(Vector3 value)`](#m-electron2d-input-setgyroscope) | Supplies raw device-axis rotation rates in radians per second. |
+| [`public static Vector3 GetMagnetometer()`](#m-electron2d-input-getmagnetometer) | Copies the last supplied device-axis magnetic field in microteslas. |
+| [`public static void SetMagnetometer(Vector3 value)`](#m-electron2d-input-setmagnetometer) | Supplies raw device-axis magnetic field in microteslas. |
 
 ## Controller motion methods
 
@@ -192,6 +207,47 @@ Gets the most recently submitted screen-space mouse velocity.
 **Value:** A thread-safe snapshot in unscaled screen pixels per second.
 
 ## Method Descriptions
+
+<a id="m-electron2d-input-getaccelerometer"></a>
+### `public static Vector3 GetAccelerometer()`
+
+Returns a value copy of the last supplied device acceleration in metres per second squared, initially zero. Reads are serialized with writes on any thread. Manual values remain available without a native host; automatic mobile acquisition is not implemented.
+
+<a id="m-electron2d-input-setaccelerometer"></a>
+### `public static void SetAccelerometer(Vector3 value)`
+
+Copies the supplied device acceleration in metres per second squared into its independent retained channel. The call is thread-safe, including during Engine execution. Every component bit is preserved, including non-finite debugging values, with no normalization, coordinate conversion, calibration or input-event delivery. The value persists until explicitly replaced; no hardware is activated.
+
+<a id="m-electron2d-input-getgravity"></a>
+### `public static Vector3 GetGravity()`
+
+Returns a value copy of the last supplied device gravity in metres per second squared, initially zero. Reads are serialized with writes on any thread. Manual values remain available without a native host; automatic mobile acquisition is not implemented.
+
+<a id="m-electron2d-input-setgravity"></a>
+### `public static void SetGravity(Vector3 value)`
+
+Copies the supplied device gravity in metres per second squared into its independent retained channel. The call is thread-safe, including during Engine execution. Every component bit is preserved, including non-finite debugging values, with no normalization, coordinate conversion, calibration or input-event delivery. The value persists until explicitly replaced; no hardware is activated.
+
+<a id="m-electron2d-input-getgyroscope"></a>
+### `public static Vector3 GetGyroscope()`
+
+Returns a value copy of the last supplied device-axis rotation rates in radians per second, initially zero. Reads are serialized with writes on any thread. Manual values remain available without a native host; automatic mobile acquisition is not implemented.
+
+<a id="m-electron2d-input-setgyroscope"></a>
+### `public static void SetGyroscope(Vector3 value)`
+
+Copies the supplied device-axis rotation rates in radians per second into its independent retained channel. The call is thread-safe, including during Engine execution. Every component bit is preserved, including non-finite debugging values, with no normalization, coordinate conversion, calibration or input-event delivery. The value persists until explicitly replaced; no hardware is activated.
+
+<a id="m-electron2d-input-getmagnetometer"></a>
+### `public static Vector3 GetMagnetometer()`
+
+Returns a value copy of the last supplied device-axis magnetic field in microteslas, initially zero. Reads are serialized with writes on any thread. Manual values remain available without a native host; automatic mobile acquisition is not implemented.
+
+<a id="m-electron2d-input-setmagnetometer"></a>
+### `public static void SetMagnetometer(Vector3 value)`
+
+Copies the supplied device-axis magnetic field in microteslas into its independent retained channel. The call is thread-safe, including during Engine execution. Every component bit is preserved, including non-finite debugging values, with no normalization, coordinate conversion, calibration or input-event delivery. The value persists until explicitly replaced; no hardware is activated.
+
 
 <a id="m-electron2d-input-iskeypressed-electron2d-key"></a>
 ### `public static bool IsKeyPressed(Key keycode)`
@@ -686,6 +742,6 @@ State/configuration queries are lock-serialized. Event parsing is serialized and
 
 ## Dependencies, verification, and limitations
 
-Depends on InputMap, typed event classes, Engine/MainLoop, SceneTree, core math and, for native pointer controls, the active DisplayServer. Managed tests cover input state, emulation order, first-contact ownership, release pairing, failure/re-entry, non-emulated allocation and root viewport Control GUI delivery and hover. The optional SDL dummy-driver suite checks pointer modifier translation. Targeted Wayland native runs verify pointer modes, cursor shapes, a copied image, Control cursor precedence and cleanup. Native controller discovery, raw/mapped event delivery, vibration and LED requests now run through SDL. Controller motion sampling and calibration now execute through actual SDL virtual devices, including scene consumers and strict NativeAOT. The eight manual device-sensor value getter/setter declarations remain actionable Unimplemented work; native mobile acquisition retains its host prerequisite. MIDI, shortcuts, complete GUI routing and nested viewports retain their separate triggers in [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers). Physical controller hardware, optional platform info and the full native-host matrix have not been exercised; mapping syntax and connection timing remain Partial in coverage.
+Depends on InputMap, typed event classes, Engine/MainLoop, SceneTree, core math and, for native pointer controls, the active DisplayServer. Managed tests cover input state, emulation order, first-contact ownership, release pairing, failure/re-entry, non-emulated allocation and root viewport Control GUI delivery and hover. The optional SDL dummy-driver suite checks pointer modifier translation. Targeted Wayland native runs verify pointer modes, cursor shapes, a copied image, Control cursor precedence and cleanup. Native controller discovery, raw/mapped event delivery, vibration and LED requests now run through SDL. Controller motion sampling and calibration now execute through actual SDL virtual devices, including scene consumers and strict NativeAOT. Manual device value setters and copied getter snapshots now execute, including concurrent access and actual scene consumers; getter coverage remains Partial until the mobile acquisition host exists. MIDI, shortcuts, complete GUI routing and nested viewports retain their separate triggers in [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers). Physical controller hardware, optional platform info and the full native-host matrix have not been exercised; mapping syntax and connection timing remain Partial in coverage.
 
 A SceneTree with a Viewport root localizes window coordinates after Input commits raw state. Positional callback events can therefore be distinct short-lived copies: polling and by-event transition identity still refer to the original parsed input. Canvas/viewport conversion never rewrites raw polling coordinates. See [Viewport.PushInput](Viewport.md#pushinput).
