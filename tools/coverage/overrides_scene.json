@@ -5875,6 +5875,16 @@
       "godot": "SceneState::method:is_node_instance_placeholder(int:)",
       "electron2d": "method:Electron2D.SceneState.IsNodeInstancePlaceholder(System.Int32)",
       "reason": "ADRs 0001/0005/0013/0014/0023: executable deferred scene records, transform-free Node placeholders, ordered typed pending values, late template load, local-resource aliases/cycles and failure-safe sibling creation/replacement. Fresh-process v6 files, v1–5 readers, malformed fields, source/template retention, owner/reentry/lifecycle failures and nested recapture are exercised. GPU and Compatibility render actual lazy/materialized pixels, body motion/point queries and 64 prepared render frames at zero owner-thread managed bytes on Linux software backends. Hardware, foreign platforms and full editor modes remain separate gates."
+    },
+    {
+      "godot": "Node::method:create_tween()",
+      "electron2d": "method:Electron2D.Node.CreateTween()",
+      "reason": "Pinned ed1daf0b Node.xml owner/member have no deprecated metadata; node.cpp 2454-2465 selects the attached tree then the application tree and binds the new running Tween. ADRs 0004/0016/0037 project that fallback through the explicit Engine.MainLoop SceneTree; independently constructed library trees do not elect a global host. Detached work waits for entry into its selected tree, with bound pause/lifetime, owner-thread/terminal guards and no publication on rejection. Public neutral/Entity/RigidBody, host/direct frames, tree precedence/migration, idle/physics lanes, committed world tick/pose/identity, timer/tween/deferred order, nested creation, deletion, empty/error cleanup and host finalization execute in sixteen CPU/software-Vulkan/registered serial/separate managed/strict NativeAOT profiles. Each measures128 physics+idle pairs at strict0/0 owner/all-thread managed bytes; eight existing tween suites also pass. Evidence: bin/physics-node-tweens/2026-10-18/validation.json. Native allocation, rendered cadence, hardware throughput and the complete physics goal retain their separate gates."
+    },
+    {
+      "godot": "SceneTree::method:create_tween()",
+      "electron2d": "method:Electron2D.SceneTree.CreateTween()",
+      "reason": "Pinned ed1daf0b SceneTree.xml owner/member have no deprecated metadata; scene_tree.cpp constructs a fresh tree-owned Tween and appends it in creation order. ADR0037 preserves running/valid empty construction, unbound tree-pause policy, typed lifetime and explicit owner-thread mutation. The eight executable tween suites audit defaults, bound/unbound pause, lane/time-scale selection, snapshot creation/order, append/empty failure, terminal cleanup, manual stepping and nested ownership. The Node creation family additionally runs sixteen public CPU/software-GPU/registered serial/separate JIT/strict NativeAOT physical profiles with committed ticks/motion/identity, phase/error/lifetime ordering and128 measured physics+idle pairs per profile at0/0 owner/all-thread managed bytes. Evidence: bin/physics-node-tweens/2026-10-18/validation.json. This closes creation semantics, not rendered cadence, native memory or complete solver/performance acceptance."
     }
   ],
   "extras": [
@@ -11885,6 +11895,20 @@
       ],
       "state": "Implemented",
       "reason": "Pinned canvas_item.cpp, viewport.cpp, window.cpp and control.cpp coordinate formulas are audited as one family. Canvas/final/canvas-layer/global composition, visible bounds, defaults/runtime descriptors, positional-event copies and inverse/owner/lifetime guards retain their existing executable contracts. Item screen projection now uses popup-base semantics: an embedding viewport stops before its own final transform; other windows prepend their local/native position and final transform through the embedder; offscreen containers prepend the container item screen transform, StretchShrink and child final transform. Standalone offscreen items need no desktop lookup. Control.GetScreenPosition is the same origin. Viewport.GetScreenTransform and warp retain the complete client chain; native desktop lookup and physical warp reject explicitly on Wayland under ADR 0040. Public CPU/software-Vulkan/registered serial/separate JIT and strict NativeAOT fixtures verify nonuniform bases, root/nearest/standalone/container boundaries, live point-derived popup placement, physical click/shape ownership and two 128-step complete-frame intervals at strict 0/0 owner/all-thread managed bytes. Native software Wayland/dummy checks independent red body and blue popup pixels, native-client pointer projection and conditional desktop capability. Popup UI uses an independent CanvasLayer within the deliberately shared World. Evidence: bin/physics-popup-coordinates/2026-10-18/validation.json. Physical pointer movement, other platform execution and whole-goal GPU/FPS acceptance are separate gates; this does not certify manual widget popup producers."
+    },
+    {
+      "godot": [
+        "Node::method:create_tween()"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned ed1daf0b Node.xml owner/member have no deprecated metadata; node.cpp 2454-2465 selects the attached tree then the application tree and binds the new running Tween. ADRs 0004/0016/0037 project that fallback through the explicit Engine.MainLoop SceneTree; independently constructed library trees do not elect a global host. Detached work waits for entry into its selected tree, with bound pause/lifetime, owner-thread/terminal guards and no publication on rejection. Public neutral/Entity/RigidBody, host/direct frames, tree precedence/migration, idle/physics lanes, committed world tick/pose/identity, timer/tween/deferred order, nested creation, deletion, empty/error cleanup and host finalization execute in sixteen CPU/software-Vulkan/registered serial/separate managed/strict NativeAOT profiles. Each measures128 physics+idle pairs at strict0/0 owner/all-thread managed bytes; eight existing tween suites also pass. Evidence: bin/physics-node-tweens/2026-10-18/validation.json. Native allocation, rendered cadence, hardware throughput and the complete physics goal retain their separate gates."
+    },
+    {
+      "godot": [
+        "SceneTree::method:create_tween()"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned ed1daf0b SceneTree.xml owner/member have no deprecated metadata; scene_tree.cpp constructs a fresh tree-owned Tween and appends it in creation order. ADR0037 preserves running/valid empty construction, unbound tree-pause policy, typed lifetime and explicit owner-thread mutation. The eight executable tween suites audit defaults, bound/unbound pause, lane/time-scale selection, snapshot creation/order, append/empty failure, terminal cleanup, manual stepping and nested ownership. The Node creation family additionally runs sixteen public CPU/software-GPU/registered serial/separate JIT/strict NativeAOT physical profiles with committed ticks/motion/identity, phase/error/lifetime ordering and128 measured physics+idle pairs per profile at0/0 owner/all-thread managed bytes. Evidence: bin/physics-node-tweens/2026-10-18/validation.json. This closes creation semantics, not rendered cadence, native memory or complete solver/performance acceptance."
     }
   ]
 }

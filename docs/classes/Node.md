@@ -123,7 +123,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public bool CanProcess()`](#m-electron2d-node-canprocess) | Determines whether the resolved process mode allows callbacks in the current tree pause state. |
 | [`public bool CancelFree()`](#m-electron2d-node-cancelfree) | Atomically cancels a pending deletion request. |
 | [`protected virtual Func<Node> CreateSceneInstanceFactory()`](#m-electron2d-node-createsceneinstancefactory) | Creates a reusable factory for packed-scene instances of this exact runtime node type. |
-| [`public Tween CreateTween()`](#m-electron2d-node-createtween) | Creates a tween in this node's scene tree and binds it to this node. |
+| [`public Tween CreateTween()`](#m-electron2d-node-createtween) | Creates a bound tween in this node's tree or the current application scene tree. |
 | [`protected override void Dispose(bool disposing)`](#m-electron2d-node-dispose-system-boolean) | Releases resources owned by a derived class. |
 | [`protected void EnsureMutable()`](#m-electron2d-node-ensuremutable) | Validates that this node may be mutated at the current lifecycle point. |
 | [`public Node FindChild(string pattern, bool recursive = true, bool owned = true)`](#m-electron2d-node-findchild-system-string-system-boolean-system-boolean) | Finds the first descendant whose name matches a wildcard pattern. |
@@ -729,13 +729,13 @@ Creates a reusable factory for packed-scene instances of this exact runtime node
 <a id="m-electron2d-node-createtween"></a>
 ### `public Tween CreateTween()`
 
-Creates a tween in this node's scene tree and binds it to this node.
+Creates a bound tween in this node's tree or the current application scene tree.
 
 **Returns:** A running empty tween that halts while this node is detached and is killed when this node is disposed.
 
-**Remarks:** The caller must append at least one tweener before the next matching frame, including a zero-delta frame.
+**Remarks:** An attached node selects its own tree. A detached node selects `Engine.MainLoop` when it is a `SceneTree` and waits until it joins that tree. The caller must append at least one tweener before the next eligible matching frame, including a zero-delta frame.
 
-**System.InvalidOperationException:** The node is detached or the call is made off the tree owner thread.
+**System.InvalidOperationException:** No scene tree is available or the call is made off its owner thread.
 
 **System.ObjectDisposedException:** The node or its tree is disposing or disposed.
 

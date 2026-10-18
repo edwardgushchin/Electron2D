@@ -1707,15 +1707,17 @@ public partial class Node : ElectronObject
         _readyCalled = false;
     }
 
-    /// <summary>Creates a tween in this node's scene tree and binds it to this node.</summary>
+    /// <summary>Creates a bound tween in this node's tree or the current application scene tree.</summary>
     /// <returns>A running empty tween that halts while this node is detached and is killed when this node is disposed.</returns>
-    /// <remarks>The caller must append at least one tweener before the next matching frame, including a zero-delta frame.</remarks>
-    /// <exception cref="InvalidOperationException">The node is detached or the call is made off the tree owner thread.</exception>
+    /// <remarks>An attached node selects its own tree. A detached node selects <see cref="Engine.MainLoop"/> when
+    /// it is a <see cref="SceneTree"/> and waits until it joins that tree. The caller must append at least one tweener
+    /// before the next eligible matching frame, including a zero-delta frame.</remarks>
+    /// <exception cref="InvalidOperationException">No scene tree is available or the call is made off its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node or its tree is disposing or disposed.</exception>
     public Tween CreateTween()
     {
         ThrowIfDisposed();
-        var tree = Tree ?? throw new InvalidOperationException("A detached node cannot create a scene-tree tween.");
+        var tree = Tree ?? Engine.MainLoop as SceneTree ?? throw new InvalidOperationException("No scene tree is available to create the tween.");
         return tree.CreateTween().BindNode(this);
     }
 

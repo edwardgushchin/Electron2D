@@ -1,6 +1,6 @@
 # SceneTree
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
 
 **Inherits:** [MainLoop](MainLoop.md)
 
@@ -1108,3 +1108,5 @@ Every pool worker prepares its thread-local group context during synchronized po
 The [complete processing contract](../components/scene-tree.md#complete-processing-metadata-and-callbacks) uses retained member comparisons and prepares actual work-gate contention before the first worker stage. Cold preparation uses one temporary joined helper without game callbacks or execution-context flow; frames remain host-driven, with no retained pump thread. Worker-owned trees in a one-worker pool are included in the public verification.
 
 Scene-authored global shader values now use [ShaderGlobalsOverride](ShaderGlobalsOverride.md). Its typed portable values, tree-order arbitration and renderer-session restoration are described in the [global parameter component](../components/global-shader-parameters.md#scene-owned-overrides).
+
+The [bound node creation audit](../components/tweening.md#bound-node-host-selection) verifies this tree's fresh unbound Tween creation together with Node selection/binding, phase ordering, errors and cleanup in public CPU/software-GPU/registered managed/strict NativeAOT profiles. The creation rows are Implemented; native cadence and full-physics acceptance remain separate.

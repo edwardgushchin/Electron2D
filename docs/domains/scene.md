@@ -74,6 +74,10 @@ CanvasItem.GetCanvasItem now supplies a stable weak scene-owned identity for act
 
 [Skeletal animation](../components/skeletal-animation.md) adds Skeleton/Bone, authored/rest pose separation, automatic endpoints, phase-aware overrides and executable LookAt stacks. Existing AnimationPlayer and canvas inheritance provide actual animation consumers; scene membership/path revisions prepare weak Polygon/target bindings. Editor integration retains its exact coverage dependency.
 
+## Bound node tween creation
+
+`Node.CreateTween()` selects the attached tree, or the current application SceneTree through `Engine.MainLoop` for a detached node. Its binding suspends until that node joins the selected tree. Tree ownership, pause/lifetime and phase ordering stay with the existing tween scheduler; [Tweening](../components/tweening.md) records the executable checks.
+
 ## Responsibility
 
 Scene owns Electron2D's primary Node-based game-object model, reusable typed in-memory scenes, and the active [`MainLoop`](../classes/MainLoop.md) implementation that delivers lifecycle, frame, pause, deferred-work, and deletion phases. A game object, composed subsystem, or complete world is represented by a Node hierarchy; the same hierarchy can be packed and instantiated for reuse. It is a 2D-only runtime domain for Windows, macOS, Linux (X11/Wayland), Android, iOS, Android TV, tvOS, and Web and compiles into the single `Electron2D.dll` assembly.

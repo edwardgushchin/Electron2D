@@ -220,6 +220,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES") == "1") 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_BACKBUFFER") is { } copyProfile) { if (copyProfile == "managed") CanvasBackBufferTests.RunManaged(); else CanvasBackBufferTests.RunNative(copyProfile); return; }
 if (args.Length == 2 && args[0] == "--hdr-storage") { CanvasHDRTests.ReadStorage(args[1]); return; }
 if (args.Length == 2 && args[0] == "--msaa-scene") { CanvasMSAATests.ReadFile(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TWEEN_CONTRACT") == "1") { VerifyTweens(); VerifyTweenInterpolation(); VerifyTweenTypeLifetime(); VerifyTweenCallbackIntervals(); VerifyTweenMethods(); VerifyTweenProperties(); VerifyTweenSubtweens(); VerifyTweenAwaits(); Console.WriteLine("Eight tween contract suites passed."); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_TWEENS") is { } tweens) { var backend = tweens.StartsWith("gpu", StringComparison.Ordinal) ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU; PhysicsNodeTweenTests.Run(() => new World(backend), backend.ToString(), tweens.Contains("threaded", StringComparison.Ordinal)); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_COORDINATES") is { } coordinates) { var backend = coordinates.StartsWith("gpu", StringComparison.Ordinal) ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU; CanvasViewportCoordinateTests.Run(() => new World(backend), backend.ToString(), coordinates.Contains("threaded", StringComparison.Ordinal), coordinates.Contains("native", StringComparison.Ordinal)); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TOP_LEVEL_RELATED") == "1") { CanvasSamplingTests.Run(); CanvasTransformNotificationTests.Run(); CanvasLifecycleTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TOP_LEVEL_PIXELS") == "1") { PhysicsInterpolationNativeTests.Run(topLevelOnly: true); return; }
@@ -10955,7 +10957,7 @@ static void VerifyTweens()
         "Manual interpolation must reject non-finite elapsed time.");
 
     using (var detached = new Entity())
-        Expect<InvalidOperationException>(() => _ = detached.CreateTween(), "A detached node must not create a tween.");
+        Expect<InvalidOperationException>(() => _ = detached.CreateTween(), "A detached node without an application scene tree must not create a tween.");
 
     var root = new Entity { Name = "tween-root" };
     var target = new Entity { Name = "target" };

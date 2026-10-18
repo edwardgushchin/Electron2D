@@ -15,5 +15,6 @@
   <ItemGroup><Compile Include="../Electron2D.Tests/ObjectIterationTests.cs" Link="ObjectIterationTests.cs" /></ItemGroup>
   <ItemGroup><Compile Include="../Electron2D.Tests/CanvasTopLevelPhysicsTests.cs" Link="CanvasTopLevelPhysicsTests.cs" /></ItemGroup>
   <ItemGroup><Compile Include="../Electron2D.Tests/CanvasViewportCoordinateTests.cs" Link="CanvasViewportCoordinateTests.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../Electron2D.Tests/PhysicsNodeTweenTests.cs" Link="PhysicsNodeTweenTests.cs" /></ItemGroup>
   <Import Project="../../tools/native-consumer.props" />
 </Project>

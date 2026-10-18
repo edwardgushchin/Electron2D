@@ -1,5 +1,8 @@
 # Physics domain
 
+[Bound node tween creation](../components/tweening.md#bound-node-host-selection) now selects the attached tree or the explicit application SceneTree for detached nodes, preserving pause, lifetime and frame ordering. Sixteen CPU/software-GPU/registered serial/separate managed/strict NativeAOT profiles and eight existing tween suites pass, including 4096 measured full physics/idle frames at strict zero managed bytes. The inherited CreateTween declaration is now Implemented; the current physics census is 207 open declarations: 176 Partial, 14 Unimplemented and 17 Blocked. Evidence: `bin/physics-node-tweens/2026-10-18/validation.json`. Editor-hint-dependent input, native allocations, hardware GPU/FPS and complete-goal acceptance remain open.
+
+
 [TopLevel presentation resets](../components/canvas-rendering.md#toplevel-transition-resets-2026-10-18) now discard descendant interpolation history after a canvas-boundary change, preserving physical position/velocity, identity and tick. Public CPU/software-GPU/registered consumers retain strict zero warm managed bytes; actual dummy and software Wayland pixels cover the reset.
 
 [Validated device contact colors](../components/gpu-contact-colors.md#validated-device-color-cache-2026-10-18) reuse derived schedules through contact keys and current endpoint validation. Missing/conflicting seeds rebuild the complete schedule; physical impulses, checkpoints, public backend choice and CPU behavior retain their existing contracts. The cache has measured device-capacity and warm-allocation observations, with complete regression and performance acceptance recorded separately.

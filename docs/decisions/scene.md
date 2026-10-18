@@ -1,6 +1,6 @@
 # Electron2D scene decisions
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
 
 This bounded document owns the current architectural decisions for scene. Node is the neutral scene-tree base and Entity is the spatial canvas base under ADR 0008; current class pages describe the implemented API. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -462,7 +462,7 @@ It does not establish real host cadence, wall-clock precision, platform scheduli
 <a id="adr-0037"></a>
 ## ADR 0037: Typed SceneTree tween scheduling
 
-Last updated: 2026-09-24
+Last updated: 2026-10-18
 
 - Status: Accepted
 - Scope: Frame-driven interpolation sequences, typed tween tasks, and SceneTree scheduling
@@ -477,7 +477,7 @@ SceneTree already owns owner-thread frame ordering, scaled/original deltas, paus
 ### Decision
 
 - Add `Tween : ElectronObject`, its four nested policy/curve enums, abstract `Tweener`, and concrete property, method, callback, interval, subtween, and event-wait tweeners under `src/Scene/Animation/` in `Electron2D.dll`.
-- Tweens are created only through `SceneTree.CreateTween()` or `Node.CreateTween()`. SceneTree owns valid top-level registration; Node creation also binds pause policy and lifetime. A tween may bind to a detached node but never to a node owned by another tree.
+- Tweens are created only through `SceneTree.CreateTween()` or `Node.CreateTween()`. SceneTree owns valid top-level registration; Node creation also binds pause policy and lifetime. Node creation selects its attached tree first. For a detached node, the application scene tree is the existing `Engine.MainLoop` when it is a `SceneTree`, including startup/shutdown visibility under ADR 0016. This is the typed explicit-host projection of the pinned `Node::create_tween` application-tree fallback; independently constructed library trees do not elect an implicit process singleton. With no eligible tree the call throws before registration. A detached binding waits for entry into the selected tree; attachment to another tree neither transfers nor advances it. Explicit BindNode rejects a node already owned by another tree. Owner-thread and terminal-tree guards apply before work is published.
 - SceneTree captures and advances matching tweens after node callbacks and lightweight timers and before deferred/deletion work. Creation during an earlier phase may enter that frame; creation during tween processing waits for the next captured batch. Captured entries revalidate their lane and top-level ownership before execution. Process and physics lanes use the existing scaled/original delta pair, so time-scale bypass requires no second clock.
 - Property animation uses explicit typed getter/setter delegates and generic values. Method and callback tasks use typed delegates. Event waits use `EventConnection` accessors for zero-, one-, or two-argument events. This permanently replaces dynamic values, reflection callables, signal objects, and string property paths in the implemented surface.
 - Built-in interpolation covers booleans, scalar numeric values, and current engine-owned math values. Static `InterpolateValue` accepts finite signed duration, extrapolates outside its interval, and returns the exact composed final value when duration is zero. Int64 interpolation uses wide intermediate arithmetic and checked midpoint rounding to keep valid near-limit results exact. Unsupported values, including strings and collections, require a caller-supplied typed interpolator on task builders; the static method has no untyped fallback. Relative mode requires a built-in addition contract; booleans use replacement and affine transforms compose the captured start with the configured relative transform.

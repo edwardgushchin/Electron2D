@@ -1,6 +1,6 @@
 # Tweening component
 
-Last updated: 2026-10-02
+Last updated: 2026-10-18
 
 ## Scope
 
@@ -25,7 +25,7 @@ This Scene component owns frame-driven, typed interpolation sequences. It provid
 
 ## Runtime flow
 
-`SceneTree.CreateTween()` registers an empty running tween; `Node.CreateTween()` additionally binds it to that node. Each frame first runs node callbacks, then lightweight tree timers, then a captured list of matching tweens, and finally deferred/deletion work. Tween creation during tween processing waits until the next frame. Each active tween scales the selected scaled or original delta, starts its current step, and attempts every tweener in a parallel group. The least unconsumed delta controls advancement to later steps. Completion events run synchronously; a finished tween stays registered until its next eligible tree step, unless a subscriber restarts it. Killing invalidates immediately but retains the registry entry until that sweep.
+`SceneTree.CreateTween()` registers an empty running tween; `Node.CreateTween()` additionally binds it to that node. It selects the attached tree first, otherwise the application `Engine.MainLoop` when it is a SceneTree. Detached work waits for entry into the selected tree; another attached tree does not acquire that work. Without an available scene tree it throws before registration. Each frame first runs node callbacks, then lightweight tree timers, then a captured list of matching tweens, and finally deferred/deletion work. Tween creation during tween processing waits until the next frame. Each active tween scales the selected scaled or original delta, starts its current step, and attempts every tweener in a parallel group. The least unconsumed delta controls advancement to later steps. Completion events run synchronously; a finished tween stays registered until its next eligible tree step, unless a subscriber restarts it. Killing invalidates immediately but retains the registry entry until that sweep.
 
 Property and method tweeners resolve interpolation once at creation. Built-in allocation-free interpolation covers `bool`, `float`, `double`, `int`, `long`, `Vector2`, `Vector2i`, `Vector3`, `Vector3i`, `Vector4`, `Vector4i`, `Color`, `Rect2`, `Rect2i`, and `Transform`; caller-supplied typed interpolation covers other values. Boolean values switch at the numeric half threshold. Integer components round midpoint values away from zero and throw on result overflow. Relative addition is arithmetic for scalar/vector/color/rectangle values, replacement by the configured delta for booleans, and parent-right affine composition for `Transform`. String and collection interpolation is not built in and instead requires an explicit typed interpolator. No dynamic value container, string property path, reflection lookup, or background scheduler is used.
 
@@ -66,6 +66,17 @@ The subtween audit checks signed/live delay, source-tree detachment including cr
 The await audit checks all three typed event arities, append-time subscription and rollback, pre-start receipt reset, cross-thread receipt with owner-thread completion, same-frame timeout priority, negative/zero/live timeout, source disposal, loop replay, cancellation and completion subscriber failure. Its own rows are Implemented under the accepted typed-event scope; event arities above two and publisher-side invocation-list inspection remain explicit future boundaries.
 
 The static interpolation audit checks 96 numeric samples from the pinned easing equations across all 12 transitions, four eases and two elapsed fractions, plus every supported typed value family, signed and zero durations, extrapolation, invalid inputs, overflow and zero warmed managed allocations. Int64 interpolation now uses wide intermediates for exact near-limit endpoints. All own Tween and Tweener declaration and type rows are Implemented; inherited managed-lifetime roles and platform acceptance retain their separate evidence limits.
+
+<a id="bound-node-host-selection"></a>
+## Bound node application-tree selection (2026-10-18)
+
+`Node.CreateTween()` formerly rejected every detached node even with an active application SceneTree. It now selects its attached tree first, then the existing `Engine.MainLoop` SceneTree under ADR 0037. A detached binding suspends elapsed time until entry into that selected tree; attachment to another tree does not transfer the tween. No available scene tree, a different MainLoop role, an off-owner call or a terminal tree rejects before registration. Stopping the host invalidates pending detached work.
+
+`PhysicsNodeTweenTests` is linked unchanged into the public backend consumer. It covers neutral, Entity and physical subclasses; actual Engine-driven and direct frames; default idle and selected physics lanes; inherited pause/Always policy; detach/reattach and tree precedence; direct and queued disposal; committed body motion, exact tick/RID/object identity and node/world/timer/tween/deferred order; creation inside a captured tween batch; empty/throwing callbacks and cleanup continuation. Time interpolation checks use `1e-10` for exactly representable quarter-second samples; physical motion checks require positive advance rather than backend bit equality.
+
+The complete creation family is audited: Node selects and binds its tree, while `SceneTree.CreateTween()` registers fresh unbound work with the existing tree-pause default. Both declaration rows are Implemented.
+
+Both original CPU root/public-consumer runs reproduce the prior detached-node exception. All seventeen final launches pass: four root CPU/software-Vulkan serial/separate profiles, six equivalent public managed profiles including registration, six strict NativeAOT public profiles, and the existing eight tween contract suites. The sixteen backend profiles each measure 128 complete physics+idle pairs after warmup: 4096 full frames total, zero owner-thread and zero all-thread managed bytes. Source/PDB checks cover all five compiled input cohorts without DEBUG or checksum mismatch. The GPU profiles load private lavapipe, and CPU/registered profiles have an unavailable Vulkan ICD; no hardware driver is loaded. Evidence: `bin/physics-node-tweens/2026-10-18/validation.json` and its source/payload manifests. This establishes the exercised headless logical contract; native allocations, window/FPS, hardware performance and complete-goal acceptance remain unverified.
 
 ## Decisions
 
