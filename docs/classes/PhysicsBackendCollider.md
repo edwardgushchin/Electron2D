@@ -175,3 +175,10 @@ motion/recovery. Warm unchanged-policy query/full-frame intervals require 0/0
 managed bytes; changed immutable authoring remains a separate measured cost.
 Complete registered numerical response and native/platform/network/performance
 acceptance retain their independent gates.
+
+The [custom bias accessor audit](../components/physics-contact-policy.md#custom-bias-accessor-audit)
+verifies both implementation capabilities through the shared typed Shape property,
+including numerical-lane reads, borrower write guards, supplier/disposal/observer
+lifecycle and identity-preserving live correction. Fresh serial/separate public
+profiles preserve exact zero managed allocation in complete measured intervals;
+full numerical-extension/native/platform/network/performance acceptance is separate.

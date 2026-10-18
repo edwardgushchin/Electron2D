@@ -1874,3 +1874,9 @@ completes the existing PhysicsServer/PhysicsBackendCollider setter projection;
 no production type or runtime behavior is added. Raw/manual/child failure/retry,
 full policy reclaim, selected motion/recovery and strict warmed full frames are
 verified separately from complete numerical-extension acceptance.
+
+The [custom bias accessor audit](components/physics-contact-policy.md#custom-bias-accessor-audit)
+completes the existing shared Shape.CustomSolverBias implementation getter/setter
+projection. Numerical hook/thread ownership, resource lifecycle and actual selected
+correction/impulse behavior are verified; no production type or runtime behavior
+is added. Complete extension/native/platform/network/performance gates stay open.

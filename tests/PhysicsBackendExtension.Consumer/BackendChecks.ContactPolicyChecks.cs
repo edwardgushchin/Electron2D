@@ -14,7 +14,12 @@ public static partial class BackendChecks
             Console.WriteLine($"Contact policy {backend?.ToString() ?? "registered"}, threaded={threaded}: mixed correction, shared sweeps, momentum and zero warm frames passed.");
         }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
-        World Create() => backend is { } selected ? new World(selected) : new World("PolicySolver");
+        World Create()
+        {
+            var world = backend is { } selected ? new World(selected) : new World("PolicySolver");
+            Check(world.PhysicsBackendName == (backend?.ToString() ?? "PolicySolver"), "Contact correction uses the selected implementation");
+            return world;
+        }
         static Shape ShapeFor(int family) => family switch
         {
             0 => new CircleShape { Radius = 5 },

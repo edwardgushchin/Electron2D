@@ -1,8 +1,52 @@
 # World and shape contact policy
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 [World policy publication recovery](physics-registered-adapter.md#failed-world-policy-publication) retains complete current profiles after partial selected errors, retries before numerical preparation and preserves skipped-interval and cleanup behavior.
+
+## Custom bias accessor audit
+
+The current required implementation getter/setter for shape correction bias map
+to the shared typed `Shape.CustomSolverBias` property under ADRs 0098 and 0103.
+The pinned Shape property and both extension methods have no deprecated metadata;
+the resource default is zero. The pinned public PhysicsServer has no corresponding
+method binding, so this audit adds no static facade alias or production API.
+
+The common resource owns the finite [0,1] value, separate policy epoch and Changed
+publication. Zero inherits the world; one nonzero shape wins and two nonzero biases
+are averaged. Attached scene/raw/disabled/server-owned borrowers preflight writes,
+including equal assignments, before mutation. Authored reads remain available on
+owner, foreign and selected numerical hooks. Geometry suppliers can read policy
+while recursive writes reject. Disposal rejects both accessor directions. Observer
+failure retains the committed edit and its epoch; subsequent preparation observes
+it without replacing geometry, fixture identity or mass.
+
+The public-only `--shape-policy` profile now captures and restores the serial or
+separate numerical setting, verifies actual implementation selection and asserts
+the registered hook's real thread and execution count. Its scene/raw/server-owned
+view guards, construction, observer and identity checks retain 128 measured edited
+complete frames at strict 0/0 owner/all-thread bytes after 256 warm frames.
+
+The `--contact-policy` profile now verifies actual selection for every world. It
+executes seven source geometries against an infinite-boundary target, all seven
+world/shape bias mixes, zero/one endpoints, slack, live observer failure, wake/equal
+sleep, full physical normal/friction momentum, shared contact/joint sweeps and dense/
+CCD duration budgets. Nineteen 128-frame measured brackets per profile retain
+strict 0/0 owner/all-thread bytes. Expected isolated correction is
+`bias * (penetration - slack)` within .004 scene units, with velocity .003 and
+reported correction impulse .01 controls; a physical momentum comparison uses .03.
+These existing bounds separate positional correction from physical impulses and
+allow ordinary floating-point/native contact rounding without CPU/GPU bit matching.
+
+Fresh JIT/strict NativeAOT CPU/no-device, private software-Vulkan and registered
+serial/separate profiles exercise both fixtures. Four root CPU/GPU serial/separate
+correction suites retain their numerical/resource/storage and whole-step checks.
+Evidence: `bin/physics-shape-bias-audit/2026-10-19/validation.json`.
+Both implementation accessor rows become Implemented; the unique physics ledger
+has 177 open declarations: 146 Partial, 14 Unimplemented and 17 Blocked. Runtime
+code and compiled public API are unchanged. Arbitrary registered algorithms,
+complete numerical-extension/network/native/foreign and target GPU/window
+performance acceptance remain open.
 
 ## Authored policy
 

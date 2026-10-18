@@ -2,7 +2,7 @@
 
 Cold world-query geometry now uses the [shared using-world borrow](../components/physics-queries.md#cold-query-geometry) before user suppliers run. Numerical writes, collider retirement/transfer and final world release reject; original supplier failures can retry. Existing pure input reads and nested query behavior are retained.
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 **Inherits:** [Resource](Resource.md) · **Inherited By:** [CircleShape](CircleShape.md), [CapsuleShape](CapsuleShape.md), [SegmentShape](SegmentShape.md), [SeparationRayShape](SeparationRayShape.md), [ConvexPolygonShape](ConvexPolygonShape.md), [ConcavePolygonShape](ConcavePolygonShape.md), [RectangleShape](RectangleShape.md), [WorldBoundaryShape](WorldBoundaryShape.md)
 
@@ -235,3 +235,10 @@ and unregisters the RID. Public-only checks retain unrelated slots, exact Area
 entry/exit histories and zero warmed managed bytes. Wider acceptance stays open.
 
 Inherited [ordinary event blocking](../classes/ElectronObject.md#ordinary-event-delivery) suppresses new event emissions at the publisher, preserving subscriptions and already accepted deferred work. Notifications, virtual callbacks, committed physical state and resource revisions continue; Disposed cleanup remains independent.
+
+The [custom bias accessor audit](../components/physics-contact-policy.md#custom-bias-accessor-audit)
+verifies both implementation capabilities through the shared typed Shape property,
+including numerical-lane reads, borrower write guards, supplier/disposal/observer
+lifecycle and identity-preserving live correction. Fresh serial/separate public
+profiles preserve exact zero managed allocation in complete measured intervals;
+full numerical-extension/native/platform/network/performance acceptance is separate.

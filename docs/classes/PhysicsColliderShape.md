@@ -1,6 +1,6 @@
 # PhysicsColliderShape
 
-Last updated: 2026-10-17
+Last updated: 2026-10-19
 
 **Declaration:** `public readonly record struct PhysicsColliderShape`
 **Source:** [PhysicsColliderShape.cs](../../src/Servers/Physics/PhysicsColliderShape.cs)
@@ -22,3 +22,10 @@ This immutable value is now public and crosses the [registered implementation bo
 ## Pending server geometry
 
 Enabled describes effective numerical participation. A disabled, disposed or unconfigured logical slot supplies no active geometry. The slot still retains its authored index and resource identity; first successful server-data configuration makes ordinary enabled slots active.
+
+The [custom bias accessor audit](../components/physics-contact-policy.md#custom-bias-accessor-audit)
+verifies both implementation capabilities through the shared typed Shape property,
+including numerical-lane reads, borrower write guards, supplier/disposal/observer
+lifecycle and identity-preserving live correction. Fresh serial/separate public
+profiles preserve exact zero managed allocation in complete measured intervals;
+full numerical-extension/native/platform/network/performance acceptance is separate.

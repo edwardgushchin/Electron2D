@@ -1,8 +1,24 @@
 # Physics contract and backend audit
 
-[One-way slot policy](physics-shapes.md#one-way-slot-operation-audit) now has a complete pinned five-argument/default/deprecation and selected-operation audit. Public-only CPU/software-GPU/registered checks cover raw/manual/child slots, normalized/zero directions, margin recovery, group reclaim, guards, exact failure/retry and strict zero-allocation full query/physics intervals. One extension setter row becomes Implemented; the unique physics ledger has 179 open declarations (148 Partial, 14 Unimplemented, 17 Blocked). Runtime code and public API are unchanged. Complete numerical-extension/native/platform/network/hardware performance acceptance remain open; earlier counts below are historical.
+[Custom shape bias accessors](physics-contact-policy.md#custom-bias-accessor-audit) now have a complete pinned property/implementation contract audit. Actual selected CPU/software-GPU/registered serial/separate profiles verify borrowed access, supplier/disposal/observer lifecycle, correction mixing/slack, independent physical impulses and strict zero-allocation complete frames. Both implementation accessor rows become Implemented; the unique physics ledger has 177 open declarations (146 Partial, 14 Unimplemented, 17 Blocked). Runtime code and public API are unchanged; complete numerical-extension/native/platform/network/hardware performance acceptance remains open. Earlier counts below are historical.
+
+[One-way slot policy](physics-shapes.md#one-way-slot-operation-audit) now has a complete pinned five-argument/default/deprecation and selected-operation audit. Public-only CPU/software-GPU/registered checks cover raw/manual/child slots, normalized/zero directions, margin recovery, group reclaim, guards, exact failure/retry and strict zero-allocation full query/physics intervals. At revision `c0303fe0`, one extension setter row became Implemented; its unique physics ledger retained 179 open declarations (148 Partial, 14 Unimplemented, 17 Blocked). Runtime code and public API are unchanged. Complete numerical-extension/native/platform/network/hardware performance acceptance remain open; earlier counts below are historical.
 
 [One-way input preparation](physics-shapes.md#one-way-input-preparation) now captures changed immutable scene slot policies during authoring, before numerical preparation. A reproduced 8192-byte/128-frame deferred allocation becomes strict 0/0 owner/all-thread physical frames; changed authoring retains its explicit 32-byte-per-slot cost. At revision `868302d3`, public signatures and coverage states were unchanged; its unique physics ledger retained 180 open declarations (149 Partial, 14 Unimplemented, 17 Blocked). Full numerical-extension, native/platform/network and target-GPU/window performance acceptance remain open.
+
+## Ordinary runtime-fix verification
+
+The uninstrumented complete suite rooted at frozen `868302d3` passed in
+1374.622614923006 seconds. Its root SHA-256 is
+`864c7c954cf0b004ad2816513066c273b71f912646eb879405ce802e1a4b9453`;
+`bin/physics-one-way-inputs/2026-10-18/full-ordinary-current/check.json` records
+exit zero and 129 observed processes, with no hardware-driver mappings. The root
+uses private software Vulkan/Mesa. This suite includes the one-way authoring fix
+and strict material/one-way managed-allocation gates. It predates the subsequent
+slot and bias audit test changes; those have separate compiled-source/profile
+receipts. Runtime sources remain unchanged through the current bias audit.
+This establishes the stated software-suite run, not native allocation, foreign
+platform, target GPU/window performance or complete-goal acceptance.
 
 ## Material allocation measurement
 

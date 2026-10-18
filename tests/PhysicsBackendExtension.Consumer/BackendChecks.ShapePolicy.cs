@@ -2,7 +2,15 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunShapePolicy(PhysicsServer.Backend? backend = null)
+    public static void RunShapePolicy(PhysicsServer.Backend? backend = null, bool threaded = false)
+    {
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { ShapePolicyChecks(backend, threaded); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
+
+    private static void ShapePolicyChecks(PhysicsServer.Backend? backend, bool threaded)
     {
         using var shape = new CircleShape { Radius = 3, CustomSolverBias = .2f };
         Solver? solver = null;
@@ -13,6 +21,7 @@ public static partial class BackendChecks
             return solver;
         });
         using var world = backend is { } builtin ? new World(builtin) : new World("ShapePolicy");
+        Check(world.PhysicsBackendName == (backend?.ToString() ?? "ShapePolicy"), "Shape policy uses the selected implementation");
         using var root = new SubViewport { World = world };
         var scene = new RigidBody { GravityScale = 0, CanSleep = false };
         scene.AddChild(new CollisionShape { Shape = shape }); root.AddChild(scene);
@@ -47,9 +56,15 @@ public static partial class BackendChecks
                     PhysicsServer.BodySetCollisionLayer(raw, 2);
                 }
                 finally { solver.BodyHook = solver.ShapeHook = solver.FilterHook = null; }
-                solver.StepHook = Guard;
+                var ownerThread = Environment.CurrentManagedThreadId; var numericalHooks = 0;
+                solver.StepHook = () =>
+                {
+                    Check((Environment.CurrentManagedThreadId != ownerThread) == threaded, "Policy guards execute on the captured numerical lane");
+                    Guard(); numericalHooks++;
+                };
                 try { tree.PhysicsFrame(1d / 120); }
                 finally { solver.StepHook = null; }
+                Check(numericalHooks == 1, "The actual selected numerical step exercised its policy guard");
                 solver.StatusHook = () =>
                 {
                     Reject<InvalidOperationException>(() => shape.CustomSolverBias = .2f);
@@ -91,7 +106,7 @@ public static partial class BackendChecks
             for (var i = 0; i < 128; i++) Frame(i);
             own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
             Check(own == 0 && all == 0, $"Shape policy full frames allocated {own}/{all} bytes");
-            Console.WriteLine($"Shape policy {backend?.ToString() ?? "registered"}: owner/borrow/observer/identity guards and 128 active full frames {own}/{all} B passed.");
+            Console.WriteLine($"Shape policy {backend?.ToString() ?? "registered"}, threaded={threaded}: owner/borrow/observer/identity guards and 128 active full frames {own}/{all} B passed.");
         }
         finally { PhysicsServer.FreeRID(raw); PhysicsServer.FreeRID(area); PhysicsServer.FreeRID(ownedID); }
         ShapeConstructionPolicyGuard();
@@ -124,6 +139,7 @@ public static partial class BackendChecks
         Shape? shape = null;
         using (shape = new CallbackShape(ShapeGeometry.Circle(2), () =>
         {
+            Check(shape!.CustomSolverBias == 0, "Geometry suppliers retain authored policy reads");
             Reject<InvalidOperationException>(() => shape!.CustomSolverBias = .2f);
             Reject<InvalidOperationException>(() => shape!.CustomSolverBias = 0);
         }))
@@ -133,5 +149,7 @@ public static partial class BackendChecks
             shape.CustomSolverBias = .2f;
             Check(shape.CustomSolverBias == .2f, "A completed geometry hook releases ordinary policy access");
         }
+        Reject<ObjectDisposedException>(() => _ = shape!.CustomSolverBias);
+        Reject<ObjectDisposedException>(() => shape!.CustomSolverBias = .2f);
     }
 }
