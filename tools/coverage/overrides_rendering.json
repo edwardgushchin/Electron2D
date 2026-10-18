@@ -5743,7 +5743,6 @@
       "state": "Implemented",
       "reason": "CanvasLayerTests and native CanvasLayerRenderingTests audit pinned canvas_layer.cpp, canvas_item.cpp and renderer_viewport.cpp: defaults, full/signed/singular matrix components, grouping before Z, sibling order, direct visibility boundaries, callback recovery, layer membership, input and distinct logical/render follow transforms. Typed finite checks, canonical matrix packing and detached ownership follow ADRs 0003/0004/0008/0023/0028. Wayland compatibility/GPU HLSL/GLSL and dummy pass. See docs/classes/CanvasLayer.md.",
       "godot": [
-        "CanvasItem::method:get_canvas_layer_node()",
         "CanvasLayer::property:layer",
         "CanvasLayer::property:visible",
         "CanvasLayer::property:transform",
@@ -7155,6 +7154,13 @@
       ],
       "state": "Implemented",
       "reason": "Executable retained change reporting and owned low-processor scheduling under ADRs 0016/0019/0028/0095. Node/resource/server/device/configuration/native-event producers, TIME/animation/viewport/interpolation/contact consumers, capture bypass, failure/presentation acknowledgement and responsive waiting share the current GPU and Compatibility paths. LowProcessorContract and LowProcessorRenderingTests exercise settings, manual/no-host contracts, real pixels, idle processing, mutation recovery, time consumers and zero prepared owner-managed bytes. Hardware power savings, native allocation totals and foreign execution remain unverified; see docs/components/low-processor-rendering.md."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "CanvasItem::method:get_canvas_layer_node()"
+      ],
+      "reason": "CanvasLayerTests and native CanvasLayerRenderingTests audit pinned canvas_layer.cpp, canvas_item.cpp and renderer_viewport.cpp: defaults, full/signed/singular matrix components, grouping before Z, sibling order, direct visibility boundaries, callback recovery, layer membership, input and distinct logical/render follow transforms. Typed finite checks, canonical matrix packing and detached ownership follow ADRs 0003/0004/0008/0023/0028. Wayland compatibility/GPU HLSL/GLSL and dummy pass. See docs/classes/CanvasLayer.md. Pinned ed1daf0b canvas_item.cpp uses a read-thread guard, and member/owner have no deprecated metadata. Logical membership now permits owner/any active group, including foreign reads, capture and detached cases; ordinary workers and disposed targets reject. Current-group physics canvas notification publication and exact canvas-filtered body/Area/tile queries execute in root/JIT/strict NativeAOT CPU/software-Vulkan/registered owner/separate profiles and actual transformed-layer Wayland GPU/compatibility pixels. Tree/canvas epochs and generated RID ownership prevent stale owner-reentry publication. Evidence: bin/physics-group-canvas/2026-10-18/validation.json; native/device/hardware gates stay separate."
     }
   ],
   "extras": [

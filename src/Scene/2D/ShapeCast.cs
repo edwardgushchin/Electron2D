@@ -2,7 +2,9 @@ namespace Electron2D;
 
 /// <summary>Sweeps a borrowed 2D shape from this node toward a local target and caches its physics-frame contacts.</summary>
 /// <remarks>An enabled node samples in the internal fixed physics lane. <see cref="ForceShapecastUpdate"/>
-/// samples immediately, including while disabled. The caller retains ownership of <see cref="Shape"/>.</remarks>
+/// samples immediately, including while disabled. The caller retains ownership of <see cref="Shape"/>.
+/// Options and exceptions permit owner/current-group writes; cached results permit owner/active-group reads with caller coordination.
+/// Sampling the numerical world requires the scene owner. Exception storage may grow on initial edits and reuses warmed capacity.</remarks>
 public sealed class ShapeCast : Entity
 {
     private static readonly PropertyDescriptor[] CastProperties =
@@ -60,7 +62,7 @@ public sealed class ShapeCast : Entity
         get { ThrowIfDisposed(); return _shape; }
         set
         {
-            EnsureMutable();
+            EnsureOptionsMutable();
             if (ReferenceEquals(_shape, value)) return;
             if (value is null) _query.ShapeRID = default;
             else _query.Shape = value;
@@ -74,7 +76,7 @@ public sealed class ShapeCast : Entity
     public Vector2 TargetPosition
     {
         get { ThrowIfDisposed(); return _targetPosition; }
-        set { EnsureMutable(); if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value)); _targetPosition = value; InvalidateCanvas(); }
+        set { EnsureOptionsMutable(); if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value)); _targetPosition = value; InvalidateCanvas(); }
     }
 
     /// <summary>Gets or sets the nonnegative query margin in scene units.</summary>
@@ -85,7 +87,7 @@ public sealed class ShapeCast : Entity
         get { ThrowIfDisposed(); return _margin; }
         set
         {
-            EnsureMutable();
+            EnsureOptionsMutable();
             if (!float.IsFinite(value) || value < 0) throw new ArgumentOutOfRangeException(nameof(value));
             _margin = value;
         }
@@ -96,7 +98,7 @@ public sealed class ShapeCast : Entity
     public int MaxResults
     {
         get { ThrowIfDisposed(); return _maxResults; }
-        set { EnsureMutable(); _maxResults = value; }
+        set { EnsureOptionsMutable(); _maxResults = value; }
     }
 
     /// <summary>Gets or sets eligible collider-layer bits.</summary>
@@ -104,7 +106,7 @@ public sealed class ShapeCast : Entity
     public uint CollisionMask
     {
         get { ThrowIfDisposed(); return _collisionMask; }
-        set { EnsureMutable(); _collisionMask = value; }
+        set { EnsureOptionsMutable(); _collisionMask = value; }
     }
 
     /// <summary>Gets or sets automatic fixed-frame sampling.</summary>
@@ -114,7 +116,7 @@ public sealed class ShapeCast : Entity
         get { ThrowIfDisposed(); return _enabled; }
         set
         {
-            EnsureMutable();
+            EnsureOptionsMutable();
             _enabled = value; InvalidateCanvas();
             if (IsInsideTree) SetInternalProcessing(false, value);
             if (!value) _collided = false;
@@ -128,7 +130,7 @@ public sealed class ShapeCast : Entity
         get { ThrowIfDisposed(); return _excludeParent; }
         set
         {
-            EnsureMutable();
+            EnsureOptionsMutable();
             if (_excludeParent == value) return;
             _excludeParent = value;
             if (IsInsideTree && Parent is CollisionObject parent)
@@ -145,7 +147,7 @@ public sealed class ShapeCast : Entity
     public bool CollideWithAreas
     {
         get { ThrowIfDisposed(); return _collideWithAreas; }
-        set { EnsureMutable(); _collideWithAreas = value; }
+        set { EnsureOptionsMutable(); _collideWithAreas = value; }
     }
 
     /// <summary>Gets or sets whether physics bodies can be reported.</summary>
@@ -153,7 +155,7 @@ public sealed class ShapeCast : Entity
     public bool CollideWithBodies
     {
         get { ThrowIfDisposed(); return _collideWithBodies; }
-        set { EnsureMutable(); _collideWithBodies = value; }
+        set { EnsureOptionsMutable(); _collideWithBodies = value; }
     }
 
     /// <summary>Adds a scene collider RID to the exception set.</summary>
@@ -161,7 +163,7 @@ public sealed class ShapeCast : Entity
     /// <exception cref="ArgumentNullException">The node is null.</exception>
     public void AddException(CollisionObject node)
     {
-        EnsureMutable();
+        EnsureOptionsMutable();
         ArgumentNullException.ThrowIfNull(node);
         AddExceptionRID(node.GetRID());
     }
@@ -170,7 +172,7 @@ public sealed class ShapeCast : Entity
     /// <param name="rid">The collider identity; duplicate additions do nothing.</param>
     public void AddExceptionRID(RID rid)
     {
-        EnsureMutable();
+        EnsureOptionsMutable();
         if (_exceptions.Add(rid)) RefreshExclusions();
     }
 
@@ -179,7 +181,7 @@ public sealed class ShapeCast : Entity
     /// <exception cref="ArgumentNullException">The node is null.</exception>
     public void RemoveException(CollisionObject node)
     {
-        EnsureMutable();
+        EnsureOptionsMutable();
         ArgumentNullException.ThrowIfNull(node);
         RemoveExceptionRID(node.GetRID());
     }
@@ -188,14 +190,14 @@ public sealed class ShapeCast : Entity
     /// <param name="rid">The identity to include again.</param>
     public void RemoveExceptionRID(RID rid)
     {
-        EnsureMutable();
+        EnsureOptionsMutable();
         if (_exceptions.Remove(rid)) RefreshExclusions();
     }
 
     /// <summary>Clears all current exceptions, including an active parent exception.</summary>
     public void ClearExceptions()
     {
-        EnsureMutable();
+        EnsureOptionsMutable();
         if (_exceptions.Count == 0) return;
         _exceptions.Clear();
         RefreshExclusions();
@@ -420,9 +422,15 @@ public sealed class ShapeCast : Entity
         _query.BorrowExclusions(_excludeScratch);
     }
 
-    private void RefreshExclusions() => _exceptionSnapshot = _exceptions.ToArray();
+    private void EnsureOptionsMutable() { EnsureProcessingAccess(); RenderingServer.NotifyRenderMutation(); }
 
-    private void EnsureReadable() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
+    private void RefreshExclusions()
+    {
+        if (_exceptionSnapshot.Length < _exceptions.Count) Array.Resize(ref _exceptionSnapshot, Math.Max(4, Math.Max(_exceptions.Count, _exceptionSnapshot.Length * 2)));
+        Array.Clear(_exceptionSnapshot); _exceptions.CopyTo(_exceptionSnapshot);
+    }
+
+    private void EnsureReadable() { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); }
 
     private PhysicsRestInfo Result(int index)
     {

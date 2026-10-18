@@ -60,7 +60,7 @@ public partial class Camera
     internal void RefreshInterpolationProcessing()
     {
         if (!ProcessingAccessible && Tree is { IsProcessingWorkerStage: true } tree)
-        { tree.QueueInterpolationPublication(this, SceneTree.InterpolationPublicationKind.CameraPolicy); return; }
+        { tree.QueueScenePublication(this, SceneTree.ScenePublicationKind.CameraPolicy); return; }
         UpdateProcessing();
     }
     private void UpdateScrollPreservingPosition()

@@ -44,7 +44,7 @@ Direct [CollisionPolygon](CollisionPolygon.md) children contribute owned solid o
 | `public void SetCollisionLayerValue(int layerNumber, bool value)` | Changes one layer bit. |
 | `public bool GetCollisionMaskValue(int layerNumber)` | Tests one-based mask bit 1–32. |
 | `public void SetCollisionMaskValue(int layerNumber, bool value)` | Changes one mask bit. |
-| `protected override void OnNotification(int what)` | Applies effective disabled/enabled physics participation after base notification handling. |
+| `protected override void OnNotification(int what)` | Applies canvas identity and effective disabled/enabled participation after base handling; current-group requests publish on the owner after join. |
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Adds stored filter bits, recovery priority and disable policy to inherited Entity descriptors. |
 
 ## Member descriptions
@@ -296,3 +296,7 @@ retirement, so later ordinary bindings remain available.
 The [complete processing metadata contract](../components/scene-tree.md#complete-processing-metadata-and-callbacks) permits coordinated stored-value reads and current-group writes for all callback switches and priorities. All six public callback switches are stored; internal switches are runtime-only. Actual input remains owner-delivered, and this metadata grants no physical/render/hierarchy mutation.
 
 Inherited [ordinary event blocking](../classes/ElectronObject.md#ordinary-event-delivery) suppresses new event emissions at the publisher, preserving subscriptions and already accepted deferred work. Notifications, virtual callbacks, committed physical state and resource revisions continue; Disposed cleanup remains independent.
+
+## Canvas notifications from groups
+
+EnterCanvas/ExitCanvas and Enabled/Disabled can be propagated by the owner/current processing group. Worker delivery queues ordered owner publication before later queries and stepping; user callbacks remain immediate. Participation uses effective ProcessMode, while canvas IDs preserve exact default/layer filtering. Tree/canvas attachment epochs prevent old requests from reaching a rebound object. Raw notifications from foreign groups or ordinary workers reject. See [lifecycle and verification](../components/scene-hierarchy.md#physical-canvas-notifications-from-processing-groups).

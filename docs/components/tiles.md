@@ -1,6 +1,6 @@
 # Tile grids, animated atlases and physical layers
 
-Last updated: 2026-10-12
+Last updated: 2026-10-18
 
 ## Scope and ownership
 
@@ -292,3 +292,5 @@ Prepared replacement bodies acquire the layer maps before any prior-body departu
 Generated tile bodies retain TileMapLayer owner identity and individual RIDs through Area/rigid object and shape events, point/ray/shape/rest queries, scene casts and scene/server motion results. Object snapshots/events deduplicate multiple bodies for one layer; shape payloads retain remote/local logical indices. Generated server geometry has no scene shape-owner node. Explicit CPU/GPU tests check canvas-qualified point queries, reparenting, sampled weak owner lifetime and 64 warmed full-frame/span-query cycles at zero owner/all-thread managed bytes. Native allocations, other platforms and visual acceptance remain unverified.
 
 Custom-data defaults create empty arrays from their already known exact CLR type, including application, jagged and multidimensional arrays without a portable codec. Storage and deep copies retain their separate codec prerequisites. Array-to-text conversion uses prepared string JSON metadata and retains escaped quotes, backslashes and newlines. The public-only prerequisite fixture exercises these paths in managed and NativeAOT hosts.
+
+[Physical canvas notification publication](scene-hierarchy.md#physical-canvas-notifications-from-processing-groups) now preserves current-group body/Area/tile identity requests and effective participation through the joined owner phase. Logical canvas-layer reads accept active groups; attachment epochs and exact generated RID targets protect owner reentry. General reserved notification consumers remain Partial.

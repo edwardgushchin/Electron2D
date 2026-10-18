@@ -1,6 +1,6 @@
 # ShapeCast
 
-Last updated: 2026-10-12
+Last updated: 2026-10-18
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -64,7 +64,7 @@ if (cast.IsColliding()) Console.WriteLine(cast.GetCollisionNormal(0));
 
 `ForceShapecastUpdate()` queries the current shared physics space immediately. It calls the direct motion cast once to find the earliest new collision. When that fraction is below one, it moves the query shape just inside the first impact so backend contact tolerance yields stable points. It then queries rest contacts at that fixed pose, excluding each returned collider RID, up to `MaxResults`. With a zero target it samples only current overlap and leaves fractions at zero; with a moving miss it stores fractions `(1, 1)`. A detached call, missing/disposed Shape, wrong owner thread, world-step call or invalid active transform rejects before replacing the prior cached results. The query reuses its parameter, exclusion and result storage after warmup.
 
-`GetCollisionCount()` and `CollisionResult` expose the held contacts. The array is a copy; each value carries collider RID, shape-owner index, global point and normal, and point velocity. The array getter resolves live physical scene references separately from sampled object identity. A disposed assigned object resolves to null while its cached instance ID and RID remain. Indexed getters throw `ArgumentOutOfRangeException` for a missing index. `GetCollider()` resolves the weak object association captured by the sample, so later rebinding does not retarget it. Attached reads require the scene owner thread. `GetClosestCollisionSafeFraction()` and `GetClosestCollisionUnsafeFraction()` return the last bracket without sampling.
+`GetCollisionCount()` and `CollisionResult` expose the held contacts. The array is a copy; each value carries collider RID, shape-owner index, global point and normal, and point velocity. The array getter resolves live physical scene references separately from sampled object identity. A disposed assigned object resolves to null while its cached instance ID and RID remain. Indexed getters throw `ArgumentOutOfRangeException` for a missing index. `GetCollider()` resolves the weak object association captured by the sample, so later rebinding does not retarget it. Attached cached-result reads permit the owner or any active processing group with caller coordination. `GetClosestCollisionSafeFraction()` and `GetClosestCollisionUnsafeFraction()` return the last bracket without sampling.
 
 ## Verification and limits
 
@@ -78,3 +78,5 @@ without erasing the sampled ID. See [object associations](../components/physics-
 [Physics canvas diagnostics](../components/physics-debug.md) describes this node's retained geometry, live redraw, ordinary canvas behavior and CPU/GPU/native checks.
 
 TileMapLayerTests verifies generated tile-layer owner projection on public CPU/GPU worlds. Cached casts retain the sampled live layer when generated body RIDs retire, then resolve null after layer disposal; the associated physical RID and logical index retain their sampled meaning.
+
+Options and RID exceptions now accept owner/current-group writes; warmed exception storage is retained. Forced numerical sampling keeps its owner-thread guard. See [group metadata, cached observations and verification](../components/physics-queries.md#scene-cast-metadata-and-cached-observations-from-groups).

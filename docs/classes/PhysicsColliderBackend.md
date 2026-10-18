@@ -1,6 +1,6 @@
 # PhysicsColliderBackend
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
 
 **Declaration:** `internal sealed partial class PhysicsColliderBackend`
 
@@ -220,3 +220,5 @@ effective owner values with wakeBody=false. Success, complete shape rebuilding o
 detach retires pending state. This retains no shape/resource or simulation-state
 copy. [Filter failure checks](../components/physics-filters.md#failed-updates-and-effective-sensing)
 verify retry errors, unchanged topology and exact sensor history.
+
+Canvas identity publication now checks implementation write access and extension hierarchy access before committing the authored value. Scene-group requests are published after physical borrows release; see [physical canvas notifications](../components/scene-hierarchy.md#physical-canvas-notifications-from-processing-groups).
