@@ -71,7 +71,10 @@ public abstract partial class Shape : Resource
     /// <returns>Validated geometry in local scene units; it is retained until EmitGeometryChanged.</returns>
     /// <remarks>This hook must not mutate or dispose the resource or recursively request its geometry.
     /// It runs on first geometry demand after an edit. The runtime uses the same data for physics,
-    /// bounds and diagnostic drawing. Unsupported collision algorithms require a solver implementation.</remarks>
+    /// bounds and diagnostic drawing. Collider compilation and supported-geometry preflight borrow
+    /// the using world before this hook: numerical authoring, binding changes and disposal cannot
+    /// reenter that world. Pure common input reads retain their existing guards.
+    /// Unsupported collision algorithms require a solver implementation.</remarks>
     protected abstract ShapeGeometry GetGeometryCore();
 
     /// <summary>Gets immutable exact geometry for the current authored resource revision.</summary>

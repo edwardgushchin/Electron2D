@@ -69,7 +69,7 @@ transform reads reuse the qualified GPU basis while CPU keeps its angle conventi
 [Scene/raw projection](../../src/Servers/Physics/PhysicsColliderBackend.Shapes.cs)
 preflights authored slots, snapshots them into a retained neutral input array and
 calls the single selected implementation span operation. Reentry rejects while
-that array is borrowed; finally clears resource/contact references. It
+that array is borrowed. The using world is borrowed before any cold geometry supplier runs, through selected compilation and failure cleanup; numerical writes, binding changes and final release reject during that interval. Finally clears resource/contact references and releases the captured world. See [geometry input borrowing](../components/physics-backends.md#geometry-input-borrowing). It
 installs category/mask bits, sensor/density policy, surface material, one-way
 metadata and exception pre-solve eligibility. Shape resources supply their existing
 borrowed scene-unit geometry through PhysicsShapeBackend. Definitions are temporary locals; the component does not retain

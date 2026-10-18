@@ -1,6 +1,6 @@
 # Shape
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
 
 **Inherits:** [Resource](Resource.md) · **Inherited By:** [CircleShape](CircleShape.md), [CapsuleShape](CapsuleShape.md), [SegmentShape](SegmentShape.md), [SeparationRayShape](SeparationRayShape.md), [ConvexPolygonShape](ConvexPolygonShape.md), [ConcavePolygonShape](ConcavePolygonShape.md), [RectangleShape](RectangleShape.md), [WorldBoundaryShape](WorldBoundaryShape.md)
 
@@ -18,7 +18,7 @@ The reusable 2D collision-geometry role. The caller owns a Shape resource; a [Co
 
 ## Example
 
-Every shape supplies immutable [ShapeGeometry](ShapeGeometry.md) through protected GetGeometryCore. The runtime retains it until EmitGeometryChanged and lends one [PhysicsShapeGeometry](PhysicsShapeGeometry.md) view to physics and drawing. Applications can derive Shape using exact supported geometry and Resource copying hooks. The default GetRect returns that data's bounds; built-in overrides retain their existing behavior. Registered algorithms beyond these geometry families remain open under ADR 0103.
+Every shape supplies immutable [ShapeGeometry](ShapeGeometry.md) through protected GetGeometryCore. The runtime retains it until EmitGeometryChanged and lends one [PhysicsShapeGeometry](PhysicsShapeGeometry.md) view to physics and drawing. Applications can derive Shape using exact supported geometry and Resource copying hooks. The default GetRect returns that data's bounds; built-in overrides retain their existing behavior. Registered algorithms beyond these geometry families remain open under ADR 0103. Collider preparation and built-in support preflight borrow the using world before calling a cold supplier. Final world release, collider/tree removal, world transfer and numerical writes reject before mutation; common logical input reads remain available. Supplier errors preserve their original identity and release the guard for a later retry. See [geometry input borrowing](../components/physics-backends.md#geometry-input-borrowing).
 
 This complete resource-only snippet requires no SceneTree, body or space:
 

@@ -5,23 +5,27 @@ internal sealed partial class PhysicsColliderBackend
     private PhysicsColliderShape[] _shapeInputs = [];
     private OneWayContactData?[] _oneWayInputs = [];
     private bool _rebuildingShapes;
-    private void BeginShapeInputs(int count)
+    private PhysicsSpace BeginShapeInputs(int count)
     {
         if (_rebuildingShapes) throw new InvalidOperationException("Collider geometry cannot rebuild recursively.");
         if (_shapeInputs.Length < count) Array.Resize(ref _shapeInputs, Math.Max(8, count));
         if (_oneWayInputs.Length < count) Array.Resize(ref _oneWayInputs, Math.Max(8, count));
+        var space = Space ?? throw new InvalidOperationException("Collider geometry requires a live world attachment.");
+        space.BeginImplementationCallback();
         _rebuildingShapes = true;
+        return space;
     }
-    private void EndShapeInputs(int count)
+    private void EndShapeInputs(int count, PhysicsSpace space)
     {
         Array.Clear(_shapeInputs, 0, count);
         Array.Clear(_oneWayInputs, count, _oneWayInputs.Length - count);
         _rebuildingShapes = false;
+        space.EndImplementationCallback();
     }
     internal void RebuildShapes(IReadOnlyList<CollisionObject.ShapeSlot> slots, uint layer, uint mask,
         bool sensor, float density, float friction = 1, float bounce = 0)
     {
-        var count = slots.Count; BeginShapeInputs(count);
+        var count = slots.Count; var space = BeginShapeInputs(count);
         try
         {
             for (var index = 0; index < count; index++)
@@ -40,12 +44,12 @@ internal sealed partial class PhysicsColliderBackend
             Attached.RebuildShapes(_shapeInputs.AsSpan(0, count), layer, mask, sensor, density, friction, bounce);
             _filterDirty = false;
         }
-        finally { EndShapeInputs(count); }
+        finally { EndShapeInputs(count, space); }
     }
     internal void RebuildShapes(IReadOnlyList<PhysicsServerCollider.ShapeSlot> slots, uint layer, uint mask,
         bool sensor, float density, float friction = 1, float bounce = 0)
     {
-        var count = slots.Count; BeginShapeInputs(count);
+        var count = slots.Count; var space = BeginShapeInputs(count);
         try
         {
             for (var index = 0; index < count; index++)
@@ -68,6 +72,6 @@ internal sealed partial class PhysicsColliderBackend
             Attached.RebuildShapes(_shapeInputs.AsSpan(0, count), layer, mask, sensor, density, friction, bounce);
             _filterDirty = false;
         }
-        finally { EndShapeInputs(count); }
+        finally { EndShapeInputs(count, space); }
     }
 }

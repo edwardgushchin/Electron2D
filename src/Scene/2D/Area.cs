@@ -395,7 +395,7 @@ public sealed partial class Area : CollisionObject
     {
         Backend.RebuildShapes(ShapeSlots, CollisionLayer, CollisionMask, true, 0);
         _appliedShapeRevisions.Clear();
-        foreach (var node in ShapeSlots) _appliedShapeRevisions.Add(node.Revision);
+        for (var index = 0; index < ShapeSlots.Count; index++) _appliedShapeRevisions.Add(ShapeSlots[index].Revision);
         _shapesDirty = false;
     }
 

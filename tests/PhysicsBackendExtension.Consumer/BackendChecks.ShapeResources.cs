@@ -15,7 +15,7 @@ public static partial class BackendChecks
         var first = PhysicsServer.BodyCreate(); var second = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate();
         var shape = PhysicsServer.CircleShapeCreate();
         using var original = new CircleShape { Radius = 3 }; using var next = new CircleShape { Radius = 8 };
-        Shape? temporary = null; var restoring = false; var restoredLater = 0;
+        Shape? temporary = null; var restoring = false; var restoredLater = 0; RID applied = default;
         try
         {
             PhysicsServer.ShapeSetData(shape, original);
@@ -25,14 +25,16 @@ public static partial class BackendChecks
             PhysicsServer.BodySetSpace(first, world.Space); PhysicsServer.BodySetSpace(second, world.Space); PhysicsServer.AreaSetSpace(area, world.Space);
             solver!.ShapeHook = id =>
             {
-                if (!restoring && id == second)
+                if (!restoring)
                 {
-                    temporary = solver.Bodies[first].LastShape.Shape;
+                    // Reused RIDs can reorder borrowers; fail after an actual selected publication.
+                    if (!applied.IsValid()) { applied = id; return; }
+                    temporary = solver.Bodies[applied].LastShape.Shape;
                     temporary.Disposed += _ => throw new ApplicationException("Rejected view retirement failure");
                     restoring = true;
                     throw new ApplicationException("Shape apply failure");
                 }
-                if (restoring && id == first) throw new InvalidOperationException("Shape first rollback failure");
+                if (restoring && id == applied) throw new InvalidOperationException("Shape first rollback failure");
                 if (restoring) restoredLater++;
             };
             var errors = ReleaseErrors(() => PhysicsServer.ShapeSetData(shape, next)); solver.ShapeHook = null;

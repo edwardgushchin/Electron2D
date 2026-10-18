@@ -19,9 +19,10 @@ internal static class PhysicsShapeBackend
     internal static void RequireSupported(PhysicsSpace? space, Shape shape)
     {
         if (shape.IsDisposed || !shape.HasServerData || space is null || space.ActualBackend == PhysicsServer.Backend.Extension) return;
-        space.BeginExtensionCallback();
+        space.EnsureImplementationInputReadAccess();
+        space.BeginImplementationCallback();
         try { RequireBuiltIn(shape); }
-        finally { space.EndExtensionCallback(); }
+        finally { space.EndImplementationCallback(); }
     }
     internal static void RequireBuiltIn(Shape shape)
     {

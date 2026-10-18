@@ -1,6 +1,10 @@
 # Area
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
+
+## Geometry preparation
+
+Scene Area shape compilation holds the [using world borrow](../components/physics-backends.md#geometry-input-borrowing) before invoking cold resources. Revision capture uses indexed logical slots, avoiding a managed enumerator per warmed rebuild. The public geometry-input fixture checks edits with full moving physics/query intervals on the selected implementations.
 
 ## Failed pose publication
 

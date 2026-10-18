@@ -31,7 +31,10 @@ rejected-copy retirement; a provider cannot edit a different participating world
 from its rebuild or failed-retirement callback. World borrowing ends before the
 old committed view retires, preserving ordinary committed callback mutation.
 Rebuild rollback, dirty retry, private-view retirement and committed cleanup errors
-keep their existing semantics. These are cold explicit copy operations; no work
+keep their existing semantics. The rollback fixture selects its first actually
+published borrower rather than assuming RID enumeration order, retaining exact
+apply/rollback/retirement errors after earlier tests recycle identities.
+These are cold explicit copy operations; no work
 is added to ordinary simulation frames.
 
 The public-only --procedural-data profile uses a Shape subclass without a duplicate

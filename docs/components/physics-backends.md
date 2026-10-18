@@ -163,6 +163,38 @@ recursive geometry-hook failure/retry on CPU/GPU/no-device. The rotation check u
 enabled state, resources and margins compare exactly. Complete public registration,
 external operation dispatch and custom algorithm geometry remain open.
 
+## Geometry input borrowing
+
+Common scene/raw Body/Area shape preparation now borrows its captured using world
+before invoking any cold `Shape.GetGeometryCore` supplier. The borrow spans source
+validation, projection, selected compilation and failure cleanup. Built-in support
+preflight uses the same numerical guard. Supplier callbacks can inspect common
+logical inputs, but cannot write numerical state, remove colliders/trees, transfer
+world bindings or release the final world resource. Releasing a non-final resource
+wrapper retains the existing shared-world lifetime contract.
+
+A supplier exception keeps its original identity and releases the guard, allowing
+unchanged authored slots to retry. Scene Area revision capture uses indexed
+logical slots, matching body preparation and avoiding a boxed enumerator per
+warmed edit. No public signature, native shape storage or packet format changes.
+
+The public-only [geometry-input fixture](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.GeometryInputs.cs)
+checks a final-resource release and add/replacement/dirty preparation on all four
+scene/raw Body/Area roles, exact logical query indices, retained identity and
+original-error retry. Its measured interval includes four slot-transform edits,
+a complete moving physics frame and an actual point query. The selected CPU,
+software Vulkan and registered implementations retain their explicit execution
+limits; focused results and compiled-source evidence are stored in
+`bin/physics-geometry-input-borrow/2026-10-18/validation.json`.
+
+The earlier whole-main run on frozen `6588bfe4` output ended after 1225.572283442
+seconds at the CPU material resting check with 0/4656 owner/all-thread managed
+bytes. Isolated CPU and software-GPU material runs of that frozen cohort passed at 0/0;
+the failed suite-wide interval and its allocation cause remain unresolved. Neither result certifies this
+new source cohort. Full-suite, real GPU performance/FPS, native allocator,
+network and foreign-platform acceptance remain open; the 194-row open physics
+ledger is unchanged.
+
 ## Selected lifecycle and activity
 
 [Local activation recovery](physics-registered-adapter.md#failed-local-activation) preserves the committed public flag after a partial selected hook error. Explicit writes retry their supplied value; space queries, history and active positive intervals restore pending committed policy before numerical work. Metadata and skipped intervals do not prepare; cleanup retires without retry.

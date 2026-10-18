@@ -1,6 +1,6 @@
 # Collision shapes component
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
 
 ## Raw shape initialization
 
@@ -16,6 +16,8 @@ Private checkpoints preserve pending slots. Portable authoring compatibility dis
 [`Shape`](../classes/Shape.md) is the abstract managed geometry resource. [`CircleShape`](../classes/CircleShape.md), [`CapsuleShape`](../classes/CapsuleShape.md), [`SegmentShape`](../classes/SegmentShape.md), [`SeparationRayShape`](../classes/SeparationRayShape.md), [`WorldBoundaryShape`](../classes/WorldBoundaryShape.md), [`ConvexPolygonShape`](../classes/ConvexPolygonShape.md), [`ConcavePolygonShape`](../classes/ConcavePolygonShape.md) and [`RectangleShape`](../classes/RectangleShape.md) provide concrete fixtures. [`CollisionShape`](../classes/CollisionShape.md) borrows one Shape as a direct `PhysicsBody` or `Area` child. [`CollisionPolygon`](../classes/CollisionPolygon.md) is a sibling scene child that owns its generated solid or hollow geometry; [`PolygonBuildMode`](../classes/PolygonBuildMode.md) chooses its construction mode. None of these public types expose backend handles.
 
 ## Runtime flow
+
+[Geometry input borrowing](physics-backends.md#geometry-input-borrowing) protects the using world before cold procedural resources run, through selected scene/raw Body/Area compilation. Numerical and binding writes reject; original supplier failures release the guard for retry. Scene Area revision capture uses indexed slot traversal, matching bodies and avoiding a boxed enumerator on warmed shape edits.
 
 Every built-in resource supplies cached immutable [ShapeGeometry](../classes/ShapeGeometry.md)
 data with exact scene-unit endpoints, radius and contours. Resource classes contain
