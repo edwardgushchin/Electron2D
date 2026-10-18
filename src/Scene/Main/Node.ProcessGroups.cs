@@ -48,27 +48,30 @@ public partial class Node
     }
     /// <summary>Gets or sets the ascending order of this node's explicit processing group.</summary>
     /// <value>Any integer, initially zero; inherited nodes retain the value without defining a group order.</value>
-    /// <remarks>Subthread stages complete before main groups at equal order. Writes apply to later frame capture.</remarks>
-    /// <exception cref="InvalidOperationException">Mutation is off the owner thread or scene capture is active.</exception>
+    /// <remarks>Subthread stages complete before main groups at equal order. The scene owner or current group may write this value,
+    /// including on inherited descendants. Writes apply to the next frame capture. Reads require caller coordination.</remarks>
+    /// <exception cref="InvalidOperationException">Mutation is outside the owner/current processing group or scene capture is active.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
     public int ProcessThreadGroupOrder
     {
         get { ThrowIfDisposed(); return _processThreadGroupOrder; }
-        set { EnsureMutable(); _processThreadGroupOrder = value; }
+        set { EnsureProcessingAccess(); _processThreadGroupOrder = value; }
     }
     /// <summary>Gets or sets lanes permitted to process this explicit group's messages without active callbacks.</summary>
     /// <value>Zero initially; Process, Physics or All permit the corresponding empty-group lane.</value>
     /// <remarks>A group with enabled callbacks already services messages in that lane. The implicit main group
-    /// always permits both lanes. Inherited nodes retain this stored value without overriding their owner.</remarks>
+    /// always permits both lanes. Inherited nodes retain this stored value without overriding their owner.
+    /// The scene owner or current group may write this value. Changes affect later stage eligibility without
+    /// interrupting an active drain. Reads require caller coordination.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The flags contain unknown bits.</exception>
-    /// <exception cref="InvalidOperationException">Mutation is off the owner thread or scene capture is active.</exception>
+    /// <exception cref="InvalidOperationException">Mutation is outside the owner/current processing group or scene capture is active.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
     public ProcessThreadMessageFlags ProcessThreadMessages
     {
         get { ThrowIfDisposed(); return _processThreadMessages; }
         set
         {
-            EnsureMutable(); if ((value & ~ProcessThreadMessageFlags.All) != 0) throw new ArgumentOutOfRangeException(nameof(value));
+            EnsureProcessingAccess(); if ((value & ~ProcessThreadMessageFlags.All) != 0) throw new ArgumentOutOfRangeException(nameof(value));
             _processThreadMessages = value;
         }
     }
