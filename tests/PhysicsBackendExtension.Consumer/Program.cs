@@ -1,4 +1,5 @@
-if (args.Length == 2 && args[0] == "--pseudo-oracle") BackendChecks.RunPseudoOracle(args[1]);
+if (args.Contains("--group-context")) BackendChecks.RunGroupContext(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Length == 2 && args[0] == "--pseudo-oracle") BackendChecks.RunPseudoOracle(args[1]);
 else if (args.Contains("--pseudolocalization")) BackendChecks.RunPseudolocalization(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--locale-lookup")) BackendChecks.RunLocaleLookup(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--locale-changes")) BackendChecks.RunLocaleChanges(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
