@@ -161,7 +161,7 @@ internal static class LocalizationProjectSettingsTests
                 {
                     Check(TranslationServer.Culture.Name == "fr-CA" && TranslationServer.FallbackCulture?.Name == "en" &&
                         TranslationServer.GetToolLocale() == "fr-FR" &&
-                        ReferenceEquals(TranslationServer.GetTranslationObject("fr-CA"), regional),
+                        TranslationServer.FindTranslations("fr-CA", false).Any(item => ReferenceEquals(item, regional)),
                         "Startup uses the test locale, fallback and scored catalog selection.");
                     Check(TranslationServer.Translate("", "Color") == "Couleur" &&
                         TranslationServer.Translate("", "Only English") == "English value" &&

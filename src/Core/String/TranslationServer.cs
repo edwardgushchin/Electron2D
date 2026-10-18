@@ -1,17 +1,20 @@
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace Electron2D;
 
 /// <summary>Stores and resolves process-wide in-memory translations for the selected UI culture.</summary>
 /// <remarks>
-/// Lookups use exact, case-sensitive domain, context, and source-message keys, then search the selected culture,
-/// its parents, close resource locale matches, and a configured fallback. Direct entries precede borrowed resource
-/// catalogs at each exact locale; later resource registrations win equal scores. This service does not load catalog
-/// files. Fixed locale metadata and integer plural rules support resource catalogs.
+/// Lookups use exact, case-sensitive domain, context, and source-message keys. Default-aware locale scores rank
+/// selected/parent direct entries and borrowed resource catalogs before the configured fallback. Direct entries win
+/// score ties; later resource registrations win equal resource scores. Parsed locale identities are weakly retained
+/// independently of live message results. Fixed locale metadata and integer plural rules support resource catalogs.
 /// </remarks>
 public static partial class TranslationServer
 {
+    private sealed record LocaleParts(string Language, string Script, string Region, string Variant);
+    private static readonly ConditionalWeakTable<string, LocaleParts> LocaleIdentities = new();
     private static readonly object Gate = new();
     private static readonly Dictionary<(string Culture, string Domain, string Context, string Message), string> Messages = new();
     private static readonly Dictionary<(string Culture, string Domain, string Context, string Singular, string Plural), Func<long, string>> Plurals = new();
@@ -86,7 +89,7 @@ public static partial class TranslationServer
 
     /// <summary>Gets the best loaded main-domain catalog locale for the selected culture, or the configured fallback.</summary>
     /// <returns>The matching catalog locale, the current culture for an exact match, or the fallback locale.</returns>
-    /// <remarks>Reuses the domain's internal catalog snapshot and compares already normalized locale names without allocating. Catalog locale changes are observed on every lookup.</remarks>
+    /// <remarks>Reuses the domain's internal catalog snapshot and compares prepared default-aware locale identities without allocating after preparation. Catalog locale changes are observed on every lookup.</remarks>
     public static string GetToolLocale()
     {
         var requested = Culture.Name;
@@ -97,7 +100,7 @@ public static partial class TranslationServer
             try
             {
                 var candidate = translation.Locale;
-                var score = CompareNormalizedLocales(requested, candidate);
+                var score = CompareLocales(requested, candidate);
                 if (score <= 0 || score < bestScore) continue;
                 if (score == 10) return requested;
                 best = candidate;
@@ -108,36 +111,11 @@ public static partial class TranslationServer
         return best ?? FallbackCulture?.Name ?? string.Empty;
     }
 
-    private static int CompareNormalizedLocales(string first, string second)
+    private static LocaleParts ParseLocale(string locale) => LocaleIdentities.GetValue(locale, static key =>
     {
-        if (first == second) return 10;
-        var a = first.AsSpan(); var b = second.AsSpan(); var aSeparator = a.IndexOf('-'); var bSeparator = b.IndexOf('-');
-        var aLanguage = a[..(aSeparator < 0 ? a.Length : aSeparator)]; var bLanguage = b[..(bSeparator < 0 ? b.Length : bSeparator)];
-        if (!aLanguage.SequenceEqual(bLanguage)) return 0;
-        ParseNormalizedParts(aSeparator < 0 ? [] : a[(aSeparator + 1)..], out var aScript, out var aRegion, out var aVariant);
-        ParseNormalizedParts(bSeparator < 0 ? [] : b[(bSeparator + 1)..], out var bScript, out var bRegion, out var bVariant);
-        if (aScript.SequenceEqual(bScript) && aRegion.SequenceEqual(bRegion) && aVariant.SequenceEqual(bVariant)) return 10;
-        var score = 5;
-        if (!aScript.IsEmpty && !bScript.IsEmpty) score += aScript.SequenceEqual(bScript) ? 1 : -1;
-        if (!aRegion.IsEmpty && !bRegion.IsEmpty) score += aRegion.SequenceEqual(bRegion) ? 1 : -1;
-        if (!aVariant.IsEmpty && !bVariant.IsEmpty) score += aVariant.SequenceEqual(bVariant) ? 1 : -1;
-        return score;
-    }
-
-    private static void ParseNormalizedParts(ReadOnlySpan<char> parts, out ReadOnlySpan<char> script,
-        out ReadOnlySpan<char> region, out ReadOnlySpan<char> variant)
-    {
-        script = region = variant = [];
-        foreach (var range in parts.Split('-'))
-        {
-            var part = parts[range];
-            if (part.Length == 4 && script.IsEmpty) script = part;
-            else if (part.Length is 2 or 3 && region.IsEmpty) region = part;
-            else if (variant.IsEmpty) variant = part;
-        }
-    }
-
-    private static (string Language, string Script, string Region, string Variant) ParseLocale(string locale) => ParseCatalogLocale(locale, true);
+        var parsed = ParseCatalogLocale(key, true);
+        return new(parsed.Language, parsed.Script, parsed.Region, parsed.Variant);
+    });
 
     /// <summary>Adds or replaces one singular translation.</summary>
     /// <param name="culture">The culture whose name forms part of the lookup key.</param>
@@ -277,12 +255,6 @@ public static partial class TranslationServer
     public static Translation[] FindTranslations(string locale, bool exact) =>
         GetOrAddDomain(string.Empty).FindTranslations(locale, exact);
 
-    /// <summary>Gets the closest matching resource in the main domain.</summary>
-    /// <param name="locale">The requested culture name.</param>
-    /// <returns>A borrowed resource, or null.</returns>
-    public static Translation? GetTranslationObject(string locale) =>
-        GetOrAddDomain(string.Empty).GetTranslationObject(locale);
-
     /// <summary>Reports whether the main domain contains a resource by identity.</summary>
     /// <param name="translation">The resource to inspect.</param>
     /// <returns>True when registered.</returns>
@@ -372,7 +344,7 @@ public static partial class TranslationServer
     /// <param name="domain">The case-sensitive translation domain.</param>
     /// <param name="message">The source message.</param>
     /// <param name="context">An optional disambiguation context. Null is equivalent to an empty string.</param>
-    /// <returns>The first matching direct or resource translation, or <paramref name="message"/> when none exists or translation is disabled.</returns>
+    /// <returns>The highest-ranked direct or resource translation, or <paramref name="message"/> when none exists or translation is disabled.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="domain"/> or <paramref name="message"/> is <see langword="null"/>.</exception>
     public static string Translate(string domain, string message, string? context = null)
     {
@@ -459,61 +431,55 @@ public static partial class TranslationServer
 
     private static string? FindSingular(CultureInfo culture, string domain, string message, string context, TranslationDomain? catalogDomain)
     {
+        string? direct = null;
+        var bestScore = 0;
         foreach (var cultureName in TranslationDomain.CultureChain(culture))
         {
-            string? direct;
-            lock (Gate)
-                Messages.TryGetValue((cultureName, domain, context, message), out direct);
-            if (direct is not null) return direct;
-            if (catalogDomain is not null)
-            {
-                try
-                {
-                    var translation = catalogDomain.FindMessage(cultureName, message, context, exact: true);
-                    if (translation.Length != 0) return translation;
-                }
-                catch (ObjectDisposedException) when (catalogDomain.IsDisposed) { return null; }
-            }
+            string? candidate;
+            lock (Gate) Messages.TryGetValue((cultureName, domain, context, message), out candidate);
+            if (candidate is null) continue;
+            var score = cultureName.Length == 0 && culture.Name.Length != 0 ? 1 : CompareLocales(culture.Name, cultureName);
+            if (score <= bestScore) continue;
+            direct = candidate; bestScore = score;
+            if (score == 10) break;
         }
         if (catalogDomain is not null)
         {
             try
             {
-                var translation = catalogDomain.FindMessage(culture.Name, message, context);
+                var translation = catalogDomain.FindMessage(culture.Name, message, context, bestScore);
                 if (translation.Length != 0) return translation;
             }
             catch (ObjectDisposedException) when (catalogDomain.IsDisposed) { }
         }
-        return null;
+        return direct;
     }
 
     private static string? FindPlural(CultureInfo culture, string domain, string singular, string plural, long count, string context, TranslationDomain? catalogDomain)
     {
+        Func<long, string>? selector = null;
+        var bestScore = 0;
         foreach (var cultureName in TranslationDomain.CultureChain(culture))
         {
-            lock (Gate)
-                if (Plurals.TryGetValue((cultureName, domain, context, singular, plural), out var selector))
-                    return selector(count) ?? throw new InvalidOperationException("A plural translation selector returned null.");
-            if (catalogDomain is not null)
-            {
-                try
-                {
-                    var translation = catalogDomain.FindPluralMessage(cultureName, singular, plural, count, context, exact: true);
-                    if (translation.Length != 0) return translation;
-                }
-                catch (ObjectDisposedException) when (catalogDomain.IsDisposed) { return null; }
-            }
+            Func<long, string>? candidate;
+            lock (Gate) Plurals.TryGetValue((cultureName, domain, context, singular, plural), out candidate);
+            if (candidate is null) continue;
+            var score = cultureName.Length == 0 && culture.Name.Length != 0 ? 1 : CompareLocales(culture.Name, cultureName);
+            if (score <= bestScore) continue;
+            selector = candidate; bestScore = score;
+            if (score == 10) break;
         }
         if (catalogDomain is not null)
         {
             try
             {
-                var translation = catalogDomain.FindPluralMessage(culture.Name, singular, plural, count, context);
+                var translation = catalogDomain.FindPluralMessage(culture.Name, singular, plural, count, context, bestScore);
                 if (translation.Length != 0) return translation;
             }
             catch (ObjectDisposedException) when (catalogDomain.IsDisposed) { }
         }
-        return null;
+        if (selector is null) return null;
+        lock (Gate) return selector(count) ?? throw new InvalidOperationException("A plural translation selector returned null.");
     }
 
     /// <summary>Removes all direct translations and borrowed resource registrations without disposing resources.</summary>

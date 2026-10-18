@@ -26,7 +26,7 @@ internal static class TranslationDomainTests
             domain.AddTranslation(catalog);
             Check(domain.GetTranslations().Length == 1 && domain.HasTranslation(catalog) &&
                 domain.HasTranslationForLocale("fr-CA", false) && !domain.HasTranslationForLocale("fr-CA", true) &&
-                ReferenceEquals(domain.GetTranslationObject("fr-CA"), catalog), "Catalog registration and locale lookup.");
+                domain.FindTranslations("fr-CA", false).Any(item => ReferenceEquals(item, catalog)), "Catalog registration and locale lookup.");
             var snapshot = domain.GetTranslations();
             domain.RemoveTranslation(catalog);
             Check(snapshot.Length == 1 && ReferenceEquals(snapshot[0], catalog) &&

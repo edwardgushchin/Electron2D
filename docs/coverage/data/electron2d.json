@@ -191104,25 +191104,6 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.TranslationDomain.GetTranslationObject(System.String)",
-    "kind": "method",
-    "declaringType": "Electron2D.TranslationDomain",
-    "name": "GetTranslationObject",
-    "signature": "public Electron2D.Translation GetTranslationObject(System.String locale)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "locale",
-        "type": "System.String",
-        "default": null
-      }
-    ],
-    "returnType": "Electron2D.Translation",
-    "value": null
-  },
-  {
     "id": "method:Electron2D.TranslationDomain.GetTranslations()",
     "kind": "method",
     "declaringType": "Electron2D.TranslationDomain",
@@ -191662,25 +191643,6 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.TranslationServer.GetTranslationObject(System.String)",
-    "kind": "method",
-    "declaringType": "Electron2D.TranslationServer",
-    "name": "GetTranslationObject",
-    "signature": "public static Electron2D.Translation GetTranslationObject(System.String locale)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "locale",
-        "type": "System.String",
-        "default": null
-      }
-    ],
-    "returnType": "Electron2D.Translation",
     "value": null
   },
   {

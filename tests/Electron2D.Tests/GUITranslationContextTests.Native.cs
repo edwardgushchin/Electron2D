@@ -24,6 +24,9 @@ internal static partial class GUITranslationContextTests
     }
     private static void Pixels(string backend)
     {
+        using var parent = new Translation { Locale = "sr" }; parent.AddMessage("Token", "Parent", "noun");
+        using var regional = new Translation { Locale = "sr-Latn-ME" }; regional.AddMessage("Token", "DDDDDDDDDD", "noun");
+        TranslationServer.AddTranslation(parent, Domain); TranslationServer.AddTranslation(regional, Domain);
         var window = new Window { Size = new(240, 100), LayoutDirection = LayoutDirection.LTR };
         var contextual = new Label { Name = "Contextual", TranslationDomain = Domain, TranslationContext = "action", Text = "Token", Position = new(8, 8), Size = new(210, 28), LayoutDirection = LayoutDirection.LTR };
         var expected = new Label { Name = "Expected", AutoTranslateMode = NodeAutoTranslateMode.Disabled, Text = "AAAA", Position = new(8, 48), Size = new(210, 28), LayoutDirection = LayoutDirection.LTR };
@@ -58,10 +61,15 @@ internal static partial class GUITranslationContextTests
                     TranslationServer.Culture = CultureInfo.GetCultureInfo("fr"); expected.Text = "CCCCCCCC";
                     Check(contextual.GetTotalCharacterCount() == 8, "Global culture publication refreshes actual prepared glyph text without manual notification.");
                 }
+                else if (frames == 3)
+                {
+                    TranslationServer.Culture = CultureInfo.GetCultureInfo("sr-ME"); expected.Text = "DDDDDDDDDD";
+                    Check(contextual.GetTotalCharacterCount() == 10, "A higher-scored script/region resource replaces the weaker parent during global refresh.");
+                }
                 else window.Tree!.Quit();
             };
         };
-        Check(Engine.Run(window) == 0 && frames == 3, "Contextual GUI renders all states and completes native lifecycle.");
-        Console.WriteLine($"GUI translation context {backend}: independently matched initial, contextual and global-culture glyph pixels passed.");
+        Check(Engine.Run(window) == 0 && frames == 4, "Contextual GUI renders all states and completes native lifecycle.");
+        Console.WriteLine($"GUI translation context {backend}: independently matched initial, contextual, global-culture and scored-resource glyph pixels passed.");
     }
 }

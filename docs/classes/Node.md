@@ -1949,3 +1949,5 @@ Emits this node after a changed description, independently of selection. Signal 
 Emits this selected node after the supported authoring mutations listed in Scene authoring state. Delivery uses the mutating thread and committed state; signal blocking applies.
 
 Successful EnsureMutable validation conservatively reports a rendering change, including equal assignments and detached authoring. Custom setters should retain the existing owner/capture guards. Repeated internal no-op setters can therefore prevent idle rendering; actual producers should avoid unnecessary publication. See [low-processor scheduling](../components/low-processor-rendering.md).
+
+Inherited object translation-domain access and plural lookup execute through [scored runtime lookup](../components/localization.md#scored-runtime-lookup). Catalog selection preserves live edits, callback errors and physical identities with strict zero warmed managed bytes. Singular translation retains the separate pseudolocalization Unicode/rounding dependency; the plural path intentionally bypasses it.

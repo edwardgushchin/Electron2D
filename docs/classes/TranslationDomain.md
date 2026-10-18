@@ -1,6 +1,6 @@
 # TranslationDomain
 
-Last updated: 2026-09-27
+Last updated: 2026-10-18
 
 **Inherits:** [`ElectronObject`](ElectronObject.md)
 **Inherited By:** —
@@ -11,7 +11,7 @@ Last updated: 2026-09-27
 
 ## Description
 
-A domain owns the registration order of borrowed [`Translation`](Translation.md) resources. It does not dispose them. A live catalog's edits and locale changes affect subsequent lookups; its disposal unregisters it. Registered domains also participate in [`TranslationServer`](TranslationServer.md) direct entries. An independent domain resolves only its own catalogs. Lookups visit the selected culture, its parents, then invariant culture, nearby resource locales and the configured fallback locale. The most recently registered resource wins an equal locale score.
+A domain owns the registration order of borrowed [`Translation`](Translation.md) resources. It does not dispose them. A live catalog's edits and locale changes affect subsequent lookups; its disposal unregisters it. Registered domains also participate in [`TranslationServer`](TranslationServer.md) direct entries. An independent domain resolves only its own catalogs. Resource lookups rank all catalogs against the selected locale, then try the configured fallback only when no message resolves. Parent or invariant resource locales cannot intercept a better regional/script match. The most recently registered resource wins an equal locale score.
 
 `Enabled`, `LocaleOverride` and pseudolocalization options belong to each domain. The process-wide server enablement still applies. The server's main domain uses the empty name. Removing a custom domain detaches it without disposing it; disposing a registered domain removes its registration and direct entries. Managed lifetime follows `ElectronObject`.
 
@@ -61,7 +61,6 @@ domain.Dispose();
 | `public Translation[] FindTranslations(string locale, bool exact)` | Returns exact or positive-score locale matches. |
 | `public bool HasTranslation(Translation translation)` | Tests registration by identity. |
 | `public bool HasTranslationForLocale(string locale, bool exact)` | Tests locale availability. |
-| `public Translation? GetTranslationObject(string locale)` | Returns the highest-scoring matching resource. |
 | `public string Translate(string message, string context = "")` | Resolves singular text, including server direct entries when registered. |
 | `public string TranslatePlural(string singular, string plural, long count, string context = "")` | Resolves plural text; singular source fallback is used only for count `1`. |
 | `public string Pseudolocalize(string message)` | Applies configured transforms regardless of `PseudolocalizationEnabled`. |
@@ -70,7 +69,7 @@ domain.Dispose();
 ## Member behavior
 
 - `LocaleOverride` accepts .NET culture names and underscore separators, normalizes them to `CultureInfo.Name`, and rejects unknown names. Empty removes the override. A null value throws `ArgumentNullException`.
-- `FindTranslations` and `HasTranslationForLocale` normalize the requested locale. With `exact = false`, they accept catalogs with a positive [`TranslationServer.CompareLocales`](TranslationServer.md#comparelocales) score. `GetTranslationObject` chooses the highest score, preferring later registration on ties. Returned arrays are snapshots, but their resource objects remain live and caller-owned.
+- `FindTranslations` and `HasTranslationForLocale` normalize the requested locale. With `exact = false`, they accept catalogs with a positive [`TranslationServer.CompareLocales`](TranslationServer.md#comparelocales) score. Returned arrays are snapshots, but their resource objects remain live and caller-owned.
 - `Translate` and `TranslatePlural` use a case-sensitive context. Direct server entries take priority in the exact-culture pass for a registered domain; nearby resource catalogs are tried next, then the configured fallback locale. Disabled lookups return source text. Resource plural selectors may throw their own exceptions. Singular translations, including source fallback, are pseudolocalized when enabled; plural translations are not.
 - `Pseudolocalize` applies override, vowel doubling, accents, and fake BIDI in that order, followed by symmetric expansion padding and prefix/suffix. Common `%s`, `%c`, `%d`, `%o`, `%x`, `%X`, and `%f` placeholders are protected when enabled. Empty input remains empty. The expansion ratio must be finite and nonnegative; a null prefix, suffix, or message throws `ArgumentNullException`.
 - A disposed domain rejects its public operations. A catalog can be disposed concurrently with lookup; lookup skips it. User resource selectors and override callbacks execute outside the server lock; direct plural selectors execute under the server lock.
@@ -86,3 +85,5 @@ domain.Dispose();
 ## Prepared lookup storage
 
 Culture fallback traversal uses a value enumerator, preserving the selected-culture, parent and invariant order without allocating an iterator. A normalized locale override retains its read-only `CultureInfo` until the override changes. Internal catalog membership snapshots are rebuilt only after registration, removal, clear or disposal; public `GetTranslations()` still returns an independent array. Lookup results are not cached: live catalog edits remain visible, and virtual resource callbacks still run outside the domain lock. [LabelTests](../../tests/Electron2D.Tests/LabelTests.cs) verifies translated text and warm localized uppercase frames in the complete text consumer.
+
+Registered direct entries and resource catalogs now share default-aware locale ranking, with direct entries winning equal scores. Parsed identities are weakly retained independently of message results, so resource edits, locale changes and disposal remain live. Prepared physical scene lookup and standalone domain checks retain strict zero managed allocation; see [scored runtime lookup](../components/localization.md#scored-runtime-lookup). Singular pseudolocalization keeps its separate Unicode/rounding audit.

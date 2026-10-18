@@ -30,7 +30,7 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 ## Invariants
 
 - Catalog access and culture changes are lock-protected.
-- Selected culture, its parents and invariant culture precede nearby resource locales; the configured fallback locale is tried afterward.
+- Catalogs compete against the selected locale using default-aware scores, then the configured fallback is tried. Direct selected/parent entries share those scores and win ties; only explicit invariant direct entries form a universal fallback.
 - Domains, contexts, and messages are ordinal and case-sensitive.
 - Missing singular translations return the source message.
 - Missing plural translations use singular only when count equals one; registered selectors own language-specific plural rules. Resource catalogs use an imported Plural-Forms definition, then a known automatic locale rule, and fail explicitly for unknown multi-form rules.
@@ -40,7 +40,7 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 
 - `.resx`, JSON catalogs and system-dependent MO extension tables remain outside the current import profile.
 - Optimized translation payloads use an internal Brotli representation; reference Smaz file compatibility and editor-only generation gating remain absent.
-- No operating-system locale discovery, number formatting, interpolation, or full Unicode bidirectional-text implementation. Pseudolocalization includes only test direction-control marks; locale alias/default-script tables and exact Unicode parity remain partial.
+- Automatic operating-system culture acquisition after startup, string parameter interpolation and exact Unicode pseudolocalization remain separate. The fixed locale catalog and generated numeric formatting execute; full Unicode bidirectional-text layout is owned by text shaping.
 - Full CLDR decimal categories remain absent; fixed integer locale rules and bounded textual catalog definitions execute. Unknown rules require a valid definition or typed caller selector.
 - No native locale-discovery or localization verification on all targets exists yet.
 
@@ -70,3 +70,5 @@ Input is bounded to 16 MiB, 100,000 messages, 64 forms and 4096 rule characters,
 `TranslationCatalogTests` exercises import, malformed input, cache/threaded paths, fresh-process archive restoration, override priority, copying and zero-byte warm selection. Native language-menu consumers use an imported rule with reordered forms and check rendered two/five-item pixels on GPU and compatibility renderers. These are Linux x64 checks, not foreign-platform acceptance.
 
 Application notification ownership, reentry, failure handling and measured public physical/native glyph consumers are documented in [translation notifications](../components/localization.md#application-translation-notifications). Independent library trees use explicit notification; active SceneTree delivery requires its owner thread.
+
+Default-aware catalog lookup, weak identity preparation, live resource callbacks and the current query API are verified through [scored runtime lookup](../components/localization.md#scored-runtime-lookup). The physical cohort retains strict zero managed allocation on CPU, software Vulkan and registered backends.

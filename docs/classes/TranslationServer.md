@@ -18,7 +18,7 @@ Stores and resolves process-wide in-memory translations for the selected UI cult
 
 `TranslationServer` is the process-wide in-memory translation registry. It owns named [`TranslationDomain`](TranslationDomain.md) instances and resolves direct entries and borrowed [`Translation`](Translation.md) resources by ordinal domain/context keys for the selected UI culture and a configured fallback. The empty name selects the main domain.
 
-Lookups use exact, case-sensitive domain, context, and source-message keys. Exact entries are checked from the selected culture through its parents and invariant culture; nearby resource locales are scored next. The configured fallback is searched after that. Within each exact locale, direct registrations precede resource catalogs; the most recently registered resource wins an equal score. This typed service does not load catalog files or implement CLDR plural rules.
+Lookups use exact, case-sensitive domain, context and source-message keys. Resource catalogs compete against the selected locale using fixed default-aware scores before project fallback. Selected/parent direct entries share those scores and win ties; explicit invariant direct entries are the lowest-priority universal fallback. The most recently registered resource wins an equal resource score. ResourceLoader imports supported catalog files; fixed integer plural rules do not imply decimal CLDR category support.
 
 ## Examples
 
@@ -52,7 +52,6 @@ string text = TranslationServer.Translate("ui", "menu.play");
 | `public static void RemoveDomain(string name)` | Detaches a custom domain and removes its direct entries; the main domain cannot be removed. |
 | `public static Translation[] GetTranslations()` | Snapshots borrowed main-domain catalogs. |
 | `public static Translation[] FindTranslations(string locale, bool exact)` | Finds main-domain catalogs by locale. |
-| `public static Translation? GetTranslationObject(string locale)` | Gets the closest main-domain catalog. |
 | `public static bool HasTranslation(Translation translation)` | Tests main-domain registration by identity. |
 | `public static bool HasTranslationForLocale(string locale, bool exact)` | Tests main-domain locale availability. |
 | `public static string[] GetLoadedLocales()` | Gets distinct live main-domain locale names. |
@@ -190,7 +189,7 @@ Removes all direct singular/plural registrations and resource registrations with
 
 `GetOrAddDomain` returns the same live domain for an exact case-sensitive name; callers may register resources and set locale override, enablement and pseudolocalization options on it. `HasDomain("")` is true even before the main domain is materialized. `RemoveDomain` rejects the empty name, removes direct entries for a custom name and leaves the detached domain alive with its borrowed catalogs. Disposing a registered domain removes it and its direct entries. Null names throw `ArgumentNullException`.
 
-`GetTranslations`, `FindTranslations`, `GetTranslationObject`, `HasTranslation`, `HasTranslationForLocale`, and `GetLoadedLocales` are convenience operations on the main domain. Arrays are independent snapshots of borrowed resources. `FindTranslations` accepts normalized exact locale or positive-score language matches, according to `exact`. `GetTranslationObject` chooses the highest score. A concurrently disposed catalog is omitted from locale queries.
+`GetTranslations`, `FindTranslations`, `HasTranslation`, `HasTranslationForLocale`, and `GetLoadedLocales` are convenience operations on the main domain. Arrays are independent snapshots of borrowed resources. `FindTranslations` accepts normalized exact locale or positive-score language matches, according to `exact`. A concurrently disposed catalog is omitted from locale queries.
 
 `PseudolocalizationEnabled` and `Pseudolocalize` use the main domain's options. Every server switch assignment, including an equal value, sends a post-commit synchronous notification to the current MainLoop; direct domain option changes keep explicit refresh. `Pseudolocalize` applies those options even if the switch is false. Singular lookup transforms both translated text and missing-message fallback when the switch is true. Plural lookup does not transform its result. See [`TranslationDomain`](TranslationDomain.md) for the options and limits.
 
@@ -203,7 +202,7 @@ Reads the eight active transform settings from [`ProjectSettings`](ProjectSettin
 
 Singular keys contain culture name, domain, normalized context, and source message. Plural keys also contain both source forms. A null context is normalized to the empty string. All string matching uses the tuple/string default ordinal, case-sensitive equality.
 
-The primary culture chain includes the exact culture, each parent, and invariant culture. Direct registrations overwrite an identical key and take priority at each exact tier. Resource catalogs are queried in reverse registration order. If exact tiers miss, their closest supported locale match is considered before the same search under the configured fallback culture. An empty fallback setting disables that second search. `RemoveTranslation` removes one resource registration.
+Direct registrations overwrite an identical key. Their selected/parent candidates compete against every resource using the original requested-locale score, with direct entries winning ties. Resource catalogs are queried in reverse registration order and empty results permit later eligible candidates. Only a complete miss tries the configured fallback; an empty fallback setting disables that second search. `RemoveTranslation` removes one resource registration.
 
 ## Invariants and errors
 
@@ -249,3 +248,5 @@ The fixed locale catalog exposes language/script/country names, aliases, script/
 | `GetPluralRules(locale)` | Fixed gettext definition; direct key, region override, then language fallback. Empty for an unknown rule. |
 
 Catalog operations reject null text. Standardization preserves catalog casing and accepts unknown language codes without a platform culture lookup; runtime Culture and catalog Locale continue to use CultureInfo. CompareLocales applies the same defaults for script/region scoring. Four inverted two-form singular predicates are corrected; fixed integer gettext selection does not claim arbitrary CLDR decimal categories. Enumeration allocates copied arrays; these authoring/discovery calls are not frame primitives. Automatic resource plural lookup uses a prepared selector and allocates no managed storage when warmed.
+
+Runtime lookup ranks catalog candidates against the original selected locale before trying the project fallback. Selected/parent direct entries compete with that same score and win ties; an explicit invariant direct entry remains the lowest-priority universal fallback. GetToolLocale uses this default-aware score as well. CompareLocales weakly retains immutable parsed identities for live input string objects, preserving the fixed parser without retaining retired keys or caching mutable messages. See [scored runtime lookup](../components/localization.md#scored-runtime-lookup) for physical, callback, lifetime, allocation and actual glyph verification.

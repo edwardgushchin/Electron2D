@@ -196,32 +196,11 @@ public sealed class TranslationDomain : ElectronObject
         return false;
     }
 
-    /// <summary>Gets the highest-scoring matching catalog, or null when none matches.</summary>
-    /// <param name="locale">The requested locale.</param>
-    public Translation? GetTranslationObject(string locale)
-    {
-        var normalized = NormalizeLocale(locale);
-        var translations = GetTranslations();
-        Translation? best = null;
-        var bestScore = 0;
-        for (var i = translations.Length - 1; i >= 0; i--)
-        {
-            try
-            {
-                var score = TranslationServer.CompareLocales(normalized, translations[i].Locale);
-                if (score <= bestScore) continue;
-                best = translations[i];
-                bestScore = score;
-                if (score == 10) break;
-            }
-            catch (ObjectDisposedException) when (translations[i].IsDisposed) { }
-        }
-        return best;
-    }
-
     /// <summary>Resolves a singular message using this domain's catalogs, effective culture and project fallback.</summary>
     /// <param name="message">The source message.</param>
     /// <param name="context">A case-sensitive context.</param>
+    /// <remarks>Catalogs compete by default-aware locale score before the configured fallback. Live edits remain visible;
+    /// prepared locale identities and registration snapshots avoid repeated managed allocations.</remarks>
     public string Translate(string message, string context = "")
     {
         ArgumentNullException.ThrowIfNull(message);
@@ -230,18 +209,13 @@ public sealed class TranslationDomain : ElectronObject
         lock (_gate) { ThrowIfDisposed(); registeredName = _registeredName; }
         if (registeredName is not null) return TranslationServer.Translate(registeredName, message, context);
         if (!Enabled || !TranslationServer.Enabled) return message;
-        var culture = EffectiveCulture;
-        foreach (var locale in CultureChain(culture))
+        var translated = FindMessage(EffectiveCulture.Name, message, context);
+        if (translated.Length != 0) return ApplyPseudo(translated);
+        if (TranslationServer.FallbackCulture is { } fallback)
         {
-            var translated = FindMessage(locale, message, context);
+            translated = FindMessage(fallback.Name, message, context);
             if (translated.Length != 0) return ApplyPseudo(translated);
         }
-        if (TranslationServer.FallbackCulture is { } fallback)
-            foreach (var locale in CultureChain(fallback))
-            {
-                var translated = FindMessage(locale, message, context);
-                if (translated.Length != 0) return ApplyPseudo(translated);
-            }
         return ApplyPseudo(message);
     }
 
@@ -250,6 +224,8 @@ public sealed class TranslationDomain : ElectronObject
     /// <param name="plural">The source plural form.</param>
     /// <param name="count">The quantity.</param>
     /// <param name="context">A case-sensitive context.</param>
+    /// <remarks>Catalogs compete by default-aware locale score before the configured fallback. Live edits remain visible;
+    /// prepared locale identities and registration snapshots avoid repeated managed allocations.</remarks>
     public string TranslatePlural(string singular, string plural, long count, string context = "")
     {
         ArgumentNullException.ThrowIfNull(singular);
@@ -260,17 +236,13 @@ public sealed class TranslationDomain : ElectronObject
         if (registeredName is not null) return TranslationServer.TranslatePlural(registeredName, singular, plural, count, context);
         if (Enabled && TranslationServer.Enabled)
         {
-            foreach (var locale in CultureChain(EffectiveCulture))
+            var translated = FindPluralMessage(EffectiveCulture.Name, singular, plural, count, context);
+            if (translated.Length != 0) return translated;
+            if (TranslationServer.FallbackCulture is { } fallback)
             {
-                var translated = FindPluralMessage(locale, singular, plural, count, context);
+                translated = FindPluralMessage(fallback.Name, singular, plural, count, context);
                 if (translated.Length != 0) return translated;
             }
-            if (TranslationServer.FallbackCulture is { } fallback)
-                foreach (var locale in CultureChain(fallback))
-                {
-                    var translated = FindPluralMessage(locale, singular, plural, count, context);
-                    if (translated.Length != 0) return translated;
-                }
         }
         return count == 1 ? singular : plural;
     }
@@ -301,18 +273,18 @@ public sealed class TranslationDomain : ElectronObject
         }
     }
 
-    internal string FindMessage(string locale, string message, string context, bool exact = false)
+    internal string FindMessage(string locale, string message, string context, int minimumScore = 0)
     {
         var translations = GetLookupSnapshot();
         string? best = null;
-        var bestScore = 0;
+        var bestScore = minimumScore;
         for (var i = translations.Length - 1; i >= 0; i--)
         {
             var translation = translations[i];
             try
             {
                 var candidate = translation.Locale;
-                var score = exact ? (candidate == locale ? 10 : 0) : TranslationServer.CompareLocales(locale, candidate);
+                var score = TranslationServer.CompareLocales(locale, candidate);
                 if (score <= bestScore) continue;
                 var value = translation.GetMessage(message, context);
                 if (value.Length == 0) continue;
@@ -325,18 +297,18 @@ public sealed class TranslationDomain : ElectronObject
         return best ?? string.Empty;
     }
 
-    internal string FindPluralMessage(string locale, string singular, string plural, long count, string context, bool exact = false)
+    internal string FindPluralMessage(string locale, string singular, string plural, long count, string context, int minimumScore = 0)
     {
         var translations = GetLookupSnapshot();
         string? best = null;
-        var bestScore = 0;
+        var bestScore = minimumScore;
         for (var i = translations.Length - 1; i >= 0; i--)
         {
             var translation = translations[i];
             try
             {
                 var candidate = translation.Locale;
-                var score = exact ? (candidate == locale ? 10 : 0) : TranslationServer.CompareLocales(locale, candidate);
+                var score = TranslationServer.CompareLocales(locale, candidate);
                 if (score <= bestScore) continue;
                 var value = translation.GetPluralMessage(singular, plural, count, context);
                 if (value.Length == 0) continue;

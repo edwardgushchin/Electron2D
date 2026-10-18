@@ -4,7 +4,7 @@ Last updated: 2026-10-18
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1433 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+1. Close 1425 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
 2. Complete 622 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -18,7 +18,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [RenderingDevice](classes/RenderingDevice.md) | 154 | 39 |
 | [OS](classes/OS.md) | 43 | 10 |
 | [Window](classes/Window.md) | 19 | 57 |
-| [Node](classes/Node.md) | 12 | 13 |
+| [Node](classes/Node.md) | 12 | 12 |
 | [Engine](classes/Engine.md) | 11 | 11 |
 | [Performance](classes/Performance.md) | 8 | 2 |
 | [SceneTree](classes/SceneTree.md) | 6 | 14 |
@@ -26,7 +26,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [SceneState](classes/SceneState.md) | 5 | 10 |
 | [Control](classes/Control.md) | 3 | 60 |
 | [FileAccess](classes/FileAccess.md) | 2 | 65 |
-| [Object](classes/Object.md) | 2 | 14 |
+| [Object](classes/Object.md) | 2 | 11 |
 | [Image](classes/Image.md) | 1 | 72 |
 | [DirAccess](classes/DirAccess.md) | 1 | 39 |
 | [Input](classes/Input.md) | 1 | 34 |
@@ -34,19 +34,19 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [Material](classes/Material.md) | 1 | 0 |
 | [PhysicsServer2DExtension](classes/PhysicsServer2DExtension.md) | 0 | 102 |
 | [Texture2D](classes/Texture.md#godot-texture2d) | 0 | 22 |
-| [TranslationServer](classes/TranslationServer.md) | 0 | 20 |
 | [ItemList](classes/ItemList.md) | 0 | 19 |
+| [TranslationServer](classes/TranslationServer.md) | 0 | 18 |
 | [CanvasItem](classes/CanvasItem.md) | 0 | 16 |
 | [Line2D](classes/Line2D.md) | 0 | 14 |
 | [InputEventKey](classes/InputEventKey.md) | 0 | 10 |
 | [RDSamplerState](classes/RDSamplerState.md) | 0 | 10 |
 | [RDTextureFormat](classes/RDTextureFormat.md) | 0 | 9 |
-| [TranslationDomain](classes/TranslationDomain.md) | 0 | 9 |
 | [DisplayServer](classes/DisplayServer.md) | 0 | 8 |
 | [Translation](classes/Translation.md) | 0 | 8 |
 | [Viewport](classes/Viewport.md) | 0 | 8 |
 | [ParallaxBackground](classes/ParallaxBackground.md) | 0 | 7 |
 | [RegEx](classes/RegEx.md) | 0 | 7 |
+| [TranslationDomain](classes/TranslationDomain.md) | 0 | 7 |
 | [InputEventScreenDrag](classes/InputEventScreenDrag.md) | 0 | 6 |
 | [NavigationServer2D](classes/NavigationServer2D.md) | 0 | 6 |
 | [RDPipelineDepthStencilState](classes/RDPipelineDepthStencilState.md) | 0 | 6 |
