@@ -9,6 +9,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SAMPLER_ARRAYS") is { } samplerArrays) { if (samplerArrays == "managed") SamplerArrayTests.Run(); else SamplerArrayTests.RunNative(samplerArrays); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOW_PROCESSOR") is { } lowProcessorMode)
 {
     if (lowProcessorMode == "managed") LowProcessorRenderingTests.RunManaged();

@@ -1,6 +1,6 @@
 # MaterialState
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 - Declaration: `internal sealed class MaterialState`
 - Source: [Material.cs](../../src/Scene/Resources/Material.cs)
@@ -91,3 +91,7 @@ PushUniforms additionally accepts the owning CanvasItem. It selects reusable ite
 ## Stage upload
 
 SynchronizeSharedUniforms(byte[]?[]? instanceBuffers = null) copies canonical logical values to their other-stage layouts after renderer builtin and per-item preparation. Arrays preserve element strides; matrices round-trip through Transform basis to honor independent row/column layouts. Effective per-item storage is used when present. PushUniforms uploads the fragment buffer prefix to fragment bindings, then remaining buffers to vertex bindings starting at one; vertex binding zero remains renderer-owned. Prepared propagation and native submission allocate no managed storage.
+
+## Sampled descriptor array integration
+
+Textures holds one borrowed override per physical descriptor element. Migration matches Name, Element and the complete sampled type/descriptor length. CopyTextures resolves each missing override against Shader.DefaultTexture(name, element), raising for a missing effective element before submission. Shared stage slots reuse matching logical elements and retain independent native binding maps. See [the component contract](../components/shader-materials.md#fixed-sampled-descriptor-arrays).

@@ -1,6 +1,6 @@
 # CanvasBatch
 
-Last updated: 2026-10-14
+Last updated: 2026-10-18
 
 - Declaration: `internal readonly record struct CanvasBatch`
 - Source: [CanvasBackend.cs](../../src/Servers/Rendering/CanvasBackend.cs)
@@ -45,3 +45,7 @@ InstanceOwner carries the CanvasItem supplying per-item uniform buffers. Adjacen
 Glyph carries LCD/MSDF mode and converted range/outline policy; GlyphModulation carries the LCD blend constant. Both participate in ordinary batch equality. CanvasMesh rejects merging into glyph ranges. Built-in masks retain scalar glyph coverage; built-in transparent group rewrites clear glyph state after restoring LCD tint. See [glyph regions](../components/canvas-rendering.md#lcd-and-msdf-texture-regions).
 
 Manual mesh visibility rectangles are carried in retained batches for group fitting; they replace the batch's CPU geometry bounds. Batches with different visibility policies remain distinct. See [manual mesh bounds](../components/meshes.md#manual-mesh-visibility-bounds).
+
+## Sampled descriptor array integration
+
+ShaderCode exposes Material.Program.NativeCode to native submission. Original Shader.GetSPIRV exports remain source payloads. Physical texture slots include every fixed descriptor array element, with per-element override/default resolution and the existing dependency discovery and native binding flow. See [the component contract](../components/shader-materials.md#fixed-sampled-descriptor-arrays).

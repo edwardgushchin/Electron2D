@@ -1,9 +1,9 @@
 # ShaderMaterial
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
-- Declaration: `public sealed class ShaderMaterial : Material`
-- Source: [Material.cs](../../src/Scene/Resources/Material.cs)
+- Declaration: `public sealed partial class ShaderMaterial : Material`
+- Source: [Material.cs](../../src/Scene/Resources/Material.cs), [Material.Textures.cs](../../src/Scene/Resources/Material.Textures.cs)
 - Inherits: [Material](Material.md), [Resource](Resource.md)
 - Component: [Shader materials](../components/shader-materials.md)
 
@@ -55,7 +55,7 @@ Names are nonblank and case-sensitive. Supported types currently include bool, f
 
 Logical bool uses C# bool; bool2/3/4 use an int component mask (low bits X/Y/Z/W). Higher bits are ignored and reads return the represented bits. Arrays use one bool or int mask per logical shader element. These types require validated [artifact metadata](../components/shader-materials.md#boolean-type-information); unannotated unsigned storage remains numeric. Defaults and reverts are false/zero.
 
-Texture overloads require a reflected sampled image name and a live Texture, or null to use the Shader default. Missing defaults or unreadable/disposed textures fail before rendering. Texture updates and changes to bindings affect later frames without redrawing geometry. Named samplers use linear filtering, clamp-to-edge coordinates and LOD zero independently of CanvasItem/Viewport properties. Configurable named sampler state remains pending; see [the verified defaults](../components/shader-materials.md#named-sampler-defaults).
+Texture overloads require a reflected sampled image name and a live Texture, or null to use the Shader default. Missing defaults or unreadable/disposed textures fail before rendering. Texture updates and changes to bindings affect later frames without redrawing geometry. Named float samplers use linear filtering and integer samplers use nearest, with clamp-to-edge coordinates and LOD zero independently of CanvasItem/Viewport properties. Configurable named sampler state remains pending; see [the verified defaults](../components/shader-materials.md#named-sampler-defaults).
 
 The full request is validated before writing, including all array elements. A failed update preserves previous values. A successful update emits `Changed` and takes effect on later draws without `QueueRedraw`. Callback failure propagates after committed mutation. No Shader causes `InvalidOperationException`; bad names/types/shapes/lengths/nonfinite values cause `ArgumentException`; disposal causes `ObjectDisposedException`. The generic unmanaged constraint does not imply arbitrary unmanaged types are accepted.
 
@@ -75,7 +75,7 @@ Inherited property discovery includes Shader and typed parameter descriptors nam
 
 ## Verification and remaining work
 
-[RenderingRuntimeTests.cs](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs) checks named typed access, failure atomicity, independent copies and returned arrays, property discovery, cross-layout reload, disposal and zero allocations over warmed repeated updates. Four GPU frames per imported language check float/int/uint/vector/array values, distinct materials sharing a shader, and image changes without drawing-command regeneration. [ShaderVectorRenderingTests](../../tests/Electron2D.Tests/ShaderVectorRenderingTests.cs) covers RGB/Rect2 and unsigned vectors, scalar and arrays, defaults/descriptors, adjacent-field integrity, failures, copies, signedness resets, two-language pixels, shared materials, layout reload and warmed allocation checks. [ShaderMatrixRenderingTests](../../tests/Electron2D.Tests/ShaderMatrixRenderingTests.cs) verifies matrix storage order/stride, identity defaults versus explicit zero, Origin omission, arrays, copying, reload, invalid layouts and GPU pixels for both source languages. [ShaderBooleanRenderingTests](../../tests/Electron2D.Tests/ShaderBooleanRenderingTests.cs) verifies logical types, masks/arrays, defaults, copying, metadata rejection, reload and two-language pixels with zero warm allocation. Native coverage is Linux Wayland/Vulkan only. Texture arrays and sampler configuration, matrices other than float2x2, nested structures, other numeric mappings and per-instance parameters remain unimplemented; see [the component limits](../components/shader-materials.md).
+[RenderingRuntimeTests.cs](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs) checks named typed access, failure atomicity, independent copies and returned arrays, property discovery, cross-layout reload, disposal and zero allocations over warmed repeated updates. Four GPU frames per imported language check float/int/uint/vector/array values, distinct materials sharing a shader, and image changes without drawing-command regeneration. [ShaderVectorRenderingTests](../../tests/Electron2D.Tests/ShaderVectorRenderingTests.cs) covers RGB/Rect2 and unsigned vectors, scalar and arrays, defaults/descriptors, adjacent-field integrity, failures, copies, signedness resets, two-language pixels, shared materials, layout reload and warmed allocation checks. [ShaderMatrixRenderingTests](../../tests/Electron2D.Tests/ShaderMatrixRenderingTests.cs) verifies matrix storage order/stride, identity defaults versus explicit zero, Origin omission, arrays, copying, reload, invalid layouts and GPU pixels for both source languages. [ShaderBooleanRenderingTests](../../tests/Electron2D.Tests/ShaderBooleanRenderingTests.cs) verifies logical types, masks/arrays, defaults, copying, metadata rejection, reload and two-language pixels with zero warm allocation. Native coverage is Linux Wayland/Vulkan only. Named sampler configuration, matrices other than float2x2, nested structures and further numeric mappings remain incomplete; see [the component limits](../components/shader-materials.md).
 
 Renderer-owned SCREEN_TEXTURE and SCREEN_PIXEL_SIZE do not appear in stored material descriptors or typed user parameter/default access. They resolve per target draw; ordinary uniforms still use the existing lock/capture/migration rules. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
 
@@ -163,3 +163,44 @@ An authored vertex stage uses the same Shader property and typed material/defaul
 ## Shared renderer globals
 
 Reserved Globals numeric blocks and GLOBAL_ sampled-image names use the [typed renderer-session global service](../components/global-shader-parameters.md). They are excluded from material parameter descriptors, defaults and stored material values. Shaders retain declarations through reload/archives; renderer-session values remain independent.
+
+## Fixed sampled descriptor arrays
+
+| Declaration | Contract |
+| --- | --- |
+| `void SetShaderTextureParameterArray(string name, ReadOnlySpan<Texture?> textures)` | Atomically replaces all ordinary-image overrides; exact reflected length. |
+| `void SetShaderLayeredParameterArray(string name, ReadOnlySpan<TextureLayered?> textures)` | Same whole-array update for layered-image resources. |
+| `Texture?[] GetShaderTextureParameterArray(string name)` | Returns a copied array of explicit ordinary-image overrides. |
+| `TextureLayered?[] GetShaderLayeredParameterArray(string name)` | Returns copied explicit layered-image overrides. |
+| `void CopyShaderTextureParameterArray(string name, Span<Texture?> destination)` | Copies all ordinary-image overrides to exact-length caller storage. |
+| `void CopyShaderLayeredParameterArray(string name, Span<TextureLayered?> destination)` | Copies all layered-image overrides to exact-length caller storage. |
+
+All six methods require a fixed descriptor array, including arrays of length one. Null entries select the respective indexed shader default. Scalar accessors, including Set/GetShaderLayeredParameter with one resource, require a scalar descriptor. Returned references stay borrowed. Bad names, roles, sampled scalar types or lengths raise ArgumentException; disposed resources raise ObjectDisposedException; missing programs or reentrant/replaced-program validation raise InvalidOperationException. Setter input is snapshotted before producer callbacks and all elements validate before one commit/Changed. Callback failures after Changed retain committed values. Prepared setters and copies allocate no managed memory. Getters allocate independent arrays.
+
+Typed descriptors, graph duplication, resource archives and name/role/scalar/length-compatible reload share the same storage. [SamplerArrayTests](../../tests/Electron2D.Tests/SamplerArrayTests.cs) exercises resource and server consumers, native pixels and warm frames. See [the full descriptor array contract](../components/shader-materials.md#fixed-sampled-descriptor-arrays) for source declarations, limits and remaining platform evidence.
+
+### SetShaderTextureParameterArray(string, ReadOnlySpan<Texture?>)
+
+Copies an exact-length array of borrowed ordinary images, validates sampled scalar roles and commits once. Null selects the matching indexed shader default. Failure preserves the old array and emits no Changed; a Changed callback failure occurs after commit. Wrong roles or scalar descriptor names reject.
+
+### SetShaderLayeredParameterArray(string, ReadOnlySpan<TextureLayered?>)
+
+Uses the same atomic update and error/lifetime contract for layered images. Layer count is an image property independent of this descriptor array's length. Ordinary images and scalar descriptors reject.
+
+### GetShaderTextureParameterArray(string)
+
+Returns a new Texture?[] containing explicit borrowed overrides for the named ordinary-image descriptor array. Null elements retain their default-selection meaning. Does not resolve defaults or transfer resource ownership.
+
+### GetShaderLayeredParameterArray(string)
+
+Returns the corresponding independent TextureLayered?[] for a layered-image descriptor array. The reflected name, descriptor array shape and image role must match; missing/disposed program checks apply.
+
+### CopyShaderTextureParameterArray(string, Span<Texture?>)
+
+Validates the name, ordinary-image descriptor shape and exact destination length before writing all explicit overrides. Prepared calls allocate no managed memory; destination elements remain borrowed references.
+
+### CopyShaderLayeredParameterArray(string, Span<TextureLayered?>)
+
+Copies the complete layered-image override array under the material gate with the same validation, ownership and prepared allocation behavior.
+
+The distinct array setter names preserve existing untyped-null calls to scalar texture setters. SamplerArrayTests compiles and checks both scalar null calls, which reject a descriptor array name without ambiguous overload resolution.

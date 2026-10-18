@@ -79,11 +79,11 @@ The parameterless overload returns copied fragment bytes and never exposes the b
 
 ### GetShaderUniformList
 
-Returns a read-only list with exact uniform names. Descriptors use `ShaderMaterial` as owner, scalar/vector/matrix element types, `T[]` for fixed arrays, or `Texture?` for texture bindings. Float4 descriptors use `Vector4`; typed parameter calls also accept `Color` and `Rect2`. Float2x2 uses `Transform` with identity defaults; row/column matrix storage and strides are reflected. Float3 uses `Vector3`, with `Color` as an RGB alias and canonical alpha one. Signed/unsigned integer vectors use `Vector2i`/`Vector3i`/`Vector4i`, retaining component bits. Logical bool uses bool; bool2/3/4 use int component masks with false/zero defaults, backed by validated [artifact metadata](../components/shader-materials.md#boolean-type-information). Fixed arrays use the corresponding canonical element descriptors. Getter/setter delegates use the material's current matching parameter, so an incompatible shader replacement is rejected on access. The list itself remains a snapshot after reload. Reserved TEXTURE and TIME are omitted. There are no grouping hints in the current import format.
+Returns a read-only list with exact uniform names. Descriptors use `ShaderMaterial` as owner, scalar/vector/matrix element types, `T[]` for fixed arrays, or `Texture?`/`TextureLayered?` for scalar sampled bindings and their typed arrays for descriptor arrays. Float4 descriptors use `Vector4`; typed parameter calls also accept `Color` and `Rect2`. Float2x2 uses `Transform` with identity defaults; row/column matrix storage and strides are reflected. Float3 uses `Vector3`, with `Color` as an RGB alias and canonical alpha one. Signed/unsigned integer vectors use `Vector2i`/`Vector3i`/`Vector4i`, retaining component bits. Logical bool uses bool; bool2/3/4 use int component masks with false/zero defaults, backed by validated [artifact metadata](../components/shader-materials.md#boolean-type-information). Fixed arrays use the corresponding canonical element descriptors. Getter/setter delegates use the material's current matching parameter, so an incompatible shader replacement is rejected on access. The list itself remains a snapshot after reload. Reserved TEXTURE and TIME are omitted. There are no grouping hints in the current import format.
 
 ### SetDefaultTextureParameter
 
-Validates a named sampled texture and stores a borrowed default. Null clears it. A material override wins over this default. Arrays of sampled bindings are not integrated, so a nonzero index throws ArgumentOutOfRangeException. Bad names/types throw ArgumentException; a disposed shader or supplied texture throws ObjectDisposedException. Mutation precedes Changed; callback failure does not undo it. Matching named defaults survive shader reload.
+Validates a named sampled texture and stores a borrowed default. Null clears it. A material override wins over this default. Index selects the reflected descriptor element; scalars accept only zero and out-of-range indices throw ArgumentOutOfRangeException. Bad names/types throw ArgumentException; a disposed shader or supplied texture throws ObjectDisposedException. Mutation precedes Changed; callback failure does not undo it. Matching named defaults survive shader reload.
 
 ### GetDefaultTextureParameter
 
@@ -95,7 +95,7 @@ Returns the assigned default or null, without transferring ownership. Uses the s
 
 ## Limits and checks
 
-Logical boolean annotations are retained in copied bytecode and checked against the physical buffer layout for all input origins. Invalid annotations preserve the previous program. Runtime validation is structural and reflective; full semantic validation currently runs during import. Arrays of sampled bindings and named sampler configuration, matrices other than float2x2, nested structs, other shader modes, source preservation and editor code inspection remain unimplemented. Both language import paths, copied payloads, invalid replacement and live uniform reload have executable checks in [RenderingRuntimeTests.cs](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs); native execution has been checked on Linux X11/Wayland Vulkan. See [ADR 0028](../decisions/rendering.md#adr-0028).
+Logical boolean annotations are retained in copied bytecode and checked against the physical buffer layout for all input origins. Invalid annotations preserve the previous program. Runtime validation is structural and reflective; full semantic validation currently runs during import. Named sampler configuration, matrices other than float2x2, nested structs, other shader modes, source preservation and editor code inspection remain unimplemented. Both language import paths, copied payloads, invalid replacement and live uniform reload have executable checks in [RenderingRuntimeTests.cs](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs); native execution has been checked on Linux X11/Wayland Vulkan. See [ADR 0028](../decisions/rendering.md#adr-0028).
 
 ## Instance data input
 
@@ -134,12 +134,12 @@ The assigned resource, or null.
 #### Parameters
 
 - `name`: The exact reflected array sampler name.
-- `index`: Zero; descriptor binding arrays are not integrated.
+- `index`: Zero for a scalar descriptor, otherwise the zero-based fixed descriptor array element.
 
 #### Exceptions
 
 - `T:System.ArgumentException`: The parameter is not a layered sampler.
-- `T:System.ArgumentOutOfRangeException`: The index is not zero.
+- `T:System.ArgumentOutOfRangeException`: The index is outside the reflected element count.
 - `T:System.ObjectDisposedException`: The shader is disposed.
 
 
@@ -164,12 +164,12 @@ Material overrides take precedence. Ownership remains with the caller; Changed f
 
 - `name`: The exact reflected array sampler name.
 - `texture`: A live array resource, or null to clear its default.
-- `index`: Zero; descriptor binding arrays are not integrated.
+- `index`: Zero for a scalar descriptor, otherwise the zero-based fixed descriptor array element.
 
 #### Exceptions
 
 - `T:System.ArgumentException`: The parameter is not a layered sampler.
-- `T:System.ArgumentOutOfRangeException`: The index is not zero.
+- `T:System.ArgumentOutOfRangeException`: The index is outside the reflected element count.
 - `T:System.ObjectDisposedException`: The shader or resource is disposed.
 
 ## Prepared reference publication
@@ -213,3 +213,7 @@ Reserved Globals numeric blocks and GLOBAL_ sampled-image names use the [typed r
 For Mesh and triangle-array drawing, authored vertex `gl_VertexIndex`/`SV_VertexID` is the original zero-based surface vertex index. Indices, LODs, expanded primitives, morphs, skinning, instances and batching preserve that identity. Other canvas geometry retains native stream indices. See the [authored vertex interface](../components/shader-materials.md#authored-vertex-stages); vertex deformation retains the existing CPU visibility bounds.
 
 For [position-free mesh surfaces](../components/meshes.md#procedural-surfaces-without-positions), the authored vertex position input is zero. Output uses local pixels converted with Frame size; canvas/command/instance/skin transforms and optional generated-pixel snapping follow afterward, preserving clip Z/W. Ordinary supplied-position drawing retains framebuffer input. Visibility remains an authored CPU rectangle.
+
+## Indexed sampled defaults
+
+Both ordinary and layered default families accept fixed descriptor array indices. Each material element independently overrides its indexed default. Stored array-valued descriptors preserve aliases and original shader payloads. Validation snapshots callback-sensitive input, rejects reentrant default mutation or program replacement, and publishes only after all values pass. A length, image role or sampled scalar change on reload drops the complete incompatible array. See [the descriptor array contract](../components/shader-materials.md#fixed-sampled-descriptor-arrays) and SamplerArrayTests for executable evidence and limits.

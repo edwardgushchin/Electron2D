@@ -52,25 +52,25 @@ internal static unsafe partial class ShaderSourceTypes
         try
         {
             var buffer = new DXCBuffer { Pointer = code, Size = length };
-            Check(((delegate* unmanaged[Cdecl]<nint, DXCBuffer*, Guid*, nint*, int>)Slot(utils, 13))(utils, &buffer, &reflectionID, &reflection));
+            Check(((delegate* unmanaged<nint, DXCBuffer*, Guid*, nint*, int>)Slot(utils, 13))(utils, &buffer, &reflectionID, &reflection));
             ShaderDescription description;
-            Check(((delegate* unmanaged[Cdecl]<nint, ShaderDescription*, int>)Slot(reflection, 3))(reflection, &description));
+            Check(((delegate* unmanaged<nint, ShaderDescription*, int>)Slot(reflection, 3))(reflection, &description));
             var result = new Dictionary<(int, string), (int, int)>();
             for (uint index = 0; index < description.ConstantBuffers; index++)
             {
-                var cb = ((delegate* unmanaged[Cdecl]<nint, uint, nint>)Slot(reflection, 4))(reflection, index);
+                var cb = ((delegate* unmanaged<nint, uint, nint>)Slot(reflection, 4))(reflection, index);
                 BufferDescription bufferDescription;
-                Check(((delegate* unmanaged[Cdecl]<nint, BufferDescription*, int>)Slot(cb, 0))(cb, &bufferDescription));
+                Check(((delegate* unmanaged<nint, BufferDescription*, int>)Slot(cb, 0))(cb, &bufferDescription));
                 var bufferName = Marshal.PtrToStringUTF8(bufferDescription.Name) ?? throw new ArgumentException("HLSL reflection lost a buffer name.");
                 if (!bindings.TryGetValue(bufferName, out var bindingPoint)) continue;
                 for (uint member = 0; member < bufferDescription.Variables; member++)
                 {
-                    var variable = ((delegate* unmanaged[Cdecl]<nint, uint, nint>)Slot(cb, 1))(cb, member);
+                    var variable = ((delegate* unmanaged<nint, uint, nint>)Slot(cb, 1))(cb, member);
                     VariableDescription value;
-                    Check(((delegate* unmanaged[Cdecl]<nint, VariableDescription*, int>)Slot(variable, 0))(variable, &value));
-                    var type = ((delegate* unmanaged[Cdecl]<nint, nint>)Slot(variable, 1))(variable);
+                    Check(((delegate* unmanaged<nint, VariableDescription*, int>)Slot(variable, 0))(variable, &value));
+                    var type = ((delegate* unmanaged<nint, nint>)Slot(variable, 1))(variable);
                     TypeDescription shape;
-                    Check(((delegate* unmanaged[Cdecl]<nint, TypeDescription*, int>)Slot(type, 0))(type, &shape));
+                    Check(((delegate* unmanaged<nint, TypeDescription*, int>)Slot(type, 0))(type, &shape));
                     var name = Marshal.PtrToStringUTF8(value.Name) ?? throw new ArgumentException("HLSL reflection lost a uniform name.");
                     // ConstantBuffer<T> wraps the top-level fields in one reflected variable.
                     if (shape.Class == 5 && shape.Elements == 0 && bufferDescription.Variables == 1 &&
@@ -78,10 +78,10 @@ internal static unsafe partial class ShaderSourceTypes
                     {
                         for (uint field = 0; field < shape.Members; field++)
                         {
-                            var fieldType = ((delegate* unmanaged[Cdecl]<nint, uint, nint>)Slot(type, 1))(type, field);
+                            var fieldType = ((delegate* unmanaged<nint, uint, nint>)Slot(type, 1))(type, field);
                             TypeDescription fieldShape;
-                            Check(((delegate* unmanaged[Cdecl]<nint, TypeDescription*, int>)Slot(fieldType, 0))(fieldType, &fieldShape));
-                            var fieldName = ((delegate* unmanaged[Cdecl]<nint, uint, nint>)Slot(type, 3))(type, field);
+                            Check(((delegate* unmanaged<nint, TypeDescription*, int>)Slot(fieldType, 0))(fieldType, &fieldShape));
+                            var fieldName = ((delegate* unmanaged<nint, uint, nint>)Slot(type, 3))(type, field);
                             Add(fieldName, fieldShape);
                         }
                     }
@@ -100,8 +100,8 @@ internal static unsafe partial class ShaderSourceTypes
         }
         finally
         {
-            if (reflection != 0) ((delegate* unmanaged[Cdecl]<nint, uint>)Slot(reflection, 2))(reflection);
-            ((delegate* unmanaged[Cdecl]<nint, uint>)Slot(utils, 2))(utils);
+            if (reflection != 0) ((delegate* unmanaged<nint, uint>)Slot(reflection, 2))(reflection);
+            ((delegate* unmanaged<nint, uint>)Slot(utils, 2))(utils);
         }
     }
 
@@ -137,11 +137,10 @@ internal static unsafe partial class ShaderSourceTypes
     private static nint Slot(nint instance, int index) => (*(nint**)instance)[index];
     private static void Check(int result)
     {
-        if (result < 0) throw new ArgumentException($"DXC source type reflection failed (0x{result:X8}).");
+        if (result < 0) throw new ArgumentException($"DXC operation failed (0x{result:X8}).");
     }
 
     [LibraryImport("dxcompiler", EntryPoint = "DxcCreateInstance")]
-    [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int DxcCreateInstance(in Guid classID, in Guid interfaceID, out nint instance);
 
     [StructLayout(LayoutKind.Sequential)]

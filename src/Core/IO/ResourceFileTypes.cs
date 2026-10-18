@@ -82,6 +82,8 @@ public static partial class ResourceFileTypes
         RegisterResource("ImageTexture", CreateImageTexture);
         RegisterResource("PlaceholderTexture", CreatePlaceholderTexture);
         RegisterResource("CompressedTexture", CreateCompressedTexture);
+        RegisterResourceArray<Texture>();
+        RegisterResourceArray<TextureLayered>();
         RegisterResource("TextureArray", CreateTextureArray);
         RegisterResource("CompressedTextureArray", CreateCompressedTextureArray);
         RegisterResource("TextureRD", CreateTextureRD);

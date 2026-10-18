@@ -1,8 +1,8 @@
 # ShaderTexture
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
-- Declaration: `internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = false, int PixelType = 0)`
+- Declaration: `internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = false, int PixelType = 0, int ArrayLength = 0, int Element = 0)`
 - Source: [ShaderProgram.cs](../../src/Servers/Rendering/ShaderProgram.cs)
 - Component: [shader-materials](../components/shader-materials.md)
 - Visibility: internal; unavailable to engine consumers.
@@ -11,7 +11,7 @@ Last updated: 2026-10-16
 
 ## Description
 
-One reflected float/signed/unsigned 32-bit scalar texture binding in descriptor set two. Name and Binding are positional record properties. Reflection validates unique names, contiguous bindings, supported image shape and paired HLSL image/sampler slots before constructing it.
+One physical sampled-image slot with its logical descriptor name/binding, fixed descriptor ArrayLength (zero for scalar) and zero-based Element. Name and Binding are positional record properties. Reflection validates unique names, contiguous bindings, supported image shape and paired HLSL image/sampler slots before constructing it.
 
 ## Member summary
 
@@ -42,6 +42,10 @@ IsCanvasTexture identifies TEXTURE; IsScreenTexture identifies SCREEN_TEXTURE; I
 
 ## Sampled shape
 
-IsArray selects a TextureLayered descriptor and array-specific accessors. RequireShape rejects use through the other typed accessor family; Validate rejects disposed or wrong-role resources. Renderer-owned TEXTURE/SCREEN_TEXTURE stay ordinary images. Reload copies texture overrides only when Name, IsArray and PixelType still agree. ResourcePixelType reads prepared source snapshots, with explicit native bindings for RD resources; ordinary and layered UInt16 sources classify unsigned without per-frame copies.
+IsArray selects a TextureLayered descriptor and array-specific accessors. RequireShape rejects use through the other typed accessor family; Validate rejects disposed or wrong-role resources. Renderer-owned TEXTURE/SCREEN_TEXTURE stay ordinary images. Reload copies texture overrides only when Name, IsArray, PixelType, ArrayLength and Element still agree. ResourcePixelType reads prepared source snapshots, with explicit native bindings for RD resources; ordinary and layered UInt16 sources classify unsigned without per-frame copies.
 
 [UInt16 image texture sources](../components/integer-textures.md) now retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility.
+
+## Descriptor shape
+
+Count is max(1, ArrayLength). IsArray denotes layered image storage; ArrayLength independently denotes a fixed array of sampled descriptors. RequireBindingArray rejects scalar/array accessor mixing; SameType compares sampled shape, scalar role and full descriptor length. Describe and DescribeDefault use Texture?[] or TextureLayered?[] for logical arrays; only Element zero publishes a property. The renderer binds each physical element separately. See [fixed descriptor arrays](../components/shader-materials.md#fixed-sampled-descriptor-arrays).

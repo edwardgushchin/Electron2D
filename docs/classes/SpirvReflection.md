@@ -1,6 +1,6 @@
 # SpirvReflection
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 - Declaration: `internal static unsafe partial class SpirvReflection`
 - Sources: [SpirvReflection.cs](../../src/Servers/Rendering/SpirvReflection.cs), [SpirvReflection.Booleans.cs](../../src/Servers/Rendering/SpirvReflection.Booleans.cs)
@@ -52,3 +52,7 @@ Fragment block type Instance/type.Instance routes its members into InstanceUnifo
 ## Stage resources
 
 Vertex resources now share the same typed scalar/vector/matrix/array and Instance reflection as fragments. Uniform sets remain one for vertex and three for fragment; sampled resources use zero and two respectively. Each stage has an independent sixteen-sampler limit. Renderer TIME, SCREEN_PIXEL_SIZE and SDF_COORDS accept the same types in vertex material blocks. Frame ownership and cross-stage name/layout merging are validated by ShaderProgram before publication.
+
+## Sampled descriptor array integration
+
+Read expands active fixed one-dimensional sampled descriptor arrays into per-element ShaderTexture metadata while preserving logical Binding, ArrayLength and Name. Literal lengths and total physical slots are bounded to sixteen; paired HLSL declarations require the same shape. Renderer/global descriptors remain scalar. Array pairing is validated by the managed adapter, avoiding the native combined-sampler helper that cannot represent arrays. Load/query-only images receive private native samplers. Reflection returns original Code and derived NativeCode without replacing source identity. See [the component contract](../components/shader-materials.md#fixed-sampled-descriptor-arrays).

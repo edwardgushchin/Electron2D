@@ -43,7 +43,7 @@ internal static class MaterialLightingProgram
     private static byte[] ComposeLibrary(ShaderProgram program, string name, bool glyph = false, bool inputs = false)
     {
         program = program.Fragment ?? program;
-        var original = new Module(program.Code);
+        var original = new Module(program.NativeCode);
         var libraryBytes = BuiltInShaders.Read(name + ".frag.spv");
         var relocations = MemoryMarshal.Cast<byte, uint>(BuiltInShaders.Read(name + ".frag.reloc"));
         var libraryWords = MemoryMarshal.Cast<byte, uint>(libraryBytes.AsSpan()); var shift = original.Header[3];

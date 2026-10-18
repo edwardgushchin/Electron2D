@@ -6,6 +6,7 @@ internal sealed partial class ShaderProgram(byte[] code, int[] bufferSizes, Dict
 {
     internal static readonly ShaderProgram Default = new(BuiltInShaders.Fragment, [], new(StringComparer.Ordinal), [new("TEXTURE", 0)]);
     internal readonly byte[] Code = code;
+    internal byte[] NativeCode { get; init; } = code;
     internal readonly int[] BufferSizes = bufferSizes;
     internal readonly Dictionary<string, ShaderUniform> Uniforms = uniforms;
     internal readonly ShaderTexture[] Textures = textures ?? [];
@@ -20,20 +21,25 @@ internal sealed partial class ShaderProgram(byte[] code, int[] bufferSizes, Dict
     internal readonly bool UsesSDFTexture = (textures ?? []).Any(t => t.IsSDFTexture);
     internal readonly bool UsesScreenTexture = (textures ?? []).Any(t => t.IsScreenTexture);
     internal readonly IReadOnlyList<PropertyDescriptor> Descriptors = Array.AsReadOnly(uniforms.Values.Select(u => u.Describe(u.Name))
-        .Concat((textures ?? []).Where(t => t.IsMaterialTexture).Select(t => t.Describe(t.Name))).ToArray());
+        .Concat((textures ?? []).Where(t => t.IsMaterialTexture && t.Element == 0).Select(t => t.Describe(t.Name))).ToArray());
     internal readonly IReadOnlyList<PropertyDescriptor> MaterialDescriptors = Array.AsReadOnly(uniforms.Values.Select(u => u.Describe("shader_parameter/" + u.Name))
-        .Concat((textures ?? []).Where(t => t.IsMaterialTexture).Select(t => t.Describe("shader_parameter/" + t.Name))).ToArray());
+        .Concat((textures ?? []).Where(t => t.IsMaterialTexture && t.Element == 0).Select(t => t.Describe("shader_parameter/" + t.Name))).ToArray());
 
-    internal int FindTexture(string name)
+    internal int FindTexture(string name, int index = 0)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
-        for (var i = 0; i < Textures.Length; i++) if (Textures[i].IsMaterialTexture && Textures[i].Name == name) return i;
+        for (var i = 0; i < Textures.Length; i++) if (Textures[i].IsMaterialTexture && Textures[i].Name == name)
+            {
+                if ((uint)index >= (uint)Textures[i].Count) throw new ArgumentOutOfRangeException(nameof(index));
+                return i + index;
+            }
         throw new ArgumentException($"Shader has no sampled texture named '{name}'.", nameof(name));
     }
 }
 
-internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = false, int PixelType = 0)
+internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = false, int PixelType = 0, int ArrayLength = 0, int Element = 0)
 {
+    internal int Count => Math.Max(1, ArrayLength);
     internal bool IsGlobal { get; } = Name.StartsWith("GLOBAL_", StringComparison.Ordinal);
     internal string GlobalName { get; } = Name.StartsWith("GLOBAL_", StringComparison.Ordinal) ? Name[7..] : string.Empty;
     internal bool IsMaterialTexture => !IsEngineTexture && !IsGlobal;
@@ -45,7 +51,11 @@ internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = fa
     {
         if (IsArray != array) throw new ArgumentException($"Texture parameter '{Name}' requires {(IsArray ? "layered" : "ordinary")} images.");
     }
-    internal bool SameType(ShaderTexture other) => IsArray == other.IsArray && PixelType == other.PixelType;
+    internal void RequireBindingArray(bool array)
+    {
+        if ((ArrayLength != 0) != array) throw new ArgumentException($"Texture parameter '{Name}' requires {(ArrayLength != 0 ? "an array" : "a scalar binding")}.");
+    }
+    internal bool SameType(ShaderTexture other) => IsArray == other.IsArray && PixelType == other.PixelType && ArrayLength == other.ArrayLength;
     internal static Resource? Source(Resource? texture)
     {
         if (texture is ServerTexture { IsProxy: true } proxy) texture = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget);
@@ -69,10 +79,18 @@ internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = fa
         if (IsArray ? texture is not TextureLayered : texture is not Texture) throw new ArgumentException($"Texture parameter '{Name}' has a different sampled image shape.");
         if (ResourcePixelType(texture) != PixelType) throw new ArgumentException($"Texture parameter '{Name}' has a different sampled scalar type.");
     }
-    internal PropertyDescriptor DescribeDefault() => IsArray
+    internal PropertyDescriptor DescribeDefault() => ArrayLength != 0
+        ? IsArray
+            ? new PropertyDescriptor<Shader, TextureLayered?[]>("default_texture_parameter/" + Name, shader => shader.GetDefaultSampledArray<TextureLayered>(Name), (shader, value) => shader.SetDefaultSampledArray(Name, value, true), _ => new TextureLayered?[Count], stored: true)
+            : new PropertyDescriptor<Shader, Texture?[]>("default_texture_parameter/" + Name, shader => shader.GetDefaultSampledArray<Texture>(Name), (shader, value) => shader.SetDefaultSampledArray(Name, value, false), _ => new Texture?[Count], stored: true)
+        : IsArray
         ? new PropertyDescriptor<Shader, TextureLayered?>("default_texture_parameter/" + Name, shader => shader.GetDefaultLayeredTextureParameter(Name), (shader, value) => shader.SetDefaultLayeredTextureParameter(Name, value), _ => null, stored: true)
         : new PropertyDescriptor<Shader, Texture?>("default_texture_parameter/" + Name, shader => shader.GetDefaultTextureParameter(Name), (shader, value) => shader.SetDefaultTextureParameter(Name, value), _ => null, stored: true);
-    internal PropertyDescriptor Describe(string propertyName) => IsArray
+    internal PropertyDescriptor Describe(string propertyName) => ArrayLength != 0
+        ? IsArray
+            ? new PropertyDescriptor<ShaderMaterial, TextureLayered?[]>(propertyName, m => m.GetShaderLayeredParameterArray(Name), (m, value) => m.SetShaderLayeredParameterArray(Name, value), _ => new TextureLayered?[Count], stored: true)
+            : new PropertyDescriptor<ShaderMaterial, Texture?[]>(propertyName, m => m.GetShaderTextureParameterArray(Name), (m, value) => m.SetShaderTextureParameterArray(Name, value), _ => new Texture?[Count], stored: true)
+        : IsArray
         ? new PropertyDescriptor<ShaderMaterial, TextureLayered?>(propertyName, m => m.GetShaderLayeredParameter(Name), (m, t) => m.SetShaderLayeredParameter(Name, t), _ => null, stored: true)
         : new PropertyDescriptor<ShaderMaterial, Texture?>(propertyName,
         m => m.GetShaderParameter(Name), (m, t) => m.SetShaderParameter(Name, t), _ => null, stored: true);

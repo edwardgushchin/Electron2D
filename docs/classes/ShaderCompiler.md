@@ -1,6 +1,6 @@
 # ShaderCompiler
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 - Declaration: `internal static unsafe class ShaderCompiler`
 - Source: [ShaderCompiler.cs](../../src/Servers/Rendering/ShaderCompiler.cs)
@@ -68,3 +68,7 @@ SamplerCount reflects only the composed stage sampler count through the existing
 ## Paired canvas validation
 
 ValidateCanvasProgram checks both module lengths before copying either, validates each canvas stage, compares vertex outputs to fragment inputs and rejects authored hardware instance locations four through six. ShaderProgram.WithVertex enforces shared logical parameter types and roles, then prepares all four derived vertex variants before publication. ValidateBytecodeLength retains the sixteen-MiB, header and word-alignment boundary. Vertex Frame validation applies during source/external import as well as runtime pair loading; renderer builtins in Frame are rejected.
+
+## Sampled descriptor array integration
+
+ValidateInterface reflects the original logical interface and then verifies native metadata against the derived NativeCode, including the physical sixteen-sampler stage bound. Paired validation and vertex adaptation use derived modules. Structural validation admits only the required sampled-array dynamic/nonuniform and image-query capabilities in addition to the established canvas capabilities; unsupported domains still reject. See [the component contract](../components/shader-materials.md#fixed-sampled-descriptor-arrays).

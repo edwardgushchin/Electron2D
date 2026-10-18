@@ -290,3 +290,7 @@ The [KTX image slice](../components/image-ktx.md) adds flat KTX1/KTX2 file/buffe
 [Packed mesh surfaces](../components/meshes.md#packed-server-surfaces) now connect typed binary descriptions to owned RenderingServer creation/append and copied export from ordinary/custom resources. Position/direction/custom/skin/morph/LOD/material data and authored visibility bounds reach the existing renderer. Real software GPU/GLSL, GPU/HLSL and Compatibility profiles verify output and prepared allocation limits; procedural position-free formats retain their exact shader producer prerequisite.
 
 [Manual mesh visibility bounds](../components/meshes.md#manual-mesh-visibility-bounds) connect stored ArrayMesh policy and static server access to fitted groups, morph output and both instance drawing paths, independently of source geometry bounds.
+
+## Fixed sampled descriptor arrays
+
+[Canvas sampled descriptor arrays](../components/shader-materials.md#fixed-sampled-descriptor-arrays) now execute through GLSL/HLSL, typed resource and static RID access, indexed shader defaults, complete validation, graph storage and derived scalar native bindings. Paired stages and existing lighting/glyph/instance/HDR/MSAA consumers share the same physical capacity and resource lifetime. See the component for measured software-Vulkan checks and the separate hardware/platform gates.

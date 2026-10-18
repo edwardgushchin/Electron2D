@@ -174,8 +174,10 @@ internal static unsafe partial class SpirvReflection
                 throw new NotSupportedException($"Sampled image resources require explicit bindings in descriptor set {(fragment ? 2 : 0)}.");
             var slot = GetDecoration(compiler, resource.Id, Binding);
             if (slot >= textureCount) throw new NotSupportedException("Texture bindings must be contiguous, starting at zero.");
-            if (GetArrayDimensions(GetType(compiler, resource.TypeId)) != 0)
-                throw new NotSupportedException("Texture binding arrays are not integrated yet; use individual named bindings.");
+            var type = GetType(compiler, resource.TypeId);
+            var dimensions = GetArrayDimensions(type);
+            if (dimensions > 1 || dimensions == 1 && (ArrayIsLiteral(type, 0) == 0 || GetArrayLength(type, 0) is 0 or > 16))
+                throw new NotSupportedException("Sampled image bindings require scalar resources or fixed arrays of one through sixteen elements.");
             return slot;
         }
         foreach (var resource in new ReadOnlySpan<ReflectedResource>((void*)(combinedCount != 0 ? combinedPointer : imagePointer), (int)textureCount))
@@ -194,24 +196,34 @@ internal static unsafe partial class SpirvReflection
             var array = ImageIsArray(imageType) != 0;
             if (array && name is "TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE") throw new NotSupportedException("Renderer-owned samplers require ordinary 2D images.");
             if (name is "SCREEN_TEXTURE" or "SDF_TEXTURE" && GetBaseType(sampleType) != 13) throw new NotSupportedException("Renderer-owned screen and distance images require float sampling.");
-            textures[slot] = new(name, (int)slot, array, GetBaseType(sampleType) switch { 7 => 1, 8 => 2, _ => 0 });
+            var resourceType = GetType(compiler, resource.TypeId);
+            var length = GetArrayDimensions(resourceType) == 0 ? 0 : (int)GetArrayLength(resourceType, 0);
+            if (length != 0 && (name is "TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE" || name.StartsWith("GLOBAL_", StringComparison.Ordinal)))
+                throw new NotSupportedException("Renderer-owned and global images require scalar descriptor bindings.");
+            textures[slot] = new(name, (int)slot, array, GetBaseType(sampleType) switch { 7 => 1, 8 => 2, _ => 0 }, length);
         }
         var samplerSlots = new bool[(int)textureCount];
         foreach (var resource in new ReadOnlySpan<ReflectedResource>((void*)samplerPointer, (int)samplerCount))
         {
             var slot = TextureBinding(resource);
             if (samplerSlots[slot]) throw new NotSupportedException("Each texture requires exactly one sampler at the same binding.");
+            var type = GetType(compiler, resource.TypeId);
+            var length = GetArrayDimensions(type) == 0 ? 0 : (int)GetArrayLength(type, 0);
+            if (textures[slot].ArrayLength != length) throw new NotSupportedException("Paired images and samplers require the same descriptor array length.");
             samplerSlots[slot] = true;
         }
-        if (imageCount != 0)
+        var needsSampler = false;
+        if (imageCount != 0 && textures.All(t => t.ArrayLength == 0))
         {
-            Check(BuildDummySampler(compiler, out var dummy));
+            Check(BuildDummySampler(compiler, out var dummy)); needsSampler = dummy != 0;
             Check(BuildCombinedSamplers(compiler));
             Check(GetCombinedSamplers(compiler, out var pairs, out var pairCount));
             foreach (var pair in new ReadOnlySpan<CombinedSampler>((void*)pairs, (int)pairCount))
                 if (pair.Sampler != dummy && GetDecoration(compiler, pair.Image, Binding) != GetDecoration(compiler, pair.Sampler, Binding))
                     throw new NotSupportedException("An image must be sampled with a sampler at the same binding.");
         }
+        textures = textures.SelectMany(texture => Enumerable.Range(0, texture.Count).Select(element => texture with { Element = element })).ToArray();
+        if (textures.Length > 16) throw new NotSupportedException("Each canvas stage supports at most sixteen sampled image elements.");
         if (booleans.Count != 0) throw new ArgumentException("Shader type metadata names an absent or inactive uniform.", nameof(code));
         uniforms.Remove("TIME", out var timeUniform);
         uniforms.Remove("SCREEN_PIXEL_SIZE", out var screenPixelSizeUniform);
@@ -240,7 +252,8 @@ internal static unsafe partial class SpirvReflection
                 if (string.IsNullOrWhiteSpace(texture.GlobalName) || globals.ContainsKey(texture.GlobalName) || uniforms.ContainsKey(texture.GlobalName) || instances.ContainsKey(texture.GlobalName))
                     throw new NotSupportedException("Global image names must be nonblank and cannot alias numeric or material fields.");
             }
-        return new ShaderProgram(code, sizes, uniforms, textures, timeUniform, screenPixelSizeUniform, sdfCoordsUniform, instances, globals);
+        return new ShaderProgram(code, sizes, uniforms, textures, timeUniform, screenPixelSizeUniform, sdfCoordsUniform, instances, globals)
+        { NativeCode = CanvasSamplerArrays.Lower(code, textures, needsSampler) };
     }
 
     [StructLayout(LayoutKind.Sequential)]

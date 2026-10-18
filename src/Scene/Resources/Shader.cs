@@ -33,7 +33,9 @@ public sealed partial class Shader : Resource
 
     private readonly object _codeGate = new();
     private ShaderProgram _program = ShaderProgram.Default;
-    private readonly Dictionary<string, Resource> _defaultTextures = new(StringComparer.Ordinal);
+    private readonly Dictionary<(string Name, int Index), Resource> _defaultTextures = [];
+    private bool _validatingDefaultTextures;
+    private Resource?[]? _defaultTextureScratch;
 
     /// <summary>Creates a canvas shader multiplying command texture samples by drawing color.</summary>
     public Shader() { }
@@ -74,9 +76,12 @@ public sealed partial class Shader : Resource
     {
         lock (_codeGate)
         {
-            ThrowIfDisposed(); _program = program;
+            ThrowIfDisposed(); var previous = _program; _program = program;
             foreach (var entry in _defaultTextures)
-                if (!program.Textures.Any(t => t.IsMaterialTexture && t.Name == entry.Key && t.IsArray == (entry.Value is TextureLayered) && t.PixelType == ShaderTexture.ResourcePixelType(entry.Value))) _defaultTextures.Remove(entry.Key);
+            {
+                var old = previous.Textures.FirstOrDefault(t => t.Name == entry.Key.Name && t.Element == entry.Key.Index);
+                if (old is null || !program.Textures.Any(t => t.IsMaterialTexture && t.Name == entry.Key.Name && t.Element == entry.Key.Index && t.SameType(old))) _defaultTextures.Remove(entry.Key);
+            }
         }
         EmitChanged();
     }
@@ -89,99 +94,112 @@ public sealed partial class Shader : Resource
     /// <summary>Returns typed material property descriptors for this program's reflected uniforms.</summary>
     /// <returns>An immutable list with case-sensitive member names. Float4 values use Vector4 descriptors;
     /// material access also accepts Color and Rect2. Float2x2 uses Transform with an identity revert value. Float3 uses Vector3; material access also accepts Color with alpha one on read. Signed/unsigned integer vectors
-    /// use Vector2i, Vector3i or Vector4i with preserved component bits. Logical bool uses bool; boolean vectors use int component masks. Fixed arrays use array-valued descriptors; sampled images use Texture or TextureLayered descriptors matched by array role and float/signed/unsigned scalar type.
+    /// use Vector2i, Vector3i or Vector4i with preserved component bits. Logical bool uses bool; boolean vectors use int component masks. Fixed numeric and sampled descriptor arrays use array-valued descriptors; scalar sampled images use Texture or TextureLayered, matched by image role and float/signed/unsigned scalar type.
     /// The built-in command TEXTURE and render TIME are omitted.</returns>
     /// <remarks>Descriptors access ShaderMaterial values through its typed parameter methods. Buffer padding and
     /// resource handles remain internal. The returned list describes this program version and does not change after reload.</remarks>
     /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>
     public IReadOnlyList<PropertyDescriptor> GetShaderUniformList() => GetProgram().Descriptors;
 
-    /// <summary>Sets the borrowed default texture for a reflected sampled 2D parameter.</summary>
+    /// <summary>Sets the borrowed default texture for one reflected sampled 2D parameter element.</summary>
     /// <param name="name">The exact texture parameter name.</param>
     /// <param name="texture">The default texture, or null to clear it.</param>
-    /// <param name="index">Zero; arrays of texture bindings are not integrated.</param>
-    /// <remarks>A material override takes precedence. Changes emit Changed; texture ownership remains with the caller.</remarks>
-    /// <exception cref="ArgumentException">The parameter is not a sampled texture.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">The index is not zero.</exception>
+    /// <param name="index">Zero for scalar bindings, otherwise the zero-based fixed descriptor array element.</param>
+    /// <remarks>A material override takes precedence per element. Changes emit Changed after mutation; ownership remains with the caller.</remarks>
+    /// <exception cref="ArgumentException">The parameter is not an ordinary sampled image or its sampled scalar type differs.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The index is outside the reflected element count.</exception>
+    /// <exception cref="InvalidOperationException">Texture validation replaces the program or reenters a default update.</exception>
     /// <exception cref="ObjectDisposedException">The shader or supplied texture is disposed.</exception>
-    public void SetDefaultTextureParameter(string name, Texture? texture, int index = 0)
-    {
-        lock (_codeGate)
-        {
-            ThrowIfDisposed();
-            if (index != 0) throw new ArgumentOutOfRangeException(nameof(index));
-            _program.Textures[_program.FindTexture(name)].RequireShape(false);
-            _program.Textures[_program.FindTexture(name)].Validate(texture);
-            if (texture is null) _defaultTextures.Remove(name); else _defaultTextures[name] = texture;
-        }
-        EmitChanged();
-    }
+    public void SetDefaultTextureParameter(string name, Texture? texture, int index = 0) => SetDefaultSampledResource(name, texture, index, false);
 
-    /// <summary>Gets the borrowed default texture for a reflected sampled 2D parameter.</summary>
+    /// <summary>Gets the borrowed default texture for one reflected sampled 2D parameter element.</summary>
     /// <param name="name">The exact texture parameter name.</param>
-    /// <param name="index">Zero; arrays of texture bindings are not integrated.</param>
+    /// <param name="index">Zero for scalar bindings, otherwise the zero-based fixed descriptor array element.</param>
     /// <returns>The assigned default, or null.</returns>
-    /// <exception cref="ArgumentException">The parameter is not a sampled texture.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">The index is not zero.</exception>
+    /// <exception cref="ArgumentException">The parameter is not an ordinary sampled image.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The index is outside the reflected element count.</exception>
     /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>
-    public Texture? GetDefaultTextureParameter(string name, int index = 0)
-    {
-        lock (_codeGate)
-        {
-            ThrowIfDisposed();
-            if (index != 0) throw new ArgumentOutOfRangeException(nameof(index));
-            _program.Textures[_program.FindTexture(name)].RequireShape(false);
-            return (Texture?)_defaultTextures.GetValueOrDefault(name);
-        }
-    }
+    public Texture? GetDefaultTextureParameter(string name, int index = 0) => (Texture?)GetDefaultSampledResource(name, index, false);
 
-    /// <summary>Sets a borrowed default resource for an image-array sampler.</summary>
-    /// <param name="name">The exact reflected array sampler name.</param>
-    /// <param name="texture">A live array resource, or null to clear its default.</param>
-    /// <param name="index">Zero; descriptor binding arrays are not integrated.</param>
-    /// <remarks>Material overrides take precedence. Ownership remains with the caller; Changed follows mutation. Sampling scalar type and array role must match the reflected shader; reload drops incompatible bindings.</remarks>
-    /// <exception cref="ArgumentException">The parameter is not a layered sampler.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">The index is not zero.</exception>
-    /// <exception cref="ObjectDisposedException">The shader or resource is disposed.</exception>
-    public void SetDefaultLayeredTextureParameter(string name, TextureLayered? texture, int index = 0)
+    /// <summary>Sets the borrowed default layered image for one reflected sampled parameter element.</summary>
+    /// <param name="name">The exact parameter name.</param>
+    /// <param name="texture">A live layered resource, or null to clear its default.</param>
+    /// <param name="index">Zero for scalar bindings, otherwise the zero-based fixed descriptor array element.</param>
+    /// <remarks>Material overrides take precedence per element. Changed follows mutation. Reload drops defaults whose descriptor shape, length or scalar type changes.</remarks>
+    /// <exception cref="ArgumentException">The parameter requires a different image shape or sampled scalar type.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The index is outside the reflected element count.</exception>
+    /// <exception cref="InvalidOperationException">Texture validation replaces the program or reenters a default update.</exception>
+    /// <exception cref="ObjectDisposedException">The shader or supplied resource is disposed.</exception>
+    public void SetDefaultLayeredTextureParameter(string name, TextureLayered? texture, int index = 0) => SetDefaultSampledResource(name, texture, index, true);
+
+    /// <summary>Gets the borrowed default layered image for one reflected sampled parameter element.</summary>
+    /// <param name="name">The exact parameter name.</param>
+    /// <param name="index">Zero for scalar bindings, otherwise the zero-based fixed descriptor array element.</param>
+    /// <returns>The assigned resource, or null.</returns>
+    /// <exception cref="ArgumentException">The parameter is not a layered sampled image.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The index is outside the reflected element count.</exception>
+    /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>
+    public TextureLayered? GetDefaultLayeredTextureParameter(string name, int index = 0) => (TextureLayered?)GetDefaultSampledResource(name, index, true);
+
+    internal void SetDefaultSampledResource(string name, Resource? texture, int index, bool? layered = null)
     {
         lock (_codeGate)
         {
-            ThrowIfDisposed(); if (index != 0) throw new ArgumentOutOfRangeException(nameof(index));
-            _program.Textures[_program.FindTexture(name)].RequireShape(true);
-            _program.Textures[_program.FindTexture(name)].Validate(texture);
-            if (texture is null) _defaultTextures.Remove(name); else _defaultTextures[name] = texture;
+            ThrowIfDisposed(); var program = _program; var descriptor = program.Textures[program.FindTexture(name, index)];
+            if (layered.HasValue) descriptor.RequireShape(layered.Value);
+            if (_validatingDefaultTextures) throw new InvalidOperationException("Texture validation cannot reenter a default update.");
+            _validatingDefaultTextures = true;
+            try
+            {
+                descriptor.Validate(texture); ThrowIfDisposed();
+                if (!ReferenceEquals(program, _program)) throw new InvalidOperationException("Texture validation replaced the shader program.");
+                if (texture is { IsDisposed: true }) throw new ObjectDisposedException(nameof(texture));
+                if (texture is null) _defaultTextures.Remove((name, index)); else _defaultTextures[(name, index)] = texture;
+            }
+            finally { _validatingDefaultTextures = false; }
         }
         EmitChanged();
     }
-    /// <summary>Gets the borrowed default image-array resource.</summary>
-    /// <param name="name">The exact reflected array sampler name.</param>
-    /// <param name="index">Zero; descriptor binding arrays are not integrated.</param>
-    /// <returns>The assigned resource, or null.</returns>
-    /// <exception cref="ArgumentException">The parameter is not a layered sampler.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">The index is not zero.</exception>
-    /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>
-    public TextureLayered? GetDefaultLayeredTextureParameter(string name, int index = 0)
+    internal Resource? GetDefaultSampledResource(string name, int index, bool? layered = null)
     {
         lock (_codeGate)
         {
-            ThrowIfDisposed(); if (index != 0) throw new ArgumentOutOfRangeException(nameof(index));
-            _program.Textures[_program.FindTexture(name)].RequireShape(true);
-            return (TextureLayered?)_defaultTextures.GetValueOrDefault(name);
+            ThrowIfDisposed(); var descriptor = _program.Textures[_program.FindTexture(name, index)];
+            if (layered.HasValue) descriptor.RequireShape(layered.Value);
+            return _defaultTextures.GetValueOrDefault((name, index));
         }
     }
-    internal void SetDefaultSampledResource(string name, Resource? texture, int index)
+    internal T?[] GetDefaultSampledArray<T>(string name) where T : Resource
     {
-        var program = GetProgram(); var slot = program.FindTexture(name); program.Textures[slot].Validate(texture);
-        if (program.Textures[slot].IsArray) SetDefaultLayeredTextureParameter(name, (TextureLayered?)texture, index);
-        else SetDefaultTextureParameter(name, (Texture?)texture, index);
+        lock (_codeGate)
+        {
+            ThrowIfDisposed(); var descriptor = _program.Textures[_program.FindTexture(name)]; descriptor.RequireBindingArray(true); descriptor.RequireShape(typeof(T) == typeof(TextureLayered));
+            var values = new T?[descriptor.Count]; for (var i = 0; i < values.Length; i++) values[i] = (T?)_defaultTextures.GetValueOrDefault((name, i)); return values;
+        }
     }
-
-    internal Resource? GetDefaultSampledResource(string name, int index)
+    internal void SetDefaultSampledArray(string name, Resource?[] values, bool layered)
     {
-        lock (_codeGate) { ThrowIfDisposed(); if (index != 0) throw new ArgumentOutOfRangeException(nameof(index)); _program.FindTexture(name); return _defaultTextures.GetValueOrDefault(name); }
+        ArgumentNullException.ThrowIfNull(values);
+        lock (_codeGate)
+        {
+            ThrowIfDisposed(); var program = _program; var descriptor = program.Textures[program.FindTexture(name)]; descriptor.RequireBindingArray(true);
+            descriptor.RequireShape(layered);
+            if (values.Length != descriptor.Count) throw new ArgumentException("Default texture array length must match the reflected descriptor array.", nameof(values));
+            if (_validatingDefaultTextures) throw new InvalidOperationException("Texture validation cannot reenter a default update.");
+            var scratch = _defaultTextureScratch ??= new Resource?[16]; _validatingDefaultTextures = true;
+            try
+            {
+                for (var i = 0; i < values.Length; i++) scratch[i] = values[i];
+                foreach (var texture in scratch.AsSpan(0, values.Length)) descriptor.Validate(texture);
+                ThrowIfDisposed(); if (!ReferenceEquals(program, _program)) throw new InvalidOperationException("Texture validation replaced the shader program.");
+                foreach (var texture in scratch.AsSpan(0, values.Length)) if (texture is { IsDisposed: true }) throw new ObjectDisposedException(nameof(values));
+                for (var i = 0; i < values.Length; i++) if (scratch[i] is { } texture) _defaultTextures[(name, i)] = texture; else _defaultTextures.Remove((name, i));
+            }
+            finally { Array.Clear(scratch); _validatingDefaultTextures = false; }
+        }
+        EmitChanged();
     }
-    internal Resource? DefaultTexture(string name) { lock (_codeGate) { ThrowIfDisposed(); return _defaultTextures.GetValueOrDefault(name); } }
+    internal Resource? DefaultTexture(string name, int index = 0) { lock (_codeGate) { ThrowIfDisposed(); return _defaultTextures.GetValueOrDefault((name, index)); } }
 
     internal ShaderProgram GetProgram()
     {
@@ -191,7 +209,7 @@ public sealed partial class Shader : Resource
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
         [new PropertyDescriptor<Shader, byte[]>("SPIRV", shader => shader.GetStoredSPIRV(), (shader, code) => shader.SetStoredSPIRV(code), stored: true)])
-        .Concat(GetProgram().Textures.Where(texture => texture.IsMaterialTexture).Select(texture => texture.DescribeDefault()));
+        .Concat(GetProgram().Textures.Where(texture => texture.IsMaterialTexture && texture.Element == 0).Select(texture => texture.DescribeDefault()));
 
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new Shader();
@@ -201,7 +219,7 @@ public sealed partial class Shader : Resource
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
         ShaderProgram program;
-        KeyValuePair<string, Resource>[] defaults;
+        KeyValuePair<(string Name, int Index), Resource>[] defaults;
         lock (_codeGate) { program = GetProgram(); defaults = _defaultTextures.ToArray(); }
         if (deep)
             for (var i = 0; i < defaults.Length; i++) defaults[i] = new(defaults[i].Key, duplicateSubresource(defaults[i].Value)!);

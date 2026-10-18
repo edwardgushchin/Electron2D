@@ -386,3 +386,7 @@ Window placement and ResetSize use the existing viewport/native resize lifecycle
 [Logical transform observation](../components/scene-hierarchy.md#logical-transform-observation-from-processing-groups) now permits active groups to read local/global Entity and Control chains, including inherited physical nodes. Shared dirty matrices publish under the retained canvas-item gate after virtual getters return; notification coalescing, ordinary-worker rejection and owner mutation guards remain distinct. Public parallel ordinary/pool-host physics consumers verify the bounded read contract. General worker mutation remains Partial.
 
 [Procedural mesh surfaces](../components/meshes.md#procedural-surfaces-without-positions) connect independent typed/packed counts and absent position buffers to authored vertex programs, native topology, full affine skin/instances, masks and fitted groups. CPU geometry operations retain their explicit missing-position boundary; Compatibility rejects programmable output.
+
+## Fixed sampled descriptor arrays
+
+[Canvas sampled descriptor arrays](../components/shader-materials.md#fixed-sampled-descriptor-arrays) now execute through GLSL/HLSL, typed resource and static RID access, indexed shader defaults, complete validation, graph storage and derived scalar native bindings. Paired stages and existing lighting/glyph/instance/HDR/MSAA consumers share the same physical capacity and resource lifetime. See the component for measured software-Vulkan checks and the separate hardware/platform gates.

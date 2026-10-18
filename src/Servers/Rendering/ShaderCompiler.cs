@@ -125,6 +125,7 @@ internal static unsafe class ShaderCompiler
         ValidateStructure(code, fragment);
         var program = SpirvReflection.Read(code, fragment, sourceTypes);
         if (!fragment) program.ValidateVertexFrame();
+        code = program.NativeCode;
         Run(() =>
         {
             fixed (byte* pointer = code)
@@ -177,7 +178,7 @@ internal static unsafe class ShaderCompiler
         ValidateBytecodeLength(vertexBytecode); ValidateBytecodeLength(fragmentBytecode);
         var vertex = ValidateInterface(vertexBytecode, fragment: false);
         var fragment = ValidateFragmentInterface(fragmentBytecode);
-        var graphics = ValidateDeviceGraphics(vertex.Code, fragment.Code);
+        var graphics = ValidateDeviceGraphics(vertex.NativeCode, fragment.NativeCode);
         if (graphics.Inputs.Any(input => input.Location is >= 4 and <= 6))
             throw new NotSupportedException("Canvas programs receive raw instance custom data at location three; hardware instance transforms and colors belong to the renderer.");
         var program = ShaderProgram.WithVertex(fragment, vertex); program.PrepareVertexVariants(); return program;
@@ -224,8 +225,8 @@ internal static unsafe class ShaderCompiler
                     throw new NotSupportedException("Canvas SPIR-V requires the selected stage with an entry point named main.");
                 entrypoints++;
             }
-            if (opcode == 17 && (count != 2 || words[offset + 1] != 1))
-                throw new NotSupportedException("This canvas interface accepts only the baseline Shader capability.");
+            if (opcode == 17 && (count != 2 || words[offset + 1] is not (1 or 29 or 50 or 5301 or 5307)))
+                throw new NotSupportedException("Canvas shaders require baseline graphics, image queries or sampled descriptor indexing capabilities.");
             if (opcode == 14 && (count != 3 || words[offset + 1] != 0 || words[offset + 2] != 1))
                 throw new NotSupportedException("Canvas SPIR-V requires the logical GLSL450 memory model.");
             offset += count;

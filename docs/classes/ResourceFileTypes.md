@@ -1,6 +1,6 @@
 # ResourceFileTypes
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 **Namespace:** `Electron2D`. **Declaration:** `public static class Electron2D.ResourceFileTypes`. **Source:** [ResourceFileTypes.cs](../../src/Core/IO/ResourceFileTypes.cs).
 
@@ -175,3 +175,7 @@ The callback receives the evaluated AnimationTree and returns its advance decisi
 Authored typed scene connections use registered compiled `SceneConnectionBinding` factories, copied payloads and dual endpoint cleanup. PackedScene captures/rebinds these subscriptions, including file archives v3. SceneState queries expose paths, diagnostic labels, flags, unbind count and typed payload snapshots. See [packed scenes](../components/packed-scenes.md) for ownership and persistence limits.
 
 Exact archive factories now include VideoStreamTheora resources and VideoStreamPlayer nodes; their configured File/Stream and authored properties restore through the ordinary typed graph.
+
+## Sampled descriptor array integration
+
+Built-in resource-array codecs now include the abstract Texture and TextureLayered roles. Fixed sampled descriptor arrays therefore retain null entries, exact lengths and concrete image factories through the existing bounded archive/graph codec. No native identity or derived bytecode is stored. SamplerArrayTests checks default/override graph aliases and shader source payload preservation. See [the component contract](../components/shader-materials.md#fixed-sampled-descriptor-arrays).

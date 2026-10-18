@@ -1096,7 +1096,7 @@ See [canvas lifetime and replay contract](../components/canvas-rendering.md#call
 | `static void ShaderSetSPIRV(RID, ReadOnlySpan<byte>)` / `static byte[] ShaderGetSPIRV(RID)` | Validate/copy a compiled canvas program; reads accept borrowed shader RIDs. |
 | `static void ShaderSetPathHint(RID, string)` | Diagnostic validation path metadata for an owned shader. |
 | `static IReadOnlyList<PropertyDescriptor> GetShaderParameterList(RID)` | Immutable typed descriptors for current reflected user uniforms. |
-| `static void ShaderSetDefaultTextureParameter(RID, string, RID, int = 0)` / `static RID ShaderGetDefaultTextureParameter(RID, string, int = 0)` | Borrowed named single sampler default; empty clears, index zero only. |
+| `static void ShaderSetDefaultTextureParameter(RID, string, RID, int = 0)` / `static RID ShaderGetDefaultTextureParameter(RID, string, int = 0)` | Borrowed indexed sampler default; empty clears, scalars accept zero and fixed descriptor arrays accept their element range. |
 | `static void MaterialSetShader(RID, RID)` | Borrow a shader for an owned material; empty clears the program/value state. |
 | `static void MaterialSetParam<T>(RID, string, T)` / `(RID, string, ReadOnlySpan<T>)` | Validate/copy a reflected scalar, vector, matrix or complete fixed array. |
 | `static void MaterialSetParam(RID, string, RID)` | Borrow an explicit named texture; empty selects the shader default. |
@@ -1400,3 +1400,25 @@ Typed and packed procedural surfaces execute through owned/borrowed mesh identit
 | `public static RID MultiMeshGetCommandBufferRDRID(RID multiMesh)` | Five uints per surface; empty without indirect mode, surfaces, capacity or a GPU backend. |
 
 Both require the global renderer owner, no active device list and no native submission/readback-memory callback reentry. Invalid logical RIDs throw ArgumentException; byte-budget overflow throws ArgumentOutOfRangeException; invalid thread/list/callback/native state throws InvalidOperationException. The resource owns live device lifetime. CPU getters remain authored; device writes are visible to actual canvas consumers. See [complete record/command layout, replacement and verification](../components/meshes.md#writable-instance-device-buffers).
+
+## Sampled descriptor arrays
+
+| Declaration | Contract |
+| --- | --- |
+| `static void MaterialSetParam(RID material, string name, ReadOnlySpan<RID> textures)` | Copies exact-length image override identities after full validation; empty entries select indexed defaults. |
+| `static RID[] MaterialGetParamTextureArray(RID material, string name)` | Returns copied explicit override identities. |
+| `static void MaterialGetParam(RID material, string name, Span<RID> destination)` | Copies all overrides into exact-length caller storage without prepared allocation. |
+
+These operations require a fixed sampled descriptor array, including length one; ordinary/layered and sampled scalar roles follow the reflected parameter. Existing scalar image operations reject arrays. ShaderSet/GetDefaultTextureParameter address individual elements by index for both image roles. Owner-thread, active-session, stale/wrong-kind/borrowed ownership and submission guards remain the existing identity contract. Wrong names/shapes/lengths/identities or disposed images reject before mutation; producer reentry/replaced programs raise InvalidOperationException. Getters return overrides, preserving empty entries independently of shader defaults. The caller owns all images; clearing/freeing a material never frees them. See [SamplerArrayTests](../../tests/Electron2D.Tests/SamplerArrayTests.cs) and [the full behavior and verification limits](../components/shader-materials.md#fixed-sampled-descriptor-arrays).
+
+### MaterialSetParam(RID, string, ReadOnlySpan<RID>)
+
+Sets the entire reflected sampled descriptor array with copied borrowed identities. Empty entries select indexed defaults. Name, length, live identity, sampled shape/scalar and owner/session/submission checks complete before one commit; failed producer validation cannot partially change the array.
+
+### MaterialGetParamTextureArray(RID, string)
+
+Returns a new RID[] of explicit borrowed overrides, preserving empty entries independently of defaults. The name must identify a fixed sampled descriptor array; no resource ownership transfers.
+
+### MaterialGetParam(RID, string, Span<RID>)
+
+Resolves every explicit override into bounded temporary identity storage before copying to the exact-length destination. A bad name, shape, length or stale/disposed resource leaves caller storage untouched. Prepared calls allocate no managed memory and retain ordinary owner/session guards.

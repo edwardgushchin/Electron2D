@@ -20,7 +20,7 @@ public abstract partial class Material : Resource
 /// and excluded from parameter access, stored properties and value migration. Scene lights compose the authored fragment color before blend while preserving discard and parameters.
 /// Normal/specular channels and point masks share the native sixteen-sampler stage capacity; overflow rejects
 /// before drawing. All four fragment uniform-buffer slots remain available; an authored vertex stage has three material slots after its renderer-owned Frame. Matching parameter names share typed values across both stages.</remarks>
-public sealed class ShaderMaterial : Material
+public sealed partial class ShaderMaterial : Material
 {
     private readonly object _gate = new();
     private Shader? _shader;
@@ -162,71 +162,67 @@ public sealed class ShaderMaterial : Material
         return uniform;
     }
 
-    /// <summary>Sets a borrowed texture override for a sampled 2D shader parameter.</summary>
+    /// <summary>Sets a borrowed ordinary image override for a scalar sampled descriptor.</summary>
     /// <param name="name">The exact, case-sensitive texture parameter name.</param>
     /// <param name="texture">A live texture, or null to use the Shader default.</param>
     /// <remarks>An unbound parameter without a Shader default fails explicitly before drawing. Textures are sampled
-    /// with linear filtering, clamped coordinates and LOD restricted to the base level, independently of canvas sampling
+    /// with linear float or nearest integer filtering, clamped coordinates and LOD restricted to the base level, independently of canvas sampling
     /// properties. Configurable named sampler state remains pending. Changes emit Changed.</remarks>
-    /// <exception cref="ArgumentException">The parameter is not a sampled texture.</exception>
-    /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
+    /// <exception cref="ArgumentException">The parameter is not an ordinary scalar sampled descriptor or the supplied sampled scalar type differs.</exception>
+    /// <exception cref="InvalidOperationException">No shader is assigned, or texture validation reenters mutation or replaces the program.</exception>
     /// <exception cref="ObjectDisposedException">The material, shader or supplied texture is disposed.</exception>
-    public void SetShaderParameter(string name, Texture? texture)
-    {
-        lock (_gate)
-        {
-            var state = RequireState();
-            var slot = state.Program.FindTexture(name); state.Program.Textures[slot].RequireShape(false);
-            state.Program.Textures[slot].Validate(texture);
-            state.Textures[slot] = texture;
-        }
-        EmitChanged();
-    }
+    public void SetShaderParameter(string name, Texture? texture) => SetSampledResource(name, texture, false);
 
-    /// <summary>Gets the explicitly assigned texture override for a sampled 2D shader parameter.</summary>
+    /// <summary>Gets the explicit ordinary image override for a scalar sampled descriptor.</summary>
     /// <param name="name">The exact, case-sensitive texture parameter name.</param>
     /// <returns>The borrowed texture override, or null when the Shader default will be used.</returns>
-    /// <exception cref="ArgumentException">The parameter is not a sampled texture.</exception>
+    /// <exception cref="ArgumentException">The parameter is not an ordinary scalar sampled descriptor or the supplied sampled scalar type differs.</exception>
     /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
     /// <exception cref="ObjectDisposedException">The material or shader is disposed.</exception>
     public Texture? GetShaderParameter(string name)
     {
-        lock (_gate) { var state = RequireState(); var slot = state.Program.FindTexture(name); state.Program.Textures[slot].RequireShape(false); return (Texture?)state.Textures[slot]; }
+        lock (_gate) { var state = RequireState(); var slot = state.Program.FindTexture(name); state.Program.Textures[slot].RequireShape(false); state.Program.Textures[slot].RequireBindingArray(false); return (Texture?)state.Textures[slot]; }
     }
 
-    /// <summary>Sets a borrowed image-array override for a reflected array sampler.</summary>
+    /// <summary>Sets a borrowed layered image override for a scalar sampled descriptor.</summary>
     /// <param name="name">The exact sampler parameter name.</param>
     /// <param name="texture">A live array resource, or null to use the shader default.</param>
-    /// <remarks>Sampling uses linear filtering, clamp addressing and base-level LOD. Changes need no geometry
+    /// <remarks>Sampling uses linear float or nearest integer filtering, clamp addressing and base-level LOD. Changes need no geometry
     /// rerecording. An unbound parameter fails before drawing. Ownership remains with the caller.</remarks>
-    /// <exception cref="ArgumentException">The parameter is not a layered sampler.</exception>
-    /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
+    /// <exception cref="ArgumentException">The parameter is not a layered scalar sampled descriptor or the supplied sampled scalar type differs.</exception>
+    /// <exception cref="InvalidOperationException">No shader is assigned, or texture validation reenters mutation or replaces the program.</exception>
     /// <exception cref="ObjectDisposedException">The material, shader or array is disposed.</exception>
-    public void SetShaderLayeredParameter(string name, TextureLayered? texture)
-    {
-        lock (_gate)
-        {
-            var state = RequireState(); var slot = state.Program.FindTexture(name); state.Program.Textures[slot].RequireShape(true);
-            state.Program.Textures[slot].Validate(texture);
-            state.Textures[slot] = texture;
-        }
-        EmitChanged();
-    }
-    /// <summary>Gets the explicitly assigned image-array override.</summary>
+    public void SetShaderLayeredParameter(string name, TextureLayered? texture) => SetSampledResource(name, texture, true);
+
+    /// <summary>Gets the explicit layered image override for a scalar sampled descriptor.</summary>
     /// <param name="name">The exact sampler parameter name.</param>
     /// <returns>The borrowed override, or null when the shader default is used.</returns>
-    /// <exception cref="ArgumentException">The parameter is not a layered sampler.</exception>
+    /// <exception cref="ArgumentException">The parameter is not a layered scalar sampled descriptor or the supplied sampled scalar type differs.</exception>
     /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
     /// <exception cref="ObjectDisposedException">The material or shader is disposed.</exception>
     public TextureLayered? GetShaderLayeredParameter(string name)
     {
-        lock (_gate) { var state = RequireState(); var slot = state.Program.FindTexture(name); state.Program.Textures[slot].RequireShape(true); return (TextureLayered?)state.Textures[slot]; }
+        lock (_gate) { var state = RequireState(); var slot = state.Program.FindTexture(name); state.Program.Textures[slot].RequireShape(true); state.Program.Textures[slot].RequireBindingArray(false); return (TextureLayered?)state.Textures[slot]; }
     }
     internal Resource? GetSampledResource(string name)
-    { lock (_gate) { var state = RequireState(); return state.Textures[state.Program.FindTexture(name)]; } }
-    internal void SetSampledResource(string name, Resource? texture)
+    { lock (_gate) { var state = RequireState(); var slot = state.Program.FindTexture(name); state.Program.Textures[slot].RequireBindingArray(false); return state.Textures[slot]; } }
+    internal void SetSampledResource(string name, Resource? texture, bool? layered = null)
     {
-        lock (_gate) { var state = RequireState(); var slot = state.Program.FindTexture(name); state.Program.Textures[slot].Validate(texture); state.Textures[slot] = texture; }
+        lock (_gate)
+        {
+            var state = RequireState(); var slot = state.Program.FindTexture(name); var descriptor = state.Program.Textures[slot]; descriptor.RequireBindingArray(false);
+            if (layered.HasValue) descriptor.RequireShape(layered.Value);
+            if (_validatingTextures) throw new InvalidOperationException("Texture validation cannot reenter a texture update.");
+            _validatingTextures = true;
+            try
+            {
+                descriptor.Validate(texture);
+                if (!ReferenceEquals(state, RequireState())) throw new InvalidOperationException("Texture validation replaced the material program.");
+                if (texture is { IsDisposed: true }) throw new ObjectDisposedException(nameof(texture));
+                state.Textures[slot] = texture;
+            }
+            finally { _validatingTextures = false; }
+        }
         EmitChanged();
     }
 
@@ -320,7 +316,7 @@ internal sealed class MaterialState
                 }
         for (var i = 0; i < Textures.Length; i++)
             for (var j = 0; j < previous.Textures.Length; j++)
-                if (program.Textures[i].Name == previous.Program.Textures[j].Name && program.Textures[i].SameType(previous.Program.Textures[j])) Textures[i] = previous.Textures[j];
+                if (program.Textures[i].Name == previous.Program.Textures[j].Name && program.Textures[i].Element == previous.Program.Textures[j].Element && program.Textures[i].SameType(previous.Program.Textures[j])) Textures[i] = previous.Textures[j];
     }
 
     internal void CopyTextures(Span<Resource?> target)
@@ -330,7 +326,7 @@ internal sealed class MaterialState
             RenderingServer.ActiveGlobalParameters?.Validate(Program);
             for (var i = 0; i < Textures.Length; i++)
             {
-                target[i] = Program.Textures[i].IsEngineTexture ? null : Program.Textures[i].IsGlobal ? (RenderingServer.ActiveGlobalParameters ?? throw new InvalidOperationException("Global images require an active renderer.")).Resolve(Program.Textures[i]) : Textures[i] ?? Shader?.DefaultTexture(Program.Textures[i].Name)
+                target[i] = Program.Textures[i].IsEngineTexture ? null : Program.Textures[i].IsGlobal ? (RenderingServer.ActiveGlobalParameters ?? throw new InvalidOperationException("Global images require an active renderer.")).Resolve(Program.Textures[i]) : Textures[i] ?? Shader?.DefaultTexture(Program.Textures[i].Name, Program.Textures[i].Element)
                     ?? throw new InvalidOperationException($"Texture parameter '{Program.Textures[i].Name}' has no texture or Shader default.");
                 Program.Textures[i].Validate(target[i]);
             }

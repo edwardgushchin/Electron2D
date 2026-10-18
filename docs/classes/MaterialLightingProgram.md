@@ -1,6 +1,6 @@
 # MaterialLightingProgram
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 - Declaration: `internal static class MaterialLightingProgram`
 - Source: [MaterialLightingProgram.cs](../../src/Servers/Rendering/MaterialLightingProgram.cs)
@@ -18,3 +18,7 @@ ComposeGlyph reuses the same exact relocation linker for incoming COLOR decoding
 ## Paired material projection
 
 Lighting/glyph fragment composition uses Program.Fragment when a paired program is supplied. Vertex-only textures and buffers therefore cannot change fragment resource bindings or consume fragment lighting/glyph capacity. The selected CanvasVertexProgram variant supplies matching private lighting/glyph varyings.
+
+## Sampled descriptor array integration
+
+Lighting and glyph composition parse ShaderProgram.NativeCode so fixed sampled descriptor arrays already have scalar physical slots. They preserve original shader export identity and count all additional engine samplers against the same stage limit. SamplerArrayTests exercises shared/split vertex/fragment arrays with lights, instancing, groups, glyphs, HDR and MSAA. See [the component contract](../components/shader-materials.md#fixed-sampled-descriptor-arrays).

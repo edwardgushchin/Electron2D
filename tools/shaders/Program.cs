@@ -108,22 +108,28 @@ static byte[] CompileHLSL(string source, RenderingDevice.ShaderStage stage, stri
         if (!ShaderCross.Init()) throw new InvalidOperationException("Cannot initialize shadercross: " + SDL.GetError());
         try
         {
-            var memory = ShaderCross.CompileSPIRVFromHLSL(source, "main",
-                stage == RenderingDevice.ShaderStage.Compute ? ShaderCross.ShaderStage.Compute : stage == RenderingDevice.ShaderStage.Fragment ? ShaderCross.ShaderStage.Fragment : ShaderCross.ShaderStage.Vertex, out var size, includeDirectory);
-            if (memory == 0) throw new ArgumentException("HLSL compilation failed: " + SDL.GetError(), nameof(source));
-            try
-            {
-                if (size > 16 * 1024 * 1024) throw new ArgumentException("Shader bytecode exceeds 16 MiB.");
-                var code = new byte[checked((int)size)];
-                Marshal.Copy(memory, code, 0, code.Length);
-                types = deviceImport ? null : ShaderSourceTypes.HLSL(source, stage == RenderingDevice.ShaderStage.Fragment, includeDirectory, code);
-                return code;
-            }
-            finally { SDL.Free(memory); }
+            var code = deviceImport ? CompileDeviceHLSL(source, stage, includeDirectory) : ShaderSourceTypes.CompileHLSL(source, stage, includeDirectory);
+            // Scalar programs retain the established import payload; descriptor arrays preserve their source shape.
+            if (!deviceImport && !ShaderSourceTypes.HasDescriptorArrays(code)) code = CompileDeviceHLSL(source, stage, includeDirectory);
+            types = deviceImport ? null : ShaderSourceTypes.HLSL(source, stage == RenderingDevice.ShaderStage.Fragment, includeDirectory, code);
+            return code;
         }
         finally { ShaderCross.Quit(); }
     }
     finally { Directory.SetCurrentDirectory(previousDirectory); }
+}
+
+static byte[] CompileDeviceHLSL(string source, RenderingDevice.ShaderStage stage, string? includeDirectory)
+{
+    var memory = ShaderCross.CompileSPIRVFromHLSL(source, "main",
+        stage == RenderingDevice.ShaderStage.Compute ? ShaderCross.ShaderStage.Compute : stage == RenderingDevice.ShaderStage.Fragment ? ShaderCross.ShaderStage.Fragment : ShaderCross.ShaderStage.Vertex, out var size, includeDirectory);
+    if (memory == 0) throw new ArgumentException("HLSL compilation failed: " + SDL.GetError(), nameof(source));
+    try
+    {
+        if (size > 16 * 1024 * 1024) throw new ArgumentException("Shader bytecode exceeds 16 MiB.");
+        var code = new byte[checked((int)size)]; Marshal.Copy(memory, code, 0, code.Length); return code;
+    }
+    finally { SDL.Free(memory); }
 }
 
 static async Task RequireVersion(string executable, string expected)

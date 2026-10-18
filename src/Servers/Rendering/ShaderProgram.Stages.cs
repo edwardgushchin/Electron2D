@@ -8,7 +8,7 @@ internal sealed partial class ShaderProgram
     {
         var vertex = Vertex ?? throw new InvalidOperationException("No authored vertex stage.");
         var variants = new byte[8][];
-        for (var i = 0; i < variants.Length; i++) variants[i] = CanvasVertexProgram.Compose(vertex.Code, (i & 1) != 0, (i & 2) != 0, (i & 4) != 0);
+        for (var i = 0; i < variants.Length; i++) variants[i] = CanvasVertexProgram.Compose(vertex.NativeCode, (i & 1) != 0, (i & 2) != 0, (i & 4) != 0);
         _vertexVariants = variants;
     }
 
@@ -60,7 +60,9 @@ internal sealed partial class ShaderProgram
             var sampler = vertex.Textures[i];
             if (uniforms.ContainsKey(sampler.Name) || instances.ContainsKey(sampler.Name) || globals.ContainsKey(sampler.Name) || sampler.IsGlobal && (uniforms.ContainsKey(sampler.GlobalName) || instances.ContainsKey(sampler.GlobalName) || globals.ContainsKey(sampler.GlobalName)))
                 throw new ArgumentException($"Shader parameter '{sampler.Name}' has conflicting uniform and sampled-image roles across stages.");
-            var index = samplers.FindIndex(t => t.Name == sampler.Name);
+            if (samplers.FirstOrDefault(t => t.Name == sampler.Name) is { } existing && !existing.SameType(sampler))
+                throw new ArgumentException($"Sampled image '{sampler.Name}' has different types across stages.");
+            var index = samplers.FindIndex(t => t.Name == sampler.Name && t.Element == sampler.Element);
             if (index < 0) { index = samplers.Count; samplers.Add(sampler); }
             else if (!samplers[index].SameType(sampler)) throw new ArgumentException($"Sampled image '{sampler.Name}' has different types across stages.");
             textureIndices[i] = index;
@@ -78,6 +80,7 @@ internal sealed partial class ShaderProgram
         var sdf = Builtin(fragment.SDFCoordsUniform, vertex.SDFCoordsUniform);
         return new(fragment.Code, [.. fragment.BufferSizes, .. vertex.BufferSizes.Skip(1)], uniforms, samplers.ToArray(), time, pixels, sdf, instances, globals)
         {
+            NativeCode = fragment.NativeCode,
             Vertex = vertex,
             Fragment = fragment,
             FragmentBufferCount = fragment.BufferSizes.Length,

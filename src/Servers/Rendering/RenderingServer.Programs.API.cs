@@ -64,7 +64,7 @@ public sealed partial class RenderingServer
     /// <param name="shader">Live owned/borrowed shader identity as allowed by the operation; mutations require caller ownership.</param>
     /// <param name="name">Exact case-sensitive reflected user parameter name.</param>
     /// <param name="texture">Borrowed live texture RID or empty to clear/select default.</param>
-    /// <param name="index">Zero; sampled texture arrays retain their own unsupported dependency.</param>
+    /// <param name="index">Zero for a scalar binding, otherwise the zero-based fixed descriptor array element.</param>
     /// <exception cref="ArgumentException">An identity, parameter, destination or payload is invalid.</exception>
     /// <exception cref="InvalidOperationException">The service is unavailable or owner/submission/lifetime rules reject the operation.</exception>
     public static void ShaderSetDefaultTextureParameter(RID shader, string name, RID texture, int index = 0) => RequireService().ShaderSetDefaultTextureParameterCore(shader, name, texture, index);
@@ -72,7 +72,7 @@ public sealed partial class RenderingServer
     /// <summary>Returns a live program default texture identity, or empty when unset.</summary>
     /// <param name="shader">Live owned/borrowed shader identity as allowed by the operation; mutations require caller ownership.</param>
     /// <param name="name">Exact case-sensitive reflected user parameter name.</param>
-    /// <param name="index">Zero; sampled texture arrays retain their own unsupported dependency.</param>
+    /// <param name="index">Zero for a scalar binding, otherwise the zero-based fixed descriptor array element.</param>
     /// <returns>The borrowed default texture identity, or empty when unset.</returns>
     /// <exception cref="ArgumentException">An identity, parameter, destination or payload is invalid.</exception>
     /// <exception cref="InvalidOperationException">The service is unavailable or owner/submission/lifetime rules reject the operation.</exception>
@@ -110,6 +110,30 @@ public sealed partial class RenderingServer
     /// <exception cref="ArgumentException">An identity, parameter, destination or payload is invalid.</exception>
     /// <exception cref="InvalidOperationException">The service is unavailable or owner/submission/lifetime rules reject the operation.</exception>
     public static void MaterialSetParam(RID material, string name, RID texture) => RequireService().MaterialSetParamTextureCore(material, name, texture);
+
+    /// <summary>Atomically replaces all borrowed sampled-image array overrides; empty elements select shader defaults.</summary>
+    /// <param name="material">Live owned programmable material identity.</param>
+    /// <param name="name">Exact reflected descriptor array name.</param>
+    /// <param name="textures">Copied ordinary or layered image identities with exactly the reflected element count.</param>
+    /// <exception cref="ArgumentException">An identity, image role, scalar type, descriptor shape or count differs.</exception>
+    /// <exception cref="InvalidOperationException">The service, owner, submission state or reentrant validation rejects the operation.</exception>
+    public static void MaterialSetParam(RID material, string name, ReadOnlySpan<RID> textures) => RequireService().MaterialSetParamTextureArrayCore(material, name, textures);
+
+    /// <summary>Returns a copied array of borrowed explicit sampled-image override identities.</summary>
+    /// <param name="material">Live programmable material identity.</param>
+    /// <param name="name">Exact reflected descriptor array name.</param>
+    /// <returns>One identity per element; empty identities select the respective shader defaults.</returns>
+    /// <exception cref="ArgumentException">The identity, name or descriptor shape differs.</exception>
+    /// <exception cref="InvalidOperationException">The service or owner state rejects the operation.</exception>
+    public static RID[] MaterialGetParamTextureArray(RID material, string name) => RequireService().MaterialGetParamTextureArrayCore(material, name);
+
+    /// <summary>Copies sampled-image overrides into exact-length caller storage without prepared allocation.</summary>
+    /// <param name="material">Live programmable material identity.</param>
+    /// <param name="name">Exact reflected descriptor array name.</param>
+    /// <param name="destination">Exact-length identity storage; empty entries select shader defaults.</param>
+    /// <exception cref="ArgumentException">An identity, name, descriptor shape or destination length differs.</exception>
+    /// <exception cref="InvalidOperationException">The service or owner state rejects the operation.</exception>
+    public static void MaterialGetParam(RID material, string name, Span<RID> destination) => RequireService().MaterialGetParamTextureArrayCore(material, name, destination);
 
     /// <summary>Reads a reflected typed scalar/vector/matrix from a live programmable material.</summary>
     /// <typeparam name="T">Unmanaged scalar/vector/matrix type matching the existing typed material contract.</typeparam>

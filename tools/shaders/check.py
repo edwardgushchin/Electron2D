@@ -160,7 +160,7 @@ void main() { gl_Position=vec4((position+uv)/frame.size,0,1); tint=color; data=c
         ('canvas-binding', 'glsl', glsl.replace('detailMap', 'TEXTURE'), 'binding zero'),
         ('texture-gap', 'glsl', glsl.replace('binding = 1', 'binding = 2'), 'contiguous'),
         ('texture-collision', 'glsl', glsl.replace('binding = 1', 'binding = 0'), 'unique'),
-        ('texture-array', 'glsl', glsl.replace('colorMap;', 'colorMap[2];').replace('textureLod(colorMap,', 'textureLod(colorMap[0],'), 'arrays'),
+        ('texture-array-overflow', 'glsl', glsl.replace('colorMap;', 'colorMap[16];').replace('textureLod(colorMap,', 'textureLod(colorMap[0],'), 'sixteen'),
         ('texture-dimension', 'glsl', glsl.replace('sampler2D', 'sampler3D').replace(', uv, lod)', ', vec3(uv, 0), lod)'), '2D'),
         ('sampler-gap', 'hlsl', hlsl.replace('register(s1,', 'register(s2,'), 'contiguous'),
         ('sampler-pair', 'hlsl', hlsl.replace('colorMap.SampleLevel(colorSampler', 'colorMap.SampleLevel(detailSampler')
@@ -170,6 +170,16 @@ void main() { gl_Position=vec4((position+uv)/frame.size,0,1); tint=color; data=c
         invalid.write_text(source)
         assert diagnostic in invoke(invalid, output, success=False)
         assert output.read_bytes() == previous, 'Invalid texture bindings replaced the usable artifact'
+    for stem in ('SamplerPairsGLSL.frag', 'SamplerReferenceGLSL.frag', 'SamplerVertexGLSL.vert', 'SamplerVertexHLSL.vert'):
+        source = root / ('tests/Electron2D.Tests/Shaders/' + stem + ('.hlsl' if 'HLSL' in stem else '.glsl'))
+        invoke(source, output, stage='vertex' if '.vert' in stem else 'fragment')
+        assert output.read_bytes() == source.with_suffix('.spv').read_bytes(), f'{stem}: reproducible sampler source'
+    for language, extension in [('GLSL', 'glsl'), ('HLSL', 'hlsl')]:
+        for stem in ('SamplerBindings', 'SamplerOperations', 'SamplerScalar'):
+            source = root / f'tests/Electron2D.Tests/Shaders/{stem}{language}.frag.{extension}'
+            invoke(source, output)
+            assert output.read_bytes() == source.with_suffix('.spv').read_bytes(), f'{stem} {language} import differs from its pinned fixture'
+    previous = output.read_bytes()
     unused = directory / 'unused.glsl'
     unused.write_text(glsl.replace('void main()', 'layout(set = 2, binding = 7) uniform sampler2D unusedMap;\nvoid main()'))
     invoke(unused, output)

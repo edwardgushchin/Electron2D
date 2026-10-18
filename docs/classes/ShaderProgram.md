@@ -1,6 +1,6 @@
 # ShaderProgram
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 - Declaration: `internal sealed class ShaderProgram`
 - Source: [ShaderProgram.cs](../../src/Servers/Rendering/ShaderProgram.cs)
@@ -34,7 +34,7 @@ ShaderProgram program = ShaderCompiler.ValidateFragmentInterface(bytecode);
 | `internal readonly ShaderTexture[] Textures` | [Textures](#textures) |
 | `internal readonly IReadOnlyList<PropertyDescriptor> Descriptors` | [Descriptors](#descriptors) |
 | `internal readonly IReadOnlyList<PropertyDescriptor> MaterialDescriptors` | [Material descriptors](#material-descriptors) |
-| `internal int FindTexture(string name)` | [Texture lookup](#texture-lookup) |
+| `internal int FindTexture(string name, int index = 0)` | [Texture lookup](#texture-lookup) |
 
 ## Member descriptions
 
@@ -94,7 +94,7 @@ The same reflected parameters with shader_parameter/ prefixes for material prope
 
 ### Texture lookup
 
-`internal int FindTexture(string name)`
+`internal int FindTexture(string name, int index = 0)`
 
 Returns the named texture index, excluding reserved TEXTURE. Null/blank or unknown names raise ArgumentException through the shared typed API.
 
@@ -109,3 +109,7 @@ InstanceUniforms, HasInstanceUniforms, InstanceDescriptors and CanvasInstanceDes
 ## Paired program metadata
 
 WithVertex validates the exact Frame layout and merges stage uniforms, builtins, instance fields and texture names. Vertex and Fragment retain the original immutable modules. FragmentBufferCount and FragmentTextureCount delimit the fragment prefix; VertexTextureIndices maps vertex sampler slots to combined resource indices. UniformCopies maps canonical shared fields to each target physical layout. ValidateVertexFrame reserves binding zero exclusively for client size. PrepareVertexVariants creates four cold CanvasVertexProgram variants, selected by VertexCode(instanced, lighting). No published collection or derived payload may mutate.
+
+## Sampled descriptor array integration
+
+Code retains the immutable original payload; NativeCode retains the derived scalar-descriptor module. FindTexture(name, index = 0) validates logical element range and resolves its physical slot. Descriptors and MaterialDescriptors expose only Element zero, with typed array values. WithVertex merges matching Name/Element slots, rejects same-name length/role/scalar conflicts and maps each vertex element independently. Composition consumes NativeCode, while copied exports and archives consume Code. See [the component contract](../components/shader-materials.md#fixed-sampled-descriptor-arrays).
