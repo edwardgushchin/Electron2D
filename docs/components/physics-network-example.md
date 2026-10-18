@@ -2,6 +2,25 @@
 
 Last updated: 2026-10-18
 
+## Activation recovery network regression, 2026-10-18
+
+Authored runtime sources at 12bf2f8a7f70ada9231d79b0ea6952d0601e1edc pass sixteen fresh separate-process profiles: eight instrumented test-host paced/ordinary profiles, four ordinary public managed example and four ordinary strict NativeAOT example profiles. They cover CPU/GPU early clients and owner/separate numerical lanes, 900 authority ticks, admission after tick 310 and a 250-ms early-client poll delay. All original impaired delivery, lifecycle/ownership, coupled contact/joint, geometry/sleep, divergence/correction, interpolation and exactly-once confirmation assertions remain. The four phase-paced profiles additionally prove every required actual post-admission client phase and prepared/applied control-handoff input replacement. Ordinary clients prove received wake corrections while the authority solves the scripted impulses; their wall-clock behavior remains distinct from check pacing.
+
+All 48 simulation processes finish successfully. Across 64 observed processes, private lavapipe appears only in the eight GPU early clients; no hardware driver is observed. Every CPU participant proves denied GPU startup before its working world and finishes without a display/rendering service. All four native scenarios run without CoreCLR. The complete cohort measures 17538 ordinary warm steps and 56750 warm replay steps at strict 0 owner/all-thread managed bytes, retaining positive samples for every participant. The twelve ordinary profiles separately measure 13420/18667 warm step/replay intervals; their scenario wall time is 17.190639–20.890789 seconds including actual session/protocol overhead. These timings are not physics throughput or window/FPS evidence.
+
+Four public portable-PDB audits match 2273 runtime and 13 example source documents without DEBUG/missing/mismatch. Both public runtime source sets match all 2273 authored inputs of the frozen test host at the same revision. The 78 test-host, 65 managed-example and 127 native-example payload files retain separate hashes. Evidence: bin/physics-network-activation/2026-10-18/validation.json, SHA-256 407106f97c78b9505099750daeff3b813ab8db1199e30a80bb27d39bacda29f6; public-source-proof.json, runtime-equivalence.json, payloads.json and tests-inputs.json.
+
+The ordinary instrumented GPU-client store counters at report capture are:
+
+| Numerical lane | Completed predicted/replayed steps | Upload bytes | Readback bytes | Submissions | Accumulated waits, ms |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Owner | 297 | 699240 | 3198932 | 14747 | 5296.9280 |
+| Separate | 286 | 665088 | 3076152 | 14212 | 5283.8539 |
+
+These are whole-store observations including setup, prediction and correction/replay, without per-consumer phase attribution. Delivery/coalescing produces different solved-work counts, so they are not a matched CPU/GPU throughput comparison. The reports also retain application wire bytes, command/event capacity formulas and step/correction percentiles; those capacities do not measure full retained graphs or native ownership. Evidence: ordinary-costs.json and the original instrumented reports. The high submission count remains a concrete preparation/query/replay profiling target, with target-hardware performance acceptance still open.
+
+The four fresh instrumented phase-paced profiles started only after successful completion of the frozen aa0b0cb5 full software suite and all twelve ordinary profiles/builds. Their original application deadlines, tick/late-admission/poll-delay settings and assertions were unchanged; all four first attempts passed (CPU owner/separate 67.224436/69.649532 seconds, GPU owner/separate 129.371159/122.426960 seconds). The separately source-bound [activation full-suite proof](physics-registered-adapter.md#failed-local-activation) passes in 1533.086791 seconds with committed-source/payload readback. The prior be4567bc cohort and its rejected concurrent paced run below retain their own source scope. These frozen runs predate the subsequent ee899e11 frame-monitor commit; that later change retains its own verification and is not covered by these executions. Full numerical/extension/inherited, native/foreign allocator, target hardware/window/FPS and performance acceptance remain open; declaration states and the 218-row open census are unchanged.
+
 ## Scene-role recovery network regression, 2026-10-18
 
 Runtime sources at be4567bc6f8e2b45c1950e653b6e47adbf7d1907 pass sixteen fresh separate-process profiles: eight instrumented paced/ordinary profiles and eight public managed/strict NativeAOT ordinary profiles, each covering CPU/GPU early clients and owner/separate numerical lanes. The accepted cohort has 48 simulation processes and 64 observed processes including check parents. Every scenario retains 900 authority ticks, late admission at tick 310 and a 250-ms early-client poll delay, with the existing impaired delivery, topology, coupled constraints/contacts, sleep/wake, ownership, divergence, interpolation and exactly-once confirmation assertions. Every CPU participant proves denied GPU startup before its working world.
