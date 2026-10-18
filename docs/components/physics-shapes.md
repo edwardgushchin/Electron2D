@@ -1,5 +1,40 @@
 # Collision shapes component
 
+## Indexed slot operation audit
+
+The Body/Area replace, local-pose, enable/disable, remove and clear operations now
+have complete operation-level accounting through their registered `RebuildShapes`
+projection under ADRs 0063, 0071, 0088 and 0103. The pinned ten public operations and
+ten implementation counterparts have no deprecated metadata. Their existing
+runtime paths preserve resource identity, logical indices, finite unit-scale
+zero-skew poses, validation and using-world/resource borrowing.
+
+Raw attached edits rebuild immediately. A failed application restores authored
+slots and history; failed restoration preserves both errors and queues numerical
+retry. Scene indexed edits commit common authoring and defer numerical preparation.
+A failed selected rebuild preserves that authoring and retries before a live query
+or physical use. Replacement retains the owner and per-slot policy; pose/disabled
+overrides leave group and child configuration intact. Removal reindexes across
+owner boundaries. Clear retains empty owners and the child/resource association;
+a later child resource edit repopulates its existing group at a new logical index.
+
+The public-only `--shape-edits` consumer now exercises six edits for each scene
+Body/Area role, two failed preparation attempts per edit on the registered owner,
+exact query geometry/indices, weak owner identity and child repopulation. Each role
+warms and measures 128 edited query/full frames at zero owner/all-thread managed
+bytes. The existing raw fixture retains 15 ordinary operations and 45 registered
+failure cases, plus all eight represented built-in geometry families. Fresh JIT
+and strict NativeAOT CPU/no-device, software-Vulkan and registered serial/separate
+profiles also exercise cold supplier borrowing through `--geometry-inputs`; the
+root slot-consumer group checks real query, mass, one-way, lifetime and event paths.
+Evidence: `bin/physics-slot-edit-audit/2026-10-18/validation.json`.
+
+Ten extension rows close; no runtime API or solver implementation changes here.
+One-way policy, other extension operations and full numerical/native/platform/
+network/hardware performance acceptance retain their independent gates. Structural
+authoring may allocate under ADR 0088; the explicit immutable one-way reauthoring
+boundary described below remains separate from zero-allocation physical steps.
+
 ## Body/Area append contract audit
 
 `PhysicsServer.BodyAddShape` and `AreaAddShape`, together with their registered

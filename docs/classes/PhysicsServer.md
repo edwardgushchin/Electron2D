@@ -1,5 +1,7 @@
 # PhysicsServer
 
+The [indexed slot operation audit](../components/physics-shapes.md#indexed-slot-operation-audit) completes registered replace, pose, disable, remove and clear accounting with public scene/raw failure and identity checks. Runtime behavior is unchanged; wider implementation acceptance remains open.
+
 The [Body/Area append audit](../components/physics-shapes.md#bodyarea-append-contract-audit) closes both public append operations and their registered projections under the accepted rigid-pose contract. Pending/disabled slots, exact logical indices, canonical geometry, ownership, rollback/retry and zero warmed managed frames are covered; overall physics acceptance remains separate.
 
 Last updated: 2026-10-18

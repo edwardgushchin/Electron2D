@@ -108,6 +108,7 @@ public static partial class BackendChecks
                 Check(owner == 0 && all == 0 && callbacks == before + 128 && bodyEvents + areaEvents == events && moving.GetRID() == movingRID && Math.Abs(moving.Position.X - start - 12.8f) < .01f,
                     $"128 edited shape/query/full frames: {owner}/{all} B, callbacks={callbacks - before}, motion={moving.Position.X - start}");
                 GeometryEdits();
+                SceneShapeEditChecks(world, root, tree, solver, circle, replacement);
                 Console.WriteLine($"Shape edits {backend?.ToString() ?? "registered"}, threaded={threaded}: 15 ordinary edits, {faults} failure cases, old geometry/history recovery; 128 full frames {owner}/{all} B.");
                 void Frame(int i)
                 {

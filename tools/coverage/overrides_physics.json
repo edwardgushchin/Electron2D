@@ -6298,6 +6298,22 @@
     },
     {
       "godot": [
+        "PhysicsServer2DExtension::method:_area_clear_shapes(RID:)",
+        "PhysicsServer2DExtension::method:_area_remove_shape(RID:,int:)",
+        "PhysicsServer2DExtension::method:_area_set_shape(RID:,int:,RID:)",
+        "PhysicsServer2DExtension::method:_area_set_shape_disabled(RID:,int:,bool:)",
+        "PhysicsServer2DExtension::method:_area_set_shape_transform(RID:,int:,Transform2D:)",
+        "PhysicsServer2DExtension::method:_body_clear_shapes(RID:)",
+        "PhysicsServer2DExtension::method:_body_remove_shape(RID:,int:)",
+        "PhysicsServer2DExtension::method:_body_set_shape(RID:,int:,RID:)",
+        "PhysicsServer2DExtension::method:_body_set_shape_disabled(RID:,int:,bool:)",
+        "PhysicsServer2DExtension::method:_body_set_shape_transform(RID:,int:,Transform2D:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0063/0071/0088/0103: complete engine-owned Body/Area replace, local-pose, disabled, remove and clear operations project the full canonical RebuildShapes input under the accepted rigid-pose contract. Exact owner/resource identity, stable logical slots and cross-group reindexing, child/group policy isolation, pending replacement rejection and disabled/disposed gaps retain shared guards. Raw edits restore authored/history inputs after partial numerical failures, preserve apply/restoration errors and retry dirty geometry. Committed authored scene edits retain deferred scene preparation; repeated selected failures preserve authoring and retry before numerical use. Public --shape-edits covers 15 ordinary raw operations/45 registered failures and all eight built-in geometry families, plus twelve scene edits/24 registered preparation failures, retained weak owners/children and repopulation after clear. Scene Body/Area roles each retain 128 warmed edited query/full frames at strict 0/0 owner/all-thread managed bytes. Fresh JIT/strict NativeAOT CPU without a device, software-GPU and registered serial/separate edit/geometry-input profiles and the root slot-consumer group verify the projection; structural authoring and explicit immutable one-way publication retain their separate allocation boundaries. This closes these ten operation rows, not other extension/one-way/provider algorithms or full numerical/native/foreign/network/hardware/performance acceptance. Evidence: bin/physics-slot-edit-audit/2026-10-18/validation.json and docs/components/physics-shapes.md#indexed-slot-operation-audit."
+    },
+    {
+      "godot": [
         "PhysicsServer2D::method:body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
         "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)"
       ],

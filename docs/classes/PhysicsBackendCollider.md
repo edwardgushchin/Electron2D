@@ -1,5 +1,7 @@
 # PhysicsBackendCollider
 
+The [indexed slot operation audit](../components/physics-shapes.md#indexed-slot-operation-audit) completes replace, pose, enable/disable, remove and clear projections through `RebuildShapes`. Raw failed edits roll back; scene failed preparation retains committed authored slots and retries. Both paths preserve group/child identity and logical query indices.
+
 The [Body/Area append operation](../components/physics-shapes.md#bodyarea-append-contract-audit) projects through the complete existing `RebuildShapes` span. Engine-owned slots retain exact indices, enabled policy, resource and pose identity across scene/raw callers; this operation is accounted as implemented without certifying every other extension operation or provider algorithm.
 
 Last updated: 2026-10-18

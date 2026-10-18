@@ -359,6 +359,13 @@ def main():
                              if any(f"method _{kind}_get_shape{suffix}(" in row
                                     for kind in ("body", "area") for suffix in ("", "_count", "_transform"))]
     assert len(extension_shape_reads) == 6 and all(" | Implemented | " in row for row in extension_shape_reads)
+    indexed_names = [f"_{role}_{operation}" for role in ("body", "area")
+                     for operation in ("set_shape", "set_shape_transform", "set_shape_disabled", "remove_shape", "clear_shapes")]
+    indexed_rows = [row for row in pages[CLASS_PAGES / "PhysicsServer2DExtension.md"].splitlines()
+                    if any(f"method {name}(" in row for name in indexed_names)]
+    assert len(indexed_rows) == 10
+    assert all(" | Implemented | " in row and "deferred scene preparation" in row and "24" in row
+               and "accepted rigid-pose contract" in row for row in indexed_rows)
     metadata_names = [f"_{kind}_get_{member}" for kind in ("body", "area")
                       for member in ("space", "collision_layer", "collision_mask", "object_instance_id", "canvas_instance_id")]
     metadata_names.append("_body_get_collision_priority")

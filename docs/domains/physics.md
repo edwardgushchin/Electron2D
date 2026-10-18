@@ -1,5 +1,9 @@
 # Physics domain
 
+[Indexed Body/Area slot edits](../components/physics-shapes.md#indexed-slot-operation-audit) now have a complete registered operation audit, including repeated deferred scene preparation failures and retained owner/child topology. Ten extension rows become Implemented; the current unique physics ledger has 180 open declarations: 149 Partial, 14 Unimplemented and 17 Blocked. Full numerical and native/platform/network/hardware performance acceptance remain open; older counts below are historical.
+
+The latest ordinary frozen `02b3328e` full run failed the CPU resting-material allocation gate at 5600/10256 owner/all-thread bytes. The [current audit](../components/physics-contract-audit.md) retains its exact artifact and unresolved cause; passing slot profiles do not close this full-suite gate.
+
 [Body/Area shape append](../components/physics-shapes.md#bodyarea-append-contract-audit) now has a fresh pinned/default/lifecycle and selected-input audit. Both public operations and both registered projections become Implemented after 52 JIT/strict NativeAOT CPU/software-GPU/registered profiles; runtime code is unchanged. The current unique physics ledger has 190 open declarations: 159 Partial, 14 Unimplemented and 17 Blocked. Complete physics and hardware/native/platform/performance acceptance remain open; older counts below are historical.
 
 [Cold query geometry](../components/physics-queries.md#cold-query-geometry) now borrows the using world before procedural CPU/GPU geometry is read, including caller-created direct-space and selected pair inputs. This closes the reproduced final-world release during CPU query construction and guards numerical writes, failure/retry and nested cache preparation. The physics ledger remains 194 open declarations (163 Partial, 14 Unimplemented, 17 Blocked); complete-goal acceptance stays open.
