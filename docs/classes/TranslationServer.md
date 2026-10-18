@@ -1,6 +1,6 @@
 # TranslationServer
 
-Last updated: 2026-10-13
+Last updated: 2026-10-18
 
 **Inherits:** —
 
@@ -34,7 +34,7 @@ string text = TranslationServer.Translate("ui", "menu.play");
 | Member | Description |
 | --- | --- |
 | [`public static CultureInfo Culture { get; set; }`](#p-electron2d-translationserver-culture) | Gets or sets the culture used for subsequent translation lookups. |
-| `public static bool PseudolocalizationEnabled { get; set; }` | Proxies the main domain's singular pseudolocalization switch. |
+| `public static bool PseudolocalizationEnabled { get; set; }` | Proxies the main domain's singular pseudolocalization switch and notifies the application loop after every assignment. |
 
 ## Methods
 
@@ -68,7 +68,7 @@ string text = TranslationServer.Translate("ui", "menu.play");
 
 Gets or sets the culture used for subsequent translation lookups.
 
-**Value:** The process-wide lookup culture, initialized from `Globalization.CultureInfo.CurrentUICulture`. Each Engine start samples the active [`ProjectSettings.LocaleTest`](ProjectSettings.md#localetest) override; an empty setting samples the current managed UI culture. Assigning this property changes subsequent lookups immediately.
+**Value:** The process-wide lookup culture, initialized from `Globalization.CultureInfo.CurrentUICulture`. Each Engine start samples the active [`ProjectSettings.LocaleTest`](ProjectSettings.md#localetest) override; an empty setting samples the current managed UI culture. Assigning this property changes subsequent lookups immediately. A different culture name synchronously notifies the attached `Engine.MainLoop` after the setter lock is released. Equal-name assignment retains the supplied managed object without another notification. Scene delivery requires its owner thread; a notification error leaves the culture committed. Independent library trees use explicit notification.
 
 **Exceptions**
 
@@ -192,12 +192,12 @@ Removes all direct singular/plural registrations and resource registrations with
 
 `GetTranslations`, `FindTranslations`, `GetTranslationObject`, `HasTranslation`, `HasTranslationForLocale`, and `GetLoadedLocales` are convenience operations on the main domain. Arrays are independent snapshots of borrowed resources. `FindTranslations` accepts normalized exact locale or positive-score language matches, according to `exact`. `GetTranslationObject` chooses the highest score. A concurrently disposed catalog is omitted from locale queries.
 
-`PseudolocalizationEnabled` and `Pseudolocalize` use the main domain's options. `Pseudolocalize` applies those options even if the switch is false. Singular lookup transforms both translated text and missing-message fallback when the switch is true. Plural lookup does not transform its result. See [`TranslationDomain`](TranslationDomain.md) for the options and limits.
+`PseudolocalizationEnabled` and `Pseudolocalize` use the main domain's options. Every server switch assignment, including an equal value, sends a post-commit synchronous notification to the current MainLoop; direct domain option changes keep explicit refresh. `Pseudolocalize` applies those options even if the switch is false. Singular lookup transforms both translated text and missing-message fallback when the switch is true. Plural lookup does not transform its result. See [`TranslationDomain`](TranslationDomain.md) for the options and limits.
 
 <a id="reloadpseudolocalization"></a>
 ### `public static void ReloadPseudolocalization()`
 
-Reads the eight active transform settings from [`ProjectSettings`](ProjectSettings.md) and updates the main domain. It leaves the runtime `PseudolocalizationEnabled` switch unchanged. `Engine.Run` loads the project switch and these options before native scene activation; `Engine.Start` loads them before attaching a caller-supplied loop, whose scene may already have delivered ready callbacks. This managed reload does not reload asset remaps or send a translation-changed notification to an active scene.
+Reads the eight active transform settings from [`ProjectSettings`](ProjectSettings.md) and updates the main domain. It leaves the runtime `PseudolocalizationEnabled` switch unchanged. `Engine.Run` loads the project switch and these options before native scene activation; `Engine.Start` publishes the caller-supplied MainLoop before loading them and notifying it; an already constructed scene may have delivered ready callbacks earlier. Explicit reload sends a synchronous translation notification to the attached application loop after applying every option. Project startup prepares culture, fallback and options before one notification. Active SceneTree delivery requires its owner thread; notification failure does not roll back committed options. Asset remaps are not reloaded.
 
 ## State and key rules
 

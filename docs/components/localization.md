@@ -1,6 +1,6 @@
 # Translation component
 
-Last updated: 2026-10-13
+Last updated: 2026-10-18
 
 ## Scope
 
@@ -14,6 +14,17 @@ This Localization component stores and resolves domain/context translations for 
 
 Direct registration and contextual, mutable resource catalogs execute through the same lookup path. A registered domain can override culture and enablement and pseudolocalize singular results. Two typed project settings select the startup test culture and fallback locale; nine further settings supply pseudolocalization enablement and main-domain transforms. A twelfth setting selects the initial scene-root auto-translate mode. `TranslationServer.ReloadPseudolocalization` reapplies the eight transforms during a run without toggling enablement. Resource duplication copies independent message containers. Optimized catalogs generate hash-keyed, optionally Brotli-compressed values, skip contextual entries, keep only the first plural form, hide source keys, and duplicate their lookup maps. Typed Translation archives now execute through ResourceLoader; UTF-8 PO/MO catalogs import through ResourceLoader; operating-system locale discovery remains unimplemented.
 
+<a id="application-translation-notifications"></a>
+## Application translation notifications
+
+Changing `TranslationServer.Culture` to a different culture name commits that culture and then synchronously sends `NotificationTranslationChanged` through the current `Engine.MainLoop`. Equal-name assignment retains the caller's managed CultureInfo object without another notification. Server `PseudolocalizationEnabled` assignments notify even when equal. Explicit `ReloadPseudolocalization` prepares all eight options before notifying, preserving runtime enablement; startup prepares culture, fallback and options before one notification to an already attached loop. Direct catalog edits and domain-local policy retain their explicit refresh contract. Asset remaps remain absent.
+
+SceneTree uses its existing depth-first hierarchy snapshot and revalidates live membership before every callback, including paused/disabled nodes. Notification errors are aggregated after later nodes run, without rolling back the committed language. Independent library trees are refreshed explicitly. Scene delivery requires its owner thread: a foreign Culture setter can commit global state before delivery rejects, so callers use the ordinary scene scheduler for owner notification. The setter releases its own catalog lock before callbacks; the separate direct-plural-selector locked contract remains unchanged.
+
+Reentrant delivery uses independent prepared buffers at each nesting depth. Capture and delivery release node references on success or failure. Successful delivery at prepared hierarchy/depth capacity avoids the former recursive iterator/array allocations. This uses the existing MainLoop notification path and creates no observer registry or background dispatcher.
+
+The public `BackendChecks.RunLocaleChanges` consumer executes immediate translation, paused nodes, numerical identity, nested changes, removed snapshot candidates, callback failures, cross-thread rejection and explicit owner scheduling, pseudolocalization reload and a subsequent generic MainLoop startup. Eighteen root/JIT/strict NativeAOT CPU/software-Vulkan/registered owner/separate profiles measure 2304 complete moving physics/query intervals with actual language changes and strict zero owner/all-thread managed bytes. Five related regressions cover Node/MainLoop, GUI contexts, locale catalogs, gettext import and native glyph output. Linux Wayland GPU and compatibility renderers independently match all three glyph states, including the automatic global culture change, in six captured PNGs. Evidence: `bin/physics-locale-notifications/2026-10-18/validation.json`. The legacy MainLoop allocation test now warms both measured frame lanes; its former cold physics call reproduced the same 120 bytes on the preceding commit. Native memory, hardware GPU speed/window FPS and human acceptance are unmeasured; the hardware power cable remains unverified.
+
 ## Dependencies
 
 The component depends on typed Core project settings, .NET globalization, collections, cryptography and Brotli compression. It has no SDL3-CS dependency.
@@ -24,7 +35,7 @@ Singular keys consist of culture, domain, context, and source message. Plural ke
 
 Direct plural registrations take `Func<long, string>`. Resource catalogs store plural-form lists and select an index through `Func<long, int>`; English has its source fallback, while other locales with multiple forms require a selector.
 
-Scene [`Control`](../classes/Control.md) can use a domain's selected culture and registered catalog when resolving application-locale layout direction. Explicit LTR/RTL remains independent of translation. Managed culture direction and catalog presence drive the current geometric mirror; root/forced project policies now execute in both Window and Control. Native locale alias tables and automatic scene reflow after a global culture change remain incomplete.
+Scene [`Control`](../classes/Control.md) can use a domain's selected culture and registered catalog when resolving application-locale layout direction. Explicit LTR/RTL remains independent of translation. Managed culture direction and catalog presence drive the current geometric mirror; root/forced project policies now execute in both Window and Control. Global culture notifications now refresh active scene consumers. Exact runtime locale/catalog negotiation remains incomplete.
 
 ## Threading
 
@@ -32,13 +43,13 @@ Direct registration, domain registry changes, clearing, and culture changes use 
 
 ## Exclusions
 
-The component does not load catalog files, format parameters, infer plural rules, or select culture from the operating system after startup. Reloading pseudolocalization does not reload asset remaps or notify an active scene of a translation change; local node domain and mode changes do notify affected nodes. Optimized catalogs do not implement the source engine's serialized Smaz format or restrict `Generate` to an editor build in the shared assembly.
+The component imports bounded UTF-8 PO/MO catalogs and supplies prepared integer plural rules. It does not format parameters, select culture from the operating system after startup or reload asset remaps. Local node domain/mode changes and application culture/pseudolocalization operations notify their affected consumers as described above. Optimized catalogs do not implement the source engine's serialized Smaz format or restrict `Generate` to an editor build in the shared assembly.
 
 ## Verification
 
 Tests cover parent-culture lookup, source fallback, scored regional selection, project fallback, domain selection, direct and resource plural selectors, contextual edits, optimized compressed lookup and key hiding, independent duplication, removal, disposal, per-object disabling, domain locale override, singular pseudolocalization, typed project-setting persistence, startup sampling and transform reload. SDL dummy `WindowRuntimeTests` verifies startup sampling before scene ready. A warmed 1,024-call direct optimized lookup check measured 0 managed allocated bytes on Linux/.NET 8. Native or external allocations, the complete server lookup route, total catalog memory use, and reference locale-alias/default-script parity remain unmeasured or unaudited.
 
-Generated numeric input now uses TranslationServer.FormatNumber/ParseNumber/GetPercentSign with exact rune/decimal/exponent data for nine systems and 92 locale identities. The SpinBox first consumer respects Control.LocalizeNumeralSystem; ordinary text is unchanged. Independent locale vectors include supplementary-plane digits, unknown-locale identity and hyphen spellings. Global locale notifications and broader CLDR/alias negotiation remain separate prerequisites.
+Generated numeric input now uses TranslationServer.FormatNumber/ParseNumber/GetPercentSign with exact rune/decimal/exponent data for nine systems and 92 locale identities. The SpinBox first consumer respects Control.LocalizeNumeralSystem; ordinary text is unchanged. Independent locale vectors include supplementary-plane digits, unknown-locale identity and hyphen spellings. Global locale notifications execute through the current application loop; broader CLDR/alias negotiation remains separate.
 
 The permanent `ProjectSettings.RootNodeLayoutDirection` integer selector accepts only 0 application locale, 1 LTR, 2 RTL and 3 system UI locale (default 0). `ForceRightToLeftLayoutDirection` is a permanent boolean, default false. Both support save/load and feature overrides and are sampled independently for each SceneTree before entry. Explicit node LTR/RTL choices override forced policy; other modes are forced RTL when enabled. Global project edits affect subsequent trees, while detached nodes read current settings. [ProjectLayoutDirectionTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionTests.cs) and native [ProjectLayoutDirectionNativeTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionNativeTests.cs) verify the executable profile.
 

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Electron2D;
 
 internal static partial class GUITranslationContextTests
@@ -42,6 +43,8 @@ internal static partial class GUITranslationContextTests
                         if (actual.R > .2f) ink++;
                     }
                 Check(ink > 30, "Comparison contains actual glyph pixels.");
+                if (Environment.GetEnvironmentVariable("ELECTRON2D_LOCALE_CAPTURE") is { Length: > 0 } folder)
+                    image.SavePNG(System.IO.Path.Combine(folder, $"{backend}-{frames + 1}.png"));
                 frames++;
                 if (frames == 1)
                 {
@@ -50,10 +53,15 @@ internal static partial class GUITranslationContextTests
                     contextual.Notify(Node.NotificationTranslationChanged); expected.Text = "BBBBBB";
                     Check(contextual.GetTotalCharacterCount() == 6, "Native notification rebuilds contextual text.");
                 }
+                else if (frames == 2)
+                {
+                    TranslationServer.Culture = CultureInfo.GetCultureInfo("fr"); expected.Text = "CCCCCCCC";
+                    Check(contextual.GetTotalCharacterCount() == 8, "Global culture publication refreshes actual prepared glyph text without manual notification.");
+                }
                 else window.Tree!.Quit();
             };
         };
-        Check(Engine.Run(window) == 0 && frames == 2, "Contextual GUI renders both states and completes native lifecycle.");
-        Console.WriteLine($"GUI translation context {backend}: independently matched initial and refreshed glyph pixels passed.");
+        Check(Engine.Run(window) == 0 && frames == 3, "Contextual GUI renders all states and completes native lifecycle.");
+        Console.WriteLine($"GUI translation context {backend}: independently matched initial, contextual and global-culture glyph pixels passed.");
     }
 }

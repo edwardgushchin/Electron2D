@@ -1,6 +1,6 @@
 # Localization domain
 
-Last updated: 2026-10-13
+Last updated: 2026-10-18
 
 ## Responsibility
 
@@ -14,7 +14,7 @@ Its production source lives under `src/Core/String/`, matching its low-level eng
 | --- | --- | --- |
 | [Translation](../components/localization.md) | Thread-safe direct and resource-backed translation registration and resolution | Implemented for in-memory lookup; locale-rule and asset gaps remain |
 
-Production types are [`TranslationServer`](../classes/TranslationServer.md), [`TranslationDomain`](../classes/TranslationDomain.md), [`Translation`](../classes/Translation.md), and [`OptimizedTranslation`](../classes/OptimizedTranslation.md). `ElectronObject` delegates `Tr` and `TrN` to this domain when per-object translation is enabled. Scene-owned [`Node`](../classes/Node.md) adds inherited domains and automatic translation policy. [`Control`](../classes/Control.md) consults the selected culture and registered catalog for locale-derived rectangle direction; exact native locale aliases and global scene refresh remain gaps.
+Production types are [`TranslationServer`](../classes/TranslationServer.md), [`TranslationDomain`](../classes/TranslationDomain.md), [`Translation`](../classes/Translation.md), and [`OptimizedTranslation`](../classes/OptimizedTranslation.md). `ElectronObject` delegates `Tr` and `TrN` to this domain when per-object translation is enabled. Scene-owned [`Node`](../classes/Node.md) adds inherited domains and automatic translation policy. [`Control`](../classes/Control.md) consults the selected culture and registered catalog for locale-derived rectangle direction; application culture and pseudolocalization changes now refresh the active MainLoop synchronously after state commits. Exact runtime locale/catalog negotiation and asset remaps remain gaps.
 
 ## Public surface
 
@@ -68,3 +68,5 @@ The permanent `ProjectSettings.RootNodeLayoutDirection` integer selector accepts
 Input is bounded to 16 MiB, 100,000 messages, 64 forms and 4096 rule characters, with 256 expression nodes and 64 nesting levels. Expressions use unsigned 64-bit integer arithmetic, normal operator precedence, ternary and short-circuit logic; divide-by-zero or an out-of-range result fails lookup. PO supports contexts, continued quoted strings, C single-character escapes and contiguous plural indexes; fuzzy and obsolete entries are skipped. MO checks revisions, tables, terminators and aggregate decoded bytes. Non-UTF-8 encodings and system-dependent MO extensions fail explicitly. Import is read-only; save the resource as `.e2dres`.
 
 `TranslationCatalogTests` exercises import, malformed input, cache/threaded paths, fresh-process archive restoration, override priority, copying and zero-byte warm selection. Native language-menu consumers use an imported rule with reordered forms and check rendered two/five-item pixels on GPU and compatibility renderers. These are Linux x64 checks, not foreign-platform acceptance.
+
+Application notification ownership, reentry, failure handling and measured public physical/native glyph consumers are documented in [translation notifications](../components/localization.md#application-translation-notifications). Independent library trees use explicit notification; active SceneTree delivery requires its owner thread.

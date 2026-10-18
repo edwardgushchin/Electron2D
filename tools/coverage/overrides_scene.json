@@ -5890,6 +5890,21 @@
       "godot": "Node::property:scene_file_path",
       "electron2d": "property:Electron2D.Node.SceneFilePath()",
       "reason": "Pinned ed1daf0b Node.xml owner/property have no deprecated metadata. Node::set_scene_file_path accepts text, commits and emits authoring state even for an equal value; Node::get_scene_file_path reads local metadata, and property registration uses PROPERTY_USAGE_NONE. ADRs0004/0008/0023/0090 preserve a public writable nonstored typed descriptor, empty default/revert, noninheritance and separate nonroot origin capture. Root reconstruction uses the actual template path; opaque edits do not load or retarget linked templates. Owner/capture/physical-borrow guards and a post-validation lifetime recheck protect commitment. Expanded public EditorState checks cover six node roles, signal blocking/reentrancy/errors, typed editing/revert, sleeping/RID/tick preservation, worker rejection, memory/file/nested recapture and real failed/successful CurrentScene reload with fresh physical identities. Eighteen CPU/software-Vulkan/registered serial/separate root/JIT/strict NativeAOT profiles execute18 fresh child scenes,128 measured moving/editing/query frames each at0/0 owner/all-thread managed bytes; deferred/connection regressions also pass. Evidence: bin/physics-scene-file-path/2026-10-18/validation.json. Native memory, target hardware/FPS, full numerical/inherited and goal acceptance remain separate."
+    },
+    {
+      "godot": "Node::property:auto_translate_mode",
+      "electron2d": "property:Electron2D.Node.AutoTranslateMode()",
+      "reason": "ADR 0007: automatic policy, root setting, inherited domains and local mode changes execute in NodeLocalizationTests. Application culture and pseudolocalization changes now notify the current MainLoop after state commits, with owner guards, reentrant snapshots, failure continuation and host lifetime checked by public physical consumers. Eighteen CPU/software-Vulkan/registered root/JIT/strict NativeAOT owner/separate profiles measure 2304 complete moving physics/query intervals at strict 0/0 managed bytes; GUI context and actual Wayland GPU/compatibility glyph checks also pass. Independent library trees retain explicit refresh. Evidence: bin/physics-locale-notifications/2026-10-18/validation.json."
+    },
+    {
+      "godot": "Node::method:atr(String:,StringName:)",
+      "electron2d": "method:Electron2D.Node.Atr(System.String,System.String)",
+      "reason": "ADR 0007: automatic policy, root setting, inherited domains and local mode changes execute in NodeLocalizationTests. Application culture and pseudolocalization changes now notify the current MainLoop after state commits, with owner guards, reentrant snapshots, failure continuation and host lifetime checked by public physical consumers. Eighteen CPU/software-Vulkan/registered root/JIT/strict NativeAOT owner/separate profiles measure 2304 complete moving physics/query intervals at strict 0/0 managed bytes; GUI context and actual Wayland GPU/compatibility glyph checks also pass. Independent library trees retain explicit refresh. Evidence: bin/physics-locale-notifications/2026-10-18/validation.json. Exact runtime locale/catalog negotiation remains Partial on TranslationServer."
+    },
+    {
+      "godot": "Node::method:atr_n(String:,StringName:,int:,StringName:)",
+      "electron2d": "method:Electron2D.Node.AtrN(System.String,System.String,System.Int64,System.String)",
+      "reason": "ADR 0007: automatic policy, root setting, inherited domains and local mode changes execute in NodeLocalizationTests. Application culture and pseudolocalization changes now notify the current MainLoop after state commits, with owner guards, reentrant snapshots, failure continuation and host lifetime checked by public physical consumers. Eighteen CPU/software-Vulkan/registered root/JIT/strict NativeAOT owner/separate profiles measure 2304 complete moving physics/query intervals at strict 0/0 managed bytes; GUI context and actual Wayland GPU/compatibility glyph checks also pass. Independent library trees retain explicit refresh. Evidence: bin/physics-locale-notifications/2026-10-18/validation.json. Exact runtime locale/catalog negotiation remains Partial on TranslationServer."
     }
   ],
   "extras": [
@@ -9662,15 +9677,6 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Automatic policy, singular/plural source fallback, root setting and change notifications execute in NodeLocalizationTests. Control default contexts, actual GUI text consumers and fresh-file/native glyph output execute in GUITranslationContextTests. Exact locale/catalog parity remains Partial on TranslationServer; global locale-change scene notification and inherited full-family acceptance remain separate prerequisites.",
-      "godot": [
-        "Node::method:atr(String:,StringName:)",
-        "Node::method:atr_n(String:,StringName:,int:,StringName:)",
-        "Node::property:auto_translate_mode"
-      ]
-    },
-    {
       "state": "Implemented",
       "reason": "The typed boolean default and persistence are checked in LocalizationProjectSettingsTests; SceneTree samples it once before root entry, and NodeLocalizationTests checks both values and runtime retention.",
       "godot": [
@@ -11921,6 +11927,21 @@
       ],
       "state": "Implemented",
       "reason": "Pinned ed1daf0b Node.xml owner/property have no deprecated metadata. Node::set_scene_file_path accepts text, commits and emits authoring state even for an equal value; Node::get_scene_file_path reads local metadata, and property registration uses PROPERTY_USAGE_NONE. ADRs0004/0008/0023/0090 preserve a public writable nonstored typed descriptor, empty default/revert, noninheritance and separate nonroot origin capture. Root reconstruction uses the actual template path; opaque edits do not load or retarget linked templates. Owner/capture/physical-borrow guards and a post-validation lifetime recheck protect commitment. Expanded public EditorState checks cover six node roles, signal blocking/reentrancy/errors, typed editing/revert, sleeping/RID/tick preservation, worker rejection, memory/file/nested recapture and real failed/successful CurrentScene reload with fresh physical identities. Eighteen CPU/software-Vulkan/registered serial/separate root/JIT/strict NativeAOT profiles execute18 fresh child scenes,128 measured moving/editing/query frames each at0/0 owner/all-thread managed bytes; deferred/connection regressions also pass. Evidence: bin/physics-scene-file-path/2026-10-18/validation.json. Native memory, target hardware/FPS, full numerical/inherited and goal acceptance remain separate."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0007: automatic policy, root setting, inherited domains and local mode changes execute in NodeLocalizationTests. Application culture and pseudolocalization changes now notify the current MainLoop after state commits, with owner guards, reentrant snapshots, failure continuation and host lifetime checked by public physical consumers. Eighteen CPU/software-Vulkan/registered root/JIT/strict NativeAOT owner/separate profiles measure 2304 complete moving physics/query intervals at strict 0/0 managed bytes; GUI context and actual Wayland GPU/compatibility glyph checks also pass. Independent library trees retain explicit refresh. Evidence: bin/physics-locale-notifications/2026-10-18/validation.json.",
+      "godot": [
+        "Node::property:auto_translate_mode"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0007: automatic policy, root setting, inherited domains and local mode changes execute in NodeLocalizationTests. Application culture and pseudolocalization changes now notify the current MainLoop after state commits, with owner guards, reentrant snapshots, failure continuation and host lifetime checked by public physical consumers. Eighteen CPU/software-Vulkan/registered root/JIT/strict NativeAOT owner/separate profiles measure 2304 complete moving physics/query intervals at strict 0/0 managed bytes; GUI context and actual Wayland GPU/compatibility glyph checks also pass. Independent library trees retain explicit refresh. Evidence: bin/physics-locale-notifications/2026-10-18/validation.json. Exact runtime locale/catalog negotiation remains Partial on TranslationServer; that lookup dependency remains open for Atr/AtrN.",
+      "godot": [
+        "Node::method:atr(String:,StringName:)",
+        "Node::method:atr_n(String:,StringName:,int:,StringName:)"
+      ]
     }
   ]
 }

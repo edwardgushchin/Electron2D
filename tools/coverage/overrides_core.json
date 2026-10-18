@@ -35,7 +35,7 @@
     {"godot": "ProjectSettings::property:internationalization/pseudolocalization/prefix", "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationPrefix()", "state": "Partial", "reason": "Typed prefix persists and drives the main-domain transform at startup and reload; scene translation-change notification is absent (ADR 0007)."},
     {"godot": "ProjectSettings::property:internationalization/pseudolocalization/suffix", "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationSuffix()", "state": "Partial", "reason": "Typed suffix persists and drives the main-domain transform at startup and reload; scene translation-change notification is absent (ADR 0007)."},
     {"godot": "ProjectSettings::property:internationalization/pseudolocalization/skip_placeholders", "electron2d": "property:Electron2D.ProjectSettings.PseudolocalizationSkipPlaceholders()", "state": "Partial", "reason": "Typed project option drives placeholder preservation at startup and reload; exact formatting-token parity remains unaudited (ADR 0007)."},
-    {"godot": "TranslationServer::method:reload_pseudolocalization()", "electron2d": "method:Electron2D.TranslationServer.ReloadPseudolocalization()", "state": "Partial", "reason": "Reapplies eight typed transform settings while preserving runtime enablement; asset remaps and active-scene translation-change notification are not yet integrated (ADR 0007)."},
+    {"godot": "TranslationServer::method:reload_pseudolocalization()", "electron2d": "method:Electron2D.TranslationServer.ReloadPseudolocalization()", "state": "Partial", "reason": "ADR 0007 reapplies all eight typed transforms before one current-MainLoop notification while preserving runtime enablement. Startup coherently prepares culture/fallback/options before its notification. Public physical and native-glyph consumers execute in bin/physics-locale-notifications/2026-10-18/validation.json; asset remap reload remains absent."},
     {"godot": "InputMap::method:load_from_project_settings()", "electron2d": "method:Electron2D.InputMap.LoadFromProjectSettings()", "state": "Partial", "reason": "The typed version-one project schema replaces untyped action dictionaries and atomically swaps the live map. Managed round-trip, rollback and callback ordering are verified; full source event-family and platform parity remain unaudited (ADR 0038)."},
     {"godot": "InputMap::signal:project_settings_loaded()", "electron2d": "event:Electron2D.InputMap.ProjectSettingsLoaded()", "state": "Implemented", "reason": "Raised synchronously after committed typed action reload; failed validation does not raise it. InputActionSettingsTests verifies callback order and failure state (ADR 0038)."},
     {"godot": "ProjectSettings::property:input/ui_focus_next", "electron2d": "property:Electron2D.ProjectSettings.InputUIFocusNext()", "state": "Partial", "reason": "Registered typed input-action key with an executable GUI focus consumer and project-file round-trip; exact platform-specific reference defaults and all input setting families remain unaudited (ADR 0038)."},
@@ -481,12 +481,12 @@
     {
       "electron2d": "property:Electron2D.TranslationServer.Culture()",
       "godot": "TranslationServer::method:get_locale()",
-      "reason": "CultureInfo property replaces locale-string operation (ADR 0007)."
+      "reason": "ADR 0007 projects the process UI culture through CultureInfo. Application culture notifications now execute after commit through Engine.MainLoop with the public physics/native-glyph cohort in bin/physics-locale-notifications/2026-10-18/validation.json. Exact runtime locale/catalog negotiation and asset remap integration remain open."
     },
     {
       "electron2d": "property:Electron2D.TranslationServer.Culture()",
       "godot": "TranslationServer::method:set_locale(String:)",
-      "reason": "CultureInfo property replaces locale-string operation (ADR 0007)."
+      "reason": "ADR 0007 projects locale assignment through CultureInfo, retaining supplied identity and suppressing equal-name notification. Different names commit before synchronous current-MainLoop delivery; owner rejection, reentry, callback errors and independent trees execute in bin/physics-locale-notifications/2026-10-18/validation.json. Exact runtime locale/catalog negotiation and asset remaps remain open."
     },
     {
       "electron2d": "method:Electron2D.ProjectSettings.GetChangedSettings()",
@@ -1010,7 +1010,8 @@
       "godot": "Object::method:is_connected(StringName:,Callable:)",
       "electron2d": "property:Electron2D.EventConnection.IsConnected()",
       "reason": "ADRs 0002/0010: EventConnection.IsConnected reports logical acceptance for the exact owned typed subscription. Existing EventConnection checks cover reusable/one-shot/disposed state, recursion/concurrency, queued cancellation and accessor/scheduler errors; EventConnectionPhysicsTests retains actual CPU/GPU Area/body callbacks and strict zero warmed immediate frame bytes. This token cannot detect a publisher independently clearing/replacing its invocation list, enumerate another publisher/handler pair or supply dynamic-name introspection; those remaining capabilities are not certified by this mapping."
-    }
+    },
+    {"godot": "TranslationServer::property:pseudolocalization_enabled", "electron2d": "property:Electron2D.TranslationServer.PseudolocalizationEnabled()", "reason": "ADR 0007 projects main-domain enablement; every server assignment now notifies the current MainLoop, including equal values, with committed-state/failure/host lifetime checks in bin/physics-locale-notifications/2026-10-18/validation.json. Exact transform/reference lookup acceptance remains on the translation domain audit."}
   ],
   "extras": [
     {"electron2d": "method:Electron2D.ElectronObject.BeginEventEmission`1(TDelegate)", "reason": "ADRs 0002/0010: protected typed publisher gateway for ordinary C# events. Returns the same concrete delegate or null once per emission without allocations, boxing, dynamic signal names or arity adapters; custom borrowed-span signatures and caller lifetime/thread validation remain intact. Direct CLR delegate calls remain ordinary language operations.", "adr": "adr-0010"},
@@ -2408,6 +2409,10 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0001/0004/0005/0091: compiled object subtypes provide ordinary typed C# GetEnumerator/MoveNext/Current and optional IEnumerable<T>. The first MoveNext combines initialization/end detection; Current reads without advancing, and per-cursor state supports independent/nested loops. This is a language/BCL projection, not a universal engine value/cursor API or an exclusion. Public ObjectIterationTests verifies empty/repeated/nested/explicit and interface consumers, typed borrowed identities, early exit and construction/move/current/cleanup/body errors, caller-owned lifetime guards and actual force/state callbacks. CPU/software-Vulkan/registered owner/separate full moving frames require strict zero owner/all-thread managed bytes through unboxed struct-pattern cursors. Interface boxing and user collection/thread/lifetime policies remain explicit; no automatic script binding or arbitrary cursor correctness is inferred."
-    }
+    },
+    {"state": "Partial", "reason": "ADR 0007 projects the process UI culture through CultureInfo. Application culture notifications now execute after commit through Engine.MainLoop with the public physics/native-glyph cohort in bin/physics-locale-notifications/2026-10-18/validation.json. Exact runtime locale/catalog negotiation and asset remap integration remain open.", "godot": ["TranslationServer::method:get_locale()"]},
+    {"state": "Partial", "reason": "ADR 0007 projects locale assignment through CultureInfo, retaining supplied identity and suppressing equal-name notification. Different names commit before synchronous current-MainLoop delivery; owner rejection, reentry, callback errors and independent trees execute in bin/physics-locale-notifications/2026-10-18/validation.json. Exact runtime locale/catalog negotiation and asset remaps remain open.", "godot": ["TranslationServer::method:set_locale(String:)"]},
+    {"state": "Partial", "reason": "ADR 0007 reapplies all eight typed transforms before one current-MainLoop notification while preserving runtime enablement. Startup coherently prepares culture/fallback/options before its notification. Public physical and native-glyph consumers execute in bin/physics-locale-notifications/2026-10-18/validation.json; asset remap reload remains absent.", "godot": ["TranslationServer::method:reload_pseudolocalization()"]},
+    {"state": "Partial", "reason": "ADR 0007 projects main-domain enablement; every server assignment now notifies the current MainLoop, including equal values, with committed-state/failure/host lifetime checks in bin/physics-locale-notifications/2026-10-18/validation.json. Exact transform/reference lookup acceptance remains on the translation domain audit.", "godot": ["TranslationServer::property:pseudolocalization_enabled"]}
   ]
 }

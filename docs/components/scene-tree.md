@@ -19,6 +19,8 @@ All engine objects expose inherited ElectronObject.IsQueuedForDeletion. Each exp
 
 A queued deletion detaches its node before Dispose. An inherited CancelDisposal veto consumes only that attempt: the node remains alive and detached, the claim/explicit mark is released, and a later request may retry. Duplicate explicit entries remain distinct attempts. A root veto cannot keep a finalized SceneTree alive; its detached subtree may be reactivated by a later tree.
 
+System notification snapshots now reuse independent buffers for each active reentry depth, clear retained references on every exit and revalidate live membership before callbacks. The current application loop receives committed culture/pseudolocalization changes from TranslationServer. See [translation delivery](localization.md#application-translation-notifications).
+
 ## Owned types
 
 | Type | Role |

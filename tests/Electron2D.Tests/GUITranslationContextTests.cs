@@ -20,6 +20,7 @@ internal static partial class GUITranslationContextTests
         TranslationServer.AddTranslation(culture, Domain, "Token", "AAAA", "action");
         TranslationServer.AddTranslation(culture, Domain, "Token", "BBBBBB", "noun");
         TranslationServer.AddTranslation(culture, Domain, "Token", "explicit", "override");
+        TranslationServer.AddTranslation(CultureInfo.GetCultureInfo("fr"), Domain, "Token", "CCCCCCCC", "noun");
         TranslationServer.AddPluralTranslation(culture, Domain, "one", "many", n => n == 1 ? "A" : "AA", "action");
         TranslationServer.AddPluralTranslation(culture, Domain, "one", "many", _ => "O", "override");
     }

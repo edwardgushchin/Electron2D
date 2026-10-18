@@ -31,7 +31,12 @@ public static partial class TranslationServer
 
     /// <summary>Gets or sets the culture used for subsequent translation lookups.</summary>
     /// <value>The process-wide lookup culture, initialized from <see cref="CultureInfo.CurrentUICulture"/> and sampled again at Engine startup unless a project test locale is configured.</value>
+    /// <remarks>A different culture name synchronously notifies <see cref="Engine.MainLoop"/> after commitment and
+    /// release of the setter's catalog lock. Equal-name assignment retains the supplied managed culture without
+    /// another notification. An active SceneTree requires owner-thread delivery; independent library trees are
+    /// notified explicitly. Notification failure does not roll back the culture.</remarks>
     /// <exception cref="ArgumentNullException">The assigned value is <see langword="null"/>.</exception>
+    /// <exception cref="Exception">The active application loop rejects notification or an observer fails after commitment.</exception>
     public static CultureInfo Culture
     {
         get
@@ -42,9 +47,13 @@ public static partial class TranslationServer
         set
         {
             ArgumentNullException.ThrowIfNull(value);
-
+            bool changed;
             lock (Gate)
+            {
+                changed = !string.Equals(_culture.Name, value.Name, StringComparison.Ordinal);
                 _culture = value;
+            }
+            if (changed) NotifyTranslationChanged();
         }
     }
 
@@ -300,10 +309,14 @@ public static partial class TranslationServer
     }
 
     /// <summary>Gets or sets pseudolocalization for the main domain.</summary>
+    /// <value>The main domain's runtime transformation switch.</value>
+    /// <remarks>Every assignment, including an equal value, synchronously notifies the attached application loop
+    /// after commitment. Active scene delivery requires its owner thread.</remarks>
+    /// <exception cref="Exception">Application notification fails after the switch is committed.</exception>
     public static bool PseudolocalizationEnabled
     {
         get => GetOrAddDomain(string.Empty).PseudolocalizationEnabled;
-        set => GetOrAddDomain(string.Empty).PseudolocalizationEnabled = value;
+        set { GetOrAddDomain(string.Empty).PseudolocalizationEnabled = value; NotifyTranslationChanged(); }
     }
 
     /// <summary>Pseudolocalizes text using the main domain's options.</summary>
@@ -313,8 +326,18 @@ public static partial class TranslationServer
 
     /// <summary>Reloads the main domain's pseudolocalization transforms from active project settings.</summary>
     /// <remarks>The runtime enablement switch is unchanged; the project switch is sampled when an Engine run starts.
-    /// This managed reload does not reload asset remaps or notify an active scene of a translation change.</remarks>
+    /// After applying every option, the attached application loop receives a synchronous translation notification.
+    /// Active scene delivery requires its owner thread. Asset remaps are not reloaded.</remarks>
+    /// <exception cref="Exception">Option preparation or application notification fails; committed options remain visible.</exception>
     public static void ReloadPseudolocalization()
+    {
+        ApplyProjectPseudolocalization();
+        NotifyTranslationChanged();
+    }
+
+    private static void NotifyTranslationChanged() => Engine.MainLoop?.Notify(MainLoop.NotificationTranslationChanged);
+
+    private static void ApplyProjectPseudolocalization()
     {
         var settings = ProjectSettings.Service;
         var domain = GetOrAddDomain(string.Empty);
@@ -335,13 +358,14 @@ public static partial class TranslationServer
         var fallback = settings.GetWithOverrideCore(ProjectSettings.LocaleFallback).Trim();
         var culture = test.Length == 0 ? CultureInfo.CurrentUICulture : CultureInfo.GetCultureInfo(test.Replace('_', '-'));
         var fallbackCulture = fallback.Length == 0 ? null : CultureInfo.GetCultureInfo(fallback.Replace('_', '-'));
-        ReloadPseudolocalization();
+        ApplyProjectPseudolocalization();
         lock (Gate)
         {
             _culture = culture;
             _fallbackCulture = fallbackCulture;
         }
-        PseudolocalizationEnabled = settings.GetWithOverrideCore(ProjectSettings.PseudolocalizationEnabled);
+        GetOrAddDomain(string.Empty).PseudolocalizationEnabled = settings.GetWithOverrideCore(ProjectSettings.PseudolocalizationEnabled);
+        NotifyTranslationChanged();
     }
 
     /// <summary>Resolves a singular message for the selected culture, nearby catalog locales and the project fallback.</summary>

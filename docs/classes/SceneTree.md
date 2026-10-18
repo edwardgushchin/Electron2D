@@ -1110,3 +1110,5 @@ The [complete processing contract](../components/scene-tree.md#complete-processi
 Scene-authored global shader values now use [ShaderGlobalsOverride](ShaderGlobalsOverride.md). Its typed portable values, tree-order arbitration and renderer-session restoration are described in the [global parameter component](../components/global-shader-parameters.md#scene-owned-overrides).
 
 The [bound node creation audit](../components/tweening.md#bound-node-host-selection) verifies this tree's fresh unbound Tween creation together with Node selection/binding, phase ordering, errors and cleanup in public CPU/software-GPU/registered managed/strict NativeAOT profiles. The creation rows are Implemented; native cadence and full-physics acceptance remain separate.
+
+Application locale and server pseudolocalization changes now enter the existing system-notification path described in [localization](../components/localization.md#application-translation-notifications). Prepared per-depth hierarchy snapshots preserve reentrant ordering, membership checks and failure continuation without warmed delivery allocations.

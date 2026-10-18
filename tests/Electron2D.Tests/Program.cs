@@ -221,6 +221,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_BACKBUFFER") is {
 if (args.Length == 2 && args[0] == "--hdr-storage") { CanvasHDRTests.ReadStorage(args[1]); return; }
 if (args.Length == 2 && args[0] == "--msaa-scene") { CanvasMSAATests.ReadFile(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TWEEN_CONTRACT") == "1") { VerifyTweens(); VerifyTweenInterpolation(); VerifyTweenTypeLifetime(); VerifyTweenCallbackIntervals(); VerifyTweenMethods(); VerifyTweenProperties(); VerifyTweenSubtweens(); VerifyTweenAwaits(); Console.WriteLine("Eight tween contract suites passed."); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOCALE_NODE_CONTRACT") == "1") { NodeLocalizationTests.Run(); TranslationDomainTests.Run(); LocalizationProjectSettingsTests.Run(); VerifyMainLoop(); Console.WriteLine("Node locale contract passed."); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOCALE_CHANGES") is { } localeProfile) { BackendChecks.RunLocaleChanges(localeProfile.StartsWith("gpu", StringComparison.Ordinal) ? PhysicsServer.Backend.GPU : localeProfile.StartsWith("cpu", StringComparison.Ordinal) ? PhysicsServer.Backend.CPU : null, localeProfile.Contains("threaded", StringComparison.Ordinal)); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_TWEENS") is { } tweens) { var backend = tweens.StartsWith("gpu", StringComparison.Ordinal) ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU; PhysicsNodeTweenTests.Run(() => new World(backend), backend.ToString(), tweens.Contains("threaded", StringComparison.Ordinal)); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_COORDINATES") is { } coordinates) { var backend = coordinates.StartsWith("gpu", StringComparison.Ordinal) ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU; CanvasViewportCoordinateTests.Run(() => new World(backend), backend.ToString(), coordinates.Contains("threaded", StringComparison.Ordinal), coordinates.Contains("native", StringComparison.Ordinal)); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TOP_LEVEL_RELATED") == "1") { CanvasSamplingTests.Run(); CanvasTransformNotificationTests.Run(); CanvasLifecycleTests.Run(); return; }
@@ -9354,7 +9356,10 @@ static void VerifyMainLoop()
 
     using var allocationTree = new SceneTree(new Entity());
     for (var index = 0; index < 16; index++)
+    {
         allocationTree.Process(0d);
+        allocationTree.PhysicsProcess(0d);
+    }
     var allocatedBefore = GC.GetAllocatedBytesForCurrentThread();
     for (var index = 0; index < 128; index++)
     {

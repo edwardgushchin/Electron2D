@@ -46,6 +46,8 @@ Selected nodes also emit `EditorStateChanged(this)` for attached process-mode ch
 
 Attached reads require the owner or current processing group. Description/folding/editability writes require the scene owner and reject capture or physical borrowing. Persistent group changes retain current-group access and deliver state events on that worker. Committed disposal clears the new events; canceled disposal preserves them.
 
+Application culture and pseudolocalization changes now deliver `NotificationTranslationChanged` through the current `Engine.MainLoop`, including paused or automatically disabled nodes. `AutoTranslateMode` still controls `Atr`/`AtrN` source fallback independently of explicit `Tr`/`TrN`. Independent library trees use explicit notification. See [delivery, failure and allocation verification](../components/localization.md#application-translation-notifications).
+
 ## Description
 
 The neutral base of every object in a scene tree. Owns ordered children, paths, groups, lifecycle, process/input participation, queued deletion, packed-scene ownership and inherited localization policy. It has no transform, visibility, material or drawing API. Parent/child relationships and callbacks accept Node, so timers and spatial objects share one tree. Physical/hierarchy mutation runs on the tree owner thread; local grouping and processing metadata also allow the current processing group; ready notification enables overridden frame/input callbacks before OnReady, and callers can disable them explicitly. Tree entry is parent-first, readiness is child-first, and teardown continues through callback failures.

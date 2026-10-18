@@ -4,7 +4,7 @@
 
 [Process policy and physics pause](../components/scene-tree.md#process-policy-and-physics-pause) now preserve inherited eligibility notifications, root policy, nested failure handling and worker reads. Paused tree frames stop numerical integration while eligible callbacks continue; explicit owned spaces retain independent clocks. Public CPU/software-Vulkan/registered serial/separate managed and NativeAOT checks cover the slice. Full inherited physics, independent hardware GPU, networking and performance gates remain open.
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
 
 [Window input reception](../classes/Window.md#window-input-reception-and-visibility-notification) now runs before viewport localization and scene callbacks for native and forwarded embedded events. Visibility changes also deliver notification 30 before their typed signal; input ownership and failure cleanup remain in the existing host/tree lifetime.
 
@@ -75,6 +75,8 @@ CanvasItem.GetCanvasItem now supplies a stable weak scene-owned identity for act
 ## Skeletal scene execution
 
 [Skeletal animation](../components/skeletal-animation.md) adds Skeleton/Bone, authored/rest pose separation, automatic endpoints, phase-aware overrides and executable LookAt stacks. Existing AnimationPlayer and canvas inheritance provide actual animation consumers; scene membership/path revisions prepare weak Polygon/target bindings. Editor integration retains its exact coverage dependency.
+
+Active application locale changes now use MainLoop translation notifications and the existing scene propagation path. [Localization](../components/localization.md#application-translation-notifications) defines committed state, owner delivery, reentrancy and explicit independent-tree refresh.
 
 ## Bound node tween creation
 
