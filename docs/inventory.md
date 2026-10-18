@@ -776,7 +776,7 @@ The initial shader/material path is executable for the documented interface. Bro
 
 | Domain | Component | Production type | Source | State |
 | --- | --- | --- | --- | --- |
-| [Resources](domains/resources.md) | [Shader materials](components/shader-materials.md) | [Shader](classes/Shader.md) | [Shader.cs](../src/Scene/Resources/Shader.cs) | Copied SPIR-V programs, uniform discovery and atomic reload; partial shader interface |
+| [Resources](domains/resources.md) | [Shader materials](components/shader-materials.md) | [Shader](classes/Shader.md) | [Shader.cs](../src/Scene/Resources/Shader.cs) | Copied paired SPIR-V programs, original mesh vertex IDs, uniform discovery and atomic reload; partial shader interface |
 | [Resources](domains/resources.md) | [Shader materials](components/shader-materials.md) | [Shader.Mode](classes/Shader.Mode.md) | [Shader.cs](../src/Scene/Resources/Shader.cs) | CanvasItem domain only |
 | [Resources](domains/resources.md) | [Shader materials](components/shader-materials.md) | [Material](classes/Material.md) | [Material.cs](../src/Scene/Resources/Material.cs) | Engine-owned resource base for executable canvas shading |
 | [Rendering](domains/rendering.md) | [Global shader parameters](components/global-shader-parameters.md) | [RenderingServer.GlobalShaderParameterType](classes/RenderingServer.GlobalShaderParameterType.md) | [RenderingServer.GlobalParameters.cs](../src/Servers/Rendering/RenderingServer.GlobalParameters.cs) | Typed session globals consumed by both canvas stages |

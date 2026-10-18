@@ -1,6 +1,6 @@
 # Shader
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 - Declaration: `public sealed class Shader : Resource`
 - Source: [Shader.cs](../../src/Scene/Resources/Shader.cs)
@@ -209,3 +209,5 @@ The public-only source consumer also verifies paired creation/export, resource a
 ## Shared renderer globals
 
 Reserved Globals numeric blocks and GLOBAL_ sampled-image names use the [typed renderer-session global service](../components/global-shader-parameters.md). They are excluded from material parameter descriptors, defaults and stored material values. Shaders retain declarations through reload/archives; renderer-session values remain independent.
+
+For Mesh and triangle-array drawing, authored vertex `gl_VertexIndex`/`SV_VertexID` is the original zero-based surface vertex index. Indices, LODs, expanded primitives, morphs, skinning, instances and batching preserve that identity. Other canvas geometry retains native stream indices. See the [authored vertex interface](../components/shader-materials.md#authored-vertex-stages); vertex deformation retains the existing CPU visibility bounds.

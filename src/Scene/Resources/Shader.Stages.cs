@@ -9,7 +9,10 @@ public sealed partial class Shader
     /// <param name="fragmentBytecode">A fragment module consuming matching canvas varyings.</param>
     /// <returns>A shader owning both validated modules and one shared typed parameter namespace.</returns>
     /// <remarks>Each module is bounded to sixteen MiB. Shared parameter names require matching logical types.
-    /// Hardware instance, lighting and glyph variants belong to the renderer. No active renderer is required.</remarks>
+    /// Hardware instance, lighting and glyph variants belong to the renderer. VertexIndex (GLSL gl_VertexIndex or
+    /// HLSL SV_VertexID) identifies the original surface vertex for mesh and triangle-array drawing, including
+    /// indices, LODs, expanded primitives and instances. Other canvas geometry retains native stream indices.
+    /// Vertex deformation does not update retained CPU bounds. No active renderer is required.</remarks>
     /// <exception cref="ArgumentException">A module or cross-stage parameter/interface is invalid.</exception>
     /// <exception cref="NotSupportedException">A module uses an unsupported canvas interface.</exception>
     public static Shader CreateFromSPIRV(ReadOnlySpan<byte> vertexBytecode, ReadOnlySpan<byte> fragmentBytecode)
@@ -23,7 +26,8 @@ public sealed partial class Shader
     /// <param name="fragmentBytecode">The replacement fragment SPIR-V module.</param>
     /// <remarks>Failure preserves both old stages. Success publishes one immutable version and emits Changed once
     /// unless signals are blocked. Material and per-item values still migrate by name and logical type,
-    /// independently of stage bindings or event delivery.</remarks>
+    /// independently of stage bindings or event delivery. Vertex builtins preserve the original surface index
+    /// for mesh/triangle-array drawing, as in the paired factory.</remarks>
     /// <exception cref="ArgumentException">A module or shared parameter/interface is invalid.</exception>
     /// <exception cref="NotSupportedException">A module uses an unsupported canvas interface.</exception>
     /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>

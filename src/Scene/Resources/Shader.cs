@@ -3,6 +3,8 @@ namespace Electron2D;
 /// <summary>A canvas program loaded from compiled fragment SPIR-V with an optional authored vertex stage.</summary>
 /// <remarks>HLSL and GLSL source is compiled during import or build. Runtime loading checks module structure and
 /// reflected interfaces without compiling source; it does not perform full instruction-level semantic validation.
+/// Paired vertex programs preserve original mesh surface indices through gl_VertexIndex or SV_VertexID,
+/// including expanded primitives, LODs and instances. Other canvas geometry retains native stream indices.
 /// This interface accepts optional float4 color at location zero,
 /// float2 UV at location one, raw float4 instance data at location two, float2 secondary UV at location four, mesh-local float3 normal at five and float4 tangent at six, framebuffer position, and one float4 color output. TEXTURE at set two, binding zero
 /// samples the current canvas command, or opaque white for untextured geometry; it is not a material parameter.

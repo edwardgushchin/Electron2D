@@ -14,6 +14,7 @@ internal static class CanvasVertexProgram
         uint Pointee(uint variable) => declarations[variables[variable][1]][3];
         uint Interface(uint storage, uint location) => variables.Values.FirstOrDefault(i => i[3] == storage && instructions.Any(d => Op(d) == 71 && d[1] == i[2] && d[2] == 30 && d[3] == location))?[2] ?? 0;
         var position = Interface(1, 0); var color = Interface(1, 1); var custom = Interface(1, 3); var outputColor = Interface(3, 0);
+        var vertexID = variables.Values.SingleOrDefault(v => v[3] == 1 && instructions.Any(i => Op(i) == 71 && i[1] == v[2] && i[2] == 11 && i[3] == 42))?[2] ?? 0;
         var float2 = Pointee(position); var float4 = Pointee(color); var scalar = declarations[float2][2];
         var basic = instructions.Where(i => Op(i) is >= 19 and <= 23).ToList();
         var uintType = basic.FirstOrDefault(i => Op(i) == 21 && i[2] == 32 && i[3] == 0)?[1] ?? 0;
@@ -46,7 +47,20 @@ internal static class CanvasVertexProgram
             if (id == 0) return;
             var variable = variables[id]; var replacement = Instruction(59, Pointer(6, Pointee(id)), id, 6);
             instructions[instructions.IndexOf(variable)] = replacement; privateVariables.Add(id);
-            instructions.RemoveAll(i => Op(i) == 71 && i[1] == id && i[2] is 14 or 30 or 31 or 32);
+            instructions.RemoveAll(i => Op(i) == 71 && i[1] == id && i[2] is 11 or 14 or 30 or 31 or 32);
+        }
+        uint rawVertexID = 0, meshVertexID = 0, vertexIDType = 0, boolType = 0;
+        if (vertexID != 0)
+        {
+            vertexIDType = Pointee(vertexID);
+            if (declarations[vertexIDType] is not [_, _, 32, _] || Op(declarations[vertexIDType]) != 21)
+                throw new NotSupportedException("Canvas vertex identity requires a 32-bit integer builtin.");
+            boolType = basic.FirstOrDefault(i => Op(i) == 20)?[1] ?? 0;
+            if (boolType == 0) { boolType = ID(); basic.Add(Instruction(20, boolType)); }
+            Privatize(vertexID);
+            rawVertexID = ID(); added.Add(Instruction(59, Pointer(1, vertexIDType), rawVertexID, 1));
+            annotations.Add(Instruction(71, rawVertexID, 11, 42));
+            meshVertexID = Variable(1, uintType, 15); newInputs.AddRange([rawVertexID, meshVertexID]);
         }
         uint rawPosition = 0, rawColor = 0, basis = 0, translation = 0, tint = 0, rawCustom = 0;
         if (instanced)
@@ -72,6 +86,13 @@ internal static class CanvasVertexProgram
         uint Value(uint opcode, uint type, params uint[] operands)
         { var id = ID(); body.Add(Instruction(opcode, [type, id, .. operands])); return id; }
         uint Load(uint type, uint variable) => Value(61, type, variable);
+        if (vertexID != 0)
+        {
+            var raw = Load(vertexIDType, rawVertexID); if (vertexIDType != uintType) raw = Value(124, uintType, raw);
+            var mesh = Load(uintType, meshVertexID);
+            var selected = Value(169, uintType, Value(171, boolType, mesh, Constant(uint.MaxValue)), mesh, raw);
+            body.Add(Instruction(62, vertexID, vertexIDType == uintType ? selected : Value(124, vertexIDType, selected)));
+        }
         if (instanced)
         {
             var p = Load(float2, rawPosition); var b = Load(float4, basis); var t = Load(float4, translation);

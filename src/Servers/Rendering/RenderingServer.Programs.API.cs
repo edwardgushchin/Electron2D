@@ -31,7 +31,9 @@ public sealed partial class RenderingServer
     /// <summary>Atomically replaces both copied canvas stages of a caller-owned shader.</summary>
     /// <param name="shader">The shader RID owned by the current renderer session.</param>
     /// <param name="vertexBytecode">The authored vertex module.</param><param name="fragmentBytecode">The matching fragment module.</param>
-    /// <remarks>Both stages validate before publication; path hints annotate failures. Shared material parameters retain one typed namespace.</remarks>
+    /// <remarks>Both stages validate before publication; path hints annotate failures. Shared material parameters retain one typed namespace.
+    /// Vertex gl_VertexIndex/SV_VertexID preserves the original mesh surface index, including LODs, expanded primitives
+    /// and instances. Other canvas geometry retains native stream indices; authored deformation retains CPU bounds.</remarks>
     /// <exception cref="ArgumentException">The identity, code or shared interface is invalid.</exception>
     /// <exception cref="NotSupportedException">A stage uses an unsupported canvas profile.</exception>
     /// <exception cref="InvalidOperationException">The shader is borrowed, the renderer is unavailable or owner/submission rules are violated.</exception>

@@ -2709,7 +2709,7 @@
         "ArrayMesh::method:add_surface_from_arrays(int:Mesh.PrimitiveType,Array:,Array[]:,Dictionary:,int:Mesh.ArrayFormat)",
         "RenderingServer::method:mesh_add_surface_from_arrays(RID:,int:RenderingServer.PrimitiveType,Array:,Array:,Dictionary:,int:RenderingServer.ArrayFormat)"
       ],
-      "reason": "Typed base/custom/skin/named morph/authored LOD and compressed UV/frame inputs execute through saved resources and real retained rendering under ADR 0092. Remaining trigger: ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY requires the actual procedural vertex-shader producer and non-position channel drawing; present canvas geometry requires explicit float XY. Empty-position flags remain absent and reject before mutation."
+      "reason": "Typed base/custom/skin/named morph/authored LOD and compressed UV/frame inputs execute through saved resources and real retained rendering under ADR 0092. Original mesh vertex IDs now reach authored GLSL/HLSL builtins. Remaining trigger: ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY requires the actual procedural vertex-shader producer and non-position channel drawing; present canvas geometry requires explicit float XY. Empty-position flags remain absent and reject before mutation."
     },
     {
       "state": "Implemented",
@@ -2763,7 +2763,7 @@
         "class:ImporterMesh",
         "ImporterMesh::method:add_surface(int:Mesh.PrimitiveType,Array:,Array[]:,Dictionary:,Material:,String:,int:)"
       ],
-      "reason": "Raw authoring, compilation, real simplification/merge, storage and all current 2D consumers execute under ADR 0092. Remaining trigger: shared ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY requires procedural vertex-shader geometry/non-position storage; these flags reject before mutation until that producer enters its first slice."
+      "reason": "Raw authoring, compilation, real simplification/merge, storage and all current 2D consumers execute under ADR 0092. Remaining trigger: shared Original mesh vertex IDs now reach authored GLSL/HLSL builtins; ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY requires procedural vertex-shader geometry/non-position storage; these flags reject before mutation until that producer enters its first slice."
     },
     {
       "state": "Implemented",
@@ -2779,14 +2779,14 @@
       "godot": [
         "RenderingServer::method:mesh_add_surface(RID:,Dictionary:)"
       ],
-      "reason": "ADR 0092 complete typed packed surface transport: copied position/frame/attribute/custom/skin/index/shape/LOD buffers, independent target schema, UV scale, borrowed material and real authored/bone visibility bounds. MeshPackedTests verifies layout/finite/range/shape/atomic/copy/fresh-authoring contracts; Linux software GPU/GLSL, GPU/HLSL and Compatibility profiles verify actual channels/material/LOD/skin pixels, public guards, custom recovery and zero-byte prepared owner frames. Remaining trigger: ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY requires the actual procedural vertex-shader and non-position-channel producer; the current canvas backend requires explicit positions, as with AddSurfaceFromArrays."
+      "reason": "ADR 0092 complete typed packed surface transport: copied position/frame/attribute/custom/skin/index/shape/LOD buffers, independent target schema, UV scale, borrowed material and real authored/bone visibility bounds. MeshPackedTests verifies layout/finite/range/shape/atomic/copy/fresh-authoring contracts; Linux software GPU/GLSL, GPU/HLSL and Compatibility profiles verify actual channels/material/LOD/skin pixels, public guards, custom recovery and zero-byte prepared owner frames. Original mesh vertex IDs now reach authored GLSL/HLSL builtins. Remaining trigger: ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY requires the actual procedural vertex-shader and non-position-channel producer; the current canvas backend requires explicit positions, as with AddSurfaceFromArrays."
     },
     {
       "state": "Partial",
       "godot": [
         "RenderingServer::method:mesh_create_from_surfaces(Dictionary[]:,int:)"
       ],
-      "reason": "ADR 0092 complete typed packed surface transport: copied position/frame/attribute/custom/skin/index/shape/LOD buffers, independent target schema, UV scale, borrowed material and real authored/bone visibility bounds. MeshPackedTests verifies layout/finite/range/shape/atomic/copy/fresh-authoring contracts; Linux software GPU/GLSL, GPU/HLSL and Compatibility profiles verify actual channels/material/LOD/skin pixels, public guards, custom recovery and zero-byte prepared owner frames. Remaining trigger: ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY requires the actual procedural vertex-shader and non-position-channel producer; the current canvas backend requires explicit positions, as with AddSurfaceFromArrays."
+      "reason": "ADR 0092 complete typed packed surface transport: copied position/frame/attribute/custom/skin/index/shape/LOD buffers, independent target schema, UV scale, borrowed material and real authored/bone visibility bounds. MeshPackedTests verifies layout/finite/range/shape/atomic/copy/fresh-authoring contracts; Linux software GPU/GLSL, GPU/HLSL and Compatibility profiles verify actual channels/material/LOD/skin pixels, public guards, custom recovery and zero-byte prepared owner frames. Original mesh vertex IDs now reach authored GLSL/HLSL builtins. Remaining trigger: ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY requires the actual procedural vertex-shader and non-position-channel producer; the current canvas backend requires explicit positions, as with AddSurfaceFromArrays."
     },
     {
       "state": "Implemented",

@@ -439,6 +439,7 @@ if (args.Length == 2 && args[0] == "--global-shader-archive") { ShaderGlobalPara
 if (args is ["--project-shader-globals-read", var globalsProject]) { ProjectShaderGlobalsTests.RunArchive(globalsProject); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_SHADER_GLOBALS") is { } projectGlobalsProfile) { if (projectGlobalsProfile == "managed") ProjectShaderGlobalsTests.RunManaged(); else ProjectShaderGlobalsTests.RunNative(projectGlobalsProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_GLOBALS") is { } globalProfile) { if (globalProfile == "managed") ShaderGlobalParametersTests.RunManaged(); else ShaderGlobalParametersTests.RunNative(globalProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VERTEX_ID") is { } vertexIDProfile) { if (vertexIDProfile == "managed") MeshVertexIDTests.Run(); else MeshVertexIDTests.RunNative(vertexIDProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_VERTEX") is { } canvasVertexProfile) { if (canvasVertexProfile == "managed") CanvasVertexProgramTests.RunManaged(); else CanvasVertexProgramTests.RunNative(canvasVertexProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_PRESENTATION") is { } presentationProfile) { ViewportPresentationTests.Run(presentationProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_VIEWPORTS_NATIVE") == "1") { ServerViewportTests.RunNative(); return; }
@@ -1648,6 +1649,7 @@ WorldTests.Run(); WorldTests.Run(PhysicsServer.Backend.GPU);
 PhysicsBodyTransformTests.Run(PhysicsServer.Backend.CPU);
 RenderingProgramTests.Run();
 CanvasVertexProgramTests.RunManaged();
+MeshVertexIDTests.Run();
 MeshSkinTests.Run();
 MultiMeshTests.Run();
 CPUParticlesTests.Run();

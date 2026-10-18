@@ -1385,3 +1385,5 @@ All three require the active renderer owner thread. Creation/append also reject 
 | `public static void MeshSetCustomAABB(RID mesh, Rect2 aabb)` | Sets finite nonnegative mesh-local visibility on a caller-owned mesh; zero restores automatic bounds. Existing submission/shutdown and ownership guards apply. |
 
 These methods share ArrayMesh.CustomAABB state. Source geometry and packed surface descriptions remain independent. Retained commands, group fitting, palettes/morphs and hardware/expanded instances use the override. Resource-owned RIDs permit queries and retain their resource setter; service mutation rejects borrowed identities. See [bounds behavior and native checks](../components/meshes.md#manual-mesh-visibility-bounds).
+
+Paired ShaderSetSPIRV uses the same [original mesh vertex ID contract](../components/shader-materials.md#authored-vertex-stages) as Shader: indexed and expanded geometry, LODs, deformation and instances retain the source index; ordinary non-mesh geometry retains native stream IDs.
