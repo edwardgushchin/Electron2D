@@ -9642,8 +9642,7 @@
         "Node::method:get_tree_string()",
         "Node::method:get_tree_string_pretty()",
         "Node::method:print_tree()",
-        "Node::method:print_tree_pretty()",
-        "Node::method:propagate_notification(int:)"
+        "Node::method:print_tree_pretty()"
       ]
     },
     {
@@ -11913,8 +11912,15 @@
         "Node::method:reset_physics_interpolation()",
         "Node::property:physics_interpolation_mode"
       ],
+      "state": "Implemented",
+      "reason": "ADR 0008: owner/current-group mode writes and explicit resets are presentation metadata on ordinary, canvas and physical nodes, with capture/lifetime/derived validation and retained stored defaults. Inheritance resolves immediately; parent-first reset callbacks reject inaccessible group branches, continue siblings and aggregate failures after policy commit. Source history is immediate; locked MultiMesh history, ordered owner publication of renderer policy/camera scroll-reset endpoints and final ancestor pose preserve presentation without numerical mutation. Root/public JIT/strict NativeAOT CPU/software-Vulkan/registered ordinary/pool-host owner/separate profiles verify complete moving physics/query intervals at 0/0 warm managed bytes, callback errors/reentry, storage and exclusions. Actual Wayland intermediate-fraction sprite/camera/MultiMesh pixels cover both renderers. Evidence: bin/physics-group-interpolation/2026-10-18/validation.json and pinned reference/members.json/node.cpp/node.h; owning types and declarations have no deprecated metadata. Target hardware throughput, native memory, foreign-platform and visual owner acceptance are separate gates."
+    },
+    {
       "state": "Partial",
-      "reason": "ADR 0008: owner-side stored interpolation mode, Control Off default, subtree publication/reset and owner/native rendering behavior remain implemented; active groups can observe the inherited mode and effective/enabled policy. Missing: own-group mode changes and ResetPhysicsInterpolation still require the scene owner. The pinned Node set_physics_interpolation_mode and propagate_notification use current-group access; this is an implementation gap, not an accepted exclusion. Trigger: implement complete group-safe policy propagation and reset callbacks/history across affected descendants and owner-side renderer/camera publication, including capture/lifetime/reentry/error behavior and full physical/rendered verification. Reference evidence: bin/physics-group-transform-notifications/2026-10-18/reference/node.cpp, pinned ed1daf0bf001b61586d9930840f2f1394092c079."
+      "godot": [
+        "Node::method:propagate_notification(int:)"
+      ],
+      "reason": "ADR 0008: owner-side parent-first notification delivery, hierarchy/lifetime protection and failure-continuing traversal execute. The specialized interpolation reset path supports own-group delivery and reports foreign branches, but general PropagateNotification still requires the scene owner despite the pinned propagate_notification ERR_THREAD_GUARD current-group policy. Trigger: implement and verify the complete own-group general notification family, including reserved notification consumers, capture/lifetime/reentry/errors, foreign boundaries, renderer/backend publication and warmed full physical/native frames. Evidence: bin/physics-group-interpolation/2026-10-18/reference/node.cpp and node.h. This is an open implementation gap, not an accepted exclusion."
     }
   ]
 }

@@ -14,6 +14,7 @@ public abstract partial class Viewport
     /// <exception cref="InvalidOperationException">An attached viewport is queried off-owner.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
     public Camera? GetCamera() { CheckTransformQuery(); return _camera; }
+    internal bool IsCurrentCamera(Camera camera) => ReferenceEquals(_camera, camera);
 
     internal void SetCurrentCamera(Camera camera) { _camera = camera; ResetCanvasInterpolationSnapshot(); }
 

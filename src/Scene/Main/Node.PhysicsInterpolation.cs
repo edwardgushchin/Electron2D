@@ -10,9 +10,12 @@ public partial class Node
     /// <summary>Gets or sets the inherited physics interpolation policy.</summary>
     /// <value>Inherit for ordinary nodes, Off for Control and On for Viewport, including Window and SubViewport.</value>
     /// <remarks>The effective policy applies only while the scene tree enables interpolation. A changed active policy
-    /// republishes affected scene-item renderer policies and resets canvas snapshots before subsequent presentation.</remarks>
+    /// republishes affected scene-item renderer policies and resets canvas snapshots before subsequent presentation.
+    /// The owner or current processing group may mutate this metadata independently of numerical authoring.
+    /// Reset callbacks run immediately, parent first; an inaccessible group branch rejects while later branches continue.
+    /// Worker renderer policies and camera history operations publish in order on the owner after the joined stage.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The value is not a defined mode.</exception>
-    /// <exception cref="InvalidOperationException">An attached read is outside the owner/active processing groups, or a mutation is off-owner or occurs during capture.</exception>
+    /// <exception cref="InvalidOperationException">An attached read is outside the owner/active processing groups, or a mutation is outside the owner/current group or occurs during capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     /// <exception cref="AggregateException">A retained transform getter or reset callback failed after later policy publications were attempted.</exception>
     public PhysicsInterpolationMode PhysicsInterpolationMode
@@ -20,30 +23,43 @@ public partial class Node
         get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _physicsInterpolationMode; }
         set
         {
-            EnsureMutable();
+            EnsureProcessingAccess();
+            RenderingServer.NotifyRenderMutation();
             if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value));
             if (_physicsInterpolationMode == value) return;
             _physicsInterpolationMode = value;
             List<Exception>? errors = null;
-            foreach (var descendant in EnumerateDepthFirst())
-                if (descendant is CanvasItem item && !item.IsDisposed)
-                    try { item.PublishInterpolationPolicy(); } catch (Exception error) { (errors ??= []).Add(error); }
+            PublishInterpolationPolicies(ref errors);
             try
             {
                 if (Tree is not null)
                 {
-                    if (IsPhysicsInterpolated()) PropagateNotification(NotificationResetPhysicsInterpolation);
-                    else
-                        foreach (var descendant in EnumerateDepthFirst())
-                            if (descendant is Camera camera && !camera.IsDisposed)
-                                camera.RefreshInterpolationProcessing();
-                            else if (descendant is MultiMeshInstance instances && !instances.IsDisposed)
-                                instances.RefreshInterpolation();
+                    if (IsPhysicsInterpolated()) PropagateNotificationCore(NotificationResetPhysicsInterpolation, stopAtWindows: false, processingScope: true);
                 }
             }
             catch (Exception error) { (errors ??= []).Add(error); }
             if (errors is not null) throw new AggregateException("Physics interpolation policy publication failed.", errors);
         }
+    }
+
+    private void PublishInterpolationPolicies(ref List<Exception>? errors)
+    {
+        Interlocked.Increment(ref _notificationPropagationDepth);
+        try
+        {
+            try { if (this is CanvasItem item) item.PublishInterpolationPolicy(); }
+            catch (Exception error) { CollectException(ref errors, error); }
+            try
+            {
+                if (Tree is not null)
+                    if (this is Camera camera) camera.RefreshInterpolationProcessing();
+                    else if (this is MultiMeshInstance instances) instances.RefreshInterpolation();
+            }
+            catch (Exception error) { CollectException(ref errors, error); }
+            foreach (var child in _children)
+                if (!child.IsDisposed && ReferenceEquals(child.Parent, this)) child.PublishInterpolationPolicies(ref errors);
+        }
+        finally { Interlocked.Decrement(ref _notificationPropagationDepth); }
     }
 
     /// <summary>Reports the inherited node policy independently of scene-wide enablement.</summary>
@@ -75,13 +91,17 @@ public partial class Node
 
     /// <summary>Resets this node and descendants to their current logical transforms before rendering.</summary>
     /// <remarks>While interpolation is enabled, delivers <see cref="NotificationResetPhysicsInterpolation"/> in
-    /// parent-first order. Detached or scene-wide disabled calls have no effect.</remarks>
-    /// <exception cref="InvalidOperationException">An attached call is off the scene owner thread.</exception>
+    /// parent-first order immediately on the owner/current processing group. Inaccessible group branches reject
+    /// while later siblings continue. Camera history operations publish on the owner after a joined worker stage.
+    /// Detached or scene-wide disabled calls have no effect.</remarks>
+    /// <exception cref="InvalidOperationException">An attached call is outside the owner/current processing group or capture is active.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     /// <exception cref="AggregateException">A notification callback failed after later descendants were attempted.</exception>
     public void ResetPhysicsInterpolation()
     {
-        EnsureMutable();
+        EnsureProcessingAccess();
+        RenderingServer.NotifyRenderMutation();
         if (Tree?.IsPhysicsInterpolationActive == true)
-            PropagateNotification(NotificationResetPhysicsInterpolation);
+            PropagateNotificationCore(NotificationResetPhysicsInterpolation, stopAtWindows: false, processingScope: true);
     }
 }

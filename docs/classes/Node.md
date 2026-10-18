@@ -363,11 +363,11 @@ Gets the direct structural parent.
 <a id="p-electron2d-node-physicsinterpolationmode"></a>
 ### `public PhysicsInterpolationMode PhysicsInterpolationMode { get; set; }`
 
-Defaults to `Inherit` for ordinary nodes, with a root resolving to On. `Control` starts Off; `Viewport`, including `Window` and `SubViewport`, starts On independently of ancestors. A descendant may opt back in. Changing an attached enabled policy resets presentation history for the subtree. The selected mode is stored by PackedScene. Its getter permits active processing groups; mutation and subtree reset currently require the owner and retain their explicit Partial worker contract. This property does not change logical transforms or processing callbacks.
+Defaults to `Inherit` for ordinary nodes, with a root resolving to On. `Control` starts Off; `Viewport`, including `Window` and `SubViewport`, starts On independently of ancestors. A descendant may opt back in. Changing an attached enabled policy resets presentation history for the subtree. The selected mode is stored by PackedScene. Its getter permits active processing groups. Mutation and subtree reset permit the owner/current group with capture, lifetime and derived validation, independently of numerical authoring. Reset callbacks run immediately in parent-first order; an inaccessible explicit-group branch rejects while later siblings continue, and the selected policy remains committed. Camera callback scheduling follows the effective policy; viewport/borrowed renderer histories publish on the owner after the joined stage. Logical transforms remain unchanged.
 
 **ArgumentOutOfRangeException:** The value is not Inherit, On or Off.
 
-**InvalidOperationException:** Attached mutation is off the owner thread or scene capture is active.
+**InvalidOperationException:** Attached mutation is outside the owner/current processing group or scene capture is active.
 
 **ObjectDisposedException:** The node is disposed.
 
@@ -1292,7 +1292,7 @@ Requests ready delivery the next time SceneTree attachment reaches the ready pha
 <a id="m-electron2d-node-resetphysicsinterpolation"></a>
 ### `public void ResetPhysicsInterpolation()`
 
-When this node is attached to a tree with interpolation enabled, resets its canvas pose and every descendant to their current logical transforms. Delivers `NotificationResetPhysicsInterpolation` parent-first, even to descendants that opt out of interpolation. Pause and application-suspend notifications also reset eligible subtrees. Detached or tree-wide-disabled calls have no effect. Attached calls require the owner thread; callback failures aggregate after later descendants are attempted.
+When this node is attached to a tree with interpolation enabled, resets its canvas pose and every descendant to their current logical transforms. Delivers `NotificationResetPhysicsInterpolation` parent-first, even to descendants that opt out of interpolation. Pause and application-suspend notifications also reset eligible subtrees. Detached or tree-wide-disabled calls have no effect. Attached calls permit the owner/current processing group and reject capture. Inaccessible explicit-group branches reject without invoking their callbacks or descendants; later siblings are attempted before errors aggregate. Source histories reset immediately; ordered camera scroll/reset operations publish on the owner after the joined stage, preserving a later pose in the same tick.
 
 <a id="m-electron2d-node-validatedisposal"></a>
 ### `protected override void ValidateDisposal()`
@@ -1954,4 +1954,4 @@ Inherited object translation-domain access and plural lookup execute through [sc
 
 [Transform authoring from processing groups](../components/scene-hierarchy.md#transform-authoring-from-processing-groups) now covers all Entity pose setters/helpers and inherited physical/drawable nodes. Cache revisions and a short notification queue gate preserve committed pose/error semantics; existing scene spaces are borrowed for metadata edits and released after every joined stage before selected queries/stepping. The original scene owner temporarily uses current-group rights while helping a parallel stage. General inherited worker operations and native physical writes retain separate coverage.
 
-[Transform notification policies and forcing](../components/scene-hierarchy.md#transform-notification-policies-and-forcing-from-groups) now accept their processing-group contexts. Forced user notifications remain immediate; camera viewport and generated tile physics/navigation updates publish after the joined worker stage before owner queries/stepping. Shared queue cancellation and lifecycle accounting support concurrent forcing without holding gates across callbacks. Inherited interpolation reads are available to active groups; its remaining worker policy mutation/reset gaps stay open.
+[Transform notification policies and forcing](../components/scene-hierarchy.md#transform-notification-policies-and-forcing-from-groups) now accept their processing-group contexts. Forced user notifications remain immediate; camera viewport and generated tile physics/navigation updates publish after the joined worker stage before owner queries/stepping. Shared queue cancellation and lifecycle accounting support concurrent forcing without holding gates across callbacks. Inherited interpolation reads permit active groups; mode mutation and reset permit the owner/current group. Reset callbacks remain immediate, with foreign branches reported and later siblings attempted. Ordered camera scroll/reset and borrowed renderer policies publish after the joined worker stage; see [interpolation publication](../components/scene-hierarchy.md#physics-interpolation-from-processing-groups).
