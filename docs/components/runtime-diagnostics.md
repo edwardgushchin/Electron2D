@@ -1,6 +1,8 @@
 # Runtime diagnostics
 
-Last updated: 2026-10-13
+Last updated: 2026-10-18
+
+[Frame timing monitors](frame-monitors.md) add four actual Engine producers: FPS and per-window peak process, physics-step and navigation durations. They retain independent cached reads and explicit reset, error, presentation and direct-host boundaries.
 
 ## Scope and owned types
 

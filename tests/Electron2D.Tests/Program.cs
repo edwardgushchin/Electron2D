@@ -9,6 +9,14 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FRAME_MONITORS") is { } frameMonitorMode)
+{
+    if (frameMonitorMode == "managed") FrameMonitorTests.Run();
+    else if (frameMonitorMode == "engine") { FrameMonitorTests.Run(); VerifyEngine(); }
+    else if (frameMonitorMode is "gpu" or "compatibility") FrameMonitorRenderingTests.Run(frameMonitorMode);
+    else throw new ArgumentException("Unknown frame-monitor profile.");
+    return;
+}
 if (args.Length == 3 && args[0] == "--deferred-scene") { DeferredSceneTests.RunChild(args[1], args[2]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEFERRED_SCENES") is { } deferredMode)
 {
@@ -1567,6 +1575,7 @@ TexturePlaceholderTests.RunManaged();
 MissingTextureTests.RunManaged();
 LinkedSceneTests.RunManaged();
 DeferredSceneTests.RunManaged();
+FrameMonitorTests.Run();
 IntegerSourceTextureTests.RunManaged();
 CompressedTextureTests.RunManaged();
 CompressedArrayTests.RunManaged();
@@ -8893,12 +8902,15 @@ static void VerifyEngine()
 
     using (var loop = new EngineProbeMainLoop())
     {
+        var initialProcessFrames = Engine.ProcessFrames;
+        var initialPhysicsFrames = Engine.PhysicsFrames;
         var projectSettingsEvents = 0;
         void OnProjectSettingsChanged(ProjectSettingsRegistry _) => projectSettingsEvents++;
         ProjectSettings.SettingsChanged += OnProjectSettingsChanged;
         ProjectSettings.Set(ProjectSettings.ApplicationVersion, "frame-test");
         Engine.Start(loop);
-        Require(loop.InitializeCount == 1 && ReferenceEquals(loop.MainLoopDuringInitialize, loop) &&
+        Require(Engine.ProcessFrames == initialProcessFrames && Engine.PhysicsFrames == initialPhysicsFrames &&
+                loop.InitializeCount == 1 && ReferenceEquals(loop.MainLoopDuringInitialize, loop) &&
                 ReferenceEquals(Engine.MainLoop, loop),
             "Engine.Start must publish and initialize an uninitialized MainLoop exactly once.");
         Expect<InvalidOperationException>(() => Engine.Start(loop), "Engine must reject a second active MainLoop.");
@@ -8919,7 +8931,7 @@ static void VerifyEngine()
                 loop.ObservedPhysicsFrameState && !loop.ObservedProcessFrameState &&
                 loop.Order.TakeLast(2).SequenceEqual(["physics", "process"]),
             "A complete fixed interval must run a scaled fixed callback before process and restore physics state.");
-        Require(Engine.ProcessFrames == 2 && Engine.PhysicsFrames == 1,
+        Require(Engine.ProcessFrames == initialProcessFrames + 2 && Engine.PhysicsFrames == initialPhysicsFrames + 1,
             "Engine frame counters must reflect completed process and started fixed callbacks.");
 
         loop.ReenterEngine = true;

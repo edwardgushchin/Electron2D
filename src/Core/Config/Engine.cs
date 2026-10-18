@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -205,7 +206,7 @@ public sealed partial class Engine : ElectronObject
         return AdvanceFrameCore(elapsedSeconds, out _);
     }
 
-    private bool AdvanceFrameCore(double elapsedSeconds, out double renderStep, int fixedFPS = 0)
+    private bool AdvanceFrameCore(double elapsedSeconds, out double renderStep, int fixedFPS = 0, bool deferFrameTiming = false)
     {
         if (!double.IsFinite(elapsedSeconds) || elapsedSeconds < 0d)
             throw new ArgumentOutOfRangeException(nameof(elapsedSeconds), elapsedSeconds, "Elapsed time must be finite and non-negative.");
@@ -254,6 +255,7 @@ public sealed partial class Engine : ElectronObject
             AtomicFloatingPoint.Write(ref _physicsInterpolationFraction, Math.Clamp(timing.InterpolationFraction, 0d, 1d));
 
             var stopRequested = false;
+            long physicsPeak = 0, navigationPeak = 0;
 
             for (var index = 0; index < timing.PhysicsSteps; index++)
             {
@@ -262,7 +264,12 @@ public sealed partial class Engine : ElectronObject
 
                 try
                 {
-                    if (mainLoop.PhysicsProcessForEngine(scaledPhysicsStep, physicsStep, unscaledProcessStep))
+                    var started = Stopwatch.GetTimestamp();
+                    var navigation = NavigationServer.ThreadProcessingTicks;
+                    var stop = mainLoop.PhysicsProcessForEngine(scaledPhysicsStep, physicsStep, unscaledProcessStep);
+                    physicsPeak = Math.Max(physicsPeak, Stopwatch.GetTimestamp() - started);
+                    navigationPeak = Math.Max(navigationPeak, NavigationServer.ThreadProcessingTicks - navigation);
+                    if (stop)
                     {
                         stopRequested = true;
                         break;
@@ -274,12 +281,15 @@ public sealed partial class Engine : ElectronObject
                 }
             }
 
+            var processStarted = Stopwatch.GetTimestamp();
             if (mainLoop.ProcessForEngine(scaledProcessStep, timing.ProcessStep, unscaledProcessStep))
                 stopRequested = true;
 
             Interlocked.Increment(ref _processFrames);
             UpdateFramesPerSecond(elapsedSeconds);
             ProjectSettings.FlushChanges();
+            _pendingFrameTiming = (processStarted, physicsPeak, navigationPeak);
+            if (!deferFrameTiming) CompleteFrameTiming(elapsedSeconds);
             return stopRequested;
         }
         catch (Exception error)
@@ -457,6 +467,8 @@ public sealed partial class Engine : ElectronObject
 
     private void ResetRunState()
     {
+        Performance.Service.ResetFrameTiming();
+        _pendingFrameTiming = default;
         _frameSynchronizer.Reset();
         AtomicFloatingPoint.Write(ref _physicsInterpolationFraction, 0d);
         Volatile.Write(ref _inPhysicsFrame, 0);

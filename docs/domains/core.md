@@ -4,6 +4,8 @@ Last updated: 2026-10-18
 
 [Custom object iteration](../components/object-lifecycle.md#custom-typed-iteration) uses the ordinary typed C# enumerator protocol on concrete compiled subclasses. Independent cursor state, readonly value retrieval, early exit/error cleanup and caller-owned lifetime guards preserve the applicable capability without a universal enumerable ElectronObject or dynamic value system.
 
+[Frame timing monitors](../components/frame-monitors.md) connect actual Engine process/presentation, fixed-step and navigation spans to four public Performance selectors. Window maxima, reset, headless/direct-host and failure boundaries remain explicit.
+
 Scene archives use the [stored node-name contract](../components/packed-scenes.md) during input validation: internal `@` names remain exact; other reserved path characters reject before reconstruction. Public Name authoring separately normalizes those characters.
 
 The [typed connection boundary](../components/event-connections.md#exclusions) excludes the complete dynamic method/event registry and connection-flags family under the existing ADRs 0001/0002/0010. This does not remove typed event, lifecycle, property, script-binding or deferred-operation obligations from their owning audits.

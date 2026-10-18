@@ -39999,6 +39999,58 @@
     "value": "19"
   },
   {
+    "id": "enumValue:Electron2D.Performance.Monitor.TimeFPS()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.Monitor",
+    "name": "TimeFPS",
+    "signature": "public const Electron2D.Performance.Monitor TimeFPS = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.Monitor",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Performance.Monitor.TimeNavigationProcess()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.Monitor",
+    "name": "TimeNavigationProcess",
+    "signature": "public const Electron2D.Performance.Monitor TimeNavigationProcess = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.Monitor",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.Performance.Monitor.TimePhysicsProcess()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.Monitor",
+    "name": "TimePhysicsProcess",
+    "signature": "public const Electron2D.Performance.Monitor TimePhysicsProcess = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.Monitor",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Performance.Monitor.TimeProcess()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.Monitor",
+    "name": "TimeProcess",
+    "signature": "public const Electron2D.Performance.Monitor TimeProcess = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.Monitor",
+    "value": "1"
+  },
+  {
     "id": "enumValue:Electron2D.Performance.MonitorType.Memory()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Performance.MonitorType",

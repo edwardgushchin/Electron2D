@@ -1,6 +1,6 @@
 # Performance
 
-Last updated: 2026-10-13
+Last updated: 2026-10-18
 
 **Declaration:** `public sealed class Performance : ElectronObject` ·
 **Source:** [Performance.cs](../../src/Core/Config/Performance.cs) ·
@@ -14,16 +14,19 @@ unregistration throws without changing its identity. Construction is private.
 
 | Signature | Contract |
 | --- | --- |
-| `public static double GetMonitor(Performance.Monitor monitor)` | Read the selected latest completed physical count as a double. |
+| `public static double GetMonitor(Performance.Monitor monitor)` | Read the selected completed frame rate, duration in seconds or physical count as a double. |
 | `protected override void ValidateDisposal()` | Reject consumer disposal of the permanent service. |
 
-The [Monitor](Performance.Monitor.md) enum exposes the three functioning physics
+The [Monitor](Performance.Monitor.md) enum exposes four Engine timing selectors and three physics
 producers. Reads may run on any thread, do not advance simulation, synchronize a
 device or allocate managed memory, and use the same snapshots as
 [PhysicsServer.GetProcessInfo](PhysicsServer.md#statistics). Undefined monitor values
 throw ArgumentOutOfRangeException. Aggregate integer overflow throws OverflowException.
 
+[Frame timing monitors](../components/frame-monitors.md) publish per-window maxima after one unscaled Engine host second. Successful attachment resets samples; stop and failed frames retain completed values. Process timing includes presentation only for the owned Window lifecycle. Independent direct frame calls do not publish Engine timing windows. Multiple reads do not form an atomic snapshot; durations measure owner-side wall time rather than native device timestamps.
+
 ```csharp
+double peakSeconds = Performance.GetMonitor(Performance.Monitor.TimeProcess);
 double active = Performance.GetMonitor(Performance.Monitor.PhysicsActiveObjects);
 double pairs = Performance.GetMonitor(Performance.Monitor.PhysicsCollisionPairs);
 double islands = Performance.GetMonitor(Performance.Monitor.PhysicsIslandCount);

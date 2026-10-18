@@ -122,9 +122,13 @@ public sealed partial class Engine
                 var now = Stopwatch.GetTimestamp();
                 var elapsed = movie is null ? Stopwatch.GetElapsedTime(lastFrame, now).TotalSeconds : 1d / movieFPS;
                 lastFrame = now;
-                if (AdvanceFrameCore(elapsed, out var renderStep, fixedFPS: movie is null ? 0 : movieFPS))
+                if (AdvanceFrameCore(elapsed, out var renderStep, fixedFPS: movie is null ? 0 : movieFPS, deferFrameTiming: true))
+                {
+                    CompleteFrameTiming(elapsed);
                     break;
+                }
                 window.Render(tree, renderStep);
+                CompleteFrameTiming(elapsed);
                 movie?.Write(window);
                 while (!tree.QuitRequested)
                 {

@@ -1,6 +1,8 @@
 # NavigationServer
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
+
+[Frame timing monitors](../components/frame-monitors.md) observe owner-side synchronization and avoidance inside Engine physics steps. Queries and independent direct hosts do not publish Engine timing windows; no native device timestamps or summed worker CPU time are implied.
 
 - Source: [NavigationServer.cs](../../src/Servers/Navigation/NavigationServer.cs), [NavigationServer.API.cs](../../src/Servers/Navigation/NavigationServer.API.cs), [NavigationServer.Links.cs](../../src/Servers/Navigation/NavigationServer.Links.cs), [NavigationServer.Query.cs](../../src/Servers/Navigation/NavigationServer.Query.cs), [NavigationServer.Agents.cs](../../src/Servers/Navigation/NavigationServer.Agents.cs)
 - Inherits: [ElectronObject](ElectronObject.md)

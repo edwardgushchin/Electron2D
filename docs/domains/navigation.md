@@ -1,6 +1,8 @@
 # Navigation domain
 
-Last updated: 2026-10-15
+Last updated: 2026-10-18
+
+[Frame timing monitors](../components/frame-monitors.md) observe synchronization/map publication and avoidance inside Engine physics steps, including owner-side waits and callbacks. They report elapsed owner time rather than summed background-worker CPU time.
 
 ## Responsibility
 

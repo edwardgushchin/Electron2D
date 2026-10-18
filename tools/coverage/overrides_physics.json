@@ -2889,6 +2889,26 @@
       "electron2d": "property:Electron2D.ProjectSettings.Physics2DRunOnSeparateThread()",
       "godot": "ProjectSettings::property:physics/2d/run_on_separate_thread",
       "reason": "Typed captured false-default numerical thread setting under ADRs 0054/0103; effective feature values are sampled before lazy World startup or raw space creation."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.TIME_FPS",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.TimeFPS()",
+      "reason": "ADR 0016: completed Engine sampling windows expose existing FPS and peak process, individual physics-step and navigation update/avoidance wall-clock durations. Owned presentation is included; waits/movie encoding and independent direct hosts are excluded. Successful attachment resets; stop and failed frames retain completed samples. Headless/public JIT/NativeAOT, exact windows, native GPU/Compatibility and warmed owner/all-thread allocation checks belong to the connected frame-monitor slice; hardware/device-time, native allocations and foreign acceptance remain separate."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.TIME_PROCESS",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.TimeProcess()",
+      "reason": "ADR 0016: completed Engine sampling windows expose existing FPS and peak process, individual physics-step and navigation update/avoidance wall-clock durations. Owned presentation is included; waits/movie encoding and independent direct hosts are excluded. Successful attachment resets; stop and failed frames retain completed samples. Headless/public JIT/NativeAOT, exact windows, native GPU/Compatibility and warmed owner/all-thread allocation checks belong to the connected frame-monitor slice; hardware/device-time, native allocations and foreign acceptance remain separate."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.TIME_PHYSICS_PROCESS",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.TimePhysicsProcess()",
+      "reason": "ADR 0016: completed Engine sampling windows expose existing FPS and peak process, individual physics-step and navigation update/avoidance wall-clock durations. Owned presentation is included; waits/movie encoding and independent direct hosts are excluded. Successful attachment resets; stop and failed frames retain completed samples. Headless/public JIT/NativeAOT, exact windows, native GPU/Compatibility and warmed owner/all-thread allocation checks belong to the connected frame-monitor slice; hardware/device-time, native allocations and foreign acceptance remain separate."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.TIME_NAVIGATION_PROCESS",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.TimeNavigationProcess()",
+      "reason": "ADR 0016: completed Engine sampling windows expose existing FPS and peak process, individual physics-step and navigation update/avoidance wall-clock durations. Owned presentation is included; waits/movie encoding and independent direct hosts are excluded. Successful attachment resets; stop and failed frames retain completed samples. Headless/public JIT/NativeAOT, exact windows, native GPU/Compatibility and warmed owner/all-thread allocation checks belong to the connected frame-monitor slice; hardware/device-time, native allocations and foreign acceptance remain separate."
     }
   ],
   "extras": [
@@ -7220,7 +7240,7 @@
         "class:Performance"
       ],
       "state": "Partial",
-      "reason": "Three completed physical producers and the complete typed custom-monitor lifecycle execute. Remaining built-in monitor selectors need their exact runtime producer instrumentation, counters or native diagnostics; these prerequisites remain recorded per row. Native Linux sessions and warmed managed reads are verified; debugger UI and foreign acceptance are separate."
+      "reason": "Completed Engine timing windows, three physical producers and the complete typed custom-monitor lifecycle execute. Other built-in selectors retain their exact instrumentation, counter or native diagnostic prerequisite. The frame-monitor component defines clock, publication, headless/direct-host and presentation boundaries; native allocation totals, hardware/device timing and foreign acceptance remain separate."
     },
     {
       "godot": [
@@ -7336,8 +7356,8 @@
         "Performance::enum_value:Monitor.TIME_PHYSICS_PROCESS",
         "Performance::enum_value:Monitor.TIME_PROCESS"
       ],
-      "state": "Unimplemented",
-      "reason": "Trigger: wire completed Engine frame timings and committed navigation timings to Performance with explicit reset, headless and independent-host sampling semantics."
+      "state": "Implemented",
+      "reason": "ADR 0016: completed Engine sampling windows expose existing FPS and peak process, individual physics-step and navigation update/avoidance wall-clock durations. Owned presentation is included; waits/movie encoding and independent direct hosts are excluded. Successful attachment resets; stop and failed frames retain completed samples. Headless/public JIT/NativeAOT, exact windows, native GPU/Compatibility and warmed owner/all-thread allocation checks belong to the connected frame-monitor slice; hardware/device-time, native allocations and foreign acceptance remain separate."
     },
     {
       "godot": [

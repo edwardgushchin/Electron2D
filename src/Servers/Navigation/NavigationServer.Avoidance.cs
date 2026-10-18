@@ -22,6 +22,13 @@ public sealed partial class NavigationServer
     private static void Duration(double delta) { if (!double.IsFinite(delta) || delta < 0 || delta > float.MaxValue || delta > 0 && delta < float.Epsilon) throw new ArgumentOutOfRangeException(nameof(delta)); }
     internal void StepAvoidance(double delta, SceneTree? tree)
     {
+        BeginProcessingTiming();
+        try { StepAvoidanceMeasured(delta, tree); }
+        finally { EndProcessingTiming(); }
+    }
+
+    private void StepAvoidanceMeasured(double delta, SceneTree? tree)
+    {
         Duration(delta); if (delta == 0) return;
         lock (_gate)
         {

@@ -1,5 +1,7 @@
 # API coverage register
 
+[Frame timing monitors](../components/frame-monitors.md) connect four absent selectors to actual Engine execution, including owned presentation, per-step physics/navigation maxima and unscaled sampling windows. The inherited-scene candidate retains its exact missing authoring-origin producer; MainInherited is not that operation.
+
 [Typed custom iteration](../components/object-lifecycle.md#custom-typed-iteration) maps the three inherited Object iteration callbacks to C# GetEnumerator/MoveNext/Current under ADR 0005. Public compiled object/body fixtures verify the existing language/BCL capability rather than adding a universal engine value or cursor API. These three rows become Implemented; the current physics ledger has 218 open declarations (187 Partial, 14 Unimplemented, 17 Blocked). Script initialization and live binding remain open.
 
 [Local activation publication](../components/physics-registered-adapter.md#failed-local-activation) retains committed public policy and repairs partial selected errors before live space/history and active-step use. All 123 final focused/related managed, strict NativeAOT and root profiles pass; the activation repair still needs its own frozen full run. This fixes implemented behavior without changing declaration states or the 221 open census.

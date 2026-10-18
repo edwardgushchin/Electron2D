@@ -1,6 +1,8 @@
 # Engine runtime component
 
-Last updated: 2026-10-15
+Last updated: 2026-10-18
+
+[Frame timing monitors](frame-monitors.md) observe completed execution using monotonic timestamps. Duration maxima publish once per unscaled host-second window; native process timing ends after presentation and before movie encoding/frame waits. Successful attachment resets samples; failed frames retain completed diagnostics.
 
 [Movie recording](movie-writing.md) uses Run/RunAsync path/FPS overloads over this same lifecycle, an exact fixed process delta and all due physics steps. GetWriteMoviePath remains visible through owned teardown. The offline FAudio graph is prepared before SceneTree construction/Autoplay; writer cleanup precedes scene/native cleanup.
 

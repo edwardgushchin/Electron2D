@@ -39,6 +39,13 @@ public sealed partial class NavigationServer : ElectronObject
     }
     internal void SynchronizeCore(bool forceSynchronous = false)
     {
+        BeginProcessingTiming();
+        try { SynchronizeMeasured(forceSynchronous); }
+        finally { EndProcessingTiming(); }
+    }
+
+    private void SynchronizeMeasured(bool forceSynchronous)
+    {
         PumpBakes();
         List<RID>? changed = null; Action<RID>? handlers;
         lock (_gate)

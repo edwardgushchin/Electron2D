@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="../../Electron2D.csproj" />
     <Compile Include="../Portability/ContractChecks.cs" Link="ContractChecks.cs" />
+    <Compile Include="../Portability/FrameMonitorContract.cs" Link="FrameMonitorContract.cs" />
   </ItemGroup>
   <Import Project="../../tools/native-consumer.props" />
 </Project>

@@ -245,7 +245,7 @@ Managed executable checks cover state transitions, ordering preconditions, callb
 <a id="adr-0016"></a>
 ## ADR 0016: Process-wide Engine runtime and host-driven scheduling
 
-Last updated: 2026-10-06
+Last updated: 2026-10-18
 
 ### Status
 
@@ -264,6 +264,8 @@ At this decision’s implementation point, Electron2D had no SDL host, renderer,
 For manual embedding, the host supplies finite non-negative unscaled elapsed seconds; Run measures these with Stopwatch. Engine uses a bounded, allocation-free fixed-step synchronizer with twelve frames of distribution history and configurable jitter tolerance. It caps long-stall catch-up, preserves the residual interpolation fraction, applies non-negative `TimeScale` to callback deltas rather than cadence, invokes fixed callbacks before process, and returns combined stop requests. Run uses an owner-thread monotonic clock, native event pump and interruptible frame wait; no background game thread, renderer, audio mixer or collision simulation is introduced.
 
 Runtime lifecycle is one atomic owner-thread state machine. Callback exceptions restore the running state; initialization and finalization failures detach the terminal loop. Process/physics counters are process-lifetime totals and define exactly whether attempted or completed callbacks count, while FPS/interpolation state is re-baselined for each successfully attached loop. Tick-frequency changes re-baseline timing rather than mixing histories based on different step sizes.
+
+Performance timing observes completed Engine frames over the same unscaled host clock. Once per host-second window it publishes peak process, individual physics-step and owner-side navigation update/avoidance durations in seconds. Owned Run/RunAsync process timing includes Window presentation but excludes movie encoding and frame-limit waits. Manual embedding adds no implicit presentation. Successful attachment resets the current-run samples; failed frames do not consume their timing window, while Stop retains completed values. Direct independent MainLoop/SceneTree/navigation calls do not impersonate Engine samples. Cross-thread reads use integer-backed floating-point atomics and do not drive a producer.
 
 The reference singleton registry is adapted to ordinal string names and `ElectronObject`, with a generic typed lookup. It starts with a permanent self-registration named `Engine`; ADR 0019 adds the permanent `ProjectSettings` entry and project-backed timing values. The registry is thread-safe and treats user entries as explicitly non-owning. Untyped dictionaries are not introduced: assembly version data uses immutable `EngineVersionInfo`.
 

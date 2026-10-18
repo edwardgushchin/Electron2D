@@ -1,6 +1,8 @@
 # Engine
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
+
+[Frame timing monitors](../components/frame-monitors.md) expose actual completed-window process, fixed-step and navigation wall time through Performance. Start resets their current-run samples; Stop retains completed observations. Owned Window presentation contributes to process timing; manual AdvanceFrame adds no implicit rendering.
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
