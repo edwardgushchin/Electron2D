@@ -12,6 +12,7 @@ Electron2D-authored code is licensed under the [MIT license](Electron2D-LICENSE.
 | NVorbis 0.10.5 internal Vorbis decoder | MIT | [NVorbis](NVorbis-LICENSE.txt) |
 | qoa-fu managed codec | MIT | [qoa-fu](QOA-LICENSE.txt) |
 | Box2D.NET managed backend | MIT | [LICENSE](Box2D.NET-LICENSE.txt) |
+| Adapted GamepadMotionHelpers v9 controller gravity filtering | MIT | [GamepadMotionHelpers](GamepadMotionHelpers-LICENSE.txt) |
 | Clipper2 managed geometry | BSL-1.0 | [LICENSE](Clipper2-LICENSE.txt) |
 | FastNoiseLite managed algorithm | MIT | [LICENSE](FastNoiseLite-LICENSE.txt) |
 | Adapted RVO2 ORCA avoidance | Apache-2.0 | [RVO2](RVO2-LICENSE.txt) |

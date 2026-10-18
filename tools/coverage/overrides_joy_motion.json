@@ -1,0 +1,127 @@
+{
+  "mappings": [
+    {
+      "godot": "Input::method:clear_joy_motion_sensors_calibration(int:)",
+      "electron2d": "method:Electron2D.Input.ClearJoyMotionSensorsCalibration(System.Int32)",
+      "reason": "Typed numeric controller sensor/calibration projection under ADRs 0033/0038."
+    },
+    {
+      "godot": "Input::method:get_joy_accelerometer(int:)",
+      "electron2d": "method:Electron2D.Input.GetJoyAccelerometer(System.Int32)",
+      "reason": "Typed numeric controller sensor/calibration projection under ADRs 0033/0038."
+    },
+    {
+      "godot": "Input::method:get_joy_gravity(int:)",
+      "electron2d": "method:Electron2D.Input.GetJoyGravity(System.Int32)",
+      "reason": "Typed numeric controller sensor/calibration projection under ADRs 0033/0038."
+    },
+    {
+      "godot": "Input::method:get_joy_gyroscope(int:)",
+      "electron2d": "method:Electron2D.Input.GetJoyGyroscope(System.Int32)",
+      "reason": "Typed numeric controller sensor/calibration projection under ADRs 0033/0038."
+    },
+    {
+      "godot": "Input::method:get_joy_motion_sensors_calibration(int:)",
+      "electron2d": "method:Electron2D.Input.GetJoyMotionSensorsCalibration(System.Int32)",
+      "reason": "Typed numeric controller sensor/calibration projection under ADRs 0033/0038."
+    },
+    {
+      "godot": "Input::method:get_joy_motion_sensors_rate(int:)",
+      "electron2d": "method:Electron2D.Input.GetJoyMotionSensorsRate(System.Int32)",
+      "reason": "Typed numeric controller sensor/calibration projection under ADRs 0033/0038."
+    },
+    {
+      "godot": "Input::method:has_joy_motion_sensors(int:)",
+      "electron2d": "method:Electron2D.Input.HasJoyMotionSensors(System.Int32)",
+      "reason": "Typed numeric controller sensor/calibration projection under ADRs 0033/0038."
+    },
+    {
+      "godot": "Input::method:is_joy_motion_sensors_calibrated(int:)",
+      "electron2d": "method:Electron2D.Input.IsJoyMotionSensorsCalibrated(System.Int32)",
+      "reason": "Typed numeric controller sensor/calibration projection under ADRs 0033/0038."
+    },
+    {
+      "godot": "Input::method:is_joy_motion_sensors_calibrating(int:)",
+      "electron2d": "method:Electron2D.Input.IsJoyMotionSensorsCalibrating(System.Int32)",
+      "reason": "Typed numeric controller sensor/calibration projection under ADRs 0033/0038."
+    },
+    {
+      "godot": "Input::method:is_joy_motion_sensors_enabled(int:)",
+      "electron2d": "method:Electron2D.Input.IsJoyMotionSensorsEnabled(System.Int32)",
+      "reason": "Typed numeric controller sensor/calibration projection under ADRs 0033/0038."
+    },
+    {
+      "godot": "Input::method:set_joy_motion_sensors_calibration(int:,Dictionary:)",
+      "electron2d": "method:Electron2D.Input.SetJoyMotionSensorsCalibration(System.Int32,Electron2D.JoyMotionCalibration)",
+      "reason": "Typed numeric controller sensor/calibration projection under ADRs 0033/0038."
+    },
+    {
+      "godot": "Input::method:set_joy_motion_sensors_enabled(int:,bool:)",
+      "electron2d": "method:Electron2D.Input.SetJoyMotionSensorsEnabled(System.Int32,System.Boolean)",
+      "reason": "Typed numeric controller sensor/calibration projection under ADRs 0033/0038."
+    },
+    {
+      "godot": "Input::method:start_joy_motion_sensors_calibration(int:)",
+      "electron2d": "method:Electron2D.Input.StartJoyMotionSensorsCalibration(System.Int32)",
+      "reason": "Typed numeric controller sensor/calibration projection under ADRs 0033/0038."
+    },
+    {
+      "godot": "Input::method:stop_joy_motion_sensors_calibration(int:)",
+      "electron2d": "method:Electron2D.Input.StopJoyMotionSensorsCalibration(System.Int32)",
+      "reason": "Typed numeric controller sensor/calibration projection under ADRs 0033/0038."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "T:Electron2D.JoyMotionCalibration",
+      "reason": "Immutable typed gyroscope_offset record returned and accepted by Input controller calibration, replacing the untyped calibration dictionary.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "constructor:Electron2D.JoyMotionCalibration..ctor(Electron2D.Vector3)",
+      "reason": "Typed construction of the controller calibration gyroscope_offset record.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    },
+    {
+      "electron2d": "property:Electron2D.JoyMotionCalibration.GyroscopeOffset()",
+      "reason": "Numeric gyroscope_offset field in radians per second from the controller calibration record.",
+      "adr": "docs/decisions/input.md#adr-0038"
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0033/0038/0095: static Input queries and native SDL channel enable/sample lifetime execute with numeric Vector3 values and typed JoyMotionCalibration. Manual stationary bias, gravity filtering, disabled/focus zeros, mapping/ID retirement, errors and scene motion have public/native Linux Wayland checks. The independent 616-step C++ trace and prepared 0/0 owner/all-thread managed gates pass. Public and positive SDL/native strict NativeAOT checks also pass; full regression, hardware/mobile/foreign execution and native allocator limits are recorded separately in docs/components/gamepad-motion.md.",
+      "godot": [
+        "Input::method:clear_joy_motion_sensors_calibration(int:)",
+        "Input::method:get_joy_accelerometer(int:)",
+        "Input::method:get_joy_gravity(int:)",
+        "Input::method:get_joy_gyroscope(int:)",
+        "Input::method:get_joy_motion_sensors_calibration(int:)",
+        "Input::method:get_joy_motion_sensors_rate(int:)",
+        "Input::method:has_joy_motion_sensors(int:)",
+        "Input::method:is_joy_motion_sensors_calibrated(int:)",
+        "Input::method:is_joy_motion_sensors_calibrating(int:)",
+        "Input::method:is_joy_motion_sensors_enabled(int:)",
+        "Input::method:set_joy_motion_sensors_calibration(int:,Dictionary:)",
+        "Input::method:set_joy_motion_sensors_enabled(int:,bool:)",
+        "Input::method:start_joy_motion_sensors_calibration(int:)",
+        "Input::method:stop_joy_motion_sensors_calibration(int:)"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADRs 0033/0038: Vector3 is an accepted numeric sensor tuple, so these are not 3D scene exclusions. The pinned Input.xml setters explicitly support debugging without hardware (lines 571-577, 602-616 and 649-655); input.cpp lines 753-799 and 1335-1356 use synchronized retained numeric fields. A connected manual value setter/getter slice is actionable on desktop without a mobile sensor adapter. Actual mobile acquisition/capabilities/permissions and delivery remain a separate host dependency; no such acquisition is claimed.",
+      "godot": [
+        "Input::method:get_accelerometer()",
+        "Input::method:get_gravity()",
+        "Input::method:get_gyroscope()",
+        "Input::method:get_magnetometer()",
+        "Input::method:set_accelerometer(Vector3:)",
+        "Input::method:set_gravity(Vector3:)",
+        "Input::method:set_gyroscope(Vector3:)",
+        "Input::method:set_magnetometer(Vector3:)"
+      ]
+    }
+  ]
+}

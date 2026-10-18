@@ -120,6 +120,14 @@ public sealed partial class DisplayServer
             }
             try
             {
+                SampleGamepadMotion(dropInput);
+            }
+            catch (Exception exception)
+            {
+                (failures ??= new List<Exception>()).Add(exception);
+            }
+            try
+            {
                 DrainDialogCallbacks();
             }
             catch (Exception exception)

@@ -1,6 +1,6 @@
 # Input
 
-Last updated: 2026-10-04
+Last updated: 2026-10-18
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -97,6 +97,27 @@ if (Input.IsActionPressed("jump"))
 | [`public static void WarpMouse(Vector2 position)`](#m-electron2d-input-warpmouse) | Requests a native pointer warp on supporting backends. |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-input-getpropertydescriptors) | Returns the typed properties exposed to tooling before validation. |
 | [`protected override void ValidateDisposal()`](#m-electron2d-input-validatedisposal) | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
+
+## Controller motion methods
+
+| Member | Contract |
+| --- | --- |
+| `public static bool HasJoyMotionSensors(int device)` | At least one available accelerometer/gyroscope channel. |
+| `public static float GetJoyMotionSensorsRate(int device)` | Native advertised sample frequency in hertz, or zero. |
+| `public static bool IsJoyMotionSensorsEnabled(int device)` | Completed native enabled state. |
+| `public static void SetJoyMotionSensorsEnabled(int device, bool enable)` | Enable or disable available channels on the display owner. |
+| `public static Vector3 GetJoyAccelerometer(int device)` | Acceleration including gravity, in metres per second squared. |
+| `public static Vector3 GetJoyGravity(int device)` | Estimated gravity direction with standard magnitude, in metres per second squared. |
+| `public static Vector3 GetJoyGyroscope(int device)` | Calibrated pitch, yaw and roll rates, in radians per second. |
+| `public static void StartJoyMotionSensorsCalibration(int device)` | Begin fresh stationary-bias collection on enabled sensors. |
+| `public static void StopJoyMotionSensorsCalibration(int device)` | Complete active calibration and retain the sample mean. |
+| `public static void ClearJoyMotionSensorsCalibration(int device)` | Reset bias samples without changing calibration flags. |
+| `public static JoyMotionCalibration? GetJoyMotionSensorsCalibration(int device)` | Completed independent bias data or null. |
+| `public static void SetJoyMotionSensorsCalibration(int device, JoyMotionCalibration calibrationInfo)` | Restore usable finite bias while calibration is not running. |
+| `public static bool IsJoyMotionSensorsCalibrated(int device)` | Calibration completed or data explicitly restored. |
+| `public static bool IsJoyMotionSensorsCalibrating(int device)` | Stationary bias collection currently active. |
+
+The [controller motion component](../components/gamepad-motion.md) defines axes, reset/error ordering and actual native sampling. Unsupported IDs retain absent results; negative IDs throw. Read snapshots are thread-safe and allocate no managed memory. Native mutations require the active display owner. Disabled and focus-suppressed readings are zero. [JoyMotionCalibration](JoyMotionCalibration.md) is an immutable value; replacing it affects the next sample. These numeric channels use the existing Vector3 data role without adding a scene dimension.
 
 ## Events
 
@@ -665,6 +686,6 @@ State/configuration queries are lock-serialized. Event parsing is serialized and
 
 ## Dependencies, verification, and limitations
 
-Depends on InputMap, typed event classes, Engine/MainLoop, SceneTree, core math and, for native pointer controls, the active DisplayServer. Managed tests cover input state, emulation order, first-contact ownership, release pairing, failure/re-entry, non-emulated allocation and root viewport Control GUI delivery and hover. The optional SDL dummy-driver suite checks pointer modifier translation. Targeted Wayland native runs verify pointer modes, cursor shapes, a copied image, Control cursor precedence and cleanup. Native controller discovery, raw/mapped event delivery, vibration and LED requests now run through SDL. Controller motion sensors, MIDI, shortcuts, complete GUI routing and nested viewports retain their separate triggers in [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers). Physical controller hardware, optional platform info and the full native-host matrix have not been exercised; mapping syntax and connection timing remain Partial in coverage.
+Depends on InputMap, typed event classes, Engine/MainLoop, SceneTree, core math and, for native pointer controls, the active DisplayServer. Managed tests cover input state, emulation order, first-contact ownership, release pairing, failure/re-entry, non-emulated allocation and root viewport Control GUI delivery and hover. The optional SDL dummy-driver suite checks pointer modifier translation. Targeted Wayland native runs verify pointer modes, cursor shapes, a copied image, Control cursor precedence and cleanup. Native controller discovery, raw/mapped event delivery, vibration and LED requests now run through SDL. Controller motion sampling and calibration now execute through actual SDL virtual devices, including scene consumers and strict NativeAOT. The eight manual device-sensor value getter/setter declarations remain actionable Unimplemented work; native mobile acquisition retains its host prerequisite. MIDI, shortcuts, complete GUI routing and nested viewports retain their separate triggers in [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers). Physical controller hardware, optional platform info and the full native-host matrix have not been exercised; mapping syntax and connection timing remain Partial in coverage.
 
 A SceneTree with a Viewport root localizes window coordinates after Input commits raw state. Positional callback events can therefore be distinct short-lived copies: polling and by-event transition identity still refer to the original parsed input. Canvas/viewport conversion never rewrites raw polling coordinates. See [Viewport.PushInput](Viewport.md#pushinput).

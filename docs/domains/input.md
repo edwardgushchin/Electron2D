@@ -1,6 +1,8 @@
 # Input domain
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
+
+[Controller motion sensors](../components/gamepad-motion.md) supply actual accelerometer, gravity and calibrated gyroscope data, native enable/rate reporting and typed calibration values through the public Input API.
 
 ## Responsibility
 

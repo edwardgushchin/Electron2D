@@ -1,6 +1,8 @@
 # Input runtime component
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
+
+[Controller motion](gamepad-motion.md) adds native sampling, manual bias calibration and gravity filtering to the retained Input service. Vector3 carries numeric channels; mapped device lifetime, owner mutations and allocation-free snapshots share existing SDL ownership.
 
 ## Scope
 

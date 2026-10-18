@@ -9,6 +9,13 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JOY_MOTION") is { } joyMotionMode)
+{
+    if (joyMotionMode == "managed") { JoyMotionContract.Run(); JoyMotionTests.Run(); }
+    else if (joyMotionMode == "native") JoyMotionNativeTests.Run();
+    else throw new ArgumentException("Unknown controller-motion profile.");
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FRAME_MONITORS") is { } frameMonitorMode)
 {
     if (frameMonitorMode == "managed") FrameMonitorTests.Run();
@@ -1576,6 +1583,8 @@ MissingTextureTests.RunManaged();
 LinkedSceneTests.RunManaged();
 DeferredSceneTests.RunManaged();
 FrameMonitorTests.Run();
+JoyMotionContract.Run();
+JoyMotionTests.Run();
 IntegerSourceTextureTests.RunManaged();
 CompressedTextureTests.RunManaged();
 CompressedArrayTests.RunManaged();

@@ -58,7 +58,12 @@ public sealed partial class DisplayServer
                 Input.Service.DisconnectNativeJoypad(id, notify: false);
                 CloseHandle(prior);
             }
-            Input.Service.ConnectNativeJoypad(id, name, guid, info, mapped, vibration, light, notify: false);
+            var acceleration = mapped && SDL.GamepadHasSensor(handle, SDL.SensorType.Accel);
+            var gyroscope = mapped && SDL.GamepadHasSensor(handle, SDL.SensorType.Gyro);
+            var rate = acceleration ? SDL.GetGamepadSensorDataRate(handle, SDL.SensorType.Accel) :
+                gyroscope ? SDL.GetGamepadSensorDataRate(handle, SDL.SensorType.Gyro) : 0;
+            Input.Service.ConnectNativeJoypad(id, name, guid, info, mapped, vibration, light, notify: false,
+                motionSensors: acceleration || gyroscope, motionRate: rate);
         }
         catch
         {
@@ -161,7 +166,9 @@ public sealed partial class DisplayServer
     internal void ApplyGamepadFocusPolicy()
     {
         EnsureOwner();
-        if (!ShouldIgnoreGamepads()) return;
+        var ignored = ShouldIgnoreGamepads();
+        Input.Service.SetNativeJoyMotionSuppressed(ignored);
+        if (!ignored) return;
         Input.ReleasePressedEvents();
         foreach (var gamepad in _gamepadsByInstance.Values)
         {
@@ -230,7 +237,12 @@ public sealed partial class DisplayServer
 
     private static void CloseHandle(GamepadDevice gamepad)
     {
-        if (gamepad.Mapped) SDL.CloseGamepad(gamepad.Handle);
+        if (gamepad.Mapped)
+        {
+            if (SDL.GamepadHasSensor(gamepad.Handle, SDL.SensorType.Accel)) SDL.SetGamepadSensorEnabled(gamepad.Handle, SDL.SensorType.Accel, false);
+            if (SDL.GamepadHasSensor(gamepad.Handle, SDL.SensorType.Gyro)) SDL.SetGamepadSensorEnabled(gamepad.Handle, SDL.SensorType.Gyro, false);
+            SDL.CloseGamepad(gamepad.Handle);
+        }
         else SDL.CloseJoystick(gamepad.Handle);
     }
 

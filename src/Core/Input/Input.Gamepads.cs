@@ -158,16 +158,18 @@ public sealed partial class Input
         {
             DisplayServer.Service?.EnsureGamepadOwner();
             lock (_gate) _ignoreJoypadOnUnfocusedApplication = value;
-            if (value) DisplayServer.Service?.ApplyGamepadFocusPolicy();
+            DisplayServer.Service?.ApplyGamepadFocusPolicy();
         }
     }
 
     internal void ConnectNativeJoypad(int device, string name, string guid, JoypadInfo info,
-        bool known, bool vibration, bool light, bool notify)
+        bool known, bool vibration, bool light, bool notify, bool motionSensors = false, float motionRate = 0)
     {
         lock (_gate)
         {
             _joyVibrations.Remove(device);
+            _joyMotion.Remove(device);
+            if (motionSensors) _joyMotion.Add(device, new JoyMotionState(motionRate));
             _connectedJoypads[device] = new JoypadState(name, guid, info, known, vibration, light);
         }
         if (notify) BeginEventEmission(JoyConnectionChangedCore)?.Invoke(device, true);
@@ -190,6 +192,7 @@ public sealed partial class Input
         lock (_gate)
         {
             _connectedJoypads.Remove(device);
+            _joyMotion.Remove(device);
             _joyVibrations.Remove(device);
             _joyButtonsPressed.RemoveWhere(button => button.Device == device);
             foreach (var axis in _joyAxes.Keys.Where(axis => axis.Device == device).ToArray()) _joyAxes.Remove(axis);

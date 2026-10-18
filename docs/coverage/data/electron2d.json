@@ -6138,6 +6138,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.JoyMotionCalibration",
+    "kind": "type",
+    "declaringType": "Electron2D.JoyMotionCalibration",
+    "name": "JoyMotionCalibration",
+    "signature": "public struct Electron2D.JoyMotionCalibration",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.JoypadInfo",
     "kind": "type",
     "declaringType": "Electron2D.JoypadInfo",
@@ -19079,6 +19092,25 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.JoyMotionCalibration..ctor(Electron2D.Vector3)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.JoyMotionCalibration",
+    "name": ".ctor",
+    "signature": "public JoyMotionCalibration(Electron2D.Vector3 gyroscopeOffset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "gyroscopeOffset",
+        "type": "Electron2D.Vector3",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -106409,6 +106441,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Input.ClearJoyMotionSensorsCalibration(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "ClearJoyMotionSensorsCalibration",
+    "signature": "public static System.Void ClearJoyMotionSensorsCalibration(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Input.FlushBufferedEvents()",
     "kind": "method",
     "declaringType": "Electron2D.Input",
@@ -106520,6 +106571,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Input.GetJoyAccelerometer(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "GetJoyAccelerometer",
+    "signature": "public static Electron2D.Vector3 GetJoyAccelerometer(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector3",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Input.GetJoyAxis(Electron2D.JoyAxis,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.Input",
@@ -106563,6 +106633,44 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Input.GetJoyGravity(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "GetJoyGravity",
+    "signature": "public static Electron2D.Vector3 GetJoyGravity(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector3",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.GetJoyGyroscope(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "GetJoyGyroscope",
+    "signature": "public static Electron2D.Vector3 GetJoyGyroscope(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector3",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Input.GetJoyInfo(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.Input",
@@ -106579,6 +106687,44 @@
       }
     ],
     "returnType": "System.Nullable\u003CElectron2D.JoypadInfo\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.GetJoyMotionSensorsCalibration(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "GetJoyMotionSensorsCalibration",
+    "signature": "public static System.Nullable\u003CElectron2D.JoyMotionCalibration\u003E GetJoyMotionSensorsCalibration(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Nullable\u003CElectron2D.JoyMotionCalibration\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.GetJoyMotionSensorsRate(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "GetJoyMotionSensorsRate",
+    "signature": "public static System.Single GetJoyMotionSensorsRate(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
     "value": null
   },
   {
@@ -106715,6 +106861,25 @@
     "declaringType": "Electron2D.Input",
     "name": "HasJoyLight",
     "signature": "public static System.Boolean HasJoyLight(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.HasJoyMotionSensors(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "HasJoyMotionSensors",
+    "signature": "public static System.Boolean HasJoyMotionSensors(System.Int32 device)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -106920,6 +107085,63 @@
     "declaringType": "Electron2D.Input",
     "name": "IsJoyKnown",
     "signature": "public static System.Boolean IsJoyKnown(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.IsJoyMotionSensorsCalibrated(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "IsJoyMotionSensorsCalibrated",
+    "signature": "public static System.Boolean IsJoyMotionSensorsCalibrated(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.IsJoyMotionSensorsCalibrating(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "IsJoyMotionSensorsCalibrating",
+    "signature": "public static System.Boolean IsJoyMotionSensorsCalibrating(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.IsJoyMotionSensorsEnabled(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "IsJoyMotionSensorsEnabled",
+    "signature": "public static System.Boolean IsJoyMotionSensorsEnabled(System.Int32 device)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -107152,6 +107374,54 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Input.SetJoyMotionSensorsCalibration(System.Int32,Electron2D.JoyMotionCalibration)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "SetJoyMotionSensorsCalibration",
+    "signature": "public static System.Void SetJoyMotionSensorsCalibration(System.Int32 device, Electron2D.JoyMotionCalibration calibrationInfo)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "calibrationInfo",
+        "type": "Electron2D.JoyMotionCalibration",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.SetJoyMotionSensorsEnabled(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "SetJoyMotionSensorsEnabled",
+    "signature": "public static System.Void SetJoyMotionSensorsEnabled(System.Int32 device, System.Boolean enable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "enable",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Input.ShouldIgnoreDevice(System.Int32,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.Input",
@@ -107173,6 +107443,25 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.StartJoyMotionSensorsCalibration(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "StartJoyMotionSensorsCalibration",
+    "signature": "public static System.Void StartJoyMotionSensorsCalibration(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -107204,6 +107493,25 @@
         "name": "duration",
         "type": "System.Single",
         "default": "0f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.StopJoyMotionSensorsCalibration(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "StopJoyMotionSensorsCalibration",
+    "signature": "public static System.Void StopJoyMotionSensorsCalibration(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
       }
     ],
     "returnType": "System.Void",
@@ -225618,6 +225926,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.JoyMotionCalibration.GyroscopeOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.JoyMotionCalibration",
+    "name": "GyroscopeOffset",
+    "signature": "public Electron2D.Vector3 GyroscopeOffset { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector3",
     "value": null
   },
   {
