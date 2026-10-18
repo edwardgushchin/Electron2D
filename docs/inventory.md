@@ -1,5 +1,7 @@
 # Engine inventory
 
+CanvasItem TopLevel rebinding now connects to the existing recursive presentation reset, with allocation-free sampling propagation and [physical/pixel verification](components/canvas-rendering.md#toplevel-transition-resets-2026-10-18). This adds no production type or public declaration.
+
 Last updated: 2026-10-18
 
 Private native libraries are owned by the Linux/macOS/Windows native packages in ordinary desktop builds; [native delivery](native-packaging.md) records source production and target verification limits. Windows resolution/full-suite checks are connected with execution pending. No public runtime type or managed backend assembly is added; internal floating-point atomics preserve Engine/audio snapshots on 32-bit hosts.

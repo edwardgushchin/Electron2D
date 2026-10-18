@@ -1,5 +1,7 @@
 # Physics domain
 
+[TopLevel presentation resets](../components/canvas-rendering.md#toplevel-transition-resets-2026-10-18) now discard descendant interpolation history after a canvas-boundary change, preserving physical position/velocity, identity and tick. Public CPU/software-GPU/registered consumers retain strict zero warm managed bytes; actual dummy and software Wayland pixels cover the reset.
+
 [Validated device contact colors](../components/gpu-contact-colors.md#validated-device-color-cache-2026-10-18) reuse derived schedules through contact keys and current endpoint validation. Missing/conflicting seeds rebuild the complete schedule; physical impulses, checkpoints, public backend choice and CPU behavior retain their existing contracts. The cache has measured device-capacity and warm-allocation observations, with complete regression and performance acceptance recorded separately.
 
 [Terminal world authoring](../components/physics-registered-adapter.md#terminal-world-authoring) now shares common simulation/restore failure validation with numerical body preparation. Motion/role writes reject before authoring; valid healthy callbacks and failed-world cleanup retain their phase/lifetime rules.

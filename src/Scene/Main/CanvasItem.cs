@@ -365,6 +365,7 @@ public abstract partial class CanvasItem : Node
     /// This item becomes a separate canvas root, drawn after the preceding root's entire canvas subtree at the same Z.
     /// Canvas roots retain scene order; Z still takes precedence. Logical visibility continues to follow direct canvas ancestors.
     /// Attached changes deliver NotificationExitCanvas before committing the mode and NotificationEnterCanvas afterward, scheduling redraw.
+    /// With scene interpolation enabled, the completed transition resets this node's and all descendants' presentation history.
     /// Callback failures are aggregated after the transition; recursive rebinding is rejected.</remarks>
     /// <exception cref="InvalidOperationException">Mutation occurs off the owner thread, during packed-scene capture, or recursively during canvas rebinding.</exception>
     /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
@@ -394,6 +395,8 @@ public abstract partial class CanvasItem : Node
                 try { EnterCanvas(); }
                 catch (Exception error) { CollectException(ref errors, error); }
                 try { if (!IsDisposed) NotifyLocalTransformChanged(); }
+                catch (Exception error) { CollectException(ref errors, error); }
+                try { if (!IsDisposed) ResetPhysicsInterpolation(); }
                 catch (Exception error) { CollectException(ref errors, error); }
             }
             finally { _rebindingCanvas = false; }

@@ -18,6 +18,7 @@ internal static class PhysicsInterpolationTests
         {
             ProjectSettings.Set(ProjectSettings.PhysicsInterpolation, true);
             NodePolicyAndCanvas();
+            TopLevelTransitions();
             ControlDefaultAndOptIn();
             CameraCanvas();
             FailureAndPacking();
@@ -84,6 +85,66 @@ internal static class PhysicsInterpolationTests
         for (var index = 0; index < 128; index++) tree.PhysicsFrame(1d / 60);
         Check(GC.GetAllocatedBytesForCurrentThread() == before,
             "Warmed active physics snapshots allocate no managed memory on the owner thread.");
+    }
+
+    private static void TopLevelTransitions()
+    {
+        using var root = new Entity { Position = new(100, 0) };
+        var parent = new MovingEntity { PhysicsProcessEnabled = true };
+        var child = new MovingEntity { PhysicsProcessEnabled = true };
+        var top = new MovingEntity { PhysicsProcessEnabled = true, TopLevel = true };
+        var neutral = new Node(); var independent = new MovingEntity { PhysicsProcessEnabled = true };
+        root.AddChild(parent); parent.AddChild(child); parent.AddChild(top); parent.AddChild(neutral); neutral.AddChild(independent);
+        using var tree = new SceneTree(root);
+        tree.PhysicsFrame(1d / 60); tree.PhysicsFrame(1d / 60);
+        Check(child.GetInterpolatedVisualTransform(0).Origin.X == 10, "The control has a genuine previous physics endpoint");
+        var saved = child.Transform; var resets = child.ResetCount;
+        parent.TopLevel = true;
+        Check(child.GetInterpolatedVisualTransform(0) == saved && child.ResetCount == resets + 1,
+            "TopLevel rebinding resets descendant presentation history, not only the changed item's local history");
+        Check(parent.GetInterpolatedGlobalVisualTransform(0) == parent.GlobalTransform &&
+            child.GetInterpolatedGlobalVisualTransform(0) == child.GlobalTransform &&
+            top.GetInterpolatedVisualTransform(0) == top.Transform && independent.GetInterpolatedVisualTransform(0) == independent.Transform,
+            "Recursive reset reaches TopLevel and neutral branches while using the new transform boundary");
+        parent.TopLevel = true; Check(child.ResetCount == resets + 1 && child.Transform == saved, "An unchanged mode neither resets nor edits logical transforms");
+        child.ServerState = new(null!, false) { Transform = new(0, new(900, 0)), Interpolated = true };
+        child.ServerState.Interpolation.Reset(Transform.Identity);
+        parent.TopLevel = false;
+        Check(child.ServerState.Interpolation.Previous == child.ServerState.Transform && child.ServerState.Interpolation.Current == child.ServerState.Transform && child.Transform == saved,
+            "A borrowed renderer override resets to its canonical retained pose without changing authored coordinates");
+        var exitFailure = new ApplicationException("canvas exit"); var resetFailure = new ApplicationException("descendant reset");
+        parent.Observed = what => { if (what == CanvasItem.NotificationExitCanvas) throw exitFailure; };
+        child.Observed = what => { if (what == Node.NotificationResetPhysicsInterpolation) throw resetFailure; };
+        var laterResets = independent.ResetCount;
+        try { parent.TopLevel = true; throw new InvalidOperationException("Expected transition failures"); }
+        catch (AggregateException errors)
+        {
+            Check(errors.Flatten().InnerExceptions.Contains(exitFailure) && errors.Flatten().InnerExceptions.Contains(resetFailure) &&
+                parent.TopLevel && independent.ResetCount == laterResets + 1,
+                "Exit and reset errors retain their identities after the mode commits and later descendants reset");
+        }
+        parent.Observed = null; child.Observed = null;
+        var visited = false;
+        child.Observed = what => { if (what == Node.NotificationResetPhysicsInterpolation) { Reject<InvalidOperationException>(() => parent.TopLevel = true); visited = true; } };
+        parent.TopLevel = false; Check(visited && !parent.TopLevel, "Reset callbacks cannot recursively rebind the transitioning item"); child.Observed = null;
+        tree.PhysicsInterpolation = false; resets = child.ResetCount; parent.TopLevel = true;
+        Check(child.ResetCount == resets, "Scene-wide disabled interpolation does not publish a reset for rebinding");
+        using var detached = new MovingEntity(); detached.TopLevel = true;
+        Check(detached.ResetCount == 0, "A detached mode change does not publish an active interpolation reset");
+        tree.PhysicsInterpolation = true;
+        tree.PhysicsFrameStarted += _ =>
+        {
+            parent.Position += new Vector2(4, 0); child.Position += new Vector2(6, 0); parent.TopLevel = !parent.TopLevel;
+            var history = new CanvasTransformInterpolation(); child.CopyInterpolationSnapshot(ref history);
+            Check(history.Previous == child.Transform && history.Current == child.Transform,
+                "A mid-physics transition resets both scene endpoints before later simulation and presentation");
+        };
+        for (var i = 0; i < 128; i++) tree.PhysicsFrame(1d / 60);
+        GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers();
+        var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+        for (var i = 0; i < 128; i++) tree.PhysicsFrame(1d / 60);
+        Check(GC.GetAllocatedBytesForCurrentThread() == owner && GC.GetTotalAllocatedBytes(true) == all,
+            "128 warmed full frames with active TopLevel changes and descendant resets allocate 0/0 managed bytes");
     }
 
     private static void ProjectSettingRoundTrip()
@@ -179,11 +240,13 @@ internal static class PhysicsInterpolationTests
     private sealed class MovingEntity : Entity
     {
         internal int ResetCount;
+        internal Action<int>? Observed;
         protected override void OnPhysicsProcess(double delta) => Position += new Vector2(10, 0);
         protected override void OnNotification(int what)
         {
             if (what == NotificationResetPhysicsInterpolation) ResetCount++;
             base.OnNotification(what);
+            Observed?.Invoke(what);
         }
     }
 

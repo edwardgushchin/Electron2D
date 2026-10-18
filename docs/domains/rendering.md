@@ -1,5 +1,7 @@
 # Rendering domain
 
+[TopLevel presentation resets](../components/canvas-rendering.md#toplevel-transition-resets-2026-10-18) now discard descendant interpolation history after a canvas-boundary change, preserving physical position/velocity, identity and tick. Public CPU/software-GPU/registered consumers retain strict zero warm managed bytes; actual dummy and software Wayland pixels cover the reset.
+
 [Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. Registered project definitions prepare typed bases before scene readiness and own loaded images through session shutdown. The registry has explicit owner/session lifetime and no material-property aliases.
 
 Last updated: 2026-10-18

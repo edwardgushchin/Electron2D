@@ -1,6 +1,6 @@
 # Scene tree component
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
 
 ## Selected authoring context
 
@@ -43,7 +43,7 @@ An inherited or wrapper frame increments its lane counter, raises its start even
 
 On a nonzero physics frame, the tree resolves current Area gravity/damping fields, applies stored body force/torque and prepares attached pin/groove constraints and spring impulses after node callbacks and before stepping its internal 2D world. It synchronizes simulated bodies and opt-in kinematic platform poses, then commits body contact/sleep and Area monitoring snapshots. Sleep/contact callbacks run before Area events and lightweight timers/tweens. Zero elapsed time leaves these snapshots unchanged. Contact and Area handlers may mutate scene membership because backend stepping has finished; failures are aggregated while later frame phases continue. The [physics bodies](physics-bodies.md), [joints](physics-joints.md) and [areas](physics-areas.md) components own the force, filtering, constraint, field and monitoring contracts.
 
-SceneTree samples `ProjectSettings.PhysicsInterpolation` at construction and exposes a live tree-wide switch. When enabled, a physics frame captures eligible canvas and viewport camera history around its callbacks without allocating after warmup; the renderer later uses Engine's fractional tick progress. Node inheritance and Control's Off default select eligible items. Reset, pause, camera switching and process-time edits discard stale presentation history while logical transforms remain current.
+SceneTree samples `ProjectSettings.PhysicsInterpolation` at construction and exposes a live tree-wide switch. When enabled, a physics frame captures eligible canvas and viewport camera history around its callbacks without allocating after warmup; the renderer later uses Engine's fractional tick progress. Node inheritance and Control's Off default select eligible items. Reset, pause, camera switching and process-time edits discard stale presentation history while logical transforms remain current. [TopLevel changes](canvas-rendering.md#toplevel-transition-resets-2026-10-18) now use the same recursive reset after canvas rebinding, including neutral and independently top-level descendant branches; failure does not skip later reset deliveries.
 
 System notifications are snapshotted and propagated depth-first to every still-live attached node. Explicit inherited finalization and disposal both close work acceptance, release the hierarchy/timers, and invalidate active tweens; explicit finalization leaves only the tree object undisposed and terminal.
 

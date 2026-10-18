@@ -2,7 +2,7 @@ using Electron2D;
 
 internal static class PhysicsInterpolationNativeTests
 {
-    internal static void Run()
+    internal static void Run(bool topLevelOnly = false)
     {
         var settings = ProjectSettings.Service;
         var previousInterpolation = ProjectSettings.Get(ProjectSettings.PhysicsInterpolation);
@@ -16,10 +16,15 @@ internal static class PhysicsInterpolationNativeTests
             ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
             Engine.PhysicsTicksPerSecond = 30;
             Engine.MaxFPS = 120;
-            SpritePixels();
-            CameraPixels();
-            NestedViewportPixels(false, backend);
-            NestedViewportPixels(true, backend);
+            if (topLevelOnly) TopLevelPixels();
+            else
+            {
+                SpritePixels();
+                TopLevelPixels();
+                CameraPixels();
+                NestedViewportPixels(false, backend);
+                NestedViewportPixels(true, backend);
+            }
         }
         finally
         {
@@ -63,6 +68,43 @@ internal static class PhysicsInterpolationNativeTests
         };
         Engine.Run(window);
         Check(sampled && window.IsDisposed, "The native interpolation probe completed and released the window.");
+    }
+
+    private static void TopLevelPixels()
+    {
+        var window = new Window { Size = new(256, 96) };
+        var ancestor = new Entity { Position = new(30, 0) }; var parent = new Entity { Position = new(20, 0) };
+        var child = new RebindingCanvasNode { Position = new(24, 40), PhysicsProcessEnabled = true };
+        window.AddChild(ancestor); ancestor.AddChild(parent); parent.AddChild(child);
+        var sampled = false; var frames = 0; var pending = false; var expectedX = 0f; var staleX = 0f;
+        window.Ready += _ =>
+        {
+            var start = Engine.PhysicsFrames; var server = RenderingServer.Service!;
+            RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePreDraw += () =>
+            {
+                if (++frames > 500) throw new InvalidOperationException("No suitable TopLevel interpolation frame was presented.");
+                var fraction = Engine.PhysicsInterpolationFraction;
+                if (sampled || pending || Engine.PhysicsFrames - start < 3 || fraction is < .2 or > .6) return;
+                var local = child.Transform; parent.TopLevel = true;
+                Check(child.Transform == local, "Rebinding preserves the child's exact logical transform.");
+                expectedX = child.GlobalPosition.X;
+                staleX = parent.Position.X + child.PreviousX + (child.Position.X - child.PreviousX) * (float)fraction; pending = true;
+            };
+            RenderingServer.FramePostDraw += () =>
+            {
+                if (!pending) return;
+                using var pixels = server.Readback();
+                var sx = pixels.Width / (float)window.Size.X; var sy = pixels.Height / (float)window.Size.Y;
+                var current = pixels.GetPixel((int)MathF.Round((expectedX + 2) * sx), (int)MathF.Round(42 * sy));
+                var stale = pixels.GetPixel((int)MathF.Round((staleX + 2) * sx), (int)MathF.Round(42 * sy));
+                Check(current.R > .95f && current.G < .05f && stale.R < .05f,
+                    $"TopLevel rebinding presents the current descendant endpoint, not stale history: current={current}, stale={stale}.");
+                sampled = true; window.Tree!.Quit();
+            };
+        };
+        Engine.Run(window);
+        Check(sampled && window.IsDisposed, "The TopLevel pixel probe completes and releases its window.");
     }
 
     private static void CameraPixels()
@@ -150,6 +192,17 @@ internal static class PhysicsInterpolationNativeTests
     private sealed class MovingCanvasNode : Entity
     {
         protected override void OnPhysicsProcess(double delta) => Position += new Vector2(24, 0);
+        protected override void OnDraw() => DrawRect(new(0, 0, 6, 6), Colors.Red);
+    }
+
+    private sealed class RebindingCanvasNode : Entity
+    {
+        internal float PreviousX;
+        protected override void OnPhysicsProcess(double delta)
+        {
+            PreviousX = Position.X;
+            Position = new(Position.X >= 96 ? 24 : Position.X + 24, 40);
+        }
         protected override void OnDraw() => DrawRect(new(0, 0, 6, 6), Colors.Red);
     }
 

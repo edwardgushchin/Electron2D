@@ -1755,8 +1755,7 @@
     {
       "electron2d": "property:Electron2D.CanvasItem.TopLevel()",
       "godot": "CanvasItem::property:top_level",
-      "state": "Partial",
-      "reason": "Default false; toggling preserves local transform and ends transform/material/modulation/Z inheritance, while visibility follows direct canvas parents. SceneHierarchyTests verifies the transform boundary. CanvasOrderingTests verifies independent canvas-root subtree order, later-root order and Z precedence on Wayland GPU/compatibility and dummy/software. CanvasLifecycleTests now verifies canvas exit/entry notification ordering, redraw, failure continuation and reattachment. Remaining gap: interpolation reset on toggling; trigger: physics-interpolation integration under ADRs 0008/0028."
+      "reason": "Typed CanvasItem.TopLevel retains the canvas transform/root boundary under ADRs 0008/0028; its status group records completed interpolation reset and executable verification."
     },
     {
       "electron2d": "event:Electron2D.CanvasItem.ItemRectChanged()",
@@ -11883,6 +11882,13 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0001/0005/0013/0014/0023: executable deferred scene records, transform-free Node placeholders, ordered typed pending values, late template load, local-resource aliases/cycles and failure-safe sibling creation/replacement. Fresh-process v6 files, v1–5 readers, malformed fields, source/template retention, owner/reentry/lifecycle failures and nested recapture are exercised. GPU and Compatibility render actual lazy/materialized pixels, body motion/point queries and 64 prepared render frames at zero owner-thread managed bytes on Linux software backends. Hardware, foreign platforms and full editor modes remain separate gates. Public-only JIT and strict NativeAOT consumers execute fresh-file production/load, pending scalar/resource values, local pixels and final shared-template retirement."
+    },
+    {
+      "godot": [
+        "CanvasItem::property:top_level"
+      ],
+      "state": "Implemented",
+      "reason": "Default false; preserves local transform and the independent canvas-root draw/inheritance boundary. Existing hierarchy/order/lifecycle tests cover transforms, visibility, exit/entry, redraw and errors. PhysicsInterpolationTests now verifies recursive scene/retained endpoint reset, neutral/TopLevel branches, mid-physics changes, no-ops, disabled/detached policy, reentry and failure continuation. Public CPU/software-GPU/registered serial/separate managed/strict NativeAOT consumers preserve exact body position/linear velocity/RID/tick and strict 0/0 warm full-frame managed bytes. Dummy and Wayland/Mesa llvmpipe compatibility pixels are RED with the former runtime and pass with the repair. See canvas-rendering.md#toplevel-transition-resets-2026-10-18. Hardware/FPS/native allocator totals and foreign acceptance remain separate under ADR 0021."
     }
   ]
 }

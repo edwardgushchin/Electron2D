@@ -32,6 +32,58 @@ The same finite transform-history helper serves lights and occluders. Their reba
 `CanvasItemInterpolationTests` checks transform/skew/negative scale, finite/overflow/singular rebases, inherited policy publication, scene storage and 1024 zero-managed-byte history cycles. Native GPU and compatibility checks sample actual intermediate physics fractions on parent/child/borrowed items and two viewports, reset/rebase/disable/enable/reparent/free behavior, and 64 active plus 64 idle warmed zero-managed-byte render intervals. Failed retained getters do not skip later capture/reset or authored-policy publication attempts. GPU light/occluder pixels check rebase continuity through subsequent ticks and scene-wide mode changes. Linux evidence does not establish foreign-platform, native allocator totals or human visual acceptance.
 
 
+### TopLevel transition resets, 2026-10-18
+
+An actual attached TopLevel change retains the local transform, publishes the old
+canvas exit and committed new canvas entry, invalidates the transform, then calls
+the existing recursive physics-interpolation reset. With tree-wide interpolation
+enabled, parent-first reset delivery reaches all descendants, including neutral,
+internal and separately top-level branches. It resets scene endpoints and borrowed
+renderer overrides to their respective current canonical transforms. Equal values,
+detached changes and scene-wide disabled interpolation do not emit this reset.
+The operation does not advance a world or replace body identity, position or
+linear velocity. Recursive rebinding of the transitioning item still rejects.
+Exit/entry/transform/reset errors are combined after later phases and descendants
+have been attempted under the ordinary typed notification/base-call contract.
+
+The pinned [CanvasItem source](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/canvas_item.cpp#L561)
+resets interpolation after its attached canvas/transform transition. The owner and
+its top_level member have no deprecated metadata in the pinned class reference.
+This repairs the previously recorded inherited behavior gap under ADRs 0008/0028;
+it introduces no public API or new architectural policy.
+
+The first warmed physical fixture exposed 160 managed bytes per change from the
+sampling-inheritance walk through IReadOnlyList. That walk now consumes the
+existing child list's concrete enumerator, retaining collection-version checks
+and disposal without boxing. The recursive reset uses the existing notification
+walk. 128 warmed edited full frames now retain strict zero owner/all-thread bytes
+in each public CPU/software-GPU/registered serial/separate managed and strict
+NativeAOT profile. A separate managed history bracket checks retained overrides,
+mid-physics endpoints, no-ops, disabled/detached cases, original callback errors,
+reentry and continued descendant delivery. Physical checks retain moving bodies,
+exact position/linear-velocity/RID/tick observations and committed frame progress.
+
+A bounded moving descendant supplies actual pixel evidence on dummy/software and
+Linux Wayland/Mesa llvmpipe compatibility rendering. The unchanged test binary
+with the former runtime renders black at the current endpoint and red at the
+stale interpolated endpoint; the corrected runtime reverses those observations.
+The Wayland environment selects Mesa explicitly and the observed EGL renderer is
+llvmpipe; process-map checks observe no hardware driver libraries. The plain
+Wayland software-framebuffer attempt is unsupported and preserved separately.
+An earlier full dummy interpolation profile reached the older unbounded sprite
+fixture's out-of-image coordinate during cold timing; it is not counted as a pass.
+The full existing sprite/camera/nested-viewport interpolation profile separately
+passes on the constrained Wayland/Mesa software renderer in 4.293895 seconds.
+These are functional presentation and managed-allocation checks, not whole-game
+FPS, target-GPU throughput, complete native allocator or foreign-platform acceptance.
+All 21 final focused/related profiles pass. Five exact Release PDB/source checks
+cover 3211 authored documents and 206 payload files; strict NativeAOT uses actual
+native execution without CoreCLR. New edited-history/physical brackets measure
+2176 complete intervals at 0/0 owner/all-thread managed bytes.
+Evidence: bin/physics-top-level/2026-10-18/validation.json, SHA-256
+21b3bb1a6ed71ac2522617e38d0a26b1ee3be74572d79f2f4254421d8a612c2d.
+
+
 ## Linear HDR canvases
 
 [HDR canvas targets](hdr-canvas.md) connect stored UseHDR2D authoring, server-session overrides and the typed root project setting to actual half-float/linear rendering, color-role sampling, composition/MSAA, device readback, SDR presentation and movie transfer. Compatibility rejects enabled HDR.

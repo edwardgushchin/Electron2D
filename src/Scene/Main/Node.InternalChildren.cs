@@ -20,6 +20,7 @@ public partial class Node
     private readonly IReadOnlyList<Node> _publicChildrenView;
     internal bool IsInternalChild => _internalMode != InternalMode.Disabled;
     internal IReadOnlyList<Node> AllChildren => _childrenView;
+    internal List<Node>.Enumerator GetAllChildrenEnumerator() => _children.GetEnumerator();
     private int ExternalChildCount => _children.Count - _internalFrontCount - _internalBackCount;
 
     /// <summary>Gets the number of direct children in the selected view.</summary>
