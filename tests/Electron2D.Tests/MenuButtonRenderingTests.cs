@@ -4,7 +4,7 @@ using SDL3;
 internal static partial class RenderingRuntimeTests
 {
     private static void MenuPointer(Vector2 point)
-    { var input = new SDL.Event { Type = (uint)SDL.EventType.MouseMotion }; input.Motion.WindowID = SDL.GetWindowID(SDL.GetWindows(out var count)![0]); input.Motion.X = point.X; input.Motion.Y = point.Y; input.Motion.XRel = 1; input.Motion.YRel = 1; SDL.PushEvent(ref input); }
+    { point = NativeDialogPoint(point, out var windowID, out var density); var input = new SDL.Event { Type = (uint)SDL.EventType.MouseMotion }; input.Motion.WindowID = windowID; input.Motion.X = point.X; input.Motion.Y = point.Y; input.Motion.XRel = 1 / density; input.Motion.YRel = 1 / density; SDL.PushEvent(ref input); }
     private static void VerifyMenuButtonRendering(string backend)
     {
         var root = new Window { Size = new(460, 260), GUIEmbedSubwindows = true }; var bar = new HBoxContainer { Position = new(20, 20), Size = new(220, 40) }; var file = new MenuButton("File") { Name = "File", SwitchOnHover = true }; var edit = new MenuButton("Edit") { Name = "Edit", SwitchOnHover = true }; file.GetPopup().AddItem("Open", 42); edit.GetPopup().AddItem("Copy command", 84); bar.AddChild(file); bar.AddChild(edit); root.AddChild(bar); var selected = 0; edit.GetPopup().IDPressed += id => selected = id; var frame = 0;

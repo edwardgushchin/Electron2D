@@ -28,7 +28,18 @@ internal static partial class RenderingRuntimeTests
     }
     private static void DialogClick(Vector2 point)
     {
-        var input = new SDL.Event { Type = (uint)SDL.EventType.MouseButtonDown }; input.Button.WindowID = SDL.GetWindowID(SDL.GetWindows(out var count)![0]); input.Button.X = point.X; input.Button.Y = point.Y; input.Button.Button = SDL.ButtonLeft; input.Button.Down = true; SDL.PushEvent(ref input); input.Type = (uint)SDL.EventType.MouseButtonUp; input.Button.Down = false; SDL.PushEvent(ref input);
+        point = NativeDialogPoint(point, out var windowID, out _);
+        var input = new SDL.Event { Type = (uint)SDL.EventType.MouseButtonDown }; input.Button.WindowID = windowID; input.Button.X = point.X; input.Button.Y = point.Y; input.Button.Button = SDL.ButtonLeft; input.Button.Down = true; SDL.PushEvent(ref input); input.Type = (uint)SDL.EventType.MouseButtonUp; input.Button.Down = false; SDL.PushEvent(ref input);
+    }
+    private static Vector2 NativeDialogPoint(Vector2 point, out uint windowID, out float density)
+    {
+        var windows = SDL.GetWindows(out var count);
+        Check(count == 1 && windows is [var handle] && handle != 0, "Pointer injection requires the actual single native window.");
+        var window = windows![0]; windowID = SDL.GetWindowID(window);
+        Check(SDL.GetWindowSize(window, out var width, out var height), "Native pointer injection reads the window's SDL coordinate size.");
+        density = DisplayServer.WindowGetSize() == new Vector2i(width, height) ? 1f : SDL.GetWindowPixelDensity(window);
+        Check(float.IsFinite(density) && density > 0, "Native pointer density is finite and positive.");
+        return point / density;
     }
     private static void VerifyDialogWarm(string backend)
     {

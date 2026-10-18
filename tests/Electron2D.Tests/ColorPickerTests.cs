@@ -58,7 +58,16 @@ internal static class ColorPickerTests
     {
         var menu = (MenuButton)Find(picker, "PaletteMenu"); var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "electron2d-picker-palette-" + Guid.NewGuid() + ".e2dres");
         void Command(int index) { menu.ShowPopup(); menu.GetPopup().SetFocusedItem(index); using var input = new InputEventAction { Action = "ui_accept", Pressed = true }; menu.GetPopup().PushInput(input, true); Frames(tree); }
-        void Accept(FileDialog dialog) { var button = dialog.GetOKButton(); button.GrabFocus(); var point = button.GetGlobalTransformWithCanvas() * (button.Size / 2); using var down = new InputEventMouseButton { Position = point, ButtonIndex = MouseButton.Left, Pressed = true }; using var up = new InputEventMouseButton { Position = point, ButtonIndex = MouseButton.Left }; dialog.PushInput(down, true); dialog.PushInput(up, true); Frames(tree); }
+        void Accept(FileDialog dialog)
+        {
+            var button = dialog.GetOKButton(); button.GrabFocus();
+            var point = (Vector2)dialog.Position + dialog.GetFinalTransform() * (button.GetGlobalTransformWithCanvas() * (button.Size / 2));
+            using var down = new InputEventMouseButton { Position = point, ButtonIndex = MouseButton.Left, Pressed = true };
+            using var up = new InputEventMouseButton { Position = point, ButtonIndex = MouseButton.Left };
+            picker.GetViewport()!.PushInput(down, true);
+            Check(button.IsHovered(), "The containing viewport routes palette clicks through the embedded window's pointer state.");
+            picker.GetViewport()!.PushInput(up, true); Frames(tree);
+        }
         try
         {
             var colors = picker.GetPresets(); Command(0); var dialog = (FileDialog)Find(picker, "_palette_file"); Check(dialog.Visible, "Palette Save command opens the connected file browser."); dialog.CurrentPath = path; Accept(dialog); Check(File.Exists(path), "Palette file browser saves the actual swatches resource.");

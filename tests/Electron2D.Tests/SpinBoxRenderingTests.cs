@@ -4,9 +4,9 @@ using SDL3;
 internal static partial class RenderingRuntimeTests
 {
     private static void SpinButton(Vector2 point, bool pressed)
-    { var input = new SDL.Event { Type = (uint)(pressed ? SDL.EventType.MouseButtonDown : SDL.EventType.MouseButtonUp) }; input.Button.WindowID = SDL.GetWindowID(SDL.GetWindows(out _)![0]); input.Button.Which = 987; input.Button.X = point.X; input.Button.Y = point.Y; input.Button.Button = SDL.ButtonLeft; input.Button.Down = pressed; SDL.PushEvent(ref input); }
+    { point = NativeDialogPoint(point, out var windowID, out _); var input = new SDL.Event { Type = (uint)(pressed ? SDL.EventType.MouseButtonDown : SDL.EventType.MouseButtonUp) }; input.Button.WindowID = windowID; input.Button.Which = 987; input.Button.X = point.X; input.Button.Y = point.Y; input.Button.Button = SDL.ButtonLeft; input.Button.Down = pressed; SDL.PushEvent(ref input); }
     private static void SpinMotion(Vector2 point, float relative)
-    { var input = new SDL.Event { Type = (uint)SDL.EventType.MouseMotion }; input.Motion.WindowID = SDL.GetWindowID(SDL.GetWindows(out _)![0]); input.Motion.Which = 987; input.Motion.State = SDL.MouseButtonFlags.Left; input.Motion.X = point.X; input.Motion.Y = point.Y; input.Motion.YRel = relative; SDL.PushEvent(ref input); }
+    { point = NativeDialogPoint(point, out var windowID, out var density); var input = new SDL.Event { Type = (uint)SDL.EventType.MouseMotion }; input.Motion.WindowID = windowID; input.Motion.Which = 987; input.Motion.State = SDL.MouseButtonFlags.Left; input.Motion.X = point.X; input.Motion.Y = point.Y; input.Motion.YRel = relative / density; SDL.PushEvent(ref input); }
     private static void VerifySpinBoxRendering(string backend)
     {
         var root = new Window { Size = new(460, 250) }; var spin = new SpinBox { Position = new(30, 55), Size = new(280, 44), Step = .01, Value = 12.5, Prefix = "$", Suffix = "kg" }; root.AddChild(spin); var frame = 0; var originalMode = MouseMode.Visible;

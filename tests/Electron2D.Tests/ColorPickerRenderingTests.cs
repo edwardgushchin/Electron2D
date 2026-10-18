@@ -33,6 +33,6 @@ internal static partial class RenderingRuntimeTests
         warmRoot.Ready += _ => { warmRoot.Tree!.ProcessFrameStarted += _ => { before = GC.GetAllocatedBytesForCurrentThread(); warm.Color = (frame & 1) == 0 ? new Color(.2f, .4f, .6f) : new Color(.8f, .6f, .4f); }; RenderingServer.FramePostDraw += () => { if (frame >= 64) bytes += GC.GetAllocatedBytesForCurrentThread() - before; if (++frame == 128) warmRoot.Tree!.Quit(); }; };
         Engine.Run(warmRoot); Released(warmRoot); Check(bytes == 0, $"ColorPicker {backend}: 64 prepared channel/shape/render frames allocated {bytes} managed bytes."); Console.WriteLine($"ColorPicker {backend}: native surface, six shape pixel readbacks, owned popup, application sampler and 64 prepared frames with {bytes} managed bytes passed.");
     }
-    private static void ColorMotion(Vector2 point) { var input = new SDL.Event { Type = (uint)SDL.EventType.MouseMotion }; input.Motion.WindowID = SDL.GetWindowID(SDL.GetWindows(out _)![0]); input.Motion.Which = 987; input.Motion.X = point.X; input.Motion.Y = point.Y; SDL.PushEvent(ref input); }
+    private static void ColorMotion(Vector2 point) { point = NativeDialogPoint(point, out var windowID, out _); var input = new SDL.Event { Type = (uint)SDL.EventType.MouseMotion }; input.Motion.WindowID = windowID; input.Motion.Which = 987; input.Motion.X = point.X; input.Motion.Y = point.Y; SDL.PushEvent(ref input); }
     private sealed class ColorTarget : Control { protected override void OnDraw() => DrawRect(new(Vector2.Zero, Size), Colors.Blue); }
 }
