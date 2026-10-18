@@ -56,6 +56,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(WebPCompressionMethod, isBasic: false);
         RegisterInternal(WebPLosslessCompressionFactor, isBasic: false);
         RegisterInternal(ApplicationName, isBasic: true);
+        RegisterInternal(LowProcessorMode, isBasic: false);
+        RegisterInternal(LowProcessorModeSleepUsec, isBasic: false);
         RegisterInternal(ApplicationVersion, isBasic: true);
         RegisterInternal(GUIThemeCustom, isBasic: true);
         RegisterInternal(GUIThemeCustomFont, isBasic: true);
@@ -986,6 +988,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
 
     private void QueueChangedLocked(string name)
     {
+        if (_processWide) RenderingServer.NotifyRenderMutation();
         _changedSettings.Add(name);
         _changeNotificationPending = true;
     }
@@ -1194,6 +1197,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, MovieWriterOGVEncodingSpeed) ||
         ReferenceEquals(setting, MovieWriterOGVKeyframeInterval) ||
         ReferenceEquals(setting, ApplicationName) ||
+        ReferenceEquals(setting, LowProcessorMode) ||
+        ReferenceEquals(setting, LowProcessorModeSleepUsec) ||
         ReferenceEquals(setting, ApplicationVersion) ||
         ReferenceEquals(setting, AudioDriverEnableInput) ||
         ReferenceEquals(setting, AudioGeneralDefaultPlaybackType) ||

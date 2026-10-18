@@ -67,7 +67,7 @@ public sealed partial class RenderingServer : ElectronObject
     internal bool RenderLoopEnabledCore
     {
         get { EnsureOwner(); return _renderLoopEnabled; }
-        set { EnsureOwner(); _renderLoopEnabled = value; }
+        set { EnsureOwner(); if (_renderLoopEnabled == value) return; _renderLoopEnabled = value; MarkChanged(); }
     }
 
     internal string GetCurrentRenderingMethodCore() { EnsureOwner(); return _backend.Method; }
@@ -80,7 +80,7 @@ public sealed partial class RenderingServer : ElectronObject
     {
         EnsureOwner();
         if (!color.IsFinite()) throw new ArgumentException("The clear color must be finite.", nameof(color));
-        _clearColor = color;
+        _clearColor = color; MarkChanged();
     }
 
     internal event Action? FramePreDrawCore;
@@ -165,7 +165,7 @@ public sealed partial class RenderingServer : ElectronObject
     private static void InvalidateViewportRecordings(Node node, Viewport viewport)
     { if (node is CanvasItem item && ReferenceEquals(item.CanvasViewport, viewport)) item.QueueRedraw(); for (var i = 0; i < node.GetChildCount(includeInternal: true); i++) InvalidateViewportRecordings(node.GetChild(i, includeInternal: true), viewport); }
     internal void SetWindowVisible(DisplayServer display, bool visible) { EnsureViewportMutation(); _backend.SetWindowVisible(display, visible); }
-    internal void EnsureViewportMutation() { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport targets cannot mutate during native submission."); }
+    internal void EnsureViewportMutation() { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport targets cannot mutate during native submission."); MarkChanged(); }
     internal void ReleaseViewport(Viewport viewport) { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport targets cannot be released during native submission."); _backend.ReleaseTarget(viewport); _canvasFrames.Remove(viewport); RemoveViewportState(viewport); viewport.RenderingOwner = null; }
     internal Vector2i ViewportDimensions(Viewport viewport) { EnsureOwner(); return TargetSize(viewport); }
     internal Image? ReadbackViewport(Viewport viewport)
@@ -178,9 +178,17 @@ public sealed partial class RenderingServer : ElectronObject
         _rendering = true;
         _swapBuffers = swapBuffers;
         Exception? frameError = null;
+        long capturedRevision = 0;
         try
         {
             AnimatedTexture.AdvanceAll(this, Stopwatch.GetTimestamp(), _animatedChanges);
+            if (!force && OS.LowProcessorUsageMode && Engine.GetWriteMoviePath().Length == 0 && !HasChangedCore())
+            {
+                CanvasTime = (CanvasTime + step) % ProjectSettings.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
+                return;
+            }
+            capturedRevision = Volatile.Read(ref _changeRevision);
+            _continuousCanvas = false;
             BeginEventEmission(FramePreDrawCore)?.Invoke();
             _globalParameters.BindScene(tree.SelectedShaderGlobals?.Parameters);
             UpdatePhysicsContacts(tree);
@@ -198,6 +206,8 @@ public sealed partial class RenderingServer : ElectronObject
             PresentViewports();
             _backend.EndFrame();
             _frameSubmitted = true;
+            _submittedRevision = capturedRevision;
+            _needsPresentation = !swapBuffers;
             Engine.Service.RecordDrawnFrame();
             CaptureCanvasVisibilityChanges();
             CaptureFrameCallbacks();
@@ -240,6 +250,7 @@ public sealed partial class RenderingServer : ElectronObject
             SubmitTexture(batch.Texture, tree);
             if (batch.Material is { } material)
             {
+                if (material.Program.TimeUniform is not null || material.Program.Vertex?.TimeUniform is not null) _continuousCanvas = true;
                 material.CopyTextures(frame.TextureScratch);
                 for (var i = 0; i < material.Textures.Length; i++) SubmitTexture(frame.TextureScratch[i] as Texture, tree);
                 Array.Clear(frame.TextureScratch);

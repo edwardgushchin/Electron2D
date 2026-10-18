@@ -103,6 +103,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     private void List(long id) { Access(); if (_drawPass != 0 || _activeList == 0 || id != _activeList) throw new ArgumentException("The compute list is not active.", nameof(id)); }
     private nint Commands()
     {
+        RenderingServer.NotifyRenderMutation();
         if (_fence != 0 || _submittedReadbacks.Count != 0) CompleteSubmission();
         if (_command == 0) { _command = SDL.AcquireGPUCommandBuffer(Device); if (_command == 0) throw GPUPhysicsDevice.Failure("acquire compute commands"); }
         return _command;
@@ -401,6 +402,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     {
         IdleList(); if (!_entries.TryGetValue(rid, out var entry)) throw new ArgumentException("The resource identity is not owned by this device.", nameof(rid)); CompleteSubmission();
         if (_command != 0 || _recordedReadbacks.Count != 0) { SubmitRecorded(); CompleteSubmission(); }
+        RenderingServer.NotifyRenderMutation();
         _entries.Remove(rid); if (entry.Borrowed is { } borrow && _rendererTextures.GetValueOrDefault(borrow.Source) == rid) _rendererTextures.Remove(borrow.Source); entry.Borrowed?.Dispose(); ReleaseProgram(entry.Variant); entry.Handle?.Dispose(); entry.FragmentHandle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose();
         DeliverReadbacks();
     }
@@ -411,6 +413,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     {
         if (disposing)
         {
+            RenderingServer.NotifyRenderMutation();
             if (_drawPass != 0) { SDL.EndGPURenderPass(_drawPass); _drawPass = 0; }
             if (_command != 0) { SDL.CancelGPUCommandBuffer(_command); _command = 0; }
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }

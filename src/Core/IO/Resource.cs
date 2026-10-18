@@ -424,6 +424,7 @@ public class Resource : ElectronObject
             ThrowIfDisposed();
 
             Interlocked.Increment(ref _changeRevision);
+            if (this is not Image) RenderingServer.NotifyRenderMutation();
             if (_changeBlockDepth != 0 && _changeBlockOwnerThreadId == Environment.CurrentManagedThreadId)
             {
                 _changePending = true;

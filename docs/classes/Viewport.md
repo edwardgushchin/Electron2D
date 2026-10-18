@@ -1,6 +1,6 @@
 # Viewport
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
 
 **Inherits:** [Node](Node.md)
 
@@ -616,3 +616,5 @@ WarpMouse resolves the containing native Window for embedded viewports, applying
 Oversampling defaults true; disabling selects raster factor one. OversamplingOverride defaults zero; a positive finite value selects an explicit factor, while nonpositive values use automatic maximum-axis stretch. GetOversampling returns the effective font/DPI raster factor. Mutations preserve scene-owner/capture/submission guards and invalidate viewport recordings. Viewport disposal releases retained DPI scale variants. These properties are typed scene state. See [scalable SVG textures](../components/scalable-svg.md).
 
 Native presentation retains a cold activation ordinal across sibling scene reordering. Entering the scene or a false-to-true RenderingServer.ViewportSetActive transition assigns a new ordinal; repeating active=true preserves it. This runtime state is not stored in scenes and participates only in final screen composition. See [screen attachment](../components/canvas-rendering.md#viewport-screen-attachment).
+
+[Low-processor scheduling](../components/low-processor-rendering.md) can skip a globally unchanged automatic frame. An active Always viewport remains a continuous consumer; Once still completes only after successful submission. Native expose/resize, changed target state and camera interpolation request new output.

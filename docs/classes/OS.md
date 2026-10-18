@@ -1,6 +1,6 @@
 # OS
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.OS`. **Inherits:** `ElectronObject`. **Inherited By:** —. **Source:** [source](../../src/Core/OS/OS.cs). **Component:** [File dialogs](../components/file-dialogs.md).
 
@@ -222,3 +222,25 @@ Key chord = OS.FindKeycodeFromString("Ctrl+Shift+K");
 string label = OS.GetKeycodeString(chord);
 bool characterKey = OS.IsKeycodeUnicode((int)Key.K);
 ```
+
+## Low-processor rendering properties
+
+| Complete declaration | Contract |
+| --- | --- |
+| `public static bool LowProcessorUsageMode { get; set; }` | Initially false; change-driven owned-window drawing with continued processing and input. |
+| `public static int LowProcessorUsageModeSleepUsec { get; set; }` | Initially 6900 microseconds; nonnegative additional wait, thread-safe. |
+| `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Inherited descriptors plus the two retained rendering-policy properties. |
+
+## Property Descriptions
+
+<a id="lowprocessorusagemode"></a>
+### LowProcessorUsageMode
+
+Process-wide, thread-safe policy. Engine.Run/RunAsync sample ProjectSettings.LowProcessorMode before scene readiness, then consume the current OS value each iteration. True skips automatic unchanged frames; process, physics and input continue. ForceDraw and movie capture still execute. Each new window startup reapplies project configuration.
+
+<a id="lowprocessorusagemodesleepusec"></a>
+### LowProcessorUsageModeSleepUsec
+
+Nonnegative microsecond interval, initially 6900. Zero removes the extra wait; MaxFPS can still require waiting. A negative assignment throws ArgumentOutOfRangeException without changing the interval. The owned host continues pumping events during long waits. Manual AdvanceFrame and movie capture do not apply this delay; precision is host-dependent.
+
+See [change reporting, producer coverage and verification](../components/low-processor-rendering.md).

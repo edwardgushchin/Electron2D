@@ -80,7 +80,7 @@ public abstract partial class CanvasItem
     public void QueueRedraw() { EnsureMutable(); if (IsInsideTree && !_drawing) InvalidateCanvas(); }
 
     // Resource change notifications may arrive from a loading thread; scene work stays on the owner thread.
-    internal void InvalidateCanvas() => Interlocked.Exchange(ref _redrawPending, 1);
+    internal void InvalidateCanvas() { Interlocked.Exchange(ref _redrawPending, 1); RenderingServer.NotifyRenderMutation(); }
 
     /// <summary>Records a filled rectangle or a centered rectangular outline during canvas recording.</summary>
     /// <param name="rect">A finite local rectangle; negative dimensions are normalized.</param>
@@ -280,7 +280,7 @@ public abstract partial class CanvasItem
 
     internal void PrepareCanvas()
     {
-        EnsureMutable();
+        ValidateNodeMutation();
         if (_drawing) throw new InvalidOperationException("Canvas recording cannot be re-entered.");
         PhysicsDebugDrawing.Refresh(this);
         if (Interlocked.Exchange(ref _redrawPending, 0) == 0) return;
@@ -334,7 +334,7 @@ public abstract partial class CanvasItem
         (bool Enabled, int Horizontal, int Vertical, bool Loop) particlesAnimation = default;
         foreach (var command in commands)
         {
-            if (command.AnimationSlice is { } slice) { skipping = !slice.Includes(time); continue; }
+            if (command.AnimationSlice is { } slice) { RenderingServer.Service?.RequireContinuousCanvas(); skipping = !slice.Includes(time); continue; }
             if (skipping || command.Texture is ServerTexture { IsDisposed: true } or TextureRD { IsDisposed: true }) continue;
             if (command.ClipIgnore is { } ignore) { commandClip = ignore ? null : clip; continue; }
             if (command.SetTransform) { drawingTransform = command.Transform; continue; }

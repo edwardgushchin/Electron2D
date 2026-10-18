@@ -5,7 +5,7 @@ internal struct CanvasTransformInterpolation
     internal bool Enabled;
     internal Transform Previous, Current;
     internal void Reset(Transform transform) => Previous = Current = transform;
-    internal void Tick(Transform transform, bool start) { if (start) Previous = Current; Current = transform; }
+    internal void Tick(Transform transform, bool start) { if (Current != transform || start && Previous != Current) RenderingServer.NotifyRenderMutation(); if (start) Previous = Current; Current = transform; }
     internal Transform Render(Transform canonical, float fraction, bool active) => Enabled && active ? Previous.InterpolateWith(Current, fraction) : canonical;
     internal Transform Rebase(Transform transform, Transform canonical)
     {

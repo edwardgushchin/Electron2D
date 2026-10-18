@@ -1,6 +1,6 @@
 # MultiMesh
 
-Last updated: 2026-10-09
+Last updated: 2026-10-18
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.MultiMesh` · **Source:** [MultiMesh.cs](../../src/Scene/Resources/MultiMesh.cs).
 
@@ -374,3 +374,5 @@ System.ArgumentOutOfRangeException: The index is outside storage.
 ## LOD behavior
 
 Authored index sets select from the full local-to-framebuffer basis using a one-pixel error threshold. MultiMesh selects each presentation instance independently; MeshInstance morph output retains LODs. Base queries and conservative bounds describe full geometry. Storage/callback ownership and detailed validation are documented in [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).
+
+Interpolation endpoint changes and explicit ResetInstancesPhysicsInterpolation report pending canvas output. Differing prepared endpoints remain a time-dependent consumer while the rendering scene enables physics interpolation. See [low-processor rendering](../components/low-processor-rendering.md).

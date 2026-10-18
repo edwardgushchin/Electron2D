@@ -1,6 +1,6 @@
 # Node
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -1939,3 +1939,5 @@ Emits this node after a changed description, independently of selection. Signal 
 ### `public event Action<Node>? EditorStateChanged`
 
 Emits this selected node after the supported authoring mutations listed in Scene authoring state. Delivery uses the mutating thread and committed state; signal blocking applies.
+
+Successful EnsureMutable validation conservatively reports a rendering change, including equal assignments and detached authoring. Custom setters should retain the existing owner/capture guards. Repeated internal no-op setters can therefore prevent idle rendering; actual producers should avoid unnecessary publication. See [low-processor scheduling](../components/low-processor-rendering.md).

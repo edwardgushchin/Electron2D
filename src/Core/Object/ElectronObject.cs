@@ -358,6 +358,7 @@ public abstract partial class ElectronObject : IDisposable
             canceled = Interlocked.CompareExchange(ref _disposeState, Disposing, PreDeleting) == PreDeleteCanceled;
             if (!canceled)
             {
+                if (this is Node || this is Resource and not Image) RenderingServer.NotifyRenderMutation();
                 try
                 {
                     Dispose(disposing: true);

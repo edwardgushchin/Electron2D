@@ -1,6 +1,6 @@
 # Camera
 
-Last updated: 2026-10-02
+Last updated: 2026-10-18
 
 - Declaration: `public partial class Camera : Entity`
 - Sources: [Camera.cs](../../src/Scene/2D/Camera.cs), [Camera.Tracking.cs](../../src/Scene/2D/Camera.Tracking.cs)
@@ -694,3 +694,5 @@ All 24 camera configuration properties are stored. CustomViewport is not stored.
 [CameraRenderingTests](../../tests/Electron2D.Tests/CameraRenderingTests.cs) checks native pixels and injected pointer mapping at six stages: centered view, zoom/follow, rotation, explicit camera switch, automatic handoff and identity after disabling all cameras. Retained draw commands are recorded once. Linux Wayland GPU/compatibility and dummy software passed, including both HLSL and GLSL material variants on GPU. The existing warmed renderer allocation check includes an active camera. Other platforms, physical-input/visual acceptance and large-scene performance are unverified.
 
 EditorDrawScreen/EditorDrawLimits/EditorDrawDragMargin require a real edited-scene preview mode, editor viewport ownership and its redraw/settings integration. They remain absent; EditedSceneRoot currently selects warning scope and explicitly does not enable editor behavior. [PhysicsInterpolationTests](../../tests/Electron2D.Tests/PhysicsInterpolationTests.cs) checks camera policy/reset and logical versus presented transforms; [native pixel checks](../../tests/Electron2D.Tests/PhysicsInterpolationNativeTests.cs) exercise the default Idle camera on Linux dummy compatibility and Wayland compatibility/GPU. CanvasLayer following, [Parallax](Parallax.md) and [ParallaxBackground](ParallaxBackground.md) camera updates are implemented for the root Window. Offscreen/nested viewports and multiple native windows remain separate dependencies. No inert camera properties stand in for them.
+
+Static tracking retains camera/parallax updates but avoids publishing an equal viewport canvas matrix. This permits [low-processor rendering](../components/low-processor-rendering.md) to idle with an attached camera; actual motion and smoothing still publish changed transforms.

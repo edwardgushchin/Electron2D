@@ -82,3 +82,7 @@ OS restart-on-exit configuration is a process-wide, desktop-only request with a 
 [Runtime diagnostics](diagnostics.md) now report manual/windowed lifecycle failures while preserving their exception and cleanup semantics; warmed successful frames perform no capture.
 
 Configured recording uses Engine.RunMovie/RunMovieAsync and the typed MovieWriterFile/FPS settings. All recording entry points sample MovieWriterDisableVSync before startup; the root window retains an immediate-presentation request after display creation and before renderer creation when selected, subject to native fallback. The request ends with that display lifetime. See [movie writing](movie-writing.md#project-movie-startup) for precedence, ownership and verification limits.
+
+## Rendering changes and low-processor scheduling
+
+[Low-processor rendering](low-processor-rendering.md) connects retained change producers, static RenderingServer.HasChanged, the two OS policies and typed startup settings to Engine.Run/RunAsync. Static output skips submissions while processing and input continue; time-driven drawing and capture retain their executing consumers. Verification limits remain explicit in the component.

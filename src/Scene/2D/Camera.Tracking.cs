@@ -113,7 +113,7 @@ public partial class Camera
             throw new InvalidOperationException("Camera tracking overflowed finite coordinates.");
         var canvas = pose.AffineInverse();
         if (!canvas.IsFinite()) throw new InvalidOperationException("Camera inverse transform overflowed finite coordinates.");
-        viewport.CanvasTransform = canvas;
+        if (viewport.CanvasTransform != canvas) viewport.CanvasTransform = canvas;
         _targetPosition = target; _smoothedPosition = smoothed; _screenRotation = angle; _screenCenter = center;
         _horizontalOffsetChanged = horizontalChanged; _verticalOffsetChanged = verticalChanged; _first = false;
         viewport.NotifyParallaxCameraMoved(center - halfSize * scale, canvas,

@@ -34,6 +34,7 @@ public sealed partial class SceneTree
                 throw;
             }
             _debugCollisionsHint = value;
+            RenderingServer.NotifyRenderMutation();
             foreach (var node in Root.EnumerateDepthFirst())
                 if (node is CollisionShape or CollisionPolygon or RayCast or ShapeCast or Joint or TileMapLayer) ((CanvasItem)node).InvalidateCanvas();
         }

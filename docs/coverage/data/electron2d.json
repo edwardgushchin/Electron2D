@@ -128320,6 +128320,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.GetRestartOnExitArguments()",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -156028,6 +156041,19 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.HasChanged()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "HasChanged",
+    "signature": "public static System.Boolean HasChanged()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -229931,6 +229957,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.OS.LowProcessorUsageMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.OS",
+    "name": "LowProcessorUsageMode",
+    "signature": "public static System.Boolean LowProcessorUsageMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.OS.LowProcessorUsageModeSleepUsec()",
+    "kind": "property",
+    "declaringType": "Electron2D.OS",
+    "name": "LowProcessorUsageModeSleepUsec",
+    "signature": "public static System.Int32 LowProcessorUsageModeSleepUsec { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.OccluderPolygon.Closed()",
     "kind": "property",
     "declaringType": "Electron2D.OccluderPolygon",
@@ -235076,6 +235128,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.LowProcessorMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "LowProcessorMode",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E LowProcessorMode { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.LowProcessorModeSleepUsec()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "LowProcessorModeSleepUsec",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E LowProcessorModeSleepUsec { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
     "value": null
   },
   {

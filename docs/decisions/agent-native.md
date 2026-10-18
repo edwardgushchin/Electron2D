@@ -1,6 +1,6 @@
 # Agent-native development decisions
 
-Last updated: 2026-10-05
+Last updated: 2026-10-18
 
 This bounded document owns the product's agent-native development contract. Use [the decision index](index.md) for other architectural domains; implemented behavior remains documented in class, component and domain pages.
 
@@ -77,7 +77,7 @@ Measure verified task success, repair iterations, elapsed time, required context
 
 ### Current implementation and verification boundary
 
-The minimal [editor startup screen](../components/editor-startup.md) now supplies a native branded window using the public runtime API; it provides no authoring operation. This decision adds no CLI command or capture API. The typed archive slice now supplies runtime programmatic save/load and fresh-process reconstruction. Existing MainLoop/Engine manual scheduling, typed Input delivery and in-memory PackedScene are foundations. Engine.Run(Window) still owns a native window and real-time clock. ResourceLoader supports leaf codecs, ordered typed format extensions and archive resource/scene graphs. ResourceArchiveTests proves programmatic save, fresh-process load and headless lifecycle; rendered capture and unified project tooling remain absent. Renderer readback is internal to tests, while public Viewport.GetTexture/ViewportTexture and independent offscreen output remain missing. Existing domain-specific development tools do not constitute the unified project workflow.
+The minimal [editor startup screen](../components/editor-startup.md) now supplies a native branded window using the public runtime API; it provides no authoring operation. This decision adds no CLI command or capture API. The typed archive slice now supplies runtime programmatic save/load and fresh-process reconstruction. Existing MainLoop/Engine manual scheduling, typed Input delivery and in-memory PackedScene are foundations. Engine.Run(Window) still owns a native window and real-time clock. ResourceLoader supports leaf codecs, ordered typed format extensions and archive resource/scene graphs. ResourceArchiveTests proves programmatic save, fresh-process load and headless lifecycle. Unified project tooling remains absent; headless simulation and actual rendered capture have separate executable checks. Public Viewport.GetTexture/ViewportTexture.GetImage, independent offscreen targets, RenderingServer.ForceDraw and the movie-writer lifecycle now provide observable native canvas output. RenderingServer.HasChanged and low-processor scheduling retain processing/input while skipping static output; their native capture probe verifies eight actual RGB frames independently of that optimization. See [low-processor rendering](../components/low-processor-rendering.md). These capabilities do not by themselves establish unified project tooling or agent acceptance. Existing domain-specific development tools do not constitute the unified project workflow.
 
 Missing capabilities remain gaps with exact triggers in [coverage](../coverage/index.md). Platform claims follow ADR 0021; zero-allocation claims follow ADR 0014. Documentation/link/decision checks verify this record only, not an implemented agent workflow or improved agent performance.
 

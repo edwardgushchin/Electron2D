@@ -222,6 +222,11 @@ public sealed partial class DisplayServer
 
         switch (type)
         {
+            case SDL.EventType.WindowExposed:
+            case SDL.EventType.WindowRestored:
+            case SDL.EventType.WindowShown:
+                RenderingServer.NotifyRenderMutation();
+                break;
             case SDL.EventType.WindowMouseEnter:
                 if (!_mouseHovering)
                 {
@@ -237,6 +242,7 @@ public sealed partial class DisplayServer
                 }
                 break;
             case SDL.EventType.WindowDisplayScaleChanged:
+                RenderingServer.NotifyRenderMutation();
                 if (_waylandWindowPosition)
                 {
                     ReapplyWaylandWindowLimits();
@@ -250,6 +256,7 @@ public sealed partial class DisplayServer
                 break;
             case SDL.EventType.WindowResized when !_pixelWindowCoordinates:
             case SDL.EventType.WindowPixelSizeChanged when _pixelWindowCoordinates:
+                RenderingServer.NotifyRenderMutation();
                 if (_waylandWindowPosition)
                     RefreshBlankWindowSurface();
                 var resizedRect = new Rect2i(_windowRect.Position,

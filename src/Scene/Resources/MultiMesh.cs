@@ -192,7 +192,7 @@ public sealed class MultiMesh : Resource
     /// <param name="instance">Existing zero-based index.</param>
     public void ResetInstancePhysicsInterpolation(int instance) { lock (Gate) { var offset = Offset(instance); _buffer.AsSpan(offset, Stride).CopyTo(_previous.AsSpan(offset)); } }
     /// <summary>Resets all presentation records to current values without editing logical data.</summary>
-    public void ResetInstancesPhysicsInterpolation() { lock (Gate) { ThrowIfDisposed(); _buffer.CopyTo(_previous, 0); } }
+    public void ResetInstancesPhysicsInterpolation() { lock (Gate) { ThrowIfDisposed(); _buffer.CopyTo(_previous, 0); } RenderingServer.NotifyRenderMutation(); }
     /// <summary>Gets the stable borrowed resource identity.</summary>
     /// <returns>A weak logical RID valid until resource disposal, independently of a renderer.</returns>
     public override RID GetRID() { lock (Gate) { ThrowIfDisposed(); return _rid.IsValid() ? _rid : _rid = RenderingMultiMeshRegistry.Register(this); } }
@@ -242,7 +242,8 @@ public sealed class MultiMesh : Resource
     {
         lock (Gate) { ThrowIfDisposed(); if (_interpolationEnabled == enabled) return; _interpolationEnabled = enabled; _buffer.CopyTo(_previous, 0); }
     }
-    internal void PhysicsTick(bool start) { lock (Gate) { if (IsDisposed) return; if (start && _interpolationEnabled) _buffer.CopyTo(_previous, 0); _inTick = start && _interpolationEnabled; } }
+    internal bool HasRenderingInterpolation { get { lock (Gate) return _interpolationEnabled && !_buffer.AsSpan().SequenceEqual(_previous); } }
+    internal void PhysicsTick(bool start) { lock (Gate) { if (IsDisposed) return; if (start && _interpolationEnabled) { if (!_buffer.AsSpan().SequenceEqual(_previous)) RenderingServer.NotifyRenderMutation(); _buffer.CopyTo(_previous, 0); } _inTick = start && _interpolationEnabled; } }
     internal void Presentation(int instance, float fraction, out Transform pose, out Color color, out Color custom)
     {
         var offset = instance * Stride; fraction = _interpolationEnabled ? Math.Clamp(fraction, 0, 1) : 1;

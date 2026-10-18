@@ -1,6 +1,6 @@
 # CanvasItem
 
-Last updated: 2026-10-14
+Last updated: 2026-10-18
 
 **Inherits:** [Node](Node.md)
 
@@ -1357,3 +1357,5 @@ GetScreenTransform now includes the outer containing native Window origin for em
 RenderingServer.CanvasItemSetCanvasGroupMode may override live composition without changing these authored properties. Changed ClipChildren values and CanvasGroup margin/mipmap assignments republish their scene policy; renderer teardown clears native overrides.
 
 Retained screen snapshots can be configured through RenderingServer.CanvasItemSetCopyToBackBuffer on live item identities. BackBufferCopy source assignments republish the authored policy; renderer-only settings stay outside scene getters/storage. See [retained copy contract](../components/canvas-rendering.md#retained-backbuffer-copy-settings).
+
+[Low-processor scheduling](../components/low-processor-rendering.md) observes retained invalidation and node/resource mutations. QueueRedraw still controls geometry recording; transforms, modulation and material writes can require presentation without rerecording. Animation intervals and changing interpolation endpoints retain active output.

@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
@@ -1335,3 +1335,14 @@ The static GlobalShaderParameterAdd/Get/GetList/GetType/Remove/Set/SetOverride f
 Scene-authored global shader values now use [ShaderGlobalsOverride](ShaderGlobalsOverride.md). Its typed portable values, tree-order arbitration and renderer-session restoration are described in the [global parameter component](../components/global-shader-parameters.md#scene-owned-overrides).
 
 Registered `shader_globals/name` definitions use [GlobalShaderParameterSettings<T>](GlobalShaderParameterSettings.Generic.md) with exact numeric carriers, copied matrices or image-path strings. Rendering-session preparation samples active features before scene Ready and owns loaded images through shutdown; later setting edits apply to the next session. Headless configuration authoring remains independent of a renderer. See [project global behavior](../components/global-shader-parameters.md#project-authored-globals).
+
+## Rendering change observation
+
+| Complete declaration | Contract |
+| --- | --- |
+| `public static bool HasChanged()` | Owner-thread observation of pending output or an executing time consumer; does not clear changes. |
+
+<a id="haschanged"></a>
+### HasChanged
+
+Returns true for pending retained state, resources, presentation or frame callbacks and active time-dependent output. A new session starts changed. Successful presented submission acknowledges the captured revision; later mutations and failures remain pending. ForceDraw(false) leaves presentation work. Off-owner access or absent renderer throws InvalidOperationException. Conservative invalidation can report equal resulting pixels. See [producer and scheduling details](../components/low-processor-rendering.md).

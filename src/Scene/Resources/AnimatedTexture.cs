@@ -220,6 +220,27 @@ public sealed class AnimatedTexture : Texture
         _sizeDirty = false;
     }
 
+    internal static bool HasTimedChanges(RenderingServer server, long ticks)
+    {
+        lock (GraphGate)
+            foreach (var weak in Instances)
+                if (weak.TryGetTarget(out var texture) && !texture.IsDisposed && texture.HasTimedChange(server, ticks)) return true;
+        return false;
+    }
+
+    private bool HasTimedChange(RenderingServer server, long ticks)
+    {
+        if (!ReferenceEquals(_lastServer, server) || _pause || _speedScale == 0 || _frameCount == 1) return false;
+        if (_oneShot && (_speedScale > 0 ? _currentFrame == _frameCount - 1 : _currentFrame == 0)) return false;
+        if (!_oneShot)
+        {
+            double cycle = 0;
+            for (var i = 0; i < _frameCount; i++) cycle += _frames[i].Duration;
+            if (cycle <= 0) return false;
+        }
+        return _elapsed + Stopwatch.GetElapsedTime(_lastTicks, ticks).TotalSeconds >= _frames[_currentFrame].Duration / Math.Abs((double)_speedScale);
+    }
+
     internal static void AdvanceAll(RenderingServer server, long ticks, List<AnimatedTexture> changed)
     {
         lock (GraphGate)

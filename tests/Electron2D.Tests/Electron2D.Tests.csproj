@@ -24,6 +24,7 @@
     <Compile Include="../Portability/FrameMonitorContract.cs" Link="FrameMonitorContract.cs" />
     <Compile Include="../Portability/JoyMotionContract.cs" Link="JoyMotionContract.cs" />
     <Compile Include="../Portability/DeviceSensorContract.cs" Link="DeviceSensorContract.cs" />
+    <Compile Include="../Portability/LowProcessorContract.cs" Link="LowProcessorContract.cs" />
     <Compile Include="../../tools/physics-memory/ProcessMemory.cs" Link="PhysicsMemory/ProcessMemory.cs" />
     <ProjectReference Include="../PhysicsBackendExtension.Consumer/PhysicsBackendExtension.Consumer.csproj" />
     <Compile Include="../PhysicsBodyExtension.Consumer/ControlledState.cs" Link="Consumers/ControlledState.cs" />

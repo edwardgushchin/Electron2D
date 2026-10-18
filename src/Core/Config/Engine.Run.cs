@@ -100,6 +100,8 @@ public sealed partial class Engine
             ThemeDB.LoadProjectTheme();
             AudioServer.LoadDefaultLayout();
             Input.IgnoreJoypadOnUnfocusedApplication = ProjectSettings.GetWithOverride(ProjectSettings.IgnoreJoypadOnUnfocusedApplication);
+            OS.LowProcessorUsageMode = ProjectSettings.GetWithOverride(ProjectSettings.LowProcessorMode);
+            OS.LowProcessorUsageModeSleepUsec = ProjectSettings.GetWithOverride(ProjectSettings.LowProcessorModeSleepUsec);
             window.OpenNative(movieDisableVSync);
             window.ApplyProjectMSAA();
             window.ApplyProjectHDR();
@@ -130,12 +132,12 @@ public sealed partial class Engine
                 window.Render(tree, renderStep);
                 CompleteFrameTiming(elapsed);
                 movie?.Write(window);
+                var waitStart = Stopwatch.GetTimestamp();
                 while (!tree.QuitRequested)
                 {
                     var limit = movie is null ? MaxFPSCore : 0;
-                    if (limit == 0 && !asynchronous)
-                        break;
-                    var remaining = limit == 0 ? 0d : 1d / limit - Stopwatch.GetElapsedTime(lastFrame).TotalSeconds;
+                    var lowWait = movie is null && OS.LowProcessorUsageMode ? OS.LowProcessorUsageModeSleepUsec / 1_000_000d - Stopwatch.GetElapsedTime(waitStart).TotalSeconds : 0d;
+                    var remaining = Math.Max(lowWait, limit == 0 ? 0d : 1d / limit - Stopwatch.GetElapsedTime(lastFrame).TotalSeconds);
                     if (remaining <= 0d && !asynchronous)
                         break;
                     var delay = Math.Clamp((int)Math.Ceiling(remaining * 1000d), 1, 10);

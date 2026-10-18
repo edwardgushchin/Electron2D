@@ -153,6 +153,14 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<string> ApplicationName { get; } =
         new("application/config/name", string.Empty);
 
+    /// <summary>Defines whether a window session starts with rendering-change-driven drawing.</summary>
+    /// <value>application/run/low_processor_mode; false initially.</value>
+    public static ProjectSetting<bool> LowProcessorMode { get; } = new("application/run/low_processor_mode", false);
+
+    /// <summary>Defines the initial low-processor wait between owned frames, in microseconds.</summary>
+    /// <value>application/run/low_processor_mode_sleep_usec; 6900 initially. Negative values are rejected.</value>
+    public static ProjectSetting<int> LowProcessorModeSleepUsec { get; } = new("application/run/low_processor_mode_sleep_usec", 6900, validator: value => value >= 0);
+
     /// <summary>Defines the application version string.</summary>
     public static ProjectSetting<string> ApplicationVersion { get; } =
         new("application/config/version", string.Empty);

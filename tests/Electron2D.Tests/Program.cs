@@ -9,6 +9,13 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOW_PROCESSOR") is { } lowProcessorMode)
+{
+    if (lowProcessorMode == "managed") LowProcessorRenderingTests.RunManaged();
+    else if (lowProcessorMode is "gpu" or "compatibility") LowProcessorRenderingTests.RunNative(lowProcessorMode);
+    else throw new ArgumentException("Unknown low-processor profile.");
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SENSORS") == "1")
 {
     DeviceSensorContract.Run();
@@ -1590,6 +1597,7 @@ MissingTextureTests.RunManaged();
 LinkedSceneTests.RunManaged();
 DeferredSceneTests.RunManaged();
 FrameMonitorTests.Run();
+LowProcessorContract.Run();
 DeviceSensorContract.Run();
 JoyMotionContract.Run();
 JoyMotionTests.Run();

@@ -93,6 +93,8 @@ status changes; full retained/native/device history budgets remain open.
 
 Last updated: 2026-10-18
 
+[Low-processor rendering](../components/low-processor-rendering.md) connects rendering change reporting, two OS policies and two typed startup settings to the existing owned window loop. Five reference rows are Implemented. Node/resource/retained/device/native-event and time-consumer producers execute on the current backends; static-camera idle and movie capture retain their own checks and platform limits.
+
 [Per-referrer resource IDs](../components/resources.md#per-referrer-path-ids) now
 have executable public cache and custom-format consumers. The two inherited
 Resource declarations are Implemented; broader inherited and complete physics

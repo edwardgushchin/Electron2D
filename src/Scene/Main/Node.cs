@@ -2652,11 +2652,18 @@ public partial class Node : ElectronObject
 
     /// <summary>Validates that this node may be mutated at the current lifecycle point.</summary>
     /// <remarks>Derived node property setters should call this before changing state that can be stored in a packed scene.
-    /// Existing disposal/capture/thread guards run before the virtual ValidateMutation hook. The inherited hook also
+    /// Existing disposal/capture/thread guards run before the virtual ValidateMutation hook. Successful validation conservatively
+    /// invalidates active rendering, including custom setters whose resulting value is equal. The inherited hook also
     /// guards affected scene colliders against owner-thread and numerical-borrow violations, including detached attachments.</remarks>
     /// <exception cref="InvalidOperationException">Scene capture is active or an attached node is accessed off the tree owner thread.</exception>
     /// <exception cref="ObjectDisposedException">Disposal has started.</exception>
     protected void EnsureMutable()
+    {
+        ValidateNodeMutation();
+        RenderingServer.NotifyRenderMutation();
+    }
+
+    internal void ValidateNodeMutation()
     {
         ThrowIfDisposed();
 

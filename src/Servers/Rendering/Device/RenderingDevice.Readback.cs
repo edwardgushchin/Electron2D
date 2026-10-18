@@ -88,6 +88,7 @@ public sealed unsafe partial class RenderingDevice
             }
             else if (entry.Kind == Kind.Uniform) entry.Data.AsSpan((int)offset, destination.Length).CopyTo(ReadbackDestination(destination));
             _recordedReadbacks.Enqueue(request);
+            RenderingServer.NotifyRenderMutation();
         }
         catch { RecycleReadback(request); throw; }
     }

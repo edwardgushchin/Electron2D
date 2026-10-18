@@ -174,6 +174,7 @@ public sealed partial class RenderingServer
     {
         EnsureOwner();
         if (_submittingTextures || _closing) throw new InvalidOperationException("Texture resources cannot change during submission or shutdown.");
+        MarkChanged();
     }
 
     private void ReleaseOwnedTextures()

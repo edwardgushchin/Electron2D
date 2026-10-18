@@ -1,6 +1,6 @@
 # Canvas rendering
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -632,3 +632,7 @@ The destination is a floating Rect2 in native client pixels. Backend clipping ad
 [ViewportPresentationTests](../../tests/Electron2D.Tests/ViewportPresentationTests.cs) exercises real GPU, Compatibility, HDR and HDR+4X MSAA pixels on Linux X11 and Wayland: attachment/replacement/detach, root visibility defaults, active/Disabled/Once/WhenVisible/WhenParentVisible, one-pixel suspension, clipping/UVs, alpha replacement, stable identities, borrowed scene viewports, topological/activation ordering, repeated activation and scene sibling reordering, pre-draw publication, owner/capture/foreign/invalid identity guards and teardown. Each profile measures 64 prepared presentation frames with zero managed bytes on the owner thread. Native allocation, frame-time bounds, compositor/human acceptance and other platforms remain unverified. Existing manual-frame, server-viewport, fitted-content and HDR movie/composition checks cover integration separately.
 
 The method remains Partial for nonzero native window identities. Exact dependency: native Window/DisplayServer identity registry, per-window backend and swapchain ownership, and close/resize/event routing under ADR 0040. Existing embedded windows remain scene targets rather than independent native outputs. Framebuffer-free direct drawing has its own blocked prerequisite; this attachment API does not expose an inert direct-render flag.
+
+## Rendering changes and low-processor scheduling
+
+[Low-processor rendering](low-processor-rendering.md) connects retained change producers, static RenderingServer.HasChanged, the two OS policies and typed startup settings to Engine.Run/RunAsync. Static output skips submissions while processing and input continue; time-driven drawing and capture retain their executing consumers. Verification limits remain explicit in the component.

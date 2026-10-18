@@ -2,7 +2,7 @@
 
 [Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. Registered project definitions prepare typed bases before scene readiness and own loaded images through session shutdown. The registry has explicit owner/session lifetime and no material-property aliases.
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
 
 [Movie writing](../components/movie-writing.md) consumes completed root-viewport pixels through the actual renderer and fixes capture dimensions across later resizes. It does not create a headless renderer or claim readback/encoding is allocation-free.
 
@@ -368,3 +368,7 @@ Paired compiled Shader stages now execute vertex deformation through existing Ca
 Scene-authored global shader values now use [ShaderGlobalsOverride](../classes/ShaderGlobalsOverride.md). Its typed portable values, tree-order arbitration and renderer-session restoration are described in the [global parameter component](../components/global-shader-parameters.md#scene-owned-overrides).
 
 Window placement and ResetSize use the existing viewport/native resize lifecycle. Embedded centering remains independent of unavailable Wayland global positions; native root placement is subject to compositor constraints. See [the window runtime](../components/window-runtime.md#initial-placement-and-constrained-reset).
+
+## Rendering changes and low-processor scheduling
+
+[Low-processor rendering](../components/low-processor-rendering.md) connects retained change producers, static RenderingServer.HasChanged, the two OS policies and typed startup settings to Engine.Run/RunAsync. Static output skips submissions while processing and input continue; time-driven drawing and capture retain their executing consumers. Verification limits remain explicit in the component.

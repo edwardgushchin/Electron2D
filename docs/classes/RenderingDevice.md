@@ -1,6 +1,6 @@
 # RenderingDevice
 
-Last updated: 2026-10-12
+Last updated: 2026-10-18
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RenderingDevice`. **Source:** [RenderingDevice.cs](../../src/Servers/Rendering/Device/RenderingDevice.cs), [RenderingDevice.Readback.cs](../../src/Servers/Rendering/Device/RenderingDevice.Readback.cs). **Component:** [Local compute](../components/local-compute.md).
 
@@ -1254,3 +1254,5 @@ A new resource with independent stage bytecode and compiler diagnostics. Failed 
 ## Source authoring
 
 [RDShaderSource](RDShaderSource.md) and [ShaderLanguage](RenderingDevice.ShaderLanguage.md) feed the separately installed ShaderImport tool through explicit cold compilation. Returned bytecode/diagnostics are copied per stage, and ordinary device shader/pipeline creation remains responsible for executable interfaces and native validation. The [authoring contract](../components/local-compute.md#source-authoring-and-build-imports) defines cache bypass, dependency handling, output/deadline bounds and verified native behavior.
+
+Command recording, queued readbacks, resource retirement and device disposal conservatively invalidate the active canvas service. This also covers caller-owned device work that can feed retained texture consumers. Existing device ownership, submission and canvas compatibility guards remain in force. See [low-processor rendering](../components/low-processor-rendering.md).

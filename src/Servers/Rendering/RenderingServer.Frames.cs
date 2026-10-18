@@ -47,6 +47,7 @@ public sealed partial class RenderingServer
         ArgumentNullException.ThrowIfNull(callback);
         var server = RequireService(); server.EnsureOwner();
         server._queuedFrameCallbacks.Add(callback);
+        server.MarkChanged();
     }
 
     private void CaptureFrameCallbacks()

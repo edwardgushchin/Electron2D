@@ -5016,6 +5016,31 @@
       "godot": "ShaderIncludeDB::method:list_built_in_include_files()",
       "electron2d": "method:Electron2D.ShaderIncludeDB.ListBuiltInIncludeFiles()",
       "reason": "ADRs 0028/0095: retained static discovery returns immutable embedded portable color source before renderer startup, literal case-sensitive existence and missing-name empty/false, and an independent ordinal name array. The same HLSL source executes in built-in canvas color processing; native project HLSL/GLSL preprocessing consumes the library with nested guards and inactive includes. ShaderIncludeDBTests checks workers, null/missing/isolation and 1024 prepared zero-byte lookups; both-language math/alpha pixels and HDR regressions pass on Linux software Vulkan Wayland/X11. Importer vertex/compute stages, unchanged output and failure preservation are verified. Driver-specific/3D internals are outside the portable adaptation; foreign platforms, native allocations, hardware and owner acceptance remain separate."
+    },
+    {
+      "godot": "OS::property:low_processor_usage_mode",
+      "electron2d": "property:Electron2D.OS.LowProcessorUsageMode()",
+      "reason": "Executable retained change reporting and owned low-processor scheduling under ADRs 0016/0019/0028/0095. Node/resource/server/device/configuration/native-event producers, TIME/animation/viewport/interpolation/contact consumers, capture bypass, failure/presentation acknowledgement and responsive waiting share the current GPU and Compatibility paths. LowProcessorContract and LowProcessorRenderingTests exercise settings, manual/no-host contracts, real pixels, idle processing, mutation recovery, time consumers and zero prepared owner-managed bytes. Hardware power savings, native allocation totals and foreign execution remain unverified; see docs/components/low-processor-rendering.md."
+    },
+    {
+      "godot": "OS::property:low_processor_usage_mode_sleep_usec",
+      "electron2d": "property:Electron2D.OS.LowProcessorUsageModeSleepUsec()",
+      "reason": "Executable retained change reporting and owned low-processor scheduling under ADRs 0016/0019/0028/0095. Node/resource/server/device/configuration/native-event producers, TIME/animation/viewport/interpolation/contact consumers, capture bypass, failure/presentation acknowledgement and responsive waiting share the current GPU and Compatibility paths. LowProcessorContract and LowProcessorRenderingTests exercise settings, manual/no-host contracts, real pixels, idle processing, mutation recovery, time consumers and zero prepared owner-managed bytes. Hardware power savings, native allocation totals and foreign execution remain unverified; see docs/components/low-processor-rendering.md."
+    },
+    {
+      "godot": "RenderingServer::method:has_changed()",
+      "electron2d": "method:Electron2D.RenderingServer.HasChanged()",
+      "reason": "Executable retained change reporting and owned low-processor scheduling under ADRs 0016/0019/0028/0095. Node/resource/server/device/configuration/native-event producers, TIME/animation/viewport/interpolation/contact consumers, capture bypass, failure/presentation acknowledgement and responsive waiting share the current GPU and Compatibility paths. LowProcessorContract and LowProcessorRenderingTests exercise settings, manual/no-host contracts, real pixels, idle processing, mutation recovery, time consumers and zero prepared owner-managed bytes. Hardware power savings, native allocation totals and foreign execution remain unverified; see docs/components/low-processor-rendering.md."
+    },
+    {
+      "godot": "ProjectSettings::property:application/run/low_processor_mode",
+      "electron2d": "property:Electron2D.ProjectSettings.LowProcessorMode()",
+      "reason": "Executable retained change reporting and owned low-processor scheduling under ADRs 0016/0019/0028/0095. Node/resource/server/device/configuration/native-event producers, TIME/animation/viewport/interpolation/contact consumers, capture bypass, failure/presentation acknowledgement and responsive waiting share the current GPU and Compatibility paths. LowProcessorContract and LowProcessorRenderingTests exercise settings, manual/no-host contracts, real pixels, idle processing, mutation recovery, time consumers and zero prepared owner-managed bytes. Hardware power savings, native allocation totals and foreign execution remain unverified; see docs/components/low-processor-rendering.md."
+    },
+    {
+      "godot": "ProjectSettings::property:application/run/low_processor_mode_sleep_usec",
+      "electron2d": "property:Electron2D.ProjectSettings.LowProcessorModeSleepUsec()",
+      "reason": "Executable retained change reporting and owned low-processor scheduling under ADRs 0016/0019/0028/0095. Node/resource/server/device/configuration/native-event producers, TIME/animation/viewport/interpolation/contact consumers, capture bypass, failure/presentation acknowledgement and responsive waiting share the current GPU and Compatibility paths. LowProcessorContract and LowProcessorRenderingTests exercise settings, manual/no-host contracts, real pixels, idle processing, mutation recovery, time consumers and zero prepared owner-managed bytes. Hardware power savings, native allocation totals and foreign execution remain unverified; see docs/components/low-processor-rendering.md."
     }
   ],
   "statusGroups": [
@@ -7057,6 +7082,41 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0028/0095: retained static discovery returns immutable embedded portable color source before renderer startup, literal case-sensitive existence and missing-name empty/false, and an independent ordinal name array. The same HLSL source executes in built-in canvas color processing; native project HLSL/GLSL preprocessing consumes the library with nested guards and inactive includes. ShaderIncludeDBTests checks workers, null/missing/isolation and 1024 prepared zero-byte lookups; both-language math/alpha pixels and HDR regressions pass on Linux software Vulkan Wayland/X11. Importer vertex/compute stages, unchanged output and failure preservation are verified. Driver-specific/3D internals are outside the portable adaptation; foreign platforms, native allocations, hardware and owner acceptance remain separate."
+    },
+    {
+      "godot": [
+        "OS::property:low_processor_usage_mode"
+      ],
+      "state": "Implemented",
+      "reason": "Executable retained change reporting and owned low-processor scheduling under ADRs 0016/0019/0028/0095. Node/resource/server/device/configuration/native-event producers, TIME/animation/viewport/interpolation/contact consumers, capture bypass, failure/presentation acknowledgement and responsive waiting share the current GPU and Compatibility paths. LowProcessorContract and LowProcessorRenderingTests exercise settings, manual/no-host contracts, real pixels, idle processing, mutation recovery, time consumers and zero prepared owner-managed bytes. Hardware power savings, native allocation totals and foreign execution remain unverified; see docs/components/low-processor-rendering.md."
+    },
+    {
+      "godot": [
+        "OS::property:low_processor_usage_mode_sleep_usec"
+      ],
+      "state": "Implemented",
+      "reason": "Executable retained change reporting and owned low-processor scheduling under ADRs 0016/0019/0028/0095. Node/resource/server/device/configuration/native-event producers, TIME/animation/viewport/interpolation/contact consumers, capture bypass, failure/presentation acknowledgement and responsive waiting share the current GPU and Compatibility paths. LowProcessorContract and LowProcessorRenderingTests exercise settings, manual/no-host contracts, real pixels, idle processing, mutation recovery, time consumers and zero prepared owner-managed bytes. Hardware power savings, native allocation totals and foreign execution remain unverified; see docs/components/low-processor-rendering.md."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:has_changed()"
+      ],
+      "state": "Implemented",
+      "reason": "Executable retained change reporting and owned low-processor scheduling under ADRs 0016/0019/0028/0095. Node/resource/server/device/configuration/native-event producers, TIME/animation/viewport/interpolation/contact consumers, capture bypass, failure/presentation acknowledgement and responsive waiting share the current GPU and Compatibility paths. LowProcessorContract and LowProcessorRenderingTests exercise settings, manual/no-host contracts, real pixels, idle processing, mutation recovery, time consumers and zero prepared owner-managed bytes. Hardware power savings, native allocation totals and foreign execution remain unverified; see docs/components/low-processor-rendering.md."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:application/run/low_processor_mode"
+      ],
+      "state": "Implemented",
+      "reason": "Executable retained change reporting and owned low-processor scheduling under ADRs 0016/0019/0028/0095. Node/resource/server/device/configuration/native-event producers, TIME/animation/viewport/interpolation/contact consumers, capture bypass, failure/presentation acknowledgement and responsive waiting share the current GPU and Compatibility paths. LowProcessorContract and LowProcessorRenderingTests exercise settings, manual/no-host contracts, real pixels, idle processing, mutation recovery, time consumers and zero prepared owner-managed bytes. Hardware power savings, native allocation totals and foreign execution remain unverified; see docs/components/low-processor-rendering.md."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:application/run/low_processor_mode_sleep_usec"
+      ],
+      "state": "Implemented",
+      "reason": "Executable retained change reporting and owned low-processor scheduling under ADRs 0016/0019/0028/0095. Node/resource/server/device/configuration/native-event producers, TIME/animation/viewport/interpolation/contact consumers, capture bypass, failure/presentation acknowledgement and responsive waiting share the current GPU and Compatibility paths. LowProcessorContract and LowProcessorRenderingTests exercise settings, manual/no-host contracts, real pixels, idle processing, mutation recovery, time consumers and zero prepared owner-managed bytes. Hardware power savings, native allocation totals and foreign execution remain unverified; see docs/components/low-processor-rendering.md."
     }
   ],
   "extras": [
@@ -8209,6 +8269,11 @@
       "electron2d": "property:Electron2D.GlobalShaderParameterSettings<T>.Value()",
       "reason": "Typed version-one project shader global value: registered shader_globals/name definitions preserve a concrete carrier and logical role without Variant or a public untyped value. Runtime startup snapshots features, prepares all 25 applicable roles and owns isolated image paths through session retirement. This projects existing project-authored global parameter behavior under ADRs 0001/0019/0028; it adds no independent capability. ProjectShaderGlobalsTests and public JIT/NativeAOT consumers exercise saved settings and actual shader output.",
       "adr": "docs/decisions/rendering.md#adr-0028"
+    },
+    {
+      "electron2d": "method:Electron2D.OS.GetPropertyDescriptors()",
+      "reason": "Inherited object-property discovery override projects the two retained static OS rendering policies; no independent upstream declaration.",
+      "adr": "ADR 0005/0095"
     }
   ]
 }

@@ -2,6 +2,22 @@ namespace Electron2D;
 
 public abstract partial class CanvasItem
 {
+    internal bool HasRenderingInterpolation
+    {
+        get
+        {
+            var moving = ServerState is not { } state || state.Transform is null && state.Interpolated is null
+                ? IsPhysicsInterpolatedAndEnabled() && _interpolationValid && _interpolationPrevious != _interpolationCurrent
+                : (state.Interpolated ?? (state.Owned || IsPhysicsInterpolated())) && state.Interpolation.Previous != state.Interpolation.Current;
+            return moving || HasMultiMeshInterpolation;
+        }
+    }
+
+    private bool HasMultiMeshInterpolation
+    {
+        get { if (_multiMeshes is not null) for (var i = 0; i < _multiMeshCount; i++) if (_multiMeshes[i].HasRenderingInterpolation) return true; return false; }
+    }
+
     private Transform _interpolationPrevious;
     private Transform _interpolationCurrent;
     private bool _interpolationValid;
@@ -12,6 +28,7 @@ public abstract partial class CanvasItem
         if (!IsPhysicsInterpolatedAndEnabled()) { _interpolationValid = false; return; }
         _interpolationFirstTick = !_interpolationValid;
         if (!_interpolationValid) { ResetInterpolationSnapshot(); _interpolationFirstTick = true; }
+        if (_interpolationPrevious != _interpolationCurrent) RenderingServer.NotifyRenderMutation();
         _interpolationPrevious = _interpolationCurrent;
     }
 
@@ -20,6 +37,7 @@ public abstract partial class CanvasItem
         if (!IsPhysicsInterpolatedAndEnabled()) { _interpolationValid = false; return; }
         var current = GetVisualTransform();
         if (!_interpolationValid || _interpolationFirstTick) _interpolationPrevious = current;
+        if (_interpolationCurrent != current) RenderingServer.NotifyRenderMutation();
         _interpolationCurrent = current;
         _interpolationValid = true;
         _interpolationFirstTick = false;

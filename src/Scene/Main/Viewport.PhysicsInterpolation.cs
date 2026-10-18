@@ -2,6 +2,8 @@ namespace Electron2D;
 
 public abstract partial class Viewport
 {
+    internal bool HasRenderingInterpolation => ShouldInterpolateCamera() && _canvasInterpolationValid && _canvasInterpolationPrevious != _canvasInterpolationCurrent;
+
     private Transform _canvasInterpolationPrevious;
     private Transform _canvasInterpolationCurrent;
     private bool _canvasInterpolationValid;
@@ -19,6 +21,7 @@ public abstract partial class Viewport
         if (!ShouldInterpolateCamera()) { _canvasInterpolationValid = false; return; }
         _canvasInterpolationFirstTick = !_canvasInterpolationValid;
         if (!_canvasInterpolationValid) { ResetCanvasInterpolationSnapshot(); _canvasInterpolationFirstTick = true; }
+        if (_canvasInterpolationPrevious != _canvasInterpolationCurrent) RenderingServer.NotifyRenderMutation();
         _canvasInterpolationPrevious = _canvasInterpolationCurrent;
     }
 
@@ -27,6 +30,7 @@ public abstract partial class Viewport
         if (!ShouldInterpolateCamera()) { _canvasInterpolationValid = false; return; }
         if (!_canvasInterpolationValid || _canvasInterpolationFirstTick)
             _canvasInterpolationPrevious = _canvasTransform;
+        if (_canvasInterpolationCurrent != _canvasTransform) RenderingServer.NotifyRenderMutation();
         _canvasInterpolationCurrent = _canvasTransform;
         _canvasInterpolationValid = true;
         _canvasInterpolationFirstTick = false;
