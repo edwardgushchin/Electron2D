@@ -84,7 +84,15 @@ public sealed class NavigationObstacle : Entity
     /// <inheritdoc />
     protected override void OnNotification(int what) { base.OnNotification(what); if (!IsInsideTree) return; if (what == NotificationWorldChanged) { PublishMap(); _published = false; PublishGeometry(); } else if (what == NotificationTransformChanged) PublishGeometry(); else if (what is NotificationPaused or NotificationUnpaused or NotificationDisabled or NotificationEnabled) UpdatePause(); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) NavigationServer.Service.ReleaseSceneObstacle(_rid); base.Dispose(disposing); }
+    /// <remarks>Exits scene membership before retiring the node-owned navigation identity. Every cleanup stage is attempted.</remarks>
+    /// <exception cref="AggregateException">Scene observers or owned cleanup fail; all failures are retained after cleanup.</exception>
+    protected override void Dispose(bool disposing)
+    {
+        List<Exception>? errors = null;
+        try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
+        if (disposing) try { NavigationServer.Service.ReleaseSceneObstacle(_rid); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Navigation node teardown failed.", errors);
+    }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => CreateObstacleNode;
     private static NavigationObstacle CreateObstacleNode() => new();

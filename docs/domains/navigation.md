@@ -24,7 +24,7 @@ Navigation owns typed 2D pathfinding authored map/polygon/region services and so
 
 ## Dependencies and invariants
 
-- Navigation depends on Core `Vector2`, `ElectronObject` lifetime, and .NET collections; it has no SDL, Box2D.NET, GPU or physics-server dependency.
+- Search and avoidance use Core `Vector2`, `ElectronObject` lifetime and .NET collections. Explicit agent path diagnostics consume the existing retained canvas renderer.
 - Point IDs are nonnegative 64-bit integers. Positions, weights and callback costs must be finite, and costs/weights nonnegative. Invalid writes fail before graph mutation.
 - Links are directional for travel and undirected for segment existence. A path pays the destination point's weight on each edge. Disabled points are excluded from path expansion and closest-segment queries unless a point query explicitly includes them.
 - A path callback may inspect graph state, but search re-entry, mutation and disposal are rejected. Concurrent callers coordinate access externally.
@@ -51,9 +51,9 @@ Navigation owns typed 2D pathfinding authored map/polygon/region services and so
 
 NavigationLink and owned server links now provide directed/bidirectional off-surface travel, finite strict-radius attachment and weighted routes. [The map contract](../components/navigation-maps.md#links-across-separated-surfaces) records transforms, source storage, publication, typed query metadata and remaining raster/search equivalence.
 
-[Typed query objects](../components/navigation-maps.md#typed-query-objects-and-transition-metadata) now supply copied filters, real search/output controls, transition provenance and completion. The native consumer performs a metadata-driven link action; agent debug and bake producers retain separate prerequisites.
+[Typed query objects](../components/navigation-maps.md#typed-query-objects-and-transition-metadata) now supply copied filters, real search/output controls, transition provenance and completion. The native consumer performs a metadata-driven link action; agent diagnostics and baking use their connected producers; global diagnostics retain a separate prerequisite.
 
-[NavigationAgent](../classes/NavigationAgent.md) now supplies getter-driven Entity-parent movement targets, typed waypoint/link events, target completion, real server agent map membership and fresh-process source settings. [Its contract](../components/navigation-maps.md#agent-path-following) separates managed checks and actual GPU/compatibility rendered consumers from pending debug prerequisites.
+[NavigationAgent](../classes/NavigationAgent.md) now supplies getter-driven Entity-parent movement targets, typed waypoint/link events, target completion, real server agent map membership and fresh-process source settings. [Its contract](../components/navigation-maps.md#agent-path-following) separates managed checks and actual GPU/compatibility rendered consumers from global map diagnostic prerequisites.
 
 [Reciprocal avoidance](../components/navigation-maps.md#reciprocal-agent-and-obstacle-avoidance) now connects NavigationAgent controls and typed velocity events, NavigationObstacle moving disc/oriented contour geometry, static server state and the physics lane. Managed/source/oracle/allocation and actual GPU/compatibility games are verified separately. Bake exclusion/carving and complete profiling/debug producers retain operation-specific dependencies.
 
@@ -68,3 +68,5 @@ Committed [raster topology and surface sampling](../components/navigation-maps.m
 [Background iterations](../components/navigation-maps.md#background-iterations) now rebuild region geometry and map topology through independently selected workers while keeping prior query snapshots usable. Explicit host Synchronize remains deterministic.
 
 [PolygonPathFinder](../classes/PolygonPathFinder.md) owns stored closed-area visibility paths, holes/islands, projected endpoints, weighted waypoint costs and deterministic scalar/intersection queries. Private typed storage survives resource copy/reset and scene/file loading. It uses immutable geometry with per-resource synchronized search workspace; [polygon paths](../components/polygon-paths.md) and [ADR 0106](../decisions/navigation.md#adr-0106) own its bounded preparation and separate verification gates.
+
+[Agent path diagnostics](../components/navigation-maps.md#agent-path-diagnostics) now draw current world paths through both retained rendering backends, with five stored source properties and three typed project defaults. Fresh-process authoring/configuration, teardown, actual local software-driver pixels and warmed managed allocation checks are distinct evidence. Global region/link/avoidance debug enablement and events still require their own producers.

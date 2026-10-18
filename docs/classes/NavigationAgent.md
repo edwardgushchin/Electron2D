@@ -1,15 +1,15 @@
 # NavigationAgent
 
-Last updated: 2026-10-07
+Last updated: 2026-10-18
 
-- Source: [NavigationAgent.cs](../../src/Navigation/2D/NavigationAgent.cs)
+- Source: [NavigationAgent.cs](../../src/Navigation/2D/NavigationAgent.cs), [NavigationAgent.Debug.cs](../../src/Navigation/2D/NavigationAgent.Debug.cs)
 - Component: [Navigation maps and agents](../components/navigation-maps.md#agent-path-following)
 
 ## Description
 
 A getter-driven path follower for its direct Entity parent, with retained query/result versions, optional typed waypoint/link metadata, target progression, real map membership and node-owned RID.
 
-Inherits [Node](Node.md), not Entity: the parent supplies spatial movement. Set TargetPosition, call GetNextPathPosition from parent physics processing, and move the parent yourself. This slice provides path following and link actions; debug rendering retains its exact coverage prerequisite. Avoidance controls execute through the shared ORCA kernel.
+Inherits [Node](Node.md), not Entity: the parent supplies spatial movement. Set TargetPosition, call GetNextPathPosition from parent physics processing, and move the parent yourself. Path following, link actions and retained path diagnostics execute through their owning services. Avoidance controls execute through the shared ORCA kernel.
 
 Equal target assignments reset the request. Map/layer changes repath active targets. Other query settings take effect at the next query. Desired thresholds accept finite signed values and use strict comparisons; reachability is inclusive, off-path reload is inclusive. Empty routes remain unfinished; an unreachable final waypoint finishes without reaching the requested target. Completed requests do not repeat events. Internal snapshots avoid public array copies during warmed following updates.
 
@@ -42,6 +42,11 @@ parent.GlobalPosition += offset.LimitLength((float)delta * 100);
 
 | Member | Contract |
 | --- | --- |
+| [`public bool DebugEnabled { get; set; }`](#debugenabled) | Draws the current path on the parent canvas without advancing navigation. |
+| [`public bool DebugUseCustom { get; set; }`](#debugusecustom) | Selects the custom color and waypoint size. |
+| [`public Color DebugPathCustomColor { get; set; }`](#debugpathcustomcolor) | Finite custom line/waypoint color, initially white. |
+| [`public float DebugPathCustomLineWidth { get; set; }`](#debugpathcustomlinewidth) | Always-selected finite line width, initially -1; zero omits the line. |
+| [`public float DebugPathCustomPointSize { get; set; }`](#debugpathcustompointsize) | Custom square size, initially 4; zero suppresses all waypoints. |
 | [`public uint NavigationLayers { get; set; }`](#navigationlayers) | Gets or changes the 32-bit navigation mask; changing it repaths an active request. |
 | [`public float PathDesiredDistance { get; set; }`](#pathdesireddistance) | Gets or changes the finite strict waypoint distance threshold; nonpositive values never advance. |
 | [`public float PathMaxDistance { get; set; }`](#pathmaxdistance) | Gets or changes the finite inclusive distance from the active path segment that triggers a repath. |
@@ -808,3 +813,36 @@ Submits a finite simulation velocity replacement for the next active-request bou
 `InvalidOperationException`: Source mutation is unavailable.
 
 Attached access follows the tree owner thread and disposed access rejects. Advancing getters require an attached direct Entity parent and reject reentry. Observer failures aggregate after delivered transitions. Agent source mutation and disposal reject during delivery; parent movement remains available.
+
+## Path diagnostics
+
+All five debug properties are stored and restored in scenes. DebugEnabled defaults false and lazily creates one internal canvas; ordinary child enumeration and scene packing omit that transient helper. Drawing reads the current result without querying or advancing navigation, including a caller-replaced path. Empty and one-point paths draw nothing. Parent visibility, exit/reentry, canvas transforms and canvas layer membership apply. World path positions do not move with the actor. Parent modulation/material do not apply; overlay Z is MaximumZIndex minus one, independent of the actor Z.
+
+<a id="debugenabled"></a>
+### `public bool DebugEnabled { get; set; }`
+
+False initially. Requires both this flag and the retained project default enablement; it is independent of SceneTree.DebugNavigationHint and global map diagnostics. Disabling clears retained drawing, while re-enabling uses the current path. The helper is disposed with the agent.
+
+<a id="debugusecustom"></a>
+### `public bool DebugUseCustom { get; set; }`
+
+False initially. Selects custom color and point size; the line width always uses DebugPathCustomLineWidth. Default enablement, red color and four-unit point size are sampled once, with feature overrides, on first diagnostics use. See [project settings](ProjectSettings.md#navigation-agent-diagnostic-keys).
+
+<a id="debugpathcustomcolor"></a>
+### `public Color DebugPathCustomColor { get; set; }`
+
+Opaque white initially. Rejects nonfinite components with ArgumentException.
+
+<a id="debugpathcustomlinewidth"></a>
+### `public float DebugPathCustomLineWidth { get; set; }`
+
+Minus one initially. Negative widths use one framebuffer pixel; positive widths use canvas units; zero draws no line. Nonfinite values raise ArgumentOutOfRangeException.
+
+<a id="debugpathcustompointsize"></a>
+### `public float DebugPathCustomPointSize { get; set; }`
+
+Four initially. Finite negative values clamp to zero; nonfinite values raise ArgumentOutOfRangeException. Zero suppresses waypoints even when DebugUseCustom is false. Otherwise the selected custom/default size draws centered filled squares.
+
+All debug access follows agent lifetime and scene owner-thread guards. Mutation rejects during scene capture or navigation delivery. Failed helper creation preserves attachment/cleanup errors, removes the helper and permits a later retry. Agent disposal exits the tree before retiring its server identity and owned result/helper, attempts every cleanup stage and aggregates observer failures. RID inspection on the disposing thread remains valid through exit; foreign disposal access and access after retirement reject.
+
+NavigationDebugTests covers properties/defaults, finite inputs, world geometry, result replacement, visibility, capture/thread guards, fresh-process scene/project restoration and all four scene navigation identity teardown paths. Native GPU/Compatibility profiles verify actual line/waypoint/visibility/canvas pixels and 64 active plus 64 idle full owner frames with zero managed bytes. Local Linux software-driver evidence does not establish target hardware, foreign platforms, native allocations or game-owner acceptance. Global region/link/avoidance diagnostics remain a separate producer.

@@ -2,7 +2,7 @@ namespace Electron2D;
 
 public sealed partial class NavigationServer
 {
-    private NavigationObstacleState Obstacle(RID rid) => _obstacles.TryGetValue(rid, out var obstacle) && (obstacle.Scene is null || obstacle.Scene.TryGetTarget(out var node) && !node.IsDisposed) ? obstacle : throw new ArgumentException("The RID does not identify a live navigation obstacle.", nameof(rid));
+    private NavigationObstacleState Obstacle(RID rid) => _obstacles.TryGetValue(rid, out var obstacle) && (obstacle.Scene is null || obstacle.Scene.TryGetTarget(out var node) && SceneIdentityAvailable(node)) ? obstacle : throw new ArgumentException("The RID does not identify a live navigation obstacle.", nameof(rid));
     internal RID CreateObstacle(NavigationObstacle? node = null) { lock (_gate) { var rid = RID.Allocate(); _obstacles.Add(rid, new(rid, node)); return rid; } }
     internal void ReleaseSceneObstacle(RID rid) { lock (_gate) _obstacles.Remove(rid); }
     internal void StageSceneObstacle(RID rid, Vector2 position, float radius, Vector2[] vertices)

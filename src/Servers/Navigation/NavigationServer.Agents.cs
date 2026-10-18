@@ -2,7 +2,7 @@ namespace Electron2D;
 
 public sealed partial class NavigationServer
 {
-    private NavigationAgentState Agent(RID rid) => _agents.TryGetValue(rid, out var agent) && (agent.Scene is null || agent.Scene.TryGetTarget(out var node) && !node.IsDisposed) ? agent : throw new ArgumentException("The RID does not identify a live navigation agent.", nameof(rid));
+    private NavigationAgentState Agent(RID rid) => _agents.TryGetValue(rid, out var agent) && (agent.Scene is null || agent.Scene.TryGetTarget(out var node) && SceneIdentityAvailable(node)) ? agent : throw new ArgumentException("The RID does not identify a live navigation agent.", nameof(rid));
     internal RID CreateAgent(NavigationAgent? node = null) { lock (_gate) { var rid = RID.Allocate(); _agents.Add(rid, new(rid, node)); return rid; } }
     internal void ReleaseSceneAgent(RID rid) { lock (_gate) _agents.Remove(rid); }
     internal ElectronObject? ResolveNavigationOwner(ulong ownerID)

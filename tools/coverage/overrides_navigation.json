@@ -1409,6 +1409,46 @@
       "godot": "NavigationServer2D::method:region_set_use_async_iterations(RID:,bool:)",
       "electron2d": "method:Electron2D.NavigationServer.RegionSetUseAsyncIterations(Electron2D.RID,System.Boolean)",
       "reason": "ADRs 0014/0097/0104: independent region/map WorkerThreadPool jobs over captured immutable inputs, nonblocking scene synchronization, committed-query retention, stale input coalescing, owner failure/publication, version/callback timing and owned task retirement. Explicit Synchronize preserves the deterministic host transaction. Browser enablement requires its threaded runtime; global debug/query-budget completeness remain independent prerequisites. NavigationIterationTests and separate-process IterationRoutes exercise actual queued frames and changed route pixels on GPU/compatibility."
+    },
+    {
+      "godot": "NavigationAgent2D::property:debug_enabled",
+      "electron2d": "property:Electron2D.NavigationAgent.DebugEnabled()",
+      "reason": "ADR 0097 retained current-path canvas: five stored fields, exact default/custom color/line/square-point rules, parent visibility/world coordinates, no navigation advancement and owned teardown. NavigationDebugTests covers finite/clamped inputs, scene/project fresh processes, guards, zero-byte warm replay and actual local Linux software GPU/Compatibility pixels/frames."
+    },
+    {
+      "godot": "NavigationAgent2D::property:debug_use_custom",
+      "electron2d": "property:Electron2D.NavigationAgent.DebugUseCustom()",
+      "reason": "ADR 0097 retained current-path canvas: five stored fields, exact default/custom color/line/square-point rules, parent visibility/world coordinates, no navigation advancement and owned teardown. NavigationDebugTests covers finite/clamped inputs, scene/project fresh processes, guards, zero-byte warm replay and actual local Linux software GPU/Compatibility pixels/frames."
+    },
+    {
+      "godot": "NavigationAgent2D::property:debug_path_custom_color",
+      "electron2d": "property:Electron2D.NavigationAgent.DebugPathCustomColor()",
+      "reason": "ADR 0097 retained current-path canvas: five stored fields, exact default/custom color/line/square-point rules, parent visibility/world coordinates, no navigation advancement and owned teardown. NavigationDebugTests covers finite/clamped inputs, scene/project fresh processes, guards, zero-byte warm replay and actual local Linux software GPU/Compatibility pixels/frames."
+    },
+    {
+      "godot": "NavigationAgent2D::property:debug_path_custom_line_width",
+      "electron2d": "property:Electron2D.NavigationAgent.DebugPathCustomLineWidth()",
+      "reason": "ADR 0097 retained current-path canvas: five stored fields, exact default/custom color/line/square-point rules, parent visibility/world coordinates, no navigation advancement and owned teardown. NavigationDebugTests covers finite/clamped inputs, scene/project fresh processes, guards, zero-byte warm replay and actual local Linux software GPU/Compatibility pixels/frames."
+    },
+    {
+      "godot": "NavigationAgent2D::property:debug_path_custom_point_size",
+      "electron2d": "property:Electron2D.NavigationAgent.DebugPathCustomPointSize()",
+      "reason": "ADR 0097 retained current-path canvas: five stored fields, exact default/custom color/line/square-point rules, parent visibility/world coordinates, no navigation advancement and owned teardown. NavigationDebugTests covers finite/clamped inputs, scene/project fresh processes, guards, zero-byte warm replay and actual local Linux software GPU/Compatibility pixels/frames."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/navigation/2d/enable_agent_paths",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationDebugAgentPaths()",
+      "reason": "Typed retained agent-path default consumed by the canvas producer; first-use feature override sampling, finite/nonnegative validation, saved project restoration and real geometry tested."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/navigation/2d/agent_path_color",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationDebugAgentPathColor()",
+      "reason": "Typed retained agent-path default consumed by the canvas producer; first-use feature override sampling, finite/nonnegative validation, saved project restoration and real geometry tested."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/navigation/2d/agent_path_point_size",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationDebugAgentPathPointSize()",
+      "reason": "Typed retained agent-path default consumed by the canvas producer; first-use feature override sampling, finite/nonnegative validation, saved project restoration and real geometry tested."
     }
   ],
   "extras": [
@@ -1923,7 +1963,7 @@
         "NavigationServer2D::method:set_debug_enabled(bool:)",
         "NavigationServer2D::signal:navigation_debug_changed()"
       ],
-      "reason": "ADR 0097 trigger: navigation debug drawing and its real property/signal integration. Authored map/region storage is already executable; compilation alone does not satisfy this operation."
+      "reason": "ADR 0097 trigger: global region/link/avoidance geometry drawing, retained global enablement and change-event propagation including SceneTree hint integration. Explicit agent paths have their own independent producer and do not consume this flag in the pinned source."
     },
     {
       "state": "Excluded",
@@ -2117,8 +2157,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "ADR 0097 trigger: agent debug path producer plus retained NavigationServer debug settings, real canvas draw lifetime and custom/default color/line/point-size consumers on both rendering backends.",
+      "state": "Implemented",
+      "reason": "ADR 0097 retained current-path canvas: five stored fields, exact default/custom color/line/square-point rules, parent visibility/world coordinates, no navigation advancement and owned teardown. NavigationDebugTests covers finite/clamped inputs, scene/project fresh processes, guards, zero-byte warm replay and actual local Linux software GPU/Compatibility pixels/frames.",
       "godot": [
         "NavigationAgent2D::property:debug_enabled",
         "NavigationAgent2D::property:debug_path_custom_color",
@@ -2218,8 +2258,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "ADR 0097 path following plus executable shared ORCA agent avoidance, typed velocity/waypoint delivery, source descriptors and stable RID/map ownership. Own avoidance rows execute; five debug path settings retain the exact canvas/debug-default producer prerequisite. NavigationAgentTests/NavigationAvoidanceTests exercise both hardware consumers, headless and fresh-process state.",
+      "state": "Implemented",
+      "reason": "Complete applicable own path-following, ORCA avoidance and retained path diagnostics API under ADR 0097, with typed events, stored source properties, stable identities and owned teardown. Agent/Avoidance/Debug tests exercise managed, fresh-process and native rendered consumers; shared query search-equivalence obligations remain on their own server rows.",
       "godot": [
         "class:NavigationAgent2D"
       ]
@@ -2267,6 +2307,15 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0014/0097/0104: independent region/map WorkerThreadPool jobs over captured immutable inputs, nonblocking scene synchronization, committed-query retention, stale input coalescing, owner failure/publication, version/callback timing and owned task retirement. Explicit Synchronize preserves the deterministic host transaction. Browser enablement requires its threaded runtime; global debug/query-budget completeness remain independent prerequisites. NavigationIterationTests and separate-process IterationRoutes exercise actual queued frames and changed route pixels on GPU/compatibility."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0097 first-use retained default enablement/color/square waypoint size. Fresh-process saved base/feature settings drive actual agent canvas output; later edits do not resample the process configuration.",
+      "godot": [
+        "ProjectSettings::property:debug/shapes/navigation/2d/enable_agent_paths",
+        "ProjectSettings::property:debug/shapes/navigation/2d/agent_path_color",
+        "ProjectSettings::property:debug/shapes/navigation/2d/agent_path_point_size"
+      ]
     }
   ]
 }

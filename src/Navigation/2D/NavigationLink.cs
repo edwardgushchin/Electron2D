@@ -106,7 +106,15 @@ public sealed class NavigationLink : Entity
     /// <inheritdoc />
     protected override void OnNotification(int what) { base.OnNotification(what); if (!IsInsideTree) return; if (what == NotificationWorldChanged) Publish(); else if (what == NotificationTransformChanged) PublishEndpoints(); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) NavigationServer.Service.ReleaseSceneLink(_rid); base.Dispose(disposing); }
+    /// <remarks>Exits scene membership before retiring the node-owned navigation identity. Every cleanup stage is attempted.</remarks>
+    /// <exception cref="AggregateException">Scene observers or owned cleanup fail; all failures are retained after cleanup.</exception>
+    protected override void Dispose(bool disposing)
+    {
+        List<Exception>? errors = null;
+        try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
+        if (disposing) try { NavigationServer.Service.ReleaseSceneLink(_rid); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Navigation node teardown failed.", errors);
+    }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(LinkProperties);
     /// <inheritdoc />

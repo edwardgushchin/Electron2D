@@ -116,6 +116,12 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(AnisotropicFilteringLevel, isBasic: false);
         RegisterInternal(DefaultClearColor, isBasic: true);
         RegisterInternal(DebugPathsColor, isBasic: false);
+        RegisterInternal(NavigationDebugAgentPaths, isBasic: false);
+        RegisterInternal(NavigationDebugAgentPathColor, isBasic: false);
+        RegisterInternal(NavigationDebugAgentPathPointSize, isBasic: false);
+        _settings[NavigationDebugAgentPaths.Name].RestartIfChanged = true;
+        _settings[NavigationDebugAgentPathColor.Name].RestartIfChanged = true;
+        _settings[NavigationDebugAgentPathPointSize.Name].RestartIfChanged = true;
         RegisterInternal(DebugCollisionShapeColor, isBasic: false);
         RegisterInternal(DebugCollisionDrawOutlines, isBasic: false);
         RegisterInternal(DebugCollisionContactColor, isBasic: false);
@@ -1239,6 +1245,9 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, AnisotropicFilteringLevel) ||
         ReferenceEquals(setting, DefaultClearColor) ||
         ReferenceEquals(setting, DebugPathsColor) ||
+        ReferenceEquals(setting, NavigationDebugAgentPaths) ||
+        ReferenceEquals(setting, NavigationDebugAgentPathColor) ||
+        ReferenceEquals(setting, NavigationDebugAgentPathPointSize) ||
         ReferenceEquals(setting, DebugCollisionShapeColor) ||
         ReferenceEquals(setting, DebugCollisionDrawOutlines) ||
         ReferenceEquals(setting, DebugCollisionContactColor) ||

@@ -1768,3 +1768,7 @@ public static void RegionSetUseAsyncIterations(RID region, bool enabled)
 Changes the following geometry builds. Queries retain completed snapshots until owner publication.
 
 Inherited [ordinary event blocking](../classes/ElectronObject.md#ordinary-event-delivery) suppresses new event emissions at the publisher, preserving subscriptions and already accepted deferred work. Notifications, virtual callbacks, committed physical state and resource revisions continue; Disposed cleanup remains independent.
+
+## Scene identity teardown
+
+Scene-owned navigation identities stay registered through node exit on the disposing thread; exit clears map membership before TreeExiting. Synchronization during that callback preserves the identity. Node cleanup attempts exit/children before releasing the RID and aggregates failures without abandoning final cleanup. Other threads cannot access a disposing scene identity, and retired RIDs reject. NavigationDebugTests verifies Agent, Region, Link and Obstacle with a failing exit observer.

@@ -93,7 +93,19 @@ public sealed partial class NavigationRegion : Entity
     protected override void OnNotification(int what)
     { base.OnNotification(what); if (IsInsideTree && what == NotificationWorldChanged) Publish(); else if (IsInsideTree && what == NotificationTransformChanged) NavigationServer.RegionSetTransform(_rid, GlobalTransform); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { NavigationServer.Service.ReleaseSceneRegion(_rid); NavigationPolygonChanged = null; BakeFinished = null; _polygon = null; } base.Dispose(disposing); }
+    /// <remarks>Exits scene membership before retiring the node-owned navigation identity. Every cleanup stage is attempted.</remarks>
+    /// <exception cref="AggregateException">Scene observers or owned cleanup fail; all failures are retained after cleanup.</exception>
+    protected override void Dispose(bool disposing)
+    {
+        List<Exception>? errors = null;
+        try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
+        if (disposing)
+        {
+            try { NavigationServer.Service.ReleaseSceneRegion(_rid); } catch (Exception error) { CollectException(ref errors, error); }
+            NavigationPolygonChanged = null; BakeFinished = null; _polygon = null;
+        }
+        ThrowCollected("Navigation region teardown failed.", errors);
+    }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(RegionProperties);
     private static readonly PropertyDescriptor[] RegionProperties =

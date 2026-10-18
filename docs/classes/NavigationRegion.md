@@ -1,6 +1,6 @@
 # NavigationRegion
 
-Last updated: 2026-10-10
+Last updated: 2026-10-18
 
 - Source: [NavigationRegion.cs](../../src/Navigation/2D/NavigationRegion.cs)
 - Inherits: [Entity](Entity.md)
@@ -256,3 +256,7 @@ Parses this region's source selection and bakes its navigation resource.
 Reports whether this region's current resource is still preparing or awaiting publication.
 
 **Returns:** False when no resource/bake is present.
+
+## Scene identity teardown
+
+Scene-owned navigation identities stay registered through node exit on the disposing thread; exit clears map membership before TreeExiting. Synchronization during that callback preserves the identity. Node cleanup attempts exit/children before releasing the RID and aggregates failures without abandoning final cleanup. Other threads cannot access a disposing scene identity, and retired RIDs reject. NavigationDebugTests verifies Agent, Region, Link and Obstacle with a failing exit observer.

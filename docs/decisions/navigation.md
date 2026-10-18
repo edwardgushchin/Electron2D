@@ -1,6 +1,6 @@
 # Electron2D navigation decisions
 
-Last updated: 2026-10-15
+Last updated: 2026-10-18
 
 This bounded document owns standalone and server-backed 2D pathfinding decisions. The [decision index](index.md) routes other domains.
 
@@ -61,7 +61,7 @@ Games can query full or partial cell paths without constructing point-edge graph
 <a id="adr-0097"></a>
 ## ADR 0097: Typed planar navigation maps and authored region topology
 
-Last updated: 2026-10-07
+Last updated: 2026-10-18
 
 - Status: Accepted for the user-authorized full API implementation goal
 - Scope: Executable map/region/polygon/link/query/agent pathfinding backend, World registration and scene ownership
@@ -92,6 +92,14 @@ Last updated: 2026-10-07
 - Agent and obstacle avoidance use an internal managed adaptation of RVO2 ORCA within Electron2D.dll, retaining its Apache-2.0 license and source provenance in third-party notices. Shared enum/math/lifetime types remain the public projection; no native or managed backend assembly is added. Reusable neighbor, contour-constraint and linear-program buffers support warmed allocation-free stepping. Initial neighbor collection is a deterministic quadratic scan with stable RID ties; spatial indexing is a measured scaling follow-up rather than a second public backend.
 - Static NavigationServer.Step(double) drives unbound caller maps for typed batch hosts; SceneTree's physics boundary drives its selected World/caller-override maps before physics calculations. Bound maps cannot be advanced by a second tree or batch owner. Desired node velocities are submitted at the next navigation boundary; path completion zeros both preferred and simulation velocity. Pause notifications immediately update agent pause state; scene obstacles detach their runtime map and restore the previous membership when resumed, while source map selection remains independent. Paused parents/obstacles do not participate. All participants solve from the same pre-step state and publish before callback delivery, fixing order-dependent in-place updates; callbacks can stage the next step, but recursive synchronization/step rejects. Freed/disabled/reassigned callback recipients are checked before delivery.
 - Circle obstacles use moving-agent predictions; oriented contour obstacles use static one-sided segment/convex-leg constraints, preserving winding and mask semantics. Source transforms publish world translation, transformed contour offsets and maximum absolute scale for radius. Bake-affect/carve settings now have the scene source parser and clearance/carve consumer below. Finite numeric inputs reject invalid signs/ranges; nonpositive max-neighbor counts disable agent neighbors. Float-representable duration bounds reject underflow/overflow before simulation. Zero duration synchronizes without simulation/callbacks, zero horizons use one step for reciprocal predictions, and coincident stationary discs use opposing deterministic normals instead of division by zero.
+
+### Agent path diagnostics and scene identity teardown
+
+NavigationAgent exposes the complete five-property debug family with stored typed descriptors. An internal retained canvas reads immutable current result data, without querying or advancing navigation. It draws world positions on the parent canvas, honors parent visibility and canvas/layer transforms, avoids actor modulation/material inheritance and uses absolute overlay Z MaximumZIndex minus one. The helper is lazily created by explicit DebugEnabled and is transient in source archives. Negative line widths retain framebuffer-pixel semantics; line width always uses the custom field. Custom point size zero suppresses all waypoints; other point/color selection follows DebugUseCustom. Reject nonfinite values; negative point size clamps to zero.
+
+The service samples three typed debug/shapes/navigation/2d keys with feature overrides on first agent diagnostics use: enable_agent_paths=true, agent_path_color=red and agent_path_point_size=4. Retain that immutable configuration for the process lifetime so projects can load before the first consumer. The pinned agent producer does not depend on NavigationServer's global debug flag. Keep global region/link/avoidance drawing, enablement/event propagation and SceneTree hint integration as their own exact dependency; implementing an agent path does not authorize inert global flags.
+
+Agent/Region/Link/Obstacle disposal must run scene exit before releasing the node-owned RID. The disposing thread can inspect that RID through exit callbacks and synchronization sweeps under ADR 0009; foreign disposal access and terminal identities reject. Every owned cleanup is attempted and observer failures aggregate. Agent query/result/debug helpers retire after scene membership and child teardown.
 
 ### Background region and map iterations
 

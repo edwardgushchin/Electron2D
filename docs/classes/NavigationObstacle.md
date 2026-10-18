@@ -1,6 +1,6 @@
 # NavigationObstacle
 
-Last updated: 2026-10-10
+Last updated: 2026-10-18
 
 - Source: [NavigationObstacle.cs](../../src/Navigation/2D/NavigationObstacle.cs)
 - Inherits: [Entity](Entity.md)
@@ -209,3 +209,7 @@ Gets or changes whether scene baking includes this obstacle.
 Gets or changes whether baked obstruction bypasses agent-radius expansion.
 
 **Value:** False initially.
+
+## Scene identity teardown
+
+Scene-owned navigation identities stay registered through node exit on the disposing thread; exit clears map membership before TreeExiting. Synchronization during that callback preserves the identity. Node cleanup attempts exit/children before releasing the RID and aggregates failures without abandoning final cleanup. Other threads cannot access a disposing scene identity, and retired RIDs reject. NavigationDebugTests verifies Agent, Region, Link and Obstacle with a failing exit observer.

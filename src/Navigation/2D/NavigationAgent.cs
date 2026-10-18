@@ -258,12 +258,26 @@ public sealed partial class NavigationAgent : Node
     /// <inheritdoc />
     protected override void ValidateDisposal() { base.ValidateDisposal(); if (_updating || _deliveringVelocity) throw new InvalidOperationException("Agent disposal cannot occur during navigation delivery."); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { NavigationServer.Service.ReleaseSceneAgent(_rid); _query.Dispose(); _result.Dispose(); } base.Dispose(disposing); }
+    /// <remarks>Exits scene membership before retiring the node-owned navigation identity. Every cleanup stage is attempted.</remarks>
+    /// <exception cref="AggregateException">Scene observers or owned cleanup fail; all failures are retained after cleanup.</exception>
+    protected override void Dispose(bool disposing)
+    {
+        List<Exception>? errors = null;
+        try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
+        if (disposing)
+        {
+            try { NavigationServer.Service.ReleaseSceneAgent(_rid); } catch (Exception error) { CollectException(ref errors, error); }
+            try { _query.Dispose(); } catch (Exception error) { CollectException(ref errors, error); }
+            try { _result.Dispose(); } catch (Exception error) { CollectException(ref errors, error); }
+            _debugCanvas = null;
+        }
+        ThrowCollected("Navigation agent teardown failed.", errors);
+    }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => CreateAgentNode;
     private static NavigationAgent CreateAgentNode() => new();
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(AgentProperties).Concat(AvoidanceProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(AgentProperties).Concat(AvoidanceProperties).Concat(DebugProperties);
     private static readonly PropertyDescriptor[] AgentProperties =
     [
         new PropertyDescriptor<NavigationAgent,uint>(nameof(NavigationLayers),n=>n.NavigationLayers,(n,v)=>n.NavigationLayers=v,_=>1u,stored:true),

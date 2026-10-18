@@ -311,3 +311,5 @@ Registered `shader_globals/name` definitions use [GlobalShaderParameterSettings<
 ## Rendering changes and low-processor scheduling
 
 [Low-processor rendering](../components/low-processor-rendering.md) connects retained change producers, static RenderingServer.HasChanged, the two OS policies and typed startup settings to Engine.Run/RunAsync. Static output skips submissions while processing and input continue; time-driven drawing and capture retain their executing consumers. Verification limits remain explicit in the component.
+
+[Navigation agent diagnostics](../components/navigation-maps.md#agent-path-diagnostics) consume three nonbasic typed project definitions for default path enablement, color and square waypoint size. Their first-use retained configuration honors loaded feature overrides and restart metadata; fresh-process settings checks exercise real canvas output.

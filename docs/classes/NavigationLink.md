@@ -1,6 +1,6 @@
 # NavigationLink
 
-Last updated: 2026-10-07
+Last updated: 2026-10-18
 
 - Source: [NavigationLink.cs](../../src/Navigation/2D/NavigationLink.cs)
 - Declaration: public sealed NavigationLink : Entity
@@ -298,3 +298,7 @@ Detached global endpoint methods use local source coordinates; attached endpoint
 ## Verification and limits
 
 [NavigationLinkTests](../../tests/Electron2D.Tests/NavigationLinkTests.cs) checks direction, layers, strict radius, costs, lifecycle, transform roles, warnings, schema/fresh loading, counter rollback/wrap and allocation boundaries. Its real rendered host follows a linked corridor across separated regions on current hardware backends. Full map raster/search equivalence and typed query metadata remain the [map/query profile](../components/navigation-maps.md) dependencies under [ADR 0097](../decisions/navigation.md#adr-0097); native editor debug producers remain separate tooling work.
+
+## Scene identity teardown
+
+Scene-owned navigation identities stay registered through node exit on the disposing thread; exit clears map membership before TreeExiting. Synchronization during that callback preserves the identity. Node cleanup attempts exit/children before releasing the RID and aggregates failures without abandoning final cleanup. Other threads cannot access a disposing scene identity, and retired RIDs reject. NavigationDebugTests verifies Agent, Region, Link and Obstacle with a failing exit observer.

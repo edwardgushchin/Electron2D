@@ -97,6 +97,8 @@ status changes; full retained/native/device history budgets remain open.
 
 Last updated: 2026-10-18
 
+[Agent path diagnostics](../components/navigation-maps.md#agent-path-diagnostics) now connect five stored NavigationAgent properties and three typed project defaults to retained world-path geometry. Managed/fresh-process/lifetime checks and actual local software GPU/Compatibility pixel/frame checks cover the connected slice. Global map diagnostics retain their exact separate producers; shared path-search equivalence remains on server query rows.
+
 [Low-processor rendering](../components/low-processor-rendering.md) connects rendering change reporting, two OS policies and two typed startup settings to the existing owned window loop. Five reference rows are Implemented. Node/resource/retained/device/native-event and time-consumer producers execute on the current backends; static-camera idle and movie capture retain their own checks and platform limits.
 
 [Per-referrer resource IDs](../components/resources.md#per-referrer-path-ids) now

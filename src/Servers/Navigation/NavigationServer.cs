@@ -23,7 +23,13 @@ public sealed partial class NavigationServer : ElectronObject
     /// callback edits stage the next iteration. Subscriber failures are aggregated after all deliveries.</remarks>
     public static event Action<RID> MapChanged { add { lock (Shared._gate) Shared._mapChanged += value; } remove { lock (Shared._gate) Shared._mapChanged -= value; } }
     private NavigationMapState Map(RID rid) => _maps.TryGetValue(rid, out var map) ? map : throw new ArgumentException("The RID does not identify a live navigation map.", nameof(rid));
-    private NavigationRegionState Region(RID rid) => _regions.TryGetValue(rid, out var region) && (region.Scene is null || region.Scene.TryGetTarget(out var node) && !node.IsDisposed) ? region : throw new ArgumentException("The RID does not identify a live navigation region.", nameof(rid));
+    private NavigationRegionState Region(RID rid) => _regions.TryGetValue(rid, out var region) && (region.Scene is null || region.Scene.TryGetTarget(out var node) && SceneIdentityAvailable(node)) ? region : throw new ArgumentException("The RID does not identify a live navigation region.", nameof(rid));
+    private static bool SceneIdentityAvailable(ElectronObject node)
+    {
+        if (!node.IsDisposed) return true;
+        try { node.EnsurePropertyInspection(); return true; }
+        catch (ObjectDisposedException) { return false; }
+    }
     internal RID CreateMap(WorldRuntime? owner = null) { lock (_gate) { var rid = RID.Allocate(); _maps.Add(rid, new(rid, owner)); return rid; } }
     internal RID CreateRegion(Node? node = null) { lock (_gate) { var rid = RID.Allocate(); _regions.Add(rid, new(rid, node)); return rid; } }
     internal void ReleaseWorldMap(RID rid) { lock (_gate) { if (!_maps.TryGetValue(rid, out var released)) return; RetireIteration(released.Pending); released.Pending = null; foreach (var region in _regions.Values) if (region.Map == rid) region.Map = default; foreach (var link in _links.Values) if (link.Map == rid) { link.Map = default; link.Dirty = true; } foreach (var agent in _agents.Values) if (agent.Map == rid) agent.Map = default; foreach (var obstacle in _obstacles.Values) if (obstacle.Map == rid) obstacle.Map = default; _maps.Remove(rid); } }
@@ -56,19 +62,19 @@ public sealed partial class NavigationServer : ElectronObject
                 // ponytail: sweep weak scene identities at the synchronization boundary; index only if measured host scale requires it.
                 List<RID>? expired = null;
                 foreach (var region in _regions.Values)
-                    if (region.Scene is not null && (!region.Scene.TryGetTarget(out var node) || node.IsDisposed)) (expired ??= []).Add(region.RID);
+                    if (region.Scene is not null && (!region.Scene.TryGetTarget(out var node) || !SceneIdentityAvailable(node))) (expired ??= []).Add(region.RID);
                 if (expired is not null) foreach (var rid in expired) ReleaseSceneRegion(rid);
                 expired = null;
                 foreach (var link in _links.Values)
-                    if (link.Scene is not null && (!link.Scene.TryGetTarget(out var node) || node.IsDisposed)) (expired ??= []).Add(link.RID);
+                    if (link.Scene is not null && (!link.Scene.TryGetTarget(out var node) || !SceneIdentityAvailable(node))) (expired ??= []).Add(link.RID);
                 if (expired is not null) foreach (var rid in expired) ReleaseSceneLink(rid);
                 expired = null;
                 foreach (var agent in _agents.Values)
-                    if (agent.Scene is not null && (!agent.Scene.TryGetTarget(out var node) || node.IsDisposed)) (expired ??= []).Add(agent.RID);
+                    if (agent.Scene is not null && (!agent.Scene.TryGetTarget(out var node) || !SceneIdentityAvailable(node))) (expired ??= []).Add(agent.RID);
                 if (expired is not null) foreach (var rid in expired) ReleaseSceneAgent(rid);
                 expired = null;
                 foreach (var obstacle in _obstacles.Values)
-                    if (obstacle.Scene is not null && (!obstacle.Scene.TryGetTarget(out var node) || node.IsDisposed)) (expired ??= []).Add(obstacle.RID);
+                    if (obstacle.Scene is not null && (!obstacle.Scene.TryGetTarget(out var node) || !SceneIdentityAvailable(node))) (expired ??= []).Add(obstacle.RID);
                 if (expired is not null) foreach (var rid in expired) ReleaseSceneObstacle(rid);
                 if (!forceSynchronous) changed = SynchronizeIterationWork();
                 else

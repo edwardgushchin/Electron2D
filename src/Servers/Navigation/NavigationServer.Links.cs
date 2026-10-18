@@ -2,7 +2,7 @@ namespace Electron2D;
 
 public sealed partial class NavigationServer
 {
-    private NavigationLinkState Link(RID rid) => _links.TryGetValue(rid, out var link) && (link.Scene is null || link.Scene.TryGetTarget(out var node) && !node.IsDisposed) ? link : throw new ArgumentException("The RID does not identify a live navigation link.", nameof(rid));
+    private NavigationLinkState Link(RID rid) => _links.TryGetValue(rid, out var link) && (link.Scene is null || link.Scene.TryGetTarget(out var node) && SceneIdentityAvailable(node)) ? link : throw new ArgumentException("The RID does not identify a live navigation link.", nameof(rid));
     internal RID CreateLink(NavigationLink? node = null) { lock (_gate) { var rid = RID.Allocate(); _links.Add(rid, new(rid, node)); return rid; } }
     internal void ReleaseSceneLink(RID rid) { lock (_gate) { if (_links.Remove(rid, out var link)) Dirty(link.Map); } }
     private void DirtyLink(NavigationLinkState link) { link.Dirty = true; Dirty(link.Map); }

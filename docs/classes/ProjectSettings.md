@@ -1602,3 +1602,15 @@ Effective feature overrides are sampled before each owned window becomes ready, 
 ### LowProcessorModeSleepUsec
 
 Effective nonnegative microseconds initialize OS.LowProcessorUsageModeSleepUsec before readiness. Negative project values fail validation; zero is valid. Ordinary typed persistence and feature overrides apply. See [the executing renderer and host workflow](../components/low-processor-rendering.md).
+
+## Navigation agent diagnostic keys
+
+All three definitions are nonbasic typed settings with restart-if-changed metadata, registered by every ProjectSettingsRegistry. The retained navigation service samples their effective feature overrides on first agent diagnostics use. Later project edits require process restart to affect that retained configuration. Existing source/project persistence applies.
+
+| Key | Typed static definition | Default and validation |
+| --- | --- | --- |
+| `debug/shapes/navigation/2d/enable_agent_paths` | `ProjectSetting<bool> NavigationDebugAgentPaths` | True; permits explicitly enabled agents to draw. |
+| `debug/shapes/navigation/2d/agent_path_color` | `ProjectSetting<Color> NavigationDebugAgentPathColor` | Opaque red; finite components. |
+| `debug/shapes/navigation/2d/agent_path_point_size` | `ProjectSetting<float> NavigationDebugAgentPathPointSize` | Four canvas units; finite and nonnegative. |
+
+These settings drive [agent path drawing](NavigationAgent.md#path-diagnostics), independently of global map diagnostics and SceneTree.DebugNavigationHint. Custom agent style selection retains its own line/point rules. Fresh-process tests load saved base values and feature overrides into real retained drawing. Source: [ProjectSettings.NavigationDebug.cs](../../src/Core/Config/ProjectSettings.NavigationDebug.cs).
