@@ -177,3 +177,9 @@ fixtures and motion queries. See [filter failures and sensing](../components/phy
 Scene departure retains the physical binding through the inherited OnExitTree hook and TreeExiting. Non-public membership cleanup then retires it before NodeRemoved/TreeExited even if a user hook or event fails. The OnExitTree hook is inherited from Node; no separate public cleanup alias is added. The [public lifecycle consumer](../components/scene-hierarchy.md#entry-readiness-and-departure) verifies live body/Area bindings, joint snapshot-map admission/removal and multi-error release on selected CPU/software-GPU/registered worlds.
 
 [Current-group Entity pose edits](../components/scene-hierarchy.md#transform-authoring-from-processing-groups) now defer selected backend publication to the joined owner phase. Scene-space borrowing excludes native/query/step/release access during worker callbacks, rolls back partial acquisition and always releases before numerical work. Body identities, child-shape transforms and synchronized AnimatableBody presentation retain their existing semantics; velocity, forces, geometry and other physical operations keep their own owner/borrow guards.
+
+Changed body one-way slot policies are captured during authoring and reused by
+the next numerical preparation. The [one-way input profile](../components/physics-shapes.md#one-way-input-preparation)
+checks edits without an intervening query, retained immutable values and strict
+zero-allocation physical frames; changed authoring measured 32 bytes per
+logical slot on Linux x64. Area sensing policy is unchanged.

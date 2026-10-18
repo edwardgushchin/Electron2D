@@ -6,7 +6,8 @@ namespace Electron2D;
 /// Incomplete authored pose publication retries before live queries, direct-body-view access and a nonzero step.
 /// Scene presentation reads retain authored state without forcing numerical preparation.
 /// Failed numerical worlds reject attached motion/role writes and numerical access before changing authoring,
-/// including after a failed local or portable restore. Teardown remains available.</remarks>
+/// including after a failed local or portable restore. Teardown remains available.
+/// Changed one-way slot policies are captured during authoring; numerical shape preparation reuses those immutable values.</remarks>
 public abstract partial class PhysicsBody : CollisionObject
 {
     private readonly List<ulong> _appliedShapeRevisions = [];
@@ -34,7 +35,11 @@ public abstract partial class PhysicsBody : CollisionObject
 
     internal ElectronObject? GetShapeNode(int index) => GetShapeOwnerObject(index);
 
-    internal override void MarkShapesDirty() => _shapesDirty = true;
+    internal override void MarkShapesDirty()
+    {
+        _shapesDirty = true;
+        for (var index = 0; index < ShapeSlots.Count; index++) _ = ShapeSlots[index].OneWay;
+    }
 
     internal PhysicsMaterial? MaterialOverride => _materialOverride is { IsDisposed: true } ? null : _materialOverride;
 

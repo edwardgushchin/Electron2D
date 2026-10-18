@@ -1,5 +1,38 @@
 # Collision shapes component
 
+## One-way input preparation
+
+Scene body dirtying captures every resolved immutable `OneWayContactData` value
+while authoring changes are applied. Numerical shape preparation reuses those
+values, preserving any earlier record retained by a selected implementation.
+The indexed traversal uses the existing slot cache and includes manual groups,
+CollisionShape and CollisionPolygon children. Area sensors retain their existing
+two-sided policy. Unchanged values reuse the same record.
+
+Previously, changing the local pose of a two-slot manual one-way group allocated
+8192 owner/all-thread bytes across 128 physical frames, with zero bytes in the
+measured property edits. Lazy policy capture had crossed into numerical preparation.
+The shared body dirtying path now moves capture to authoring: changed input costs
+32 managed bytes per logical slot on measured Linux x64, while each physical frame requires
+strict zero owner/all-thread bytes. This does not promise zero allocation for
+structural authoring or changed immutable input publication.
+
+The public-only `--one-way-inputs` fixture deliberately performs no query between
+an edit and its step. Manual two-slot groups, borrowed circle children and solid
+polygon children each alternate local pose, margin and passing direction. Every
+case warms 128 and measures 128 complete frames with an independently moving body;
+registered owners also verify current transformed values and unchanged retained
+records. JIT and strict NativeAOT profiles cover CPU without an available GPU,
+software Vulkan and a registered implementation, with serial/separate numerical
+policy. The root filter-contract group retains actual one-way traversal, polygon
+response and collision-exception checks. Adjacent geometry-borrowing and indexed
+shape-edit profiles protect the common preparation paths.
+
+Evidence: `bin/physics-one-way-inputs/2026-10-18/validation.json`. No public signature,
+ADR decision or coverage state changes. Complete numerical-extension, native
+allocation, foreign-platform, network and target-GPU/window performance acceptance
+remain open; software Vulkan establishes functional execution only.
+
 ## Indexed slot operation audit
 
 The Body/Area replace, local-pose, enable/disable, remove and clear operations now

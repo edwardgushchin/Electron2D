@@ -304,3 +304,9 @@ EnterCanvas/ExitCanvas and Enabled/Disabled can be propagated by the owner/curre
 ## Collapsed canvas picking
 
 Automatic physics picking ignores a canvas whose determinant is zero/nonfinite or whose inverse query position is nonfinite. Other canvases continue; mouse hover exits through normal object/shape cleanup and returns under a stationary pointer when the map becomes usable. Small finite and reflected transforms remain valid. This changes neither authored matrix storage nor explicit AffineInverse failure semantics, ordinary direct physics queries or collider ownership. See [the component contract and regression scope](../components/physics-picking.md#collapsed-canvas-mappings).
+
+Changed body one-way slot policies are captured during authoring and reused by
+the next numerical preparation. The [one-way input profile](../components/physics-shapes.md#one-way-input-preparation)
+checks edits without an intervening query, retained immutable values and strict
+zero-allocation physical frames; changed authoring measured 32 bytes per
+logical slot on Linux x64. Area sensing policy is unchanged.

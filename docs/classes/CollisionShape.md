@@ -107,3 +107,9 @@ The guard is released on supplier/status failure and before committed old-view
 retirement, so later ordinary bindings remain available.
 
 Manual Parent/Unparent notifications require the scene owner before inherited canvas callbacks or physical shape-owner metadata can change. A worker failure preserves the existing shape owner and its query identity. Custom notifications and interpolation resets retain inherited own-group delivery.
+
+Changed body one-way slot policies are captured during authoring and reused by
+the next numerical preparation. The [one-way input profile](../components/physics-shapes.md#one-way-input-preparation)
+checks edits without an intervening query, retained immutable values and strict
+zero-allocation physical frames; changed authoring measured 32 bytes per
+logical slot on Linux x64. Area sensing policy is unchanged.
