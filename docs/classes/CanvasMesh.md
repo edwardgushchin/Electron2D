@@ -26,3 +26,7 @@ Compressed surfaces use the same decoded numerical channel contract. The cold cu
 ## Packed surface integration
 
 Packed server surfaces supply authored local visibility rectangles. Attached skeleton palettes transform optional nullable bone rectangles through the existing mesh/skeleton basis; bounds storage stays private, and prepared queries/replay allocate no new arrays. Ordinary resource surfaces retain geometry-derived bounds.
+
+## Authored mesh visibility
+
+Draw bounds select a nonzero ArrayMesh.CustomAABB before palette-derived or per-surface bounds, then apply the draw-local transform. Geometric GetLocalBounds remains independent for Mesh.GetAABB. Hardware instance preparation uses the same override; whole MultiMesh bounds retain their separate precedence. See [manual mesh visibility](../components/meshes.md#manual-mesh-visibility-bounds).

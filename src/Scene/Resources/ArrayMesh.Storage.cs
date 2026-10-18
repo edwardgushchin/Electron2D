@@ -87,6 +87,7 @@ public sealed partial class ArrayMesh
     }
     private static readonly PropertyDescriptor[] SurfaceProperties =
     [
+        new PropertyDescriptor<ArrayMesh, Rect2>(nameof(CustomAABB), m => m.CustomAABB, (m, v) => m.CustomAABB = v, _ => default, stored: true),
         new PropertyDescriptor<ArrayMesh, BlendShapeMode>(nameof(BlendShapeMode), m => m.BlendShapeMode, (m, v) => m.BlendShapeMode = v, _ => BlendShapeMode.Relative, stored: true),
         new PropertyDescriptor<ArrayMesh, byte[]>("_surface_data", m => m.SaveSurfaces(), (m, v) => m.LoadSurfaces(v), _ => [], stored: true),
         new PropertyDescriptor<ArrayMesh, Material?[]>("_surface_materials", m => m.StoredMaterials, (m, v) => m.StoredMaterials = v, _ => [], stored: true)

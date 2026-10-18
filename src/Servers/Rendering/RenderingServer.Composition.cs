@@ -133,6 +133,9 @@ public sealed partial class RenderingServer
     {
         foreach (var batch in _batches)
         {
+            if (batch.First >= end || batch.First + batch.Count <= first) continue;
+            if (batch.VisibilityBounds is { } manual)
+            { initial = initial is { } bounds ? bounds.Merge(manual) : manual; continue; }
             // Instance base vertices are local geometry; their transformed bounds were accumulated during publication.
             if (batch.InstanceCount > 0) continue;
             var stop = Math.Min(end, batch.First + batch.Count);

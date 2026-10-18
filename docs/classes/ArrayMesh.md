@@ -28,6 +28,7 @@ Shape count/name accessors are inherited from [Mesh](Mesh.md). Named targets, tw
 | Complete signature | Contract |
 | --- | --- |
 | `public ArrayMesh()` | Creates an empty mesh. |
+| `public Electron2D.Rect2 CustomAABB { get; set; }` | Stored mesh-local visibility override; zero restores automatic bounds. |
 | `public System.Void AddBlendShape(System.String name)` | Adds a named shape definition before any surfaces exist. |
 | `public System.Void AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData> blendShapes = null, System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> lods = null, Electron2D.Mesh.ArrayFormat flags = None)` | Adds one copied two-dimensional surface. |
 | `public System.Void ClearBlendShapes()` | Clears shape definitions before any surfaces exist. |
@@ -328,3 +329,15 @@ Caller-owned RenderingServer mesh RIDs use this resource's authoritative index a
 ## Packed surface integration
 
 The packed RenderingServer family uses the same internal surface storage. Source-backed exports derive bounds and bone rectangles; imported server surfaces retain authored visibility rectangles, independent target schemas and exact shape bytes. Raw server identities are transient; the resource file format is unchanged. See [packed surfaces](../components/meshes.md#packed-server-surfaces).
+
+## Manual visibility bounds
+
+`CustomAABB` stores a finite nonnegative mesh-local Rect2; its end must be representable. The zero rectangle restores automatic visibility. Every successful assignment commits then emits Changed, including equal values; blocked signals retain the new value, and listener failure does not roll it back. Invalid rectangles preserve state. Resource duplication, local scene copies and typed archives retain the value independently of geometry.
+
+The override feeds retained command rectangles, fitted CanvasGroup output and both hardware/expanded MultiMesh culling. It takes precedence over packed surface and palette-derived visibility; a whole MultiMesh.CustomAABB still takes precedence over its child mesh. Authors cover all displaced or deformed positions. It does not transform vertices or change GetAABB, GetFaces, CreatePlaceholder or packed surface AABB. ClearSurfaces and tangent regeneration preserve this independent policy. Morph output carries live source changes. See [executable visibility bounds](../components/meshes.md#manual-mesh-visibility-bounds).
+
+```csharp
+mesh.CustomAABB = new Rect2(-20, -10, 80, 60);
+Rect2 sourceBounds = mesh.GetAABB();
+mesh.CustomAABB = default; // Restore automatic visibility.
+```

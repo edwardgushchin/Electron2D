@@ -116,16 +116,16 @@ internal static class CanvasCompositionTests
         {
             var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () =>
             {
-                using var screen = renderer.ReadbackBackBuffer(window); using var image = window.UseHDR2D ? window.GetTexture().GetImage()! : renderer.Readback();
-                if (stage == 0) { Pixel(screen, 12, 12, Colors.Red); if (material is not null) Pixel(image, 12, 12, Colors.Red); copy.CopyMode = BackBufferCopyMode.Viewport; }
-                else if (stage == 1) { Pixel(screen, 72, 48, Colors.Red); copy.CopyMode = BackBufferCopyMode.Rect; copy.Rect = default; }
-                else if (stage == 2) { Pixel(screen, 72, 48, Colors.Red); copy.Rect = new(0, 0, 16, 16); copy.Position = new(-8, 8); reader.Position = new(0, 8); reader.Extent = new(8, 16); reader.QueueRedraw(); }
-                else if (stage == 3) { Pixel(screen, 4, 12, Colors.Red); if (material is not null) Pixel(image, 4, 12, Colors.Red); copy.CopyMode = BackBufferCopyMode.Disabled; }
-                else if (stage == 4) { if (material is not null) { Pixel(screen, 4, 12, Colors.Blue); Pixel(image, 4, 12, Colors.Blue); } copy.CopyMode = BackBufferCopyMode.Rect; copy.Visible = false; }
+                using var screen = material is null && stage is >= 4 and <= 6 ? null : renderer.ReadbackBackBuffer(window); using var image = window.UseHDR2D ? window.GetTexture().GetImage()! : renderer.Readback();
+                if (stage == 0) { Pixel(screen!, 12, 12, Colors.Red); if (material is not null) Pixel(image, 12, 12, Colors.Red); copy.CopyMode = BackBufferCopyMode.Viewport; }
+                else if (stage == 1) { Pixel(screen!, 72, 48, Colors.Red); copy.CopyMode = BackBufferCopyMode.Rect; copy.Rect = default; }
+                else if (stage == 2) { Pixel(screen!, 72, 48, Colors.Red); copy.Rect = new(0, 0, 16, 16); copy.Position = new(-8, 8); reader.Position = new(0, 8); reader.Extent = new(8, 16); reader.QueueRedraw(); }
+                else if (stage == 3) { Pixel(screen!, 4, 12, Colors.Red); if (material is not null) Pixel(image, 4, 12, Colors.Red); copy.CopyMode = BackBufferCopyMode.Disabled; }
+                else if (stage == 4) { if (material is not null) { Pixel(screen!, 4, 12, Colors.Blue); Pixel(image, 4, 12, Colors.Blue); } copy.CopyMode = BackBufferCopyMode.Rect; copy.Visible = false; }
                 else if (stage == 5) { if (material is not null) Pixel(image, 4, 12, Colors.Blue); copy.Visible = true; copy.VisibilityLayer = 2; }
                 else if (stage == 6) { if (material is not null) Pixel(image, 4, 12, Colors.Blue); copy.VisibilityLayer = 1; copy.CopyMode = BackBufferCopyMode.Viewport; copy.ZIndex = -1; }
-                else if (stage == 7) { Pixel(screen, 4, 12, Colors.Black); if (material is not null) Pixel(image, 4, 12, Colors.Black); copy.ZIndex = 0; copy.CopyMode = BackBufferCopyMode.Rect; copy.Rect = new(16, 0, -16, 16); copy.Position = new(8, 8); reader.Position = new(8, 8); reader.Extent = new(16, 16); reader.QueueRedraw(); }
-                else if (stage == 8) { Pixel(screen, 12, 12, Colors.Red); if (material is not null) Pixel(image, 12, 12, Colors.Red); window.Tree!.Quit(); }
+                else if (stage == 7) { Pixel(screen!, 4, 12, Colors.Black); if (material is not null) Pixel(image, 4, 12, Colors.Black); copy.ZIndex = 0; copy.CopyMode = BackBufferCopyMode.Rect; copy.Rect = new(16, 0, -16, 16); copy.Position = new(8, 8); reader.Position = new(8, 8); reader.Extent = new(16, 16); reader.QueueRedraw(); }
+                else if (stage == 8) { Pixel(screen!, 12, 12, Colors.Red); if (material is not null) Pixel(image, 12, 12, Colors.Red); window.Tree!.Quit(); }
                 stage++;
             };
         };

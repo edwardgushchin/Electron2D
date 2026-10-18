@@ -1714,6 +1714,21 @@
       "godot": "RenderingServer::method:mesh_get_surface(RID:,int:)",
       "electron2d": "method:Electron2D.RenderingServer.MeshGetSurface(Electron2D.RID,System.Int32)",
       "reason": "ADR 0092 complete typed packed surface transport: copied position/frame/attribute/custom/skin/index/shape/LOD buffers, independent target schema, UV scale, borrowed material and real authored/bone visibility bounds. MeshPackedTests verifies layout/finite/range/shape/atomic/copy/fresh-authoring contracts; Linux software GPU/GLSL, GPU/HLSL and Compatibility profiles verify actual channels/material/LOD/skin pixels, public guards, custom recovery and zero-byte prepared owner frames."
+    },
+    {
+      "godot": "ArrayMesh::property:custom_aabb",
+      "electron2d": "property:Electron2D.ArrayMesh.CustomAABB()",
+      "reason": "ADR 0092: applicable 2D mesh-local visibility overrides project AABB to Rect2, with zero selecting automatic bounds. Stored resource state, both copy policies, committed notifications, live morph propagation, palette precedence, group fitting and hardware/expanded instance culling execute independently of source geometry bounds and packed surface metadata. MeshBoundsTests and Linux Wayland GLSL/HLSL/Compatibility pixels cover guards, validation, reset, archives and 64 active/64 idle owner frames; software-driver evidence does not certify hardware, foreign platforms or native allocations."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_get_custom_aabb(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshGetCustomAABB(Electron2D.RID)",
+      "reason": "ADR 0092: applicable 2D mesh-local visibility overrides project AABB to Rect2, with zero selecting automatic bounds. Stored resource state, both copy policies, committed notifications, live morph propagation, palette precedence, group fitting and hardware/expanded instance culling execute independently of source geometry bounds and packed surface metadata. MeshBoundsTests and Linux Wayland GLSL/HLSL/Compatibility pixels cover guards, validation, reset, archives and 64 active/64 idle owner frames; software-driver evidence does not certify hardware, foreign platforms or native allocations."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_set_custom_aabb(RID:,AABB:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSetCustomAABB(Electron2D.RID,Electron2D.Rect2)",
+      "reason": "ADR 0092: applicable 2D mesh-local visibility overrides project AABB to Rect2, with zero selecting automatic bounds. Stored resource state, both copy policies, committed notifications, live morph propagation, palette precedence, group fitting and hardware/expanded instance culling execute independently of source geometry bounds and packed surface metadata. MeshBoundsTests and Linux Wayland GLSL/HLSL/Compatibility pixels cover guards, validation, reset, archives and 64 active/64 idle owner frames; software-driver evidence does not certify hardware, foreign platforms or native allocations."
     }
   ],
   "extras": [
@@ -2772,6 +2787,15 @@
         "RenderingServer::method:mesh_create_from_surfaces(Dictionary[]:,int:)"
       ],
       "reason": "ADR 0092 complete typed packed surface transport: copied position/frame/attribute/custom/skin/index/shape/LOD buffers, independent target schema, UV scale, borrowed material and real authored/bone visibility bounds. MeshPackedTests verifies layout/finite/range/shape/atomic/copy/fresh-authoring contracts; Linux software GPU/GLSL, GPU/HLSL and Compatibility profiles verify actual channels/material/LOD/skin pixels, public guards, custom recovery and zero-byte prepared owner frames. Remaining trigger: ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY requires the actual procedural vertex-shader and non-position-channel producer; the current canvas backend requires explicit positions, as with AddSurfaceFromArrays."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "ArrayMesh::property:custom_aabb",
+        "RenderingServer::method:mesh_get_custom_aabb(RID:)",
+        "RenderingServer::method:mesh_set_custom_aabb(RID:,AABB:)"
+      ],
+      "reason": "ADR 0092: applicable 2D mesh-local visibility overrides project AABB to Rect2, with zero selecting automatic bounds. Stored resource state, both copy policies, committed notifications, live morph propagation, palette precedence, group fitting and hardware/expanded instance culling execute independently of source geometry bounds and packed surface metadata. MeshBoundsTests and Linux Wayland GLSL/HLSL/Compatibility pixels cover guards, validation, reset, archives and 64 active/64 idle owner frames; software-driver evidence does not certify hardware, foreign platforms or native allocations."
     }
   ]
 }

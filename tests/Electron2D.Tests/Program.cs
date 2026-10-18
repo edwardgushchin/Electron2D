@@ -469,6 +469,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_COMPRESSION") == "1
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_FILE_CHILD") is { } shaderFileChild) { RDShaderFileTests.RunChild(shaderFileChild); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_FILE_NATIVE") == "1") { RDShaderFileTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_FILE") == "1") { RDShaderFileTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_BOUNDS_CHILD") is { } meshBoundsPath) { MeshBoundsTests.Child(meshBoundsPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_BOUNDS_NATIVE") is { } meshBoundsProfile) { MeshBoundsTests.Native(meshBoundsProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_BOUNDS") == "1") { MeshBoundsTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_PACKED_NATIVE") is { } packedMeshProfile) { MeshPackedTests.Native(packedMeshProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_PACKED_CHILD") is { } packedMeshPath) { MeshPackedTests.Child(packedMeshPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_PACKED") == "1") { MeshPackedTests.Run(); return; }
@@ -1611,7 +1614,7 @@ AudioEQTests.Run(); AudioDelayTests.Run(); AudioReverbTests.Run(); AudioChorusTe
 AudioSpatialTests.Run();
 AudioFilterTests.Run();
 MeshTests.Run(); MeshIndexTests.Run();
-MeshPackedTests.Run();
+MeshPackedTests.Run(); MeshBoundsTests.Run();
 RenderingPrimitiveTests.Run();
 RenderingCanvasTests.Run();
 NavigationTopologyTests.Run();

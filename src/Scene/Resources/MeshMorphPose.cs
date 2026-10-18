@@ -74,6 +74,8 @@ internal sealed class MeshMorphPose : IDisposable
                 s.Basis.Normals.CopyTo(target.Data.Normals, 0); s.Basis.Tangents.CopyTo(target.Data.Tangents, 0);
                 for (var vertex = 0; vertex < s.Basis.Vertices.Length; vertex++) Position(s, vertex, weights, candidate, value, basisWeight, out target.Data.Vertices[vertex]);
             }
+            var customBounds = arrays?.CustomAABB ?? default;
+            if (output.CustomAABB != customBounds) output.CustomAABB = customBounds;
             if (next is not null) { _output?.Dispose(); _output = next; next = null; }
             _source = source; _revision = revision; output.EmitChanged(); return output;
         }

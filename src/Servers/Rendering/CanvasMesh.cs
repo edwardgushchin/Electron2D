@@ -23,6 +23,7 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
             {
                 lock (arrays.Gate)
                 {
+                    Rect2? visibility = arrays.CustomAABB is var manual && manual != default ? transform * (instances is null ? manual : instances.GetPresentationBounds(fraction)) : null;
                     for (var i = 0; i < arrays.SurfaceCount; i++)
                     {
                         var surface = arrays.Get(i); var first = vertices.Count;
@@ -30,13 +31,13 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
                         if (surface.LODs.Length == 0 && instances is not null && !snap && palette.IsEmpty && surface.Data.Bones.Length == 0 &&
                             surface.Primitive is Mesh.PrimitiveType.Triangles or Mesh.PrimitiveType.TriangleStrip &&
                             RenderingServer.Service is { } renderer && renderer.CanInstance(skinOwner) &&
-                            TryInstanceBounds(surface.Data, out var bounds) && renderer.TryAppendInstances(instances, transform, color, surface.PackedAABB ?? bounds, fraction, out firstInstance, linear))
+                            TryInstanceBounds(surface.Data, out var bounds) && renderer.TryAppendInstances(instances, transform, color, arrays.CustomAABB != default ? arrays.CustomAABB : surface.PackedAABB ?? bounds, fraction, out firstInstance, linear, recordBounds: visibility is null))
                         {
                             instanceCount = instances.DrawCount;
                             AppendSurface(vertices, surface.Data, surface.Primitive, Transform.Identity, Colors.White, false, default, default, Transform.Identity, Transform.Identity, linear);
                         }
                         else AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs, linear);
-                        AddBatch(batches, first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, firstInstance, instanceCount, linear);
+                        AddBatch(batches, first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, firstInstance, instanceCount, linear, visibility);
                     }
                 }
                 return;
@@ -95,7 +96,7 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
         }
         finally { _preparing = false; }
     }
-    internal Rect2 GetDrawBounds(CanvasItem owner) => local * GetLocalBounds(owner);
+    internal Rect2 GetDrawBounds(CanvasItem owner) => local * (mesh is ArrayMesh { CustomAABB: var manual } && manual != default ? manual : GetLocalBounds(owner));
     internal Rect2 GetLocalBounds(CanvasItem? owner = null)
     {
         ObjectDisposedException.ThrowIf(mesh.IsDisposed, mesh); var first = true; var minimum = Vector2.Zero; var maximum = Vector2.Zero;
@@ -136,14 +137,15 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
         return bounds;
     }
     private static void AddBatch(List<CanvasBatch> batches, int first, int count, Material? surfaceMaterial, MaterialState? inheritedMaterial, BlendMode inheritedBlend,
-        Texture? texture, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, CanvasItem? owner, int firstInstance = 0, int instanceCount = 0, bool linear = false)
+        Texture? texture, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, CanvasItem? owner, int firstInstance = 0, int instanceCount = 0, bool linear = false, Rect2? visibility = null)
     {
         if (count == 0) return;
+        if (visibility is { } bounds && (!bounds.IsFinite() || !bounds.End.IsFinite())) throw new ArithmeticException("Mesh visibility bounds exceed finite canvas coordinates.");
         var material = surfaceMaterial is null ? inheritedMaterial : surfaceMaterial.GetCanvasState(); var blend = surfaceMaterial is null ? inheritedBlend : surfaceMaterial.GetCanvasBlendMode();
         var instanceOwner = material?.Program.HasInstanceUniforms == true ? owner : null;
-        if (instanceCount == 0 && batches.Count != 0 && batches[^1] is var last && last.InstanceCount == 0 && last.Operation == CanvasOperation.Draw && last.Glyph.Mode == CanvasGlyphMode.None && last.Material == material && last.InstanceOwner == instanceOwner && last.Texture == texture && last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == clip && last.LinearColors == linear)
+        if (instanceCount == 0 && batches.Count != 0 && batches[^1] is var last && last.VisibilityBounds == visibility && last.InstanceCount == 0 && last.Operation == CanvasOperation.Draw && last.Glyph.Mode == CanvasGlyphMode.None && last.Material == material && last.InstanceOwner == instanceOwner && last.Texture == texture && last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == clip && last.LinearColors == linear)
             batches[^1] = last with { Count = last.Count + count };
-        else batches.Add(new(first, count, material, texture, filter, repeat, anisotropy, blend, clip, FirstInstance: firstInstance, InstanceCount: instanceCount, InstanceOwner: instanceOwner, LinearColors: linear));
+        else batches.Add(new(first, count, material, texture, filter, repeat, anisotropy, blend, clip, FirstInstance: firstInstance, InstanceCount: instanceCount, InstanceOwner: instanceOwner, LinearColors: linear, VisibilityBounds: visibility));
     }
     private static bool TryInstanceBounds(MeshSurfaceData data, out Rect2 bounds)
     {

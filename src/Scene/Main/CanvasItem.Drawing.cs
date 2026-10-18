@@ -403,7 +403,7 @@ public abstract partial class CanvasItem
                 capturedMaterial = true;
             }
             var repeat = command.Tile ? TextureRepeat.Enabled : inheritedRepeat;
-            if (batches.Count != 0 && batches[^1] is var last && last.Operation == CanvasOperation.Draw && last.InstanceCount == 0 && last.Material == material && last.InstanceOwner == (material?.Program.HasInstanceUniforms == true ? this : null) && last.Texture == replay.Texture &&
+            if (batches.Count != 0 && batches[^1] is var last && last.VisibilityBounds is null && last.Operation == CanvasOperation.Draw && last.InstanceCount == 0 && last.Material == material && last.InstanceOwner == (material?.Program.HasInstanceUniforms == true ? this : null) && last.Texture == replay.Texture &&
                 last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == commandClip && last.Glyph == glyph && last.GlyphModulation == glyphModulation && last.LinearColors == linearColors)
 
                 batches[^1] = last with { Count = last.Count + count };

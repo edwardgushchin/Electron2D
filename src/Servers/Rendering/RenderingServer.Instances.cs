@@ -14,7 +14,7 @@ public sealed partial class RenderingServer
     internal bool CanInstance(CanvasItem? owner) => _rendering && _backend is GPUCanvasBackend &&
         owner is not null && owner is not VisibleOnScreenNotifier && !IsCompositor(owner) && ParentGroup(owner) is null or CanvasGroup;
 
-    internal bool TryAppendInstances(MultiMesh resource, Transform canvas, Color modulation, Rect2 bounds, float fraction, out int first, bool linear = false)
+    internal bool TryAppendInstances(MultiMesh resource, Transform canvas, Color modulation, Rect2 bounds, float fraction, out int first, bool linear = false, bool recordBounds = true)
     {
         first = _instances.Count;
         Rect2? combined = null;
@@ -32,7 +32,7 @@ public sealed partial class RenderingServer
             _instances.Add(new(pose, color, custom));
             combined = combined is { } prior ? prior.Merge(transformedBounds) : transformedBounds;
         }
-        if (combined is { } actual) _appendedInstanceBounds = _appendedInstanceBounds is { } prior ? prior.Merge(actual) : actual;
+        if (recordBounds && combined is { } actual) _appendedInstanceBounds = _appendedInstanceBounds is { } prior ? prior.Merge(actual) : actual;
         return true;
     }
 }

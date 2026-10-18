@@ -45,12 +45,13 @@ public sealed class MultiMesh : Resource
     }
     /// <summary>Gets the local visibility rectangle of the visible instance prefix.</summary>
     /// <returns>The manual rectangle or merged transformed mesh bounds, empty without visible geometry.</returns>
+    /// <remarks>A child ArrayMesh.CustomAABB overrides its source bounds before each instance transform; this resource's CustomAABB takes precedence.</remarks>
     public Rect2 GetAABB() { lock (Gate) { ThrowIfDisposed(); return GetPresentationBounds(1); } }
     internal Rect2 GetPresentationBounds(float fraction)
     {
         if (_customAABB != default) return _customAABB;
         var mesh = _mesh; var count = DrawCount; if (mesh is null || count == 0) return default;
-        var revision = ChangeRevision; var surfaces = mesh.GetSurfaceCount(); var local = surfaces == 0 ? default : mesh.GetAABB();
+        var revision = ChangeRevision; var surfaces = mesh.GetSurfaceCount(); var local = surfaces == 0 ? default : mesh is ArrayMesh { CustomAABB: var manual } && manual != default ? manual : mesh.GetAABB();
         ThrowIfDisposed(); if (ChangeRevision != revision) throw new InvalidOperationException("Mesh callbacks changed instance storage during bounds preparation.");
         if (surfaces == 0) return default;
         var result = default(Rect2);

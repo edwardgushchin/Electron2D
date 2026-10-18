@@ -1376,3 +1376,12 @@ This moves its first triangle to vertices 3, 4 and 5 when the index stride is tw
 | `MeshSurfaceBuffers MeshGetSurface(RID mesh, int surface)` | Returns independent packed buffers/metadata from an owned or borrowed mesh; material remains borrowed. |
 
 All three require the active renderer owner thread. Creation/append also reject native submission/shutdown and borrowed mutation. Invalid buffers, counts, bounds, topology, shape schema, indices or LODs reject before publication. Disposed materials reject on import. Empty batches are valid and retain their explicit shape count. Custom export rejects recursive/revision-changing/disposed sources and recovers on later valid preparation. The [payload contract](MeshSurfaceBuffers.md) and [component](../components/meshes.md#packed-server-surfaces) define exact packing, independent shape masks, bounds, ownership and verification limits. Queries/imports allocate; warmed retained replay/region updates retain the existing budget. Procedural position-free formats remain an explicit producer dependency.
+
+## Manual mesh visibility bounds
+
+| Signature | Contract |
+| --- | --- |
+| `public static Rect2 MeshGetCustomAABB(RID mesh)` | Owner-thread query of a live owned or borrowed mesh; zero selects automatic visibility. Other borrowed Mesh roles have no authored override. |
+| `public static void MeshSetCustomAABB(RID mesh, Rect2 aabb)` | Sets finite nonnegative mesh-local visibility on a caller-owned mesh; zero restores automatic bounds. Existing submission/shutdown and ownership guards apply. |
+
+These methods share ArrayMesh.CustomAABB state. Source geometry and packed surface descriptions remain independent. Retained commands, group fitting, palettes/morphs and hardware/expanded instances use the override. Resource-owned RIDs permit queries and retain their resource setter; service mutation rejects borrowed identities. See [bounds behavior and native checks](../components/meshes.md#manual-mesh-visibility-bounds).

@@ -288,3 +288,5 @@ The [KTX image slice](../components/image-ktx.md) adds flat KTX1/KTX2 file/buffe
 [Linked packed scenes](../components/linked-scenes.md) reuse compatible local resources when applying nested overrides, preserve aliases/cycles and transfer created resources to the appropriate nested owner. Version-5 archives persist template references while retaining version-4 missing-payload roles.
 
 [Packed mesh surfaces](../components/meshes.md#packed-server-surfaces) now connect typed binary descriptions to owned RenderingServer creation/append and copied export from ordinary/custom resources. Position/direction/custom/skin/morph/LOD/material data and authored visibility bounds reach the existing renderer. Real software GPU/GLSL, GPU/HLSL and Compatibility profiles verify output and prepared allocation limits; procedural position-free formats retain their exact shader producer prerequisite.
+
+[Manual mesh visibility bounds](../components/meshes.md#manual-mesh-visibility-bounds) connect stored ArrayMesh policy and static server access to fitted groups, morph output and both instance drawing paths, independently of source geometry bounds.

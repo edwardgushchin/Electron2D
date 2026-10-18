@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>Composites same-Z canvas descendants as one object before applying its own appearance.</summary>
 /// <remarks>The renderer fits a screen-space rectangle around submitted children and uses a native transparent
-/// backbuffer. SelfModulate applies to the completed group, avoiding repeated opacity in overlapping children.
+/// backbuffer. Mesh visibility overrides replace their CPU geometry bounds during fitting. SelfModulate applies to the completed group, avoiding repeated opacity in overlapping children.
 /// An assigned material replaces the default group shader. Nested groups share the backbuffer and are unsupported;
 /// GetConfigurationWarnings reports that boundary. Custom shaders and mipmap generation require the GPU profile.</remarks>
 public class CanvasGroup : Entity

@@ -106,3 +106,5 @@ GPUCanvasBackend.Glyphs composes and caches encoded coverage programs on cold so
 ## Authored vertex stages
 
 Native pipeline identity includes the selected authored vertex variant as well as fragment payload, blend, instancing, sample count, glyph mode and target format. Fragment and vertex samplers bind separately from the combined logical material resources; extra light/glyph resources use the fragment prefix count. Shader reload retires unused stage combinations through the existing frame lifetime. Renderer-owned mask/group passes keep their built-in vertices; authored group material draws use their own vertex stage. CanvasVertexProgramTests verifies pixel output and prepared owner-frame managed allocation on Linux X11/Wayland.
+
+Programmable pipeline usage retains one previous frame. Alternating instance culling reuses its prepared pipeline; two consecutive unused frames retire it, and shutdown disposes all retained native pipelines.

@@ -202,10 +202,10 @@ public sealed partial class ArrayMesh : Mesh
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
-        Surface[] copies; string[] names; BlendShapeMode mode;
-        lock (Gate) { ThrowIfDisposed(); names = _blendShapeNames.ToArray(); mode = _blendShapeMode; copies = new Surface[_surfaces.Count]; for (var i = 0; i < copies.Length; i++) { var s = _surfaces[i]; copies[i] = new(s.Data.Copy(), s.Primitive, s.Format & (ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights | ArrayFormat.CompressAttributes), (uint[])s.FrameWords.Clone(), s.BlendShapes.Select(shape => shape.Copy()).ToArray(), s.BlendMask, MeshLOD.Copy(s.LODs), s.Compression) { Name = s.Name, Material = s.Material, PackedAABB = s.PackedAABB, PackedUVScale = s.PackedUVScale, PackedBoneAABBs = s.PackedBoneAABBs, PackedBlendShapeData = s.PackedBlendShapeData }; } }
+        Surface[] copies; string[] names; BlendShapeMode mode; Rect2 customBounds;
+        lock (Gate) { ThrowIfDisposed(); names = _blendShapeNames.ToArray(); mode = _blendShapeMode; customBounds = _customAABB; copies = new Surface[_surfaces.Count]; for (var i = 0; i < copies.Length; i++) { var s = _surfaces[i]; copies[i] = new(s.Data.Copy(), s.Primitive, s.Format & (ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights | ArrayFormat.CompressAttributes), (uint[])s.FrameWords.Clone(), s.BlendShapes.Select(shape => shape.Copy()).ToArray(), s.BlendMask, MeshLOD.Copy(s.LODs), s.Compression) { Name = s.Name, Material = s.Material, PackedAABB = s.PackedAABB, PackedUVScale = s.PackedUVScale, PackedBoneAABBs = s.PackedBoneAABBs, PackedBlendShapeData = s.PackedBlendShapeData }; } }
         foreach (var copy in copies) copy.Material = (Material?)duplicateSubresource(copy.Material);
-        var other = (ArrayMesh)target; lock (other.Gate) { other.ThrowIfDisposed(); other._surfaces.Clear(); other._surfaces.AddRange(copies); other._blendShapeNames.Clear(); other._blendShapeNames.AddRange(names); other._blendShapeMode = mode; }
+        var other = (ArrayMesh)target; lock (other.Gate) { other.ThrowIfDisposed(); other._surfaces.Clear(); other._surfaces.AddRange(copies); other._blendShapeNames.Clear(); other._blendShapeNames.AddRange(names); other._blendShapeMode = mode; other._customAABB = customBounds; }
     }
     /// <inheritdoc />
     protected override void Dispose(bool disposing) { lock (Gate) { _surfaces.Clear(); _blendShapeNames.Clear(); } base.Dispose(disposing); }

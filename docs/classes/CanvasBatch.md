@@ -15,14 +15,14 @@ A contiguous vertex range with one borrowed material state, command texture, fil
 
 | Declaration | Contract |
 | --- | --- |
-| `CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null, TextureFilter Filter = TextureFilter.Nearest, TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1, BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool MIPMaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0)` | [Construction and values](#construction-and-values) |
+| `CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null, TextureFilter Filter = TextureFilter.Nearest, TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1, BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool MIPMaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0, CanvasLightingItem? Lighting = null, CanvasItem? InstanceOwner = null, CanvasGlyph Glyph = default, Color GlyphModulation = default, bool LinearColors = false, Color? CanvasModulation = null, Rect2? VisibilityBounds = null)` | [Construction and values](#construction-and-values) |
 | `internal byte[]? ShaderCode { get; }` | [Shader code](#shader-code) |
 
 ## Member descriptions
 
 ### Construction and values
 
-`CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null, TextureFilter Filter = TextureFilter.Nearest, TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1, BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool MIPMaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0)`
+`CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null, TextureFilter Filter = TextureFilter.Nearest, TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1, BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool MIPMaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0, CanvasLightingItem? Lighting = null, CanvasItem? InstanceOwner = null, CanvasGlyph Glyph = default, Color GlyphModulation = default, bool LinearColors = false, Color? CanvasModulation = null, Rect2? VisibilityBounds = null)`
 
 First and Count index the prepared triangle list. Material null selects the built-in program. Texture null means opaque white for the built-in command sampler. Filter, Repeat and MaxAnisotropy are resolved per item before batching; tiled commands force Enabled addressing. These values participate in batch equality. These arguments become record properties.
 
@@ -43,3 +43,5 @@ MaskShader selects the built-in final alpha mask while preserving command textur
 InstanceOwner carries the CanvasItem supplying per-item uniform buffers. Adjacent batches merge only when this owner also matches. Group/mask operations preserve it through batch rewrites. See [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).
 
 Glyph carries LCD/MSDF mode and converted range/outline policy; GlyphModulation carries the LCD blend constant. Both participate in ordinary batch equality. CanvasMesh rejects merging into glyph ranges. Built-in masks retain scalar glyph coverage; built-in transparent group rewrites clear glyph state after restoring LCD tint. See [glyph regions](../components/canvas-rendering.md#lcd-and-msdf-texture-regions).
+
+Manual mesh visibility rectangles are carried in retained batches for group fitting; they replace the batch's CPU geometry bounds. Batches with different visibility policies remain distinct. See [manual mesh bounds](../components/meshes.md#manual-mesh-visibility-bounds).

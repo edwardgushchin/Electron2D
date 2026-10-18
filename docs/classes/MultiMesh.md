@@ -376,3 +376,7 @@ System.ArgumentOutOfRangeException: The index is outside storage.
 Authored index sets select from the full local-to-framebuffer basis using a one-pixel error threshold. MultiMesh selects each presentation instance independently; MeshInstance morph output retains LODs. Base queries and conservative bounds describe full geometry. Storage/callback ownership and detailed validation are documented in [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).
 
 Interpolation endpoint changes and explicit ResetInstancesPhysicsInterpolation report pending canvas output. Differing prepared endpoints remain a time-dependent consumer while the rendering scene enables physics interpolation. See [low-processor rendering](../components/low-processor-rendering.md).
+
+## Child mesh visibility
+
+Automatic GetAABB and presentation bounds use ArrayMesh.CustomAABB before each visible instance transform when that child override is nonzero. This resource's CustomAABB overrides the complete collection. Both hardware and expanded drawing retain the same child policy; the child mesh's geometric GetAABB remains independent. See [manual mesh bounds](../components/meshes.md#manual-mesh-visibility-bounds).
