@@ -1,6 +1,6 @@
 # Texture
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
 
 - Declaration: `public abstract class Texture : Resource`
 - Source: [Texture.cs](../../src/Scene/Resources/Texture.cs)
@@ -129,3 +129,5 @@ ViewportTexture supplies live native target storage and explicit caller-owned Ge
 
 
 DPITexture retains SVG authoring data and selects viewport raster variants during canvas replay. GetRID preserves the stable base resource identity; its GetScaledRID supplies a borrowed current-draw scale identity. See [scalable SVG textures](../components/scalable-svg.md) for variant lifetime and processing limits.
+
+[MeshTexture](MeshTexture.md) supplies actual mesh geometry through the virtual drawing family while retaining no raster image. Its logical resource identity executes virtual rectangle drawing through RenderingServer; scaling/region/tile behavior follows its documented mesh-view contract.

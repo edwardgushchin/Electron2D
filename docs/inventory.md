@@ -776,6 +776,7 @@ The initial shader/material path is executable for the documented interface. Bro
 
 | Domain | Component | Production type | Source | State |
 | --- | --- | --- | --- | --- |
+| [Resources](domains/resources.md) | [Meshes](components/meshes.md) | [MeshTexture](classes/MeshTexture.md) | [MeshTexture.cs](../src/Scene/Resources/MeshTexture.cs) | Drawing-only mesh view for Texture consumers; borrowed geometry/image, signed logical scaling and typed graph storage |
 | [Resources](domains/resources.md) | [Shader materials](components/shader-materials.md) | [Shader](classes/Shader.md) | [Shader.cs](../src/Scene/Resources/Shader.cs) | Copied paired SPIR-V programs, original mesh vertex IDs, uniform discovery and atomic reload; partial shader interface |
 | [Resources](domains/resources.md) | [Shader materials](components/shader-materials.md) | [Shader.Mode](classes/Shader.Mode.md) | [Shader.cs](../src/Scene/Resources/Shader.cs) | CanvasItem domain only |
 | [Resources](domains/resources.md) | [Shader materials](components/shader-materials.md) | [Material](classes/Material.md) | [Material.cs](../src/Scene/Resources/Material.cs) | Engine-owned resource base for executable canvas shading |

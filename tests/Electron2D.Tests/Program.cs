@@ -9,6 +9,7 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_TEXTURE") is { } meshTextureProfile) { MeshTextureTests.Run(meshTextureProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NUMERIC_MATRICES") is { } numericMatrices) { NumericMatrixTests.Run(numericMatrices); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SAMPLER_ARRAYS") is { } samplerArrays) { if (samplerArrays == "managed") SamplerArrayTests.Run(); else SamplerArrayTests.RunNative(samplerArrays); return; }
 
@@ -1646,6 +1647,7 @@ RenderingCanvasTests.Run();
 NavigationTopologyTests.Run();
 TextureArrayTests.Run();
 NumericMatrixTests.Run("managed");
+MeshTextureTests.Managed();
 TexturePlaceholderTests.RunManaged();
 MissingTextureTests.RunManaged();
 LinkedSceneTests.RunManaged();

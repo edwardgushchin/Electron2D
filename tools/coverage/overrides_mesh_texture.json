@@ -1,0 +1,119 @@
+{
+  "mappings": [
+    {
+      "godot": "class:MeshTexture",
+      "electron2d": "T:Electron2D.MeshTexture",
+      "reason": "ADRs 0013/0014/0028/0092: drawing-only MeshTexture borrows real Mesh/base Texture, retains raw finite ImageSize with truncated dimensions, and executes point/rectangle/region drawing through existing mesh replay. Region/tile requests draw once; signed destinations retain logical-size origin shifts and transpose swaps diagonal scale. Zero logical axes avoid undefined division. Resource changes, borrowed disposal, mixed texture graph cycles, exact graph/archive/scene factories and static RID virtual drawing are connected. Current backend verification and limits are recorded in docs/components/meshes.md."
+    },
+    {
+      "godot": "MeshTexture::property:mesh",
+      "electron2d": "property:Electron2D.MeshTexture.Mesh()",
+      "reason": "ADRs 0013/0014/0028/0092: drawing-only MeshTexture borrows real Mesh/base Texture, retains raw finite ImageSize with truncated dimensions, and executes point/rectangle/region drawing through existing mesh replay. Region/tile requests draw once; signed destinations retain logical-size origin shifts and transpose swaps diagonal scale. Zero logical axes avoid undefined division. Resource changes, borrowed disposal, mixed texture graph cycles, exact graph/archive/scene factories and static RID virtual drawing are connected. Current backend verification and limits are recorded in docs/components/meshes.md."
+    },
+    {
+      "godot": "MeshTexture::property:base_texture",
+      "electron2d": "property:Electron2D.MeshTexture.BaseTexture()",
+      "reason": "ADRs 0013/0014/0028/0092: drawing-only MeshTexture borrows real Mesh/base Texture, retains raw finite ImageSize with truncated dimensions, and executes point/rectangle/region drawing through existing mesh replay. Region/tile requests draw once; signed destinations retain logical-size origin shifts and transpose swaps diagonal scale. Zero logical axes avoid undefined division. Resource changes, borrowed disposal, mixed texture graph cycles, exact graph/archive/scene factories and static RID virtual drawing are connected. Current backend verification and limits are recorded in docs/components/meshes.md."
+    },
+    {
+      "godot": "MeshTexture::property:image_size",
+      "electron2d": "property:Electron2D.MeshTexture.ImageSize()",
+      "reason": "ADRs 0013/0014/0028/0092: drawing-only MeshTexture borrows real Mesh/base Texture, retains raw finite ImageSize with truncated dimensions, and executes point/rectangle/region drawing through existing mesh replay. Region/tile requests draw once; signed destinations retain logical-size origin shifts and transpose swaps diagonal scale. Zero logical axes avoid undefined division. Resource changes, borrowed disposal, mixed texture graph cycles, exact graph/archive/scene factories and static RID virtual drawing are connected. Current backend verification and limits are recorded in docs/components/meshes.md."
+    },
+    {
+      "godot": "MeshTexture::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "reason": "ADRs 0013/0014/0028/0092: drawing-only MeshTexture borrows real Mesh/base Texture, retains raw finite ImageSize with truncated dimensions, and executes point/rectangle/region drawing through existing mesh replay. Region/tile requests draw once; signed destinations retain logical-size origin shifts and transpose swaps diagonal scale. Zero logical axes avoid undefined division. Resource changes, borrowed disposal, mixed texture graph cycles, exact graph/archive/scene factories and static RID virtual drawing are connected. Current backend verification and limits are recorded in docs/components/meshes.md."
+    },
+    {
+      "godot": "Texture2D::method:_draw(RID:,Vector2:,Color:,bool:)",
+      "electron2d": "method:Electron2D.MeshTexture.Draw(Electron2D.CanvasItem,Electron2D.Vector2,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "ADRs 0013/0014/0028/0092: drawing-only MeshTexture borrows real Mesh/base Texture, retains raw finite ImageSize with truncated dimensions, and executes point/rectangle/region drawing through existing mesh replay. Region/tile requests draw once; signed destinations retain logical-size origin shifts and transpose swaps diagonal scale. Zero logical axes avoid undefined division. Resource changes, borrowed disposal, mixed texture graph cycles, exact graph/archive/scene factories and static RID virtual drawing are connected. Current backend verification and limits are recorded in docs/components/meshes.md."
+    },
+    {
+      "godot": "Texture2D::method:draw(RID:,Vector2:,Color:,bool:)",
+      "electron2d": "method:Electron2D.MeshTexture.Draw(Electron2D.CanvasItem,Electron2D.Vector2,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "ADRs 0013/0014/0028/0092: drawing-only MeshTexture borrows real Mesh/base Texture, retains raw finite ImageSize with truncated dimensions, and executes point/rectangle/region drawing through existing mesh replay. Region/tile requests draw once; signed destinations retain logical-size origin shifts and transpose swaps diagonal scale. Zero logical axes avoid undefined division. Resource changes, borrowed disposal, mixed texture graph cycles, exact graph/archive/scene factories and static RID virtual drawing are connected. Current backend verification and limits are recorded in docs/components/meshes.md."
+    },
+    {
+      "godot": "Texture2D::method:_draw_rect(RID:,Rect2:,bool:,Color:,bool:)",
+      "electron2d": "method:Electron2D.MeshTexture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect2,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "ADRs 0013/0014/0028/0092: drawing-only MeshTexture borrows real Mesh/base Texture, retains raw finite ImageSize with truncated dimensions, and executes point/rectangle/region drawing through existing mesh replay. Region/tile requests draw once; signed destinations retain logical-size origin shifts and transpose swaps diagonal scale. Zero logical axes avoid undefined division. Resource changes, borrowed disposal, mixed texture graph cycles, exact graph/archive/scene factories and static RID virtual drawing are connected. Current backend verification and limits are recorded in docs/components/meshes.md."
+    },
+    {
+      "godot": "Texture2D::method:draw_rect(RID:,Rect2:,bool:,Color:,bool:)",
+      "electron2d": "method:Electron2D.MeshTexture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect2,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "ADRs 0013/0014/0028/0092: drawing-only MeshTexture borrows real Mesh/base Texture, retains raw finite ImageSize with truncated dimensions, and executes point/rectangle/region drawing through existing mesh replay. Region/tile requests draw once; signed destinations retain logical-size origin shifts and transpose swaps diagonal scale. Zero logical axes avoid undefined division. Resource changes, borrowed disposal, mixed texture graph cycles, exact graph/archive/scene factories and static RID virtual drawing are connected. Current backend verification and limits are recorded in docs/components/meshes.md."
+    },
+    {
+      "godot": "Texture2D::method:_draw_rect_region(RID:,Rect2:,Rect2:,Color:,bool:,bool:)",
+      "electron2d": "method:Electron2D.MeshTexture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect2,Electron2D.Rect2,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
+      "reason": "ADRs 0013/0014/0028/0092: drawing-only MeshTexture borrows real Mesh/base Texture, retains raw finite ImageSize with truncated dimensions, and executes point/rectangle/region drawing through existing mesh replay. Region/tile requests draw once; signed destinations retain logical-size origin shifts and transpose swaps diagonal scale. Zero logical axes avoid undefined division. Resource changes, borrowed disposal, mixed texture graph cycles, exact graph/archive/scene factories and static RID virtual drawing are connected. Current backend verification and limits are recorded in docs/components/meshes.md."
+    },
+    {
+      "godot": "Texture2D::method:draw_rect_region(RID:,Rect2:,Rect2:,Color:,bool:,bool:)",
+      "electron2d": "method:Electron2D.MeshTexture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect2,Electron2D.Rect2,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
+      "reason": "ADRs 0013/0014/0028/0092: drawing-only MeshTexture borrows real Mesh/base Texture, retains raw finite ImageSize with truncated dimensions, and executes point/rectangle/region drawing through existing mesh replay. Region/tile requests draw once; signed destinations retain logical-size origin shifts and transpose swaps diagonal scale. Zero logical axes avoid undefined division. Resource changes, borrowed disposal, mixed texture graph cycles, exact graph/archive/scene factories and static RID virtual drawing are connected. Current backend verification and limits are recorded in docs/components/meshes.md."
+    },
+    {
+      "godot": "Texture2D::method:_get_height()",
+      "electron2d": "method:Electron2D.MeshTexture.GetHeight()",
+      "reason": "ADRs 0013/0014/0028/0092: drawing-only MeshTexture borrows real Mesh/base Texture, retains raw finite ImageSize with truncated dimensions, and executes point/rectangle/region drawing through existing mesh replay. Region/tile requests draw once; signed destinations retain logical-size origin shifts and transpose swaps diagonal scale. Zero logical axes avoid undefined division. Resource changes, borrowed disposal, mixed texture graph cycles, exact graph/archive/scene factories and static RID virtual drawing are connected. Current backend verification and limits are recorded in docs/components/meshes.md."
+    },
+    {
+      "godot": "Texture2D::method:get_height()",
+      "electron2d": "method:Electron2D.MeshTexture.GetHeight()",
+      "reason": "ADRs 0013/0014/0028/0092: drawing-only MeshTexture borrows real Mesh/base Texture, retains raw finite ImageSize with truncated dimensions, and executes point/rectangle/region drawing through existing mesh replay. Region/tile requests draw once; signed destinations retain logical-size origin shifts and transpose swaps diagonal scale. Zero logical axes avoid undefined division. Resource changes, borrowed disposal, mixed texture graph cycles, exact graph/archive/scene factories and static RID virtual drawing are connected. Current backend verification and limits are recorded in docs/components/meshes.md."
+    },
+    {
+      "godot": "Texture2D::method:_get_width()",
+      "electron2d": "method:Electron2D.MeshTexture.GetWidth()",
+      "reason": "ADRs 0013/0014/0028/0092: drawing-only MeshTexture borrows real Mesh/base Texture, retains raw finite ImageSize with truncated dimensions, and executes point/rectangle/region drawing through existing mesh replay. Region/tile requests draw once; signed destinations retain logical-size origin shifts and transpose swaps diagonal scale. Zero logical axes avoid undefined division. Resource changes, borrowed disposal, mixed texture graph cycles, exact graph/archive/scene factories and static RID virtual drawing are connected. Current backend verification and limits are recorded in docs/components/meshes.md."
+    },
+    {
+      "godot": "Texture2D::method:get_width()",
+      "electron2d": "method:Electron2D.MeshTexture.GetWidth()",
+      "reason": "ADRs 0013/0014/0028/0092: drawing-only MeshTexture borrows real Mesh/base Texture, retains raw finite ImageSize with truncated dimensions, and executes point/rectangle/region drawing through existing mesh replay. Region/tile requests draw once; signed destinations retain logical-size origin shifts and transpose swaps diagonal scale. Zero logical axes avoid undefined division. Resource changes, borrowed disposal, mixed texture graph cycles, exact graph/archive/scene factories and static RID virtual drawing are connected. Current backend verification and limits are recorded in docs/components/meshes.md."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:MeshTexture",
+        "MeshTexture::property:base_texture",
+        "MeshTexture::property:image_size",
+        "MeshTexture::property:mesh",
+        "MeshTexture::property:resource_local_to_scene"
+      ],
+      "reason": "ADRs 0013/0014/0028/0092: drawing-only MeshTexture borrows real Mesh/base Texture, retains raw finite ImageSize with truncated dimensions, and executes point/rectangle/region drawing through existing mesh replay. Region/tile requests draw once; signed destinations retain logical-size origin shifts and transpose swaps diagonal scale. Zero logical axes avoid undefined division. Resource changes, borrowed disposal, mixed texture graph cycles, exact graph/archive/scene factories and static RID virtual drawing are connected. Current backend verification and limits are recorded in docs/components/meshes.md."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.MeshTexture..ctor()",
+      "reason": "Typed C# exact MeshTexture construction and Resource property-discovery, graph-duplication or deterministic-disposal hooks project the existing resource lifecycle; no additional gameplay capability.",
+      "adr": "ADRs 0004/0013/0014/0028/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.MeshTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed C# exact MeshTexture construction and Resource property-discovery, graph-duplication or deterministic-disposal hooks project the existing resource lifecycle; no additional gameplay capability.",
+      "adr": "ADRs 0004/0013/0014/0028/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.MeshTexture.CreateDuplicateInstance()",
+      "reason": "Typed C# exact MeshTexture construction and Resource property-discovery, graph-duplication or deterministic-disposal hooks project the existing resource lifecycle; no additional gameplay capability.",
+      "adr": "ADRs 0004/0013/0014/0028/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.MeshTexture.Dispose(System.Boolean)",
+      "reason": "Typed C# exact MeshTexture construction and Resource property-discovery, graph-duplication or deterministic-disposal hooks project the existing resource lifecycle; no additional gameplay capability.",
+      "adr": "ADRs 0004/0013/0014/0028/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.MeshTexture.GetPropertyDescriptors()",
+      "reason": "Typed C# exact MeshTexture construction and Resource property-discovery, graph-duplication or deterministic-disposal hooks project the existing resource lifecycle; no additional gameplay capability.",
+      "adr": "ADRs 0004/0013/0014/0028/0092"
+    }
+  ]
+}

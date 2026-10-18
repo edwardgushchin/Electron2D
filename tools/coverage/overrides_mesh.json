@@ -183,12 +183,12 @@
     {
       "godot": "CanvasItem::method:draw_mesh(Mesh:,Texture2D:,Transform2D:,Color:)",
       "electron2d": "method:Electron2D.CanvasItem.DrawMesh(Electron2D.Mesh,Electron2D.Texture,System.Nullable<Electron2D.Transform>,System.Nullable<Electron2D.Color>)",
-      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits. Virtual atlas RID callbacks are followed by a second geometry-lifetime check before recording for both mesh and instance resources; MeshTextureTests verifies disposal reentry leaves no retained commands."
     },
     {
       "godot": "CanvasItem::method:draw_mesh(Mesh:,Texture2D:,Transform2D:,Color:)",
       "electron2d": "method:Electron2D.CanvasItem.DrawMesh(Electron2D.RID,Electron2D.RID,System.Nullable<Electron2D.Transform>,System.Nullable<Electron2D.Color>)",
-      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits. Virtual atlas RID callbacks are followed by a second geometry-lifetime check before recording for both mesh and instance resources; MeshTextureTests verifies disposal reentry leaves no retained commands."
     },
     {
       "godot": "RenderingServer::method:mesh_add_surface_from_arrays(RID:,int:RenderingServer.PrimitiveType,Array:,Array:,Dictionary:,int:RenderingServer.ArrayFormat)",
@@ -603,12 +603,12 @@
     {
       "godot": "CanvasItem::method:draw_multimesh(MultiMesh:,Texture2D:)",
       "electron2d": "method:Electron2D.CanvasItem.DrawMultiMesh(Electron2D.MultiMesh,Electron2D.Texture)",
-      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware eligibility, native-allocation and platform limits."
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware eligibility, native-allocation and platform limits. Virtual atlas RID callbacks are followed by a second geometry-lifetime check before recording for both mesh and instance resources; MeshTextureTests verifies disposal reentry leaves no retained commands."
     },
     {
       "godot": "CanvasItem::method:draw_multimesh(MultiMesh:,Texture2D:)",
       "electron2d": "method:Electron2D.CanvasItem.DrawMultiMesh(Electron2D.RID,Electron2D.RID)",
-      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware eligibility, native-allocation and platform limits."
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware eligibility, native-allocation and platform limits. Virtual atlas RID callbacks are followed by a second geometry-lifetime check before recording for both mesh and instance resources; MeshTextureTests verifies disposal reentry leaves no retained commands."
     },
     {
       "godot": "ArrayMesh::method:surface_update_skin_region(int:,int:,PackedByteArray:)",

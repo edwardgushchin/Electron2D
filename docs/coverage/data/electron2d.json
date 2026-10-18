@@ -6813,6 +6813,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.MeshTexture",
+    "kind": "type",
+    "declaringType": "Electron2D.MeshTexture",
+    "name": "MeshTexture",
+    "signature": "public sealed class Electron2D.MeshTexture",
+    "visibility": "public",
+    "baseType": "Electron2D.Texture",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.MethodTweener\u003CTValue\u003E",
     "kind": "type",
     "declaringType": "Electron2D.MethodTweener\u003CTValue\u003E",
@@ -19424,6 +19439,19 @@
     "declaringType": "Electron2D.MeshSurfaceData",
     "name": ".ctor",
     "signature": "public MeshSurfaceData()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.MeshTexture..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.MeshTexture",
+    "name": ".ctor",
+    "signature": "public MeshTexture()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -119134,6 +119162,233 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshTexture",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshTexture.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshTexture",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshTexture.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshTexture",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshTexture.Draw(Electron2D.CanvasItem,Electron2D.Vector2,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshTexture",
+    "name": "Draw",
+    "signature": "public override System.Void Draw(Electron2D.CanvasItem canvasItem, Electron2D.Vector2 position, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvasItem",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "modulate",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "transpose",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshTexture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect2,System.Boolean,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshTexture",
+    "name": "DrawRect",
+    "signature": "public override System.Void DrawRect(Electron2D.CanvasItem canvasItem, Electron2D.Rect2 rect, System.Boolean tile, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvasItem",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      },
+      {
+        "name": "tile",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "modulate",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "transpose",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshTexture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect2,Electron2D.Rect2,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshTexture",
+    "name": "DrawRectRegion",
+    "signature": "public override System.Void DrawRectRegion(Electron2D.CanvasItem canvasItem, Electron2D.Rect2 rect, Electron2D.Rect2 sourceRect, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false, System.Boolean clipUV = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvasItem",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      },
+      {
+        "name": "sourceRect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      },
+      {
+        "name": "modulate",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "transpose",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "clipUV",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshTexture.GetHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshTexture",
+    "name": "GetHeight",
+    "signature": "public override System.Int32 GetHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshTexture.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshTexture",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshTexture.GetWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshTexture",
+    "name": "GetWidth",
+    "signature": "public override System.Int32 GetWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -228636,6 +228891,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshTexture.BaseTexture()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshTexture",
+    "name": "BaseTexture",
+    "signature": "public Electron2D.Texture BaseTexture { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshTexture.ImageSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshTexture",
+    "name": "ImageSize",
+    "signature": "public Electron2D.Vector2 ImageSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshTexture.Mesh()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshTexture",
+    "name": "Mesh",
+    "signature": "public Electron2D.Mesh Mesh { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh",
     "value": null
   },
   {

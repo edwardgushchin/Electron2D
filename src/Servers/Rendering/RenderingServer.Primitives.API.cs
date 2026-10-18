@@ -98,7 +98,7 @@ public sealed partial class RenderingServer
     /// <param name="tile">Whether the texture repeats across the destination.</param>
     /// <param name="modulate">Finite command tint; null means white.</param>
     /// <param name="transpose">Whether source axes transpose.</param>
-    /// <remarks>Uses copied retained commands in the active owner session. Source-node getters, input and processing remain authored; source redraw replaces native command edits.</remarks>
+    /// <remarks>Uses copied retained commands and the texture resource's virtual drawing behavior in the active owner session. Source-node getters, input and processing remain authored; source redraw replaces native command edits.</remarks>
     /// <exception cref="ArgumentException">A live identity, finite value or geometry/channel count is invalid.</exception>
     /// <exception cref="InvalidOperationException">The service is unavailable or owner/submission/lifetime rules reject the operation.</exception>
     public static void CanvasItemAddTextureRect(RID item, Rect2 rect, RID texture, bool tile = false, Color? modulate = null, bool transpose = false) => RequireService().CanvasItemAddTextureRectCore(item, rect, texture, tile, modulate ?? Colors.White, transpose);
@@ -111,7 +111,7 @@ public sealed partial class RenderingServer
     /// <param name="modulate">Finite command tint; null means white.</param>
     /// <param name="transpose">Whether source axes transpose.</param>
     /// <param name="clipUV">Whether UVs stay inside source-region texel centers.</param>
-    /// <remarks>Uses copied retained commands in the active owner session. Source-node getters, input and processing remain authored; source redraw replaces native command edits.</remarks>
+    /// <remarks>Uses copied retained commands and the texture resource's virtual drawing behavior in the active owner session. Source-node getters, input and processing remain authored; source redraw replaces native command edits.</remarks>
     /// <exception cref="ArgumentException">A live identity, finite value or geometry/channel count is invalid.</exception>
     /// <exception cref="InvalidOperationException">The service is unavailable or owner/submission/lifetime rules reject the operation.</exception>
     public static void CanvasItemAddTextureRectRegion(RID item, Rect2 rect, RID texture, Rect2 source, Color? modulate = null, bool transpose = false, bool clipUV = true) => RequireService().CanvasItemAddTextureRectRegionCore(item, rect, texture, source, modulate ?? Colors.White, transpose, clipUV);

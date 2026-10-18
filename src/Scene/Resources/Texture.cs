@@ -1,9 +1,10 @@
 namespace Electron2D;
 
 /// <summary>Describes a two-dimensional texture with a logical size and image or native target storage.</summary>
-/// <remarks>Custom implementations provide GetWidth, GetHeight and GetImage, and emit Changed when their pixels change.
+/// <remarks>Custom image implementations provide GetWidth, GetHeight and GetImage, and emit Changed when their pixels change.
 /// The renderer caches a copied image until Changed. Consumers borrow textures; GPU resources belong to the renderer.
-/// UInt16 image sources use raw unsigned GPU sampling with nearest filtering. ViewportTexture uses live native targets and explicit GetImage readback.</remarks>
+/// UInt16 image sources use raw unsigned GPU sampling with nearest filtering. ViewportTexture uses live native targets and explicit GetImage readback.
+/// MeshTexture instead supplies drawing-only mesh geometry through the virtual Draw family without raster image storage.</remarks>
 public abstract class Texture : Resource
 {
     internal void BindRenderingRID(RID rid)

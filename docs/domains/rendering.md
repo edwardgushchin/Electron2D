@@ -1,5 +1,7 @@
 # Rendering domain
 
+[Mesh textures](../components/meshes.md#mesh-textures) connect real retained mesh geometry to Texture consumers and static texture draw identities, with borrowed source lifetime and typed graph/scene storage.
+
 [Numeric material matrices](../components/shader-materials.md#numeric-material-matrices) support copied mat3/mat4 values and fixed arrays through resources and static server identities, with typed storage, identity defaults and layout-aware paired-stage reload.
 
 [Original mesh vertex IDs](../components/shader-materials.md#authored-vertex-stages) now reach authored GLSL/HLSL vertex programs across indexed/expanded geometry, LODs, deformation and native instances. The verified profile is Linux Wayland software Vulkan; procedural position-free storage and generated-position transforms now execute.

@@ -90,6 +90,7 @@ public static partial class ResourceFileTypes
         RegisterResource("TextureArrayRD", CreateTextureArrayRD);
         RegisterResource("PlaceholderTextureArray", CreatePlaceholderTextureArray);
         RegisterResource("AtlasTexture", CreateAtlasTexture);
+        RegisterResource("MeshTexture", CreateMeshTexture);
 
         RegisterAnimationGraphFiles();
         RegisterBuiltInNodes();
@@ -205,6 +206,7 @@ public static partial class ResourceFileTypes
     private static TextureArrayRD CreateTextureArrayRD() => new();
     private static PlaceholderTextureArray CreatePlaceholderTextureArray() => new();
     private static AtlasTexture CreateAtlasTexture() => new();
+    private static MeshTexture CreateMeshTexture() => new();
     private static CircleShape CreateCircleFileResource() => new();
     private static ConvexPolygonShape CreateConvexPolygonFileResource() => new();
     private static ConcavePolygonShape CreateConcavePolygonFileResource() => new();

@@ -22,7 +22,7 @@ internal static class MeshRenderingTests
             Check(RenderingServer.MeshGetSurfaceCount(owned) == 1 && RenderingServer.MeshSurfaceGetArrayLen(owned, 0) == 4, "Owned server mesh producer/query.");
             Check(RenderingServer.MeshSurfaceGetFormatVertexStride(mesh.SurfaceGetFormat(0), 4) == 8 && RenderingServer.MeshSurfaceGetFormatAttributeStride(mesh.SurfaceGetFormat(0), 4) == 12, "Pinned 2D channel strides.");
             Reject<NotSupportedException>(() => RenderingServer.MeshSurfaceGetFormatVertexStride(Mesh.ArrayFormat.Vertex, 4));
-            Reject<NotSupportedException>(() => RenderingServer.MeshSurfaceGetFormatAttributeStride((Mesh.ArrayFormat)2, 4));
+            Check(RenderingServer.MeshSurfaceGetFormatAttributeStride(Mesh.ArrayFormat.Normal, 4) == 0 && RenderingServer.MeshSurfaceGetFormatNormalTangentStride(Mesh.ArrayFormat.Normal, 4) == 4, "Mesh-local normal data uses its separate packed direction stream.");
             Reject<ArgumentOutOfRangeException>(() => RenderingServer.MeshSurfaceGetFormatVertexStride(Mesh.ArrayFormat.None, -1));
             Reject<InvalidOperationException>(() => RenderingServer.FreeRID(mesh.GetRID()));
             Reject<InvalidOperationException>(() => RenderingServer.MeshClear(mesh.GetRID()));

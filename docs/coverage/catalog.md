@@ -450,7 +450,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [MeshInstance2D](classes/MeshInstance2D.md) | Node2D | Implemented | 3 |
 | [MeshInstance3D](classes/MeshInstance3D.md) | GeometryInstance3D | Excluded | 18 |
 | [MeshLibrary](classes/MeshLibrary.md) | Resource | Excluded | 25 |
-| [MeshTexture](classes/MeshTexture.md) | Texture2D | Blocked | 4 |
+| [MeshTexture](classes/MeshTexture.md) | Texture2D | Implemented | 4 |
 | [MethodTweener](classes/MethodTweener.md) | Tweener | Implemented | 3 |
 | [MissingNode](classes/MissingNode.md) | Node | Blocked | 4 |
 | [MissingResource](classes/MissingResource.md) | Resource | Implemented | 2 |
