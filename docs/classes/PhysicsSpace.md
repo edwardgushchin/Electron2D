@@ -2,7 +2,7 @@
 
 Cold world-query geometry now uses the [shared using-world borrow](../components/physics-queries.md#cold-query-geometry) before user suppliers run. Numerical writes, collider retirement/transfer and final world release reject; original supplier failures can retry. Existing pure input reads and nested query behavior are retained.
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 ## Failed local activation
 
@@ -364,3 +364,10 @@ participating world through removal and private-view retirement. Status failure
 preserves live data; committed cleanup attempts all users, retains exact errors
 and unregisters the RID. Public-only checks retain unrelated slots, exact Area
 entry/exit histories and zero warmed managed bytes. Wider acceptance stays open.
+
+[Body-pair publication recovery](../components/physics-shape-pairs.md#body-pair-publication-recovery-and-composed-pose-validation)
+validates the slot/resources, then prepares that body's pending motion/mode/pose
+before selected pair dispatch. The composed pose validates before that hook. Errors preserve caller points/count and the tick;
+resource-only queries remain independent, and later kinematic targets retain their
+step boundary. Expanded public profiles keep strict zero-allocation complete
+frames and the existing GPU pose-only transfer boundary. Full acceptance is separate.

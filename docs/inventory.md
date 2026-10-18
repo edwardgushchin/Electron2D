@@ -1880,3 +1880,8 @@ completes the existing shared Shape.CustomSolverBias implementation getter/sette
 projection. Numerical hook/thread ownership, resource lifecycle and actual selected
 correction/impulse behavior are verified; no production type or runtime behavior
 is added. Complete extension/native/platform/network/performance gates stay open.
+
+The [body-pair publication correction](components/physics-shape-pairs.md#body-pair-publication-recovery-and-composed-pose-validation)
+uses existing PhysicsSpace/PhysicsBodyRuntime scene/raw preparation before selected
+BodyCollideShape dispatch. No production type is added; caller-output/epoch and
+queued-kinematic behavior are verified separately from full numerical acceptance.

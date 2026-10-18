@@ -1,6 +1,6 @@
 # PhysicsBodyRuntime
 
-Last updated: 2026-10-17
+Last updated: 2026-10-19
 
 ## Prepared body view acquisition
 
@@ -124,3 +124,10 @@ A factory-returned cached body extension now projects its contact count/values o
 Retains scene/raw ContactsReportedDepthThreshold independently of numerical storage. It survives detach/reentry and participates in immutable checkpoint configuration and portable schema. Publication filters signed scene-unit candidate depths; changing policy preserves the completed snapshot.
 
 Prepared authoring reads can bypass the scene owner check only inside this world's exact authorized numerical implementation scope. Live state reads, authoring and lifetime operations keep their original owner/phase guards. Ordinary threads and foreign attached bodies gain no access. The [public-only consumer](../components/physics-thread.md) exercises mass/geometry/exclusion reads and write/query/lifetime rejection.
+
+[Body-pair publication recovery](../components/physics-shape-pairs.md#body-pair-publication-recovery-and-composed-pose-validation)
+validates the slot/resources, then prepares that body's pending motion/mode/pose
+before selected pair dispatch. The composed pose validates before that hook. Errors preserve caller points/count and the tick;
+resource-only queries remain independent, and later kinematic targets retain their
+step boundary. Expanded public profiles keep strict zero-allocation complete
+frames and the existing GPU pose-only transfer boundary. Full acceptance is separate.

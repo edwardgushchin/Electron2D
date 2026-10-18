@@ -1,6 +1,6 @@
 # PhysicsServerBackend
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 ## Failed local activation
 
@@ -264,3 +264,10 @@ contact/pin convergence use nineteen complete 128-warmup/128-measured brackets
 at zero managed allocation. Registered contact-cache, arbitrary coupled/custom,
 full inherited/extension/network and native/platform/performance acceptance remain
 open.
+
+[Body-pair publication recovery](../components/physics-shape-pairs.md#body-pair-publication-recovery-and-composed-pose-validation)
+validates the slot/resources, then prepares that body's pending motion/mode/pose
+before selected pair dispatch. The composed pose validates before that hook. Errors preserve caller points/count and the tick;
+resource-only queries remain independent, and later kinematic targets retain their
+step boundary. Expanded public profiles keep strict zero-allocation complete
+frames and the existing GPU pose-only transfer boundary. Full acceptance is separate.

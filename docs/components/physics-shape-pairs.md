@@ -1,8 +1,57 @@
 # Selected shape-pair queries
 
+## Body-pair publication recovery and composed-pose validation
+
+An attached `BodyCollideShape` query validates the logical slot and both live
+configured resource identities before repairing that body's pending motion, mode
+and pose publication. Scene and raw roles use the existing guarded preparation
+paths. The selected pair implementation then observes the committed body pose.
+Failed preparation propagates the original error before the hook or caller output
+changes; it does not advance the physics tick. Terminal worlds retain their query
+rejection. Queued later kinematic targets still wait for an actual nonzero step.
+
+The reproduced registered Static-body failure previously returned a false miss,
+changed the caller count from 997 to zero and made no pose retry after a partial
+selected publication. The same consumer DLL now observes the original retry error
+and unchanged caller contacts/count, then succeeds from the committed pose after
+the publisher recovers. Pure two-resource queries and invalid body inputs do not
+repair another body's publication. No whole-world query preparation is introduced.
+
+The common attached-body path also validates the composed body/slot pose before
+entering the selected hook. A disabled scene slot with nonunit scale previously
+reached a registered implementation and returned a contact, unlike the built-in
+implementations. Scale and skew now reject consistently with unchanged caller
+contacts/count and no selected pair invocation. Disabled slots still participate
+when their composed pose is valid.
+
+The public-only `--shape-pairs` fixture now captures actual backend/thread selection
+and exercises a real moving body during the strict 64-frame query bracket. All
+eight built-in families execute selected pair math, including the registered owner.
+A twenty-edge concave/circle case verifies independent concave-motion rules,
+reversed point ownership, disabled/zero-filter/one-way raw slots, caller capacities
+0/1/4/24, exact distinct deepest edges and unchanged tails. Its 128 warm/128 measured
+complete frames require 0/0 owner/all-thread bytes. Line/circle boundary checks use
+.001 scene-unit tolerance; edges are spaced one unit apart, avoiding threshold ties.
+The caller-span capacity is independent of the resource-array sixteen-pair cap.
+
+`--pose-transactions` adds explicit body-pair recovery to every applicable scene/raw
+body and numerical mode, including repeated failure and unchanged ticks. Separate
+controls verify that body-pair preparation does not apply a queued kinematic target
+before its step. Existing numerical frame bounds and exact error identity checks
+remain unchanged. `--pair-lifetime` and `--query-geometry` retain operand/using-world
+borrows, cold supplier/error retry and real moving frames. Root ownership checks
+retain the dynamic GPU pose query's one submission and 24 readback bytes.
+
+Evidence: `bin/physics-shape-pair-audit/2026-10-19/final/validation.json`. This is a shared
+runtime correction and expanded verification; the complete implementation-operation
+accounting stays Partial. Coverage states and the 177-declaration open ledger are
+unchanged. Full numerical-extension/native/foreign/network and target-GPU/window
+performance acceptance remain open. The earlier ordinary frozen `868302d3` success
+predates this fix; a new runtime-source-qualified ordinary run is required.
+
 Both cold operands now use [world-query geometry preflight](physics-queries.md#cold-query-geometry) while their existing resource/pair borrows remain active. Numerical authoring rejects during supplier execution; selected pair hooks, staged output validation and nested scratch retain their existing contracts.
 
-Last updated: 2026-10-14
+Last updated: 2026-10-19
 
 The internal selected-owner bridge executes resource/resource and body-slot/resource
 collision for the pending complete server-extension family. No new public family is

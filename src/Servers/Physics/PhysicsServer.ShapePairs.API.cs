@@ -35,9 +35,12 @@ public sealed partial class PhysicsServer
     /// <param name="contacts">Caller storage for alternating body/other global points; its length must be even.</param>
     /// <param name="count">The number of complete pairs written on success.</param>
     /// <returns>Whether the applicable regions intersect, including when no output pairs fit.</returns>
-    /// <remarks>Composes the current body and authored slot poses. Filters, slot enablement and other world
+    /// <remarks>Composes the current body and authored slot poses and requires their result to be finite,
+    /// unit-scale and zero-skew before invoking the selected implementation. Filters, slot enablement and other world
     /// objects do not affect this explicit pair. Attached bodies use their actual selected implementation;
-    /// detached bodies use resource geometry. Output is validated atomically and unused tails remain unchanged.</remarks>
+    /// detached bodies use resource geometry. Pending motion, mode and pose publication on this body retries before
+    /// the selected query; retry failure preserves caller contacts and count without advancing the physics tick.
+    /// Output is validated atomically and unused tails remain unchanged.</remarks>
     /// <exception cref="ArgumentException">A RID, pose or output capacity is invalid.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The slot, motion or transformed geometry is invalid.</exception>
     /// <exception cref="InvalidOperationException">Owner/solver/failure access is forbidden or output is invalid.</exception>

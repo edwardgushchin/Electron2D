@@ -1224,3 +1224,10 @@ motion/recovery. Warm unchanged-policy query/full-frame intervals require 0/0
 managed bytes; changed immutable authoring remains a separate measured cost.
 Complete registered numerical response and native/platform/network/performance
 acceptance retain their independent gates.
+
+[Body-pair publication recovery](../components/physics-shape-pairs.md#body-pair-publication-recovery-and-composed-pose-validation)
+validates the slot/resources, then prepares that body's pending motion/mode/pose
+before selected pair dispatch. The composed pose validates before that hook. Errors preserve caller points/count and the tick;
+resource-only queries remain independent, and later kinematic targets retain their
+step boundary. Expanded public profiles keep strict zero-allocation complete
+frames and the existing GPU pose-only transfer boundary. Full acceptance is separate.

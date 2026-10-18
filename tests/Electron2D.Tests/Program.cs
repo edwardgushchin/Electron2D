@@ -1547,6 +1547,7 @@ SegmentShapeTests.Run(); SegmentShapeTests.Run(PhysicsServer.Backend.GPU);
 SeparationRayShapeTests.Run(); SeparationRayShapeTests.Run(PhysicsServer.Backend.GPU);
 WorldBoundaryTests.Run(); WorldBoundaryTests.Run(PhysicsServer.Backend.GPU);
 ShapeCollisionTests.Run();
+BackendChecks.RunShapePairs();
 OneWayCollisionTests.Run(); OneWayCollisionTests.Run(PhysicsServer.Backend.GPU);
 BackendChecks.RunOneWayInputs(PhysicsServer.Backend.CPU); BackendChecks.RunOneWayInputs(PhysicsServer.Backend.GPU); BackendChecks.RunOneWayInputs();
 CollisionPolygonTests.Run(); CollisionPolygonTests.Run(PhysicsServer.Backend.GPU);

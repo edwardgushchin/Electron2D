@@ -657,6 +657,12 @@ bin/physics-notification-phase/2026-10-12/final.
 
 ## Public shape-pair dispatch
 
+[Body-pair publication recovery](physics-shape-pairs.md#body-pair-publication-recovery-and-composed-pose-validation)
+now prepares the queried scene/raw body before its selected pair hook after
+incomplete numerical publication. Invalid inputs reject first; repeated errors
+preserve output/count and the tick. Other resource pairs retain independent state.
+Composed nonunit/skewed slot poses reject before the pair hook.
+
 PhysicsServer.ShapeCollide selects an explicit live space for CollideShapes;
 BodyCollideShape selects the body's actual attachment or detached resource path.
 Previously the selected resource-pair hook had only an internal test entry point.

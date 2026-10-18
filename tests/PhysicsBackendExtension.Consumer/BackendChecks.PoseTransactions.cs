@@ -39,7 +39,7 @@ public static partial class BackendChecks
                     foreach (var mode in new[] { Mode.Static, Mode.Kinematic, Mode.Rigid, Mode.RigidLinear })
                     {
                         if (IsArea(i) && mode != Mode.Static) continue;
-                        for (var lane = 0; lane < 6; lane++)
+                        for (var lane = 0; lane < 7; lane++)
                             for (var count = 1; count <= 2; count++)
                             {
                                 Reset(i, mode); var held = IsArea(i) ? null : PhysicsServer.BodyGetDirectState(ids[i]);
@@ -91,6 +91,8 @@ public static partial class BackendChecks
                                         PhysicsServer.BodyGetTransform(world.Space, batchIDs, batchPoses);
                                         Check(PoseEqual(batchPoses[0], target), "Batch poses retain scalar scene/raw semantics after failure");
                                     }
+                                    else if (lane == 6 && !IsArea(i)) Check(PhysicsServer.BodyCollideShape(ids[i], 1, circle.GetRID(), target, Vector2.Zero, [], out var pairs) && pairs == 0,
+                                        "An explicit body pair prepares the committed numerical pose with zero output capacity");
                                     else Query(i, target);
                                 }
                             }
@@ -154,10 +156,14 @@ public static partial class BackendChecks
                     }
                 Reset(6, Mode.Kinematic); var firstPose = new Transform(0, new(600, 0)); var laterPose = new Transform(0, new(600, 10));
                 Set(6, firstPose); Query(6, firstPose); Set(6, laterPose); Query(6, firstPose);
+                Check(PhysicsServer.BodyCollideShape(raw, 1, circle.GetRID(), firstPose, Vector2.Zero, [], out _) &&
+                    !PhysicsServer.BodyCollideShape(raw, 1, circle.GetRID(), laterPose, Vector2.Zero, [], out _),
+                    "Explicit pairs keep the current pose while a later kinematic target waits for a step");
                 var beforeZero = PhysicsServer.SpaceGetTick(world.Space); tree.PhysicsFrame(0); Query(6, firstPose);
                 Check(PhysicsServer.SpaceGetTick(world.Space) == beforeZero, "Zero delta retains a later kinematic target");
                 tree.PhysicsFrame(.01); Query(6, laterPose);
                 Check(PoseEqual(Get(6), laterPose), "Later kinematic targets advance only on a nonzero step");
+                Check(PhysicsServer.BodyCollideShape(raw, 1, circle.GetRID(), laterPose, Vector2.Zero, [], out _), "Explicit pairs observe a kinematic target after its actual step");
                 PhysicsServer.BodySetMode(raw, Mode.RigidLinear);
                 for (var frame = 0; frame < 128; frame++) Frame(frame);
                 Collect(); var own = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);

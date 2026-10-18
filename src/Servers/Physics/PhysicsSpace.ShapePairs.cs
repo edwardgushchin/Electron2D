@@ -40,10 +40,16 @@ internal sealed partial class PhysicsSpace
         var owners = PhysicsServer.Service.ResolveBodyOwners(body);
         var backend = owners.Scene?.Backend ?? owners.Server!.Backend;
         if (!ReferenceEquals(backend.Space, this)) throw new ArgumentException("The body belongs to another physics space.", nameof(body));
+        // Validate resources before repairing this body's incomplete publication.
+        _ = PhysicsServer.Service.GetShapeGeometry(PhysicsServer.Service.BodyGetShapeCore(body, index));
+        _ = PhysicsServer.Service.GetShapeGeometry(shape);
+        PhysicsServer.Service.BodyRuntime(body).EnsureAccess();
+        owners.Scene?.PreparePendingPose();
         BeginExtensionCallback();
         try
         {
             var pair = PhysicsServer.Service.GetBodyShapePair(body, index);
+            PhysicsShapeCollision.Validate(pair.Pose, Vector2.Zero);
             var firstGeometry = PhysicsServer.Service.GetShapeGeometry(pair.Shape);
             var secondGeometry = PhysicsServer.Service.GetShapeGeometry(shape);
             firstGeometry.BeginCollisionUse();
