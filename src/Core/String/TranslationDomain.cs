@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Electron2D;
@@ -15,10 +16,13 @@ public sealed class TranslationDomain : ElectronObject
     private string _localeOverride = string.Empty;
     private bool _enabled = true;
     private string? _registeredName;
-    private PseudoOptions _pseudo = new(true, false, false, false, false, true, 0, "[", "]");
+    private bool _pseudoEnabled;
+    private PseudoOptions _pseudo = new(true, false, false, false, true, 0, "[", "]");
+    private readonly ConditionalWeakTable<string, PseudoResult> _pseudoResults = new();
+    private sealed record PseudoResult(PseudoOptions Options, string Text);
 
     private readonly record struct PseudoOptions(
-        bool Accents, bool DoubleVowels, bool FakeBIDI, bool Override, bool Enabled,
+        bool Accents, bool DoubleVowels, bool FakeBIDI, bool Override,
         bool SkipPlaceholders, float ExpansionRatio, string Prefix, string Suffix);
 
     /// <summary>Creates an empty independent domain.</summary>
@@ -46,8 +50,8 @@ public sealed class TranslationDomain : ElectronObject
     /// <summary>Gets or sets whether singular results are pseudolocalized.</summary>
     public bool PseudolocalizationEnabled
     {
-        get { lock (_gate) { ThrowIfDisposed(); return _pseudo.Enabled; } }
-        set { lock (_gate) { ThrowIfDisposed(); _pseudo = _pseudo with { Enabled = value }; } }
+        get { lock (_gate) { ThrowIfDisposed(); return _pseudoEnabled; } }
+        set { lock (_gate) { ThrowIfDisposed(); _pseudoEnabled = value; } }
     }
 
     /// <summary>Gets or sets whether Latin letters receive accented substitutes.</summary>
@@ -249,18 +253,35 @@ public sealed class TranslationDomain : ElectronObject
 
     /// <summary>Applies this domain's configured pseudolocalization transforms to a string.</summary>
     /// <param name="message">The string to transform.</param>
+    /// <returns>The transformed string, reusing the prepared result for the same input object and transform options.</returns>
+    /// <remarks>Override and padding count Unicode code points; unpaired UTF-16 units each count as one and remain
+    /// unchanged outside override. Empty input bypasses affixes. Enabled state does not affect this explicit operation.
+    /// First use of an input identity or changed transform values prepares an output outside a hot interval. Weak keys
+    /// do not retain retired inputs, and disposal clears prepared results. Catalog lookup results remain live.</remarks>
+    /// <exception cref="ArgumentNullException">The message is null.</exception>
+    /// <exception cref="ObjectDisposedException">The domain is disposed.</exception>
+    /// <exception cref="OverflowException">The padding length cannot be represented.</exception>
     public string Pseudolocalize(string message)
     {
         ArgumentNullException.ThrowIfNull(message);
-        PseudoOptions options;
-        lock (_gate) { ThrowIfDisposed(); options = _pseudo; }
+        lock (_gate) { ThrowIfDisposed(); return PseudolocalizeUnderLock(message); }
+    }
+
+    private string PseudolocalizeUnderLock(string message)
+    {
         if (message.Length == 0) return message;
+        var options = _pseudo;
+        if (_pseudoResults.TryGetValue(message, out var prepared) && prepared.Options == options) return prepared.Text;
+        var length = 0;
+        foreach (var rune in message.EnumerateRunes()) length++;
+        var padding = new string('_', checked((int)(length * options.ExpansionRatio / 2)));
         var transformed = options.Override ? Transform(message, options, PseudoTransform.Override) : message;
         if (options.DoubleVowels) transformed = Transform(transformed, options, PseudoTransform.DoubleVowels);
         if (options.Accents) transformed = Transform(transformed, options, PseudoTransform.Accents);
         if (options.FakeBIDI) transformed = Transform(transformed, options, PseudoTransform.FakeBIDI);
-        var padding = new string('_', checked((int)(message.Length * options.ExpansionRatio / 2)));
-        return string.Concat(options.Prefix, padding, transformed, padding, options.Suffix);
+        var result = string.Concat(options.Prefix, padding, transformed, padding, options.Suffix);
+        _pseudoResults.Remove(message); _pseudoResults.Add(message, new(options, result));
+        return result;
     }
 
     internal CultureInfo EffectiveCulture
@@ -321,7 +342,10 @@ public sealed class TranslationDomain : ElectronObject
         return best ?? string.Empty;
     }
 
-    internal string ApplyPseudo(string message) => PseudolocalizationEnabled ? Pseudolocalize(message) : message;
+    internal string ApplyPseudo(string message)
+    {
+        lock (_gate) { ThrowIfDisposed(); return _pseudoEnabled ? PseudolocalizeUnderLock(message) : message; }
+    }
 
     internal Translation[] GetLookupSnapshot()
     {
@@ -352,7 +376,7 @@ public sealed class TranslationDomain : ElectronObject
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) Clear();
+        if (disposing) { Clear(); lock (_gate) _pseudoResults.Clear(); }
         base.Dispose(disposing);
     }
 
@@ -407,12 +431,17 @@ public sealed class TranslationDomain : ElectronObject
             var letter = message[i];
             switch (transform)
             {
-                case PseudoTransform.Override: result.Append('*'); break;
+                case PseudoTransform.Override:
+                    result.Append('*');
+                    if (char.IsHighSurrogate(letter) && i + 1 < message.Length && char.IsLowSurrogate(message[i + 1])) i++;
+                    break;
                 case PseudoTransform.DoubleVowels:
                     result.Append(letter);
                     if ("aeiouAEIOU".Contains(letter)) result.Append(letter);
                     break;
-                case PseudoTransform.Accents: result.Append(Accent(letter)); break;
+                case PseudoTransform.Accents:
+                    if (Accent(letter) is { } accent) result.Append(accent); else result.Append(letter);
+                    break;
                 default: result.Append(letter); break;
             }
         }
@@ -420,7 +449,7 @@ public sealed class TranslationDomain : ElectronObject
         return result.ToString();
     }
 
-    private static string Accent(char letter) => letter switch
+    private static string? Accent(char letter) => letter switch
     {
         'A' => "Å",
         'B' => "ß",
@@ -474,6 +503,6 @@ public sealed class TranslationDomain : ElectronObject
         'x' => "x́",
         'y' => "ý",
         'z' => "ź",
-        _ => letter.ToString(),
+        _ => null,
     };
 }

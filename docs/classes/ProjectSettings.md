@@ -1614,3 +1614,5 @@ All three definitions are nonbasic typed settings with restart-if-changed metada
 | `debug/shapes/navigation/2d/agent_path_point_size` | `ProjectSetting<float> NavigationDebugAgentPathPointSize` | Four canvas units; finite and nonnegative. |
 
 These settings drive [agent path drawing](NavigationAgent.md#path-diagnostics), independently of global map diagnostics and SceneTree.DebugNavigationHint. Custom agent style selection retains its own line/point rules. Fresh-process tests load saved base values and feature overrides into real retained drawing. Source: [ProjectSettings.NavigationDebug.cs](../../src/Core/Config/ProjectSettings.NavigationDebug.cs).
+
+The nine pseudolocalization keys feed the verified [Unicode pseudolocalization](../components/localization.md#unicode-pseudolocalization) policy: startup samples enablement and eight transforms; explicit reload preserves the runtime switch and publishes one notification after applying the transforms. Cached outputs are valid only for their actual transform values.

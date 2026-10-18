@@ -66,10 +66,21 @@ internal static partial class GUITranslationContextTests
                     TranslationServer.Culture = CultureInfo.GetCultureInfo("sr-ME"); expected.Text = "DDDDDDDDDD";
                     Check(contextual.GetTotalCharacterCount() == 10, "A higher-scored script/region resource replaces the weaker parent during global refresh.");
                 }
+                else if (frames == 4)
+                {
+                    regional.AddMessage("Token", "D😀%s", "noun");
+                    var domain = TranslationServer.GetOrAddDomain(Domain);
+                    domain.PseudolocalizationOverrideEnabled = true; domain.PseudolocalizationDoubleVowelsEnabled = false;
+                    domain.PseudolocalizationAccentsEnabled = false; domain.PseudolocalizationFakeBIDIEnabled = true;
+                    domain.PseudolocalizationSkipPlaceholdersEnabled = true; domain.PseudolocalizationExpansionRatio = .5f;
+                    domain.PseudolocalizationPrefix = "<"; domain.PseudolocalizationSuffix = ">"; domain.PseudolocalizationEnabled = true;
+                    contextual.Notify(Node.NotificationTranslationChanged); expected.Text = "<_\u202e**\u202c%s\u202e\u202c_>";
+                }
                 else window.Tree!.Quit();
             };
         };
-        Check(Engine.Run(window) == 0 && frames == 4, "Contextual GUI renders all states and completes native lifecycle.");
-        Console.WriteLine($"GUI translation context {backend}: independently matched initial, contextual, global-culture and scored-resource glyph pixels passed.");
+        Check(Engine.Run(window) == 0 && frames == 5, "Contextual GUI renders all states and completes native lifecycle.");
+        TranslationServer.GetOrAddDomain(Domain).PseudolocalizationEnabled = false;
+        Console.WriteLine($"GUI translation context {backend}: independently matched initial, contextual, global-culture, scored-resource and pseudolocalized glyph pixels passed.");
     }
 }

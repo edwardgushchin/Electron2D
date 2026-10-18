@@ -40,7 +40,7 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 
 - `.resx`, JSON catalogs and system-dependent MO extension tables remain outside the current import profile.
 - Optimized translation payloads use an internal Brotli representation; reference Smaz file compatibility and editor-only generation gating remain absent.
-- Automatic operating-system culture acquisition after startup, string parameter interpolation and exact Unicode pseudolocalization remain separate. The fixed locale catalog and generated numeric formatting execute; full Unicode bidirectional-text layout is owned by text shaping.
+- Automatic operating-system culture acquisition after startup and string parameter interpolation remain separate. Unicode pseudolocalization now executes the complete tested transform pipeline. The fixed locale catalog and generated numeric formatting execute; full Unicode bidirectional-text layout is owned by text shaping.
 - Full CLDR decimal categories remain absent; fixed integer locale rules and bounded textual catalog definitions execute. Unknown rules require a valid definition or typed caller selector.
 - No native locale-discovery or localization verification on all targets exists yet.
 
@@ -72,3 +72,5 @@ Input is bounded to 16 MiB, 100,000 messages, 64 forms and 4096 rule characters,
 Application notification ownership, reentry, failure handling and measured public physical/native glyph consumers are documented in [translation notifications](../components/localization.md#application-translation-notifications). Independent library trees use explicit notification; active SceneTree delivery requires its owner thread.
 
 Default-aware catalog lookup, weak identity preparation, live resource callbacks and the current query API are verified through [scored runtime lookup](../components/localization.md#scored-runtime-lookup). The physical cohort retains strict zero managed allocation on CPU, software Vulkan and registered backends.
+
+[Unicode pseudolocalization](../components/localization.md#unicode-pseudolocalization) now supplies code-point masking/expansion, exact protected pairs and BIDI boundaries, with weak prepared outputs and tested retirement. Inherited singular lookup and nine project keys have executable evidence; asset remaps and broader locale acquisition retain separate dependencies.
