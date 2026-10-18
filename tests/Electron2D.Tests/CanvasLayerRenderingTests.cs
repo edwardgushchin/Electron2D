@@ -62,7 +62,7 @@ internal static partial class RenderingRuntimeTests
         var layer = new CanvasLayer { Offset = new(10, 5) }; window.AddChild(layer);
         var red = LayerBox("Red", new(1, 1), Colors.Red, material); layer.AddChild(red);
         var input = new CoordinateInputNode { Name = "Input", Position = new(1, 1), InputEnabled = true }; layer.AddChild(input);
-        var frames = 0; var inputs = 0;
+        var frames = 0; var warmup = 0; var retainedDraws = 0; var inputs = 0;
         input.InputAction = e =>
         {
             if (e is not InputEventMouseMotion motion || !motion.Position.IsEqualApprox(new(12, 7))) return;
@@ -79,6 +79,8 @@ internal static partial class RenderingRuntimeTests
             var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
             RenderingServer.FramePostDraw += () =>
             {
+                // Initial window configuration may recapture commands before the transform-only stages.
+                if (warmup++ < 24) { retainedDraws = red.Draws; return; }
                 using var pixels = server.Readback(); frames++;
                 try
                 {
@@ -101,7 +103,7 @@ internal static partial class RenderingRuntimeTests
                             layer.FollowViewportEnabled = true; layer.FollowViewportScale = 1; window.SnapTransformsToPixel = true; snappedDefault.Show(); break;
                         default:
                             Pixel(pixels, 1, 0, Colors.Red); Pixel(pixels, 5, 0, Colors.Black); Pixel(pixels, 10, 9, Colors.Cyan); Pixel(pixels, 14, 9, Colors.Black);
-                            Check(red.Draws == 1, "Layer and camera transforms retain draw commands."); window.Tree!.Quit(); break;
+                            Check(retainedDraws > 0 && red.Draws == retainedDraws, "Layer and camera transforms retain draw commands."); window.Tree!.Quit(); break;
                     }
                 }
                 catch (Exception error) { throw new InvalidOperationException($"Canvas layer coordinates {backend}, frame {frames}.", error); }

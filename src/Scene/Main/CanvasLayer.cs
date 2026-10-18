@@ -53,7 +53,8 @@ public partial class CanvasLayer : Node
     /// <summary>Gets or sets the layer transform before viewport following.</summary>
     /// <value>Identity initially; finite singular and skewed transforms are accepted.</value>
     /// <remarks>Component queries lazily decompose this matrix. Setting Offset, Rotation or Scale afterward
-    /// reconstructs rotation and scale, discarding skew. PackedScene stores this canonical matrix.</remarks>
+    /// reconstructs rotation and scale, discarding skew. PackedScene stores this canonical matrix. Physics pointer picking
+    /// skips a singular final canvas map; a valid restored map permits stationary hover again.</remarks>
     /// <exception cref="ArgumentException">The matrix is nonfinite.</exception>
     /// <exception cref="InvalidOperationException">Access is off-owner or mutation occurs during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">The layer is disposed.</exception>

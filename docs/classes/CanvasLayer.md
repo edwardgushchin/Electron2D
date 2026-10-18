@@ -1,6 +1,6 @@
 # CanvasLayer
 
-Last updated: 2026-10-04
+Last updated: 2026-10-18
 
 - Declaration: `public class CanvasLayer : Node`
 - Source: [CanvasLayer.cs](../../src/Scene/Main/CanvasLayer.cs)
@@ -338,3 +338,7 @@ CustomViewport can now target a live SubViewport in the same scene. Its canvas i
 ## Server canvas integration
 
 `GetCanvas()` supplies the stable borrowed logical canvas RID, valid before native startup and until layer disposal. Server viewport attachment/transforms/stacking can target this canvas without rewriting authored getters; matching layer setters republish their primary view. See [the executable canvas contract](../components/canvas-rendering.md#caller-owned-canvases-and-items).
+
+## Collapsed canvas picking
+
+Automatic physics picking ignores a canvas whose determinant is zero/nonfinite or whose inverse query position is nonfinite. Other canvases continue; mouse hover exits through normal object/shape cleanup and returns under a stationary pointer when the map becomes usable. Small finite and reflected transforms remain valid. This changes neither authored matrix storage nor explicit AffineInverse failure semantics, ordinary direct physics queries or collider ownership. See [the component contract and regression scope](../components/physics-picking.md#collapsed-canvas-mappings).

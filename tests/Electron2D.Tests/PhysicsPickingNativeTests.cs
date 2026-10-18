@@ -46,11 +46,13 @@ internal static class PhysicsPickingNativeTests
         internal int Drawn;
         internal bool Finished;
         private uint _windowID;
+        private float _inputScale;
+        private Vector2 _expectedPosition, _injectedPosition;
         private int _stage, _frames, _clicks, _exits, _previousExits;
         private bool _expectExit, _observedExit;
         protected override void OnReady()
         {
-            ProcessEnabled = true;
+            ProcessEnabled = InputEnabled = true;
             var windows = SDL.GetWindows(out var count); Check(count == 1, "One native window"); _windowID = SDL.GetWindowID(windows![0]);
             RenderingServer.FramePostDraw += () =>
             {
@@ -65,16 +67,29 @@ internal static class PhysicsPickingNativeTests
             body.InputEvent += (view, input, index) =>
             {
                 if (input is not InputEventMouseButton { Pressed: true } button) return;
-                Check(ReferenceEquals(view, window) && index == 0 && button.Position.IsEqualApprox(new(50, 46)), "Native final transform removed before physics canvas query");
+                Check(ReferenceEquals(view, window) && index == 0 && button.Position.IsEqualApprox(_expectedPosition), $"Native final transform removed before physics canvas query: position={button.Position}, inputScale={_inputScale}, final={window.GetFinalTransform()}, stage={_stage}, viewport={ReferenceEquals(view, window)}, shape={index}");
                 _clicks++;
+                // Queue exit while this hit is still hovered, before a later frame samples the desktop pointer.
+                if (_stage == 2 && _clicks >= 2)
+                {
+                    _previousExits = _exits; _expectExit = true; PushWindow(SDL.EventType.WindowMouseEnter); PushWindow(SDL.EventType.WindowMouseLeave); _stage = 3;
+                }
             };
             body.MouseExited += () => _exits++;
             window.MouseExited += () => { if (_expectExit) { Check(_exits > _previousExits, "Native exit clears physics hover before Window signal"); _observedExit = true; } };
             PushWindow(SDL.EventType.WindowMouseEnter); Click();
         }
+        protected override void OnInput(InputEvent input)
+        {
+            if (Input.MouseMode == MouseMode.Captured || input is not InputEventMouseButton { Pressed: true } button) return;
+            // SDL logical coordinates acquire the current pixel density when dispatched, which can change after queueing.
+            var scale = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland" ? SDL.GetWindowPixelDensity(SDL.GetWindowFromID(_windowID)) : 1;
+            _expectedPosition = window.GetFinalTransform().AffineInverse() * (_injectedPosition * scale);
+            Check(button.Position.IsEqualApprox(_expectedPosition), $"Native click localization at dispatch: {button.Position} vs {_expectedPosition}, inputScale={_inputScale}, density={SDL.GetWindowPixelDensity(SDL.GetWindowFromID(_windowID))}, final={window.GetFinalTransform()}");
+        }
         protected override void OnProcess(double delta)
         {
-            Check(++_frames < 600, "Native picking scenario exceeded its frame budget");
+            Check(++_frames < 600, $"Native picking scenario exceeded its frame budget: stage={_stage}, clicks={_clicks}, inputScale={_inputScale}");
             if (_stage == 0 && _clicks == 1)
             {
                 Input.MouseMode = MouseMode.Captured; Click(); _stage = 1;
@@ -84,17 +99,15 @@ internal static class PhysicsPickingNativeTests
                 Check(_clicks == 1, "Captured pointer does not generate physics input");
                 Input.MouseMode = MouseMode.Visible; Click(); _stage = 2;
             }
-            else if (_stage == 2 && _clicks >= 2)
-            {
-                _previousExits = _exits; _expectExit = true; PushWindow(SDL.EventType.WindowMouseEnter); PushWindow(SDL.EventType.WindowMouseLeave); _stage = 3;
-            }
             else if (_stage == 3 && _observedExit) { Finished = true; Tree!.Quit(); }
         }
         private void Click()
         {
-            var motion = new SDL.Event { Motion = new SDL.MouseMotionEvent { Type = SDL.EventType.MouseMotion, WindowID = _windowID, X = 55, Y = 50 } };
+            _inputScale = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland" ? SDL.GetWindowPixelDensity(SDL.GetWindowFromID(_windowID)) : 1;
+            _injectedPosition = new(55 / _inputScale, 50 / _inputScale);
+            var motion = new SDL.Event { Motion = new SDL.MouseMotionEvent { Type = SDL.EventType.MouseMotion, WindowID = _windowID, X = _injectedPosition.X, Y = _injectedPosition.Y } };
             Check(SDL.PushEvent(ref motion), "Queue native motion");
-            var down = new SDL.Event { Button = new SDL.MouseButtonEvent { Type = SDL.EventType.MouseButtonDown, WindowID = _windowID, Button = (byte)MouseButton.Left, Down = true, X = 55, Y = 50 } };
+            var down = new SDL.Event { Button = new SDL.MouseButtonEvent { Type = SDL.EventType.MouseButtonDown, WindowID = _windowID, Button = (byte)MouseButton.Left, Down = true, X = _injectedPosition.X, Y = _injectedPosition.Y } };
             Check(SDL.PushEvent(ref down), "Queue native button");
             down.Button.Type = SDL.EventType.MouseButtonUp; down.Button.Down = false; Check(SDL.PushEvent(ref down), "Queue native release");
         }

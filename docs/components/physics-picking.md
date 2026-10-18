@@ -1,6 +1,6 @@
 # Physics pointer picking
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 [Viewport](../classes/Viewport.md#physics-picking) queues unhandled pointer events
 for [CollisionObject](../classes/CollisionObject.md#pointer-input) callbacks and
@@ -137,3 +137,13 @@ EventHandlerTests compares 1,024 mixed delegate add/remove operations with nativ
 See [typed handler storage](../classes/EventHandlers.Generic.md) and [ADR 0010](../decisions/core-object-runtime.md#adr-0010).
 
 Inherited [ordinary event blocking](../classes/ElectronObject.md#ordinary-event-delivery) suppresses new event emissions at the publisher, preserving subscriptions and already accepted deferred work. Notifications, virtual callbacks, committed physical state and resource revisions continue; Disposed cleanup remains independent.
+
+## Collapsed canvas mappings
+
+Automatic physics picking skips one canvas when its determinant is exactly zero or nonfinite, or the existing affine inverse produces nonfinite query coordinates. It does not query an arbitrary origin or identity fallback. The root CanvasTransform and each CanvasLayer final transform use the same guard before the selected CPU/GPU point query; a collapsed follow scale is included. There is no epsilon cutoff: small finite mappings and negative determinants remain pickable when the mapped position is finite. Explicit mathematical AffineInverse calls retain their existing exception contract.
+
+A skipped canvas contributes no hits to the current event. Other canvases continue in their normal order, and queued event copies still complete their ordinary disposal path. On mouse/passive refresh, prior object hover exits before shape hover through the existing cleanup; repeated collapsed frames emit no duplicate exits. Restoring a valid mapping reenters under a stationary known pointer, with one internal motion for a newly hovered object. Touch/drag still do not create mouse hover. Collapsing a later canvas from an earlier callback is observed when that canvas begins its query; the existing sampled-hit rules within an already queried canvas remain unchanged.
+
+[PhysicsPickingTests.Singular.cs](../../tests/Electron2D.Tests/PhysicsPickingTests.Singular.cs) checks default and independent canvases, zero/collinear/follow transforms, numerical overflow, small/reflected valid maps, queued mouse/touch/drag, callback mutation, disposal observer failures and 64 active collapsed-canvas frames after 96 warmup. The same cases run on CPU/GPU through the public scene/pointer API. CanvasLayerRenderingTests retains its eight native transform/pixel stages, including zero and negative follow scales, after a warm retention baseline so initial window configuration does not masquerade as transform-triggered geometry rebuilding. Native/backend and allocation evidence is recorded with the verified runs; hardware performance, native allocator totals and other-platform acceptance remain separate.
+
+The native pointer fixture converts its physical target to Wayland SDL logical coordinates at each injection, checks the current dispatch-time pixel density and final transform through ordinary input, then requires the deferred physics callback to preserve that local position. It queues window exit directly from the confirmed hit before a later passive frame can sample the desktop pointer. Target pixels remain independently checked. Dedicated native layer checks now pass the formerly failing collapsed-layer case. The wider renderer run still stops at the separate LegacyParallax retained-draw startup assertion; it is not recorded as a passing global renderer suite.

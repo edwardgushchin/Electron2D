@@ -618,3 +618,7 @@ Oversampling defaults true; disabling selects raster factor one. OversamplingOve
 Native presentation retains a cold activation ordinal across sibling scene reordering. Entering the scene or a false-to-true RenderingServer.ViewportSetActive transition assigns a new ordinal; repeating active=true preserves it. This runtime state is not stored in scenes and participates only in final screen composition. See [screen attachment](../components/canvas-rendering.md#viewport-screen-attachment).
 
 [Low-processor scheduling](../components/low-processor-rendering.md) can skip a globally unchanged automatic frame. An active Always viewport remains a continuous consumer; Once still completes only after successful submission. Native expose/resize, changed target state and camera interpolation request new output.
+
+## Collapsed canvas picking
+
+Automatic physics picking ignores a canvas whose determinant is zero/nonfinite or whose inverse query position is nonfinite. Other canvases continue; mouse hover exits through normal object/shape cleanup and returns under a stationary pointer when the map becomes usable. Small finite and reflected transforms remain valid. This changes neither authored matrix storage nor explicit AffineInverse failure semantics, ordinary direct physics queries or collider ownership. See [the component contract and regression scope](../components/physics-picking.md#collapsed-canvas-mappings).

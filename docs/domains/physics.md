@@ -1505,3 +1505,7 @@ The [complete Node processing contract](../components/scene-tree.md#complete-pro
 [Physical canvas notification publication](../components/scene-hierarchy.md#physical-canvas-notifications-from-processing-groups) now preserves current-group body/Area/tile identity requests and effective participation through the joined owner phase. Logical canvas-layer reads accept active groups; attachment epochs and exact generated RID targets protect owner reentry. General reserved notification consumers remain Partial.
 
 [Scene cast group access](../components/physics-queries.md#scene-cast-metadata-and-cached-observations-from-groups) now covers local options, exceptions and held results. Numerical sampling remains owner-only, as in the pinned server; it is no longer misclassified as an absent reserved notification consumer. Other reserved consumers remain Partial.
+
+## Collapsed pointer-query canvases
+
+[Physics picking](../components/physics-picking.md#collapsed-canvas-mappings) now skips only a noninvertible or numerically unusable canvas map before CPU/GPU point queries. Other canvases, queued event disposal, hover departure/reentry and scene processing continue through the existing owner/lifetime path. Authored zero-scale CanvasLayer/follow states remain valid scene values.

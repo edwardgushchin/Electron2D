@@ -300,3 +300,7 @@ Inherited [ordinary event blocking](../classes/ElectronObject.md#ordinary-event-
 ## Canvas notifications from groups
 
 EnterCanvas/ExitCanvas and Enabled/Disabled can be propagated by the owner/current processing group. Worker delivery queues ordered owner publication before later queries and stepping; user callbacks remain immediate. Participation uses effective ProcessMode, while canvas IDs preserve exact default/layer filtering. Tree/canvas attachment epochs prevent old requests from reaching a rebound object. Raw notifications from foreign groups or ordinary workers reject. See [lifecycle and verification](../components/scene-hierarchy.md#physical-canvas-notifications-from-processing-groups).
+
+## Collapsed canvas picking
+
+Automatic physics picking ignores a canvas whose determinant is zero/nonfinite or whose inverse query position is nonfinite. Other canvases continue; mouse hover exits through normal object/shape cleanup and returns under a stationary pointer when the map becomes usable. Small finite and reflected transforms remain valid. This changes neither authored matrix storage nor explicit AffineInverse failure semantics, ordinary direct physics queries or collider ownership. See [the component contract and regression scope](../components/physics-picking.md#collapsed-canvas-mappings).

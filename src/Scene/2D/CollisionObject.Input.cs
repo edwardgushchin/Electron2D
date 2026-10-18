@@ -12,6 +12,7 @@ public abstract partial class CollisionObject
     /// <summary>Gets or sets whether unhandled viewport pointer events can pick this object's shapes.</summary>
     /// <value>True for collision objects and areas; physics bodies default to false.</value>
     /// <remarks>Picking also requires a nonzero collision layer, visible active scene membership and processing eligibility.
+    /// The selecting canvas must produce finite inverse query coordinates; a collapsed canvas exits mouse hover on the next pass.
     /// Changes affect the next physics picking pass, without changing simulation or ordinary queries.</remarks>
     /// <exception cref="InvalidOperationException">Attached mutation is off-owner, capture-owned, or the selected numerical implementation is borrowed.</exception>
     /// <exception cref="ObjectDisposedException">The object is disposed.</exception>

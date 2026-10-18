@@ -185,7 +185,11 @@ public sealed partial class SceneTree
 
     private void CollectPhysicsPicks(PhysicsPickingState state, World world, Vector2 point, Transform canvas, ulong canvasID)
     {
-        state.Parameters.Position = canvas.AffineInverse() * point; state.Parameters.CanvasInstanceID = canvasID;
+        var determinant = canvas.Determinant();
+        if (determinant == 0 || !float.IsFinite(determinant)) return;
+        var position = canvas.AffineInverse() * point;
+        if (!position.IsFinite()) return;
+        state.Parameters.Position = position; state.Parameters.CanvasInstanceID = canvasID;
         foreach (var result in world.DirectSpaceState!.CollectPointHits(state.Parameters))
         {
             if (state.Hits.Count == 64) break;

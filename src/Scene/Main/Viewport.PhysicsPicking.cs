@@ -9,7 +9,9 @@ public abstract partial class Viewport
     /// <summary>Gets or sets whether unhandled pointer events are queued for physics object picking.</summary>
     /// <value>False initially. Scene activation samples the project default for an unauthored root viewport.</value>
     /// <remarks>Delivery runs at the beginning of a physics frame, after its start notification and before node callbacks.
-    /// Disabling clears pending events and hover. At most 64 eligible logical shape hits per canvas are selected before optional sorting.</remarks>
+    /// Disabling clears pending events and hover. At most 64 eligible logical shape hits per canvas are selected before optional sorting.
+    /// Canvases with zero or nonfinite determinants, or nonfinite inverse-mapped query positions, contribute no hits.
+    /// Other canvases continue normally; mouse hover exits on that pass and resumes under a stationary pointer when mapping becomes valid.</remarks>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or capture-owned.</exception>
     /// <exception cref="AggregateException">Hover-exit callbacks fail after disabling commits.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>

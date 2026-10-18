@@ -1,6 +1,6 @@
 using Electron2D;
 
-internal static class PhysicsPickingTests
+internal static partial class PhysicsPickingTests
 {
     internal static void Run()
     {
@@ -15,7 +15,7 @@ internal static class PhysicsPickingTests
     }
     private static void Verify(PhysicsServer.Backend backend)
     {
-        Bindings(backend); DeliveryAndHover(backend); OrderingAndConsumption(backend); CoordinatesAndWorlds(backend);
+        Bindings(backend); DeliveryAndHover(backend); OrderingAndConsumption(backend); CoordinatesAndWorlds(backend); SingularCanvases(backend);
         DisposalFailures(backend); LifetimeAndErrors(backend); Capacity(backend); NestedAndLayerPolicy(backend); Measure(backend);
         Console.WriteLine($"Public physics picking passed on {backend}: input/hover order, logical shapes, policies, canvas/world routing, lifecycle and warmed allocation.");
     }

@@ -132,3 +132,7 @@ The [complete Node processing contract](../components/scene-tree.md#complete-pro
 [Keyboard name conversion](../components/input-runtime.md#keyboard-name-conversion) now
 connects the retained OS service, InputEventKey text and persisted InputMap bindings.
 Formatting, named parsing and character capability execute independently of native input.
+
+## Collapsed pointer-query canvases
+
+[Physics picking](../components/physics-picking.md#collapsed-canvas-mappings) now skips only a noninvertible or numerically unusable canvas map before CPU/GPU point queries. Other canvases, queued event disposal, hover departure/reentry and scene processing continue through the existing owner/lifetime path. Authored zero-scale CanvasLayer/follow states remain valid scene values.
