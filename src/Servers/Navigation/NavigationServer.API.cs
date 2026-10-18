@@ -102,10 +102,11 @@ public sealed partial class NavigationServer
     /// <exception cref="ArgumentException">A required RID is absent, stale or belongs to another resource kind.</exception>
     public static void RegionSetNavigationPolygon(RID region, NavigationPolygon? polygon) { lock (Shared._gate) Shared.SetPolygon(region, polygon); }
     /// <summary>Stages a region's finite world transform.</summary>
+    /// <remarks>An equal stored transform preserves pending changes and does not request a new topology iteration.</remarks>
     /// <param name="region">Live navigation region RID.</param>
     /// <param name="transform">Finite invertible local-to-world transform.</param>
     /// <exception cref="ArgumentException">A required RID is absent, stale or belongs to another resource kind.</exception>
-    public static void RegionSetTransform(RID region, Transform transform) { if (!transform.IsFinite() || transform.Determinant() == 0) throw new ArgumentException("Navigation region transforms must be finite and invertible.", nameof(transform)); lock (Shared._gate) { var r = Shared.Region(region); r.Transform = transform; r.Dirty = true; Shared.Dirty(r.Map); } }
+    public static void RegionSetTransform(RID region, Transform transform) { if (!transform.IsFinite() || transform.Determinant() == 0) throw new ArgumentException("Navigation region transforms must be finite and invertible.", nameof(transform)); lock (Shared._gate) { var r = Shared.Region(region); if (r.Transform == transform) return; r.Transform = transform; r.Dirty = true; Shared.Dirty(r.Map); } }
     /// <summary>Returns the staged region transform.</summary>
     /// <param name="region">Live navigation region RID.</param>
     /// <returns>Returns the staged region transform.</returns>

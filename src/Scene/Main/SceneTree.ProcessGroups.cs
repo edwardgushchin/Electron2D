@@ -12,10 +12,64 @@ public partial class SceneTree
     private static readonly Comparison<ScheduledNode> ProcessingNodeOrder = static (left, right) => left.CompareTo(right);
     private readonly List<GroupEntry> _groupFrame = [];
     private readonly List<ProcessingGroup> _groupStage = [];
+    private readonly List<CanvasItem> _transformPublications = [];
+    internal enum InterpolationPublicationKind { CanvasPolicy, CameraPolicy, CameraScroll, ViewportReset }
+    private readonly record struct InterpolationPublication(Node Node, InterpolationPublicationKind Kind, Vector2 Position = default, float Rotation = 0);
+    private readonly List<InterpolationPublication> _interpolationPublications = [];
+    internal void QueueInterpolationPublication(Node node, InterpolationPublicationKind kind)
+    {
+        lock (_workGate) _interpolationPublications.Add(new(node, kind));
+    }
+    internal void QueueCameraScroll(Camera camera, Vector2 position, float rotation)
+    {
+        lock (_workGate)
+        {
+            _interpolationPublications.Add(new(camera, InterpolationPublicationKind.CameraScroll, position, rotation));
+            if (!_transformPublications.Contains(camera)) _transformPublications.Add(camera);
+        }
+    }
     private Action<int>? _runGroupWorker;
     private bool _groupPhysics;
     private volatile bool _processingWorkerStage;
     internal bool IsProcessingWorkerStage => _processingWorkerStage;
+    internal void QueueTransformPublication(CanvasItem item)
+    {
+        lock (_workGate)
+            if (!_transformPublications.Contains(item)) _transformPublications.Add(item);
+    }
+    private void PublishProcessingTransforms(ref List<Exception>? errors)
+    {
+        try
+        {
+            foreach (var publication in _interpolationPublications)
+            {
+                var node = publication.Node;
+                if (node.IsDisposed || !ReferenceEquals(node.Tree, this)) continue;
+                try
+                {
+                    switch (publication.Kind)
+                    {
+                        case InterpolationPublicationKind.CanvasPolicy: ((CanvasItem)node).PublishInterpolationPolicy(); break;
+                        case InterpolationPublicationKind.CameraPolicy: ((Camera)node).RefreshInterpolationProcessing(); break;
+                        case InterpolationPublicationKind.CameraScroll: ((Camera)node).PublishScroll(publication.Position, publication.Rotation); break;
+                        case InterpolationPublicationKind.ViewportReset: ((Viewport)node).ResetCanvasInterpolationSnapshot(); break;
+                    }
+                }
+                catch (Exception error) { CollectException(ref errors, error); }
+            }
+            foreach (var item in _transformPublications)
+            {
+                if (item.IsDisposed || !ReferenceEquals(item.Tree, this)) continue;
+                try
+                {
+                    if (item is Camera camera) camera.PublishFinalScroll();
+                    else if (item is TileMapLayer tiles) tiles.PublishSceneTransform();
+                }
+                catch (Exception error) { CollectException(ref errors, error); }
+            }
+        }
+        finally { _interpolationPublications.Clear(); _transformPublications.Clear(); }
+    }
     private double _groupUnscaledDelta;
     private ulong _groupTreeOrderPath = ulong.MaxValue;
     private ProcessingGroup DefaultProcessingGroup
@@ -173,6 +227,7 @@ public partial class SceneTree
                 foreach (var failure in failures) CollectException(ref errors, failure);
                 failures.Clear();
             }
+            if (first.Worker) PublishProcessingTransforms(ref errors);
             from = end;
         }
         _groupStage.Clear(); _groupFrame.Clear();

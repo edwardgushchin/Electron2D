@@ -1625,21 +1625,23 @@ public partial class Node : ElectronObject
 
     internal void PropagateWindowNotification(int what) => PropagateNotificationCore(what, stopAtWindows: true);
 
-    private void PropagateNotificationCore(int what, bool stopAtWindows)
+    private void PropagateNotificationCore(int what, bool stopAtWindows, bool processingScope = false)
     {
-        ThrowIfDisposed(); Tree?.EnsureOwnerThread();
+        ThrowIfDisposed();
+        if (processingScope) Tree?.EnsureProcessingAccess(this);
+        else Tree?.EnsureOwnerThread();
         List<Exception>? errors = null;
-        _notificationPropagationDepth++;
+        Interlocked.Increment(ref _notificationPropagationDepth);
         try
         {
             try { DispatchNotification(what); }
             catch (Exception error) { CollectException(ref errors, error); }
             foreach (var child in _children)
                 if (!child.IsDisposed && ReferenceEquals(child.Parent, this) && (!stopAtWindows || child is not Window))
-                    try { child.PropagateNotificationCore(what, stopAtWindows); }
+                    try { child.PropagateNotificationCore(what, stopAtWindows, processingScope); }
                     catch (Exception error) { CollectException(ref errors, error); }
         }
-        finally { _notificationPropagationDepth--; }
+        finally { Interlocked.Decrement(ref _notificationPropagationDepth); }
         ThrowCollected("One or more propagated notification callbacks failed.", errors);
     }
 
@@ -2303,7 +2305,7 @@ public partial class Node : ElectronObject
             _internalProcessEnabled = _internalPhysicsProcessEnabled = false;
             return;
         }
-        EnsureMutable();
+        EnsureProcessingAccess();
         if (_internalProcessEnabled == processEnabled && _internalPhysicsProcessEnabled == physicsProcessEnabled) return;
         _internalProcessEnabled = processEnabled;
         _internalPhysicsProcessEnabled = physicsProcessEnabled;

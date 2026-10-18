@@ -2,6 +2,8 @@ namespace Electron2D;
 
 public partial class Camera
 {
+    private Vector2 _publishedScrollPosition;
+    private float _publishedScrollRotation;
     internal bool CanTrack(Viewport viewport) => _enabled && ReferenceEquals(_viewport, viewport) && !IsDisposed;
 
     internal override void OnTreeMembershipChanged(bool entering)
@@ -55,7 +57,12 @@ public partial class Camera
         _viewport?.ResetCanvasInterpolationSnapshot();
     }
 
-    internal void RefreshInterpolationProcessing() => UpdateProcessing();
+    internal void RefreshInterpolationProcessing()
+    {
+        if (!ProcessingAccessible && Tree is { IsProcessingWorkerStage: true } tree)
+        { tree.QueueInterpolationPublication(this, SceneTree.InterpolationPublicationKind.CameraPolicy); return; }
+        UpdateProcessing();
+    }
     private void UpdateScrollPreservingPosition()
     {
         var previous = _smoothedPosition;
@@ -67,12 +74,20 @@ public partial class Camera
         halfSize.X * _dragHorizontalOffset * _dragMargins[_dragHorizontalOffset < 0 ? (int)Side.Right : (int)Side.Left],
         halfSize.Y * _dragVerticalOffset * _dragMargins[_dragVerticalOffset < 0 ? (int)Side.Bottom : (int)Side.Top]);
 
-    private void UpdateScroll()
+    internal void UpdateScroll()
     {
+        if (_viewport?.IsCurrentCamera(this) != true) return;
+        if (Tree is { IsProcessingWorkerStage: true } tree) { tree.QueueCameraScroll(this, GlobalPosition, GlobalRotation); return; }
+        PublishScroll(GlobalPosition, GlobalRotation);
+    }
+
+    internal void PublishScroll(Vector2 position, float rotation)
+    {
+        _publishedScrollPosition = position; _publishedScrollRotation = rotation;
         var viewport = _viewport;
         if (viewport is null || !ReferenceEquals(viewport.GetCamera(), this)) return;
         var size = viewport.GetVisibleRect().Size; var halfSize = size * 0.5f; var scale = Vector2.One / _zoom;
-        var position = GlobalPosition; var target = _targetPosition; var smoothed = _smoothedPosition;
+        var target = _targetPosition; var smoothed = _smoothedPosition;
         var angle = _screenRotation; var delta = (float)(_processCallback == ProcessPhase.Physics || Tree?.IsInPhysicsFrame == true ? PhysicsProcessDeltaTime : ProcessDeltaTime);
         var horizontalChanged = _horizontalOffsetChanged; var verticalChanged = _verticalOffsetChanged;
         if (_first) target = smoothed = position;
@@ -100,7 +115,7 @@ public partial class Camera
         var screenOffset = _anchorMode == AnchorMode.DragCenter ? halfSize * scale : Vector2.Zero;
         if (!_ignoreRotation)
         {
-            angle = _rotationSmoothingEnabled ? Mathf.LerpAngle(angle, GlobalRotation, _rotationSmoothingSpeed * delta) : GlobalRotation;
+            angle = _rotationSmoothingEnabled ? Mathf.LerpAngle(angle, rotation, _rotationSmoothingSpeed * delta) : rotation;
             screenOffset = screenOffset.Rotated(angle);
         }
         var origin = smoothed - screenOffset;
@@ -118,6 +133,12 @@ public partial class Camera
         _horizontalOffsetChanged = horizontalChanged; _verticalOffsetChanged = verticalChanged; _first = false;
         viewport.NotifyParallaxCameraMoved(center - halfSize * scale, canvas,
             _anchorMode == AnchorMode.DragCenter ? halfSize : Vector2.Zero);
+    }
+
+    internal void PublishFinalScroll()
+    {
+        var position = GlobalPosition; var rotation = GlobalRotation;
+        if (_publishedScrollPosition != position || _publishedScrollRotation != rotation) PublishScroll(position, rotation);
     }
 
     private Vector2 LimitOrigin(Vector2 origin, Vector2 extent) => new(

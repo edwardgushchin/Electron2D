@@ -14,6 +14,7 @@ public abstract partial class CanvasItem
     internal void PublishInterpolationPolicy()
     {
         if (ServerState is not { Owned: false } state) return;
+        if (Tree is { IsProcessingWorkerStage: true } tree) { tree.QueueInterpolationPublication(this, SceneTree.InterpolationPublicationKind.CanvasPolicy); return; }
         state.Interpolated = null; state.Interpolation.Reset(state.Transform ?? GetVisualTransform());
     }
     internal Rect2? RenderCopyRect => ServerState?.Copy is { } retained

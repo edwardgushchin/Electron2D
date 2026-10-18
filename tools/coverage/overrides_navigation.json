@@ -323,7 +323,7 @@
     {
       "godot": "NavigationServer2D::method:region_set_transform(RID:,Transform2D:)",
       "electron2d": "method:Electron2D.NavigationServer.RegionSetTransform(Electron2D.RID,Electron2D.Transform)",
-      "reason": "ADR 0097 typed planar authored-region kernel; static process service under ADR 0095, copied arrays/spans, fully uppercase acronyms and owning RID lifetime."
+      "reason": "ADR 0097: finite/invertible transforms and owning RID validate before staging. Equal stored transforms preserve existing pending geometry/map changes without requesting another immutable topology iteration. Changed matrices retain deferred publication and the ordinary cold iteration cost. The public group-forced camera/tile/physics consumer observes stable region identity/transform/iteration through128 complete warmed frames at0/0 managed bytes on CPU/software-GPU/registered ordinary/pool and owner/separate profiles. Existing navigation topology/version/failure suites retain their scope. Evidence: bin/physics-group-transform-notifications/2026-10-18/validation.json."
     },
     {
       "godot": "NavigationServer2D::method:region_set_travel_cost(RID:,float:)",
@@ -1918,7 +1918,6 @@
         "NavigationServer2D::method:region_set_navigation_layers(RID:,int:)",
         "NavigationServer2D::method:region_set_navigation_polygon(RID:,NavigationPolygon:)",
         "NavigationServer2D::method:region_set_owner_id(RID:,int:)",
-        "NavigationServer2D::method:region_set_transform(RID:,Transform2D:)",
         "NavigationServer2D::method:region_set_travel_cost(RID:,float:)",
         "NavigationServer2D::signal:map_changed(RID:)"
       ],
@@ -2316,6 +2315,13 @@
         "ProjectSettings::property:debug/shapes/navigation/2d/agent_path_color",
         "ProjectSettings::property:debug/shapes/navigation/2d/agent_path_point_size"
       ]
+    },
+    {
+      "godot": [
+        "NavigationServer2D::method:region_set_transform(RID:,Transform2D:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0097: finite/invertible transforms and owning RID validate before staging. Equal stored transforms preserve existing pending geometry/map changes without requesting another immutable topology iteration. Changed matrices retain deferred publication and the ordinary cold iteration cost. The public group-forced camera/tile/physics consumer observes stable region identity/transform/iteration through128 complete warmed frames at0/0 managed bytes on CPU/software-GPU/registered ordinary/pool and owner/separate profiles. Existing navigation topology/version/failure suites retain their scope. Evidence: bin/physics-group-transform-notifications/2026-10-18/validation.json."
     }
   ]
 }

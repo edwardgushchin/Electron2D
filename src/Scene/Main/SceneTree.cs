@@ -1982,16 +1982,21 @@ public sealed partial class SceneTree : MainLoop
 
     internal void DeliverTransformNotification(CanvasItem item)
     {
-        _lifecycleExecutionDepth++;
+        Interlocked.Increment(ref _lifecycleExecutionDepth);
         try { item.DispatchNotification(CanvasItem.NotificationTransformChanged); }
-        finally { _lifecycleExecutionDepth--; }
+        finally { Interlocked.Decrement(ref _lifecycleExecutionDepth); }
     }
 
-    internal void CancelTransformNotification(CanvasItem item)
+    internal bool CancelTransformNotification(CanvasItem item)
     {
-        var entry = item.TransformQueueEntry;
-        if (ReferenceEquals(_nextTransformNotification, entry)) _nextTransformNotification = entry.Next;
-        entry.List?.Remove(entry);
+        lock (_workGate)
+        {
+            var entry = item.TransformQueueEntry;
+            if (entry.List is null) return false;
+            if (ReferenceEquals(_nextTransformNotification, entry)) _nextTransformNotification = entry.Next;
+            entry.List.Remove(entry);
+            return true;
+        }
     }
 
     private void FlushTransformNotifications(ref List<Exception>? errors)

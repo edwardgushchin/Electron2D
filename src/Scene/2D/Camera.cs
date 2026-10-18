@@ -13,7 +13,9 @@ public enum AnchorMode
 /// <remarks>One camera is current per viewport. The first enabled camera becomes current on entry. Tracking
 /// uses internal process/physics notifications and the inherited pause policy. Camera state does not change
 /// node transforms. Finite values are required; rendering overflow fails before changing the viewport.
-/// Editor overlays, physics interpolation and independent offscreen viewports are not implemented.</remarks>
+/// Worker tracking and forced transform notifications publish viewport changes on the scene owner after the
+/// processing stage joins. Ordered position/rotation snapshots preserve scroll/reset/scroll history endpoints;
+/// user transform and reset notifications remain synchronous on their calling group.</remarks>
 public partial class Camera : Entity
 {
     private Vector2 _offset = Vector2.Zero;

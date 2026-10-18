@@ -84,7 +84,7 @@ public partial class Node
         new PropertyDescriptor<Node, ProcessThreadMessageFlags>(nameof(ProcessThreadMessages), n => n.ProcessThreadMessages,
             (n, v) => n.ProcessThreadMessages = v, _ => 0, (_, v) => (v & ~ProcessThreadMessageFlags.All) == 0, stored: true)
     ];
-    private void EnsureProcessingAccess()
+    internal void EnsureProcessingAccess()
     {
         ThrowIfDisposed(); EnsureNotSceneCapture(); Tree?.EnsureProcessingAccess(this); ValidateMutation();
     }

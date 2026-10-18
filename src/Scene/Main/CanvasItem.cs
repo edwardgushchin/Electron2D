@@ -131,16 +131,17 @@ public abstract partial class CanvasItem : Node
     /// <summary>Immediately delivers this item's pending global-transform notification, if any.</summary>
     /// <remarks>Requires active tree membership. Removes the pending entry before calling user code. Does not
     /// flush descendants, change the transform, clear its invalidation state or request redraw. A second call
-    /// without a new pending entry does nothing. Callback failure leaves the consumed entry removed.</remarks>
-    /// <exception cref="InvalidOperationException">The item is detached, accessed off-owner, or a scene capture is active.</exception>
+    /// without a new pending entry does nothing. Callback failure leaves the consumed entry removed. The scene owner
+    /// or current processing group may force delivery; numeric and typed callbacks execute immediately on the caller
+    /// outside the queue gate. Built-in camera and tile consumers publish viewport/backend changes after the group joins.</remarks>
+    /// <exception cref="InvalidOperationException">The item is detached, accessed outside the owner/current processing group, or a scene capture is active.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     /// <exception cref="Exception">A transform notification callback throws.</exception>
     public void ForceUpdateTransform()
     {
-        EnsureMutable();
+        EnsureProcessingAccess();
         var tree = Tree ?? throw new InvalidOperationException("A transform update requires an active scene tree.");
-        if (TransformQueueEntry.List is null) return;
-        tree.CancelTransformNotification(this);
+        if (!tree.CancelTransformNotification(this)) return;
         tree.DeliverTransformNotification(this);
     }
 
@@ -514,19 +515,21 @@ public abstract partial class CanvasItem : Node
 
     /// <summary>Gets or sets whether local transform changes dispatch <see cref="NotificationLocalTransformChanged"/>.</summary>
     /// <value>False by default. Enables both the numeric local notification and its typed event while attached.</value>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner, or mutation occurs during scene capture.</exception>
+    /// <remarks>Policy reads permit any active processing group; writes permit the owner/current group, including
+    /// physical nodes. These transient flags do not alter stored scene state or native numerical state.</remarks>
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public bool NotifyLocalTransformChanges
     {
         get
         {
             ThrowIfDisposed();
-            Tree?.EnsureOwnerThread();
+            Tree?.EnsureProcessingReadAccess();
             return _notifyLocalTransformChanges;
         }
         set
         {
-            EnsureMutable();
+            EnsureProcessingAccess();
             _notifyLocalTransformChanges = value;
         }
     }
@@ -534,20 +537,21 @@ public abstract partial class CanvasItem : Node
     /// <summary>Gets or sets whether global transform changes dispatch <see cref="NotificationTransformChanged"/>.</summary>
     /// <value>False by default. Enables queuing on global invalidation; initial tree entry always queues once.</value>
     /// <remarks>Enabling while attached resolves the current global transform without queuing. Disabling does not
-    /// cancel an already queued notification. Delivery includes the typed TransformChanged event.</remarks>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner, or mutation occurs during scene capture.</exception>
+    /// cancel an already queued notification. Delivery includes the typed TransformChanged event. Policy reads permit
+    /// any active processing group; writes permit the owner/current group. The policy is transient scene metadata.</remarks>
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public bool NotifyTransformChanges
     {
         get
         {
             ThrowIfDisposed();
-            Tree?.EnsureOwnerThread();
+            Tree?.EnsureProcessingReadAccess();
             return _notifyTransformChanges;
         }
         set
         {
-            EnsureMutable();
+            EnsureProcessingAccess();
             if (_notifyTransformChanges == value) return;
             _notifyTransformChanges = value;
             if (value && IsInsideTree) _ = GetGlobalTransform();
