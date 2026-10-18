@@ -1,6 +1,6 @@
 # Two-dimensional mesh surfaces
 
-Last updated: 2026-10-12
+Last updated: 2026-10-18
 
 ## Executable skeletal polygons
 
@@ -121,3 +121,13 @@ The scale is zero for wholly [0,1] coordinates, otherwise twice each component's
 Merge retains applicable 2D Transform authoring with independent source snapshots. Targets/levels are discarded; compatible unskinned groups retain their first material. Schema mismatches and line strips remain independent. Mixed index presence, reflected unindexed skin/custom records and strip winding/joins preserve actual geometry. These boundaries correct malformed or lost source geometry rather than carrying inert data. Lightmap hints are excluded with the 3D atlas role; the shared empty-position flag remains the exact remaining import prerequisite.
 
 Managed checks cover raw precision, cache/ownership/listener state, six independent C++ index fixtures, UV seams, pose rollback, all five merged/reflected topologies, raw archives, duplicate/local graphs and fresh scene generation/replay. Linux GLSL/HLSL/compatibility pixels cover generated geometry, numeric UV/frame/custom fields, reflected tangents, silhouette/gaps, morph, eighth-slot skin, groups, repeated instances and owned service import. Twenty-four warmup frames precede 64 active and 64 idle complete frames with zero managed bytes. Cold generation and native allocator totals are separate, as are foreign platforms and owner acceptance. Native package/consumer verification must exercise the public generator with all native compilers blocked; local platform packing is not publication. Evidence lives in `bin/importer-mesh-validation/2026-10-12/`.
+
+## Live index buffer updates
+
+RenderingServer.MeshSurfaceUpdateIndexRegion edits the authoritative existing ArrayMesh index storage behind a caller-owned RID. uint16 is used for positive vertex counts through 65536, uint32 above that boundary. The caller supplies little-endian byte regions, including unaligned partial records. Two-pass preflight rejects any out-of-buffer range or resulting invalid vertex index before writing earlier records. It preserves primitive/count, material, bounds, mesh identity and independent authored LOD buffers. Changed publication follows commitment, including valid empty patches; observer exceptions do not roll it back.
+
+MeshSurfaceGetFormatIndexStride and MeshSurfaceGetFormatOffset expose the same packing. The latter selects one existing typed channel presence bit; it addresses the position/direction, attribute, skin or index buffer independently. Missing channels return zero. Six-byte compressed direction frames retain their existing four-byte axis/two-byte angle split. Invalid selectors, unsupported formats and overflowing offsets fail explicitly.
+
+MeshIndexTests covers 65536/65537 boundaries, copied and unaligned records, later-record transactional failure, every primitive, LOD independence, observer failure, resource duplication, fresh-process archive loading and prepared 128-update zero owner/all-thread managed-byte intervals. Its native profile exercises public owned/borrowed/invalid/off-owner operations, both widths, retained mesh and hardware/expanded MultiMesh pixels without caller redraw, and 64 active/64 idle complete owner-thread frames. Native allocation totals, foreign platforms, hardware performance and human visual acceptance remain unverified.
+
+Focused commands after the Release test build: `ELECTRON2D_TEST_MESH_INDICES=1` for managed/archive checks, or `ELECTRON2D_TEST_MESH_INDICES_NATIVE=gpu` / `compatibility` for native checks. Evidence for the current Linux/Wayland software-driver runs is under `bin/mesh-index-updates/2026-10-18/`.

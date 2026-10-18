@@ -1346,3 +1346,23 @@ Registered `shader_globals/name` definitions use [GlobalShaderParameterSettings<
 ### HasChanged
 
 Returns true for pending retained state, resources, presentation or frame callbacks and active time-dependent output. A new session starts changed. Successful presented submission acknowledges the captured revision; later mutations and failures remain pending. ForceDraw(false) leaves presentation work. Off-owner access or absent renderer throws InvalidOperationException. Conservative invalidation can report equal resulting pixels. See [producer and scheduling details](../components/low-processor-rendering.md).
+
+## Live packed mesh indices
+
+| Declaration | Contract |
+| --- | --- |
+| `public static void MeshSurfaceUpdateIndexRegion(RID mesh, int surface, int offset, ReadOnlySpan<byte> data)` | Copies partial little-endian index bytes into an existing caller-owned surface, after validating the entire resulting range. |
+| `public static int MeshSurfaceGetFormatIndexStride(Mesh.ArrayFormat format, int vertexCount)` | Zero without Index, two bytes for 1–65536 vertices, four otherwise. Negative counts reject. |
+| `public static int MeshSurfaceGetFormatOffset(Mesh.ArrayFormat format, int vertexCount, Mesh.ArrayFormat channel)` | Selects one channel presence bit and returns its offset within its own buffer; absent channels return zero. |
+
+All three operations require the active renderer owner. Index mutation also rejects borrowed/invalid identities, active submission, missing index storage, out-of-buffer regions and indices outside the existing vertex set. Validation precedes every write; observer errors retain committed data. Empty valid patches emit Changed consistently with other region updates. Surface primitive/count/material, RID, authored bounds and separate LOD indices are preserved. Retained mesh and repeated-instance commands use the next current topology without caller QueueRedraw.
+
+Offset channels are Vertex, Normal, Tangent, Color, TexUV, TexUV2, Custom0–Custom3, Bones, Weights and Index. Vertex, Index and absent channels return zero. Normal/tangent records follow all eight-byte positions; attribute offsets address one color/UV/custom record, and skin offsets address one four/eight-slot record. Compressed directions use four axis bytes followed by two tangent/angle bytes. Invalid combined/policy channels throw ArgumentOutOfRangeException; an overflowing direction offset throws OverflowException. Unsupported formats keep the existing explicit format errors.
+
+For example, while the renderer is active and `mesh` is a caller-owned indexed surface with at least six vertices:
+
+```csharp
+RenderingServer.MeshSurfaceUpdateIndexRegion(mesh, 0, 0, new byte[] { 3, 0, 4, 0, 5, 0 });
+```
+
+This moves its first triangle to vertices 3, 4 and 5 when the index stride is two. See [mesh index behavior and verification](../components/meshes.md#live-index-buffer-updates).

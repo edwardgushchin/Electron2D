@@ -320,3 +320,7 @@ Authored levels use copied positive local edge-error thresholds and shorter comp
 
 
 ImporterMesh.GetMesh can atomically append a prevalidated compiled draft. Unshaped existing surfaces remain; target shape definitions must be empty and a shaped draft requires an empty target. One ResourceName/Changed publication follows complete geometry, names, materials and mode. A failing observer retains the committed mesh and producer cache. See [ImporterMesh](ImporterMesh.md).
+
+## Server-owned index storage
+
+Caller-owned RenderingServer mesh RIDs use this resource's authoritative index arrays for transactional partial 16/32-bit edits through [MeshSurfaceUpdateIndexRegion](RenderingServer.md#live-packed-mesh-indices). Primitive/count, material, bounds and separate LOD indices remain intact; resource copies and archives retain the edited topology. Ordinary borrowed ArrayMesh RIDs remain read/draw-only at the service boundary. See [index storage and checks](../components/meshes.md#live-index-buffer-updates).

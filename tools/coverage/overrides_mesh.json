@@ -1684,6 +1684,21 @@
       "godot": "ImporterMesh::method:set_surface_name(int:,String:)",
       "electron2d": "method:Electron2D.ImporterMesh.SetSurfaceName(System.Int32,System.String)",
       "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_surface_update_index_region(RID:,int:,int:,PackedByteArray:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceUpdateIndexRegion(Electron2D.RID,System.Int32,System.Int32,System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADRs 0001/0014/0092/0095: typed packed-channel offsets and 16/32-bit index edits preflight partial records atomically, retain topology/count/material/RID and independent LODs, and feed existing retained mesh/MultiMesh consumers. MeshIndexTests covers width/byte/error boundaries, copied storage/fresh-process archives, public service ownership and native GPU/Compatibility pixels plus prepared managed allocation intervals. Native allocation totals, foreign platforms and human acceptance remain separate."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_surface_get_format_index_stride(int:RenderingServer.ArrayFormat,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceGetFormatIndexStride(Electron2D.Mesh.ArrayFormat,System.Int32)",
+      "reason": "ADRs 0001/0014/0092/0095: typed packed-channel offsets and 16/32-bit index edits preflight partial records atomically, retain topology/count/material/RID and independent LODs, and feed existing retained mesh/MultiMesh consumers. MeshIndexTests covers width/byte/error boundaries, copied storage/fresh-process archives, public service ownership and native GPU/Compatibility pixels plus prepared managed allocation intervals. Native allocation totals, foreign platforms and human acceptance remain separate."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_surface_get_format_offset(int:RenderingServer.ArrayFormat,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceGetFormatOffset(Electron2D.Mesh.ArrayFormat,System.Int32,Electron2D.Mesh.ArrayFormat)",
+      "reason": "ADRs 0001/0014/0092/0095: typed packed-channel offsets and 16/32-bit index edits preflight partial records atomically, retain topology/count/material/RID and independent LODs, and feed existing retained mesh/MultiMesh consumers. MeshIndexTests covers width/byte/error boundaries, copied storage/fresh-process archives, public service ownership and native GPU/Compatibility pixels plus prepared managed allocation intervals. Native allocation totals, foreign platforms and human acceptance remain separate."
     }
   ],
   "extras": [
@@ -2651,6 +2666,15 @@
         "ImporterMesh::method:add_surface(int:Mesh.PrimitiveType,Array:,Array[]:,Dictionary:,Material:,String:,int:)"
       ],
       "reason": "Raw authoring, compilation, real simplification/merge, storage and all current 2D consumers execute under ADR 0092. Remaining trigger: shared ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY requires procedural vertex-shader geometry/non-position storage; these flags reject before mutation until that producer enters its first slice."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingServer::method:mesh_surface_update_index_region(RID:,int:,int:,PackedByteArray:)",
+        "RenderingServer::method:mesh_surface_get_format_index_stride(int:RenderingServer.ArrayFormat,int:)",
+        "RenderingServer::method:mesh_surface_get_format_offset(int:RenderingServer.ArrayFormat,int:,int:)"
+      ],
+      "reason": "ADRs 0001/0014/0092/0095: typed packed-channel offsets and 16/32-bit index edits preflight partial records atomically, retain topology/count/material/RID and independent LODs, and feed existing retained mesh/MultiMesh consumers. MeshIndexTests covers width/byte/error boundaries, copied storage/fresh-process archives, public service ownership and native GPU/Compatibility pixels plus prepared managed allocation intervals. Native allocation totals, foreign platforms and human acceptance remain separate."
     }
   ]
 }

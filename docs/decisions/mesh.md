@@ -1,6 +1,6 @@
 # Typed two-dimensional mesh data
 
-Last updated: 2026-10-12
+Last updated: 2026-10-18
 
 <a id="adr-0092"></a>
 ## ADR 0092: Typed 2D mesh surfaces on the retained canvas
@@ -24,6 +24,12 @@ ImmediateMesh : Mesh builds one invisible draft through SurfaceBegin, current Co
 ### Ownership, errors and verification
 
 Meshes own channel storage and borrow materials; nodes and drawing commands borrow meshes/textures. Owned server meshes close with the renderer. Invalid geometry, nonfinite inputs, out-of-range indices and regions fail before mutation. Resource Changed runs after committed edits; callback failure does not roll back valid geometry. Warmed successful paths are checked under [ADR 0014](resources.md#adr-0014). Exact managed/native pixel and platform limits are recorded in the [mesh component](../components/meshes.md); builds do not establish rendered or human acceptance.
+
+### Packed index edits and channel addresses
+
+RenderingServer.MeshSurfaceUpdateIndexRegion changes the existing caller-owned surface index buffer without changing its primitive, index count, RID, material, authored bounds or independent LOD buffers. Storage is little-endian uint16 for 1 through 65536 vertices, otherwise uint32. Partial bytes are valid; preflight every affected reconstructed index against the vertex count before any write. Empty valid regions retain the sibling Changed publication policy. The retained resource data is authoritative for drawing, copies and archives; mutation retains ordinary owner/submission/borrowed-identity guards.
+
+MeshSurfaceGetFormatIndexStride projects this width, returning zero without an index channel. MeshSurfaceGetFormatOffset selects one existing Mesh.ArrayFormat presence bit instead of a heterogeneous-array ordinal under ADR 0001; it introduces no untyped array API or duplicate selector enum. Positions, normal/tangent frames, attributes, skin and indices keep their existing separate buffer layouts. An absent channel returns zero; directions skip the complete position block. The accepted compressed frame uses four axis bytes followed by two tangent/angle bytes. Overflowing Int32 byte offsets reject explicitly. This extends the applicable packed-data operations; it does not reinstate the excluded dynamic array container/selectors.
 
 ### Repeated mesh instances and 2D visibility
 

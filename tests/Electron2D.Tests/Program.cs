@@ -462,6 +462,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_COMPRESSION") == "1
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_FILE_CHILD") is { } shaderFileChild) { RDShaderFileTests.RunChild(shaderFileChild); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_FILE_NATIVE") == "1") { RDShaderFileTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_FILE") == "1") { RDShaderFileTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_INDICES_CHILD") is { } indexPath) { MeshIndexTests.RunChild(indexPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_INDICES") == "1") { MeshIndexTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_INDICES_NATIVE") is { } indexBackend) { MeshIndexTests.Native(indexBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_LOD_CHILD") is { } lodChild) { MeshLODTests.RunChild(lodChild); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_LOD_NATIVE") == "1") { MeshLODNativeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_LOD") == "1") { MeshLODTests.Run(); return; }
@@ -1140,7 +1143,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MULTIMESH") == "1") { Mu
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_NATIVE") == "1") { MeshRenderingTests.Run(); return; }
 
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH") == "1") { MeshTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH") == "1") { MeshTests.Run(); MeshIndexTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_RANDOMIZER_HOST") == "1") { AudioRandomizerHostTests.Run(); return; }
 
@@ -1593,7 +1596,7 @@ AudioEffectLevelTests.Run();
 AudioEQTests.Run(); AudioDelayTests.Run(); AudioReverbTests.Run(); AudioChorusTests.Run(); AudioDistortionTests.Run(); AudioHardLimiterTests.Run(); AudioLimiterTests.Run(); AudioCompressorTests.Run(); AudioSpectrumTests.Run(); AudioPitchShiftTests.Run(); AudioStereoEnhanceTests.Run(); AudioPhaserTests.Run(); AudioRecordTests.Run();
 AudioSpatialTests.Run();
 AudioFilterTests.Run();
-MeshTests.Run();
+MeshTests.Run(); MeshIndexTests.Run();
 RenderingPrimitiveTests.Run();
 RenderingCanvasTests.Run();
 NavigationTopologyTests.Run();

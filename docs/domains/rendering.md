@@ -374,3 +374,5 @@ Window placement and ResetSize use the existing viewport/native resize lifecycle
 ## Rendering changes and low-processor scheduling
 
 [Low-processor rendering](../components/low-processor-rendering.md) connects retained change producers, static RenderingServer.HasChanged, the two OS policies and typed startup settings to Engine.Run/RunAsync. Static output skips submissions while processing and input continue; time-driven drawing and capture retain their executing consumers. Verification limits remain explicit in the component.
+
+[Live index-buffer edits](../components/meshes.md#live-index-buffer-updates) now let caller-owned meshes change topology through partial 16/32-bit packed updates. Typed channel-offset/index-stride queries share the existing storage contract; retained mesh and repeated-instance drawing observe edited indices while preserving surface counts, RID, material and independent LOD storage. Current evidence separates Linux/Wayland software rendering and prepared managed allocations from native allocation totals and foreign/hardware acceptance.
