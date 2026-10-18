@@ -10,7 +10,7 @@ internal static class GPUPhysicsCheckpointTests
 {
     internal static void Run()
     {
-        ShapelessPortable(); ReplayContacts(); ReplayJointsAndTargets(); ReplayOneWayGrowth(); ReplayCCD(); SleepAndPending(); Guards(); CopyFailure(); Warm();
+        ShapelessPortable(); ReplayColorCacheGrowth(); ReplayContacts(); ReplayJointsAndTargets(); ReplayOneWayGrowth(); ReplayCCD(); SleepAndPending(); Guards(); CopyFailure(); Warm();
         Console.WriteLine("GPU checkpoints: contact/joint/sleep/target/one-way replay, growth, publication, configuration/lifetime guards and warmed allocation passed.");
     }
     private static Body Add(GPUPhysicsBodyStore store, Vector2 position, Mode mode = Mode.Rigid, bool sleep = false) =>
@@ -58,6 +58,31 @@ internal static class GPUPhysicsCheckpointTests
             if (fence != 0) SDL.ReleaseGPUFence(device, fence);
             SDL.ReleaseGPUTransferBuffer(device, transfer);
         }
+    }
+    private static void ReplayColorCacheGrowth()
+    {
+        using var store = new GPUPhysicsBodyStore(); using var circle = new CircleShape { Radius = 1 };
+        store.AddShape(Add(store, default), circle);
+        for (var i = 0; i < 4; i++) store.AddShape(Add(store, new(2, 0), Mode.Static), circle);
+        var supports = new Body[96];
+        for (var i = 0; i < supports.Length; i++)
+        {
+            store.AddShape(Add(store, new(100 + 10 * i, 0)), circle);
+            supports[i] = Add(store, new(100 + 10 * i, 10), Mode.Static); store.AddShape(supports[i], circle);
+        }
+        Solve(); Solve();
+        Check(store.ContactPointCount == 4 && store.ContactColorCount == 4 && store.ContactColorRounds == 0,
+            "Capture starts with a validated four-row color cache");
+        using var point = store.CreateCheckpoint(); var capacity = store.ContactColorCacheStorageBytes;
+        for (var i = 0; i < supports.Length; i++) store.SetPose(supports[i], new(100 + 10 * i, 2), 0);
+        Solve(); Solve();
+        Check(store.ContactPointCount == 100 && store.ContactColorCacheStorageBytes > capacity,
+            "The discarded future grows the live key records and table beyond the captured lookup size");
+        point.Restore(); Solve();
+        Check(store.ContactPointCount == 4 && store.ContactColorCount == 4 && store.ContactColorRounds == 0 && store.ContactColorFallbacks == 0,
+            "Restore retains the captured key table and lookup size inside larger live allocations");
+        Console.WriteLine("GPU checkpoint color cache: four-row scheduling survives a discarded 100-row allocation growth without rebuilding or fallback.");
+        void Solve() => store.SolveConstraints(1f / 60, iterations: 1, margin: 0);
     }
     private static void ReplayContacts()
     {

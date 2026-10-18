@@ -1,6 +1,6 @@
 # Resident GPU buffer memory
 
-Last updated: 2026-10-15
+Last updated: 2026-10-18
 
 [Cold compiler/device controls](physics-native-phases.md) now measure scopes
 outside requested buffers. Reflection alone does not reproduce the large rise;
@@ -17,7 +17,7 @@ buffer accounting does not close that native-memory/performance issue.
 
 `GPUPhysicsBodyStore.BufferMemory` reports the current requested bytes and live
 resource counts for every SDL storage buffer and transfer buffer owned by that
-store, including its local replay checkpoints. It also records cumulative
+store, including its local replay checkpoints and device-only contact-color key records/table. Valid cached continuation adds its record prefix and captured table lookup extent to local checkpoint copies; those bytes are included in both checkpoint capacity and device-copy counters. It also records cumulative
 allocation/release counts and the maximum combined live byte count. The peak
 includes old and replacement resources that coexist during growth; adding
 separate subsystem estimates would miss this overlap.

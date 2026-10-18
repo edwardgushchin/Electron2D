@@ -7,8 +7,7 @@ internal static class GPUPhysicsSolverStoreTests
 {
     internal static void Run()
     {
-        VerifyShortColorBudget();
-        VerifyGrowingColorBudget();
+        RunColorScheduling();
         PhysicsMassPerformance.VerifyDirtyBufferInitialization();
         VerifyImpact();
         VerifySpeculativeImpact();
@@ -28,9 +27,63 @@ internal static class GPUPhysicsSolverStoreTests
         VerifyResidency(256);
     }
 
+    internal static void RunColorScheduling()
+    {
+        VerifyRetainedColorSchedule();
+        VerifyShortColorBudget();
+        VerifyGrowingColorBudget();
+    }
+
     private static Body Add(GPUPhysicsBodyStore store, Vector2 position = default, Vector2 velocity = default,
         Mode mode = Mode.Rigid, float mass = 1, float inertia = 0, float angular = 0) =>
         store.Add(new(mode, position, 0, velocity, angular, mass, inertia, CenterOfMass: Vector2.Zero, CanSleep: false));
+
+    private static void VerifyRetainedColorSchedule()
+    {
+        using var store = new GPUPhysicsBodyStore(); using var circle = new CircleShape { Radius = 1 };
+        var a = Add(store, velocity: new(12, 0)); var b = Add(store, new(10, 0), new(12, 0));
+        store.AddShape(a, circle, friction: 0); store.AddShape(b, circle, friction: 0);
+        var supports = new Body[4];
+        for (var i = 0; i < supports.Length; i++)
+        {
+            supports[i] = Add(store, new(i < 2 ? 2 : 12, 0), mode: Mode.Static);
+            store.AddShape(supports[i], circle, friction: 0);
+        }
+        store.SolveConstraints(1f / 60, iterations: 1, margin: 0);
+        Check(store.ContactPointCount == 4 && store.ContactColorCount == 2, "Two independent support pairs require two colors for all four rows");
+        store.SolveConstraints(1f / 60, iterations: 1, margin: 0);
+        Console.WriteLine($"Resident retained colors: {store.ContactPointCount} rows, {store.ContactColorCount} colors, {store.ContactColorRounds} new proposal rounds.");
+        Check(store.ContactColorRounds == 0 && store.ContactColorReuseCount == 1,
+            "Retained contact colors are validated against the current graph without new proposals");
+        store.SetPose(b, new(100, 0), 0);
+        for (var i = 2; i < supports.Length; i++) store.SetPose(supports[i], new(2, 0), 0);
+        store.SetVelocity(a, new(12, 0), 0);
+        store.SolveConstraints(1f / 60, iterations: 1, margin: 0);
+        Check(store.ContactPointCount == 4 && store.ContactColorCount == 4 && store.ContactColorRounds == 4 && store.ContactColorFallbacks == 0,
+            "A changed four-row graph rejects the conflicting two-color cache and completely recolors every row");
+        Span<GPUPhysicsBodyStore.Snapshot> states = stackalloc GPUPhysicsBodyStore.Snapshot[2]; store.Read([a, b], states);
+        Near(states[0].Velocity.X, 0, .002f, "Rebuilt colors retain complete static support after topology changes");
+        Near(states[1].Velocity.X, 0, .002f, "Moving the other supported body preserves its stopped physical state");
+        for (var i = 0; i < 128; i++) store.SolveConstraints(1f / 60, iterations: 1, margin: 0);
+        GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers();
+        var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+        var reused = store.ContactColorReuseCount;
+        for (var i = 0; i < 128; i++) store.SolveConstraints(1f / 60, iterations: 1, margin: 0);
+        Check(GC.GetAllocatedBytesForCurrentThread() == owner && GC.GetTotalAllocatedBytes(true) == all,
+            "Validated retained contact schedules allocate zero owner/all-thread managed bytes");
+        Check(store.ContactColorCount == 4 && store.ContactColorRounds == 0 && store.ContactColorFallbacks == 0 && store.ContactColorReuseCount - reused == 128,
+            "Repeated cache validation retains all coupled rows without new proposals or fallback");
+        Console.WriteLine("Resident retained colors: same-size topology replacement rebuilds complete support; 128 warmed solves allocate 0/0 owner/all-thread bytes.");
+        store.SetPose(supports[3], new(1000, 0), 0); store.SetVelocity(a, new(12, 0), 0);
+        store.SolveConstraints(1f / 60, iterations: 1, margin: 0);
+        Check(store.ContactPointCount == 3 && store.ContactColorCount >= 3 && store.ContactColorCount <= 4 && store.ContactColorRounds == 0 && store.ContactColorFallbacks == 0,
+            "A changed-size graph reuses the three remaining keyed colors without relying on their row indices");
+        store.Read([a, b], states); Near(states[0].Velocity.X, 0, .002f, "A reused contact subset preserves complete physical support");
+        Check(store.ContactColorCacheStorageBytes > 0, "The retained schedule reports its device cache capacity");
+        store.Dispose(); var memory = store.BufferMemory;
+        Check(memory.DeviceBytes == 0 && memory.TransferBytes == 0 && memory.Allocations == memory.Releases,
+            "Retiring a cached schedule releases every tracked device/transfer allocation");
+    }
 
     private static void VerifyShortColorBudget()
     {

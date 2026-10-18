@@ -1,6 +1,6 @@
 # Device-local GPU replay checkpoints
 
-Last updated: 2026-10-10
+Last updated: 2026-10-18
 
 ## Executing scope
 
@@ -43,6 +43,28 @@ hash against the current allocation. A restored one-way table retains its captur
 lookup size until the next episode publication, even if a later frame enlarged the
 live allocation. Sleep clocks, connected-wake graph, idle-skip metadata and pending
 force consumption are restored together.
+
+Contact-color scheduling keys, colors and their device hash table are retained
+when a valid multi-color cache exists. Record copies use 48 bytes per captured
+contact row; the table uses four bytes per captured logical lookup slot. These
+copies join the same capture/restore command and fence, without a CPU contact
+mirror or physical readback. Lookup retains the captured table size even when a
+later branch enlarged the live allocation. The next completed color schedule
+publishes a table for the current capacity. Cumulative work counters do not rewind.
+This is local numerical continuation data, not a portable network payload.
+
+The first keyed-cache regression failed the existing eight-box 40-tick replay
+bound: one body's position differed by about .023 against the unchanged .02 limit.
+Retaining the scheduling cache addresses the discarded-future seed state. A new
+focused growth fixture captures four rows, grows a discarded branch to 100 rows,
+then requires restored cache reuse inside the larger live buffers. The focused profile passes in 9.790839 seconds, including this growth
+case and the unchanged original contact/joint/CCD replay bounds. Warm capture and
+restore retain strict 0 owner/all-thread managed bytes, no new native buffers and
+the original two copy submissions; the disjoint single-color warm fixture has no
+valid multi-color cache to copy. The final fourteen-profile focused/related
+regression also passes on the checkpoint-retaining source payload, including the
+complete resident solver and transient/dense contacts. The complete repository
+suite and target hardware/window gates retain independent acceptance.
 
 Spatial/query caches are invalidated and rebuilt from restored authoritative data.
 The changed-body consumer is reset so its next read republishes all live bodies;

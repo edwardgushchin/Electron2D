@@ -4,6 +4,8 @@
 
 Last updated: 2026-10-18
 
+[Validated color reuse](../components/gpu-contact-colors.md#validated-device-color-cache-2026-10-18) seeds schedules through retained device contact keys, then checks every current row and dynamic endpoint. Any miss/conflict rebuilds the complete schedule. `ContactColorReuseCount` counts accepted seeds; `ContactColorCacheStorageBytes` reports 48-byte record and four-byte table-slot capacity. This adds no CPU contact mirror, portable payload or cache-specific readback. Local GPU checkpoints retain this scheduling cache and its logical lookup size for bounded replay. A reused subset can leave empty color ranges; `ContactColorCount` is their exclusive upper index, and only populated ranges solve. `ContactColorRounds` is zero when validation needs no productive proposal round. Exact native/driver overhead and final hardware acceptance remain outside these counters.
+
 [Contact proposal budgets](../components/gpu-contact-colors.md#row-bounded-proposal-batches-2026-10-18) use the current row count to bound initial and extended schedule batches. `ContactColorProposalRoundCount` is a cumulative internal count of encoded complete proposal rounds, including device-empty padding. Reading it creates no GPU work, waits or state mirror; it is diagnostic metadata, not checkpoint state. Color validation, configured solver sweeps and full overflow response remain unchanged.
 
 [Angular normal/friction coupling](../components/gpu-contact-solver.md#angular-normalfriction-coupling-2026-10-16) now preserves oblique rotating-ray response through colored and high-degree resident contacts, without increasing solver sweeps or the CCD budget. The public reset/full-frame fixture checks actual motion and reported impulse balance.

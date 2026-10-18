@@ -53,7 +53,7 @@ Capture prepares pending shape/pose/joint authoring, then saves the kernel and c
 state without advancing a physics tick. Each point owns its saved data and reuses
 high-water capacities on recapture. CPU data uses explicit typed copies; GPU solver
 history uses device-local copies. Common capture retains already published host
-poses and logical observer contacts. The selected GPU checkpoint retains its published reports and qualified caches; it does not request a new full
+poses and logical observer contacts. The selected GPU checkpoint retains its published reports, contact-color scheduling keys/table/lookup size and qualified caches; it does not request a new full
 GPU body-state readback. The kernel's command flushing and copy fence are still
 included in checkpoint timing.
 

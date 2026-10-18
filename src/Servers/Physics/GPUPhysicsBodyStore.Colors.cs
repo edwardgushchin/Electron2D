@@ -6,6 +6,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
 {
     private RenderHandle? _colorPipeline, _coloredSolvePipeline, _contactColors, _colorOwners, _colorStatus, _colorDownload, _colorBuckets, _colorOrder;
     private int _colorCapacity, _colorOwnerCapacity, _colorOrderCapacity;
+    private int _retainedColorPointCount;
+    private RenderHandle? _colorCacheRecords, _colorCacheTable;
+    private int _colorCacheCapacity, _colorCacheTableCapacity, _colorCacheReadCapacity;
     private readonly int[] _colorCounts = new int[32], _colorStarts = new int[32];
     private RenderHandle? _packSolverPipeline, _packedConstraints, _packedImpulses, _solverBodies;
     private int _packedConstraintCapacity, _packedImpulseCapacity, _solverBodyCapacity;
@@ -18,6 +21,10 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     internal long ContactColorFallbacks { get; private set; }
     /// <summary>Counts encoded proposal rounds, including rounds whose device work exits after completion.</summary>
     internal long ContactColorProposalRoundCount { get; private set; }
+    /// <summary>Counts retained schedules validated against current constraints without new proposal work.</summary>
+    internal long ContactColorReuseCount { get; private set; }
+    /// <summary>Gets retained device record/table capacity for derived contact-color lookup.</summary>
+    internal long ContactColorCacheStorageBytes => (long)_colorCacheCapacity * 48 + (long)_colorCacheTableCapacity * 4;
     /// <summary>Creates schedule resources before any solver commands are recorded.</summary>
     private void PrepareContactColors()
     {
@@ -26,6 +33,10 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         Grow(ref _contactColors, ref _colorCapacity, ContactPointCount, 4, false);
         Grow(ref _colorOwners, ref _colorOwnerCapacity, _highWater, 8, false);
         Grow(ref _colorOrder, ref _colorOrderCapacity, ContactPointCount, 4, false);
+        var records = _colorCacheCapacity; var table = _colorCacheTableCapacity;
+        Grow(ref _colorCacheRecords, ref _colorCacheCapacity, ContactPointCount, 48, false);
+        Grow(ref _colorCacheTable, ref _colorCacheTableCapacity, checked(2 * ContactPointCount), 4, false);
+        if (records != _colorCacheCapacity || table != _colorCacheTableCapacity) _retainedColorPointCount = 0;
         _colorBuckets ??= Buffer(384); _colorStatus ??= Buffer(16); _colorDownload ??= Transfer(144, SDL.GPUTransferBufferUsage.Download);
     }
     private int BuildContactColors(ref nint command)
@@ -36,7 +47,17 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         var copy = SDL.BeginGPUCopyPass(command);
         if (copy == 0) throw GPUPhysicsDevice.Failure("begin contact coloring reset");
         UploadSpatial(copy, _colorStatus!, 0, 16); SDL.EndGPUCopyPass(copy);
-        ColorPass(command, 0, _highWater, 0); ColorPass(command, 1, ContactPointCount, 0); ColorPass(command, 7, 32, 0);
+        var retained = _retainedColorPointCount != 0 && ContactPointCount > 1;
+        ColorPass(command, 0, _highWater, 0);
+        if (retained)
+        {
+            ColorPass(command, 12, ContactPointCount, 0);
+            ColorPass(command, 6, ContactPointCount, 0, validateOnly: true);
+            ColorPass(command, 10, Math.Max(_highWater, ContactPointCount), 0);
+            ColorPass(command, 11, 1, 0);
+        }
+        else ColorPass(command, 1, ContactPointCount, 0);
+        ColorPass(command, 7, 32, 0);
         // shortcut: 32 colors/64 rounds use complete Jacobi on overflow; enlarge the schedule if high-degree workloads need colored convergence.
         // An unfinished round assigns at least one row or selects the complete fallback.
         var budget = (uint)Math.Min(64, ContactPointCount);
@@ -81,21 +102,31 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             if (!incomplete) { if (fallback) ContactColorFallbacks++; break; }
             limit = Math.Min(budget, limit + 16);
         }
+        // A single-color graph already completes in one productive proposal round.
+        _retainedColorPointCount = ContactColorCount > 1 ? ContactPointCount : 0;
+        if (retained && ContactColorCount > 0 && ContactColorRounds == 0) ContactColorReuseCount++;
+        if (_retainedColorPointCount > 0)
+        {
+            _colorCacheReadCapacity = _colorCacheTableCapacity;
+            ColorPass(command, 13, _colorCacheTableCapacity, 0);
+            ColorPass(command, 14, ContactPointCount, 0);
+        }
         UploadBytes += 16;
         _failed = false; return ContactColorCount;
     }
-    private void ColorPass(nint command, uint stage, int count, uint round)
+    private void ColorPass(nint command, uint stage, int count, uint round, bool validateOnly = false)
     {
-        var outputs = stackalloc SDL.GPUStorageBufferReadWriteBinding[5]
+        var outputs = stackalloc SDL.GPUStorageBufferReadWriteBinding[7]
         {
             new() { Buffer = _contactColors!.DangerousGetHandle() }, new() { Buffer = _colorOwners!.DangerousGetHandle() }, new() { Buffer = _colorStatus!.DangerousGetHandle() },
-            new() { Buffer = _colorBuckets!.DangerousGetHandle() }, new() { Buffer = _colorOrder!.DangerousGetHandle() }
+            new() { Buffer = _colorBuckets!.DangerousGetHandle() }, new() { Buffer = _colorOrder!.DangerousGetHandle() },
+            new() { Buffer = _colorCacheRecords!.DangerousGetHandle() }, new() { Buffer = _colorCacheTable!.DangerousGetHandle() }
         };
-        var inputs = stackalloc nint[2] { _bodies!.DangerousGetHandle(), _constraintsGPU!.DangerousGetHandle() };
-        var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, 5);
+        var inputs = stackalloc nint[3] { _bodies!.DangerousGetHandle(), _constraintsGPU!.DangerousGetHandle(), _contactsGPU!.DangerousGetHandle() };
+        var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, 7);
         if (compute == 0) throw GPUPhysicsDevice.Failure("begin contact coloring");
-        SDL.BindGPUComputePipeline(compute, _colorPipeline!.DangerousGetHandle()); SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 2);
-        var settings = stackalloc uint[8] { stage, (uint)count, (uint)_highWater, (uint)ContactPointCount, round, 0, 0, 0 };
+        SDL.BindGPUComputePipeline(compute, _colorPipeline!.DangerousGetHandle()); SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 3);
+        var settings = stackalloc uint[8] { stage, (uint)count, (uint)_highWater, (uint)ContactPointCount, round, validateOnly ? 1u : 0u, (uint)_retainedColorPointCount, (uint)(stage == 12 ? _colorCacheReadCapacity : _colorCacheTableCapacity) };
         SDL.PushGPUComputeUniformData(command, 0, (nint)settings, 32); SDL.DispatchGPUCompute(compute, ((uint)count + 63) / 64, 1, 1); SDL.EndGPUComputePass(compute); UniformBytes += 32;
     }
     private void ColoredSolve(nint command, SolverUniforms settings, int color)
@@ -142,6 +173,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private void DisposeColors()
     {
         _packSolverPipeline?.Dispose(); _packedConstraints?.Dispose(); _packedImpulses?.Dispose(); _solverBodies?.Dispose();
+        _colorCacheRecords?.Dispose(); _colorCacheTable?.Dispose();
         _colorPipeline?.Dispose(); _coloredSolvePipeline?.Dispose(); _contactColors?.Dispose(); _colorOwners?.Dispose(); _colorStatus?.Dispose(); _colorDownload?.Dispose(); _colorBuckets?.Dispose(); _colorOrder?.Dispose();
     }
 }

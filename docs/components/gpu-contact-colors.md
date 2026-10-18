@@ -2,6 +2,169 @@
 
 Last updated: 2026-10-18
 
+## Validated device color cache, 2026-10-18
+
+Contact schedules now retain a device-only key table. Each record contains the
+shape-pair identity/generations, complete contact features and assigned color;
+lookup follows current contact keys rather than previous append indices. The
+current constraints and dynamic endpoints still validate every proposed color.
+Missing keys, invalid colors or endpoint conflicts reset the whole
+candidate and run the complete bounded proposal algorithm. All current rows,
+configured solver sweeps and the full high-degree Jacobi response remain.
+
+The cache is derived scheduling data and contains no impulses, poses or observer
+history. A local GPU checkpoint retains its records, table and logical lookup size
+to preserve the bounded continuation of iterative solving; portable wire payloads
+do not contain it. Restoring or editing a world still validates current keys and
+endpoints before reuse. A single-row graph keeps the shorter cold path. A prior single-color result
+does not seed the cache because it already completes in one productive round.
+A reused subset may have empty color ranges; ContactColorCount is the exclusive
+upper color index, and only populated ranges dispatch physical constraints.
+
+Device capacity is 48 bytes per rounded contact record plus four bytes per rounded
+table slot; the table reserves at least twice the contact count, with the existing
+64-slot minimum/power-of-two growth. Buffer replacement discards the derived cache.
+The same tracked resource owner releases both buffers. ContactColorCacheStorageBytes
+reports this logical capacity, excluding native/driver overhead. ContactColorReuseCount
+and ContactColorProposalRoundCount are cumulative diagnostic counts, not simulation
+or checkpoint state. PhysicsMassPerformance reports them as ColorReuses,
+EncodedColorProposalRounds and ColorCacheStorageBytes over the full session,
+including warmup; ordinary transfer/timing/allocation fields retain their measured
+interval scope.
+
+Lookup and validation use the existing schedule completion check. Saving the next
+table joins the ordinary remaining solver commands; there is no separate cache
+submission/readback or CPU contact mirror. A miss after a previously reused graph
+can extend the ordinary four-round adaptive batch and add a completion check. The
+full workload counters include those waits and commands. Even a successful reuse
+still records the bounded proposal commands, whose device bodies exit immediately;
+ContactColorRounds is zero when no productive new proposal round was needed.
+
+A RED four-row control rebuilt two colors with two productive rounds. The keyed
+path reuses it with zero productive rounds, completely rebuilds a changed four-row
+shared endpoint graph, and reuses a three-row subset by key. The unchanged
+single-row control retains 1/1 encoded rounds and 2848/1872 uniform bytes. The
+four-row warmed bracket measures strict 0 owner/all-thread managed bytes. A separate final fixture check also confirms zero tracked device/transfer bytes
+and equal allocation/release counts after explicit store retirement.
+
+An initial cache keyed only by append indices passed the small controls but reused
+no schedule in the full 4096-body scene. It is rejected: median full step was
+68.1707 ms versus 67.2999 ms in the preceding frozen baseline. The keyed candidate
+instead records 1838 reuses over 480 four-substep ticks, 917504 bytes of cache
+capacity and a 56.6798-ms median full step, while retaining the original geometry,
+energy, population and strict zero managed-byte assertions. These are software
+Vulkan development observations; the intervening independent input-only commit
+and exact frozen sources are recorded separately. The 65536-body keyed candidate records 1224 reuses, 14680064 bytes of cache
+capacity, a 648.6508-ms median and strict 0/0 managed bytes; maximum penetration
+remains 0.300035 within the unchanged 0.601 scene-unit bound. CPU medians in that
+same frozen candidate payload are 12.2080/262.7678 ms for 4096/65536 bodies, so
+software GPU remains slower. Final regression and target-hardware/window/FPS gates
+remain separate. Evidence:
+bin/physics-matched-mass/2026-10-18/, including baseline-validation.json,
+candidate-index-rejection.json and the source/PDB/payload manifests.
+
+### Full backend software workload
+
+The final four workload profiles use one frozen Release payload on 9a6c5f22 plus
+the keyed-color implementation and checkpoint-cache retention fix. Both backends
+retain the same deterministic lattice, mass-one radius-four circles, three walls,
+gravity 980, damping .05, friction .3, bounce zero, 1/60-second ticks, four
+substeps and sixteen sweeps. All bodies remain awake; each profile runs 240
+warmup and 240 measured ticks. CPU uses the existing up-to-four-worker policy;
+private lavapipe uses four LLVM workers. Tiered compilation is disabled.
+Measurements are sequential and headless, excluding setup, final invariant
+inspection, serialization and disposal.
+
+| Backend / bodies | Mean | P50 | P95 | P99 | Max |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| CPU / 4096 | 13.3385 | 12.8809 | 15.9504 | 18.0387 | 20.5316 |
+| GPU / 4096 | 58.8325 | 57.8289 | 63.9172 | 66.4795 | 84.8088 |
+| CPU / 65536 | 263.7213 | 262.5240 | 273.6732 | 289.5032 | 300.1793 |
+| GPU / 65536 | 793.5437 | 753.9595 | 912.6568 | 1607.6988 | 2826.3070 |
+
+Times are milliseconds. Every profile retains all requested active bodies, finite
+enclosed state, energy below 102% of initial energy, maximum penetration below
+twice the .3 allowed penetration plus .001, and strict 0 owner/all-thread managed
+bytes over measured intervals. Candidate-pair counts are different backend work,
+not a common count of touching contacts. The complete timing/wait distributions
+and eight phase means remain in the raw reports.
+
+| Backend / bodies | Mean fence wait, ms | Upload B/tick | Readback B/tick | Uniform B/tick | Submissions/tick |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| CPU / 4096 | 0.0000 | 0.00 | 0.00 | 0.00 | 0.00 |
+| GPU / 4096 | 56.9531 | 232.00 | 752.00 | 57320.00 | 17.00 |
+| CPU / 65536 | 0.0000 | 0.00 | 0.00 | 0.00 | 0.00 |
+| GPU / 65536 | 761.8551 | 232.00 | 783.80 | 64165.60 | 17.22 |
+
+Software GPU remains slower than CPU. The final 65536-body median is also about
+3% above the preceding 732.0492-ms baseline, despite fewer productive coloring
+rounds; the repeated software observations do not establish a stable whole-step
+gain. Before/after observations at the preceding
+baseline, rejected append-index experiment and pre-retention candidate have
+separate source/payload records; they do not establish a controlled target-device
+speedup. Final workload validation: verified-mass-validation.json, SHA-256
+dd4607a9af6919ddd927a7c6944516009cff39c970117b83489e8ea215085ed2.
+The four runs share the source/PDB/payload set in source-proof-replay.json and
+payloads-replay.json. The pre-retention candidate has its own keyed2-validation.json;
+the original baseline has baseline-validation.json. Complete solver/network
+acceptance and real Wayland window/FPS/target-GPU results retain separate gates.
+
+### Final solver regression
+
+The checkpoint-retaining sources complete the resident-solver profile in
+874.273728 seconds. It executes the original 4096/65536-body loaded pits,
+all three storage layouts, oblique friction, rotating stacks, directed rays,
+signed materials, capped coupled joints and complete 64/257-support overflow.
+The current four-row cache/rebuild/subset and single-row/growth controls run in
+that same profile. This functional run overlaps other builds/checks and retains
+its measured zero owner-thread managed-byte gate; its timings are not a matched
+performance comparison. Evidence: verified-resident-solver/check.json and
+runner.log under bin/physics-matched-mass/2026-10-18/.
+All thirteen related CPU/shared-GPU, CCD, joint, field, report, portable/local/device
+checkpoint, sleep, transient/dense contact and one-way profiles also pass on the
+same frozen root payload. The fourteen-profile validation is
+verified-root-validation.json, SHA-256
+26c14211c185fe31cf190469da5f2543ea9e13b36bd20dfa60077688ee9e9f16.
+This is a focused/related regression, not the complete repository suite.
+
+All sixteen fresh separate-process network profiles on the same 9a6c5f22-based
+frozen sources pass: instrumented/public managed/strict NativeAOT CPU/GPU clients,
+owner/separate lanes and four phase-paced checks. The original 900 authority ticks,
+late join at 310, adverse delivery, correction/replay, lifecycle, joints, sleep,
+confirmed events and prepared/applied handoff assertions remain. All 48 simulation
+participants retain positive warm samples and strict zero owner/all-thread managed
+bytes: 17612 warm steps and 57581 warm replay steps in total. The 24 cost reports
+retain twenty phase regions, exact byte/submission partitions and bounded wall
+samples. Validation: verified-network-validation.json, SHA-256
+57e374651cc493d32c94b5487ea583d2ecc1270177194e5f670a509fe57dffea. Eight Release PDB/source audits cover the frozen 3049 authored
+documents and 336 payload files; four manifests bind all 32 physics programs to
+current source fingerprints and embedded runtime bytes.
+
+
+### Combined main regression
+
+While these frozen checks ran, the independent low-processor rendering change
+78a91158 entered main. Its source and documentation are preserved. The combined
+runtime, public example and strict NativeAOT example are rebuilt separately;
+six exact PDB/source audits cover 3050 authored documents and 271 payload files.
+Three new shader manifests bind the unchanged physics source fingerprints to
+all 32 embedded programs per runtime. Current-main color-cache, device-checkpoint
+and shared CPU/GPU public-contract profiles all pass. Validation:
+merged-root-validation.json, SHA-256
+c647d6769d37bd563473f08202488f50182ce0d4d4e6237cd617feaaea174c80.
+The nine formatting/Release/API/wiki checks also pass on this combined version.
+Eight fresh public managed/strict NativeAOT network profiles also pass on this
+combined runtime: CPU/GPU clients in both owner/separate lanes, with all original
+900-tick checks and strict zero warm owner/all-thread managed bytes. The 24
+simulation processes contribute 9057 warm steps and 12857 warm replay steps.
+Validation: merged-network-validation.json, SHA-256
+b68b1847b807b62ad7f965531ce5dfb58fcc55d1141863d0fb767f50ed1ab3df.
+
+The mass timings and complete fourteen/sixteen-profile cohorts above remain
+observations of their explicitly frozen 9a6c5f22-based sources, not a rerun of all
+those workloads on the later rendering change. Exact old source bytes displaced
+by that independent merge are retained and checked against their original PDB hashes.
+
 ## Row-bounded proposal batches, 2026-10-18
 
 The encoded proposal budget now follows the current contact-row count. A one-row
@@ -111,8 +274,9 @@ status fence, measured by the complete scene benchmark. Its JSON records final
 color/round counts and cumulative fallbacks separately from frame timing.
 
 An unfinished graph continues without resetting or physically replaying it.
-Derived colors, owners, buckets and order are rebuilt from current constraints and
-are not physical checkpoint state. Generation, geometry and contact-history guards
+Derived colors are validated or rebuilt from current constraints; owners, buckets
+and order are rebuilt. Local checkpoints retain the keyed scheduling cache for
+bounded replay; portable snapshots keep it implementation-local. Generation, geometry and contact-history guards
 remain in preparation. Owner-thread and failed-world lifetimes are unchanged.
 
 ## Storage and synchronization

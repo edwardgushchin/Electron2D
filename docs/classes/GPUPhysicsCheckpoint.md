@@ -1,6 +1,6 @@
 # GPUPhysicsBodyStore.Checkpoint
 
-Last updated: 2026-10-10
+Last updated: 2026-10-18
 
 **Declaration:** `internal sealed class GPUPhysicsBodyStore.Checkpoint : IDisposable`
 
@@ -17,7 +17,7 @@ or public game-facing replay API.
 | Operation | Contract |
 | --- | --- |
 | `Capture()` | Replace saved device/metadata state without advancing time; flush queued body edits and prepare dirty authoring. Retain storage capacity. A failed recapture invalidates the saved point. |
-| `Restore()` | Validate configuration before mutation, then restore device state and sleep/contact/joint histories. Discard pending future body commands, rebuild derived caches and republish live body state. A later copy failure makes the source unusable except for cleanup. |
+| `Restore()` | Validate configuration before mutation, then restore device state and sleep/contact/joint histories. Retain contact-color keys/table and their captured lookup size, discard pending future body commands, rebuild spatial/query caches and republish live body state. A later copy failure makes the source unusable except for cleanup. |
 | `DeviceCapacityBytes` | Reserved checkpoint GPU buffer bytes, independent of live-world storage. |
 | `ManagedCapacityBytes` | Logical reserved authored/configuration array payload, excluding object headers and live simulation data. |
 | `Dispose()` | Idempotently release buffers and authored arrays and remove the source reference; an executing copy or foreign live owner thread rejects. Source disposal also disposes its checkpoints. |

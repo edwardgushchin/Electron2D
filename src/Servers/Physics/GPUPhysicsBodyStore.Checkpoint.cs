@@ -23,7 +23,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     {
         private GPUPhysicsBodyStore? _store;
         private GPUPhysicsBodyStore Store => _store ?? throw new ObjectDisposedException(nameof(Checkpoint));
-        private readonly Block[] _blocks = new Block[19];
+        private readonly Block[] _blocks = new Block[21];
         private Slot[] _slots = [];
         private ShapeSlot[] _shapes = [];
         private GeometryState[] _geometry = [];
@@ -38,6 +38,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         {
             internal int Bodies, Shapes, Joints, Exceptions, PreviousPoints, SleepBodies, SleepEdges, Active, PublishedActive, Islands;
             internal int OneWay, OneWayTable, Reports, ReportBodies, Contacts, Pairs, Warm;
+            internal int ColorPoints, ColorTable;
             internal long BodyVersion, ShapeVersion, FieldVersion, SleepBodyVersion, SleepShapeVersion, SleepGeometryEpoch, SteppedFields;
             internal PhysicsSleepSettings SleepSettings;
             internal PhysicsContactSettings ContactSettings;
@@ -88,6 +89,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 Contacts = s.ContactPointCount,
                 Pairs = s.PairCount,
                 Warm = s.WarmStartedPointCount,
+                ColorPoints = s._retainedColorPointCount,
+                ColorTable = s._colorCacheReadCapacity,
                 BodyVersion = s._bodyVersion,
                 ShapeVersion = s._shapeVersion,
                 FieldVersion = s._fieldVersion,
@@ -157,6 +160,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 s._reportReady = _state.ReportReady; s._reportInitialize = _state.ReportInitialize; s._reportOpen = false;
                 s._fieldEditsDirty = _state.FieldDirty; s._steppedDefaults = _state.Defaults; s._steppedFieldVersion = _state.SteppedFields;
                 s.ContactPointCount = _state.Contacts; s.PairCount = _state.Pairs; s.WarmStartedPointCount = _state.Warm;
+                s._retainedColorPointCount = _state.ColorPoints; s._colorCacheReadCapacity = _state.ColorTable;
                 s._pairBodyVersion = s._pairShapeVersion = s._boundsBodyVersion = s._boundsShapeVersion = s._contactPairVersion = -1;
                 s._treeTopologyDirty = true; s._refitsSinceSort = 0;
                 // A consumer may still hold poses from the discarded future.
@@ -260,6 +264,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         16 => (_constraintImpulsesGPU, _constraintImpulseCapacity, 32),
         17 => (_contactHeadsGPU, _contactHeadCapacity, 8),
         18 => (_pairsGPU, _pairCapacity, 16),
+        19 => (_colorCacheRecords, _retainedColorPointCount, 48),
+        20 => (_colorCacheTable, _retainedColorPointCount == 0 ? 0 : _colorCacheReadCapacity, 4),
         _ => throw new ArgumentOutOfRangeException(nameof(index))
     };
     private void PrepareCheckpointBuffer(int index, int count)
@@ -282,6 +288,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             case 16: Grow(ref _constraintImpulsesGPU, ref _constraintImpulseCapacity, count, 32, false); break;
             case 17: Grow(ref _contactHeadsGPU, ref _contactHeadCapacity, count, 8, false); break;
             case 18: Grow(ref _pairsGPU, ref _pairCapacity, count, 16, false); break;
+            case 19: Grow(ref _colorCacheRecords, ref _colorCacheCapacity, count, 48, false); break;
+            case 20: Grow(ref _colorCacheTable, ref _colorCacheTableCapacity, count, 4, false); break;
         }
     }
 }

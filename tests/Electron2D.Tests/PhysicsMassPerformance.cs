@@ -268,6 +268,9 @@ internal static class PhysicsMassPerformance
                 ContactColors = _data.GPUStore?.ContactColorCount,
                 ColorRounds = _data.GPUStore?.ContactColorRounds,
                 ColorFallbacks = _data.GPUStore?.ContactColorFallbacks,
+                ColorReuses = _data.GPUStore?.ContactColorReuseCount,
+                ColorCacheStorageBytes = _data.GPUStore?.ContactColorCacheStorageBytes,
+                EncodedColorProposalRounds = _data.GPUStore?.ContactColorProposalRoundCount,
                 PackedContacts = _data.GPUStore?.PackColoredContacts,
                 PackedSolverBodies = _data.GPUStore is { } store ? (bool?)(store.PackColoredContacts && store.PackSolverBodyState) : null,
                 PackedSolverStorageBytes = _data.GPUStore?.PackedSolverStorageBytes
