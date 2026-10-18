@@ -2418,6 +2418,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.BlitBlendMode",
+    "kind": "type",
+    "declaringType": "Electron2D.BlitBlendMode",
+    "name": "BlitBlendMode",
+    "signature": "public enum Electron2D.BlitBlendMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.BlitMaterial",
+    "kind": "type",
+    "declaringType": "Electron2D.BlitMaterial",
+    "name": "BlitMaterial",
+    "signature": "public sealed class Electron2D.BlitMaterial",
+    "visibility": "public",
+    "baseType": "Electron2D.Material",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Bone",
     "kind": "type",
     "declaringType": "Electron2D.Bone",
@@ -3944,6 +3977,39 @@
     "visibility": "public",
     "baseType": "Electron2D.DragPayload",
     "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.DrawableTexture",
+    "kind": "type",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "DrawableTexture",
+    "signature": "public sealed class Electron2D.DrawableTexture",
+    "visibility": "public",
+    "baseType": "Electron2D.Texture",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.DrawableTexture.DrawableFormat",
+    "kind": "type",
+    "declaringType": "Electron2D.DrawableTexture.DrawableFormat",
+    "name": "DrawableFormat",
+    "signature": "public enum Electron2D.DrawableTexture.DrawableFormat",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
     "parameters": null,
     "returnType": null,
     "value": null
@@ -10116,6 +10182,24 @@
     "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
     "name": "GlobalShaderParameterType",
     "signature": "public enum Electron2D.RenderingServer.GlobalShaderParameterType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RenderingServer.TextureDrawableFormat",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingServer.TextureDrawableFormat",
+    "name": "TextureDrawableFormat",
+    "signature": "public enum Electron2D.RenderingServer.TextureDrawableFormat",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -17096,6 +17180,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.BlitMaterial..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.BlitMaterial",
+    "name": ".ctor",
+    "signature": "public BlitMaterial()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Bone..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Bone",
@@ -18085,6 +18182,19 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.DrawableTexture..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": ".ctor",
+    "signature": "public DrawableTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -26734,6 +26844,71 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.BlitBlendMode.Add()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BlitBlendMode",
+    "name": "Add",
+    "signature": "public const Electron2D.BlitBlendMode Add = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BlitBlendMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.BlitBlendMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BlitBlendMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.BlitBlendMode Disabled = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BlitBlendMode",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.BlitBlendMode.Mix()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BlitBlendMode",
+    "name": "Mix",
+    "signature": "public const Electron2D.BlitBlendMode Mix = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BlitBlendMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.BlitBlendMode.Mul()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BlitBlendMode",
+    "name": "Mul",
+    "signature": "public const Electron2D.BlitBlendMode Mul = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BlitBlendMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.BlitBlendMode.Sub()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BlitBlendMode",
+    "name": "Sub",
+    "signature": "public const Electron2D.BlitBlendMode Sub = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BlitBlendMode",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.BoxContainer.AlignmentMode.Begin()",
     "kind": "enumValue",
     "declaringType": "Electron2D.BoxContainer.AlignmentMode",
@@ -29553,6 +29728,58 @@
     "parameters": [],
     "returnType": "Electron2D.DomainWarpType",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.DrawableTexture.DrawableFormat.RGBA8()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DrawableTexture.DrawableFormat",
+    "name": "RGBA8",
+    "signature": "public const Electron2D.DrawableTexture.DrawableFormat RGBA8 = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DrawableTexture.DrawableFormat",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.DrawableTexture.DrawableFormat.RGBA8SRGB()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DrawableTexture.DrawableFormat",
+    "name": "RGBA8SRGB",
+    "signature": "public const Electron2D.DrawableTexture.DrawableFormat RGBA8SRGB = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DrawableTexture.DrawableFormat",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.DrawableTexture.DrawableFormat.RGBAF()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DrawableTexture.DrawableFormat",
+    "name": "RGBAF",
+    "signature": "public const Electron2D.DrawableTexture.DrawableFormat RGBAF = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DrawableTexture.DrawableFormat",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.DrawableTexture.DrawableFormat.RGBAH()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DrawableTexture.DrawableFormat",
+    "name": "RGBAH",
+    "signature": "public const Electron2D.DrawableTexture.DrawableFormat RGBAH = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DrawableTexture.DrawableFormat",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.ENetCompressionMode.FASTLZ()",
@@ -46052,6 +46279,58 @@
     "value": "16"
   },
   {
+    "id": "enumValue:Electron2D.RenderingServer.TextureDrawableFormat.RGBA8()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.TextureDrawableFormat",
+    "name": "RGBA8",
+    "signature": "public const Electron2D.RenderingServer.TextureDrawableFormat RGBA8 = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.TextureDrawableFormat",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.TextureDrawableFormat.RGBA8SRGB()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.TextureDrawableFormat",
+    "name": "RGBA8SRGB",
+    "signature": "public const Electron2D.RenderingServer.TextureDrawableFormat RGBA8SRGB = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.TextureDrawableFormat",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.TextureDrawableFormat.RGBAF()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.TextureDrawableFormat",
+    "name": "RGBAF",
+    "signature": "public const Electron2D.RenderingServer.TextureDrawableFormat RGBAF = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.TextureDrawableFormat",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.TextureDrawableFormat.RGBAH()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.TextureDrawableFormat",
+    "name": "RGBAH",
+    "signature": "public const Electron2D.RenderingServer.TextureDrawableFormat RGBAH = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.TextureDrawableFormat",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.Repeat.Mirror()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Repeat",
@@ -46934,6 +47213,19 @@
     "parameters": [],
     "returnType": "Electron2D.Shader.Mode",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Shader.Mode.TextureBlit()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Shader.Mode",
+    "name": "TextureBlit",
+    "signature": "public const Electron2D.Shader.Mode TextureBlit = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Shader.Mode",
+    "value": "5"
   },
   {
     "id": "enumValue:Electron2D.Side.Bottom()",
@@ -75338,6 +75630,71 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.BlitMaterial.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.BlitMaterial",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BlitMaterial.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.BlitMaterial",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BlitMaterial.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.BlitMaterial",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Bone.ApplyRest()",
     "kind": "method",
     "declaringType": "Electron2D.Bone",
@@ -90867,6 +91224,354 @@
         "default": "0"
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DrawableTexture.BlitRect(Electron2D.Rect2i,Electron2D.Texture,System.Nullable\u003CElectron2D.Color\u003E,System.Int32,Electron2D.Material)",
+    "kind": "method",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "BlitRect",
+    "signature": "public System.Void BlitRect(Electron2D.Rect2i rect, Electron2D.Texture source, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Int32 mipmap = 0, Electron2D.Material material = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2i",
+        "default": null
+      },
+      {
+        "name": "source",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "modulate",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "mipmap",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "material",
+        "type": "Electron2D.Material",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DrawableTexture.BlitRectMulti(Electron2D.Rect2i,System.ReadOnlySpan\u003CElectron2D.Texture\u003E,System.ReadOnlySpan\u003CElectron2D.DrawableTexture\u003E,System.Nullable\u003CElectron2D.Color\u003E,System.Int32,Electron2D.Material)",
+    "kind": "method",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "BlitRectMulti",
+    "signature": "public System.Void BlitRectMulti(Electron2D.Rect2i rect, System.ReadOnlySpan\u003CElectron2D.Texture\u003E sources, System.ReadOnlySpan\u003CElectron2D.DrawableTexture\u003E extraTargets, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Int32 mipmap = 0, Electron2D.Material material = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2i",
+        "default": null
+      },
+      {
+        "name": "sources",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Texture\u003E",
+        "default": null
+      },
+      {
+        "name": "extraTargets",
+        "type": "System.ReadOnlySpan\u003CElectron2D.DrawableTexture\u003E",
+        "default": null
+      },
+      {
+        "name": "modulate",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "mipmap",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "material",
+        "type": "Electron2D.Material",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DrawableTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DrawableTexture.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DrawableTexture.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DrawableTexture.GenerateMIPMaps()",
+    "kind": "method",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "GenerateMIPMaps",
+    "signature": "public System.Void GenerateMIPMaps()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DrawableTexture.GetHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "GetHeight",
+    "signature": "public override System.Int32 GetHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DrawableTexture.GetImage()",
+    "kind": "method",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "GetImage",
+    "signature": "public override Electron2D.Image GetImage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DrawableTexture.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DrawableTexture.GetUseMIPMaps()",
+    "kind": "method",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "GetUseMIPMaps",
+    "signature": "public System.Boolean GetUseMIPMaps()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DrawableTexture.GetWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "GetWidth",
+    "signature": "public override System.Int32 GetWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DrawableTexture.OnResetState()",
+    "kind": "method",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "OnResetState",
+    "signature": "protected override System.Void OnResetState()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DrawableTexture.SetFormat(Electron2D.DrawableTexture.DrawableFormat)",
+    "kind": "method",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "SetFormat",
+    "signature": "public System.Void SetFormat(Electron2D.DrawableTexture.DrawableFormat format)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "format",
+        "type": "Electron2D.DrawableTexture.DrawableFormat",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DrawableTexture.SetUseMIPMaps(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "SetUseMIPMaps",
+    "signature": "public System.Void SetUseMIPMaps(System.Boolean mipmaps)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mipmaps",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DrawableTexture.Setup(System.Int32,System.Int32,Electron2D.DrawableTexture.DrawableFormat,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "Setup",
+    "signature": "public System.Void Setup(System.Int32 width, System.Int32 height, Electron2D.DrawableTexture.DrawableFormat format, System.Nullable\u003CElectron2D.Color\u003E color = null, System.Boolean useMIPMaps = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "width",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "height",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "format",
+        "type": "Electron2D.DrawableTexture.DrawableFormat",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "useMIPMaps",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DrawableTexture.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DrawableTexture.ValidateMutation()",
+    "kind": "method",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "ValidateMutation",
+    "signature": "protected override System.Void ValidateMutation()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -158654,6 +159359,121 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.TextureDrawableBlitRect(System.ReadOnlySpan\u003CElectron2D.RID\u003E,Electron2D.Rect2i,Electron2D.RID,Electron2D.Color,System.ReadOnlySpan\u003CElectron2D.RID\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "TextureDrawableBlitRect",
+    "signature": "public static System.Void TextureDrawableBlitRect(System.ReadOnlySpan\u003CElectron2D.RID\u003E textures, Electron2D.Rect2i rect, Electron2D.RID material, Electron2D.Color modulate, System.ReadOnlySpan\u003CElectron2D.RID\u003E sourceTextures, System.Int32 toMipmap = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "textures",
+        "type": "System.ReadOnlySpan\u003CElectron2D.RID\u003E",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2i",
+        "default": null
+      },
+      {
+        "name": "material",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "modulate",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "sourceTextures",
+        "type": "System.ReadOnlySpan\u003CElectron2D.RID\u003E",
+        "default": null
+      },
+      {
+        "name": "toMipmap",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.TextureDrawableCreate(System.Int32,System.Int32,Electron2D.RenderingServer.TextureDrawableFormat,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "TextureDrawableCreate",
+    "signature": "public static Electron2D.RID TextureDrawableCreate(System.Int32 width, System.Int32 height, Electron2D.RenderingServer.TextureDrawableFormat format, System.Nullable\u003CElectron2D.Color\u003E color = null, System.Boolean withMIPMaps = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "width",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "height",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "format",
+        "type": "Electron2D.RenderingServer.TextureDrawableFormat",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "withMIPMaps",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.TextureDrawableGenerateMIPMaps(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "TextureDrawableGenerateMIPMaps",
+    "signature": "public static System.Void TextureDrawableGenerateMIPMaps(Electron2D.RID texture)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "texture",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.TextureDrawableGetDefaultMaterial()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "TextureDrawableGetDefaultMaterial",
+    "signature": "public static Electron2D.RID TextureDrawableGetDefaultMaterial()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.TextureGetFormat(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -166713,6 +167533,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Shader.CreateFromSPIRV(System.ReadOnlySpan\u003CSystem.Byte\u003E,Electron2D.Shader.Mode)",
+    "kind": "method",
+    "declaringType": "Electron2D.Shader",
+    "name": "CreateFromSPIRV",
+    "signature": "public static Electron2D.Shader CreateFromSPIRV(System.ReadOnlySpan\u003CSystem.Byte\u003E bytecode, Electron2D.Shader.Mode mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "bytecode",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.Shader.Mode",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Shader",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Shader.CreateFromSPIRV(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.Shader",
@@ -166977,6 +167821,30 @@
       {
         "name": "bytecode",
         "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Shader.SetSPIRV(System.ReadOnlySpan\u003CSystem.Byte\u003E,Electron2D.Shader.Mode)",
+    "kind": "method",
+    "declaringType": "Electron2D.Shader",
+    "name": "SetSPIRV",
+    "signature": "public System.Void SetSPIRV(System.ReadOnlySpan\u003CSystem.Byte\u003E bytecode, Electron2D.Shader.Mode mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "bytecode",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.Shader.Mode",
         "default": null
       }
     ],
@@ -215621,6 +216489,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.BlitMaterial.BlendMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.BlitMaterial",
+    "name": "BlendMode",
+    "signature": "public Electron2D.BlitBlendMode BlendMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BlitBlendMode",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Bone.Rest()",
     "kind": "property",
     "declaringType": "Electron2D.Bone",
@@ -222235,6 +223116,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DrawableTexture.HasAlpha()",
+    "kind": "property",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "HasAlpha",
+    "signature": "public System.Boolean HasAlpha { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DrawableTexture.HasMIPMaps()",
+    "kind": "property",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "HasMIPMaps",
+    "signature": "public System.Boolean HasMIPMaps { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DrawableTexture.MIPMapCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "MIPMapCount",
+    "signature": "public System.Int32 MIPMapCount { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DrawableTexture.PixelFormat()",
+    "kind": "property",
+    "declaringType": "Electron2D.DrawableTexture",
+    "name": "PixelFormat",
+    "signature": "public Electron2D.Image.Format PixelFormat { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image.Format",
     "value": null
   },
   {

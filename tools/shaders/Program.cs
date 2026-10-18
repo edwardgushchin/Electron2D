@@ -4,10 +4,11 @@ using Electron2D;
 using SDL3;
 using System.Runtime.InteropServices;
 
+var blitImport = args.Length is 4 or 5 && args[3] == "--texture-blit";
 var deviceImport = args.Length is 4 or 5 && args[3] == "--device";
-if ((!deviceImport && args.Length != 3) || args[1] is not ("vertex" or "fragment" or "compute") || args[1] == "compute" && !deviceImport)
+if ((!deviceImport && !blitImport && args.Length != 3) || (blitImport && args[1] != "fragment") || args[1] is not ("vertex" or "fragment" or "compute") || args[1] == "compute" && !deviceImport)
 {
-    Console.Error.WriteLine("Usage: ShaderImport <source.hlsl|source.glsl|source.spv> <vertex|fragment|compute> <output.spv> [--device [include-root]]");
+    Console.Error.WriteLine("Usage: ShaderImport <source.hlsl|source.glsl|source.spv> <vertex|fragment|compute> <output.spv> [--device|--texture-blit [include-root]]");
     return 2;
 }
 var input = IOPath.GetFullPath(args[0]);
@@ -51,12 +52,12 @@ try
     var result = File.ReadAllBytes(temporary);
     if (sourceTypes is not null)
     {
-        result = ShaderSourceTypes.Annotate(result, args[1] == "fragment", sourceTypes);
+        result = ShaderSourceTypes.Annotate(result, args[1] == "fragment", sourceTypes, blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
         File.WriteAllBytes(temporary, result);
     }
     Console.Write(await Execute("spirv-val", "--target-env", "vulkan1.0", temporary));
     if (deviceImport) RenderingDevice.ValidateSourceModule(result, stage);
-    else ShaderCompiler.ValidateInterface(result, fragment: args[1] == "fragment");
+    else ShaderCompiler.ValidateInterface(result, fragment: args[1] == "fragment", mode: blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
     if (File.Exists(output) && new FileInfo(output).Length == result.Length &&
         File.ReadAllBytes(output).AsSpan().SequenceEqual(result))
     {

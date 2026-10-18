@@ -118,12 +118,17 @@ internal static unsafe class ShaderCompiler
     internal static ShaderProgram ValidateFragmentInterface(ReadOnlySpan<byte> bytecode) => ValidateInterface(bytecode, fragment: true);
 
     internal static ShaderProgram ValidateInterface(ReadOnlySpan<byte> bytecode, bool fragment,
-        IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null)
+        IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null, Shader.Mode mode = Shader.Mode.CanvasItem)
     {
+        if (mode is not (Shader.Mode.CanvasItem or Shader.Mode.TextureBlit)) throw new ArgumentOutOfRangeException(nameof(mode));
+        if (!fragment && mode != Shader.Mode.CanvasItem) throw new NotSupportedException("Blit programs use the built-in vertex stage.");
         ValidateBytecodeLength(bytecode);
         var code = bytecode.ToArray();
         ValidateStructure(code, fragment);
-        var program = SpirvReflection.Read(code, fragment, sourceTypes);
+        var program = SpirvReflection.Read(code, fragment, sourceTypes, mode == Shader.Mode.TextureBlit);
+        program.Mode = mode;
+        if (mode == Shader.Mode.TextureBlit && (program.HasInstanceUniforms || program.UsesScreenTexture || program.UsesSDFTexture || program.ScreenPixelSizeUniform is not null || program.SDFCoordsUniform is not null || program.Textures.Any(t => t.IsCanvasTexture)))
+            throw new NotSupportedException("Blit shaders have no scene, screen or command-texture interface; use SOURCE_TEXTURE0 through SOURCE_TEXTURE3.");
         if (!fragment) program.ValidateVertexFrame();
         code = program.NativeCode;
         Run(() =>
@@ -139,9 +144,26 @@ internal static unsafe class ShaderCompiler
                     if (r.NumSamplers != program.Textures.Length || r.NumStorageTextures != 0 || r.NumStorageBuffers != 0 ||
                         r.NumUniformBuffers != program.BufferSizes.Length)
                         throw new NotSupportedException($"The reflected resources do not match the canvas stage interface (samplers={r.NumSamplers}/{program.Textures.Length}, storage images={r.NumStorageTextures}, buffers={r.NumStorageBuffers}, uniforms={r.NumUniformBuffers}/{program.BufferSizes.Length}).");
-                    if (metadata.NumInputs > (fragment ? 10 : 14) || (fragment ? metadata.NumOutputs != 1 : metadata.NumOutputs is < 2 or > 10))
+                    if (mode == Shader.Mode.TextureBlit)
+                    {
+                        if (metadata.NumInputs > 2 || metadata.NumOutputs is < 1 or > 4) throw new NotSupportedException("Blit fragments support MODULATE, UV and one through four color outputs.");
+                        for (var i = 0; i < metadata.NumInputs; i++)
+                        {
+                            var field = Marshal.PtrToStructure<ShaderCross.IOVarMetadata>(metadata.Inputs + i * Marshal.SizeOf<ShaderCross.IOVarMetadata>());
+                            if (field.VectorType != ShaderCross.IOVarType.Float32 || field.Location > 1 || field.VectorSize != (field.Location == 0 ? 4 : 2)) throw new NotSupportedException("Blit inputs require float4 MODULATE at zero and float2 UV at one.");
+                        }
+                        var mask = 0;
+                        for (var i = 0; i < metadata.NumOutputs; i++)
+                        {
+                            var field = Marshal.PtrToStructure<ShaderCross.IOVarMetadata>(metadata.Outputs + i * Marshal.SizeOf<ShaderCross.IOVarMetadata>());
+                            if (field.VectorType != ShaderCross.IOVarType.Float32 || field.VectorSize != 4 || field.Location > 3 || (mask & (1 << (int)field.Location)) != 0) throw new NotSupportedException("Blit outputs require unique float4 locations zero through three.");
+                            mask |= 1 << (int)field.Location; program.ColorOutputs = Math.Max(program.ColorOutputs, (int)field.Location + 1);
+                        }
+                        if (mask != (1 << (int)metadata.NumOutputs) - 1) throw new NotSupportedException("Blit color outputs must be contiguous from zero.");
+                    }
+                    else if (metadata.NumInputs > (fragment ? 10 : 14) || (fragment ? metadata.NumOutputs != 1 : metadata.NumOutputs is < 2 or > 10))
                         throw new NotSupportedException("Canvas shaders use color at zero, UV at one, optional instance data at two, secondary UV at four, normal/tangent at five/six, mesh custom float4 at seven through ten and one fragment color output.");
-                    if (fragment) ValidateVaryings(metadata.Inputs, metadata.NumInputs);
+                    if (fragment && mode == Shader.Mode.CanvasItem) ValidateVaryings(metadata.Inputs, metadata.NumInputs);
                     if (!fragment)
                     {
                         if (metadata.NumInputs is < 3 or > 14) throw new NotSupportedException("Canvas vertices require float2 position, float4 color and float2 UV.");
@@ -157,7 +179,7 @@ internal static unsafe class ShaderCompiler
                         if ((locations & 112) != 0 && (locations & 120) != 120) throw new NotSupportedException("Hardware instances require basis, translation, color and custom data at locations three through six.");
                         if ((locations & 7) != 7) throw new NotSupportedException("Canvas vertex inputs require position, color and UV.");
                     }
-                    if (fragment) ValidateColor(metadata.Outputs);
+                    if (fragment) { if (mode == Shader.Mode.CanvasItem) ValidateColor(metadata.Outputs); }
                     else ValidateVaryings(metadata.Outputs, metadata.NumOutputs, requireBase: true);
                 }
                 finally { SDL.Free(memory); }

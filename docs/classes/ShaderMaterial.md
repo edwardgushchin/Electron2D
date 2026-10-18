@@ -208,3 +208,5 @@ Copies the complete layered-image override array under the material gate with th
 The distinct array setter names preserve existing untyped-null calls to scalar texture setters. SamplerArrayTests compiles and checks both scalar null calls, which reject a descriptor array name without ambiguous overload resolution.
 
 [NumericMatrixTests](../../tests/Electron2D.Tests/NumericMatrixTests.cs) adds mat3/mat4 scalar/fixed-array identities, complete finite validation, copied descriptors/graphs/archives, shape resets and layout-aware reload. GLSL/HLSL resource and RID pixels, including paired stages, execute on Linux Wayland software Vulkan; 64 active/64 idle prepared frames allocate zero managed bytes. Hardware/native-allocation and foreign-platform acceptance remain open.
+
+A Shader with Mode.TextureBlit executes through DrawableTexture blit methods and RenderingServer.TextureDrawableBlitRect. Its uniforms, default images and globals use the same typed material state; canvas use rejects this domain. See [writable textures](../components/drawable-textures.md).

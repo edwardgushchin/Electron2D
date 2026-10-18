@@ -5,6 +5,8 @@ namespace Electron2D;
 internal sealed partial class ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<string, ShaderUniform> uniforms, ShaderTexture[]? textures = null, ShaderUniform? timeUniform = null, ShaderUniform? screenPixelSizeUniform = null, ShaderUniform? sdfCoordsUniform = null, Dictionary<string, ShaderUniform>? instanceUniforms = null, Dictionary<string, ShaderUniform>? globalUniforms = null)
 {
     internal static readonly ShaderProgram Default = new(BuiltInShaders.Fragment, [], new(StringComparer.Ordinal), [new("TEXTURE", 0)]);
+    internal Shader.Mode Mode { get; set; } = Shader.Mode.CanvasItem;
+    internal int ColorOutputs { get; set; } = 1;
     internal readonly byte[] Code = code;
     internal byte[] NativeCode { get; init; } = code;
     internal readonly int[] BufferSizes = bufferSizes;
@@ -37,7 +39,7 @@ internal sealed partial class ShaderProgram(byte[] code, int[] bufferSizes, Dict
     }
 }
 
-internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = false, int PixelType = 0, int ArrayLength = 0, int Element = 0)
+internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = false, int PixelType = 0, int ArrayLength = 0, int Element = 0, bool BlitSource = false)
 {
     internal int Count => Math.Max(1, ArrayLength);
     internal bool IsGlobal { get; } = Name.StartsWith("GLOBAL_", StringComparison.Ordinal);
@@ -46,7 +48,7 @@ internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = fa
     internal bool IsCanvasTexture => Name == "TEXTURE";
     internal bool IsScreenTexture => Name == "SCREEN_TEXTURE";
     internal bool IsSDFTexture => Name == "SDF_TEXTURE";
-    internal bool IsEngineTexture => IsCanvasTexture || IsScreenTexture || IsSDFTexture;
+    internal bool IsEngineTexture => IsCanvasTexture || IsScreenTexture || IsSDFTexture || BlitSource;
     internal void RequireShape(bool array)
     {
         if (IsArray != array) throw new ArgumentException($"Texture parameter '{Name}' requires {(IsArray ? "layered" : "ordinary")} images.");

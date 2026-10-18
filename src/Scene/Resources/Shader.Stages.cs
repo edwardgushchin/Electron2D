@@ -58,6 +58,13 @@ public sealed partial class Shader
     private byte[] GetStoredSPIRV()
     {
         var program = GetProgram();
+        if (program.Mode == Mode.TextureBlit)
+        {
+            var payload = new byte[8 + program.Code.Length];
+            BinaryPrimitives.WriteUInt32LittleEndian(payload, 0x42534845);
+            BinaryPrimitives.WriteUInt32LittleEndian(payload.AsSpan(4), 1);
+            program.Code.CopyTo(payload, 8); return payload;
+        }
         if (program.Vertex is not { } vertex) return (byte[])program.Code.Clone();
         var data = new byte[checked(16 + vertex.Code.Length + program.Code.Length)];
         BinaryPrimitives.WriteUInt32LittleEndian(data, StoredStageMagic);
@@ -70,6 +77,11 @@ public sealed partial class Shader
     private void SetStoredSPIRV(byte[] data)
     {
         ArgumentNullException.ThrowIfNull(data);
+        if (data.Length >= 4 && BinaryPrimitives.ReadUInt32LittleEndian(data) == 0x42534845)
+        {
+            if (data.Length < 28 || BinaryPrimitives.ReadUInt32LittleEndian(data.AsSpan(4)) != 1) throw new InvalidDataException("Unsupported stored blit program header.");
+            SetSPIRV(data.AsSpan(8), Mode.TextureBlit); return;
+        }
         if (data.Length < 4 || BinaryPrimitives.ReadUInt32LittleEndian(data) != StoredStageMagic) { SetSPIRV(data); return; }
         if (data.Length < 16 || BinaryPrimitives.ReadUInt32LittleEndian(data.AsSpan(4)) != 1)
             throw new InvalidDataException("Unsupported stored canvas stage header.");

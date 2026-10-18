@@ -8,6 +8,7 @@ internal sealed class RendererTextureBorrow : IDisposable
     private readonly RenderHandle _first;
     private readonly RenderHandle? _second;
     private readonly Viewport? _viewport;
+    private readonly RID _drawableImage;
     private bool _firstHeld, _secondHeld, _disposed;
     internal RendererTextureBorrow(Resource source, GPUTexture pixels)
     {
@@ -21,17 +22,23 @@ internal sealed class RendererTextureBorrow : IDisposable
         try { _first.DangerousAddRef(ref _firstHeld); _second.DangerousAddRef(ref _secondHeld); }
         catch { if (_secondHeld) _second.DangerousRelease(); if (_firstHeld) _first.DangerousRelease(); throw; }
     }
+    internal RendererTextureBorrow(DrawableTexture source, RID image, RenderHandle allocation)
+    {
+        Source = source; _drawableImage = image; _first = allocation;
+        _first.DangerousAddRef(ref _firstHeld);
+    }
     internal bool Alive
     {
         get
         {
             if (_disposed || Source.IsDisposed) return false;
+            if (Source is DrawableTexture drawable) return drawable.AllocatedImage == _drawableImage;
             if (Target is not null) return !Target.IsDisposed && _viewport is { IsDisposed: false } && ReferenceEquals(((ViewportTexture)Source).Bound, _viewport);
             if (Pixels is null || Pixels.IsDisposed) return false;
             return Source switch { Texture texture => texture.CapturePixels() is { } p && ReferenceEquals(p.Allocation, Pixels.Pixels.Allocation), TextureLayered layered => layered.CaptureLayers() is { } p && ReferenceEquals(p.Allocation, Pixels.ArrayPixels!.Allocation), _ => false };
         }
     }
-    internal nint Native => Target?.Current.DangerousGetHandle() ?? Pixels!.Handle;
+    internal nint Native => Source is DrawableTexture ? _first.DangerousGetHandle() : Target?.Current.DangerousGetHandle() ?? Pixels!.Handle;
     internal void RefreshPixels()
     {
         if (Pixels is null) return;

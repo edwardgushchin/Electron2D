@@ -217,3 +217,5 @@ For [position-free mesh surfaces](../components/meshes.md#procedural-surfaces-wi
 ## Indexed sampled defaults
 
 Both ordinary and layered default families accept fixed descriptor array indices. Each material element independently overrides its indexed default. Stored array-valued descriptors preserve aliases and original shader payloads. Validation snapshots callback-sensitive input, rejects reentrant default mutation or program replacement, and publishes only after all values pass. A length, image role or sampled scalar change on reload drops the complete incompatible array. See [the descriptor array contract](../components/shader-materials.md#fixed-sampled-descriptor-arrays) and SamplerArrayTests for executable evidence and limits.
+
+Shader.Mode.TextureBlit and the explicit-domain CreateFromSPIRV/SetSPIRV overloads execute writable-texture fragments with the shared typed parameter contract. See [writable textures](../components/drawable-textures.md) for imported inputs, outputs, source bindings and archive semantics.

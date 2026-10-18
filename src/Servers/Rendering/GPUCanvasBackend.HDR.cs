@@ -20,6 +20,11 @@ internal sealed unsafe partial class GPUCanvasBackend
             if (target.HDR) return native;
             size = target.Size; levels = 1;
         }
+        else if (texture is DrawableTexture drawable)
+        {
+            if (drawable.NativeFormat != RenderingDevice.DataFormat.R8G8B8A8UNORM) return native;
+            size = drawable.NativeSize; levels = (uint)(drawable.MIPMapCount + 1);
+        }
         else if (texture is TextureRD { DeviceInfo: { } info })
         {
             if (!RenderingDevice.CanvasEncodedColor(info.Format)) return native;

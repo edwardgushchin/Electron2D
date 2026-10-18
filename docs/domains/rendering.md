@@ -394,3 +394,5 @@ Window placement and ResetSize use the existing viewport/native resize lifecycle
 ## Fixed sampled descriptor arrays
 
 [Canvas sampled descriptor arrays](../components/shader-materials.md#fixed-sampled-descriptor-arrays) now execute through GLSL/HLSL, typed resource and static RID access, indexed shader defaults, complete validation, graph storage and derived scalar native bindings. Paired stages and existing lighting/glyph/instance/HDR/MSAA consumers share the same physical capacity and resource lifetime. See the component for measured software-Vulkan checks and the separate hardware/platform gates.
+
+[Writable textures](../components/drawable-textures.md) connect DrawableTexture, BlitMaterial, the TextureBlit shader domain and static RenderingServer drawable operations to ordered GPU passes and ordinary native sampling.

@@ -87,6 +87,8 @@ public static partial class ResourceFileTypes
         RegisterResource("TextureArray", CreateTextureArray);
         RegisterResource("CompressedTextureArray", CreateCompressedTextureArray);
         RegisterResource("TextureRD", CreateTextureRD);
+        RegisterResource("DrawableTexture", CreateDrawableTexture);
+        RegisterResource("BlitMaterial", CreateBlitMaterial);
         RegisterResource("TextureArrayRD", CreateTextureArrayRD);
         RegisterResource("PlaceholderTextureArray", CreatePlaceholderTextureArray);
         RegisterResource("AtlasTexture", CreateAtlasTexture);
@@ -202,6 +204,8 @@ public static partial class ResourceFileTypes
     private static CompressedTexture CreateCompressedTexture() => new();
     private static TextureArray CreateTextureArray() => new();
     private static CompressedTextureArray CreateCompressedTextureArray() => new();
+    private static DrawableTexture CreateDrawableTexture() => new();
+    private static BlitMaterial CreateBlitMaterial() => new();
     private static TextureRD CreateTextureRD() => new();
     private static TextureArrayRD CreateTextureArrayRD() => new();
     private static PlaceholderTextureArray CreatePlaceholderTextureArray() => new();

@@ -311,6 +311,8 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         {
             if (texture is AtlasTexture atlas) { texture = atlas.RenderingTexture ?? RenderingTextureRegistry.WhiteTexture; continue; }
             if (texture is CanvasTexture canvas) { texture = canvas.DiffuseTexture ?? RenderingTextureRegistry.WhiteTexture; continue; }
+            if (texture is ServerTexture { IsProxy: true } proxy) { texture = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget) ?? RenderingTextureRegistry.PlaceholderTexture; continue; }
+            if (texture is DrawableTexture) throw new NotSupportedException("Writable texture sampling requires the GPU renderer.");
             return texture;
         }
         throw new InvalidOperationException("Texture view depth exceeds 1024.");

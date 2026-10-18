@@ -230,7 +230,14 @@ public sealed partial class RenderingServer : ElectronObject
     }
     private void SubmitTexture(Texture? texture, SceneTree tree)
     {
+        if (texture is ServerTexture { IsProxy: true } proxy) texture = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget);
         while (texture is AtlasTexture atlas) texture = atlas.RenderingTexture;
+        if (texture is DrawableTexture drawable && _backend is GPUCanvasBackend)
+        {
+            _preparingNativeDrawable = true;
+            try { drawable.EnsureImage(); } finally { _preparingNativeDrawable = false; }
+            return;
+        }
         if (texture is CanvasTexture channels)
         {
             SubmitTexture(channels.DiffuseTexture, tree); SubmitTexture(channels.NormalTexture, tree); SubmitTexture(channels.SpecularTexture, tree); return;

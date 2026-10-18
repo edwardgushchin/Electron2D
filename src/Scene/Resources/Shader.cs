@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-/// <summary>A canvas program loaded from compiled fragment SPIR-V with an optional authored vertex stage.</summary>
+/// <summary>A compiled canvas or writable-texture fragment program, with optional authored canvas vertices.</summary>
 /// <remarks>HLSL and GLSL source is compiled during import or build. Runtime loading checks module structure and
 /// reflected interfaces without compiling source; it does not perform full instruction-level semantic validation.
 /// Paired vertex programs preserve original mesh surface indices through gl_VertexIndex or SV_VertexID,
@@ -21,7 +21,7 @@ namespace Electron2D;
 /// Instance arrays, matrices and renderer-owned fields are rejected; supported declaration defaults are zero.
 /// Material uniforms use validated std140 buffers at descriptor
 /// set three and sampled 2D or image-array textures at set two. Named textures use linear/base-level/clamp sampling, independently
-/// of canvas properties. The paired-stage API adds vertex Frame at set one/binding zero, material blocks at set one/bindings one through three and sampled textures at set zero. Shared names use one typed parameter namespace across stages. Sampler configuration, matrices other than float2x2 and nested uniform structs remain pending.</remarks>
+/// of canvas properties. The paired-stage API adds vertex Frame at set one/binding zero, material blocks at set one/bindings one through three and sampled textures at set zero. Shared names use one typed parameter namespace across stages. Sampler configuration and nested uniform structs remain pending. Blit fragments use the explicit TextureBlit domain and have their own source/output interface.</remarks>
 public sealed partial class Shader : Resource
 {
     /// <summary>Identifies the supported two-dimensional shader domain.</summary>
@@ -29,6 +29,8 @@ public sealed partial class Shader : Resource
     {
         /// <summary>A shader applied to canvas geometry.</summary>
         CanvasItem = 1,
+        /// <summary>A fragment program drawing into writable textures.</summary>
+        TextureBlit = 5,
     }
 
     private readonly object _codeGate = new();
@@ -40,10 +42,10 @@ public sealed partial class Shader : Resource
     /// <summary>Creates a canvas shader multiplying command texture samples by drawing color.</summary>
     public Shader() { }
 
-    /// <summary>Gets this shader's canvas domain.</summary>
-    /// <returns>Mode.CanvasItem.</returns>
+    /// <summary>Gets this shader's executing domain.</summary>
+    /// <returns>CanvasItem or TextureBlit.</returns>
     /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>
-    public Mode GetMode() { ThrowIfDisposed(); return Mode.CanvasItem; }
+    public Mode GetMode() => GetProgram().Mode;
 
     /// <summary>Creates a canvas fragment shader from a copied SPIR-V module.</summary>
     /// <param name="bytecode">A little-endian SPIR-V module, at most 16 MiB, with one fragment entry point named main.</param>
@@ -95,7 +97,7 @@ public sealed partial class Shader : Resource
     /// <returns>An immutable list with case-sensitive member names. Float4 values use Vector4 descriptors;
     /// material access also accepts Color and Rect2. Float2x2 uses Transform with an identity revert value. Float3 uses Vector3; material access also accepts Color with alpha one on read. Signed/unsigned integer vectors
     /// use Vector2i, Vector3i or Vector4i with preserved component bits. Logical bool uses bool; boolean vectors use int component masks. Fixed numeric and sampled descriptor arrays use array-valued descriptors; scalar sampled images use Texture or TextureLayered, matched by image role and float/signed/unsigned scalar type.
-    /// The built-in command TEXTURE and render TIME are omitted.</returns>
+    /// Renderer-owned command/blit sources and render TIME are omitted.</returns>
     /// <remarks>Descriptors access ShaderMaterial values through its typed parameter methods. Buffer padding and
     /// resource handles remain internal. The returned list describes this program version and does not change after reload.</remarks>
     /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>

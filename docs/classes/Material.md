@@ -21,3 +21,5 @@ Render priorities and next-pass chains are excluded 3D-only operations by the pi
 Direct canvas RID binding accepts both material kinds. Caller-owned server materials remain separate from borrowed resource identities; disposal removes the latter without disposing shader or texture dependencies. See [the program RID contract](../components/shader-materials.md#shader-and-material-identities).
 
 [Automatic scene lighting](../components/shader-materials.md#automatic-scene-lighting) composes the computed fragment color before blend, preserving parameters, texture roles, discard, returns, reload and hardware instancing. Normal/specular and point-mask samplers share the native sixteen-binding stage capacity; four user uniform slots remain available. Current rendered evidence is Linux/Vulkan.
+
+BlitMaterial supplies built-in writable-texture blend operations; ShaderMaterial supplies programmable TextureBlit fragments. Both retain the existing borrowed logical material RID lifetime. See [writable textures](../components/drawable-textures.md).

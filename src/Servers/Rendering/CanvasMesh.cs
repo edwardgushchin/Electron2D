@@ -174,7 +174,7 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate, boo
         Texture? texture, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, CanvasItem? owner, int firstInstance = 0, int instanceCount = 0, bool linear = false, Rect2? visibility = null, bool procedural = false, Mesh.PrimitiveType primitive = Mesh.PrimitiveType.Triangles, bool snap = false)
     {
         if (visibility is { } bounds && (!bounds.IsFinite() || !bounds.End.IsFinite())) throw new ArithmeticException("Mesh visibility bounds exceed finite canvas coordinates.");
-        var material = surfaceMaterial is null ? inheritedMaterial : surfaceMaterial.GetCanvasState(); var blend = surfaceMaterial is null ? inheritedBlend : surfaceMaterial.GetCanvasBlendMode();
+        var material = surfaceMaterial is null ? inheritedMaterial : surfaceMaterial.RequireCanvasState(); var blend = surfaceMaterial is null ? inheritedBlend : surfaceMaterial.GetCanvasBlendMode();
         if (procedural && material?.Program.Vertex is null) throw new NotSupportedException("Position-free mesh drawing requires an authored vertex stage.");
         var instanceOwner = material?.Program.HasInstanceUniforms == true ? owner : null;
         return new(first, count, material, texture, filter, repeat, anisotropy, blend, clip, FirstInstance: firstInstance, InstanceCount: instanceCount, InstanceOwner: instanceOwner, LinearColors: linear, VisibilityBounds: visibility, Procedural: procedural, Primitive: primitive, SnapGeneratedVertices: procedural && snap);

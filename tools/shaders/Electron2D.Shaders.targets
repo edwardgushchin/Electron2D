@@ -29,9 +29,10 @@
                 var input = source.GetMetadata("FullPath");
                 var stage = source.GetMetadata("Stage");
                 var profile = source.GetMetadata("Profile");
-                if (profile.Length != 0 && profile != "canvas" && profile != "device")
-                    throw new ArgumentException(input + ": Profile must be canvas or device.");
+                if (profile.Length != 0 && profile != "canvas" && profile != "device" && profile != "texture-blit")
+                    throw new ArgumentException(input + ": Profile must be canvas, device or texture-blit.");
                 var device = profile == "device";
+                if (profile == "texture-blit" && stage != "fragment") throw new ArgumentException(input + ": Blit programs require a fragment stage.");
                 if (stage != "vertex" && stage != "fragment" && !(device && stage == "compute"))
                     throw new ArgumentException(input + ": Stage must be vertex/fragment, or compute for Profile=device.");
                 var target = source.GetMetadata("TargetPath");
@@ -54,7 +55,7 @@
                 item.SetMetadata("CopyToPublishDirectory", "PreserveNewest");
                 item.SetMetadata("Source", input);
                 item.SetMetadata("Stage", stage);
-                item.SetMetadata("Profile", device ? "device" : "canvas");
+                item.SetMetadata("Profile", profile.Length == 0 ? "canvas" : profile);
                 outputs.Add(item);
             }
             if (Compile)
@@ -78,6 +79,7 @@
                     arguments.Add(output.GetMetadata("Stage"));
                     arguments.Add(output.ItemSpec);
                     if (output.GetMetadata("Profile") == "device") arguments.Add("--device");
+                    if (output.GetMetadata("Profile") == "texture-blit") arguments.Add("--texture-blit");
                     using (var process = Process.Start(start))
                     {
                         if (process == null) throw new InvalidOperationException("Cannot start " + tool);

@@ -3,17 +3,23 @@ using SDL3;
 
 namespace Electron2D;
 
-/// <summary>A resource selecting how canvas geometry is shaded.</summary>
+/// <summary>A resource selecting how canvas geometry or writable texture pixels are shaded.</summary>
 /// <remarks>Materials are borrowed by nodes; disposing a node
 /// does not dispose shared materials. Three-dimensional render priority and next-pass chains are not supported.</remarks>
 public abstract partial class Material : Resource
 {
     private protected Material() { }
     internal abstract MaterialState? GetCanvasState();
+    internal MaterialState? RequireCanvasState()
+    {
+        var state = GetCanvasState();
+        if (this is BlitMaterial || state?.Program.Mode == Shader.Mode.TextureBlit) throw new NotSupportedException("A blit material can only draw into writable textures.");
+        return state;
+    }
     internal virtual BlendMode GetCanvasBlendMode() => BlendMode.Mix;
 }
 
-/// <summary>Applies a programmable canvas shader to a node's canvas commands.</summary>
+/// <summary>Applies a compiled shader to canvas commands or writable-texture blit passes.</summary>
 /// <remarks>A null shader uses normal color drawing. An assigned shader requires the GPU backend, including
 /// an identity shader. Shader resources are borrowed; resource duplication follows the requested graph policy.
 /// Reserved TIME and SCREEN_PIXEL_SIZE uniforms and SCREEN_TEXTURE sampling are filled by the renderer
@@ -29,7 +35,7 @@ public sealed partial class ShaderMaterial : Material
     /// <summary>Creates a material using ordinary canvas colors.</summary>
     public ShaderMaterial() { }
 
-    /// <summary>Gets or sets the borrowed shader applied to canvas geometry and fragments.</summary>
+    /// <summary>Gets or sets the borrowed program applied to canvas geometry or writable-texture fragments.</summary>
     /// <value>Null by default.</value>
     /// <exception cref="ObjectDisposedException">The material or supplied shader is disposed.</exception>
     public Shader? Shader

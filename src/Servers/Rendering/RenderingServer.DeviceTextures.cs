@@ -3,7 +3,7 @@ namespace Electron2D;
 public sealed partial class RenderingServer
 {
     internal bool DeviceClosing => _closing;
-    internal void EnsureDeviceAccess() { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Device operations cannot reenter native canvas submission."); }
+    internal void EnsureDeviceAccess() { EnsureOwner(); if (_submittingTextures && !_preparingNativeDrawable) throw new InvalidOperationException("Device operations cannot reenter native canvas submission."); }
     internal RenderingDevice? GetRenderingDeviceCore()
     {
         EnsureOwner(); if (_closing) throw new InvalidOperationException("The renderer is closing.");

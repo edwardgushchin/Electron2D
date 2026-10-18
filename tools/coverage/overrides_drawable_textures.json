@@ -1,0 +1,311 @@
+{
+  "mappings": [
+    {
+      "godot": "class:BlitMaterial",
+      "electron2d": "T:Electron2D.BlitMaterial",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "BlitMaterial::enum:BlendMode",
+      "electron2d": "T:Electron2D.BlitBlendMode",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "BlitMaterial::enum_value:BlendMode.BLEND_MODE_ADD",
+      "electron2d": "enumValue:Electron2D.BlitBlendMode.Add()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "BlitMaterial::enum_value:BlendMode.BLEND_MODE_DISABLED",
+      "electron2d": "enumValue:Electron2D.BlitBlendMode.Disabled()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "BlitMaterial::enum_value:BlendMode.BLEND_MODE_MIX",
+      "electron2d": "enumValue:Electron2D.BlitBlendMode.Mix()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "BlitMaterial::enum_value:BlendMode.BLEND_MODE_MUL",
+      "electron2d": "enumValue:Electron2D.BlitBlendMode.Mul()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "BlitMaterial::enum_value:BlendMode.BLEND_MODE_SUB",
+      "electron2d": "enumValue:Electron2D.BlitBlendMode.Sub()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "BlitMaterial::property:blend_mode",
+      "electron2d": "property:Electron2D.BlitMaterial.BlendMode()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "class:DrawableTexture2D",
+      "electron2d": "T:Electron2D.DrawableTexture",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "DrawableTexture2D::enum:DrawableFormat",
+      "electron2d": "T:Electron2D.DrawableTexture.DrawableFormat",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "DrawableTexture2D::enum_value:DrawableFormat.DRAWABLE_FORMAT_RGBA8",
+      "electron2d": "enumValue:Electron2D.DrawableTexture.DrawableFormat.RGBA8()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "DrawableTexture2D::enum_value:DrawableFormat.DRAWABLE_FORMAT_RGBA8_SRGB",
+      "electron2d": "enumValue:Electron2D.DrawableTexture.DrawableFormat.RGBA8SRGB()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "DrawableTexture2D::enum_value:DrawableFormat.DRAWABLE_FORMAT_RGBAF",
+      "electron2d": "enumValue:Electron2D.DrawableTexture.DrawableFormat.RGBAF()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "DrawableTexture2D::enum_value:DrawableFormat.DRAWABLE_FORMAT_RGBAH",
+      "electron2d": "enumValue:Electron2D.DrawableTexture.DrawableFormat.RGBAH()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "DrawableTexture2D::method:blit_rect(Rect2i:,Texture2D:,Color:,int:,Material:)",
+      "electron2d": "method:Electron2D.DrawableTexture.BlitRect(Electron2D.Rect2i,Electron2D.Texture,System.Nullable<Electron2D.Color>,System.Int32,Electron2D.Material)",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "DrawableTexture2D::method:blit_rect_multi(Rect2i:,Texture2D[]:,DrawableTexture2D[]:,Color:,int:,Material:)",
+      "electron2d": "method:Electron2D.DrawableTexture.BlitRectMulti(Electron2D.Rect2i,System.ReadOnlySpan<Electron2D.Texture>,System.ReadOnlySpan<Electron2D.DrawableTexture>,System.Nullable<Electron2D.Color>,System.Int32,Electron2D.Material)",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "DrawableTexture2D::method:generate_mipmaps()",
+      "electron2d": "method:Electron2D.DrawableTexture.GenerateMIPMaps()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "DrawableTexture2D::method:get_use_mipmaps()",
+      "electron2d": "method:Electron2D.DrawableTexture.GetUseMIPMaps()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "DrawableTexture2D::method:set_format(int:DrawableTexture2D.DrawableFormat)",
+      "electron2d": "method:Electron2D.DrawableTexture.SetFormat(Electron2D.DrawableTexture.DrawableFormat)",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "DrawableTexture2D::method:set_use_mipmaps(bool:)",
+      "electron2d": "method:Electron2D.DrawableTexture.SetUseMIPMaps(System.Boolean)",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "DrawableTexture2D::method:setup(int:,int:,int:DrawableTexture2D.DrawableFormat,Color:,bool:)",
+      "electron2d": "method:Electron2D.DrawableTexture.Setup(System.Int32,System.Int32,Electron2D.DrawableTexture.DrawableFormat,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "DrawableTexture2D::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "RenderingServer::enum:TextureDrawableFormat",
+      "electron2d": "T:Electron2D.RenderingServer.TextureDrawableFormat",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "RenderingServer::enum_value:TextureDrawableFormat.TEXTURE_DRAWABLE_FORMAT_RGBA8",
+      "electron2d": "enumValue:Electron2D.RenderingServer.TextureDrawableFormat.RGBA8()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "RenderingServer::enum_value:TextureDrawableFormat.TEXTURE_DRAWABLE_FORMAT_RGBA8_SRGB",
+      "electron2d": "enumValue:Electron2D.RenderingServer.TextureDrawableFormat.RGBA8SRGB()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "RenderingServer::enum_value:TextureDrawableFormat.TEXTURE_DRAWABLE_FORMAT_RGBAF",
+      "electron2d": "enumValue:Electron2D.RenderingServer.TextureDrawableFormat.RGBAF()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "RenderingServer::enum_value:TextureDrawableFormat.TEXTURE_DRAWABLE_FORMAT_RGBAH",
+      "electron2d": "enumValue:Electron2D.RenderingServer.TextureDrawableFormat.RGBAH()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "RenderingServer::method:texture_drawable_blit_rect(RID[]:,Rect2i:,RID:,Color:,RID[]:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.TextureDrawableBlitRect(System.ReadOnlySpan<Electron2D.RID>,Electron2D.Rect2i,Electron2D.RID,Electron2D.Color,System.ReadOnlySpan<Electron2D.RID>,System.Int32)",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "RenderingServer::method:texture_drawable_create(int:,int:,int:RenderingServer.TextureDrawableFormat,Color:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.TextureDrawableCreate(System.Int32,System.Int32,Electron2D.RenderingServer.TextureDrawableFormat,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "RenderingServer::method:texture_drawable_generate_mipmaps(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.TextureDrawableGenerateMIPMaps(Electron2D.RID)",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "RenderingServer::method:texture_drawable_get_default_material()",
+      "electron2d": "method:Electron2D.RenderingServer.TextureDrawableGetDefaultMaterial()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    },
+    {
+      "godot": "Shader::enum_value:Mode.MODE_TEXTURE_BLIT",
+      "electron2d": "enumValue:Electron2D.Shader.Mode.TextureBlit()",
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "godot": [
+        "BlitMaterial::enum:BlendMode",
+        "BlitMaterial::enum_value:BlendMode.BLEND_MODE_ADD",
+        "BlitMaterial::enum_value:BlendMode.BLEND_MODE_DISABLED",
+        "BlitMaterial::enum_value:BlendMode.BLEND_MODE_MIX",
+        "BlitMaterial::enum_value:BlendMode.BLEND_MODE_MUL",
+        "BlitMaterial::enum_value:BlendMode.BLEND_MODE_SUB",
+        "BlitMaterial::property:blend_mode",
+        "DrawableTexture2D::enum:DrawableFormat",
+        "DrawableTexture2D::enum_value:DrawableFormat.DRAWABLE_FORMAT_RGBA8",
+        "DrawableTexture2D::enum_value:DrawableFormat.DRAWABLE_FORMAT_RGBA8_SRGB",
+        "DrawableTexture2D::enum_value:DrawableFormat.DRAWABLE_FORMAT_RGBAF",
+        "DrawableTexture2D::enum_value:DrawableFormat.DRAWABLE_FORMAT_RGBAH",
+        "DrawableTexture2D::method:blit_rect(Rect2i:,Texture2D:,Color:,int:,Material:)",
+        "DrawableTexture2D::method:blit_rect_multi(Rect2i:,Texture2D[]:,DrawableTexture2D[]:,Color:,int:,Material:)",
+        "DrawableTexture2D::method:generate_mipmaps()",
+        "DrawableTexture2D::method:get_use_mipmaps()",
+        "DrawableTexture2D::method:set_format(int:DrawableTexture2D.DrawableFormat)",
+        "DrawableTexture2D::method:set_use_mipmaps(bool:)",
+        "DrawableTexture2D::method:setup(int:,int:,int:DrawableTexture2D.DrawableFormat,Color:,bool:)",
+        "DrawableTexture2D::property:resource_local_to_scene",
+        "RenderingServer::enum:TextureDrawableFormat",
+        "RenderingServer::enum_value:TextureDrawableFormat.TEXTURE_DRAWABLE_FORMAT_RGBA8",
+        "RenderingServer::enum_value:TextureDrawableFormat.TEXTURE_DRAWABLE_FORMAT_RGBA8_SRGB",
+        "RenderingServer::enum_value:TextureDrawableFormat.TEXTURE_DRAWABLE_FORMAT_RGBAF",
+        "RenderingServer::enum_value:TextureDrawableFormat.TEXTURE_DRAWABLE_FORMAT_RGBAH",
+        "RenderingServer::method:texture_drawable_blit_rect(RID[]:,Rect2i:,RID:,Color:,RID[]:,int:)",
+        "RenderingServer::method:texture_drawable_create(int:,int:,int:RenderingServer.TextureDrawableFormat,Color:,bool:)",
+        "RenderingServer::method:texture_drawable_generate_mipmaps(RID:)",
+        "RenderingServer::method:texture_drawable_get_default_material()",
+        "Shader::enum_value:Mode.MODE_TEXTURE_BLIT",
+        "class:BlitMaterial",
+        "class:DrawableTexture2D"
+      ],
+      "reason": "ADRs 0004/0013/0028/0095: executable writable GPU texture setup, four formats, one-to-four-target ordered blit, explicit mip writes/generation/readback, five built-in blends and TextureBlit HLSL/GLSL fragments with shared typed material/default/global state. Stable logical identities, borrowed native export leases, aliases, source callbacks, ownership/replace/shutdown, typed setup archives, graph/local copies and reset execute. DrawableTextureTests verifies Linux Wayland software-Vulkan pixels and 64 active/64 retained zero-managed-byte frames; compatibility rejects this GPU family. See docs/components/drawable-textures.md for current evidence and platform/native-memory limits."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.BlitMaterial..ctor()",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "constructor:Electron2D.DrawableTexture..ctor()",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.BlitMaterial.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.BlitMaterial.CreateDuplicateInstance()",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.BlitMaterial.GetPropertyDescriptors()",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.DrawableTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.DrawableTexture.CreateDuplicateInstance()",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.DrawableTexture.Dispose(System.Boolean)",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.DrawableTexture.GetHeight()",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.DrawableTexture.GetImage()",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.DrawableTexture.GetPropertyDescriptors()",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.DrawableTexture.GetWidth()",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.DrawableTexture.OnResetState()",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.DrawableTexture.ValidateDisposal()",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.DrawableTexture.ValidateMutation()",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.Shader.CreateFromSPIRV(System.ReadOnlySpan<System.Byte>,Electron2D.Shader.Mode)",
+      "reason": "Explicit typed shader-domain selection for immutable compiled SPIR-V loading/replacement; preserves the accepted build-time HLSL/GLSL compilation boundary and the existing canvas overloads.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.Shader.SetSPIRV(System.ReadOnlySpan<System.Byte>,Electron2D.Shader.Mode)",
+      "reason": "Explicit typed shader-domain selection for immutable compiled SPIR-V loading/replacement; preserves the accepted build-time HLSL/GLSL compilation boundary and the existing canvas overloads.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "property:Electron2D.DrawableTexture.HasAlpha()",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "property:Electron2D.DrawableTexture.HasMIPMaps()",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "property:Electron2D.DrawableTexture.MIPMapCount()",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    },
+    {
+      "electron2d": "property:Electron2D.DrawableTexture.PixelFormat()",
+      "reason": "Typed C# construction, native-storage reset, duplication, metadata or deterministic disposal projects the existing Texture/Material/Resource lifecycle into the executing drawable family.",
+      "adr": "ADRs 0004/0013/0028"
+    }
+  ]
+}

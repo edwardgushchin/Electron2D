@@ -49,6 +49,9 @@ def generate(output, source_root=ROOT):
                         defines = [f'-D{name}_TYPE={("float4", "int4", "uint4")[kind]}'
                                    for name, kind in zip(('DIFFUSE', 'NORMAL', 'SPECULAR'), types)]
                         programs.append((source, f'Lighting{"".join(map(str, types))}.frag', defines))
+                elif source.name == 'Drawable.frag.hlsl':
+                    for count in (2, 3, 4):
+                        programs.append((source, f'Drawable{count}.frag', [f'-DTARGETS={count}']))
                 elif source.name == 'Clip.frag.hlsl':
                     for kind in (1, 2):
                         programs.append((source, f'Clip{kind}.frag', [f'-DDIFFUSE_TYPE={("float4", "int4", "uint4")[kind]}']))

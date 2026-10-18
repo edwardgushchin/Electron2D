@@ -119,7 +119,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [BaseMaterial3D](classes/BaseMaterial3D.md) | Material | Excluded | 289 |
 | [Basis](classes/Basis.md) | — | Excluded | 42 |
 | [BitMap](classes/BitMap.md) | Resource | Implemented | 13 |
-| [BlitMaterial](classes/BlitMaterial.md) | Material | Blocked | 7 |
+| [BlitMaterial](classes/BlitMaterial.md) | Material | Implemented | 7 |
 | [Bone2D](classes/Bone2D.md) | Node2D | Implemented | 10 |
 | [BoneAttachment3D](classes/BoneAttachment3D.md) | Node3D | Excluded | 8 |
 | [BoneConstraint3D](classes/BoneConstraint3D.md) | SkeletonModifier3D | Excluded | 20 |
@@ -224,7 +224,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [DirectionalLight2D](classes/DirectionalLight2D.md) | Light2D | Implemented | 2 |
 | [DirectionalLight3D](classes/DirectionalLight3D.md) | Light3D | Excluded | 17 |
 | [DisplayServer](classes/DisplayServer.md) | Object | Implemented | 552 |
-| [DrawableTexture2D](classes/DrawableTexture2D.md) | Texture2D | Blocked | 13 |
+| [DrawableTexture2D](classes/DrawableTexture2D.md) | Texture2D | Implemented | 13 |
 | [ENetConnection](classes/ENetConnection.md) | RefCounted | Implemented | 35 |
 | [ENetMultiplayerPeer](classes/ENetMultiplayerPeer.md) | MultiplayerPeer | Implemented | 7 |
 | [ENetPacketPeer](classes/ENetPacketPeer.md) | PacketPeer | Implemented | 47 |

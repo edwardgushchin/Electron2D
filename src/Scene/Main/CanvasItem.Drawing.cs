@@ -355,14 +355,14 @@ public abstract partial class CanvasItem
             }
             if (replay.MultiMesh is { } instances)
             {
-                if (!capturedMaterial) { var current = CanvasMaterial; material = current?.GetCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
+                if (!capturedMaterial) { var current = CanvasMaterial; material = current?.RequireCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
                 var fraction = IsPhysicsInterpolatedAndEnabled() ? (float)Engine.PhysicsInterpolationFraction : 1f;
                 instances.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, commandClip, viewport?.SnapVerticesToPixel == true, fraction, outputSize, this, linear);
                 continue;
             }
             if (replay.Mesh is { } mesh)
             {
-                if (!capturedMaterial) { var current = CanvasMaterial; material = current?.GetCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
+                if (!capturedMaterial) { var current = CanvasMaterial; material = current?.RequireCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
                 mesh.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, commandClip, viewport?.SnapVerticesToPixel == true, skinOwner: this, linear: linear);
                 continue;
             }
@@ -398,7 +398,7 @@ public abstract partial class CanvasItem
             if (!capturedMaterial)
             {
                 var canvasMaterial = CanvasMaterial;
-                material = canvasMaterial?.GetCanvasState();
+                material = canvasMaterial?.RequireCanvasState();
                 blend = canvasMaterial?.GetCanvasBlendMode() ?? BlendMode.Mix;
                 capturedMaterial = true;
             }

@@ -103,7 +103,8 @@
     "OccluderPolygon2D": "OccluderPolygon",
     "CompressedTexture2DArray": "CompressedTextureArray",
     "CompressedTexture2D": "CompressedTexture",
-    "PlaceholderTexture2D": "PlaceholderTexture"
+    "PlaceholderTexture2D": "PlaceholderTexture",
+    "DrawableTexture2D": "DrawableTexture"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",
@@ -221,6 +222,8 @@
     "PhysicsServer2D.ShapeType": "PhysicsServer.ShapeType",
     "RenderingServer.TextureLayeredType": "TextureLayered.LayeredType",
     "TileSetAtlasSource.TileAnimationMode": "Electron2D.TileSetAtlasSource.TileAnimationMode",
-    "ProgressBar.FillMode": "ProgressFillMode"
+    "ProgressBar.FillMode": "ProgressFillMode",
+    "DrawableTexture2D.DrawableFormat": "DrawableTexture.DrawableFormat",
+    "BlitMaterial.BlendMode": "BlitBlendMode"
   }
 }

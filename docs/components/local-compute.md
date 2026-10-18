@@ -225,3 +225,5 @@ device.FreeRID(image); // Releases the wrapper, preserving the viewport target.
 ## Writable retained instance buffers
 
 The global device consumes the real storage exported by RenderingServer.MultiMeshGetBufferRDRID and MultiMeshGetCommandBufferRDRID. Buffer/compute operations share native submission ordering with CPU dirty ranges and the canvas GPU conversion/indirect draw. The resource owns live lifetime; expiration invalidates uniform-set borrowers. Current/previous native records support physics presentation while CPU snapshots stay authored. Compatibility exports no storage. [The mesh contract](meshes.md#writable-instance-device-buffers) specifies layouts, bounds, command validity, ownership, native pixel and allocation evidence. This adds no particle simulation or arbitrary process-material stage.
+
+DrawableTexture storage belongs to the global rendering device. Ordered blit passes and mip generation record before canvas submission; exported device RIDs lease storage with wrapper-only ownership. See [writable textures](drawable-textures.md).

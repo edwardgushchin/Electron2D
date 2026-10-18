@@ -2695,12 +2695,12 @@
     {
       "godot": "RenderingServer::method:texture_proxy_create(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyCreate(Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "RenderingServer::method:texture_proxy_update(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyUpdate(Electron2D.RID,Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "FlowContainer::theme_item:h_separation",
@@ -5487,13 +5487,6 @@
     },
     {
       "state": "Blocked",
-      "reason": "Trigger: the first drawable-texture/offscreen blit slice must implement its shader entry/interface, target lifecycle and backend checks; ordinary canvas texture sampling does not supply that mode (ADR 0028).",
-      "godot": [
-        "Shader::enum_value:Mode.MODE_TEXTURE_BLIT"
-      ]
-    },
-    {
-      "state": "Blocked",
       "reason": "Trigger: the first editor shader-inspection slice must show actual generated backend code and variants through the public engine API; compiling/reflection alone does not implement this editor UI (ADRs 0027/0028).",
       "godot": [
         "Shader::method:inspect_native_shader_code()",
@@ -6289,7 +6282,7 @@
         "RenderingServer::method:texture_proxy_update(RID:,RID:)"
       ],
       "state": "Partial",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": [
@@ -6298,16 +6291,6 @@
       ],
       "state": "Blocked",
       "reason": "Trigger: safe borrowed external texture identity/import ownership and sRGB view contract for GPU and compatibility drivers, including invalidation/cleanup/capability checks; enters the first native texture interop slice under ADR 0028 without exposing owned SDL types/handles."
-    },
-    {
-      "godot": [
-        "RenderingServer::method:texture_drawable_create(int:,int:,int:RenderingServer.TextureDrawableFormat,Color:,bool:)",
-        "RenderingServer::method:texture_drawable_blit_rect(RID[]:,Rect2i:,RID:,Color:,RID[]:,int:)",
-        "RenderingServer::method:texture_drawable_generate_mipmaps(RID:)",
-        "RenderingServer::method:texture_drawable_get_default_material()"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: owned 2D render-target/drawable storage, format-aware target creation/blit/mipmap passes and drawable material RID lifetime; enter the first offscreen drawable integration under ADR 0028. Root canvas rendering and sampled texture RIDs do not supply these target operations."
     },
     {
       "godot": [

@@ -462,6 +462,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     private nint PrepareTexture(Texture texture)
     {
         if (texture is ServerTexture { IsProxy: true } proxy) texture = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget) ?? RenderingTextureRegistry.PlaceholderTexture;
+        if (texture is CanvasTexture channels) texture = ShaderTexture.Source(channels) as Texture ?? RenderingTextureRegistry.PlaceholderTexture;
         if (texture is AtlasTexture atlas) texture = atlas.RenderingTexture
             ?? throw new InvalidOperationException("A sampled atlas has no source texture.");
         if (texture is ViewportTexture viewportTexture)
@@ -469,6 +470,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             var viewport = viewportTexture.Bound ?? throw new InvalidOperationException("The sampled viewport texture is unresolved.");
             return (FindTarget(viewport) ?? throw new InvalidOperationException("The sampled viewport has no native target.")).Current.DangerousGetHandle();
         }
+        if (texture is DrawableTexture drawable) return drawable.NativeTexture(Device);
         if (texture is TextureRD deviceTexture && deviceTexture.NativeTexture(Device) is var native && native != 0) return native;
         if (_usedTextures.Add(texture))
         {

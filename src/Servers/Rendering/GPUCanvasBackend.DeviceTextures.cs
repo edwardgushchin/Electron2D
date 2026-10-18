@@ -4,6 +4,11 @@ internal sealed unsafe partial class GPUCanvasBackend
 {
     internal RID ExportTexture(Resource resource, RenderingDevice device, bool SRGB)
     {
+        if (resource is DrawableTexture drawable)
+        {
+            if (SRGB && drawable.NativeFormat != RenderingDevice.DataFormat.R8G8B8A8SRGB) throw new NotSupportedException("Distinct sRGB views require native format-view integration.");
+            return device.BorrowDrawableTexture(drawable, drawable.EnsureImage());
+        }
         if (resource is ViewportTexture viewportTexture)
         {
             var viewport = viewportTexture.Bound; var target = viewport is null ? null : FindTarget(viewport);

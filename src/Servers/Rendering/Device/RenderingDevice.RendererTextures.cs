@@ -6,6 +6,18 @@ public sealed unsafe partial class RenderingDevice
 {
     private readonly Dictionary<Resource, RID> _rendererTextures = new(ReferenceEqualityComparer.Instance);
     private readonly HashSet<GPUTexture> _rendererUploads = [];
+    internal RID BorrowDrawableTexture(DrawableTexture source, RID image)
+    {
+        IdleList();
+        if (_rendererTextures.TryGetValue(source, out var cached) && _entries.TryGetValue(cached, out var prior) && prior.Borrowed?.Alive == true) return cached;
+        var original = Get(image, Kind.Texture); var borrow = new RendererTextureBorrow(source, image, original.Handle!);
+        try
+        {
+            var rid = Add(new Entry { Kind = Kind.Texture, Texture = original.Texture, Size = original.Size, Borrowed = borrow });
+            _rendererTextures[source] = rid; return rid;
+        }
+        catch { borrow.Dispose(); throw; }
+    }
     internal RID BorrowRendererTexture(Resource source, GPUTexture? pixels, CanvasRenderTarget? target)
     {
         IdleList();

@@ -29,7 +29,7 @@ internal static unsafe partial class SpirvReflection
     }
 
     internal static ShaderProgram Read(byte[] code, bool fragment,
-        IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null)
+        IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null, bool blit = false)
     {
         var booleans = ReadBooleans(code);
         if (sourceTypes is not null && booleans.Count != 0)
@@ -200,7 +200,9 @@ internal static unsafe partial class SpirvReflection
             var length = GetArrayDimensions(resourceType) == 0 ? 0 : (int)GetArrayLength(resourceType, 0);
             if (length != 0 && (name is "TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE" || name.StartsWith("GLOBAL_", StringComparison.Ordinal)))
                 throw new NotSupportedException("Renderer-owned and global images require scalar descriptor bindings.");
-            textures[slot] = new(name, (int)slot, array, GetBaseType(sampleType) switch { 7 => 1, 8 => 2, _ => 0 }, length);
+            var blitSource = blit && name is "SOURCE_TEXTURE0" or "SOURCE_TEXTURE1" or "SOURCE_TEXTURE2" or "SOURCE_TEXTURE3";
+            if (blitSource && (array || length != 0 || GetBaseType(sampleType) != 13)) throw new NotSupportedException("Blit source samplers require scalar float 2D images.");
+            textures[slot] = new(name, (int)slot, array, GetBaseType(sampleType) switch { 7 => 1, 8 => 2, _ => 0 }, length, BlitSource: blitSource);
         }
         var samplerSlots = new bool[(int)textureCount];
         foreach (var resource in new ReadOnlySpan<ReflectedResource>((void*)samplerPointer, (int)samplerCount))
