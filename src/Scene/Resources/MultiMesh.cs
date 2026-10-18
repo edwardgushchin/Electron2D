@@ -3,8 +3,8 @@ namespace Electron2D;
 /// <summary>Owns copied two-dimensional instance transforms, colors and shader data for a borrowed mesh.</summary>
 /// <remarks>Configuration flags change only while InstanceCount is zero. Packed records contain eight transform
 /// floats, followed by optional four-float color and custom-data channels. Resource operations serialize;
-/// changes commit before Changed callbacks. Presentation snapshots are transient and do not enter copies.</remarks>
-public sealed class MultiMesh : Resource
+/// changes commit before Changed callbacks. Presentation snapshots and renderer-device identities are transient and do not enter copies. Exported writable device buffers retain the same record layout. GPU writes affect drawing while CPU getters and automatic bounds retain authored data; provide manual bounds for generated output.</remarks>
+public sealed partial class MultiMesh : Resource
 {
     /// <summary>Selects the interpolation of two-dimensional instance bases.</summary>
     public enum PhysicsInterpolationQuality
@@ -32,7 +32,7 @@ public sealed class MultiMesh : Resource
     public Mesh? Mesh
     {
         get { lock (Gate) { ThrowIfDisposed(); return _mesh; } }
-        set { lock (Gate) { ThrowIfDisposed(); if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); if (ReferenceEquals(_mesh, value)) return; _mesh = value; } EmitChanged(); }
+        set { lock (Gate) { ThrowIfDisposed(); if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); if (ReferenceEquals(_mesh, value)) return; _mesh = value; _gpu?.MeshChanged(); } EmitChanged(); }
     }
     /// <summary>Gets or sets a manual local visibility rectangle for the whole instance resource.</summary>
     /// <value>The zero rectangle selects automatic bounds; other finite nonnegative rectangles override computation.</value>
@@ -78,7 +78,7 @@ public sealed class MultiMesh : Resource
     public int VisibleInstanceCount
     {
         get { lock (Gate) { ThrowIfDisposed(); return _visible; } }
-        set { lock (Gate) { ThrowIfDisposed(); if (value < -1 || value > _count) throw new ArgumentOutOfRangeException(nameof(value)); if (_visible == value) return; _visible = value; } EmitChanged(); }
+        set { lock (Gate) { ThrowIfDisposed(); if (value < -1 || value > _count) throw new ArgumentOutOfRangeException(nameof(value)); if (_visible == value) return; _visible = value; _gpu?.SetVisible(DrawCount); } EmitChanged(); }
     }
     /// <summary>Gets or sets whether packed records include instance color multipliers.</summary>
     /// <value>False initially; configure before allocating instances.</value>
@@ -125,7 +125,7 @@ public sealed class MultiMesh : Resource
     /// <exception cref="ArgumentException">A buffer is malformed; both snapshots remain unchanged.</exception>
     public void SetBufferInterpolated(ReadOnlySpan<float> bufferCurrent, ReadOnlySpan<float> bufferPrevious)
     {
-        lock (Gate) { ThrowIfDisposed(); ValidateBuffer(bufferCurrent); ValidateBuffer(bufferPrevious); bufferCurrent.CopyTo(_buffer); bufferPrevious.CopyTo(_previous); _interpolationEnabled = true; }
+        lock (Gate) { ThrowIfDisposed(); ValidateBuffer(bufferCurrent); ValidateBuffer(bufferPrevious); bufferCurrent.CopyTo(_buffer); bufferPrevious.CopyTo(_previous); _interpolationEnabled = true; _gpu?.SetSnapshots(_buffer.Length); }
         EmitChanged();
     }
     /// <summary>Returns the current stored local transform for one instance.</summary>
@@ -191,15 +191,15 @@ public sealed class MultiMesh : Resource
     public Color[] CustomDataArray { get => GetColors(custom: true); set => SetColors(value, custom: true); }
     /// <summary>Prevents interpolation for one instance by copying its current record to the previous snapshot.</summary>
     /// <param name="instance">Existing zero-based index.</param>
-    public void ResetInstancePhysicsInterpolation(int instance) { lock (Gate) { var offset = Offset(instance); _buffer.AsSpan(offset, Stride).CopyTo(_previous.AsSpan(offset)); } }
+    public void ResetInstancePhysicsInterpolation(int instance) { lock (Gate) { var offset = Offset(instance); _buffer.AsSpan(offset, Stride).CopyTo(_previous.AsSpan(offset)); _gpu?.ResetPrevious(offset, Stride); } }
     /// <summary>Resets all presentation records to current values without editing logical data.</summary>
-    public void ResetInstancesPhysicsInterpolation() { lock (Gate) { ThrowIfDisposed(); _buffer.CopyTo(_previous, 0); } RenderingServer.NotifyRenderMutation(); }
+    public void ResetInstancesPhysicsInterpolation() { lock (Gate) { ThrowIfDisposed(); _buffer.CopyTo(_previous, 0); _gpu?.ResetPrevious(0, _buffer.Length); } RenderingServer.NotifyRenderMutation(); }
     /// <summary>Gets the stable borrowed resource identity.</summary>
     /// <returns>A weak logical RID valid until resource disposal, independently of a renderer.</returns>
     public override RID GetRID() { lock (Gate) { ThrowIfDisposed(); return _rid.IsValid() ? _rid : _rid = RenderingMultiMeshRegistry.Register(this); } }
-    internal void Allocate(int count, bool colors, bool custom)
+    internal void Allocate(int count, bool colors, bool custom, bool indirect = false)
     {
-        bool changed; lock (Gate) changed = AllocateCore(count, colors, custom);
+        bool changed; lock (Gate) { changed = AllocateCore(count, colors, custom); if (UseIndirect != indirect) { UseIndirect = indirect; _gpu = null; changed = true; } }
         if (changed) EmitChanged();
     }
     private bool AllocateCore(int count, bool colors, bool custom)
@@ -209,7 +209,7 @@ public sealed class MultiMesh : Resource
         var stride = 8 + (colors ? 4 : 0) + (custom ? 4 : 0); var length = (long)count * stride;
         if (length > Array.MaxLength) throw new ArgumentOutOfRangeException(nameof(count));
         var buffer = new float[(int)length]; var previous = new float[(int)length];
-        _buffer = buffer; _previous = previous; _count = count; _colors = colors; _custom = custom; _visible = Math.Min(_visible, count);
+        _gpu = null; _buffer = buffer; _previous = previous; _count = count; _colors = colors; _custom = custom; _visible = Math.Min(_visible, count);
         return true;
     }
     internal RID RegisterOwned(RenderingServer owner) { lock (Gate) { ThrowIfDisposed(); return _rid = RenderingMultiMeshRegistry.Register(this, owner); } }
@@ -217,7 +217,7 @@ public sealed class MultiMesh : Resource
     private int Offset(int instance) { ThrowIfDisposed(); if ((uint)instance >= (uint)_count) throw new ArgumentOutOfRangeException(nameof(instance)); return instance * Stride; }
     private int Channel(int instance, bool custom) { var offset = Offset(instance); if (custom ? !_custom : !_colors) throw new InvalidOperationException("The requested instance channel is disabled."); return offset + 8 + (custom && _colors ? 4 : 0); }
     private void ValidateBuffer(ReadOnlySpan<float> values) { if (values.Length != _buffer.Length) throw new ArgumentException("Packed instance buffer size differs from allocated storage.", nameof(values)); foreach (var value in values) if (!float.IsFinite(value)) throw new ArgumentException("Instance buffers must be finite.", nameof(values)); }
-    private void CommitRange(int offset, int count) { if (!_inTick) _buffer.AsSpan(offset, count).CopyTo(_previous.AsSpan(offset)); }
+    private void CommitRange(int offset, int count) { if (!_inTick) _buffer.AsSpan(offset, count).CopyTo(_previous.AsSpan(offset)); _gpu?.Changed(offset, count, !_inTick); }
     private void SetColor(int instance, Color value, bool custom)
     {
         lock (Gate) { var offset = Channel(instance, custom); if (!value.IsFinite()) throw new ArgumentException("Instance components must be finite.", nameof(value)); WriteColor(_buffer, offset, value); CommitRange(offset, 4); }
@@ -241,10 +241,10 @@ public sealed class MultiMesh : Resource
     private static void WriteColor(float[] values, int offset, Color value) { values[offset] = value.R; values[offset + 1] = value.G; values[offset + 2] = value.B; values[offset + 3] = value.A; }
     internal void SetInterpolationEnabled(bool enabled)
     {
-        lock (Gate) { ThrowIfDisposed(); if (_interpolationEnabled == enabled) return; _interpolationEnabled = enabled; _buffer.CopyTo(_previous, 0); }
+        lock (Gate) { ThrowIfDisposed(); if (_interpolationEnabled == enabled) return; _interpolationEnabled = enabled; _buffer.CopyTo(_previous, 0); _gpu?.ResetPrevious(0, _buffer.Length); }
     }
-    internal bool HasRenderingInterpolation { get { lock (Gate) return _interpolationEnabled && !_buffer.AsSpan().SequenceEqual(_previous); } }
-    internal void PhysicsTick(bool start) { lock (Gate) { if (IsDisposed) return; if (start && _interpolationEnabled) { if (!_buffer.AsSpan().SequenceEqual(_previous)) RenderingServer.NotifyRenderMutation(); _buffer.CopyTo(_previous, 0); } _inTick = start && _interpolationEnabled; } }
+    internal bool HasRenderingInterpolation { get { lock (Gate) return _interpolationEnabled && (GPUState is not null || !_buffer.AsSpan().SequenceEqual(_previous)); } }
+    internal void PhysicsTick(bool start) { lock (Gate) { if (IsDisposed) return; if (start && _interpolationEnabled) { if (!_buffer.AsSpan().SequenceEqual(_previous)) RenderingServer.NotifyRenderMutation(); _gpu?.PhysicsTick(); _buffer.CopyTo(_previous, 0); } _inTick = start && _interpolationEnabled; } }
     internal void Presentation(int instance, float fraction, out Transform pose, out Color color, out Color custom)
     {
         var offset = instance * Stride; fraction = _interpolationEnabled ? Math.Clamp(fraction, 0, 1) : 1;
@@ -273,12 +273,24 @@ public sealed class MultiMesh : Resource
         var other = (MultiMesh)target; Mesh? mesh; float[] buffer; int count, visible; bool colors, custom; PhysicsInterpolationQuality quality; Rect2 bounds;
         lock (Gate) { ThrowIfDisposed(); mesh = _mesh; buffer = (float[])_buffer.Clone(); count = _count; visible = _visible; colors = _colors; custom = _custom; quality = _quality; bounds = _customAABB; }
         mesh = (Mesh?)duplicateSubresource(mesh);
-        lock (other.Gate) { other.ThrowIfDisposed(); other._mesh = mesh; other._buffer = buffer; other._previous = (float[])buffer.Clone(); other._count = count; other._visible = visible; other._colors = colors; other._custom = custom; other._quality = quality; other._customAABB = bounds; }
+        var previous = (float[])buffer.Clone();
+        lock (other.Gate)
+        {
+            other.ThrowIfDisposed();
+            if (other._count != count || other._colors != colors || other._custom != custom) other._gpu = null;
+            else if (other._gpu is { } gpu)
+            {
+                gpu.SetSnapshots(buffer.Length);
+                if (!ReferenceEquals(other._mesh, mesh)) gpu.MeshChanged();
+                else if (other._visible != visible) gpu.SetVisible(visible < 0 ? count : visible);
+            }
+            other._mesh = mesh; other._buffer = buffer; other._previous = previous; other._count = count; other._visible = visible; other._colors = colors; other._custom = custom; other._quality = quality; other._customAABB = bounds;
+        }
     }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        lock (Gate) { if (_rid.IsValid()) RenderingMultiMeshRegistry.Remove(_rid); _rid = default; _mesh = null; _buffer = _previous = []; _inTick = false; }
+        lock (Gate) { _gpu = null; if (_rid.IsValid()) RenderingMultiMeshRegistry.Remove(_rid); _rid = default; _mesh = null; _buffer = _previous = []; _inTick = false; }
         base.Dispose(disposing);
     }
 }

@@ -21,3 +21,9 @@ CanvasVertexProgramTests checks real GLSL/HLSL native pixels, hardware instances
 ## Procedural mesh integration
 
 Procedural variants set authored position input to zero and transform homogeneous output through the retained affine basis/origin. They preserve clip Z/W, apply optional framebuffer snapping and derive built-in group screen UVs. Public Frame remains one float2; physical private metadata is renderer-owned. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).
+
+## Writable instance consumer
+
+Exported/indirect MultiMesh storage selects a retained GPU consumer. CanvasMesh captures source vertices/indices, palette deformation, LOD metadata and finite authored canvas state. CanvasMultiMesh retains manual/authored bounds and resource guards. GPUCanvasBackend owns conversion outputs, native index/LOD buffers and indirect commands; the private kernel interpolates raw device records and chooses each instance's LOD. CanvasVertexProgram snaps ordinary instance positions before the authored stage and procedural homogeneous output after it; built-in instance vertices support snapping and group screen UVs. Group color premultiplication, masks and original vertex IDs remain connected. Relaxed Android devices bind each LOD instance separately when nonzero indirect first-instance support is unavailable. See [ownership and Linux-native verification limits](../components/meshes.md#writable-instance-device-buffers).
+
+Original instance identity is carried as two exact numerical 16-bit halves in private translation padding. Canvas vertex composition restores the original 32-bit builtin for indirect subranges and per-instance LOD commands; legacy streams retain their native builtin. GLSL/HLSL command pixels include source ID 65537. Private buffers that were never exported retire their device metadata after pending work, while expired exported identities remain available for explicit FreeRID.

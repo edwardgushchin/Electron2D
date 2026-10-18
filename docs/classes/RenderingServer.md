@@ -522,7 +522,7 @@ data: Little-endian X/Y records.
 
 ## Instance integration
 
-Created MultiMesh identities own instance storage until FreeRID or renderer shutdown and borrow child Mesh identities. Reads enforce renderer owner thread/lifetime and accept live owned or borrowed instance identities; mutations additionally enforce identity ownership. Resource RIDs may be drawn but cannot be mutated/freed through these owned methods. Ordinary fixed 2D allocation executes atomically; useIndirect=true rejects before mutation. Device buffer RIDs remain absent. Canonical owned MeshCreate identities survive linked MultiMeshGetMesh queries.
+Created MultiMesh identities own instance storage until FreeRID or renderer shutdown and borrow child Mesh identities. Reads enforce renderer owner thread/lifetime and accept live owned or borrowed instance identities; mutations additionally enforce identity ownership. Resource RIDs may be drawn but cannot be mutated/freed through these owned methods. Fixed 2D allocation executes atomically; useIndirect=true creates native command storage on the GPU backend and rejects on Compatibility before mutation. Writable device identities follow the contract below. Canonical owned MeshCreate identities survive linked MultiMeshGetMesh queries.
 
 ## Methods and protected extension points
 
@@ -569,11 +569,11 @@ useColors: Include four-float color multipliers.
 
 useCustomData: Include four-float shader data.
 
-useIndirect: False for retained canvas storage; true requires a future writable GPU command-buffer backend.
+useIndirect: Create native five-uint commands per surface, initially with zero instances; requires GPU rendering.
 
-System.NotSupportedException: Indirect GPU instance commands are requested.
+System.NotSupportedException: Enabled indirect mode is requested on Compatibility.
 
-Remarks: Transforms are always two-dimensional. Equal capacity and flags preserve storage.
+Remarks: Transforms are always two-dimensional. Equal capacity, schema and indirect mode preserve storage; capacity/schema changes reset records and expire identities; mode changes recreate native storage from retained authored snapshots.
 
 <a id="member-a3d75d5b55ec"></a>
 ### MultiMeshCreate
@@ -1391,3 +1391,12 @@ Paired ShaderSetSPIRV uses the same [original mesh vertex ID contract](../compon
 ## Procedural mesh integration
 
 Typed and packed procedural surfaces execute through owned/borrowed mesh identities with independent counts, source IDs and authored visibility. Existing owner-thread, mutation and disposal guards apply. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).
+
+## Writable MultiMesh buffers
+
+| Complete signature | Contract |
+| --- | --- |
+| `public static RID MultiMeshGetBufferRDRID(RID multiMesh)` | Live borrowed/owned resource to actual canonical writable storage; empty for zero count or Compatibility. |
+| `public static RID MultiMeshGetCommandBufferRDRID(RID multiMesh)` | Five uints per surface; empty without indirect mode, surfaces, capacity or a GPU backend. |
+
+Both require the global renderer owner, no active device list and no native submission/readback-memory callback reentry. Invalid logical RIDs throw ArgumentException; byte-budget overflow throws ArgumentOutOfRangeException; invalid thread/list/callback/native state throws InvalidOperationException. The resource owns live device lifetime. CPU getters remain authored; device writes are visible to actual canvas consumers. See [complete record/command layout, replacement and verification](../components/meshes.md#writable-instance-device-buffers).

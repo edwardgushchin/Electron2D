@@ -134,9 +134,9 @@ public sealed partial class RenderingServer
     /// <param name="instances">Nonnegative capacity.</param>
     /// <param name="useColors">Include four-float color multipliers.</param>
     /// <param name="useCustomData">Include four-float shader data.</param>
-    /// <param name="useIndirect">False for retained canvas storage; true requires a future writable GPU command-buffer backend.</param>
-    /// <exception cref="NotSupportedException">Indirect GPU instance commands are requested.</exception>
-    /// <remarks>Transforms are always two-dimensional. Equal capacity and flags preserve storage.</remarks>
+    /// <param name="useIndirect">Create writable indirect commands per surface, initially with zero instances; requires the GPU renderer.</param>
+    /// <exception cref="NotSupportedException">Indirect allocation is requested on Compatibility.</exception>
+    /// <remarks>Transforms are always two-dimensional. Equal capacity, schema and indirect mode preserve storage. Capacity/schema changes reset records and expire exports. Mode changes retain authored snapshots and recreate native storage. CPU getters remain authored snapshots after GPU writes.</remarks>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void MultiMeshAllocateData(RID multiMesh, int instances, bool useColors = false, bool useCustomData = false, bool useIndirect = false) => RequireService().MultiMeshAllocateDataCore(multiMesh, instances, useColors, useCustomData, useIndirect);
 

@@ -259,6 +259,7 @@ public sealed partial class RenderingServer : ElectronObject
         foreach (var mask in frame.Lighting.Masks) SubmitTexture(mask.Texture, tree);
         foreach (var child in _activeFrames) if (UpdateMode(child.Viewport) == ViewportUpdateMode.WhenParentVisible && ReferenceEquals(RenderParent(child.Viewport), frame.Viewport)) { child.Wanted = true; SubmitFrame(child, tree); }
         var target = _backend.FindTarget(frame.Viewport); if (target is null) return;
+        _renderingDevice?.FlushRendererCommands();
         _submittingTextures = true;
         try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), FrameClear(frame.Viewport), ClearMode(frame.Viewport) != ViewportClearMode.Never, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting); }
         finally { _submittingTextures = false; }

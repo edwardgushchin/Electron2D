@@ -112,3 +112,7 @@ Programmable pipeline usage retains one previous frame. Alternating instance cul
 ## Procedural mesh integration
 
 Procedural pipeline identity includes native topology and composed vertex code. Built-in mask/group passes preserve authored generated vertex execution and bind its vertex textures. Frame private metadata carries snapping/group UV policy without changing the public Frame schema. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).
+
+## Writable instance consumer
+
+Exported/indirect MultiMesh storage selects a retained GPU consumer. CanvasMesh captures source vertices/indices, palette deformation, LOD metadata and finite authored canvas state. CanvasMultiMesh retains manual/authored bounds and resource guards. GPUCanvasBackend owns conversion outputs, native index/LOD buffers and indirect commands; the private kernel interpolates raw device records and chooses each instance's LOD. CanvasVertexProgram snaps ordinary instance positions before the authored stage and procedural homogeneous output after it; built-in instance vertices support snapping and group screen UVs. Group color premultiplication, masks and original vertex IDs remain connected. Relaxed Android devices bind each LOD instance separately when nonzero indirect first-instance support is unavailable. See [ownership and Linux-native verification limits](../components/meshes.md#writable-instance-device-buffers).

@@ -16,7 +16,7 @@ Fixed two-dimensional instance resource borrowing a Mesh and owning copied packe
 
 GetAABB returns Rect2 bounds for the visible prefix or manual CustomAABB; zero override enables computation. Culling uses presentation poses and finite rectangles. Fast interpolates components; High preserves rotation/scale/skew for compatible nonsingular bases and falls back otherwise. Tick capture/reset/explicit-pair behavior is described by each member. Scene consumers refresh the shared resource policy; last assigned effective policy applies to shared storage. Ordinary writes outside ticks reset edited previous values.
 
-Shallow copies borrow Mesh, deep and scene-local copies follow inherited resource graph rules and own independent records. New copies reset transient previous state and logical identities. Disposal invalidates this resource RID and storage without disposing Mesh. Renderer-owned allocation exposes the same ordinary behavior; indirect/device-buffer storage is absent. GPU draws use a retained hardware stream for eligible unskinned ArrayMesh/ImmediateMesh triangles; other cases retain CPU expansion. Both preserve surface/instance order and finite presentation validation. Raw custom fragment data reaches GPU shaders; compatibility rejects custom shaders.
+Shallow copies borrow Mesh, deep and scene-local copies follow inherited resource graph rules and own independent records. New copies reset transient previous state and logical identities. Disposal invalidates this resource RID and storage without disposing Mesh. Renderer-owned allocation exposes the same ordinary behavior and optional native indirect commands. The writable buffer contract below applies after export or indirect allocation. GPU draws use a retained hardware stream for eligible unskinned ArrayMesh/ImmediateMesh triangles; other cases retain CPU expansion. Both preserve surface/instance order and finite presentation validation. Raw custom fragment data reaches GPU shaders; compatibility rejects custom shaders.
 
 ## Example
 
@@ -384,3 +384,13 @@ Automatic GetAABB and presentation bounds use ArrayMesh.CustomAABB before each v
 ## Procedural mesh integration
 
 Procedural source surfaces support all five topologies with native or expanded instances. Expanded instances keep separate strips. Instance transforms, tint/custom data and explicit bounds retain their existing roles. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).
+
+## Writable rendering storage
+
+On the GPU backend, `RenderingServer.MultiMeshGetBufferRDRID` exports real renderer-owned storage for a live owned or borrowed resource. Zero capacity and Compatibility return an empty RID. The getter prepares native storage and selects the GPU instance consumer; indirect allocation selects it automatically. Use the global `RenderingDevice` on its owner thread outside command lists/native submission. Local devices reject these identities.
+
+Each record contains `[XX, YX, 0, originX, XY, YY, 0, originY]`, followed by optional four-float color and four-float custom data. The stride is 8, 12 or 16 floats. CPU setters upload only their changed records/channels, preserving unrelated GPU writes. GPU writes affect native drawing while `Buffer`, per-instance getters, copies and automatic geometric queries retain authored CPU snapshots. Authors supply `CustomAABB` covering GPU-generated output. Device-buffer capacities must fit the renderer byte budget.
+
+`MultiMeshAllocateData(..., useIndirect: true)` supplies five uints per surface. Indexed commands are `[indexCount, instanceCount, firstIndex, signedBaseVertexBits, firstInstance]`; sequential commands are `[vertexCount, instanceCount, firstVertex, firstInstance, unused]`. Initial instance counts are zero. GPU producers or actual visible-prefix edits set counts; `-1` writes capacity. The native consumer caps the instance subrange to capacity. Producers must keep invocation ranges, indices and signed vertex offsets valid for their surface. Nondefault invocation ranges override automatic LOD selection; default base ranges select per-instance levels on GPU from the full interpolated framebuffer basis.
+
+See [device-buffer lifetime, interpolation and native checks](../components/meshes.md#writable-instance-device-buffers). Fresh resource copies reset renderer storage and indirect session state. Compatible in-place copies retain instance identities and upload complete authored snapshots; structural copies expire storage.

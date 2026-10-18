@@ -15,7 +15,8 @@ internal sealed class CanvasMultiMesh(MultiMesh resource)
         lock (resource.Gate)
         {
             ObjectDisposedException.ThrowIf(resource.IsDisposed, resource);
-            var mesh = resource.Mesh; if (mesh is null || resource.DrawCount == 0) return;
+            if (resource.UseIndirect && RenderingServer.Service?.GetRenderingDeviceCore() is { } device) resource.PrepareGPU(device);
+            var mesh = resource.Mesh; if (mesh is null || resource.InstanceCount == 0 || !resource.UseIndirect && resource.DrawCount == 0) return;
             var revision = resource.ChangeRevision;
             var bounds = transform * resource.GetPresentationBounds(fraction);
             ObjectDisposedException.ThrowIf(resource.IsDisposed, resource);

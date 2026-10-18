@@ -31,7 +31,7 @@ internal static class MultiMeshRenderingTests
             Check(RenderingServer.MultiMeshGetInstanceCount(owned) == 1 && RenderingServer.MultiMeshGetBuffer(owned).Length == 16 && RenderingServer.MultiMeshGetMesh(owned) == mesh.GetRID(), "Owned server producer/read path.");
             Reject<InvalidOperationException>(() => RenderingServer.FreeRID(resource.GetRID()));
             Reject<InvalidOperationException>(() => RenderingServer.MultiMeshSetBuffer(resource.GetRID(), resource.Buffer));
-            Reject<NotSupportedException>(() => RenderingServer.MultiMeshAllocateData(owned, 1, useIndirect: true));
+            if (method == "compatibility") Reject<NotSupportedException>(() => RenderingServer.MultiMeshAllocateData(owned, 1, useIndirect: true));
             Task.Run(() => Reject<InvalidOperationException>(() => RenderingServer.MultiMeshGetInstanceCount(owned))).GetAwaiter().GetResult();
             window.AddChild(new RIDNode(owned));
             window.AddChild(new TailNode(mesh));

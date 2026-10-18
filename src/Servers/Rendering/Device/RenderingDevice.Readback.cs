@@ -130,6 +130,7 @@ public sealed unsafe partial class RenderingDevice
             _submittedReadbacks.Dequeue(); RecycleReadback(request);
         }
         RetireRendererTextures();
+        RetireMultiMeshBuffers();
     }
     private void DeliverReadbacks()
     {

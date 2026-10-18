@@ -15,6 +15,7 @@ internal static class CanvasVertexProgram
         uint Interface(uint storage, uint location) => variables.Values.FirstOrDefault(i => i[3] == storage && instructions.Any(d => Op(d) == 71 && d[1] == i[2] && d[2] == 30 && d[3] == location))?[2] ?? 0;
         var position = Interface(1, 0); var color = Interface(1, 1); var custom = Interface(1, 3); var outputColor = Interface(3, 0);
         var vertexID = variables.Values.SingleOrDefault(v => v[3] == 1 && instructions.Any(i => Op(i) == 71 && i[1] == v[2] && i[2] == 11 && i[3] == 42))?[2] ?? 0;
+        var instanceID = variables.Values.SingleOrDefault(v => v[3] == 1 && instructions.Any(i => Op(i) == 71 && i[1] == v[2] && i[2] == 11 && i[3] == 43))?[2] ?? 0;
         var float2 = Pointee(position); var float4 = Pointee(color); var scalar = declarations[float2][2];
         var basic = instructions.Where(i => Op(i) is >= 19 and <= 23).ToList();
         var uintType = basic.FirstOrDefault(i => Op(i) == 21 && i[2] == 32 && i[3] == 0)?[1] ?? 0;
@@ -62,12 +63,12 @@ internal static class CanvasVertexProgram
             annotations.Add(Instruction(71, rawVertexID, 11, 42));
             meshVertexID = Variable(1, uintType, 15); newInputs.AddRange([rawVertexID, meshVertexID]);
         }
-        if (procedural && boolType == 0)
+        if ((procedural || instanced) && boolType == 0)
         {
             boolType = basic.FirstOrDefault(i => Op(i) == 20)?[1] ?? 0;
             if (boolType == 0) { boolType = ID(); basic.Add(Instruction(20, boolType)); }
         }
-        uint rawPosition = 0, rawColor = 0, basis = 0, translation = 0, tint = 0, rawCustom = 0;
+        uint rawPosition = 0, rawColor = 0, basis = 0, translation = 0, tint = 0, rawCustom = 0, rawInstanceID = 0, instanceIDType = 0;
         if (instanced || procedural) { Privatize(position); rawPosition = Variable(1, float2, 0); newInputs.Add(rawPosition); }
         if (instanced)
         {
@@ -75,6 +76,13 @@ internal static class CanvasVertexProgram
             rawColor = Variable(1, float4, 1);
             basis = Variable(1, float4, 3); translation = Variable(1, float4, 4); tint = Variable(1, float4, 5); rawCustom = Variable(1, float4, 6);
             newInputs.AddRange([rawColor, basis, translation, tint, rawCustom]);
+            if (instanceID != 0)
+            {
+                instanceIDType = Pointee(instanceID);
+                if (declarations[instanceIDType] is not [_, _, 32, _] || Op(declarations[instanceIDType]) != 21) throw new NotSupportedException("Canvas instance identity requires a 32-bit integer builtin.");
+                Privatize(instanceID); rawInstanceID = ID(); added.Add(Instruction(59, Pointer(1, instanceIDType), rawInstanceID, 1));
+                annotations.Add(Instruction(71, rawInstanceID, 11, 43)); newInputs.Add(rawInstanceID);
+            }
         }
         var glyphInput = Variable(1, float4, 14); var glyphOutput = Variable(3, float4, 11, flat: true);
         newInputs.Add(glyphInput); newOutputs.Add(glyphOutput);
@@ -108,11 +116,33 @@ internal static class CanvasVertexProgram
         if (instanced)
         {
             var p = Load(float2, rawPosition); var b = Load(float4, basis); var t = Load(float4, translation);
+            if (instanceID != 0)
+            {
+                // Two exact 16-bit numeric fields preserve identity without float denormal or 24-bit limits.
+                var low = Value(81, scalar, t, 2); var high = Value(81, scalar, t, 3); var zero = ID(); added.Add(Instruction(43, scalar, zero, 0));
+                var index = Value(128, uintType, Value(109, uintType, low), Value(132, uintType, Value(130, uintType, Value(109, uintType, high), Constant(1)), Constant(65536)));
+                var raw = Load(instanceIDType, rawInstanceID); if (instanceIDType != uintType) raw = Value(124, uintType, raw);
+                var selected = Value(169, uintType, Value(182, boolType, high, zero), index, raw);
+                body.Add(Instruction(62, instanceID, instanceIDType == uintType ? selected : Value(124, instanceIDType, selected)));
+            }
             var x = Value(81, scalar, p, 0); var y = Value(81, scalar, p, 1);
             var bx = Value(79, float2, b, b, 0, 1); var by = Value(79, float2, b, b, 2, 3); var origin = Value(79, float2, t, t, 0, 1);
             var px = Value(142, float2, bx, x); var py = Value(142, float2, by, y);
             var local = Value(129, float2, px, py); var transformed = Value(129, float2, local, origin);
             foreach (var id in new[] { px, py, local, transformed }) annotations.Add(Instruction(71, id, 42));
+            if (!procedural)
+            {
+                var flags = Load(uintType, Value(65, Pointer(2, uintType), frame[2], Constant(2)));
+                var snap = Value(171, boolType, Value(199, uintType, flags, Constant(1)), Constant(0));
+                var half = ID(); added.Add(Instruction(43, scalar, half, 0x3f000000));
+                var halves = Value(80, float2, half, half);
+                var std450 = instructions.FirstOrDefault(i => Op(i) == 11 && i.AsSpan(2).SequenceEqual(new uint[] { 0x4c534c47, 0x6474732e, 0x3035342e, 0 }))?[1] ?? 0;
+                if (std450 == 0) { std450 = ID(); instructions.Insert(0, Instruction(11, std450, 0x4c534c47, 0x6474732e, 0x3035342e, 0)); }
+                var snapped = Value(12, float2, std450, 8, Value(129, float2, transformed, halves));
+                var sx = Value(169, scalar, snap, Value(81, scalar, snapped, 0), Value(81, scalar, transformed, 0));
+                var sy = Value(169, scalar, snap, Value(81, scalar, snapped, 1), Value(81, scalar, transformed, 1));
+                transformed = Value(80, float2, sx, sy);
+            }
             body.Add(Instruction(62, position, transformed));
             if (procedural)
             {

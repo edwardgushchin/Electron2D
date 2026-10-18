@@ -1,6 +1,6 @@
 # Local compute
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 The public [RenderingDevice](../classes/RenderingDevice.md) compute slice is created by `RenderingServer.CreateLocalRenderingDevice()` under [ADR 0028](../decisions/rendering.md#adr-0028). It supplies a portable compute path for application algorithms without exposing native handles or adding domain-specific fluid API. [RDShaderSPIRV](../classes/RDShaderSPIRV.md) owns copied bytecode and compiler diagnostics; [RDUniform](../classes/RDUniform.md) describes borrowed resource bindings. [ShaderStage](../classes/RenderingDevice.ShaderStage.md) and [UniformType](../classes/RenderingDevice.UniformType.md) retain their applicable numeric identities.
 
@@ -221,3 +221,7 @@ device.FreeRID(image); // Releases the wrapper, preserving the viewport target.
 ```
 
 [UInt16 image texture sources](integer-textures.md) now retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility.
+
+## Writable retained instance buffers
+
+The global device consumes the real storage exported by RenderingServer.MultiMeshGetBufferRDRID and MultiMeshGetCommandBufferRDRID. Buffer/compute operations share native submission ordering with CPU dirty ranges and the canvas GPU conversion/indirect draw. The resource owns live lifetime; expiration invalidates uniform-set borrowers. Current/previous native records support physics presentation while CPU snapshots stay authored. Compatibility exports no storage. [The mesh contract](meshes.md#writable-instance-device-buffers) specifies layouts, bounds, command validity, ownership, native pixel and allocation evidence. This adds no particle simulation or arbitrary process-material stage.

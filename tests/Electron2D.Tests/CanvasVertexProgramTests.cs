@@ -81,7 +81,7 @@ internal static class CanvasVertexProgramTests
         Console.WriteLine("Canvas vertex stage material merge, migration and guards passed.");
     }
 
-    internal static void RunNative(string profile = "gpu")
+    internal static void RunNative(string profile = "gpu", bool gpuBuffers = false)
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         var language = profile.Contains("hlsl", StringComparison.Ordinal) ? "HLSL" : "GLSL";
@@ -107,6 +107,7 @@ internal static class CanvasVertexProgramTests
         var reloadEvents = 0; shader.Changed += _ => reloadEvents++;
         window.Ready += _ =>
         {
+            if (gpuBuffers) { RenderingServer.MultiMeshGetBufferRDRID(multi.GetRID()); window.SnapVerticesToPixel = profile.Contains("snap", StringComparison.Ordinal); }
             Check(RenderingServer.GetCurrentRenderingMethod() == "gpu", "Native GPU without fallback."); RenderingServer.SetDefaultClearColor(Colors.Black);
             var owned = RenderingServer.ShaderCreate(); RenderingServer.ShaderSetSPIRV(owned, shader.GetSPIRV(RenderingDevice.ShaderStage.Vertex), shader.GetSPIRV());
             Check(RenderingServer.ShaderGetSPIRV(owned, RenderingDevice.ShaderStage.Vertex).SequenceEqual(shader.GetSPIRV(RenderingDevice.ShaderStage.Vertex)), "Owned shader stages use the public server family."); RenderingServer.FreeRID(owned);

@@ -57,8 +57,10 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     {
         internal Kind Kind;
         internal RendererTextureBorrow? Borrowed;
+        internal MultiMeshGPUState? MeshOwner;
+        internal bool MeshCommand, MeshExported;
         internal bool Expired;
-        internal bool Alive => !Expired && (Borrowed?.Alive ?? true);
+        internal bool Alive => !Expired && (Borrowed?.Alive ?? true) && (MeshOwner?.Alive ?? true) && (!MeshCommand || MeshOwner?.CommandsAlive != false);
         internal nint NativeHandle => Borrowed?.Native ?? Handle!.DangerousGetHandle();
         internal RenderHandle? Handle, Upload, Download, TextureScratch;
         internal bool ScratchColorTarget;
@@ -96,10 +98,10 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     private readonly RenderingServer? _serverOwner;
     internal RenderingDevice(RenderingServer? serverOwner = null) { _serverOwner = serverOwner; }
     private void Access(bool canvasMetadata = false) { ThrowIfDisposed(); if (!canvasMetadata) _serverOwner?.EnsureDeviceAccess(); if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("A rendering device belongs to its creating thread."); if (_accessingReadbackMemory) throw new InvalidOperationException("A readback memory accessor cannot reenter its device."); }
-    private Entry Get(RID rid) { Access(); if (!_entries.TryGetValue(rid, out var entry) || !entry.Alive) throw new ArgumentException("The RID is not a live resource of this device.", nameof(rid)); PrepareRendererTexture(entry); return entry; }
+    private Entry Get(RID rid) { Access(); if (!_entries.TryGetValue(rid, out var entry) || !entry.Alive) throw new ArgumentException("The RID is not a live resource of this device.", nameof(rid)); PrepareRendererTexture(entry); entry.MeshOwner?.Prepare(entry.MeshCommand); if (!entry.Alive) throw new ArgumentException("The retained storage expired during preparation.", nameof(rid)); return entry; }
     private Entry Get(RID rid, Kind kind) { var entry = Get(rid); return entry.Kind == kind ? entry : throw new ArgumentException("The RID has the wrong resource kind.", nameof(rid)); }
     private RID Add(Entry entry) { var rid = RID.Allocate(); _entries.Add(rid, entry); return rid; }
-    private void IdleList() { Access(); if (_activeList != 0) throw new InvalidOperationException("End the active command list first."); }
+    private void IdleList(bool canvasMetadata = false) { Access(canvasMetadata); if (_activeList != 0) throw new InvalidOperationException("End the active command list first."); }
     private void List(long id) { Access(); if (_drawPass != 0 || _activeList == 0 || id != _activeList) throw new ArgumentException("The compute list is not active.", nameof(id)); }
     private nint Commands()
     {
@@ -364,9 +366,9 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         if (_serverOwner is not null) throw new InvalidOperationException("The renderer submits its device; explicit submission belongs to local devices.");
         SubmitRecorded();
     }
-    private void SubmitRecorded()
+    private void SubmitRecorded(bool canvasMetadata = false)
     {
-        IdleList(); if (_fence != 0 || _submittedReadbacks.Count != 0) throw new InvalidOperationException("Synchronize the previous submission first.");
+        IdleList(canvasMetadata); if (_fence != 0 || _submittedReadbacks.Count != 0) throw new InvalidOperationException("Synchronize the previous submission first.");
         if (_command != 0)
         {
             var command = _command; _command = 0; _fence = SDL.SubmitGPUCommandBufferAndAcquireFence(command);
@@ -395,12 +397,14 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <summary>Frees a resource after completing pending work.</summary>
     /// <param name="rid">A live identity owned by this device.</param>
     /// <remarks>Borrowed renderer image identities release their wrapper and leases, preserving source ownership.
+    /// Live renderer-owned instance buffers retain their resource lifetime and cannot be freed directly.
     /// Expired borrowed identities may still be freed. Borrowers become invalid; they may still be freed explicitly. Pending readbacks complete
     /// before removal; their callbacks run after the resource is removed.</remarks>
     /// <exception cref="AggregateException">One or more completed readback callbacks failed.</exception>
+    /// <exception cref="InvalidOperationException">A live instance buffer has resource-owned lifetime, or owner/list/native state is invalid.</exception>
     public void FreeRID(RID rid)
     {
-        IdleList(); if (!_entries.TryGetValue(rid, out var entry)) throw new ArgumentException("The resource identity is not owned by this device.", nameof(rid)); CompleteSubmission();
+        IdleList(); if (!_entries.TryGetValue(rid, out var entry)) throw new ArgumentException("The resource identity is not owned by this device.", nameof(rid)); if (entry.MeshOwner is not null && entry.Alive) throw new InvalidOperationException("The instance resource owns this retained buffer lifetime."); CompleteSubmission();
         if (_command != 0 || _recordedReadbacks.Count != 0) { SubmitRecorded(); CompleteSubmission(); }
         RenderingServer.NotifyRenderMutation();
         _entries.Remove(rid); if (entry.Borrowed is { } borrow && _rendererTextures.GetValueOrDefault(borrow.Source) == rid) _rendererTextures.Remove(borrow.Source); entry.Borrowed?.Dispose(); ReleaseProgram(entry.Variant); entry.Handle?.Dispose(); entry.FragmentHandle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose();

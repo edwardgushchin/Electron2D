@@ -1,6 +1,6 @@
 # CanvasMultiMesh
 
-Last updated: 2026-10-07
+Last updated: 2026-10-18
 
 Internal rendering helper; source [CanvasMultiMesh.cs](../../src/Servers/Rendering/CanvasMultiMesh.cs).
 
@@ -16,3 +16,7 @@ Attached palette skin is now passed to CanvasMesh. Replay bypasses authored/rest
 Owned canvas command clear/record/replay reuses that wrapper without retaining removed mesh resources; RenderingCanvasTests measures 128 combined Mesh/MultiMesh command cycles.
 
 The internal Mesh accessor supports parameter discovery from surface shaders before recording. Append forwards its canvas owner to surface/hardware batches. See [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).
+
+## Writable instance consumer
+
+Exported/indirect MultiMesh storage selects a retained GPU consumer. CanvasMesh captures source vertices/indices, palette deformation, LOD metadata and finite authored canvas state. CanvasMultiMesh retains manual/authored bounds and resource guards. GPUCanvasBackend owns conversion outputs, native index/LOD buffers and indirect commands; the private kernel interpolates raw device records and chooses each instance's LOD. CanvasVertexProgram snaps ordinary instance positions before the authored stage and procedural homogeneous output after it; built-in instance vertices support snapping and group screen UVs. Group color premultiplication, masks and original vertex IDs remain connected. Relaxed Android devices bind each LOD instance separately when nonzero indirect first-instance support is unavailable. See [ownership and Linux-native verification limits](../components/meshes.md#writable-instance-device-buffers).

@@ -15,14 +15,14 @@ internal static partial class ProceduralMeshTests
         protected override void OnDraw() { if (Resource.IsValid()) DrawMesh(Resource, transform: Command); }
     }
     private sealed class Box : Entity { protected override void OnDraw() => DrawRect(new(-4, -4, 40, 40), Colors.White); }
-    internal static void RunNative(string profile)
+    internal static void RunNative(string profile, bool gpuBuffers = false)
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, profile == "compatibility" ? "compatibility" : "gpu"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false); ProjectSettings.Set(ProjectSettings.SnapVerticesToPixel, profile.Contains("snap"));
         using var shader = Program(profile.Contains("hlsl") ? "HLSL" : "GLSL", profile.Contains("modern"));
         using var mapPixels = Image.CreateEmpty(1, 1, false, Image.Format.Rgba8); mapPixels.Fill(Colors.Black); using var map = ImageTexture.CreateFromImage(mapPixels); shader.SetDefaultTextureParameter("position_map", map);
         using var controlShader = Shader.CreateFromSPIRV(Module("DeviceVertexIDGLSL.frag.spv")); using var controlMaterial = new ShaderMaterial { Shader = controlShader };
         using var window = new Window { Size = new(1152, 480), UseHDR2D = profile.Contains("hdr"), MSAA2D = profile.Contains("msaa") ? Viewport.MSAA.Samples4X : Viewport.MSAA.Disabled };
-        var resources = new List<Resource>(); var materials = new List<ShaderMaterial>(); var comparisons = new List<(Vector2 Origin, Vector2 Delta, bool Area, string Name)>(); var samples = new List<(Vector2 Point, Color Color, string Name)>();
+        var gpuInstances = new List<MultiMesh>(); var resources = new List<Resource>(); var materials = new List<ShaderMaterial>(); var comparisons = new List<(Vector2 Origin, Vector2 Delta, bool Area, string Name)>(); var samples = new List<(Vector2 Point, Color Color, string Name)>();
         ShaderMaterial Material(Mesh.PrimitiveType primitive)
         {
             var material = new ShaderMaterial { Shader = shader }; material.SetShaderParameter<Vector2>("generated", Generated(primitive).AsSpan()); material.SetShaderParameter("homogeneous_w", profile.Contains("homogeneous") ? 1f : 0f); materials.Add(material); return material;
@@ -57,7 +57,7 @@ internal static partial class ProceduralMeshTests
         for (var i = 0; i < primitives.Length; i++)
         {
             var primitive = primitives[i]; var source = CreateMesh(primitive); resources.Add(source); var control = Control(source, primitive); var origin = new Vector2(i * 192 + 40, 2 * 88 + 32); var delta = new Vector2(80, 0);
-            var procInstances = new MultiMesh { Mesh = source, UseColors = true, InstanceCount = 2 }; var referenceInstances = new MultiMesh { Mesh = control, UseColors = true, InstanceCount = 2 }; resources.Add(procInstances); resources.Add(referenceInstances);
+            var procInstances = new MultiMesh { Mesh = source, UseColors = true, InstanceCount = 2 }; var referenceInstances = new MultiMesh { Mesh = control, UseColors = true, InstanceCount = 2 }; resources.Add(procInstances); resources.Add(referenceInstances); gpuInstances.Add(procInstances);
             for (var n = 0; n < 2; n++) { var transform = new Transform(0, new(n * 40, 0)); procInstances.SetInstanceTransform2D(n, transform); referenceInstances.SetInstanceTransform2D(n, transform); procInstances.SetInstanceColor(n, Colors.White); referenceInstances.SetInstanceColor(n, Colors.White); }
             var proc = new MultiMeshInstance { MultiMesh = procInstances, Material = Material(primitive), Position = origin }; var reference = new MultiMeshInstance { MultiMesh = referenceInstances, Material = controlMaterial, Position = origin + delta };
             // Force the strip fallback through a fitted group; other primitives retain hardware instances.
@@ -77,6 +77,7 @@ internal static partial class ProceduralMeshTests
         RID owned = default; var frame = 0; long before = 0, active = 0, idle = 0;
         window.Ready += _ =>
         {
+            if (gpuBuffers) foreach (var instances in gpuInstances) RenderingServer.MultiMeshGetBufferRDRID(instances.GetRID());
             RenderingServer.SetDefaultClearColor(Colors.Black); foreach (var (rig, node) in rigs) node.AttachSkeleton(rig.GetSkeleton());
             var description = ownedSource.ExportPacked(0); description.AABB = ownedSource.CustomAABB; owned = RenderingServer.MeshCreateFromSurfaces([description]); Check(RenderingServer.MeshGetSurface(owned, 0).VertexData.Length == 0, "Owned packed positions remain absent."); owner.Resource = owned; owner.QueueRedraw();
             var appended = RenderingServer.MeshCreate(); RenderingServer.MeshAddSurfaceFromArrays(appended, Mesh.PrimitiveType.Triangles, Data(), Empty); RenderingServer.MeshAddSurface(appended, description); Check(RenderingServer.MeshGetSurfaceCount(appended) == 2 && RenderingServer.MeshGetSurface(appended, 1).VertexCount == 4, "Typed and packed owned append retain independent invocation counts."); RenderingServer.FreeRID(appended);
@@ -92,7 +93,7 @@ internal static partial class ProceduralMeshTests
                 {
                     // Native point/line edge coverage can differ by one pixel from CPU-expanded quads after clip rounding.
                     var radius = sample.Name.EndsWith("Points", StringComparison.Ordinal) || sample.Name.EndsWith("Lines", StringComparison.Ordinal) || sample.Name.EndsWith("LineStrip", StringComparison.Ordinal) ? 1 : 0; var matched = false;
-                    for (var y = -radius; y <= radius; y++) for (var x = -radius; x <= radius; x++) { var color = image.GetPixel((int)MathF.Floor(sample.Point.X) + x, (int)MathF.Floor(sample.Point.Y) + y); matched |= MathF.Abs(color.R - sample.Color.R) < .04f && MathF.Abs(color.G - sample.Color.G) < .04f && MathF.Abs(color.B - sample.Color.B) < .04f; }
+                    for (var y = -radius; y <= radius; y++) for (var x = -radius; x <= radius; x++) { var color = image.GetPixel((int)MathF.Floor(sample.Point.X) + x, (int)MathF.Floor(sample.Point.Y) + y); for (var coverage = radius > 0 && profile.Contains("msaa", StringComparison.Ordinal) ? 1 : 4; coverage <= 4; coverage++) { var expected = sample.Color * (coverage / 4f); matched |= MathF.Abs(color.R - expected.R) < .04f && MathF.Abs(color.G - expected.G) < .04f && MathF.Abs(color.B - expected.B) < .04f; } }
                     Check(matched, $"Generated {sample.Name} sample near {sample.Point} ({profile}).");
                 }
                 foreach (var comparison in comparisons) Compare(image, comparison.Origin, comparison.Delta, comparison.Area, comparison.Name);

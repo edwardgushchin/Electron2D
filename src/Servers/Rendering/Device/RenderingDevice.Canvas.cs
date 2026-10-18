@@ -26,7 +26,7 @@ public sealed unsafe partial class RenderingDevice
     }
     internal void FlushRendererCommands()
     {
-        IdleList(); if (_command != 0 || _recordedReadbacks.Count != 0) { CompleteSubmission(); SubmitRecorded(); }
+        IdleList(true); if (_command != 0 || _recordedReadbacks.Count != 0) { CompleteSubmission(); SubmitRecorded(true); }
     }
     internal void CompleteRendererReadbacks()
     {
