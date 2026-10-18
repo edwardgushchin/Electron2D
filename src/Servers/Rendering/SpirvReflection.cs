@@ -84,7 +84,7 @@ internal static unsafe partial class SpirvReflection
                 var field = GetType(compiler, GetMemberType(type, member));
                 var width = GetVectorSize(field);
                 var dimensions = GetArrayDimensions(field);
-                var matrix = GetBaseType(field) == 13 && GetColumns(field) == width && width is >= 2 and <= 4 && (width == 2 || globalBuffers.Contains((int)binding));
+                var matrix = GetBaseType(field) == 13 && GetColumns(field) == width && width is >= 2 and <= 4;
                 if (name == "TIME" && (GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 1 || GetColumns(field) != 1 || dimensions != 0))
                     throw new NotSupportedException("The built-in TIME requires a non-array float32 scalar in a stage uniform buffer.");
                 if (name == "SCREEN_PIXEL_SIZE" && (GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 2 || GetColumns(field) != 1 || dimensions != 0))
@@ -93,7 +93,7 @@ internal static unsafe partial class SpirvReflection
                     throw new NotSupportedException("SDF_COORDS requires a non-array float32 vector of width four in a stage uniform buffer.");
                 if (name is "SCREEN_TEXTURE" or "SDF_TEXTURE") throw new NotSupportedException("Renderer-owned texture names require sampled texture bindings.");
                 if (GetBitWidth(field) != 32 || GetColumns(field) != 1 && !matrix || dimensions > 1)
-                    throw new NotSupportedException($"Uniform '{name}' requires a supported 32-bit scalar/vector, float2x2 matrix or a fixed one-dimensional array; other matrices and nested structs are not integrated yet.");
+                    throw new NotSupportedException($"Uniform '{name}' requires a supported 32-bit scalar/vector, square float matrix of width two through four or a fixed one-dimensional array; nonsquare matrices and nested structs are not supported.");
                 booleans.Remove(name, out var logical);
                 if (sourceTypes is not null && !sourceTypes.TryGetValue(((int)binding, name), out logical))
                     throw new NotSupportedException($"Source reflection did not retain uniform '{name}'.");
@@ -231,7 +231,7 @@ internal static unsafe partial class SpirvReflection
         var instances = new Dictionary<string, ShaderUniform>(StringComparer.Ordinal);
         foreach (var pair in uniforms.ToArray()) if (instanceBuffers.Contains(pair.Value.Buffer))
             {
-                if (pair.Value.ArrayLength != 0 || pair.Value.Type == typeof(Transform)) throw new NotSupportedException("Instance parameters support only scalar and vector values.");
+                if (pair.Value.ArrayLength != 0 || pair.Value.MatrixStride != 0) throw new NotSupportedException("Instance parameters support only scalar and vector values.");
                 instances.Add(pair.Key, pair.Value); uniforms.Remove(pair.Key);
             }
         if (instances.Count > 16) throw new NotSupportedException("A shader supports at most sixteen instance parameters.");

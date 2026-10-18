@@ -77,10 +77,14 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
         for stage, suffix in [('vertex', 'vert'), ('fragment', 'frag')]:
             invoke(root / f'tests/Electron2D.Tests/Shaders/{stem}.{suffix}.{language}', output, stage)
             assert output.read_bytes() == (root / f'tests/Electron2D.Tests/Shaders/{stem}.{suffix}.spv').read_bytes(), f'{stem} {stage} differs from its fixed oracle'
+    for language, label in [('glsl', 'GLSL'), ('hlsl', 'HLSL')]:
+        for stem, stage, suffix in [('NumericMatrices', 'fragment', 'frag'), ('NumericMatricesReordered', 'fragment', 'frag'), ('NumericMatricesChanged', 'fragment', 'frag'), ('NumericMatrices', 'vertex', 'vert')]:
+            invoke(root / f'tests/Electron2D.Tests/Shaders/{stem}.{suffix}.{language}', output, stage)
+            assert output.read_bytes() == (root / f'tests/Electron2D.Tests/Shaders/{stem}{label}.{suffix}.spv').read_bytes(), f'{stem}/{language}/{stage} changed'
     bad_global = directory / 'invalid-global.frag.glsl'
     for declaration, expression, expected in [
         ('layout(set=3,binding=0,std140) uniform Globals { float value[2]; };', 'vec4(value[0]+value[1])', 'Global parameters do not declare arrays'),
-        ('layout(set=3,binding=0,std140) uniform Parameters { mat3 value; };', 'vec4(value[0],1)', 'supported 32-bit'),
+        ('layout(set=3,binding=0,std140) uniform Instance { mat3 value; };', 'vec4(value[0],1)', 'Instance parameters support only scalar and vector'),
         ('layout(set=3,binding=0,std140) uniform Globals { float TIME; };', 'vec4(TIME)', 'Renderer-owned uniforms cannot'),
         ('layout(set=2,binding=0) uniform sampler2D GLOBAL_;', 'texture(GLOBAL_,vec2(0))', 'whitespace'),
         ('layout(set=2,binding=0) uniform sampler2D GLOBAL_TIME;', 'texture(GLOBAL_TIME,vec2(0))', 'reserved')]:
@@ -271,12 +275,12 @@ void main() { gl_Position=vec4((position+uv)/frame.size,0,1); tint=color; data=c
         invoke(external, output, success=False)
         assert output.read_bytes() == previous, 'Invalid matrix layout replaced the last usable artifact'
     for language, source in [
-        ('hlsl', 'cbuffer Values : register(b0, space3) { float3x3 invalid; }; float4 main() : SV_Target0 { return float4(invalid[0], 1); }'),
-        ('glsl', '#version 450\nlayout(location = 0) out vec4 outputColor; layout(set = 3, binding = 0, std140) uniform Values { mat3 invalid; }; void main() { outputColor = vec4(invalid[0], 1); }'),
+        ('hlsl', 'cbuffer Values : register(b0, space3) { float2x3 invalid; }; float4 main() : SV_Target0 { return float4(invalid[0].xy, 0, 1); }'),
+        ('glsl', '#version 450\nlayout(location = 0) out vec4 outputColor; layout(set = 3, binding = 0, std140) uniform Values { mat2x3 invalid; }; void main() { outputColor = vec4(invalid[0], 1); }'),
     ]:
         invalid = directory / f'unsupported-matrix.{language}'
         invalid.write_text(source)
-        assert 'float2x2' in invoke(invalid, output, success=False)
+        assert 'square float matrix' in invoke(invalid, output, success=False)
         assert output.read_bytes() == previous
     # Source type reflection must preserve bool without relabeling neighboring uint.
     def boolean_records(code):

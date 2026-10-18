@@ -3,7 +3,7 @@
 Last updated: 2026-10-18
 
 - Declaration: `public sealed partial class ShaderMaterial : Material`
-- Source: [Material.cs](../../src/Scene/Resources/Material.cs), [Material.Textures.cs](../../src/Scene/Resources/Material.Textures.cs)
+- Source: [Material.cs](../../src/Scene/Resources/Material.cs), [Material.Textures.cs](../../src/Scene/Resources/Material.Textures.cs), [Material.Matrices.cs](../../src/Scene/Resources/Material.Matrices.cs)
 - Inherits: [Material](Material.md), [Resource](Resource.md)
 - Component: [Shader materials](../components/shader-materials.md)
 
@@ -41,6 +41,8 @@ Color tint = material.GetShaderParameter<Color>("tint");
 | `T[] GetShaderParameterArray<T>(string name) where T : unmanaged` | Returns a copy of a complete fixed-size array. |
 | `void CopyShaderParameterArray<T>(string name, Span<T> destination) where T : unmanaged` | Copies the complete reflected array into exact-length caller storage; prepared copies allocate no managed memory. |
 
+Numeric mat3/mat4 values and fixed arrays use `SetShaderMatrixParameter(string, ReadOnlySpan<float>)`, `GetShaderMatrixParameter(string)` and `CopyShaderMatrixParameter(string, Span<float>)`. Each matrix contributes nine/sixteen column-major components. Values are copied, finite, identity by default and retained across compatible layout reload. Typed float-array descriptors use the same storage and revert contract. See [numeric material matrices](../components/shader-materials.md#numeric-material-matrices).
+
 ## Property descriptions
 
 ### Shader
@@ -75,7 +77,7 @@ Inherited property discovery includes Shader and typed parameter descriptors nam
 
 ## Verification and remaining work
 
-[RenderingRuntimeTests.cs](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs) checks named typed access, failure atomicity, independent copies and returned arrays, property discovery, cross-layout reload, disposal and zero allocations over warmed repeated updates. Four GPU frames per imported language check float/int/uint/vector/array values, distinct materials sharing a shader, and image changes without drawing-command regeneration. [ShaderVectorRenderingTests](../../tests/Electron2D.Tests/ShaderVectorRenderingTests.cs) covers RGB/Rect2 and unsigned vectors, scalar and arrays, defaults/descriptors, adjacent-field integrity, failures, copies, signedness resets, two-language pixels, shared materials, layout reload and warmed allocation checks. [ShaderMatrixRenderingTests](../../tests/Electron2D.Tests/ShaderMatrixRenderingTests.cs) verifies matrix storage order/stride, identity defaults versus explicit zero, Origin omission, arrays, copying, reload, invalid layouts and GPU pixels for both source languages. [ShaderBooleanRenderingTests](../../tests/Electron2D.Tests/ShaderBooleanRenderingTests.cs) verifies logical types, masks/arrays, defaults, copying, metadata rejection, reload and two-language pixels with zero warm allocation. Native coverage is Linux Wayland/Vulkan only. Named sampler configuration, matrices other than float2x2, nested structures and further numeric mappings remain incomplete; see [the component limits](../components/shader-materials.md).
+[RenderingRuntimeTests.cs](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs) checks named typed access, failure atomicity, independent copies and returned arrays, property discovery, cross-layout reload, disposal and zero allocations over warmed repeated updates. Four GPU frames per imported language check float/int/uint/vector/array values, distinct materials sharing a shader, and image changes without drawing-command regeneration. [ShaderVectorRenderingTests](../../tests/Electron2D.Tests/ShaderVectorRenderingTests.cs) covers RGB/Rect2 and unsigned vectors, scalar and arrays, defaults/descriptors, adjacent-field integrity, failures, copies, signedness resets, two-language pixels, shared materials, layout reload and warmed allocation checks. [ShaderMatrixRenderingTests](../../tests/Electron2D.Tests/ShaderMatrixRenderingTests.cs) verifies matrix storage order/stride, identity defaults versus explicit zero, Origin omission, arrays, copying, reload, invalid layouts and GPU pixels for both source languages. [ShaderBooleanRenderingTests](../../tests/Electron2D.Tests/ShaderBooleanRenderingTests.cs) verifies logical types, masks/arrays, defaults, copying, metadata rejection, reload and two-language pixels with zero warm allocation. Native coverage is Linux Wayland/Vulkan only. Named sampler configuration, nonsquare matrices, nested structures and further numeric mappings remain incomplete; see [the component limits](../components/shader-materials.md).
 
 Renderer-owned SCREEN_TEXTURE and SCREEN_PIXEL_SIZE do not appear in stored material descriptors or typed user parameter/default access. They resolve per target draw; ordinary uniforms still use the existing lock/capture/migration rules. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
 
@@ -204,3 +206,5 @@ Validates the name, ordinary-image descriptor shape and exact destination length
 Copies the complete layered-image override array under the material gate with the same validation, ownership and prepared allocation behavior.
 
 The distinct array setter names preserve existing untyped-null calls to scalar texture setters. SamplerArrayTests compiles and checks both scalar null calls, which reject a descriptor array name without ambiguous overload resolution.
+
+[NumericMatrixTests](../../tests/Electron2D.Tests/NumericMatrixTests.cs) adds mat3/mat4 scalar/fixed-array identities, complete finite validation, copied descriptors/graphs/archives, shape resets and layout-aware reload. GLSL/HLSL resource and RID pixels, including paired stages, execute on Linux Wayland software Vulkan; 64 active/64 idle prepared frames allocate zero managed bytes. Hardware/native-allocation and foreign-platform acceptance remain open.

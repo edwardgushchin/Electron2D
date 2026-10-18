@@ -1422,3 +1422,5 @@ Returns a new RID[] of explicit borrowed overrides, preserving empty entries ind
 ### MaterialGetParam(RID, string, Span<RID>)
 
 Resolves every explicit override into bounded temporary identity storage before copying to the exact-length destination. A bad name, shape, length or stale/disposed resource leaves caller storage untouched. Prepared calls allocate no managed memory and retain ordinary owner/session guards.
+
+Numeric material mat3/mat4 values and fixed arrays execute through `MaterialSetMatrixParam` and copied-array/exact-span `MaterialGetMatrixParam`. They share the ShaderMaterial column-major/finite/identity contract, including reload and paired stages; owned identities permit mutation and borrowed resource identities permit reads. See [numeric material matrices](../components/shader-materials.md#numeric-material-matrices).

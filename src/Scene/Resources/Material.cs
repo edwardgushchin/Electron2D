@@ -301,10 +301,20 @@ internal sealed class MaterialState
         Shader = shader;
         Buffers = program.BufferSizes.Select(size => new byte[size]).ToArray();
         Textures = new Resource?[program.Textures.Length];
+        Span<float> identity = stackalloc float[16];
         foreach (var uniform in program.Uniforms.Values)
+        {
             if (uniform.Type == typeof(Transform))
                 for (var i = 0; i < uniform.Count; i++)
                     uniform.Write(Buffers[uniform.Buffer].AsSpan(uniform.Offset + i * uniform.Stride, uniform.ElementSize), Transform.Identity);
+            else if (uniform.MatrixWidth > 2)
+            {
+                identity.Clear();
+                for (var axis = 0; axis < uniform.MatrixWidth; axis++) identity[axis * (uniform.MatrixWidth + 1)] = 1;
+                for (var i = 0; i < uniform.Count; i++)
+                    uniform.WriteMatrix(Buffers[uniform.Buffer].AsSpan(uniform.Offset + i * uniform.Stride, uniform.ElementSize), identity);
+            }
+        }
         if (previous is null) return;
         foreach (var uniform in program.Uniforms.Values)
             if (previous.Program.Uniforms.TryGetValue(uniform.Name, out var old) && uniform.SameType(old))

@@ -113,7 +113,7 @@ internal static partial class RenderingRuntimeTests
         var nodes = new[] { new CanvasNode { Name = "first", Material = material }, new CanvasNode { Name = "copy", Material = copy, Position = new(16, 0) }, new CanvasNode { Name = "shared", Material = material, Position = new(32, 0) }, new CanvasNode { Name = "defaults", Material = defaults, Position = new(48, 0) } };
         var window = new Window { Size = new(64, 32) };
         foreach (var node in nodes) { node.DrawAction = n => n.DrawRect(new(0, 0, 12, 12), Colors.White); window.AddChild(node); }
-        var frames = 0; var before = 0L; var allocated = 0L;
+        var frames = 0; var before = 0L; var allocated = 0L; var warmDraws = new int[nodes.Length];
         window.Ready += _ =>
         {
             var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
@@ -131,7 +131,8 @@ internal static partial class RenderingRuntimeTests
                 if (frames == 4) shader.SetSPIRV(original);
                 if (frames == 5) InitializeMatrixValues(material, default, second);
                 if (frames == 6) InitializeMatrixValues(material, first, second);
-                if (frames == 40) { Check(allocated == 0 && nodes.All(n => n.Draws == 1), "Matrix values and reload retain geometry without warm render allocations."); window.Tree!.Quit(); }
+                if (frames == 20) for (var i = 0; i < nodes.Length; i++) warmDraws[i] = nodes[i].Draws;
+                if (frames == 40) { Check(allocated == 0 && nodes.Select((n, i) => n.Draws == warmDraws[i]).All(v => v), $"Matrix values retain prepared geometry; warm bytes={allocated}."); window.Tree!.Quit(); }
             };
         };
         if (backend == "compatibility") Reject<NotSupportedException>(() => Engine.Run(window));

@@ -103,6 +103,30 @@ public sealed partial class RenderingServer
     /// <exception cref="InvalidOperationException">The service is unavailable or owner/submission/lifetime rules reject the operation.</exception>
     public static void MaterialSetParam<T>(RID material, string name, ReadOnlySpan<T> values) where T : unmanaged => RequireService().MaterialSetParamCore(material, name, values);
 
+    /// <summary>Replaces a numeric mat3/mat4 parameter or entire fixed array in an owned material.</summary>
+    /// <param name="material">A live owned programmable material identity.</param>
+    /// <param name="name">Exact case-sensitive material member name.</param>
+    /// <param name="values">Copied finite column-major values, nine/sixteen per matrix, concatenated for arrays.</param>
+    /// <exception cref="ArgumentException">An identity, matrix role, component count or value is invalid.</exception>
+    /// <exception cref="InvalidOperationException">The service is unavailable or owner/submission/lifetime rules reject the operation.</exception>
+    public static void MaterialSetMatrixParam(RID material, string name, ReadOnlySpan<float> values) => RequireService().MaterialSetMatrixParamCore(material, name, values);
+
+    /// <summary>Returns an independent column-major copy of a numeric mat3/mat4 parameter or fixed array.</summary>
+    /// <param name="material">A live programmable material identity; borrowed identities permit reads.</param>
+    /// <param name="name">Exact case-sensitive material member name.</param>
+    /// <returns>Nine/sixteen values per matrix, concatenated for arrays; each matrix initially contains identity.</returns>
+    /// <exception cref="ArgumentException">An identity or matrix role is invalid.</exception>
+    /// <exception cref="InvalidOperationException">The service is unavailable or owner/lifetime rules reject the operation.</exception>
+    public static float[] MaterialGetMatrixParam(RID material, string name) => RequireService().MaterialGetMatrixParamCore(material, name);
+
+    /// <summary>Copies a numeric mat3/mat4 parameter or fixed array without managed allocation after preparation.</summary>
+    /// <param name="material">A live programmable material identity; borrowed identities permit reads.</param>
+    /// <param name="name">Exact case-sensitive material member name.</param>
+    /// <param name="destination">Exact-size column-major destination, nine/sixteen values per matrix, concatenated for arrays.</param>
+    /// <exception cref="ArgumentException">An identity, matrix role or destination length is invalid; the destination remains unchanged.</exception>
+    /// <exception cref="InvalidOperationException">The service is unavailable or owner/lifetime rules reject the operation.</exception>
+    public static void MaterialGetMatrixParam(RID material, string name, Span<float> destination) => RequireService().MaterialGetMatrixParamCore(material, name, destination);
+
     /// <summary>Sets a borrowed sampled texture override; empty restores the program default.</summary>
     /// <param name="material">Live material identity; mutations require ownership and a programmable material.</param>
     /// <param name="name">Exact case-sensitive reflected user parameter name.</param>

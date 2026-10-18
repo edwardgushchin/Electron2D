@@ -30,6 +30,9 @@ public sealed partial class RenderingServer
     internal void MaterialSetShaderCore(RID rid, RID shader) { var material = MutableProgramMaterial(rid); material.Shader = shader.IsValid() ? RenderingProgramRegistry<Shader>.Resolve(shader) : null; }
     internal void MaterialSetParamCore<T>(RID rid, string name, T value) where T : unmanaged => MutableProgramMaterial(rid).SetShaderParameter(name, value);
     internal void MaterialSetParamCore<T>(RID rid, string name, ReadOnlySpan<T> values) where T : unmanaged => MutableProgramMaterial(rid).SetShaderParameter(name, values);
+    internal void MaterialSetMatrixParamCore(RID rid, string name, ReadOnlySpan<float> values) => MutableProgramMaterial(rid).SetShaderMatrixParameter(name, values);
+    internal float[] MaterialGetMatrixParamCore(RID rid, string name) => ReadProgramMaterial(rid).GetShaderMatrixParameter(name);
+    internal void MaterialGetMatrixParamCore(RID rid, string name, Span<float> destination) => ReadProgramMaterial(rid).CopyShaderMatrixParameter(name, destination);
     internal void MaterialSetParamTextureCore(RID rid, string name, RID texture) => MutableProgramMaterial(rid).SetSampledResource(name, texture.IsValid() ? RenderingTextureRegistry.ResolveResource(texture) : null);
     internal void MaterialSetParamTextureArrayCore(RID rid, string name, ReadOnlySpan<RID> textures) => MutableProgramMaterial(rid).SetSampledArray(name, textures);
     internal RID[] MaterialGetParamTextureArrayCore(RID rid, string name) => ReadProgramMaterial(rid).GetSampledArray(name);

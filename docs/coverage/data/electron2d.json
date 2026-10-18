@@ -156109,6 +156109,59 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.MaterialGetMatrixParam(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MaterialGetMatrixParam",
+    "signature": "public static System.Single[] MaterialGetMatrixParam(Electron2D.RID material, System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "material",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MaterialGetMatrixParam(Electron2D.RID,System.String,System.Span\u003CSystem.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MaterialGetMatrixParam",
+    "signature": "public static System.Void MaterialGetMatrixParam(Electron2D.RID material, System.String name, System.Span\u003CSystem.Single\u003E destination)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "material",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Single\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.MaterialGetParam(Electron2D.RID,System.String)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -156256,6 +156309,35 @@
       {
         "name": "destination",
         "type": "Span\u003CT\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MaterialSetMatrixParam(Electron2D.RID,System.String,System.ReadOnlySpan\u003CSystem.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MaterialSetMatrixParam",
+    "signature": "public static System.Void MaterialSetMatrixParam(Electron2D.RID material, System.String name, System.ReadOnlySpan\u003CSystem.Single\u003E values)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "material",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "values",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
         "default": null
       }
     ],
@@ -167141,6 +167223,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ShaderMaterial.CopyShaderMatrixParameter(System.String,System.Span\u003CSystem.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderMaterial",
+    "name": "CopyShaderMatrixParameter",
+    "signature": "public System.Void CopyShaderMatrixParameter(System.String name, System.Span\u003CSystem.Single\u003E destination)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Single\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ShaderMaterial.CopyShaderParameterArray\u00601(System.String,Span\u003CT\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.ShaderMaterial",
@@ -167272,6 +167378,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ShaderMaterial.GetShaderMatrixParameter(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderMaterial",
+    "name": "GetShaderMatrixParameter",
+    "signature": "public System.Single[] GetShaderMatrixParameter(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ShaderMaterial.GetShaderParameter(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.ShaderMaterial",
@@ -167389,6 +167514,30 @@
       {
         "name": "textures",
         "type": "System.ReadOnlySpan\u003CElectron2D.TextureLayered\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShaderMaterial.SetShaderMatrixParameter(System.String,System.ReadOnlySpan\u003CSystem.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShaderMaterial",
+    "name": "SetShaderMatrixParameter",
+    "signature": "public System.Void SetShaderMatrixParameter(System.String name, System.ReadOnlySpan\u003CSystem.Single\u003E values)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "values",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
         "default": null
       }
     ],

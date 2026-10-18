@@ -102,7 +102,8 @@ internal sealed record ShaderUniform(string Name, Type Type, int Buffer, int Off
     internal bool Accepts<T>() where T : unmanaged => typeof(T) == Type || Type == typeof(Vector3) && typeof(T) == typeof(Color) || Type == typeof(Vector4) && (typeof(T) == typeof(Color) || typeof(T) == typeof(Rect2));
     internal bool SameType(ShaderUniform other) => Type == other.Type && Unsigned == other.Unsigned && ArrayLength == other.ArrayLength && BooleanWidth == other.BooleanWidth && MatrixWidth == other.MatrixWidth;
 
-    internal PropertyDescriptor Describe(string propertyName) => Type == typeof(float) ? Describe<float>(propertyName) :
+    internal PropertyDescriptor Describe(string propertyName) => MatrixWidth > 2 ? new PropertyDescriptor<ShaderMaterial, float[]>(propertyName,
+        m => m.GetShaderMatrixParameter(Name), (m, v) => { ArgumentNullException.ThrowIfNull(v); m.SetShaderMatrixParameter(Name, v); }, _ => MatrixDefaults(), stored: true) : Type == typeof(float) ? Describe<float>(propertyName) :
         Type == typeof(bool) ? Describe<bool>(propertyName) : Type == typeof(int) ? Describe<int>(propertyName) : Type == typeof(uint) ? Describe<uint>(propertyName) :
         Type == typeof(Vector2) ? Describe<Vector2>(propertyName) : Type == typeof(Vector3) ? Describe<Vector3>(propertyName) : Type == typeof(Vector4) ? Describe<Vector4>(propertyName) :
         Type == typeof(Transform) ? Describe<Transform>(propertyName) : Type == typeof(Vector2i) ? Describe<Vector2i>(propertyName) : Type == typeof(Vector3i) ? Describe<Vector3i>(propertyName) : Describe<Vector4i>(propertyName);
@@ -137,16 +138,29 @@ internal sealed record ShaderUniform(string Name, Type Type, int Buffer, int Off
                 stored[(RowMajor ? row : column) * MatrixStride / 4 + (RowMajor ? column : row)] = values[column * width + row];
     }
 
+    internal void ReadMatrix(ReadOnlySpan<byte> source, Span<float> values)
+    {
+        var stored = MemoryMarshal.Cast<byte, float>(source);
+        for (var column = 0; column < MatrixWidth; column++)
+            for (var row = 0; row < MatrixWidth; row++)
+                values[column * MatrixWidth + row] = stored[(RowMajor ? row : column) * MatrixStride / 4 + (RowMajor ? column : row)];
+    }
+
+    private float[] MatrixDefaults()
+    {
+        var values = new float[Count * MatrixWidth * MatrixWidth];
+        for (var i = 0; i < Count; i++)
+            for (var axis = 0; axis < MatrixWidth; axis++) values[i * MatrixWidth * MatrixWidth + axis * (MatrixWidth + 1)] = 1;
+        return values;
+    }
+
     internal void CopyValue(ReadOnlySpan<byte> source, ShaderUniform destination, Span<byte> target)
     {
         if (Type == typeof(Transform)) destination.Write(target, Read<Transform>(source));
         else if (MatrixWidth > 2)
         {
             Span<float> values = stackalloc float[16];
-            var stored = MemoryMarshal.Cast<byte, float>(source);
-            for (var column = 0; column < MatrixWidth; column++)
-                for (var row = 0; row < MatrixWidth; row++)
-                    values[column * MatrixWidth + row] = stored[(RowMajor ? row : column) * MatrixStride / 4 + (RowMajor ? column : row)];
+            ReadMatrix(source, values);
             destination.WriteMatrix(target, values);
         }
         else source.CopyTo(target);
