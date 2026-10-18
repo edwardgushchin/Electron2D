@@ -1699,6 +1699,21 @@
       "godot": "RenderingServer::method:mesh_surface_get_format_offset(int:RenderingServer.ArrayFormat,int:,int:)",
       "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceGetFormatOffset(Electron2D.Mesh.ArrayFormat,System.Int32,Electron2D.Mesh.ArrayFormat)",
       "reason": "ADRs 0001/0014/0092/0095: typed packed-channel offsets and 16/32-bit index edits preflight partial records atomically, retain topology/count/material/RID and independent LODs, and feed existing retained mesh/MultiMesh consumers. MeshIndexTests covers width/byte/error boundaries, copied storage/fresh-process archives, public service ownership and native GPU/Compatibility pixels plus prepared managed allocation intervals. Native allocation totals, foreign platforms and human acceptance remain separate."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_add_surface(RID:,Dictionary:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshAddSurface(Electron2D.RID,Electron2D.MeshSurfaceBuffers)",
+      "reason": "ADR 0092 complete typed packed surface transport: copied position/frame/attribute/custom/skin/index/shape/LOD buffers, independent target schema, UV scale, borrowed material and real authored/bone visibility bounds. MeshPackedTests verifies layout/finite/range/shape/atomic/copy/fresh-authoring contracts; Linux software GPU/GLSL, GPU/HLSL and Compatibility profiles verify actual channels/material/LOD/skin pixels, public guards, custom recovery and zero-byte prepared owner frames."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_create_from_surfaces(Dictionary[]:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshCreateFromSurfaces(System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceBuffers>,System.Int32)",
+      "reason": "ADR 0092 complete typed packed surface transport: copied position/frame/attribute/custom/skin/index/shape/LOD buffers, independent target schema, UV scale, borrowed material and real authored/bone visibility bounds. MeshPackedTests verifies layout/finite/range/shape/atomic/copy/fresh-authoring contracts; Linux software GPU/GLSL, GPU/HLSL and Compatibility profiles verify actual channels/material/LOD/skin pixels, public guards, custom recovery and zero-byte prepared owner frames."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_get_surface(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshGetSurface(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0092 complete typed packed surface transport: copied position/frame/attribute/custom/skin/index/shape/LOD buffers, independent target schema, UV scale, borrowed material and real authored/bone visibility bounds. MeshPackedTests verifies layout/finite/range/shape/atomic/copy/fresh-authoring contracts; Linux software GPU/GLSL, GPU/HLSL and Compatibility profiles verify actual channels/material/LOD/skin pixels, public guards, custom recovery and zero-byte prepared owner frames."
     }
   ],
   "extras": [
@@ -2073,6 +2088,74 @@
     {
       "electron2d": "method:Electron2D.ImporterMesh.OnResetState()",
       "reason": "ADRs 0013/0092: managed construction, exact resource duplication/local graphs, bounded typed stored-state descriptors, transient compiled-cache reset and disposal implement the inherited Resource host lifecycle; no extra importer domain operation."
+    },
+    {
+      "electron2d": "T:Electron2D.MeshSurfaceBuffers",
+      "reason": "ADRs 0001/0092: typed packed surface dictionary projection, including independent shape schema, exact copied channel/shape/LOD bytes, planar/bone visibility rectangles and borrowed material. Executable import/export/render consumers replace heterogeneous metadata; this is no additional semantic capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.MeshSurfaceBuffers..ctor()",
+      "reason": "ADRs 0001/0092: typed packed surface dictionary projection, including independent shape schema, exact copied channel/shape/LOD bytes, planar/bone visibility rectangles and borrowed material. Executable import/export/render consumers replace heterogeneous metadata; this is no additional semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceBuffers.AABB()",
+      "reason": "ADRs 0001/0092: typed packed surface dictionary projection, including independent shape schema, exact copied channel/shape/LOD bytes, planar/bone visibility rectangles and borrowed material. Executable import/export/render consumers replace heterogeneous metadata; this is no additional semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceBuffers.AttributeData()",
+      "reason": "ADRs 0001/0092: typed packed surface dictionary projection, including independent shape schema, exact copied channel/shape/LOD bytes, planar/bone visibility rectangles and borrowed material. Executable import/export/render consumers replace heterogeneous metadata; this is no additional semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceBuffers.BlendShapeData()",
+      "reason": "ADRs 0001/0092: typed packed surface dictionary projection, including independent shape schema, exact copied channel/shape/LOD bytes, planar/bone visibility rectangles and borrowed material. Executable import/export/render consumers replace heterogeneous metadata; this is no additional semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceBuffers.BlendShapeFormat()",
+      "reason": "ADRs 0001/0092: typed packed surface dictionary projection, including independent shape schema, exact copied channel/shape/LOD bytes, planar/bone visibility rectangles and borrowed material. Executable import/export/render consumers replace heterogeneous metadata; this is no additional semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceBuffers.BoneAABBs()",
+      "reason": "ADRs 0001/0092: typed packed surface dictionary projection, including independent shape schema, exact copied channel/shape/LOD bytes, planar/bone visibility rectangles and borrowed material. Executable import/export/render consumers replace heterogeneous metadata; this is no additional semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceBuffers.Format()",
+      "reason": "ADRs 0001/0092: typed packed surface dictionary projection, including independent shape schema, exact copied channel/shape/LOD bytes, planar/bone visibility rectangles and borrowed material. Executable import/export/render consumers replace heterogeneous metadata; this is no additional semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceBuffers.IndexCount()",
+      "reason": "ADRs 0001/0092: typed packed surface dictionary projection, including independent shape schema, exact copied channel/shape/LOD bytes, planar/bone visibility rectangles and borrowed material. Executable import/export/render consumers replace heterogeneous metadata; this is no additional semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceBuffers.IndexData()",
+      "reason": "ADRs 0001/0092: typed packed surface dictionary projection, including independent shape schema, exact copied channel/shape/LOD bytes, planar/bone visibility rectangles and borrowed material. Executable import/export/render consumers replace heterogeneous metadata; this is no additional semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceBuffers.LODs()",
+      "reason": "ADRs 0001/0092: typed packed surface dictionary projection, including independent shape schema, exact copied channel/shape/LOD bytes, planar/bone visibility rectangles and borrowed material. Executable import/export/render consumers replace heterogeneous metadata; this is no additional semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceBuffers.Material()",
+      "reason": "ADRs 0001/0092: typed packed surface dictionary projection, including independent shape schema, exact copied channel/shape/LOD bytes, planar/bone visibility rectangles and borrowed material. Executable import/export/render consumers replace heterogeneous metadata; this is no additional semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceBuffers.Primitive()",
+      "reason": "ADRs 0001/0092: typed packed surface dictionary projection, including independent shape schema, exact copied channel/shape/LOD bytes, planar/bone visibility rectangles and borrowed material. Executable import/export/render consumers replace heterogeneous metadata; this is no additional semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceBuffers.SkinData()",
+      "reason": "ADRs 0001/0092: typed packed surface dictionary projection, including independent shape schema, exact copied channel/shape/LOD bytes, planar/bone visibility rectangles and borrowed material. Executable import/export/render consumers replace heterogeneous metadata; this is no additional semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceBuffers.UVScale()",
+      "reason": "ADRs 0001/0092: typed packed surface dictionary projection, including independent shape schema, exact copied channel/shape/LOD bytes, planar/bone visibility rectangles and borrowed material. Executable import/export/render consumers replace heterogeneous metadata; this is no additional semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceBuffers.VertexCount()",
+      "reason": "ADRs 0001/0092: typed packed surface dictionary projection, including independent shape schema, exact copied channel/shape/LOD bytes, planar/bone visibility rectangles and borrowed material. Executable import/export/render consumers replace heterogeneous metadata; this is no additional semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceBuffers.VertexData()",
+      "reason": "ADRs 0001/0092: typed packed surface dictionary projection, including independent shape schema, exact copied channel/shape/LOD bytes, planar/bone visibility rectangles and borrowed material. Executable import/export/render consumers replace heterogeneous metadata; this is no additional semantic capability."
     }
   ],
   "statusGroups": [
@@ -2160,8 +2243,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Typed surface format/topology/vertex/index counts execute through the mesh data fields. Full packed surface result including deformation/LOD/extra channels awaits their actual integrations (ADR 0092).",
+      "state": "Implemented",
+      "reason": "ADR 0092 complete typed packed surface transport: copied position/frame/attribute/custom/skin/index/shape/LOD buffers, independent target schema, UV scale, borrowed material and real authored/bone visibility bounds. MeshPackedTests verifies layout/finite/range/shape/atomic/copy/fresh-authoring contracts; Linux software GPU/GLSL, GPU/HLSL and Compatibility profiles verify actual channels/material/LOD/skin pixels, public guards, custom recovery and zero-byte prepared owner frames.",
       "godot": [
         "RenderingServer::method:mesh_get_surface(RID:,int:)"
       ]
@@ -2675,6 +2758,20 @@
         "RenderingServer::method:mesh_surface_get_format_offset(int:RenderingServer.ArrayFormat,int:,int:)"
       ],
       "reason": "ADRs 0001/0014/0092/0095: typed packed-channel offsets and 16/32-bit index edits preflight partial records atomically, retain topology/count/material/RID and independent LODs, and feed existing retained mesh/MultiMesh consumers. MeshIndexTests covers width/byte/error boundaries, copied storage/fresh-process archives, public service ownership and native GPU/Compatibility pixels plus prepared managed allocation intervals. Native allocation totals, foreign platforms and human acceptance remain separate."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingServer::method:mesh_add_surface(RID:,Dictionary:)"
+      ],
+      "reason": "ADR 0092 complete typed packed surface transport: copied position/frame/attribute/custom/skin/index/shape/LOD buffers, independent target schema, UV scale, borrowed material and real authored/bone visibility bounds. MeshPackedTests verifies layout/finite/range/shape/atomic/copy/fresh-authoring contracts; Linux software GPU/GLSL, GPU/HLSL and Compatibility profiles verify actual channels/material/LOD/skin pixels, public guards, custom recovery and zero-byte prepared owner frames. Remaining trigger: ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY requires the actual procedural vertex-shader and non-position-channel producer; the current canvas backend requires explicit positions, as with AddSurfaceFromArrays."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingServer::method:mesh_create_from_surfaces(Dictionary[]:,int:)"
+      ],
+      "reason": "ADR 0092 complete typed packed surface transport: copied position/frame/attribute/custom/skin/index/shape/LOD buffers, independent target schema, UV scale, borrowed material and real authored/bone visibility bounds. MeshPackedTests verifies layout/finite/range/shape/atomic/copy/fresh-authoring contracts; Linux software GPU/GLSL, GPU/HLSL and Compatibility profiles verify actual channels/material/LOD/skin pixels, public guards, custom recovery and zero-byte prepared owner frames. Remaining trigger: ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY requires the actual procedural vertex-shader and non-position-channel producer; the current canvas backend requires explicit positions, as with AddSurfaceFromArrays."
     }
   ]
 }

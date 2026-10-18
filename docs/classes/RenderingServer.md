@@ -1366,3 +1366,13 @@ RenderingServer.MeshSurfaceUpdateIndexRegion(mesh, 0, 0, new byte[] { 3, 0, 4, 0
 ```
 
 This moves its first triangle to vertices 3, 4 and 5 when the index stride is two. See [mesh index behavior and verification](../components/meshes.md#live-index-buffer-updates).
+
+## Packed mesh surface family
+
+| Public static member | Contract |
+| --- | --- |
+| `RID MeshCreateFromSurfaces(IReadOnlyList<MeshSurfaceBuffers> surfaces, int blendShapeCount = 0)` | Validates every surface before publishing a caller-owned identity; explicit zero-through-4096 shape count applies to every surface. |
+| `void MeshAddSurface(RID mesh, MeshSurfaceBuffers surface)` | Appends copied packed data to a current-renderer-owned mesh, preserving existing surfaces on validation failure. |
+| `MeshSurfaceBuffers MeshGetSurface(RID mesh, int surface)` | Returns independent packed buffers/metadata from an owned or borrowed mesh; material remains borrowed. |
+
+All three require the active renderer owner thread. Creation/append also reject native submission/shutdown and borrowed mutation. Invalid buffers, counts, bounds, topology, shape schema, indices or LODs reject before publication. Disposed materials reject on import. Empty batches are valid and retain their explicit shape count. Custom export rejects recursive/revision-changing/disposed sources and recovers on later valid preparation. The [payload contract](MeshSurfaceBuffers.md) and [component](../components/meshes.md#packed-server-surfaces) define exact packing, independent shape masks, bounds, ownership and verification limits. Queries/imports allocate; warmed retained replay/region updates retain the existing budget. Procedural position-free formats remain an explicit producer dependency.

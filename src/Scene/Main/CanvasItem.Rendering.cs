@@ -57,7 +57,7 @@ public abstract partial class CanvasItem
             {
                 if (command.SetTransform) { drawing = command.Transform; continue; }
                 if (command.AnimationSlice is not null || command.ClipIgnore is not null) continue;
-                Rect2? value = command.Mesh?.GetDrawBounds() ?? command.MultiMesh?.Bounds();
+                Rect2? value = command.Mesh?.GetDrawBounds(this) ?? command.MultiMesh?.Bounds();
                 if (value is null && command.Stroke is { } stroke) value = stroke.GetLocalBounds();
                 if (value is null && command.Polygon is { } polygon) value = polygon.GetLocalBounds();
                 if (value is null) value = command.Line ? new Rect2(command.A, Vector2.Zero).Expand(command.B).Grow(Math.Max(0, command.Width / 2)) : new Rect2(command.A, command.B).Abs();

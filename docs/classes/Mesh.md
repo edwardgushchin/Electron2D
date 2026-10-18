@@ -1,6 +1,6 @@
 # Mesh
 
-Last updated: 2026-10-12
+Last updated: 2026-10-18
 
 **Namespace:** `Electron2D` · **Declaration:** `public abstract class Electron2D.Mesh` · **Source:** [Mesh.cs](../../src/Scene/Resources/Mesh.cs).
 
@@ -389,3 +389,7 @@ Authored levels use copied positive local edge-error thresholds and shorter comp
 `public Electron2D.PlaceholderMesh CreatePlaceholder()`
 
 Creates a caller-owned surface-free mesh retaining the current visibility bounds. See [missing-resource recovery](../components/resource-files.md#missing-resource-recovery) for strict/tolerant policy, lifetime and actual verification limits.
+
+## Packed surface integration
+
+GetAABB retains geometry-derived bounds for ordinary resources and authored rectangles for packed server surfaces. Packed surface export uses copied buffers through [RenderingServer](RenderingServer.md#packed-mesh-surface-family).

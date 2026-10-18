@@ -22,6 +22,10 @@ public sealed partial class ArrayMesh : Mesh
             (data.Normals.Length != 0 ? ArrayFormat.Normal : 0) | (data.Tangents.Length != 0 ? ArrayFormat.Tangent : 0) | (data.Colors.Length != 0 ? ArrayFormat.Color : 0) | (data.UVs.Length != 0 ? ArrayFormat.TexUV : 0) | (data.UV2s.Length != 0 ? ArrayFormat.TexUV2 : 0) | (data.Indices.Length != 0 ? ArrayFormat.Index : 0) | (data.Bones.Length != 0 ? ArrayFormat.Bones | ArrayFormat.Weights : 0);
         internal string Name = "";
         internal Material? Material;
+        internal Rect2? PackedAABB;
+        internal Vector4? PackedUVScale;
+        internal Rect2?[] PackedBoneAABBs = [];
+        internal byte[]? PackedBlendShapeData;
     }
     internal const ArrayFormat SupportedFormats = ArrayFormat.Custom0 | ArrayFormat.Custom1 | ArrayFormat.Custom2 | ArrayFormat.Custom3 | MeshCustomCodec.FormatMask | ArrayFormat.CompressAttributes | ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights | ArrayFormat.Vertex | ArrayFormat.Normal | ArrayFormat.Tangent | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights;
     internal readonly object Gate = new();
@@ -199,7 +203,7 @@ public sealed partial class ArrayMesh : Mesh
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
         Surface[] copies; string[] names; BlendShapeMode mode;
-        lock (Gate) { ThrowIfDisposed(); names = _blendShapeNames.ToArray(); mode = _blendShapeMode; copies = new Surface[_surfaces.Count]; for (var i = 0; i < copies.Length; i++) { var s = _surfaces[i]; copies[i] = new(s.Data.Copy(), s.Primitive, s.Format & (ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights | ArrayFormat.CompressAttributes), (uint[])s.FrameWords.Clone(), s.BlendShapes.Select(shape => shape.Copy()).ToArray(), s.BlendMask, MeshLOD.Copy(s.LODs), s.Compression) { Name = s.Name, Material = s.Material }; } }
+        lock (Gate) { ThrowIfDisposed(); names = _blendShapeNames.ToArray(); mode = _blendShapeMode; copies = new Surface[_surfaces.Count]; for (var i = 0; i < copies.Length; i++) { var s = _surfaces[i]; copies[i] = new(s.Data.Copy(), s.Primitive, s.Format & (ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights | ArrayFormat.CompressAttributes), (uint[])s.FrameWords.Clone(), s.BlendShapes.Select(shape => shape.Copy()).ToArray(), s.BlendMask, MeshLOD.Copy(s.LODs), s.Compression) { Name = s.Name, Material = s.Material, PackedAABB = s.PackedAABB, PackedUVScale = s.PackedUVScale, PackedBoneAABBs = s.PackedBoneAABBs, PackedBlendShapeData = s.PackedBlendShapeData }; } }
         foreach (var copy in copies) copy.Material = (Material?)duplicateSubresource(copy.Material);
         var other = (ArrayMesh)target; lock (other.Gate) { other.ThrowIfDisposed(); other._surfaces.Clear(); other._surfaces.AddRange(copies); other._blendShapeNames.Clear(); other._blendShapeNames.AddRange(names); other._blendShapeMode = mode; }
     }

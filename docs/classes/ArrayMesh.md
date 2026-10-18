@@ -1,6 +1,6 @@
 # ArrayMesh
 
-Last updated: 2026-10-12
+Last updated: 2026-10-18
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.ArrayMesh` · **Source:** [ArrayMesh.cs](../../src/Scene/Resources/ArrayMesh.cs).
 
@@ -324,3 +324,7 @@ ImporterMesh.GetMesh can atomically append a prevalidated compiled draft. Unshap
 ## Server-owned index storage
 
 Caller-owned RenderingServer mesh RIDs use this resource's authoritative index arrays for transactional partial 16/32-bit edits through [MeshSurfaceUpdateIndexRegion](RenderingServer.md#live-packed-mesh-indices). Primitive/count, material, bounds and separate LOD indices remain intact; resource copies and archives retain the edited topology. Ordinary borrowed ArrayMesh RIDs remain read/draw-only at the service boundary. See [index storage and checks](../components/meshes.md#live-index-buffer-updates).
+
+## Packed surface integration
+
+The packed RenderingServer family uses the same internal surface storage. Source-backed exports derive bounds and bone rectangles; imported server surfaces retain authored visibility rectangles, independent target schemas and exact shape bytes. Raw server identities are transient; the resource file format is unchanged. See [packed surfaces](../components/meshes.md#packed-server-surfaces).

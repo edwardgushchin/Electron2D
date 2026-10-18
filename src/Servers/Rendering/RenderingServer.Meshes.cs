@@ -42,7 +42,7 @@ public sealed partial class RenderingServer
     /// <param name="vertexCount">Nonnegative count; does not affect the fixed skin stride.</param>
     /// <returns>Zero without skin; two bytes per present index/weight slot, with four or eight slots.</returns>
     public static int MeshSurfaceGetFormatSkinStride(Mesh.ArrayFormat format, int vertexCount) => RequireService().MeshSurfaceGetFormatSkinStrideCore(format, vertexCount);
-    private static void ValidateMeshFormat(Mesh.ArrayFormat format, int vertexCount)
+    internal static void ValidateMeshFormat(Mesh.ArrayFormat format, int vertexCount)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(vertexCount);
         if ((format & Mesh.ArrayFormat.CompressAttributes) != 0 && (format & Mesh.ArrayFormat.Tangent) != 0 && (format & Mesh.ArrayFormat.Normal) == 0) throw new ArgumentException("Compressed tangents require normals.", nameof(format));

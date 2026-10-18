@@ -1,6 +1,6 @@
 # CanvasMesh
 
-Last updated: 2026-10-12
+Last updated: 2026-10-18
 
 Internal retained mesh geometry in [CanvasMesh.cs](../../src/Servers/Rendering/CanvasMesh.cs), part of [canvas rendering](../components/canvas-rendering.md) and [mesh rendering](../components/meshes.md). It captures immutable or live mesh surfaces, transform/color/UV/custom instance data and primitive tessellation before appending to the existing canvas vertex/batch stream. Material, texture, filtering, repeat, clipping and native profile rules stay with that stream. Native resources belong to the renderer; this geometry owns no device handles.
 
@@ -22,3 +22,7 @@ Private alternate views share base channel arrays and retain copied indices. The
 
 
 Compressed surfaces use the same decoded numerical channel contract. The cold custom format callback selects the compression codec with stable-revision recovery; prepared retained replay follows the shared [compressed attribute layout](../components/meshes.md#compressed-attributes).
+
+## Packed surface integration
+
+Packed server surfaces supply authored local visibility rectangles. Attached skeleton palettes transform optional nullable bone rectangles through the existing mesh/skeleton basis; bounds storage stays private, and prepared queries/replay allocate no new arrays. Ordinary resource surfaces retain geometry-derived bounds.
