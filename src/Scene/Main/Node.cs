@@ -1617,11 +1617,13 @@ public partial class Node : ElectronObject
     /// <summary>Delivers a notification to this node and then every descendant in parent-first order.</summary>
     /// <param name="what">The notification identifier.</param>
     /// <remarks>Direct child insertion, removal and reordering are rejected while this node is being traversed.
-    /// Remaining descendants receive the notification after a callback failure; errors are combined afterward.</remarks>
-    /// <exception cref="InvalidOperationException">An attached call runs off-owner.</exception>
+    /// The owner or current processing group delivers callbacks immediately. Inaccessible explicit-group branches
+    /// reject without visiting their descendants; later siblings continue. Callback failures are combined afterward.
+    /// Individual notification handlers retain their own capture, renderer and physics access requirements.</remarks>
+    /// <exception cref="InvalidOperationException">An attached receiver is outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
     /// <exception cref="AggregateException">One or more callbacks fail after traversal continues.</exception>
-    public void PropagateNotification(int what) => PropagateNotificationCore(what, stopAtWindows: false);
+    public void PropagateNotification(int what) => PropagateNotificationCore(what, stopAtWindows: false, processingScope: true);
 
     internal void PropagateWindowNotification(int what) => PropagateNotificationCore(what, stopAtWindows: true);
 

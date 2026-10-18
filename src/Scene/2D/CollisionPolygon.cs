@@ -165,8 +165,10 @@ public sealed class CollisionPolygon : Entity, ICollisionGeometry
     private static Node CreateCollisionPolygon() => new CollisionPolygon();
 
     /// <inheritdoc />
+    /// <remarks>Parent and unparent notifications require the scene owner before changing canvas or geometry ownership.</remarks>
     protected override void OnNotification(int what)
     {
+        if (what is NotificationParented or NotificationUnparented) Tree?.EnsureOwnerThread();
         base.OnNotification(what);
         if (what == NotificationDraw && PhysicsDebugDrawing.Enabled(this))
         {

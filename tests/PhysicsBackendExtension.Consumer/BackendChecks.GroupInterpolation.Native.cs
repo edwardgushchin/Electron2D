@@ -2,7 +2,7 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunNativeGroupInterpolation(PhysicsServer.Backend backend, bool threaded, string renderer)
+    public static void RunNativeGroupInterpolation(PhysicsServer.Backend backend, bool threaded, string renderer, bool propagated = false)
     {
         var oldThreads = ProjectSettings.Get(ProjectSettings.WorkerPoolMaxThreads); var oldSolver = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         var oldRenderer = ProjectSettings.Get(ProjectSettings.RenderingMethod); var oldFallback = ProjectSettings.Get(ProjectSettings.RenderingFallback);
@@ -28,13 +28,18 @@ public static partial class BackendChecks
                 worker = Environment.CurrentManagedThreadId; phase++;
                 writer.PhysicsInterpolationMode = PhysicsInterpolationMode.Off; writer.PhysicsInterpolationMode = PhysicsInterpolationMode.On;
                 var point = new Vector2((phase & 1) == 0 ? 30 : 80, 25);
-                sprite.Position = point + new Vector2(10, 0); sprite.ResetPhysicsInterpolation(); sprite.Position += new Vector2(10, 0);
+                sprite.Position = point + new Vector2(10, 0); Reset(sprite); sprite.Position += new Vector2(10, 0);
                 body.Position = sprite.Position;
-                camera.GetGlobalTransform(); camera.Position = new(10, 0); camera.ForceUpdateTransform(); camera.ResetPhysicsInterpolation();
+                camera.GetGlobalTransform(); camera.Position = new(10, 0); camera.ForceUpdateTransform(); Reset(camera);
                 camera.GetGlobalTransform(); camera.Position = new(20, 0); camera.ForceUpdateTransform();
-                instances.SetInstanceTransform2D(0, new Transform(0, point + new Vector2(10, 30))); multi.ResetPhysicsInterpolation();
+                instances.SetInstanceTransform2D(0, new Transform(0, point + new Vector2(10, 30))); Reset(multi);
                 instances.SetInstanceTransform2D(0, new Transform(0, point + new Vector2(20, 30)));
             };
+            if (propagated)
+            {
+                var relay = new PropagationProbe { Callback = writer.Write }; writer.AddChild(relay);
+                writer.Write = () => writer.PropagateNotification(PropagationNotice);
+            }
             using var query = new PhysicsPointQueryParameters(); var hits = new PhysicsPointResult[1];
             window.Ready += _ =>
             {
@@ -48,7 +53,7 @@ public static partial class BackendChecks
                     CheckPixel(new(point.X == 30 ? 80 : 30, 25), Colors.Black);
                     query.Position = body.GlobalPosition; Check(world.DirectSpaceState.IntersectPoint(query, hits) == 1 && hits[0].ColliderRID == body.GetRID() && body.Position == point + new Vector2(20, 0), "Visual history does not move the authoritative body query");
                     var bit = point.X == 30 ? 1 : 2;
-                    if ((seen & bit) == 0 && Environment.GetEnvironmentVariable("ELECTRON2D_GROUP_INTERPOLATION_CAPTURE") is { } path) pixels.SavePNG(System.IO.Path.Combine(path, bit + ".png"));
+                    if ((seen & bit) == 0 && Environment.GetEnvironmentVariable(propagated ? "ELECTRON2D_GROUP_PROPAGATION_CAPTURE" : "ELECTRON2D_GROUP_INTERPOLATION_CAPTURE") is { } path) pixels.SavePNG(System.IO.Path.Combine(path, bit + ".png"));
                     seen |= bit; if (seen == 3) window.Tree!.Quit();
                     void CheckPixel(Vector2 at, Color expected)
                     {
@@ -66,5 +71,11 @@ public static partial class BackendChecks
             ProjectSettings.Set(ProjectSettings.RenderingMethod, oldRenderer); ProjectSettings.Set(ProjectSettings.RenderingFallback, oldFallback);
             ProjectSettings.Set(ProjectSettings.PhysicsInterpolation, oldInterpolation); Engine.PhysicsTicksPerSecond = oldTicks; Engine.MaxFPS = oldFPS;
         }
+        void Reset(Node node)
+        {
+            if (propagated) node.PropagateNotification(Node.NotificationResetPhysicsInterpolation);
+            else node.ResetPhysicsInterpolation();
+        }
+
     }
 }

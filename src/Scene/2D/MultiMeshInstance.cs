@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>Draws borrowed two-dimensional mesh instances through the retained canvas renderer.</summary>
 /// <remarks>Mesh and texture resources remain caller-owned. Live mesh geometry is read during replay;
-/// change notifications request redraw for captured scene state. Attached mutation uses the scene owner thread.</remarks>
+/// change notifications request redraw for captured scene state. Attached mutation uses the scene owner thread.
+/// Interpolation reset also resets the borrowed instance resource before its first drawing command is captured.</remarks>
 public class MultiMeshInstance : Entity
 {
     private MultiMesh? _multiMesh;
