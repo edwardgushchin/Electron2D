@@ -16,9 +16,9 @@ public partial class Control
         Tree!.GrabGUIClickFocus(viewport, this);
     }
 
-    /// <summary>Returns the desktop position of this control's local origin.</summary>
-    /// <returns>The origin of the complete canvas, viewport and window screen transform.</returns>
-    /// <exception cref="NotSupportedException">The native backend cannot report desktop window placement.</exception>
+    /// <summary>Returns this control's local origin in its popup host's screen coordinate space.</summary>
+    /// <returns>The origin of GetScreenTransform, stopping at an embedding viewport or including native desktop placement when needed.</returns>
+    /// <exception cref="NotSupportedException">Required native desktop window placement is unavailable.</exception>
     /// <exception cref="InvalidOperationException">There is no active viewport or the caller is off-owner.</exception>
     /// <exception cref="ObjectDisposedException">The control is disposed.</exception>
     public Vector2 GetScreenPosition() => GetScreenTransform().Origin;

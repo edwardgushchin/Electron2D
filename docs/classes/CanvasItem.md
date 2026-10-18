@@ -69,7 +69,7 @@ Source: [CanvasItem.Coordinates.cs](../../src/Scene/Main/CanvasItem.Coordinates.
 | `public Transform GetCanvasTransform()` | [Canvas-to-viewport transform](#getcanvastransform) |
 | `public Transform GetGlobalTransformWithCanvas()` | [Local-to-viewport transform](#getglobaltransformwithcanvas) |
 | `public Transform GetViewportTransform()` | [Canvas-to-viewport-output transform](#getviewporttransform) |
-| `public Transform GetScreenTransform()` | [Local-to-desktop transform](#getscreentransform) |
+| `public Transform GetScreenTransform()` | [Local-to-popup-screen transform](#getscreentransform) |
 | `public Vector2 MakeCanvasPositionLocal(Vector2 viewportPoint)` | [Convert a viewport point](#makecanvaspositionlocal) |
 | `public InputEvent MakeInputLocal(InputEvent inputEvent)` | [Convert a viewport event](#makeinputlocal) |
 | `public Vector2 GetGlobalMousePosition()` | [Pointer in canvas coordinates](#getglobalmouseposition) |
@@ -119,7 +119,7 @@ Returns `F * C` for this item's owning viewport output. Does not include this it
 
 `public Transform GetScreenTransform()`
 
-Returns native client-origin translation times viewport GetScreenTransform times `C * G`. Unlike Viewport.GetScreenTransform, this includes desktop placement. Wayland cannot report the native desktop origin and throws NotSupportedException; it does not invent zero desktop coordinates.
+Returns popup-base transform times `C * G`. A viewport with GUIEmbedSubwindows stops the chain before its own final transform. Other Windows include their position/final transform through their embedding viewport; container-hosted offscreen viewports include the container item screen transform, StretchShrink and child final transform. A standalone offscreen viewport uses its own final transform. Native desktop placement is required only when this chain reaches a native Window without an embedding boundary, and Wayland rejects that lookup explicitly. Viewport.GetScreenTransform instead projects through the complete native-client chain; the two methods intentionally have different coordinate spaces.
 
 ### MakeCanvasPositionLocal
 
@@ -1352,7 +1352,7 @@ These operations require the scene owner for attached items and reject mutation 
 
 A retained server visibility notification can extend command/custom culling bounds through its finite local rectangle. This also participates in clip bounds. Borrowed scene items release that runtime callback state immediately during disposal; it is not a stored scene property. See [canvas rendering](../components/canvas-rendering.md).
 
-GetScreenTransform now includes the outer containing native Window origin for embedded viewport/container chains. Viewport.GetScreenTransform retains its client-coordinate role. Wayland desktop placement remains explicitly unsupported. ControlPointerTests covers the shared nested origin contract.
+GetScreenTransform now follows popup-base space and stops at an embedding viewport before its own final transform. Only an unbounded chain reaching a native Window includes desktop placement and its Wayland capability limit. Viewport.GetScreenTransform retains the complete client-coordinate chain. ControlPointerTests covers the shared nested origin contract.
 
 RenderingServer.CanvasItemSetCanvasGroupMode may override live composition without changing these authored properties. Changed ClipChildren values and CanvasGroup margin/mipmap assignments republish their scene policy; renderer teardown clears native overrides.
 

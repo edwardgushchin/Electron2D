@@ -40,19 +40,19 @@ public abstract partial class CanvasItem
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public Transform GetViewportTransform() { var viewport = RequireCanvasViewport(); return viewport.GetFinalTransform() * GetCanvasTransform(); }
 
-    /// <summary>Returns this item's local-to-screen transform, including native window placement.</summary>
-    /// <returns>The outer containing window desktop origin, complete viewport screen transform and local-to-canvas transform composed in order.</returns>
-    /// <remarks>Native desktop placement is unavailable on Wayland and fails explicitly. No fabricated screen origin is returned.</remarks>
-    /// <exception cref="NotSupportedException">The native backend cannot report the window's desktop position.</exception>
+    /// <summary>Returns this item's local-to-screen transform in its popup host's coordinate space.</summary>
+    /// <returns>The viewport popup-base transform followed by this item's canvas and logical global transforms.</returns>
+    /// <remarks>A viewport that embeds windows stops the popup-base chain before its own final transform. Other windows
+    /// include their position and final transform through the embedder; offscreen containers include their item, shrink
+    /// and child final transforms. Native desktop placement is included only when the chain reaches a native window
+    /// without an embedding boundary. Wayland rejects that desktop lookup explicitly. Viewport.GetScreenTransform
+    /// instead projects through the complete containing-client chain.</remarks>
+    /// <exception cref="NotSupportedException">Required native desktop placement is unavailable.</exception>
     /// <exception cref="InvalidOperationException">The item has no active viewport or is queried off-owner.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public Transform GetScreenTransform()
     {
-        var viewport = RequireCanvasViewport();
-        var window = GetWindow();
-        while (window?.Embedder is { } embedder) window = embedder.GetWindow();
-        var origin = window is null ? Vector2.Zero : (Vector2)window.Position;
-        return new Transform(0, origin) * viewport.GetScreenTransform() * GetGlobalTransformWithCanvas();
+        return RequireCanvasViewport().GetPopupBaseTransform() * GetGlobalTransformWithCanvas();
     }
 
     /// <summary>Converts a point in viewport coordinates to this item's local coordinates.</summary>

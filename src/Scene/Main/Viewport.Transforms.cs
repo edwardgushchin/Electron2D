@@ -72,6 +72,20 @@ public abstract partial class Viewport
             : GetFinalTransform();
     }
 
+    internal Transform GetPopupBaseTransform()
+    {
+        CheckTransformQuery();
+        if (GUIEmbedSubwindows) return Transform.Identity;
+        if (this is Window window)
+        {
+            var transform = new Transform(0, window.Position) * GetFinalTransform();
+            return window.Embedder is { } embedder ? embedder.GetPopupBaseTransform() * transform : transform;
+        }
+        return Parent is SubViewportContainer container
+            ? container.GetScreenTransform() * container.ViewportScale * GetFinalTransform()
+            : GetFinalTransform();
+    }
+
     /// <summary>Returns the current pointer position in viewport coordinates.</summary>
     /// <returns>The section's current pointer in viewport units. A disconnected section retains its last local mouse point, initially zero.</returns>
     /// <remarks>Sections connected to the scene root poll its native pointer, or the global input position for a headless/emulated host,

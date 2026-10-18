@@ -111,7 +111,7 @@ Returns window presentation, then StretchTransform and GlobalCanvasTransform. Wi
 
 `public Transform GetScreenTransform()`
 
-Returns GetFinalTransform for the native root window. Screen here is the containing window coordinate space: it does not include desktop placement. The same query guards apply. Standalone offscreen viewports return their final transform without an actual desktop presentation; embedded transforms include the complete container/shrink chain.
+Returns GetFinalTransform for the native root window. Screen here is the containing window coordinate space: it does not include desktop placement. The same query guards apply. Standalone offscreen viewports return their final transform without an actual desktop presentation; embedded transforms include the complete container/shrink chain. This full client projection is used by native pointer operations and differs from CanvasItem.GetScreenTransform, which stops at popup embedding boundaries.
 
 ### GetMousePosition
 

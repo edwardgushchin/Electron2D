@@ -22,20 +22,24 @@ internal static class CanvasViewportCoordinateTests
             foreach (var viewport in new[] { root, nested, outer, inner }) viewport.CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest;
             var body = new Probe { Position = new(1, 1), InputPickable = true };
             var control = new Control { Position = new(1, 1), Size = Vector2.One, MouseFilter = MouseFilter.Ignore };
+            var rootControl = new Control { Position = new(2, 3), MouseFilter = MouseFilter.Ignore };
+            var popup = new Popup { World = world, Size = new(2, 2), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
+            var popupLayer = new CanvasLayer(); popupLayer.AddChild(new BluePopup { Size = new(2, 2), MouseFilter = MouseFilter.Ignore }); popup.AddChild(popupLayer); body.AddChild(popup);
             body.AddChild(new CollisionShape { Shape = shape }); inner.AddChild(body); inner.AddChild(control);
-            outer.AddChild(inner); nested.AddChild(outer); container.AddChild(nested); root.AddChild(container);
+            outer.AddChild(inner); nested.AddChild(outer); container.AddChild(nested); root.AddChild(container); root.AddChild(rootControl);
             using var click = new InputEventMouseButton { Position = new(42, 52), GlobalPosition = new(42, 52), ButtonIndex = MouseButton.Left, Pressed = true };
             if (native)
             {
                 ProjectSettings.Set(ProjectSettings.RenderingMethod, "compatibility"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
-                var isolated = new SubViewport { World = world }; root.AddChild(isolated);
-                var driver = new NativeDriver((Window)root, nested, outer, inner, body, control, isolated); root.AddChild(driver);
+                var isolated = new SubViewport { World = world }; var isolatedItem = new Control { Position = new(7, 9) }; isolated.AddChild(isolatedItem); root.AddChild(isolated);
+                var driver = new NativeDriver((Window)root, nested, outer, inner, body, control, isolated, isolatedItem, rootControl, popup); root.AddChild(driver);
                 Check(Engine.Run((Window)root) == 0 && driver.Complete, "Native coordinate fixture finishes and releases its window");
                 Check(!DisplayServer.IsAvailable && !RenderingServer.IsAvailable, "Native coordinate services are released");
             }
             else
             {
                 using var tree = new SceneTree(root);
+                PopupScreenQueries(root, world, rootControl, body, control, popup);
                 OffscreenMouseQueries(root, world, tree);
                 Verify(nested, outer, inner, body);
                 root.PushInput(click); tree.PhysicsFrame(.01);
@@ -73,6 +77,37 @@ internal static class CanvasViewportCoordinateTests
             (body.GetViewportTransform() * body.GetGlobalTransform()).Origin == new Vector2(2, 2) && body.GetViewportRect().Size == new Vector2(4, 4),
             "Item viewport queries stop at the owning viewport rather than including ancestor placements");
         Check(body.MakeCanvasPositionLocal(new(1, 1)) == Vector2.Zero, "Canvas position localization stays independent of the screen chain");
+        Check(body.GetScreenTransform().Origin == new Vector2(3, 3), "Item screen coordinates stop at the outer embedding window rather than the native root");
+    }
+
+    private static void PopupScreenQueries(Viewport root, World world, Control rootControl, Probe body, Control control, Popup popup)
+    {
+        Check(rootControl.GetScreenPosition() == new Vector2(6, 10), "Standalone root item includes the root final transform");
+        root.GUIEmbedSubwindows = true;
+        Check(rootControl.GetScreenPosition() == new Vector2(3, 5), "An embedding root excludes its own final presentation transform"); root.GUIEmbedSubwindows = false;
+        Check(control.GetScreenPosition() == new Vector2(3, 3), "Control screen position uses the same popup host as CanvasItem");
+        popup.Popup(new((Vector2i)(body.GetScreenTransform().Origin + new Vector2(0, 2)), new(2, 2)));
+        Check(popup.Position == new Vector2i(3, 5) && popup.Visible, "Public item screen coordinates place an embedded popup in the correct host"); popup.Hide();
+        using var standalone = new SubViewport { World = world, GlobalCanvasTransform = new(new(2, 0), new(0, 3), new(11, 13)), CanvasTransform = new(0, new(3, 4)) };
+        var item = new Control { Position = new(2, 3), Scale = new(2, 3) }; standalone.AddChild(item); root.AddChild(standalone);
+        Check(item.GetScreenPosition() == new Vector2(21, 34), "A standalone offscreen screen query includes only its own final/canvas transforms");
+        standalone.GUIEmbedSubwindows = true;
+        Check(item.GetScreenPosition() == new Vector2(5, 7), "An offscreen embedding boundary stops before its own final transform"); standalone.GUIEmbedSubwindows = false;
+        using var container = new SubViewportContainer { Position = new(5, 6), Size = new(64, 48), Stretch = true, StretchShrink = 2 };
+        root.AddChild(container); standalone.Reparent(container, false);
+        root.GUIEmbedSubwindows = true;
+        Check(item.GetScreenPosition() == new Vector2(48, 76), "Container popup space includes its item transform, shrink and child final transform in order");
+        Check((item.GetScreenTransform() * new Vector2(1, 1)).IsEqualApprox(new(56, 94)), "Popup projection preserves the complete nonuniform basis, not just its origin");
+        root.GUIEmbedSubwindows = false;
+        Check(item.GetScreenPosition() == new Vector2(96, 152), "Without a root embedding boundary the container inherits the root final transform");
+        standalone.GUIEmbedSubwindows = true;
+        Check(item.GetScreenPosition() == new Vector2(5, 7), "A nearer embedding boundary removes the entire ancestor popup chain");
+        Reject<InvalidOperationException>(() => Task.Run(() => body.GetScreenTransform()).GetAwaiter().GetResult());
+    }
+
+    private sealed class BluePopup : Control
+    {
+        protected override void OnDraw() => DrawRect(new(Vector2.Zero, Size), Colors.Blue);
     }
 
     private static void OffscreenMouseQueries(Viewport root, World world, SceneTree tree)
@@ -200,7 +235,7 @@ internal static class CanvasViewportCoordinateTests
         }
     }
 
-    private sealed class NativeDriver(Window root, SubViewport nested, Window outer, Window inner, Probe body, Control control, SubViewport isolated) : Node
+    private sealed class NativeDriver(Window root, SubViewport nested, Window outer, Window inner, Probe body, Control control, SubViewport isolated, Control isolatedItem, Control rootControl, Popup popup) : Node
     {
         internal bool Complete;
         private bool _pixels;
@@ -225,12 +260,19 @@ internal static class CanvasViewportCoordinateTests
             var raw = root.GetFinalTransform() * root.GetMousePosition();
             Check(inner.GetMousePosition().IsEqualApprox(inner.GetScreenTransform().AffineInverse() * raw) &&
                 body.GetLocalMousePosition().IsEqualApprox(body.GetGlobalTransformWithCanvas().AffineInverse() * inner.GetMousePosition()), "Nested pointer reads use the same native root and inverse chain");
-            if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland") Reject<NotSupportedException>(() => body.GetScreenTransform());
-            else Check(body.GetScreenTransform().Origin.IsEqualApprox((Vector2)root.Position + new Vector2(42, 52)), "Item screen coordinates add only the native root desktop origin");
+            Check(body.GetScreenTransform().Origin == new Vector2(3, 3) && control.GetScreenPosition() == new Vector2(3, 3), "Embedded item screen queries stop at the popup host without a desktop origin");
+            Check(isolatedItem.GetScreenPosition() == new Vector2(7, 9), "Disconnected native-host viewports have their own popup space without desktop lookup");
+            if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland") Reject<NotSupportedException>(() => rootControl.GetScreenTransform());
+            else Check(rootControl.GetScreenPosition().IsEqualApprox((Vector2)root.Position + new Vector2(6, 10)), "A native root still includes actual desktop placement when required");
+            root.GUIEmbedSubwindows = true; Check(rootControl.GetScreenPosition() == new Vector2(3, 5), "A native embedding root uses logical popup coordinates on every backend"); root.GUIEmbedSubwindows = false;
+            popup.Popup(new((Vector2i)(body.GetScreenTransform().Origin + new Vector2(0, 2)), new(2, 2)));
+            Check(popup.Position == new Vector2i(3, 5), "The native fixture presents a popup using the public item screen projection");
             RenderingServer.FramePostDraw += () =>
             {
                 using var image = root.GetTexture().GetImage()!;
-                var pixel = image.GetPixel(42, 52); Check(pixel.R > .9f && pixel.G < .1f && pixel.B < .1f, "Nested physics target is red at the projected client coordinate");
+                if (Environment.GetEnvironmentVariable("ELECTRON2D_COORDINATE_CAPTURE") is { } path) image.SavePNG(path);
+                var pixel = image.GetPixel(42, 52); Check(pixel.R > .9f && pixel.G < .1f && pixel.B < .1f, $"Nested physics target is red at the projected client coordinate: {pixel}; popup={popup.Position}/{popup.Size}");
+                pixel = image.GetPixel(46, 72); Check(pixel.B > .9f && pixel.R < .1f && pixel.G < .1f, "A popup positioned with item screen coordinates is blue at the independent native-client pixel");
                 _pixels = true;
             };
         }
