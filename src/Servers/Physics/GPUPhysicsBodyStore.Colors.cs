@@ -16,6 +16,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     internal int ContactColorCount { get; private set; }
     internal int ContactColorRounds { get; private set; }
     internal long ContactColorFallbacks { get; private set; }
+    /// <summary>Counts encoded proposal rounds, including rounds whose device work exits after completion.</summary>
+    internal long ContactColorProposalRoundCount { get; private set; }
     /// <summary>Creates schedule resources before any solver commands are recorded.</summary>
     private void PrepareContactColors()
     {
@@ -36,7 +38,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         UploadSpatial(copy, _colorStatus!, 0, 16); SDL.EndGPUCopyPass(copy);
         ColorPass(command, 0, _highWater, 0); ColorPass(command, 1, ContactPointCount, 0); ColorPass(command, 7, 32, 0);
         // shortcut: 32 colors/64 rounds use complete Jacobi on overflow; enlarge the schedule if high-degree workloads need colored convergence.
-        var limit = (uint)Math.Clamp(ContactColorRounds + 1, 4, 64); var round = 0u;
+        // An unfinished round assigns at least one row or selects the complete fallback.
+        var budget = (uint)Math.Min(64, ContactPointCount);
+        var limit = (uint)Math.Clamp(ContactColorRounds + 1, Math.Min(4, ContactPointCount), (int)budget); var round = 0u;
         while (true)
         {
             for (; round < limit; round++)
@@ -44,6 +48,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 ColorPass(command, 2, _highWater, round);
                 ColorPass(command, 3, ContactPointCount, round);
                 ColorPass(command, 4, ContactPointCount, round);
+                ContactColorProposalRoundCount++;
             }
             ColorPass(command, 5, _highWater, 0); ColorPass(command, 6, ContactPointCount, 0);
             ColorPass(command, 8, 1, 0); ColorPass(command, 9, ContactPointCount, 0);
@@ -59,7 +64,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             {
                 var state = (uint*)mapped;
                 if (state[1] > 32 || state[3] != 0) throw new InvalidOperationException("GPU contact coloring returned an invalid or conflicting schedule.");
-                incomplete = state[0] != 0 && (state[2] & 1) == 0 && round < 64;
+                incomplete = state[0] != 0 && (state[2] & 1) == 0 && round < budget;
                 fallback = state[0] != 0 || (state[2] & 1) != 0;
                 ContactColorCount = state[0] == 0 && (state[2] & 1) == 0 ? (int)state[1] : 0;
                 ContactColorRounds = (int)(state[2] >> 8);
@@ -74,7 +79,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             command = SDL.AcquireGPUCommandBuffer(Device);
             if (command == 0) throw GPUPhysicsDevice.Failure("acquire colored contact solve");
             if (!incomplete) { if (fallback) ContactColorFallbacks++; break; }
-            limit = Math.Min(64, limit + 16);
+            limit = Math.Min(budget, limit + 16);
         }
         UploadBytes += 16;
         _failed = false; return ContactColorCount;

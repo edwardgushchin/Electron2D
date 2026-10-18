@@ -1,6 +1,66 @@
 # Resident contact scheduling and dense-world verification
 
-Last updated: 2026-10-11
+Last updated: 2026-10-18
+
+## Row-bounded proposal batches, 2026-10-18
+
+The encoded proposal budget now follows the current contact-row count. A one-row
+graph records one proposal round on both cold and repeated solves, rather than
+four; six coupled rows extend their initial four-round batch only to six, and a
+subsequent one-row graph cannot inherit a seven-round budget. Solver sweeps,
+contact/joint features, the 32-color limit and full overflow response remain.
+The internal cumulative ContactColorProposalRoundCount counts encoded complete
+proposal rounds, including rounds whose device work would immediately exit after
+completion. It observes command work without another GPU submission or readback.
+
+A frozen RED isolated-contact fixture recorded 4/4 rounds and 3136/2160 uniform
+bytes for its first/repeated velocity solve. The row-bounded fixture records 1/1
+rounds and 2848/1872 bytes. Two 1-kg bodies retain 6 scene-unit/s inelastic
+velocities, total momentum of 12 kg·scene-unit/s and unchanged poses; 128 warmed
+solves measure strict 0 owner/all-thread managed bytes. The six-row growth/shrink fixture also retains
+physical static support. This is an encoded-work reduction in a 1/60-second,
+single-iteration isolated velocity-solve control. Velocity and momentum tolerances
+are 0.002 scene-unit/s and 0.002 kg·scene-unit/s, reusing the existing resident
+coupled-chain bounds for FP32 warm/gather accumulation. Poses are exact because
+the operation does not advance them. This establishes no whole-step throughput,
+hardware speedup or window/FPS result. Evidence is retained under
+bin/physics-network-stage-costs/2026-10-18/.
+
+Initial separate-process profiling on the preceding 20cab511 runtime sources
+completed 317/312 GPU-client frames in owner/separate modes. The combined resident
+solver commands account for 73.632%/73.325% of accumulated store fence waits.
+These counters include schedule construction; they are not an isolated coloring
+kernel measurement. The original network inputs, positive warm prediction/replay
+samples and strict 0/0 managed-byte gates remain. Evidence:
+initial-stage-analysis.json and source-proof-initial.json in the same directory.
+The waits motivate examining command work; they do not establish a hardware gain.
+
+The complete resident-solver profile passes on the row-bounded sources in
+692.254965 seconds, including dirty 16384-body scratch initialization, elastic and
+speculative impacts, signed materials and stationary surfaces, directed rays,
+64/257-support overflow, coupled capped joints, all three storage layouts, oblique
+friction, the ten-second rotating stack and 4096/65536-body loaded pits. The pit
+checks retain four substeps, sixteen sweeps and 384 warmup/256 measured intervals;
+measured owner-thread managed bytes are zero. Their timing logs include concurrent
+host compilation during part of this functional run and establish no matched
+CPU/GPU throughput or target-hardware advantage. The simpler floor-one experiment
+was replaced by the row-count bound and its interrupted run is excluded from final
+acceptance. No physics declaration state is closed by this optimization.
+
+Fourteen final root profiles now pass: the complete resident solver, shared
+CPU/GPU bodies/shapes/worlds, common CCD/boundary/directed-ray and joint contracts,
+fields, completed-frame reports, portable snapshots, public and private device
+checkpoints, resident sleep, transient and dense contact histories, and one-way
+response. The transient suite covers all 32 CPU/GPU, scene/server, CastRay/CastShape
+and owner/separate combinations; dense histories retain 32-slot identity/cap/event
+checks. Transient/dense history warm brackets remain at strict 0 owner/all-thread
+managed bytes.
+The corrected sleep fixture has its own fresh source/PDB proof; its runtime DLL
+is byte-identical to the earlier final solver/runtime build. The original stale
+fixture failures remain outside accepted results. Evidence: root-validation.json
+and source-proof-fixed.json under the same artifact directory.
+
+All sixteen fresh [network regression profiles](physics-network-example.md#row-bounded-contact-scheduling-regression-2026-10-18) also pass: twelve ordinary instrumented/public managed/strict NativeAOT profiles and four phase-paced profiles, with their original deadlines and physical/protocol assertions. The 17614 warm step and 56100 warm replay intervals remain at strict 0 owner/all-thread managed bytes. This does not replace the earlier failed timing observations or establish their cause. Functional payloads predate the independent controller-motion commit; integration build/API/wiki checks retain their own scope.
 
 ## Failure that motivated the change
 
@@ -37,10 +97,15 @@ whole constraint batch uses the complete GPU Jacobi update/gather path; no conta
 are truncated and no CPU solve is substituted. The 64/257-support checks exercise
 that high-degree path. Improving convergence for overflowing graphs remains open.
 
-Proposal batches start with the previous completed round count plus one, bounded
-to 4 through 64 rounds. A device-confirmed unfinished batch extends by sixteen
-rounds until completion or the existing limit. This reduces commands for rounds
-that would do no work after completion; it does not accept an incomplete graph,
+Proposal batches start with the previous completed round count plus one. For N
+contact rows, the initial budget is clamped between min(4, N) and min(64, N).
+A device-confirmed unfinished batch extends by sixteen rounds up to min(64, N).
+An unfinished proposal round assigns at least the globally lowest-priority row,
+or selects the complete fallback when its endpoint colors are exhausted; N rows
+therefore need no padding beyond N rounds. The device still validates completion
+and conflicting ownership before any colored response. A graph that remains
+unfinished at its bound uses the complete GPU Jacobi path. This reduces commands
+for rounds that would do no work after completion; it does not accept an incomplete graph,
 change configured solver sweeps or discard contact rows. Graph growth may add a
 status fence, measured by the complete scene benchmark. Its JSON records final
 color/round counts and cumulative fallbacks separately from frame timing.

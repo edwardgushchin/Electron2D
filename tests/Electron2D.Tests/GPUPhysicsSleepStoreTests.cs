@@ -128,7 +128,12 @@ internal static class GPUPhysicsSleepStoreTests
         using var springWorld = new Store(); springWorld.SetSleepSettings(new(2, 0.1f, 0.05f));
         var a = Add(springWorld, sleep: true); var b = Add(springWorld, new(12, 0), sleep: true);
         springWorld.AddJoint(new(Kind.DampedSpring, a, b, Transform.Identity, Transform.Identity) { RestLength = 10, Stiffness = 20, Damping = 0 });
+        springWorld.SolveConstraints(0.01f);
+        Check(Read(springWorld, a).Sleeping && Read(springWorld, b).Sleeping,
+            "Unchanged spring tension preserves the endpoints' initial sleeping configuration");
+        springWorld.SetSleeping(a, false);
         springWorld.SolveConstraints(0.01f); Near(Read(springWorld, a).Velocity.X, 0.4f, 0.001f, "An extended spring wakes and applies its impulse");
+        Near(Read(springWorld, b).Velocity.X, -0.4f, 0.001f, "The explicitly awakened spring preserves equal opposite momentum");
     }
     private static void VerifyResidency(int side)
     {

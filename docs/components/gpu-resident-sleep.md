@@ -1,6 +1,6 @@
 # Resident GPU sleep and wake
 
-Last updated: 2026-10-10
+Last updated: 2026-10-18
 
 ## Executing boundary
 
@@ -8,7 +8,8 @@ Last updated: 2026-10-10
 sleep and wake on the device. Dynamic bodies default to CanSleep=true and awake;
 BodyDefinition can start one asleep. SetSleeping clears dynamic velocity when true;
 SetCanSleep(false), explicit velocity (including zero), nonzero impulse and authored
-body/shape/joint edits wake affected bodies. Ordered pending commands retain the
+body/shape/joint edits wake affected existing bodies. Initial creation preserves
+the requested sleeping state. Ordered pending commands retain the
 latest explicit sleep/velocity/impulse action. Constant force remains configured
 while asleep. Static and kinematic roles do not enter dynamic sleep.
 
@@ -26,6 +27,16 @@ publication and sleep callbacks now execute. Local checkpoints and portable
 network snapshots remain distinct consumers; internal selected snapshots are not
 event delivery or a portable replay format. Full physics and platform acceptance
 requires the complete shared public contract.
+
+## Sleeping spring regression, 2026-10-18
+
+The standalone resident-sleep fixture now checks that two initially sleeping
+endpoints retain sleep under unchanged spring tension, then explicitly wakes one
+endpoint and retains the original 0.4-unit/s velocity assertion plus the opposite
+endpoint momentum check (0.001 tolerance). The old fixture incorrectly expected
+unconditional wake, contradicting the shared loaded-spring policy. The same
+failure was reproduced in the unchanged 12bf2f8a test payload and the pre-budget
+control; no runtime sleep or spring behavior was changed by this correction.
 
 ## Device graph and propagation
 
@@ -45,11 +56,13 @@ build. A removed, reused, teleported or edited endpoint wakes its former neighbo
 before the old edges are overwritten. This includes removal/filtering/disposal of a
 static support. Old component wake skips newly reused body generations. New contacts
 then propagate wake across the current component. A moving static/kinematic surface,
-motor on an already awake component or stretched spring wakes its constrained
-dynamics. An unchanged motor does not override explicit sleep. A motor edit or
-external impact still wakes the component through ordinary authoring/contact rules.
-Springs retain the existing nonzero-force wake policy, including at an offset loaded
-equilibrium. The common public CCD suite checks immediate impact and two idle ticks
+motor on an already awake component wakes its constrained dynamics. Unchanged
+motor drive and steady spring tension do not override explicit sleep. Tension may
+balance contact/joint reactions at a loaded equilibrium; the shared
+[joint/contact policy](physics-joints.md#coupled-support-continuous-motion-and-sleep)
+uses actual motion, quiet clocks and authored changes. Motor/spring edits,
+explicit wake and external impacts still wake through the ordinary component
+rules. After wake, nonzero spring impulses apply to eligible dynamic endpoints. The common public CCD suite checks immediate impact and two idle ticks
 after explicit sleep, at four impact times and with finite/unlimited joint caps.
 
 Wake occurs before contact/joint effective masses are prepared. If a body wakes

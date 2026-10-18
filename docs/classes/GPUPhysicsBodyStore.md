@@ -2,7 +2,9 @@
 
 [Buffer memory observations](../components/gpu-memory.md) are implemented in [GPUPhysicsBodyStore.Memory.cs](../../src/Servers/Physics/GPUPhysicsBodyStore.Memory.cs). They track all requested storage/transfer resources, growth overlap and checkpoint copies through native release, without a simulation mirror or extra GPU work. Complete driver/native and managed memory remains outside this counter.
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
+
+[Contact proposal budgets](../components/gpu-contact-colors.md#row-bounded-proposal-batches-2026-10-18) use the current row count to bound initial and extended schedule batches. `ContactColorProposalRoundCount` is a cumulative internal count of encoded complete proposal rounds, including device-empty padding. Reading it creates no GPU work, waits or state mirror; it is diagnostic metadata, not checkpoint state. Color validation, configured solver sweeps and full overflow response remain unchanged.
 
 [Angular normal/friction coupling](../components/gpu-contact-solver.md#angular-normalfriction-coupling-2026-10-16) now preserves oblique rotating-ray response through colored and high-degree resident contacts, without increasing solver sweeps or the CCD budget. The public reset/full-frame fixture checks actual motion and reported impulse balance.
 

@@ -7,6 +7,8 @@ internal static class GPUPhysicsSolverStoreTests
 {
     internal static void Run()
     {
+        VerifyShortColorBudget();
+        VerifyGrowingColorBudget();
         PhysicsMassPerformance.VerifyDirtyBufferInitialization();
         VerifyImpact();
         VerifySpeculativeImpact();
@@ -29,6 +31,59 @@ internal static class GPUPhysicsSolverStoreTests
     private static Body Add(GPUPhysicsBodyStore store, Vector2 position = default, Vector2 velocity = default,
         Mode mode = Mode.Rigid, float mass = 1, float inertia = 0, float angular = 0) =>
         store.Add(new(mode, position, 0, velocity, angular, mass, inertia, CenterOfMass: Vector2.Zero, CanSleep: false));
+
+    private static void VerifyShortColorBudget()
+    {
+        using var store = new GPUPhysicsBodyStore(); using var circle = new CircleShape { Radius = 1 };
+        var a = Add(store, velocity: new(12, 0)); var b = Add(store, new(2, 0));
+        store.AddShape(a, circle, friction: 0); store.AddShape(b, circle, friction: 0);
+        var uniform = store.UniformBytes;
+        store.SolveConstraints(1f / 60, iterations: 1, margin: 0);
+        var first = store.ContactColorProposalRoundCount; var firstUniform = store.UniformBytes - uniform;
+        uniform = store.UniformBytes;
+        store.SolveConstraints(1f / 60, iterations: 1, margin: 0);
+        var next = store.ContactColorProposalRoundCount - first; var nextUniform = store.UniformBytes - uniform;
+        Console.WriteLine($"Resident short color budget: first={first}, next={next} proposal rounds; uniforms={firstUniform}/{nextUniform} B.");
+        Check(first == 1 && next == 1, "A one-row graph never records padding beyond its complete proposal budget");
+        Check(store.ContactColorCount == 1 && store.ContactColorRounds == 1 && store.ContactColorFallbacks == 0,
+            "The complete isolated contact retains its validated single-color schedule");
+        GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers();
+        for (var i = 0; i < 128; i++) store.SolveConstraints(1f / 60, iterations: 1, margin: 0);
+        var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+        var rounds = store.ContactColorProposalRoundCount;
+        for (var i = 0; i < 128; i++) store.SolveConstraints(1f / 60, iterations: 1, margin: 0);
+        Check(GC.GetAllocatedBytesForCurrentThread() == owner && GC.GetTotalAllocatedBytes(true) == all,
+            "Prepared short contact schedules allocate zero owner/all-thread managed bytes");
+        Check(store.ContactColorProposalRoundCount - rounds == 128, "All measured solves retain the shorter complete schedule budget");
+        var states = new GPUPhysicsBodyStore.Snapshot[2]; store.Read([a, b], states);
+        Near(states[0].Velocity.X, 6, .002f, "Short scheduling preserves the first inelastic contact velocity");
+        Near(states[1].Velocity.X, 6, .002f, "Short scheduling preserves the second inelastic contact velocity");
+        Near(states[0].Velocity.X + states[1].Velocity.X, 12, .002f, "Short scheduling preserves total momentum");
+        Check(states[0].Position == Vector2.Zero && states[1].Position == new Vector2(2, 0), "Velocity solving retains both poses");
+        Console.WriteLine("Resident short color budget: 128 warmed solves at 0/0 owner/all-thread bytes preserve momentum and poses.");
+    }
+
+    private static void VerifyGrowingColorBudget()
+    {
+        using var store = new GPUPhysicsBodyStore(); using var circle = new CircleShape { Radius = 1 };
+        var body = Add(store, velocity: new(12, 0)); store.AddShape(body, circle, friction: 0);
+        var supports = new GPUPhysicsBodyStore.ShapeHandle[6];
+        for (var i = 0; i < supports.Length; i++)
+            supports[i] = store.AddShape(Add(store, new(2, 0), mode: Mode.Static), circle, friction: 0);
+        store.SolveConstraints(1f / 60, iterations: 1, margin: 0);
+        Check(store.ContactPointCount == 6 && store.ContactColorCount == 6 && store.ContactColorRounds == 6 &&
+            store.ContactColorProposalRoundCount == 6 && store.ContactColorFallbacks == 0,
+            "Growing beyond the initial budget completes all six coupled rows without recording padding rounds");
+        for (var i = 1; i < supports.Length; i++) store.RemoveShape(supports[i]);
+        var rounds = store.ContactColorProposalRoundCount;
+        store.SolveConstraints(1f / 60, iterations: 1, margin: 0);
+        Check(store.ContactPointCount == 1 && store.ContactColorCount == 1 && store.ContactColorRounds == 1 &&
+            store.ContactColorProposalRoundCount - rounds == 1 && store.ContactColorFallbacks == 0,
+            "A shrinking graph bounds the reused budget by its current row count");
+        Span<GPUPhysicsBodyStore.Snapshot> state = stackalloc GPUPhysicsBodyStore.Snapshot[1]; store.Read([body], state);
+        Near(state[0].Velocity.X, 0, .002f, "Complete static support stops the incoming dynamic body");
+        Console.WriteLine("Resident color budget: growth completes six coupled rows; shrinkage retains one validated row and physical support.");
+    }
 
     private static void VerifyImpact()
     {
