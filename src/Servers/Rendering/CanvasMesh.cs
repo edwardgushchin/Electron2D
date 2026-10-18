@@ -30,7 +30,7 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
                         if (surface.LODs.Length == 0 && instances is not null && !snap && palette.IsEmpty && surface.Data.Bones.Length == 0 &&
                             surface.Primitive is Mesh.PrimitiveType.Triangles or Mesh.PrimitiveType.TriangleStrip &&
                             RenderingServer.Service is { } renderer && renderer.CanInstance(skinOwner) &&
-                            TryInstanceBounds(surface.Data, out var bounds) && renderer.TryAppendInstances(instances, transform, color, bounds, fraction, out firstInstance, linear))
+                            TryInstanceBounds(surface.Data, out var bounds) && renderer.TryAppendInstances(instances, transform, color, surface.PackedAABB ?? bounds, fraction, out firstInstance, linear))
                         {
                             instanceCount = instances.DrawCount;
                             AppendSurface(vertices, surface.Data, surface.Primitive, Transform.Identity, Colors.White, false, default, default, Transform.Identity, Transform.Identity, linear);
@@ -95,16 +95,41 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
         }
         finally { _preparing = false; }
     }
-    internal Rect2 GetDrawBounds() => local * GetLocalBounds();
-    internal Rect2 GetLocalBounds()
+    internal Rect2 GetDrawBounds(CanvasItem owner) => local * GetLocalBounds(owner);
+    internal Rect2 GetLocalBounds(CanvasItem? owner = null)
     {
         ObjectDisposedException.ThrowIf(mesh.IsDisposed, mesh); var first = true; var minimum = Vector2.Zero; var maximum = Vector2.Zero;
         void Add(MeshSurfaceData data)
         {
             foreach (var vertex in data.Vertices) { if (first) { minimum = maximum = vertex; first = false; } else { minimum = minimum.Min(vertex); maximum = maximum.Max(vertex); } }
         }
+        void AddBounds(Rect2 bounds)
+        {
+            if (first) { minimum = bounds.Position; maximum = bounds.End; first = false; }
+            else { minimum = minimum.Min(bounds.Position); maximum = maximum.Max(bounds.End); }
+        }
         var arrays = mesh as ArrayMesh ?? (mesh as ImmediateMesh)?.Surfaces;
-        if (arrays is not null) { lock (arrays.Gate) { for (var i = 0; i < arrays.SurfaceCount; i++) Add(arrays.Get(i).Data); } }
+        if (arrays is not null)
+        {
+            RenderingSkeletonRegistry.Palette? lease = null;
+            try
+            {
+                PrepareSkin(owner, out var palette, out var toPalette, out var fromPalette, out lease);
+                lock (arrays.Gate) for (var i = 0; i < arrays.SurfaceCount; i++)
+                    {
+                        var surface = arrays.Get(i);
+                        if (surface.PackedAABB is not { } authored) { Add(surface.Data); continue; }
+                        var bones = surface.PackedBoneAABBs; var foundBone = false;
+                        if (!palette.IsEmpty && bones.Length != 0)
+                        {
+                            if (bones.Length > palette.Length) throw new InvalidOperationException("Packed bone bounds exceed the attached palette.");
+                            for (var bone = 0; bone < bones.Length; bone++) if (bones[bone] is { } boneRect) { AddBounds(fromPalette * (palette[bone] * (toPalette * boneRect))); foundBone = true; }
+                        }
+                        if (!foundBone) AddBounds(authored);
+                    }
+            }
+            finally { if (lease is not null) lease.ReplayReaders--; }
+        }
         else { PrepareCustom(); for (var i = 0; i < _customCount; i++) Add(_custom[i].Data); }
         var bounds = new Rect2(minimum, maximum - minimum);
         if (!bounds.IsFinite() || !bounds.End.IsFinite()) throw new ArithmeticException("Mesh bounds exceed finite rectangles.");

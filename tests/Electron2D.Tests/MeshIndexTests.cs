@@ -43,9 +43,17 @@ internal static class MeshIndexTests
             Check(mesh.SurfaceGetArrays(0).Indices[2] == count - 1, "Observer failure retains committed indices.");
             using var copy = (ArrayMesh)mesh.Duplicate(); mesh.UpdateIndexRegion(0, 0, left); Check(copy.SurfaceGetArrays(0).Indices[2] == count - 1, "Duplication owns independent edited indices.");
             for (var i = 0; i < 128; i++) mesh.UpdateIndexRegion(0, 0, (i & 1) == 0 ? right : left);
-            var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
-            for (var i = 0; i < 128; i++) mesh.UpdateIndexRegion(0, 0, (i & 1) == 0 ? right : left);
-            Check(GC.GetAllocatedBytesForCurrentThread() == owner && GC.GetTotalAllocatedBytes(true) == all, "128 prepared updates allocate zero owner/all-thread managed bytes.");
+            Check(GC.TryStartNoGCRegion(1024 * 1024), "Reserve a quiet allocation interval after prior fixtures.");
+            long ownerBytes, allBytes;
+            try
+            {
+                _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
+                var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+                for (var i = 0; i < 128; i++) mesh.UpdateIndexRegion(0, 0, (i & 1) == 0 ? right : left);
+                ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; allBytes = GC.GetTotalAllocatedBytes(true) - all;
+            }
+            finally { GC.EndNoGCRegion(); }
+            Check(ownerBytes == 0 && allBytes == 0, $"128 prepared updates ({count} vertices) allocate zero owner/all-thread managed bytes: {ownerBytes}/{allBytes}.");
         }
         foreach (var primitive in Enum.GetValues<Mesh.PrimitiveType>())
         {

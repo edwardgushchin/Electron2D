@@ -96,7 +96,8 @@ public abstract partial class Mesh : Resource
     public int GetSurfaceCount() { ThrowIfDisposed(); var count = OnGetSurfaceCount(); if (count < 0) throw new InvalidOperationException("Mesh surface count must be nonnegative."); return count; }
     /// <summary>Returns the axis-aligned visibility bounds of this two-dimensional mesh.</summary>
     /// <returns>A finite local rectangle, empty without vertices.</returns>
-    /// <remarks>Default bounds include stored vertices from every topology, including unreferenced vertices.
+    /// <remarks>Ordinary bounds include stored vertices from every topology, including unreferenced vertices.
+    /// Packed server surfaces retain their explicitly authored visibility rectangles.
     /// Prepared custom surface snapshots are reused; live ArrayMesh positions are read without copied queries.</remarks>
     /// <exception cref="ArgumentException">A custom bounds callback supplies an invalid rectangle.</exception>
     public Rect2 GetAABB()

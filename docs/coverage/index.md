@@ -1135,3 +1135,5 @@ Paired Shader and RenderingServer SPIR-V setters/factories now execute authored 
 ## Global shader parameters
 
 [Typed global parameters](../components/global-shader-parameters.md) connect all seven retained service operations and 27 applicable enum declarations to live GLSL/HLSL canvas stages, independent materials, numeric matrices/planar transforms and borrowed ordinary/array images. Base reads and temporary overrides have distinct behavior, with row/column layout copying and prepared zero-managed-byte updates. Project registry loading, the scene override-node lifecycle, external-image ownership, foreign/device performance and native allocation acceptance retain explicit prerequisites.
+
+[Packed mesh surfaces](../components/meshes.md#packed-server-surfaces) provide real RenderingServer binary creation/append/export over the current channel, shape, LOD and palette consumers. Complete getter data and typed metadata are exercised; creation/append retain the exact procedural position-free format dependency. Ordinary source archives and local software-driver pixel/frame checks remain separate acceptance evidence.

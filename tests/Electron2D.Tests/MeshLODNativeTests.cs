@@ -16,7 +16,7 @@ internal static class MeshLODNativeTests
         var data = MeshLODTests.Data(); data.Bones = new int[32]; data.Weights = new float[32]; for (var i = 0; i < 8; i++) data.Weights[i * 4] = 1;
         using var skin = new ArrayMesh(); skin.AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType.Triangles, data, lods: MeshLODTests.Levels()); skin.SurfaceSetMaterial(0, material);
         using var multi = new MultiMesh { Mesh = mesh, InstanceCount = 2 }; multi.SetInstanceTransform2D(0, new(new Vector2(.5f, 0), new Vector2(0, .5f), Vector2.Zero)); multi.SetInstanceTransform2D(1, new(0, new(48, 0)));
-        using var window = new Window { Size = new(320, 160), MinSize = new(320, 160), MaxSize = new(320, 160), Visible = true };
+        using var window = new Window { Size = new(320, 160), Visible = true };
         var node = new MeshInstance { Mesh = mesh, Name = "Mesh", Position = new(4, 4) }; var morph = new MeshInstance { Mesh = shaped, Name = "Morph", Position = new(100, 4), Scale = new(.5f, .5f) }; morph.SetBlendShapeValue(0, 1); var skinned = new MeshInstance { Mesh = skin, Name = "Skin", Position = new(140, 4), Scale = new(.5f, .5f) }; var instances = new MultiMeshInstance { MultiMesh = multi, Name = "Instances", Position = new(4, 56) };
         foreach (var item in new CanvasItem[] { node, morph, skinned, instances }) window.AddChild(item);
         var group = new CanvasGroup { Name = "Group", Position = new(180, 4) }; group.AddChild(new MeshInstance { Mesh = mesh, Scale = new(.5f, .5f) }); window.AddChild(group);

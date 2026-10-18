@@ -18,7 +18,7 @@ internal static class MeshCompressionNativeTests
         using var skin = new ArrayMesh(); skin.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, skinData, flags: Mesh.ArrayFormat.CompressAttributes | Mesh.ArrayFormat.Use8BoneWeights); skin.SurfaceSetMaterial(0, material);
         using var multi = new MultiMesh { Mesh = mesh, InstanceCount = 2 }; multi.SetInstanceTransform2D(0, Transform.Identity); multi.SetInstanceTransform2D(1, new(new Vector2(.5f, 0), new Vector2(0, .5f), new(20, 0)));
         using var custom = new MeshCompressionTests.Custom();
-        using var window = new Window { Size = new(256, 64), MinSize = new(256, 64), MaxSize = new(256, 64), Visible = true };
+        using var window = new Window { Size = new(256, 64), Visible = true };
         var node = new MeshInstance { Name = "Base", Mesh = mesh, Position = new(4, 4) }; var morph = new MeshInstance { Name = "Morph", Mesh = shaped, Position = new(40, 4) }; morph.SetBlendShapeValue(0, .5f); var skinned = new MeshInstance { Name = "Skin", Mesh = skin, Position = new(80, 4) };
         window.AddChild(new MeshInstance { Name = "Custom", Mesh = custom, Material = material, Position = new(232, 4) }); window.AddChild(node); window.AddChild(morph); window.AddChild(skinned); window.AddChild(new MultiMeshInstance { Name = "Instances", MultiMesh = multi, Position = new(116, 4) });
         var group = new CanvasGroup { Name = "Group", Position = new(160, 4) }; group.AddChild(new MeshInstance { Mesh = mesh }); window.AddChild(group);
