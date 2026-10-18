@@ -5,7 +5,7 @@ namespace Electron2D;
 
 internal static class CanvasVertexProgram
 {
-    internal static byte[] Compose(byte[] code, bool instanced, bool lighting)
+    internal static byte[] Compose(byte[] code, bool instanced, bool lighting, bool procedural = false)
     {
         var module = new Module(code); var instructions = module.Instructions;
         var declarations = instructions.Where(i => Op(i) is >= 19 and <= 33).ToDictionary(i => i[1]);
@@ -38,8 +38,8 @@ internal static class CanvasVertexProgram
         }
         var frame = variables.Values.Single(v => v[3] == 2 && instructions.Any(i => Op(i) == 71 && i[1] == v[2] && i[2] == 34 && i[3] == 1) && instructions.Any(i => Op(i) == 71 && i[1] == v[2] && i[2] == 33 && i[3] == 0));
         var frameType = declarations[declarations[frame[1]][3]]; var frameId = frameType[1]; var frameIndex = instructions.IndexOf(frameType);
-        instructions[frameIndex] = Instruction(30, frameId, float2, uintType, float4);
-        annotations.Add(Instruction(72, frameId, 1, 35, 8)); annotations.Add(Instruction(72, frameId, 2, 35, 16));
+        instructions[frameIndex] = Instruction(30, frameId, float2, uintType, uintType, float4);
+        annotations.Add(Instruction(72, frameId, 1, 35, 8)); annotations.Add(Instruction(72, frameId, 2, 35, 12)); annotations.Add(Instruction(72, frameId, 3, 35, 16));
         var entry = instructions.Single(i => Op(i) == 15); var originalMain = entry[2]; var wrapper = ID();
         var privateVariables = new HashSet<uint>(); var newInputs = new List<uint>(); var newOutputs = new List<uint>();
         void Privatize(uint id)
@@ -62,13 +62,19 @@ internal static class CanvasVertexProgram
             annotations.Add(Instruction(71, rawVertexID, 11, 42));
             meshVertexID = Variable(1, uintType, 15); newInputs.AddRange([rawVertexID, meshVertexID]);
         }
+        if (procedural && boolType == 0)
+        {
+            boolType = basic.FirstOrDefault(i => Op(i) == 20)?[1] ?? 0;
+            if (boolType == 0) { boolType = ID(); basic.Add(Instruction(20, boolType)); }
+        }
         uint rawPosition = 0, rawColor = 0, basis = 0, translation = 0, tint = 0, rawCustom = 0;
+        if (instanced || procedural) { Privatize(position); rawPosition = Variable(1, float2, 0); newInputs.Add(rawPosition); }
         if (instanced)
         {
-            Privatize(position); Privatize(color); Privatize(custom);
-            rawPosition = Variable(1, float2, 0); rawColor = Variable(1, float4, 1);
+            Privatize(color); Privatize(custom);
+            rawColor = Variable(1, float4, 1);
             basis = Variable(1, float4, 3); translation = Variable(1, float4, 4); tint = Variable(1, float4, 5); rawCustom = Variable(1, float4, 6);
-            newInputs.AddRange([rawPosition, rawColor, basis, translation, tint, rawCustom]);
+            newInputs.AddRange([rawColor, basis, translation, tint, rawCustom]);
         }
         var glyphInput = Variable(1, float4, 14); var glyphOutput = Variable(3, float4, 11, flat: true);
         newInputs.Add(glyphInput); newOutputs.Add(glyphOutput);
@@ -93,6 +99,12 @@ internal static class CanvasVertexProgram
             var selected = Value(169, uintType, Value(171, boolType, mesh, Constant(uint.MaxValue)), mesh, raw);
             body.Add(Instruction(62, vertexID, vertexIDType == uintType ? selected : Value(124, vertexIDType, selected)));
         }
+        uint proceduralOrigin = 0, proceduralX = 0, proceduralY = 0;
+        if (procedural)
+        {
+            var affine = Load(float4, glyphInput); proceduralOrigin = Load(float2, rawPosition);
+            proceduralX = Value(79, float2, affine, affine, 0, 1); proceduralY = Value(79, float2, affine, affine, 2, 3);
+        }
         if (instanced)
         {
             var p = Load(float2, rawPosition); var b = Load(float4, basis); var t = Load(float4, translation);
@@ -102,17 +114,63 @@ internal static class CanvasVertexProgram
             var local = Value(129, float2, px, py); var transformed = Value(129, float2, local, origin);
             foreach (var id in new[] { px, py, local, transformed }) annotations.Add(Instruction(71, id, 42));
             body.Add(Instruction(62, position, transformed));
+            if (procedural)
+            {
+                uint Basis(uint vector)
+                {
+                    var vx = Value(81, scalar, vector, 0); var vy = Value(81, scalar, vector, 1);
+                    return Value(129, float2, Value(142, float2, bx, vx), Value(142, float2, by, vy));
+                }
+                proceduralOrigin = transformed; proceduralX = Basis(proceduralX); proceduralY = Basis(proceduralY);
+            }
             var incoming = Load(float4, rawColor); var multiplier = Load(float4, tint);
             body.Add(Instruction(62, color, Value(133, float4, incoming, multiplier)));
             if (custom != 0) body.Add(Instruction(62, custom, Load(float4, rawCustom)));
         }
         var function = instructions.Single(i => Op(i) == 54 && i[2] == originalMain);
         var voidType = function[1]; var functionType = function[4];
+        uint zeroVector = 0;
+        if (procedural) { zeroVector = ID(); added.Add(Instruction(46, float2, zeroVector)); body.Add(Instruction(62, position, zeroVector)); }
         _ = Value(57, voidType, originalMain);
-        var modulationPointer = Value(65, Pointer(2, float4), frame[2], Constant(2));
+        if (procedural)
+        {
+            uint output = 0;
+            foreach (var variable in variables.Values.Where(v => v[3] == 3))
+            {
+                if (instructions.Any(i => Op(i) == 71 && i[1] == variable[2] && i[2] == 11 && i[3] == 0)) { output = variable[2]; break; }
+                var structure = Pointee(variable[2]);
+                var member = instructions.FirstOrDefault(i => Op(i) == 72 && i[1] == structure && i[3] == 11 && i[4] == 0);
+                if (member is not null) { output = Value(65, Pointer(3, float4), variable[2], Constant(member[2])); break; }
+            }
+            if (output == 0) throw new NotSupportedException("Procedural canvas vertices require a position builtin output.");
+            uint Float(uint bits) { var id = ID(); added.Add(Instruction(43, scalar, id, bits)); return id; }
+            var half = Float(0x3f000000); var two = Float(0x40000000); var zero = Float(0);
+            var clip = Load(float4, output); var cx = Value(81, scalar, clip, 0); var cy = Value(81, scalar, clip, 1); var cz = Value(81, scalar, clip, 2); var cw = Value(81, scalar, clip, 3);
+            var size = Load(float2, Value(65, Pointer(2, float2), frame[2], Constant(0))); var sx = Value(81, scalar, size, 0); var sy = Value(81, scalar, size, 1);
+            var x = Value(133, scalar, Value(133, scalar, Value(129, scalar, cx, cw), sx), half);
+            var y = Value(133, scalar, Value(133, scalar, Value(131, scalar, cw, cy), sy), half);
+            var world = Value(129, float2, Value(129, float2, Value(142, float2, proceduralX, x), Value(142, float2, proceduralY, y)), Value(142, float2, proceduralOrigin, cw));
+            var wx = Value(81, scalar, world, 0); var wy = Value(81, scalar, world, 1);
+            var flags = Load(uintType, Value(65, Pointer(2, uintType), frame[2], Constant(2)));
+            var snap = Value(167, boolType, Value(171, boolType, Value(199, uintType, flags, Constant(1)), Constant(0)), Value(182, boolType, cw, zero));
+            uint std450 = instructions.FirstOrDefault(i => Op(i) == 11 && i.AsSpan(2).SequenceEqual(new uint[] { 0x4c534c47, 0x6474732e, 0x3035342e, 0 }))?[1] ?? 0;
+            if (std450 == 0) { std450 = ID(); instructions.Insert(0, Instruction(11, std450, 0x4c534c47, 0x6474732e, 0x3035342e, 0)); }
+            uint Snap(uint value) => Value(169, scalar, snap, Value(133, scalar, Value(12, scalar, std450, 8, Value(129, scalar, Value(136, scalar, value, cw), half)), cw), value);
+            wx = Snap(wx); wy = Snap(wy);
+            var ox = Value(131, scalar, Value(136, scalar, Value(133, scalar, wx, two), sx), cw);
+            var oy = Value(131, scalar, cw, Value(136, scalar, Value(133, scalar, wy, two), sy));
+            body.Add(Instruction(62, output, Value(80, float4, ox, oy, cz, cw)));
+            var outputUV = Interface(3, 1); var uv = Load(float2, outputUV);
+            var screenUV = Value(171, boolType, Value(199, uintType, flags, Constant(2)), Constant(0));
+            var groupU = Value(169, scalar, screenUV, Value(136, scalar, Value(136, scalar, wx, cw), sx), Value(81, scalar, uv, 0));
+            var groupV = Value(169, scalar, screenUV, Value(136, scalar, Value(136, scalar, wy, cw), sy), Value(81, scalar, uv, 1));
+            body.Add(Instruction(62, outputUV, Value(80, float2, groupU, groupV)));
+        }
+        var modulationPointer = Value(65, Pointer(2, float4), frame[2], Constant(3));
         var modulation = Load(float4, modulationPointer); var resultColor = Load(float4, outputColor);
         body.Add(Instruction(62, outputColor, Value(133, float4, resultColor, modulation)));
-        body.Add(Instruction(62, glyphOutput, Load(float4, glyphInput)));
+        if (procedural) { var zeroGlyph = ID(); added.Add(Instruction(46, float4, zeroGlyph)); body.Add(Instruction(62, glyphOutput, zeroGlyph)); }
+        else body.Add(Instruction(62, glyphOutput, Load(float4, glyphInput)));
         if (lighting)
         {
             var indexPointer = Value(65, Pointer(2, uintType), frame[2], Constant(1));

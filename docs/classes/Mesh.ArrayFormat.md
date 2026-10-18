@@ -1,6 +1,6 @@
 # Mesh.ArrayFormat
 
-Last updated: 2026-10-12
+Last updated: 2026-10-18
 
 **Namespace:** `Electron2D` · **Declaration:** `public enum Electron2D.Mesh.ArrayFormat` · **Source:** [Mesh.cs](../../src/Scene/Resources/Mesh.cs).
 
@@ -46,6 +46,7 @@ var value = Mesh.ArrayFormat.Color;
 | `public const Electron2D.Mesh.ArrayFormat Use2DVertices = 33554432` | Vertex positions use two floating components. |
 | `public const Electron2D.Mesh.ArrayFormat Use8BoneWeights = 134217728` | Skin records contain eight indices and eight weights instead of four. |
 | `public const Electron2D.Mesh.ArrayFormat UseDynamicUpdate = 67108864` | Surface buffers accept explicit region updates. |
+| `public const Electron2D.Mesh.ArrayFormat UseEmptyVertexArray = 268435456` | Permits absent position storage and generated shader geometry. |
 | `public const Electron2D.Mesh.ArrayFormat Vertex = 1` | Vertex positions. |
 | `public const Electron2D.Mesh.ArrayFormat Weights = 2048` | Flattened unsigned normalized 16-bit skin weights. |
 
@@ -213,3 +214,9 @@ First bit of the shared storage-policy flags; this is a bit-position value, not 
 `public const Electron2D.Mesh.ArrayFormat CompressAttributes = 536870912`
 
 Selects four-byte UV UNORM16 pairs and six-byte joint normal/tangent axis/angle records. Position pairs remain float XY; custom/color/skin/index packing is unchanged. See [the compressed attribute contract](../components/meshes.md#compressed-attributes).
+
+### UseEmptyVertexArray
+
+`public const Electron2D.Mesh.ArrayFormat UseEmptyVertexArray = 268435456`
+
+Permits absent positions with explicit channel counts or zero-count uint16 index-only invocations. Retained drawing requires an authored vertex stage and author-owned visibility bounds. CPU face extraction skips flagged surfaces even when positions are supplied. See [procedural surfaces](../components/meshes.md#procedural-surfaces-without-positions).

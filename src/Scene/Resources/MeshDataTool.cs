@@ -35,6 +35,7 @@ public sealed partial class MeshDataTool : ElectronObject
             lock (mesh.Gate)
             {
                 var source = mesh.Get(surface); if (source.Primitive != Mesh.PrimitiveType.Triangles) throw new ArgumentException("Topology editing requires triangles.", nameof(surface));
+                if (source.Data.IsProcedural) throw new ArgumentException("Topology editing requires position geometry.", nameof(surface));
                 data = source.Data.Copy(); format = source.Format; material = source.Material;
                 if (material is { IsDisposed: true }) throw new ObjectDisposedException(nameof(material)); data.Validate(Mesh.PrimitiveType.Triangles);
             }

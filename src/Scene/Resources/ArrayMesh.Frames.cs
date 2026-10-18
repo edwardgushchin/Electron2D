@@ -17,14 +17,15 @@ public sealed partial class ArrayMesh
             var prepared = new List<Surface>(_surfaces.Count);
             foreach (var surface in _surfaces)
             {
+                if (surface.Data.IsProcedural) throw new InvalidOperationException("Tangent regeneration requires position geometry.");
                 if (surface.Material is { IsDisposed: true }) throw new ObjectDisposedException(nameof(Material));
                 using var tool = new SurfaceTool(); tool.CreateFromArrays(surface.Data, surface.Primitive); tool.GenerateTangents();
                 var data = tool.CommitToArrays(); data.Validate(surface.Primitive);
                 var next = new Surface(data, surface.Primitive, surface.Format, blendShapes: surface.BlendShapes, blendMask: surface.BlendMask, lods: MeshLOD.Copy(surface.LODs), compression: surface.Compression is { } compressed ? new MeshCompression(data, compressed.UVScale, (byte[])compressed.UVs.Clone(), (byte[])compressed.UV2s.Clone()) : null) { Name = surface.Name, Material = surface.Material, PackedAABB = surface.PackedAABB, PackedUVScale = surface.PackedUVScale, PackedBoneAABBs = surface.PackedBoneAABBs, PackedBlendShapeData = surface.PackedBlendShapeData };
                 if (data.Normals.Length != 0 && surface.Compression is null)
                 {
-                    var oldStride = surface.FrameWords.Length / data.Vertices.Length; var newStride = next.FrameWords.Length / data.Vertices.Length;
-                    for (var i = 0; i < data.Vertices.Length; i++) { var word = surface.FrameWords[i * oldStride]; next.FrameWords[i * newStride] = word; MeshFrameCodec.RestoreWord(data, i * newStride, word); }
+                    var oldStride = surface.FrameWords.Length / data.VertexCount; var newStride = next.FrameWords.Length / data.VertexCount;
+                    for (var i = 0; i < data.VertexCount; i++) { var word = surface.FrameWords[i * oldStride]; next.FrameWords[i * newStride] = word; MeshFrameCodec.RestoreWord(data, i * newStride, word); }
                 }
                 prepared.Add(next);
             }

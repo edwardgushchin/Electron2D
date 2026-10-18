@@ -18,7 +18,7 @@ internal static class MeshVertexIDTests
         using var stream = typeof(MeshVertexIDTests).Assembly.GetManifestResourceStream($"Electron2D.Device.DeviceVertexID{language}.{stage}.spv")!;
         using var memory = new MemoryStream(); stream.CopyTo(memory); return memory.ToArray();
     }
-    private static byte[] Modern(byte[] code)
+    internal static byte[] Modern(byte[] code)
     {
         var module = new Electron2D.MaterialLightingProgram.Module(code); module.Header[1] = 0x10500;
         var entry = module.Instructions.Single(i => Op(i) == 15); var start = StringEnd(entry, 3);

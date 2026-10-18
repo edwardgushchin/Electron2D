@@ -12,7 +12,7 @@ internal static class MeshFrameCodec
         var normal = data.Normals.Length != 0;
         if (normal && data.Tangents.Length == 0)
         {
-            data.Tangents = new Vector4[data.Vertices.Length];
+            data.Tangents = new Vector4[data.VertexCount];
             for (var i = 0; i < data.Tangents.Length; i++)
             {
                 var n = Unit(data.Normals[i]);
@@ -27,8 +27,8 @@ internal static class MeshFrameCodec
         var tangent = data.Tangents.Length != 0;
         var stride = (normal ? 1 : 0) + (tangent ? 1 : 0);
         if (stride == 0) return [];
-        var words = new uint[checked(data.Vertices.Length * stride)];
-        for (var i = 0; i < data.Vertices.Length; i++)
+        var words = new uint[checked(data.VertexCount * stride)];
+        for (var i = 0; i < data.VertexCount; i++)
         {
             var offset = i * stride;
             if (normal) { var word = PackNormal(data.Normals[i]); words[offset++] = word; data.Normals[i] = Normal(word); }

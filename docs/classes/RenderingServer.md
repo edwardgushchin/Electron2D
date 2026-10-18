@@ -1387,3 +1387,7 @@ All three require the active renderer owner thread. Creation/append also reject 
 These methods share ArrayMesh.CustomAABB state. Source geometry and packed surface descriptions remain independent. Retained commands, group fitting, palettes/morphs and hardware/expanded instances use the override. Resource-owned RIDs permit queries and retain their resource setter; service mutation rejects borrowed identities. See [bounds behavior and native checks](../components/meshes.md#manual-mesh-visibility-bounds).
 
 Paired ShaderSetSPIRV uses the same [original mesh vertex ID contract](../components/shader-materials.md#authored-vertex-stages) as Shader: indexed and expanded geometry, LODs, deformation and instances retain the source index; ordinary non-mesh geometry retains native stream IDs.
+
+## Procedural mesh integration
+
+Typed and packed procedural surfaces execute through owned/borrowed mesh identities with independent counts, source IDs and authored visibility. Existing owner-thread, mutation and disposal guards apply. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).

@@ -1,11 +1,13 @@
 namespace Electron2D;
 
-internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
+internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate, bool captureCustomBounds = true)
 {
     internal void Set(Mesh value, Transform pose, Color tint) { if (!ReferenceEquals(mesh, value)) { _revision = -1; _customCount = 0; Array.Clear(_custom); } mesh = value; local = pose; modulate = tint; }
     private (MeshSurfaceData Data, Mesh.PrimitiveType Primitive, Material? Material, MeshLOD[] LODs)[] _custom = [];
     private long _revision = -1;
     private int _customCount;
+    private Rect2 _customBounds;
+    private bool _customProcedural;
     internal Mesh Mesh => mesh;
     internal void Clear() { mesh = null!; _revision = -1; _customCount = 0; Array.Clear(_custom); }
 
@@ -27,17 +29,25 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
                     for (var i = 0; i < arrays.SurfaceCount; i++)
                     {
                         var surface = arrays.Get(i); var first = vertices.Count;
+                        var surfaceVisibility = visibility ?? (surface.Data.IsProcedural ? transform * (instances is null ? surface.PackedAABB ?? default : instances.GetPresentationBounds(fraction)) : null);
                         var instanceCount = 0; var firstInstance = 0;
                         if (surface.LODs.Length == 0 && instances is not null && !snap && palette.IsEmpty && surface.Data.Bones.Length == 0 &&
-                            surface.Primitive is Mesh.PrimitiveType.Triangles or Mesh.PrimitiveType.TriangleStrip &&
+                            (surface.Data.IsProcedural || surface.Primitive is Mesh.PrimitiveType.Triangles or Mesh.PrimitiveType.TriangleStrip) &&
                             RenderingServer.Service is { } renderer && renderer.CanInstance(skinOwner) &&
-                            TryInstanceBounds(surface.Data, out var bounds) && renderer.TryAppendInstances(instances, transform, color, arrays.CustomAABB != default ? arrays.CustomAABB : surface.PackedAABB ?? bounds, fraction, out firstInstance, linear, recordBounds: visibility is null))
+                            TryInstanceBounds(surface.Data, arrays.CustomAABB != default ? arrays.CustomAABB : surface.PackedAABB, out var bounds) && renderer.TryAppendInstances(instances, transform, color, arrays.CustomAABB != default ? arrays.CustomAABB : surface.PackedAABB ?? bounds, fraction, out firstInstance, linear, recordBounds: surfaceVisibility is null))
                         {
                             instanceCount = instances.DrawCount;
                             AppendSurface(vertices, surface.Data, surface.Primitive, Transform.Identity, Colors.White, false, default, default, Transform.Identity, Transform.Identity, linear);
                         }
+                        else if (surface.Data.IsProcedural && instances is not null)
+                        {
+                            if (instances.DrawCount == 0) continue;
+                            var template = Batch(0, 0, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, linear: linear, visibility: surfaceVisibility, procedural: true, primitive: surface.Primitive, snap: snap);
+                            AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs, linear, batches, template);
+                            continue;
+                        }
                         else AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs, linear);
-                        AddBatch(batches, first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, firstInstance, instanceCount, linear, visibility);
+                        if (vertices.Count != first) AddBatch(batches, Batch(first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, firstInstance, instanceCount, linear, surfaceVisibility, surface.Data.IsProcedural, surface.Data.IsProcedural ? surface.Primitive : Mesh.PrimitiveType.Triangles, snap));
                     }
                 }
                 return;
@@ -45,8 +55,17 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
             PrepareCustom();
             for (var i = 0; i < _customCount; i++)
             {
-                var first = vertices.Count; var surface = _custom[i]; AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs, linear);
-                AddBatch(batches, first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, linear: linear);
+                var first = vertices.Count; var surface = _custom[i];
+                Rect2? visibility = surface.Data.IsProcedural ? transform * (instances is null ? _customBounds : instances.GetPresentationBounds(fraction)) : null;
+                if (surface.Data.IsProcedural && instances is not null)
+                {
+                    if (instances.DrawCount == 0) continue;
+                    var template = Batch(0, 0, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, linear: linear, visibility: visibility, procedural: true, primitive: surface.Primitive, snap: snap);
+                    AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs, linear, batches, template);
+                    continue;
+                }
+                AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs, linear);
+                if (vertices.Count != first) AddBatch(batches, Batch(first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, linear: linear, visibility: visibility, procedural: surface.Data.IsProcedural, primitive: surface.Data.IsProcedural ? surface.Primitive : Mesh.PrimitiveType.Triangles, snap: snap));
             }
         }
         finally { if (lease is not null) lease.ReplayReaders--; }
@@ -81,16 +100,18 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
             var revision = mesh.ChangeRevision;
             if (_revision != revision)
             {
-                var count = mesh.GetSurfaceCount(); if (_custom.Length < count) Array.Resize(ref _custom, count);
+                var hasProcedural = false; var count = mesh.GetSurfaceCount(); if (_custom.Length < count) Array.Resize(ref _custom, count);
                 for (var i = 0; i < count; i++)
                 {
-                    var data = mesh.SurfaceGetArrays(i); var primitive = mesh.SurfaceGetPrimitiveType(i); data.Validate(primitive); data.QuantizeSkin(); if ((mesh.SurfaceGetFormat(i) & Mesh.ArrayFormat.CompressAttributes) != 0) _ = new MeshCompression(data); else MeshFrameCodec.Capture(data); data.PrepareCustoms();
+                    var data = mesh.SurfaceGetArrays(i); var primitive = mesh.SurfaceGetPrimitiveType(i); data.Validate(primitive); if (data.IsProcedural && (mesh.SurfaceGetFormat(i) & Mesh.ArrayFormat.UseEmptyVertexArray) == 0) throw new ArgumentException("Position-free custom surfaces require UseEmptyVertexArray."); data.QuantizeSkin(); if ((mesh.SurfaceGetFormat(i) & Mesh.ArrayFormat.CompressAttributes) != 0) _ = new MeshCompression(data); else MeshFrameCodec.Capture(data); data.PrepareCustoms();
+                    hasProcedural |= data.IsProcedural;
                     _custom[i] = (data, primitive, mesh.SurfaceGetMaterial(i), MeshLOD.Capture(mesh.SurfaceGetLODs(i), data, primitive));
                 }
+                var customBounds = hasProcedural && captureCustomBounds ? mesh.GetAABB() : default;
                 ObjectDisposedException.ThrowIf(mesh.IsDisposed, mesh);
                 if (mesh.ChangeRevision != revision) throw new InvalidOperationException("Mesh callbacks changed the resource while preparing its surfaces.");
                 Array.Clear(_custom, count, _custom.Length - count);
-                _customCount = count;
+                _customCount = count; _customProcedural = hasProcedural; _customBounds = customBounds;
                 _revision = revision;
             }
         }
@@ -131,26 +152,31 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
             }
             finally { if (lease is not null) lease.ReplayReaders--; }
         }
-        else { PrepareCustom(); for (var i = 0; i < _customCount; i++) Add(_custom[i].Data); }
+        else { PrepareCustom(); if (_customProcedural) AddBounds(_customBounds); for (var i = 0; i < _customCount; i++) Add(_custom[i].Data); }
         var bounds = new Rect2(minimum, maximum - minimum);
         if (!bounds.IsFinite() || !bounds.End.IsFinite()) throw new ArithmeticException("Mesh bounds exceed finite rectangles.");
         return bounds;
     }
-    private static void AddBatch(List<CanvasBatch> batches, int first, int count, Material? surfaceMaterial, MaterialState? inheritedMaterial, BlendMode inheritedBlend,
-        Texture? texture, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, CanvasItem? owner, int firstInstance = 0, int instanceCount = 0, bool linear = false, Rect2? visibility = null)
+    private static CanvasBatch Batch(int first, int count, Material? surfaceMaterial, MaterialState? inheritedMaterial, BlendMode inheritedBlend,
+        Texture? texture, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, CanvasItem? owner, int firstInstance = 0, int instanceCount = 0, bool linear = false, Rect2? visibility = null, bool procedural = false, Mesh.PrimitiveType primitive = Mesh.PrimitiveType.Triangles, bool snap = false)
     {
-        if (count == 0) return;
         if (visibility is { } bounds && (!bounds.IsFinite() || !bounds.End.IsFinite())) throw new ArithmeticException("Mesh visibility bounds exceed finite canvas coordinates.");
         var material = surfaceMaterial is null ? inheritedMaterial : surfaceMaterial.GetCanvasState(); var blend = surfaceMaterial is null ? inheritedBlend : surfaceMaterial.GetCanvasBlendMode();
+        if (procedural && material?.Program.Vertex is null) throw new NotSupportedException("Position-free mesh drawing requires an authored vertex stage.");
         var instanceOwner = material?.Program.HasInstanceUniforms == true ? owner : null;
-        if (instanceCount == 0 && batches.Count != 0 && batches[^1] is var last && last.VisibilityBounds == visibility && last.InstanceCount == 0 && last.Operation == CanvasOperation.Draw && last.Glyph.Mode == CanvasGlyphMode.None && last.Material == material && last.InstanceOwner == instanceOwner && last.Texture == texture && last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == clip && last.LinearColors == linear)
-            batches[^1] = last with { Count = last.Count + count };
-        else batches.Add(new(first, count, material, texture, filter, repeat, anisotropy, blend, clip, FirstInstance: firstInstance, InstanceCount: instanceCount, InstanceOwner: instanceOwner, LinearColors: linear, VisibilityBounds: visibility));
+        return new(first, count, material, texture, filter, repeat, anisotropy, blend, clip, FirstInstance: firstInstance, InstanceCount: instanceCount, InstanceOwner: instanceOwner, LinearColors: linear, VisibilityBounds: visibility, Procedural: procedural, Primitive: primitive, SnapGeneratedVertices: procedural && snap);
     }
-    private static bool TryInstanceBounds(MeshSurfaceData data, out Rect2 bounds)
+    private static void AddBatch(List<CanvasBatch> batches, CanvasBatch batch)
+    {
+        if (batch.Count == 0) return;
+        if (!batch.Procedural && batch.InstanceCount == 0 && batches.Count != 0 && batches[^1] is var last && !last.Procedural && last.VisibilityBounds == batch.VisibilityBounds && last.InstanceCount == 0 && last.Operation == CanvasOperation.Draw && last.Glyph.Mode == CanvasGlyphMode.None && last.Material == batch.Material && last.InstanceOwner == batch.InstanceOwner && last.Texture == batch.Texture && last.Filter == batch.Filter && last.Repeat == batch.Repeat && last.MaxAnisotropy == batch.MaxAnisotropy && last.Blend == batch.Blend && last.Clip == batch.Clip && last.LinearColors == batch.LinearColors)
+            batches[^1] = last with { Count = last.Count + batch.Count };
+        else batches.Add(batch);
+    }
+    private static bool TryInstanceBounds(MeshSurfaceData data, Rect2? authored, out Rect2 bounds)
     {
         bounds = default;
-        if (data.Vertices.Length == 0) return false;
+        if (data.IsProcedural) { bounds = authored ?? default; return bounds.HasArea(); }
         foreach (var color in data.Colors)
             if (color.R is < 0 or > 1 || color.G is < 0 or > 1 || color.B is < 0 or > 1 || color.A is < 0 or > 1) return false;
         var minimum = data.Vertices[0]; var maximum = minimum;
@@ -158,19 +184,22 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
         bounds = new(minimum, maximum - minimum);
         return bounds.IsFinite() && bounds.End.IsFinite();
     }
-    private static void AppendSurfaceInstances(List<CanvasVertex> output, MeshSurfaceData data, Mesh.PrimitiveType primitive, Transform transform, Color modulation, bool snap, MultiMesh? instances, float fraction, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, MeshLOD[] lods, bool linear)
+    private static void AppendSurfaceInstances(List<CanvasVertex> output, MeshSurfaceData data, Mesh.PrimitiveType primitive, Transform transform, Color modulation, bool snap, MultiMesh? instances, float fraction, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, MeshLOD[] lods, bool linear, List<CanvasBatch>? splitBatches = null, CanvasBatch template = default)
     {
         if (!palette.IsEmpty && data.Bones.Length != 0) foreach (var bone in data.Bones) if ((uint)bone >= (uint)palette.Length) throw new InvalidOperationException("A mesh skin index does not resolve in its palette.");
         if (instances is null) { AppendSurface(output, MeshLOD.Select(data, lods, transform), primitive, transform, modulation, snap, default, palette, toPalette, fromPalette, linear); return; }
         for (var index = 0; index < instances.DrawCount; index++)
         {
             instances.Presentation(index, fraction, out var pose, out var color, out var custom);
+            var first = output.Count;
             AppendSurface(output, MeshLOD.Select(data, lods, transform * pose), primitive, transform * pose, modulation * (linear ? CanvasGeometry.LinearColor(color) : color), snap, custom, palette, toPalette, fromPalette, linear);
+            if (splitBatches is not null) AddBatch(splitBatches, template with { First = first, Count = output.Count - first });
         }
     }
     private static void AppendSurface(List<CanvasVertex> output, MeshSurfaceData data, Mesh.PrimitiveType primitive, Transform transform, Color modulation, bool snap, Color custom, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, bool linear)
     {
-        var count = data.Indices.Length == 0 ? data.Vertices.Length : data.Indices.Length;
+        var count = data.Indices.Length == 0 ? data.VertexCount : data.Indices.Length;
+        if (data.IsProcedural) { for (var i = 0; i < count; i++) output.Add(Vertex(data, i, transform, modulation, false, custom, palette, toPalette, fromPalette, linear)); return; }
         if (primitive is Mesh.PrimitiveType.Triangles or Mesh.PrimitiveType.TriangleStrip)
         {
             if (primitive == Mesh.PrimitiveType.Triangles)
@@ -194,15 +223,27 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
     }
     private static Vector2 Deform(MeshSurfaceData data, int index, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette)
     {
-        var point = data.Vertices[index]; if (palette.IsEmpty || data.Bones.Length == 0) return point;
+        var point = data.Vertices[index]; return DeformPoint(data, index, point, palette, toPalette, fromPalette);
+    }
+    private static Vector2 DeformPoint(MeshSurfaceData data, int index, Vector2 point, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette)
+    {
+        if (palette.IsEmpty || data.Bones.Length == 0) return point;
         var source = toPalette * point; double x = 0, y = 0, total = 0; var slots = data.SkinSlots;
         for (var slot = 0; slot < slots; slot++) { var entry = index * slots + slot; var weight = data.Weights[entry]; if (weight == 0) continue; var transformed = palette[data.Bones[entry]] * source; x += transformed.X * (double)weight; y += transformed.Y * (double)weight; total += weight; }
         var result = fromPalette.BasisXform(new((float)x, (float)y)) + fromPalette.Origin * (float)total; if (!result.IsFinite()) throw new InvalidOperationException("Mesh skin deformation overflowed finite coordinates."); return result;
     }
     private static CanvasVertex Vertex(MeshSurfaceData data, int order, Transform transform, Color modulation, bool snap, Color custom, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, bool linear)
     {
-        var index = data.Indices.Length == 0 ? order : data.Indices[order]; var position = transform * Deform(data, index, palette, toPalette, fromPalette); var sourceColor = data.Colors.Length == 0 ? Colors.White : data.Colors[index]; var color = (linear ? CanvasGeometry.LinearColor(sourceColor) : sourceColor) * modulation;
+        var index = data.Indices.Length == 0 ? order : data.Indices[order];
+        var affine = transform;
+        if (data.IsProcedural && !palette.IsEmpty && data.Bones.Length != 0)
+        {
+            var origin = DeformPoint(data, index, Vector2.Zero, palette, toPalette, fromPalette);
+            affine *= new Transform(DeformPoint(data, index, Vector2.Right, palette, toPalette, fromPalette) - origin, DeformPoint(data, index, Vector2.Down, palette, toPalette, fromPalette) - origin, origin);
+        }
+        if (data.IsProcedural && (!affine.X.IsFinite() || !affine.Y.IsFinite())) throw new InvalidOperationException("Procedural mesh transforms exceed finite coordinates.");
+        var position = data.IsProcedural ? affine.Origin : transform * Deform(data, index, palette, toPalette, fromPalette); var sourceColor = data.Colors.Length == 0 ? Colors.White : data.Colors[index]; var color = (linear ? CanvasGeometry.LinearColor(sourceColor) : sourceColor) * modulation;
         if (!position.IsFinite() || !color.IsFinite()) throw new InvalidOperationException("Mesh canvas values overflowed finite coordinates.");
-        return new(snap ? CanvasGeometry.Snap(position) : position, color, data.UVs.Length == 0 ? Vector2.Zero : data.UVs[index], custom, data.UV2s.Length == 0 ? Vector2.Zero : data.UV2s[index], data.Normals.Length == 0 ? default : data.Normals[index], data.Tangents.Length == 0 ? default : data.Tangents[index], data.Custom0 is null ? default : data.Custom0.Values[index], data.Custom1 is null ? default : data.Custom1.Values[index], data.Custom2 is null ? default : data.Custom2.Values[index], data.Custom3 is null ? default : data.Custom3.Values[index], VertexID: (uint)index);
+        return new(snap ? CanvasGeometry.Snap(position) : position, color, data.UVs.Length == 0 ? Vector2.Zero : data.UVs[index], custom, data.UV2s.Length == 0 ? Vector2.Zero : data.UV2s[index], data.Normals.Length == 0 ? default : data.Normals[index], data.Tangents.Length == 0 ? default : data.Tangents[index], data.Custom0 is null ? default : data.Custom0.Values[index], data.Custom1 is null ? default : data.Custom1.Values[index], data.Custom2 is null ? default : data.Custom2.Values[index], data.Custom3 is null ? default : data.Custom3.Values[index], Glyph: data.IsProcedural ? new(affine.X.X, affine.X.Y, affine.Y.X, affine.Y.Y) : default, VertexID: (uint)index);
     }
 }

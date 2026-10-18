@@ -379,7 +379,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ImageTexture3D](classes/ImageTexture3D.md) | Texture3D | Excluded | 2 |
 | [ImageTextureLayered](classes/ImageTextureLayered.md) | TextureLayered | Implemented | 2 |
 | [ImmediateMesh](classes/ImmediateMesh.md) | Mesh | Implemented | 10 |
-| [ImporterMesh](classes/ImporterMesh.md) | Resource | Partial | 25 |
+| [ImporterMesh](classes/ImporterMesh.md) | Resource | Implemented | 25 |
 | [ImporterMeshInstance3D](classes/ImporterMeshInstance3D.md) | Node3D | Excluded | 10 |
 | [Input](classes/Input.md) | Object | Partial | 98 |
 | [InputEvent](classes/InputEvent.md) | Resource | Partial | 17 |
@@ -837,7 +837,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [SubViewport](classes/SubViewport.md) | Viewport | Partial | 16 |
 | [SubViewportContainer](classes/SubViewportContainer.md) | Container | Implemented | 5 |
 | [SubtweenTweener](classes/SubtweenTweener.md) | Tweener | Implemented | 1 |
-| [SurfaceTool](classes/SurfaceTool.md) | RefCounted | Partial | 46 |
+| [SurfaceTool](classes/SurfaceTool.md) | RefCounted | Implemented | 46 |
 | [SyntaxHighlighter](classes/SyntaxHighlighter.md) | Resource | Implemented | 7 |
 | [SystemFont](classes/SystemFont.md) | Font | Partial | 17 |
 | [TCPServer](classes/TCPServer.md) | SocketServer | Implemented | 3 |

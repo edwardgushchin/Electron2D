@@ -1,6 +1,6 @@
 # MeshDataTool
 
-Last updated: 2026-10-12
+Last updated: 2026-10-18
 
 MeshDataTool : ElectronObject edits copied two-dimensional triangle surfaces under [ADR 0092](../decisions/mesh.md#adr-0092). It borrows source/target meshes, material and runtime metadata values. Every operation rejects a disposed editor; invalid element/corner indices throw ArgumentOutOfRangeException. Individual operations serialize; callers synchronize whole edit sequences across threads.
 
@@ -529,3 +529,7 @@ returns: Whether an annotation of this exact type is stored.
 
 
 Compressed ArrayMesh surfaces import decoded numerical channels and retain their format mask. CommitToSurface accepts CompressAttributes and applies the documented quantization to edited values through the shared [compressed attribute layout](../components/meshes.md#compressed-attributes).
+
+## Procedural mesh integration
+
+CreateFromSurface rejects missing positions before replacing current topology. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).

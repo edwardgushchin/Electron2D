@@ -18,7 +18,7 @@ public sealed partial class ArrayMesh : Mesh
         private static uint[] Prepare(MeshSurfaceData data, uint[]? words, bool compressed) { data.PrepareCustoms(); return compressed ? [] : words ?? MeshFrameCodec.Capture(data); }
         internal readonly PrimitiveType Primitive = primitive;
         internal readonly ArrayFormat Format = Channels(data) | flags;
-        internal static ArrayFormat Channels(MeshSurfaceData data) => MeshCustomCodec.Channels(data) | ArrayFormat.Vertex | ArrayFormat.Use2DVertices |
+        internal static ArrayFormat Channels(MeshSurfaceData data) => MeshCustomCodec.Channels(data) | (data.IsProcedural ? ArrayFormat.UseEmptyVertexArray : ArrayFormat.Vertex | ArrayFormat.Use2DVertices) |
             (data.Normals.Length != 0 ? ArrayFormat.Normal : 0) | (data.Tangents.Length != 0 ? ArrayFormat.Tangent : 0) | (data.Colors.Length != 0 ? ArrayFormat.Color : 0) | (data.UVs.Length != 0 ? ArrayFormat.TexUV : 0) | (data.UV2s.Length != 0 ? ArrayFormat.TexUV2 : 0) | (data.Indices.Length != 0 ? ArrayFormat.Index : 0) | (data.Bones.Length != 0 ? ArrayFormat.Bones | ArrayFormat.Weights : 0);
         internal string Name = "";
         internal Material? Material;
@@ -27,7 +27,7 @@ public sealed partial class ArrayMesh : Mesh
         internal Rect2?[] PackedBoneAABBs = [];
         internal byte[]? PackedBlendShapeData;
     }
-    internal const ArrayFormat SupportedFormats = ArrayFormat.Custom0 | ArrayFormat.Custom1 | ArrayFormat.Custom2 | ArrayFormat.Custom3 | MeshCustomCodec.FormatMask | ArrayFormat.CompressAttributes | ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights | ArrayFormat.Vertex | ArrayFormat.Normal | ArrayFormat.Tangent | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights;
+    internal const ArrayFormat SupportedFormats = ArrayFormat.UseEmptyVertexArray | ArrayFormat.Custom0 | ArrayFormat.Custom1 | ArrayFormat.Custom2 | ArrayFormat.Custom3 | MeshCustomCodec.FormatMask | ArrayFormat.CompressAttributes | ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights | ArrayFormat.Vertex | ArrayFormat.Normal | ArrayFormat.Tangent | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights;
     internal readonly object Gate = new();
     private readonly List<Surface> _surfaces = [];
     /// <summary>Creates an empty mesh.</summary>
@@ -37,8 +37,11 @@ public sealed partial class ArrayMesh : Mesh
     /// <param name="arrays">Borrowed typed vertex/normal/tangent/color/primary and secondary UV/custom/index/skin arrays copied before mutation.</param>
     /// <param name="blendShapes">One copied position/normal/tangent-only target per named definition; null or empty for unshaped meshes.</param>
     /// <param name="lods">Copied positive finite local error thresholds mapped to shorter index sets; null or empty uses base geometry.</param>
-    /// <param name="flags">UseDynamicUpdate, Use2DVertices, Use8BoneWeights, CompressAttributes and matching channel bits. Unsupported bits reject before mutation.</param>
-    /// <remarks>Channel bits are inferred; explicitly supplied channel bits must match the arrays. The new surface index is the old GetSurfaceCount result.</remarks>
+    /// <param name="flags">UseDynamicUpdate, Use2DVertices, Use8BoneWeights, CompressAttributes, UseEmptyVertexArray and matching channel bits. Unsupported bits reject before mutation.</param>
+    /// <remarks>Channel bits are inferred; explicitly supplied channel bits must match the arrays except for zero-count index-only channel declarations.
+    /// Absent positions require UseEmptyVertexArray, an explicit channel count or uint16 index-only invocations,
+    /// and an authored vertex shader when drawn. Compressed direction frames require positions.
+    /// The new surface index is the old GetSurfaceCount result.</remarks>
     /// <exception cref="ArgumentException">Channel counts, primitives or finite values are invalid.</exception>
     /// <exception cref="ArgumentNullException">The data or a channel array is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">An index or primitive is invalid.</exception>
@@ -52,9 +55,17 @@ public sealed partial class ArrayMesh : Mesh
         if (material is { IsDisposed: true }) throw new ObjectDisposedException(nameof(material));
         if ((flags & ~SupportedFormats) != 0) throw new NotSupportedException("These mesh flags require their attribute storage integration.");
         var copy = arrays.Copy(); copy.Validate(primitive);
-        var blendMask = ArrayFormat.Vertex | (copy.Normals.Length != 0 ? ArrayFormat.Normal : 0) | (copy.Tangents.Length != 0 ? ArrayFormat.Tangent : 0);
+        if (copy.IsProcedural && (flags & ArrayFormat.UseEmptyVertexArray) == 0) throw new ArgumentException("Position-free surfaces require UseEmptyVertexArray.", nameof(flags));
+        if (copy.IsProcedural && (flags & (ArrayFormat.CompressAttributes | ArrayFormat.Vertex)) == ArrayFormat.CompressAttributes && ((flags | Surface.Channels(copy)) & (ArrayFormat.Normal | ArrayFormat.Tangent)) != 0) throw new ArgumentException("Compressed direction frames require positions.", nameof(flags));
+        if (copy.VertexCount == 0)
+        {
+            if ((flags & ArrayFormat.Vertex) != 0) flags |= ArrayFormat.Use2DVertices;
+            for (var channel = 0; channel < 4; channel++) if ((flags & MeshCustomCodec.Mask(channel)) != 0 && copy.Custom(channel) is null)
+                    copy.SetCustom(channel, new() { Format = (MeshCustomFormat)((ulong)flags >> MeshCustomCodec.Shift(channel) & 7), Data = [] });
+        }
+        var blendMask = BlendMaskFor(copy, blendShapes, flags);
         var shapes = blendShapes?.Select(shape => { ArgumentNullException.ThrowIfNull(shape); var result = shape.Copy(); ValidateBlendShape(result, copy, blendMask); if ((flags & ArrayFormat.CompressAttributes) != 0) { var authoredTangent = result.Tangents.Length != 0; _ = new MeshCompression(result); if (!authoredTangent) result.Tangents = []; } else { for (var i = 0; i < result.Normals.Length; i++) result.Normals[i] = MeshFrameCodec.Normal(MeshFrameCodec.PackNormal(result.Normals[i])); for (var i = 0; i < result.Tangents.Length; i++) result.Tangents[i] = MeshFrameCodec.Tangent(MeshFrameCodec.PackTangent(result.Tangents[i])); } return result; }).ToArray() ?? [];
-        var packed = new Surface(copy, primitive, flags, blendShapes: shapes, blendMask: blendMask, lods: lods, compression: compression); var inferred = Surface.Channels(copy); const ArrayFormat channels = ArrayFormat.Custom0 | ArrayFormat.Custom1 | ArrayFormat.Custom2 | ArrayFormat.Custom3 | ArrayFormat.Vertex | ArrayFormat.Normal | ArrayFormat.Tangent | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights; if ((flags & channels & ~inferred) != 0) throw new ArgumentException("Explicit channel flags require matching typed arrays.", nameof(flags)); if (copy.SkinSlots != 0 && copy.SkinSlots != ((flags & ArrayFormat.Use8BoneWeights) != 0 ? 8 : 4)) throw new ArgumentException("Skin slot count must match the eight-weight flag.", nameof(flags)); copy.QuantizeSkin();
+        var packed = new Surface(copy, primitive, flags, blendShapes: shapes, blendMask: blendMask, lods: lods, compression: compression); var inferred = Surface.Channels(copy); const ArrayFormat channels = ArrayFormat.Custom0 | ArrayFormat.Custom1 | ArrayFormat.Custom2 | ArrayFormat.Custom3 | ArrayFormat.Vertex | ArrayFormat.Normal | ArrayFormat.Tangent | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights; if (copy.VertexCount != 0 && (flags & channels & ~inferred) != 0) throw new ArgumentException("Explicit channel flags require matching typed arrays.", nameof(flags)); if (copy.SkinSlots != 0 && copy.SkinSlots != ((flags & ArrayFormat.Use8BoneWeights) != 0 ? 8 : 4)) throw new ArgumentException("Skin slot count must match the eight-weight flag.", nameof(flags)); if (((packed.Format & ArrayFormat.Bones) != 0) != ((packed.Format & ArrayFormat.Weights) != 0)) throw new ArgumentException("Skin channels require both bones and weights.", nameof(flags)); copy.QuantizeSkin();
         for (var channel = 0; channel < 4; channel++)
         {
             var supplied = (ulong)flags >> MeshCustomCodec.Shift(channel) & 7;
@@ -140,7 +151,7 @@ public sealed partial class ArrayMesh : Mesh
         {
             var surface = Get(surfaceIndex); var colors = surface.Data.Colors.Length != 0; var uvs = surface.Data.UVs.Length != 0; var uv2s = surface.Data.UV2s.Length != 0;
             var stride = MeshCustomCodec.AttributeStride(surface.Format); if (stride == 0) throw new InvalidOperationException("The surface has no attribute buffer.");
-            Region(offset, data.Length, surface.Data.Vertices.Length, stride); Span<byte> record = stackalloc byte[84]; var end = (long)offset + data.Length;
+            Region(offset, data.Length, surface.Data.VertexCount, stride); Span<byte> record = stackalloc byte[84]; var end = (long)offset + data.Length;
             for (var pass = 0; pass < 2; pass++)
                 for (var index = offset / stride; index * (long)stride < end; index++)
                 {
@@ -186,7 +197,7 @@ public sealed partial class ArrayMesh : Mesh
     /// <inheritdoc />
     protected override MeshSurfaceData OnSurfaceGetArrays(int surfaceIndex) { lock (Gate) return Get(surfaceIndex).Data.Copy(); }
     /// <inheritdoc />
-    protected override int OnSurfaceGetArrayLen(int surfaceIndex) { lock (Gate) return Get(surfaceIndex).Data.Vertices.Length; }
+    protected override int OnSurfaceGetArrayLen(int surfaceIndex) { lock (Gate) return Get(surfaceIndex).Data.VertexCount; }
     /// <inheritdoc />
     protected override int OnSurfaceGetArrayIndexLen(int surfaceIndex) { lock (Gate) return Get(surfaceIndex).Data.Indices.Length; }
     /// <inheritdoc />
@@ -203,7 +214,7 @@ public sealed partial class ArrayMesh : Mesh
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
         Surface[] copies; string[] names; BlendShapeMode mode; Rect2 customBounds;
-        lock (Gate) { ThrowIfDisposed(); names = _blendShapeNames.ToArray(); mode = _blendShapeMode; customBounds = _customAABB; copies = new Surface[_surfaces.Count]; for (var i = 0; i < copies.Length; i++) { var s = _surfaces[i]; copies[i] = new(s.Data.Copy(), s.Primitive, s.Format & (ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights | ArrayFormat.CompressAttributes), (uint[])s.FrameWords.Clone(), s.BlendShapes.Select(shape => shape.Copy()).ToArray(), s.BlendMask, MeshLOD.Copy(s.LODs), s.Compression) { Name = s.Name, Material = s.Material, PackedAABB = s.PackedAABB, PackedUVScale = s.PackedUVScale, PackedBoneAABBs = s.PackedBoneAABBs, PackedBlendShapeData = s.PackedBlendShapeData }; } }
+        lock (Gate) { ThrowIfDisposed(); names = _blendShapeNames.ToArray(); mode = _blendShapeMode; customBounds = _customAABB; copies = new Surface[_surfaces.Count]; for (var i = 0; i < copies.Length; i++) { var s = _surfaces[i]; copies[i] = new(s.Data.Copy(), s.Primitive, (s.Data.VertexCount == 0 ? s.Format : s.Format & (ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights | ArrayFormat.CompressAttributes | ArrayFormat.UseEmptyVertexArray)), (uint[])s.FrameWords.Clone(), s.BlendShapes.Select(shape => shape.Copy()).ToArray(), s.BlendMask, MeshLOD.Copy(s.LODs), s.Compression) { Name = s.Name, Material = s.Material, PackedAABB = s.PackedAABB, PackedUVScale = s.PackedUVScale, PackedBoneAABBs = s.PackedBoneAABBs, PackedBlendShapeData = s.PackedBlendShapeData }; } }
         foreach (var copy in copies) copy.Material = (Material?)duplicateSubresource(copy.Material);
         var other = (ArrayMesh)target; lock (other.Gate) { other.ThrowIfDisposed(); other._surfaces.Clear(); other._surfaces.AddRange(copies); other._blendShapeNames.Clear(); other._blendShapeNames.AddRange(names); other._blendShapeMode = mode; other._customAABB = customBounds; }
     }

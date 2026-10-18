@@ -1,6 +1,6 @@
 # CanvasVertexProgram
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 - Declaration: `internal static class CanvasVertexProgram`
 - Source: [CanvasVertexProgram.cs](../../src/Servers/Rendering/CanvasVertexProgram.cs)
@@ -17,3 +17,7 @@ Cold SPIR-V composition for an authored canvas vertex stage. Compose copies its 
 ## Verification and limits
 
 CanvasVertexProgramTests checks real GLSL/HLSL native pixels, hardware instances and automatic lighting on Linux Vulkan. The import tool and external spirv-val validate fixed input/derived fixtures. Runtime structural/reflection checks do not establish validity of arbitrary external instructions. See the component for the exact ABI, clipping/bounds limitation and foreign-platform gates.
+
+## Procedural mesh integration
+
+Procedural variants set authored position input to zero and transform homogeneous output through the retained affine basis/origin. They preserve clip Z/W, apply optional framebuffer snapping and derive built-in group screen UVs. Public Frame remains one float2; physical private metadata is renderer-owned. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).

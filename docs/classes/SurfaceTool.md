@@ -1,6 +1,6 @@
 # Typed surface authoring
 
-Last updated: 2026-10-12
+Last updated: 2026-10-18
 
 SurfaceTool : ElectronObject builds and edits supported two-dimensional MeshSurfaceData under [ADR 0092](../decisions/mesh.md#adr-0092). It has deterministic lifetime and borrows source/target meshes and materials. Every public call rejects a disposed builder. Mutations/disposal during source capture throw InvalidOperationException. Draft-only setters reject inactive drafts and late channel activation. Completed ArrayMesh resources use the existing canvas and indexed RenderingDevice consumers.
 
@@ -442,3 +442,7 @@ System.ArgumentException: A value is nonfinite.
 
 
 Commit accepts CompressAttributes and executes the shared packed UV/joint-frame ArrayMesh import. CreateFrom/CreateFromBlendShape copy decoded compressed base channels and raw target channels; ordinary structural edits preserve those numerical values, while a compressed commit performs its documented quantization. See [compressed storage](../components/meshes.md#compressed-attributes).
+
+## Procedural mesh integration
+
+Commit accepts UseEmptyVertexArray on authored position geometry. Geometry-only imports reject missing source positions before replacing current state. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).

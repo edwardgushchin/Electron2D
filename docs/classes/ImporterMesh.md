@@ -1,6 +1,6 @@
 # ImporterMesh
 
-Last updated: 2026-10-12
+Last updated: 2026-10-18
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.ImporterMesh` · **Source:** [ImporterMesh.cs](../../src/Scene/Resources/ImporterMesh.cs).
 
@@ -331,8 +331,12 @@ value: Normalized initially; edits invalidate the compiled snapshot.
 
 ## Storage, errors and verification
 
-The typed IMP1 raw archive stores 4096 surfaces/definitions/levels, at most 65536 UTF-16 units per name and 64 MiB total. Counts/schemas/truncation/finite data/topology/flags/levels validate before replacement. Mode is a stored property; borrowed materials are a separate typed array preserving resource aliases. Compiled cache/native identities are transient. The loader has exact built-in registration; fresh .e2dscene processes restore and execute native generation plus actual canvas geometry.
+The typed IMP2 raw archive (reading IMP1) stores 4096 surfaces/definitions/levels, at most 65536 UTF-16 units per name and 64 MiB total. Counts/schemas/truncation/finite data/topology/flags/levels validate before replacement. Mode is a stored property; borrowed materials are a separate typed array preserving resource aliases. Compiled cache/native identities are transient. The loader has exact built-in registration; fresh .e2dscene processes restore and execute native generation plus actual canvas geometry.
 
 [ImporterMeshTests](../../tests/Electron2D.Tests/ImporterMeshTests.cs) covers raw precision, copies/modes/names, cached identity, target callback failure, independent snapshots/disposal, real decreasing levels, monotonic errors, six independent pinned C++ index corpora, eight-slot poses and late-surface rollback, UV seams, reflected/mixed topology, material aliases, malformed archives and fresh/local scenes. [Native tests](../../tests/Electron2D.Tests/ImporterMeshNativeTests.cs) exercise GLSL/HLSL numeric attributes, reflected tangent signs, generated levels, silhouette/gaps, morph, eighth-slot skin, groups, instances and owned drawing. Each measures 24 warmup, 64 active and 64 idle complete frames at zero managed allocation. Full native allocations, foreign platforms and human acceptance remain separate.
 
-The remaining shared empty-position flag requires procedural vertex shader geometry/non-position storage. Lightmap atlas hints retain the 3D lighting exclusion. See [ADR 0092](../decisions/mesh.md#adr-0092), [the mesh component](../components/meshes.md#importer-mesh) and [coverage](../coverage/classes/ImporterMesh.md).
+The shared empty-position flag executes through procedural vertex geometry and independent non-position storage. Lightmap atlas hints retain the 3D lighting exclusion. See [ADR 0092](../decisions/mesh.md#adr-0092), [the mesh component](../components/meshes.md#importer-mesh) and [coverage](../coverage/classes/ImporterMesh.md).
+
+## Procedural mesh integration
+
+UseEmptyVertexArray retains independent counts, absent positions, direction targets and authored levels through raw IMP2 (reading IMP1), copies and compilation. GenerateLODs preserves authored procedural levels. Identity merges retain/remap channels; nonidentity merge transforms reject unavailable positions. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).

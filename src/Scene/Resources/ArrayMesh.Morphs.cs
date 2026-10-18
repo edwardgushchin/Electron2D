@@ -41,10 +41,16 @@ public sealed partial class ArrayMesh
     protected override void OnSetBlendShapeName(int index, string name) { lock (Gate) { ThrowIfDisposed(); _blendShapeNames[index] = UniqueBlendShapeName(name, index); } EmitChanged(); }
     /// <inheritdoc />
     protected override MeshSurfaceData[] OnSurfaceGetBlendShapeArrays(int surfaceIndex) { lock (Gate) return Get(surfaceIndex).BlendShapes.Select(shape => shape.Copy()).ToArray(); }
+    internal static ArrayFormat BlendMaskFor(MeshSurfaceData data, IReadOnlyList<MeshSurfaceData>? shapes, ArrayFormat format = 0)
+    {
+        var mask = (data.VertexCount == 0 ? format & ArrayFormat.BlendShapeMask : data.IsProcedural ? ArrayFormat.None : ArrayFormat.Vertex) | (data.Normals.Length != 0 ? ArrayFormat.Normal : 0) | (data.Tangents.Length != 0 ? ArrayFormat.Tangent : 0);
+        if ((mask & ArrayFormat.Normal) != 0 && shapes is { Count: > 0 } && shapes[0] is { Tangents.Length: 0 }) mask &= ~ArrayFormat.Tangent;
+        return mask;
+    }
     internal static void ValidateBlendShape(MeshSurfaceData shape, MeshSurfaceData basis, ArrayFormat mask)
     {
         ArgumentNullException.ThrowIfNull(shape); ArgumentNullException.ThrowIfNull(shape.Vertices); ArgumentNullException.ThrowIfNull(shape.Normals); ArgumentNullException.ThrowIfNull(shape.Tangents);
-        if (shape.Vertices.Length != basis.Vertices.Length || shape.Normals.Length != ((mask & ArrayFormat.Normal) != 0 ? basis.Vertices.Length : 0) || shape.Tangents.Length != ((mask & ArrayFormat.Tangent) != 0 ? basis.Vertices.Length : 0)) throw new ArgumentException("Blend shape counts must match the base position/normal/tangent schema.");
+        if (shape.VertexCount != basis.VertexCount || shape.Vertices.Length != ((mask & ArrayFormat.Vertex) != 0 ? basis.VertexCount : 0) || shape.Normals.Length != ((mask & ArrayFormat.Normal) != 0 ? basis.VertexCount : 0) || shape.Tangents.Length != ((mask & ArrayFormat.Tangent) != 0 ? basis.VertexCount : 0)) throw new ArgumentException("Blend shape counts must match the base position/normal/tangent schema.");
         if (shape.Colors.Length != 0 || shape.UVs.Length != 0 || shape.UV2s.Length != 0 || shape.Indices.Length != 0 || shape.Bones.Length != 0 || shape.Weights.Length != 0 || shape.Custom0 is not null || shape.Custom1 is not null || shape.Custom2 is not null || shape.Custom3 is not null) throw new ArgumentException("Blend shapes contain only positions, normals and tangents.");
         foreach (var value in shape.Vertices) if (!value.IsFinite()) throw new ArgumentException("Blend positions must be finite.");
         foreach (var value in shape.Normals) if (!value.IsFinite()) throw new ArgumentException("Blend normals must be finite.");

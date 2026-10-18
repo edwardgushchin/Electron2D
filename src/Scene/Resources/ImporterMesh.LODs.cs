@@ -5,7 +5,7 @@ public sealed partial class ImporterMesh
     /// <summary>Replaces indexed triangle levels with actual attribute-aware simplification.</summary>
     /// <param name="normalMergeAngle">Finite angular threshold in degrees for welding coincident normal-compatible vertices.</param>
     /// <param name="boneTransformArray">Optional finite two-dimensional skin pose used to measure errors; original channels remain raw.</param>
-    /// <remarks>Nontriangle levels remain intact; unindexed/small triangles produce no generated levels.
+    /// <remarks>Nontriangle and shader-generated levels remain intact; unindexed/small triangles produce no generated levels.
     /// All surfaces preflight before publication. Generation may allocate managed/native temporary storage and needs the matching native mesh library.</remarks>
     /// <exception cref="ArgumentException">Coordinates, pose, thresholds or generated data are invalid.</exception>
     public void GenerateLODs(float normalMergeAngle, IReadOnlyList<Transform>? boneTransformArray = null)

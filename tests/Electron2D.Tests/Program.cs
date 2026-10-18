@@ -441,6 +441,8 @@ if (args.Length == 2 && args[0] == "--global-shader-archive") { ShaderGlobalPara
 if (args is ["--project-shader-globals-read", var globalsProject]) { ProjectShaderGlobalsTests.RunArchive(globalsProject); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_SHADER_GLOBALS") is { } projectGlobalsProfile) { if (projectGlobalsProfile == "managed") ProjectShaderGlobalsTests.RunManaged(); else ProjectShaderGlobalsTests.RunNative(projectGlobalsProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_GLOBALS") is { } globalProfile) { if (globalProfile == "managed") ShaderGlobalParametersTests.RunManaged(); else ShaderGlobalParametersTests.RunNative(globalProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROCEDURAL_MESH_CHILD") is { } proceduralPath) { ProceduralMeshTests.Child(proceduralPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROCEDURAL_MESH") is { } proceduralProfile) { if (proceduralProfile == "managed") ProceduralMeshTests.Run(); else ProceduralMeshTests.RunNative(proceduralProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VERTEX_ID") is { } vertexIDProfile) { if (vertexIDProfile == "managed") MeshVertexIDTests.Run(); else MeshVertexIDTests.RunNative(vertexIDProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_VERTEX") is { } canvasVertexProfile) { if (canvasVertexProfile == "managed") CanvasVertexProgramTests.RunManaged(); else CanvasVertexProgramTests.RunNative(canvasVertexProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_PRESENTATION") is { } presentationProfile) { ViewportPresentationTests.Run(presentationProfile); return; }
@@ -1652,6 +1654,7 @@ PhysicsBodyTransformTests.Run(PhysicsServer.Backend.CPU);
 RenderingProgramTests.Run();
 CanvasVertexProgramTests.RunManaged();
 MeshVertexIDTests.Run();
+ProceduralMeshTests.Run();
 MeshSkinTests.Run();
 MultiMeshTests.Run();
 CPUParticlesTests.Run();

@@ -1,6 +1,6 @@
 # MeshInstance
 
-Last updated: 2026-10-04
+Last updated: 2026-10-18
 
 **Namespace:** `Electron2D` · **Declaration:** `public class Electron2D.MeshInstance` · **Source:** [MeshInstance.cs](../../src/Scene/2D/MeshInstance.cs).
 
@@ -140,3 +140,7 @@ System.InvalidOperationException: Mutation is off-owner or capture-owned.
 ## LOD behavior
 
 Authored index sets select from the full local-to-framebuffer basis using a one-pixel error threshold. MultiMesh selects each presentation instance independently; MeshInstance morph output retains LODs. Base queries and conservative bounds describe full geometry. Storage/callback ownership and detailed validation are documented in [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).
+
+## Procedural mesh integration
+
+Procedural mesh surfaces apply item and per-vertex skin transforms after authored local pixel-to-clip output. Explicit mesh/surface bounds cover generated output; CPU positions and collisions remain separate. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).

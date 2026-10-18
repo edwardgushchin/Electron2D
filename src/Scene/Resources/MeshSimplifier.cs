@@ -10,7 +10,7 @@ internal static partial class MeshSimplifier
     private static unsafe partial nuint Simplify(int* output, int* indices, nuint count, float* positions, nuint vertices, float* attributes, float* weights, nuint attributeCount, nuint target, uint options, float* error);
     internal static unsafe MeshLOD[] Generate(MeshSurfaceData data, MeshSurfaceData[] shapes, Mesh.PrimitiveType primitive, MeshLOD[] old, float mergeAngle, IReadOnlyList<Transform>? boneTransforms)
     {
-        if (primitive != Mesh.PrimitiveType.Triangles) return old;
+        if (primitive != Mesh.PrimitiveType.Triangles || data.IsProcedural) return old;
         if (data.Indices.Length == 0) return [];
         var count = data.Vertices.Length; var points = (Vector2[])data.Vertices.Clone();
         if (boneTransforms is { Count: > 0 } && data.Bones.Length != 0)

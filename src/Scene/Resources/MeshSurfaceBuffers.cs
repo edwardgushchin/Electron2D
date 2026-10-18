@@ -11,13 +11,14 @@ public sealed class MeshSurfaceBuffers
     /// <value>Triangles initially.</value>
     public Mesh.PrimitiveType Primitive { get; set; } = Mesh.PrimitiveType.Triangles;
     /// <summary>Gets or sets the exact channel and packing flags.</summary>
-    /// <value>Planar positions initially. Procedural position-free formats are unsupported.</value>
+    /// <value>Planar positions initially. UseEmptyVertexArray permits a missing position block.</value>
     public Mesh.ArrayFormat Format { get; set; } = Mesh.ArrayFormat.Vertex | Mesh.ArrayFormat.Use2DVertices;
     /// <summary>Gets or sets the position block followed by interleaved normal/tangent records.</summary>
     /// <value>Empty initially; requires VertexCount times the combined vertex and direction strides.</value>
     public byte[] VertexData { get; set; } = [];
     /// <summary>Gets or sets the number of vertex records.</summary>
-    /// <value>Zero initially; imported surfaces require a positive count.</value>
+    /// <value>Zero initially; positive counts size all selected channels. Zero is valid for uint16 index-only
+    /// procedural geometry, with empty channel buffers and a nonempty index buffer.</value>
     public int VertexCount { get; set; }
     /// <summary>Gets or sets interleaved color, primary/secondary UV and custom records.</summary>
     /// <value>Empty without attribute channels; otherwise exactly one format-sized record per vertex.</value>
@@ -45,7 +46,8 @@ public sealed class MeshSurfaceBuffers
     /// <remarks>Attached palettes transform these rectangles for canvas visibility. Without a palette the surface AABB applies.</remarks>
     public Rect2?[] BoneAABBs { get; set; } = [];
     /// <summary>Gets or sets the optional independent shape position/direction schema.</summary>
-    /// <value>None uses the base position/direction channels. An explicit mask includes Vertex and may select present Normal/Tangent channels. Exports use None for the complete base schema.</value>
+    /// <value>None uses the base position/direction channels. An explicit mask retains the base Vertex bit
+    /// and may select present Normal/Tangent channels. Exports use None for the complete base schema.</value>
     /// <remarks>Preserves existing shape payloads when base tangents were generated after shape authoring.</remarks>
     public Mesh.ArrayFormat BlendShapeFormat { get; set; }
     /// <summary>Gets or sets concatenated shape position/direction blocks.</summary>

@@ -35,6 +35,7 @@ internal readonly record struct MeshLOD(float Error, MeshSurfaceData Data)
             if (indices.Length == 0 || indices.Length >= basis.Indices.Length) throw new ArgumentException("LOD indices must be nonempty and fewer than base indices.", nameof(source));
             var data = new MeshSurfaceData
             {
+                VertexCount = basis.VertexCount,
                 Vertices = basis.Vertices,
                 Normals = basis.Normals,
                 Tangents = basis.Tangents,

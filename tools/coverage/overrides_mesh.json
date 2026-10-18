@@ -128,7 +128,7 @@
     {
       "godot": "ArrayMesh::method:add_surface_from_arrays(int:Mesh.PrimitiveType,Array:,Array[]:,Dictionary:,int:Mesh.ArrayFormat)",
       "electron2d": "method:Electron2D.ArrayMesh.AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType,Electron2D.MeshSurfaceData,System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData>,System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]>,Electron2D.Mesh.ArrayFormat)",
-      "reason": "ADR 0092: copied typed base/custom/skin/named-target/LOD/compressed imports execute through finite canonical packing and actual retained drawing. Procedural shader-generated empty-position geometry remains the exact separate prerequisite."
+      "reason": "ADRs 0001/0014/0028/0092: typed/packed position-free surfaces retain explicit or zero-count uint16 index-only invocations and non-position channels through copied/AMS8/IMP2/legacy/fresh storage. Authored GLSL/HLSL vertices preserve source IDs and homogeneous canvas/command/skin/instance transforms; actual native topologies, independent strips, mask/group owners, live attributes, reload and zero managed owner frames are exercised on Linux software Vulkan. Visibility is author-owned; geometry-only operations reject or skip unavailable positions, compressed direction frames require positions, and Compatibility rejects programmable drawing. Hardware, foreign/native allocation and owner acceptance remain distinct."
     },
     {
       "godot": "ArrayMesh::method:clear_surfaces()",
@@ -193,7 +193,7 @@
     {
       "godot": "RenderingServer::method:mesh_add_surface_from_arrays(RID:,int:RenderingServer.PrimitiveType,Array:,Array:,Dictionary:,int:RenderingServer.ArrayFormat)",
       "electron2d": "method:Electron2D.RenderingServer.MeshAddSurfaceFromArrays(Electron2D.RID,Electron2D.Mesh.PrimitiveType,Electron2D.MeshSurfaceData,Electron2D.Mesh.ArrayFormat,System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData>,System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]>)",
-      "reason": "ADR 0092: copied typed base/custom/skin/named-target/LOD/compressed imports execute through finite canonical packing and actual retained drawing. Procedural shader-generated empty-position geometry remains the exact separate prerequisite."
+      "reason": "ADRs 0001/0014/0028/0092: typed/packed position-free surfaces retain explicit or zero-count uint16 index-only invocations and non-position channels through copied/AMS8/IMP2/legacy/fresh storage. Authored GLSL/HLSL vertices preserve source IDs and homogeneous canvas/command/skin/instance transforms; actual native topologies, independent strips, mask/group owners, live attributes, reload and zero managed owner frames are exercised on Linux software Vulkan. Visibility is author-owned; geometry-only operations reject or skip unavailable positions, compressed direction frames require positions, and Compatibility rejects programmable drawing. Hardware, foreign/native allocation and owner acceptance remain distinct."
     },
     {
       "godot": "RenderingServer::method:mesh_clear(RID:)",
@@ -1729,6 +1729,16 @@
       "godot": "RenderingServer::method:mesh_set_custom_aabb(RID:,AABB:)",
       "electron2d": "method:Electron2D.RenderingServer.MeshSetCustomAABB(Electron2D.RID,Electron2D.Rect2)",
       "reason": "ADR 0092: applicable 2D mesh-local visibility overrides project AABB to Rect2, with zero selecting automatic bounds. Stored resource state, both copy policies, committed notifications, live morph propagation, palette precedence, group fitting and hardware/expanded instance culling execute independently of source geometry bounds and packed surface metadata. MeshBoundsTests and Linux Wayland GLSL/HLSL/Compatibility pixels cover guards, validation, reset, archives and 64 active/64 idle owner frames; software-driver evidence does not certify hardware, foreign platforms or native allocations."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.UseEmptyVertexArray()",
+      "reason": "ADRs 0001/0014/0028/0092: typed/packed position-free surfaces retain explicit or zero-count uint16 index-only invocations and non-position channels through copied/AMS8/IMP2/legacy/fresh storage. Authored GLSL/HLSL vertices preserve source IDs and homogeneous canvas/command/skin/instance transforms; actual native topologies, independent strips, mask/group owners, live attributes, reload and zero managed owner frames are exercised on Linux software Vulkan. Visibility is author-owned; geometry-only operations reject or skip unavailable positions, compressed direction frames require positions, and Compatibility rejects programmable drawing. Hardware, foreign/native allocation and owner acceptance remain distinct."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.UseEmptyVertexArray()",
+      "reason": "ADRs 0001/0014/0028/0092: typed/packed position-free surfaces retain explicit or zero-count uint16 index-only invocations and non-position channels through copied/AMS8/IMP2/legacy/fresh storage. Authored GLSL/HLSL vertices preserve source IDs and homogeneous canvas/command/skin/instance transforms; actual native topologies, independent strips, mask/group owners, live attributes, reload and zero managed owner frames are exercised on Linux software Vulkan. Visibility is author-owned; geometry-only operations reject or skip unavailable positions, compressed direction frames require positions, and Compatibility rejects programmable drawing. Hardware, foreign/native allocation and owner acceptance remain distinct."
     }
   ],
   "extras": [
@@ -2171,12 +2181,16 @@
     {
       "electron2d": "property:Electron2D.MeshSurfaceBuffers.VertexData()",
       "reason": "ADRs 0001/0092: typed packed surface dictionary projection, including independent shape schema, exact copied channel/shape/LOD bytes, planar/bone visibility rectangles and borrowed material. Executable import/export/render consumers replace heterogeneous metadata; this is no additional semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceData.VertexCount()",
+      "reason": "ADRs 0001/0092: typed replacement for the independent logical vertex count used by position-free surfaces. Positive counts size non-position channels; zero preserves uint16 index-only geometry. Copied authoring, packed transport, archives and actual generated drawing consume it; this adds no separate semantic capability."
     }
   ],
   "statusGroups": [
     {
       "state": "Partial",
-      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/primary-UV/secondary-UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits. Further channel/deformation/storage/geometry operations retain exact dependencies.",
+      "reason": "ADR 0092: typed/packed static and procedural geometry, all five topologies, attributes/skin/targets/LODs/compression, counted storage and actual retained node/canvas/server drawing execute. Remaining exact members: Mesh.CreateOutline requires executable offset geometry generation; ArrayMesh.ShadowMesh requires an actual separate 2D shadow-mesh consumer. Their individual Blocked rows remain open.",
       "godot": [
         "class:ArrayMesh",
         "class:Mesh"
@@ -2303,8 +2317,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: actual procedural shader-generated mesh vertices and non-position channel storage with visible draw verification; current canvas geometry requires explicit positions (ADR 0092).",
+      "state": "Implemented",
+      "reason": "ADRs 0001/0014/0028/0092: typed/packed position-free surfaces retain explicit or zero-count uint16 index-only invocations and non-position channels through copied/AMS8/IMP2/legacy/fresh storage. Authored GLSL/HLSL vertices preserve source IDs and homogeneous canvas/command/skin/instance transforms; actual native topologies, independent strips, mask/group owners, live attributes, reload and zero managed owner frames are exercised on Linux software Vulkan. Visibility is author-owned; geometry-only operations reject or skip unavailable positions, compressed direction frames require positions, and Compatibility rejects programmable drawing. Hardware, foreign/native allocation and owner acceptance remain distinct.",
       "godot": [
         "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY"
       ]
@@ -2468,8 +2482,8 @@
       "godot": [
         "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: actual procedural shader-generated mesh vertices and non-position channel storage with visible draw verification; current canvas geometry requires explicit positions (ADR 0092)."
+      "state": "Implemented",
+      "reason": "ADRs 0001/0014/0028/0092: typed/packed position-free surfaces retain explicit or zero-count uint16 index-only invocations and non-position channels through copied/AMS8/IMP2/legacy/fresh storage. Authored GLSL/HLSL vertices preserve source IDs and homogeneous canvas/command/skin/instance transforms; actual native topologies, independent strips, mask/group owners, live attributes, reload and zero managed owner frames are exercised on Linux software Vulkan. Visibility is author-owned; geometry-only operations reject or skip unavailable positions, compressed direction frames require positions, and Compatibility rejects programmable drawing. Hardware, foreign/native allocation and owner acceptance remain distinct."
     },
     {
       "godot": [
@@ -2534,8 +2548,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "ADR 0092: complete supported typed 2D authoring, copied arrays, finite/topology/channel boundaries, four/eight influence selection, index/deindex/cache reorder, source revision/reentry guards, transformed append and atomic geometry/material commit. GLSL/HLSL indexed device and retained GPU/compatibility pixels, fresh process output and warmed zero managed replay are checked; native cache speed, native allocation totals and wider platforms are unverified. Missing normal/tangent/custom producer/consumer and morph authoring retain individual triggers.",
+      "state": "Implemented",
+      "reason": "ADR 0092: typed position authoring, all applicable normal/tangent/custom/skin/UV/morph imports, index/cache operations and atomic material/mesh commit execute. UseEmptyVertexArray policy is retained on supplied-position commits; missing-position geometry imports reject atomically. Managed/fresh/native tests distinguish native optimization/platform/owner limits.",
       "godot": [
         "class:SurfaceTool"
       ]
@@ -2704,12 +2718,12 @@
       ]
     },
     {
-      "state": "Partial",
+      "state": "Implemented",
       "godot": [
         "ArrayMesh::method:add_surface_from_arrays(int:Mesh.PrimitiveType,Array:,Array[]:,Dictionary:,int:Mesh.ArrayFormat)",
         "RenderingServer::method:mesh_add_surface_from_arrays(RID:,int:RenderingServer.PrimitiveType,Array:,Array:,Dictionary:,int:RenderingServer.ArrayFormat)"
       ],
-      "reason": "Typed base/custom/skin/named morph/authored LOD and compressed UV/frame inputs execute through saved resources and real retained rendering under ADR 0092. Original mesh vertex IDs now reach authored GLSL/HLSL builtins. Remaining trigger: ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY requires the actual procedural vertex-shader producer and non-position channel drawing; present canvas geometry requires explicit float XY. Empty-position flags remain absent and reject before mutation."
+      "reason": "ADRs 0001/0014/0028/0092: typed/packed position-free surfaces retain explicit or zero-count uint16 index-only invocations and non-position channels through copied/AMS8/IMP2/legacy/fresh storage. Authored GLSL/HLSL vertices preserve source IDs and homogeneous canvas/command/skin/instance transforms; actual native topologies, independent strips, mask/group owners, live attributes, reload and zero managed owner frames are exercised on Linux software Vulkan. Visibility is author-owned; geometry-only operations reject or skip unavailable positions, compressed direction frames require positions, and Compatibility rejects programmable drawing. Hardware, foreign/native allocation and owner acceptance remain distinct."
     },
     {
       "state": "Implemented",
@@ -2758,12 +2772,12 @@
       "reason": "ADRs 0004/0092: 3D lightmap atlas hints have no 2D lighting consumer; no implementation trigger."
     },
     {
-      "state": "Partial",
+      "state": "Implemented",
       "godot": [
         "class:ImporterMesh",
         "ImporterMesh::method:add_surface(int:Mesh.PrimitiveType,Array:,Array[]:,Dictionary:,Material:,String:,int:)"
       ],
-      "reason": "Raw authoring, compilation, real simplification/merge, storage and all current 2D consumers execute under ADR 0092. Remaining trigger: shared Original mesh vertex IDs now reach authored GLSL/HLSL builtins; ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY requires procedural vertex-shader geometry/non-position storage; these flags reject before mutation until that producer enters its first slice."
+      "reason": "ADRs 0001/0014/0028/0092: typed/packed position-free surfaces retain explicit or zero-count uint16 index-only invocations and non-position channels through copied/AMS8/IMP2/legacy/fresh storage. Authored GLSL/HLSL vertices preserve source IDs and homogeneous canvas/command/skin/instance transforms; actual native topologies, independent strips, mask/group owners, live attributes, reload and zero managed owner frames are exercised on Linux software Vulkan. Visibility is author-owned; geometry-only operations reject or skip unavailable positions, compressed direction frames require positions, and Compatibility rejects programmable drawing. Hardware, foreign/native allocation and owner acceptance remain distinct."
     },
     {
       "state": "Implemented",
@@ -2775,18 +2789,18 @@
       "reason": "ADRs 0001/0014/0092/0095: typed packed-channel offsets and 16/32-bit index edits preflight partial records atomically, retain topology/count/material/RID and independent LODs, and feed existing retained mesh/MultiMesh consumers. MeshIndexTests covers width/byte/error boundaries, copied storage/fresh-process archives, public service ownership and native GPU/Compatibility pixels plus prepared managed allocation intervals. Native allocation totals, foreign platforms and human acceptance remain separate."
     },
     {
-      "state": "Partial",
+      "state": "Implemented",
       "godot": [
         "RenderingServer::method:mesh_add_surface(RID:,Dictionary:)"
       ],
-      "reason": "ADR 0092 complete typed packed surface transport: copied position/frame/attribute/custom/skin/index/shape/LOD buffers, independent target schema, UV scale, borrowed material and real authored/bone visibility bounds. MeshPackedTests verifies layout/finite/range/shape/atomic/copy/fresh-authoring contracts; Linux software GPU/GLSL, GPU/HLSL and Compatibility profiles verify actual channels/material/LOD/skin pixels, public guards, custom recovery and zero-byte prepared owner frames. Original mesh vertex IDs now reach authored GLSL/HLSL builtins. Remaining trigger: ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY requires the actual procedural vertex-shader and non-position-channel producer; the current canvas backend requires explicit positions, as with AddSurfaceFromArrays."
+      "reason": "ADRs 0001/0014/0028/0092: typed/packed position-free surfaces retain explicit or zero-count uint16 index-only invocations and non-position channels through copied/AMS8/IMP2/legacy/fresh storage. Authored GLSL/HLSL vertices preserve source IDs and homogeneous canvas/command/skin/instance transforms; actual native topologies, independent strips, mask/group owners, live attributes, reload and zero managed owner frames are exercised on Linux software Vulkan. Visibility is author-owned; geometry-only operations reject or skip unavailable positions, compressed direction frames require positions, and Compatibility rejects programmable drawing. Hardware, foreign/native allocation and owner acceptance remain distinct."
     },
     {
-      "state": "Partial",
+      "state": "Implemented",
       "godot": [
         "RenderingServer::method:mesh_create_from_surfaces(Dictionary[]:,int:)"
       ],
-      "reason": "ADR 0092 complete typed packed surface transport: copied position/frame/attribute/custom/skin/index/shape/LOD buffers, independent target schema, UV scale, borrowed material and real authored/bone visibility bounds. MeshPackedTests verifies layout/finite/range/shape/atomic/copy/fresh-authoring contracts; Linux software GPU/GLSL, GPU/HLSL and Compatibility profiles verify actual channels/material/LOD/skin pixels, public guards, custom recovery and zero-byte prepared owner frames. Original mesh vertex IDs now reach authored GLSL/HLSL builtins. Remaining trigger: ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY requires the actual procedural vertex-shader and non-position-channel producer; the current canvas backend requires explicit positions, as with AddSurfaceFromArrays."
+      "reason": "ADRs 0001/0014/0028/0092: typed/packed position-free surfaces retain explicit or zero-count uint16 index-only invocations and non-position channels through copied/AMS8/IMP2/legacy/fresh storage. Authored GLSL/HLSL vertices preserve source IDs and homogeneous canvas/command/skin/instance transforms; actual native topologies, independent strips, mask/group owners, live attributes, reload and zero managed owner frames are exercised on Linux software Vulkan. Visibility is author-owned; geometry-only operations reject or skip unavailable positions, compressed direction frames require positions, and Compatibility rejects programmable drawing. Hardware, foreign/native allocation and owner acceptance remain distinct."
     },
     {
       "state": "Implemented",

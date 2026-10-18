@@ -17,8 +17,8 @@ Typed packed surface input/output for RenderingServer.MeshCreateFromSurfaces, Me
 | `public MeshSurfaceBuffers()` | Empty description with triangle topology and planar position flags. |
 | `public Mesh.PrimitiveType Primitive { get; set; }` | All five existing topologies; complete primitive records required. |
 | `public Mesh.ArrayFormat Format { get; set; }` | Exact supported channels and policies; requires explicit planar positions. |
-| `public byte[] VertexData { get; set; }` | VertexCount contiguous float32 XY pairs, followed by interleaved packed normal/tangent records. |
-| `public int VertexCount { get; set; }` | Positive count on import. |
+| `public byte[] VertexData { get; set; }` | Present VertexCount float32 XY pairs, followed by interleaved packed normal/tangent records; positions may be absent. |
+| `public int VertexCount { get; set; }` | Logical channel count; zero permits uint16 index-only procedural geometry. |
 | `public byte[] AttributeData { get; set; }` | One interleaved color, UV, UV2, custom0–3 record per vertex. |
 | `public byte[] SkinData { get; set; }` | Per vertex: four/eight uint16 bone indices, then four/eight UNORM16 weights. Both channels required. |
 | `public byte[] IndexData { get; set; }` | UInt16 through 65536 vertices, UInt32 thereafter; each index must resolve. |
@@ -50,3 +50,7 @@ RenderingServer.CanvasItemAddMesh(item.GetCanvasItem(), copy);
 ## Verification
 
 MeshPackedTests exercises all topologies/eight custom formats, ordinary/compressed packing, both skin widths, both index-width boundaries, two shapes/LODs, independent shape schemas after tangent generation, both live morph modes, copies, bounds, invalid records and fresh material-free JSON authoring. MeshPackedNativeTests uses the public static family on real Linux Wayland GPU/GLSL, GPU/HLSL and Compatibility hosts; it verifies channel/material/LOD/skin pixels, palette-aware bounds, shape counts, atomic failure, custom callback recovery and 64 active/64 idle prepared owner frames with zero managed bytes. Software-driver evidence does not establish target hardware, foreign execution, native allocator totals or owner acceptance. Procedural surfaces without positions remain a separate shader producer.
+
+## Procedural mesh integration
+
+UseEmptyVertexArray omits the position block. VertexCount sizes selected channels; zero-count uint16 index-only buffers retain zero records. BlendShapeFormat retains the base Vertex bit, which may be absent. Explicit AABB/BoneAABBs cover generated output. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).

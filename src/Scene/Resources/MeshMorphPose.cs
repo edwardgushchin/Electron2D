@@ -37,7 +37,7 @@ internal sealed class MeshMorphPose : IDisposable
                 else
                 {
                     var data = source.SurfaceGetArrays(i).Copy(); var shapes = source.SurfaceGetBlendShapeArrays(i).Select(shape => shape.Copy()).ToArray(); var primitive = source.SurfaceGetPrimitiveType(i); data.Validate(primitive);
-                    var mask = Mesh.ArrayFormat.Vertex | (data.Normals.Length != 0 ? Mesh.ArrayFormat.Normal : 0) | (data.Tangents.Length != 0 ? Mesh.ArrayFormat.Tangent : 0);
+                    var mask = ArrayMesh.BlendMaskFor(data, shapes, source.SurfaceGetFormat(i));
                     if (shapes.Length != shapeCount) throw new ArgumentException("Surface shape count must match named shapes."); foreach (var shape in shapes) ArrayMesh.ValidateBlendShape(shape, data, mask);
                     data.QuantizeSkin(); var compression = (source.SurfaceGetFormat(i) & Mesh.ArrayFormat.CompressAttributes) != 0 ? new MeshCompression(data) : null; var words = compression is null ? MeshFrameCodec.Capture(data) : []; data.PrepareCustoms(); _sources[i] = new(data, words, shapes, mask, primitive, source.SurfaceGetMaterial(i), "", MeshLOD.Capture(source.SurfaceGetLODs(i), data, primitive), compression);
                 }
@@ -64,7 +64,7 @@ internal sealed class MeshMorphPose : IDisposable
             if (rebuild)
             {
                 next = new();
-                for (var i = 0; i < _count; i++) { var s = _sources[i]; next.AddSurface(s.Primitive, s.Basis, null, MeshLOD.Copy(s.LODs), (s.Basis.SkinSlots == 8 ? Mesh.ArrayFormat.Use8BoneWeights : 0) | (s.Compression is null ? 0 : Mesh.ArrayFormat.CompressAttributes), s.Material, s.Compression); }
+                for (var i = 0; i < _count; i++) { var s = _sources[i]; next.AddSurface(s.Primitive, s.Basis, null, MeshLOD.Copy(s.LODs), (s.Basis.IsProcedural ? Mesh.ArrayFormat.UseEmptyVertexArray : 0) | (s.Basis.SkinSlots == 8 ? Mesh.ArrayFormat.Use8BoneWeights : 0) | (s.Compression is null ? 0 : Mesh.ArrayFormat.CompressAttributes), s.Material, s.Compression); }
             }
             var output = next ?? _output!;
             for (var surface = 0; surface < _count; surface++)
@@ -84,7 +84,7 @@ internal sealed class MeshMorphPose : IDisposable
     private static bool SameLayout(ArrayMesh.Surface target, Source source)
     {
         var a = target.Data; var b = source.Basis;
-        return target.Primitive == source.Primitive && a.Vertices.Length == b.Vertices.Length && a.Normals.Length == b.Normals.Length && a.Tangents.Length == b.Tangents.Length && a.Colors.Length == b.Colors.Length && a.UVs.Length == b.UVs.Length && a.UV2s.Length == b.UV2s.Length && a.Indices.Length == b.Indices.Length && a.Bones.Length == b.Bones.Length && a.Weights.Length == b.Weights.Length && CustomMatches(a.Custom0, b.Custom0) && CustomMatches(a.Custom1, b.Custom1) && CustomMatches(a.Custom2, b.Custom2) && CustomMatches(a.Custom3, b.Custom3) && SameLODs(target.LODs, source.LODs) && (target.Compression is null ? source.Compression is null : source.Compression is not null && target.Compression.UVScale == source.Compression.UVScale);
+        return target.Primitive == source.Primitive && a.VertexCount == b.VertexCount && a.Vertices.Length == b.Vertices.Length && a.Normals.Length == b.Normals.Length && a.Tangents.Length == b.Tangents.Length && a.Colors.Length == b.Colors.Length && a.UVs.Length == b.UVs.Length && a.UV2s.Length == b.UV2s.Length && a.Indices.Length == b.Indices.Length && a.Bones.Length == b.Bones.Length && a.Weights.Length == b.Weights.Length && CustomMatches(a.Custom0, b.Custom0) && CustomMatches(a.Custom1, b.Custom1) && CustomMatches(a.Custom2, b.Custom2) && CustomMatches(a.Custom3, b.Custom3) && SameLODs(target.LODs, source.LODs) && (target.Compression is null ? source.Compression is null : source.Compression is not null && target.Compression.UVScale == source.Compression.UVScale);
     }
     private static bool SameLODs(MeshLOD[] a, MeshLOD[] b)
     {

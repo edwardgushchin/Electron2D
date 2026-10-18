@@ -1,6 +1,6 @@
 # MultiMeshInstance
 
-Last updated: 2026-10-04
+Last updated: 2026-10-18
 
 **Namespace:** `Electron2D` · **Declaration:** `public class Electron2D.MultiMeshInstance` · **Source:** [MultiMeshInstance.cs](../../src/Scene/2D/MultiMeshInstance.cs).
 
@@ -150,3 +150,7 @@ Occurs after replacing the borrowed texture and scheduling redraw.
 ## Dependencies, errors and verification
 
 [ADR 0092](../decisions/mesh.md#adr-0092) and [mesh component](../components/meshes.md#repeated-instance-resources) define ownership, typed bounds, callbacks and backend limits. MultiMeshTests checks resource/scene failures and warmed replay; MultiMeshRenderingTests checks native pixels, actual intermediate poses, owned identities and 256-instance active/idle frames. Native allocator totals, structural allocation, dense-scene cost, other targets and owner acceptance remain unverified. Scene-file persistence remains a separate dependency.
+
+## Procedural mesh integration
+
+Generated source geometry follows item and instance transforms with native/expanded submission and explicit visibility bounds. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).

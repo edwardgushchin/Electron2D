@@ -3,12 +3,12 @@ namespace Electron2D;
 internal sealed partial class ShaderProgram
 {
     private byte[][]? _vertexVariants;
-    internal byte[]? VertexCode(bool instanced, bool lighting) => _vertexVariants?[(instanced ? 1 : 0) | (lighting ? 2 : 0)];
+    internal byte[]? VertexCode(bool instanced, bool lighting, bool procedural = false) => _vertexVariants?[(instanced ? 1 : 0) | (lighting ? 2 : 0) | (procedural ? 4 : 0)];
     internal void PrepareVertexVariants()
     {
         var vertex = Vertex ?? throw new InvalidOperationException("No authored vertex stage.");
-        var variants = new byte[4][];
-        for (var i = 0; i < variants.Length; i++) variants[i] = CanvasVertexProgram.Compose(vertex.Code, (i & 1) != 0, (i & 2) != 0);
+        var variants = new byte[8][];
+        for (var i = 0; i < variants.Length; i++) variants[i] = CanvasVertexProgram.Compose(vertex.Code, (i & 1) != 0, (i & 2) != 0, (i & 4) != 0);
         _vertexVariants = variants;
     }
 

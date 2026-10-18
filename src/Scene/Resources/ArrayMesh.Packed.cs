@@ -10,14 +10,16 @@ public sealed partial class ArrayMesh
         ArgumentNullException.ThrowIfNull(source.VertexData); ArgumentNullException.ThrowIfNull(source.AttributeData);
         ArgumentNullException.ThrowIfNull(source.SkinData); ArgumentNullException.ThrowIfNull(source.IndexData);
         ArgumentNullException.ThrowIfNull(source.BlendShapeData); ArgumentNullException.ThrowIfNull(source.BoneAABBs); ArgumentNullException.ThrowIfNull(source.LODs);
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(source.VertexCount); ArgumentOutOfRangeException.ThrowIfNegative(source.IndexCount);
+        ArgumentOutOfRangeException.ThrowIfNegative(source.VertexCount); ArgumentOutOfRangeException.ThrowIfNegative(source.IndexCount);
+        if (source.VertexCount == 0 && (source.Format & ArrayFormat.UseEmptyVertexArray) == 0) throw new ArgumentOutOfRangeException(nameof(source.VertexCount));
         RenderingServer.ValidateMeshFormat(source.Format, source.VertexCount);
         var format = source.Format; var compressed = (format & ArrayFormat.CompressAttributes) != 0;
-        if ((format & (ArrayFormat.Vertex | ArrayFormat.Use2DVertices)) != (ArrayFormat.Vertex | ArrayFormat.Use2DVertices)) throw new NotSupportedException("Packed surfaces require explicit planar positions.");
+        if ((format & ArrayFormat.Vertex) == 0 && (format & ArrayFormat.UseEmptyVertexArray) == 0) throw new ArgumentException("Position-free packed surfaces require UseEmptyVertexArray.", nameof(source));
+        if (source.VertexCount == 0 && source.IndexCount == 0) throw new ArgumentException("A surface requires vertex invocations.", nameof(source));
         if (compressed && (format & ArrayFormat.Normal) != 0) format |= ArrayFormat.Tangent;
         var baseShapeFormat = format & (ArrayFormat.Vertex | ArrayFormat.Normal | ArrayFormat.Tangent);
         var shapeFormat = source.BlendShapeFormat == 0 ? baseShapeFormat : source.BlendShapeFormat;
-        if ((shapeFormat & ArrayFormat.Vertex) == 0 || (shapeFormat & ~baseShapeFormat) != 0 || compressed && (shapeFormat & ArrayFormat.Tangent) != 0 && (shapeFormat & ArrayFormat.Normal) == 0) throw new ArgumentException("Shape format must select base position/direction channels.", nameof(source));
+        if ((shapeFormat & ArrayFormat.Vertex) != (baseShapeFormat & ArrayFormat.Vertex) || (shapeFormat & ~baseShapeFormat) != 0 || compressed && (shapeFormat & ArrayFormat.Tangent) != 0 && (shapeFormat & ArrayFormat.Normal) == 0) throw new ArgumentException("Shape format must select base position/direction channels.", nameof(source));
         if (((format & ArrayFormat.Bones) != 0) != ((format & ArrayFormat.Weights) != 0)) throw new ArgumentException("Packed skin requires both bones and weights.", nameof(source));
         if (((format & ArrayFormat.Index) != 0) != (source.IndexCount != 0)) throw new ArgumentException("Index flags and counts differ.", nameof(source));
         if (source.Material is { IsDisposed: true }) throw new ObjectDisposedException(nameof(source.Material));
@@ -27,8 +29,8 @@ public sealed partial class ArrayMesh
         foreach (var bounds in source.BoneAABBs) if (bounds is { } rect) PackedRect(rect);
         var count = source.VertexCount; var frames = PackedFrameStride(format); var attributes = MeshCustomCodec.AttributeStride(format);
         var slots = (format & ArrayFormat.Bones) == 0 ? 0 : (format & ArrayFormat.Use8BoneWeights) != 0 ? 8 : 4;
-        PackedLength(source.VertexData, (8L + frames) * count); PackedLength(source.AttributeData, (long)attributes * count);
-        var shapePacking = shapeFormat | (format & ArrayFormat.CompressAttributes); var shapeStride = checked((8 + PackedFrameStride(shapePacking)) * count);
+        PackedLength(source.VertexData, (((format & ArrayFormat.Vertex) != 0 ? 8L : 0L) + frames) * count); PackedLength(source.AttributeData, (long)attributes * count);
+        var shapePacking = shapeFormat | (format & ArrayFormat.CompressAttributes); var shapeStride = checked((((shapePacking & ArrayFormat.Vertex) != 0 ? 8 : 0) + PackedFrameStride(shapePacking)) * count);
         PackedLength(source.SkinData, (long)slots * 4 * count); PackedLength(source.BlendShapeData, (long)shapeStride * shapeCount);
         var data = ReadPackedVertices(source.VertexData, count, format, out var words, out var frameBytes);
         data.Indices = ReadPackedIndices(source.IndexData, source.IndexCount, count);
@@ -87,10 +89,11 @@ public sealed partial class ArrayMesh
     }
     private static MeshSurfaceData ReadPackedVertices(ReadOnlySpan<byte> bytes, int count, ArrayFormat format, out uint[] words, out byte[] frames)
     {
-        var data = new MeshSurfaceData { Vertices = new Vector2[count] }; var normal = (format & ArrayFormat.Normal) != 0; var tangent = (format & ArrayFormat.Tangent) != 0;
+        var positions = (format & ArrayFormat.Vertex) != 0 ? count : 0;
+        var data = new MeshSurfaceData { VertexCount = count, Vertices = new Vector2[positions] }; var normal = (format & ArrayFormat.Normal) != 0; var tangent = (format & ArrayFormat.Tangent) != 0;
         if (normal) data.Normals = new Vector3[count]; if (tangent || normal && (format & ArrayFormat.CompressAttributes) != 0) data.Tangents = new Vector4[count];
-        for (var i = 0; i < count; i++) { data.Vertices[i] = ReadVector(bytes[(i * 8)..]); if (!data.Vertices[i].IsFinite()) throw new ArgumentException("Packed positions must be finite."); }
-        var directions = bytes[(count * 8)..];
+        for (var i = 0; i < positions; i++) { data.Vertices[i] = ReadVector(bytes[(i * 8)..]); if (!data.Vertices[i].IsFinite()) throw new ArgumentException("Packed positions must be finite."); }
+        var directions = bytes[(positions * 8)..];
         if ((format & ArrayFormat.CompressAttributes) != 0)
         {
             words = []; frames = directions.ToArray();
@@ -107,7 +110,7 @@ public sealed partial class ArrayMesh
     private static int[] ReadPackedIndices(byte[] bytes, int count, int vertices)
     {
         var width = vertices <= 65536 ? 2 : 4; PackedLength(bytes, (long)count * width); var result = new int[count];
-        for (var i = 0; i < count; i++) { var value = width == 2 ? BinaryPrimitives.ReadUInt16LittleEndian(bytes.AsSpan(i * 2)) : BinaryPrimitives.ReadUInt32LittleEndian(bytes.AsSpan(i * 4)); if (value >= (uint)vertices) throw new ArgumentException("Packed indices must address a vertex."); result[i] = (int)value; }
+        for (var i = 0; i < count; i++) { var value = width == 2 ? BinaryPrimitives.ReadUInt16LittleEndian(bytes.AsSpan(i * 2)) : BinaryPrimitives.ReadUInt32LittleEndian(bytes.AsSpan(i * 4)); if (vertices != 0 && value >= (uint)vertices) throw new ArgumentException("Packed indices must address a vertex."); result[i] = (int)value; }
         return result;
     }
     private static void PackedLength(byte[] bytes, long expected) { if (bytes.LongLength != expected) throw new ArgumentException("Packed buffer length differs from its format and count."); }
@@ -116,7 +119,7 @@ public sealed partial class ArrayMesh
     internal MeshSurfaceBuffers ExportPacked(int index) { lock (Gate) return ExportPacked(Get(index)); }
     internal static MeshSurfaceBuffers ExportPacked(Surface surface)
     {
-        var data = surface.Data; var count = data.Vertices.Length; var format = surface.Format;
+        var data = surface.Data; var count = data.VertexCount; var format = surface.Format;
         var baseShapeFormat = format & (ArrayFormat.Vertex | ArrayFormat.Normal | ArrayFormat.Tangent); var shapePacking = surface.BlendMask | (format & ArrayFormat.CompressAttributes);
         var result = new MeshSurfaceBuffers
         {
@@ -148,7 +151,7 @@ public sealed partial class ArrayMesh
         if (surface.PackedBlendShapeData is { } shapeBytes) result.BlendShapeData = (byte[])shapeBytes.Clone();
         else
         {
-            var shapeStride = checked(count * (8 + PackedFrameStride(shapePacking))); result.BlendShapeData = new byte[checked(shapeStride * surface.BlendShapes.Length)];
+            var shapeStride = checked(count * (((shapePacking & ArrayFormat.Vertex) != 0 ? 8 : 0) + PackedFrameStride(shapePacking))); result.BlendShapeData = new byte[checked(shapeStride * surface.BlendShapes.Length)];
             for (var i = 0; i < surface.BlendShapes.Length; i++)
             {
                 var shape = surface.BlendShapes[i].Copy(); var compression = (format & ArrayFormat.CompressAttributes) != 0 ? new MeshCompression(shape) : null;
@@ -159,13 +162,14 @@ public sealed partial class ArrayMesh
     }
     private static byte[] WritePackedVertices(MeshSurfaceData data, ArrayFormat format, uint[]? words, MeshCompression? compression)
     {
-        var count = data.Vertices.Length; var result = new byte[checked(count * (8 + PackedFrameStride(format)))];
-        for (var i = 0; i < count; i++) WritePackedVector(result.AsSpan(i * 8), data.Vertices[i]);
-        if (compression is not null) compression.Frames.CopyTo(result, count * 8);
-        else if (words is not null) { for (var i = 0; i < words.Length; i++) BinaryPrimitives.WriteUInt32LittleEndian(result.AsSpan(count * 8 + i * 4), words[i]); }
+        var count = data.VertexCount; var positions = (format & ArrayFormat.Vertex) != 0 ? data.Vertices.Length : 0;
+        var result = new byte[checked(positions * 8 + count * PackedFrameStride(format))];
+        for (var i = 0; i < positions; i++) WritePackedVector(result.AsSpan(i * 8), data.Vertices[i]);
+        if (compression is not null) compression.Frames.CopyTo(result, positions * 8);
+        else if (words is not null) { for (var i = 0; i < words.Length; i++) BinaryPrimitives.WriteUInt32LittleEndian(result.AsSpan(positions * 8 + i * 4), words[i]); }
         else
         {
-            var offset = count * 8;
+            var offset = positions * 8;
             for (var i = 0; i < count; i++)
             {
                 if ((format & ArrayFormat.Normal) != 0) { BinaryPrimitives.WriteUInt32LittleEndian(result.AsSpan(offset), MeshFrameCodec.PackNormal(data.Normals[i])); offset += 4; }
@@ -183,11 +187,13 @@ public sealed partial class ArrayMesh
     }
     internal static Rect2 PackedBounds(Vector2[] vertices)
     {
+        if (vertices.Length == 0) return default;
         var minimum = vertices[0]; var maximum = minimum; foreach (var value in vertices) { minimum = minimum.Min(value); maximum = maximum.Max(value); }
         var result = new Rect2(minimum, maximum - minimum); PackedRect(result); return result;
     }
     private static Rect2?[] BoneBounds(MeshSurfaceData data)
     {
+        if (data.IsProcedural) return [];
         var count = 0; for (var i = 0; i < data.Bones.Length; i++) if (data.Weights[i] > 0) count = Math.Max(count, data.Bones[i] + 1);
         var result = new Rect2?[count];
         for (var i = 0; i < data.Bones.Length; i++) if (data.Weights[i] > 0) { var bone = data.Bones[i]; var point = data.Vertices[i / data.SkinSlots]; result[bone] = result[bone] is { } bounds ? bounds.Expand(point) : new(point, Vector2.Zero); }

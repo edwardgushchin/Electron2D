@@ -136,6 +136,7 @@ public sealed partial class SurfaceTool
         (data.Indices.Length != 0 ? Mesh.ArrayFormat.Index : 0) | (data.Bones.Length != 0 ? Mesh.ArrayFormat.Bones | Mesh.ArrayFormat.Weights : 0) | (data.SkinSlots == 8 ? Mesh.ArrayFormat.Use8BoneWeights : 0);
     private static List<Vertex> Vertices(MeshSurfaceData data)
     {
+        if (data.IsProcedural) throw new ArgumentException("Surface authoring requires position geometry.", nameof(data));
         var result = new List<Vertex>(data.Vertices.Length); var slots = data.SkinSlots;
         for (var i = 0; i < data.Vertices.Length; i++)
         {
@@ -157,8 +158,8 @@ public sealed partial class SurfaceTool
         {
             var revision = mesh.ChangeRevision; if ((uint)surface >= (uint)mesh.GetSurfaceCount()) throw new ArgumentOutOfRangeException(nameof(surface));
             var primitive = mesh.SurfaceGetPrimitiveType(surface); var data = (mesh.SurfaceGetArrays(surface) ?? throw new ArgumentException("Source surface arrays must not be null.", nameof(mesh))).Copy(); var format = mesh.SurfaceGetFormat(surface); var material = mesh.SurfaceGetMaterial(surface);
-            if (mesh.IsDisposed || material is { IsDisposed: true }) throw new ObjectDisposedException("Source mesh or material"); if (revision != mesh.ChangeRevision) throw new InvalidOperationException("Mesh source callbacks must retain a stable revision."); data.Validate(primitive);
-            const Mesh.ArrayFormat policies = Mesh.ArrayFormat.Use2DVertices | Mesh.ArrayFormat.UseDynamicUpdate | Mesh.ArrayFormat.Use8BoneWeights | Mesh.ArrayFormat.CompressAttributes;
+            if (mesh.IsDisposed || material is { IsDisposed: true }) throw new ObjectDisposedException("Source mesh or material"); if (revision != mesh.ChangeRevision) throw new InvalidOperationException("Mesh source callbacks must retain a stable revision."); data.Validate(primitive); if (data.IsProcedural) throw new ArgumentException("Surface authoring requires source positions.", nameof(mesh));
+            const Mesh.ArrayFormat policies = Mesh.ArrayFormat.UseEmptyVertexArray | Mesh.ArrayFormat.Use2DVertices | Mesh.ArrayFormat.UseDynamicUpdate | Mesh.ArrayFormat.Use8BoneWeights | Mesh.ArrayFormat.CompressAttributes;
             const Mesh.ArrayFormat channels = Mesh.ArrayFormat.Custom0 | Mesh.ArrayFormat.Custom1 | Mesh.ArrayFormat.Custom2 | Mesh.ArrayFormat.Custom3 | Mesh.ArrayFormat.Vertex | Mesh.ArrayFormat.Normal | Mesh.ArrayFormat.Tangent | Mesh.ArrayFormat.Color | Mesh.ArrayFormat.TexUV | Mesh.ArrayFormat.TexUV2 | Mesh.ArrayFormat.Index | Mesh.ArrayFormat.Bones | Mesh.ArrayFormat.Weights;
             if ((format & ~(policies | channels | MeshCustomCodec.FormatMask)) != 0) throw new NotSupportedException("Source channels require their typed storage and shader consumer.");
             if ((format & (channels | MeshCustomCodec.FormatMask)) != (Format(data) & (channels | MeshCustomCodec.FormatMask)) || data.SkinSlots != 0 && data.SkinSlots != ((format & Mesh.ArrayFormat.Use8BoneWeights) != 0 ? 8 : 4)) throw new ArgumentException("Source format must describe its actual channels and skin width.");

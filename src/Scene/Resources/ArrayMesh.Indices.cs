@@ -12,7 +12,7 @@ public sealed partial class ArrayMesh
         {
             var surface = Get(surfaceIndex); var indices = surface.Data.Indices;
             if (indices.Length == 0) throw new InvalidOperationException("The surface has no index buffer.");
-            var count = surface.Data.Vertices.Length; var stride = IndexStride(count);
+            var count = surface.Data.VertexCount; var stride = IndexStride(count);
             Region(offset, data.Length, indices.Length, stride);
             Span<byte> record = stackalloc byte[4]; var end = (long)offset + data.Length;
             for (var pass = 0; pass < 2; pass++)
@@ -23,7 +23,7 @@ public sealed partial class ArrayMesh
                     else BinaryPrimitives.WriteUInt32LittleEndian(bytes, (uint)indices[index]);
                     Overlay(bytes, index * (long)stride, offset, data);
                     var next = stride == 2 ? BinaryPrimitives.ReadUInt16LittleEndian(bytes) : BinaryPrimitives.ReadUInt32LittleEndian(bytes);
-                    if (next >= count) throw new ArgumentOutOfRangeException(nameof(data), "Every index must address an existing vertex.");
+                    if (count != 0 && next >= count) throw new ArgumentOutOfRangeException(nameof(data), "Every index must address an existing vertex.");
                     if (pass != 0) indices[index] = (int)next;
                 }
         }

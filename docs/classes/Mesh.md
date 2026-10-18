@@ -10,7 +10,7 @@ Last updated: 2026-10-18
 
 ## Description
 
-Abstract typed two-dimensional surface contract. Count/array/format/topology/material callbacks project applicable mesh reads. SurfaceGetArrays returns independent typed channel copies; vertex/index counts and policies preserve the current resource state. Mesh.GetRID lazily creates a weak stable resource-owned identity, independent of Engine.Run, until disposal; it is borrowed and cannot be mutated/freed through RenderingServer ownership. Implementations publish Changed after geometry/material edits. Runtime arrays and node/canvas geometry are strictly 2D. GetFaces exposes copied local 2D triangle faces; strips expand with alternating winding, and point/line surfaces contribute nothing. Named target deformation and authored LOD selection execute; compression, automatic simplification and remaining geometry operations retain exact coverage dependencies.
+Abstract typed two-dimensional surface contract. Count/array/format/topology/material callbacks project applicable mesh reads. SurfaceGetArrays returns independent typed channel copies; vertex/index counts and policies preserve the current resource state. Mesh.GetRID lazily creates a weak stable resource-owned identity, independent of Engine.Run, until disposal; it is borrowed and cannot be mutated/freed through RenderingServer ownership. Implementations publish Changed after geometry/material edits. Runtime arrays and node/canvas geometry are strictly 2D. GetFaces exposes copied local 2D triangle faces; strips expand with alternating winding, and point/line/UseEmptyVertexArray surfaces contribute nothing. Named target deformation and authored LOD selection execute; compression, automatic simplification and remaining geometry operations retain exact coverage dependencies.
 
 ## Example
 
@@ -108,7 +108,7 @@ returns: A non-null name; empty names are permitted.
 
 summary: Gets copied local vertices for every triangle face.
 
-returns: Three vertices per face; point and line surfaces contribute no vertices.
+returns: Three vertices per face; point, line and UseEmptyVertexArray surfaces contribute no vertices.
 
 remarks: Indexed and sequential triangles and triangle strips are expanded in surface order. Strip winding alternates to preserve face orientation. The result is caller-owned cold query storage.
 
@@ -393,3 +393,7 @@ Creates a caller-owned surface-free mesh retaining the current visibility bounds
 ## Packed surface integration
 
 GetAABB retains geometry-derived bounds for ordinary resources and authored rectangles for packed server surfaces. Packed surface export uses copied buffers through [RenderingServer](RenderingServer.md#packed-mesh-surface-family).
+
+## Procedural mesh integration
+
+Face extraction skips UseEmptyVertexArray surfaces. Custom generated surfaces retain an independent logical count and may override OnGetAABB with authored visibility. Default procedural bounds are empty without recursive callbacks. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).

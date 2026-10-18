@@ -38471,6 +38471,19 @@
     "value": "67108864"
   },
   {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.UseEmptyVertexArray()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "UseEmptyVertexArray",
+    "signature": "public const Electron2D.Mesh.ArrayFormat UseEmptyVertexArray = 268435456",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "268435456"
+  },
+  {
     "id": "enumValue:Electron2D.Mesh.ArrayFormat.Vertex()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Mesh.ArrayFormat",
@@ -228181,6 +228194,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshSurfaceData.VertexCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshSurfaceData",
+    "name": "VertexCount",
+    "signature": "public System.Int32 VertexCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {

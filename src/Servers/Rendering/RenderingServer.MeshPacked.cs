@@ -12,7 +12,7 @@ public sealed partial class RenderingServer
     /// <exception cref="ArgumentNullException">The list, a surface or a required buffer is null.</exception>
     /// <exception cref="ArgumentException">Counts, geometry, bounds or channel data are invalid.</exception>
     /// <exception cref="ArgumentOutOfRangeException">A shape count, vertex/index count or primitive is invalid.</exception>
-    /// <exception cref="NotSupportedException">A format requires non-planar or procedural position-free storage.</exception>
+    /// <exception cref="NotSupportedException">A format requires non-planar or unsupported storage.</exception>
     /// <exception cref="ObjectDisposedException">A supplied material is disposed.</exception>
     /// <exception cref="InvalidOperationException">The renderer is inactive, off-owner, in submission/shutdown or the list changes during import.</exception>
     public static RID MeshCreateFromSurfaces(IReadOnlyList<MeshSurfaceBuffers> surfaces, int blendShapeCount = 0)
@@ -68,6 +68,7 @@ public sealed partial class RenderingServer
             var revision = source.ChangeRevision; var shapes = source.GetBlendShapeCount();
             using var draft = new ArrayMesh(); for (var i = 0; i < shapes; i++) draft.AddBlendShape(i.ToString(System.Globalization.CultureInfo.InvariantCulture));
             draft.AddSurface(source.SurfaceGetPrimitiveType(surface), source.SurfaceGetArrays(surface), source.SurfaceGetBlendShapeArrays(surface), source.SurfaceGetLODs(surface), source.SurfaceGetFormat(surface), source.SurfaceGetMaterial(surface));
+            if (draft.Get(0).Data.IsProcedural) draft.Get(0).PackedAABB = source.GetAABB();
             source.EnsurePropertyInspection();
             if (source.ChangeRevision != revision) throw new InvalidOperationException("Custom mesh changed during packed preparation.");
             return draft.ExportPacked(0);

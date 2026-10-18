@@ -30,3 +30,7 @@ Packed server surfaces supply authored local visibility rectangles. Attached ske
 ## Authored mesh visibility
 
 Draw bounds select a nonzero ArrayMesh.CustomAABB before palette-derived or per-surface bounds, then apply the draw-local transform. Geometric GetLocalBounds remains independent for Mesh.GetAABB. Hardware instance preparation uses the same override; whole MultiMesh bounds retain their separate precedence. See [manual mesh visibility](../components/meshes.md#manual-mesh-visibility-bounds).
+
+## Procedural mesh integration
+
+Procedural snapshots retain source IDs and non-position channels, transport an affine basis/origin privately and submit real native topology. Expanded instances retain separate strip batches. Custom authored visibility is captured under stable revision/reentry guards; default geometric bounds capture never recursively reads itself. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).

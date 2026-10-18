@@ -380,3 +380,7 @@ Interpolation endpoint changes and explicit ResetInstancesPhysicsInterpolation r
 ## Child mesh visibility
 
 Automatic GetAABB and presentation bounds use ArrayMesh.CustomAABB before each visible instance transform when that child override is nonzero. This resource's CustomAABB overrides the complete collection. Both hardware and expanded drawing retain the same child policy; the child mesh's geometric GetAABB remains independent. See [manual mesh bounds](../components/meshes.md#manual-mesh-visibility-bounds).
+
+## Procedural mesh integration
+
+Procedural source surfaces support all five topologies with native or expanded instances. Expanded instances keep separate strips. Instance transforms, tint/custom data and explicit bounds retain their existing roles. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).

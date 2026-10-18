@@ -312,12 +312,12 @@ value: Relative initially; changing the mode preserves stored payloads and updat
 
 ## LOD behavior
 
-Authored levels use copied positive local edge-error thresholds and shorter complete index sets over an indexed base. Drawing selects the largest threshold within one framebuffer pixel from the greatest singular value of the full transformed basis. Bounds, arrays and face/index counts preserve full geometry. Morph output and tangent regeneration retain levels. AMS7 persists LODs, targets and compressed attributes and reads AMS1–6. See [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).
+Authored levels use copied positive local edge-error thresholds and shorter complete index sets over an indexed base. Drawing selects the largest threshold within one framebuffer pixel from the greatest singular value of the full transformed basis. Bounds, arrays and face/index counts preserve full geometry. Morph output and tangent regeneration retain levels. AMS8 persists LODs, targets and compressed attributes and reads AMS1–7. See [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).
 
 
 ## Compressed attribute storage
 
-`Mesh.ArrayFormat.CompressAttributes` retains float XY positions, four-byte UNORM16 primary/secondary UVs and a six-byte joint normal/tangent axis/angle record. UVs outside [0,1] use copied per-component scale metadata; zero axes remain zero and overflowing scale rejects before mutation. Normal-only imports synthesize a tangent; tangent-only compressed input rejects. Frame packing normalizes/projects numerical directions, so it does not retain arbitrary magnitude/nonorthogonality. Partial updates preserve untouched canonical bytes. Tangent regeneration retains exact UV bytes/scale and reencodes the coupled frame. Copies, saved scenes and morph output retain the format and exact base records. AMS7 persists metadata and canonical bytes and reads AMS1–6. See [compressed attributes](../components/meshes.md#compressed-attributes) for layout, precision and verification limits.
+`Mesh.ArrayFormat.CompressAttributes` retains float XY positions, four-byte UNORM16 primary/secondary UVs and a six-byte joint normal/tangent axis/angle record. UVs outside [0,1] use copied per-component scale metadata; zero axes remain zero and overflowing scale rejects before mutation. Normal-only imports synthesize a tangent; tangent-only compressed input rejects. Frame packing normalizes/projects numerical directions, so it does not retain arbitrary magnitude/nonorthogonality. Partial updates preserve untouched canonical bytes. Tangent regeneration retains exact UV bytes/scale and reencodes the coupled frame. Copies, saved scenes and morph output retain the format and exact base records. AMS8 persists metadata and canonical bytes and reads AMS1–7. See [compressed attributes](../components/meshes.md#compressed-attributes) for layout, precision and verification limits.
 
 
 ImporterMesh.GetMesh can atomically append a prevalidated compiled draft. Unshaped existing surfaces remain; target shape definitions must be empty and a shaped draft requires an empty target. One ResourceName/Changed publication follows complete geometry, names, materials and mode. A failing observer retains the committed mesh and producer cache. See [ImporterMesh](ImporterMesh.md).
@@ -341,3 +341,7 @@ mesh.CustomAABB = new Rect2(-20, -10, 80, 60);
 Rect2 sourceBounds = mesh.GetAABB();
 mesh.CustomAABB = default; // Restore automatic visibility.
 ```
+
+## Procedural mesh integration
+
+UseEmptyVertexArray accepts absent positions, explicit non-position counts or uint16 index-only invocations. Region updates, independent target masks, packed transport, copies and AMS8 preserve that schema. Drawing requires an authored vertex stage and visibility bounds; tangent regeneration rejects missing positions. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).

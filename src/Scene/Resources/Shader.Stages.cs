@@ -12,7 +12,10 @@ public sealed partial class Shader
     /// Hardware instance, lighting and glyph variants belong to the renderer. VertexIndex (GLSL gl_VertexIndex or
     /// HLSL SV_VertexID) identifies the original surface vertex for mesh and triangle-array drawing, including
     /// indices, LODs, expanded primitives and instances. Other canvas geometry retains native stream indices.
-    /// Vertex deformation does not update retained CPU bounds. No active renderer is required.</remarks>
+    /// Position-free mesh input is zero; authored local pixel positions use Frame size for clip conversion,
+    /// then the renderer applies homogeneous canvas, command, instance and skin transforms and optional pixel snapping.
+    /// Supplied-position geometry keeps framebuffer-pixel input. Vertex deformation does not update retained CPU bounds.
+    /// No active renderer is required.</remarks>
     /// <exception cref="ArgumentException">A module or cross-stage parameter/interface is invalid.</exception>
     /// <exception cref="NotSupportedException">A module uses an unsupported canvas interface.</exception>
     public static Shader CreateFromSPIRV(ReadOnlySpan<byte> vertexBytecode, ReadOnlySpan<byte> fragmentBytecode)

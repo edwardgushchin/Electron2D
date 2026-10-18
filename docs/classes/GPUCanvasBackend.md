@@ -1,6 +1,6 @@
 # GPUCanvasBackend
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 - Declaration: `internal sealed unsafe class GPUCanvasBackend : CanvasBackend`
 - Source: [GPUCanvasBackend.cs](../../src/Servers/Rendering/GPUCanvasBackend.cs)
@@ -108,3 +108,7 @@ GPUCanvasBackend.Glyphs composes and caches encoded coverage programs on cold so
 Native pipeline identity includes the selected authored vertex variant as well as fragment payload, blend, instancing, sample count, glyph mode and target format. Fragment and vertex samplers bind separately from the combined logical material resources; extra light/glyph resources use the fragment prefix count. Shader reload retires unused stage combinations through the existing frame lifetime. Renderer-owned mask/group passes keep their built-in vertices; authored group material draws use their own vertex stage. CanvasVertexProgramTests verifies pixel output and prepared owner-frame managed allocation on Linux X11/Wayland.
 
 Programmable pipeline usage retains one previous frame. Alternating instance culling reuses its prepared pipeline; two consecutive unused frames retire it, and shutdown disposes all retained native pipelines.
+
+## Procedural mesh integration
+
+Procedural pipeline identity includes native topology and composed vertex code. Built-in mask/group passes preserve authored generated vertex execution and bind its vertex textures. Frame private metadata carries snapping/group UV policy without changing the public Frame schema. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).

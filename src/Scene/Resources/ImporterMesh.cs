@@ -54,13 +54,14 @@ public sealed partial class ImporterMesh : Resource
     /// <param name="material">Borrowed live material or null.</param>
     /// <param name="name">Non-null surface name.</param>
     /// <param name="flags">Supported raw channel/storage flags; kept exactly for GetSurfaceFormat.</param>
-    /// <remarks>Channel/skin/schema failures leave prior surfaces intact. Changed runs after commit.</remarks>
+    /// <remarks>Channel/skin/schema failures leave prior surfaces intact. Changed runs after commit.
+    /// UseEmptyVertexArray retains absent positions and the independent logical count; drawing the compiled mesh requires an authored vertex stage.</remarks>
     public void AddSurface(Mesh.PrimitiveType primitive, MeshSurfaceData arrays, IReadOnlyList<MeshSurfaceData>? blendShapes = null, IReadOnlyDictionary<float, int[]>? lods = null, Material? material = null, string name = "", Mesh.ArrayFormat flags = Mesh.ArrayFormat.None)
     {
         ArgumentNullException.ThrowIfNull(arrays); ArgumentNullException.ThrowIfNull(name);
         var data = arrays.Copy(); data.Validate(primitive); if (material is { IsDisposed: true }) throw new ObjectDisposedException(nameof(material));
         if ((flags & ~ArrayMesh.SupportedFormats) != 0) throw new NotSupportedException("Flags require absent mesh storage.");
-        var mask = Mesh.ArrayFormat.Vertex | (data.Normals.Length != 0 ? Mesh.ArrayFormat.Normal : 0) | (data.Tangents.Length != 0 ? Mesh.ArrayFormat.Tangent : 0);
+        var mask = ArrayMesh.BlendMaskFor(data, blendShapes, flags);
         var shapes = blendShapes?.Select(s => { ArgumentNullException.ThrowIfNull(s); var copy = s.Copy(); ArrayMesh.ValidateBlendShape(copy, data, mask); return copy; }).ToArray() ?? [];
         var levels = MeshLOD.Capture(lods, data, primitive);
         // The compiled importer is a real validation boundary, but raw values stay in this producer.

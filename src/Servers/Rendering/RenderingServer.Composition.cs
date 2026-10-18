@@ -48,7 +48,7 @@ public sealed partial class RenderingServer
                         var inserted = end - maskBatch - 1; maskBatch += inserted; end += inserted;
                     }
                     for (var i = maskBatch + 1; i < end; i++)
-                        _batches[i] = _batches[i] with { Operation = CanvasOperation.MaskEnd, MaskShader = maskBuiltIn, Material = maskBuiltIn ? null : _batches[i].Material, Blend = maskBuiltIn ? BlendMode.Mix : _batches[i].Blend, CanvasModulation = maskBuiltIn ? null : _batches[i].CanvasModulation, Lighting = maskBuiltIn ? null : _batches[i].Lighting };
+                        _batches[i] = _batches[i] with { Operation = CanvasOperation.MaskEnd, MaskShader = maskBuiltIn, Material = maskBuiltIn && !_batches[i].Procedural ? null : _batches[i].Material, Blend = maskBuiltIn ? BlendMode.Mix : _batches[i].Blend, CanvasModulation = maskBuiltIn ? null : _batches[i].CanvasModulation, Lighting = maskBuiltIn ? null : _batches[i].Lighting };
                     _batches[maskBatch] = _batches[maskBatch] with { MaskShader = maskBuiltIn, MIPMaps = settings.BlurMIPMaps };
                     _batches[begin] = new(0, 0, null, Operation: CanvasOperation.MaskBegin, Region: region);
                     _batches.Add(new(0, 0, null, Operation: CanvasOperation.MaskFinish, Region: region, MaskShader: maskBuiltIn));
@@ -77,10 +77,14 @@ public sealed partial class RenderingServer
                             _vertices[vertex] = _vertices[vertex] with { Color = CanvasGeometry.LinearColor(_vertices[vertex].Color) };
                     _batches[i] = batch with { Operation = CanvasOperation.GroupEnd, GroupShader = builtIn, Glyph = builtIn ? default : batch.Glyph, LinearColors = builtIn && linear || batch.LinearColors };
                 }
-                if (builtIn) for (var i = ownFirst; i < _vertices.Count; i++)
+                if (builtIn) for (var i = ownBatch; i < _batches.Count; i++)
                     {
-                        var v = _vertices[i]; var c = v.Color;
-                        _vertices[i] = v with { UV = v.Position / new Vector2(pixels.X, pixels.Y), Color = new(c.R * c.A, c.G * c.A, c.B * c.A, c.A), Glyph = default };
+                        var batch = _batches[i];
+                        for (var vertex = batch.First; vertex < batch.First + batch.Count; vertex++)
+                        {
+                            var value = _vertices[vertex]; var color = value.Color;
+                            _vertices[vertex] = value with { UV = batch.Procedural ? value.UV : value.Position / new Vector2(pixels.X, pixels.Y), Color = new(color.R * color.A, color.G * color.A, color.B * color.A, color.A), Glyph = batch.Procedural ? value.Glyph : default };
+                        }
                     }
                 var clearBounds = active.HasCanvasCommands || settings.FitEmpty ? VertexBounds(ownFirst, _vertices.Count, bounds)!.Value : fit;
                 var clear = PixelRegion(GrowFinite(clearBounds, settings.ClearMargin), pixels, clip);

@@ -1,6 +1,6 @@
 # MeshSurfaceData
 
-Last updated: 2026-10-12
+Last updated: 2026-10-18
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.MeshSurfaceData` · **Source:** [MeshSurfaceData.cs](../../src/Scene/Resources/MeshSurfaceData.cs).
 
@@ -37,6 +37,7 @@ var data = new MeshSurfaceData
 | `public Electron2D.Vector4[] Tangents { get; set; }` | Gets or sets optional mesh-local tangent vectors and handedness. |
 | `public Electron2D.Vector2[] UV2s { get; set; }` | Gets or sets optional secondary texture coordinates. |
 | `public Electron2D.Vector2[] UVs { get; set; }` | Gets or sets optional primary texture coordinates. |
+| `public System.Int32 VertexCount { get; set; }` | Gets or sets the logical count independently of position storage. |
 | `public Electron2D.Vector2[] Vertices { get; set; }` | Gets or sets local two-dimensional vertex positions. |
 | `public System.Single[] Weights { get; set; }` | Gets or sets flattened skin weights matching Bones. |
 
@@ -102,7 +103,7 @@ value: Null without the channel; independent of instance shader data.
 
 summary: Gets or sets optional indices defining primitive vertex order.
 
-value: Empty initially; each index must address Vertices when consumed.
+value: Empty for sequential invocations; each index addresses VertexCount, or zero through 65535 for a zero-count index-only procedural surface.
 
 ### Normals
 
@@ -155,4 +156,17 @@ value: Finite values; imports clamp and truncate to unsigned normalized 16-bit w
 
 ## Compressed attribute storage
 
-`Mesh.ArrayFormat.CompressAttributes` retains float XY positions, four-byte UNORM16 primary/secondary UVs and a six-byte joint normal/tangent axis/angle record. UVs outside [0,1] use copied per-component scale metadata; zero axes remain zero and overflowing scale rejects before mutation. Normal-only imports synthesize a tangent; tangent-only compressed input rejects. Frame packing normalizes/projects numerical directions, so it does not retain arbitrary magnitude/nonorthogonality. Partial updates preserve untouched canonical bytes. Tangent regeneration retains exact UV bytes/scale and reencodes the coupled frame. Copies, saved scenes and morph output retain the format and exact base records. AMS7 persists metadata and canonical bytes and reads AMS1–6. See [compressed attributes](../components/meshes.md#compressed-attributes) for layout, precision and verification limits.
+`Mesh.ArrayFormat.CompressAttributes` retains float XY positions, four-byte UNORM16 primary/secondary UVs and a six-byte joint normal/tangent axis/angle record. UVs outside [0,1] use copied per-component scale metadata; zero axes remain zero and overflowing scale rejects before mutation. Normal-only imports synthesize a tangent; tangent-only compressed input rejects. Frame packing normalizes/projects numerical directions, so it does not retain arbitrary magnitude/nonorthogonality. Partial updates preserve untouched canonical bytes. Tangent regeneration retains exact UV bytes/scale and reencodes the coupled frame. Copies, saved scenes and morph output retain the format and exact base records. AMS8 persists metadata and canonical bytes and reads AMS1–7. See [compressed attributes](../components/meshes.md#compressed-attributes) for layout, precision and verification limits.
+
+### VertexCount
+
+`public System.Int32 VertexCount { get; set; }`
+
+Zero infers `Vertices.Length`. A positive value must match supplied positions; without positions it sizes the optional channels. Index-only procedural surfaces may retain zero and unsigned 16-bit indices. Validation happens when consumed. [Procedural surfaces](../components/meshes.md#procedural-surfaces-without-positions) require `UseEmptyVertexArray` and an authored vertex stage for drawing.
+
+```csharp
+using var generated = new ArrayMesh { CustomAABB = new(0, 0, 64, 64) };
+generated.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles,
+    new MeshSurfaceData { VertexCount = 3 }, flags: Mesh.ArrayFormat.UseEmptyVertexArray);
+// Assign an authored vertex ShaderMaterial before drawing this mesh.
+```
