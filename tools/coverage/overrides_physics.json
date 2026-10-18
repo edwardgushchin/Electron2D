@@ -6045,14 +6045,14 @@
         "class:ShapeCast2D"
       ],
       "state": "Implemented",
-      "reason": "ADRs 0063/0100/0101: retained scene cast state executes through public CPU/GPU worlds and projects generated TileMapLayer owners with their individual body RIDs and logical shape indices. TileMapLayerTests checks actual RayCast/ShapeCast hits and sampled weak owner lifetime across generated-body retirement and layer disposal. Unassigned raw collider objects remain null; diagnostics and ordinary query policies retain their separate executable checks."
+      "reason": "ADRs 0063/0100/0101: retained scene cast state executes through public CPU/GPU worlds and projects generated TileMapLayer owners with their individual body RIDs and logical shape indices. TileMapLayerTests checks actual RayCast/ShapeCast hits and sampled weak owner lifetime across generated-body retirement and layer disposal. Unassigned raw collider objects remain null; diagnostics and ordinary query policies retain their separate executable checks. Current-group cast options, borrowed shape and complete RID exception edits now preserve capture/lifetime/foreign guards; coordinated active-group getters observe complete held results. Synchronous numerical sampling stays owner-only as pinned physics_server_2d_wrap_mt.h:114-118 requires. Retained exception capacity supports full warmed moving physics/query intervals at strict 0/0 owner/all-thread managed bytes in public root/JIT/strict NativeAOT CPU/software-Vulkan/registered ordinary/pool-owner owner/separate profiles. Wayland GPU/compatibility hit/miss diagnostic pixels cover worker edits and owner sampling. Evidence: bin/physics-group-casts/2026-10-18/validation.json; native allocation/hardware/foreign gates remain separate."
     },
     {
       "godot": [
         "ShapeCast2D::method:get_collider(int:)"
       ],
       "state": "Implemented",
-      "reason": "ADRs 0063/0100/0101: retained scene cast state executes through public CPU/GPU worlds and projects generated TileMapLayer owners with their individual body RIDs and logical shape indices. TileMapLayerTests checks actual RayCast/ShapeCast hits and sampled weak owner lifetime across generated-body retirement and layer disposal. Unassigned raw collider objects remain null; diagnostics and ordinary query policies retain their separate executable checks."
+      "reason": "ADRs 0063/0100/0101: retained scene cast state executes through public CPU/GPU worlds and projects generated TileMapLayer owners with their individual body RIDs and logical shape indices. TileMapLayerTests checks actual RayCast/ShapeCast hits and sampled weak owner lifetime across generated-body retirement and layer disposal. Unassigned raw collider objects remain null; diagnostics and ordinary query policies retain their separate executable checks. Current-group cast options, borrowed shape and complete RID exception edits now preserve capture/lifetime/foreign guards; coordinated active-group getters observe complete held results. Synchronous numerical sampling stays owner-only as pinned physics_server_2d_wrap_mt.h:114-118 requires. Retained exception capacity supports full warmed moving physics/query intervals at strict 0/0 owner/all-thread managed bytes in public root/JIT/strict NativeAOT CPU/software-Vulkan/registered ordinary/pool-owner owner/separate profiles. Wayland GPU/compatibility hit/miss diagnostic pixels cover worker edits and owner sampling. Evidence: bin/physics-group-casts/2026-10-18/validation.json; native allocation/hardware/foreign gates remain separate."
     },
     {
       "godot": [
@@ -6084,21 +6084,21 @@
         "ShapeCast2D::property:target_position"
       ],
       "state": "Implemented",
-      "reason": "Spatial shape casts execute fixed-frame and forced first-impact queries, typed multi-collider contacts, RID exclusions, filtering, zero motion, rotation, caps, PackedScene and warmed allocation checks (ADR 0063, ShapeCastTests)."
+      "reason": "Spatial shape casts execute fixed-frame and forced first-impact queries, typed multi-collider contacts, RID exclusions, filtering, zero motion, rotation, caps, PackedScene and warmed allocation checks (ADR 0063, ShapeCastTests). Current-group cast options, borrowed shape and complete RID exception edits now preserve capture/lifetime/foreign guards; coordinated active-group getters observe complete held results. Synchronous numerical sampling stays owner-only as pinned physics_server_2d_wrap_mt.h:114-118 requires. Retained exception capacity supports full warmed moving physics/query intervals at strict 0/0 owner/all-thread managed bytes in public root/JIT/strict NativeAOT CPU/software-Vulkan/registered ordinary/pool-owner owner/separate profiles. Wayland GPU/compatibility hit/miss diagnostic pixels cover worker edits and owner sampling. Evidence: bin/physics-group-casts/2026-10-18/validation.json; native allocation/hardware/foreign gates remain separate."
     },
     {
       "godot": [
         "class:RayCast2D"
       ],
       "state": "Implemented",
-      "reason": "ADRs 0063/0100/0101: retained scene cast state executes through public CPU/GPU worlds and projects generated TileMapLayer owners with their individual body RIDs and logical shape indices. TileMapLayerTests checks actual RayCast/ShapeCast hits and sampled weak owner lifetime across generated-body retirement and layer disposal. Unassigned raw collider objects remain null; diagnostics and ordinary query policies retain their separate executable checks."
+      "reason": "ADRs 0063/0100/0101: retained scene cast state executes through public CPU/GPU worlds and projects generated TileMapLayer owners with their individual body RIDs and logical shape indices. TileMapLayerTests checks actual RayCast/ShapeCast hits and sampled weak owner lifetime across generated-body retirement and layer disposal. Unassigned raw collider objects remain null; diagnostics and ordinary query policies retain their separate executable checks. Current-group cast options, borrowed shape and complete RID exception edits now preserve capture/lifetime/foreign guards; coordinated active-group getters observe complete held results. Synchronous numerical sampling stays owner-only as pinned physics_server_2d_wrap_mt.h:114-118 requires. Retained exception capacity supports full warmed moving physics/query intervals at strict 0/0 owner/all-thread managed bytes in public root/JIT/strict NativeAOT CPU/software-Vulkan/registered ordinary/pool-owner owner/separate profiles. Wayland GPU/compatibility hit/miss diagnostic pixels cover worker edits and owner sampling. Evidence: bin/physics-group-casts/2026-10-18/validation.json; native allocation/hardware/foreign gates remain separate."
     },
     {
       "godot": [
         "RayCast2D::method:get_collider()"
       ],
       "state": "Implemented",
-      "reason": "ADRs 0063/0100/0101: retained scene cast state executes through public CPU/GPU worlds and projects generated TileMapLayer owners with their individual body RIDs and logical shape indices. TileMapLayerTests checks actual RayCast/ShapeCast hits and sampled weak owner lifetime across generated-body retirement and layer disposal. Unassigned raw collider objects remain null; diagnostics and ordinary query policies retain their separate executable checks."
+      "reason": "ADRs 0063/0100/0101: retained scene cast state executes through public CPU/GPU worlds and projects generated TileMapLayer owners with their individual body RIDs and logical shape indices. TileMapLayerTests checks actual RayCast/ShapeCast hits and sampled weak owner lifetime across generated-body retirement and layer disposal. Unassigned raw collider objects remain null; diagnostics and ordinary query policies retain their separate executable checks. Current-group cast options, borrowed shape and complete RID exception edits now preserve capture/lifetime/foreign guards; coordinated active-group getters observe complete held results. Synchronous numerical sampling stays owner-only as pinned physics_server_2d_wrap_mt.h:114-118 requires. Retained exception capacity supports full warmed moving physics/query intervals at strict 0/0 owner/all-thread managed bytes in public root/JIT/strict NativeAOT CPU/software-Vulkan/registered ordinary/pool-owner owner/separate profiles. Wayland GPU/compatibility hit/miss diagnostic pixels cover worker edits and owner sampling. Evidence: bin/physics-group-casts/2026-10-18/validation.json; native allocation/hardware/foreign gates remain separate."
     },
     {
       "godot": [
@@ -6124,7 +6124,7 @@
         "RayCast2D::property:target_position"
       ],
       "state": "Implemented",
-      "reason": "ADR 0063 scene ray executes cached fixed-step and forced queries, typed RID exclusions, parent filtering, masks, Area/body flags, inside hits, target transform, stale/miss state and PackedScene; RayCastTests checks timing, failures and warm allocation."
+      "reason": "ADR 0063 scene ray executes cached fixed-step and forced queries, typed RID exclusions, parent filtering, masks, Area/body flags, inside hits, target transform, stale/miss state and PackedScene; RayCastTests checks timing, failures and warm allocation. Current-group cast options, borrowed shape and complete RID exception edits now preserve capture/lifetime/foreign guards; coordinated active-group getters observe complete held results. Synchronous numerical sampling stays owner-only as pinned physics_server_2d_wrap_mt.h:114-118 requires. Retained exception capacity supports full warmed moving physics/query intervals at strict 0/0 owner/all-thread managed bytes in public root/JIT/strict NativeAOT CPU/software-Vulkan/registered ordinary/pool-owner owner/separate profiles. Wayland GPU/compatibility hit/miss diagnostic pixels cover worker edits and owner sampling. Evidence: bin/physics-group-casts/2026-10-18/validation.json; native allocation/hardware/foreign gates remain separate."
     },
     {
       "godot": [

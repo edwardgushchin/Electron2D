@@ -1,6 +1,6 @@
 # RayCast
 
-Last updated: 2026-10-12
+Last updated: 2026-10-18
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -87,7 +87,7 @@ Uses the current scene transform, target, masks and exception set immediately, e
 <a id="resultmethods"></a>
 ### Cached result methods
 
-`IsColliding()` reports the last sample or immediate disabled state. On a hit, collider RID, shape index, point and normal update together. On a miss, `IsColliding` becomes false and RID/shape reset to empty/zero, while point and normal retain their last hit values. `GetCollider()` resolves the sampled weak object association and returns null when unassigned, disposed or collected; later body rebinding does not change the cached target. Attached result reads require the scene owner thread. The typed return permits future non-CollisionObject scene owners, such as tile collision nodes, but those virtual-body mappings remain incomplete in [coverage](../coverage/classes/RayCast2D.md).
+`IsColliding()` reports the last sample or immediate disabled state. On a hit, collider RID, shape index, point and normal update together. On a miss, `IsColliding` becomes false and RID/shape reset to empty/zero, while point and normal retain their last hit values. `GetCollider()` resolves the sampled weak object association and returns null when unassigned, disposed or collected; later body rebinding does not change the cached target. Attached cached-result reads permit the owner or any active processing group with caller coordination. The typed return permits future non-CollisionObject scene owners, such as tile collision nodes, but those virtual-body mappings remain incomplete in [coverage](../coverage/classes/RayCast2D.md).
 
 ## Lifecycle and limits
 
@@ -101,3 +101,5 @@ without erasing the sampled ID. See [object associations](../components/physics-
 [Physics canvas diagnostics](../components/physics-debug.md) describes this node's retained geometry, live redraw, ordinary canvas behavior and CPU/GPU/native checks.
 
 TileMapLayerTests verifies generated tile-layer owner projection on public CPU/GPU worlds. Cached casts retain the sampled live layer when generated body RIDs retire, then resolve null after layer disposal; the associated physical RID and logical index retain their sampled meaning.
+
+Options and RID exceptions now accept owner/current-group writes; warmed exception storage is retained. Forced numerical sampling keeps its owner-thread guard. See [group metadata, cached observations and verification](../components/physics-queries.md#scene-cast-metadata-and-cached-observations-from-groups).

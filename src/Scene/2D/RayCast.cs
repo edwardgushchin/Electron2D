@@ -2,7 +2,9 @@ namespace Electron2D;
 
 /// <summary>Samples the nearest 2D collider along a local ray and caches its last physics-frame result.</summary>
 /// <remarks>An enabled node updates in the internal fixed physics lane. Call <see cref="ForceRaycastUpdate"/>
-/// to sample immediately, including while disabled. A detached node has no query world.</remarks>
+/// to sample immediately, including while disabled. A detached node has no query world.
+/// Options and exceptions permit owner/current-group writes; cached results permit owner/active-group reads with caller coordination.
+/// Sampling the numerical world requires the scene owner. Exception storage may grow on initial edits and reuses warmed capacity.</remarks>
 public sealed class RayCast : Entity
 {
     private static readonly PropertyDescriptor[] RayProperties =
@@ -48,7 +50,7 @@ public sealed class RayCast : Entity
     public Vector2 TargetPosition
     {
         get { ThrowIfDisposed(); return _targetPosition; }
-        set { EnsureMutable(); if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value)); _targetPosition = value; InvalidateCanvas(); }
+        set { EnsureOptionsMutable(); if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value)); _targetPosition = value; InvalidateCanvas(); }
     }
 
     /// <summary>Gets or sets the 32-bit collision layers accepted by this ray.</summary>
@@ -56,7 +58,7 @@ public sealed class RayCast : Entity
     public uint CollisionMask
     {
         get { ThrowIfDisposed(); return _collisionMask; }
-        set { EnsureMutable(); _collisionMask = value; }
+        set { EnsureOptionsMutable(); _collisionMask = value; }
     }
 
     /// <summary>Gets or sets automatic sampling in each eligible fixed physics frame.</summary>
@@ -66,7 +68,7 @@ public sealed class RayCast : Entity
         get { ThrowIfDisposed(); return _enabled; }
         set
         {
-            EnsureMutable();
+            EnsureOptionsMutable();
             _enabled = value; InvalidateCanvas();
             if (IsInsideTree) SetInternalProcessing(false, value);
             if (!value) _collided = false;
@@ -80,7 +82,7 @@ public sealed class RayCast : Entity
         get { ThrowIfDisposed(); return _excludeParent; }
         set
         {
-            EnsureMutable();
+            EnsureOptionsMutable();
             if (_excludeParent == value) return;
             _excludeParent = value;
             if (IsInsideTree && Parent is CollisionObject parent)
@@ -97,7 +99,7 @@ public sealed class RayCast : Entity
     public bool HitFromInside
     {
         get { ThrowIfDisposed(); return _hitFromInside; }
-        set { EnsureMutable(); _hitFromInside = value; }
+        set { EnsureOptionsMutable(); _hitFromInside = value; }
     }
 
     /// <summary>Gets or sets whether Area sensors are eligible.</summary>
@@ -105,7 +107,7 @@ public sealed class RayCast : Entity
     public bool CollideWithAreas
     {
         get { ThrowIfDisposed(); return _collideWithAreas; }
-        set { EnsureMutable(); _collideWithAreas = value; }
+        set { EnsureOptionsMutable(); _collideWithAreas = value; }
     }
 
     /// <summary>Gets or sets whether physics bodies are eligible.</summary>
@@ -113,7 +115,7 @@ public sealed class RayCast : Entity
     public bool CollideWithBodies
     {
         get { ThrowIfDisposed(); return _collideWithBodies; }
-        set { EnsureMutable(); _collideWithBodies = value; }
+        set { EnsureOptionsMutable(); _collideWithBodies = value; }
     }
 
     /// <summary>Adds a live scene collision object to the RID exception set.</summary>
@@ -121,7 +123,7 @@ public sealed class RayCast : Entity
     /// <exception cref="ArgumentNullException">The node is null.</exception>
     public void AddException(CollisionObject node)
     {
-        EnsureMutable();
+        EnsureOptionsMutable();
         ArgumentNullException.ThrowIfNull(node);
         AddExceptionRID(node.GetRID());
     }
@@ -130,7 +132,7 @@ public sealed class RayCast : Entity
     /// <param name="rid">The identity to exclude; duplicates are ignored.</param>
     public void AddExceptionRID(RID rid)
     {
-        EnsureMutable();
+        EnsureOptionsMutable();
         if (_exceptions.Add(rid)) RefreshExclusions();
     }
 
@@ -139,7 +141,7 @@ public sealed class RayCast : Entity
     /// <exception cref="ArgumentNullException">The node is null.</exception>
     public void RemoveException(CollisionObject node)
     {
-        EnsureMutable();
+        EnsureOptionsMutable();
         ArgumentNullException.ThrowIfNull(node);
         RemoveExceptionRID(node.GetRID());
     }
@@ -148,14 +150,14 @@ public sealed class RayCast : Entity
     /// <param name="rid">The identity to include again.</param>
     public void RemoveExceptionRID(RID rid)
     {
-        EnsureMutable();
+        EnsureOptionsMutable();
         if (_exceptions.Remove(rid)) RefreshExclusions();
     }
 
     /// <summary>Clears explicit exceptions, retaining an enabled direct-parent exception.</summary>
     public void ClearExceptions()
     {
-        EnsureMutable();
+        EnsureOptionsMutable();
         _exceptions.Clear();
         if (_excludeParent && IsInsideTree && Parent is CollisionObject parent)
             _exceptions.Add(parent.GetRID());
@@ -180,32 +182,32 @@ public sealed class RayCast : Entity
 
     /// <summary>Returns whether the most recent automatic or forced sample hit a collider.</summary>
     /// <returns>False before the first sample, after a miss, or immediately after disabling.</returns>
-    public bool IsColliding() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _collided; }
+    public bool IsColliding() { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _collided; }
 
     /// <summary>Returns the live object association captured by the last ray sample.</summary>
     /// <returns>The borrowed instance, or null for a miss or an unassigned, disposed or collected target.</returns>
     public ElectronObject? GetCollider()
     {
         ThrowIfDisposed();
-        Tree?.EnsureOwnerThread();
+        Tree?.EnsureProcessingReadAccess();
         return _colliderIdentity.Target;
     }
 
     /// <summary>Returns the RID retained from the most recent hit.</summary>
     /// <returns>The collider identity, or an empty RID after a miss or before first sampling.</returns>
-    public RID GetColliderRID() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _colliderRID; }
+    public RID GetColliderRID() { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _colliderRID; }
 
     /// <summary>Returns the last hit's shape-owner index.</summary>
     /// <returns>Zero before a hit or after a miss.</returns>
-    public int GetColliderShape() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _colliderShape; }
+    public int GetColliderShape() { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _colliderShape; }
 
     /// <summary>Returns the last hit point in global scene coordinates.</summary>
     /// <returns>Zero before any hit; the last point remains available after a miss or disable.</returns>
-    public Vector2 GetCollisionPoint() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _collisionPoint; }
+    public Vector2 GetCollisionPoint() { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _collisionPoint; }
 
     /// <summary>Returns the last hit normal in global coordinates.</summary>
     /// <returns>Zero before any hit; the last normal remains available after a miss or disable.</returns>
-    public Vector2 GetCollisionNormal() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _collisionNormal; }
+    public Vector2 GetCollisionNormal() { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _collisionNormal; }
 
     /// <summary>Samples the current physics space immediately, regardless of Enabled.</summary>
     /// <exception cref="InvalidOperationException">The node is detached, off-owner, or the world is stepping.</exception>
@@ -275,7 +277,13 @@ public sealed class RayCast : Entity
         }
     }
 
-    private void RefreshExclusions() => _excludeSnapshot = _exceptions.ToArray();
+    private void EnsureOptionsMutable() { EnsureProcessingAccess(); RenderingServer.NotifyRenderMutation(); }
+
+    private void RefreshExclusions()
+    {
+        if (_excludeSnapshot.Length < _exceptions.Count) Array.Resize(ref _excludeSnapshot, Math.Max(4, Math.Max(_exceptions.Count, _excludeSnapshot.Length * 2)));
+        Array.Clear(_excludeSnapshot); _exceptions.CopyTo(_excludeSnapshot);
+    }
 
     private static uint LayerBit(int number)
     {
