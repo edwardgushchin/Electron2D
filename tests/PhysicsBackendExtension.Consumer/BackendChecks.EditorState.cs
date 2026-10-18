@@ -14,7 +14,7 @@ public static partial class BackendChecks
         {
             using var world = backend is { } selected ? new World(selected) : new World("EditorState");
             Check(world.PhysicsBackendName == (backend?.ToString() ?? "EditorState") && world.PhysicsFallbackReason is null, "Exact authoring backend without fallback");
-            EditorStateContract(world); EditorStateConnections(world); EditorStateArchive(backend, threaded); EditorStateFrames(world, provider);
+            EditorStateContract(world); EditorSceneFilePath(world); EditorStateConnections(world); EditorStateArchive(backend, threaded); EditorStateFrames(world, provider);
             Console.WriteLine($"Editor state {world.PhysicsBackendName}/{(threaded ? "separate" : "owner")}: events, failures, ownership, fresh scene, motion and 128 full frames 0/0 B passed.");
         }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
@@ -93,6 +93,57 @@ public static partial class BackendChecks
         Reject<ObjectDisposedException>(() => veto.EditorDescription = "dead"); Reject<ObjectDisposedException>(() => _ = veto.IsPartOfEditedScene);
     }
 
+    private static void EditorSceneFilePath(World world)
+    {
+        foreach (var node in new Node[] { new Node(), new Entity(), new Control(), new RigidBody(), new StaticBody(), new Area() })
+        {
+            using (node)
+            {
+                var property = (PropertyDescriptor<Node, string>)node.GetPropertyList().Single(p => p.Name == nameof(Node.SceneFilePath));
+                Check(node.SceneFilePath == "" && !property.IsReadOnly && !property.IsStored && !property.CanRevert(node), "Writable nonstored source-path defaults on every node role");
+                foreach (var value in new[] { "res://arbitrary.e2dscene", "  relative \0 path  ", "" })
+                {
+                    node.SceneFilePath = value; Check(property.GetValue(node) == value, "Source metadata accepts opaque text without opening a file");
+                }
+                property.SetValue(node, "authored"); Check(property.CanRevert(node), "Typed path editing shares the public setter"); property.Revert(node);
+                Check(node.SceneFilePath == "", "Path revert restores empty metadata"); Reject<ArgumentNullException>(() => node.SceneFilePath = null!);
+            }
+        }
+        var root = new SubViewport { World = world }; var nodeInTree = new EditorProbe(); var child = new Node();
+        root.AddChild(nodeInTree); nodeInTree.AddChild(child); using var tree = new SceneTree(root); tree.EditedSceneRoot = root;
+        using var shape = new CircleShape { Radius = 1 }; using var sleeping = new RigidBody { GravityScale = 0 };
+        sleeping.AddChild(new CollisionShape { Shape = shape }); root.AddChild(sleeping); sleeping.Sleeping = true;
+        var tick = PhysicsServer.SpaceGetTick(world.Space); var rid = sleeping.GetRID(); var identity = sleeping.InstanceID;
+        sleeping.SceneFilePath = "sleeping.e2dscene";
+        Check(sleeping.Sleeping && sleeping.GetRID() == rid && sleeping.InstanceID == identity && PhysicsServer.SpaceGetTick(world.Space) == tick, "Source metadata neither wakes a physical body nor changes its identity or tick");
+        var events = 0; nodeInTree.EditorStateChanged += node => { Check(node == nodeInTree, "Path authoring sender"); events++; };
+        nodeInTree.SceneFilePath = "outer"; nodeInTree.SceneFilePath = "outer";
+        Check(events == 2 && child.SceneFilePath == "", "Equal path writes emit; descendants do not inherit source metadata");
+        nodeInTree.SetBlockSignals(true); nodeInTree.SceneFilePath = "blocked"; nodeInTree.SetBlockSignals(false);
+        Check(events == 2 && nodeInTree.SceneFilePath == "blocked", "Signal blocking preserves committed path metadata");
+        var failure = new ApplicationException("source observer"); Action<Node> fail = _ => throw failure;
+        nodeInTree.EditorStateChanged += fail;
+        Check(ReferenceEquals(CaptureCopy(() => nodeInTree.SceneFilePath = "committed"), failure) && nodeInTree.SceneFilePath == "committed", "Path observer failure cannot roll back its committed value");
+        nodeInTree.EditorStateChanged -= fail;
+        Action<Node> reenter = node => { if (node.SceneFilePath == "outer") node.SceneFilePath = "inner"; };
+        nodeInTree.EditorStateChanged += reenter; nodeInTree.SceneFilePath = "outer"; nodeInTree.EditorStateChanged -= reenter;
+        Check(nodeInTree.SceneFilePath == "inner" && events == 5, "Reentrant source edits observe committed values");
+        var before = events; Reject<ArgumentNullException>(() => nodeInTree.SceneFilePath = null!);
+        nodeInTree.Validate = () => throw failure;
+        Check(ReferenceEquals(CaptureCopy(() => nodeInTree.SceneFilePath = "rejected"), failure) && nodeInTree.SceneFilePath == "inner" && events == before, "Derived path validation precedes mutation and events"); nodeInTree.Validate = null;
+        Task.Run(() => { Check(nodeInTree.SceneFilePath == "inner", "Coordinated source-path reads need no owner-thread scene access"); Reject<InvalidOperationException>(() => nodeInTree.SceneFilePath = "inner"); }).GetAwaiter().GetResult();
+        tree.EditedSceneRoot = null; nodeInTree.SceneFilePath = "unselected"; Check(events == before, "Unselected path edits emit no editor-state event");
+        using var guarded = new EditorCapture { SceneFilePath = "before" }; using var packed = new PackedScene();
+        guarded.Read = () => { Reject<InvalidOperationException>(() => guarded.SceneFilePath = "before"); Reject<InvalidOperationException>(() => guarded.SceneFilePath = "new"); };
+        packed.Pack(guarded); Check(guarded.SceneFilePath == "before", "Capture rejects equal and changed path writes");
+        var disposedByValidation = new EditorProbe(); disposedByValidation.Validate = disposedByValidation.Dispose;
+        Reject<ObjectDisposedException>(() => disposedByValidation.SceneFilePath = "late");
+        Check(disposedByValidation.IsDisposed, "Path commitment rechecks lifetime after the derived validation hook");
+        Reject<ObjectDisposedException>(() => _ = disposedByValidation.SceneFilePath);
+        var veto = new EditorProbe { Veto = true }; veto.Dispose(); veto.SceneFilePath = "retained"; Check(!veto.IsDisposed && veto.SceneFilePath == "retained", "Disposal cancellation retains writable source metadata"); veto.Veto = false; veto.Dispose();
+        Reject<ObjectDisposedException>(() => veto.SceneFilePath = "late");
+    }
+
     private static EventConnection EditorRename(Node source, Node target, bool failRemoval) => EventConnection.Subscribe<Node>(
         h => source.Renamed += h, h => { source.Renamed -= h; if (failRemoval) throw new ArithmeticException("removal"); }, _ => target.EditorDescription = source.Name);
     private static EventConnection EditorRenameOnce(Node source, Node target, bool _) => EventConnection.Subscribe<Node>(
@@ -126,8 +177,8 @@ public static partial class BackendChecks
         using var inner = new Node { Name = "Inner" }; var body = new RigidBody { Name = "Body", GravityScale = 0, CanSleep = false, LinearVelocity = new(3, 0), LinearDampMode = RigidBody.DampMode.Replace, AngularDampMode = RigidBody.DampMode.Replace };
         body.AddChild(new CollisionShape { Name = "Shape", Shape = disk }); inner.AddChild(body); body.Owner = inner; body.GetChild(0).Owner = inner;
         template.Pack(inner); template.ResourcePath = "res://editable-inner.e2dscene";
-        var instance = template.Instantiate(); instance.Name = "Instance"; instance.EditorDescription = "instance description"; instance.DisplayFolded = true;
-        var outer = new Node { Name = "Outer", EditorDescription = "outer description", DisplayFolded = true }; outer.AddChild(instance); instance.Owner = outer;
+        var instance = template.Instantiate(); Check(instance.SceneFilePath == template.ResourcePath && body.SceneFilePath == "", "External template assigns only its scene root origin"); instance.SceneFilePath = "res://authored-inner.e2dscene"; instance.GetNode<RigidBody>("Body").SceneFilePath = "res://authored-body.e2dscene"; instance.Name = "Instance"; instance.EditorDescription = "instance description"; instance.DisplayFolded = true;
+        var outer = new Node { Name = "Outer", SceneFilePath = "res://source-root.e2dscene", EditorDescription = "outer description", DisplayFolded = true }; outer.AddChild(instance); instance.Owner = outer;
         using var excluded = new PackedScene(); excluded.Pack(outer); Check(excluded.GetState().GetNodeCount() == 2, "Disabled instance-owned branch remains excluded from flattened capture");
         outer.SetEditableInstance(instance, true);
         return outer;
@@ -140,14 +191,18 @@ public static partial class BackendChecks
             using var disk = new CircleShape { Radius = 1, ResourceLocalToScene = true }; using var template = new PackedScene();
             using var outer = EditorStateSource(template, disk); using var scene = new PackedScene(); scene.Pack(outer);
             Check(scene.GetState().GetNodeCount() == 4 && scene.GetState().GetNodeOwnerPath(2) == "Instance", "Editable owner selection and stored ownership");
-            using (var copy = (PackedScene)scene.Duplicate(true)) using (var restored = copy.Instantiate()) EditorStateRestored(restored);
+            var state = scene.GetState();
+            for (var nodeIndex = 0; nodeIndex < state.GetNodeCount(); nodeIndex++)
+                for (var property = 0; property < state.GetNodePropertyCount(nodeIndex); property++)
+                    Check(state.GetNodePropertyName(nodeIndex, property) != nameof(Node.SceneFilePath) && (nodeIndex != 0 || state.GetNodePropertyName(nodeIndex, property) != "__SceneInstanceOrigin"), "The ordinary path descriptor is nonstored and root origins are not captured");
+            using (var copy = (PackedScene)scene.Duplicate(true)) using (var restored = copy.Instantiate()) { Check(restored.SceneFilePath == "", "In-memory root omits source metadata"); EditorStateRestored(restored); }
             var file = IOPath.Combine(directory, "editor.e2dscene"); ResourceSaver.Save(scene, file, SaverFlags.BundleResources);
             var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true };
             if (IOPath.GetFileNameWithoutExtension(Environment.ProcessPath) == "dotnet") start.ArgumentList.Add(IOPath.Combine(AppContext.BaseDirectory, System.Reflection.Assembly.GetEntryAssembly()!.GetName().Name + ".dll"));
             start.ArgumentList.Add("--editor-state-child"); start.ArgumentList.Add(file); if (threaded) start.ArgumentList.Add("--threaded"); if (backend is { } value) start.ArgumentList.Add(value == PhysicsServer.Backend.GPU ? "--gpu" : "--cpu");
             using var process = Process.Start(start)!; var output = process.StandardOutput.ReadToEndAsync(); var errors = process.StandardError.ReadToEndAsync();
             if (!process.WaitForExit(30000)) { process.Kill(true); process.WaitForExit(); throw new TimeoutException("Editor state fresh consumer"); }
-            Task.WaitAll(output, errors); Check(process.ExitCode == 0 && output.Result.Contains("Editor archive passed"), $"Fresh editor scene: {output.Result} {errors.Result}");
+            Task.WaitAll(output, errors); Check(process.ExitCode == 0 && output.Result.Contains("Editor archive passed"), $"Fresh editor scene: {output.Result} {errors.Result}"); Console.WriteLine(output.Result.Trim());
         }
         finally { Directory.Delete(directory, true); }
     }
@@ -155,18 +210,27 @@ public static partial class BackendChecks
     {
         var instance = restored.GetNode("Instance"); var body = restored.GetNode<RigidBody>("Instance/Body");
         Check(restored.EditorDescription == "outer description" && instance.EditorDescription == "instance description" && !restored.DisplayFolded && !instance.DisplayFolded, "Descriptions stored; folding transient");
-        Check(instance.SceneFilePath == "res://editable-inner.e2dscene" && restored.IsEditableInstance(instance) && body.Owner == instance && body.GetChild(0).Owner == instance && !restored.IsPartOfEditedScene, $"Instance origin/flag/ownership: path={instance.SceneFilePath}, editable={restored.IsEditableInstance(instance)}, bodyOwner={body.Owner?.Name}, shapeOwner={body.GetChild(0).Owner?.Name}, edited={restored.IsPartOfEditedScene}");
+        Check(instance.SceneFilePath == "res://authored-inner.e2dscene" && body.SceneFilePath == "res://authored-body.e2dscene" && restored.IsEditableInstance(instance) && body.Owner == instance && body.GetChild(0).Owner == instance && !restored.IsPartOfEditedScene, $"Instance origin/flag/ownership: path={instance.SceneFilePath}, editable={restored.IsEditableInstance(instance)}, bodyOwner={body.Owner?.Name}, shapeOwner={body.GetChild(0).Owner?.Name}, edited={restored.IsPartOfEditedScene}");
     }
     public static void ReadEditorState(string path, PhysicsServer.Backend? backend, bool threaded)
     {
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded); if (backend is null) PhysicsServerManager.RegisterServer("EditorState", static () => new Solver());
-        using var scene = ResourceLoader.Load<PackedScene>(path); var restored = scene.Instantiate(); EditorStateRestored(restored);
+        using var scene = ResourceLoader.Load<PackedScene>(path); var restored = scene.Instantiate(); EditorStateRestored(restored); Check(restored.SceneFilePath == scene.ResourcePath, "File producer assigns the actual archive path to its root");
         using var world = backend is { } selected ? new World(selected) : new World("EditorState"); var root = new SubViewport { World = world }; root.AddChild(restored); using var tree = new SceneTree(root); tree.EditedSceneRoot = restored;
         Check(world.PhysicsBackendName == (backend?.ToString() ?? "EditorState") && world.PhysicsFallbackReason is null, "Fresh process retains exact selected backend without fallback");
         var body = restored.GetNode<RigidBody>("Instance/Body"); var before = body.Position.X; tree.PhysicsFrame(.1);
         using var point = new PhysicsPointQueryParameters { Position = body.GlobalPosition }; var hits = new PhysicsPointResult[2];
         Check(Math.Abs(body.Position.X - before - .3f) < .001f && world.DirectSpaceState.IntersectPoint(point, hits) == 1 && hits[0].ColliderRID == body.GetRID() && body.IsPartOfEditedScene, "Fresh physical scene moves and queries on selected backend");
-        using var recaptured = new PackedScene(); recaptured.Pack(restored); using var second = recaptured.Instantiate(); EditorStateRestored(second); Console.WriteLine("Editor archive passed");
+        using var recaptured = new PackedScene(); recaptured.Pack(restored); using var second = recaptured.Instantiate(); EditorStateRestored(second); Check(second.SceneFilePath == "", "Recaptured in-memory root does not persist the loaded file origin");
+        tree.CurrentScene = restored; var rid = body.GetRID(); var identity = body.InstanceID;
+        restored.SceneFilePath = IOPath.Combine(IOPath.GetDirectoryName(path)!, "missing.e2dscene");
+        Reject<FileNotFoundException>(tree.ReloadCurrentScene);
+        Check(tree.CurrentScene == restored && !restored.IsDisposed && body.GetRID() == rid, "A missing authored reload path preserves the active physical scene");
+        restored.SceneFilePath = path; tree.ReloadCurrentScene(); tree.FlushDeferred();
+        Check(restored.IsDisposed && tree.CurrentScene is { } current && current.SceneFilePath == scene.ResourcePath, "Authored source path drives actual deferred scene reload");
+        var reloaded = tree.CurrentScene!.GetNode<RigidBody>("Instance/Body"); tree.PhysicsFrame(.1); point.Position = reloaded.GlobalPosition;
+        Check(reloaded.GetRID() != rid && reloaded.InstanceID != identity && world.DirectSpaceState.IntersectPoint(point, hits) == 1 && hits[0].ColliderRID == reloaded.GetRID(), "Reload creates fresh physical identities and executable query state");
+        Console.WriteLine($"Editor archive passed {world.PhysicsBackendName}/{(threaded ? "separate" : "owner")}: authored reload and fresh physical identities.");
     }
 
     private static void EditorStateFrames(World world, Solver? provider)
@@ -180,6 +244,8 @@ public static partial class BackendChecks
             root.DisplayFolded = true;
             provider.StatusHook = () =>
             {
+                Reject<InvalidOperationException>(() => body.SceneFilePath = "borrowed");
+                Reject<InvalidOperationException>(() => root.SceneFilePath = "borrowed");
                 Reject<InvalidOperationException>(() => body.EditorDescription = "borrowed");
                 Reject<InvalidOperationException>(() => body.DisplayFolded = true);
                 Reject<InvalidOperationException>(() => root.SetEditableInstance(body, false));
@@ -198,6 +264,7 @@ public static partial class BackendChecks
                 workerThread = Environment.CurrentManagedThreadId;
                 Check(node.IsPartOfEditedScene, "Selected context is observable in current processing group");
                 Reject<InvalidOperationException>(() => _ = root.IsPartOfEditedScene);
+                Reject<InvalidOperationException>(() => node.SceneFilePath = "foreign authoring");
                 Reject<InvalidOperationException>(() => node.EditorDescription = "foreign authoring");
                 node.AddToGroup("worker-authored", true); node.RemoveFromGroup("worker-authored");
             };
@@ -205,15 +272,18 @@ public static partial class BackendChecks
             Check(workerThread != ownerThread && workerEvents == 2, "Persistent worker groups emit authoring events outside owner thread"); worker.Dispose();
         }
         finally { ProjectSettings.Set(ProjectSettings.WorkerPoolMaxThreads, workers); }
+        var pathProperty = (PropertyDescriptor<Node, string>)body.GetPropertyList().Single(p => p.Name == nameof(Node.SceneFilePath));
         for (var i = 0; i < 128; i++) Frame(i);
         var x = body.Position.X; var prior = events; var priorDescriptions = descriptions; Collect();
         var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < 128; i++) Frame(i);
         owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
-        Check(owner == 0 && all == 0 && Math.Abs(body.Position.X - x - 38.4f) < .01f && events == prior + 384 && descriptions == priorDescriptions + 128 && body.GetRID() == rid && body.InstanceID == identity,
+        Check(owner == 0 && all == 0 && Math.Abs(body.Position.X - x - 38.4f) < .01f && events == prior + 640 && descriptions == priorDescriptions + 128 && body.GetRID() == rid && body.InstanceID == identity,
             $"Warm editor/physical frames: {owner}/{all} B, motion={body.Position.X - x}, state={events - prior}, description={descriptions - priorDescriptions}");
+        Console.WriteLine($"Source-path full frames: 128 warm/128 measured, {owner}/{all} B, {events - prior} state events.");
         void Frame(int index)
         {
+            body.SceneFilePath = (index & 1) == 0 ? "first.e2dscene" : "second.e2dscene"; pathProperty.SetValue(body, body.SceneFilePath);
             body.EditorDescription = (index & 1) == 0 ? "first" : "second"; body.DisplayFolded = (index & 1) == 0;
             root.SetEditableInstance(body, (index & 1) == 0); body.AddToGroup("authored", true); body.RemoveFromGroup("authored");
             tree.PhysicsFrame(.1); query.Position = body.GlobalPosition;

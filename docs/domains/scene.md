@@ -12,6 +12,8 @@ Last updated: 2026-10-17
 
 [Node authoring state](../classes/Node.md#scene-authoring-state) supplies stored descriptions, transient folding, explicit edited-subtree membership and target-owned editable flags. [PackedScene](../classes/PackedScene.md#editable-ownership-capture) includes editable-owned physical children in its flattened graph and restores typed origin/flag metadata from fresh-process files. Authoring observations cover persistent connections and groups; physical owner/borrow/capture guards remain applicable. Linked nested/inherited override graphs, full editor UI, hardware GPU and full-goal acceptance remain open.
 
+`Node.SceneFilePath` exposes writable nonstored source metadata through the shared typed descriptor. PackedScene retains nonroot origins separately and assigns the producing template path to reconstructed roots. [Scene source paths](../components/scene-hierarchy.md#scene-source-paths) describes authoring events, guards and actual scene reload.
+
 ## Runtime child names
 
 [Child-name collision policy](../components/scene-hierarchy.md#child-name-collisions)

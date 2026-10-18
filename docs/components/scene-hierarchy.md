@@ -1,6 +1,6 @@
 # Scene hierarchy component
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
 
 ## Node authoring observations
 
@@ -12,9 +12,20 @@ Last updated: 2026-10-17
 
 Selected nodes also emit `EditorStateChanged(this)` for attached process-mode changes, nonnull owner changes, unique-name changes, successful persistent group add/remove, source-path assignment and authored connection changes. Folding, selection, ordinary runtime groups and CLR subscriptions emit no state event. Delivery is synchronous on the mutating thread outside internal locks and respects signal blocking. A process-mode callback failure joins other notification failures; owner/unique/group operations retain committed progress when a callback throws. A failed authored subscription rolls back without a second authoring event; rollback errors are preserved. Manual disconnection emits once, while consumed one-shots and endpoint teardown do not.
 
-Attached reads require the owner or current processing group. Description/folding/editability writes require the scene owner and reject capture or physical borrowing. Persistent group changes retain current-group access and deliver state events on that worker. Committed disposal clears the new events; canceled disposal preserves them.
+Authoring-context reads require the owner or current processing group; coordinated source-path reads retain their local metadata contract. Description/folding/editability writes require the scene owner and reject capture or physical borrowing. Persistent group changes retain current-group access and deliver state events on that worker. Committed disposal clears the new events; canceled disposal preserves them.
 
 Editable-owned physical children now participate in flattened PackedScene capture; descriptions and instance-origin/flag metadata survive fresh-process files, while folding stays transient. Linked nested/inherited overrides and full editor UI remain open.
+
+<a id="scene-source-paths"></a>
+## Scene source paths
+
+`Node.SceneFilePath` is writable source metadata on every Node role, initially empty. It accepts arbitrary nonnull text, does not inherit from parents, and neither opens a file nor changes the actual linked PackedScene identity. Every valid assignment, including an equal value, emits `EditorStateChanged` only in the selected edited subtree. Signal blocking preserves the new value without delivery; callback errors follow commitment and nested writes observe that committed value.
+
+The shared typed descriptor is writable with an empty revert default and is not ordinarily stored. PackedScene separately stores nonempty nonroot origins in its reserved metadata; a newly instantiated root uses the template's ResourcePath instead of the captured source node's path. An unpathed in-memory template therefore produces an empty root origin, while a file-loaded template produces its actual archive path. Assigning a path to CurrentScene supplies the existing ReloadCurrentScene consumer: a missing file fails before replacing the active scene, and a successful reload creates fresh scene/physical identities at the normal deferred safe point.
+
+Coordinated reads need only a live receiver. Attached writes require the scene owner; capture, including unchanged writes, and borrowed physical contexts reject before commitment. Derived mutation validation may change the node's lifetime, so the common setter rechecks authoring/lifetime after that hook. Source-path edits neither wake sleeping bodies nor change RID, object identity or world tick.
+
+The public EditorState consumer now verifies this contract across six Node roles, including empty/opaque values, typed default/revert and nonstorage, equal writes, blocking, nested edits and failures. A small external consumer first reproduces the former readonly-property compile error; a staged runtime check also reproduces missing lifetime revalidation after a derived hook disposes its receiver. Both are repaired. Eighteen final root/JIT/strict NativeAOT profiles cover CPU, private software Vulkan and registered implementations under serial/separate numerical policies. Every profile spawns a fresh file consumer, checks authored nested origins and successful/failed actual reload with new physical/query identities, and measures128 moving metadata-edit/query physics frames at zero owner/all-thread managed bytes:2304 measured full frames. Each interval observes640 source/other authoring events, including equal descriptor writes. Independent connection and deferred-scene regressions pass. All five source/PDB cohorts match their full Compile sets without DEBUG or checksum mismatches; payloads retain the same compiled sources. Evidence: `bin/physics-scene-file-path/2026-10-18/validation.json`. This is exercised headless/public/managed-memory proof; native memory, window cadence/FPS, hardware performance and the full physics goal remain open.
 
 ## Child-name collisions
 

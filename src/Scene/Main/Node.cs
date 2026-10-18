@@ -28,6 +28,8 @@ public partial class Node : ElectronObject
         new PropertyDescriptor<Node, bool>(nameof(DisplayFolded), node => node.DisplayFolded,
             (node, value) => node.DisplayFolded = value, _ => false),
         new PropertyDescriptor<Node, bool>(nameof(IsPartOfEditedScene), node => node.IsPartOfEditedScene),
+        new PropertyDescriptor<Node, string>(nameof(SceneFilePath), node => node.SceneFilePath,
+            (node, value) => node.SceneFilePath = value, _ => string.Empty),
         new PropertyDescriptor<Node, ProcessMode>(
             nameof(ProcessMode),
             node => node.ProcessMode,
@@ -486,9 +488,17 @@ public partial class Node : ElectronObject
                 child.NotifyInheritedTranslationDomainChanged(ref errors);
     }
 
-    /// <summary>Gets the external resource path from which this scene root was instantiated.</summary>
-    /// <value>The packed-scene path for an instantiated external scene root; otherwise an empty string.</value>
-    /// <remarks>The value is assigned by packed-scene instantiation and is not inherited by descendants.</remarks>
+    /// <summary>Gets or sets this node's scene source path metadata.</summary>
+    /// <value>Non-null text, initially empty. External packed-scene instantiation assigns its resource path to the root.</value>
+    /// <remarks>The value is not inherited and assignment neither loads a file nor changes the linked scene template.
+    /// Every valid assignment emits EditorStateChanged in the selected edited subtree, including an equal value.
+    /// Observer errors propagate after commitment. The ordinary tooling descriptor is not stored; packed-scene
+    /// capture retains nonroot origin metadata separately, while a reconstructed root takes its template's path.
+    /// Reads require a live receiver and coordination with writes. Attached writes require the scene owner and reject
+    /// capture and physical borrowing. Derived validation runs before commitment and its resulting lifetime is rechecked.</remarks>
+    /// <exception cref="ArgumentNullException">The assigned value is null.</exception>
+    /// <exception cref="InvalidOperationException">Mutation is unavailable or attached access is off the scene owner.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposing or disposed.</exception>
     public string SceneFilePath
     {
         get
@@ -496,6 +506,7 @@ public partial class Node : ElectronObject
             ThrowIfDisposed();
             return _sceneFilePath;
         }
+        set => SetSceneFilePath(value);
     }
 
     /// <summary>Gets or sets the borrowed authoring owner used for packed-scene storage.</summary>
@@ -2190,6 +2201,7 @@ public partial class Node : ElectronObject
     internal void SetSceneFilePath(string path)
     {
         EnsureMutable();
+        EnsureEditorAuthoringCommit();
         ArgumentNullException.ThrowIfNull(path);
         _sceneFilePath = path;
         EmitEditorStateChanged();

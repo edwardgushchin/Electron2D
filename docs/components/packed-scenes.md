@@ -1,6 +1,6 @@
 # Packed scenes component
 
-Last updated: 2026-10-17
+Last updated: 2026-10-18
 
 ## Scope
 
@@ -24,6 +24,8 @@ All three types ship in `Electron2D.dll`. Production sources live in `src/Scene/
 4. One graph session duplicates scene-local resource graphs with aliases and cycles preserved, assigns the new root before setup, invokes setup once per local duplicate, and transfers ownership of every created resource to the root.
 5. Each new node remains under an instantiation barrier while unfinished. The root receives the external scene path when applicable. The complete topology is validated, the template root receives notification `20` (linked child templates already received their own notifications), topology is validated again, the barriers are removed, and the detached root is returned.
 6. Any failure attempts to dispose every returned node and resource duplicate acquired by the operation and aggregates rollback failures. Source nodes and shared source resources are never disposed by this rollback; an allocation a factory never returns remains outside engine ownership.
+
+Public source-path editing follows [scene source paths](scene-hierarchy.md#scene-source-paths). Its ordinary descriptor is nonstored; the existing reserved nonroot origin records preserve authored nested-node text independently of actual linked template identity. Captured root metadata is omitted. Instantiation and file reload assign the producing template path to each reconstructed root.
 
 ## Dependencies
 

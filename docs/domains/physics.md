@@ -1,5 +1,8 @@
 # Physics domain
 
+[Writable scene source paths](../components/scene-hierarchy.md#scene-source-paths) now connect the public inherited setter and nonstored descriptor to the existing origin/file/reload consumers. Post-validation lifetime checks prevent writing through a node disposed by its validation hook. Eighteen CPU/software-GPU/registered root/JIT/strict NativeAOT serial/separate profiles execute fresh file processes, failed/successful reload and2304 measured complete physics frames at strict0/0 managed bytes; two connection/deferred regressions also pass. SceneFilePath becomes Implemented. The current physics census is206 open declarations:175 Partial,14 Unimplemented and17 Blocked. Evidence: `bin/physics-scene-file-path/2026-10-18/validation.json`. Hardware/FPS, native memory and complete-goal acceptance remain open.
+
+
 [Bound node tween creation](../components/tweening.md#bound-node-host-selection) now selects the attached tree or the explicit application SceneTree for detached nodes, preserving pause, lifetime and frame ordering. Sixteen CPU/software-GPU/registered serial/separate managed/strict NativeAOT profiles and eight existing tween suites pass, including 4096 measured full physics/idle frames at strict zero managed bytes. The inherited CreateTween declaration is now Implemented; the current physics census is 207 open declarations: 176 Partial, 14 Unimplemented and 17 Blocked. Evidence: `bin/physics-node-tweens/2026-10-18/validation.json`. Editor-hint-dependent input, native allocations, hardware GPU/FPS and complete-goal acceptance remain open.
 
 

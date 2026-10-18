@@ -97,7 +97,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public bool ProcessEnabled { get; set; }`](#p-electron2d-node-processenabled) | Gets or sets whether this node participates in host-driven process frames. |
 | [`public ProcessMode ProcessMode { get; set; }`](#p-electron2d-node-processmode) | Gets or sets the pause policy used by both process callback lanes. |
 | [`public int ProcessPriority { get; set; }`](#p-electron2d-node-processpriority) | Gets or sets this node's ascending process-frame order key. |
-| [`public string SceneFilePath { get; }`](#p-electron2d-node-scenefilepath) | Gets the external resource path from which this scene root was instantiated. |
+| [`public string SceneFilePath { get; set; }`](#p-electron2d-node-scenefilepath) | Gets or sets this node's scene source path metadata. |
 | [`public SceneTree? Tree { get; }`](#p-electron2d-node-tree) | Gets the active scene tree containing this node. |
 | [`public override string TranslationDomain { get; set; }`](#p-electron2d-node-translationdomain) | Gets or explicitly overrides the inherited translation domain. |
 | [`public bool ShortcutInputEnabled { get; set; }`](#p-electron2d-node-shortcutinputenabled) | Selects the post-GUI shortcut stage; ready enables an overridden callback. |
@@ -461,13 +461,19 @@ Gets or sets this node's ascending process-frame order key.
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
 <a id="p-electron2d-node-scenefilepath"></a>
-### `public string SceneFilePath { get; }`
+### `public string SceneFilePath { get; set; }`
 
-Gets the external resource path from which this scene root was instantiated.
+Gets or sets this node's scene source path metadata.
 
-**Value:** The packed-scene path for an instantiated external scene root; otherwise an empty string.
+**Value:** Non-null text, initially empty. External packed-scene instantiation assigns its resource path to the root.
 
-**Remarks:** The value is assigned by packed-scene instantiation and is not inherited by descendants.
+**Remarks:** The value is not inherited. Assignment does not load a file or replace the linked template. Every valid write, including an equal value, emits `EditorStateChanged` in the selected edited subtree; blocking suppresses delivery, and observer errors propagate after commitment. The ordinary typed descriptor is writable and nonstored. PackedScene separately retains nonroot origin metadata; a reconstructed root takes its template's path. Attached writes require the scene owner and reject capture or physical borrowing. Lifetime is rechecked after derived validation. Coordinated reads need a live receiver.
+
+**System.ArgumentNullException:** The assigned value is null.
+
+**System.InvalidOperationException:** Mutation is unavailable or attached access is off the scene owner.
+
+**System.ObjectDisposedException:** The node is disposing or disposed.
 
 <a id="p-electron2d-node-tree"></a>
 ### `public SceneTree? Tree { get; }`

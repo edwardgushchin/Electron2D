@@ -229866,7 +229866,7 @@
     "kind": "property",
     "declaringType": "Electron2D.Node",
     "name": "SceneFilePath",
-    "signature": "public System.String SceneFilePath { get;  }",
+    "signature": "public System.String SceneFilePath { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
