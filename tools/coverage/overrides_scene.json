@@ -1,6 +1,12 @@
 {
   "mappings": [
     {
+      "godot": "Viewport::property:gui_snap_controls_to_pixels",
+      "electron2d": "property:Electron2D.Viewport.GUISnapControlsToPixels()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028: GUISnapControlsToPixels is a stored per-viewport policy, true by default. Attached Control rendering rounds its local transform origin with floor(value+0.5) when abs(sin(primaryRotation*4)) < 0.00001, before visual-only offset transforms. Basis, size, logical/global/input/focus geometry and Entity transforms remain unchanged. Nested Window/SubViewport policies, Y-sorted/child/layer transforms, retained server override precedence, fresh typed scenes and owner/capture/disposal guards execute. GUISnapControlTests checks managed numeric/input cases and GPU/compatibility native pixels, with 64 active/64 idle full frames and zero managed owner bytes. Foreign platforms, physical input, native/driver allocations and throughput remain unverified."
+    },
+    {
       "godot": "Node::enum:ProcessThreadGroup",
       "electron2d": "T:Electron2D.Node.ProcessThreadGroupMode",
       "reason": "ADRs 0006/0051/0104: actual inherited Node group partition, retained WorkerThreadPool stages, ascending order with worker-before-main barriers, per-lane enabled snapshots and destination typed queues execute. Active groups drain messages independently of masks; masks permit empty-group processing. Worker callbacks gain own-group processing flags/priorities/order/message-mask writes and delta reads; hierarchy/render/backend and broader inherited access retain their accepted owner guards. Public CPU/software-Vulkan/registered serial/separate managed and strict NativeAOT profiles verify two real parallel groups, inherited member order, equal-order main physics collection, current-group isolation, masks, failures, group replacement/queue retirement, packed and fresh-file settings and128 warmed/measured full frames/queries with0/0 owner/all-thread bytes. Evidence: bin/physics-process-groups/2026-10-15/validation.json. Full general in-group Node/CanvasItem/Entity access and physical worker mutation remain Partial; this is executable scheduling, not full inheritance acceptance."
@@ -10076,8 +10082,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "First typed GUI, text-input and embedded-viewport integration after rendering (ADRs 0008 and 0028).",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028: GUISnapControlsToPixels is a stored per-viewport policy, true by default. Attached Control rendering rounds its local transform origin with floor(value+0.5) when abs(sin(primaryRotation*4)) < 0.00001, before visual-only offset transforms. Basis, size, logical/global/input/focus geometry and Entity transforms remain unchanged. Nested Window/SubViewport policies, Y-sorted/child/layer transforms, retained server override precedence, fresh typed scenes and owner/capture/disposal guards execute. GUISnapControlTests checks managed numeric/input cases and GPU/compatibility native pixels, with 64 active/64 idle full frames and zero managed owner bytes. Foreign platforms, physical input, native/driver allocations and throughput remain unverified.",
       "godot": [
         "Viewport::property:gui_snap_controls_to_pixels"
       ]

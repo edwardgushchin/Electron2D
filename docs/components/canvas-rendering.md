@@ -1,6 +1,6 @@
 # Canvas rendering
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -201,6 +201,14 @@ Sprite borrows its texture, records through the texture's virtual region draw me
 [Line](../classes/Line.md) builds editable thick polylines as internal retained triangle arrays, preserving the inherited CanvasItem transform, material, texture sampling and visibility path. The triangle recorder reuses polygon storage and resolves AtlasTexture UVs before committing a command. Line borrows Gradient, Curve and Texture resources and redraws on their changes; PackedScene stores copied point arrays. Finite-segment joint intersection bounds near-reversal geometry, while open-line cap lengths enter interior gradient/curve distance and round-cap UVs cover the arc. The native line pixel test passes round endpoints, a bevel bend, stretched texture sampling and a changed color on Linux Wayland compatibility/GPU (including HLSL/GLSL) and dummy/software. Round caps/joints still lack a complete antialias fringe, and exact source tessellation and UV behavior remain Partial in [coverage](../coverage/classes/Line2D.md).
 
 [Polygon](../classes/Polygon.md) builds filled spatial contours through the same retained polygon recorder. It copies local vertices, index contours, UVs and vertex colors; borrows its texture; and stores typed scene state. Inverted fill bridges the contour to its padded bounds, ignoring explicit index contours while enabled. Native Linux Wayland compatibility/GPU, GPU HLSL/GLSL and dummy/software pixel checks cover separate index contours, texture sampling, inverted fill and redraw after color or border changes. Self-intersections, holes between explicit index contours and skeletal deformation are outside the current executable path; [coverage](../coverage/classes/Polygon2D.md) records the member-specific limits.
+
+## GUI control pixel snapping
+
+GUISnapControlsToPixels is an independent stored property on every Window and SubViewport, true initially. For an attached Control whose primary Rotation satisfies `abs(sin(Rotation * 4)) < 0.00001`, rendering rounds the complete local transform origin with `floor(origin + 0.5)`. The basis and size stay unchanged. A logical offset transform participates before rounding; a visual-only offset composes afterwards. Parent Entity and CanvasLayer matrices, canvas scaling and final vertex snapping retain their own stages. Ineligible rotations and detached controls retain fractional local origins. This is visual geometry: public Position/GetTransform/GetGlobalTransform/rectangles, layout, input, focus and physics coordinates remain fractional.
+
+Visual submissions sample the current flag without rerecording Control commands; normal mutation invalidates low-processor rendering. No logical transform/rectangle notification is emitted by the flag alone. Explicit RenderingServer transform overrides retain precedence until a subsequent actual authored transform change. Interpolation retains its existing visual-pose rules. GUI snapping is separate from SnapTransformsToPixel and SnapVerticesToPixel and has no project-setting or server-only viewport mirror. Getters allow coordinated owner/active-group reads; attached mutation requires the owner and rejects capture, including equal assignments. Disposed access throws.
+
+GUISnapControlTests managed checks defaults, negative half ties, pivot/scale, offset order, 45-degree rotation tolerance, fractional hit testing/rectangles, detached and nested viewports, Window/Subviewport scene storage, fresh-process reconstruction and owner/capture/disposal guards. A prepared 128-policy/visual-query interval allocates zero managed owner bytes. GPU and compatibility native profiles check actual local/child/CanvasLayer/offset/nested pixels, Y sorting, rotation invariance and server override/republication. Each measures 64 changing-policy and 64 retained idle full frames after 32 warmups with zero owner-thread managed bytes and no additional OnDraw. Readback/setup allocations are outside those brackets. Native/driver allocations, physical pointer use, foreign targets and throughput remain unverified.
 
 ## Pixel snapping
 

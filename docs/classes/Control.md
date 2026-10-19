@@ -1,6 +1,6 @@
 # Control
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 **Inherits:** [CanvasItem](CanvasItem.md) → [Node](Node.md) → [ElectronObject](ElectronObject.md)
 
@@ -12,7 +12,7 @@ Last updated: 2026-10-18
 
 ## Description
 
-Control is the rectangular UI branch beside [Entity](Entity.md). It inherits the scene tree and canvas rendering API. A direct Control parent supplies the area for anchors; a root Control uses its viewport's visible size. A direct non-Control canvas parent supplies a zero-size anchor area in this slice. Detached controls also use a zero-size anchor area. Offsets are local canvas units; anchors are fractions of the parent area. Changes to the parent rectangle or viewport size reflow an attached control synchronously. Pivot, rotation and scale change the canvas transform without changing its layout rectangle. Control itself emits no drawing commands.
+Control is the rectangular UI branch beside [Entity](Entity.md). It inherits the scene tree and canvas rendering API. A direct Control parent supplies the area for anchors; a root Control uses its viewport's visible size. A direct non-Control canvas parent supplies a zero-size anchor area in this slice. Detached controls also use a zero-size anchor area. Offsets are local canvas units; anchors are fractions of the parent area. Changes to the parent rectangle or viewport size reflow an attached control synchronously. Pivot, rotation and scale change the canvas transform without changing its layout rectangle. Control itself emits no drawing commands. Attached rendering also consumes its viewport's separate GUISnapControlsToPixels policy; logical geometry stays fractional.
 
 Control starts with inherited `PhysicsInterpolationMode.Off`, so UI layout and pointer hit regions normally use the current pose. Assign `On` explicitly to interpolate a Control and its inheriting canvas children while the tree enables physics interpolation. The displayed transform may then differ from current logical layout coordinates until the next physics tick; `ResetPhysicsInterpolation` removes that history.
 
@@ -490,3 +490,11 @@ The [complete processing metadata contract](../components/scene-tree.md#complete
 Logical transform observation permits the scene owner or any active processing group, including shared ancestors and nodes in another group. This covers Entity local/global position, transform, rotation/degrees, scale/skew and pure point, angle and relative-chain queries; concrete Control transforms, combined pivots and derived rectangles follow the same logical chain. Coordinate concurrent writes: separate reads do not form an atomic scene snapshot. Ordinary external or pool jobs receive no group permission. Mutations and numerical/renderer operations retain their separate guards and remaining Partial coverage.
 
 A dirty global matrix is computed through virtual getters outside the retained canvas-item gate. One publisher commits the matrix and clears a volatile invalidation flag under that gate. This preserves later transform notification queueing without concurrent matrix writes or a new per-node lock allocation. [Public concurrent physical consumers](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.GroupTransforms.cs) exercise ordinary and pool-owned trees, mixed ancestry, errors, stable identities and complete moving physics/query intervals with zero warmed managed bytes. Evidence: `bin/physics-group-transforms/2026-10-18/validation.json`. See the [logical observation contract](../components/scene-hierarchy.md#logical-transform-observation-from-processing-groups); full worker authoring and hardware performance remain open.
+
+## Viewport GUI pixel snapping
+
+GUISnapControlsToPixels is an independent stored property on every Window and SubViewport, true initially. For an attached Control whose primary Rotation satisfies `abs(sin(Rotation * 4)) < 0.00001`, rendering rounds the complete local transform origin with `floor(origin + 0.5)`. The basis and size stay unchanged. A logical offset transform participates before rounding; a visual-only offset composes afterwards. Parent Entity and CanvasLayer matrices, canvas scaling and final vertex snapping retain their own stages. Ineligible rotations and detached controls retain fractional local origins. This is visual geometry: public Position/GetTransform/GetGlobalTransform/rectangles, layout, input, focus and physics coordinates remain fractional.
+
+Visual submissions sample the current flag without rerecording Control commands; normal mutation invalidates low-processor rendering. No logical transform/rectangle notification is emitted by the flag alone. Explicit RenderingServer transform overrides retain precedence until a subsequent actual authored transform change. Interpolation retains its existing visual-pose rules. GUI snapping is separate from SnapTransformsToPixel and SnapVerticesToPixel and has no project-setting or server-only viewport mirror. Getters allow coordinated owner/active-group reads; attached mutation requires the owner and rejects capture, including equal assignments. Disposed access throws.
+
+See [verification and limits](../components/canvas-rendering.md#gui-control-pixel-snapping).

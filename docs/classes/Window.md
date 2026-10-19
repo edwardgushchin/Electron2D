@@ -834,3 +834,7 @@ removal or tree shutdown. Regression checks cover both cleanup paths.
 All thirteen Window theme items now have executing embedded consumers. The built-in theme supplies focused `embedded_border` and `embedded_unfocused_border` styles, borrowed `title_font` and fallback `title_font_size`, `title_color`, `title_outline_modulate`, `title_outline_size`, `title_height`, `resize_margin`, real DPITexture `close` and `close_pressed` icons, and `close_h_offset`/`close_v_offset`. Normal defaults are 16-pixel icons, offsets 18 and 24, title height 36, resize margin 4 and outline size zero. Resource and local override changes use ordinary deferred/direct ThemeOwner invalidation and batching. Subclasses inherit the Window item type chain; custom variation/owner/project themes remain supported.
 
 The [complete chrome contract](../components/popup-windows.md#embedded-decoration-theme-and-input) covers retained shaped titles, pressed/canceled/released close capture, outside resizing, geometry queries, source-resource changes, scene persistence and verified limits.
+
+## GUI control pixel policy
+
+The inherited [GUISnapControlsToPixels](Viewport.md#guisnapcontrolstopixels) defaults true independently on this viewport and is stored in typed scenes. It rounds eligible Control rendering translations while preserving logical layout/input geometry. Nested viewports use their own flag. See [executing checks](../components/canvas-rendering.md#gui-control-pixel-snapping).

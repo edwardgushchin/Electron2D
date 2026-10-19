@@ -27,11 +27,13 @@ public abstract partial class Viewport
         return result;
     }
 
+    private bool _guiSnapControlsToPixels = true;
     private bool _snapTransformsToPixel;
     private bool _snapVerticesToPixel;
     private uint _canvasCullMask = uint.MaxValue;
     private static readonly PropertyDescriptor[] CanvasRenderingProperties =
     [
+        new PropertyDescriptor<Viewport, bool>(nameof(GUISnapControlsToPixels), n => n.GUISnapControlsToPixels, (n, v) => n.GUISnapControlsToPixels = v, _ => true, stored: true),
         new PropertyDescriptor<Viewport, bool>(nameof(SnapTransformsToPixel), n => n.SnapTransformsToPixel, (n, v) => n.SnapTransformsToPixel = v, _ => false, stored: true),
         new PropertyDescriptor<Viewport, bool>(nameof(SnapVerticesToPixel), n => n.SnapVerticesToPixel, (n, v) => n.SnapVerticesToPixel = v, _ => false, stored: true),
         new PropertyDescriptor<Viewport, uint>(nameof(CanvasCullMask), n => n.CanvasCullMask, (n, v) => n.CanvasCullMask = v, _ => uint.MaxValue, stored: true),
@@ -77,6 +79,20 @@ public abstract partial class Viewport
         var bit = 1u << layer;
         _canvasCullMask = enable ? _canvasCullMask | bit : _canvasCullMask & ~bit;
         RenderingOwner?.PublishCanvasCullMask(this);
+    }
+
+    /// <summary>Gets or sets whether attached controls round their local rendering translation to whole canvas units.</summary>
+    /// <value>True initially; stored independently by each Window or SubViewport.</value>
+    /// <remarks>Applies when the control's primary rotation is near a multiple of 45 degrees, before a visual-only
+    /// offset transform. Half units round toward positive infinity. Logical transforms, layout, size, input and
+    /// focus geometry remain fractional. Subsequent visual submissions sample this policy without rerecording commands.
+    /// Entity transforms and the independent canvas transform/vertex snapping policies retain their own behavior.</remarks>
+    /// <exception cref="InvalidOperationException">An attached viewport is read outside the owner/processing scope or mutated off-owner or during capture.</exception>
+    /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
+    public bool GUISnapControlsToPixels
+    {
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _guiSnapControlsToPixels; }
+        set { EnsureMutable(); _guiSnapControlsToPixels = value; }
     }
 
     /// <summary>Gets or sets whether canvas transform translations round to whole pixels during rendering.</summary>

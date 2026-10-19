@@ -10,6 +10,8 @@
 
 # API coverage register
 
+[Viewport GUI control snapping](../components/canvas-rendering.md#gui-control-pixel-snapping) now executes a stored true-by-default policy across Window/SubViewport and Control descendants. It preserves fractional logical/input geometry while rounding eligible local visual translations before visual offsets. Managed/fresh-process and native GPU/compatibility checks include prepared zero-managed-byte active/idle intervals; foreign/native-allocation acceptance remains separate.
+
 [Sparse framebuffer outputs](../components/local-compute.md#sparse-framebuffer-outputs) now execute logical unused output slots, exact shader masks and native target/SPIR-V location mapping. RDFramebufferPass and ColorAttachments become Implemented; typed MRT, specialization, grouped locations, MSAA/input/resolve and retained canvas consumers have native checks. Prepared changing/unchanged frames retain zero managed owner bytes; multiview, attachmentless graphics and foreign/native-allocation acceptance remain separate.
 
 [Embedded Window chrome](../components/popup-windows.md#embedded-decoration-theme-and-input) now consumes all thirteen Window theme items through focused/unfocused frames, retained shaped titles and outlines, real normal/pressed close textures, captured release/cancel and constrained outside resizing. Managed/fresh-scene and native X11/Wayland GPU/Compatibility checks execute; prepared captured motion and active rendered theme updates retain zero owner-thread managed bytes. Independent native children, OS titlebar policies and foreign/native-allocation acceptance remain separate.

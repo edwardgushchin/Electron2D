@@ -402,3 +402,5 @@ Window placement and ResetSize use the existing viewport/native resize lifecycle
 [Writable textures](../components/drawable-textures.md) connect DrawableTexture, BlitMaterial, the TextureBlit shader domain and static RenderingServer drawable operations to ordered GPU passes and ordinary native sampling.
 
 [Sparse framebuffer outputs](../components/local-compute.md#sparse-framebuffer-outputs) now preserve logical output/blend/resolve slots while packing native targets and private fragment output locations. Exact shader masks, typed MRT, MSAA input/resolve, depth-only holes and retained canvas consumers execute without dummy images or a runtime source compiler.
+
+[GUI control pixel snapping](../components/canvas-rendering.md#gui-control-pixel-snapping) is independent of canvas transform/vertex snapping. The viewport-owned flag acts on eligible Control local visual translations before visual-only offsets; Entity/layer/canvas matrices keep their separate stages. Both current renderers consume retained commands without additional redraw callbacks.

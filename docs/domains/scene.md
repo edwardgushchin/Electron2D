@@ -475,3 +475,5 @@ Prepared skeletal modifiers and local bone override requests now execute in thei
 ## Embedded Window decorations
 
 The complete thirteen-item Window theme family now executes focused/unfocused styles, retained shaped and outlined titles and captured normal/pressed close images. Outside resize margins preserve actual constrained opposite edges. [Window chrome](../components/popup-windows.md#embedded-decoration-theme-and-input) records scene/resource authoring, callback cleanup, native pointer/pixel verification and remaining independent native-host limits.
+
+[Viewport GUI pixel snapping](../components/canvas-rendering.md#gui-control-pixel-snapping) now provides a stored independent policy for local Control visual origins, including offsets, rotation tolerance, nested targets and retained overrides. Logical layout/input/focus geometry stays fractional. Native GPU/compatibility pixels and prepared allocation intervals complement managed/fresh-scene checks.

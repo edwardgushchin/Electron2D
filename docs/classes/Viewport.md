@@ -1,6 +1,6 @@
 # Viewport
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 **Inherits:** [Node](Node.md)
 
@@ -133,12 +133,21 @@ Implemented in [Viewport.Rendering.cs](../../src/Scene/Main/Viewport.Rendering.c
 
 | Declaration | Default | Contract |
 | --- | --- | --- |
+| `public bool GUISnapControlsToPixels { get; set; }` | true | [GUI snapping](#guisnapcontrolstopixels) |
 | `public bool SnapTransformsToPixel { get; set; }` | false | [Transform snapping](#snaptransformstopixel) |
 | `public bool SnapVerticesToPixel { get; set; }` | false | [Vertex snapping](#snapverticestopixel) |
 
 ```csharp
 var window = new Window { SnapTransformsToPixel = true };
 ```
+
+### GUISnapControlsToPixels
+
+`public bool GUISnapControlsToPixels { get; set; }`
+
+GUISnapControlsToPixels is an independent stored property on every Window and SubViewport, true initially. For an attached Control whose primary Rotation satisfies `abs(sin(Rotation * 4)) < 0.00001`, rendering rounds the complete local transform origin with `floor(origin + 0.5)`. The basis and size stay unchanged. A logical offset transform participates before rounding; a visual-only offset composes afterwards. Parent Entity and CanvasLayer matrices, canvas scaling and final vertex snapping retain their own stages. Ineligible rotations and detached controls retain fractional local origins. This is visual geometry: public Position/GetTransform/GetGlobalTransform/rectangles, layout, input, focus and physics coordinates remain fractional.
+
+Visual submissions sample the current flag without rerecording Control commands; normal mutation invalidates low-processor rendering. No logical transform/rectangle notification is emitted by the flag alone. Explicit RenderingServer transform overrides retain precedence until a subsequent actual authored transform change. Interpolation retains its existing visual-pose rules. GUI snapping is separate from SnapTransformsToPixel and SnapVerticesToPixel and has no project-setting or server-only viewport mirror. Getters allow coordinated owner/active-group reads; attached mutation requires the owner and rejects capture, including equal assignments. Disposed access throws.
 
 ### SnapTransformsToPixel
 
@@ -152,7 +161,7 @@ Canvas translations use a separate viewport preparation step: `ceil(position - 0
 
 Rounds final primitive corners after node, drawing and framebuffer transforms. Does not affect Sprite bounds or source-opacity queries. Retained commands use the current flag at each submission. Texture clipping interpolation points remain inside the snapped triangles, preventing artificial cuts from collapsing or opening gaps. A small normalized UV offset follows the renderer precision convention. Degenerate snapped texture triangles emit no geometry.
 
-Both properties are stored by PackedScene. Defaults are false on Viewport; construction of the explicit root Window reads active project overrides before caller configuration. Off-owner/capture mutation throws InvalidOperationException; disposed access throws ObjectDisposedException. Neither setter opens native resources. Both may be enabled, although combining them can make motion less smooth. GUI control snapping is a separate absent capability.
+Both properties are stored by PackedScene. Defaults are false on Viewport; construction of the explicit root Window reads active project overrides before caller configuration. Off-owner/capture mutation throws InvalidOperationException; disposed access throws ObjectDisposedException. Neither setter opens native resources. Both may be enabled, although combining them can make motion less smooth. GUI control snapping is the separate true-by-default policy described above.
 
 ## Sampling properties and enums
 
@@ -622,3 +631,5 @@ Native presentation retains a cold activation ordinal across sibling scene reord
 ## Collapsed canvas picking
 
 Automatic physics picking ignores a canvas whose determinant is zero/nonfinite or whose inverse query position is nonfinite. Other canvases continue; mouse hover exits through normal object/shape cleanup and returns under a stationary pointer when the map becomes usable. Small finite and reflected transforms remain valid. This changes neither authored matrix storage nor explicit AffineInverse failure semantics, ordinary direct physics queries or collider ownership. See [the component contract and regression scope](../components/physics-picking.md#collapsed-canvas-mappings).
+
+[GUI snapping verification](../components/canvas-rendering.md#gui-control-pixel-snapping) covers numeric/input/storage contracts and actual native pixels.

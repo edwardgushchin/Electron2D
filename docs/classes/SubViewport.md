@@ -1,6 +1,6 @@
 # SubViewport
 
-Last updated: 2026-10-13
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.SubViewport` · **Source:** [SubViewport.cs](../../src/Scene/Main/SubViewport.cs).
 
@@ -188,3 +188,7 @@ SubViewportTests verifies guards/defaults/clamps, stable RID/texture identity, o
 A direct stretched [SubViewportContainer](SubViewportContainer.md) owns Size; manual Size writes reject while Stretch is true. The container configures child update/handled policy on entry/visibility, redraws its native texture, and forwards localized GUI/scene input. Child controls now have independent focus/hover/capture/tooltips; connected drag sections are shared. Native target ownership and resize remain with the renderer.
 
 Static RenderingServer viewport setters also address attached SubViewport identities. Server size writes retain exact nonnegative dimensions, including suspended zero/one axes; ordinary Size writes retain their minimum-two policy. Server clear/update/transparency writes use these same properties and successful Once transitions. Stretched containers retain size ownership.
+
+## GUI control pixel policy
+
+The inherited [GUISnapControlsToPixels](Viewport.md#guisnapcontrolstopixels) defaults true independently on this viewport and is stored in typed scenes. It rounds eligible Control rendering translations while preserving logical layout/input geometry. Nested viewports use their own flag. See [executing checks](../components/canvas-rendering.md#gui-control-pixel-snapping).

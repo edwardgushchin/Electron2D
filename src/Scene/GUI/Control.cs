@@ -675,6 +675,8 @@ public partial class Control : CanvasItem
     internal override Transform GetVisualTransform()
     {
         var transform = GetTransform();
+        if (IsInsideTree && MathF.Abs(MathF.Sin(_rotation * 4f)) < .00001f && GetViewport() is { GUISnapControlsToPixels: true })
+            transform.Origin = (transform.Origin + new Vector2(.5f, .5f)).Floor();
         return _offsetTransformEnabled && _offsetTransformVisualOnly ? transform * GetOffsetTransform() : transform;
     }
 
