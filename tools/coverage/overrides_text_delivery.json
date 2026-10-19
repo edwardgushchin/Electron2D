@@ -24,6 +24,11 @@
       "godot": "Node::constant:NOTIFICATION_OS_IME_UPDATE",
       "electron2d": "constant:Electron2D.Node.NotificationOsImeUpdate()",
       "reason": "ADR 0038: the original node notification ID now also executes for native composition updates after DisplayServer commits its text and selection."
+    },
+    {
+      "godot": "Viewport::method:push_text_input(String:)",
+      "electron2d": "method:Electron2D.Viewport.PushTextInput(System.String)",
+      "reason": "ADR 0038 and ADR 0004: typed owner-thread full-text replacement uses the focused LineEdit/TextEdit/CodeEdit Text setter. Embedded-window focus forwards recursively, native windows and direct SubViewports keep independent GUI focus, and a focused SubViewportContainer does not forward. Paused, read-only and GUI-input-disabled editors remain authorable. Null/disposed/off-owner/capture guards execute. TextChanged and Control.TextInput are suppressed; multiline TextSet is synchronous even for equal assignments, replacement preserves undo, and queued real user changes survive. ViewportTextInputTests covers routing, scalar limits, history, failures and current native renderer integration."
     }
   ],
   "statusGroups": [
@@ -50,11 +55,11 @@
       "reason": "Native SDL key events still carry Unicode zero. Complete committed strings and IME composition reach focused Controls separately under ADR 0038; per-key Unicode attribution needs a native source that identifies the producing key without guessing from later SDL text events."
     },
     {
-      "state": "Blocked",
+      "state": "Implemented",
       "godot": [
         "Viewport::method:push_text_input(String:)"
       ],
-      "reason": "The pinned method calls a focused editor-specific _set_text path, or its embedded subwindow equivalent. Native committed-text delivery does not provide that programmatic editor replacement contract; it requires a typed text-control owner and embedded subwindow focus routing."
+      "reason": "ADR 0038 and ADR 0004: typed owner-thread full-text replacement uses the focused LineEdit/TextEdit/CodeEdit Text setter. Embedded-window focus forwards recursively, native windows and direct SubViewports keep independent GUI focus, and a focused SubViewportContainer does not forward. Paused, read-only and GUI-input-disabled editors remain authorable. Null/disposed/off-owner/capture guards execute. TextChanged and Control.TextInput are suppressed; multiline TextSet is synchronous even for equal assignments, replacement preserves undo, and queued real user changes survive. ViewportTextInputTests covers routing, scalar limits, history, failures and current native renderer integration."
     }
   ]
 }

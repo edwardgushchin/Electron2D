@@ -2,6 +2,32 @@ namespace Electron2D;
 
 public partial class TextEdit
 {
+    private void ReplaceDocument(string text, bool clearHistory = false)
+    {
+        EnsureTextMutable(); ArgumentNullException.ThrowIfNull(text); text = Normalize(text);
+        CancelIME(); EndAction(); _draggingCursor = _draggingMinimap = _dragAttempt = false;
+        _carets.RemoveRange(1, _carets.Count - 1); _carets[0] = new();
+        BeginComplexOperation(); var settingText = _settingText; _settingText = true;
+        List<Exception>? errors = null;
+        try
+        {
+            Replace(Vector2i.Zero, new(_lines[^1].Scalars, _lines.Count - 1), text);
+            _carets[0] = new(); _scrollHorizontal = 0; _scrollVertical = _verticalTarget = 0; _horizontalTarget = 0;
+            Changed(0, _lines.Count - 1, false);
+        }
+        finally
+        {
+            _settingText = settingText;
+            try { EndComplexOperation(); } catch (Exception error) { CollectException(ref errors, error); }
+        }
+        if (!IsDisposed)
+        {
+            if (clearHistory) ClearUndoHistory();
+            try { BeginEventEmission(TextSet)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        }
+        ThrowCollected("TextEdit replacement callbacks failed.", errors);
+    }
+
     // ponytail: cold undo snapshots cost O(document size); edit deltas replace them when large-document editing needs a tighter ceiling.
     private History Snapshot() => new(_lines.Select(l => l.Text).ToArray(), _carets.Select(c => c.Copy()).ToArray(), _version, _lines.Select(l => l.Gutters.Select((cell, index) => (_gutters[index], cell.Copy())).ToArray()).ToArray(), _lines.Select(l => l.Background).ToArray());
     private void SetLines(string[] text)
@@ -86,8 +112,9 @@ public partial class TextEdit
         finally { EndMulticaretEdit(); EndComplexOperation(); }
         AdjustViewportToCaret(); ResetBlink();
     }
-    /// <summary>Clears text, secondary carets and undo history.</summary>
-    public void Clear() { EnsureTextMutable(); Text = ""; RemoveSecondaryCarets(); ClearUndoHistory(); }
+    /// <summary>Clears text and secondary carets, retaining an undo operation for editable documents.</summary>
+    /// <remarks>Read-only documents clear their history. TextSet is synchronous; TextChanged is suppressed.</remarks>
+    public void Clear() => ReplaceDocument("", clearHistory: !_editable);
     /// <summary>Starts a nested group of edits represented by one undo step.</summary>
     public void BeginComplexOperation() { EnsureTextMutable(); if (_complex++ == 0) StartEdit(); }
     /// <summary>Ends one nested undo group.</summary>

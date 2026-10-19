@@ -2,6 +2,18 @@ namespace Electron2D;
 
 public sealed partial class SceneTree
 {
+    internal void ReplaceFocusedText(Viewport viewport, string text)
+    {
+        EnsureOwnerThread(); EnsureAcceptingWork();
+        while (_embeddedFocus.GetValueOrDefault(viewport) is { IsDisposed: false, Visible: true } child)
+            viewport = child;
+        switch (GetGUIFocusOwner(viewport))
+        {
+            case LineEdit line: line.Text = text; break;
+            case TextEdit document: document.Text = text; break;
+        }
+    }
+
     internal void DispatchCommittedText(Viewport viewport, string text)
     {
         using var scope = SelectGUI(viewport);

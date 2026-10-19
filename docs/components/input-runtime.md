@@ -20,6 +20,8 @@ Native text now follows a separate owner-thread route from key and action events
 
 The public `InputMap.LoadFromProjectSettings()` reads the process registry; the isolated registry overload uses the same candidate preparation. Active typed feature overrides, all five bindable event families and built-in UI defaults are included. A malformed later binding, unidentified key, unsupported version or 33rd serialized record fails before the live map changes; a successful swap invalidates old pressed contributions before `ProjectSettingsLoaded`.
 
+Viewport.PushTextInput is a separate owner-thread authoring operation: it replaces the focused editor text without parsing an InputEvent or delivering a native text commit. It respects focused embedded-window priority and independent native/SubViewport focus. It does not gate on GUI input or processing policy, and does not change global Input state.
+
 ## Owned types
 
 `Input`, `InputMap`, `JoypadInfo`, `InputActionSettings`, `InputBindingSettings`, `InputBindingKind`, `InputEvent`, `InputEventAction`, `InputEventFromWindow`, `InputEventWithModifiers`, `InputEventKey`, `InputEventMouse`, `InputEventMouseButton`, `InputEventMouseMotion`, `InputEventJoypadButton`, `InputEventJoypadMotion`, `InputEventScreenTouch`, `InputEventScreenDrag`, `InputEventGesture`, `InputEventMagnifyGesture`, `InputEventPanGesture`, `DragPayload`, `DragPayload<T>`, `Key`, `KeyModifierMask`, `KeyLocation`, `MouseButton`, `MouseButtonMask`, `JoyAxis`, and `JoyButton`.

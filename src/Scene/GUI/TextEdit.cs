@@ -107,7 +107,7 @@ public partial class TextEdit : Control
     private readonly Action<Resource> _resourceChanged;
     private readonly Action<ElectronObject> _resourceDisposed;
     private readonly Action _emitChanges;
-    private bool _changeQueued, _pendingTextChanged, _pendingTextSet, _pendingCaret;
+    private bool _changeQueued, _pendingTextChanged, _pendingCaret, _settingText;
     private int _pendingFrom = int.MaxValue, _pendingTo = -1;
     private readonly record struct VisualLine(int Line, int Wrap, float Y, float Height);
     private sealed record History(string[] Lines, Caret[] Carets, int Version, (Gutter Identity, GutterCell Cell)[][] Gutters, Color[] Backgrounds);
@@ -123,16 +123,14 @@ public partial class TextEdit : Control
         _hBar.ValueChanged += value => { if (!_building) { _scrollHorizontal = (int)value; _horizontalTarget = (float)value; QueueRedraw(); } };
         _menu.IDPressed += value => MenuOption((TextMenuAction)value); PrepareMenu(); _history.Add(Snapshot());
     }
-    /// <summary>Gets or replaces the document's LF-normalized text, clearing history and secondary carets.</summary>
+    /// <summary>Gets or replaces the document's LF-normalized text as one undo operation, resetting carets and selection.</summary>
     /// <value>Empty initially; the document always retains one logical line.</value>
+    /// <remarks>Replacement emits TextSet synchronously, including equal assignments, without adding TextChanged.
+    /// Previously queued user-change notifications remain queued. Read-only documents remain writable programmatically.</remarks>
     public string Text
     {
         get { CheckTextEdit(); return string.Join('\n', _lines.Select(l => l.Text)); }
-        set
-        {
-            EnsureTextMutable(); ArgumentNullException.ThrowIfNull(value); var normalized = Normalize(value); if (normalized == Text) return;
-            CancelIME(); _draggingCursor = _draggingMinimap = _dragAttempt = false; _operationBefore = null; _action = EditAction.None; _complex = _multiEdit = 0; SetLines(normalized.Split('\n')); _carets.Clear(); _carets.Add(new()); _version = ++_nextVersion; _savedVersion = 0; _scrollHorizontal = 0; _scrollVertical = _verticalTarget = 0; _horizontalTarget = 0; _history.Clear(); _historyPosition = 0; _history.Add(Snapshot()); _pendingTextSet = true; Changed(0, _lines.Count - 1, true);
-        }
+        set => ReplaceDocument(value);
     }
     /// <summary>Gets or sets a borrowed highlighter dedicated to this editor.</summary><value>Null initially.</value>
     public SyntaxHighlighter? SyntaxHighlighter
@@ -150,7 +148,7 @@ public partial class TextEdit : Control
     }
     /// <summary>Occurs after a coalesced change to document content.</summary>
     public event Action? TextChanged;
-    /// <summary>Occurs after replacing the complete document through Text.</summary>
+    /// <summary>Occurs synchronously after replacing the complete document through Text or Clear, including equal assignments.</summary>
     public event Action? TextSet;
     /// <summary>Occurs after caret/selection positions change.</summary>
     public event Action? CaretChanged;
@@ -168,14 +166,13 @@ public partial class TextEdit : Control
     private void ResourceChanged(Resource _) { if (!IsDisposed) Interlocked.Exchange(ref _resourcePending, 1); }
     private void ResourceDisposed(ElectronObject resource) => ResourceChanged((Resource)resource);
     private void Changed(int from, int to, bool text)
-    { InvalidateTextLayout(); if (text) { _pendingTextChanged = true; _pendingFrom = Math.Min(_pendingFrom, from); _pendingTo = Math.Max(_pendingTo, to); } _pendingCaret = true; QueueChanges(); }
+    { InvalidateTextLayout(); if (text) { if (!_settingText) _pendingTextChanged = true; _pendingFrom = Math.Min(_pendingFrom, from); _pendingTo = Math.Max(_pendingTo, to); } _pendingCaret = true; QueueChanges(); }
     private void QueueChanges() { if (_complex > 0 || _multiEdit > 0 || _operationBefore != null || _changeQueued) return; _changeQueued = true; if (Tree is { IsClosing: false } tree) tree.Defer(_emitChanges); else if (Tree is null) EmitChanges(); }
     private void EmitChanges()
     {
-        _changeQueued = false; if (IsDisposed || _disposing) return; var textSet = _pendingTextSet; var changed = _pendingTextChanged; var caret = _pendingCaret; var from = _pendingFrom; var to = _pendingTo;
-        _pendingTextSet = _pendingTextChanged = _pendingCaret = false; _pendingFrom = int.MaxValue; _pendingTo = -1; List<Exception>? errors = null;
+        _changeQueued = false; if (IsDisposed || _disposing) return; var changed = _pendingTextChanged; var caret = _pendingCaret; var from = _pendingFrom; var to = _pendingTo;
+        _pendingTextChanged = _pendingCaret = false; _pendingFrom = int.MaxValue; _pendingTo = -1; List<Exception>? errors = null;
         try { if (from != int.MaxValue) BeginEventEmission(LinesEditedFrom)?.Invoke(from, to); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!IsDisposed && textSet) BeginEventEmission(TextSet)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         try { if (!IsDisposed && changed) BeginEventEmission(TextChanged)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         try { if (!IsDisposed && caret) BeginEventEmission(CaretChanged)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("TextEdit change callbacks failed.", errors);

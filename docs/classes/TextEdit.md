@@ -1,6 +1,6 @@
 # TextEdit
 
-Last updated: 2026-10-13
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.TextEdit`. **Source:** [source](../../src/Scene/GUI/TextEdit.cs). **Component:** [Multiline editing](../components/multiline-editing.md).
 
@@ -10,9 +10,11 @@ A multiline Unicode editor using logical line indices and Unicode scalar columns
 
 Text shaping uses the existing font, Unicode/BIDI, grapheme and paragraph layout. Wrapped rows, gutters, pixel/column queries, caret viewport fitting and both owned scrollbars consume that layout. Read-only mode suppresses user mutation while allowing typed programmatic authoring and selection/copy. Context menus use the shared TextMenuAction identity, with direction and Unicode submenus. Pointer, keyboard, committed strings and IME preedit enter through ordinary Control/Viewport routing. Font/texture invalidation is polled on the owner; required child disposal is guarded. Themes include focus, normal/read-only, outlines, caret/selection/search, wrap margin, font and space/tab markers.
 
-Assigning SyntaxHighlighter borrows one dedicated resource. Sharing it between live editors is rejected. Packed scenes restore an independent owned duplicate for each editor; configuration persists but carets, selections, gutters, history, callbacks and platform composition are runtime state. Source fonts and gutter icons are borrowed. Text/line/caret notifications coalesce on an attached scene; observers see committed history before notification. Editing, shaping, parsing and packing are cold operations. Prepared recording reuses scalar color and selection buffers.
+Assigning SyntaxHighlighter borrows one dedicated resource. Sharing it between live editors is rejected. Packed scenes restore an independent owned duplicate for each editor; configuration persists but carets, selections, gutters, history, callbacks and platform composition are runtime state. Source fonts and gutter icons are borrowed. User text/line/caret notifications coalesce on an attached scene; TextSet is synchronous. Observers see completed edits/history before notification. Editing, shaping, parsing and packing are cold operations. Prepared recording reuses scalar color and selection buffers.
 
 Undo snapshots cost O(document size) per cold edit and are limited by TextEditUndoStackMaxSize; edit deltas would reduce the large-document ceiling. Minimap drawing is a scaled scalar overview, not font rasterization at tiny sizes. Native virtual keyboard, symbol picker, semantic services and editor authoring retain exact dependency gates in coverage. Tests exercise current Linux desktop behavior; physical IME and other targets are not inferred from those tests.
+
+Complete replacement through Text or Viewport.PushTextInput normalizes CR/LF, removes secondary carets and selection, resets the primary caret and retains one undo operation. It raises TextSet synchronously even for equal text and suppresses TextChanged from the replacement. Existing pending user-edit notifications remain pending. Runtime undo state is not serialized; restoring stored Text executes the same construction replacement.
 
 ## Members
 
@@ -25,7 +27,7 @@ Undo snapshots cost O(document size) per cold edit and are limited by TextEditUn
 | `public event System.Action GutterRemoved` | Occurs after a gutter is removed. |
 | `public event System.Action<System.Int32, System.Int32> LinesEditedFrom` | Reports an inclusive affected logical line range. |
 | `public event System.Action TextChanged` | Occurs after a coalesced change to document content. |
-| `public event System.Action TextSet` | Occurs after replacing the complete document through Text. |
+| `public event System.Action TextSet` | Occurs synchronously after replacing the complete document through Text or Clear, including equal assignments. |
 | `public System.Int32 AddCaret(System.Int32 line, System.Int32 column)` | Adds a distinct caret at a logical/scalar position. |
 | `public System.Void AddCaretAtCarets(System.Boolean below)` | Adds a caret on the adjacent visible row for each current caret. |
 | `public System.Void AddGutter(System.Int32 at = -1)` | Inserts a gutter and an empty cell on every line. |
@@ -37,7 +39,7 @@ Undo snapshots cost O(document size) per cold edit and are limited by TextEditUn
 | `public System.Void BeginMulticaretEdit()` | Starts a nested multicaret operation, deferring overlap merging. |
 | `public System.Void CancelIME()` | Discards uncommitted composition. |
 | `public System.Void CenterViewportToCaret(System.Int32 caretIndex = 0)` | Centers the viewport vertically on a caret. |
-| `public System.Void Clear()` | Clears text, secondary carets and undo history. |
+| `public System.Void Clear()` | Clears text and secondary carets, retaining an undo operation for editable documents. |
 | `public System.Void ClearUndoHistory()` | Clears undo/redo history while retaining current text. |
 | `public System.Void CollapseCarets(System.Int32 fromLine, System.Int32 fromColumn, System.Int32 toLine, System.Int32 toColumn, System.Boolean inclusive = false)` | Moves carets within an ordered interval to its start, retaining affected selection anchors. |
 | `public System.Void Copy(System.Int32 caretIndex = -1)` | Copies the selections, or the current logical line when empty-selection copying is enabled. |
@@ -234,7 +236,7 @@ Undo snapshots cost O(document size) per cold edit and are limited by TextEditUn
 | `public System.String[] StructuredTextBIDIOverrideOptions { get; set; }` | Gets or sets structured text bidi override options for the multiline editor. |
 | `public Electron2D.SyntaxHighlighter SyntaxHighlighter { get; set; }` | Gets or sets a borrowed highlighter dedicated to this editor. |
 | `public System.Boolean TabInputMode { get; set; }` | Gets or sets tab input mode for the multiline editor. |
-| `public System.String Text { get; set; }` | Gets or replaces the document's LF-normalized text, clearing history and secondary carets. |
+| `public System.String Text { get; set; }` | Gets or replaces the document's LF-normalized text as one undo operation, resetting carets and selection. |
 | `public Electron2D.TextDirection TextDirection { get; set; }` | Gets or sets text direction for the multiline editor. |
 | `public System.Boolean UseCustomWordSeparators { get; set; }` | Gets or sets use custom word separators for the multiline editor. |
 | `public System.Boolean UseDefaultWordSeparators { get; set; }` | Gets or sets use default word separators for the multiline editor. |

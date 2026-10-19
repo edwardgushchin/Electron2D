@@ -51,6 +51,10 @@ Apple library references now carry static FreeType/HarfBuzz/ICU archives and exe
 
 A fresh self-contained Linux x64 former host-example publish passes native and license audits: 67 ELF payloads, 52 byte-identical required notices and exactly nine private text-boundary C exports. The private library under `runtimes/linux-x64/native` has its own SONAME and no dynamic ICU dependency. Offline import checks verify the pinned Unicode closure, case tables and ICU source/data hashes. Cross-RID Windows packaging omits the Linux-only boundary library and build target; this does not establish Windows text execution.
 
+## Programmatic focused text
+
+Viewport.PushTextInput replaces a focused LineEdit, TextEdit or CodeEdit through its Text contract, separately from committed input and IME. Focused embedded windows forward recursively; native windows and direct SubViewports retain their own focus. Replacement is available while paused/read-only/input-disabled. It suppresses TextChanged and Control.TextInput; multiline editors still emit synchronous TextSet and retain undo history. Editing remains a cold allocation-capable operation.
+
 ## Single-line editing
 
 [LineEdit](../classes/LineEdit.md) uses complete shaped-line caret/selection geometry, scalar editing, grapheme/word navigation, native IME/commits, history, typed command dispatch, clipboard and text dragging. Nonprinting control display emits clipped hexadecimal placeholders. Local text clipping also applies to glyph rasters and missing-glyph geometry; other consumers keep their previous unclipped path. Caret geometry is prepared once per layout, with linear hit testing and reused buffers. The LineEdit class page records the exact remaining popup, virtual-keyboard and picker prerequisites and test boundaries.

@@ -2598,7 +2598,7 @@
     {
       "godot": "TextEdit::method:clear()",
       "electron2d": "method:Electron2D.TextEdit.Clear()",
-      "reason": "Executable multiline editing/highlighting slice under ADRs 0004/0038/0046/0051/0083: scalar document edits, multicaret selections, grouped/versioned undo, Unicode shaping/wrapping, gutters, scrollbars/minimap, native committed/preedit input, typed clipboard/commands, highlighter transitions/regions and independent persisted scene instances. TextEditTests exercises boundary/history/observer/resource/storage/input paths and current Linux GPU/compatibility rendered pixels; 64 prepared selection/render frames allocate zero managed bytes. Cold document snapshots/parsing and native event copies are outside that interval. Physical IME, native semantic/virtual keyboard, other-target and editor-authoring acceptance retain their own gates."
+      "reason": "Executable multiline editing/highlighting slice under ADRs 0004/0038/0046/0051/0083: scalar document edits, multicaret selections, grouped/versioned undo, Unicode shaping/wrapping, gutters, scrollbars/minimap, native committed/preedit input, typed clipboard/commands, highlighter transitions/regions and independent persisted scene instances. TextEditTests exercises boundary/history/observer/resource/storage/input paths and current Linux GPU/compatibility rendered pixels; 64 prepared selection/render frames allocate zero managed bytes. Cold document snapshots/parsing and native event copies are outside that interval. Physical IME, native semantic/virtual keyboard, other-target and editor-authoring acceptance retain their own gates. ViewportTextInputTests verifies full replacement as one undo operation, synchronous TextSet for equal and different text, suppression of replacement TextChanged with preservation of pending user changes, and editable/read-only Clear history policy."
     },
     {
       "godot": "TextEdit::method:clear_undo_history()",
@@ -3503,7 +3503,7 @@
     {
       "godot": "TextEdit::property:text",
       "electron2d": "property:Electron2D.TextEdit.Text()",
-      "reason": "Executable multiline editing/highlighting slice under ADRs 0004/0038/0046/0051/0083: scalar document edits, multicaret selections, grouped/versioned undo, Unicode shaping/wrapping, gutters, scrollbars/minimap, native committed/preedit input, typed clipboard/commands, highlighter transitions/regions and independent persisted scene instances. TextEditTests exercises boundary/history/observer/resource/storage/input paths and current Linux GPU/compatibility rendered pixels; 64 prepared selection/render frames allocate zero managed bytes. Cold document snapshots/parsing and native event copies are outside that interval. Physical IME, native semantic/virtual keyboard, other-target and editor-authoring acceptance retain their own gates."
+      "reason": "Executable multiline editing/highlighting slice under ADRs 0004/0038/0046/0051/0083: scalar document edits, multicaret selections, grouped/versioned undo, Unicode shaping/wrapping, gutters, scrollbars/minimap, native committed/preedit input, typed clipboard/commands, highlighter transitions/regions and independent persisted scene instances. TextEditTests exercises boundary/history/observer/resource/storage/input paths and current Linux GPU/compatibility rendered pixels; 64 prepared selection/render frames allocate zero managed bytes. Cold document snapshots/parsing and native event copies are outside that interval. Physical IME, native semantic/virtual keyboard, other-target and editor-authoring acceptance retain their own gates. ViewportTextInputTests verifies full replacement as one undo operation, synchronous TextSet for equal and different text, suppression of replacement TextChanged with preservation of pending user changes, and editable/read-only Clear history policy."
     },
     {
       "godot": "TextEdit::property:text_direction",
@@ -3553,12 +3553,12 @@
     {
       "godot": "TextEdit::signal:text_changed()",
       "electron2d": "event:Electron2D.TextEdit.TextChanged()",
-      "reason": "Executable multiline editing/highlighting slice under ADRs 0004/0038/0046/0051/0083: scalar document edits, multicaret selections, grouped/versioned undo, Unicode shaping/wrapping, gutters, scrollbars/minimap, native committed/preedit input, typed clipboard/commands, highlighter transitions/regions and independent persisted scene instances. TextEditTests exercises boundary/history/observer/resource/storage/input paths and current Linux GPU/compatibility rendered pixels; 64 prepared selection/render frames allocate zero managed bytes. Cold document snapshots/parsing and native event copies are outside that interval. Physical IME, native semantic/virtual keyboard, other-target and editor-authoring acceptance retain their own gates."
+      "reason": "Executable multiline editing/highlighting slice under ADRs 0004/0038/0046/0051/0083: scalar document edits, multicaret selections, grouped/versioned undo, Unicode shaping/wrapping, gutters, scrollbars/minimap, native committed/preedit input, typed clipboard/commands, highlighter transitions/regions and independent persisted scene instances. TextEditTests exercises boundary/history/observer/resource/storage/input paths and current Linux GPU/compatibility rendered pixels; 64 prepared selection/render frames allocate zero managed bytes. Cold document snapshots/parsing and native event copies are outside that interval. Physical IME, native semantic/virtual keyboard, other-target and editor-authoring acceptance retain their own gates. ViewportTextInputTests verifies full replacement as one undo operation, synchronous TextSet for equal and different text, suppression of replacement TextChanged with preservation of pending user changes, and editable/read-only Clear history policy."
     },
     {
       "godot": "TextEdit::signal:text_set()",
       "electron2d": "event:Electron2D.TextEdit.TextSet()",
-      "reason": "Executable multiline editing/highlighting slice under ADRs 0004/0038/0046/0051/0083: scalar document edits, multicaret selections, grouped/versioned undo, Unicode shaping/wrapping, gutters, scrollbars/minimap, native committed/preedit input, typed clipboard/commands, highlighter transitions/regions and independent persisted scene instances. TextEditTests exercises boundary/history/observer/resource/storage/input paths and current Linux GPU/compatibility rendered pixels; 64 prepared selection/render frames allocate zero managed bytes. Cold document snapshots/parsing and native event copies are outside that interval. Physical IME, native semantic/virtual keyboard, other-target and editor-authoring acceptance retain their own gates."
+      "reason": "Executable multiline editing/highlighting slice under ADRs 0004/0038/0046/0051/0083: scalar document edits, multicaret selections, grouped/versioned undo, Unicode shaping/wrapping, gutters, scrollbars/minimap, native committed/preedit input, typed clipboard/commands, highlighter transitions/regions and independent persisted scene instances. TextEditTests exercises boundary/history/observer/resource/storage/input paths and current Linux GPU/compatibility rendered pixels; 64 prepared selection/render frames allocate zero managed bytes. Cold document snapshots/parsing and native event copies are outside that interval. Physical IME, native semantic/virtual keyboard, other-target and editor-authoring acceptance retain their own gates. ViewportTextInputTests verifies full replacement as one undo operation, synchronous TextSet for equal and different text, suppression of replacement TextChanged with preservation of pending user changes, and editable/read-only Clear history policy."
     },
     {
       "godot": "ProjectSettings::property:input/ui_text_newline",
@@ -5005,7 +5005,6 @@
         "TextEdit::method:begin_multicaret_edit()",
         "TextEdit::method:cancel_ime()",
         "TextEdit::method:center_viewport_to_caret(int:)",
-        "TextEdit::method:clear()",
         "TextEdit::method:clear_undo_history()",
         "TextEdit::method:collapse_carets(int:,int:,int:,int:,bool:)",
         "TextEdit::method:copy(int:)",
@@ -5186,7 +5185,6 @@
         "TextEdit::property:structured_text_bidi_override_options",
         "TextEdit::property:syntax_highlighter",
         "TextEdit::property:tab_input_mode",
-        "TextEdit::property:text",
         "TextEdit::property:text_direction",
         "TextEdit::property:use_custom_word_separators",
         "TextEdit::property:use_default_word_separators",
@@ -5196,8 +5194,6 @@
         "TextEdit::signal:gutter_clicked(int:,int:)",
         "TextEdit::signal:gutter_removed()",
         "TextEdit::signal:lines_edited_from(int:,int:)",
-        "TextEdit::signal:text_changed()",
-        "TextEdit::signal:text_set()",
         "ProjectSettings::property:input/ui_text_newline",
         "ProjectSettings::property:input/ui_text_caret_document_start",
         "ProjectSettings::property:input/ui_text_caret_document_end",
@@ -5423,6 +5419,16 @@
       ],
       "state": "Excluded",
       "reason": "ADR 0004: pinned TextServer.xml marks BREAK_TRIM_EDGE_SPACES deprecated: Use [code]BREAK_TRIM_START_EDGE_SPACES | BREAK_TRIM_END_EDGE_SPACES[/code] instead. No public alias or inert numeric-bit behavior is retained."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "TextEdit::property:text",
+        "TextEdit::method:clear()",
+        "TextEdit::signal:text_set()",
+        "TextEdit::signal:text_changed()"
+      ],
+      "reason": "ADR 0004/0038: Text and Viewport.PushTextInput replace the entire normalized document as one undo operation, reset carets/selection, and emit TextSet synchronously even for equal assignments. Replacement does not add TextChanged and preserves queued user-edit notifications. Editable Clear is undoable; read-only Clear retires history. ViewportTextInputTests covers grouped/disabled history, observer failure after commit, length-rejection finalization in LineEdit, independent viewport/window focus and current native renderer integration; existing TextEdit/CodeEdit profiles retain fresh-process storage and prepared rendering checks. Editing/history is cold; physical input and foreign-platform acceptance remain separate."
     }
   ],
   "extras": [

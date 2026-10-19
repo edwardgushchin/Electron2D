@@ -34,6 +34,8 @@ Production types are [`Input`](../classes/Input.md), [`InputMap`](../classes/Inp
 - Native committed text and IME composition: DisplayServer supplies the independent full-string/preedit stream; Window bridges it to root SceneTree; focused Control virtual hooks/events consume it after scene-wide composition notification, without altering key/action state.
 - `Control`/`Viewport` GUI drag: typed payload production/acceptance/delivery and forwarding, threshold and forced starts, temporary preview ownership, cancel/drop result, drag notifications and native cursor feedback in the root viewport.
 
+Viewport.PushTextInput supplies programmatic complete-text replacement independently of the native committed stream. Focused embedded windows take priority; direct native windows and SubViewports use their own focus. The receiving editor applies its Text rules without TextChanged or Control.TextInput; TextEdit.TextSet remains synchronous. Paused, read-only and GUI-input-disabled scenes remain authorable.
+
 ## Dependency direction
 
 Input depends on Core object/resource lifecycle, math and typed ProjectSettings snapshots. `Engine` registers the two process singletons and `MainLoop` owns transition-window completion. Scene consumes Input events for node delivery. Pointer controls query `DisplayServer` and use its owner-thread native operations; Input stores the default cursor policy while DisplayServer owns the current native cursor. Input has no direct SDL, renderer, audio, physics, networking, or editor dependency.

@@ -5,7 +5,8 @@ public partial class LineEdit
     private void AssignText(string text)
     {
         _deletionVersion++; _deletionPending = false; _text = ""; _caret = 0; _scroll = 0; _ime = ""; Deselect(); _history.Clear(); _history.Add(new("", 0, 0)); _historyPosition = 0;
-        InsertTextAtCaret(text); if (_text.Length > 0) Remember(); _caret = 0; _scroll = 0; Invalidate();
+        try { InsertTextAtCaret(text); }
+        finally { if (!IsDisposed) { if (_text.Length > 0) Remember(); _caret = 0; _scroll = 0; Invalidate(); } }
     }
     internal void SetTextPreservingSelection(string text)
     {

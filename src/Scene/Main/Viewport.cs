@@ -82,6 +82,24 @@ public abstract partial class Viewport : Node
         var tree = GetInputTree(); tree.DispatchViewportInput(this, inputEvent, inLocalCoordinates);
     }
 
+    /// <summary>Replaces the complete text of this viewport's focused text editor.</summary>
+    /// <param name="text">The replacement text, including an empty string to clear the editor.</param>
+    /// <remarks>Focused embedded windows receive the replacement first. LineEdit, TextEdit and CodeEdit use
+    /// their Text setter, including length, normalization, caret and history rules. This operation does not
+    /// insert a native text commit, raise Control.TextInput, update Input state or emit TextChanged.
+    /// TextEdit still emits TextSet. It works while paused or GUI input is disabled. A detached viewport,
+    /// an absent focus owner or a focused control without an editor text contract is unchanged.
+    /// SubViewportContainer does not forward this call: call the child viewport directly.</remarks>
+    /// <exception cref="ArgumentNullException">The replacement is null.</exception>
+    /// <exception cref="InvalidOperationException">The attached scene is accessed off-owner or captured, or editor mutation is unavailable.</exception>
+    /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
+    /// <exception cref="AggregateException">Multiline replacement observers fail after the text commits.</exception>
+    public void PushTextInput(string text)
+    {
+        EnsureMutable(); ArgumentNullException.ThrowIfNull(text);
+        Tree?.ReplaceFocusedText(this, text);
+    }
+
     /// <summary>Refreshes pointer hover and cursor selection through the containing Window.</summary>
     /// <remarks>Uses the current native pointer and a temporary internal mouse-motion event. GUI routing,
     /// embedded windows, nested viewport hit testing and physics hover run normally; user Node input callbacks

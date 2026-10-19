@@ -10,6 +10,12 @@ Last updated: 2026-10-19
 - **Namespace:** `Electron2D`
 - **Declaration:** `public abstract partial class Viewport : Node`
 
+## Focused text replacement
+
+`public void PushTextInput(string text)` replaces the entire text of the focused LineEdit, TextEdit or CodeEdit. Focused embedded windows take precedence recursively; native windows keep independent GUI focus and are addressed through their own viewport. Direct SubViewport calls use that viewport’s focus. A focused SubViewportContainer does not forward this operation.
+
+The call uses the editor’s Text contract: LineEdit applies its scalar length limit and resets history; TextEdit/CodeEdit normalize CR/LF, remove secondary carets and selections, reset the primary caret and preserve replacement as one undo operation. TextChanged and Control.TextInput are silent; TextEdit.TextSet still runs synchronously, including equal assignments. The operation remains available while paused, read-only or GUIDisableInput is enabled, and does not change global Input state. No eligible editor or a detached viewport is unchanged. Null, disposed, off-owner and captured mutation fail explicitly.
+
 ## HDR canvas rendering
 
 `public bool UseHDR2D { get; set; }` enables linear RGBA half-float targets, default false. An unassigned root uses `ProjectSettings.HDR2D` at startup; offscreen authoring remains independent. Equal assignments republish renderer-session overrides. Changes notify texture views after state publication, preserve the logical RID and replace native targets on the next submission; observer failures aggregate without rollback. GetTexture().GetImage() returns completed linear `Rgbah` pixels while the root screen is SDR encoded. Compatibility and unsupported GPU formats/sample counts reject enabled HDR. See [color roles, storage, capture and executable verification](../components/hdr-canvas.md).

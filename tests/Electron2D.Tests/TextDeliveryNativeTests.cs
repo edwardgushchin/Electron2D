@@ -27,6 +27,8 @@ internal static partial class RenderingRuntimeTests
 
         protected override void OnIMECompositionChanged(string text, Vector2i selection)
         {
+            // Native activation/focus changes may also send an empty composition reset.
+            if (text.Length == 0) { Check(selection == Vector2i.Zero, "An empty native composition has no selection."); return; }
             Preedit = (text, selection); Order.Add("composition:" + text);
         }
 
@@ -34,6 +36,7 @@ internal static partial class RenderingRuntimeTests
         {
             base.OnNotification(what);
             if (what != NotificationOsImeUpdate) return;
+            if (DisplayServer.IMEGetText().Length == 0) { Check(DisplayServer.IMEGetSelection() == Vector2i.Zero, "An empty native composition is committed before notification."); return; }
             Check(DisplayServer.IMEGetText() == "a🙂" && DisplayServer.IMEGetSelection() == new Vector2i(1, 1),
                 "Native composition state is committed before the scene-wide notification.");
             Order.Add("notify");

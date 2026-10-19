@@ -1,10 +1,12 @@
 # CodeEdit
 
-Last updated: 2026-10-07
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.CodeEdit`. **Source:** [source](../../src/Scene/GUI/CodeEdit.cs). **Component:** [Code authoring](../components/code-authoring.md).
 
 **Inherits:** [TextEdit](TextEdit.md).
+
+Viewport.PushTextInput uses the inherited Text replacement path. TextSet clears folds, bookmarks, execution/breakpoint markers and completion state before the call returns; it does not run paired-character insertion, automatic indentation or completion requests. Replacement remains undoable through the common document history.
 
 ## Description
 

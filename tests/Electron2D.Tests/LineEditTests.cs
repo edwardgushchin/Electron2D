@@ -151,7 +151,9 @@ internal static class LineEditTests
                 Check(field.Text == "native😀", "Native producer committed string.");
                 var handle = SDL.GetWindows(out var count)![0]; Check(SDL.GetTextInputArea(handle, out var area, out var cursor) && SDL.TextInputActive(handle), "Active native IME area.");
                 var height = field.GetThemeFont("font")!.GetHeight(field.GetThemeFontSize("font_size")); var expected = field.GetViewport()!.GetScreenTransform() * field.GetGlobalTransformWithCanvas() * new Vector2(0, (field.Size.Y + height) / 2);
-                Check(area.Y == (int)expected.Y && area.X >= 8, "Embedded IME area uses containing-window coordinates.");
+                var density = SDL.GetCurrentVideoDriver() == "wayland" ? SDL.GetWindowPixelDensity(handle) : 1f;
+                var expectedY = (int)Math.Round((int)expected.Y / (double)density, MidpointRounding.AwayFromZero);
+                Check(area.Y == expectedY && area.X >= (int)Math.Round(8 / (double)density, MidpointRounding.AwayFromZero), $"Embedded IME area uses containing-window coordinates: actual={area.X},{area.Y}, expectedY={expectedY}, density={density}.");
                 var pointer = System.Runtime.InteropServices.Marshal.StringToCoTaskMemUTF8("中");
                 _pointers.Add(pointer);
                 { var input = new SDL.Event { Edit = new SDL.TextEditingEvent { Type = SDL.EventType.TextEditing, WindowID = _id, Text = pointer, Start = 0, Length = 1 } }; Check(SDL.PushEvent(ref input), "Queue preedit."); }

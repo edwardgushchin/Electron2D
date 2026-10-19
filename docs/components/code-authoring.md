@@ -1,6 +1,8 @@
 # Code authoring
 
-Last updated: 2026-10-07
+Last updated: 2026-10-19
+
+Viewport.PushTextInput replaces the focused CodeEdit document through inherited Text. It preserves literal supplied text instead of running paired input or indentation, retains undo history and executes TextSet cleanup synchronously. Read-only mode suppresses user input while allowing this authoring operation.
 
 [CodeEdit](../classes/CodeEdit.md) connects the existing TextEdit document, highlighter, canvas, theme, InputMap, Timer and typed scene storage into a source-authoring widget. [CodeCompletionOption](../classes/CodeCompletionOption.md) replaces an untyped option dictionary with immutable typed fields and exact generic borrowed values. The complete owning API and inheritance are recorded in [CodeEdit coverage](../coverage/classes/CodeEdit.md); class pages describe the document, delimiter/fold, marker, completion, symbol and stored contracts.
 

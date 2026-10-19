@@ -1,10 +1,12 @@
 # LineEdit
 
-Last updated: 2026-10-13
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public class LineEdit : Control`.
 
 **Inherits:** [Control](Control.md). **Source:** [LineEdit.cs](../../src/Scene/GUI/LineEdit.cs), [editing](../../src/Scene/GUI/LineEdit.Editing.cs), [input](../../src/Scene/GUI/LineEdit.Input.cs), [layout](../../src/Scene/GUI/LineEdit.Layout.cs), [commands](../../src/Scene/GUI/LineEdit.Menu.cs), [storage](../../src/Scene/GUI/LineEdit.Storage.cs).
+
+`Viewport.PushTextInput` uses the same complete replacement contract as Text, including scalar MaxLength rejection, caret/selection reset and fresh undo history. It does not deliver a native commit or emit TextChanged. The focused field remains programmatically writable while read-only or paused.
 
 ## Description
 
