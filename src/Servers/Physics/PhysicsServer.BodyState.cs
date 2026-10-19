@@ -128,6 +128,10 @@ public sealed partial class PhysicsServer
     internal bool BodyGetSleepingCore(RID body) => ForceRuntime(body, writing: false).GetSleeping();
     internal void BodySetCanSleepCore(RID body, bool canSleep) => ForceRuntime(body).SetCanSleep(canSleep);
     internal bool BodyGetCanSleepCore(RID body) => ParameterRuntime(body, writing: false).GetCanSleep();
-    internal void BodySetAxisVelocityCore(RID body, Vector2 axisVelocity) => ForceRuntime(body).SetAxisVelocity(axisVelocity);
+    internal void BodySetAxisVelocityCore(RID body, Vector2 axisVelocity)
+    {
+        PhysicsBodyRuntime.Finite(axisVelocity);
+        ForceRuntime(body).SetAxisVelocity(axisVelocity);
+    }
 
 }

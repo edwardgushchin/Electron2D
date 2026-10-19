@@ -38,6 +38,7 @@ public static partial class BackendChecks
         RunLifecycle();
         StateChecks();
         RunBodyStates();
+        RunAxisVelocity();
         RunForces();
         RunExceptions();
         RunExceptionTransactions();

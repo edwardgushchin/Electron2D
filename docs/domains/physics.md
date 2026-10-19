@@ -1598,3 +1598,12 @@ lanes and 2048 complete measured diagnostic frames at strict zero owner/all-thre
 managed bytes. Built-in no-device/software-GPU and real-window renderer companions
 complete 43 processes. These three operation rows close; complete numerical,
 network/native/platform and hardware performance gates remain open.
+
+
+[Complete axis velocity](../components/physics-registered-adapter.md#complete-axis-velocity-operation)
+shares scene/server current-motion projection, preserving unsynchronized perpendicular
+impulses and inactive native future configuration. Exact configured values, bounded
+live error, nine body owners/four direct modes, publication recovery and 1536 complete
+warmed frames at 0/0 owner/all-thread managed bytes pass in the 58-profile
+JIT/NativeAOT CPU/software-GPU/registered cohort. This closes the extension axis
+operation; broader numerical, networking and hardware acceptance remain open.

@@ -277,3 +277,12 @@ including actual scene/raw contacts, terminal rejection/cleanup, owner/separate
 execution, validated count bounds and rendered marker consumers. Preparation errors
 preserve prior implementation policy; tree-wide rollback attempts every request and
 retains original errors. This closes those operations, not the whole numerical family.
+
+
+[Complete axis velocity](../components/physics-registered-adapter.md#complete-axis-velocity-operation)
+shares scene/server current-motion projection, preserving unsynchronized perpendicular
+impulses and inactive native future configuration. Exact configured values, bounded
+live error, nine body owners/four direct modes, publication recovery and 1536 complete
+warmed frames at 0/0 owner/all-thread managed bytes pass in the 58-profile
+JIT/NativeAOT CPU/software-GPU/registered cohort. This closes the extension axis
+operation; broader numerical, networking and hardware acceptance remain open.

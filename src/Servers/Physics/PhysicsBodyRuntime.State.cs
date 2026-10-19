@@ -57,7 +57,13 @@ internal sealed partial class PhysicsBodyRuntime
         if (Space is null) Wake();
     }
 
-    internal void SetAxisVelocity(Vector2 axisVelocity) => SetLinearVelocity(ProjectAxisVelocity(GetLinearVelocity(), axisVelocity));
+    internal void SetAxisVelocity(Vector2 axisVelocity)
+    {
+        var velocity = Owners.Scene is RigidBody { HasServerMode: false } rigid &&
+            rigid.EffectiveBodyMode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic ?
+            rigid.LinearVelocity : GetLinearVelocity();
+        SetLinearVelocity(ProjectAxisVelocity(velocity, axisVelocity));
+    }
 
     internal static Vector2 ProjectAxisVelocity(Vector2 velocity, Vector2 axisVelocity)
     {

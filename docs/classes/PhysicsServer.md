@@ -1421,3 +1421,12 @@ selected numerical hooks, including the captured solver thread. Existing common
 input guards preserve ordinary owner/failure/lifetime checks; writes remain guarded.
 Readonly profiles match selected preparation and require no live field-state query.
 The public 64-frame edited/acceleration fixture retains strict zero managed bytes.
+
+
+[Complete axis velocity](../components/physics-registered-adapter.md#complete-axis-velocity-operation)
+shares scene/server current-motion projection, preserving unsynchronized perpendicular
+impulses and inactive native future configuration. Exact configured values, bounded
+live error, nine body owners/four direct modes, publication recovery and 1536 complete
+warmed frames at 0/0 owner/all-thread managed bytes pass in the 58-profile
+JIT/NativeAOT CPU/software-GPU/registered cohort. This closes the extension axis
+operation; broader numerical, networking and hardware acceptance remain open.

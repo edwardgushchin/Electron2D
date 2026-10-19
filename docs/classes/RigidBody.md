@@ -205,7 +205,7 @@ Both properties default to zero and replace their stored totals. The three metho
 <a id="setaxisvelocity"></a>
 ### `SetAxisVelocity`
 
-The supplied vector gives both axis direction and replacement speed. The method subtracts the old velocity projection along the normalized axis and adds the supplied vector, preserving perpendicular velocity. A zero vector leaves velocity unchanged; nonfinite inputs or a nonfinite result throw before mutation. Detached bodies store the new velocity; attached calls reach and wake the backend body.
+The supplied vector gives both axis direction and replacement speed. Double normalization subtracts the old projection and adds the supplied vector, preserving perpendicular velocity. Active bodies sample current selected motion, including impulses not yet synchronized to scene properties. Native inactive/frozen/MakeStatic roles preserve retained future velocity. Zero keeps velocity and wakes eligible dynamics, including detached bodies; nonfinite inputs or overflowing results reject before assignment. The scene call shares the server operation and its single recoverable motion publication, without an additional untracked wake. See [the axis operation audit](../components/physics-registered-adapter.md#complete-axis-velocity-operation).
 
 <a id="physicsmaterialoverride"></a>
 ### `PhysicsMaterialOverride`

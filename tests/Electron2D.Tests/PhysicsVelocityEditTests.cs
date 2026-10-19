@@ -44,6 +44,11 @@ internal static class PhysicsVelocityEditTests
             PhysicsServer.BodySetSleeping(body, true); state.AngularVelocity = 0;
             Check(!state.Sleeping, "Explicit zero component wakes after sleep"); Motion(Vector2.Zero, 0);
             state.LinearVelocity = new(7, 9); state.AngularVelocity = 2;
+            if (scene)
+            {
+                rigid.ApplyCentralImpulse(new(0, 4)); rigid.SetAxisVelocity(new(5, 0)); Motion(new(5, 11), 2);
+                state.LinearVelocity = new(7, 9);
+            }
             PhysicsServer.BodySetAxisVelocity(body, new(0, 20)); Motion(new(7, 20), 2);
             if (scene)
             {

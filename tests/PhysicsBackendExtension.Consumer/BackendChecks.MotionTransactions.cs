@@ -230,10 +230,11 @@ public static partial class BackendChecks
                                     Clear(); failures += solver is null ? 0 : 1;
                                     void WriteNative()
                                     {
-                                        if (native is RigidBody rigid && op != 2)
+                                        if (native is RigidBody rigid)
                                         {
                                             if (op == 0) rigid.LinearVelocity = new(7, 8);
                                             else if (op == 1) rigid.AngularVelocity = 3;
+                                            else if (op == 2) rigid.SetAxisVelocity(new(0, 9));
                                             else if (op is 3 or 4) rigid.Sleeping = op == 3; else rigid.CanSleep = op == 5;
                                         }
                                         else if (native is StaticBody surface && stage == 2 && op is 0 or 1)
@@ -383,11 +384,12 @@ public static partial class BackendChecks
             }
             void Write(int i, Mode mode, int op, bool scene, PhysicsDirectBodyState? view = null)
             {
-                if (scene && i is 3 or 4 && op != 2 && (mode is Mode.Rigid or Mode.RigidLinear || op is not (3 or 4)))
+                if (scene && i is 3 or 4 && (mode is Mode.Rigid or Mode.RigidLinear || op is not (3 or 4)))
                 {
                     var rigid = (RigidBody)nodes[i];
                     if (op == 0) rigid.LinearVelocity = new(7, 8);
                     else if (op == 1) rigid.AngularVelocity = mode == Mode.RigidLinear ? 0 : 3;
+                    else if (op == 2) rigid.SetAxisVelocity(new(0, 9));
                     else if (op is 3 or 4) rigid.Sleeping = op == 3; else rigid.CanSleep = op == 5;
                     return;
                 }

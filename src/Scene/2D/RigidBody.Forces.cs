@@ -130,13 +130,15 @@ public partial class RigidBody
 
     /// <summary>Replaces the velocity component along the supplied axis, retaining perpendicular velocity.</summary>
     /// <param name="axisVelocity">An axis whose direction and length give the new component in scene units per second.</param>
-    /// <remarks>A zero vector leaves the velocity unchanged.</remarks>
+    /// <remarks>Active bodies project current selected motion, including impulses not yet synchronized to scene properties.
+    /// Inactive native roles retain their configured future velocity. A zero vector keeps velocity and wakes eligible dynamic bodies.
+    /// Selected publication errors retain the requested velocity for the ordinary motion preparation retry.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">An input or resulting velocity is nonfinite.</exception>
+    /// <exception cref="InvalidOperationException">Attached mutation is off-owner, inside a numerical hook or after world failure.</exception>
     public void SetAxisVelocity(Vector2 axisVelocity)
     {
         EnsureMutable();
-        LinearVelocity = PhysicsBodyRuntime.ProjectAxisVelocity(LinearVelocity, axisVelocity);
-        if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.SetAwake(true);
+        PhysicsServer.BodySetAxisVelocity(GetRID(), axisVelocity);
     }
 
     private void WakeForPersistentForce()

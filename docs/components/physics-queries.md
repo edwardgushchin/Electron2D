@@ -356,3 +356,12 @@ This numerical boundary is present in the pinned reference: [PhysicsServer2DWrap
 Public root/JIT/strict NativeAOT CPU/software-Vulkan/registered ordinary/pool-owner profiles exercise all options and exception operations, complete held results, matching selected owner queries, capture/packing, numeric notification errors and lifetime. Full warmed moving physics/query frames include repeated metadata and exception edits at a strict zero owner/all-thread managed budget. Native Wayland GPU/compatibility windows exercise worker observations and option edits, owner queries and hit/miss diagnostic pixels. Artifacts: `bin/physics-group-casts/2026-10-18/validation.json`. Native allocation totals, target hardware performance and foreign platforms retain their separate gates.
 
 Final group-cast verification: 36 focused root/JIT/strict NativeAOT profiles measure 4608 complete moving physics/query frames with repeated option/exception edits at strict 0/0 owner/all-thread managed bytes. Twenty-four related profiles and eight new native profiles pass, with 16 retained Wayland captures. All 3264 authored inputs match five explicit Compile/PDB cohorts (2299 runtime, 786 root tests, 188 public consumer). Compiled API remains 14635 declarations/875 types, unchanged from main `13a2c225`. The same consumer reproduces the former cached-read owner rejection over that baseline runtime. One mixed CPU/GPU diagnostic suite initially ran with Vulkan disabled by the harness; the preserved setup failure is excluded from success counts and the corrected software-Vulkan rerun passes. General notification coverage remains Partial and the physical census stays 196 open.
+
+
+[Complete axis velocity](physics-registered-adapter.md#complete-axis-velocity-operation)
+shares scene/server current-motion projection, preserving unsynchronized perpendicular
+impulses and inactive native future configuration. Exact configured values, bounded
+live error, nine body owners/four direct modes, publication recovery and 1536 complete
+warmed frames at 0/0 owner/all-thread managed bytes pass in the 58-profile
+JIT/NativeAOT CPU/software-GPU/registered cohort. This closes the extension axis
+operation; broader numerical, networking and hardware acceptance remain open.

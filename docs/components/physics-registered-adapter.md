@@ -2,6 +2,71 @@
 
 Last updated: 2026-10-19
 
+## Complete axis velocity operation
+
+BodySetAxisVelocity and RigidBody.SetAxisVelocity share one guarded projection/
+publication path under ADRs 0070/0075/0103. The three pinned 4.7.2-stable server/
+extension/scene methods at ed1daf0bf001b61586d9930840f2f1394092c079 and their owning
+metadata have no deprecation; reference-contract.json records the audit.
+No public declaration, selector enum or architecture decision is added.
+
+The identical final consumer fails on the old runtime (-6) and passes on the
+corrected runtime (0): after a central impulse changed velocity from (3,4)
+to (3,10), the scene axis call formerly produced (5,4), erasing perpendicular
+impulse motion before scene synchronization. It now produces (5,10) through the
+facade's current selected-motion read, preserving angular impulse motion too.
+The redundant untracked wake after scene publication is removed.
+
+Native frozen static/kinematic, MakeStatic and inactive PhysicalBone roles project
+their retained future configuration instead of temporary solver velocity.
+Both scene and facade routes preserve the other configured component, including
+zero input; reactivation restores authored motion. Detached dynamic scene zero-axis
+writes share explicit-write wake semantics. Direct server mode profiles retain
+their static/kinematic virtual-surface distinctions. Finite validation precedes
+selected access; double normalization handles tiny/large finite directions, and
+overflowing results reject before assignment. Numerical borrowing, owner and
+terminal guards precede live motion use. Publication failures retain the complete
+requested linear write for motion preparation/query/history/step retry, without
+replaying Solve.
+
+The public --axis-velocity consumer checks five scene body siblings and four raw
+bodies across four direct modes, signed horizontal/vertical/oblique/zero/tiny
+inputs, detached huge/overflow cases, invalid kind/stale IDs and foreign/borrowed
+writes. Angular preservation compares the preceding selected angular channel;
+it does not invent a different setter contract for a motion role. A real dynamic
+torque case independently requires 2 rad/s within 0.0001. Native inactive cases
+check exact configured vectors; live vectors/angular values use absolute 0.0001
+scene-unit/s or rad/s tolerance. These bounds cover float/native unit conversion
+without permitting loss of the deliberate six-unit perpendicular impulse.
+
+Twelve JIT/strict NativeAOT CPU/no-device, software-GPU and independently registered
+owner/separate profiles each measure 128 complete edited frames after 64 warmup,
+with nine bodies receiving real impulses and projections: 1536 measured frames
+and 13824 owner callbacks, strictly zero owner/all-thread managed bytes. Four
+registered profiles reject 80 terminal zero/changed writes without failed-step
+replay. Setup, numeric rejection and fault injection are outside allocation brackets.
+The motion-transaction fixture now calls the scene method directly for native
+and direct-mode profiles; partial-error/retry/retirement checks remain.
+Force, body-state, contact-response, ordinary registered and root component-edit
+companions complete 58 distinct processes. Native adjacent checks execute an
+ordinary GPU-rendered window with CPU and software-GPU physics; their throughput
+figures are local software measurements, not target hardware/FPS acceptance.
+The 512-body, requested 60-Hz, VSync-enabled samples observed 62.29/27.68 FPS
+for CPU/software-GPU physics over about four seconds; each measured 240 ticks and
+9600 owner-managed bytes over the whole window loop. That aggregate includes
+physics, rendering, input and scheduling, so it does not identify the allocating
+stage. This nonzero native-host interval remains an open localization/zero gate;
+it is distinct from the strict zero headless physics intervals above.
+
+Axis projection deliberately reads current selected motion for its one body;
+ordinary component assignments retain their queued path. This adds no full-world
+mirror or CPU collision pass. All exercised GPU/renderer processes use private
+lavapipe, and maps reject hardware drivers; NativeAOT maps reject CoreCLR.
+Six assembly/PDB proofs bind results to current source. Evidence:
+bin/physics-axis-velocity/2026-10-19/. Only the remaining extension axis row closes;
+complete numerical/custom-geometry/network/native-allocation/foreign-platform and
+target hardware performance gates remain open.
+
 ## Complete diagnostic contact operations
 
 The three non-deprecated extension debug-space operations project to selected
@@ -135,7 +200,7 @@ no CoreCLR for NativeAOT; CPU/registered profiles use an empty ICD. Evidence:
 `bin/physics-contact-threshold-operations/2026-10-19/validation.json`,
 current-source-proof.json and current-source-inputs.json.
 
-Only the two extension rows become Implemented. The current physics census is
+Only the two extension rows become Implemented. That slice recorded
 1262/1369 (92.18407596785974%), with 107 open declarations: 76 Partial, 14 Unimplemented and
 17 Blocked; 92 remain Excluded. Earlier counts describe recorded checkpoints.
 Full ordinary root, complete numerical/custom/extension behavior, native allocations,
@@ -283,7 +348,7 @@ world/portable-joint/spring-anchor, coupled/contact and root joint companions pa
 on this same cohort. These scenarios do not establish arbitrary custom geometry,
 complete numerical/extension or multiplayer acceptance.
 
-Only these six extension rows become Implemented. The current physics census is
+Only these six extension rows become Implemented. That slice recorded
 1258/1369 (91.8918918918919%), with 111 open declarations: 80 Partial, 14 Unimplemented and
 17 Blocked; 92 remain Excluded. Earlier counts describe recorded checkpoints.
 Full ordinary root, native allocations, broader stability/performance, portable
@@ -366,7 +431,7 @@ reject hardware drivers, and require no CoreCLR for NativeAOT. CPU/registered
 profiles use an empty ICD. Frozen payloads from the preceding exception slice
 retain their hashes despite sharing unchanged dependencies.
 
-Only these eight extension rows become Implemented. The current physics census is
+Only these eight extension rows become Implemented. That slice recorded
 1252/1369 (91.4536157779401%), with 117 open declarations: 86 Partial, 14 Unimplemented
 and 17 Blocked; 92 remain Excluded. Earlier counts describe recorded checkpoints.
 Full ordinary root, complete numerical/custom geometry/extension, native allocations,
@@ -455,7 +520,7 @@ current-source-inputs.json and reference-contract.json. CPU/registered payloads
 use an empty ICD; GPU payloads use only the pinned private lavapipe, with process
 map sampling rejecting hardware drivers and requiring no CoreCLR for NativeAOT.
 
-Only these five extension rows become Implemented. The current physics census is
+Only these five extension rows become Implemented. That slice recorded
 1244/1369 (90.86924762600438%), with 125 open declarations: 94 Partial,
 14 Unimplemented and 17 Blocked; 92 remain Excluded. Earlier counts describe their
 recorded checkpoints. Full ordinary root, complete numerical/custom geometry and

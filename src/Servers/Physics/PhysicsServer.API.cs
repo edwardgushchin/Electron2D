@@ -1278,7 +1278,11 @@ public sealed partial class PhysicsServer
     /// <summary>Replaces linear velocity along the supplied axis, preserving its perpendicular component.</summary>
     /// <param name="body">A live scene or server body RID.</param>
     /// <param name="axisVelocity">Finite direction and magnitude in scene units per second; zero retains current velocity.</param>
+    /// <remarks>Active bodies preserve the perpendicular component of current selected motion, including impulse effects not yet synchronized to scene properties.
+    /// Inactive native rigid roles project their retained future velocity. Eligible dynamics wake even for a zero axis.
+    /// Failed publication retains the requested velocity for ordinary motion preparation retry.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The input or resulting velocity is nonfinite.</exception>
+    /// <exception cref="InvalidOperationException">Attached mutation is off-owner, inside a numerical hook or after world failure.</exception>
     public static void BodySetAxisVelocity(RID body, Vector2 axisVelocity) => Service.BodySetAxisVelocityCore(body, axisVelocity);
 
     /// <summary>Changes a body among static, kinematic and dynamic modes.</summary>
