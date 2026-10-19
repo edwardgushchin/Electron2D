@@ -41,6 +41,8 @@ public static partial class BackendChecks
         internal Action<RID>? JointFactoryHook, JointReleaseHook;
         internal bool FailJointFactory, NullJointFactory, FailJointAttach, FailJointDetach;
         internal PhysicsBackendJoint? ReusedJoint;
+        internal bool NullColliderFactory;
+        internal PhysicsBackendCollider? ReusedCollider;
         internal Action<RID>? BodyReleaseHook;
         internal Action? InitHook, FinishHook;
         internal Func<RID, PhysicsDirectSpaceState>? SpaceViewFactory;
@@ -155,7 +157,12 @@ public static partial class BackendChecks
             return new(active, checked(Pairs + sensorPairs), islands);
         }
         protected override PhysicsBackendCollider CreateCollider(RID collider, bool area)
-        { ColliderFactoryHook?.Invoke(collider); var b = new Body(this, collider, area); Bodies.Add(collider, b); return b; }
+        {
+            ColliderFactoryHook?.Invoke(collider);
+            if (NullColliderFactory) return null!;
+            if (ReusedCollider is { } reused) return reused;
+            var b = new Body(this, collider, area); Bodies.Add(collider, b); return b;
+        }
         protected override PhysicsBackendJoint CreateJoint(RID joint)
         {
             if (FailJointFactory) throw new InvalidOperationException("Joint factory failure");

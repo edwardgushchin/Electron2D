@@ -1,6 +1,19 @@
 # PhysicsServerExtension
 
-Last updated: 2026-10-17
+Last updated: 2026-10-19
+
+## Collider construction and reentry
+
+BodyCreate/AreaCreate allocate fresh detached logical identities without a selected
+numerical call. Binding invokes the world owner's factory with the engine RID and
+body/Area role. Return a fresh non-null collider for every attachment: live and
+retired instances remain permanently claimed and cannot be reused. Rejected
+creation preserves common authoring and unrelated owners. Departure invalidates
+the cached direct-body view; healthy reentry retains the RID with a fresh numerical
+attachment. Failed live insertion remains structurally in the tree and explicitly
+removable; failed whole-tree construction releases membership/readiness and permits
+a healthy retry of the original root. See [the creation checks](../components/physics-registered-adapter.md#collider-creation-operation-audit)
+for public CPU/software-GPU/registered JIT/NativeAOT, error and allocation scope.
 
 Caller-derived scoped numerical implementation base inheriting the full protected PhysicsServerBackend family. Implement real body, joint, geometry, query, observation and history operations; the world supplies engine identities and owns lifetime.
 

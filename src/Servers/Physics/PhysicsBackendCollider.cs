@@ -1,6 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Defines one numerical collider attachment without scene, runtime or native handles.</summary>
+/// <remarks>Return a fresh instance from the selected backend factory for each attachment. A claimed instance remains retired after Detach and cannot be reused.</remarks>
 public abstract class PhysicsBackendCollider
 {
     private int _claimed;

@@ -2,6 +2,54 @@
 
 Last updated: 2026-10-19
 
+## Collider creation operation audit
+
+BodyCreate and AreaCreate produce distinct caller-owned detached identities without
+invoking a numerical factory. Their common defaults, empty shape lists and zero
+object IDs are immediately readable. Numerical creation starts on binding to a
+selected space; scene bodies and Areas use that same path. Factories receive the
+registered RID, its body/Area role and guarded authored input on the world owner,
+outside the registry lock. Each non-null result must be fresh: its claim is
+permanent even after retirement and even for reentry under the original RID.
+Rejected reuse preserves the original live owner. Unchanged membership retains
+one numerical attachment and its cached direct-body view; real departure
+invalidates that view, and reentry keeps the RID with a fresh numerical owner.
+
+The public --collider-creation fixture covers raw Body/Area and StaticBody,
+AnimatableBody, CharacterBody, RigidBody, PhysicalBone and Area scene owners.
+Each registered profile rejects 56 factory results (null, live/cross-kind,
+retired, original retired and thrown errors), exercises 48 real live-entry
+failures with both cleanup outcomes and 12 whole-tree activation failures.
+Live AddChild commits structural membership before reporting callback errors;
+the failed node remains explicitly removable without a physical binding or
+consumed readiness. Removing it and requesting readiness permits healthy reentry.
+Failed SceneTree construction unwinds membership and readiness without disposing
+the authored hierarchy; a healthy construction of that same root succeeds.
+Original and secondary cleanup errors survive. Unrelated live Body/Area queries
+and common pose/motion/sleep authoring remain intact.
+
+Fresh JIT and strict NativeAOT CPU/no-device, private software-GPU and registered
+owner/separate runs pass. Twelve shared profiles execute 1536 measured complete
+tree frames, 9216 owner callbacks and 12288 exact RID/logical-slot point queries
+at strict zero owner/all-thread managed bytes. The four registered runs cover
+224 rejected results, 192 live-entry and 48 activation failures. Motion tolerance
+0.0001 scene units covers single-precision integration of speed 1 for 0.01 seconds
+at offsets through 700 units; Areas retain their pose. Companion attachment-error,
+mass-reset, node-lifecycle, construction/resource/lifecycle/view, ordinary consumer
+and root ownership checks complete 69/69 profiles. Allocation brackets measure
+managed frames after warmup, not native retained memory or cold construction.
+
+Only the extension Body/Area creation rows become Implemented. The unique physics
+census is 1208/1369 Implemented (88.23959094229365%), with 161 open declarations:
+130 Partial, 14 Unimplemented and 17 Blocked; 92 are Excluded. Monitoring callbacks
+and complete typed parameters remain Partial. Runtime algorithms and public
+signatures are unchanged; XML now states the deferred factory/permanent claim
+contract. Complete numerical/custom geometry/inherited, networking, native retained
+memory, target-GPU/window performance and platform acceptance remain open. The
+RTX power cable remains unchecked; no hardware driver or target-GPU load ran.
+Evidence: bin/physics-collider-creation/2026-10-19/validation.json. Earlier sections
+below record their own verification checkpoints and census counts.
+
 ## Authored state after failed initial attachment
 
 Initial failure cleanup previously sampled a partially prepared implementation as

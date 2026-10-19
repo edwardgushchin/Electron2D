@@ -6,6 +6,19 @@ The [Body/Area append audit](../components/physics-shapes.md#bodyarea-append-con
 
 Last updated: 2026-10-19
 
+## Collider construction and reentry
+
+BodyCreate/AreaCreate allocate fresh detached logical identities without a selected
+numerical call. Binding invokes the world owner's factory with the engine RID and
+body/Area role. Return a fresh non-null collider for every attachment: live and
+retired instances remain permanently claimed and cannot be reused. Rejected
+creation preserves common authoring and unrelated owners. Departure invalidates
+the cached direct-body view; healthy reentry retains the RID with a fresh numerical
+attachment. Failed live insertion remains structurally in the tree and explicitly
+removable; failed whole-tree construction releases membership/readiness and permits
+a healthy retry of the original root. See [the creation checks](../components/physics-registered-adapter.md#collider-creation-operation-audit)
+for public CPU/software-GPU/registered JIT/NativeAOT, error and allocation scope.
+
 ## Failed initial attachment
 
 Failed initial preparation discards incomplete numerical pose, velocity and sleep instead of reading them into common authoring. Public authored state remains available for healthy reattachment. Ordinary retirement of a successfully attached body still preserves accepted solver motion, including immediate impulses. See [state preservation checks](../components/physics-registered-adapter.md#authored-state-after-failed-initial-attachment) for all owner/role, sleep, error and lifecycle controls and their limits.
