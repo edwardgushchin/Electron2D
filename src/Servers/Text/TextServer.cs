@@ -174,7 +174,7 @@ public abstract partial class TextServer : ElectronObject
     {
         internal TextLine Buffer { get; } = buffer;
         private bool _pending = parent is not null;
-        internal void Commit() { Buffer.ServerDetachSubstring(); if (!_pending) return; parent!.ServerPublishLine(line, Buffer); _pending = false; }
+        internal void Commit(bool detachSubstring = true) { if (detachSubstring) Buffer.ServerDetachSubstring(); if (!_pending) return; parent!.ServerPublishLine(line, Buffer); _pending = false; }
         public void Dispose() { if (_pending) Buffer.Dispose(); }
     }
     private static BufferMutation Mutation(RID rid)

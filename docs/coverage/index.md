@@ -156,7 +156,7 @@ status changes; full retained/native/device history budgets remain open.
 
 [Resident GPU buffer accounting](../components/gpu-memory.md) now covers all storage/transfer allocations, growth peaks and replay retirement. This internal measurement changes no public declaration status and leaves complete retained/native/device budgets open.
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 [Complete space activation operations](../components/physics-registered-adapter.md#complete-space-activation-operations)
 close the two selected activation rows after shared public CPU/no-device,
@@ -1232,3 +1232,5 @@ The checks explicitly select the current source-built private text ABI (SHA-256 
 The TextServer editing slice (2026-10-19) implements twelve caret/selection/navigation operations with the immutable TextCaretInfo result. Unicode character ends and native shaping clusters retain separate contracts, including BIDI/ligatures/inline objects, supplementary/language contexts, repeated advances, global line origins and the corrected vertical RTL after-cluster axis. Managed checks, four software native profiles and fresh resource/load/render children verify the exercised contract; prepared scalar queries and 64 active/64 idle frames retain zero owner managed bytes. Twenty-six related text consumers pass. Paragraph reflow also refreshes retired detached font dependencies before coherence validation. Evidence: `bin/text-server-editing/2026-10-19/`; whole-provider, package/native-allocator, hardware and foreign-platform acceptance remain open.
 
 [Shaped-buffer wrapping and owned substrings](../components/text-server.md#line-wrapping-and-owned-substrings) add four executable TextServer operations: scalar line/column ranges, original-cluster slicing and parent discovery. Retained source leases survive retirement; API coverage remains separate from hardware, platform and product acceptance.
+
+[Shaped-buffer formatting](../components/text-server.md#fitting-spacing-and-overrun) connects ten TextServer methods and TextOverrunFlags to actual fitting, signed spacing, punctuation and independent trim/ellipsis display. Owned/borrowed lines share real geometry, rendering and transactional font reads; raw editing ranges remain complete. Verification and remaining platform/allocation/owner limits are recorded with the component.

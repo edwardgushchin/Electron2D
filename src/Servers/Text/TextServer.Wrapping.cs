@@ -24,7 +24,7 @@ public abstract partial class TextServer
     }
     /// <summary>Creates an owned substring retaining complete original shaped clusters and source context.</summary>
     /// <param name="shaped">Live source or substring; nested slices address its original parent range.</param><param name="start">Global scalar start.</param><param name="length">Nonnegative scalar length within the source.</param><returns>An independent caller-owned buffer; release with FreeRID.</returns>
-    /// <remarks>Fonts, keys and metadata remain borrowed. Parent identity is informational; retained source leases survive its retirement. First successful mutation detaches the substring. Partial ligatures and inline objects have no copied glyph.</remarks>
+    /// <remarks>Fonts, keys and metadata remain borrowed. Parent identity is informational; retained source leases survive its retirement. First successful authoring mutation detaches the substring; fit/trim/ellipsis preserve its context. Partial ligatures and inline objects have no copied glyph.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The range is outside the source or its length is negative.</exception>
     public RID ShapedTextSubstr(RID shaped, int start, int length)
     {

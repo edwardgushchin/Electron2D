@@ -13,11 +13,25 @@ public sealed partial class TextLine
     internal TextLine? ServerShapingSource => _serverSubstring?.Source;
     internal void ServerAttachSubstring(TextLine source, RID parent)
     {
-        source.Ensure();
-        source._serverSliceSnapshot ??= new(source.Duplicate());
-        _serverSubstring = source._serverSliceSnapshot; _serverSubstring.References++; ServerParent = parent;
-        foreach (var font in _serverSubstring.Source._fonts) if (!_fonts.Contains(font)) _fonts.Add(font);
-        _fonts.Sort(static (a, b) => a.InstanceID.CompareTo(b.InstanceID));
+        source.Ensure(); source._busy = true;
+        try
+        {
+            source.BeginPreparedReads();
+            if (source._serverSliceSnapshot is null)
+            {
+                var snapshot = source.Duplicate();
+                try
+                {
+                    if (source._serverFullFormatted) { snapshot.Ensure(); source._full.ServerCopyFormatting(snapshot._full, false); source._full.ServerCopyFormatting(snapshot._display, false); snapshot._serverFullFormatted = true; }
+                    source._serverSliceSnapshot = new(snapshot);
+                }
+                catch { snapshot.Dispose(); throw; }
+            }
+            _serverSubstring = source._serverSliceSnapshot; _serverSubstring.References++; ServerParent = parent;
+            foreach (var font in _serverSubstring.Source._fonts) if (!_fonts.Contains(font)) _fonts.Add(font);
+            _fonts.Sort(static (a, b) => a.InstanceID.CompareTo(b.InstanceID));
+        }
+        finally { try { source.EndReads(); } finally { source._busy = false; } }
     }
     internal void ServerDetachSubstring()
     {
@@ -32,7 +46,7 @@ public sealed partial class TextLine
         Ensure(); _busy = true;
         try
         {
-            BeginReads();
+            BeginPreparedReads();
             _full.ServerCopySlice(target._full, target.ServerOffset - ServerOffset, target.ServerOffset - ServerOffset + target._count);
             _full.ServerCopySlice(target._display, target.ServerOffset - ServerOffset, target.ServerOffset - ServerOffset + target._count);
         }

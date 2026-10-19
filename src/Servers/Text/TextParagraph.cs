@@ -24,7 +24,7 @@ public sealed partial class TextParagraph : ElectronObject
     private TextLineBreakFlags _breaks = TextLineBreakFlags.Mandatory | TextLineBreakFlags.WordBound;
     private TextJustificationFlags _justification = TextJustificationFlags.Kashida | TextJustificationFlags.WordBound | TextJustificationFlags.SkipLastLine | TextJustificationFlags.DoNotSkipSingleLine;
     private TextOverrunBehavior _overrun;
-    private string _punctuation = string.Empty, _ellipsis = "…";
+    private string _ellipsis = "…";
     private Vector2 _size, _capSize;
     private Vector2[] _origins = [];
     private int VisibleLines => _maxLines < 0 ? _display.LineCount : Math.Min(_maxLines, _display.LineCount);
@@ -38,7 +38,7 @@ public sealed partial class TextParagraph : ElectronObject
     /// <summary>Gets or sets Mandatory and width-dependent breaks; initially Mandatory and WordBound.</summary><value>The current policy.</value>
     public TextLineBreakFlags BreakFlags { get { Check(); return _breaks; } set { CheckMutation(); if (((int)value & ~239) != 0) throw new ArgumentOutOfRangeException(nameof(value)); if (_breaks == value) return; _breaks = value; _dirty = true; } }
     /// <summary>Gets or sets Replacement punctuation classification for justification; empty uses Unicode punctuation.</summary><value>The current policy.</value>
-    public string CustomPunctuation { get { Check(); return _punctuation; } set { CheckMutation(); ArgumentNullException.ThrowIfNull(value); if (_punctuation == value) return; _punctuation = value; _dirty = true; } }
+    public string CustomPunctuation { get { Check(); return _source.ServerPunctuation; } set { CheckMutation(); _source.ServerSetPunctuation(value); } }
     /// <summary>Gets or sets First Unicode scalar used for ellipsis; empty uses the standard ellipsis.</summary><value>The current policy.</value>
     public string EllipsisChar { get { Check(); return _ellipsis; } set { CheckMutation(); ArgumentNullException.ThrowIfNull(value); value = FirstScalar(value); if (_ellipsis == value) return; _ellipsis = value; _dirty = true; } }
     /// <summary>Gets or sets Line justification policies; initially Kashida, WordBound, SkipLastLine and DoNotSkipSingleLine.</summary><value>The current policy.</value>
@@ -113,7 +113,7 @@ public sealed partial class TextParagraph : ElectronObject
         Check(); var copy = new TextParagraph(); copy._source.Dispose(); copy._dropcap.Dispose();
         copy._source = _source.Duplicate(); copy._dropcap = _dropcap.Duplicate(); copy._margins = _margins;
         copy._width = _width; copy._spacing = _spacing; copy._maxLines = _maxLines; copy._alignment = _alignment;
-        copy._breaks = _breaks; copy._justification = _justification; copy._overrun = _overrun; copy._punctuation = _punctuation; copy._ellipsis = _ellipsis;
+        copy._breaks = _breaks; copy._justification = _justification; copy._overrun = _overrun; copy._ellipsis = _ellipsis;
         copy.ServerAttachSources(); copy.ContentChanged(); return copy;
     }
     /// <summary>Returns the stable borrowed full-string buffer identity.</summary><returns>Valid until disposal.</returns>
@@ -257,7 +257,7 @@ public sealed partial class TextParagraph : ElectronObject
         var capCross = Vertical ? _capSize.X : _capSize.Y;
         var key = new TextLayoutKey(string.Empty, 16, _width, _alignment, _maxLines, _breaks, _justification, _source.Direction, _source.Orientation, true);
         var options = new TextLayoutOptions(LineSpacing: _spacing, Overrun: (int)_overrun, Ellipsis: _ellipsis.Length == 0 ? "…" : _ellipsis,
-            ApplyAlignment: false, DropcapWidth: CapAdvance, DropcapHeight: capCross, ParagraphBuffers: true, CustomPunctuation: _punctuation, ServerBuffers: true);
+            ApplyAlignment: false, DropcapWidth: CapAdvance, DropcapHeight: capCross, ParagraphBuffers: true, CustomPunctuation: _source.ServerPunctuation, ServerBuffers: true);
         _source.BuildBuffer(_geometry, key, options with { Overrun = 0 }); _source.BuildBuffer(_display, key, options);
         RetireLines(); _lines.EnsureCapacity(_display.LineCount);
         for (var i = 0; i < _display.LineCount; i++) _lines.Add(TextBuffers.Register(this, i));

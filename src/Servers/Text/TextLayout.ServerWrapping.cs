@@ -102,7 +102,26 @@ internal sealed partial class TextLayout
     private static bool ServerTrimCluster(ServerBreakCluster cluster, bool softWrap) => !(softWrap && cluster.Hyphen) && (cluster.Space || cluster.Hard || cluster.Hyphen);
     internal void ServerCopySlice(TextLayout target, int from, int to)
     {
-        PrepareRuns(from, to); target._glyphs.Clear(); target._rawGlyphs.Clear(); target._caretsReady = false;
+        target._glyphs.Clear(); target._rawGlyphs.Clear(); target._caretsReady = false;
+        ServerCopyGlyphs(target, target._glyphs, from, to, from);
+        var ascent = 0f; var descent = 0f; var width = 0f; var underline = 0f; var thickness = 0f;
+        foreach (var glyph in target._glyphs)
+        {
+            width += glyph.Advance * glyph.Repeat;
+            if (glyph.ObjectIndex >= 0) { ascent = Math.Max(ascent, glyph.ObjectAscent); descent = Math.Max(descent, glyph.ObjectDescent); continue; }
+            var style = target.StyleAt(glyph.Start); var metrics = style.Font.GetShapingMetrics(glyph.Face, style.Size);
+            ascent = Math.Max(ascent, metrics.Ascent); descent = Math.Max(descent, metrics.Descent);
+            underline = Math.Max(underline, style.Font.GetShapingUnderline(glyph.Face, style.Size, false)); thickness = Math.Max(thickness, style.Font.GetShapingUnderline(glyph.Face, style.Size, true));
+            if (glyph.Missing) { var box = TextMissingGlyph.Size(target.GlyphSize(glyph), glyph.Index); if (Key.Orientation == TextOrientation.Horizontal) { ascent = Math.Max(ascent, box.Y * .85f); descent = Math.Max(descent, box.Y * .15f); } else { ascent = Math.Max(ascent, box.X * .5f); descent = Math.Max(descent, box.X * .5f); } }
+        }
+        ascent += target._options.BufferTopSpacing; descent += target._options.BufferBottomSpacing;
+        target._rawGlyphs.AddRange(target._glyphs); target._lines.Clear();
+        if (from < to || target._options.ServerBuffers) target._lines.Add(new(0, to - from, 0, target._glyphs.Count, width, ascent, descent, 0, true, from < _count ? _paragraphLevels[from] : 0, UnderlinePosition: underline, UnderlineThickness: thickness));
+        target.NaturalWidth = target.UnwrappedWidth = MathF.Ceiling(width); target.PositionLines(); target.PrepareServerWrapping();
+    }
+    private void ServerCopyGlyphs(TextLayout target, List<Glyph> destination, int from, int to, int offset)
+    {
+        PrepareRuns(from, to);
         foreach (var run in _runs)
         {
             var begin = LogicalGlyphAt(run.Start); var finish = LogicalGlyphAt(run.End); var rtl = (run.Level & 1) != 0;
@@ -114,28 +133,15 @@ internal sealed partial class TextLayout
                 for (var index = first; index < last; index++)
                 {
                     var glyph = _glyphs[_serverLogicalGlyphs[index]]; if (glyph.End > run.End || glyph.End > to) continue;
-                    var local = glyph.Start - from; var objectIndex = glyph.ObjectIndex < 0 ? -1 : target._richObjects[local].Index;
+                    var local = glyph.Start - offset; var objectIndex = glyph.ObjectIndex < 0 ? -1 : target._richObjects[local].Index;
                     if (glyph.End == to && _scalars[glyph.Start] == 0x00ad && glyph.Face is { } face)
                         glyph = glyph with { Index = face.GetGlyphIndex(0x00ad), Advance = face.GetGlyphAdvance(face.GetGlyphIndex(0x00ad), GlyphSize(glyph), Key.Orientation == TextOrientation.Vertical) };
-                    if (target._glyphs.Count == 0 && glyph.Offset.X < 0) glyph = glyph with { Advance = glyph.Advance - glyph.Offset.X, Offset = new(0, glyph.Offset.Y) };
-                    target._glyphs.Add(glyph with { Start = local, End = glyph.End - from, ObjectIndex = objectIndex, RTL = rtl });
+                    if (destination.Count == 0 && glyph.Offset.X < 0) glyph = glyph with { Advance = glyph.Advance - glyph.Offset.X, Offset = new(0, glyph.Offset.Y) };
+                    destination.Add(glyph with { Start = local, End = glyph.End - offset, ObjectIndex = objectIndex, RTL = rtl });
                 }
                 cursor = rtl ? first - 1 : last;
             }
         }
-        var ascent = 0f; var descent = 0f; var width = 0f; var underline = 0f; var thickness = 0f;
-        foreach (var glyph in target._glyphs)
-        {
-            width += glyph.Advance * glyph.Repeat;
-            if (glyph.ObjectIndex >= 0) { ascent = Math.Max(ascent, glyph.ObjectAscent); descent = Math.Max(descent, glyph.ObjectDescent); continue; }
-            var style = target.StyleAt(glyph.Start); var metrics = style.Font.GetShapingMetrics(glyph.Face, style.Size);
-            ascent = Math.Max(ascent, metrics.Ascent); descent = Math.Max(descent, metrics.Descent);
-            underline = Math.Max(underline, style.Font.GetShapingUnderline(glyph.Face, style.Size, false)); thickness = Math.Max(thickness, style.Font.GetShapingUnderline(glyph.Face, style.Size, true));
-            if (glyph.Missing) { var box = TextMissingGlyph.Size(target.GlyphSize(glyph), glyph.Index); if (Key.Orientation == TextOrientation.Horizontal) { ascent = Math.Max(ascent, box.Y * .85f); descent = Math.Max(descent, box.Y * .15f); } else { ascent = Math.Max(ascent, box.X * .5f); descent = Math.Max(descent, box.X * .5f); } }
-        }
-        target._rawGlyphs.AddRange(target._glyphs); target._lines.Clear();
-        if (from < to) target._lines.Add(new(0, to - from, 0, target._glyphs.Count, width, ascent, descent, 0, true, _paragraphLevels[from], UnderlinePosition: underline, UnderlineThickness: thickness));
-        target.NaturalWidth = target.UnwrappedWidth = MathF.Ceiling(width); target.PositionLines(); target.PrepareServerWrapping();
     }
     internal int ServerScalarUTF16(int scalar) => _utf16[scalar];
     private int LogicalGlyphAt(int scalar)

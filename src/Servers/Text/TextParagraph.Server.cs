@@ -30,7 +30,7 @@ public sealed partial class TextParagraph
     private TextLayoutLine ServerMetrics(int index, bool geometry = false)
     {
         if (!_serverLines.TryGetValue(index, out var line)) return (geometry ? _geometry : _display).Lines[index];
-        var layout = line.ServerLayout; var m = layout.LineCount == 0 ? default : layout.Lines[0];
+        var layout = geometry ? line.ServerLayout : line.ServerPreparedDisplay; var m = layout.LineCount == 0 ? default : layout.Lines[0];
         return m with { Start = line.ServerOffset, End = line.ServerOffset + line.ScalarCount, RangeEnd = line.ServerOffset + line.ScalarCount };
     }
     private void RefreshServerLines()
@@ -86,7 +86,23 @@ public sealed partial class TextParagraph
         _serverLines.Add(line, copy); copy.ServerChanged = ServerLineChanged; ServerLineChanged();
     }
     internal RID ServerLineParent(int line, RID rid)
-    { ServerCheckLine(line, rid); return _serverLines.ContainsKey(line) ? default : _source.GetRID(); }
+    { ServerCheckLine(line, rid); return _serverLines.TryGetValue(line, out var edited) ? edited.ServerParent : _source.GetRID(); }
+    internal int ServerTrimPosition(int line, RID rid, bool ellipsis)
+    {
+        Check(); if ((uint)line >= (uint)_lines.Count || _lines[line] != rid) throw new InvalidOperationException("The paragraph line was retired.");
+        if (_serverLines.TryGetValue(line, out var edited)) return edited.ServerTrimPosition(ellipsis);
+        return ellipsis ? _display.Lines[line].EllipsisPosition : _display.Lines[line].TrimPosition;
+    }
+    internal void ServerPrepareLayoutLine(int line, RID rid, TextLine copy)
+    {
+        ServerCheckLine(line, rid); _busy = true;
+        try
+        {
+            BeginPreparedReads(); var range = _display.Lines[line]; var end = range.RangeEnd < 0 ? range.End : range.RangeEnd;
+            copy.ServerAttachSubstring(_source, _source.GetRID()); copy.ServerLoadPreparedShape(_geometry, _display, line, range.Start, end);
+        }
+        finally { try { EndReads(); } finally { _busy = false; } }
+    }
     internal bool ServerIsReady(int line, RID rid)
     {
         Check(); if (_dirty || !_source.ServerReady || !_dropcap.ServerReady || _source.ServerCurrentRevision != _sourceVersion || _dropcap.ServerCurrentRevision != _dropcapVersion) return false;

@@ -1,6 +1,6 @@
 # TextServer
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -119,7 +119,7 @@ Accepts 1–4096 finite widths synchronously; invalid length throws ArgumentExce
 
 ### ShapedTextSubstr
 
-Start/length identify a nonnegative range inside the original source; invalid or overflowing ranges throw ArgumentOutOfRangeException before creating an identity. A nested slice addresses its original parent range. Release the returned identity with FreeRID. Whole shaping clusters, inline keys and typed metadata are preserved. Cutting a ligature/object does not create new glyphs. Shared source-version leases survive parent retirement while caller fonts remain borrowed. Parent mutation does not rewrite children. First successful child mutation detaches; failed/no-op mutation leaves the relationship intact.
+Start/length identify a nonnegative range inside the original source; invalid or overflowing ranges throw ArgumentOutOfRangeException before creating an identity. A nested slice addresses its original parent range. Release the returned identity with FreeRID. Whole shaping clusters, inline keys and typed metadata are preserved. Cutting a ligature/object does not create new glyphs. Shared source-version leases survive parent retirement while caller fonts remain borrowed. Parent mutation does not rewrite children. First successful child authoring mutation detaches; failed/no-op mutation leaves the relationship intact. Fitting, trimming and ellipsis configuration retain the original relation.
 
 ### ShapedTextGetParent
 
@@ -147,3 +147,90 @@ finally { server.FreeRID(source); }
 ## Protected integration
 
 ValidateDisposal rejects disposal of the retained object. Native source ownership, font-cache/extension gaps and verification limits are described in [the component contract](../components/text-server.md).
+
+## Buffer formatting
+
+See [fitting, spacing and overrun](../components/text-server.md#fitting-spacing-and-overrun) and [TextOverrunFlags](TextOverrunFlags.md). Operations retain the shared owner/thread/font-generation contract.
+
+| Signature | Behavior |
+| --- | --- |
+| `float ShapedTextFitToWidth(RID shaped, float width, TextJustificationFlags justificationFlags = TextJustificationFlags.Kashida \| TextJustificationFlags.WordBound)` | Adjusts actual raw advances; returns the ceiled achievable width. Finite targets and defined flags are required. Existing display cuts remain independent; ConstrainEllipsis fits only the retained visible range. |
+| `void ShapedTextOverrunTrimToWidth(RID shaped, float width = 0, TextOverrunFlags overrunTrimFlags = TextOverrunFlags.NoTrim)` | Chooses complete visible clusters and optional ellipsis. NoTrim/nonpositive width restores raw display; original clusters and editing geometry remain complete. Undefined flags and nonfinite widths throw. |
+| `int ShapedTextGetTrimPos(RID shaped)` | Returns the current buffer-local visual glyph-record trim boundary, or -1 when untrimmed/unprepared. This is not a scalar position. |
+| `int ShapedTextGetEllipsisPos(RID shaped)` | Returns the current buffer-local visual glyph-record ellipsis boundary, or -1 without an active ellipsis. |
+| `void ShapedTextSetCustomEllipsis(RID shaped, int character)` | Sets a valid Unicode scalar for subsequent explicit trims, preserving current display and parent relation. Unsupported glyphs use three periods when available. |
+| `int ShapedTextGetCustomEllipsis(RID shaped)` | Returns the configured Unicode scalar, initially U+2026. |
+| `void ShapedTextSetCustomPunctuation(RID shaped, string punctuation)` | Copies punctuation classification, at most 64 MiB UTF-16. Null throws; nonempty text replaces default punctuation. A changed value invalidates shaping and detaches substring authoring. |
+| `string ShapedTextGetCustomPunctuation(RID shaped)` | Returns the source punctuation string, initially empty. The paragraph property shares this same owner. |
+| `void ShapedTextSetSpacing(RID shaped, TextSpacingType spacing, int value)` | Sets signed extra logical-pixel spacing for Glyph, Space, Top or Bottom; Max/undefined categories throw. Changes invalidate shaping and detach authored substrings; equal values are no-ops. |
+| `int ShapedTextGetSpacing(RID shaped, TextSpacingType spacing)` | Returns signed extra spacing, initially zero; it survives clear and duplicate. Only the four selectable categories are accepted. |
+
+<a id="shapedtextfittowidth"></a>
+### ShapedTextFitToWidth
+
+`float ShapedTextFitToWidth(RID shaped, float width, TextJustificationFlags justificationFlags = TextJustificationFlags.Kashida | TextJustificationFlags.WordBound)`
+
+Adjusts actual raw advances; returns the ceiled achievable width. Finite targets and defined flags are required. Existing display cuts remain independent; ConstrainEllipsis fits only the retained visible range.
+
+<a id="shapedtextoverruntrimtowidth"></a>
+### ShapedTextOverrunTrimToWidth
+
+`void ShapedTextOverrunTrimToWidth(RID shaped, float width = 0, TextOverrunFlags overrunTrimFlags = TextOverrunFlags.NoTrim)`
+
+Chooses complete visible clusters and optional ellipsis. NoTrim/nonpositive width restores raw display; original clusters and editing geometry remain complete. Undefined flags and nonfinite widths throw.
+
+<a id="shapedtextgettrimpos"></a>
+### ShapedTextGetTrimPos
+
+`int ShapedTextGetTrimPos(RID shaped)`
+
+Returns the current buffer-local visual glyph-record trim boundary, or -1 when untrimmed/unprepared. This is not a scalar position.
+
+<a id="shapedtextgetellipsispos"></a>
+### ShapedTextGetEllipsisPos
+
+`int ShapedTextGetEllipsisPos(RID shaped)`
+
+Returns the current buffer-local visual glyph-record ellipsis boundary, or -1 without an active ellipsis.
+
+<a id="shapedtextsetcustomellipsis"></a>
+### ShapedTextSetCustomEllipsis
+
+`void ShapedTextSetCustomEllipsis(RID shaped, int character)`
+
+Sets a valid Unicode scalar for subsequent explicit trims, preserving current display and parent relation. Unsupported glyphs use three periods when available.
+
+<a id="shapedtextgetcustomellipsis"></a>
+### ShapedTextGetCustomEllipsis
+
+`int ShapedTextGetCustomEllipsis(RID shaped)`
+
+Returns the configured Unicode scalar, initially U+2026.
+
+<a id="shapedtextsetcustompunctuation"></a>
+### ShapedTextSetCustomPunctuation
+
+`void ShapedTextSetCustomPunctuation(RID shaped, string punctuation)`
+
+Copies punctuation classification, at most 64 MiB UTF-16. Null throws; nonempty text replaces default punctuation. A changed value invalidates shaping and detaches substring authoring.
+
+<a id="shapedtextgetcustompunctuation"></a>
+### ShapedTextGetCustomPunctuation
+
+`string ShapedTextGetCustomPunctuation(RID shaped)`
+
+Returns the source punctuation string, initially empty. The paragraph property shares this same owner.
+
+<a id="shapedtextsetspacing"></a>
+### ShapedTextSetSpacing
+
+`void ShapedTextSetSpacing(RID shaped, TextSpacingType spacing, int value)`
+
+Sets signed extra logical-pixel spacing for Glyph, Space, Top or Bottom; Max/undefined categories throw. Changes invalidate shaping and detach authored substrings; equal values are no-ops.
+
+<a id="shapedtextgetspacing"></a>
+### ShapedTextGetSpacing
+
+`int ShapedTextGetSpacing(RID shaped, TextSpacingType spacing)`
+
+Returns signed extra spacing, initially zero; it survives clear and duplicate. Only the four selectable categories are accepted.

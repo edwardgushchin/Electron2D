@@ -1,6 +1,6 @@
 # Retained standalone text objects
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 TextLine exposes the complete single-line contract over the existing FreeType/HarfBuzz/TextLayout owner. Text spans borrow Font resources with their own size/language and exact typed metadata; a generic AddString overload and TryGetSpanMetadata make metadata observable. TextObjectKey supplies reference identity in every inline parameter/result position without universal value dispatch.
 
@@ -27,3 +27,5 @@ TextParagraphTests and TextParagraphRenderingTests cover full typed authoring/qu
 [TextServer editing](text-server.md#caret-selection-and-navigation) consumes the same full and line buffer identities. Retiring detached lines refreshes the paragraph read set before validating reflow, including width changes and source-font generation changes; no disposed internal span adapter remains in subsequent reads.
 
 The low-level [wrapping and substring API](text-server.md#line-wrapping-and-owned-substrings) uses the same retained builder and native shaping, including parent/source lifetime across paragraph line reflow. Owned substring mutation remains independent of the source text object.
+
+[Shaped-buffer formatting](text-server.md#fitting-spacing-and-overrun) connects ten TextServer methods and TextOverrunFlags to actual fitting, signed spacing, punctuation and independent trim/ellipsis display. Owned/borrowed lines share real geometry, rendering and transactional font reads; raw editing ranges remain complete. Verification and remaining platform/allocation/owner limits are recorded with the component.

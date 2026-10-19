@@ -9,10 +9,10 @@ internal readonly record struct TextLayoutKey(string Text, int FontSize, float W
     int MaxLines, TextLineBreakFlags Breaks, TextJustificationFlags Justification, TextDirection Direction, TextOrientation Orientation, bool Multiline = false);
 
 internal readonly record struct TextLayoutOptions(float LineSpacing = 0, float ParagraphSpacing = 0, string Language = "",
-    float[]? TabStops = null, int Overrun = 1, string Ellipsis = "\u2026", int VisibleCharacters = -1, int VisibleBehavior = 1, IReadOnlyList<TextBIDIRange>? BIDIOverride = null, bool ApplyAlignment = true, bool? WrappedBehavior = null, bool PreserveControl = false, IReadOnlyList<TextLayoutStyleSpan>? Styles = null, IReadOnlyList<TextLayoutInlineObject>? Objects = null, float DropcapWidth = 0, float DropcapHeight = 0, bool PreserveInvalid = true, bool GlobalObjectMetrics = false, bool ParagraphBuffers = false, string CustomPunctuation = "", bool ServerBuffers = false);
+    float[]? TabStops = null, int Overrun = 1, string Ellipsis = "\u2026", int VisibleCharacters = -1, int VisibleBehavior = 1, IReadOnlyList<TextBIDIRange>? BIDIOverride = null, bool ApplyAlignment = true, bool? WrappedBehavior = null, bool PreserveControl = false, IReadOnlyList<TextLayoutStyleSpan>? Styles = null, IReadOnlyList<TextLayoutInlineObject>? Objects = null, float DropcapWidth = 0, float DropcapHeight = 0, bool PreserveInvalid = true, bool GlobalObjectMetrics = false, bool ParagraphBuffers = false, string CustomPunctuation = "", bool ServerBuffers = false, int BufferGlyphSpacing = 0, int BufferSpaceSpacing = 0, int BufferTopSpacing = 0, int BufferBottomSpacing = 0, TextLayout? RetainedShape = null);
 
 internal readonly record struct TextLayoutLine(int Start, int End, int GlyphStart, int GlyphCount, float Width, float Ascent,
-    float Descent, float CrossOffset, bool ParagraphEnd, int ParagraphLevel, int RangeEnd = -1, float UnderlinePosition = 0, float UnderlineThickness = 0)
+    float Descent, float CrossOffset, bool ParagraphEnd, int ParagraphLevel, int RangeEnd = -1, float UnderlinePosition = 0, float UnderlineThickness = 0, int TrimPosition = -1, int EllipsisPosition = -1)
 {
     internal float Height => Ascent + Descent;
 }
@@ -88,7 +88,7 @@ internal sealed partial class TextLayout
     {
         _font = font; _options = options ?? new TextLayoutOptions(Overrun: 1, VisibleCharacters: -1);
         Key = key; _caretsReady = false; _serverCharactersReady = false; _glyphs.Clear(); _rawGlyphs.Clear(); _lines.Clear(); Size = Vector2.Zero;
-        Decode(key.Text); CharacterCount = _count; PrepareRichStyles(); if (_options.ServerBuffers) PrepareStyleBreaks();
+        Decode(key.Text); CharacterCount = _count; PrepareRichStyles(); PrepareCustomPunctuation(); if (_options.ServerBuffers) PrepareStyleBreaks();
         if (_options.VisibleBehavior == 0 && _options.VisibleCharacters >= 0) _count = Math.Min(_count, _options.VisibleCharacters);
         ResolveProperties(); MeasureParagraphs(); BreakLines(); NaturalWidth = 0;
         foreach (var line in _lines) NaturalWidth = Math.Max(NaturalWidth, MathF.Ceiling(line.Width));
@@ -205,7 +205,7 @@ internal sealed partial class TextLayout
     private void BreakLines()
     {
         DropcapLines = 0;
-        if (_count == 0) { if (_options.ParagraphBuffers) AddLine(0, 0, true); return; }
+        if (_count == 0) { if (_options.ParagraphBuffers || _options.ServerBuffers) AddLine(0, 0, true); return; }
         var start = 0; var indent = 0f;
         if ((Key.Breaks & TextLineBreakFlags.TrimIndent) != 0 && Key.Width > 0)
         {
@@ -317,6 +317,7 @@ internal sealed partial class TextLayout
         }
         if (ascent == 0 && descent == 0) { var style = _options.ParagraphBuffers && _count > 0 ? StyleAt(Math.Min(start, _count - 1)) : new TextLayoutStyleSpan(0, _count, _font, Key.FontSize); ascent = style.Font.GetAscent(style.Size); descent = style.Font.GetDescent(style.Size); }
         else if (_options.Styles is null) { ascent += _font.GetSpacing(TextSpacingType.Top); descent += _font.GetSpacing(TextSpacingType.Bottom); }
+        ascent += _options.BufferTopSpacing; descent += _options.BufferBottomSpacing;
         var paragraphLevel = start < _count ? _paragraphLevels[start] : Key.Direction == TextDirection.RTL ? 1 : 0;
         var width = LayoutAdvance(); var glyphStart = _rawGlyphs.Count; _rawGlyphs.AddRange(_lineGlyphs);
         _lines.Add(new(start, end, glyphStart, _lineGlyphs.Count, width, ascent, descent, 0, paragraphEnd, paragraphLevel, UnderlinePosition: _shapeFontMetrics.UnderlinePosition, UnderlineThickness: _shapeFontMetrics.UnderlineThickness));
@@ -342,7 +343,7 @@ internal sealed partial class TextLayout
         }
         for (var i = 0; i < _lines.Count; i++)
         {
-            var line = _lines[i]; _tabRTL = line.ParagraphLevel == 1; _lineGlyphs.Clear();
+            var line = _lines[i]; _lineTrimPosition = _lineEllipsisPosition = -1; _tabRTL = line.ParagraphLevel == 1; _lineGlyphs.Clear();
             for (var j = line.GlyphStart; j < line.GlyphStart + line.GlyphCount; j++) _lineGlyphs.Add(_rawGlyphs[j]);
             var width = line.Width; _lineTrimmed = false;
             var originalKey = Key;
@@ -356,7 +357,7 @@ internal sealed partial class TextLayout
                 if (Key.Multiline && !wrapped && fill && _lineTrimmed) width = Justify(line.Start, line.End, width);
             }
             var glyphStart = _glyphs.Count; _glyphs.AddRange(_lineGlyphs);
-            _lines[i] = line with { GlyphStart = glyphStart, GlyphCount = _lineGlyphs.Count, Width = width };
+            _lines[i] = line with { GlyphStart = glyphStart, GlyphCount = _lineGlyphs.Count, Width = width, TrimPosition = _lineTrimPosition, EllipsisPosition = _lineEllipsisPosition };
             Key = originalKey;
         }
     }
@@ -377,7 +378,10 @@ internal sealed partial class TextLayout
                     Math.Max(_shapeFontMetrics.UnderlineThickness, style.Font.GetShapingUnderline(face, size, true)));
             }
         }
-        _lineGlyphs.Clear(); PrepareRuns(start, end); var length = end - start;
+        _lineGlyphs.Clear();
+        if (_options.RetainedShape is { } retained)
+        { retained.ServerCopyGlyphs(this, _lineGlyphs, start, end, 0); LayoutAdvance(); return; }
+        PrepareRuns(start, end); var length = end - start;
         foreach (var run in _runs)
         {
             var runStyle = StyleAt(run.Start); var inline = _richObjects[run.Start]; var rtl = (run.Level & 1) != 0;
@@ -439,8 +443,8 @@ internal sealed partial class TextLayout
                 if (shaped.GlyphIndex == 0) advance = 0;
                 if (advance != 0)
                 {
-                    var spaceSpacing = space ? runStyle.Font.GetShapingSpacing(run.Face, TextSpacingType.Space) : 0;
-                    var extraSpacing = spaceSpacing != 0 ? spaceSpacing : runStyle.Font.GetShapingSpacing(run.Face, TextSpacingType.Glyph);
+                    var spaceSpacing = space ? runStyle.Font.GetShapingSpacing(run.Face, TextSpacingType.Space) + (float)_options.BufferSpaceSpacing : 0;
+                    var extraSpacing = spaceSpacing != 0 ? spaceSpacing : runStyle.Font.GetShapingSpacing(run.Face, TextSpacingType.Glyph) + (float)_options.BufferGlyphSpacing;
                     if (shapedIndex < lastAdvance) advance += extraSpacing;
                 }
                 _lineGlyphs.Add(new(run.Face, shaped.GlyphIndex, cluster, clusterEnd, advance,
@@ -538,6 +542,7 @@ internal sealed partial class TextLayout
     {
         _lineTrimmed = false;
         if (Key.Width <= 0 || _options.Overrun == 0) return;
+        var originalCount = _lineGlyphs.Count;
         var width = LayoutAdvance(); var force = forceEllipsis || _options.Overrun is 5 or 6;
         if (width <= Key.Width && !force) return;
         _lineTrimmed = true;
@@ -575,15 +580,24 @@ internal sealed partial class TextLayout
         }
         if (wordOnly)
         {
-            while (_lineGlyphs.Count > 0)
+            while (_lineGlyphs.Count >= 6)
             {
                 var index = paragraphLevel == 1 ? 0 : _lineGlyphs.Count - 1; var glyph = _lineGlyphs[index];
                 if (_breaks[glyph.End] || glyph.Space) break;
-                _lineGlyphs.RemoveAt(index);
+                var cluster = glyph.Start; var clusterEnd = glyph.End;
+                do
+                {
+                    _lineGlyphs.RemoveAt(index); if (_lineGlyphs.Count == 0) break;
+                    index = paragraphLevel == 1 ? 0 : _lineGlyphs.Count - 1;
+                } while (_lineGlyphs[index].Start == cluster && _lineGlyphs[index].End == clusterEnd);
             }
         }
+        var keptVisible = _lineGlyphs.Count; _lineTrimPosition = paragraphLevel == 1 ? originalCount - keptVisible : keptVisible;
+        if (keptVisible == originalCount) _lineTrimPosition = -1;
+        _serverVisibleStart = paragraphLevel == 1 ? originalCount - keptVisible : 0; _serverVisibleCount = keptVisible; _serverEllipsisAdvance = 0;
         if (addEllipsis && (force || ellipsisWidth <= Key.Width) && _ellipsis is not null)
         {
+            _lineEllipsisPosition = paragraphLevel == 1 ? originalCount - keptVisible : keptVisible; _serverEllipsisAdvance = ellipsisWidth;
             var cluster = _lineGlyphs.Count > 0 ? _lineGlyphs[paragraphLevel == 1 ? 0 : _lineGlyphs.Count - 1].End : 0;
             var insert = paragraphLevel == 1 ? 0 : _lineGlyphs.Count;
             foreach (var glyph in _ellipsis._glyphs)
@@ -591,77 +605,86 @@ internal sealed partial class TextLayout
         }
     }
 
-    private float Justify(int start, int end, float width)
+    private float Justify(int start, int end, float width, bool prepareAll = false)
     {
+        var word = (Key.Justification & TextJustificationFlags.WordBound) != 0; var kashida = (Key.Justification & TextJustificationFlags.Kashida) != 0;
+        PrepareJustificationGlyphs(start, end, word || prepareAll, kashida || prepareAll);
         if ((Key.Justification & TextJustificationFlags.ConstrainEllipsis) != 0 && !_lineTrimmed) return width;
         var begin = 0; var limit = _lineGlyphs.Count;
         if ((Key.Justification & TextJustificationFlags.AfterLastTab) != 0)
-            for (var i = 0; i < limit; i++) if (_lineGlyphs[i].Tab) begin = i + 1;
-        if ((Key.Justification & TextJustificationFlags.WordBound) != 0)
         {
-            for (var i = begin; i < limit; i++)
-            {
-                var glyph = _lineGlyphs[i];
-                if (glyph.Start <= start || glyph.Start >= end || !_wordEnds[glyph.Start] || glyph.Space || glyph.Virtual || glyph.Missing || glyph.Face is null) continue;
-                var scalar = new Rune(_scalars[glyph.Start]);
-                if (_options.ParagraphBuffers ? (!string.IsNullOrEmpty(_options.CustomPunctuation) ? _options.CustomPunctuation.Contains(scalar.ToString(), StringComparison.Ordinal) : Rune.IsPunctuation(scalar) && scalar.Value != '_') : Rune.IsPunctuation(scalar)) continue;
-                var adjacent = !glyph.RTL ? i - 1 : i + 1;
-                if (adjacent >= 0 && adjacent < limit && _lineGlyphs[adjacent].Space) continue;
-                _lineGlyphs.Insert(i, new(glyph.Face, 0, glyph.Start, glyph.End, 0, Vector2.Zero, 0, true, false, glyph.RTL, Virtual: true));
-                i++; limit++;
-            }
+            if (_tabRTL) { for (var i = 0; i < limit; i++) if (_lineGlyphs[i].Tab && _lineGlyphs[i].End > _lineGlyphs[i].Start) { limit = i; break; } }
+            else for (var i = limit - 1; i >= 0; i--) if (_lineGlyphs[i].Tab && _lineGlyphs[i].End > _lineGlyphs[i].Start) { begin = i + 1; break; }
         }
-        if ((Key.Justification & TextJustificationFlags.Kashida) != 0 && Key.Orientation == TextOrientation.Horizontal && width < Key.Width)
+        if ((Key.Justification & TextJustificationFlags.TrimEdgeSpaces) != 0)
+        {
+            var first = begin; var last = limit - 1;
+            while (first <= last && ServerJustificationEdge(_lineGlyphs[first])) { width -= _lineGlyphs[first].Advance * _lineGlyphs[first].Repeat; _lineGlyphs[first] = _lineGlyphs[first] with { Advance = 0 }; first++; }
+            while (last >= first && ServerJustificationEdge(_lineGlyphs[last])) { width -= _lineGlyphs[last].Advance * _lineGlyphs[last].Repeat; _lineGlyphs[last] = _lineGlyphs[last] with { Advance = 0 }; last--; }
+        }
+        if (kashida)
         {
             var opportunities = 0;
-            for (var wordStart = start; wordStart < end;)
-            {
-                var wordEnd = wordStart + 1; while (wordEnd < end && !_wordBoundaries[wordEnd]) wordEnd++;
-                var position = _wordEnds[wordEnd] ? TextJustification.FindKashida(_scalars.AsSpan(0, _count), wordStart, wordEnd) : -1;
-                if (position >= 0)
-                {
-                    for (var i = begin; i < limit; i++)
-                    {
-                        var glyph = _lineGlyphs[i];
-                        if (glyph.Start != position || glyph.Face is null) continue;
-                        if (glyph.Elongation) { opportunities++; break; }
-                        if (_scalars[position] == 0x0640) { _lineGlyphs[i] = glyph with { Elongation = true }; opportunities++; break; }
-                        if (i > 0 && (_lineGlyphs[i - 1].Flags & 4) == 0) continue;
-                        var index = glyph.Face.GetGlyphIndex(0x0640); if (index == 0) break;
-                        var advance = glyph.Face.GetGlyphAdvance(index, Key.FontSize); if (advance <= 0) break;
-                        _lineGlyphs.Insert(i, new(glyph.Face, index, glyph.Start, glyph.End, advance, new(0, glyph.Offset.Y), 0, false, false, glyph.RTL, 0, true, Elongation: true));
-                        opportunities++; limit++; break;
-                    }
-                }
-                wordStart = wordEnd;
-            }
+            for (var i = begin; i < limit; i++) if (_lineGlyphs[i].Elongation && _lineGlyphs[i].Advance > 0 && (i == begin || !_lineGlyphs[i - 1].Elongation)) opportunities++;
             if (opportunities > 0)
             {
-                var extra = (Key.Width - width) / opportunities;
+                var extra = ((double)Key.Width - width) / opportunities;
                 for (var i = begin; i < limit; i++)
                 {
-                    var glyph = _lineGlyphs[i]; if (!glyph.Elongation || glyph.Advance <= 0) continue;
-                    var repeat = (int)Math.Clamp(Math.Floor(extra / glyph.Advance) + (glyph.Virtual ? 0 : 1), glyph.Virtual ? 0 : 1, 255);
+                    var glyph = _lineGlyphs[i]; if (!glyph.Elongation || glyph.Advance <= 0 || i > begin && _lineGlyphs[i - 1].Elongation) continue;
+                    var repeat = (int)Math.Clamp(glyph.Repeat + Math.Truncate(extra / glyph.Advance), glyph.Virtual ? 0 : 1, 255);
                     _lineGlyphs[i] = glyph with { Repeat = repeat }; width += (repeat - glyph.Repeat) * glyph.Advance;
                 }
             }
         }
-        if ((Key.Justification & TextJustificationFlags.WordBound) != 0)
+        if (word)
         {
             var spaces = 0;
-            for (var i = begin; i < limit; i++) if (_lineGlyphs[i].Space && !_lineGlyphs[i].Tab && (_lineGlyphs[i].Advance > 0 || _lineGlyphs[i].Virtual)) spaces++;
+            for (var i = begin; i < limit; i++) if (IsJustificationSpace(_lineGlyphs[i])) spaces++;
             if (spaces > 0)
             {
                 var extra = (Key.Width - width) / spaces;
                 for (var i = begin; i < limit; i++)
                 {
-                    var glyph = _lineGlyphs[i]; if (!glyph.Space || glyph.Tab || glyph.Advance <= 0 && !glyph.Virtual) continue;
-                    var advance = Math.Max(glyph.Virtual ? 0 : Key.FontSize * .1f, glyph.Advance + extra);
+                    var glyph = _lineGlyphs[i]; if (!IsJustificationSpace(glyph)) continue;
+                    var advance = Math.Max(glyph.Virtual ? 0 : GlyphSize(glyph) * .1f, glyph.Advance + extra);
                     _lineGlyphs[i] = glyph with { Advance = advance }; width += advance - glyph.Advance;
                 }
             }
         }
         return width;
+    }
+
+    private bool IsJustificationSpace(Glyph glyph) => glyph.Space && glyph.End > glyph.Start && !glyph.Tab && (glyph.Advance > 0 || glyph.Virtual) && !IsCustomPunctuation(new Rune(_scalars[glyph.Start]));
+    private void PrepareJustificationGlyphs(int start, int end, bool word, bool kashida)
+    {
+        if (word) for (var i = 0; i < _lineGlyphs.Count; i++)
+            {
+                var glyph = _lineGlyphs[i];
+                if (glyph.Start <= start || glyph.Start >= end || !_wordEnds[glyph.Start] || glyph.Space || glyph.Virtual || glyph.Missing || glyph.Face is null || IsCustomPunctuation(new Rune(_scalars[glyph.Start]))) continue;
+                var adjacent = !glyph.RTL ? i - 1 : i + 1; if (adjacent >= 0 && adjacent < _lineGlyphs.Count && _lineGlyphs[adjacent].Space) continue;
+                _lineGlyphs.Insert(i, new(glyph.Face, 0, glyph.Start, glyph.End, 0, Vector2.Zero, 0, true, false, glyph.RTL, Virtual: true, Size: GlyphSize(glyph))); i++;
+            }
+        if (!kashida) return;
+        for (var wordStart = start; wordStart < end;)
+        {
+            var wordEnd = wordStart + 1; while (wordEnd < end && !_wordBoundaries[wordEnd]) wordEnd++;
+            var position = _wordEnds[wordEnd] ? TextJustification.FindKashida(_scalars.AsSpan(0, _count), wordStart, wordEnd) : -1;
+            if (position >= 0) for (var i = 0; i < _lineGlyphs.Count; i++)
+                {
+                    var glyph = _lineGlyphs[i]; if (glyph.Start != position || glyph.End <= glyph.Start || glyph.Face is null) continue;
+                    if (glyph.Elongation) break;
+                    if (_scalars[position] == 0x0640) { _lineGlyphs[i] = glyph with { Elongation = true }; break; }
+                    if (i > 0 && (_lineGlyphs[i - 1].Flags & 4) == 0) continue;
+                    var style = StyleAt(glyph.Start); _shaped.Clear();
+                    glyph.Face.Shape(ServerTatweelScalar, 0, 1, GlyphSize(glyph), NativeTextDirection.RTL, TextScript.ToTag(UnicodeScript.Arabic), style.Language, _shaped, features: style.Font.GetShapingFeatures(glyph.Face), textLength: 1);
+                    if (_shaped.Count == 0 || _shaped[0].GlyphIndex == 0) break;
+                    var shaped = _shaped[0]; var advance = (Key.Orientation == TextOrientation.Horizontal ? shaped.XAdvance : -shaped.YAdvance) / 64f;
+                    var offset = Key.Orientation == TextOrientation.Horizontal ? new Vector2(shaped.XOffset / 64f, glyph.Offset.Y) : new Vector2(glyph.Offset.X, -shaped.YOffset / 64f);
+                    _lineGlyphs.Insert(i, new(glyph.Face, shaped.GlyphIndex, glyph.Start, glyph.End, advance, offset, shaped.Flags, false, false, glyph.RTL, 0, true, Elongation: true, Size: GlyphSize(glyph))); break;
+                }
+            wordStart = wordEnd;
+        }
     }
 
     private void PositionLines()

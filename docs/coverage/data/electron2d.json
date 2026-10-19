@@ -12490,6 +12490,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.TextOverrunFlags",
+    "kind": "type",
+    "declaringType": "Electron2D.TextOverrunFlags",
+    "name": "TextOverrunFlags",
+    "signature": "public enum Electron2D.TextOverrunFlags",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TextParagraph",
     "kind": "type",
     "declaringType": "Electron2D.TextParagraph",
@@ -50443,6 +50461,97 @@
     "parameters": [],
     "returnType": "Electron2D.TextOverrunBehavior",
     "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.TextOverrunFlags.AddEllipsis()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextOverrunFlags",
+    "name": "AddEllipsis",
+    "signature": "public const Electron2D.TextOverrunFlags AddEllipsis = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextOverrunFlags",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.TextOverrunFlags.EnforceEllipsis()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextOverrunFlags",
+    "name": "EnforceEllipsis",
+    "signature": "public const Electron2D.TextOverrunFlags EnforceEllipsis = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextOverrunFlags",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.TextOverrunFlags.JustificationAware()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextOverrunFlags",
+    "name": "JustificationAware",
+    "signature": "public const Electron2D.TextOverrunFlags JustificationAware = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextOverrunFlags",
+    "value": "16"
+  },
+  {
+    "id": "enumValue:Electron2D.TextOverrunFlags.NoTrim()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextOverrunFlags",
+    "name": "NoTrim",
+    "signature": "public const Electron2D.TextOverrunFlags NoTrim = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextOverrunFlags",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.TextOverrunFlags.ShortStringEllipsis()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextOverrunFlags",
+    "name": "ShortStringEllipsis",
+    "signature": "public const Electron2D.TextOverrunFlags ShortStringEllipsis = 32",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextOverrunFlags",
+    "value": "32"
+  },
+  {
+    "id": "enumValue:Electron2D.TextOverrunFlags.Trim()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextOverrunFlags",
+    "name": "Trim",
+    "signature": "public const Electron2D.TextOverrunFlags Trim = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextOverrunFlags",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.TextOverrunFlags.TrimWordOnly()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextOverrunFlags",
+    "name": "TrimWordOnly",
+    "signature": "public const Electron2D.TextOverrunFlags TrimWordOnly = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextOverrunFlags",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.TextSpacingType.Bottom()",
@@ -188285,6 +188394,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServer.ShapedTextFitToWidth(Electron2D.RID,System.Single,Electron2D.TextJustificationFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextFitToWidth",
+    "signature": "public System.Single ShapedTextFitToWidth(Electron2D.RID shaped, System.Single width, Electron2D.TextJustificationFlags justificationFlags = Kashida, WordBound)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "justificationFlags",
+        "type": "Electron2D.TextJustificationFlags",
+        "default": "Kashida, WordBound"
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServer.ShapedTextGetAscent(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.TextServer",
@@ -188344,6 +188482,44 @@
       }
     ],
     "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetCustomEllipsis(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetCustomEllipsis",
+    "signature": "public System.Int32 ShapedTextGetCustomEllipsis(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetCustomPunctuation(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetCustomPunctuation",
+    "signature": "public System.String ShapedTextGetCustomPunctuation(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -188411,6 +188587,25 @@
       }
     ],
     "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetEllipsisPos(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetEllipsisPos",
+    "signature": "public System.Int32 ShapedTextGetEllipsisPos(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -188759,6 +188954,49 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServer.ShapedTextGetSpacing(Electron2D.RID,Electron2D.TextSpacingType)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetSpacing",
+    "signature": "public System.Int32 ShapedTextGetSpacing(Electron2D.RID shaped, Electron2D.TextSpacingType spacing)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "spacing",
+        "type": "Electron2D.TextSpacingType",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetTrimPos(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetTrimPos",
+    "signature": "public System.Int32 ShapedTextGetTrimPos(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServer.ShapedTextGetUnderlinePosition(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.TextServer",
@@ -188974,6 +189212,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServer.ShapedTextOverrunTrimToWidth(Electron2D.RID,System.Single,Electron2D.TextOverrunFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextOverrunTrimToWidth",
+    "signature": "public System.Void ShapedTextOverrunTrimToWidth(Electron2D.RID shaped, System.Single width = 0f, Electron2D.TextOverrunFlags overrunTrimFlags = NoTrim)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": "0f"
+      },
+      {
+        "name": "overrunTrimFlags",
+        "type": "Electron2D.TextOverrunFlags",
+        "default": "NoTrim"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServer.ShapedTextPrevCharacterPos(Electron2D.RID,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.TextServer",
@@ -189085,6 +189352,54 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServer.ShapedTextSetCustomEllipsis(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextSetCustomEllipsis",
+    "signature": "public System.Void ShapedTextSetCustomEllipsis(Electron2D.RID shaped, System.Int32 character)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "character",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextSetCustomPunctuation(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextSetCustomPunctuation",
+    "signature": "public System.Void ShapedTextSetCustomPunctuation(Electron2D.RID shaped, System.String punctuation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "punctuation",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServer.ShapedTextSetDirection(Electron2D.RID,Electron2D.TextDirection)",
     "kind": "method",
     "declaringType": "Electron2D.TextServer",
@@ -189174,6 +189489,35 @@
       {
         "name": "enabled",
         "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextSetSpacing(Electron2D.RID,Electron2D.TextSpacingType,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextSetSpacing",
+    "signature": "public System.Void ShapedTextSetSpacing(Electron2D.RID shaped, Electron2D.TextSpacingType spacing, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "spacing",
+        "type": "Electron2D.TextSpacingType",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
         "default": null
       }
     ],

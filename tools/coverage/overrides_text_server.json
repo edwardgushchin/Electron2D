@@ -313,22 +313,112 @@
     {
       "godot": "TextServer::method:shaped_text_get_line_breaks(RID:,float:,int:,int:TextServer.LineBreakFlag)",
       "electron2d": "method:Electron2D.TextServer.ShapedTextGetLineBreaks(Electron2D.RID,System.Single,System.Int32,Electron2D.TextLineBreakFlags)",
-      "reason": "ADR 0107/0004/0046: executable single/successive-width wrapping over original logical shaped clusters and locale-native opportunities; same word/grapheme/adaptive flags, mandatory CRLF, edge/indent policies and global scalar ranges. Owned substrings retain complete original clusters, BIDI context, whole inline tokens/typed metadata, shared source-version/font leases and informational root parent identity across retirement/reflow; first successful mutation detaches. Correct advanced adaptive/grapheme policy omissions, reversed/out-of-range starts and empty sliced origins. Parent release safety is a managed ownership adaptation. Cold snapshots/authoring may allocate; prepared values/draw remain reuse paths. Hardware/foreign/native-allocation and owner acceptance remain independent."
+      "reason": "ADR 0107/0004/0046: executable single/successive-width wrapping over original logical shaped clusters and locale-native opportunities; same word/grapheme/adaptive flags, mandatory CRLF, edge/indent policies and global scalar ranges. Owned substrings retain complete original clusters, BIDI context, whole inline tokens/typed metadata, shared source-version/font leases and informational root parent identity across retirement/reflow; first successful authoring mutation detaches. Correct advanced adaptive/grapheme policy omissions, reversed/out-of-range starts and empty sliced origins. Parent release safety is a managed ownership adaptation. Cold snapshots/authoring may allocate; prepared values/draw remain reuse paths. Hardware/foreign/native-allocation and owner acceptance remain independent."
     },
     {
       "godot": "TextServer::method:shaped_text_get_line_breaks_adv(RID:,PackedFloat32Array:,int:,bool:,int:TextServer.LineBreakFlag)",
       "electron2d": "method:Electron2D.TextServer.ShapedTextGetLineBreaksAdv(Electron2D.RID,System.ReadOnlySpan<System.Single>,System.Int32,System.Boolean,Electron2D.TextLineBreakFlags)",
-      "reason": "ADR 0107/0004/0046: executable single/successive-width wrapping over original logical shaped clusters and locale-native opportunities; same word/grapheme/adaptive flags, mandatory CRLF, edge/indent policies and global scalar ranges. Owned substrings retain complete original clusters, BIDI context, whole inline tokens/typed metadata, shared source-version/font leases and informational root parent identity across retirement/reflow; first successful mutation detaches. Correct advanced adaptive/grapheme policy omissions, reversed/out-of-range starts and empty sliced origins. Parent release safety is a managed ownership adaptation. Cold snapshots/authoring may allocate; prepared values/draw remain reuse paths. Hardware/foreign/native-allocation and owner acceptance remain independent."
+      "reason": "ADR 0107/0004/0046: executable single/successive-width wrapping over original logical shaped clusters and locale-native opportunities; same word/grapheme/adaptive flags, mandatory CRLF, edge/indent policies and global scalar ranges. Owned substrings retain complete original clusters, BIDI context, whole inline tokens/typed metadata, shared source-version/font leases and informational root parent identity across retirement/reflow; first successful authoring mutation detaches. Correct advanced adaptive/grapheme policy omissions, reversed/out-of-range starts and empty sliced origins. Parent release safety is a managed ownership adaptation. Cold snapshots/authoring may allocate; prepared values/draw remain reuse paths. Hardware/foreign/native-allocation and owner acceptance remain independent."
     },
     {
       "godot": "TextServer::method:shaped_text_get_parent(RID:)",
       "electron2d": "method:Electron2D.TextServer.ShapedTextGetParent(Electron2D.RID)",
-      "reason": "ADR 0107/0004/0046: executable single/successive-width wrapping over original logical shaped clusters and locale-native opportunities; same word/grapheme/adaptive flags, mandatory CRLF, edge/indent policies and global scalar ranges. Owned substrings retain complete original clusters, BIDI context, whole inline tokens/typed metadata, shared source-version/font leases and informational root parent identity across retirement/reflow; first successful mutation detaches. Correct advanced adaptive/grapheme policy omissions, reversed/out-of-range starts and empty sliced origins. Parent release safety is a managed ownership adaptation. Cold snapshots/authoring may allocate; prepared values/draw remain reuse paths. Hardware/foreign/native-allocation and owner acceptance remain independent."
+      "reason": "ADR 0107/0004/0046: executable single/successive-width wrapping over original logical shaped clusters and locale-native opportunities; same word/grapheme/adaptive flags, mandatory CRLF, edge/indent policies and global scalar ranges. Owned substrings retain complete original clusters, BIDI context, whole inline tokens/typed metadata, shared source-version/font leases and informational root parent identity across retirement/reflow; first successful authoring mutation detaches. Correct advanced adaptive/grapheme policy omissions, reversed/out-of-range starts and empty sliced origins. Parent release safety is a managed ownership adaptation. Cold snapshots/authoring may allocate; prepared values/draw remain reuse paths. Hardware/foreign/native-allocation and owner acceptance remain independent."
     },
     {
       "godot": "TextServer::method:shaped_text_substr(RID:,int:,int:)",
       "electron2d": "method:Electron2D.TextServer.ShapedTextSubstr(Electron2D.RID,System.Int32,System.Int32)",
-      "reason": "ADR 0107/0004/0046: executable single/successive-width wrapping over original logical shaped clusters and locale-native opportunities; same word/grapheme/adaptive flags, mandatory CRLF, edge/indent policies and global scalar ranges. Owned substrings retain complete original clusters, BIDI context, whole inline tokens/typed metadata, shared source-version/font leases and informational root parent identity across retirement/reflow; first successful mutation detaches. Correct advanced adaptive/grapheme policy omissions, reversed/out-of-range starts and empty sliced origins. Parent release safety is a managed ownership adaptation. Cold snapshots/authoring may allocate; prepared values/draw remain reuse paths. Hardware/foreign/native-allocation and owner acceptance remain independent."
+      "reason": "ADR 0107/0004/0046: executable single/successive-width wrapping over original logical shaped clusters and locale-native opportunities; same word/grapheme/adaptive flags, mandatory CRLF, edge/indent policies and global scalar ranges. Owned substrings retain complete original clusters, BIDI context, whole inline tokens/typed metadata, shared source-version/font leases and informational root parent identity across retirement/reflow; first successful authoring mutation detaches. Correct advanced adaptive/grapheme policy omissions, reversed/out-of-range starts and empty sliced origins. Parent release safety is a managed ownership adaptation. Cold snapshots/authoring may allocate; prepared values/draw remain reuse paths. Hardware/foreign/native-allocation and owner acceptance remain independent."
+    },
+    {
+      "godot": "TextServer::enum:TextOverrunFlag",
+      "electron2d": "T:Electron2D.TextOverrunFlags",
+      "reason": "ADR 0107/0004/0046: actual retained raw-advance fitting and independent complete-cluster trim/ellipsis display; typed flags, signed source spacing, shared paragraph punctuation, custom Unicode scalar with native-font/period fallback. Raw editing/wrapping/substrings consume fitted geometry; trim metadata uses local visual records. Transactional coherent font reads and reusable workspaces preserve parent/context for fit/trim/ellipsis; changed authoring spacing/punctuation detaches. Correct inferred RTL and vertical ellipse advance, actual-size/current-repeat Kashida, directional tab adjustment, zero-range ellipse opportunity handling and borrowed line display metrics. Source rebuild resets imperative formatting. Managed edge/failure/128-cycle zero-owner checks and four software native/fresh-font pixel/full-frame gates are distinct from hardware/native allocator/package/foreign and owner acceptance."
+    },
+    {
+      "godot": "TextServer::enum_value:TextOverrunFlag.OVERRUN_ADD_ELLIPSIS",
+      "electron2d": "enumValue:Electron2D.TextOverrunFlags.AddEllipsis()",
+      "reason": "ADR 0107/0004/0046: actual retained raw-advance fitting and independent complete-cluster trim/ellipsis display; typed flags, signed source spacing, shared paragraph punctuation, custom Unicode scalar with native-font/period fallback. Raw editing/wrapping/substrings consume fitted geometry; trim metadata uses local visual records. Transactional coherent font reads and reusable workspaces preserve parent/context for fit/trim/ellipsis; changed authoring spacing/punctuation detaches. Correct inferred RTL and vertical ellipse advance, actual-size/current-repeat Kashida, directional tab adjustment, zero-range ellipse opportunity handling and borrowed line display metrics. Source rebuild resets imperative formatting. Managed edge/failure/128-cycle zero-owner checks and four software native/fresh-font pixel/full-frame gates are distinct from hardware/native allocator/package/foreign and owner acceptance."
+    },
+    {
+      "godot": "TextServer::enum_value:TextOverrunFlag.OVERRUN_ENFORCE_ELLIPSIS",
+      "electron2d": "enumValue:Electron2D.TextOverrunFlags.EnforceEllipsis()",
+      "reason": "ADR 0107/0004/0046: actual retained raw-advance fitting and independent complete-cluster trim/ellipsis display; typed flags, signed source spacing, shared paragraph punctuation, custom Unicode scalar with native-font/period fallback. Raw editing/wrapping/substrings consume fitted geometry; trim metadata uses local visual records. Transactional coherent font reads and reusable workspaces preserve parent/context for fit/trim/ellipsis; changed authoring spacing/punctuation detaches. Correct inferred RTL and vertical ellipse advance, actual-size/current-repeat Kashida, directional tab adjustment, zero-range ellipse opportunity handling and borrowed line display metrics. Source rebuild resets imperative formatting. Managed edge/failure/128-cycle zero-owner checks and four software native/fresh-font pixel/full-frame gates are distinct from hardware/native allocator/package/foreign and owner acceptance."
+    },
+    {
+      "godot": "TextServer::enum_value:TextOverrunFlag.OVERRUN_JUSTIFICATION_AWARE",
+      "electron2d": "enumValue:Electron2D.TextOverrunFlags.JustificationAware()",
+      "reason": "ADR 0107/0004/0046: actual retained raw-advance fitting and independent complete-cluster trim/ellipsis display; typed flags, signed source spacing, shared paragraph punctuation, custom Unicode scalar with native-font/period fallback. Raw editing/wrapping/substrings consume fitted geometry; trim metadata uses local visual records. Transactional coherent font reads and reusable workspaces preserve parent/context for fit/trim/ellipsis; changed authoring spacing/punctuation detaches. Correct inferred RTL and vertical ellipse advance, actual-size/current-repeat Kashida, directional tab adjustment, zero-range ellipse opportunity handling and borrowed line display metrics. Source rebuild resets imperative formatting. Managed edge/failure/128-cycle zero-owner checks and four software native/fresh-font pixel/full-frame gates are distinct from hardware/native allocator/package/foreign and owner acceptance."
+    },
+    {
+      "godot": "TextServer::enum_value:TextOverrunFlag.OVERRUN_NO_TRIM",
+      "electron2d": "enumValue:Electron2D.TextOverrunFlags.NoTrim()",
+      "reason": "ADR 0107/0004/0046: actual retained raw-advance fitting and independent complete-cluster trim/ellipsis display; typed flags, signed source spacing, shared paragraph punctuation, custom Unicode scalar with native-font/period fallback. Raw editing/wrapping/substrings consume fitted geometry; trim metadata uses local visual records. Transactional coherent font reads and reusable workspaces preserve parent/context for fit/trim/ellipsis; changed authoring spacing/punctuation detaches. Correct inferred RTL and vertical ellipse advance, actual-size/current-repeat Kashida, directional tab adjustment, zero-range ellipse opportunity handling and borrowed line display metrics. Source rebuild resets imperative formatting. Managed edge/failure/128-cycle zero-owner checks and four software native/fresh-font pixel/full-frame gates are distinct from hardware/native allocator/package/foreign and owner acceptance."
+    },
+    {
+      "godot": "TextServer::enum_value:TextOverrunFlag.OVERRUN_SHORT_STRING_ELLIPSIS",
+      "electron2d": "enumValue:Electron2D.TextOverrunFlags.ShortStringEllipsis()",
+      "reason": "ADR 0107/0004/0046: actual retained raw-advance fitting and independent complete-cluster trim/ellipsis display; typed flags, signed source spacing, shared paragraph punctuation, custom Unicode scalar with native-font/period fallback. Raw editing/wrapping/substrings consume fitted geometry; trim metadata uses local visual records. Transactional coherent font reads and reusable workspaces preserve parent/context for fit/trim/ellipsis; changed authoring spacing/punctuation detaches. Correct inferred RTL and vertical ellipse advance, actual-size/current-repeat Kashida, directional tab adjustment, zero-range ellipse opportunity handling and borrowed line display metrics. Source rebuild resets imperative formatting. Managed edge/failure/128-cycle zero-owner checks and four software native/fresh-font pixel/full-frame gates are distinct from hardware/native allocator/package/foreign and owner acceptance."
+    },
+    {
+      "godot": "TextServer::enum_value:TextOverrunFlag.OVERRUN_TRIM",
+      "electron2d": "enumValue:Electron2D.TextOverrunFlags.Trim()",
+      "reason": "ADR 0107/0004/0046: actual retained raw-advance fitting and independent complete-cluster trim/ellipsis display; typed flags, signed source spacing, shared paragraph punctuation, custom Unicode scalar with native-font/period fallback. Raw editing/wrapping/substrings consume fitted geometry; trim metadata uses local visual records. Transactional coherent font reads and reusable workspaces preserve parent/context for fit/trim/ellipsis; changed authoring spacing/punctuation detaches. Correct inferred RTL and vertical ellipse advance, actual-size/current-repeat Kashida, directional tab adjustment, zero-range ellipse opportunity handling and borrowed line display metrics. Source rebuild resets imperative formatting. Managed edge/failure/128-cycle zero-owner checks and four software native/fresh-font pixel/full-frame gates are distinct from hardware/native allocator/package/foreign and owner acceptance."
+    },
+    {
+      "godot": "TextServer::enum_value:TextOverrunFlag.OVERRUN_TRIM_WORD_ONLY",
+      "electron2d": "enumValue:Electron2D.TextOverrunFlags.TrimWordOnly()",
+      "reason": "ADR 0107/0004/0046: actual retained raw-advance fitting and independent complete-cluster trim/ellipsis display; typed flags, signed source spacing, shared paragraph punctuation, custom Unicode scalar with native-font/period fallback. Raw editing/wrapping/substrings consume fitted geometry; trim metadata uses local visual records. Transactional coherent font reads and reusable workspaces preserve parent/context for fit/trim/ellipsis; changed authoring spacing/punctuation detaches. Correct inferred RTL and vertical ellipse advance, actual-size/current-repeat Kashida, directional tab adjustment, zero-range ellipse opportunity handling and borrowed line display metrics. Source rebuild resets imperative formatting. Managed edge/failure/128-cycle zero-owner checks and four software native/fresh-font pixel/full-frame gates are distinct from hardware/native allocator/package/foreign and owner acceptance."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_fit_to_width(RID:,float:,int:TextServer.JustificationFlag)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextFitToWidth(Electron2D.RID,System.Single,Electron2D.TextJustificationFlags)",
+      "reason": "ADR 0107/0004/0046: actual retained raw-advance fitting and independent complete-cluster trim/ellipsis display; typed flags, signed source spacing, shared paragraph punctuation, custom Unicode scalar with native-font/period fallback. Raw editing/wrapping/substrings consume fitted geometry; trim metadata uses local visual records. Transactional coherent font reads and reusable workspaces preserve parent/context for fit/trim/ellipsis; changed authoring spacing/punctuation detaches. Correct inferred RTL and vertical ellipse advance, actual-size/current-repeat Kashida, directional tab adjustment, zero-range ellipse opportunity handling and borrowed line display metrics. Source rebuild resets imperative formatting. Managed edge/failure/128-cycle zero-owner checks and four software native/fresh-font pixel/full-frame gates are distinct from hardware/native allocator/package/foreign and owner acceptance."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_get_custom_ellipsis(RID:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextGetCustomEllipsis(Electron2D.RID)",
+      "reason": "ADR 0107/0004/0046: actual retained raw-advance fitting and independent complete-cluster trim/ellipsis display; typed flags, signed source spacing, shared paragraph punctuation, custom Unicode scalar with native-font/period fallback. Raw editing/wrapping/substrings consume fitted geometry; trim metadata uses local visual records. Transactional coherent font reads and reusable workspaces preserve parent/context for fit/trim/ellipsis; changed authoring spacing/punctuation detaches. Correct inferred RTL and vertical ellipse advance, actual-size/current-repeat Kashida, directional tab adjustment, zero-range ellipse opportunity handling and borrowed line display metrics. Source rebuild resets imperative formatting. Managed edge/failure/128-cycle zero-owner checks and four software native/fresh-font pixel/full-frame gates are distinct from hardware/native allocator/package/foreign and owner acceptance."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_get_custom_punctuation(RID:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextGetCustomPunctuation(Electron2D.RID)",
+      "reason": "ADR 0107/0004/0046: actual retained raw-advance fitting and independent complete-cluster trim/ellipsis display; typed flags, signed source spacing, shared paragraph punctuation, custom Unicode scalar with native-font/period fallback. Raw editing/wrapping/substrings consume fitted geometry; trim metadata uses local visual records. Transactional coherent font reads and reusable workspaces preserve parent/context for fit/trim/ellipsis; changed authoring spacing/punctuation detaches. Correct inferred RTL and vertical ellipse advance, actual-size/current-repeat Kashida, directional tab adjustment, zero-range ellipse opportunity handling and borrowed line display metrics. Source rebuild resets imperative formatting. Managed edge/failure/128-cycle zero-owner checks and four software native/fresh-font pixel/full-frame gates are distinct from hardware/native allocator/package/foreign and owner acceptance."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_get_ellipsis_pos(RID:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextGetEllipsisPos(Electron2D.RID)",
+      "reason": "ADR 0107/0004/0046: actual retained raw-advance fitting and independent complete-cluster trim/ellipsis display; typed flags, signed source spacing, shared paragraph punctuation, custom Unicode scalar with native-font/period fallback. Raw editing/wrapping/substrings consume fitted geometry; trim metadata uses local visual records. Transactional coherent font reads and reusable workspaces preserve parent/context for fit/trim/ellipsis; changed authoring spacing/punctuation detaches. Correct inferred RTL and vertical ellipse advance, actual-size/current-repeat Kashida, directional tab adjustment, zero-range ellipse opportunity handling and borrowed line display metrics. Source rebuild resets imperative formatting. Managed edge/failure/128-cycle zero-owner checks and four software native/fresh-font pixel/full-frame gates are distinct from hardware/native allocator/package/foreign and owner acceptance."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_get_spacing(RID:,int:TextServer.SpacingType)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextGetSpacing(Electron2D.RID,Electron2D.TextSpacingType)",
+      "reason": "ADR 0107/0004/0046: actual retained raw-advance fitting and independent complete-cluster trim/ellipsis display; typed flags, signed source spacing, shared paragraph punctuation, custom Unicode scalar with native-font/period fallback. Raw editing/wrapping/substrings consume fitted geometry; trim metadata uses local visual records. Transactional coherent font reads and reusable workspaces preserve parent/context for fit/trim/ellipsis; changed authoring spacing/punctuation detaches. Correct inferred RTL and vertical ellipse advance, actual-size/current-repeat Kashida, directional tab adjustment, zero-range ellipse opportunity handling and borrowed line display metrics. Source rebuild resets imperative formatting. Managed edge/failure/128-cycle zero-owner checks and four software native/fresh-font pixel/full-frame gates are distinct from hardware/native allocator/package/foreign and owner acceptance."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_get_trim_pos(RID:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextGetTrimPos(Electron2D.RID)",
+      "reason": "ADR 0107/0004/0046: actual retained raw-advance fitting and independent complete-cluster trim/ellipsis display; typed flags, signed source spacing, shared paragraph punctuation, custom Unicode scalar with native-font/period fallback. Raw editing/wrapping/substrings consume fitted geometry; trim metadata uses local visual records. Transactional coherent font reads and reusable workspaces preserve parent/context for fit/trim/ellipsis; changed authoring spacing/punctuation detaches. Correct inferred RTL and vertical ellipse advance, actual-size/current-repeat Kashida, directional tab adjustment, zero-range ellipse opportunity handling and borrowed line display metrics. Source rebuild resets imperative formatting. Managed edge/failure/128-cycle zero-owner checks and four software native/fresh-font pixel/full-frame gates are distinct from hardware/native allocator/package/foreign and owner acceptance."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_overrun_trim_to_width(RID:,float:,int:TextServer.TextOverrunFlag)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextOverrunTrimToWidth(Electron2D.RID,System.Single,Electron2D.TextOverrunFlags)",
+      "reason": "ADR 0107/0004/0046: actual retained raw-advance fitting and independent complete-cluster trim/ellipsis display; typed flags, signed source spacing, shared paragraph punctuation, custom Unicode scalar with native-font/period fallback. Raw editing/wrapping/substrings consume fitted geometry; trim metadata uses local visual records. Transactional coherent font reads and reusable workspaces preserve parent/context for fit/trim/ellipsis; changed authoring spacing/punctuation detaches. Correct inferred RTL and vertical ellipse advance, actual-size/current-repeat Kashida, directional tab adjustment, zero-range ellipse opportunity handling and borrowed line display metrics. Source rebuild resets imperative formatting. Managed edge/failure/128-cycle zero-owner checks and four software native/fresh-font pixel/full-frame gates are distinct from hardware/native allocator/package/foreign and owner acceptance."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_set_custom_ellipsis(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextSetCustomEllipsis(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0107/0004/0046: actual retained raw-advance fitting and independent complete-cluster trim/ellipsis display; typed flags, signed source spacing, shared paragraph punctuation, custom Unicode scalar with native-font/period fallback. Raw editing/wrapping/substrings consume fitted geometry; trim metadata uses local visual records. Transactional coherent font reads and reusable workspaces preserve parent/context for fit/trim/ellipsis; changed authoring spacing/punctuation detaches. Correct inferred RTL and vertical ellipse advance, actual-size/current-repeat Kashida, directional tab adjustment, zero-range ellipse opportunity handling and borrowed line display metrics. Source rebuild resets imperative formatting. Managed edge/failure/128-cycle zero-owner checks and four software native/fresh-font pixel/full-frame gates are distinct from hardware/native allocator/package/foreign and owner acceptance."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_set_custom_punctuation(RID:,String:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextSetCustomPunctuation(Electron2D.RID,System.String)",
+      "reason": "ADR 0107/0004/0046: actual retained raw-advance fitting and independent complete-cluster trim/ellipsis display; typed flags, signed source spacing, shared paragraph punctuation, custom Unicode scalar with native-font/period fallback. Raw editing/wrapping/substrings consume fitted geometry; trim metadata uses local visual records. Transactional coherent font reads and reusable workspaces preserve parent/context for fit/trim/ellipsis; changed authoring spacing/punctuation detaches. Correct inferred RTL and vertical ellipse advance, actual-size/current-repeat Kashida, directional tab adjustment, zero-range ellipse opportunity handling and borrowed line display metrics. Source rebuild resets imperative formatting. Managed edge/failure/128-cycle zero-owner checks and four software native/fresh-font pixel/full-frame gates are distinct from hardware/native allocator/package/foreign and owner acceptance."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_set_spacing(RID:,int:TextServer.SpacingType,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextSetSpacing(Electron2D.RID,Electron2D.TextSpacingType,System.Int32)",
+      "reason": "ADR 0107/0004/0046: actual retained raw-advance fitting and independent complete-cluster trim/ellipsis display; typed flags, signed source spacing, shared paragraph punctuation, custom Unicode scalar with native-font/period fallback. Raw editing/wrapping/substrings consume fitted geometry; trim metadata uses local visual records. Transactional coherent font reads and reusable workspaces preserve parent/context for fit/trim/ellipsis; changed authoring spacing/punctuation detaches. Correct inferred RTL and vertical ellipse advance, actual-size/current-repeat Kashida, directional tab adjustment, zero-range ellipse opportunity handling and borrowed line display metrics. Source rebuild resets imperative formatting. Managed edge/failure/128-cycle zero-owner checks and four software native/fresh-font pixel/full-frame gates are distinct from hardware/native allocator/package/foreign and owner acceptance."
     }
   ],
   "extras": [
@@ -376,6 +466,14 @@
     },
     {
       "godot": [
+        "TextServer::enum:TextOverrunFlag",
+        "TextServer::enum_value:TextOverrunFlag.OVERRUN_ADD_ELLIPSIS",
+        "TextServer::enum_value:TextOverrunFlag.OVERRUN_ENFORCE_ELLIPSIS",
+        "TextServer::enum_value:TextOverrunFlag.OVERRUN_JUSTIFICATION_AWARE",
+        "TextServer::enum_value:TextOverrunFlag.OVERRUN_NO_TRIM",
+        "TextServer::enum_value:TextOverrunFlag.OVERRUN_SHORT_STRING_ELLIPSIS",
+        "TextServer::enum_value:TextOverrunFlag.OVERRUN_TRIM",
+        "TextServer::enum_value:TextOverrunFlag.OVERRUN_TRIM_WORD_ONLY",
         "TextServer::method:create_shaped_text(int:TextServer.Direction,int:TextServer.Orientation)",
         "TextServer::method:free_rid(RID:)",
         "TextServer::method:get_name()",
@@ -393,12 +491,16 @@
         "TextServer::method:shaped_text_draw(RID:,RID:,Vector2:,float:,float:,Color:,float:)",
         "TextServer::method:shaped_text_draw_outline(RID:,RID:,Vector2:,float:,float:,int:,Color:,float:)",
         "TextServer::method:shaped_text_duplicate(RID:)",
+        "TextServer::method:shaped_text_fit_to_width(RID:,float:,int:TextServer.JustificationFlag)",
         "TextServer::method:shaped_text_get_ascent(RID:)",
         "TextServer::method:shaped_text_get_carets(RID:,int:)",
         "TextServer::method:shaped_text_get_character_breaks(RID:)",
+        "TextServer::method:shaped_text_get_custom_ellipsis(RID:)",
+        "TextServer::method:shaped_text_get_custom_punctuation(RID:)",
         "TextServer::method:shaped_text_get_descent(RID:)",
         "TextServer::method:shaped_text_get_direction(RID:)",
         "TextServer::method:shaped_text_get_dominant_direction_in_range(RID:,int:,int:)",
+        "TextServer::method:shaped_text_get_ellipsis_pos(RID:)",
         "TextServer::method:shaped_text_get_glyph_count(RID:)",
         "TextServer::method:shaped_text_get_grapheme_bounds(RID:,int:)",
         "TextServer::method:shaped_text_get_inferred_direction(RID:)",
@@ -414,6 +516,8 @@
         "TextServer::method:shaped_text_get_range(RID:)",
         "TextServer::method:shaped_text_get_selection(RID:,int:,int:)",
         "TextServer::method:shaped_text_get_size(RID:)",
+        "TextServer::method:shaped_text_get_spacing(RID:,int:TextServer.SpacingType)",
+        "TextServer::method:shaped_text_get_trim_pos(RID:)",
         "TextServer::method:shaped_text_get_underline_position(RID:)",
         "TextServer::method:shaped_text_get_underline_thickness(RID:)",
         "TextServer::method:shaped_text_get_width(RID:)",
@@ -424,14 +528,18 @@
         "TextServer::method:shaped_text_is_ready(RID:)",
         "TextServer::method:shaped_text_next_character_pos(RID:,int:)",
         "TextServer::method:shaped_text_next_grapheme_pos(RID:,int:)",
+        "TextServer::method:shaped_text_overrun_trim_to_width(RID:,float:,int:TextServer.TextOverrunFlag)",
         "TextServer::method:shaped_text_prev_character_pos(RID:,int:)",
         "TextServer::method:shaped_text_prev_grapheme_pos(RID:,int:)",
         "TextServer::method:shaped_text_resize_object(RID:,Variant:,Vector2:,int:InlineAlignment,float:)",
         "TextServer::method:shaped_text_set_bidi_override(RID:,Array:)",
+        "TextServer::method:shaped_text_set_custom_ellipsis(RID:,int:)",
+        "TextServer::method:shaped_text_set_custom_punctuation(RID:,String:)",
         "TextServer::method:shaped_text_set_direction(RID:,int:TextServer.Direction)",
         "TextServer::method:shaped_text_set_orientation(RID:,int:TextServer.Orientation)",
         "TextServer::method:shaped_text_set_preserve_control(RID:,bool:)",
         "TextServer::method:shaped_text_set_preserve_invalid(RID:,bool:)",
+        "TextServer::method:shaped_text_set_spacing(RID:,int:TextServer.SpacingType,int:)",
         "TextServer::method:shaped_text_shape(RID:)",
         "TextServer::method:shaped_text_substr(RID:,int:,int:)",
         "TextServer::method:shaped_text_tab_align(RID:,PackedFloat32Array:)",
@@ -587,7 +695,6 @@
     {
       "godot": [
         "TextServer::enum:Feature",
-        "TextServer::enum:TextOverrunFlag",
         "TextServer::enum_value:Feature.FEATURE_BIDI_LAYOUT",
         "TextServer::enum_value:Feature.FEATURE_BREAK_ITERATORS",
         "TextServer::enum_value:Feature.FEATURE_CONTEXT_SENSITIVE_CASE_CONVERSION",
@@ -603,13 +710,6 @@
         "TextServer::enum_value:Feature.FEATURE_UNICODE_SECURITY",
         "TextServer::enum_value:Feature.FEATURE_USE_SUPPORT_DATA",
         "TextServer::enum_value:Feature.FEATURE_VERTICAL_LAYOUT",
-        "TextServer::enum_value:TextOverrunFlag.OVERRUN_ADD_ELLIPSIS",
-        "TextServer::enum_value:TextOverrunFlag.OVERRUN_ENFORCE_ELLIPSIS",
-        "TextServer::enum_value:TextOverrunFlag.OVERRUN_JUSTIFICATION_AWARE",
-        "TextServer::enum_value:TextOverrunFlag.OVERRUN_NO_TRIM",
-        "TextServer::enum_value:TextOverrunFlag.OVERRUN_SHORT_STRING_ELLIPSIS",
-        "TextServer::enum_value:TextOverrunFlag.OVERRUN_TRIM",
-        "TextServer::enum_value:TextOverrunFlag.OVERRUN_TRIM_WORD_ONLY",
         "TextServer::method:draw_hex_code_box(RID:,int:,Vector2:,int:,Color:)",
         "TextServer::method:get_features()",
         "TextServer::method:get_hex_code_box_size(int:,int:)",
@@ -619,17 +719,7 @@
         "TextServer::method:is_valid_letter(int:)",
         "TextServer::method:name_to_tag(String:)",
         "TextServer::method:shaped_set_span_update_font(RID:,int:,RID[]:,int:,Dictionary:)",
-        "TextServer::method:shaped_text_fit_to_width(RID:,float:,int:TextServer.JustificationFlag)",
-        "TextServer::method:shaped_text_get_custom_ellipsis(RID:)",
-        "TextServer::method:shaped_text_get_custom_punctuation(RID:)",
-        "TextServer::method:shaped_text_get_ellipsis_pos(RID:)",
-        "TextServer::method:shaped_text_get_spacing(RID:,int:TextServer.SpacingType)",
-        "TextServer::method:shaped_text_get_trim_pos(RID:)",
         "TextServer::method:shaped_text_get_word_breaks(RID:,int:TextServer.GraphemeFlag,int:TextServer.GraphemeFlag)",
-        "TextServer::method:shaped_text_overrun_trim_to_width(RID:,float:,int:TextServer.TextOverrunFlag)",
-        "TextServer::method:shaped_text_set_custom_ellipsis(RID:,int:)",
-        "TextServer::method:shaped_text_set_custom_punctuation(RID:,String:)",
-        "TextServer::method:shaped_text_set_spacing(RID:,int:TextServer.SpacingType,int:)",
         "TextServer::method:string_get_character_breaks(String:,String:)",
         "TextServer::method:string_get_word_breaks(String:,String:,int:)",
         "TextServer::method:string_to_lower(String:,String:)",

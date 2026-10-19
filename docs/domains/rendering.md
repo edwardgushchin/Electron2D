@@ -12,7 +12,7 @@
 
 [Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. Registered project definitions prepare typed bases before scene readiness and own loaded images through session shutdown. The registry has explicit owner/session lifetime and no material-property aliases.
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 [Movie writing](../components/movie-writing.md) consumes completed root-viewport pixels through the actual renderer and fixes capture dimensions across later resizes. It does not create a headless renderer or claim readback/encoding is allocation-free.
 
@@ -416,3 +416,5 @@ Ordinary desktop Window children now execute [independent native hosts](../compo
 [TextServer editing](../components/text-server.md#caret-selection-and-navigation) supplies typed baseline-relative BIDI caret shapes, logical selections, Unicode character boundaries and native shaping-cluster navigation. Existing canvas primitives consume the returned geometry on both renderers; paragraph line views retain global scalar origins and line-local geometry. TextCaretInfo owns no native resources. Snapshot arrays remain cold; prepared value queries retain the existing owner/generation/reentry checks.
 
 [Shaped-buffer wrapping and substrings](../components/text-server.md#line-wrapping-and-owned-substrings) expose variable-width multiline flow and independently owned cluster-preserving draws, including shared source leases, global scalar offsets, BIDI/inline context and explicit parent retirement.
+
+[Shaped-buffer formatting](../components/text-server.md#fitting-spacing-and-overrun) connects ten TextServer methods and TextOverrunFlags to actual fitting, signed spacing, punctuation and independent trim/ellipsis display. Owned/borrowed lines share real geometry, rendering and transactional font reads; raw editing ranges remain complete. Verification and remaining platform/allocation/owner limits are recorded with the component.

@@ -22,7 +22,8 @@ public sealed partial class TextLine
             }
             utf16 += rune.Utf16SequenceLength; scalar++;
         }
-        var bidi = new TextBIDI(); bidi.Resolve(full.AsSpan(from, to - from), 2);
+        var text = full.AsSpan(from, to - from); var localeRTL = NativeTextBreak.IsLocaleRTL(_spans.Count > 0 ? _spans[0].Language : string.Empty);
+        var bidi = new TextBIDI(); bidi.Resolve(text, !TextBIDI.HasStrongDirection(text) && localeRTL ? (sbyte)1 : (sbyte)2);
         return bidi.ParagraphLevel == 1 ? TextDirection.RTL : TextDirection.LTR;
     }
     internal long ServerCurrentRevision => _revision;
@@ -95,7 +96,7 @@ public sealed partial class TextLine
                     copy.AddText(ServerSliceText(at, end), ReferenceEquals(span.Font, _neutral) ? copy._neutral : span.Font, span.Size, span.Language, span.Metadata); at = end;
                 }
             }
-            ServerCopyFonts(copy); copy._tabs = (float[])_tabs.Clone();
+            ServerCopyFonts(copy); ServerCopyFormatSettings(copy); copy._tabs = (float[])_tabs.Clone();
             var ranges = new List<TextBIDIRange>(); foreach (var r in _bidi) if (r.Start < to && r.End > from) ranges.Add(new(Math.Max(r.Start, from) - from, Math.Min(r.End, to) - from, r.Direction));
             copy._bidi = ranges.ToArray(); return copy;
         }

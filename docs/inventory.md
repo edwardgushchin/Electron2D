@@ -2,7 +2,7 @@
 
 CanvasItem TopLevel rebinding now connects to the existing recursive presentation reset, with allocation-free sampling propagation and [physical/pixel verification](components/canvas-rendering.md#toplevel-transition-resets-2026-10-18). This adds no production type or public declaration.
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 [Failed initial collider preparation](components/physics-registered-adapter.md#authored-state-after-failed-initial-attachment) now discards partial numerical readback while retaining common body authoring. Ordinary retirement still captures accepted motion; no production type or public declaration is added.
 
@@ -521,6 +521,7 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 | [Rendering](domains/rendering.md) | [Text buffers](components/text-server.md) | [TextServer](classes/TextServer.md) | [TextServer.cs](../src/Servers/Text/TextServer.cs) | Current | Retained implementation object; owned/borrowed shaped-buffer authoring, queries, native drawing and lifetime. |
 | [Rendering](domains/rendering.md) | [Text buffers](components/text-server.md) | [TextServerManager](classes/TextServerManager.md) | [TextServerManager.cs](../src/Servers/Text/TextServerManager.cs) | Current | Permanent static provider discovery and retained Engine service identity. |
 | [Rendering](domains/rendering.md) | [Text buffers](components/text-server.md) | [TextBufferFont](classes/TextBufferFont.md) | [TextLine.Server.cs](../src/Servers/Text/TextLine.Server.cs) | Internal | Borrowed font-source and feature adapter, shared lease lifetime, existing native faces. |
+| [Rendering](domains/rendering.md) | [Text buffers](components/text-server.md) | [TextOverrunFlags](classes/TextOverrunFlags.md) | [TextOverrunFlags.cs](../src/Servers/Text/TextOverrunFlags.cs) | Current | Typed explicit trim, word, ellipsis and justification-aware policies with real display consumers. |
 | [Rendering](domains/rendering.md) | [Text buffers](components/text-server.md) | [TextCaretInfo](classes/TextCaretInfo.md) | [TextCaretInfo.cs](../src/Servers/Text/TextCaretInfo.cs) | Current | Typed leading/trailing baseline-relative caret geometry and directions produced by TextServer. |
 | [Rendering](domains/rendering.md) | [Text objects](components/text-objects.md) | [TextObjectKey](classes/TextObjectKey.md) | [TextLine.cs](../src/Servers/Text/TextLine.cs) | Current | Caller-owned inline reference token shared by duplicate geometry. |
 | [Resources](domains/resources.md) | [Text](components/text.md) | [`Font`](classes/Font.md) | [`Font.cs`](../src/Scene/Resources/Font.cs) | Current | Typed font/layout policy and executable text consumer support. |

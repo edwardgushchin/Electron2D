@@ -1,6 +1,6 @@
 # TextLayout
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 **Visibility:** internal · **Source:** [TextLayout.cs](../../src/Servers/Text/TextLayout.cs) · **Component:** [Text](../components/text.md)
 
@@ -29,3 +29,5 @@ The retained character-end and line-local geometry queries are implemented in [T
 Glyph direction is retained from the actual resolved shaping run, including line-ending whitespace resets. Caret, selection, scalar hits and rich glyph flags share that retained metadata across wrapped lines and BIDI override contexts.
 
 [Owned TextServer substrings](../components/text-server.md#line-wrapping-and-owned-substrings) retain complete original clusters and shared source-version leases independently of parent retirement. The line owner uses a private reference-counted source snapshot; the layout caches logical glyph order and shares BIDI run resolution for actual substring drawing. Language-specific native break opportunities preserve adjacent equal-language context.
+
+The [TextServer formatting family](../components/text-server.md#fitting-spacing-and-overrun) adjusts retained raw advances and independent display trimming through this same owner. Fitting/trim/ellipsis preserve substring context and parent identity; changed spacing/punctuation detaches authored data. Repeated Arabic/word fitting, vertical/RTL trimming and borrowed paragraph line metrics are covered by the formatting profiles.

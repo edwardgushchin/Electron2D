@@ -16,6 +16,13 @@ internal sealed class TextBIDI
     /// <summary>Gets the last resolved paragraph direction, zero for LTR or one for RTL.</summary>
     internal int ParagraphLevel => _paragraphLevel;
 
+    internal static bool HasStrongDirection(ReadOnlySpan<char> text)
+    {
+        var iterator = new CodepointEnumerator(text);
+        while (iterator.MoveNext(out var codepoint)) if (codepoint.BiDiClass is BidiClass.LeftToRight or BidiClass.RightToLeft or BidiClass.ArabicLetter) return true;
+        return false;
+    }
+
     /// <summary>Resolves one paragraph with an explicit LTR/RTL level or automatic first-strong direction.</summary>
     /// <param name="text">UTF-16 paragraph text.</param>
     /// <param name="paragraphLevel">Zero for LTR, one for RTL, or two for automatic direction.</param>

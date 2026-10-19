@@ -1,6 +1,6 @@
 # TextParagraph
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -631,3 +631,5 @@ The borrowed identities interoperate with [TextServer](TextServer.md) through th
 The [shaped-buffer editing](../components/text-server.md#caret-selection-and-navigation) path retains line-local caret/selection geometry and global scalar origins. Reflow refreshes font dependencies after retiring detached adapters before the next coherence check; character-end caches reset with layout preparation.
 
 [Owned TextServer substrings](../components/text-server.md#line-wrapping-and-owned-substrings) retain complete original clusters and shared source-version leases independently of parent retirement. The line owner uses a private reference-counted source snapshot; the layout caches logical glyph order and shares BIDI run resolution for actual substring drawing. Language-specific native break opportunities preserve adjacent equal-language context.
+
+The [TextServer formatting family](../components/text-server.md#fitting-spacing-and-overrun) adjusts retained raw advances and independent display trimming through this same owner. Fitting/trim/ellipsis preserve substring context and parent identity; changed spacing/punctuation detaches authored data. Repeated Arabic/word fitting, vertical/RTL trimming and borrowed paragraph line metrics are covered by the formatting profiles.

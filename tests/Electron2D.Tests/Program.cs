@@ -984,6 +984,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_PARAGRAPH_RENDER") 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_PARAGRAPH") == "1") { TextParagraphTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_LINE_RENDER") is { } textLineBackend) { TextLineRenderingTests.Run(textLineBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_RENDER") is { } textServerBackend) { TextServerRenderingTests.Run(textServerBackend); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_FORMATTING_RENDER") is { } formattingBackend) { TextServerFormattingRenderingTests.Run(formattingBackend); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_FORMATTING") == "1") { TextServerFormattingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_WRAPPING_RENDER") is { } wrappingBackend) { TextServerWrappingRenderingTests.Run(wrappingBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_WRAPPING") == "1") { TextServerWrappingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_EDITING_RENDER") is { } editingBackend) { TextServerEditingRenderingTests.Run(editingBackend); return; }
@@ -1778,6 +1780,7 @@ PolygonPathFinderTests.Run();
 TextServerTests.Run();
 TextServerEditingTests.Run();
 TextServerWrappingTests.Run();
+TextServerFormattingTests.Run();
 TextLineTests.Run();
 AStarGridTests.Run();
 RemoteTransformTests.Run();

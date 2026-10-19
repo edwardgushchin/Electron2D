@@ -1,6 +1,6 @@
 # TextLayoutLine
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 **Visibility:** internal · **Source:** [TextLayout.cs](../../src/Servers/Text/TextLayout.cs) · **Component:** [Text](../components/text.md)
 
@@ -13,3 +13,5 @@ Immutable scalar and glyph ranges plus advance width, ascent/descent and placeme
 Used through [Font](Font.md), [FontFile](FontFile.md) and canvas/Label consumers. These helpers do not add a public compatibility API. The [text component](../components/text.md#verification-boundaries) distinguishes source, managed, native pixel, allocation and platform evidence. [ADR 0046](../decisions/rendering.md#adr-0046) owns the backend and integration boundary.
 
 Underline offset/thickness snapshots are retained with baseline metrics during shaping under active font read scopes. Prepared text-buffer queries read these values without invoking fonts after face retirement.
+
+TrimPosition and EllipsisPosition retain buffer-local visual glyph-record boundaries, initially -1. Raw and display layouts retain independent widths; borrowed line consumers read actual display metrics.
