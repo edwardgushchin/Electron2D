@@ -1,6 +1,6 @@
 # NativeTextBreak
 
-Last updated: 2026-10-14
+Last updated: 2026-10-20
 
 **Declaration:** `internal static unsafe partial class NativeTextBreak` · **Source:** [NativeTextBreak.cs](../../src/Servers/Text/NativeTextBreak.cs) · **Component:** [Text](../components/text.md)
 
@@ -14,7 +14,7 @@ Each call pins the string only while setting and reading the iterators. Both ite
 
 `IsLocaleRTL` supplies the neutral-paragraph fallback policy for `ar`, `dv`, `he`, `fa`, `ff`, `ku` and `ur`; it does not replace Unicode strong-character resolution. The managed culture-tag separator `-` is accepted alongside `_`. ICU's general locale-orientation policy is deliberately not substituted for that specified language policy.
 
-`IsNonprinting` classifies valid Unicode scalars using the same pinned ICU data: a scalar is nonprinting when it is neither graphic nor blank. Controls and unassigned scalars therefore remain distinct from spaces, tabulation and graphic private-use characters. TextLayout caches this result once per decoded scalar before shaping. The private library exposes nine engine-owned C entrypoints, including this classification query.
+`IsNonprinting` classifies valid Unicode scalars using the same pinned ICU data: a scalar is nonprinting when it is neither graphic nor blank. Controls and unassigned scalars therefore remain distinct from spaces, tabulation and graphic private-use characters. TextLayout caches this result once per decoded scalar before shaping. The combined private text library exposes fifteen engine-owned C entrypoints, including Unicode transforms/properties and MSDF generation/release; packaging checks use the canonical TEXT_EXPORTS set.
 
 ## Packaging and verification
 
@@ -31,3 +31,7 @@ Android's private `.so` and embedded ICU data are now connected to the SDK appli
 ## MSDF integration
 
 The existing private text library also contains the immutable MSDF core and its bounded generation/release exports. Break iterator initialization/data/lifetime remains independent of cold font generation. Native publish checks require the complete combined export closure and forbid global ICU imports.
+
+## Standalone string operations
+
+[NativeTextBreak.Unicode.cs](../../src/Servers/Text/NativeTextBreak.Unicode.cs) and [TextUnicode.cpp](../../src/Servers/Text/Native/TextUnicode.cpp) reuse the same process data owner and lock for public TextServer utilities. Per-call character/word iterators are closed before unpinning; no source cursor escapes. Native lowercase/titlecase and diacritic removal preflight explicit-length output under the 64 MiB UTF-16 budget. Per-scalar NFKD decomposition uses fixed native stack storage because removing nonzero combining classes makes cross-scalar reordering irrelevant. Identifier checks require NFC, XID/recommended scripts and complete contextual join controls; required Indic properties are checked before use. The filtered data adds ulayout.icu, with no upstream algorithm changes. Threaded tests, whole-string differential cases, missing-data failure and public rendered consumers are recorded in [the Unicode verification contract](../components/text-server.md#unicode-verification-2026-10-20). Foreign execution claims above precede these four new exports and do not establish their acceptance.

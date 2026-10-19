@@ -234,3 +234,23 @@ Sets signed extra logical-pixel spacing for Glyph, Space, Top or Bottom; Max/und
 `int ShapedTextGetSpacing(RID shaped, TextSpacingType spacing)`
 
 Returns signed extra spacing, initially zero; it survives clear and duplicate. Only the four selectable categories are accepted.
+
+## Unicode and locale utilities
+
+See the [standalone Unicode contract](../components/text-server.md#standalone-unicode-utilities) for exact range units, normalization, join-control rules, bounds and verification limits. These operations are stateless and callable across threads; returned arrays are independent cold snapshots. Null string arguments throw ArgumentNullException and strings beyond 64 MiB UTF-16 throw ArgumentException. Empty language samples the current tool locale.
+
+| Signature | Behavior |
+| --- | --- |
+| `bool IsLocaleRightToLeft(string locale)` | Tests the case-sensitive ar/dv/he/fa/ff/ku/ur language policy; accepts underscore/hyphen separators, empty is false. |
+| `bool IsValidIdentifier(string text)` | NFC/recommended-script XID syntax with initial underscore and contextual join controls; malformed/empty is false. Does not detect confusables. |
+| `bool IsValidLetter(int unicode)` | Unicode letter category; invalid scalars and surrogate values return false. |
+| `uint NameToTag(string name)` | Registered alias or custom big-endian four-byte OpenType tag. |
+| `string TagToName(uint tag)` | Canonical registered name or custom_ Latin-1 bytes, stopped at NUL. |
+| `int[] StringGetCharacterBreaks(string text, string language = "")` | Composite-character scalar ends, including nonempty source end. |
+| `int[] StringGetWordBreaks(string text, string language = "", int charsPerLine = 0)` | Alternating scalar starts/ends for words, or scalar-width lines when positive. |
+| `string StringToLower(string text, string language = "")` | Full locale-sensitive lowercase. |
+| `string StringToTitle(string text, string language = "")` | Locale-sensitive word titlecase with remaining letters lowercased. |
+| `string StringToUpper(string text, string language = "")` | Shared managed full uppercase and locale tailoring. |
+| `string StripDiacritics(string text)` | NFKD compatibility decomposition, removing nonzero canonical combining classes. |
+
+Transformations preserve embedded NUL and unpaired UTF-16. Positive character-width word ranges can split composites; use composite ends when that cut is unwanted. Hard separators do not occur in returned word/width ranges. Native lower/title/strip reject an oversized expanded result before output allocation. Scalar/known-tag queries reuse warmed state; transformations and arrays may allocate.

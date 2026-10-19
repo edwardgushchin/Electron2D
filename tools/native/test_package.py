@@ -16,6 +16,18 @@ import test_consumer
 
 
 class NativePackageTests(unittest.TestCase):
+    def test_text_unicode_operations_are_in_every_private_abi(self):
+        additions = {"e2d_text_case", "e2d_text_strip_diacritics", "e2d_text_character_properties", "e2d_text_is_identifier"}
+        for profile in ("Linux", "MacOS", "Windows"):
+            name = next(name for name in package.LIBRARIES[profile] if "Electron2DTextBreak" in name)
+            exports = package.required_exports(name)
+            self.assertEqual(len(exports), 15)
+            self.assertTrue(additions <= exports)
+        native = package.ROOT / "src/Servers/Text/Native"
+        for symbol in additions:
+            self.assertIn(symbol + ";", (native / "exports.map").read_text())
+            self.assertIn("_" + symbol + "\n", (native / "exports-macos.txt").read_text())
+
     def test_webrtc_desktop_exports_and_pinned_sources(self):
         for profile in ("Linux", "MacOS", "Windows"):
             name = next(name for name in package.LIBRARIES[profile] if "Electron2DWebRTC" in name)

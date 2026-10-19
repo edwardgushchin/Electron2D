@@ -1,6 +1,10 @@
 _e2d_text_init
 _e2d_text_versions
 _e2d_text_is_nonprinting
+_e2d_text_case
+_e2d_text_strip_diacritics
+_e2d_text_character_properties
+_e2d_text_is_identifier
 _e2d_break_open
 _e2d_break_set
 _e2d_break_first

@@ -10,6 +10,7 @@ from pathlib import Path
 
 TEXT_EXPORTS = {
     "e2d_text_init", "e2d_text_versions", "e2d_text_is_nonprinting",
+    "e2d_text_case", "e2d_text_strip_diacritics", "e2d_text_character_properties", "e2d_text_is_identifier",
     "e2d_break_open", "e2d_break_set", "e2d_break_first", "e2d_break_next",
     "e2d_break_status", "e2d_break_close", "e2d_font_msdf_generate", "e2d_font_msdf_free",
 }

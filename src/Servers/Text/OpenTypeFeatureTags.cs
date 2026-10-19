@@ -155,6 +155,22 @@ internal static partial class OpenTypeFeatureTags
         return count == 0 ? 0 : tag;
     }
 
+    private static readonly Dictionary<uint, string> Names = CreateNames();
+    private static Dictionary<uint, string> CreateNames()
+    {
+        var names = new Dictionary<uint, string>(); foreach (var pair in Aliases) names[pair.Value] = pair.Key;
+        for (var i = 1; i <= 99; i++) { var name = "character_variant_" + i.ToString("D2", System.Globalization.CultureInfo.InvariantCulture); names[Resolve(name)] = name; }
+        for (var i = 1; i <= 20; i++) { var name = "stylistic_set_" + i.ToString("D2", System.Globalization.CultureInfo.InvariantCulture); names[Resolve(name)] = name; }
+        return names;
+    }
+    internal static string GetName(uint tag)
+    {
+        if (Names.TryGetValue(tag, out var name)) return name;
+        Span<char> result = stackalloc char[11]; "custom_".AsSpan().CopyTo(result); var length = 7;
+        for (var shift = 24; shift >= 0; shift -= 8) { var value = (byte)(tag >> shift); if (value == 0) break; result[length++] = (char)value; }
+        return new string(result[..length]);
+    }
+
     private static bool TryNumbered(string name, string prefix, int maximum, out int number)
     {
         number = 0;

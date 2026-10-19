@@ -2507,8 +2507,8 @@
   ],
   "data": {
     "path": "data/TextBreak78.dat",
-    "sha256": "64e407b570a21a4b740531a14cd95f0cefc46cef3d8224fd09a0dd386fb7016a",
-    "bytes": 4797472,
+    "sha256": "632f80e9268e60542a9189d3575b53a4338a752ac8a4f1ebd89465ff73eca329",
+    "bytes": 4811936,
     "tocPrefix": "icudt78l",
     "items": [
       "brkitr/burmesedict.dict",
@@ -2567,6 +2567,7 @@
       "supplementalData.res",
       "timezoneTypes.res",
       "uemoji.icu",
+      "ulayout.icu",
       "units.res",
       "uts46.nrm",
       "windowsZones.res",

@@ -187987,6 +187987,82 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServer.IsLocaleRightToLeft(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "IsLocaleRightToLeft",
+    "signature": "public System.Boolean IsLocaleRightToLeft(System.String locale)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.IsValidIdentifier(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "IsValidIdentifier",
+    "signature": "public System.Boolean IsValidIdentifier(System.String text)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.IsValidLetter(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "IsValidLetter",
+    "signature": "public System.Boolean IsValidLetter(System.Int32 unicode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "unicode",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.NameToTag(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "NameToTag",
+    "signature": "public System.UInt32 NameToTag(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServer.ShapedGetSpanCount(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.TextServer",
@@ -189599,6 +189675,169 @@
       }
     ],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.StringGetCharacterBreaks(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "StringGetCharacterBreaks",
+    "signature": "public System.Int32[] StringGetCharacterBreaks(System.String text, System.String language = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.StringGetWordBreaks(System.String,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "StringGetWordBreaks",
+    "signature": "public System.Int32[] StringGetWordBreaks(System.String text, System.String language = \u0022\u0022, System.Int32 charsPerLine = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "charsPerLine",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.StringToLower(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "StringToLower",
+    "signature": "public System.String StringToLower(System.String text, System.String language = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.StringToTitle(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "StringToTitle",
+    "signature": "public System.String StringToTitle(System.String text, System.String language = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.StringToUpper(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "StringToUpper",
+    "signature": "public System.String StringToUpper(System.String text, System.String language = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.StripDiacritics(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "StripDiacritics",
+    "signature": "public System.String StripDiacritics(System.String text)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.TagToName(System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "TagToName",
+    "signature": "public System.String TagToName(System.UInt32 tag)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tag",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
     "value": null
   },
   {
