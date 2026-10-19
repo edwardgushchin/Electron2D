@@ -4,13 +4,19 @@ public sealed partial class TextParagraph
 {
     private readonly Dictionary<int, TextLine> _serverLines = [];
     private readonly Dictionary<int, long> _serverVersions = [];
-    private bool _serverMetricsDirty;
+    private bool _serverMetricsDirty, _serverReadsRetired;
     private void ServerAttachSources()
     {
         _source.ServerGuard = Check; _dropcap.ServerGuard = Check;
         _source.ServerChanged = ContentChanged; _dropcap.ServerChanged = ContentChanged;
     }
-    private void RetireServerLines() { foreach (var line in _serverLines.Values) line.Dispose(); _serverLines.Clear(); _serverVersions.Clear(); _serverMetricsDirty = false; }
+    private void RetireServerLines()
+    {
+        var changed = _serverLines.Count != 0;
+        foreach (var line in _serverLines.Values) line.Dispose();
+        _serverLines.Clear(); _serverVersions.Clear(); _serverMetricsDirty = false;
+        if (changed) { _serverReadsRetired = true; ContentChanged(); }
+    }
     private void ServerLineChanged()
     {
         _serverMetricsDirty = true; _fonts.Clear(); _source.CollectFonts(_fonts); _dropcap.CollectFonts(_fonts);

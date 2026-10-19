@@ -241,7 +241,8 @@ public sealed partial class TextParagraph : ElectronObject
     {
         for (var attempt = 0; attempt < Font.MaximumReadAttempts; attempt++)
         {
-            BeginReads(); Prepare(); RefreshServerLines(); if (ReadsCurrent()) return;
+            _serverReadsRetired = false;
+            BeginReads(); Prepare(); RefreshServerLines(); if (!_serverReadsRetired && ReadsCurrent()) return;
             _dirty = true; EndReads();
         }
         throw Font.UnsettledRead();

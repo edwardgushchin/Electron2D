@@ -12200,6 +12200,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.TextCaretInfo",
+    "kind": "type",
+    "declaringType": "Electron2D.TextCaretInfo",
+    "name": "TextCaretInfo",
+    "signature": "public struct Electron2D.TextCaretInfo",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TextDirection",
     "kind": "type",
     "declaringType": "Electron2D.TextDirection",
@@ -188126,6 +188139,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServer.ShapedTextClosestCharacterPos(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextClosestCharacterPos",
+    "signature": "public System.Int32 ShapedTextClosestCharacterPos(Electron2D.RID shaped, System.Int32 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServer.ShapedTextDraw(Electron2D.RID,Electron2D.CanvasItem,Electron2D.Vector2,System.Single,System.Single,System.Nullable\u003CElectron2D.Color\u003E,System.Single)",
     "kind": "method",
     "declaringType": "Electron2D.TextServer",
@@ -188267,6 +188304,49 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServer.ShapedTextGetCarets(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetCarets",
+    "signature": "public Electron2D.TextCaretInfo ShapedTextGetCarets(Electron2D.RID shaped, System.Int32 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextCaretInfo",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetCharacterBreaks(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetCharacterBreaks",
+    "signature": "public System.Int32[] ShapedTextGetCharacterBreaks(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServer.ShapedTextGetDescent(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.TextServer",
@@ -188305,6 +188385,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServer.ShapedTextGetDominantDirectionInRange(Electron2D.RID,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetDominantDirectionInRange",
+    "signature": "public Electron2D.TextDirection ShapedTextGetDominantDirectionInRange(Electron2D.RID shaped, System.Int32 start, System.Int32 end)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "start",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "end",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServer.ShapedTextGetGlyphCount(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.TextServer",
@@ -188321,6 +188430,30 @@
       }
     ],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetGraphemeBounds(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetGraphemeBounds",
+    "signature": "public Electron2D.Vector2 ShapedTextGetGraphemeBounds(Electron2D.RID shaped, System.Int32 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {
@@ -188486,6 +188619,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServer.ShapedTextGetSelection(Electron2D.RID,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetSelection",
+    "signature": "public Electron2D.Vector2[] ShapedTextGetSelection(Electron2D.RID shaped, System.Int32 start, System.Int32 end)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "start",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "end",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServer.ShapedTextGetSize(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.TextServer",
@@ -188586,6 +188748,49 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServer.ShapedTextHasVisibleChars(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextHasVisibleChars",
+    "signature": "public System.Boolean ShapedTextHasVisibleChars(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextHitTestGrapheme(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextHitTestGrapheme",
+    "signature": "public System.Int32 ShapedTextHitTestGrapheme(Electron2D.RID shaped, System.Single coords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "coords",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServer.ShapedTextHitTestPosition(Electron2D.RID,System.Single)",
     "kind": "method",
     "declaringType": "Electron2D.TextServer",
@@ -188626,6 +188831,102 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextNextCharacterPos(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextNextCharacterPos",
+    "signature": "public System.Int32 ShapedTextNextCharacterPos(Electron2D.RID shaped, System.Int32 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextNextGraphemePos(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextNextGraphemePos",
+    "signature": "public System.Int32 ShapedTextNextGraphemePos(Electron2D.RID shaped, System.Int32 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextPrevCharacterPos(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextPrevCharacterPos",
+    "signature": "public System.Int32 ShapedTextPrevCharacterPos(Electron2D.RID shaped, System.Int32 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextPrevGraphemePos(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextPrevGraphemePos",
+    "signature": "public System.Int32 ShapedTextPrevGraphemePos(Electron2D.RID shaped, System.Int32 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -252315,6 +252616,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextCaretInfo.LeadingDirection()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextCaretInfo",
+    "name": "LeadingDirection",
+    "signature": "public Electron2D.TextDirection LeadingDirection { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextCaretInfo.LeadingRect()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextCaretInfo",
+    "name": "LeadingRect",
+    "signature": "public Electron2D.Rect2 LeadingRect { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextCaretInfo.TrailingDirection()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextCaretInfo",
+    "name": "TrailingDirection",
+    "signature": "public Electron2D.TextDirection TrailingDirection { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextCaretInfo.TrailingRect()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextCaretInfo",
+    "name": "TrailingRect",
+    "signature": "public Electron2D.Rect2 TrailingRect { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {

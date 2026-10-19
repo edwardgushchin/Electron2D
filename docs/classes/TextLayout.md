@@ -1,6 +1,6 @@
 # TextLayout
 
-Last updated: 2026-10-12
+Last updated: 2026-10-19
 
 **Visibility:** internal · **Source:** [TextLayout.cs](../../src/Servers/Text/TextLayout.cs) · **Component:** [Text](../components/text.md)
 
@@ -21,3 +21,9 @@ Used through [Font](Font.md), [FontFile](FontFile.md) and canvas/Label consumers
 ## Support-aware source selection
 
 Scripts are resolved before fallback selection. Primary sources remain first; explicit fallback sources retain authored order within the three language/script support tiers. Full grapheme coverage is attempted before scalar fallback, and script-unsupported sources remain last resort. Emoji presentation prefers color fonts, including explicit VS16, while VS15 retains ordinary text priority. Policy changes invalidate cached layout and dependent native variations; prepared canvas commands reuse glyph storage. The text component records current native pixel and allocation verification.
+
+The [shaped-buffer editing](../components/text-server.md#caret-selection-and-navigation) path retains line-local caret/selection geometry and global scalar origins. Reflow refreshes font dependencies after retiring detached adapters before the next coherence check; character-end caches reset with layout preparation.
+
+The retained character-end and line-local geometry queries are implemented in [TextLayout.ServerEditing.cs](../../src/Servers/Text/TextLayout.ServerEditing.cs).
+
+Glyph direction is retained from the actual resolved shaping run, including line-ending whitespace resets. Caret, selection, scalar hits and rich glyph flags share that retained metadata across wrapped lines and BIDI override contexts.

@@ -410,3 +410,7 @@ Ordinary desktop Window children now execute [independent native hosts](../compo
 ## Low-level shaped text
 
 [TextServer buffers](../components/text-server.md) connect retained provider discovery, owned buffer creation/release and borrowed TextLine/TextParagraph identities to typed authoring, native shaping, ceiled dimensions, fractional baseline metrics and baseline canvas drawing. Paragraph line edits detach atomically and retire at reflow. The same FreeType/HarfBuzz and canvas owners remain in use; raw font-cache and extension families retain separate coverage prerequisites.
+
+## Shaped-buffer editing
+
+[TextServer editing](../components/text-server.md#caret-selection-and-navigation) supplies typed baseline-relative BIDI caret shapes, logical selections, Unicode character boundaries and native shaping-cluster navigation. Existing canvas primitives consume the returned geometry on both renderers; paragraph line views retain global scalar origins and line-local geometry. TextCaretInfo owns no native resources. Snapshot arrays remain cold; prepared value queries retain the existing owner/generation/reentry checks.
