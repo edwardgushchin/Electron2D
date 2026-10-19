@@ -34,11 +34,11 @@ Games can define asymmetric bodies, tune their angular response and use the same
 <a id="adr-0076"></a>
 ## ADR 0076: Complete typed body parameters and field/material consumers
 
-Last updated: 2026-09-26
+Last updated: 2026-10-19
 
 - Status: Accepted
 - Scope: All ten body parameter capabilities across scene/server RIDs
-- Depends on: [0073](#adr-0073), [0056](physics.md#adr-0056), [0054](physics-backends.md#adr-0054), [0001](product.md#adr-0001), [0014](resources.md#adr-0014)
+- Depends on: [0073](#adr-0073), [0056](physics-fields.md#adr-0056), [0054](physics-backends.md#adr-0054), [0001](product.md#adr-0001), [0014](resources.md#adr-0014)
 
 ### Context
 
@@ -49,6 +49,7 @@ Typed mass/center/inertia exists, but the server parameter dispatcher still lack
 - Complete concrete BodySet/GetFriction, Bounce, GravityScale, LinearDamp, AngularDamp, LinearDampMode and AngularDampMode beside the existing mass/center/inertia pairs. These ten pairs preserve every parameter capability without Variant or a generic untyped dispatcher. Exclude only the raw BodyParameter numeric selector/container and MAX sentinel under ADR 0001; its behaviors remain represented by these pairs. Reuse RigidBody.DampMode Combine=0/default and Replace=1 for the semantically identical server BodyDampMode enum instead of another public duplicate.
 - Signed friction/restitution project the existing rough/absorbent material convention into actual fixtures and the world combine callbacks. Defaults are friction one, bounce zero. Body-local server writes do not mutate a borrowed PhysicsMaterial. Scene material assignment/revision/disposal reload replaces both raw overrides with current material/default coefficients; revision polling recovers missed subscriber delivery before fixture preparation. Other bodies borrowing that resource retain their own settings.
 - Store non-rigid/server gravity scale one, damping zero and Combine defaults in the runtime; scene RigidBody getters/setters share its existing descriptors. Apply signed gravity to selected Area/world gravity. Combine adds selected damping, Replace uses body damping, with max(0,1-delta*damp) before default gravity/forces. Signed damping remains valid. Validate resolved totals, factors and candidate motion before velocity/cache commit; changing a resolved field wakes affected dynamic bodies. Leaving an approximately zero gravity multiplier also follows the reference wakeup rule.
+- Scene gravity and force-omission edits retain their newly authored multiplier/flag after selected native-gravity publication fails. Retry the latest effective native multiplier (zero for omitted integration) before numerical body/view/query/force/history access or a positive step. Configured reads do not prepare; repeated failure preserves its error and tick. Retirement discards the attachment-local request. Scene material assignment, damping values/modes and omission edits reject a terminal world before changing authoring, including equal assignments; healthy post-solver callback writes remain allowed.
 - Preserve settings through detached configuration, removal/reentry and role changes. Static/kinematic roles retain configuration while inverse dynamics remain disabled. CharacterBody.GetGravity and its direct-state TotalGravity share the scaled selected field; this does not apply gravity to caller-owned character velocity. Omitted integration retains reported fields and configuration while skipping default physical effects.
 - Reuse signed material setup and shared field reducer. Enforce owner/solver access, live body kind, finite coefficients and valid damping enums before configuration writes. Borrowed-resource callbacks may throw after their resource change; the revision gate restores actual body material at the next query/step. The warm field/read/solver path reuses storage; vendor is unchanged.
 

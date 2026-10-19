@@ -136,7 +136,8 @@ public abstract class PhysicsBackendCollider
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract void SetRotationLocked(bool locked);
     /// <summary>Supplies the selected implementation operation: set gravity scale.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.
+    /// The scale is the effective native multiplier, zero when default scene force integration is omitted. A selected failure retains this request for retry before numerical use; live access to this body rejects until publication returns. The authored multiplier remains separately available through integration inputs.</remarks>
     protected internal abstract void SetGravityScale(float scale);
     /// <summary>Supplies the selected implementation operation: apply central force.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>

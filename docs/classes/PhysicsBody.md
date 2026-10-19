@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-19
 
+[Gravity publication and terminal parameter guards](../components/physics-registered-adapter.md#gravity-publication-and-terminal-parameter-guards) retry the latest effective native gravity/omission request after a selected error and discard it on attachment retirement. Scene damping, omission and inherited material setters reject failed worlds before changing authoring while healthy post-solver callbacks retain writes. Public CPU/software-GPU/registered JIT/NativeAOT profiles verify real motion, history boundaries and strict zero managed-byte frames; wider acceptance remains open.
+
 [Body mode operation audit](../components/physics-registered-adapter.md#body-mode-operation-audit) now checks all four roles across five scene siblings and raw bodies, real changed-frame motion, captured numerical input reads, guarded writes and complete mode-publication recovery. Public JIT/strict NativeAOT CPU/software-GPU/registered companions retain strict zero managed-byte frames; broader numerical/native/network/performance acceptance remains open.
 
 ## Terminal world access

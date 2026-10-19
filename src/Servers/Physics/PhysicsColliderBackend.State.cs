@@ -66,7 +66,23 @@ internal sealed partial class PhysicsColliderBackend
     internal void SetAwake(bool awake) => Attached.SetAwake(awake);
     internal void SetCanSleep(bool canSleep) => Attached.SetCanSleep(canSleep);
     internal void SetRotationLocked(bool locked) => Attached.SetRotationLocked(locked);
-    internal void SetGravityScale(float scale) => Attached.SetGravityScale(scale);
+    private float? _pendingGravityScale;
+    private bool _publishingGravityScale;
+    internal void SetGravityScale(float scale)
+    {
+        if (_publishingGravityScale) throw new InvalidOperationException("Gravity publication cannot reenter its own write.");
+        _publishingGravityScale = true;
+        try { Attached.SetGravityScale(scale); _pendingGravityScale = null; }
+        catch { _pendingGravityScale = scale; Space?.MarkColliderMetadataDirty(); throw; }
+        finally { _publishingGravityScale = false; }
+    }
+    internal void PreparePendingGravityScale()
+    {
+        if (_publishingGravityScale) throw new InvalidOperationException("Gravity publication cannot reenter its own write.");
+        if (_pendingGravityScale is not { } scale) return;
+        Space?.EnsureImplementationWriteAccess(); Space?.EnsureBackendAccess();
+        SetGravityScale(scale);
+    }
     internal void ApplyCentralForce(Vector2 force, bool wake) => Attached.ApplyCentralForce(force, wake);
     internal void ApplyTorque(float torque, bool wake) => Attached.ApplyTorque(torque, wake);
 }

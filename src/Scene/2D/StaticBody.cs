@@ -88,6 +88,7 @@ public partial class StaticBody : PhysicsBody
     /// <value>Null by default, which uses friction one and bounce zero.</value>
     /// <remarks>Property edits rebuild fixtures before the next physics step. The caller owns the material.</remarks>
     /// <exception cref="ObjectDisposedException">The assigned material or body has been disposed.</exception>
+    /// <exception cref="InvalidOperationException">Attached mutation is off-owner, inside a numerical hook or after the world has failed, including equal assignments.</exception>
     public PhysicsMaterial? PhysicsMaterialOverride
     {
         get { ThrowIfDisposed(); return MaterialOverride; }

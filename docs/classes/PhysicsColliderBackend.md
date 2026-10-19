@@ -1,6 +1,8 @@
 # PhysicsColliderBackend
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
+
+[Gravity publication and terminal parameter guards](../components/physics-registered-adapter.md#gravity-publication-and-terminal-parameter-guards) retry the latest effective native gravity/omission request after a selected error and discard it on attachment retirement. Scene damping, omission and inherited material setters reject failed worlds before changing authoring while healthy post-solver callbacks retain writes. Public CPU/software-GPU/registered JIT/NativeAOT profiles verify real motion, history boundaries and strict zero managed-byte frames; wider acceptance remains open.
 
 **Declaration:** `internal sealed partial class PhysicsColliderBackend`
 

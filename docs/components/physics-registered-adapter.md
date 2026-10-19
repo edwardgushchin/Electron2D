@@ -2,6 +2,62 @@
 
 Last updated: 2026-10-19
 
+## Gravity publication and terminal parameter guards
+
+A selected scene gravity hook could partially change its native multiplier and
+throw after common authoring committed. The regression then produced velocity
+99 instead of 3 on the next real step. One unchanged public consumer DLL fails
+against the old runtime and passes after only the five recovery source files
+change. It models a valid native-style implementation whose gravity multiplier
+is updated by SetGravityScale; ordinary integration inputs still carry the
+configured multiplier, including when default integration is omitted.
+
+The attachment facade now retains the latest failed effective multiplier and an
+in-flight guard. Retry it before cached/fresh body-state access, RID numerical
+reads, live queries, force preparation, private/portable capture or apply, and
+positive steps. Fixed-configuration private restore prepares it before selected
+history access. Configured gravity/omission reads remain non-preparing. Repeated
+failure retains its original exception and tick; an explicit new scene assignment
+can replace the pending scalar, while RID setters retain their existing prior
+preparation boundary. Retirement discards the old request and new attachment
+configuration supplies the current effective multiplier. Preparation never runs
+Solve or switches to CPU. No history or wire schema changes.
+
+A separate old-runtime control accepted 14 writes after a terminal solve failure:
+CustomIntegrator, four damping value/mode properties and PhysicsMaterialOverride
+on RigidBody/PhysicalBone, plus material assignment on StaticBody/AnimatableBody.
+These setters now check backend failure before authoring, including equal writes.
+The common material gate serves every exposed inherited material property.
+Healthy post-solver user callbacks retain their parameter writes; teardown remains
+available. Captured parameter tuples verify that rejected writes change no state.
+
+The public --gravity-publication fixture checks two affected scene siblings,
+four physical roles and six scene/RID gravity/omission setters. Registered
+profiles execute 864 partial failures across nine preparation boundaries and
+one/two failures, six retirement cases and two explicit replacement cases.
+Private/portable configuration fingerprints match the committed target profile;
+all four world bodies, including the unshaped surface controls, are bound in each
+portable map. In-flight cached numerical reads and recursive writes reject.
+
+Each profile warms 128 frames then measures 128 complete changed-role, signed
+scale/omission, step and actual point-query frames at strict zero owner/all-thread
+managed bytes. Dynamic gravity yields the expected velocity; static/kinematic
+roles and omission suppress default acceleration. Reported TotalGravity retains
+the configured signed field during omission. Velocity and field tolerance is
+0.002 in corresponding scene units, covering single-precision integration at
+0.1 seconds with acceleration magnitude at most 30. Registered Solve observes
+both native multipliers on the captured owner/separate lane: 128 hooks and
+256 scalar observations in each measured bracket.
+
+Fresh public JIT/strict NativeAOT CPU/no-device, private software-GPU and registered
+owner/separate profiles, mass/motion/terminal/portable/history/input companions
+and root CPU/GPU body parameter checks qualify these paths. Creation and complete
+typed-parameter extension operations remain Partial; the unique physics census
+stays 1205/1369 Implemented (88.02045288531775%), with 164 open declarations.
+This is declaration coverage. Complete numerical/custom-geometry, network,
+native retained-memory, target-GPU/window performance and platform acceptance
+remain open. Evidence: bin/physics-gravity-publication/2026-10-19/validation.json.
+
 ## Mass profile publication recovery
 
 A failed selected mass operation previously left preceding common configuration

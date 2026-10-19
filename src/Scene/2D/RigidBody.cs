@@ -66,6 +66,7 @@ public partial class RigidBody : PhysicsBody
     /// <value>Null by default, which uses friction one and bounce zero.</value>
     /// <remarks>Property edits rebuild fixtures before the next physics step. The caller owns the material.</remarks>
     /// <exception cref="ObjectDisposedException">The assigned material or body has been disposed.</exception>
+    /// <exception cref="InvalidOperationException">Attached mutation is off-owner, inside a numerical hook or after the world has failed, including equal assignments.</exception>
     public PhysicsMaterial? PhysicsMaterialOverride
     {
         get { ThrowIfDisposed(); return MaterialOverride; }
@@ -83,9 +84,10 @@ public partial class RigidBody : PhysicsBody
     }
 
     /// <summary>Gets or sets the finite multiplier of selected Area/world gravity.</summary>
-    /// <remarks>Leaving an approximately zero previous multiplier follows the body wakeup rule.</remarks>
+    /// <remarks>Leaving an approximately zero previous multiplier follows the body wakeup rule. A selected publication failure retains the new multiplier and retries its effective native value before later numerical access; configured reads do not prepare it.</remarks>
     /// <value>One by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is nonfinite.</exception>
+    /// <exception cref="InvalidOperationException">Attached mutation is off-owner, inside a numerical hook or after the world has failed.</exception>
     public float GravityScale
     {
         get { ThrowIfDisposed(); return _gravityScale; }
@@ -128,37 +130,41 @@ public partial class RigidBody : PhysicsBody
     /// <summary>Gets or sets finite signed linear damping per second.</summary>
     /// <value>Zero by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is nonfinite.</exception>
+    /// <exception cref="InvalidOperationException">Attached mutation is off-owner, inside a numerical hook or after the world has failed.</exception>
     public float LinearDamp
     {
         get { ThrowIfDisposed(); return _linearDamp; }
-        set { EnsureMutable(); Finite(value); _linearDamp = value; GPUParametersDirty = true; }
+        set { EnsureMutable(); Finite(value); Space?.EnsureBackendAccess(); _linearDamp = value; GPUParametersDirty = true; }
     }
 
     /// <summary>Gets or sets finite signed angular damping per second.</summary>
     /// <value>Zero by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is nonfinite.</exception>
+    /// <exception cref="InvalidOperationException">Attached mutation is off-owner, inside a numerical hook or after the world has failed.</exception>
     public float AngularDamp
     {
         get { ThrowIfDisposed(); return _angularDamp; }
-        set { EnsureMutable(); Finite(value); _angularDamp = value; GPUParametersDirty = true; }
+        set { EnsureMutable(); Finite(value); Space?.EnsureBackendAccess(); _angularDamp = value; GPUParametersDirty = true; }
     }
 
     /// <summary>Gets or sets whether linear damping combines with or replaces area and world damping.</summary>
     /// <value><see cref="DampMode.Combine"/> by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned mode is undefined.</exception>
+    /// <exception cref="InvalidOperationException">Attached mutation is off-owner, inside a numerical hook or after the world has failed.</exception>
     public DampMode LinearDampMode
     {
         get { ThrowIfDisposed(); return _linearDampMode; }
-        set { EnsureMutable(); ValidateDampMode(value); _linearDampMode = value; GPUParametersDirty = true; }
+        set { EnsureMutable(); ValidateDampMode(value); Space?.EnsureBackendAccess(); _linearDampMode = value; GPUParametersDirty = true; }
     }
 
     /// <summary>Gets or sets whether angular damping combines with or replaces area and world damping.</summary>
     /// <value><see cref="DampMode.Combine"/> by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned mode is undefined.</exception>
+    /// <exception cref="InvalidOperationException">Attached mutation is off-owner, inside a numerical hook or after the world has failed.</exception>
     public DampMode AngularDampMode
     {
         get { ThrowIfDisposed(); return _angularDampMode; }
-        set { EnsureMutable(); ValidateDampMode(value); _angularDampMode = value; GPUParametersDirty = true; }
+        set { EnsureMutable(); ValidateDampMode(value); Space?.EnsureBackendAccess(); _angularDampMode = value; GPUParametersDirty = true; }
     }
 
     /// <summary>Gets or sets whether gravity and forces are disabled under the selected freeze role.</summary>

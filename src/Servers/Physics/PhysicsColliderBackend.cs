@@ -106,6 +106,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
         {
             _implementation = null;
             _pendingMotion = null;
+            _pendingGravityScale = null;
             _filterDirty = false;
             _identityDirty = false; _priorityDirty = false;
             if (Space is not null) { Space = null; Interlocked.Decrement(ref _attachmentCount); }

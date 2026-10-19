@@ -21,6 +21,7 @@ public static partial class BackendChecks
         RunCurvedAnnulus();
         RunMassRoles();
         RunMassReset();
+        RunGravityPublication();
         RunPortableRoles();
         RunPortableContacts();
         RunPortableCapture();

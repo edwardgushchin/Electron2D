@@ -31,6 +31,8 @@ public static partial class BackendChecks
         internal RID ContactFailure;
         internal Action<RID>? IdentityHook, ColliderFactoryHook, ModeHook, RotationHook, SurfaceHook, PoseHook, AngularHook, AwakeHook, CanSleepHook, MassHook;
         internal Action<RID>? ShapeHook, FilterHook;
+        internal Action<RID, float>? GravityHook;
+        internal bool UsePublishedGravityScale;
         internal Action<RID>? AreaFieldsHook;
         internal Action? DefaultFieldsHook;
         internal Action<RID, uint, uint, bool>? FilterPolicyHook;
@@ -310,7 +312,7 @@ public static partial class BackendChecks
         protected override int ShapeCount => Shapes;
         internal int Shapes;
         protected override void Attach(Vector2 position, float rotation, in PhysicsBodyConfiguration configuration)
-        { Position = position; Rotation = rotation; Mode = configuration.Mode; Velocity = configuration.LinearVelocity; Angular = configuration.AngularVelocity; Awake = !configuration.Sleeping; CanSleep = configuration.CanSleep; Locked = configuration.LockRotation; }
+        { Position = position; Rotation = rotation; Mode = configuration.Mode; PublishedGravityScale = configuration.GravityScale; Velocity = configuration.LinearVelocity; Angular = configuration.AngularVelocity; Awake = !configuration.Sleeping; CanSleep = configuration.CanSleep; Locked = configuration.LockRotation; }
         protected override void Detach()
         {
             try { solver.BodyReleaseHook?.Invoke(rid); if (solver.FailBodyDetach) throw new InvalidOperationException("Collider detach failure"); }
@@ -343,7 +345,7 @@ public static partial class BackendChecks
             ContinuousMode = configuration.CCDMode;
             Locked = configuration.LockRotation; Omit = configuration.OmitForces;
             var f = solver.ResolveFields(this);
-            _fields = new(f.Gravity * configuration.GravityScale,
+            _fields = new(f.Gravity * (solver.UsePublishedGravityScale && !configuration.OmitForces ? PublishedGravityScale : configuration.GravityScale),
                 configuration.LinearDamp + (configuration.LinearDampMode == RigidBody.DampMode.Combine ? f.LinearDamp : 0),
                 configuration.AngularDamp + (configuration.AngularDampMode == RigidBody.DampMode.Combine ? f.AngularDamp : 0), true);
         }
@@ -396,7 +398,8 @@ public static partial class BackendChecks
         protected override void SetAwake(bool awake) { solver.AwakeHook?.Invoke(rid); Awake = awake; SleepTime = 0; if (!awake) ClearVelocity(); else solver.WakeConnected(this); }
         protected override void SetCanSleep(bool canSleep) { solver.CanSleepHook?.Invoke(rid); CanSleep = canSleep; if (!canSleep) { Awake = true; SleepTime = 0; solver.WakeConnected(this); } }
         protected override void SetRotationLocked(bool locked) { solver.RotationHook?.Invoke(rid); Locked = locked; }
-        protected override void SetGravityScale(float scale) { }
+        internal float PublishedGravityScale = 1;
+        protected override void SetGravityScale(float scale) { PublishedGravityScale = scale; solver.GravityHook?.Invoke(rid, scale); }
         protected override void ApplyCentralForce(Vector2 force, bool wake) { Force += force; Awake |= wake; }
         protected override void ApplyTorque(float torque, bool wake) { Torque += torque; Awake |= wake; }
         protected override bool RotationLocked => Locked;

@@ -1919,3 +1919,5 @@ parameter/numerical/platform/performance acceptance.
 [Body mode operation audit](components/physics-registered-adapter.md#body-mode-operation-audit) verifies the existing PhysicsBody/PhysicsServer/PhysicsBackendCollider role family without adding production declarations; actual motion, prepared inputs, lifecycle and complete recovery remain shared across selected owners.
 
 [Mass profile publication recovery](components/physics-registered-adapter.md#mass-profile-publication-recovery) uses the existing PhysicsBodyRuntime/PhysicsBody/PhysicsServerCollider/PhysicsSpace checkpoint family. Attachment-qualified failed mass state is prepared before numerical use without adding production types or serialized fields.
+
+[Gravity publication recovery](components/physics-registered-adapter.md#gravity-publication-and-terminal-parameter-guards) retains one failed effective scalar and an in-flight flag in the existing PhysicsColliderBackend attachment facade. Runtime/body/query/checkpoint preparation and scene parameter failure guards reuse existing owners; no public type or serialized field is added.

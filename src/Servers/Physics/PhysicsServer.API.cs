@@ -320,6 +320,7 @@ public sealed partial class PhysicsServer
     /// <summary>Enables or disables omission of automatic gravity, damping and accumulated forces.</summary>
     /// <param name="body">A live body RID.</param>
     /// <param name="enable">True for manual force integration; impulses and solver contacts remain active.</param>
+    /// <remarks>A scene rigid body retains the new authored gravity or omission flag after selected gravity publication fails. Later numerical access prepares its effective native multiplier; configured reads do not perform that repair.</remarks>
     public static void BodySetOmitForceIntegration(RID body, bool enable) => Service.BodySetOmitForceIntegrationCore(body, enable);
 
     /// <summary>Tests whether a body omits automatic force integration.</summary>
@@ -900,6 +901,7 @@ public sealed partial class PhysicsServer
     /// <param name="scale">Finite signed scale; default one.</param>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
     /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <remarks>A scene rigid body retains the new authored gravity or omission flag after selected gravity publication fails. Later numerical access prepares its effective native multiplier; configured reads do not perform that repair.</remarks>
     public static void BodySetGravityScale(RID body, float scale) => Service.BodySetGravityScaleCore(body, scale);
 
     /// <summary>Gets the body's configured gravity multiplier.</summary>

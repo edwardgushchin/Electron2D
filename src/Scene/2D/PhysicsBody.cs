@@ -46,6 +46,7 @@ public abstract partial class PhysicsBody : CollisionObject
     internal void SetMaterialOverride(PhysicsMaterial? material)
     {
         EnsureMutable();
+        Space?.EnsureBackendAccess();
         if (material?.IsDisposed == true) throw new ObjectDisposedException(nameof(material));
         if (ReferenceEquals(material, _materialOverride)) return;
         if (_materialOverride is { } old)
@@ -111,6 +112,7 @@ public abstract partial class PhysicsBody : CollisionObject
         if (Space is null) return;
         if (!_preparingServerMode) PreparePendingServerMode();
         Runtime.PreparePendingMass();
+        Backend.PreparePendingGravityScale();
         Backend.PrepareContactPolicy();
         var transform = GlobalTransform;
         var geometryEpoch = Shape.GeometryEpoch;

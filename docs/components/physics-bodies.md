@@ -7,6 +7,8 @@
 
 Last updated: 2026-10-19
 
+[Gravity publication and terminal parameter guards](physics-registered-adapter.md#gravity-publication-and-terminal-parameter-guards) retry the latest effective native gravity/omission request after a selected error and discard it on attachment retirement. Scene damping, omission and inherited material setters reject failed worlds before changing authoring while healthy post-solver callbacks retain writes. Public CPU/software-GPU/registered JIT/NativeAOT profiles verify real motion, history boundaries and strict zero managed-byte frames; wider acceptance remains open.
+
 [Mass profile publication recovery](physics-registered-adapter.md#mass-profile-publication-recovery) now restores preceding authoring after a partial selected error before numerical use, with all scene/raw siblings, real automatic reset/impulse response, history boundaries and strict zero managed allocation. Configured reads and post-commit notification semantics retain their documented behavior; complete numerical/native/platform/performance acceptance remains open.
 
 ## Scene role publication recovery

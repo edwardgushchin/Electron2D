@@ -1,6 +1,8 @@
 # PhysicsCheckpoint
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
+
+[Gravity publication and terminal parameter guards](../components/physics-registered-adapter.md#gravity-publication-and-terminal-parameter-guards) retry the latest effective native gravity/omission request after a selected error and discard it on attachment retirement. Scene damping, omission and inherited material setters reject failed worlds before changing authoring while healthy post-solver callbacks retain writes. Public CPU/software-GPU/registered JIT/NativeAOT profiles verify real motion, history boundaries and strict zero managed-byte frames; wider acceptance remains open.
 
 [Publication recovery](../components/physics-registered-adapter.md#failed-motion-publication) distinguishes local rewind from portable preparation. Successful local restore discards superseded motion/pose/mode publication without invoking the failed request. Portable apply first prepares pre-existing local authoring; a preparation failure leaves incoming state unapplied and the tick unchanged, and a later successful apply supplies authoritative state.
 

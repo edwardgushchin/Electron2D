@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-19
 
+[Gravity publication and terminal parameter guards](../components/physics-registered-adapter.md#gravity-publication-and-terminal-parameter-guards) retry the latest effective native gravity/omission request after a selected error and discard it on attachment retirement. Scene damping, omission and inherited material setters reject failed worlds before changing authoring while healthy post-solver callbacks retain writes. Public CPU/software-GPU/registered JIT/NativeAOT profiles verify real motion, history boundaries and strict zero managed-byte frames; wider acceptance remains open.
+
 [Mass profile publication recovery](../components/physics-registered-adapter.md#mass-profile-publication-recovery) preserves preceding authoring after selected mass/inertia/center/reset errors and prepares it before numerical use. Cached views, space/force/checkpoint/portable boundaries, attachment retirement, in-flight rejection and post-commit notification behavior execute across all scene/raw roles. Public JIT/strict NativeAOT CPU/software-GPU/registered full-frame checks retain strict zero managed allocation; wider native/platform/network/performance gates remain open.
 
 [CCD policy operation audit](../components/physics-registered-adapter.md#ccd-policy-operation-audit) checks all three modes across five scene siblings and raw bodies, selected numerical input reads, wake/failure recovery, role/attachment lifetime and actual discrete/continuous motion with logical contact identity and impulse balance. Public JIT/strict NativeAOT CPU/software-GPU/registered full frames retain strict zero managed allocation; broader numerical/native/network/performance acceptance remains open.

@@ -63,6 +63,8 @@ else if (args.Contains("--motion-transactions")) BackendChecks.RunMotionTransact
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--pose-transactions")) BackendChecks.RunPoseTransactions(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Contains("--gravity-publication")) BackendChecks.RunGravityPublication(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--mass-reset")) BackendChecks.RunMassReset(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--ccd-policies")) BackendChecks.RunCCDPolicies(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
