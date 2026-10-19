@@ -1231,3 +1231,9 @@ before selected pair dispatch. The composed pose validates before that hook. Err
 resource-only queries remain independent, and later kinematic targets retain their
 step boundary. Expanded public profiles keep strict zero-allocation complete
 frames and the existing GPU pose-only transfer boundary. Full acceptance is separate.
+
+[Filter setter operation audit](../components/physics-filters.md#filter-setter-operation-audit)
+completes shared Body/Area layer/mask authoring through selected UpdateFilter.
+Argument/wake/thread checks, eight-role failure repair and real directional response
+retain configured metadata, logical identity and zero managed allocation in full
+moving frames. Geometry, numerical and platform/performance gates remain separate.

@@ -324,3 +324,9 @@ verifies the retained Body/Area input, inherited defaults, actual selected query
 numerical lanes, owner/disposal guards and callback edits. Changed-policy moving
 frames preserve exact transitions and zero managed allocation; native rendering
 and wider numerical/platform/performance acceptance keep their separate scopes.
+
+[Filter setter operation audit](../components/physics-filters.md#filter-setter-operation-audit)
+completes shared Body/Area layer/mask authoring through selected UpdateFilter.
+Argument/wake/thread checks, eight-role failure repair and real directional response
+retain configured metadata, logical identity and zero managed allocation in full
+moving frames. Geometry, numerical and platform/performance gates remain separate.

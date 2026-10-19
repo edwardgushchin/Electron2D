@@ -182,3 +182,9 @@ including numerical-lane reads, borrower write guards, supplier/disposal/observe
 lifecycle and identity-preserving live correction. Fresh serial/separate public
 profiles preserve exact zero managed allocation in complete measured intervals;
 full numerical-extension/native/platform/network/performance acceptance is separate.
+
+[Filter setter operation audit](../components/physics-filters.md#filter-setter-operation-audit)
+completes shared Body/Area layer/mask authoring through selected UpdateFilter.
+Argument/wake/thread checks, eight-role failure repair and real directional response
+retain configured metadata, logical identity and zero managed allocation in full
+moving frames. Geometry, numerical and platform/performance gates remain separate.

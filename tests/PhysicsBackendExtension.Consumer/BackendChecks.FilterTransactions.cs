@@ -14,7 +14,8 @@ public static partial class BackendChecks
             using var root = new SubViewport { World = world };
             using var circle = new CircleShape { Radius = 3 }; using var identity = new Node();
             CollisionObject?[] nodes = [new StaticBody(), new AnimatableBody(), new CharacterBody(),
-                new RigidBody { GravityScale = 0, CanSleep = false }, new PhysicalBone(), new Area(), null, null];
+                new RigidBody { GravityScale = 0, CanSleep = false, MaxContactsReported = 4,
+                    LinearDampMode = RigidBody.DampMode.Replace, AngularDampMode = RigidBody.DampMode.Replace }, new PhysicalBone(), new Area(), null, null];
             var rids = new RID[8]; var observers = new RID[8]; var peers = new StaticBody[8];
             var events = new int[8]; var areaEvents = new int[8];
             for (var i = 0; i < nodes.Length; i++)
@@ -129,6 +130,13 @@ public static partial class BackendChecks
                                         faults++;
                                     }
                 }
+                var ownerThread = Environment.CurrentManagedThreadId; var filterCalls = 0; var numericalCalls = 0;
+                if (solver is not null) solver.FilterPolicyHook = (rid, layer, mask, wake) =>
+                {
+                    var i = Array.IndexOf(rids, rid); if (i < 0) return;
+                    Check(Environment.CurrentManagedThreadId == ownerThread && wake == !IsArea(i), "Filter publication keeps owner threading and Body/Area wake policy");
+                    Check((layer == 0 || layer == 1) && (mask == 0 || mask == 4), "The selected filter receives complete effective layer/mask bits"); filterCalls++;
+                };
                 var edits = 0;
                 for (var i = 0; i < rids.Length; i++)
                     for (var field = 0; field < 2; field++)
@@ -142,17 +150,37 @@ public static partial class BackendChecks
                             Check(events[i] - observed == (field == 0 && !Suppressed(i) ? 2 : 0) && areaEvents[i] - received == (field == 1 && IsArea(i) ? 2 : 0), "Restored authored filters publish one entry without duplicate effects"); edits++;
                         }
                 Check(shapeRebuilds == 0, "Successful filters also retain geometry compilation identity");
+                Check(solver is null || filterCalls == edits * 2, "Every ordinary filter assignment reaches the selected update exactly once");
                 var observedEvents = events.Sum() + areaEvents.Sum();
                 checkpoint.Capture(); Step(); checkpoint.Restore(); Step();
                 Check(events.Sum() + areaEvents.Sum() == observedEvents, "Private replay after live filter edits preserves observer history without duplicate effects");
                 if (solver is not null) solver.ShapeHook = null;
+                foreach (var responds in new[] { false, true })
+                {
+                    PhysicsServer.BodySetCollisionLayer(rids[3], 0); PhysicsServer.BodySetCollisionMask(rids[3], responds ? 4u : 0u);
+                    PhysicsServer.BodySetTransform(rids[3], new(0, Origin(3) + new Vector2(15, 0))); PhysicsServer.BodySetLinearVelocity(rids[3], new(6, 0)); Step();
+                    var state = PhysicsServer.BodyGetDirectState(rids[3])!;
+                    Check(responds ? MathF.Abs(state.LinearVelocity.X) < .01f && state.GetContactCount() == 1 &&
+                        state.GetContactLocalShape(0) == 2 && state.GetContactImpulse(0).Length() > 5
+                        : MathF.Abs(state.LinearVelocity.X - 6) < .001f && state.GetContactCount() == 0 && MathF.Abs(state.Transform.Origin.X - Origin(3).X - 15.1f) < .001f,
+                        "A zero-layer body responds only through its own mask, with a real impulse and preserved logical contact index");
+                    PhysicsServer.BodySetCollisionLayer(rids[3], 1); PhysicsServer.BodySetCollisionMask(rids[3], 4);
+                    PhysicsServer.BodySetTransform(rids[3], new(0, Origin(3))); PhysicsServer.BodySetLinearVelocity(rids[3], Vector2.Zero);
+                    PhysicsServer.BodySetAngularVelocity(rids[3], 0); Step();
+                }
+                if (solver is not null) solver.StepHook = () =>
+                {
+                    Check((Environment.CurrentManagedThreadId != ownerThread) == threaded, "Filter input reads use the captured numerical lane");
+                    for (var i = 0; i < rids.Length; i++) Authored(i, 1, 4); numericalCalls++;
+                };
                 var movingRID = moving.GetRID(); PhysicsServer.BodySetForceIntegrationCallback(movingRID, _ => callbacks++);
                 for (var i = 0; i < 128; i++) Frame();
-                var callbackStart = callbacks; var x = moving.Position.X;
+                var callbackStart = callbacks; var x = moving.Position.X; var filterStart = filterCalls; var numericalStart = numericalCalls;
                 Collect(); var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
                 for (var i = 0; i < 128; i++) Frame();
                 owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
-                Check(owner == 0 && all == 0 && callbacks == callbackStart + 128 && moving.GetRID() == movingRID && Math.Abs(moving.Position.X - x - 12.8f) < .01f,
+                Check(owner == 0 && all == 0 && callbacks == callbackStart + 128 && moving.GetRID() == movingRID && Math.Abs(moving.Position.X - x - 12.8f) < .01f &&
+                    (solver is null || filterCalls - filterStart == 2048 && numericalCalls - numericalStart == 128),
                     $"Filter transactions: {owner}/{all} B, force callbacks={callbacks - callbackStart}, motion={moving.Position.X - x}");
                 Console.WriteLine($"Filter transactions {backend?.ToString() ?? "registered"}, threaded={threaded}: eight roles, {edits} ordinary edits, {faults} failed assignments; no shape rebuilds; 128 full frames {owner}/{all} B.");
 
@@ -195,7 +223,7 @@ public static partial class BackendChecks
             }
             finally
             {
-                if (solver is not null) { solver.FilterHook = null; solver.ShapeHook = null; }
+                if (solver is not null) { solver.FilterHook = null; solver.FilterPolicyHook = null; solver.ShapeHook = null; solver.StepHook = null; }
                 for (var i = 0; i < rids.Length; i++)
                     if (rids[i] != default && IsArea(i)) PhysicsServer.AreaSetMonitorCallback(rids[i], null);
                 foreach (var observer in observers) if (observer != default) PhysicsServer.FreeRID(observer);

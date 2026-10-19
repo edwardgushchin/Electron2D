@@ -2,7 +2,56 @@
 
 Body/Area filter getters now use [prepared collider metadata access](physics-registered-adapter.md#prepared-collider-metadata-reads) during selected numerical/status hooks. Reads preserve authored bits, including inactive PhysicalBone filters, while mutations keep their existing numerical-borrow guards.
 
-Last updated: 2026-10-16
+Last updated: 2026-10-19
+
+## Filter setter operation audit
+
+The complete Body/Area layer/mask setter family now has a bidirectional audit
+against 22 pinned declarations: public and required implementation getters/setters,
+both CollisionObject properties and all four one-based bit helpers. Nine pinned
+source receipts verify defaults of one, uint32 native boundaries, required/const
+metadata, absent deprecation and bit numbers 1 through 32. Typed unsigned values
+preserve all category bits. Existing prepared getter operations remain complete;
+only the four outstanding implementation setters change coverage state.
+
+The common runtime keeps previously committed authoring after failed numerical
+publication and repairs complete effective filters before a later query or step.
+The public-only `--filter-transactions` profile covers eight scene/raw roles,
+40 ordinary edits and 160 registered partial-failure cases. Its selected hook now
+observes full proposed layer/mask arguments, owner threading and the Body/Area
+wake distinction. Forty successful edit/restore pairs invoke the selected update
+80 times; each measured 128-frame bracket requires 2,048 selected updates and
+128 actual numerical hooks on the captured serial/separate lane. Prepared reads
+retain configured values while an inactive PhysicalBone receives zero effective
+bits. Geometry rebuilds remain zero, and resource/RID/canvas/slot identity stays
+stable.
+
+A zero-layer RigidBody with its own matching mask receives a real circle impulse
+against a zero-mask static peer and reports logical shape index 2. Rejecting both
+masks instead gives free motion and no contacts. Velocity/position comparisons
+use .01/.001 scene-unit bounds for float integration; a greater-than-five impulse
+separates the response from the six-unit incoming motion. The physical case resets
+pose/velocity explicitly. Its initial checkpoint-based reset was rejected by the
+existing fixed-configuration GPU guard after configuration authoring; no runtime
+history contract or verifier was changed.
+
+Fresh JIT/strict Linux x64 NativeAOT CPU/no-device, software-GPU and registered
+serial/separate filter and prepared-input profiles execute the finished sources.
+Factory-view and shape-policy companions retain the original borrowed FilterHook
+behavior while the new argument probe is unused. Root CPU/GPU filter checks add
+all bits, directional impulse/CCD, actual sensor/contact transitions, callback and
+lifetime guards and body/neighbor wake on equal assignments. Generated tile-body
+checks retain defaults, bit 32, immediate query/sensor changes and tile/RID/shape
+owner identity. Tile unchanged-frame allocation also has its existing owner-only
+measurement; this is separate from strict owner/all-thread brackets.
+
+Evidence: `bin/physics-filter-operation-audit/2026-10-19/validation.json` and its
+contract/source/profile receipts. Four setter rows become Implemented. The unique
+physics ledger retains 171 open declarations (140 Partial, 14 Unimplemented,
+17 Blocked). Runtime C# and public API are unchanged. The ordinary frozen
+`8912effe` runtime success remains qualified separately from these fresh test
+cohorts. Complete arbitrary registered numerics, inherited/extension/network,
+native memory, foreign platforms and target-GPU/window performance remain open.
 
 ## Public behavior
 

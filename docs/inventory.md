@@ -1890,3 +1890,8 @@ The [pickability operation audit](components/physics-picking.md#pickability-oper
 completes two existing common Body/Area input operations through selected point
 queries. No production type, public declaration or runtime behavior is added;
 complete extension/numerical/network/platform/performance gates stay open.
+
+The [filter setter audit](components/physics-filters.md#filter-setter-operation-audit)
+completes four existing common Body/Area layer/mask operations through selected
+UpdateFilter. No production type, API or runtime behavior is added. Complete
+registered numerical/extension/network/platform/performance gates stay open.

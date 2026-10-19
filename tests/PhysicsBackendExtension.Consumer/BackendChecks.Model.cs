@@ -31,6 +31,7 @@ public static partial class BackendChecks
         internal RID ContactFailure;
         internal Action<RID>? IdentityHook, ColliderFactoryHook, ModeHook, RotationHook, SurfaceHook, PoseHook, AngularHook, AwakeHook, CanSleepHook, MassHook;
         internal Action<RID>? ShapeHook, FilterHook;
+        internal Action<RID, uint, uint, bool>? FilterPolicyHook;
         internal Action<RID>? BodyHook;
         internal Action<RID>? JointHook;
         internal Action<RID>? JointFactoryHook, JointReleaseHook;
@@ -353,6 +354,7 @@ public static partial class BackendChecks
         { solver.PriorityHook?.Invoke(); Priority = value; }
         protected override void UpdateFilter(uint layer, uint mask, bool wakeBody)
         {
+            solver.FilterPolicyHook?.Invoke(rid, layer, mask, wakeBody);
             solver.FilterHook?.Invoke(rid);
             if (wakeBody) solver.WakeConnected(this);
             Layer = layer; Mask = mask;

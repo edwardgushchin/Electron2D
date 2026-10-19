@@ -2627,3 +2627,13 @@ participating world through removal and private-view retirement. Status failure
 preserves live data; committed cleanup attempts all users, retains exact errors
 and unregisters the RID. Public-only checks retain unrelated slots, exact Area
 entry/exit histories and zero warmed managed bytes. Wider acceptance stays open.
+
+## Filter setter operation audit
+
+The [shared audit](physics-filters.md#filter-setter-operation-audit) completes all
+four Body/Area input setters with complete proposed effective bits and wake policy,
+old-authoring failure preservation and selected numerical/thread checks. Forty
+ordinary edits and 160 registered failures retain logical slots and observer history;
+real one-sided contact and zero-allocation moving frames add executable behavior.
+Complete numerical geometry/extension/network/platform/performance acceptance remains
+open. The prepared getter family keeps its existing implementation status.
