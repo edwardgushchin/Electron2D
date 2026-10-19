@@ -2,9 +2,15 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunJointLifecycle(PhysicsServer.Backend? backend = null) => JointLifecycleChecks(backend);
+    public static void RunJointLifecycle(PhysicsServer.Backend? backend = null, bool threaded = false)
+    {
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { JointLifecycleChecks(backend, threaded); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
 
-    private static void JointLifecycleChecks(PhysicsServer.Backend? backend = null)
+    private static void JointLifecycleChecks(PhysicsServer.Backend? backend = null, bool threaded = false)
     {
         Solver? solver = null;
         if (backend is null) PhysicsServerManager.RegisterServer("JointLifecycle", () => solver = new());
@@ -16,6 +22,8 @@ public static partial class BackendChecks
         Joint[] nodes = [new PinJoint(), new GrooveJoint(), new DampedSpringJoint()];
         foreach (var node in nodes) root.AddChild(node);
         using var tree = new SceneTree(root);
+        var ownerThread = Thread.CurrentThread;
+        if (solver is not null) solver.StepHook = () => Check((Thread.CurrentThread != ownerThread) == threaded, "Lifecycle uses the actual selected numerical thread");
         var raw = PhysicsServer.BodyCreate();
         var joints = new[] { PhysicsServer.JointCreate(), PhysicsServer.JointCreate(), PhysicsServer.JointCreate() };
         var spare = PhysicsServer.JointCreate();
@@ -76,6 +84,7 @@ public static partial class BackendChecks
             JointLifecycleIdentity(tree, world, scene.GetRID(), raw, all, solver);
             JointParameterMotion(tree, scene, raw, all, joints[2]);
             for (var i = 0; i < all.Length; i++) { MakeJoint(all[i], i % 3, scene.GetRID(), raw); SetJointParameters(all[i], 1); }
+            JointLifecycleContracts(tree, world, scene, raw, nodes, joints, solver);
             for (var i = 0; i < 64; i++) tree.PhysicsFrame(1d / 60);
             GC.Collect(); GC.WaitForPendingFinalizers();
             var owner = GC.GetAllocatedBytesForCurrentThread(); var total = GC.GetTotalAllocatedBytes(true);

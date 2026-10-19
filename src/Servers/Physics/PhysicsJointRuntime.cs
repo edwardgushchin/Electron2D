@@ -108,6 +108,7 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
         }
         Type = type; BodyA = first; BodyB = second; FrameA = frameA; FrameB = frameB;
         LowerTranslation = lower; UpperTranslation = upper;
+        if (!preserve) MarkServerOverride();
         RefreshSpace();
     }
 
@@ -145,7 +146,13 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
     internal void Clear()
     {
         EnsureWriteAccess();
-        DetachSpace(); Type = PhysicsServer.JointType.Empty; BodyA = BodyB = default;
+        try { DetachSpace(); }
+        finally { Type = PhysicsServer.JointType.Empty; BodyA = BodyB = default; }
+    }
+
+    internal void MarkServerOverride()
+    {
+        if (Scene is { } weak && weak.TryGetTarget(out var scene)) scene.MarkServerOverride();
     }
 
     internal void DetachSpace()

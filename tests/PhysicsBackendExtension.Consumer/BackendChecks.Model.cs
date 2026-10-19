@@ -175,7 +175,9 @@ public static partial class BackendChecks
             if (FailJointFactory) throw new InvalidOperationException("Joint factory failure");
             if (NullJointFactory) return null!;
             if (ReusedJoint is { } reused) return reused;
-            var created = new Constraint(this, joint); Joints.Add(joint, created); JointFactoryHook?.Invoke(joint); return created;
+            var created = new Constraint(this, joint); Joints.Add(joint, created);
+            try { JointFactoryHook?.Invoke(joint); return created; }
+            catch { Joints.Remove(joint); throw; }
         }
         protected override void BeginStep(double delta) { LifecycleHook?.Invoke(LifecyclePhase.Begin); Ready = false; }
         protected override void PrepareWorld(double delta, in PhysicsAreaFieldConfiguration fields) { Fields = fields; DefaultFieldsHook?.Invoke(); PrepareFieldAreas(); }
@@ -450,6 +452,7 @@ public static partial class BackendChecks
     {
         internal PhysicsJointConfiguration Settings;
         private RID _first, _second;
+        internal (RID First, RID Second) Endpoints => (_first, _second);
         private bool _attached;
         protected override bool IsAttached => _attached;
         protected override void Attach(RID first, RID second, in PhysicsJointConfiguration settings)

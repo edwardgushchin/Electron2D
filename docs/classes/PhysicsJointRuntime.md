@@ -2,6 +2,22 @@
 
 Last updated: 2026-10-19
 
+## Lifecycle request ownership
+
+After clear passes its access preflight, cleanup always commits Empty and forgets
+endpoints, including selected detach or contribution-invalidation errors. The RID
+and common settings survive. A server clear retains scene override ownership even
+on failure, so endpoint reentry cannot restore the retired scene connection.
+Validated server make requests commit role, sampled frames, endpoints and scene
+ownership before selected factory/attachment/contribution effects. A failed
+publication retains that request for explicit retry or endpoint reentry; explicit
+scene authoring can still reclaim it. Rejected validation/borrowing preserves the
+prior request. Failure detaching an old connection precedes the new request commit.
+Selected providers release their resources before reporting Detach errors; the
+engine retires that attachment and preserves the original cleanup errors.
+See [complete joint lifecycle operations](../components/physics-registered-adapter.md#complete-joint-lifecycle-operations)
+for executed scope and limits.
+
 ## Typed parameter publication
 
 A selected publication error retains the requested typed parameter channel.
@@ -45,8 +61,9 @@ Neither this runtime nor the scene joint classes expose or store vendor types.
 | Spring rest/coefficient/automatic-length settings | Literal server rest or scene zero fallback; Hooke/drag parameters. |
 | `EnsureAccess()`, `Require(JointType type)` | Validate all related world threads/phases and concrete role. |
 | `ConfigurePin`, `ConfigureGroove`, `ConfigureSceneGroove`, `ConfigureSpring` | Validate input and sample frames before replacing the old connection; optionally retain scene scalars. |
+| `MarkServerOverride()` | Commit the weak scene owner to retained server authoring before selected effects or after clear starts. |
 | `RefreshSpace()` | Select active owner, suspend mismatch or attach the retained backend using the endpoints' current collider adapters. |
-| `BodyLeaving(RID body)`, `DetachSpace()`, `Clear()` | Release native handle before body/world destruction; clear additionally forgets role/endpoints. |
+| `BodyLeaving(RID body)`, `DetachSpace()`, `Clear()` | Release native handle before body/world destruction; clear additionally forgets role/endpoints even when cleanup reports errors. |
 | Scalar setters | Validate finite/range values, update shared settings and native solver without resampling anchors. |
 | `Configuration` | Sample complete immutable engine-unit values, including effective spring rest length, for the selected attachment and CPU spring pass. |
 
@@ -89,7 +106,7 @@ Bias (default zero), MaxBias/MaxForce (default float.MaxValue) are common author
 EnsureWriteAccess checks attached scene, current joint and endpoint worlds before any scalar/path/geometry mutation, including pending attachment and unchanged values. It guards numerical borrowing separately from ordinary query phases so engine spring preparation can resolve automatic rest length before solving.
 
 
-Clear and Configure check EnsureWriteAccess before detaching or changing retained role/endpoints. Public make methods also preflight both incoming body owners before preparing either. Engine pre-solve scene preparation retains its internal path. Invalid candidates preserve the old connection; selected attachment failure leaves the validated role pending for explicit make retry. Detach errors retire the matching numerical attachment and a repeated clear completes common cleanup.
+Clear and Configure check EnsureWriteAccess before detaching or changing retained role/endpoints. Public make methods also preflight both incoming body owners before preparing either. Engine pre-solve scene preparation retains its internal path. Invalid candidates preserve the old connection; selected attachment failure leaves the validated role pending for explicit make retry. Detach errors retire the matching numerical attachment; a started clear commits Empty and forgets endpoints even when cleanup throws. Validated server make/clear ownership survives selected errors.
 
 
 DetachSpace unregisters the old membership in a finally block even when numerical detach throws. Common identity/role/frame records retain the existing authoring retry policy; FreeRID separately preflights access and retires the caller-owned identity after cleanup starts.

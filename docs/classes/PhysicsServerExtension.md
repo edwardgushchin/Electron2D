@@ -2,6 +2,15 @@
 
 Last updated: 2026-10-19
 
+## Joint lifecycle ownership
+
+Selected creation/attachment errors retain validated server role, endpoints and
+scene override for retry. A started clear commits Empty even when cleanup reports
+errors; RID/common settings and original errors survive. Selected providers release
+owned resources before propagating Detach failures. Input/borrow rejection preserves
+the previous request; explicit scene edits may reclaim ownership.
+See [complete lifecycle operations](../components/physics-registered-adapter.md#complete-joint-lifecycle-operations).
+
 ## Typed parameter publication
 
 A selected publication error retains the requested typed parameter channel.

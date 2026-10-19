@@ -1,6 +1,22 @@
 # Physics joints component
 
-Last updated: 2026-10-16
+Last updated: 2026-10-19
+
+## Lifecycle request ownership
+
+After clear passes its access preflight, cleanup always commits Empty and forgets
+endpoints, including selected detach or contribution-invalidation errors. The RID
+and common settings survive. A server clear retains scene override ownership even
+on failure, so endpoint reentry cannot restore the retired scene connection.
+Validated server make requests commit role, sampled frames, endpoints and scene
+ownership before selected factory/attachment/contribution effects. A failed
+publication retains that request for explicit retry or endpoint reentry; explicit
+scene authoring can still reclaim it. Rejected validation/borrowing preserves the
+prior request. Failure detaching an old connection precedes the new request commit.
+Selected providers release their resources before reporting Detach errors; the
+engine retires that attachment and preserves the original cleanup errors.
+See [complete joint lifecycle operations](../components/physics-registered-adapter.md#complete-joint-lifecycle-operations)
+for executed scope and limits.
 
 ## Physical skeletal integration
 
@@ -45,7 +61,7 @@ of invalid replacement. Each world runs 120 steps at 1/120 s; one scene unit of
 anchor error and 0.05 rad beyond the configured angle limit allow the existing
 solver tolerances. Independent GPU joint ownership, spring evaluation, public-world integration and portable replay now execute; full physics/network acceptance remains open.
 
-[PhysicsBackendOwnershipTests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.cs) now exercises all three roles, failed internal creation followed by retirement, body transfer that suspends/reconnects constraints, exact stored frame/policy metadata, clear/reuse and CPU/GPU world-anchor ownership. The selected implementation never retargets another world. Public registration and extension construction remain open under ADR 0103.
+[PhysicsBackendOwnershipTests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.cs) now exercises all three roles, failed internal creation followed by retirement, body transfer that suspends/reconnects constraints, exact stored frame/policy metadata, clear/reuse and CPU/GPU world-anchor ownership. The selected implementation never retargets another world. Public registration and extension construction execute under ADR 0103 through the [registered adapter](physics-registered-adapter.md); wider numerical acceptance remains open.
 
 ## Independent GPU foundation
 

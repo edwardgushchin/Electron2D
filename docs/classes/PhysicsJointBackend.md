@@ -1,6 +1,15 @@
 # PhysicsJointBackend
 
-Last updated: 2026-10-12
+Last updated: 2026-10-19
+
+## Joint lifecycle ownership
+
+Selected creation/attachment errors retain validated server role, endpoints and
+scene override for retry. A started clear commits Empty even when cleanup reports
+errors; RID/common settings and original errors survive. Selected providers release
+owned resources before propagating Detach failures. Input/borrow rejection preserves
+the previous request; explicit scene edits may reclaim ownership.
+See [complete lifecycle operations](../components/physics-registered-adapter.md#complete-joint-lifecycle-operations).
 
 [Shared public family checks](../components/physics-joint-policies.md#public-cpu-gpu-conformance)
 now run through explicitly selected CPU and independent GPU worlds, including

@@ -2,6 +2,22 @@
 
 Last updated: 2026-10-19
 
+## Lifecycle request ownership
+
+After clear passes its access preflight, cleanup always commits Empty and forgets
+endpoints, including selected detach or contribution-invalidation errors. The RID
+and common settings survive. A server clear retains scene override ownership even
+on failure, so endpoint reentry cannot restore the retired scene connection.
+Validated server make requests commit role, sampled frames, endpoints and scene
+ownership before selected factory/attachment/contribution effects. A failed
+publication retains that request for explicit retry or endpoint reentry; explicit
+scene authoring can still reclaim it. Rejected validation/borrowing preserves the
+prior request. Failure detaching an old connection precedes the new request commit.
+Selected providers release their resources before reporting Detach errors; the
+engine retires that attachment and preserves the original cleanup errors.
+See [complete joint lifecycle operations](../components/physics-registered-adapter.md#complete-joint-lifecycle-operations)
+for executed scope and limits.
+
 ## Typed parameter publication
 
 A selected publication error retains the requested typed parameter channel.

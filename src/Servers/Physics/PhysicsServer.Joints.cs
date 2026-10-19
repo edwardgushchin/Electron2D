@@ -76,7 +76,9 @@ public sealed partial class PhysicsServer
     internal void JointClearCore(RID joint)
     {
         var runtime = GetJoint(joint);
-        runtime.Clear(); MarkSceneOverride(runtime);
+        runtime.EnsureWriteAccess();
+        try { runtime.Clear(); }
+        finally { runtime.MarkServerOverride(); }
     }
 
     internal JointType JointGetTypeCore(RID joint) => GetJoint(joint).Type;
@@ -90,7 +92,7 @@ public sealed partial class PhysicsServer
         var runtime = GetJoint(joint);
         runtime.EnsureWriteAccess();
         PrepareJointBodies(bodyA, bodyB, allowWorld: true);
-        runtime.ConfigurePin(anchor, bodyA, bodyB); MarkSceneOverride(runtime);
+        runtime.ConfigurePin(anchor, bodyA, bodyB);
     }
 
     internal void JointMakeGrooveCore(RID joint, Vector2 groove1A, Vector2 groove2A, Vector2 anchorB,
@@ -99,7 +101,7 @@ public sealed partial class PhysicsServer
         var runtime = GetJoint(joint);
         runtime.EnsureWriteAccess();
         PrepareJointBodies(bodyA, bodyB);
-        runtime.ConfigureGroove(groove1A, groove2A, anchorB, bodyA, bodyB); MarkSceneOverride(runtime);
+        runtime.ConfigureGroove(groove1A, groove2A, anchorB, bodyA, bodyB);
     }
 
     internal void JointMakeDampedSpringCore(RID joint, Vector2 anchorA, Vector2 anchorB, RID bodyA, RID bodyB = default)
@@ -107,12 +109,7 @@ public sealed partial class PhysicsServer
         var runtime = GetJoint(joint);
         runtime.EnsureWriteAccess();
         PrepareJointBodies(bodyA, bodyB);
-        runtime.ConfigureSpring(anchorA, anchorB, bodyA, bodyB); MarkSceneOverride(runtime);
-    }
-
-    private static void MarkSceneOverride(PhysicsJointRuntime runtime)
-    {
-        if (runtime.Scene is { } weak && weak.TryGetTarget(out var scene)) scene.MarkServerOverride();
+        runtime.ConfigureSpring(anchorA, anchorB, bodyA, bodyB);
     }
 
     private void PrepareJointBodies(RID first, RID second, bool allowWorld = false)

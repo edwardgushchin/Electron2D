@@ -492,7 +492,7 @@ public sealed partial class PhysicsServer
 
     /// <summary>Clears the body connection while retaining the RID and collision policy.</summary>
     /// <param name="joint">A live scene-owned or caller-owned joint RID.</param>
-    /// <remarks>A scene joint remains cleared until scene path/geometry edits or reentry configure it again.</remarks>
+    /// <remarks>A scene joint remains cleared until scene path/geometry edits or reentry configure it again. Once clearing begins, the resource commits Empty and forgets its endpoints even if selected cleanup throws. Scene server ownership also remains committed; validation/borrow failures before clearing preserve the prior request.</remarks>
     /// <exception cref="ArgumentException">The RID is stale, has the wrong kind or lacks the requested joint role.</exception>
     /// <exception cref="InvalidOperationException">A related or incoming world is off-owner, stepping or borrowed by a numerical hook, or a scene joint would change its concrete role/world.</exception>
     public static void JointClear(RID joint) => Service.JointClearCore(joint);
@@ -526,7 +526,7 @@ public sealed partial class PhysicsServer
     /// <param name="bodyB">Second live body RID, or empty to attach body A to the fixed world.</param>
     /// <remarks>Body-local frames are sampled once. Detached bodies connect when they later share a space.
     /// Current joint and both incoming bodies reject numerical borrowing before any body preparation or connection change.
-    /// A failed selected attachment retains the validated role for explicit retry; its cleanup errors are preserved.</remarks>
+    /// A failed selected attachment retains the validated role and server-authored scene ownership for explicit retry or endpoint reentry; its cleanup errors are preserved.</remarks>
     /// <exception cref="ArgumentException">The RID is stale, has the wrong kind or lacks the requested joint role.</exception>
     /// <exception cref="InvalidOperationException">A related or incoming world is off-owner, stepping or borrowed by a numerical hook, or a scene joint would change its concrete role/world.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Numeric input is nonfinite, outside the backend extent, or violates the active physical parameter range.</exception>
@@ -540,7 +540,7 @@ public sealed partial class PhysicsServer
     /// <param name="bodyA">First live body RID; empty rejects.</param>
     /// <param name="bodyB">Second live body RID; empty rejects.</param>
     /// <remarks>Current joint and both incoming bodies reject numerical borrowing before any body preparation or connection change.
-    /// A failed selected attachment retains the validated role for explicit retry; its cleanup errors are preserved.</remarks>
+    /// A failed selected attachment retains the validated role and server-authored scene ownership for explicit retry or endpoint reentry; its cleanup errors are preserved.</remarks>
     /// <exception cref="ArgumentException">The RID is stale, has the wrong kind or lacks the requested joint role.</exception>
     /// <exception cref="InvalidOperationException">A related or incoming world is off-owner, stepping or borrowed by a numerical hook, or a scene joint would change its concrete role/world.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Numeric input is nonfinite, outside the backend extent, or violates the active physical parameter range.</exception>
@@ -555,7 +555,7 @@ public sealed partial class PhysicsServer
     /// <param name="bodyB">Second live body RID; empty rejects.</param>
     /// <remarks>Resets relaxed length to anchor separation, stiffness to 20 and damping to 1.5 kg/s.
     /// Current joint and both incoming bodies reject numerical borrowing before any body preparation or connection change.
-    /// A failed selected attachment retains the validated role for explicit retry; its cleanup errors are preserved.</remarks>
+    /// A failed selected attachment retains the validated role and server-authored scene ownership for explicit retry or endpoint reentry; its cleanup errors are preserved.</remarks>
     /// <exception cref="ArgumentException">The RID is stale, has the wrong kind or lacks the requested joint role.</exception>
     /// <exception cref="InvalidOperationException">A related or incoming world is off-owner, stepping or borrowed by a numerical hook, or a scene joint would change its concrete role/world.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Numeric input is nonfinite, outside the backend extent, or violates the active physical parameter range.</exception>

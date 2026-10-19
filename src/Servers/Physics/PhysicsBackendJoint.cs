@@ -16,7 +16,7 @@ public abstract class PhysicsBackendJoint
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract void Attach(RID first, RID second, in PhysicsJointConfiguration settings);
     /// <summary>Supplies the selected implementation operation: detach.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only. A reported detach error still retires the engine attachment and a requested clear commits an empty connection. Release owned resources before propagating cleanup errors.</remarks>
     protected internal abstract void Detach();
     /// <summary>Supplies the selected implementation operation: apply solver policy.</summary>
     /// <remarks>Publishes a complete parameter channel on the owning world thread. The latest retained value may be retried after a publication error before query, capture or an active positive step; apply it idempotently. Borrowed data is valid only for this call.</remarks>

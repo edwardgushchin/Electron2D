@@ -6,6 +6,7 @@ namespace Electron2D;
 /// node alone does not retune it. Concrete engine-owned subclasses supply the constraint.
 /// Path, geometry and parameter writes reject while a selected numerical hook is borrowed, including initial
 /// attachment and unchanged assignments. Server clear and connection replacement share this guard.
+/// Accepted server make/clear ownership survives selected factory, attachment and cleanup errors. A started clear commits an empty connection even when cleanup reports failure.
 /// Ordinary game callbacks may author the next interval. Scene departure retains the joint through TreeExiting;
 /// engine membership cleanup then releases it even when a user exit callback fails.
 /// NodeA/NodeB also allow managed path authoring from the current processing group. Native connection work

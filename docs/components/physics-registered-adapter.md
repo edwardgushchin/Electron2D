@@ -2,6 +2,78 @@
 
 Last updated: 2026-10-19
 
+## Complete joint lifecycle operations
+
+The six extension create/type/clear/make operations execute through the shared
+scene/raw runtime and selected CreateJoint/Attach/Detach family. The pinned
+4.7.2-stable metadata at ed1daf0bf001b61586d9930840f2f1394092c079 contains fifteen
+non-deprecated records: six extension methods, six server methods and Joint RID/
+endpoint properties. See reference-contract.json. No public declaration is added.
+
+The same final consumer reproduces two defects with an old runtime (-6) and
+passes with the corrected runtime (0): failed clear retained a retired role,
+and failed server make lost scene ownership on endpoint reentry. Clear now commits
+Empty and forgets endpoints once cleanup begins, even when selected detach and
+common contribution invalidation both report errors. It retains RID/common policy
+and original errors. Server clear retains its scene override on failure. A validated
+make commits role/frames/endpoints and scene ownership before selected factory,
+attachment or contribution effects; endpoint reentry retries that retained request.
+Explicit scene edits still reclaim ownership. Rejected input/borrowing preserves
+the prior request. Failure detaching an old connection precedes the new request
+commit. Selected providers release owned resources before reporting Detach errors;
+the engine retires that attachment. The consumer factory removes its own unreturned
+record when its test hook throws. Factory borrow guards observe the newly allocated
+provider record while preserving the existing callback phase.
+
+The lifecycle fixture runs 64 cold transitions per profile: Empty/Pin/Groove/Spring
+to Pin/Groove/Spring/world-pin, with all scene/raw endpoint ownership combinations.
+It checks stable RID/common settings, concrete defaults and fresh selected identity/
+exact endpoints. All lifecycle operations reject empty/wrong-kind/stale IDs,
+off-owner access and actual Solve borrowing; unbound process-global creation is
+still allowed. Ordinary state callbacks create/make/read/clear/free every role.
+Existing sampled geometry, pending endpoint entry/free, invalid role/numeric/world
+input, live factory/attachment/release borrow guards, factory/null/reuse/attach/
+detach errors, scene reentry and actual spring response remain exercised.
+
+Four registered JIT/strict NativeAOT owner/separate recovery profiles run 48 clear
+and 36 server-request cases in total, preserving exact original error instances,
+independent collision contributions and explicit scene reclamation. The recovered
+numerical thread is asserted. Twelve JIT/NativeAOT CPU/no-device, private software-GPU
+and registered owner/separate lifecycle profiles run 768 cold transitions outside
+the allocation bracket and measure a separate 768 active complete frames at strict
+0/0 owner/all-thread managed bytes after warmup. Existing response bounds remain
+unchanged; cold topology creation is not claimed allocation-free.
+
+The final source cohort passes 105/105 distinct profiles:
+
+| Executed profile family | Profiles |
+| --- | ---: |
+| JIT/NativeAOT, three backends, owner/separate parameter/exception/world/portable-joint/spring-anchor/lifecycle families | 72 |
+| JIT/NativeAOT, three backends, serial joint response | 6 |
+| JIT/NativeAOT registered owner/separate joint/exception/lifecycle recovery | 12 |
+| JIT/NativeAOT default registered consumer | 2 |
+| JIT three backends, owner/separate coupled-joint/contact companions | 12 |
+| Serial combined CPU/GPU root joint contract | 1 |
+
+Response/root entrypoints are counted once per executable/backend because they do
+not consume a separate-thread flag. Registered coupled/contact runs explicitly pass
+--registered. Six PDB/Compile proofs match 3411 authored source inputs, without
+DEBUG or missing/mismatched files. Process maps require private lavapipe for GPU,
+reject hardware drivers and require no CoreCLR for NativeAOT. CPU/registered runs
+use an empty ICD. Evidence: `bin/physics-joint-lifecycle/2026-10-19/validation.json`,
+current-source-proof.json, current-source-inputs.json, clear-runtime-regression-proof.json
+and scene-request-runtime-regression-proof.json. Existing parameter/exception/
+world/portable-joint/spring-anchor, coupled/contact and root joint companions pass
+on this same cohort. These scenarios do not establish arbitrary custom geometry,
+complete numerical/extension or multiplayer acceptance.
+
+Only these six extension rows become Implemented. The current physics census is
+1258/1369 (91.8918918918919%), with 111 open declarations: 80 Partial, 14 Unimplemented and
+17 Blocked; 92 remain Excluded. Earlier counts describe recorded checkpoints.
+Full ordinary root, native allocations, broader stability/performance, portable
+multiplayer, other platforms and hardware real-window/FPS acceptance remain open.
+Hardware GPU load did not run; the RTX power cable remains unchecked.
+
 ## Complete joint parameter operations
 
 The eight extension numeric parameter/flag operations project to the complete
@@ -1475,8 +1547,9 @@ low-speed test; it is not a general solver tolerance. After 64 warmup frames,
 on each backend, including the first frame after collection.
 
 The eight extension parameter/flag selector operations map to their complete typed
-facade family under ADR 0087/0103 and remain Partial. Bounded registered pin/groove
-response now has the shared checks below; complete numerical-extension acceptance
+facade family under ADR 0087/0103; the [complete parameter audit](#complete-joint-parameter-operations)
+closes those rows. Bounded registered pin/groove response has the shared checks below;
+complete numerical-extension acceptance
 remains open. Built-in joint response uses the existing shared CPU/GPU contract tests. Native allocations, other
 platforms, networking and final window/performance acceptance are unverified here.
 
@@ -1500,18 +1573,19 @@ callbacks may clear/remake the next interval's connection.
 
 Independent factory throws, null results and claimed-object reuse reject. Attach
 failure attempts Detach; both errors remain if cleanup also throws. The matching
-numerical attachment retires even on detach error. Validated common role may remain
-pending after an attachment error, or until a failed clear is retried: explicit
-make/clear retry completes the operation. These outside-step authoring errors
+numerical attachment retires even on detach error. A validated make retains its
+role, endpoints and server scene ownership for explicit retry or endpoint reentry.
+A started clear commits Empty even on cleanup errors and keeps scene server ownership;
+endpoint reentry cannot recreate the discarded connection. These outside-step authoring errors
 leave the world usable; started solve failures keep the existing terminal policy.
 
 The test also exercises real capped spring response with the existing .001
 scene-unit/s short-run tolerance. After 64 warmup frames, 64 complete frames with
 six active joint records allocate 0 owner/all-thread managed bytes on each backend.
 Cold creation/replacement intentionally creates fresh numerical objects and is
-outside this allocation bracket. The six extension creation/type/clear/make rows
-remain Partial: broader coupled registered constraint behavior and complete
-extension acceptance are still open. Native allocations, other platforms, final networking
+outside this allocation bracket. The [complete lifecycle audit](#complete-joint-lifecycle-operations)
+closes the six extension creation/type/clear/make rows. Broader numerical and complete
+extension acceptance remain open. Native allocations, other platforms, final networking
 and real-window/performance acceptance are unverified here.
 
 

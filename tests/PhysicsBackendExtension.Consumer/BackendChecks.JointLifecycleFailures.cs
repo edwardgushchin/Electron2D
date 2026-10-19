@@ -45,9 +45,9 @@ public static partial class BackendChecks
                 solver.FailJointDetach = true;
                 try { Reject<InvalidOperationException>(() => PhysicsServer.JointClear(probe)); }
                 finally { solver.FailJointDetach = false; }
-                Check(!solver.Joints.ContainsKey(probe), "A detach error still retires the numerical attachment");
+                Check(!solver.Joints.ContainsKey(probe) && PhysicsServer.JointGetType(probe) == PhysicsServer.JointType.Empty, "A detach error still commits cleared identity and retires the numerical attachment");
                 PhysicsServer.JointClear(probe); PhysicsServer.JointClear(id);
-                Check(PhysicsServer.JointGetType(probe) == PhysicsServer.JointType.Empty, "Explicit clear retry completes retained resource cleanup");
+                Check(PhysicsServer.JointGetType(probe) == PhysicsServer.JointType.Empty, "Repeated clear remains idempotent after reported cleanup errors");
             }
         }
         finally
