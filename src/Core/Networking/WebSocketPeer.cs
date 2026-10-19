@@ -17,14 +17,7 @@ public enum WebSocketState
     /// <summary>No active connection exists.</summary>
     Closed = 3
 }
-/// <summary>Selects the WebSocket message payload contract.</summary>
-public enum WebSocketWriteMode
-{
-    /// <summary>Payload bytes must be valid UTF-8 text.</summary>
-    Text = 0,
-    /// <summary>Payload bytes are arbitrary binary data.</summary>
-    Binary = 1
-}
+
 
 /// <summary>Exchanges complete WebSocket messages over polled WS/WSS or a borrowed ordered stream.</summary>
 /// <remarks>Calls and disposal require the constructing thread. ConnectToURL owns its HTTP/TCP/TLS state;
@@ -157,12 +150,12 @@ public class WebSocketPeer : PacketPeer
     /// <exception cref="InvalidOperationException">Not open or prepared queue capacity is exhausted; the message is not queued.</exception>
     /// <exception cref="ArgumentException">The payload exceeds its budget or text is invalid UTF-8.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The write mode is not text or binary.</exception>
-    public void Send(ReadOnlySpan<byte> message, WebSocketWriteMode writeMode = WebSocketWriteMode.Binary)
+    public void Send(ReadOnlySpan<byte> message, PacketWriteMode writeMode = PacketWriteMode.Binary)
     {
         CheckPacketPeer(); if ((uint)writeMode > 1) throw new ArgumentOutOfRangeException(nameof(writeMode)); if (_state != WebSocketState.Open) throw new InvalidOperationException("An open WebSocket is required.");
         if (message.Length > GetMaxPacketSize()) throw new ArgumentException("Message exceeds the prepared output limit.", nameof(message));
-        if (writeMode == WebSocketWriteMode.Text && !ValidUTF8(message)) throw new ArgumentException("Text payload must be valid UTF-8.", nameof(message));
-        QueueFrame(writeMode == WebSocketWriteMode.Text ? 1 : 2, message); Flush();
+        if (writeMode == PacketWriteMode.Text && !ValidUTF8(message)) throw new ArgumentException("Text payload must be valid UTF-8.", nameof(message));
+        QueueFrame(writeMode == PacketWriteMode.Text ? 1 : 2, message); Flush();
     }
     /// <summary>Encodes and sends one UTF-8 text message through prepared storage.</summary><param name="message">Text with valid UTF-16; no temporary encoded array is allocated.</param>
     /// <exception cref="EncoderFallbackException">The string contains invalid UTF-16.</exception>

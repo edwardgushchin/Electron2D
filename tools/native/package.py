@@ -11,7 +11,7 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
-from check_native_publish import TEXT_EXPORTS, check_private_text
+from check_native_publish import TEXT_EXPORTS, WEBRTC_EXPORTS, check_private_text, check_private_webrtc
 
 PLATFORMS = {"Linux": ("linux-x64", "linux-arm64"), "MacOS": ("osx-x64", "osx-arm64"),
              "Windows": ("win-x86", "win-x64", "win-arm64"),
@@ -19,10 +19,10 @@ PLATFORMS = {"Linux": ("linux-x64", "linux-arm64"), "MacOS": ("osx-x64", "osx-ar
              "iOS": ("ios-arm64", "iossimulator-arm64", "iossimulator-x64"),
              "tvOS": ("tvos-arm64", "tvossimulator-arm64", "tvossimulator-x64"), "Web": ("browser-wasm",)}
 RIDS = tuple(rid for values in PLATFORMS.values() for rid in values)
-LIBRARIES = {"Linux": ("libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so", "libElectron2DMesh.so", "libElectron2DWebP.so", "libElectron2DOGV.so", "libElectron2DKTX.so"),
-             "MacOS": ("libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib", "libElectron2DMesh.dylib", "libElectron2DWebP.dylib", "libElectron2DOGV.dylib", "libElectron2DKTX.dylib",
+LIBRARIES = {"Linux": ("libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so", "libElectron2DWebRTC.so", "libElectron2DMesh.so", "libElectron2DWebP.so", "libElectron2DOGV.so", "libElectron2DKTX.so"),
+             "MacOS": ("libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib", "libElectron2DWebRTC.dylib", "libElectron2DMesh.dylib", "libElectron2DWebP.dylib", "libElectron2DOGV.dylib", "libElectron2DKTX.dylib",
                        "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib", "libElectron2DFreeType.dylib"),
-             "Windows": ("Electron2DTextBreak.dll", "FAudio.dll", "Electron2DENet.dll", "Electron2DMesh.dll", "Electron2DWebP.dll", "Electron2DOGV.dll", "Electron2DKTX.dll",
+             "Windows": ("Electron2DTextBreak.dll", "FAudio.dll", "Electron2DENet.dll", "Electron2DWebRTC.dll", "Electron2DMesh.dll", "Electron2DWebP.dll", "Electron2DOGV.dll", "Electron2DKTX.dll",
                          "libcrypto-3-Electron2D.dll", "libssl-3-Electron2D.dll", "Electron2DFreeType.dll")}
 LIBRARIES["Android"] = ("libElectron2DTextBreak.so", "libFAudio.so", "libElectron2DENet.so", "libElectron2DMesh.so", "libElectron2DWebP.so", "libElectron2DOGV.so", "libElectron2DKTX.so",
                         "libElectron2DCrypto.so", "libElectron2DSSL.so", "libElectron2DFreeType.so", "libElectron2DHarfBuzz.so")
@@ -34,6 +34,8 @@ LIBRARIES.update(iOS=ARCHIVES, tvOS=ARCHIVES, Web=(*ARCHIVES, "libSDL3.a", "libE
 
 
 def required_exports(name):
+    if "Electron2DWebRTC" in name:
+        return WEBRTC_EXPORTS
     if "Electron2DKTX" in name:
         return {"e2d_ktx_create", "e2d_ktx_level", "e2d_ktx_destroy", "e2d_basis_create", "e2d_block_decode", "e2d_image_encode", "e2d_image_encoded_free"}
     if "Electron2DOGV" in name:
@@ -154,13 +156,14 @@ def configuration():
 def source_hash():
     files = set()
     for directory in ("src/Vendor/ICU", "src/Vendor/MSDFGen", "src/Vendor/FAudio", "src/Vendor/ENet",
-                      "src/Vendor/FastLZ", "src/Vendor/meshoptimizer", "src/Servers/Text/Native",
-                      "tools/audio-native", "tools/enet-native", "tools/mesh-native", "tools/webp-native", "tools/ogv-native", "tools/ktx-native", "tools/font-native", "tools/native"):
+                      "src/Vendor/FastLZ", "src/Vendor/libdatachannel", "src/Vendor/meshoptimizer", "src/Servers/Text/Native",
+                      "tools/audio-native", "tools/enet-native", "tools/webrtc-native", "tools/mesh-native", "tools/webp-native", "tools/ogv-native", "tools/ktx-native", "tools/font-native", "tools/native"):
         files.update(p for p in (ROOT / directory).rglob("*") if p.is_file()
                      and not {"bin", "obj", "__pycache__"} & set(p.relative_to(ROOT).parts))
     files.update((ROOT / "tools").glob("*-native.targets"))
     files.update((ROOT / "tools").glob("native-package.*"))
     files.add(ROOT / ".github/workflows/native.yml")
+    files.add(ROOT / "tools/check_native_publish.py")
     digest = hashlib.sha256()
     for path in sorted(files):
         digest.update(path.relative_to(ROOT).as_posix().encode() + b"\0")
@@ -194,7 +197,7 @@ def inspect(rid, directory):
         if rid.startswith(("osx-", "win-")):
             exports = windows_exports(path, rid, name) if rid.startswith("win-") else macos_exports(path, rid, name)
             required = required_exports(name)
-            if not required <= exports or ("TextBreak" in name or "ENet" in name or "Electron2DMesh" in name or "Electron2DOGV" in name or "Electron2DKTX" in name) and exports != required:
+            if not required <= exports or ("TextBreak" in name or "ENet" in name or "Electron2DWebRTC" in name or "Electron2DMesh" in name or "Electron2DOGV" in name or "Electron2DKTX" in name) and exports != required:
                 raise ValueError(f"Missing or foreign engine ABI exports: {path}")
             checksums[name] = hashlib.sha256(data).hexdigest()
             continue
@@ -212,7 +215,7 @@ def inspect(rid, directory):
             raise ValueError("FAudio must share the packaged SDL3 core")
         exports = elf_exports(path)
         required = required_exports(name)
-        if ("Electron2DMesh" in name or "Electron2DOGV" in name or "Electron2DKTX" in name) and exports != required:
+        if ("Electron2DWebRTC" in name or "Electron2DMesh" in name or "Electron2DOGV" in name or "Electron2DKTX" in name) and exports != required:
             raise ValueError(f"Private codec/mesh must export only its engine bridge: {path}")
         if name != "libElectron2DTextBreak.so" and not required <= exports:
             raise ValueError(f"Missing engine bridge exports: {path}: {required - exports}")
@@ -234,6 +237,7 @@ def inspect(rid, directory):
         checksums[name] = hashlib.sha256(data).hexdigest()
     if rid.startswith("linux-"):
         check_private_text(rid, directory / libraries[0])
+        check_private_webrtc(rid, directory / "libElectron2DWebRTC.so")
     return checksums
 
 

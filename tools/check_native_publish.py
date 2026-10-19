@@ -15,6 +15,25 @@ TEXT_EXPORTS = {
 }
 
 
+WEBRTC_EXPORTS = {"e2d_rtc_" + name for name in (
+    "error", "create", "destroy", "close", "state", "offer", "local", "remote", "candidate", "event",
+    "event_kind", "event_string", "event_channel", "event_release", "channel_create", "channel_destroy",
+    "channel_close", "channel_poll", "channel_info", "channel_string", "channel_size", "channel_read", "channel_send")}
+
+
+def check_private_webrtc(rid: str, library: Path) -> None:
+    header = library.read_bytes()[:20]
+    assert header[:6] == b"\x7fELF\x02\x01" and int.from_bytes(header[18:20], "little") == {"linux-x64": 62, "linux-arm64": 183}[rid], "WebRTC ELF architecture mismatch"
+    dynamic = subprocess.check_output(["readelf", "--wide", "--dynamic", str(library)], text=True)
+    assert re.findall(r"\(SONAME\).*\[([^]]+)\]", dynamic) == ["libElectron2DWebRTC.so"], "WebRTC SONAME mismatch"
+    assert not re.search(r"\((RPATH|RUNPATH)\)", dynamic), "WebRTC retains a build-machine search path"
+    dependencies = set(re.findall(r"\(NEEDED\).*\[([^]]+)\]", dynamic))
+    allowed = {"libssl.so.3", "libcrypto.so.3", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6", "libpthread.so.0", "libdl.so.2", {"linux-x64": "ld-linux-x86-64.so.2", "linux-arm64": "ld-linux-aarch64.so.1"}[rid]}
+    assert {"libssl.so.3", "libcrypto.so.3"} <= dependencies <= allowed, f"Unreviewed WebRTC dependencies: {dependencies}"
+    symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(library)], text=True)
+    assert {line.split()[-1] for line in symbols.splitlines()} == WEBRTC_EXPORTS, "WebRTC private ABI mismatch"
+
+
 def check_private_text(rid: str, library: Path) -> None:
     with library.open("rb") as stream:
         header = stream.read(20)
@@ -80,6 +99,9 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
         symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(enet)], text=True)
         exports = {line.split()[-1] for line in symbols.splitlines()}
         assert exports == {"e2d_enet_" + name for name in ("callbacks", "create", "destroy", "connect", "service", "flush", "send", "packet", "release", "peer", "stat", "host", "compress")} | {"e2d_file_encode", "e2d_file_decode"}, "ENet private ABI export mismatch"
+        webrtc = native / "libElectron2DWebRTC.so"
+        assert webrtc.is_file() and not (publish / webrtc.name).exists(), "WebRTC must retain its RID directory"
+        check_private_webrtc(rid, webrtc)
         audio = native / "libFAudio.so.0"
         assert audio.is_file(), "Missing pinned native audio backend"
         header = audio.read_bytes()[:20]
@@ -101,12 +123,12 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
         ktx = native / "libElectron2DKTX.so"
         assert ktx.is_file(), "Missing private KTX/Basis decoder"
         ktx_symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(ktx)], text=True)
-        assert {line.split()[-1] for line in ktx_symbols.splitlines()} == {"e2d_ktx_create", "e2d_ktx_level", "e2d_ktx_destroy", "e2d_basis_create", "e2d_block_decode"}, "KTX private ABI mismatch"
+        assert {line.split()[-1] for line in ktx_symbols.splitlines()} == {"e2d_ktx_create", "e2d_ktx_level", "e2d_ktx_destroy", "e2d_basis_create", "e2d_block_decode", "e2d_image_encode", "e2d_image_encoded_free"}, "KTX private ABI mismatch"
         ktx_dynamic = subprocess.check_output(["readelf", "--wide", "--dynamic", str(ktx)], text=True)
         assert not any(name in ktx_dynamic for name in ("libktx", "libbasis", "libzstd", "RPATH", "RUNPATH")), "KTX codec closure must remain private and relocatable"
         assert not (publish / "FAudio.dll").exists(), "Managed backend leaked outside the engine assembly"
         assert not list(publish.rglob("libicu*")), "A private text publish must not deliver global ICU libraries"
-        print(f"{rid}: self-contained host, SDL/FAudio/FreeType/HarfBuzz and private text/ENet backends verified (9/15 exports, no global ICU dependency)")
+        print(f"{rid}: self-contained host, SDL/FAudio/FreeType/HarfBuzz and private text/ENet/WebRTC backends verified (no global ICU dependency)")
     else:
         assert not list(publish.rglob("libElectron2DENet.so")), "Linux ENet backend leaked into a foreign publish"
         assert not list(publish.rglob("libFAudio*")), "Linux audio library leaked into a foreign publish"

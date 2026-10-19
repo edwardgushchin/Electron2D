@@ -1,6 +1,6 @@
 # WebSocketPeer
 
-Last updated: 2026-10-04
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.WebSocketPeer`. **Inherits:** [PacketPeer](PacketPeer.md). **Source:** [WebSocketPeer.cs](../../src/Core/Networking/WebSocketPeer.cs).
 
@@ -154,7 +154,7 @@ System.ArgumentException: A protocol is null, duplicated or not an HTTP token.
 | `public System.Void Poll()` | Advances transport/upgrade, complete-message queues, heartbeat and close handshake without waiting. |
 | `public override System.Void PutPacket(System.ReadOnlySpan<System.Byte> data)` | Sends exactly one packet. |
 | `protected override System.Void ReadPacketCore(System.Span<System.Byte> destination)` | Consumes the next complete packet into a validated destination. |
-| `public System.Void Send(System.ReadOnlySpan<System.Byte> message, Electron2D.WebSocketWriteMode writeMode = Binary)` | Copies and queues one complete message, then attempts immediate nonblocking transmission. |
+| `public System.Void Send(System.ReadOnlySpan<System.Byte> message, Electron2D.PacketWriteMode writeMode = Binary)` | Copies and queues one complete message, then attempts immediate nonblocking transmission. |
 | `public System.Void SendText(System.String message)` | Encodes and sends one UTF-8 text message through prepared storage. |
 | `public System.Void SetNoDelay(System.Boolean enabled)` | Sets TCP_NODELAY on the live native transport. |
 | `public System.Boolean WasStringPacket()` | Reports the text marker of the most recently consumed application message. |
@@ -365,7 +365,7 @@ destination: An exact-sized destination.
 <a id="member-e984a58ec953"></a>
 ### Send
 
-`public System.Void Send(System.ReadOnlySpan<System.Byte> message, Electron2D.WebSocketWriteMode writeMode = Binary)`
+`public System.Void Send(System.ReadOnlySpan<System.Byte> message, Electron2D.PacketWriteMode writeMode = Binary)`
 
 Copies and queues one complete message, then attempts immediate nonblocking transmission.
 

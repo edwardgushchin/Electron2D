@@ -1,6 +1,8 @@
 # Multiplayer transports
 
-Last updated: 2026-10-04
+Last updated: 2026-10-19
+
+WebRTCMultiplayerPeer now supplies the same public multiplayer contract through native negotiated SCTP channels. It owns three reserved channels plus configured additional modes while borrowing caller connections. The [WebRTC component](webrtc.md) records routing, lifetime, rollback, bounded queues, exact packet metadata and SceneTree RPC verification.
 
 ## Scope and types
 

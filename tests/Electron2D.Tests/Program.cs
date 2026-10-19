@@ -9,6 +9,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WEBRTC") == "browser") { try { WebRTCTests.Browser(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WEBRTC") == "1") { try { WebRTCTests.Run(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TIME") == "zone") { TimeTests.RunZone(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TIME") == "1") { TimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PARTICLE_SERVER") is { } particleServer) { ParticleServerTests.Run(particleServer); return; }

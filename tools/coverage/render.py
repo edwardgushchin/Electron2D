@@ -698,6 +698,8 @@ def render():
             updated = "2026-10-17"
         if name == "Object":
             updated = "2026-10-18"
+        if name.startswith("WebRTC") or name == "WebSocketPeer":
+            updated = "2026-10-19"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

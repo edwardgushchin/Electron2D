@@ -1482,7 +1482,7 @@
     },
     {
       "godot": "WebSocketPeer::enum:WriteMode",
-      "electron2d": "T:Electron2D.WebSocketWriteMode",
+      "electron2d": "T:Electron2D.PacketWriteMode",
       "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
     },
     {
@@ -1507,12 +1507,12 @@
     },
     {
       "godot": "WebSocketPeer::enum_value:WriteMode.WRITE_MODE_BINARY",
-      "electron2d": "enumValue:Electron2D.WebSocketWriteMode.Binary()",
+      "electron2d": "enumValue:Electron2D.PacketWriteMode.Binary()",
       "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
     },
     {
       "godot": "WebSocketPeer::enum_value:WriteMode.WRITE_MODE_TEXT",
-      "electron2d": "enumValue:Electron2D.WebSocketWriteMode.Text()",
+      "electron2d": "enumValue:Electron2D.PacketWriteMode.Text()",
       "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
     },
     {
@@ -1577,7 +1577,7 @@
     },
     {
       "godot": "WebSocketPeer::method:send(PackedByteArray:,int:WebSocketPeer.WriteMode)",
-      "electron2d": "method:Electron2D.WebSocketPeer.Send(System.ReadOnlySpan<System.Byte>,Electron2D.WebSocketWriteMode)",
+      "electron2d": "method:Electron2D.WebSocketPeer.Send(System.ReadOnlySpan<System.Byte>,Electron2D.PacketWriteMode)",
       "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
     },
     {
@@ -3549,6 +3549,491 @@
       "godot": "ENetPacketPeer::method:throttle_configure(int:,int:,int:)",
       "electron2d": "method:Electron2D.ENetPacketPeer.ThrottleConfigure(System.UInt32,System.UInt32,System.UInt32)",
       "reason": "ADR 0094 complete native ENet host/peer/multiplayer slice: unchanged ENet 1.3.18 core, private routing-token IPv4/IPV6 socket port, typed events, exact channels/flags/statistics, five codecs, bounded packet queues and retained DTLS transport. Server/client/mesh integration preserves identity, channel zero mode separation, positive channels, actual metadata, targeting, relay capability and committed callback/lifetime semantics; channel upper-bound, server bandwidth/channel argument and timeout multiplier defects are corrected explicitly. ENetTests executes IPv4/IPV6, all codecs/fragmentation, DTLS, two-client routing/modes, mesh, SceneTree/SceneMultiplayer packets, tuning, refusal, datagram loss/retransmission, capacity and owner/reset/disposal edges; a separate stock Unix ENet process verifies the private socket-port wire. The complete SceneReplicationTests native spawn/sync/delta/visibility/RPC/cleanup scenario also executes over ENet; the asynchronous fixture waits for subsequent state separately from initial spawn readiness. Sixty-four prepared multiplayer and active replication/idle scene intervals allocate zero managed bytes. Native allocator/routed/browser/foreign-platform and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "godot": "class:WebRTCDataChannel",
+      "electron2d": "T:Electron2D.WebRTCDataChannel",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::enum:ChannelState",
+      "electron2d": "T:Electron2D.WebRTCDataChannel.ChannelState",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::enum:WriteMode",
+      "electron2d": "T:Electron2D.PacketWriteMode",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::enum_value:ChannelState.STATE_CLOSED",
+      "electron2d": "enumValue:Electron2D.WebRTCDataChannel.ChannelState.Closed()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::enum_value:ChannelState.STATE_CLOSING",
+      "electron2d": "enumValue:Electron2D.WebRTCDataChannel.ChannelState.Closing()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::enum_value:ChannelState.STATE_CONNECTING",
+      "electron2d": "enumValue:Electron2D.WebRTCDataChannel.ChannelState.Connecting()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::enum_value:ChannelState.STATE_OPEN",
+      "electron2d": "enumValue:Electron2D.WebRTCDataChannel.ChannelState.Open()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::enum_value:WriteMode.WRITE_MODE_BINARY",
+      "electron2d": "enumValue:Electron2D.PacketWriteMode.Binary()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::enum_value:WriteMode.WRITE_MODE_TEXT",
+      "electron2d": "enumValue:Electron2D.PacketWriteMode.Text()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::method:close()",
+      "electron2d": "method:Electron2D.WebRTCDataChannel.Close()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::method:get_buffered_amount()",
+      "electron2d": "method:Electron2D.WebRTCDataChannel.GetBufferedAmount()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::method:get_id()",
+      "electron2d": "method:Electron2D.WebRTCDataChannel.GetID()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::method:get_label()",
+      "electron2d": "method:Electron2D.WebRTCDataChannel.GetLabel()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::method:get_max_packet_life_time()",
+      "electron2d": "method:Electron2D.WebRTCDataChannel.GetMaxPacketLifeTime()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::method:get_max_retransmits()",
+      "electron2d": "method:Electron2D.WebRTCDataChannel.GetMaxRetransmits()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::method:get_protocol()",
+      "electron2d": "method:Electron2D.WebRTCDataChannel.GetProtocol()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::method:get_ready_state()",
+      "electron2d": "method:Electron2D.WebRTCDataChannel.GetReadyState()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::method:is_negotiated()",
+      "electron2d": "method:Electron2D.WebRTCDataChannel.IsNegotiated()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::method:is_ordered()",
+      "electron2d": "method:Electron2D.WebRTCDataChannel.IsOrdered()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::method:poll()",
+      "electron2d": "method:Electron2D.WebRTCDataChannel.Poll()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::method:was_string_packet()",
+      "electron2d": "method:Electron2D.WebRTCDataChannel.WasStringPacket()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannel::property:write_mode",
+      "electron2d": "property:Electron2D.WebRTCDataChannel.WriteMode()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "class:WebRTCDataChannelExtension",
+      "electron2d": "T:Electron2D.WebRTCDataChannelExtension",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_close()",
+      "electron2d": "method:Electron2D.WebRTCDataChannelExtension.Close()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_get_available_packet_count()",
+      "electron2d": "method:Electron2D.WebRTCDataChannelExtension.GetAvailablePacketCount()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_get_buffered_amount()",
+      "electron2d": "method:Electron2D.WebRTCDataChannelExtension.GetBufferedAmount()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_get_id()",
+      "electron2d": "method:Electron2D.WebRTCDataChannelExtension.GetID()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_get_label()",
+      "electron2d": "method:Electron2D.WebRTCDataChannelExtension.GetLabel()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_get_max_packet_life_time()",
+      "electron2d": "method:Electron2D.WebRTCDataChannelExtension.GetMaxPacketLifeTime()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_get_max_packet_size()",
+      "electron2d": "method:Electron2D.WebRTCDataChannelExtension.GetMaxPacketSize()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_get_max_retransmits()",
+      "electron2d": "method:Electron2D.WebRTCDataChannelExtension.GetMaxRetransmits()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_get_packet(const uint8_t **:,int32_t*:)",
+      "electron2d": "method:Electron2D.WebRTCDataChannelExtension.NextPacketSize()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_get_packet(const uint8_t **:,int32_t*:)",
+      "electron2d": "method:Electron2D.WebRTCDataChannelExtension.ReadPacketCore(System.Span<System.Byte>)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_get_protocol()",
+      "electron2d": "method:Electron2D.WebRTCDataChannelExtension.GetProtocol()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_get_ready_state()",
+      "electron2d": "method:Electron2D.WebRTCDataChannelExtension.GetReadyState()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_get_write_mode()",
+      "electron2d": "property:Electron2D.WebRTCDataChannelExtension.WriteMode()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_is_negotiated()",
+      "electron2d": "method:Electron2D.WebRTCDataChannelExtension.IsNegotiated()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_is_ordered()",
+      "electron2d": "method:Electron2D.WebRTCDataChannelExtension.IsOrdered()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_poll()",
+      "electron2d": "method:Electron2D.WebRTCDataChannelExtension.Poll()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_put_packet(const uint8_t*:,int:)",
+      "electron2d": "method:Electron2D.WebRTCDataChannelExtension.PutPacket(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_set_write_mode(int:WebRTCDataChannel.WriteMode)",
+      "electron2d": "property:Electron2D.WebRTCDataChannelExtension.WriteMode()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCDataChannelExtension::method:_was_string_packet()",
+      "electron2d": "method:Electron2D.WebRTCDataChannelExtension.WasStringPacket()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "class:WebRTCMultiplayerPeer",
+      "electron2d": "T:Electron2D.WebRTCMultiplayerPeer",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCMultiplayerPeer::method:add_peer(WebRTCPeerConnection:,int:,int:)",
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.AddPeer(Electron2D.WebRTCPeerConnection,System.Int32,System.Int32)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCMultiplayerPeer::method:create_client(int:,Array:)",
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.CreateClient(System.Int32,System.Collections.Generic.IReadOnlyList<Electron2D.TransferMode>)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCMultiplayerPeer::method:create_mesh(int:,Array:)",
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.CreateMesh(System.Int32,System.Collections.Generic.IReadOnlyList<Electron2D.TransferMode>)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCMultiplayerPeer::method:create_server(Array:)",
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.CreateServer(System.Collections.Generic.IReadOnlyList<Electron2D.TransferMode>)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCMultiplayerPeer::method:get_peer(int:)",
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.GetPeer(System.Int32)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCMultiplayerPeer::method:get_peers()",
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.GetPeers()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCMultiplayerPeer::method:has_peer(int:)",
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.HasPeer(System.Int32)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCMultiplayerPeer::method:remove_peer(int:)",
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.RemovePeer(System.Int32)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "class:WebRTCPeerConnection",
+      "electron2d": "T:Electron2D.WebRTCPeerConnection",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::enum:ConnectionState",
+      "electron2d": "T:Electron2D.WebRTCPeerConnection.ConnectionState",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::enum:GatheringState",
+      "electron2d": "T:Electron2D.WebRTCPeerConnection.GatheringState",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::enum:SignalingState",
+      "electron2d": "T:Electron2D.WebRTCPeerConnection.SignalingState",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::enum_value:ConnectionState.STATE_CLOSED",
+      "electron2d": "enumValue:Electron2D.WebRTCPeerConnection.ConnectionState.Closed()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::enum_value:ConnectionState.STATE_CONNECTED",
+      "electron2d": "enumValue:Electron2D.WebRTCPeerConnection.ConnectionState.Connected()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::enum_value:ConnectionState.STATE_CONNECTING",
+      "electron2d": "enumValue:Electron2D.WebRTCPeerConnection.ConnectionState.Connecting()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::enum_value:ConnectionState.STATE_DISCONNECTED",
+      "electron2d": "enumValue:Electron2D.WebRTCPeerConnection.ConnectionState.Disconnected()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::enum_value:ConnectionState.STATE_FAILED",
+      "electron2d": "enumValue:Electron2D.WebRTCPeerConnection.ConnectionState.Failed()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::enum_value:ConnectionState.STATE_NEW",
+      "electron2d": "enumValue:Electron2D.WebRTCPeerConnection.ConnectionState.New()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::enum_value:GatheringState.GATHERING_STATE_COMPLETE",
+      "electron2d": "enumValue:Electron2D.WebRTCPeerConnection.GatheringState.Complete()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::enum_value:GatheringState.GATHERING_STATE_GATHERING",
+      "electron2d": "enumValue:Electron2D.WebRTCPeerConnection.GatheringState.Gathering()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::enum_value:GatheringState.GATHERING_STATE_NEW",
+      "electron2d": "enumValue:Electron2D.WebRTCPeerConnection.GatheringState.New()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::enum_value:SignalingState.SIGNALING_STATE_CLOSED",
+      "electron2d": "enumValue:Electron2D.WebRTCPeerConnection.SignalingState.Closed()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::enum_value:SignalingState.SIGNALING_STATE_HAVE_LOCAL_OFFER",
+      "electron2d": "enumValue:Electron2D.WebRTCPeerConnection.SignalingState.HaveLocalOffer()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::enum_value:SignalingState.SIGNALING_STATE_HAVE_LOCAL_PRANSWER",
+      "electron2d": "enumValue:Electron2D.WebRTCPeerConnection.SignalingState.HaveLocalPranswer()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::enum_value:SignalingState.SIGNALING_STATE_HAVE_REMOTE_OFFER",
+      "electron2d": "enumValue:Electron2D.WebRTCPeerConnection.SignalingState.HaveRemoteOffer()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::enum_value:SignalingState.SIGNALING_STATE_HAVE_REMOTE_PRANSWER",
+      "electron2d": "enumValue:Electron2D.WebRTCPeerConnection.SignalingState.HaveRemotePranswer()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::enum_value:SignalingState.SIGNALING_STATE_STABLE",
+      "electron2d": "enumValue:Electron2D.WebRTCPeerConnection.SignalingState.Stable()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::method:add_ice_candidate(String:,int:,String:)",
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.AddICECandidate(System.String,System.Int32,System.String)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::method:close()",
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.Close()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::method:create_data_channel(String:,Dictionary:)",
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.CreateDataChannel(System.String,Electron2D.WebRTCDataChannelOptions)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::method:create_offer()",
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.CreateOffer()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::method:get_connection_state()",
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.GetConnectionState()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::method:get_gathering_state()",
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.GetGatheringState()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::method:get_signaling_state()",
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.GetSignalingState()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::method:initialize(Dictionary:)",
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.Initialize(Electron2D.WebRTCConfiguration)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::method:poll()",
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.Poll()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::method:set_default_extension(StringName:)",
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.SetDefaultExtension(System.Func<Electron2D.WebRTCPeerConnectionExtension>)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::method:set_local_description(String:,String:)",
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.SetLocalDescription(System.String,System.String)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::method:set_remote_description(String:,String:)",
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.SetRemoteDescription(System.String,System.String)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::signal:data_channel_received(WebRTCDataChannel:)",
+      "electron2d": "event:Electron2D.WebRTCPeerConnection.DataChannelReceived()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::signal:ice_candidate_created(String:,int:,String:)",
+      "electron2d": "event:Electron2D.WebRTCPeerConnection.ICECandidateCreated()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnection::signal:session_description_created(String:,String:)",
+      "electron2d": "event:Electron2D.WebRTCPeerConnection.SessionDescriptionCreated()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "class:WebRTCPeerConnectionExtension",
+      "electron2d": "T:Electron2D.WebRTCPeerConnectionExtension",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnectionExtension::method:_add_ice_candidate(String:,int:,String:)",
+      "electron2d": "method:Electron2D.WebRTCPeerConnectionExtension.AddICECandidate(System.String,System.Int32,System.String)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnectionExtension::method:_close()",
+      "electron2d": "method:Electron2D.WebRTCPeerConnectionExtension.Close()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnectionExtension::method:_create_data_channel(String:,Dictionary:)",
+      "electron2d": "method:Electron2D.WebRTCPeerConnectionExtension.CreateDataChannel(System.String,Electron2D.WebRTCDataChannelOptions)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnectionExtension::method:_create_offer()",
+      "electron2d": "method:Electron2D.WebRTCPeerConnectionExtension.CreateOffer()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnectionExtension::method:_get_connection_state()",
+      "electron2d": "method:Electron2D.WebRTCPeerConnectionExtension.GetConnectionState()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnectionExtension::method:_get_gathering_state()",
+      "electron2d": "method:Electron2D.WebRTCPeerConnectionExtension.GetGatheringState()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnectionExtension::method:_get_signaling_state()",
+      "electron2d": "method:Electron2D.WebRTCPeerConnectionExtension.GetSignalingState()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnectionExtension::method:_initialize(Dictionary:)",
+      "electron2d": "method:Electron2D.WebRTCPeerConnectionExtension.Initialize(Electron2D.WebRTCConfiguration)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnectionExtension::method:_poll()",
+      "electron2d": "method:Electron2D.WebRTCPeerConnectionExtension.Poll()",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnectionExtension::method:_set_local_description(String:,String:)",
+      "electron2d": "method:Electron2D.WebRTCPeerConnectionExtension.SetLocalDescription(System.String,System.String)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "godot": "WebRTCPeerConnectionExtension::method:_set_remote_description(String:,String:)",
+      "electron2d": "method:Electron2D.WebRTCPeerConnectionExtension.SetRemoteDescription(System.String,System.String)",
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
     }
   ],
   "extras": [
@@ -5196,6 +5681,271 @@
       "electron2d": "property:Electron2D.ENetMultiplayerPeer.RefuseNewConnections()",
       "state": "Implemented",
       "reason": "Typed ENet event/packet-flags value, constructor/finalizer/disposal or inherited concrete PacketPeer/MultiplayerPeer lifecycle/metadata/packet hook. ADR 0094 complete native ENet host/peer/multiplayer slice: unchanged ENet 1.3.18 core, private routing-token IPv4/IPV6 socket port, typed events, exact channels/flags/statistics, five codecs, bounded packet queues and retained DTLS transport. Server/client/mesh integration preserves identity, channel zero mode separation, positive channels, actual metadata, targeting, relay capability and committed callback/lifetime semantics; channel upper-bound, server bandwidth/channel argument and timeout multiplier defects are corrected explicitly. ENetTests executes IPv4/IPV6, all codecs/fragmentation, DTLS, two-client routing/modes, mesh, SceneTree/SceneMultiplayer packets, tuning, refusal, datagram loss/retransmission, capacity and owner/reset/disposal edges; a separate stock Unix ENet process verifies the private socket-port wire. The complete SceneReplicationTests native spawn/sync/delta/visibility/RPC/cleanup scenario also executes over ENet; the asynchronous fixture waits for subsequent state separately from initial spawn readiness. Sixty-four prepared multiplayer and active replication/idle scene intervals allocate zero managed bytes. Native allocator/routed/browser/foreign-platform and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "electron2d": "T:Electron2D.WebRTCConfiguration",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "T:Electron2D.WebRTCDataChannelOptions",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "T:Electron2D.WebRTCICEServer",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "T:Electron2D.WebRTCPeerInfo",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "constructor:Electron2D.WebRTCConfiguration..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "constructor:Electron2D.WebRTCDataChannel..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "constructor:Electron2D.WebRTCDataChannelExtension..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "constructor:Electron2D.WebRTCDataChannelOptions..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "constructor:Electron2D.WebRTCICEServer..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "constructor:Electron2D.WebRTCMultiplayerPeer..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "constructor:Electron2D.WebRTCPeerConnection..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "constructor:Electron2D.WebRTCPeerConnectionExtension..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.Close()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.DisconnectPeer(System.Int32,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.GetAvailablePacketCount()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.GetConnectionStatus()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.GetMaxPacketSize()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.GetPacketChannel()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.GetPacketMode()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.GetPacketPeer()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.GetUniqueID()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.IsServer()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.IsServerRelaySupported()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.NextPacketSize()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.Poll()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.PutPacket(System.ReadOnlySpan<System.Byte>)",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.ReadPacketCore(System.Span<System.Byte>)",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.SetTargetPeer(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCMultiplayerPeer.ValidateDisposal()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.CheckPeerAccess()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.Create()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.EmitDataChannelReceived(Electron2D.WebRTCDataChannel)",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.EmitICECandidateCreated(System.String,System.Int32,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.EmitSessionDescriptionCreated(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.WebRTCPeerConnection.ValidateDisposal()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "property:Electron2D.WebRTCConfiguration.ICEServers()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "property:Electron2D.WebRTCDataChannelOptions.ID()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "property:Electron2D.WebRTCDataChannelOptions.MaxPacketLifeTime()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "property:Electron2D.WebRTCDataChannelOptions.MaxRetransmits()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "property:Electron2D.WebRTCDataChannelOptions.Negotiated()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "property:Electron2D.WebRTCDataChannelOptions.Ordered()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "property:Electron2D.WebRTCDataChannelOptions.Protocol()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "property:Electron2D.WebRTCICEServer.Credential()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "property:Electron2D.WebRTCICEServer.URLs()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "property:Electron2D.WebRTCICEServer.Username()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "property:Electron2D.WebRTCMultiplayerPeer.RefuseNewConnections()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "property:Electron2D.WebRTCMultiplayerPeer.TransferChannel()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "property:Electron2D.WebRTCMultiplayerPeer.TransferMode()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "property:Electron2D.WebRTCPeerInfo.Channels()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "property:Electron2D.WebRTCPeerInfo.Connected()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "electron2d": "property:Electron2D.WebRTCPeerInfo.Connection()",
+      "state": "Implemented",
+      "reason": "ADR 0094 typed WebRTC configuration/ICE/channel options or copied membership observation, explicit factory, owner/event guard, lifecycle or inherited PacketPeer/MultiplayerPeer override. Executes with the complete native peer/channel/extension/multiplayer slice and its focused native/browser/scene tests. ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
     }
   ],
   "statusGroups": [
@@ -5312,7 +6062,10 @@
     },
     {
       "state": "Implemented",
-      "godot": ["class:StreamPeerSocket", "StreamPeerSocket::method:poll()"],
+      "godot": [
+        "class:StreamPeerSocket",
+        "StreamPeerSocket::method:poll()"
+      ],
       "reason": "ADR 0094: owner-thread nonblocking TCP/UDS stream lifecycle and cached connection phases. Poll preserves queued FIN and reports abortive RST through the actual nonzero socket error; error readiness alone is not a reset. Linux loopback FIN/RST and warmed allocation regressions pass. The corrected full macOS suite still requires a target rerun; other targets and routed traffic remain separate gates."
     },
     {
@@ -5342,132 +6095,6 @@
         "StreamPeerExtension::method:_put_partial_data(const uint8_t*:,int:,int32_t*:)"
       ],
       "reason": "ADR 0001/0094: managed user transports extend StreamPeer/PacketPeer directly through typed span/progress, availability and outgoing raw payload capacity hooks, replacing native pointer/error-out ABI. NetworkingTests executes consumer-defined fragmented streams, full primitive progress, packet framing and custom packet bounds; no native extension facade is required."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "class:WebRTCDataChannel",
-        "WebRTCDataChannel::enum:ChannelState",
-        "WebRTCDataChannel::enum:WriteMode",
-        "WebRTCDataChannel::enum_value:ChannelState.STATE_CLOSED",
-        "WebRTCDataChannel::enum_value:ChannelState.STATE_CLOSING",
-        "WebRTCDataChannel::enum_value:ChannelState.STATE_CONNECTING",
-        "WebRTCDataChannel::enum_value:ChannelState.STATE_OPEN",
-        "WebRTCDataChannel::enum_value:WriteMode.WRITE_MODE_BINARY",
-        "WebRTCDataChannel::enum_value:WriteMode.WRITE_MODE_TEXT",
-        "WebRTCDataChannel::method:close()",
-        "WebRTCDataChannel::method:get_buffered_amount()",
-        "WebRTCDataChannel::method:get_id()",
-        "WebRTCDataChannel::method:get_label()",
-        "WebRTCDataChannel::method:get_max_packet_life_time()",
-        "WebRTCDataChannel::method:get_max_retransmits()",
-        "WebRTCDataChannel::method:get_protocol()",
-        "WebRTCDataChannel::method:get_ready_state()",
-        "WebRTCDataChannel::method:is_negotiated()",
-        "WebRTCDataChannel::method:is_ordered()",
-        "WebRTCDataChannel::method:poll()",
-        "WebRTCDataChannel::method:was_string_packet()",
-        "WebRTCDataChannel::property:write_mode"
-      ],
-      "reason": "ADR 0094: Requires a WebRTC backend with ICE/STUN/TURN, SDP, DTLS/SCTP and data-channel state/ownership, plus native/browser packaging. Managed extension hooks follow the executable typed owner."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "class:WebRTCDataChannelExtension",
-        "WebRTCDataChannelExtension::method:_close()",
-        "WebRTCDataChannelExtension::method:_get_available_packet_count()",
-        "WebRTCDataChannelExtension::method:_get_buffered_amount()",
-        "WebRTCDataChannelExtension::method:_get_id()",
-        "WebRTCDataChannelExtension::method:_get_label()",
-        "WebRTCDataChannelExtension::method:_get_max_packet_life_time()",
-        "WebRTCDataChannelExtension::method:_get_max_packet_size()",
-        "WebRTCDataChannelExtension::method:_get_max_retransmits()",
-        "WebRTCDataChannelExtension::method:_get_packet(const uint8_t **:,int32_t*:)",
-        "WebRTCDataChannelExtension::method:_get_protocol()",
-        "WebRTCDataChannelExtension::method:_get_ready_state()",
-        "WebRTCDataChannelExtension::method:_get_write_mode()",
-        "WebRTCDataChannelExtension::method:_is_negotiated()",
-        "WebRTCDataChannelExtension::method:_is_ordered()",
-        "WebRTCDataChannelExtension::method:_poll()",
-        "WebRTCDataChannelExtension::method:_put_packet(const uint8_t*:,int:)",
-        "WebRTCDataChannelExtension::method:_set_write_mode(int:WebRTCDataChannel.WriteMode)",
-        "WebRTCDataChannelExtension::method:_was_string_packet()"
-      ],
-      "reason": "ADR 0094: Requires a WebRTC backend with ICE/STUN/TURN, SDP, DTLS/SCTP and data-channel state/ownership, plus native/browser packaging. Managed extension hooks follow the executable typed owner."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "class:WebRTCMultiplayerPeer",
-        "WebRTCMultiplayerPeer::method:add_peer(WebRTCPeerConnection:,int:,int:)",
-        "WebRTCMultiplayerPeer::method:create_client(int:,Array:)",
-        "WebRTCMultiplayerPeer::method:create_mesh(int:,Array:)",
-        "WebRTCMultiplayerPeer::method:create_server(Array:)",
-        "WebRTCMultiplayerPeer::method:get_peer(int:)",
-        "WebRTCMultiplayerPeer::method:get_peers()",
-        "WebRTCMultiplayerPeer::method:has_peer(int:)",
-        "WebRTCMultiplayerPeer::method:remove_peer(int:)"
-      ],
-      "reason": "ADR 0094: Typed MultiplayerPeer now executes. Requires executable WebRTCPeerConnection/DataChannel SDP/ICE/DTLS/SCTP host integration and an owned WebRTC multiplayer cohort."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "class:WebRTCPeerConnection",
-        "WebRTCPeerConnection::enum:ConnectionState",
-        "WebRTCPeerConnection::enum:GatheringState",
-        "WebRTCPeerConnection::enum:SignalingState",
-        "WebRTCPeerConnection::enum_value:ConnectionState.STATE_CLOSED",
-        "WebRTCPeerConnection::enum_value:ConnectionState.STATE_CONNECTED",
-        "WebRTCPeerConnection::enum_value:ConnectionState.STATE_CONNECTING",
-        "WebRTCPeerConnection::enum_value:ConnectionState.STATE_DISCONNECTED",
-        "WebRTCPeerConnection::enum_value:ConnectionState.STATE_FAILED",
-        "WebRTCPeerConnection::enum_value:ConnectionState.STATE_NEW",
-        "WebRTCPeerConnection::enum_value:GatheringState.GATHERING_STATE_COMPLETE",
-        "WebRTCPeerConnection::enum_value:GatheringState.GATHERING_STATE_GATHERING",
-        "WebRTCPeerConnection::enum_value:GatheringState.GATHERING_STATE_NEW",
-        "WebRTCPeerConnection::enum_value:SignalingState.SIGNALING_STATE_CLOSED",
-        "WebRTCPeerConnection::enum_value:SignalingState.SIGNALING_STATE_HAVE_LOCAL_OFFER",
-        "WebRTCPeerConnection::enum_value:SignalingState.SIGNALING_STATE_HAVE_LOCAL_PRANSWER",
-        "WebRTCPeerConnection::enum_value:SignalingState.SIGNALING_STATE_HAVE_REMOTE_OFFER",
-        "WebRTCPeerConnection::enum_value:SignalingState.SIGNALING_STATE_HAVE_REMOTE_PRANSWER",
-        "WebRTCPeerConnection::enum_value:SignalingState.SIGNALING_STATE_STABLE",
-        "WebRTCPeerConnection::method:add_ice_candidate(String:,int:,String:)",
-        "WebRTCPeerConnection::method:close()",
-        "WebRTCPeerConnection::method:create_data_channel(String:,Dictionary:)",
-        "WebRTCPeerConnection::method:create_offer()",
-        "WebRTCPeerConnection::method:get_connection_state()",
-        "WebRTCPeerConnection::method:get_gathering_state()",
-        "WebRTCPeerConnection::method:get_signaling_state()",
-        "WebRTCPeerConnection::method:initialize(Dictionary:)",
-        "WebRTCPeerConnection::method:poll()",
-        "WebRTCPeerConnection::method:set_default_extension(StringName:)",
-        "WebRTCPeerConnection::method:set_local_description(String:,String:)",
-        "WebRTCPeerConnection::method:set_remote_description(String:,String:)",
-        "WebRTCPeerConnection::signal:data_channel_received(WebRTCDataChannel:)",
-        "WebRTCPeerConnection::signal:ice_candidate_created(String:,int:,String:)",
-        "WebRTCPeerConnection::signal:session_description_created(String:,String:)"
-      ],
-      "reason": "ADR 0094: Requires a WebRTC backend with ICE/STUN/TURN, SDP, DTLS/SCTP and data-channel state/ownership, plus native/browser packaging. Managed extension hooks follow the executable typed owner."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "class:WebRTCPeerConnectionExtension",
-        "WebRTCPeerConnectionExtension::method:_add_ice_candidate(String:,int:,String:)",
-        "WebRTCPeerConnectionExtension::method:_close()",
-        "WebRTCPeerConnectionExtension::method:_create_data_channel(String:,Dictionary:)",
-        "WebRTCPeerConnectionExtension::method:_create_offer()",
-        "WebRTCPeerConnectionExtension::method:_get_connection_state()",
-        "WebRTCPeerConnectionExtension::method:_get_gathering_state()",
-        "WebRTCPeerConnectionExtension::method:_get_signaling_state()",
-        "WebRTCPeerConnectionExtension::method:_initialize(Dictionary:)",
-        "WebRTCPeerConnectionExtension::method:_poll()",
-        "WebRTCPeerConnectionExtension::method:_set_local_description(String:,String:)",
-        "WebRTCPeerConnectionExtension::method:_set_remote_description(String:,String:)"
-      ],
-      "reason": "ADR 0094: Requires a WebRTC backend with ICE/STUN/TURN, SDP, DTLS/SCTP and data-channel state/ownership, plus native/browser packaging. Managed extension hooks follow the executable typed owner."
     },
     {
       "state": "Implemented",
@@ -6125,6 +6752,108 @@
         "class:ENetMultiplayerPeer",
         "class:ENetPacketPeer"
       ]
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:WebRTCDataChannel",
+        "WebRTCDataChannel::enum:ChannelState",
+        "WebRTCDataChannel::enum:WriteMode",
+        "WebRTCDataChannel::enum_value:ChannelState.STATE_CLOSED",
+        "WebRTCDataChannel::enum_value:ChannelState.STATE_CLOSING",
+        "WebRTCDataChannel::enum_value:ChannelState.STATE_CONNECTING",
+        "WebRTCDataChannel::enum_value:ChannelState.STATE_OPEN",
+        "WebRTCDataChannel::enum_value:WriteMode.WRITE_MODE_BINARY",
+        "WebRTCDataChannel::enum_value:WriteMode.WRITE_MODE_TEXT",
+        "WebRTCDataChannel::method:close()",
+        "WebRTCDataChannel::method:get_buffered_amount()",
+        "WebRTCDataChannel::method:get_id()",
+        "WebRTCDataChannel::method:get_label()",
+        "WebRTCDataChannel::method:get_max_packet_life_time()",
+        "WebRTCDataChannel::method:get_max_retransmits()",
+        "WebRTCDataChannel::method:get_protocol()",
+        "WebRTCDataChannel::method:get_ready_state()",
+        "WebRTCDataChannel::method:is_negotiated()",
+        "WebRTCDataChannel::method:is_ordered()",
+        "WebRTCDataChannel::method:poll()",
+        "WebRTCDataChannel::method:was_string_packet()",
+        "WebRTCDataChannel::property:write_mode",
+        "class:WebRTCDataChannelExtension",
+        "WebRTCDataChannelExtension::method:_close()",
+        "WebRTCDataChannelExtension::method:_get_available_packet_count()",
+        "WebRTCDataChannelExtension::method:_get_buffered_amount()",
+        "WebRTCDataChannelExtension::method:_get_id()",
+        "WebRTCDataChannelExtension::method:_get_label()",
+        "WebRTCDataChannelExtension::method:_get_max_packet_life_time()",
+        "WebRTCDataChannelExtension::method:_get_max_packet_size()",
+        "WebRTCDataChannelExtension::method:_get_max_retransmits()",
+        "WebRTCDataChannelExtension::method:_get_packet(const uint8_t **:,int32_t*:)",
+        "WebRTCDataChannelExtension::method:_get_protocol()",
+        "WebRTCDataChannelExtension::method:_get_ready_state()",
+        "WebRTCDataChannelExtension::method:_get_write_mode()",
+        "WebRTCDataChannelExtension::method:_is_negotiated()",
+        "WebRTCDataChannelExtension::method:_is_ordered()",
+        "WebRTCDataChannelExtension::method:_poll()",
+        "WebRTCDataChannelExtension::method:_put_packet(const uint8_t*:,int:)",
+        "WebRTCDataChannelExtension::method:_set_write_mode(int:WebRTCDataChannel.WriteMode)",
+        "WebRTCDataChannelExtension::method:_was_string_packet()",
+        "class:WebRTCMultiplayerPeer",
+        "WebRTCMultiplayerPeer::method:add_peer(WebRTCPeerConnection:,int:,int:)",
+        "WebRTCMultiplayerPeer::method:create_client(int:,Array:)",
+        "WebRTCMultiplayerPeer::method:create_mesh(int:,Array:)",
+        "WebRTCMultiplayerPeer::method:create_server(Array:)",
+        "WebRTCMultiplayerPeer::method:get_peer(int:)",
+        "WebRTCMultiplayerPeer::method:get_peers()",
+        "WebRTCMultiplayerPeer::method:has_peer(int:)",
+        "WebRTCMultiplayerPeer::method:remove_peer(int:)",
+        "class:WebRTCPeerConnection",
+        "WebRTCPeerConnection::enum:ConnectionState",
+        "WebRTCPeerConnection::enum:GatheringState",
+        "WebRTCPeerConnection::enum:SignalingState",
+        "WebRTCPeerConnection::enum_value:ConnectionState.STATE_CLOSED",
+        "WebRTCPeerConnection::enum_value:ConnectionState.STATE_CONNECTED",
+        "WebRTCPeerConnection::enum_value:ConnectionState.STATE_CONNECTING",
+        "WebRTCPeerConnection::enum_value:ConnectionState.STATE_DISCONNECTED",
+        "WebRTCPeerConnection::enum_value:ConnectionState.STATE_FAILED",
+        "WebRTCPeerConnection::enum_value:ConnectionState.STATE_NEW",
+        "WebRTCPeerConnection::enum_value:GatheringState.GATHERING_STATE_COMPLETE",
+        "WebRTCPeerConnection::enum_value:GatheringState.GATHERING_STATE_GATHERING",
+        "WebRTCPeerConnection::enum_value:GatheringState.GATHERING_STATE_NEW",
+        "WebRTCPeerConnection::enum_value:SignalingState.SIGNALING_STATE_CLOSED",
+        "WebRTCPeerConnection::enum_value:SignalingState.SIGNALING_STATE_HAVE_LOCAL_OFFER",
+        "WebRTCPeerConnection::enum_value:SignalingState.SIGNALING_STATE_HAVE_LOCAL_PRANSWER",
+        "WebRTCPeerConnection::enum_value:SignalingState.SIGNALING_STATE_HAVE_REMOTE_OFFER",
+        "WebRTCPeerConnection::enum_value:SignalingState.SIGNALING_STATE_HAVE_REMOTE_PRANSWER",
+        "WebRTCPeerConnection::enum_value:SignalingState.SIGNALING_STATE_STABLE",
+        "WebRTCPeerConnection::method:add_ice_candidate(String:,int:,String:)",
+        "WebRTCPeerConnection::method:close()",
+        "WebRTCPeerConnection::method:create_data_channel(String:,Dictionary:)",
+        "WebRTCPeerConnection::method:create_offer()",
+        "WebRTCPeerConnection::method:get_connection_state()",
+        "WebRTCPeerConnection::method:get_gathering_state()",
+        "WebRTCPeerConnection::method:get_signaling_state()",
+        "WebRTCPeerConnection::method:initialize(Dictionary:)",
+        "WebRTCPeerConnection::method:poll()",
+        "WebRTCPeerConnection::method:set_default_extension(StringName:)",
+        "WebRTCPeerConnection::method:set_local_description(String:,String:)",
+        "WebRTCPeerConnection::method:set_remote_description(String:,String:)",
+        "WebRTCPeerConnection::signal:data_channel_received(WebRTCDataChannel:)",
+        "WebRTCPeerConnection::signal:ice_candidate_created(String:,int:,String:)",
+        "WebRTCPeerConnection::signal:session_description_created(String:,String:)",
+        "class:WebRTCPeerConnectionExtension",
+        "WebRTCPeerConnectionExtension::method:_add_ice_candidate(String:,int:,String:)",
+        "WebRTCPeerConnectionExtension::method:_close()",
+        "WebRTCPeerConnectionExtension::method:_create_data_channel(String:,Dictionary:)",
+        "WebRTCPeerConnectionExtension::method:_create_offer()",
+        "WebRTCPeerConnectionExtension::method:_get_connection_state()",
+        "WebRTCPeerConnectionExtension::method:_get_gathering_state()",
+        "WebRTCPeerConnectionExtension::method:_get_signaling_state()",
+        "WebRTCPeerConnectionExtension::method:_initialize(Dictionary:)",
+        "WebRTCPeerConnectionExtension::method:_poll()",
+        "WebRTCPeerConnectionExtension::method:_set_local_description(String:,String:)",
+        "WebRTCPeerConnectionExtension::method:_set_remote_description(String:,String:)"
+      ],
+      "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
     }
   ]
 }

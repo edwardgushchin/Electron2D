@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -164,3 +164,7 @@ Manual mesh visibility uses `ELECTRON2D_TEST_MESH_BOUNDS=1` and native `ELECTRON
 For procedural mesh surfaces run `ELECTRON2D_TEST_PROCEDURAL_MESH=managed`, then native `gpu`, `hlsl`, `gpu-modern`, `hlsl-modern`, `gpu-homogeneous`, `hlsl-homogeneous`, `gpu-lit`, `gpu-snap`, `gpu-hdr`, `gpu-msaa` and explicit `compatibility` rejection. Validate all 32 dumped composed variants independently with spirv-val. Preserve actual generated/reference pixels, homogeneous W, non-position live attributes, independent strip instances, authored visibility, counts/legacy/fresh archives, callbacks and 64 active/64 idle complete owner frames. Rerun shared mesh/importer/morph/packed/LOD/frame/compression/indices/builders and composition/authored-vertex regressions. Software Vulkan is distinct from hardware/foreign/native-allocation acceptance.
 
 For grouped skeletal physics changes, run the public consumer with `--group-bones` and the root executable with `ELECTRON2D_TEST_GROUP_BONES=cpu|gpu|registered`, including `-threaded` and `-pool-owner` profiles. Verify binding loss/repair against actual modes and queries, shared cold setup/subscriber failure, propagated notifications, selected publication retry and attachment retirement, then 128 complete moving frames with zero owner/all-thread managed allocation. `--native-group-bones` uses `ELECTRON2D_GROUP_BONES_RENDERER=gpu|compatibility` to verify actual body-following pixels through an ordinary Engine window. Physics selection is independent of rendering; NativeAOT and software Vulkan functional evidence do not establish hardware throughput or native allocator totals.
+
+### WebRTC source and transport checks
+
+Run `python3 -B tools/native/test_package.py` to verify the immutable libdatachannel source manifest and required private exports. Build `BuildElectron2DNativeAssets` with restore, `RuntimeIdentifier=linux-x64` and `Electron2DBuildNativeFromSource=true` to produce native assets and source receipts; the WebRTC bridge exports only its 23 engine functions. Run `ELECTRON2D_TEST_WEBRTC=1` with the Release test runner for native/extension/multiplayer/scene contracts. The `browser` profile prints a loopback signaling URL for independent-browser wire verification. Retain native logs as evidence because the browser may observe closure after the host exits. Rebuild/check package receipts after any producer input changes. Routed STUN/TURN, foreign execution and native allocation remain separate verification gates.

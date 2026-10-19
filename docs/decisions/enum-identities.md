@@ -3,7 +3,7 @@
 <a id="adr-0051"></a>
 ## ADR 0051: Public enum identities and declaring owners
 
-Last updated: 2026-10-15
+Last updated: 2026-10-19
 
 ### Status
 
@@ -56,3 +56,5 @@ IPType preserves the None/IPv4/IPv6/Any address-selection domain; ResolverStatus
 Node keeps the applicable ProcessThreadGroup and ProcessThreadMessages property names. Their owner-specific nested types are Node.ProcessThreadGroupMode and Node.ProcessThreadMessageFlags, avoiding C# type/member name collisions without aliases. Inherit/MainThread/SubThread values0/1/2 and Process/Physics/All flags1/2/3 retain pinned meanings; zero is valid as an empty flags value without an extra named constant.
 
 ParticlesDrawOrder is shared by GPUParticles and RenderingServer with the same Index/Lifetime/ReverseLifetime values. CPUParticles.DrawOrderMode retains its smaller two-value contract. GPUParticles.EmitFlags selects supplied manual-emission fields and remains its own typed bitmask.
+
+WebSocketPeer and WebRTCDataChannel share top-level `PacketWriteMode` (Text=0, Binary=1). Both select UTF-8 text versus arbitrary binary packet payloads with the same valid values. The former WebSocketWriteMode identity is removed across callers, XML and coverage; no alias is retained.

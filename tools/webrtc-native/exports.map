@@ -1,0 +1,25 @@
+{ global:
+  e2d_rtc_error;
+  e2d_rtc_create;
+  e2d_rtc_destroy;
+  e2d_rtc_close;
+  e2d_rtc_state;
+  e2d_rtc_offer;
+  e2d_rtc_local;
+  e2d_rtc_remote;
+  e2d_rtc_candidate;
+  e2d_rtc_event;
+  e2d_rtc_event_kind;
+  e2d_rtc_event_string;
+  e2d_rtc_event_channel;
+  e2d_rtc_event_release;
+  e2d_rtc_channel_create;
+  e2d_rtc_channel_destroy;
+  e2d_rtc_channel_close;
+  e2d_rtc_channel_poll;
+  e2d_rtc_channel_info;
+  e2d_rtc_channel_string;
+  e2d_rtc_channel_size;
+  e2d_rtc_channel_read;
+  e2d_rtc_channel_send;
+local: *; };

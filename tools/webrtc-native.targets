@@ -1,0 +1,39 @@
+<Project>
+  <PropertyGroup>
+    <Electron2DWebRTCNativeRID Condition="'$(Electron2DWebRTCNativeRID)' == '' and '$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier)</Electron2DWebRTCNativeRID>
+    <Electron2DWebRTCNativeRID Condition="'$(Electron2DWebRTCNativeRID)' == ''">$(NETCoreSdkRuntimeIdentifier)</Electron2DWebRTCNativeRID>
+    <_Electron2DWebRTCCustomLibrary Condition="'$(Electron2DWebRTCNativeLibrary)' != ''">true</_Electron2DWebRTCCustomLibrary>
+    <_Electron2DWebRTCName>libElectron2DWebRTC.so</_Electron2DWebRTCName>
+    <_Electron2DWebRTCName Condition="'$(Electron2DNativePlatform)' == 'MacOS'">libElectron2DWebRTC.dylib</_Electron2DWebRTCName>
+    <Electron2DWebRTCNativeLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DWebRTCNativeLibrary)' == '' and '$(Electron2DNativePlatform)' != 'MacOS'">$(PkgElectron2D_Linux)/runtimes/$(Electron2DWebRTCNativeRID)/native/libElectron2DWebRTC.so</Electron2DWebRTCNativeLibrary>
+    <Electron2DWebRTCNativeLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DWebRTCNativeLibrary)' == '' and '$(Electron2DNativePlatform)' == 'MacOS'">$(PkgElectron2D_MacOS)/runtimes/$(Electron2DWebRTCNativeRID)/native/libElectron2DWebRTC.dylib</Electron2DWebRTCNativeLibrary>
+    <Electron2DWebRTCNativeEnabled Condition="'$(Electron2DWebRTCNativeEnabled)' == '' and '$(Electron2DNativePlatform)' == 'Linux' and ('$(Electron2DWebRTCNativeRID)' == 'linux-x64' or '$(Electron2DWebRTCNativeRID)' == 'linux-arm64')">true</Electron2DWebRTCNativeEnabled>
+    <Electron2DWebRTCNativeEnabled Condition="'$(Electron2DWebRTCNativeEnabled)' == '' and '$(Electron2DNativePlatform)' == 'MacOS' and ('$(Electron2DWebRTCNativeRID)' == 'osx-x64' or '$(Electron2DWebRTCNativeRID)' == 'osx-arm64')">true</Electron2DWebRTCNativeEnabled>
+    <Electron2DWebRTCNativeEnabled Condition="'$(Electron2DWebRTCNativeEnabled)' == ''">false</Electron2DWebRTCNativeEnabled>
+    <Electron2DWebRTCNativeJobs Condition="'$(Electron2DWebRTCNativeJobs)' == ''">4</Electron2DWebRTCNativeJobs>
+    <_Electron2DWebRTCSource>$(MSBuildThisFileDirectory)../src/Vendor/libdatachannel</_Electron2DWebRTCSource>
+    <_Electron2DWebRTCWrapper>$(MSBuildThisFileDirectory)webrtc-native</_Electron2DWebRTCWrapper>
+    <_Electron2DWebRTCBuild>$(MSBuildThisFileDirectory)../obj/webrtc-native/$(Electron2DWebRTCNativeRID)</_Electron2DWebRTCBuild>
+    <_Electron2DWebRTCLibrary>$(_Electron2DWebRTCBuild)/$(_Electron2DWebRTCName)</_Electron2DWebRTCLibrary>
+    <_Electron2DWebRTCLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true'">$(PkgElectron2D_Linux)/runtimes/$(Electron2DWebRTCNativeRID)/native/$(_Electron2DWebRTCName)</_Electron2DWebRTCLibrary>
+    <_Electron2DWebRTCLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DNativePlatform)' == 'MacOS'">$(PkgElectron2D_MacOS)/runtimes/$(Electron2DWebRTCNativeRID)/native/$(_Electron2DWebRTCName)</_Electron2DWebRTCLibrary>
+    <_Electron2DWebRTCLibrary Condition="'$(Electron2DWebRTCNativeLibrary)' != ''">$(Electron2DWebRTCNativeLibrary)</_Electron2DWebRTCLibrary>
+    <_Electron2DWebRTCToolchainArg Condition="'$(Electron2DWebRTCNativeToolchain)' != ''">-DCMAKE_TOOLCHAIN_FILE=&quot;$(Electron2DWebRTCNativeToolchain)&quot;</_Electron2DWebRTCToolchainArg>
+  </PropertyGroup>
+  <ItemGroup>
+    <_Electron2DWebRTCInput Include="$(_Electron2DWebRTCSource)/**/*.cpp;$(_Electron2DWebRTCSource)/**/*.hpp;$(_Electron2DWebRTCSource)/**/*.c;$(_Electron2DWebRTCSource)/**/*.h;$(_Electron2DWebRTCSource)/**/CMakeLists.txt;$(_Electron2DWebRTCSource)/manifest.json;$(_Electron2DWebRTCWrapper)/**/*;$(MSBuildThisFileDirectory)native-package.props;$(MSBuildThisFileFullPath)" />
+    <None Include="$(_Electron2DWebRTCLibrary)" Condition="'$(Electron2DWebRTCNativeEnabled)' == 'true' and ('$(Electron2DBuildNativeFromSource)' == 'true' or Exists('$(_Electron2DWebRTCLibrary)'))" Link="runtimes/$(Electron2DWebRTCNativeRID)/native/$(_Electron2DWebRTCName)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="false" PackagePath="runtimes/$(Electron2DWebRTCNativeRID)/native/" Visible="false" />
+  </ItemGroup>
+  <Target Name="ValidateElectron2DWebRTCNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DWebRTCNativeEnabled)' == 'true' and ('$(Electron2DBuildNativeFromSource)' == 'true' or '$(_Electron2DWebRTCCustomLibrary)' == 'true')">
+    <Error Condition="'$(Electron2DNativePlatform)' != 'Linux' and '$(Electron2DNativePlatform)' != 'MacOS'" Text="Native WebRTC builds require Linux or MacOS; foreign profiles must not package host libraries." />
+    <Error Condition="('$(Electron2DNativePlatform)' == 'Linux' and '$(Electron2DWebRTCNativeRID)' != 'linux-x64' and '$(Electron2DWebRTCNativeRID)' != 'linux-arm64') or ('$(Electron2DNativePlatform)' == 'MacOS' and '$(Electron2DWebRTCNativeRID)' != 'osx-x64' and '$(Electron2DWebRTCNativeRID)' != 'osx-arm64')" Text="The WebRTC RID must match its selected Linux or MacOS native profile." />
+    <Error Condition="'$(Electron2DWebRTCNativeLibrary)' != '' and !Exists('$(_Electron2DWebRTCLibrary)')" Text="Electron2DWebRTCNativeLibrary must name an existing target library." />
+    <Error Condition="'$(Electron2DWebRTCNativeLibrary)' == '' and '$(Electron2DWebRTCNativeRID)' != '$(NETCoreSdkRuntimeIdentifier)' and '$(Electron2DWebRTCNativeToolchain)' == ''" Text="Cross-RID webrtc builds require a target CMake toolchain or prebuilt target library." />
+    <Error Condition="'$(Electron2DWebRTCNativeLibrary)' == '' and '$(Electron2DWebRTCNativeToolchain)' == '' and (('$(Electron2DNativePlatform)' == 'Linux' and !$([MSBuild]::IsOSPlatform('Linux'))) or ('$(Electron2DNativePlatform)' == 'MacOS' and !$([MSBuild]::IsOSPlatform('OSX'))))" Text="A foreign-OS WebRTC build requires an explicit target toolchain or prebuilt library." />
+  </Target>
+  <Target Name="BuildElectron2DWebRTCNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" DependsOnTargets="ValidateElectron2DWebRTCNative;BuildElectron2DTLSNative" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and '$(Electron2DWebRTCNativeEnabled)' == 'true' and '$(Electron2DWebRTCNativeLibrary)' == ''" Inputs="@(_Electron2DWebRTCInput);$(Electron2DWebRTCNativeToolchain)" Outputs="$(_Electron2DWebRTCLibrary)">
+    <Exec Condition="'$(Electron2DNativePlatform)' == 'MacOS'" Command="$(Electron2DNativePython) -B &quot;$(MSBuildThisFileDirectory)native/build_webrtc.py&quot; $(Electron2DWebRTCNativeRID) &quot;$(_Electron2DWebRTCBuild)&quot; &quot;$(_Electron2DTLSBuild)&quot;" />
+    <Exec Condition="'$(Electron2DNativePlatform)' == 'Linux'" Command="cmake -S &quot;$(_Electron2DWebRTCWrapper)&quot; -B &quot;$(_Electron2DWebRTCBuild)&quot; -G Ninja -DCMAKE_BUILD_TYPE=Release $(_Electron2DWebRTCToolchainArg)" />
+    <Exec Condition="'$(Electron2DNativePlatform)' == 'Linux'" Command="cmake --build &quot;$(_Electron2DWebRTCBuild)&quot; --target Electron2DWebRTC --config Release --parallel $(Electron2DWebRTCNativeJobs)" />
+  </Target>
+</Project>

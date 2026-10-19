@@ -1,6 +1,6 @@
 # PacketPeer
 
-Last updated: 2026-10-04
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public abstract class Electron2D.PacketPeer`.
 
@@ -173,3 +173,7 @@ Remarks: This method can run concurrently in multiple callers and can race with 
 ## Verification and limits
 
 [NetworkingTests](../../tests/Electron2D.Tests/NetworkingTests.cs) verifies the exercised native Linux x64 IPv4/IPv6 loopback and UDS paths, binary/framing/queue edges, lifecycle, owner checks, scene request/reply and warmed allocation boundaries. Native allocator totals, other hosts/browser transport, real routed traffic, network throughput and owner acceptance remain unverified. Dynamic-value wire encoding is excluded under ADR 0001; raw typed bytes are executable. See [coverage](../coverage/classes/PacketPeer.md).
+
+## WebRTC integration
+
+WebRTCDataChannel and its typed extension implement the same complete-packet span contract. [WebRTC](../components/webrtc.md) records native queue, reliability and caller-channel ownership; WebRTCMultiplayerPeer consumes those packets without changing small-buffer retry semantics.

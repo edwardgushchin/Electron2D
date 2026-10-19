@@ -1,6 +1,6 @@
 # Typed scene multiplayer
 
-Last updated: 2026-10-15
+Last updated: 2026-10-19
 
 Default construction derives the absolute root configuration from the known root name
 before node entry; it does not query the inactive node's empty GetPath result.
@@ -50,3 +50,7 @@ Typed root, node/spawner and node/synchronizer ObjectConfigurationAdd/Remove ove
 [SceneMultiplayerTests](../../tests/Electron2D.Tests/SceneMultiplayerTests.cs) executes a public tree containing server and two client branches in WS and WSS. It checks broadcast/local/positive client-client routing, original sender, authority rejection/change, raw bytes, path rename, owner/budget/disposal and automatic polling toggle. Additional native tests cover bilateral authentication/challenge, deadline, callback continuation, oversized/truncated/forged packet drain, recursion and callback reset. A managed MultiplayerAPI subclass exercises typed default factory, configuration, codec execution, polling and borrowed detachment. Each 64-cycle warmed native WS/WSS RPC/process-frame interval and idle interval reports zero managed bytes.
 
 These network tests are display independent and establish programmatic authoring/headless execution, not rendered/editor/agent or human acceptance. Typed spawning/property synchronization is now verified separately by SceneReplicationTests. Foreign hosts, routed throughput, external native allocation and real application schema/security acceptance remain separate. See [ADR 0094](../decisions/networking.md#adr-0094) and [platform verification](../platform-verification.md).
+
+## WebRTC transport verification
+
+WebRTCTests.Scene executes native WebRTCMultiplayerPeer server/client connections through automatic SceneTree polling, bidirectional typed RPC and scene raw packets. This headless network/scene path establishes transport integration; it does not establish rendered output or routed/foreign platform acceptance. See [WebRTC](webrtc.md).

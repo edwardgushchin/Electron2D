@@ -1,6 +1,8 @@
 # Networking
 
-Last updated: 2026-10-16
+Last updated: 2026-10-19
+
+The [WebRTC component](../components/webrtc.md) implements native peer/channel negotiation, typed extension providers and WebRTCMultiplayerPeer consumed by SceneMultiplayer/SceneTree. It shares PacketWriteMode with WebSocketPeer. Configuration and peer observations use typed records; signaling remains application-owned. Linux native and independent browser packet checks passed; routed and foreign adapter gates remain explicit.
 
 ## Responsibility and public surface
 

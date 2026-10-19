@@ -203,7 +203,7 @@
     "HTTPClient.ResponseCode": "HTTPResponseCode",
     "HTTPRequest.Result": "HTTPRequestResult",
     "WebSocketPeer.State": "WebSocketState",
-    "WebSocketPeer.WriteMode": "WebSocketWriteMode",
+    "WebSocketPeer.WriteMode": "PacketWriteMode",
     "MultiplayerPeer.ConnectionStatus": "MultiplayerConnectionStatus",
     "MultiplayerPeer.TransferMode": "TransferMode",
     "HashingContext.HashType": "HashType",

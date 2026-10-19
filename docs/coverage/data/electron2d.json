@@ -7966,6 +7966,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.PacketWriteMode",
+    "kind": "type",
+    "declaringType": "Electron2D.PacketWriteMode",
+    "name": "PacketWriteMode",
+    "signature": "public enum Electron2D.PacketWriteMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Panel",
     "kind": "type",
     "declaringType": "Electron2D.Panel",
@@ -14071,6 +14089,205 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.WebRTCConfiguration",
+    "kind": "type",
+    "declaringType": "Electron2D.WebRTCConfiguration",
+    "name": "WebRTCConfiguration",
+    "signature": "public sealed class Electron2D.WebRTCConfiguration",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.WebRTCDataChannel",
+    "kind": "type",
+    "declaringType": "Electron2D.WebRTCDataChannel",
+    "name": "WebRTCDataChannel",
+    "signature": "public abstract class Electron2D.WebRTCDataChannel",
+    "visibility": "public",
+    "baseType": "Electron2D.PacketPeer",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.WebRTCDataChannel.ChannelState",
+    "kind": "type",
+    "declaringType": "Electron2D.WebRTCDataChannel.ChannelState",
+    "name": "ChannelState",
+    "signature": "public enum Electron2D.WebRTCDataChannel.ChannelState",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.WebRTCDataChannelExtension",
+    "kind": "type",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "WebRTCDataChannelExtension",
+    "signature": "public abstract class Electron2D.WebRTCDataChannelExtension",
+    "visibility": "public",
+    "baseType": "Electron2D.WebRTCDataChannel",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.WebRTCDataChannelOptions",
+    "kind": "type",
+    "declaringType": "Electron2D.WebRTCDataChannelOptions",
+    "name": "WebRTCDataChannelOptions",
+    "signature": "public sealed class Electron2D.WebRTCDataChannelOptions",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.WebRTCICEServer",
+    "kind": "type",
+    "declaringType": "Electron2D.WebRTCICEServer",
+    "name": "WebRTCICEServer",
+    "signature": "public sealed class Electron2D.WebRTCICEServer",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.WebRTCMultiplayerPeer",
+    "kind": "type",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "WebRTCMultiplayerPeer",
+    "signature": "public sealed class Electron2D.WebRTCMultiplayerPeer",
+    "visibility": "public",
+    "baseType": "Electron2D.MultiplayerPeer",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.WebRTCPeerConnection",
+    "kind": "type",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "WebRTCPeerConnection",
+    "signature": "public class Electron2D.WebRTCPeerConnection",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.WebRTCPeerConnection.ConnectionState",
+    "kind": "type",
+    "declaringType": "Electron2D.WebRTCPeerConnection.ConnectionState",
+    "name": "ConnectionState",
+    "signature": "public enum Electron2D.WebRTCPeerConnection.ConnectionState",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.WebRTCPeerConnection.GatheringState",
+    "kind": "type",
+    "declaringType": "Electron2D.WebRTCPeerConnection.GatheringState",
+    "name": "GatheringState",
+    "signature": "public enum Electron2D.WebRTCPeerConnection.GatheringState",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.WebRTCPeerConnection.SignalingState",
+    "kind": "type",
+    "declaringType": "Electron2D.WebRTCPeerConnection.SignalingState",
+    "name": "SignalingState",
+    "signature": "public enum Electron2D.WebRTCPeerConnection.SignalingState",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.WebRTCPeerConnectionExtension",
+    "kind": "type",
+    "declaringType": "Electron2D.WebRTCPeerConnectionExtension",
+    "name": "WebRTCPeerConnectionExtension",
+    "signature": "public abstract class Electron2D.WebRTCPeerConnectionExtension",
+    "visibility": "public",
+    "baseType": "Electron2D.WebRTCPeerConnection",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.WebRTCPeerInfo",
+    "kind": "type",
+    "declaringType": "Electron2D.WebRTCPeerInfo",
+    "name": "WebRTCPeerInfo",
+    "signature": "public sealed class Electron2D.WebRTCPeerInfo",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.WebSocketMultiplayerPeer",
     "kind": "type",
     "declaringType": "Electron2D.WebSocketMultiplayerPeer",
@@ -14106,24 +14323,6 @@
     "declaringType": "Electron2D.WebSocketState",
     "name": "WebSocketState",
     "signature": "public enum Electron2D.WebSocketState",
-    "visibility": "public",
-    "baseType": "System.Enum",
-    "interfaces": [
-      "System.IComparable",
-      "System.IConvertible",
-      "System.IFormattable",
-      "System.ISpanFormattable"
-    ],
-    "parameters": null,
-    "returnType": null,
-    "value": null
-  },
-  {
-    "id": "T:Electron2D.WebSocketWriteMode",
-    "kind": "type",
-    "declaringType": "Electron2D.WebSocketWriteMode",
-    "name": "WebSocketWriteMode",
-    "signature": "public enum Electron2D.WebSocketWriteMode",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -24827,6 +25026,110 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.WebRTCConfiguration..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.WebRTCConfiguration",
+    "name": ".ctor",
+    "signature": "public WebRTCConfiguration()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.WebRTCDataChannel..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.WebRTCDataChannel",
+    "name": ".ctor",
+    "signature": "protected WebRTCDataChannel()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.WebRTCDataChannelExtension..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": ".ctor",
+    "signature": "protected WebRTCDataChannelExtension()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.WebRTCDataChannelOptions..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.WebRTCDataChannelOptions",
+    "name": ".ctor",
+    "signature": "public WebRTCDataChannelOptions()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.WebRTCICEServer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.WebRTCICEServer",
+    "name": ".ctor",
+    "signature": "public WebRTCICEServer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.WebRTCMultiplayerPeer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": ".ctor",
+    "signature": "public WebRTCMultiplayerPeer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.WebRTCPeerConnection..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": ".ctor",
+    "signature": "protected WebRTCPeerConnection()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.WebRTCPeerConnectionExtension..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.WebRTCPeerConnectionExtension",
+    "name": ".ctor",
+    "signature": "protected WebRTCPeerConnectionExtension()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -40596,6 +40899,32 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.PacketWriteMode.Binary()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PacketWriteMode",
+    "name": "Binary",
+    "signature": "public const Electron2D.PacketWriteMode Binary = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PacketWriteMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.PacketWriteMode.Text()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PacketWriteMode",
+    "name": "Text",
+    "signature": "public const Electron2D.PacketWriteMode Text = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PacketWriteMode",
+    "value": "0"
+  },
+  {
     "id": "enumValue:Electron2D.ParticleProcessMaterial.CollisionModeEnum.Disabled()",
     "kind": "enumValue",
     "declaringType": "Electron2D.ParticleProcessMaterial.CollisionModeEnum",
@@ -52972,6 +53301,253 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.WebRTCDataChannel.ChannelState.Closed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCDataChannel.ChannelState",
+    "name": "Closed",
+    "signature": "public const Electron2D.WebRTCDataChannel.ChannelState Closed = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCDataChannel.ChannelState",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.WebRTCDataChannel.ChannelState.Closing()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCDataChannel.ChannelState",
+    "name": "Closing",
+    "signature": "public const Electron2D.WebRTCDataChannel.ChannelState Closing = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCDataChannel.ChannelState",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.WebRTCDataChannel.ChannelState.Connecting()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCDataChannel.ChannelState",
+    "name": "Connecting",
+    "signature": "public const Electron2D.WebRTCDataChannel.ChannelState Connecting = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCDataChannel.ChannelState",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.WebRTCDataChannel.ChannelState.Open()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCDataChannel.ChannelState",
+    "name": "Open",
+    "signature": "public const Electron2D.WebRTCDataChannel.ChannelState Open = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCDataChannel.ChannelState",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.WebRTCPeerConnection.ConnectionState.Closed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCPeerConnection.ConnectionState",
+    "name": "Closed",
+    "signature": "public const Electron2D.WebRTCPeerConnection.ConnectionState Closed = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.ConnectionState",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.WebRTCPeerConnection.ConnectionState.Connected()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCPeerConnection.ConnectionState",
+    "name": "Connected",
+    "signature": "public const Electron2D.WebRTCPeerConnection.ConnectionState Connected = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.ConnectionState",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.WebRTCPeerConnection.ConnectionState.Connecting()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCPeerConnection.ConnectionState",
+    "name": "Connecting",
+    "signature": "public const Electron2D.WebRTCPeerConnection.ConnectionState Connecting = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.ConnectionState",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.WebRTCPeerConnection.ConnectionState.Disconnected()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCPeerConnection.ConnectionState",
+    "name": "Disconnected",
+    "signature": "public const Electron2D.WebRTCPeerConnection.ConnectionState Disconnected = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.ConnectionState",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.WebRTCPeerConnection.ConnectionState.Failed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCPeerConnection.ConnectionState",
+    "name": "Failed",
+    "signature": "public const Electron2D.WebRTCPeerConnection.ConnectionState Failed = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.ConnectionState",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.WebRTCPeerConnection.ConnectionState.New()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCPeerConnection.ConnectionState",
+    "name": "New",
+    "signature": "public const Electron2D.WebRTCPeerConnection.ConnectionState New = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.ConnectionState",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.WebRTCPeerConnection.GatheringState.Complete()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCPeerConnection.GatheringState",
+    "name": "Complete",
+    "signature": "public const Electron2D.WebRTCPeerConnection.GatheringState Complete = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.GatheringState",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.WebRTCPeerConnection.GatheringState.Gathering()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCPeerConnection.GatheringState",
+    "name": "Gathering",
+    "signature": "public const Electron2D.WebRTCPeerConnection.GatheringState Gathering = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.GatheringState",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.WebRTCPeerConnection.GatheringState.New()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCPeerConnection.GatheringState",
+    "name": "New",
+    "signature": "public const Electron2D.WebRTCPeerConnection.GatheringState New = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.GatheringState",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.WebRTCPeerConnection.SignalingState.Closed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCPeerConnection.SignalingState",
+    "name": "Closed",
+    "signature": "public const Electron2D.WebRTCPeerConnection.SignalingState Closed = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.SignalingState",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.WebRTCPeerConnection.SignalingState.HaveLocalOffer()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCPeerConnection.SignalingState",
+    "name": "HaveLocalOffer",
+    "signature": "public const Electron2D.WebRTCPeerConnection.SignalingState HaveLocalOffer = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.SignalingState",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.WebRTCPeerConnection.SignalingState.HaveLocalPranswer()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCPeerConnection.SignalingState",
+    "name": "HaveLocalPranswer",
+    "signature": "public const Electron2D.WebRTCPeerConnection.SignalingState HaveLocalPranswer = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.SignalingState",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.WebRTCPeerConnection.SignalingState.HaveRemoteOffer()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCPeerConnection.SignalingState",
+    "name": "HaveRemoteOffer",
+    "signature": "public const Electron2D.WebRTCPeerConnection.SignalingState HaveRemoteOffer = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.SignalingState",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.WebRTCPeerConnection.SignalingState.HaveRemotePranswer()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCPeerConnection.SignalingState",
+    "name": "HaveRemotePranswer",
+    "signature": "public const Electron2D.WebRTCPeerConnection.SignalingState HaveRemotePranswer = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.SignalingState",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.WebRTCPeerConnection.SignalingState.Stable()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.WebRTCPeerConnection.SignalingState",
+    "name": "Stable",
+    "signature": "public const Electron2D.WebRTCPeerConnection.SignalingState Stable = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.SignalingState",
+    "value": "0"
+  },
+  {
     "id": "enumValue:Electron2D.WebSocketState.Closed()",
     "kind": "enumValue",
     "declaringType": "Electron2D.WebSocketState",
@@ -53022,32 +53598,6 @@
     "parameters": [],
     "returnType": "Electron2D.WebSocketState",
     "value": "1"
-  },
-  {
-    "id": "enumValue:Electron2D.WebSocketWriteMode.Binary()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.WebSocketWriteMode",
-    "name": "Binary",
-    "signature": "public const Electron2D.WebSocketWriteMode Binary = 1",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.WebSocketWriteMode",
-    "value": "1"
-  },
-  {
-    "id": "enumValue:Electron2D.WebSocketWriteMode.Text()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.WebSocketWriteMode",
-    "name": "Text",
-    "signature": "public const Electron2D.WebSocketWriteMode Text = 0",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.WebSocketWriteMode",
-    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.Window.WindowInitialPosition.Absolute()",
@@ -57363,6 +57913,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.WebRTCPeerConnection.DataChannelReceived()",
+    "kind": "event",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "DataChannelReceived",
+    "signature": "public event System.Action\u003CElectron2D.WebRTCDataChannel\u003E DataChannelReceived",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.WebRTCDataChannel\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.WebRTCPeerConnection.ICECandidateCreated()",
+    "kind": "event",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "ICECandidateCreated",
+    "signature": "public event System.Action\u003CSystem.String, System.Int32, System.String\u003E ICECandidateCreated",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String, System.Int32, System.String\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.WebRTCPeerConnection.SessionDescriptionCreated()",
+    "kind": "event",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "SessionDescriptionCreated",
+    "signature": "public event System.Action\u003CSystem.String, System.String\u003E SessionDescriptionCreated",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String, System.String\u003E",
     "value": null
   },
   {
@@ -207423,6 +208012,1375 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.WebRTCDataChannel.Close()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannel",
+    "name": "Close",
+    "signature": "public abstract System.Void Close()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannel.GetBufferedAmount()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannel",
+    "name": "GetBufferedAmount",
+    "signature": "public abstract System.Int32 GetBufferedAmount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannel.GetID()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannel",
+    "name": "GetID",
+    "signature": "public abstract System.Int32 GetID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannel.GetLabel()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannel",
+    "name": "GetLabel",
+    "signature": "public abstract System.String GetLabel()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannel.GetMaxPacketLifeTime()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannel",
+    "name": "GetMaxPacketLifeTime",
+    "signature": "public abstract System.Int32 GetMaxPacketLifeTime()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannel.GetMaxRetransmits()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannel",
+    "name": "GetMaxRetransmits",
+    "signature": "public abstract System.Int32 GetMaxRetransmits()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannel.GetProtocol()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannel",
+    "name": "GetProtocol",
+    "signature": "public abstract System.String GetProtocol()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannel.GetReadyState()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannel",
+    "name": "GetReadyState",
+    "signature": "public abstract Electron2D.WebRTCDataChannel.ChannelState GetReadyState()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCDataChannel.ChannelState",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannel.IsNegotiated()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannel",
+    "name": "IsNegotiated",
+    "signature": "public abstract System.Boolean IsNegotiated()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannel.IsOrdered()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannel",
+    "name": "IsOrdered",
+    "signature": "public abstract System.Boolean IsOrdered()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannel.Poll()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannel",
+    "name": "Poll",
+    "signature": "public abstract System.Void Poll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannel.WasStringPacket()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannel",
+    "name": "WasStringPacket",
+    "signature": "public abstract System.Boolean WasStringPacket()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannelExtension.Close()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "Close",
+    "signature": "public abstract System.Void Close()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannelExtension.GetAvailablePacketCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "GetAvailablePacketCount",
+    "signature": "public abstract System.Int32 GetAvailablePacketCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannelExtension.GetBufferedAmount()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "GetBufferedAmount",
+    "signature": "public abstract System.Int32 GetBufferedAmount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannelExtension.GetID()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "GetID",
+    "signature": "public abstract System.Int32 GetID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannelExtension.GetLabel()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "GetLabel",
+    "signature": "public abstract System.String GetLabel()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannelExtension.GetMaxPacketLifeTime()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "GetMaxPacketLifeTime",
+    "signature": "public abstract System.Int32 GetMaxPacketLifeTime()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannelExtension.GetMaxPacketSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "GetMaxPacketSize",
+    "signature": "public abstract System.Int32 GetMaxPacketSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannelExtension.GetMaxRetransmits()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "GetMaxRetransmits",
+    "signature": "public abstract System.Int32 GetMaxRetransmits()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannelExtension.GetProtocol()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "GetProtocol",
+    "signature": "public abstract System.String GetProtocol()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannelExtension.GetReadyState()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "GetReadyState",
+    "signature": "public abstract Electron2D.WebRTCDataChannel.ChannelState GetReadyState()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCDataChannel.ChannelState",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannelExtension.IsNegotiated()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "IsNegotiated",
+    "signature": "public abstract System.Boolean IsNegotiated()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannelExtension.IsOrdered()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "IsOrdered",
+    "signature": "public abstract System.Boolean IsOrdered()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannelExtension.NextPacketSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "NextPacketSize",
+    "signature": "protected abstract System.Int32 NextPacketSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannelExtension.Poll()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "Poll",
+    "signature": "public abstract System.Void Poll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannelExtension.PutPacket(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "PutPacket",
+    "signature": "public abstract System.Void PutPacket(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannelExtension.ReadPacketCore(System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "ReadPacketCore",
+    "signature": "protected abstract System.Void ReadPacketCore(System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCDataChannelExtension.WasStringPacket()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "WasStringPacket",
+    "signature": "public abstract System.Boolean WasStringPacket()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.AddPeer(Electron2D.WebRTCPeerConnection,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "AddPeer",
+    "signature": "public System.Void AddPeer(Electron2D.WebRTCPeerConnection peer, System.Int32 peerID, System.Int32 unreliableLifetime = 1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "peer",
+        "type": "Electron2D.WebRTCPeerConnection",
+        "default": null
+      },
+      {
+        "name": "peerID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "unreliableLifetime",
+        "type": "System.Int32",
+        "default": "1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.Close()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "Close",
+    "signature": "public override System.Void Close()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.CreateClient(System.Int32,System.Collections.Generic.IReadOnlyList\u003CElectron2D.TransferMode\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "CreateClient",
+    "signature": "public System.Void CreateClient(System.Int32 peerID, System.Collections.Generic.IReadOnlyList\u003CElectron2D.TransferMode\u003E channelsConfig = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "peerID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "channelsConfig",
+        "type": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.TransferMode\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.CreateMesh(System.Int32,System.Collections.Generic.IReadOnlyList\u003CElectron2D.TransferMode\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "CreateMesh",
+    "signature": "public System.Void CreateMesh(System.Int32 peerID, System.Collections.Generic.IReadOnlyList\u003CElectron2D.TransferMode\u003E channelsConfig = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "peerID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "channelsConfig",
+        "type": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.TransferMode\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.CreateServer(System.Collections.Generic.IReadOnlyList\u003CElectron2D.TransferMode\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "CreateServer",
+    "signature": "public System.Void CreateServer(System.Collections.Generic.IReadOnlyList\u003CElectron2D.TransferMode\u003E channelsConfig = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "channelsConfig",
+        "type": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.TransferMode\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.DisconnectPeer(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "DisconnectPeer",
+    "signature": "public override System.Void DisconnectPeer(System.Int32 peer, System.Boolean force = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "peer",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.GetAvailablePacketCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "GetAvailablePacketCount",
+    "signature": "public override System.Int32 GetAvailablePacketCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.GetConnectionStatus()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "GetConnectionStatus",
+    "signature": "public override Electron2D.MultiplayerConnectionStatus GetConnectionStatus()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MultiplayerConnectionStatus",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.GetMaxPacketSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "GetMaxPacketSize",
+    "signature": "public override System.Int32 GetMaxPacketSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.GetPacketChannel()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "GetPacketChannel",
+    "signature": "public override System.Int32 GetPacketChannel()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.GetPacketMode()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "GetPacketMode",
+    "signature": "public override Electron2D.TransferMode GetPacketMode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TransferMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.GetPacketPeer()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "GetPacketPeer",
+    "signature": "public override System.Int32 GetPacketPeer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.GetPeer(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "GetPeer",
+    "signature": "public Electron2D.WebRTCPeerInfo GetPeer(System.Int32 peerID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "peerID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.WebRTCPeerInfo",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.GetPeers()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "GetPeers",
+    "signature": "public System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Int32, Electron2D.WebRTCPeerInfo\u003E GetPeers()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Int32, Electron2D.WebRTCPeerInfo\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.GetUniqueID()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "GetUniqueID",
+    "signature": "public override System.Int32 GetUniqueID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.HasPeer(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "HasPeer",
+    "signature": "public System.Boolean HasPeer(System.Int32 peerID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "peerID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.IsServer()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "IsServer",
+    "signature": "public override System.Boolean IsServer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.IsServerRelaySupported()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "IsServerRelaySupported",
+    "signature": "public override System.Boolean IsServerRelaySupported()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.NextPacketSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "NextPacketSize",
+    "signature": "protected override System.Int32 NextPacketSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.Poll()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "Poll",
+    "signature": "public override System.Void Poll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.PutPacket(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "PutPacket",
+    "signature": "public override System.Void PutPacket(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.ReadPacketCore(System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "ReadPacketCore",
+    "signature": "protected override System.Void ReadPacketCore(System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.RemovePeer(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "RemovePeer",
+    "signature": "public System.Void RemovePeer(System.Int32 peerID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "peerID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.SetTargetPeer(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "SetTargetPeer",
+    "signature": "public override System.Void SetTargetPeer(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCMultiplayerPeer.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.AddICECandidate(System.String,System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "AddICECandidate",
+    "signature": "public virtual System.Void AddICECandidate(System.String media, System.Int32 index, System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "media",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.CheckPeerAccess()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "CheckPeerAccess",
+    "signature": "protected System.Void CheckPeerAccess()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.Close()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "Close",
+    "signature": "public virtual System.Void Close()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.Create()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "Create",
+    "signature": "public static Electron2D.WebRTCPeerConnection Create()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.CreateDataChannel(System.String,Electron2D.WebRTCDataChannelOptions)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "CreateDataChannel",
+    "signature": "public virtual Electron2D.WebRTCDataChannel CreateDataChannel(System.String label, Electron2D.WebRTCDataChannelOptions options = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "label",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "options",
+        "type": "Electron2D.WebRTCDataChannelOptions",
+        "default": "null"
+      }
+    ],
+    "returnType": "Electron2D.WebRTCDataChannel",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.CreateOffer()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "CreateOffer",
+    "signature": "public virtual System.Void CreateOffer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.EmitDataChannelReceived(Electron2D.WebRTCDataChannel)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "EmitDataChannelReceived",
+    "signature": "protected System.Void EmitDataChannelReceived(Electron2D.WebRTCDataChannel channel)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "channel",
+        "type": "Electron2D.WebRTCDataChannel",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.EmitICECandidateCreated(System.String,System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "EmitICECandidateCreated",
+    "signature": "protected System.Void EmitICECandidateCreated(System.String media, System.Int32 index, System.String name)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "media",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.EmitSessionDescriptionCreated(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "EmitSessionDescriptionCreated",
+    "signature": "protected System.Void EmitSessionDescriptionCreated(System.String type, System.String sdp)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "type",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "sdp",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.GetConnectionState()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "GetConnectionState",
+    "signature": "public virtual Electron2D.WebRTCPeerConnection.ConnectionState GetConnectionState()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.ConnectionState",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.GetGatheringState()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "GetGatheringState",
+    "signature": "public virtual Electron2D.WebRTCPeerConnection.GatheringState GetGatheringState()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.GatheringState",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.GetSignalingState()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "GetSignalingState",
+    "signature": "public virtual Electron2D.WebRTCPeerConnection.SignalingState GetSignalingState()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.SignalingState",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.Initialize(Electron2D.WebRTCConfiguration)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "Initialize",
+    "signature": "public virtual System.Void Initialize(Electron2D.WebRTCConfiguration configuration = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "configuration",
+        "type": "Electron2D.WebRTCConfiguration",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.Poll()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "Poll",
+    "signature": "public virtual System.Void Poll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.SetDefaultExtension(System.Func\u003CElectron2D.WebRTCPeerConnectionExtension\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "SetDefaultExtension",
+    "signature": "public static System.Void SetDefaultExtension(System.Func\u003CElectron2D.WebRTCPeerConnectionExtension\u003E factory)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "factory",
+        "type": "System.Func\u003CElectron2D.WebRTCPeerConnectionExtension\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.SetLocalDescription(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "SetLocalDescription",
+    "signature": "public virtual System.Void SetLocalDescription(System.String type, System.String sdp)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "type",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "sdp",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.SetRemoteDescription(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "SetRemoteDescription",
+    "signature": "public virtual System.Void SetRemoteDescription(System.String type, System.String sdp)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "type",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "sdp",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnection.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnection",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnectionExtension.AddICECandidate(System.String,System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnectionExtension",
+    "name": "AddICECandidate",
+    "signature": "public abstract System.Void AddICECandidate(System.String media, System.Int32 index, System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "media",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnectionExtension.Close()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnectionExtension",
+    "name": "Close",
+    "signature": "public abstract System.Void Close()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnectionExtension.CreateDataChannel(System.String,Electron2D.WebRTCDataChannelOptions)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnectionExtension",
+    "name": "CreateDataChannel",
+    "signature": "public abstract Electron2D.WebRTCDataChannel CreateDataChannel(System.String label, Electron2D.WebRTCDataChannelOptions options = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "label",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "options",
+        "type": "Electron2D.WebRTCDataChannelOptions",
+        "default": "null"
+      }
+    ],
+    "returnType": "Electron2D.WebRTCDataChannel",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnectionExtension.CreateOffer()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnectionExtension",
+    "name": "CreateOffer",
+    "signature": "public abstract System.Void CreateOffer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnectionExtension.GetConnectionState()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnectionExtension",
+    "name": "GetConnectionState",
+    "signature": "public abstract Electron2D.WebRTCPeerConnection.ConnectionState GetConnectionState()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.ConnectionState",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnectionExtension.GetGatheringState()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnectionExtension",
+    "name": "GetGatheringState",
+    "signature": "public abstract Electron2D.WebRTCPeerConnection.GatheringState GetGatheringState()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.GatheringState",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnectionExtension.GetSignalingState()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnectionExtension",
+    "name": "GetSignalingState",
+    "signature": "public abstract Electron2D.WebRTCPeerConnection.SignalingState GetSignalingState()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection.SignalingState",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnectionExtension.Initialize(Electron2D.WebRTCConfiguration)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnectionExtension",
+    "name": "Initialize",
+    "signature": "public abstract System.Void Initialize(Electron2D.WebRTCConfiguration configuration = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "configuration",
+        "type": "Electron2D.WebRTCConfiguration",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnectionExtension.Poll()",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnectionExtension",
+    "name": "Poll",
+    "signature": "public abstract System.Void Poll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnectionExtension.SetLocalDescription(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnectionExtension",
+    "name": "SetLocalDescription",
+    "signature": "public abstract System.Void SetLocalDescription(System.String type, System.String sdp)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "type",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "sdp",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WebRTCPeerConnectionExtension.SetRemoteDescription(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.WebRTCPeerConnectionExtension",
+    "name": "SetRemoteDescription",
+    "signature": "public abstract System.Void SetRemoteDescription(System.String type, System.String sdp)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "type",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "sdp",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.WebSocketMultiplayerPeer.Close()",
     "kind": "method",
     "declaringType": "Electron2D.WebSocketMultiplayerPeer",
@@ -208095,11 +210053,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.WebSocketPeer.Send(System.ReadOnlySpan\u003CSystem.Byte\u003E,Electron2D.WebSocketWriteMode)",
+    "id": "method:Electron2D.WebSocketPeer.Send(System.ReadOnlySpan\u003CSystem.Byte\u003E,Electron2D.PacketWriteMode)",
     "kind": "method",
     "declaringType": "Electron2D.WebSocketPeer",
     "name": "Send",
-    "signature": "public System.Void Send(System.ReadOnlySpan\u003CSystem.Byte\u003E message, Electron2D.WebSocketWriteMode writeMode = Binary)",
+    "signature": "public System.Void Send(System.ReadOnlySpan\u003CSystem.Byte\u003E message, Electron2D.PacketWriteMode writeMode = Binary)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -208111,7 +210069,7 @@
       },
       {
         "name": "writeMode",
-        "type": "Electron2D.WebSocketWriteMode",
+        "type": "Electron2D.PacketWriteMode",
         "default": "Binary"
       }
     ],
@@ -253171,6 +255129,240 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WebRTCConfiguration.ICEServers()",
+    "kind": "property",
+    "declaringType": "Electron2D.WebRTCConfiguration",
+    "name": "ICEServers",
+    "signature": "public System.Collections.Generic.IReadOnlyList\u003CElectron2D.WebRTCICEServer\u003E ICEServers { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.WebRTCICEServer\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WebRTCDataChannel.WriteMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.WebRTCDataChannel",
+    "name": "WriteMode",
+    "signature": "public Electron2D.PacketWriteMode WriteMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PacketWriteMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WebRTCDataChannelExtension.WriteMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.WebRTCDataChannelExtension",
+    "name": "WriteMode",
+    "signature": "public Electron2D.PacketWriteMode WriteMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PacketWriteMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WebRTCDataChannelOptions.ID()",
+    "kind": "property",
+    "declaringType": "Electron2D.WebRTCDataChannelOptions",
+    "name": "ID",
+    "signature": "public System.Nullable\u003CSystem.Int32\u003E ID { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Nullable\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WebRTCDataChannelOptions.MaxPacketLifeTime()",
+    "kind": "property",
+    "declaringType": "Electron2D.WebRTCDataChannelOptions",
+    "name": "MaxPacketLifeTime",
+    "signature": "public System.Nullable\u003CSystem.Int32\u003E MaxPacketLifeTime { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Nullable\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WebRTCDataChannelOptions.MaxRetransmits()",
+    "kind": "property",
+    "declaringType": "Electron2D.WebRTCDataChannelOptions",
+    "name": "MaxRetransmits",
+    "signature": "public System.Nullable\u003CSystem.Int32\u003E MaxRetransmits { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Nullable\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WebRTCDataChannelOptions.Negotiated()",
+    "kind": "property",
+    "declaringType": "Electron2D.WebRTCDataChannelOptions",
+    "name": "Negotiated",
+    "signature": "public System.Boolean Negotiated { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WebRTCDataChannelOptions.Ordered()",
+    "kind": "property",
+    "declaringType": "Electron2D.WebRTCDataChannelOptions",
+    "name": "Ordered",
+    "signature": "public System.Boolean Ordered { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WebRTCDataChannelOptions.Protocol()",
+    "kind": "property",
+    "declaringType": "Electron2D.WebRTCDataChannelOptions",
+    "name": "Protocol",
+    "signature": "public System.String Protocol { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WebRTCICEServer.Credential()",
+    "kind": "property",
+    "declaringType": "Electron2D.WebRTCICEServer",
+    "name": "Credential",
+    "signature": "public System.String Credential { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WebRTCICEServer.URLs()",
+    "kind": "property",
+    "declaringType": "Electron2D.WebRTCICEServer",
+    "name": "URLs",
+    "signature": "public System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E URLs { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WebRTCICEServer.Username()",
+    "kind": "property",
+    "declaringType": "Electron2D.WebRTCICEServer",
+    "name": "Username",
+    "signature": "public System.String Username { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WebRTCMultiplayerPeer.RefuseNewConnections()",
+    "kind": "property",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "RefuseNewConnections",
+    "signature": "public System.Boolean RefuseNewConnections { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WebRTCMultiplayerPeer.TransferChannel()",
+    "kind": "property",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "TransferChannel",
+    "signature": "public System.Int32 TransferChannel { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WebRTCMultiplayerPeer.TransferMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.WebRTCMultiplayerPeer",
+    "name": "TransferMode",
+    "signature": "public Electron2D.TransferMode TransferMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TransferMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WebRTCPeerInfo.Channels()",
+    "kind": "property",
+    "declaringType": "Electron2D.WebRTCPeerInfo",
+    "name": "Channels",
+    "signature": "public System.Collections.Generic.IReadOnlyList\u003CElectron2D.WebRTCDataChannel\u003E Channels { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.WebRTCDataChannel\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WebRTCPeerInfo.Connected()",
+    "kind": "property",
+    "declaringType": "Electron2D.WebRTCPeerInfo",
+    "name": "Connected",
+    "signature": "public System.Boolean Connected { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WebRTCPeerInfo.Connection()",
+    "kind": "property",
+    "declaringType": "Electron2D.WebRTCPeerInfo",
+    "name": "Connection",
+    "signature": "public Electron2D.WebRTCPeerConnection Connection { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.WebRTCPeerConnection",
     "value": null
   },
   {

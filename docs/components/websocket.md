@@ -1,10 +1,10 @@
 # WebSocket messages
 
-Last updated: 2026-10-06
+Last updated: 2026-10-19
 
 ## Scope and owners
 
-[WebSocketPeer](../classes/WebSocketPeer.md) is a [PacketPeer](../classes/PacketPeer.md) for complete text/binary messages over WS/WSS, including server upgrades over borrowed StreamPeer transports. WebSocketState and WebSocketWriteMode are independent top-level enum domains. Internal WebSocketPacketQueue owns prepared payload/frame rings and value metadata. [ADR 0094](../decisions/networking.md#adr-0094) owns threading, transport lifetime, protocol and capacity rules. No new package or vendored code is added.
+[WebSocketPeer](../classes/WebSocketPeer.md) is a [PacketPeer](../classes/PacketPeer.md) for complete text/binary messages over WS/WSS, including server upgrades over borrowed StreamPeer transports. WebSocketState and PacketWriteMode are independent top-level enum domains. Internal WebSocketPacketQueue owns prepared payload/frame rings and value metadata. [ADR 0094](../decisions/networking.md#adr-0094) owns threading, transport lifetime, protocol and capacity rules. No new package or vendored code is added.
 
 ## Connection flow and ownership
 
@@ -16,7 +16,7 @@ Ready state transitions Closed → Connecting → Open → Closing → Closed. P
 
 ## Messages and control frames
 
-PutPacket sends binary; Send chooses WebSocketWriteMode; SendText encodes directly through prepared storage. Client frames use fresh cryptographic random masks, server frames are unmasked, and receiving the wrong mask direction fails. Poll handles fragmented messages, continuation order, canonical 7/16/64-bit network-order lengths, zero messages, UTF-8 across fragments and ping/pong/close interleaving. Reserved opcodes/RSV, invalid continuations, fragmented/oversized controls, noncanonical/high-bit lengths and invalid text/close payloads result in protocol close. Text must be strict UTF-8; invalid C# UTF-16 in SendText/Close fails encoding. No extension or compression is negotiated.
+PutPacket sends binary; Send chooses PacketWriteMode; SendText encodes directly through prepared storage. Client frames use fresh cryptographic random masks, server frames are unmasked, and receiving the wrong mask direction fails. Poll handles fragmented messages, continuation order, canonical 7/16/64-bit network-order lengths, zero messages, UTF-8 across fragments and ping/pong/close interleaving. Reserved opcodes/RSV, invalid continuations, fragmented/oversized controls, noncanonical/high-bit lengths and invalid text/close payloads result in protocol close. Text must be strict UTF-8; invalid C# UTF-16 in SendText/Close fails encoding. No extension or compression is negotiated.
 
 Inbound reads expose complete application messages only after Poll, and only in Open state. Inherited GetPacket snapshots allocate, while GetPacket(Span<byte>) reuses caller storage. Too-small reads preserve packet order and WasStringPacket; the marker changes only when a packet is consumed. GetPacketError/LastReadException follow PacketPeer. GetCurrentOutboundBufferedAmount counts queued application payload, retaining a partially sent message's full length until its frame drains; framing and controls are excluded. Send copies input before returning and attempts nonblocking progress; queue overflow throws before enqueuing that message.
 

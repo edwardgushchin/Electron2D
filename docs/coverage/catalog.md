@@ -1043,11 +1043,11 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VoxelGI](classes/VoxelGI.md) | VisualInstance3D | Excluded | 12 |
 | [VoxelGIData](classes/VoxelGIData.md) | Resource | Excluded | 14 |
 | [WeakRef](classes/WeakRef.md) | RefCounted | Implemented | 1 |
-| [WebRTCDataChannel](classes/WebRTCDataChannel.md) | PacketPeer | Blocked | 21 |
-| [WebRTCDataChannelExtension](classes/WebRTCDataChannelExtension.md) | WebRTCDataChannel | Blocked | 18 |
-| [WebRTCMultiplayerPeer](classes/WebRTCMultiplayerPeer.md) | MultiplayerPeer | Blocked | 8 |
-| [WebRTCPeerConnection](classes/WebRTCPeerConnection.md) | RefCounted | Blocked | 33 |
-| [WebRTCPeerConnectionExtension](classes/WebRTCPeerConnectionExtension.md) | WebRTCPeerConnection | Blocked | 11 |
+| [WebRTCDataChannel](classes/WebRTCDataChannel.md) | PacketPeer | Implemented | 21 |
+| [WebRTCDataChannelExtension](classes/WebRTCDataChannelExtension.md) | WebRTCDataChannel | Implemented | 18 |
+| [WebRTCMultiplayerPeer](classes/WebRTCMultiplayerPeer.md) | MultiplayerPeer | Implemented | 8 |
+| [WebRTCPeerConnection](classes/WebRTCPeerConnection.md) | RefCounted | Implemented | 33 |
+| [WebRTCPeerConnectionExtension](classes/WebRTCPeerConnectionExtension.md) | WebRTCPeerConnection | Implemented | 11 |
 | [WebSocketMultiplayerPeer](classes/WebSocketMultiplayerPeer.md) | MultiplayerPeer | Implemented | 11 |
 | [WebSocketPeer](classes/WebSocketPeer.md) | PacketPeer | Implemented | 30 |
 | [WebXRInterface](classes/WebXRInterface.md) | XRInterface | Excluded | 32 |

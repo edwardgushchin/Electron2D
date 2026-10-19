@@ -92,6 +92,7 @@
   <Import Project="tools/text-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
   <Import Project="tools/audio-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
   <Import Project="tools/enet-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
+  <Import Project="tools/webrtc-native.targets" />
   <Import Project="tools/mesh-native.targets" />
   <Import Project="tools/webp-native.targets" />
   <Import Project="tools/ogv-native.targets" />

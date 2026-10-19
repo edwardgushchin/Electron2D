@@ -16,3 +16,5 @@ Publish for a specific RID to include only its native assets under `runtimes/<RI
 Native producers keep source receipts, binary SHA-256 values, architecture/loader/export checks and bundled notices. The maintainer source-build mode and CI prepare packages; game developers do not compile the native backends.
 
 The WebP bridge producer in `tools/webp-native` statically links the pinned mature codec for exact/lossy image saving. Source builds and native receipts require `Electron2DWebP` on desktop/Android and its bridge/codec archives on Apple device/browser profiles. Older prebuilt bundles do not contain it. Its sole C export is `e2d_webp_encode`; Linux execution is verified separately from foreign targets and publication.
+
+Desktop packages also contain the private WebRTC data-channel bridge and dependency license/source-access notices. The bridge statically links pinned libdatachannel/libjuice/usrsctp/plog and exports only its 23 engine functions. Windows/macOS producers link the pinned private OpenSSL pair; Linux uses system OpenSSL 3. A browser-hosted engine adapter and mobile/static-Apple WebRTC assets require their own integration.

@@ -1,6 +1,6 @@
 # MultiplayerPeer
 
-Last updated: 2026-10-04
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public abstract class Electron2D.MultiplayerPeer`. **Inherits:** [PacketPeer](PacketPeer.md). **Inherited by:** [OfflineMultiplayerPeer](OfflineMultiplayerPeer.md), [WebSocketMultiplayerPeer](WebSocketMultiplayerPeer.md). **Source:** [MultiplayerPeer.cs](../../src/Core/Networking/MultiplayerPeer.cs).
 
@@ -312,3 +312,7 @@ Identifies the server endpoint.
 Transport operations/disposal require the constructing thread. See the component for actual offline authority behavior and WS/WSS state/ID assignment, configured versus actual transfer mode/channel, next-packet metadata, routing and whole handshake deadline. Queued data remains bounded; buffer/queue configuration for the WS/WSS cohort requires Disconnected. Events see committed state; callback errors aggregate and reentry/Close/recreation follow the generation/lifetime rules. Owning Close releases resources; returned peer references remain borrowed. Snapshots/setup/lifecycle/diagnostic allocation is separate from prepared message processing.
 
 [MultiplayerTests](../../tests/Electron2D.Tests/MultiplayerTests.cs) verifies native Linux WS/WSS two-client/public scene workflows, independent ID/application wire, custom managed hooks/offline role, packet/metadata/routing/pressure/admission/deadline/callback/ownership edges and 64 warmed custom event/packet plus native active/idle zero-managed-allocation intervals. Browser/foreign hosts, external native allocation, routed throughput and human acceptance remain separate. Higher scene multiplayer/replication and other transport protocols retain exact coverage dependencies.
+
+## WebRTC integration
+
+[WebRTCMultiplayerPeer](WebRTCMultiplayerPeer.md) adds native negotiated SCTP channels to this contract. Reserved/custom delivery modes, borrowed connection lifetime, committed membership and consistent next-packet metadata execute through SceneMultiplayer/SceneTree; see [WebRTC](../components/webrtc.md).

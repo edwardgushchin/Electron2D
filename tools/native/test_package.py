@@ -10,11 +10,32 @@ from unittest.mock import Mock, patch
 from zipfile import ZipFile
 
 import build_tls
+import build_webrtc
 import package
 import test_consumer
 
 
 class NativePackageTests(unittest.TestCase):
+    def test_webrtc_desktop_exports_and_pinned_sources(self):
+        for profile in ("Linux", "MacOS", "Windows"):
+            name = next(name for name in package.LIBRARIES[profile] if "Electron2DWebRTC" in name)
+            self.assertEqual(package.required_exports(name), package.WEBRTC_EXPORTS)
+            self.assertEqual(len(package.required_exports(name)), 23)
+        root = package.ROOT / "src/Vendor/libdatachannel"
+        manifest = json.loads((root / "manifest.json").read_text())
+        self.assertEqual(manifest["commit"], "6b1e2e620f1e37f0eafeee702eaea0043cb305fd")
+        self.assertEqual({p.relative_to(root).as_posix() for p in root.rglob("*") if p.is_file() and p.name != "manifest.json"}, set(manifest["files"]))
+        for name, checksum in manifest["files"].items():
+            self.assertEqual(hashlib.sha256((root / name).read_bytes()).hexdigest(), checksum, name)
+
+    def test_webrtc_private_tls_build_rejects_missing_tls(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with self.assertRaises(FileNotFoundError):
+                build_webrtc.build("win-x64", root / "bridge", root / "missing-tls")
+            with self.assertRaises(ValueError):
+                build_webrtc.build("browser-wasm", root / "bridge", root / "tls")
+
     def test_ktx_bridge_is_required_in_every_profile(self):
         for profile, names in package.LIBRARIES.items():
             name = next(name for name in names if "Electron2DKTX" in name)
@@ -57,6 +78,7 @@ class NativePackageTests(unittest.TestCase):
                  patch.object(build_windows.windows, "sdl_import_library"), \
                  patch.object(build_windows.subprocess, "run"), \
                  patch.object(build_windows.build_tls, "build"), \
+                 patch.object(build_windows.build_webrtc, "build"), \
                  patch.object(build_windows.package, "stage"), \
                  patch.object(build_windows.shutil, "copy2") as copy:
                 build_windows.build("win-x64", root / "SDL3.dll", root / "artifacts")
@@ -111,11 +133,17 @@ class NativePackageTests(unittest.TestCase):
             recipe = root / ".github/workflows/native.yml"
             recipe.parent.mkdir(parents=True)
             recipe.write_text("container: ubuntu:22.04\n")
+            audit = root / "tools/check_native_publish.py"
+            audit.parent.mkdir(parents=True)
+            audit.write_text("assert True\n")
             with patch.object(package, "ROOT", root):
                 original = package.source_hash()
                 self.assertEqual(original, package.source_hash())
                 recipe.write_text("container: ubuntu:26.04\n")
                 self.assertNotEqual(original, package.source_hash())
+                updated = package.source_hash()
+                audit.write_text("assert False\n")
+                self.assertNotEqual(updated, package.source_hash())
 
     def test_macos_identity_architecture_imports_and_exports(self):
         with tempfile.TemporaryDirectory() as directory:
