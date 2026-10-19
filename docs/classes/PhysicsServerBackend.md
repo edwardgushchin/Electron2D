@@ -250,7 +250,7 @@ if (IsBodyExcludedFromMotionTest(candidateRID) ||
 | `protected internal abstract void SynchronizeCollisionExceptions()` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract PhysicsBackendCheckpoint CreateCheckpoint()` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract void BeginPortableRestore()` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
-| `protected internal abstract void CompletePortableRestore(ReadOnlySpan<PhysicsBackendOneWay> pairs, ulong tick)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
+| `protected internal abstract void CompletePortableRestore(ReadOnlySpan<PhysicsBackendOneWay> pairs, ulong tick, float step)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract int GetPortableOneWayCount()` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract int CapturePortableOneWays(Span<PhysicsBackendOneWay> destination)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract float ReadPortableSleepTime(RID collider)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
@@ -297,7 +297,7 @@ if (IsBodyExcludedFromMotionTest(candidateRID) ||
 
 [Independent solver probe](../../tests/Electron2D.Tests/PhysicsRegisteredBackendTests.cs) exercises scene/raw integration, ordinary views, queries, Area events, contacts, spring policy, local/portable restore, guarded lifetime and terminal solve failure. The separate public-only consumer implements a bounded circle/constraint model; it is a test solver, not a production backend. Arbitrary custom geometry and unexercised operation acceptance remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
 
-`GetPortableOneWayCount` bounds the next `CapturePortableOneWays` span, even after retained storage has grown. Returned count cannot exceed that current span. Valid continuation requires distinct bound colliders, enabled logical shapes, implementation-validated nonnegative pieces and no duplicate unordered pair. `CompletePortableRestore` receives the translated local identities; the external consumer checks actual pass-through and contact impulses after restore.
+`GetPortableOneWayCount` bounds the next `CapturePortableOneWays` span, even after retained storage has grown. Returned count cannot exceed that current span. Valid continuation requires distinct bound colliders, enabled logical shapes, implementation-validated nonnegative pieces and no duplicate unordered pair. `CompletePortableRestore` receives the translated local identities, restored tick and finite nonnegative source step in seconds; restore implementation timing before later queries or callback views. The required `step` argument replaces the earlier two-argument hook; the external consumer checks actual pass-through and contact impulses after restore.
 
 Body force, mass, integration, motion, sleep, CCD and callback authoring now
 reject before mutation during selected numerical hooks, including initial
@@ -406,3 +406,8 @@ disabled/zero-filter slots, independent motion policies, exact caller capacity a
 borrowed/atomic failure handling. Independent registered math shares the public
 CPU/software-GPU assertions; full moving brackets retain zero managed bytes.
 Broader numerical and final platform/network/performance acceptance remains separate.
+
+
+[Moving one-way continuation](../components/physics-registered-adapter.md#moving-one-way-continuation)
+checks the restored source duration through immediate supplied-pose recovery and
+factory-provided direct-state Step. Full numerical-extension acceptance stays open.

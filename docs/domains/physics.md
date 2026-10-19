@@ -1650,3 +1650,10 @@ atomic failure handling and strict zero warmed full-frame managed bytes. The
 current ledger is 1279/1369 Implemented (93.43%), with 90 open (59 Partial,
 17 Blocked, 14 Unimplemented), 92 Excluded. Arbitrary custom/coupled, inherited/
 server/network/native/platform and target-hardware performance acceptance stay open.
+
+
+[Moving one-way continuation](../components/physics-registered-adapter.md#moving-one-way-continuation)
+now shares public CPU/software-GPU/registered raw and scene supplied-pose checks.
+Registered portable completion receives source step duration explicitly, preserving
+immediate recovery and factory-provided Step after correction. The full selected
+motion operation stays Partial; the ledger remains 1279/1369 (93.43%), 90 open.

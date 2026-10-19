@@ -145347,11 +145347,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsServerBackend.CompletePortableRestore(System.ReadOnlySpan\u003CElectron2D.PhysicsBackendOneWay\u003E,System.UInt64)",
+    "id": "method:Electron2D.PhysicsServerBackend.CompletePortableRestore(System.ReadOnlySpan\u003CElectron2D.PhysicsBackendOneWay\u003E,System.UInt64,System.Single)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServerBackend",
     "name": "CompletePortableRestore",
-    "signature": "protected internal abstract System.Void CompletePortableRestore(System.ReadOnlySpan\u003CElectron2D.PhysicsBackendOneWay\u003E pairs, System.UInt64 tick)",
+    "signature": "protected internal abstract System.Void CompletePortableRestore(System.ReadOnlySpan\u003CElectron2D.PhysicsBackendOneWay\u003E pairs, System.UInt64 tick, System.Single step)",
     "visibility": "protected internal",
     "baseType": null,
     "interfaces": null,
@@ -145364,6 +145364,11 @@
       {
         "name": "tick",
         "type": "System.UInt64",
+        "default": null
+      },
+      {
+        "name": "step",
+        "type": "System.Single",
         "default": null
       }
     ],

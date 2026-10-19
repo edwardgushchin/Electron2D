@@ -80,8 +80,15 @@ public static partial class BackendChecks
         }
         private static Part MotionRecoveryPart(in Part own, in Part target, float margin) =>
             own.Directed && target.Boundary ? own with { Inflation = own.Inflation + margin } : ExpandPart(own, margin);
-        private static bool AcceptRecovery(in Part part, Body body, Vector2 normal, float depth, float margin) =>
-            part.OneWay is not { } policy || normal.Dot(policy.LocalDirection.Rotated(body.Rotation)) < 0 && depth <= MathF.Max(policy.Margin, margin);
+        private bool AcceptRecovery(in Part part, Body body, Vector2 normal, float depth, float margin)
+        {
+            if (part.OneWay is not { } policy) return true;
+            var pass = policy.LocalDirection.Rotated(body.Rotation);
+            var allowance = MathF.Max(policy.Margin, margin);
+            var velocity = body.Velocity + (body.Mode == PhysicsServer.BodyMode.Kinematic ? body.Surface : Vector2.Zero);
+            if (body.Mode != PhysicsServer.BodyMode.Static) allowance += Delta * MathF.Max(0, -velocity.Dot(pass));
+            return normal.Dot(pass) < 0 && depth <= allowance;
+        }
         private static void RetainMotionPlane(Span<System.Numerics.Vector4> planes, ref int count, System.Numerics.Vector4 plane)
         {
             if (count < planes.Length) { planes[count++] = plane; return; }

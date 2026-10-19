@@ -266,8 +266,8 @@ public static partial class BackendChecks
         protected override void BeginPortableRestore() { CachedContacts.Clear(); }
         internal readonly List<PhysicsBackendOneWay> OneWays = [];
         internal int OneWayCapacity = -1, OneWayReturn = -1, OneWaySpanLength;
-        protected override void CompletePortableRestore(ReadOnlySpan<PhysicsBackendOneWay> pairs, ulong tick)
-        { OneWays.Clear(); OneWays.EnsureCapacity(pairs.Length); foreach (var pair in pairs) OneWays.Add(pair); RestoreExecutionHook?.Invoke(); }
+        protected override void CompletePortableRestore(ReadOnlySpan<PhysicsBackendOneWay> pairs, ulong tick, float step)
+        { Delta = step; OneWays.Clear(); OneWays.EnsureCapacity(pairs.Length); foreach (var pair in pairs) OneWays.Add(pair); RestoreExecutionHook?.Invoke(); }
 
         protected override int GetPortableOneWayCount() => OneWayCapacity < 0 ? OneWays.Count : OneWayCapacity;
         protected override int CapturePortableOneWays(Span<PhysicsBackendOneWay> destination)

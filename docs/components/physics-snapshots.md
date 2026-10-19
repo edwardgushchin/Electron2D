@@ -1,6 +1,6 @@
 # Portable physics snapshots
 
-Last updated: 2026-10-18
+Last updated: 2026-10-20
 
 [Publication recovery](physics-registered-adapter.md#failed-motion-publication) keeps incomplete motion writes retryable before capture. A successful local rewind discards superseded motion/pose/mode publication without invoking that failed request again. Portable apply retains its existing preparation of prior local authoring; a preparation failure leaves incoming state unapplied and the tick unchanged, and a later successful apply supplies authoritative state.
 
@@ -90,7 +90,12 @@ and server kinematic targets, character platform/slide/floor state, current cont
 reports and contact/Area observer history. References inside these records use the
 bound network IDs and are resolved to local identities on apply. Joint local frames
 are validated and applied in place; authored solver parameters must match. One-way
-side decisions survive correction.
+side decisions survive correction. Registered completion receives the source tick and
+validated source step duration as typed inputs after common timing is committed.
+Its implementation must restore numerical timing before subsequent queries or
+factory-provided callback views. [Moving one-way continuation](physics-registered-adapter.md#moving-one-way-continuation)
+checks immediate public recovery after .001/.01-second and pre-first-step correction;
+no new timing field or implementation-private payload is introduced.
 
 Geometry, body roles and physical authoring must already match. This includes
 scene/server representation roles, layers/masks, material values, CCD, mass/damping,
