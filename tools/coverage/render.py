@@ -316,8 +316,10 @@ def reason_for_type(item, lookup):
         return "Blocked", "Trigger: accepted typed cryptography utility contract and first portable crypto-service slice (ADR 0001)."
     if name.startswith("VisualShader"):
         return "Blocked", "Trigger: first typed 2D visual-shader graph translation and shader-import slice (ADR 0028)."
-    if name in {"GPUParticles2D", "ParticleProcessMaterial"}:
-        return "Blocked", "Trigger: retained GPU particle RID/node simulation, scheduling, process-material generation, canvas output and collision/attractor ownership under ADR 0028. The executable Shader.Mode.Particles import/resource/RenderingDevice profile supplies the process ABI; it does not yet supply retained simulation or CPU conversion."
+    if name == "GPUParticles2D":
+        return "Blocked", "Trigger: connect GPUParticles scene authoring, stored properties, lifecycle, signals and conversions to the executing RenderingServer particle storage/canvas family under ADR 0028; connect typed ParticleProcessMaterial settings where conversion requires them. Retained simulation, trails, subemitters and actual mesh canvas output now execute; no scene emitter placeholder is exposed."
+    if name == "ParticleProcessMaterial":
+        return "Blocked", "Trigger: implement the typed planar process-material settings and built-in portable compute generator for distributions, curves, forces, color/animation and SDF collision, then connect its real GPUParticles/CPUParticles conversions under ADR 0028. The compute ABI and retained GPU simulation/draw consumer already execute; spatial scene attractors/colliders remain outside ADR 0004."
     if name in {"DirectionalLight2D", "Light2D", "LightOccluder2D", "OccluderPolygon2D", "PointLight2D"}:
         return "Blocked", "Trigger: first 2D light and occlusion renderer slice (ADR 0028)."
     if name in {"BackBufferCopy", "CanvasGroup"}:

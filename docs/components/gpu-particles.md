@@ -1,0 +1,43 @@
+# GPU particles
+
+Last updated: 2026-10-19
+
+## Executable scope
+
+The static `RenderingServer.Particles*` family owns renderer-session particle RIDs on the GPU backend. `CanvasItemAddParticles` submits their mesh passes through the existing retained canvas. Simulation state, previous transforms, history, age ordering, subemission queues and generated vertices remain in native GPU buffers. CPU state retains configuration, timing and a bounded pending manual queue. Compatibility rejects creation explicitly.
+
+Process and draw materials have separate roles. `ParticlesSetProcessMaterial` borrows a `ShaderMaterial` with `Shader.Mode.Particles`; empty material or an unconfigured shader material uses the default process. The canvas item's material and mesh surface materials shade the generated geometry. Meshes, textures and materials remain caller-owned; disposing one while it is in use rejects the next consumer. Freeing a particle RID invalidates its retained commands and detaches incoming subemitter links. All state retires with its renderer session. Stale, foreign and wrong-kind identities and wrong-thread access reject.
+
+The high-level GPUParticles node, ParticleProcessMaterial generator and CPU conversion remain dependencies of their next connected slice. Their public placeholders are not exposed.
+
+## Configuration and updates
+
+Create, allocate with `ParticlesSetAmount`, assign mesh passes with `ParticlesSetDrawPasses`/`ParticlesSetDrawPassMesh`, and attach with `CanvasItemAddParticles`. An owned canvas RID keeps commands until cleared; drawing through a scene-owned canvas RID follows that item's ordinary draw recording lifecycle. Configure emission with `ParticlesSetEmitting`, lifetime, amount ratio, explosiveness, randomness, speed scale, one-shot and preprocessing. Capacity starts at zero; changing it clears native state. Defaults are lifetime 1 second, speed/amount ratio 1, fixed frequency 30, interpolation enabled, fractional delta and local coordinates disabled, and custom bounds (-4,-4,8,8).
+
+Visible commands request processing once per renderer frame. `ParticlesRequestProcess` and `ParticlesRequestProcessTime` also work for hidden or unattached identities. The latter replaces pending process/residual intervals; preprocessing and these explicit intervals run in fixed subdivisions independently of speed scale. Residual processing disables emission. Positive fixed frequency uses a remainder and caps automatic wall-clock delta at 0.1 second; nonpositive frequency uses variable steps, except segmented trails use 60 Hz. A restart clears phase and records at the next update. One-shot turns emission off before processing the first step into the next cycle. Stopped activity drains after 1.2 lifetimes; `ParticlesIsInactive` describes that activity interval rather than a GPU particle-count readback.
+
+`ParticlesEmit` copies selected position, basis, velocity, color and four numeric custom channels. Bits 1, 2, 4, 8 and 16 select those fields; other bits are ignored. Manual emission disables automatic emission, clearing its previous state when necessary. The pending queue holds at most capacity records and drops excess. No caller array is retained. Finite durations/scales are nonnegative, lifetime is positive, and ratios clamp to [0,1]. Native record/history/expanded-geometry byte and step counters are checked before dispatch.
+
+## Compute frame and routing
+
+The [portable process ABI](particle-shaders.md) remains the shader contract. The renderer initializes or restarts records, integrates existing velocity/age, sets newborn flags, runs the optional authored compute program, captures history and prepares draw ordering. A custom program owns its active flag and any custom lifetime policy; the default process deactivates records at nominal lifetime. `State.x` bits 1/2 indicate active/newborn; `State.y` is the birth cycle, `State.z` the seed and `State.w` the per-particle delta as float bits. Fractional delta supplies the newborn's fraction of the current step in this last lane.
+
+`EmissionX/Y` is identity in local coordinates and the authored emission pose in world coordinates. `PreviousEmissionX/Y` retains the previous simulation pose, or the current pose on reset.
+
+`Counts` supplies amount, cycle, seed and outgoing queue capacity. `Time` supplies step seconds, nominal lifetime, randomness and explosiveness. `Cycle` supplies old/new phase, interpolation-to-end and amount ratio. `EmitterVelocity.xy` contains the supplied planar velocity and `.w` collision base size. `Options.x` holds emission/fractional/local/reset/full-cycle/default-process bits (1,2,4,8,16,32); `.w` is the dispatch row width. Compute programs flatten `gl_GlobalInvocationID.x + gl_GlobalInvocationID.y * Options.w` for large dispatches.
+
+`ParticlesSetSubemitter` borrows a target in the same renderer and rejects cycles. The topological schedule processes parents before children, independent of creation order. For retained subemission, set the emitted record's `State.x` to the same five field-selection bits used by `ParticlesEmit`; the atomic header remains separate. The GPU converts parent-local through world into child-local coordinates, bounds destination writes and disables child automatic emission. An absent target has an empty bounded outgoing queue. Source programs without the optional queue descriptor do not route emissions.
+
+SDF process samplers use the distance field of the first submitting viewport in the frame. `SDFRect` carries canvas UV scale/offset; the two SDF transform rows include the particle command's canvas basis. A request without a submitting viewport uses an empty field. Collision base size is a shader input, not a spatial collision-object implementation.
+
+## Canvas, trails and bounds
+
+Draw passes accept current array, immediate and procedural meshes, surface materials, ordinary topology, vertex/custom data and canvas clips/modulation. GPU expansion preserves distinct vertex instance ordinals and the normal draw material path, HDR color transfer, MSAA, per-item shader values and particle sprite-sheet UVs. Built-in group-owner geometry computes final screen UVs and premultiplies the complete mesh/particle/item opacity once on the GPU. Index order keeps original records; lifetime/reverse lifetime sort by age on the GPU. Velocity alignment selects the local X or Y basis and preserves planar scale. Depth order, billboards and their channel-rotation options have no planar role.
+
+`ParticlesSetTrails` enables native history for skinned meshes with multiple copied planar bind poses. Weighted mesh vertices interpolate age-separated transforms, colors and custom channels and combine their bind poses; the current birth cycle prevents connecting different incarnations. Trail length accepts at least 0.01 second and caps at ten seconds. Changing trail configuration or fixed frequency resets numerical state; changing pose count resets allocated state. Fixed-step presentation can interpolate previous/current transforms, colors and custom values; no CPU particle readback occurs during ordinary frames.
+
+Custom bounds control ordinary visibility in the command's emitter-local space; world-state conversion does not shift that authored visibility rectangle. World canvas/bounds conversion and child-local subemission require an invertible emission pose; attempting a singular inverse rejects before submission. `ParticlesGetCurrentAABB` is an explicit native synchronization/readback operation: active current records and selected trail history are converted to emitter-local coordinates and expanded by the longest draw-mesh axis. It returns empty before initialized allocation. Mesh callbacks must leave particle ownership stable. The query intentionally allocates copied readback data and belongs outside hot frames.
+
+## Verification limits
+
+`ParticleServerTests` exercises real Linux Wayland/software-Vulkan pixels for process/draw separation, local/world coordinates, fixed/explicit timing, wrap/one-shot/residual processing, subemitters, trails, bounds, ordering, velocity axes, HDR/MSAA and hidden requests. Owner/thread/identity/domain/finite/capacity and mesh-callback reentry validation is executable. Multiple generated streams retain identity across empty clipping and reversed batch order. Native process failure and a later draw-only failure exercise cancellation/retry of unpublished state, manual queues and weighted geometry uploads. Thirty-two warmed process/sort/render intervals allocate zero managed owner bytes. Physical GPU performance, native allocator accounting, other platforms and owner acceptance remain separate gates.

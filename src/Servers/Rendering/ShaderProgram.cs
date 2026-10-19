@@ -7,6 +7,7 @@ internal sealed partial class ShaderProgram(byte[] code, int[] bufferSizes, Dict
     internal static readonly ShaderProgram Default = new(BuiltInShaders.Fragment, [], new(StringComparer.Ordinal), [new("TEXTURE", 0)]);
     internal Shader.Mode Mode { get; set; } = Shader.Mode.CanvasItem;
     internal int ColorOutputs { get; set; } = 1;
+    internal int ParticleStorageBuffers { get; set; } = 1;
     internal readonly byte[] Code = code;
     internal byte[] NativeCode { get; init; } = code;
     internal readonly int[] BufferSizes = bufferSizes;

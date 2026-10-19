@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
@@ -1426,3 +1426,398 @@ Resolves every explicit override into bounded temporary identity storage before 
 Numeric material mat3/mat4 values and fixed arrays execute through `MaterialSetMatrixParam` and copied-array/exact-span `MaterialGetMatrixParam`. They share the ShaderMaterial column-major/finite/identity contract, including reload and paired stages; owned identities permit mutation and borrowed resource identities permit reads. See [numeric material matrices](../components/shader-materials.md#numeric-material-matrices).
 
 The TextureDrawableCreate/TextureDrawableBlitRect/TextureDrawableGenerateMIPMaps/TextureDrawableGetDefaultMaterial family owns writable GPU images and a retained default blit material. Its TextureDrawableFormat values preserve RGBA8, sRGB, half and float storage. Borrowed resource targets, native export leases, matching owned replacement, path/display metadata and shutdown share the existing texture RID services. See [writable textures](../components/drawable-textures.md).
+
+## GPU particle storage and canvas
+
+The static particle family owns planar GPU storage and borrows draw/process resources. All operations require a live GPU renderer and its owner thread. Stale, foreign and wrong-kind identities reject. Mutations cannot reenter native submission or particle preparation; explicit bounds readback cannot run during submission. Compatibility rejects storage creation. See [GPU particles](../components/gpu-particles.md) for defaults, scheduling, native ABI, subemitters, trails, ownership and current verification limits.
+
+### Particle example
+
+This standalone native example uses the public API. The storage and canvas identities belong to the renderer session; the mesh remains caller-owned. This example compiles as a separate public-API consumer; the same workflow executes in ParticleServerTests.
+
+```csharp
+using Electron2D;
+
+using var window = new Window { Size = new(160, 120) };
+var owner = new Entity();
+window.AddChild(owner);
+using var mesh = new ArrayMesh();
+mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData
+{
+    Vertices = [new(-4, -4), new(4, -4), new(4, 4), new(-4, 4)],
+    Indices = [0, 1, 2, 0, 2, 3]
+});
+window.Ready += _ =>
+{
+    var particles = RenderingServer.ParticlesCreate();
+    RenderingServer.ParticlesSetAmount(particles, 1);
+    RenderingServer.ParticlesSetFixedFPS(particles, 0);
+    RenderingServer.ParticlesSetLifetime(particles, 10);
+    RenderingServer.ParticlesSetUseLocalCoordinates(particles, true);
+    RenderingServer.ParticlesSetDrawPasses(particles, 1);
+    RenderingServer.ParticlesSetDrawPassMesh(particles, 0, mesh.GetRID());
+    var canvas = RenderingServer.CanvasItemCreate();
+    RenderingServer.CanvasItemSetParent(canvas, owner.GetCanvasItem());
+    RenderingServer.CanvasItemAddParticles(canvas, particles);
+    RenderingServer.ParticlesEmit(particles, new Transform(0, new Vector2(80, 60)),
+        Vector2.Zero, Colors.Green, Colors.White, 31);
+    RenderingServer.FramePostDraw += () =>
+    {
+        RenderingServer.FreeRID(canvas);
+        RenderingServer.FreeRID(particles);
+        window.Tree!.Quit();
+    };
+};
+Engine.Run(window);
+```
+
+### Particle method summary
+
+Signatures below are declared on `RenderingServer`; the nested draw policy types are [ParticlesDrawOrder](RenderingServer.ParticlesDrawOrder.md), [ParticlesTransformAlign](RenderingServer.ParticlesTransformAlign.md) and [ParticlesTransformAlignAxis](RenderingServer.ParticlesTransformAlignAxis.md).
+
+| C# signature | Contract |
+| --- | --- |
+| `public static void CanvasItemAddParticles(RID item, RID particles, RID texture = default)` | [Appends a retained particle draw command to a canvas item.](#canvasitemaddparticles) |
+| `public static RID ParticlesCreate()` | [Creates owned planar GPU particle storage metadata.](#particlescreate) |
+| `public static bool ParticlesGetEmitting(RID particles)` | [Queries whether automatic emission is enabled.](#particlesgetemitting) |
+| `public static bool ParticlesIsInactive(RID particles)` | [Queries whether a stopped emitter has drained its renderer activity interval.](#particlesisinactive) |
+| `public static void ParticlesRequestProcess(RID particles)` | [Requests one simulation update, including for an emitter without a visible canvas command.](#particlesrequestprocess) |
+| `public static void ParticlesRequestProcessTime(RID particles, float processTime, float processTimeResidual = 0)` | [Queues explicit process and residual intervals for the next update.](#particlesrequestprocesstime) |
+| `public static void ParticlesRestart(RID particles)` | [Restarts simulation state and its emission phase on the next update.](#particlesrestart) |
+| `public static void ParticlesSetAmount(RID particles, int amount)` | [Sets particle capacity and clears prior state when its size changes.](#particlessetamount) |
+| `public static void ParticlesSetEmitting(RID particles, bool enabled)` | [Sets automatic emission.](#particlessetemitting) |
+| `public static void ParticlesSetOneShot(RID particles, bool enabled)` | [Sets one-cycle automatic emission.](#particlessetoneshot) |
+| `public static void ParticlesSetFractionalDelta(RID particles, bool enabled)` | [Sets fractional newborn processing.](#particlessetfractionaldelta) |
+| `public static void ParticlesSetInterpolate(RID particles, bool enabled)` | [Sets fixed-step presentation interpolation.](#particlessetinterpolate) |
+| `public static void ParticlesSetUseLocalCoordinates(RID particles, bool enabled)` | [Sets emitter-local simulation coordinates.](#particlessetuselocalcoordinates) |
+| `public static void ParticlesSetLifetime(RID particles, float value)` | [Sets the nominal particle lifetime.](#particlessetlifetime) |
+| `public static void ParticlesSetPreProcessTime(RID particles, float value)` | [Sets the restart preprocessing duration.](#particlessetpreprocesstime) |
+| `public static void ParticlesSetSpeedScale(RID particles, float value)` | [Sets the automatic simulation time scale.](#particlessetspeedscale) |
+| `public static void ParticlesSetCollisionBaseSize(RID particles, float value)` | [Sets the process collision size.](#particlessetcollisionbasesize) |
+| `public static void ParticlesSetAmountRatio(RID particles, float value)` | [Sets the active capacity ratio.](#particlessetamountratio) |
+| `public static void ParticlesSetExplosivenessRatio(RID particles, float value)` | [Sets the emission concentration.](#particlessetexplosivenessratio) |
+| `public static void ParticlesSetRandomnessRatio(RID particles, float value)` | [Sets the cycle/index emission-time randomness.](#particlessetrandomnessratio) |
+| `public static void ParticlesSetInterpToEnd(RID particles, float value)` | [Sets the process interpolation-to-end input.](#particlessetinterptoend) |
+| `public static void ParticlesSetFixedFPS(RID particles, int FPS)` | [Selects fixed simulation frequency or variable stepping.](#particlessetfixedfps) |
+| `public static void ParticlesSetEmissionTransform(RID particles, Transform transform)` | [Sets the finite planar emission transform.](#particlessetemissiontransform) |
+| `public static void ParticlesSetEmitterVelocity(RID particles, Vector2 velocity)` | [Sets the finite planar emitter velocity supplied to process programs.](#particlessetemittervelocity) |
+| `public static void ParticlesSetCustomAABB(RID particles, Rect2 bounds)` | [Sets authored visibility bounds without reading GPU state.](#particlessetcustomaabb) |
+| `public static Rect2 ParticlesGetCurrentAABB(RID particles)` | [Reads current native particle bounds in emitter-local coordinates.](#particlesgetcurrentaabb) |
+| `public static void ParticlesSetProcessMaterial(RID particles, RID material)` | [Sets the borrowed particle process material.](#particlessetprocessmaterial) |
+| `public static void ParticlesSetSubemitter(RID particles, RID subemitter)` | [Selects the borrowed target for GPU-generated subemissions.](#particlessetsubemitter) |
+| `public static void ParticlesSetDrawPasses(RID particles, int count)` | [Sets the number of borrowed mesh draw passes.](#particlessetdrawpasses) |
+| `public static void ParticlesSetDrawPassMesh(RID particles, int pass, RID mesh)` | [Assigns one borrowed planar draw-pass mesh.](#particlessetdrawpassmesh) |
+| `public static void ParticlesSetDrawOrder(RID particles, ParticlesDrawOrder value)` | [Selects particle drawing order.](#particlessetdraworder) |
+| `public static void ParticlesSetTransformAlign(RID particles, ParticlesTransformAlign value)` | [Selects velocity alignment.](#particlessettransformalign) |
+| `public static void ParticlesSetTransformAlignAxis(RID particles, ParticlesTransformAlignAxis value)` | [Selects aligned planar basis.](#particlessettransformalignaxis) |
+| `public static void ParticlesSetTrailBindPoses(RID particles, ReadOnlySpan<Transform> bindPoses)` | [Sets copied planar trail bind poses.](#particlessettrailbindposes) |
+| `public static void ParticlesSetTrails(RID particles, bool enabled, float lengthSeconds)` | [Configures retained trail history for skinned draw meshes.](#particlessettrails) |
+| `public static void ParticlesEmit(RID particles, Transform transform, Vector2 velocity, Color color, Color custom, int emitFlags)` | [Queues one copied manual particle and switches off automatic emission.](#particlesemit) |
+
+### Particle method descriptions
+
+#### CanvasItemAddParticles
+
+`public static void CanvasItemAddParticles(RID item, RID particles, RID texture = default)`
+
+Appends a retained particle draw command to a canvas item.
+
+**item:** A live canvas item identity. **particles:** A particle identity owned by this renderer. **texture:** A borrowed ordinary texture, or empty.
+
+Mesh passes supply geometry; the canvas item's material shades it independently of the particle process material.
+
+#### ParticlesCreate
+
+`public static RID ParticlesCreate()`
+
+Creates owned planar GPU particle storage metadata.
+
+**Returns:** A fresh identity; capacity starts at zero.
+
+Owner-thread operations require an active GPU rendering session. Free with RenderingServer.FreeRID. Particle data and native buffers are allocated on demand; Compatibility rejects this family.
+
+#### ParticlesGetEmitting
+
+`public static bool ParticlesGetEmitting(RID particles)`
+
+Queries whether automatic emission is enabled.
+
+**particles:** A live caller-owned particle identity.
+
+**Returns:** The committed emission flag.
+
+#### ParticlesIsInactive
+
+`public static bool ParticlesIsInactive(RID particles)`
+
+Queries whether a stopped emitter has drained its renderer activity interval.
+
+**particles:** A live caller-owned particle identity.
+
+**Returns:** True only after emission is disabled and the activity interval has elapsed.
+
+#### ParticlesRequestProcess
+
+`public static void ParticlesRequestProcess(RID particles)`
+
+Requests one simulation update, including for an emitter without a visible canvas command.
+
+**particles:** A live caller-owned particle identity.
+
+#### ParticlesRequestProcessTime
+
+`public static void ParticlesRequestProcessTime(RID particles, float processTime, float processTimeResidual = 0)`
+
+Queues explicit process and residual intervals for the next update.
+
+**particles:** A live caller-owned particle identity. **processTime:** Nonnegative emitting process seconds. **processTimeResidual:** Nonnegative residual seconds, with emission disabled.
+
+Owner-thread operations require an active GPU rendering session. Explicit intervals use fixed subdivisions, independently of SpeedScale. A later request replaces both pending intervals. Processing occurs when the renderer next updates this identity.
+
+#### ParticlesRestart
+
+`public static void ParticlesRestart(RID particles)`
+
+Restarts simulation state and its emission phase on the next update.
+
+**particles:** A live caller-owned particle identity.
+
+#### ParticlesSetAmount
+
+`public static void ParticlesSetAmount(RID particles, int amount)`
+
+Sets particle capacity and clears prior state when its size changes.
+
+**particles:** A live caller-owned particle identity. **amount:** Nonnegative record capacity within native byte limits.
+
+#### ParticlesSetEmitting
+
+`public static void ParticlesSetEmitting(RID particles, bool enabled)`
+
+Sets automatic emission.
+
+**particles:** A live caller-owned particle identity. **enabled:** Whether the option is enabled.
+
+#### ParticlesSetOneShot
+
+`public static void ParticlesSetOneShot(RID particles, bool enabled)`
+
+Sets one-cycle automatic emission.
+
+**particles:** A live caller-owned particle identity. **enabled:** Whether the option is enabled.
+
+#### ParticlesSetFractionalDelta
+
+`public static void ParticlesSetFractionalDelta(RID particles, bool enabled)`
+
+Sets fractional newborn processing.
+
+**particles:** A live caller-owned particle identity. **enabled:** Whether the option is enabled.
+
+#### ParticlesSetInterpolate
+
+`public static void ParticlesSetInterpolate(RID particles, bool enabled)`
+
+Sets fixed-step presentation interpolation.
+
+**particles:** A live caller-owned particle identity. **enabled:** Whether the option is enabled.
+
+#### ParticlesSetUseLocalCoordinates
+
+`public static void ParticlesSetUseLocalCoordinates(RID particles, bool enabled)`
+
+Sets emitter-local simulation coordinates.
+
+**particles:** A live caller-owned particle identity. **enabled:** Whether the option is enabled.
+
+#### ParticlesSetLifetime
+
+`public static void ParticlesSetLifetime(RID particles, float value)`
+
+Sets the nominal particle lifetime.
+
+**particles:** A live caller-owned particle identity. **value:** Positive finite value; durations use seconds.
+
+#### ParticlesSetPreProcessTime
+
+`public static void ParticlesSetPreProcessTime(RID particles, float value)`
+
+Sets the restart preprocessing duration.
+
+**particles:** A live caller-owned particle identity. **value:** Nonnegative finite value; durations use seconds.
+
+#### ParticlesSetSpeedScale
+
+`public static void ParticlesSetSpeedScale(RID particles, float value)`
+
+Sets the automatic simulation time scale.
+
+**particles:** A live caller-owned particle identity. **value:** Nonnegative finite value; durations use seconds.
+
+#### ParticlesSetCollisionBaseSize
+
+`public static void ParticlesSetCollisionBaseSize(RID particles, float value)`
+
+Sets the process collision size.
+
+**particles:** A live caller-owned particle identity. **value:** Nonnegative finite collision-size input, initially 0.01.
+
+#### ParticlesSetAmountRatio
+
+`public static void ParticlesSetAmountRatio(RID particles, float value)`
+
+Sets the active capacity ratio.
+
+**particles:** A live caller-owned particle identity. **value:** A finite ratio, clamped to zero through one.
+
+#### ParticlesSetExplosivenessRatio
+
+`public static void ParticlesSetExplosivenessRatio(RID particles, float value)`
+
+Sets the emission concentration.
+
+**particles:** A live caller-owned particle identity. **value:** A finite ratio, clamped to zero through one.
+
+#### ParticlesSetRandomnessRatio
+
+`public static void ParticlesSetRandomnessRatio(RID particles, float value)`
+
+Sets the cycle/index emission-time randomness.
+
+**particles:** A live caller-owned particle identity. **value:** A finite ratio, clamped to zero through one.
+
+#### ParticlesSetInterpToEnd
+
+`public static void ParticlesSetInterpToEnd(RID particles, float value)`
+
+Sets the process interpolation-to-end input.
+
+**particles:** A live caller-owned particle identity. **value:** A finite ratio, clamped to zero through one.
+
+#### ParticlesSetFixedFPS
+
+`public static void ParticlesSetFixedFPS(RID particles, int FPS)`
+
+Selects fixed simulation frequency or variable stepping.
+
+**particles:** A live caller-owned particle identity. **FPS:** Positive frequency; zero or negative selects variable stepping. Changing this option clears numerical state.
+
+#### ParticlesSetEmissionTransform
+
+`public static void ParticlesSetEmissionTransform(RID particles, Transform transform)`
+
+Sets the finite planar emission transform.
+
+**particles:** A live caller-owned particle identity. **transform:** Emitter transform; identity initially. World canvas/bounds and child-local routing require an invertible pose.
+
+#### ParticlesSetEmitterVelocity
+
+`public static void ParticlesSetEmitterVelocity(RID particles, Vector2 velocity)`
+
+Sets the finite planar emitter velocity supplied to process programs.
+
+**particles:** A live caller-owned particle identity. **velocity:** Emitter velocity in pixels per second.
+
+#### ParticlesSetCustomAABB
+
+`public static void ParticlesSetCustomAABB(RID particles, Rect2 bounds)`
+
+Sets authored visibility bounds without reading GPU state.
+
+**particles:** A live caller-owned particle identity. **bounds:** Emitter-local visibility bounds; initially (-4,-4,8,8).
+
+#### ParticlesGetCurrentAABB
+
+`public static Rect2 ParticlesGetCurrentAABB(RID particles)`
+
+Reads current native particle bounds in emitter-local coordinates.
+
+**particles:** A live caller-owned particle identity.
+
+**Returns:** Active state bounds expanded by the longest draw-mesh axis; empty before allocation.
+
+Owner-thread operations require an active GPU rendering session. This is an explicit GPU synchronization/readback query, outside native submission. World coordinates are transformed by the current emission inverse. Mesh callbacks must leave particle state stable.
+
+#### ParticlesSetProcessMaterial
+
+`public static void ParticlesSetProcessMaterial(RID particles, RID material)`
+
+Sets the borrowed particle process material.
+
+**particles:** A live caller-owned particle identity. **material:** A particle ShaderMaterial identity, or empty for the default process.
+
+#### ParticlesSetSubemitter
+
+`public static void ParticlesSetSubemitter(RID particles, RID subemitter)`
+
+Selects the borrowed target for GPU-generated subemissions.
+
+**particles:** A live caller-owned particle identity. **subemitter:** An identity from this rendering session, or empty. Cycles reject.
+
+#### ParticlesSetDrawPasses
+
+`public static void ParticlesSetDrawPasses(RID particles, int count)`
+
+Sets the number of borrowed mesh draw passes.
+
+**particles:** A live caller-owned particle identity. **count:** Nonnegative pass count. New entries are empty.
+
+#### ParticlesSetDrawPassMesh
+
+`public static void ParticlesSetDrawPassMesh(RID particles, int pass, RID mesh)`
+
+Assigns one borrowed planar draw-pass mesh.
+
+**particles:** A live caller-owned particle identity. **pass:** Existing zero-based draw-pass index. **mesh:** Live mesh identity, or empty to disable the pass.
+
+#### ParticlesSetDrawOrder
+
+`public static void ParticlesSetDrawOrder(RID particles, ParticlesDrawOrder value)`
+
+Selects particle drawing order.
+
+**particles:** A live caller-owned particle identity. **value:** A defined planar option.
+
+#### ParticlesSetTransformAlign
+
+`public static void ParticlesSetTransformAlign(RID particles, ParticlesTransformAlign value)`
+
+Selects velocity alignment.
+
+**particles:** A live caller-owned particle identity. **value:** A defined planar option.
+
+#### ParticlesSetTransformAlignAxis
+
+`public static void ParticlesSetTransformAlignAxis(RID particles, ParticlesTransformAlignAxis value)`
+
+Selects aligned planar basis.
+
+**particles:** A live caller-owned particle identity. **value:** A defined planar option.
+
+#### ParticlesSetTrailBindPoses
+
+`public static void ParticlesSetTrailBindPoses(RID particles, ReadOnlySpan<Transform> bindPoses)`
+
+Sets copied planar trail bind poses.
+
+**particles:** A live caller-owned particle identity. **bindPoses:** Copied per-bone poses. Zero or one disables segmented trail history.
+
+#### ParticlesSetTrails
+
+`public static void ParticlesSetTrails(RID particles, bool enabled, float lengthSeconds)`
+
+Configures retained trail history for skinned draw meshes.
+
+**particles:** A live caller-owned particle identity. **enabled:** Whether per-particle history is enabled. **lengthSeconds:** Finite history length of at least 0.01 seconds; capped at ten seconds.
+
+#### ParticlesEmit
+
+`public static void ParticlesEmit(RID particles, Transform transform, Vector2 velocity, Color color, Color custom, int emitFlags)`
+
+Queues one copied manual particle and switches off automatic emission.
+
+**particles:** A live caller-owned particle identity. **transform:** Supplied planar particle pose. **velocity:** Supplied planar velocity. **color:** Supplied particle color. **custom:** Supplied four numeric custom channels. **emitFlags:** Bits 1 position, 2 basis, 4 velocity, 8 color and 16 custom select supplied fields. Remaining bits are ignored.
+
+Owner-thread operations require an active GPU rendering session. If automatic emission was enabled, its previous state is cleared on processing. The pending queue is bounded by capacity; excess records are dropped. No caller-owned data is retained.
+
+All per-member failures also follow the shared owner/identity/preparation contract above. Invalid numeric, enum and capacity values reject before the corresponding operation commits; disposed borrowed resources reject their next use. The native/readback and platform limits are documented in the linked component.

@@ -366,7 +366,7 @@ internal sealed class MaterialState
         }
     }
 
-    internal void PushUniforms(nint command, float time, Vector2 screenPixelSize, Vector4 sdfCoords = default, CanvasItem? instance = null)
+    internal void PushUniforms(nint command, float time, Vector2 screenPixelSize, Vector4 sdfCoords = default, CanvasItem? instance = null, bool compute = false)
     {
         lock (_gate)
         {
@@ -382,7 +382,8 @@ internal sealed class MaterialState
             for (var i = 0; i < Buffers.Length; i++)
             {
                 var bytes = instanceBuffer is not null && instanceBuffer[i] is { } own ? own : Buffers[i];
-                if (i < Program.FragmentBufferCount) SDL.PushGPUFragmentUniformData(command, (uint)i, bytes.AsSpan(), (uint)bytes.Length);
+                if (compute) { if (i != 0) SDL.PushGPUComputeUniformData(command, (uint)i, bytes.AsSpan(), (uint)bytes.Length); }
+                else if (i < Program.FragmentBufferCount) SDL.PushGPUFragmentUniformData(command, (uint)i, bytes.AsSpan(), (uint)bytes.Length);
                 else SDL.PushGPUVertexUniformData(command, (uint)(i - Program.FragmentBufferCount + 1), bytes.AsSpan(), (uint)bytes.Length);
             }
         }

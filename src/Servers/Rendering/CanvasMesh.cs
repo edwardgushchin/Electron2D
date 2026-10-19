@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate, bool captureCustomBounds = true)
+internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modulate, bool captureCustomBounds = true)
 {
     internal void Set(Mesh value, Transform pose, Color tint) { if (!ReferenceEquals(mesh, value)) { _revision = -1; _customCount = 0; Array.Clear(_custom); } mesh = value; local = pose; modulate = tint; }
     private (MeshSurfaceData Data, Mesh.PrimitiveType Primitive, Material? Material, MeshLOD[] LODs)[] _custom = [];

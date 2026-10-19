@@ -353,6 +353,12 @@ public abstract partial class CanvasItem
                 var raster = dpiTexture.ForViewport(viewport); if (raster is null) continue;
                 replay = replay with { Texture = raster };
             }
+            if (replay.Particles is { } particles)
+            {
+                if (!capturedMaterial) { var current = CanvasMaterial; material = current?.RequireCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
+                particles.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, commandClip, viewport?.SnapVerticesToPixel == true, linear, this);
+                continue;
+            }
             if (replay.MultiMesh is { } instances)
             {
                 if (!capturedMaterial) { var current = CanvasMaterial; material = current?.RequireCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }

@@ -1,12 +1,12 @@
 # Particle shaders
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 ## Executable scope
 
 `Shader.Mode.Particles` (2) is a compiled compute profile for planar particle state. The HLSL/GLSL importers, project build items, resource reflection, typed `ShaderMaterial` values, duplication and file graphs execute this profile. Export the compute module to the public `RenderingDevice` API to create a compute pipeline, bind buffers and dispatch it. The device owns the native state; reading it is an explicit synchronization/readback operation.
 
-This layer does not schedule emitters, advance particles automatically or submit canvas geometry. The retained RenderingServer particle RID family, GPUParticles node, ParticleProcessMaterial generator and CPU conversion still require their connected simulation/rendering slice. A process material cannot be submitted to canvas or writable-texture drawing. No high-level particle placeholder types are exposed.
+The [retained GPU particle server](gpu-particles.md) now schedules these programs and submits canvas mesh geometry. The GPUParticles node, ParticleProcessMaterial generator and CPU conversion remain their next connected integration. A process material cannot be submitted to canvas or writable-texture drawing. No high-level particle placeholder types are exposed.
 
 ## Authoring and loading
 
@@ -50,7 +50,7 @@ Each `Electron2D_Particle` is a 96-byte record, with six aligned 16-byte lanes:
 
 The writable `PARTICLES` runtime array is descriptor set one/binding zero. Optional `SUBPARTICLES` is the same record layout at binding one. Storage descriptors cannot be arrays; other storage/image/push-constant resources are rejected by this profile.
 
-`ParticleFrame` is a required 192-byte uniform block at set two/binding zero. Its twelve aligned lanes, in order, are `uint4 Counts`, then float4 `Time`, `Cycle`, `EmissionX`, `EmissionY`, `PreviousEmissionX`, `PreviousEmissionY`, `EmitterVelocity`, `SDFRect`, `SDFTransformX`, `SDFTransformY`, and `uint4 Options`. It stays outside material properties. Explicit device callers supply all values and their simulation policy. These fields reserve the frame contract for retained simulation; their presence alone performs no emission, collision or integration.
+`ParticleFrame` is a required 192-byte uniform block at set two/binding zero. Its twelve aligned lanes, in order, are `uint4 Counts`, then float4 `Time`, `Cycle`, `EmissionX`, `EmissionY`, `PreviousEmissionX`, `PreviousEmissionY`, `EmitterVelocity`, `SDFRect`, `SDFTransformX`, `SDFTransformY`, and `uint4 Options`. It stays outside material properties. Explicit device callers supply all values and their simulation policy. The retained renderer supplies the executing frame semantics described in [GPU particles](gpu-particles.md); explicit device callers choose their own policy.
 
 At most three further uniform blocks use contiguous bindings one through three. Existing std140 scalar/vector/matrix/fixed-array types, logical boolean metadata, typed sampled images and their fixed descriptor arrays retain the shared material contract. Up to sixteen sampled bindings occupy set zero. Instance blocks, screen/command textures and screen pixel dimensions are rejected. Global/TIME/SDF inputs, when declared, require explicit caller binding in this device workflow; there is no automatic viewport source.
 
@@ -64,4 +64,4 @@ The helper clamps capacity to the physical array length minus its header. A comp
 
 `ParticleShaderTests` checks both imported languages before renderer startup, logical booleans, typed migration, atomic replacement, malformed workgroup/storage/frame layouts, independent exports, resource graph archives and duplication. The native path passes each exported public Shader module to RenderingDevice, advances GPU state repeatedly, verifies a partial final workgroup, exercises bounded concurrent queue writes and disables processing through its logical boolean. Headerless, zero-capacity, oversized-capacity and UINT_MAX-count queues, plus a state/frame-only program without a queue, execute. Thirty-two warmed submission/synchronization steps per language allocate zero managed owner bytes.
 
-Current native evidence uses Linux Wayland and software Vulkan (lavapipe). This establishes compute execution and readback, without claiming particle canvas output, hardware performance, native allocator measurements, other platforms or owner acceptance. The retained particle family remains pending with its exact dependencies in coverage.
+Current native evidence uses Linux Wayland and software Vulkan (lavapipe). This establishes compute execution and readback, with the retained canvas evidence documented separately in [GPU particles](gpu-particles.md). Hardware performance, native allocator measurements, other platforms and owner acceptance remain unverified.

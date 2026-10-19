@@ -1,6 +1,6 @@
 # Electron2D rendering decisions
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 
 Public process-wide service operations delegate statically to retained objects under [ADR 0095](singleton-services.md#adr-0095). Owning lifetime, threading and native resource contracts below continue to apply.
@@ -12,7 +12,7 @@ Decisions in this log: [0028](#adr-0028), [0046](#adr-0046).
 <a id="adr-0028"></a>
 ## ADR 0028: GPU-first 2D rendering, shared SPIR-V shaders, browser WebGPU, and SDL_Renderer fallback
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 ### Status
 
@@ -101,7 +101,7 @@ Keep all applicable scalar/vector, rectangle, numeric matrix and planar-transfor
 
 RenderingServer.HasChanged now connects the retained canvas to low-processor owned scheduling under ADR 0016. Conservative mutation revisions, native repaint obligations and active time/interpolation/viewport consumers replace stored-only dirty flags. Successful presented submission acknowledges a captured revision; failed or later mutations remain pending, and nonpresented output retains its presentation obligation. See [the executing producer contract](../components/low-processor-rendering.md).
 
-The particle process shader domain uses a native compute stage with a fixed portable HLSL/GLSL ABI: 64 lanes per workgroup, writable 96-byte planar particle records at set one/binding zero, optional bounded subemission records at binding one, a 192-byte ParticleFrame at set two/binding zero, three typed user/global uniform slots and up to sixteen sampled images at set zero. The portable includes own this layout and the bounded atomic queue writer. Shader.Mode.Particles, import/build, reflection, typed ShaderMaterial properties, duplication and file graphs can be delivered as the executable prerequisite through public RenderingDevice compute dispatch before the retained server and node layer. This prerequisite owns no automatic simulation, emission scheduling, collision field or canvas output; explicit device callers bind every frame and resource. Canvas and writable-texture submission reject it. The retained RenderingServer particle family, GPUParticles, ParticleProcessMaterial and CPU conversion remain separate blocked integrations until GPU state ownership, lifecycle/scheduling, process/draw separation, sorting, trails, subemitter routing and real canvas output execute. Their current omissions are implementation dependencies and do not narrow the applicable planar API. Shared spatial signatures with a 2D role use Transform, Vector2 and Rect2; spatial scene collisions, height fields and depth/billboard policies remain outside the planar product.
+The particle process shader domain uses a native compute stage with a fixed portable HLSL/GLSL ABI: 64 lanes per workgroup, writable 96-byte planar particle records at set one/binding zero, optional bounded subemission records at binding one, a 192-byte ParticleFrame at set two/binding zero, three typed user/global uniform slots and up to sixteen sampled images at set zero. The portable includes own this layout and the bounded atomic queue writer. Shader.Mode.Particles, import/build, reflection, typed ShaderMaterial properties, duplication and file graphs can be delivered as the executable prerequisite through public RenderingDevice compute dispatch before the retained server and node layer. Explicit device callers bind every frame and resource independently of the retained renderer consumer. Canvas and writable-texture submission reject it. The retained RenderingServer particle family now owns session-scoped planar GPU storage, fixed/variable/explicit scheduling, process/draw separation, GPU age ordering, native history with copied planar bind poses, bounded acyclic subemitter routing and real canvas mesh output. Reuse the existing canvas material, clipping, HDR/MSAA and owner lifecycle. Explicit requests also execute without a visible canvas. Readback is an explicit cold bounds query; ordinary frames retain no CPU particle mirror. The portable frame/record semantics and current verification limits are documented in [GPU particles](../components/gpu-particles.md). GPUParticles, ParticleProcessMaterial and CPU conversion remain the next connected integrations. Their current omissions are implementation dependencies and do not narrow the applicable planar API. Shared spatial signatures with a 2D role use Transform, Vector2 and Rect2; spatial scene collisions, height fields and depth/billboard policies remain outside the planar product. Omit the 2D/3D mode selector rather than expose an inert planar-only switch. The pinned copy shader applies custom-channel rotation only inside the 3D billboard branch, so its selector and enum family have no applicable planar behavior and remain excluded under ADR 0004.
 
 ### Consequences
 

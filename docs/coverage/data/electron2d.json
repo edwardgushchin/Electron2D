@@ -10228,6 +10228,60 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RenderingServer.ParticlesDrawOrder",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingServer.ParticlesDrawOrder",
+    "name": "ParticlesDrawOrder",
+    "signature": "public enum Electron2D.RenderingServer.ParticlesDrawOrder",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RenderingServer.ParticlesTransformAlign",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingServer.ParticlesTransformAlign",
+    "name": "ParticlesTransformAlign",
+    "signature": "public enum Electron2D.RenderingServer.ParticlesTransformAlign",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RenderingServer.ParticlesTransformAlignAxis",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingServer.ParticlesTransformAlignAxis",
+    "name": "ParticlesTransformAlignAxis",
+    "signature": "public enum Electron2D.RenderingServer.ParticlesTransformAlignAxis",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RenderingServer.TextureDrawableFormat",
     "kind": "type",
     "declaringType": "Electron2D.RenderingServer.TextureDrawableFormat",
@@ -46414,6 +46468,97 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
     "value": "16"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.ParticlesDrawOrder.Index()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.ParticlesDrawOrder",
+    "name": "Index",
+    "signature": "public const Electron2D.RenderingServer.ParticlesDrawOrder Index = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.ParticlesDrawOrder",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.ParticlesDrawOrder.Lifetime()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.ParticlesDrawOrder",
+    "name": "Lifetime",
+    "signature": "public const Electron2D.RenderingServer.ParticlesDrawOrder Lifetime = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.ParticlesDrawOrder",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.ParticlesDrawOrder.ReverseLifetime()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.ParticlesDrawOrder",
+    "name": "ReverseLifetime",
+    "signature": "public const Electron2D.RenderingServer.ParticlesDrawOrder ReverseLifetime = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.ParticlesDrawOrder",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.ParticlesTransformAlign.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.ParticlesTransformAlign",
+    "name": "Disabled",
+    "signature": "public const Electron2D.RenderingServer.ParticlesTransformAlign Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.ParticlesTransformAlign",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.ParticlesTransformAlign.YToVelocity()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.ParticlesTransformAlign",
+    "name": "YToVelocity",
+    "signature": "public const Electron2D.RenderingServer.ParticlesTransformAlign YToVelocity = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.ParticlesTransformAlign",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.ParticlesTransformAlignAxis.X()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.ParticlesTransformAlignAxis",
+    "name": "X",
+    "signature": "public const Electron2D.RenderingServer.ParticlesTransformAlignAxis X = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.ParticlesTransformAlignAxis",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.ParticlesTransformAlignAxis.Y()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.ParticlesTransformAlignAxis",
+    "name": "Y",
+    "signature": "public const Electron2D.RenderingServer.ParticlesTransformAlignAxis Y = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.ParticlesTransformAlignAxis",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.RenderingServer.TextureDrawableFormat.RGBA8()",
@@ -154697,6 +154842,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.CanvasItemAddParticles(Electron2D.RID,Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemAddParticles",
+    "signature": "public static System.Void CanvasItemAddParticles(Electron2D.RID item, Electron2D.RID particles, Electron2D.RID texture = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.RID",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.CanvasItemAddPolygon(Electron2D.RID,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Color\u003E,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -159251,6 +159425,845 @@
       {
         "name": "visible",
         "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesCreate",
+    "signature": "public static Electron2D.RID ParticlesCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesEmit(Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,Electron2D.Color,Electron2D.Color,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesEmit",
+    "signature": "public static System.Void ParticlesEmit(Electron2D.RID particles, Electron2D.Transform transform, Electron2D.Vector2 velocity, Electron2D.Color color, Electron2D.Color custom, System.Int32 emitFlags)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "velocity",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "custom",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "emitFlags",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesGetCurrentAABB(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesGetCurrentAABB",
+    "signature": "public static Electron2D.Rect2 ParticlesGetCurrentAABB(Electron2D.RID particles)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesGetEmitting(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesGetEmitting",
+    "signature": "public static System.Boolean ParticlesGetEmitting(Electron2D.RID particles)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesIsInactive(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesIsInactive",
+    "signature": "public static System.Boolean ParticlesIsInactive(Electron2D.RID particles)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesRequestProcess(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesRequestProcess",
+    "signature": "public static System.Void ParticlesRequestProcess(Electron2D.RID particles)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesRequestProcessTime(Electron2D.RID,System.Single,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesRequestProcessTime",
+    "signature": "public static System.Void ParticlesRequestProcessTime(Electron2D.RID particles, System.Single processTime, System.Single processTimeResidual = 0f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "processTime",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "processTimeResidual",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesRestart(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesRestart",
+    "signature": "public static System.Void ParticlesRestart(Electron2D.RID particles)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetAmount(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetAmount",
+    "signature": "public static System.Void ParticlesSetAmount(Electron2D.RID particles, System.Int32 amount)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "amount",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetAmountRatio(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetAmountRatio",
+    "signature": "public static System.Void ParticlesSetAmountRatio(Electron2D.RID particles, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetCollisionBaseSize(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetCollisionBaseSize",
+    "signature": "public static System.Void ParticlesSetCollisionBaseSize(Electron2D.RID particles, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetCustomAABB(Electron2D.RID,Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetCustomAABB",
+    "signature": "public static System.Void ParticlesSetCustomAABB(Electron2D.RID particles, Electron2D.Rect2 bounds)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "bounds",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetDrawOrder(Electron2D.RID,Electron2D.RenderingServer.ParticlesDrawOrder)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetDrawOrder",
+    "signature": "public static System.Void ParticlesSetDrawOrder(Electron2D.RID particles, Electron2D.RenderingServer.ParticlesDrawOrder value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.RenderingServer.ParticlesDrawOrder",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetDrawPassMesh(Electron2D.RID,System.Int32,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetDrawPassMesh",
+    "signature": "public static System.Void ParticlesSetDrawPassMesh(Electron2D.RID particles, System.Int32 pass, Electron2D.RID mesh)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "pass",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetDrawPasses(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetDrawPasses",
+    "signature": "public static System.Void ParticlesSetDrawPasses(Electron2D.RID particles, System.Int32 count)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "count",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetEmissionTransform(Electron2D.RID,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetEmissionTransform",
+    "signature": "public static System.Void ParticlesSetEmissionTransform(Electron2D.RID particles, Electron2D.Transform transform)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetEmitterVelocity(Electron2D.RID,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetEmitterVelocity",
+    "signature": "public static System.Void ParticlesSetEmitterVelocity(Electron2D.RID particles, Electron2D.Vector2 velocity)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "velocity",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetEmitting(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetEmitting",
+    "signature": "public static System.Void ParticlesSetEmitting(Electron2D.RID particles, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetExplosivenessRatio(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetExplosivenessRatio",
+    "signature": "public static System.Void ParticlesSetExplosivenessRatio(Electron2D.RID particles, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetFixedFPS(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetFixedFPS",
+    "signature": "public static System.Void ParticlesSetFixedFPS(Electron2D.RID particles, System.Int32 FPS)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "FPS",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetFractionalDelta(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetFractionalDelta",
+    "signature": "public static System.Void ParticlesSetFractionalDelta(Electron2D.RID particles, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetInterpToEnd(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetInterpToEnd",
+    "signature": "public static System.Void ParticlesSetInterpToEnd(Electron2D.RID particles, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetInterpolate(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetInterpolate",
+    "signature": "public static System.Void ParticlesSetInterpolate(Electron2D.RID particles, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetLifetime(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetLifetime",
+    "signature": "public static System.Void ParticlesSetLifetime(Electron2D.RID particles, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetOneShot(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetOneShot",
+    "signature": "public static System.Void ParticlesSetOneShot(Electron2D.RID particles, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetPreProcessTime(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetPreProcessTime",
+    "signature": "public static System.Void ParticlesSetPreProcessTime(Electron2D.RID particles, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetProcessMaterial(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetProcessMaterial",
+    "signature": "public static System.Void ParticlesSetProcessMaterial(Electron2D.RID particles, Electron2D.RID material)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "material",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetRandomnessRatio(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetRandomnessRatio",
+    "signature": "public static System.Void ParticlesSetRandomnessRatio(Electron2D.RID particles, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetSpeedScale(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetSpeedScale",
+    "signature": "public static System.Void ParticlesSetSpeedScale(Electron2D.RID particles, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetSubemitter(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetSubemitter",
+    "signature": "public static System.Void ParticlesSetSubemitter(Electron2D.RID particles, Electron2D.RID subemitter)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "subemitter",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetTrailBindPoses(Electron2D.RID,System.ReadOnlySpan\u003CElectron2D.Transform\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetTrailBindPoses",
+    "signature": "public static System.Void ParticlesSetTrailBindPoses(Electron2D.RID particles, System.ReadOnlySpan\u003CElectron2D.Transform\u003E bindPoses)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "bindPoses",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Transform\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetTrails(Electron2D.RID,System.Boolean,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetTrails",
+    "signature": "public static System.Void ParticlesSetTrails(Electron2D.RID particles, System.Boolean enabled, System.Single lengthSeconds)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "lengthSeconds",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetTransformAlign(Electron2D.RID,Electron2D.RenderingServer.ParticlesTransformAlign)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetTransformAlign",
+    "signature": "public static System.Void ParticlesSetTransformAlign(Electron2D.RID particles, Electron2D.RenderingServer.ParticlesTransformAlign value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.RenderingServer.ParticlesTransformAlign",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetTransformAlignAxis(Electron2D.RID,Electron2D.RenderingServer.ParticlesTransformAlignAxis)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetTransformAlignAxis",
+    "signature": "public static System.Void ParticlesSetTransformAlignAxis(Electron2D.RID particles, Electron2D.RenderingServer.ParticlesTransformAlignAxis value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.RenderingServer.ParticlesTransformAlignAxis",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ParticlesSetUseLocalCoordinates(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ParticlesSetUseLocalCoordinates",
+    "signature": "public static System.Void ParticlesSetUseLocalCoordinates(Electron2D.RID particles, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
         "default": null
       }
     ],

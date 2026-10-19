@@ -1,6 +1,6 @@
 # CanvasBatch
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 - Declaration: `internal readonly record struct CanvasBatch`
 - Source: [CanvasBackend.cs](../../src/Servers/Rendering/CanvasBackend.cs)
@@ -49,3 +49,7 @@ Manual mesh visibility rectangles are carried in retained batches for group fitt
 ## Sampled descriptor array integration
 
 ShaderCode exposes Material.Program.NativeCode to native submission. Original Shader.GetSPIRV exports remain source payloads. Physical texture slots include every fixed descriptor array element, with per-element override/default resolution and the existing dependency discovery and native binding flow. See [the component contract](../components/shader-materials.md#fixed-sampled-descriptor-arrays).
+
+## Particle integration
+
+Particle batches additionally retain ParticleGPUDraw metadata for native state/geometry conversion and indirect draw selection; ordinary batches retain their existing path. See [GPU particles](../components/gpu-particles.md).

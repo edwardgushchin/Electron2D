@@ -1,6 +1,6 @@
 # CanvasMesh
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 Internal retained mesh geometry in [CanvasMesh.cs](../../src/Servers/Rendering/CanvasMesh.cs), part of [canvas rendering](../components/canvas-rendering.md) and [mesh rendering](../components/meshes.md). It captures immutable or live mesh surfaces, transform/color/UV/custom instance data and primitive tessellation before appending to the existing canvas vertex/batch stream. Material, texture, filtering, repeat, clipping and native profile rules stay with that stream. Native resources belong to the renderer; this geometry owns no device handles.
 
@@ -38,3 +38,7 @@ Procedural snapshots retain source IDs and non-position channels, transport an a
 ## Writable instance consumer
 
 Exported/indirect MultiMesh storage selects a retained GPU consumer. CanvasMesh captures source vertices/indices, palette deformation, LOD metadata and finite authored canvas state. CanvasMultiMesh retains manual/authored bounds and resource guards. GPUCanvasBackend owns conversion outputs, native index/LOD buffers and indirect commands; the private kernel interpolates raw device records and chooses each instance's LOD. CanvasVertexProgram snaps ordinary instance positions before the authored stage and procedural homogeneous output after it; built-in instance vertices support snapping and group screen UVs. Group color premultiplication, masks and original vertex IDs remain connected. Relaxed Android devices bind each LOD instance separately when nonzero indirect first-instance support is unavailable. See [ownership and Linux-native verification limits](../components/meshes.md#writable-instance-device-buffers).
+
+## Particle mesh templates
+
+[CanvasMesh.Particles.cs](../../src/Servers/Rendering/CanvasMesh.Particles.cs) prepares ordinary mesh surface templates for retained GPU particle batches. It preserves topology, indexed/procedural vertex identity, materials, UV/custom channels and all four/eight bone influences, validates trail indices and omits empty tessellation. Particle-specific native streams belong to the GPU renderer; cached geometry metadata is described in [CanvasParticles](CanvasParticles.md).

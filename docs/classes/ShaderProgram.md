@@ -1,6 +1,6 @@
 # ShaderProgram
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 - Declaration: `internal sealed class ShaderProgram`
 - Source: [ShaderProgram.cs](../../src/Servers/Rendering/ShaderProgram.cs)
@@ -113,3 +113,7 @@ WithVertex validates the exact Frame layout and merges stage uniforms, builtins,
 ## Sampled descriptor array integration
 
 Code retains the immutable original payload; NativeCode retains the derived scalar-descriptor module. FindTexture(name, index = 0) validates logical element range and resolves its physical slot. Descriptors and MaterialDescriptors expose only Element zero, with typed array values. WithVertex merges matching Name/Element slots, rejects same-name length/role/scalar conflicts and maps each vertex element independently. Composition consumes NativeCode, while copied exports and archives consume Code. See [the component contract](../components/shader-materials.md#fixed-sampled-descriptor-arrays).
+
+## Particle integration
+
+ParticleStorageBuffers records the validated native writable descriptor count, one for state or two with the optional bounded subemission queue; retained simulation binds exactly that count. See [GPU particles](../components/gpu-particles.md).

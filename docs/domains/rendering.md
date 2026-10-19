@@ -2,7 +2,7 @@
 
 [Mesh textures](../components/meshes.md#mesh-textures) connect real retained mesh geometry to Texture consumers and static texture draw identities, with borrowed source lifetime and typed graph/scene storage.
 
-[Particle shaders](../components/particle-shaders.md) now execute a validated HLSL/GLSL compute profile through public RenderingDevice, with typed material/archive state and portable bounded-subemission includes. Retained emitters and canvas output remain pending.
+[Particle shaders](../components/particle-shaders.md) now execute a validated HLSL/GLSL compute profile through public RenderingDevice, with typed material/archive state and portable bounded-subemission includes. [Retained GPU particles](../components/gpu-particles.md) now execute server-owned simulation, mesh canvas output, trails and subemitters. High-level emitter and process-material authoring remain pending.
 
 [Numeric material matrices](../components/shader-materials.md#numeric-material-matrices) support copied mat3/mat4 values and fixed arrays through resources and static server identities, with typed storage, identity defaults and layout-aware paired-stage reload.
 
@@ -12,7 +12,7 @@
 
 [Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. Registered project definitions prepare typed bases before scene readiness and own loaded images through session shutdown. The registry has explicit owner/session lifetime and no material-property aliases.
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 [Movie writing](../components/movie-writing.md) consumes completed root-viewport pixels through the actual renderer and fixes capture dimensions across later resizes. It does not create a headless renderer or claim readback/encoding is allocation-free.
 
@@ -233,7 +233,7 @@ The executable [multiline editing component](../components/multiline-editing.md)
 
 ## CPU particle integration
 
-[CPUParticles](../classes/CPUParticles.md) and [CPU particles](../components/cpu-particles.md) connect ordinary scene internal processing, scalar curves/gradients, borrowed textures/materials, typed file graphs and shared canvas output. Configured CPU simulation and sprite-sheet replay execute on current GPU/compatibility. World emission follows complete physics poses and uses a separate canvas basis for visible world quads. GPU compute/process materials, their conversion, foreign/native allocator and owner acceptance remain separate exact dependencies.
+[CPUParticles](../classes/CPUParticles.md) and [CPU particles](../components/cpu-particles.md) connect ordinary scene internal processing, scalar curves/gradients, borrowed textures/materials, typed file graphs and shared canvas output. Configured CPU simulation and sprite-sheet replay execute on current GPU/compatibility. World emission follows complete physics poses and uses a separate canvas basis for visible world quads. The [GPU particle server](../components/gpu-particles.md) executes compute simulation and canvas output; high-level process material authoring, CPU conversion, foreign/native allocator and owner acceptance remain separate exact dependencies.
 
 ## Executable viewport worlds
 

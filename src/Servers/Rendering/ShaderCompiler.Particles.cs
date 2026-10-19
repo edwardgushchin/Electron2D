@@ -32,6 +32,7 @@ internal static unsafe partial class ShaderCompiler
                 try
                 {
                     var info = Marshal.PtrToStructure<ShaderCross.ComputePipelineMetadata>(memory);
+                    program.ParticleStorageBuffers = checked((int)info.NumReadWriteStorageBuffers);
                     if (info.ThreadCountX != 64 || info.ThreadCountY != 1 || info.ThreadCountZ != 1 || info.NumReadOnlyStorageBuffers != 0 || info.NumReadOnlyStorageTextures != 0 || info.NumReadWriteStorageTextures != 0 || info.NumReadWriteStorageBuffers is < 1 or > 2 || info.NumUniformBuffers != program.BufferSizes.Length || info.NumSamplers != program.Textures.Length)
                         throw new NotSupportedException("Particle compute resources or local size do not match the process profile.");
                 }

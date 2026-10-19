@@ -58,7 +58,7 @@ public abstract partial class CanvasItem
             {
                 if (command.SetTransform) { drawing = command.Transform; continue; }
                 if (command.AnimationSlice is not null || command.ClipIgnore is not null) continue;
-                Rect2? value = command.Mesh?.GetDrawBounds(this) ?? command.MultiMesh?.Bounds();
+                Rect2? value = command.Mesh?.GetDrawBounds(this) ?? command.MultiMesh?.Bounds() ?? command.Particles?.Bounds();
                 if (value is null && command.Stroke is { } stroke) value = stroke.GetLocalBounds();
                 if (value is null && command.Polygon is { } polygon) value = polygon.GetLocalBounds();
                 if (value is null) value = command.Line ? new Rect2(command.A, Vector2.Zero).Expand(command.B).Grow(Math.Max(0, command.Width / 2)) : new Rect2(command.A, command.B).Abs();
@@ -109,6 +109,8 @@ public abstract partial class CanvasItem
     }
     internal void AppendServerMesh(Mesh mesh, Texture? texture, Transform transform, Color modulate)
     { var previous = _currentDrawingItem; var drawing = _drawing; _currentDrawingItem = this; _drawing = true; try { DrawMesh(mesh, texture, transform, modulate); } finally { _drawing = drawing; _currentDrawingItem = previous; } }
+    internal void AppendServerParticles(RenderingParticleState particles, Texture? texture)
+    { (_canvasCommands ??= []).Add(new(false, default, default, Colors.White, 0, false, Transform.Identity, texture, Particles: new(particles))); }
     internal void AppendServerMultiMesh(MultiMesh mesh, Texture? texture)
     { var previous = _currentDrawingItem; var drawing = _drawing; _currentDrawingItem = this; _drawing = true; try { DrawMultiMesh(mesh, texture); } finally { _drawing = drawing; _currentDrawingItem = previous; } }
     internal void AppendServerNinePatch(Texture texture, Rect2 rect, Rect2 source, CanvasNinePatch patch, Color color)

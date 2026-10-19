@@ -80,6 +80,7 @@ public sealed partial class RenderingServer
                 if (builtIn) for (var i = ownBatch; i < _batches.Count; i++)
                     {
                         var batch = _batches[i];
+                        if (batch.Particles is not null) continue;
                         for (var vertex = batch.First; vertex < batch.First + batch.Count; vertex++)
                         {
                             var value = _vertices[vertex]; var color = value.Color;

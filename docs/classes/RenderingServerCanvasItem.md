@@ -1,6 +1,6 @@
 # RenderingServerCanvasItem
 
-Last updated: 2026-10-11
+Last updated: 2026-10-19
 
 - Visibility: internal
 - Source: [CanvasItem.Rendering.cs](../../src/Scene/Main/CanvasItem.Rendering.cs)
@@ -19,3 +19,7 @@ Private detached Entity command recorder owned by the renderer; scene processing
 The same private detached recorder now owns general primitive/indexed triangle commands; ServerDrawingScope supplies allocation-free restoration of drawing context on success or failure. See [the executable primitive contract](../components/canvas-rendering.md#low-level-primitive-commands).
 
 Layer-owned instances guard direct disposal until their retained owner releases them. Ordinary server items retain their public renderer lifetime.
+
+## Particle commands
+
+`RenderingServer.CanvasItemAddParticles` appends borrowed GPU particle storage and an optional ordinary texture. Mesh passes supply geometry; the canvas material supplies drawing independently of the compute process material. See [GPU particles](../components/gpu-particles.md) for session ownership, updates, trails and native verification.

@@ -2700,12 +2700,12 @@
     {
       "godot": "RenderingServer::method:texture_proxy_create(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyCreate(Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "RenderingServer::method:texture_proxy_update(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyUpdate(Electron2D.RID,Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "FlowContainer::theme_item:h_separation",
@@ -6280,7 +6280,7 @@
         "RenderingServer::method:texture_proxy_update(RID:,RID:)"
       ],
       "state": "Partial",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": [
@@ -6546,13 +6546,6 @@
         "RenderingServer::method:canvas_item_set_use_parent_material(RID:,bool:)"
       ],
       "reason": "ADRs 0004/0028/0095: native borrowed material inheritance follows the actual renderer parent for owned/source items, preserves authored UseParentMaterial and republish semantics, and executes real additive native pixels in RenderingPrimitiveTests. Direct material RID binding still requires material identity/ownership."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "RenderingServer::method:canvas_item_add_particles(RID:,RID:,RID:)"
-      ],
-      "reason": "Trigger: real caller-owned GPU particle emitter storage, process-material execution, update/draw buffers and typed RID lifetime. Existing CPUParticles scene output is not a native emitter RID producer."
     },
     {
       "state": "Partial",
@@ -6899,40 +6892,6 @@
       ],
       "state": "Implemented",
       "reason": "Executable owner-thread native frame driver under ADR 0028/0095: ForceDraw reuses the retained scene/material/viewport/device pipeline, bypasses the automatic loop and supports non-presenting root texture output. ForceSync waits for real GPU completion and queued readbacks. Typed Action requests run once after native commitment, with ordered phase boundaries, error aggregation and capture release; Engine counts completed intervals once across targets. ManualRenderFrameTests exercises Linux Wayland GPU/hardware compatibility pixels, clocks/scene separation, device readback, guards, errors, lifetime and prepared callback/draw allocation. Foreign platforms and full batch/editor tooling acceptance remain separate gates."
-    },
-    {
-      "godot": [
-        "RenderingServer::method:particles_create()",
-        "RenderingServer::method:particles_get_emitting(RID:)",
-        "RenderingServer::method:particles_is_inactive(RID:)",
-        "RenderingServer::method:particles_request_process(RID:)",
-        "RenderingServer::method:particles_request_process_time(RID:,float:,float:)",
-        "RenderingServer::method:particles_restart(RID:)",
-        "RenderingServer::method:particles_set_amount(RID:,int:)",
-        "RenderingServer::method:particles_set_amount_ratio(RID:,float:)",
-        "RenderingServer::method:particles_set_collision_base_size(RID:,float:)",
-        "RenderingServer::method:particles_set_emitting(RID:,bool:)",
-        "RenderingServer::method:particles_set_explosiveness_ratio(RID:,float:)",
-        "RenderingServer::method:particles_set_fixed_fps(RID:,int:)",
-        "RenderingServer::method:particles_set_fractional_delta(RID:,bool:)",
-        "RenderingServer::method:particles_set_interp_to_end(RID:,float:)",
-        "RenderingServer::method:particles_set_interpolate(RID:,bool:)",
-        "RenderingServer::method:particles_set_lifetime(RID:,float:)",
-        "RenderingServer::method:particles_set_mode(RID:,int:RenderingServer.ParticlesMode)",
-        "RenderingServer::method:particles_set_one_shot(RID:,bool:)",
-        "RenderingServer::method:particles_set_pre_process_time(RID:,float:)",
-        "RenderingServer::method:particles_set_process_material(RID:,RID:)",
-        "RenderingServer::method:particles_set_randomness_ratio(RID:,float:)",
-        "RenderingServer::method:particles_set_speed_scale(RID:,float:)",
-        "RenderingServer::method:particles_set_subemitter(RID:,RID:)",
-        "RenderingServer::method:particles_set_trails(RID:,bool:,float:)",
-        "RenderingServer::method:particles_set_transform_align(RID:,int:RenderingServer.ParticlesTransformAlign)",
-        "RenderingServer::method:particles_set_transform_align_axis(RID:,int:RenderingServer.ParticlesTransformAlignAxis)",
-        "RenderingServer::method:particles_set_transform_align_channel_filter(RID:,int:RenderingServer.ParticlesTransformAlignCustomSrc)",
-        "RenderingServer::method:particles_set_use_local_coordinates(RID:,bool:)"
-      ],
-      "state": "Unimplemented",
-      "reason": "Exact executable prerequisite: an owned raw particle RID simulation/context and typed process-material binding must drive the complete 2D particle state family, native stepping/restart/lifetime, canvas_item_add_particles submission and resource teardown. Existing scene-owned particle nodes do not supply a detached server RID implementation; connect that owner and canvas consumer before exposing these operations."
     },
     {
       "godot": [

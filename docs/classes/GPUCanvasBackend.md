@@ -1,6 +1,6 @@
 # GPUCanvasBackend
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 - Declaration: `internal sealed unsafe class GPUCanvasBackend : CanvasBackend`
 - Source: [GPUCanvasBackend.cs](../../src/Servers/Rendering/GPUCanvasBackend.cs)
@@ -116,3 +116,9 @@ Procedural pipeline identity includes native topology and composed vertex code. 
 ## Writable instance consumer
 
 Exported/indirect MultiMesh storage selects a retained GPU consumer. CanvasMesh captures source vertices/indices, palette deformation, LOD metadata and finite authored canvas state. CanvasMultiMesh retains manual/authored bounds and resource guards. GPUCanvasBackend owns conversion outputs, native index/LOD buffers and indirect commands; the private kernel interpolates raw device records and chooses each instance's LOD. CanvasVertexProgram snaps ordinary instance positions before the authored stage and procedural homogeneous output after it; built-in instance vertices support snapping and group screen UVs. Group color premultiplication, masks and original vertex IDs remain connected. Relaxed Android devices bind each LOD instance separately when nonzero indirect first-instance support is unavailable. See [ownership and Linux-native verification limits](../components/meshes.md#writable-instance-device-buffers).
+
+## Retained particles
+
+[GPUCanvasBackend.Particles.cs](../../src/Servers/Rendering/GPUCanvasBackend.Particles.cs) prepares the source graph, validates budgets and borrowed materials, records integration/custom compute/queue/history/sort work and commits CPU timing only after successful native submission. ParticleCheckpoint retains the rollback fields; ParticleQueueParameters carries planar queue conversion. A later draw-only cancellation also invalidates changed geometry uploads when simulation already committed in another viewport. Explicit detached requests reuse an owned one-pixel canvas target with an empty SDF field. Custom compute pipelines retain one previous frame before eviction.
+
+[GPUCanvasBackend.ParticleVertices.cs](../../src/Servers/Rendering/GPUCanvasBackend.ParticleVertices.cs) owns expanded vertex and indirect-draw streams. ParticleVertexParameters carries canvas/color/layout/history/sheet inputs; ParticleStream retires its native vertex/command buffers. Conversion preserves the existing CanvasVertex layout, uses eight stored skin influences and omits inactive draws. Native history/order/state stay on the GPU. See [GPU particles](../components/gpu-particles.md) for the executing contract and exact acceptance limits.

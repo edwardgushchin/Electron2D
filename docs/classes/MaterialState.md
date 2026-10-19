@@ -1,6 +1,6 @@
 # MaterialState
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 - Declaration: `internal sealed class MaterialState`
 - Source: [Material.cs](../../src/Scene/Resources/Material.cs)
@@ -95,3 +95,7 @@ SynchronizeSharedUniforms(byte[]?[]? instanceBuffers = null) copies canonical lo
 ## Sampled descriptor array integration
 
 Textures holds one borrowed override per physical descriptor element. Migration matches Name, Element and the complete sampled type/descriptor length. CopyTextures resolves each missing override against Shader.DefaultTexture(name, element), raising for a missing effective element before submission. Shared stage slots reuse matching logical elements and retain independent native binding maps. See [the component contract](../components/shader-materials.md#fixed-sampled-descriptor-arrays).
+
+## Particle integration
+
+The retained particle compute path pushes typed user/global/TIME/SDF uniforms to compute slots one through three while the renderer owns frame slot zero. Canvas fragment/vertex pushing keeps its existing separate stage mapping. See [GPU particles](../components/gpu-particles.md).

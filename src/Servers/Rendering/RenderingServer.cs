@@ -201,8 +201,15 @@ public sealed partial class RenderingServer : ElectronObject
             foreach (var viewport in _staleViewports) ReleaseViewport(viewport); _staleViewports.Clear();
             _renderingDevice?.FlushRendererCommands();
             BeginCanvasVisibilityFrame();
+            _particleFrame++; _particleDelta = step;
             _backend.BeginFrame();
             for (var i = 0; i < _activeFrames.Count; i++) { var frame = _activeFrames[i]; if (ScreenVisible(frame.Viewport) || UpdateMode(frame.Viewport) is ViewportUpdateMode.Always or ViewportUpdateMode.Once) { frame.Wanted = true; SubmitFrame(frame, tree); } }
+            if (_backend is GPUCanvasBackend particlesBackend)
+            {
+                _submittingTextures = true;
+                try { particlesBackend.ProcessPendingParticles(this); }
+                finally { _submittingTextures = false; }
+            }
             PresentViewports();
             _backend.EndFrame();
             _frameSubmitted = true;
@@ -559,6 +566,7 @@ public sealed partial class RenderingServer : ElectronObject
             try
             {
                 try { _globalParameters.RetireProjectImages(); } catch (Exception error) { (errors ??= []).Add(error); }
+                try { ReleaseParticles(); } catch (Exception error) { (errors ??= []).Add(error); }
                 try { ReleaseOwnedMultiMeshes(); } catch (Exception error) { (errors ??= []).Add(error); }
                 ReleaseOwnedSkeletons();
                 ReleaseServerViewports();
