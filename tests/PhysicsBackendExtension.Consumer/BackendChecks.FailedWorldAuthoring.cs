@@ -92,6 +92,7 @@ public static partial class BackendChecks
                 for (var i = 0; i < ids.Length; i++)
                 {
                     var id = ids[i]; var view = views[i];
+                    foreach (var action in ForceCalls(id).Concat(ForceCalls(id, view))) Denied(action);
                     Denied(() => PhysicsServer.BodySetLinearVelocity(id, Vector2.One));
                     Denied(() => PhysicsServer.BodySetAngularVelocity(id, 9));
                     Denied(() => PhysicsServer.BodySetCanSleep(id, true));
@@ -112,6 +113,11 @@ public static partial class BackendChecks
                     }
                     if (body is RigidBody rigid)
                     {
+                        Denied(() => rigid.ConstantForce = Vector2.Zero);
+                        Denied(() => rigid.ConstantTorque = 0);
+                        Denied(() => rigid.ConstantForce = Vector2.One);
+                        Denied(() => rigid.ConstantTorque = 9);
+                        Check(rigid.ConstantForce == Vector2.Zero && rigid.ConstantTorque == 0, "Terminal constant writes retain both authored channels");
                         Denied(() => rigid.LinearVelocity = Vector2.One); Denied(() => rigid.AngularVelocity = 9);
                         Denied(() => rigid.LinearVelocity = new(6, 0)); Denied(() => rigid.AngularVelocity = 3);
                         Denied(() => rigid.CanSleep = true); Denied(() => rigid.CanSleep = false);

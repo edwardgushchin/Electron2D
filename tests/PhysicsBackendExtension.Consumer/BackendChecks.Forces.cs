@@ -2,17 +2,26 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunForces(PhysicsServer.Backend? backend = null) => ForceChecks(backend);
-
-    private static void ForceChecks(PhysicsServer.Backend? backend = null)
+    public static void RunForces(PhysicsServer.Backend? backend = null, bool threaded = false)
     {
-        if (backend is null) PhysicsServerManager.RegisterServer("ForceChecks", () => new Solver());
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { ForceChecks(backend, threaded); ForceOperationChecks(backend, threaded); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
+
+    private static void ForceChecks(PhysicsServer.Backend? backend = null, bool threaded = false)
+    {
+        Solver? solver = null;
+        if (backend is null) PhysicsServerManager.RegisterServer("ForceChecks", () => solver = new());
         using var world = backend is { } selected ? new World(selected) : new World("ForceChecks");
         using var root = new SubViewport { World = world };
         using var circle = new CircleShape { Radius = 3 };
         var scene = new RigidBody { Mass = 2, Inertia = 8, GravityScale = 0, CanSleep = false };
         scene.AddChild(new CollisionShape { Shape = circle }); root.AddChild(scene);
         using var tree = new SceneTree(root);
+        var ownerThread = Thread.CurrentThread;
+        if (solver is not null) solver.StepHook = () => Check((Thread.CurrentThread != ownerThread) == threaded, "Forces use the actual captured numerical thread");
         var raw = PhysicsServer.BodyCreate();
         const double delta = 1d / 60;
         try

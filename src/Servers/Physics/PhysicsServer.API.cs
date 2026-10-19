@@ -390,7 +390,7 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live scene or server body RID, including a detached body.</param>
     /// <param name="force">Finite global force in scene units times kilograms per squared second.</param>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or the solver owns the world.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, inside a numerical hook or after the world has failed.</exception>
     public static void BodyApplyCentralForce(RID body, Vector2 force) => Service.BodyApplyCentralForceCore(body, force);
 
     /// <summary>Applies a positioned force for the next eligible fixed step.</summary>
@@ -398,21 +398,21 @@ public sealed partial class PhysicsServer
     /// <param name="force">Finite global force in scene units times kilograms per squared second.</param>
     /// <param name="position">Global-axis offset from body origin in scene units; zero by default.</param>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or the solver owns the world.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, inside a numerical hook or after the world has failed.</exception>
     public static void BodyApplyForce(RID body, Vector2 force, Vector2 position = default) => Service.BodyApplyForceCore(body, force, position);
 
     /// <summary>Applies torque for the next eligible fixed step.</summary>
     /// <param name="body">A live body RID.</param>
     /// <param name="torque">Finite kilograms times squared scene units per squared second.</param>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or the solver owns the world.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, inside a numerical hook or after the world has failed.</exception>
     public static void BodyApplyTorque(RID body, float torque) => Service.BodyApplyTorqueCore(body, torque);
 
     /// <summary>Applies an instantaneous impulse without adding angular motion.</summary>
     /// <param name="body">A live body RID.</param>
     /// <param name="impulse">Finite global scene units times kilograms per second.</param>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or the solver owns the world.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, inside a numerical hook or after the world has failed.</exception>
     public static void BodyApplyCentralImpulse(RID body, Vector2 impulse) => Service.BodyApplyCentralImpulseCore(body, impulse);
 
     /// <summary>Applies an instantaneous positioned impulse using the current mass profile.</summary>
@@ -421,21 +421,21 @@ public sealed partial class PhysicsServer
     /// <param name="impulse">Finite global scene units times kilograms per second.</param>
     /// <param name="position">Global-axis body-origin offset in scene units; zero by default.</param>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or the solver owns the world.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, inside a numerical hook or after the world has failed.</exception>
     public static void BodyApplyImpulse(RID body, Vector2 impulse, Vector2 position = default) => Service.BodyApplyImpulseCore(body, impulse, position);
 
     /// <summary>Applies an instantaneous angular impulse.</summary>
     /// <param name="body">A live body RID.</param>
     /// <param name="impulse">Finite kilograms times squared scene units per second.</param>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or the solver owns the world.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, inside a numerical hook or after the world has failed.</exception>
     public static void BodyApplyTorqueImpulse(RID body, float impulse) => Service.BodyApplyTorqueImpulseCore(body, impulse);
 
     /// <summary>Adds a persistent central force without changing torque.</summary>
     /// <param name="body">A live body RID.</param>
     /// <param name="force">Finite global force in scene units times kilograms per squared second.</param>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or the solver owns the world.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, inside a numerical hook or after the world has failed.</exception>
     public static void BodyAddConstantCentralForce(RID body, Vector2 force) => Service.BodyAddConstantCentralForceCore(body, force);
 
     /// <summary>Adds persistent force and its moment about the current center.</summary>
@@ -444,21 +444,21 @@ public sealed partial class PhysicsServer
     /// <param name="position">Global-axis body-origin offset; zero by default.</param>
     /// <remarks>The moment is captured at this call and persists independently of later center or pose changes.</remarks>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or the solver owns the world.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, inside a numerical hook or after the world has failed.</exception>
     public static void BodyAddConstantForce(RID body, Vector2 force, Vector2 position = default) => Service.BodyAddConstantForceCore(body, force, position);
 
     /// <summary>Adds persistent torque without changing force.</summary>
     /// <param name="body">A live body RID.</param>
     /// <param name="torque">Finite kilograms times squared scene units per squared second.</param>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or the solver owns the world.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, inside a numerical hook or after the world has failed.</exception>
     public static void BodyAddConstantTorque(RID body, float torque) => Service.BodyAddConstantTorqueCore(body, torque);
 
     /// <summary>Replaces the persistent global force.</summary>
     /// <param name="body">A live body RID.</param>
     /// <param name="force">Finite force; zero clears it without waking the body.</param>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or the solver owns the world.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, inside a numerical hook or after the world has failed.</exception>
     public static void BodySetConstantForce(RID body, Vector2 force) => Service.BodySetConstantForceCore(body, force);
 
     /// <summary>Returns the persistent global force in scene units.</summary>
@@ -474,7 +474,7 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live body RID.</param>
     /// <param name="torque">Finite torque; zero clears it without waking the body.</param>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or the solver owns the world.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, inside a numerical hook or after the world has failed.</exception>
     public static void BodySetConstantTorque(RID body, float torque) => Service.BodySetConstantTorqueCore(body, torque);
 
     /// <summary>Returns persistent torque in scene units.</summary>

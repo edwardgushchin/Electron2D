@@ -18,6 +18,7 @@ public partial class RigidBody
     /// <summary>Gets or sets the finite force applied at the center of mass every physics step.</summary>
     /// <value>Zero by default; the value persists until replaced or cleared.</value>
     /// <exception cref="ArgumentOutOfRangeException">A component is nonfinite.</exception>
+    /// <exception cref="InvalidOperationException">Attached mutation is off-owner, inside a numerical hook or after the world has failed, including zero and equal assignments.</exception>
     public Vector2 ConstantForce
     {
         get { ThrowIfDisposed(); return _constantForce; }
@@ -25,6 +26,7 @@ public partial class RigidBody
         {
             EnsureMutable();
             if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value));
+            EnsurePhysicsParticipationChange();
             _constantForce = value; GPUParametersDirty = true;
             if (value != Vector2.Zero) WakeForPersistentForce();
         }
@@ -33,6 +35,7 @@ public partial class RigidBody
     /// <summary>Gets or sets the finite torque applied every physics step.</summary>
     /// <value>Zero by default; the value persists until replaced or cleared.</value>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite.</exception>
+    /// <exception cref="InvalidOperationException">Attached mutation is off-owner, inside a numerical hook or after the world has failed, including zero and equal assignments.</exception>
     public float ConstantTorque
     {
         get { ThrowIfDisposed(); return _constantTorque; }
@@ -40,6 +43,7 @@ public partial class RigidBody
         {
             EnsureMutable();
             Finite(value);
+            EnsurePhysicsParticipationChange();
             _constantTorque = value; GPUParametersDirty = true;
             if (value != 0) WakeForPersistentForce();
         }

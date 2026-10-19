@@ -316,7 +316,7 @@ public static partial class BackendChecks
         {
             if (!Awake || area || Mode == PhysicsServer.BodyMode.Static) return;
             var next = Locked ? Rotation : Rotation + Angular * dt;
-            Position += Velocity * dt + (Dynamic ? _center.Rotated(Rotation) - _center.Rotated(next) : Vector2.Zero);
+            Position += Velocity * dt + (_center.Rotated(Rotation) - _center.Rotated(next));
             Rotation = next;
         }
         internal bool FrameForcesApplied;
@@ -402,7 +402,7 @@ public static partial class BackendChecks
             if (Position == position && Rotation == rotation) return;
             Position = position; Rotation = rotation; solver.WakeConnected(this);
         }
-        protected override void SetTargetPose(Transform pose, double delta) { Velocity = (pose.Origin - Position) / (float)delta; Angular = (pose.Rotation - Rotation) / (float)delta; }
+        protected override void SetTargetPose(Transform pose, double delta) { Velocity = (pose.Origin - Position + _center.Rotated(pose.Rotation) - _center.Rotated(Rotation)) / (float)delta; Angular = (pose.Rotation - Rotation) / (float)delta; }
         protected override void SavePose() => _saved = GetTransform();
         protected override void RestorePose() { Position = _saved.Origin; Rotation = _saved.Rotation; }
         protected override void SetLinearVelocity(Vector2 velocity) { solver.BodyHook?.Invoke(rid); Velocity = velocity; }

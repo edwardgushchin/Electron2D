@@ -2,6 +2,16 @@
 
 Last updated: 2026-10-19
 
+## Force operation access
+
+The complete force/impulse/persistent family retains the view's attachment,
+owner, phase and failed-world checks, including its configured force/torque
+getters. A live view cannot be used inside numerical Solve; the facade's separate
+readonly input projection does not grant that permission. Retired views reject all
+thirteen operations. Ordinary owner callbacks retain writes for the next interval.
+See [complete force operations](../components/physics-registered-adapter.md#complete-force-operations).
+
+
 ## Integration callback lifetime
 
 Detachment preserves force/sync registrations for reentry with a fresh direct-state

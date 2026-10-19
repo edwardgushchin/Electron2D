@@ -2,6 +2,73 @@
 
 Last updated: 2026-10-19
 
+## Complete force operations
+
+All thirteen extension central/positioned force, impulse, torque and persistent
+operations now have a complete operation audit under ADRs 0057/0074/0103. Common
+scene/raw authoring retains transient and constant totals, current mass and the
+rotated center of mass; selected preparation and impulse hooks provide response.
+No numerical implementation interface or public declaration is added. The pinned
+server/extension/direct-state families and RigidBody methods/properties comprise
+50 non-deprecated records in reference-contract.json with the licensed server source.
+
+The audit reproduced an actual terminal-world hole: assigning zero to scene
+ConstantForce succeeded after a selected restore failure, and nonzero assignments
+could change the value before wake discovered that failure. Both scene persistent
+setters now use the existing participation guard before retained mutation, including
+zero/equal values. Ordinary configured scene reads remain non-preparing. Facade
+getters retain borrowed readonly-input access, while direct-state views retain
+strict attachment/owner/query-phase access and reject all operations in Solve.
+The identical final consumer rejects the old runtime (-6, Expected a cleanup failure
+at the zero scene assignment) and passes with the corrected runtime (0); see
+`bin/physics-force-operations/2026-10-19/runtime-regression-proof.json`.
+
+The expanded --forces fixture captures and restores the actual thread setting and
+asserts the real registered numerical thread. Existing analytic central/positioned
+scene/facade/direct response, persistent moment capture, detached/static pending
+lifetime, stale views, nonfinite/overflow rollback and axis checks remain. A new
+connected fixture exercises all five scene siblings plus a raw body, four body
+roles and facade/direct/available scene routes. Every frame replaces constants,
+adds positioned and central totals, applies all transient and impulse forms, and
+observes actual mass/inertia response with a rotated custom center. Static pending
+input survives until kinematic participation consumes it without dynamic response.
+
+Twelve JIT/strict NativeAOT CPU/no-device, private software-GPU and registered
+owner/separate profiles execute 1536 changed full frames and 119808 top-level
+force-family operations, with 6912 owner callbacks and 6912 queries with exact RID/logical shape index, at strict
+0/0 owner/all-thread managed bytes. The preceding two-body fixture adds another
+1536 measured edited full frames at 0/0 B. Dynamic velocity/angular tolerance 0.0002
+covers float unit conversion and integration; constant torque uses 0.00001.
+Kinematic velocity is the derivative of its center path, including rotation of the
+custom local center, with four origin ULPs divided by 0.01 s added to its tolerance.
+The bounded registered test model previously used origin velocity for that case;
+its target and movement now account for the rotated center. Production numerical
+paths and their tolerances were not changed to match the fixture.
+
+All thirteen facade operations reject wrong-kind, stale and empty RIDs; retired
+views reject their complete family. All owner-bound calls reject a foreign thread.
+Actual Solve rejects every write, including equal scene persistent assignments;
+facade retained getters remain readable there, while direct-state reads reject.
+Terminal simulation/local
+checkpoint/portable-apply failures exercise 1704 actual rejected operations in each
+of four registered profiles, including all facade/direct force calls and both scene
+persistent channels. Both scene values remain unchanged. Existing integration,
+body-parameter/read, state and default consumer companions pass. The serial root
+body-contract companions retain force lifetime, sleep/omission, primitive mass,
+phase guards, contact impulses and report-only behavior on CPU and software GPU.
+The root entrypoint does not consume a separate-thread flag and is counted once
+per selected backend. The final cohort has 64/64 distinct profiles and six
+PDB/Compile proofs for 3394 authored sources.
+
+Only these thirteen extension force rows become Implemented. The physics census
+is 1239/1369 (90.50401753104455%), with 130 open declarations: 99 Partial,
+14 Unimplemented and 17 Blocked; 92 remain Excluded. Earlier counts are historical
+checkpoints. Evidence: `bin/physics-force-operations/2026-10-19/validation.json`,
+current-source-proof.json and current-source-inputs.json. Full ordinary root,
+complete numerical/custom geometry/extension, native allocation, portable network,
+other platforms and hardware real-window/FPS/performance acceptance remain open.
+Hardware GPU load did not run; the RTX power cable remains unchecked.
+
 ## Complete world parameter operations
 
 All nine typed space-parameter branches expose common retained input: three sleep
@@ -1166,8 +1233,9 @@ warmup and 128 measured edited full PhysicsFrame cycles at 0/0 owner/all-thread
 managed bytes. Collection occurs after warmup, so the first following frame is
 included. GPU CCD validation uses the three explicit valid modes rather than
 reconstructing enum metadata after collection; an isolated old validation probe
-reproduced the 248-byte allocation found in that first frame. These fourteen
-extension rows remain Partial pending complete numerical-extension acceptance.
+reproduced the 248-byte allocation found in that first frame. The thirteen extension
+force rows now follow the [complete force operation audit](#complete-force-operations);
+wider numerical-extension acceptance remains open.
 
 ## Collision-exception authoring and response
 

@@ -2,6 +2,17 @@
 
 Last updated: 2026-10-19
 
+## Persistent force authoring guards
+
+ConstantForce and ConstantTorque reject attached writes after terminal world
+failure before either retained value changes, including zero and equal assignments.
+Their configured getters remain non-preparing. Detached authoring and healthy
+owner callbacks retain their existing behavior. The inherited scene force family,
+RID facade and direct views reach the same retained totals and selected response;
+see [complete force operations](../components/physics-registered-adapter.md#complete-force-operations)
+for mode, lifetime, numerical and allocation evidence.
+
+
 ## Integration callback lifetime
 
 Detachment preserves force/sync registrations for reentry with a fresh direct-state

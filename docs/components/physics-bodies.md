@@ -7,6 +7,15 @@
 
 Last updated: 2026-10-19
 
+Scene persistent force/torque setters now reject terminal-world access before
+retained mutation, including zero/equal assignments. Configured scene reads remain
+non-preparing; facade input reads and direct-view phase guards remain distinct.
+The [complete force operation audit](physics-registered-adapter.md#complete-force-operations)
+executes all thirteen operations, five scene siblings and raw bodies, actual
+role/mass/rotated-center response, lifetime and failure guards on both built-in
+backends and a registered implementation in both numerical thread modes.
+
+
 ## Integration callback lifetime
 
 Detachment preserves force/sync registrations for reentry with a fresh direct-state

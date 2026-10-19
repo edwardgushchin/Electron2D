@@ -1,5 +1,8 @@
 # Physics contract and backend audit
 
+[Complete force operations](physics-registered-adapter.md#complete-force-operations) retain all thirteen force/impulse/persistent capabilities across scene, facade and direct routes. Scene persistent setters now reject terminal-world zero/equal writes before mutation. Actual mode/mass/rotated-center response, lifetime, thread/borrow/terminal guards and warmed 0/0 managed bytes pass in 64/64 distinct JIT/NativeAOT CPU/no-device, software-GPU, registered and serial root companion profiles. The current physics census is 1239/1369 Implemented (90.5040%), with 130 open declarations (99 Partial, 14 Unimplemented, 17 Blocked), 92 Excluded. Wider numerical/network/native/platform/hardware performance acceptance remains open; earlier counts record their checkpoints.
+
+
 [Complete world parameter operations](physics-registered-adapter.md#complete-world-parameter-operations) allow all nine retained world inputs in actual borrowed Solve without numerical queries, publication or failure-hook reentry. Defaults, boundaries, thread/kind/lifetime/failure guards, policy recovery and actual sleep/contact response execute through public JIT/NativeAOT CPU/no-device, software-GPU and registered owner/separate checks; 82/82 distinct profiles pass with strict zero warmed managed bytes. The current physics census is 1226/1369 Implemented (89.5544%), with 143 open declarations (112 Partial, 14 Unimplemented, 17 Blocked), 92 Excluded. Wider numerical/network/native/platform/hardware performance acceptance remains open; earlier counts record their checkpoints.
 
 

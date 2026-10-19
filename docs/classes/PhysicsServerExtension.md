@@ -2,6 +2,19 @@
 
 Last updated: 2026-10-19
 
+## Force operation family
+
+All thirteen central/positioned/torque transient, impulse and persistent operations
+share retained scene/raw authoring and selected numerical response. Persistent
+facade getters can read prepared inputs in implementation hooks; direct-state
+views keep their separate attachment and query-phase guards. Every force write
+rejects foreign-thread, numerical-borrow and terminal-world access before mutation.
+Scene ConstantForce/ConstantTorque setters apply the same terminal guard even for
+zero and equal assignments. Configured scene reads remain non-preparing.
+See [complete force operations](../components/physics-registered-adapter.md#complete-force-operations)
+for the actual response, lifetime and failure checks and their remaining limits.
+
+
 ## Configured world parameter reads
 
 The nine typed world-policy getters read common retained configuration without

@@ -38,7 +38,7 @@ public static partial class BackendChecks
         RunLifecycle();
         StateChecks();
         RunBodyStates();
-        ForceChecks();
+        RunForces();
         ExceptionChecks();
         JointParameterChecks();
         JointLifecycleChecks();
