@@ -628,7 +628,8 @@ public sealed partial class PhysicsServer
     /// <param name="space">A live space RID.</param>
     /// <returns>A finite fraction from zero to one; initially sampled from ProjectSettings.Physics2DDefaultConstraintBias.</returns>
     /// <exception cref="ArgumentException">The RID is stale or has the wrong resource or joint role.</exception>
-    /// <exception cref="InvalidOperationException">Access violates the owning world thread or phase.</exception>
+    /// <exception cref="InvalidOperationException">Ordinary access violates the world owner-thread or failed-world rules.</exception>
+    /// <remarks>Reads retained configuration without numerical queries or publication. Borrowed implementation inputs are readable on the world owner or captured solver thread; ordinary reads retain failure guards.</remarks>
     public static float SpaceGetConstraintDefaultBias(RID space) => Service.SpaceGetConstraintDefaultBiasCore(space);
 
     /// <summary>Sets the joint positional correction fraction.</summary>

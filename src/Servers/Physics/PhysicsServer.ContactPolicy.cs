@@ -2,6 +2,14 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
+    private PhysicsSpace WorldParameterSpace(RID space)
+    {
+        ThrowIfDisposed();
+        var world = GetSceneSpace(space);
+        world.EnsureImplementationInputReadAccess();
+        return world;
+    }
+
     internal float BodyGetCollisionPriorityCore(RID body) => ColliderBackend(body, false, input: true).CollisionPriority;
     internal void BodySetCollisionPriorityCore(RID body, float value)
     {
@@ -11,7 +19,7 @@ public sealed partial class PhysicsServer
     }
     internal float SpaceGetContactRecycleRadiusCore(RID space)
     {
-        ThrowIfDisposed(); var world = GetSceneSpace(space); world.EnsureQueryAccess(); return world.ContactSettings.RecycleRadius;
+        return WorldParameterSpace(space).ContactSettings.RecycleRadius;
     }
     internal void SpaceSetContactRecycleRadiusCore(RID space, float value)
     {
@@ -19,7 +27,7 @@ public sealed partial class PhysicsServer
     }
     internal float SpaceGetContactMaxSeparationCore(RID space)
     {
-        ThrowIfDisposed(); var world = GetSceneSpace(space); world.EnsureQueryAccess(); return world.ContactSettings.MaxSeparation;
+        return WorldParameterSpace(space).ContactSettings.MaxSeparation;
     }
     internal void SpaceSetContactMaxSeparationCore(RID space, float value)
     {
@@ -27,7 +35,7 @@ public sealed partial class PhysicsServer
     }
     internal int SpaceGetSolverIterationsCore(RID space)
     {
-        ThrowIfDisposed(); var world = GetSceneSpace(space); world.EnsureQueryAccess(); return world.SolverIterations;
+        return WorldParameterSpace(space).SolverIterations;
     }
     internal void SpaceSetSolverIterationsCore(RID space, int value)
     {
@@ -35,7 +43,7 @@ public sealed partial class PhysicsServer
     }
     internal float SpaceGetContactDefaultBiasCore(RID space)
     {
-        ThrowIfDisposed(); var world = GetSceneSpace(space); world.EnsureQueryAccess(); return world.ContactSettings.Bias;
+        return WorldParameterSpace(space).ContactSettings.Bias;
     }
     internal void SpaceSetContactDefaultBiasCore(RID space, float value)
     {
@@ -43,7 +51,7 @@ public sealed partial class PhysicsServer
     }
     internal float SpaceGetContactMaxAllowedPenetrationCore(RID space)
     {
-        ThrowIfDisposed(); var world = GetSceneSpace(space); world.EnsureQueryAccess(); return world.ContactSettings.AllowedPenetration;
+        return WorldParameterSpace(space).ContactSettings.AllowedPenetration;
     }
     internal void SpaceSetContactMaxAllowedPenetrationCore(RID space, float value)
     {

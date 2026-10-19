@@ -2,6 +2,76 @@
 
 Last updated: 2026-10-19
 
+## Complete world parameter operations
+
+All nine typed space-parameter branches expose common retained input: three sleep
+thresholds/duration, four contact correction/cache values, solver iteration count
+and default joint constraint bias. The previous public getters used live-query
+access even during selected numerical borrowing, rejecting all nine actual Solve
+reads. One private WorldParameterSpace reader now reuses the existing guarded
+implementation-input path for this complete family. No field query, readback,
+publication, wake or pending-policy preparation is performed. Ordinary callers
+retain owner/lifetime/failure guards; the owning borrowed implementation may read
+on its owner or captured numerical thread, including failure-status hooks.
+Writes and live space queries inside Solve still reject, including equal writes.
+Scene-owned in-solver notification and foreign-thread guards remain separate.
+
+The public-only --world-parameters fixture checks all defaults against feature-aware
+ProjectSettings, every changed pair, zero float endpoints, unit bias endpoints,
+positive int.MaxValue iteration retention and invalid negative/nonfinite/zero-count
+inputs. Wrong-kind, stale and empty RIDs and off-owner getter/setter calls reject.
+Actual registered Solve verifies both its real thread and the complete currently
+published selected profile. Getter calls do not reenter HasFailure or publish
+settings. Ordinary status checks still execute exactly once per getter while
+nested configured reads use their existing borrowed context.
+
+All nine values alternate before each complete frame. A scene and raw body retain
+actual selected movement, exact logical shape identity and owner notification
+callbacks with point queries. Final motion tolerance 0.0002 covers float unit
+conversion; values, ticks, counts, identity and managed allocations remain exact.
+Twelve fresh JIT/strict NativeAOT CPU/no-device, private software-GPU and registered
+owner/separate profiles execute 336 numeric rejections and 1536 changed full frames,
+59904 configured reads, 3072 callbacks and 3072 selected queries at strict zero
+owner/all-thread managed bytes. Each registered bracket includes 1152 reads inside
+128 actual Solve calls; its remaining reads and all built-in reads execute on the
+owner. These are retained inputs, not a claim of numerical-query access in Solve.
+
+An identical final consumer reproduces the old rejection of all nine Solve reads
+(-6), then passes with the corrected runtime (0). Binary hashes and exact output
+are in `bin/physics-world-parameters/2026-10-19/runtime-regression-proof.json`.
+Pinned non-deprecated selector/enum metadata is retained in reference-contract.json
+with the licensed server source and its SHA-256. The typed integer iteration
+adaptation remains under ADR 0098; no selector enum or Variant API is introduced.
+
+Existing world-policy transaction tests retain all nine publication families,
+partial-error identity, equal-write recovery, query/history/step preparation,
+skipped intervals and local/portable configuration boundaries. Failed-world
+checks now explicitly reject all nine ordinary getter/setter pairs after simulation,
+checkpoint and portable-apply failures. Their rejection helper now requires a
+nonempty error list, and retired native PhysicalBone sleep expectations follow the
+accepted inactive static role rather than the old awake assumption. The first
+cohort stopped at that outdated test expectation; final cohorts use the corrected
+fixture without changing runtime sleep behavior. Contact-policy numerical companions
+retain seven shape families, bias/slack/cache settings, shared contact/joint sweeps,
+impulses and CCD. Sleep checks now capture and restore the actual separate-thread
+setting, with a registered Solve-thread assertion, while retaining strict threshold,
+duration, wake, quiet-clock replay and contact/joint group behavior. Resource world
+copy/identity, ordinary consumers and root public sleep/contact-correction companions
+complete 82/82 distinct profiles. Root in-solver scene notification guards remain
+covered in both selected backends and both thread settings. Six PDB/Compile sets
+qualify 3393 authored inputs on the same source cohort.
+
+Only the remaining extension _space_get_param operation becomes Implemented; the
+complete typed setter family keeps its existing implementation status. The physics
+census is 1226/1369 (89.554419284149%), with 143 open declarations: 112 Partial,
+14 Unimplemented and 17 Blocked; 92 remain Excluded. Evidence:
+`bin/physics-world-parameters/2026-10-19/validation.json`, current-source-proof.json
+and current-source-inputs.json. Earlier counts retain their historical checkpoints.
+The full ordinary root suite was not rerun. Complete numerical/custom geometry,
+inherited/extension, portable network, native retained memory, other platforms and
+target-GPU real-window/FPS/performance acceptance remain open. Hardware GPU load did
+not run; the RTX power cable remains unchecked.
+
 ## Complete integration policy operations
 
 The common contact-limit, omission and force/sync callback family now has a complete

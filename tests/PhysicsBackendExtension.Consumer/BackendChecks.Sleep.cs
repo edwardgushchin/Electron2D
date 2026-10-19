@@ -2,7 +2,15 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunSleep(PhysicsServer.Backend? backend = null)
+    public static void RunSleep(PhysicsServer.Backend? backend = null, bool threaded = false)
+    {
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { SleepChecks(backend, threaded); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
+
+    private static void SleepChecks(PhysicsServer.Backend? backend, bool threaded)
     {
         Solver? solver = null;
         if (backend is null) PhysicsServerManager.RegisterServer("Sleep", () => solver = new());
@@ -14,6 +22,11 @@ public static partial class BackendChecks
         var scene = new RigidBody { GravityScale = 0, CanSleep = true, CollisionLayer = 0, CollisionMask = 0 };
         scene.AddChild(new CollisionShape { Shape = circle }); root.AddChild(scene);
         using var tree = new SceneTree(root);
+        if (solver is not null)
+        {
+            var owner = Thread.CurrentThread;
+            solver.StepHook = () => Check((Thread.CurrentThread != owner) == threaded, "Sleep executes on the actual captured numerical thread");
+        }
         var raw = PhysicsServer.BodyCreate();
         try
         {

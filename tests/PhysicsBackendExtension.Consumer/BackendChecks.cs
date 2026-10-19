@@ -54,6 +54,7 @@ public static partial class BackendChecks
         MotionRoleChecks();
         RunBodyParameters();
         WorldPolicyChecks();
+        RunWorldParameters();
         SceneSpaceChecks();
         RunMembership();
         RunAreaFields();

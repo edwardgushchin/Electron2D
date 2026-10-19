@@ -23,7 +23,8 @@ public sealed partial class PhysicsServer
     /// <param name="space">A live scene-owned or server-created space RID.</param>
     /// <returns>The configured nonnegative scene-unit distance.</returns>
     /// <exception cref="ArgumentException">The RID does not identify a live space.</exception>
-    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules.</exception>
+    /// <exception cref="InvalidOperationException">Ordinary access violates the world owner-thread or failed-world rules.</exception>
+    /// <remarks>Reads retained configuration without numerical queries or publication. Borrowed implementation inputs are readable on the world owner or captured solver thread; ordinary reads retain failure guards.</remarks>
     public static float SpaceGetContactRecycleRadius(RID space) => Service.SpaceGetContactRecycleRadiusCore(space);
 
     /// <summary>Sets the world's body-local radius for reusing cached contact impulses.</summary>
@@ -40,7 +41,8 @@ public sealed partial class PhysicsServer
     /// <param name="space">A live scene-owned or server-created space RID.</param>
     /// <returns>The configured nonnegative scene-unit distance.</returns>
     /// <exception cref="ArgumentException">The RID does not identify a live space.</exception>
-    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules.</exception>
+    /// <exception cref="InvalidOperationException">Ordinary access violates the world owner-thread or failed-world rules.</exception>
+    /// <remarks>Reads retained configuration without numerical queries or publication. Borrowed implementation inputs are readable on the world owner or captured solver thread; ordinary reads retain failure guards.</remarks>
     public static float SpaceGetContactMaxSeparation(RID space) => Service.SpaceGetContactMaxSeparationCore(space);
 
     /// <summary>Sets the world's maximum normal separation or tangential drift of cached contacts.</summary>
@@ -57,7 +59,8 @@ public sealed partial class PhysicsServer
     /// <param name="space">A live scene-owned or server-created physics space.</param>
     /// <returns>A positive count sampled from project settings when the space was created, initially sixteen.</returns>
     /// <exception cref="ArgumentException">The RID does not identify a live space.</exception>
-    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules.</exception>
+    /// <exception cref="InvalidOperationException">Ordinary access violates the world owner-thread or failed-world rules.</exception>
+    /// <remarks>Reads retained configuration without numerical queries or publication. Borrowed implementation inputs are readable on the world owner or captured solver thread; ordinary reads retain failure guards.</remarks>
     public static int SpaceGetSolverIterations(RID space) => Service.SpaceGetSolverIterationsCore(space);
 
     /// <summary>Sets the number of contact and joint solver sweeps per simulation substep.</summary>
@@ -74,7 +77,8 @@ public sealed partial class PhysicsServer
     /// <param name="space">A live scene-owned or server-created space RID.</param>
     /// <returns>The current value as a fraction in [0,1], initially sampled from project defaults.</returns>
     /// <exception cref="ArgumentException">The RID is stale or does not identify a space.</exception>
-    /// <exception cref="InvalidOperationException">Access violates owner thread or solver phase.</exception>
+    /// <exception cref="InvalidOperationException">Ordinary access violates the world owner-thread or failed-world rules.</exception>
+    /// <remarks>Reads retained configuration without numerical queries or publication. Borrowed implementation inputs are readable on the world owner or captured solver thread; ordinary reads retain failure guards.</remarks>
     public static float SpaceGetContactDefaultBias(RID space) => Service.SpaceGetContactDefaultBiasCore(space);
 
     /// <summary>Sets the world's outer-tick contact correction fraction.</summary>
@@ -92,7 +96,8 @@ public sealed partial class PhysicsServer
     /// <param name="space">A live scene-owned or server-created space RID.</param>
     /// <returns>The current value as a nonnegative scene-unit distance, initially sampled from project defaults.</returns>
     /// <exception cref="ArgumentException">The RID is stale or does not identify a space.</exception>
-    /// <exception cref="InvalidOperationException">Access violates owner thread or solver phase.</exception>
+    /// <exception cref="InvalidOperationException">Ordinary access violates the world owner-thread or failed-world rules.</exception>
+    /// <remarks>Reads retained configuration without numerical queries or publication. Borrowed implementation inputs are readable on the world owner or captured solver thread; ordinary reads retain failure guards.</remarks>
     public static float SpaceGetContactMaxAllowedPenetration(RID space) => Service.SpaceGetContactMaxAllowedPenetrationCore(space);
 
     /// <summary>Sets the world's contact penetration slack.</summary>

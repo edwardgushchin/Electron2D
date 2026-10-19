@@ -84,6 +84,11 @@ public static partial class BackendChecks
                 solver.ModeHook = solver.RotationHook = solver.BodyHook = solver.AngularHook = solver.SurfaceHook = solver.AwakeHook = solver.CanSleepHook = _ => mutations++;
                 Denied(() => _ = PhysicsServer.SpaceIsActive(world.Space));
                 Denied(() => tree.PhysicsFrame(.01));
+                foreach (var policy in WorldPolicies(world.Space))
+                {
+                    Denied(() => _ = policy.Get());
+                    Denied(() => policy.Set(policy.First));
+                }
                 for (var i = 0; i < ids.Length; i++)
                 {
                     var id = ids[i]; var view = views[i];
@@ -128,14 +133,17 @@ public static partial class BackendChecks
                 {
                     body.Parent!.RemoveChild(body);
                     if (body is RigidBody rigid)
-                        Check(rigid.LinearVelocity == new Vector2(6, 0) && rigid.AngularVelocity == 3 && !rigid.Sleeping,
-                            "Retirement exposes the original retained motion and sleep authoring");
+                    {
+                        var inactive = body is PhysicalBone && !direct;
+                        if (!(rigid.LinearVelocity == new Vector2(6, 0) && rigid.AngularVelocity == 3 && rigid.Sleeping == inactive))
+                            throw new InvalidOperationException($"Retirement {body.GetType().Name}/{failureKind}/{direct}: velocity {rigid.LinearVelocity}/{rigid.AngularVelocity}, sleeping {rigid.Sleeping}, expected inactive {inactive}.");
+                    }
                     body.Dispose();
                 }
                 void Denied(Action action)
                 {
                     var denied = ReleaseErrors(action); rejected++;
-                    Check(denied.All(error => error is InvalidOperationException), "Terminal access reports the world failure");
+                    Check(denied.Length != 0 && denied.All(error => error is InvalidOperationException), "Terminal access reports the world failure");
                     Check(mutations == 0 && solver.Steps == solves, "Rejected access neither publishes nor solves");
                 }
             }

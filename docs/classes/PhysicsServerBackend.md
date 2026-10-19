@@ -2,6 +2,17 @@
 
 Last updated: 2026-10-19
 
+## Configured world parameter reads
+
+The nine typed world-policy getters read common retained configuration without
+selected numerical queries or pending publication. A borrowed implementation can
+read those inputs on its world's owner or captured solver thread, including actual
+Solve and failure-status hooks. Ordinary reads retain owner, lifetime and failed-world
+guards. This permission does not allow policy writes, live space queries or access
+from another thread. All setters keep their existing validation and recovery rules.
+See [complete world parameter operations](../components/physics-registered-adapter.md#complete-world-parameter-operations)
+for the exercised policy family and verification limits.
+
 ## Selected Area overlap publication
 
 Selected monitoring combines scene observation with either server callback;

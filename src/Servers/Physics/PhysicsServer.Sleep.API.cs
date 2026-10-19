@@ -6,7 +6,8 @@ public sealed partial class PhysicsServer
     /// <param name="space">A live scene-owned or server-created space RID.</param>
     /// <returns>The finite nonnegative value sampled from ProjectSettings.Physics2DSleepThresholdLinear at world creation, or its later override.</returns>
     /// <exception cref="ArgumentException">The RID is stale or does not identify a space.</exception>
-    /// <exception cref="InvalidOperationException">Access violates the world's owner thread or solver phase.</exception>
+    /// <exception cref="InvalidOperationException">Ordinary access violates the world owner-thread or failed-world rules.</exception>
+    /// <remarks>Reads retained configuration without numerical queries or publication. Borrowed implementation inputs are readable on the world owner or captured solver thread; ordinary reads retain failure guards.</remarks>
     public static float SpaceGetBodyLinearVelocitySleepThreshold(RID space) => Service.SpaceGetBodyLinearVelocitySleepThresholdCore(space);
 
     /// <summary>Sets the world's quiet velocity threshold in scene units per second.</summary>
@@ -25,7 +26,8 @@ public sealed partial class PhysicsServer
     /// <param name="space">A live scene-owned or server-created space RID.</param>
     /// <returns>The finite nonnegative value sampled from ProjectSettings.Physics2DSleepThresholdAngular at world creation, or its later override.</returns>
     /// <exception cref="ArgumentException">The RID is stale or does not identify a space.</exception>
-    /// <exception cref="InvalidOperationException">Access violates the world's owner thread or solver phase.</exception>
+    /// <exception cref="InvalidOperationException">Ordinary access violates the world owner-thread or failed-world rules.</exception>
+    /// <remarks>Reads retained configuration without numerical queries or publication. Borrowed implementation inputs are readable on the world owner or captured solver thread; ordinary reads retain failure guards.</remarks>
     public static float SpaceGetBodyAngularVelocitySleepThreshold(RID space) => Service.SpaceGetBodyAngularVelocitySleepThresholdCore(space);
 
     /// <summary>Sets the world's quiet velocity threshold in radians per second.</summary>
@@ -44,7 +46,8 @@ public sealed partial class PhysicsServer
     /// <param name="space">A live scene-owned or server-created space RID.</param>
     /// <returns>The finite nonnegative value sampled from ProjectSettings.Physics2DTimeBeforeSleep at world creation, or its later override.</returns>
     /// <exception cref="ArgumentException">The RID is stale or does not identify a space.</exception>
-    /// <exception cref="InvalidOperationException">Access violates the world's owner thread or solver phase.</exception>
+    /// <exception cref="InvalidOperationException">Ordinary access violates the world owner-thread or failed-world rules.</exception>
+    /// <remarks>Reads retained configuration without numerical queries or publication. Borrowed implementation inputs are readable on the world owner or captured solver thread; ordinary reads retain failure guards.</remarks>
     public static float SpaceGetBodyTimeToSleep(RID space) => Service.SpaceGetBodyTimeToSleepCore(space);
 
     /// <summary>Sets the world's quiet duration in seconds.</summary>

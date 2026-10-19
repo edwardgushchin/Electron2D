@@ -1,5 +1,8 @@
 # Physics domain
 
+[Complete world parameter operations](../components/physics-registered-adapter.md#complete-world-parameter-operations) allow all nine retained world inputs in actual borrowed Solve without numerical queries, publication or failure-hook reentry. Defaults, boundaries, thread/kind/lifetime/failure guards, policy recovery and actual sleep/contact response execute through public JIT/NativeAOT CPU/no-device, software-GPU and registered owner/separate checks; 82/82 distinct profiles pass with strict zero warmed managed bytes. The current physics census is 1226/1369 Implemented (89.5544%), with 143 open declarations (112 Partial, 14 Unimplemented, 17 Blocked), 92 Excluded. Wider numerical/network/native/platform/hardware performance acceptance remains open; earlier counts record their checkpoints.
+
+
 [Complete integration policy operations](../components/physics-registered-adapter.md#complete-integration-policy-operations) release callback data after body disposal despite retained invalid views, and audit contact caps, omission and force/sync callbacks for all scene/raw roles. JIT/strict NativeAOT CPU/no-device, software-GPU and registered owner/separate profiles retain strict zero warmed managed bytes; 61/61 profiles pass. The current physics census is 1225/1369 Implemented (89.4814%), with 144 open declarations (113 Partial, 14 Unimplemented, 17 Blocked), 92 Excluded. Wider numerical/network/native/platform/hardware performance acceptance remains open; earlier counts record their checkpoints.
 
 

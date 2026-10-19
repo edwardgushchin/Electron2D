@@ -170,7 +170,7 @@ public sealed partial class PhysicsServer
     internal void PinJointSetSoftnessCore(RID joint, float value) => GetJoint(joint, JointType.Pin).SetPinSoftness(value);
     internal float SpaceGetConstraintDefaultBiasCore(RID space)
     {
-        ThrowIfDisposed(); var world = GetSceneSpace(space); world.EnsureQueryAccess(); return world.ConstraintDefaultBias;
+        return WorldParameterSpace(space).ConstraintDefaultBias;
     }
     internal void SpaceSetConstraintDefaultBiasCore(RID space, float value)
     {
