@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-19
 
+[CCD policy operation audit](physics-registered-adapter.md#ccd-policy-operation-audit) closes both extension CCD-setting rows after pinned metadata, six-owner lifecycle and wake repair, numerical input reads, real discrete/continuous contact response and strict zero-allocation full-frame checks. The current physics census is 165 open declarations: 134 Partial, 14 Unimplemented and 17 Blocked. Complete numerical/inherited/network/native/platform and target-GPU performance acceptance remains open; earlier counts below are historical.
+
 [Body mode operation audit](physics-registered-adapter.md#body-mode-operation-audit) closes both extension mode rows after complete pinned/default/value, selected numerical input, real motion, recovery and lifecycle verification. The current unique physics census is 167 open declarations: 136 Partial, 14 Unimplemented and 17 Blocked. Wider full-goal requirements remain open; earlier counts below are historical.
 
 [Complete Area parameter operations](physics-areas.md#complete-area-parameter-operations) verify all ten typed pairs, distinct scene/raw/default profiles, lifetime and six partial-preparation retry cases. The two extension get/set operation rows become Implemented; the current unique physics census is 169 open declarations: 138 Partial, 14 Unimplemented and 17 Blocked. All wider full-goal requirements remain open. Earlier counts below are historical.

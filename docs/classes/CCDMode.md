@@ -1,6 +1,8 @@
 # CCDMode
 
-Last updated: 2026-10-14
+Last updated: 2026-10-19
+
+[CCD policy operation audit](../components/physics-registered-adapter.md#ccd-policy-operation-audit) checks all three modes across five scene siblings and raw bodies, selected numerical input reads, wake/failure recovery, role/attachment lifetime and actual discrete/continuous motion with logical contact identity and impulse balance. Public JIT/strict NativeAOT CPU/software-GPU/registered full frames retain strict zero managed allocation; broader numerical/native/network/performance acceptance remains open.
 
 **Declaration:** `public enum CCDMode`
 **Source:** [CCDMode.cs](../../src/Servers/Physics/CCDMode.cs)

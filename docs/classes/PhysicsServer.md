@@ -6,6 +6,8 @@ The [Body/Area append audit](../components/physics-shapes.md#bodyarea-append-con
 
 Last updated: 2026-10-19
 
+[CCD policy operation audit](../components/physics-registered-adapter.md#ccd-policy-operation-audit) checks all three modes across five scene siblings and raw bodies, selected numerical input reads, wake/failure recovery, role/attachment lifetime and actual discrete/continuous motion with logical contact identity and impulse balance. Public JIT/strict NativeAOT CPU/software-GPU/registered full frames retain strict zero managed allocation; broader numerical/native/network/performance acceptance remains open.
+
 [Body mode operation audit](../components/physics-registered-adapter.md#body-mode-operation-audit) now checks all four roles across five scene siblings and raw bodies, real changed-frame motion, captured numerical input reads, guarded writes and complete mode-publication recovery. Public JIT/strict NativeAOT CPU/software-GPU/registered companions retain strict zero managed-byte frames; broader numerical/native/network/performance acceptance remains open.
 
 [Complete Area parameter operations](../components/physics-areas.md#complete-area-parameter-operations) now have a public-only component, lifetime, selected-preparation failure and warmed complete-frame audit across CPU/GPU/registered implementations. The engine-owned ten-field contract preserves independent defaults, prepared reads and retry without replaying Solve; broader numerical/native/network/performance acceptance remains open.

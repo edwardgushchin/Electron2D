@@ -2,6 +2,54 @@
 
 Last updated: 2026-10-19
 
+## CCD policy operation audit
+
+BodySetContinuousCollisionDetectionMode/BodyGetContinuousCollisionDetectionMode
+now have an operation audit across static, animatable, character, rigid and
+physical-bone scene nodes and raw bodies. Thirteen pinned public/extension,
+scene-property and enum records are nondeprecated; the shared compiled CCDMode
+retains Disabled=0, CastRay=1 and CastShape=2, with Disabled as the property default.
+
+The public --ccd-policies fixture checks detached defaults, invalid enum values,
+empty/wrong/stale RID kinds, foreign-thread get/set guards, unchanged sleep after
+equal writes, wake after changed writes, 72 motion-role changes and 54 attachment
+transitions through detach, another selected world and return. Rigid/bone scene
+properties retain the same authoring. The registered fixture reads all six modes
+inside actual Solve on its captured owner/separate lane, compares prepared
+integration configuration including six independently configured values, and
+rejects equal/changed borrowed writes. Thirty-six injected wake-publication
+failure scenarios retain committed CCD, original errors, failed repair debt, cached view identity and unchanged ticks; numerical failure retains
+failed-world read/write rejection and performs no hidden backend replay.
+
+Every measured frame resets and moves all six bodies at 3000 units/second for
+0.02 seconds. The all-Disabled control travels 60 units; CastRay/CastShape stop at
+the radius-one circle contact at x=18. Transverse and stop/travel tolerances are
+0.02 scene units, residual speed is below 0.05 and full contact impulse differs
+from mass-two momentum change by less than 0.1. These bounds cover accumulated
+single-precision solver/contact values. Logical disabled shape gap 0/active slot
+1, peer shape 0, collider and cached view identity, and one outer callback per body
+are checked while targets retain Disabled. Each registered measured bracket requires
+128 actual hooks and 768 configured reads. All 128 complete measured frames require
+strict zero owner and all-thread managed bytes.
+
+Controls deliberately use one mode per frame. Other bodies' continuous intervals
+can improve ordinary discrete collision, and the built-in GPU contact margin can
+stop separated shapes. The initial registered mixed-mode control stopped a
+Disabled body at x=16 through shared continuous intervals. A radius-two control stopped at x=15
+with separation 1 inside the GPU margin 2. Radius-one controls have separation 3
+at that ordinary substep, beyond this margin; the runtime, budgets and detection
+policies were unchanged. Those failed controls and diagnostic receipts are kept.
+
+Fresh JIT/strict NativeAOT CPU/no-device, software-GPU and registered owner/separate
+profiles exercise this contract, with continuous-response and configured-input
+companions. Fresh CPU/no-device and owner/separate public CPU/GPU continuous
+contract groups retain geometry, boundary, directed-ray, motion/force/joint,
+filter, scene-storage and strict allocation checks. Both extension CCD policy
+operation rows are Implemented; four creation/mass/typed-parameter rows remain
+Partial. Complete numerical/custom geometry, inherited/network/native/platform
+and target-GPU/window performance acceptance remain open. Runtime API, XML and
+wire formats are unchanged. Evidence: bin/physics-ccd-policy-audit/2026-10-19/validation.json.
+
 ## Body mode operation audit
 
 BodySetMode/BodyGetMode now have a complete operation audit for all four modes
@@ -35,7 +83,7 @@ read-only loop from one-time captured negative probes removes that fixture cost.
 Fresh JIT/strict NativeAOT CPU/no-device, software-GPU and registered owner/separate
 checks run the same contract, with server-mode, mass-role, scene-role and configured
 input companions. Both extension mode operation rows are Implemented. Other
-creation/CCD/mass/parameter operations, complete numerical/custom geometry,
+creation/mass/parameter operations, complete numerical/custom geometry,
 inherited/network/native/platform and target GPU/window performance acceptance
 remain open. No runtime API, wire format or implementation behavior changed.
 Evidence: bin/physics-body-mode-audit/2026-10-19/validation.json.
@@ -999,7 +1047,7 @@ unchanged pre-fix measurement allocated 248/248 B in the first CCD setter after
 collection. The registered fixture records delivered CCD configuration; it does
 not implement or establish independent numerical CCD.
 
-The six creation/CCD/mass/typed-parameter extension rows remain Partial; the [mode operation pair](#body-mode-operation-audit) is Implemented.
+The four creation/mass/typed-parameter extension rows remain Partial; the [mode operation pair](#body-mode-operation-audit) and [CCD policy pair](#ccd-policy-operation-audit) are Implemented.
 `ELECTRON2D_TEST_GPU_CCD_CONTRACT=1` separately verifies actual CCD, boundaries and
 directed-ray dynamics on CPU and resident GPU. Frozen runner evidence is under
 `bin/physics-construction/2026-10-12/final/`. Full registered numerical, physical,

@@ -1,6 +1,8 @@
 # Per-body continuous collision
 
-Last updated: 2026-10-14
+Last updated: 2026-10-19
+
+[CCD policy operation audit](physics-registered-adapter.md#ccd-policy-operation-audit) now checks the complete scene/raw mode input pair through actual selected implementations, numerical hooks, wake repair and real circle response. Controls distinguish configured detection from shared substeps and ordinary contact margins. JIT/strict NativeAOT CPU/software-GPU/registered owner/separate frames retain strict zero managed bytes; complete numerical and target-hardware acceptance remain separate.
 
 ## Public contract
 

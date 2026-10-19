@@ -13,6 +13,7 @@ public static partial class BackendChecks
         RunSleep();
         RunContactResponse();
         RunContinuousResponse();
+        RunCCDPolicies();
         RunContactFrames();
         RunCompound();
         RunAngularCompound();

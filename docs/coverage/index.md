@@ -130,7 +130,9 @@ status changes; full retained/native/device history budgets remain open.
 
 [Resident GPU buffer accounting](../components/gpu-memory.md) now covers all storage/transfer allocations, growth peaks and replay retirement. This internal measurement changes no public declaration status and leaves complete retained/native/device budgets open.
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
+
+[CCD policy operation audit](../components/physics-registered-adapter.md#ccd-policy-operation-audit) closes the two extension CCD-setting rows, with all scene/raw body roles, actual selected integration inputs, wake repair and real contact response at zero warmed managed bytes. The current unique physics ledger has 165 open declarations: 134 Partial, 14 Unimplemented and 17 Blocked. Wider numerical/inherited/network/native/platform and hardware/window performance acceptance remain open; earlier counts below are historical.
 
 [Body mode operation audit](../components/physics-registered-adapter.md#body-mode-operation-audit) closes the two mode operation rows. All four roles across scene/raw owners retain actual movement/surface/rotation semantics, six prepared mode reads per numerical hook, complete failure recovery and strict zero managed-byte full frames in public CPU/software-GPU/registered JIT/NativeAOT checks. The current physics census is 167 open declarations: 136 Partial, 14 Unimplemented and 17 Blocked. Broader numerical/inherited/network/native/platform and hardware/window performance acceptance remain open; earlier counts below are historical.
 
