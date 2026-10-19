@@ -2,9 +2,15 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunAreaMonitors(PhysicsServer.Backend? backend = null) => AreaMonitorChecks(backend);
+    public static void RunAreaMonitors(PhysicsServer.Backend? backend = null, bool threaded = false)
+    {
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { AreaMonitorChecks(backend, threaded); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
 
-    private static void AreaMonitorChecks(PhysicsServer.Backend? backend = null)
+    private static void AreaMonitorChecks(PhysicsServer.Backend? backend = null, bool threaded = false)
     {
         Solver? solver = null;
         if (backend is null) PhysicsServerManager.RegisterServer("AreaMonitors", () => solver = new());
@@ -12,12 +18,17 @@ public static partial class BackendChecks
         using var root = new SubViewport { World = world };
         using var circle = new CircleShape { Radius = 3 };
         using var identity = new Node();
-        var scene = new Area(); scene.AddChild(new CollisionShape { Shape = circle }); root.AddChild(scene);
+        var parent = new Entity(); root.AddChild(parent);
+        var scene = new Area(); scene.AddChild(new CollisionShape { Shape = circle }); parent.AddChild(scene);
         var body = new StaticBody(); body.AddChild(new CollisionShape { Shape = circle }); root.AddChild(body);
         using var tree = new SceneTree(root);
         var raw = PhysicsServer.AreaCreate(); var peer = PhysicsServer.AreaCreate(); var rawBody = PhysicsServer.BodyCreate();
         var bodyAdds = 0; var bodyRemoves = 0; var areaAdds = 0; var areaRemoves = 0;
         var sceneBodies = 0; var sceneAreas = 0;
+        var ownerThread = Environment.CurrentManagedThreadId; var numericalReads = 0;
+        var scenePose = Transform.Identity; var rawPose = Transform.Identity;
+        var sceneID = scene.GetRID(); var probeWrites = true;
+        RID[] areaIDs = [sceneID, raw, peer];
         Action<PhysicsServer.AreaBodyStatus, RID, ulong, int, int> bodyCallback = (status, rid, id, remote, local) =>
         {
             Check((rid == body.GetRID() && id == body.InstanceID || rid == rawBody && id == identity.InstanceID) && remote == 0 && local == 0,
@@ -73,7 +84,28 @@ public static partial class BackendChecks
                 Check(PhysicsServer.AreaGetTransform(scene.GetRID()) == Transform.Identity, "Callback pose reads remain available");
             });
             tree.PhysicsFrame(0); Check(bodyAdds == 0 && areaAdds == 0, "Zero step does not publish transitions");
+            Check(world.PhysicsBackendName == (backend?.ToString() ?? "AreaMonitors"), "Area monitoring uses the requested actual implementation");
+            if (solver is not null) solver.StepHook = () =>
+            {
+                Check((Environment.CurrentManagedThreadId != ownerThread) == threaded, "Area pose reads execute on the captured numerical lane");
+                ReadPoses(); numericalReads++;
+                if (!probeWrites) return;
+                foreach (var id in areaIDs)
+                {
+                    Reject<InvalidOperationException>(() => PhysicsServer.AreaSetTransform(id, PhysicsServer.AreaGetTransform(id)));
+                    Reject<InvalidOperationException>(() => PhysicsServer.AreaSetTransform(id, new(.7f, Vector2.One)));
+                }
+                Reject<InvalidOperationException>(() => PhysicsServer.BodyGetTransform(body.GetRID()));
+                if (threaded) Reject<InvalidOperationException>(() => { _ = scene.GlobalTransform; });
+                probeWrites = false;
+            };
             tree.PhysicsFrame(1d / 60);
+            if (solver is not null)
+            {
+                Check(numericalReads == 1, "The selected numerical hook actually reads all three configured Area poses");
+                solver.StatusHook = ReadPoses;
+                _ = PhysicsServer.AreaGetTransform(raw); solver.StatusHook = null;
+            }
             Check(bodyAdds == 2 && areaAdds == 1 && sceneBodies == 2 && sceneAreas == 1 && scene.GetOverlappingBodies().Contains(body),
                 "Selected owner publishes directional body pairs, default raw monitorability and mandatory scene snapshots");
             PhysicsServer.AreaSetMonitorable(peer, true); tree.PhysicsFrame(1d / 60);
@@ -107,30 +139,59 @@ public static partial class BackendChecks
                 Reject<ArgumentException>(() => PhysicsServer.AreaSetAreaMonitorCallback(wrong, null));
             }
             var near = Transform.Identity; var far = new Transform(.2f, new Vector2(30, 0));
-            for (var i = 0; i < 64; i++) { PhysicsServer.AreaSetTransform(raw, i % 2 == 0 ? far : near); tree.PhysicsFrame(1d / 60); }
+            for (var i = 0; i < 64; i++) EditAndStep(i);
             Collect(); GC.WaitForPendingFinalizers(); var all = GC.GetTotalAllocatedBytes(true); var owner = GC.GetAllocatedBytesForCurrentThread();
             var entries = bodyAdds + areaAdds; var exits = bodyRemoves + areaRemoves;
-            for (var i = 0; i < 64; i++) { PhysicsServer.AreaSetTransform(raw, i % 2 == 0 ? far : near); tree.PhysicsFrame(1d / 60); }
+            var beforeReads = numericalReads;
+            for (var i = 0; i < 64; i++) EditAndStep(i);
             owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
             Check(bodyAdds + areaAdds - entries == 128 && bodyRemoves + areaRemoves - exits == 128,
                 "Warmed pose changes deliver actual body/Area entry and exit pairs");
             Check(owner == 0 && all == 0, $"Area monitoring complete-frame allocations: owner={owner}, all={all}");
+            Check(solver is null || numericalReads == beforeReads + 64, "Every measured frame reads three prepared poses inside the actual selected Solve");
             Check(Task.Run(() =>
             {
-                Reject<InvalidOperationException>(() => PhysicsServer.AreaGetTransform(raw));
+                foreach (var id in areaIDs) Reject<InvalidOperationException>(() => PhysicsServer.AreaGetTransform(id));
                 Reject<InvalidOperationException>(() => PhysicsServer.AreaSetTransform(raw, Transform.Identity));
                 Reject<InvalidOperationException>(() => PhysicsServer.AreaSetMonitorable(raw, false));
                 Reject<InvalidOperationException>(() => PhysicsServer.AreaSetMonitorCallback(raw, null));
                 Reject<InvalidOperationException>(() => PhysicsServer.AreaSetAreaMonitorCallback(raw, null));
             }).Wait(TimeSpan.FromSeconds(2)), "Attached Area access rejects other threads");
-            Console.WriteLine($"Area monitor family on {backend?.ToString() ?? "registered"} passed: 128 entries/128 exits, owner={owner}, all={all}.");
+            Console.WriteLine($"Area monitor family on {backend?.ToString() ?? "registered"}, separate={threaded} passed: 128 entries/128 exits, owner={owner}, all={all}.");
+            if (solver is not null)
+            {
+                solver.StepHook = null; ClearCallbacks(); solver.FailSolve = true;
+                Reject<AggregateException>(() => tree.PhysicsFrame(1d / 60));
+                foreach (var id in areaIDs) Reject<InvalidOperationException>(() => PhysicsServer.AreaGetTransform(id));
+            }
+
+            void EditAndStep(int i)
+            {
+                parent.Transform = new(.3f + (i & 1) * .1f, new(.1f, .2f));
+                scene.Transform = new(-.1f, new(.2f, -.1f)); scenePose = scene.GlobalTransform;
+                rawPose = i % 2 == 0 ? far : near; PhysicsServer.AreaSetTransform(raw, rawPose);
+                tree.PhysicsFrame(1d / 60);
+            }
         }
         finally
         {
-            if (solver is not null) solver.IdentityHook = null;
+            if (solver is not null) { solver.IdentityHook = null; solver.StepHook = null; solver.StatusHook = null; }
+            if (solver?.FailSolve != true) ClearCallbacks();
+            PhysicsServer.FreeRID(raw); PhysicsServer.FreeRID(peer); PhysicsServer.FreeRID(rawBody);
+        }
+        void ReadPoses()
+        {
+            foreach (var id in areaIDs)
+            {
+                var actual = PhysicsServer.AreaGetTransform(id);
+                var expected = id == sceneID ? scenePose : id == raw ? rawPose : Transform.Identity;
+                Check(actual.IsEqualApprox(expected) && actual.IsEqualApprox(solver!.Bodies[id].Pose), "Configured scene/raw Area pose agrees with the selected prepared global pose");
+            }
+        }
+        void ClearCallbacks()
+        {
             PhysicsServer.AreaSetMonitorCallback(scene.GetRID(), null); PhysicsServer.AreaSetAreaMonitorCallback(scene.GetRID(), null);
             PhysicsServer.AreaSetMonitorCallback(raw, null); PhysicsServer.AreaSetAreaMonitorCallback(raw, null);
-            PhysicsServer.FreeRID(raw); PhysicsServer.FreeRID(peer); PhysicsServer.FreeRID(rawBody);
         }
         Reject<ArgumentException>(() => PhysicsServer.AreaGetTransform(raw));
         Reject<ArgumentException>(() => PhysicsServer.AreaSetTransform(raw, Transform.Identity));

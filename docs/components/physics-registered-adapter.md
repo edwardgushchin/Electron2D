@@ -517,7 +517,7 @@ pose and monitoring authoring projects through selected collider creation, SetPo
 SetAreaMonitoring and overlap output. AreaGetTransform returns authored engine
 pose, without exposing numerical storage. Invalid finite/scale/skew input rejects
 before replacing authoring. Numerical borrowing rejects configuration writes,
-including equal scene assignments; reads retain their existing access guards.
+including equal scene assignments. [Prepared pose reads](physics-areas.md#prepared-area-pose-inputs) now execute on the exact numerical thread using retained scene input; ordinary reads retain current non-preparing presentation and owner/failure guards.
 
 Scene Monitoring/Monitorable changes also reject from the same Area's raw server
 observer, using the shared dispatch state. Equal assignments remain harmless during

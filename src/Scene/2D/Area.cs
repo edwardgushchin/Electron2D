@@ -223,6 +223,7 @@ public sealed partial class Area : CollisionObject
 
     internal override void MarkShapesDirty() => _shapesDirty = true;
     internal override void OnCollisionFilterChanged(uint layer, uint mask) { if (Space is not null) Backend.UpdateFilter(layer, mask, wakeBody: false); }
+    internal Transform PreparedTransform => new(_lastRotation, _lastPosition);
 
     internal void AttachBackend(PhysicsSpace space)
     {

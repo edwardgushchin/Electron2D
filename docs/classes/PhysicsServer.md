@@ -6,6 +6,8 @@ The [Body/Area append audit](../components/physics-shapes.md#bodyarea-append-con
 
 Last updated: 2026-10-19
 
+[Prepared Area pose inputs](../components/physics-areas.md#prepared-area-pose-inputs) let AreaGetTransform read scene/raw configured poses from selected numerical hooks, without live solver queries or general scene observation. Ordinary reads retain owner/failure guards and non-preparing presentation.
+
 ## Failed local activation
 
 A failed selected activation leaves the prior public flag committed. Equal writes retry incomplete publication; live space queries, local/portable history and active positive intervals restore that committed policy before numerical use. Explicit writes may instead commit a different supplied choice. Metadata reads and skipped intervals remain non-preparing. Post-solver failure keeps its completed tick and callbacks; retirement discards pending activation. See [activation recovery](../components/physics-registered-adapter.md#failed-local-activation) for exercised scope and limits.
