@@ -1,6 +1,6 @@
 # PhysicsFixtureTag
 
-Last updated: 2026-10-16
+Last updated: 2026-10-20
 
 **Declaration:** `internal sealed record PhysicsFixtureTag`
 
@@ -34,3 +34,11 @@ contain sampled values, never these tags. Piece tags keep independent weak sourc
 references and share only the current compound contour. Reuse refreshes every
 logical, one-way and directed field. [Shape-edit checks](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse)
 cover transformed compound/directed queries and stable Area effects.
+
+
+[Special source motion](../components/physics-registered-adapter.md#special-source-motion)
+retains represented family across physical pieces and live shape replacement.
+Initial recovery/residual stopping still executes; ignored special displacement
+cannot manufacture a new sweep, and two concave resources cannot contact through
+private edge pieces. Shared public CPU/software-GPU/registered assertions cover
+logical slots, analytical boundaries, fractions and zero warmed full-frame bytes.

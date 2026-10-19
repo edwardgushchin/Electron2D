@@ -115,7 +115,7 @@ internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBa
         var tag = TakeFixtureTag();
         tag.ColliderRID = Owner.RID; tag.ShapeIndex = index; tag.OneWay = oneWay; tag.SeparationRay = null;
         tag.Owner = Owner; tag.SceneOwner = Owner.SceneOwnerReference; tag.Source!.SetTarget(shape); tag.CompoundPiece = 0;
-        tag.Compound = null;
+        tag.Compound = null; tag.Kind = geometry.Kind;
         if (geometry.Kind == PhysicsShapeGeometry.ShapeKind.ConvexPolygon && geometry.Points.Length > B2Constants.B2_MAX_POLYGON_VERTICES)
         {
             tag.CachedCompound ??= new(tag.Source, transform);
@@ -141,7 +141,7 @@ internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBa
         tag.ColliderRID = source.ColliderRID; tag.ShapeIndex = source.ShapeIndex; tag.OneWay = source.OneWay;
         tag.SeparationRay = ray; tag.Owner = source.Owner; tag.SceneOwner = source.SceneOwner;
         source.Source!.TryGetTarget(out var shape); tag.Source!.SetTarget(shape!);
-        tag.Compound = source.Compound; tag.CompoundPiece = piece;
+        tag.Compound = source.Compound; tag.CompoundPiece = piece; tag.Kind = source.Kind;
         return tag;
     }
 }

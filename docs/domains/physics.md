@@ -1657,3 +1657,9 @@ now shares public CPU/software-GPU/registered raw and scene supplied-pose checks
 Registered portable completion receives source step duration explicitly, preserving
 immediate recovery and factory-provided Step after correction. The full selected
 motion operation stays Partial; the ledger remains 1279/1369 (93.43%), 90 open.
+
+
+[Special source motion](../components/physics-registered-adapter.md#special-source-motion)
+now preserves source-family displacement and recovery across CPU/software-GPU/
+registered scene/raw callers, including live shape replacement. The complete
+selected motion operation remains Partial: 1279/1369 (93.43%), 90 open.

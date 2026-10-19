@@ -375,3 +375,12 @@ factory-provided Step and unchanged supplied-pose callers. Eight cases each requ
 128 complete warmed moving frames at zero owner/all-thread managed bytes. Custom
 backends implement `CompletePortableRestore(pairs, tick, step)` and restore the
 incoming step duration before exposing corrected motion or callback views.
+
+
+`--motion-matrix`, optionally `--cpu`, `--gpu` and `--threaded`, checks all 64
+ordered built-in families through raw/scene server motion and scene TestMove,
+with logical slot 1, transformed poses, margins, analytical contact boundaries,
+unit normals and eight-refinement fractions. Recovery/residual, two-concave and
+live source/target replacement controls precede 128 warmed complete moving frames
+at strict zero owner/all-thread managed bytes. Special source motion follows the
+logical resource family across private numerical pieces.

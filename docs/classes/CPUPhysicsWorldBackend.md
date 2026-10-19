@@ -149,3 +149,11 @@ Scene-Area scans and external server-Area scans now use each scene body's
 effective collision layer. This preserves zero-layer inactive PhysicalBone
 followers while retaining configured public bits. [Filter conformance](../components/physics-filters.md#failed-updates-and-effective-sensing)
 checks exact sensing, queries, ordinary edits and warm allocation on both owners.
+
+
+[Special source motion](../components/physics-registered-adapter.md#special-source-motion)
+retains represented family across physical pieces and live shape replacement.
+Initial recovery/residual stopping still executes; ignored special displacement
+cannot manufacture a new sweep, and two concave resources cannot contact through
+private edge pieces. Shared public CPU/software-GPU/registered assertions cover
+logical slots, analytical boundaries, fractions and zero warmed full-frame bytes.

@@ -1,6 +1,6 @@
 # Resident GPU body-motion queries
 
-Last updated: 2026-10-10
+Last updated: 2026-10-20
 
 The selected GPU world owner now receives engine-unit body motion and typed RID exclusions from common server/space code, then invokes this resident driver. CPU fixture lists no longer pass through that boundary. Platform point velocity resolves current body RID/world membership and uses the selected resident collider attachment. See [shared ownership checks](../classes/PhysicsWorldBackend.md#body-motion-and-platform-lookup).
 
@@ -206,3 +206,14 @@ The compiled surface remains 13,961 declarations; wiki output has 832 public typ
 and 850 files. Source/runtime manifests, process driver/thread proofs and logs are
 retained in bin/physics-moving-oneway/2026-10-14/validation.json. These software
 results establish functional regression evidence, not target-GPU speed or FPS.
+
+
+[Special source motion](physics-registered-adapter.md#special-source-motion) retains
+logical source-kind precedence during resident queries instead of sweeping every
+physical piece as ordinary geometry. Recovery and residual stopping remain active;
+two concave resources do not create piece contacts. The public --motion-matrix
+checks all 64 ordered families, scene/raw/TestMove paths, live replacement and
+128 complete warmed moving frames per profile with strict zero managed bytes.
+Use ELECTRON2D_TEST_GPU_MOTION_QUERIES=functional for resident batch/geometry/
+filter/lifetime/velocity checks without the separate massive measurement; value 1
+retains that complete measurement. Software execution is not hardware performance.

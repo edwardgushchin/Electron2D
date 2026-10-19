@@ -1486,6 +1486,70 @@ Local activation still commits only after selected SetActive succeeds. One pendi
 
 The public-only --activation-transactions fixture uses actual selected activity to gate its independent Solve, reproducing the old mismatch: public active=true, zero selected retry, no motion and an advanced tick after partial deactivation. Registered profiles each cover 64 scene/raw cases (both committed flags, before/after side effects, eight repair routes), original/repeated errors, off-owner and borrowed guards, actual movement, healthy equality, post-step callbacks, failed startup cleanup and pending retirement. An inactive-step route verifies skipping before an allowed query repair. CPU/private software-Vulkan/registered owner/separate healthy profiles toggle local/global activity and actual state callbacks, then measure 128 complete moving intervals at strict 0/0 owner/all-thread managed bytes. All 123 final profiles pass: 51 managed consumer, 51 strict NativeAOT consumer and 21 root profiles. The twelve healthy activation profiles measure 1536 complete moving intervals at 0/0 owner/all-thread managed bytes. Seven portable-PDB proofs match 2273 runtime, 164 consumer and 755 root documents without DEBUG/missing/mismatch; their 3187 unique tracked inputs are retained for committed-source readback. Evidence: bin/physics-activation-transactions/2026-10-18/validation.json; SHA-256 72adf281501f153352a895a232dc59f581412b859cdd5bc8af2482a8105ccb24. The frozen full software/offscreen suite for runtime sources at aa0b0cb5ad5458719a0d3311071cce550bebeeb3 completed with exit 0 in 1533.086791 seconds. Host SHA-256: e488c6f96fd1387bb536fb4be183b5dd5a93fec36401fe603a604d51b80beebd. Across 45236 parent-process map samples private lavapipe was observed and no hardware driver was observed. Post-run readback matches all 3187 unique committed source documents and 78 frozen payload files. Evidence: bin/physics-activation-transactions/2026-10-18/verified/full-runs.json (SHA-256 e709da4a0e99e52727c1a15e3b026e3980da752dec8c5c84d7a7fcfb12c910c7), full-binding.json, full-inputs.json and post-run-source-check.json. The later 12bf2f8a iteration verification changes runtime XML only and retains its separate eighteen-profile evidence; it is not an execution of that newer test host or of the subsequent ee899e11 frame-monitor change. This does not inject physical GPU failure or close native/foreign, complete numerical/network, hardware/window/FPS or performance acceptance.
 
+## Special source motion
+
+The public-only --motion-matrix consumer audits all 64 ordered built-in families
+through raw BodyTestMotion, scene-RID BodyTestMotion and scene TestMove. A disabled
+gap retains logical slot 1. Four cold pose/margin variants each include forward
+and reverse controls: 1536 queries per profile. Forty-three arranged positive
+witnesses and twenty-one policy misses exercise the family dispatch independently
+of backend point order or implementation parity. Rigid covariance uses a .37-radian
+rotation and translation; margins 0/.75 retain the separate recovery policy.
+
+The pinned kernel's family rules precede private physical decomposition. The
+shared matrix reproduced 156 false-hit cases per CPU/GPU/registered profile across
+thirteen source/target families: motion dispatch treated infinite boundaries and
+concave resources as ordinary pieces and incorrectly produced new sweeps.
+
+A stricter outgoing-normal assertion also reproduced two registered zero-width
+segment contact families choosing the wrong side at exact first impact. CPU/GPU
+speculative post-impact poses also crossed these zero-width surfaces and selected
+the opposite side. Built-ins retain the cast's incoming-side certificate; the
+provider orients its exact ordinary impact against incoming displacement. Existing
+overlap recovery and directed-ray normals keep their separate policy. The
+assertions are unchanged after these corrections.
+
+CPU tags now retain represented geometry kind, including every pooled/decomposed
+piece and live replacement. CPU, resident GPU and independent registered queries
+preserve [ADR 0063](../decisions/physics.md#adr-0063) special source displacement;
+they still run initial recovery and residual-overlap stopping. Two concave resources
+cannot manufacture recovery contacts from their private edges. Finite concave
+motion against a world boundary retains its separate precedence. No public API,
+wire payload or numerical simulation geometry changes.
+
+Additional controls verify raw/scene initial recovery, recovery-only misses,
+deep residual overlap with the complete unconsumed remainder, two-concave rejection
+and live source/target replacement between circle, concave and boundary. They
+prevent an implementation from simply dropping special slots. Every positive
+witness checks exact collider/logical slot identity, an outward unit normal, zero
+stationary target velocity, analytical target-boundary membership and an impact
+fraction within the eight-refinement bracket. Boundary tolerance is .01 scene
+units for float composition; bracket slack is .0002 and maximum width 1/256 plus
+.000002. The .13-unit travel bound covers 30/256 = .1171875 units of refinement
+plus .01 boundary slack. Completed separated travel/remainder agrees within .001.
+
+After 128 warmups, 128 actual moving selected frames cycle all families through
+all three routes at strict 0/0 owner/all-thread managed bytes. Root resident-motion
+functional mode retains CPU comparison, geometry/rays, filters/lifetime, custom
+point velocity and batch checks while leaving the existing full measurement mode
+available as value 1. Functional execution does not establish query or step
+performance. Evidence: bin/physics-motion-matrix/2026-10-20/.
+
+The final source-bound regression cohort passes all 107 processes: 51 JIT,
+51 strict NativeAOT and five root query/resident-motion profiles.
+Twelve JIT/strict NativeAOT backend/thread matrix profiles complete 18432 cold
+queries and 1536 measured moving frames at strict zero owner/all-thread bytes.
+Six assembly/PDB sets match 3459 non-generated C# source files, including vendor
+inputs. A fresh pinned shader compilation and SPIR-V validation match 51 tracked
+shader/tool inputs and all four embedded runtime/native payloads. Source, process,
+allocation and shader proofs remain beside the frozen runnable payloads.
+
+The complete selected motion operation remains Partial. The ledger is unchanged:
+1279/1369 Implemented (93.43%), 90 open, 92 Excluded. Arbitrary custom/coupled,
+inherited/server/network/native/platform and hardware/window/performance acceptance
+remain open. GPU execution uses private software Vulkan; the unchecked power
+cable excludes hardware load.
+
 ## Moving one-way continuation
 
 The public-only --moving-oneway consumer shares the CPU/GPU moving-platform

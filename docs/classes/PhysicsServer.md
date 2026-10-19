@@ -1453,3 +1453,11 @@ Broader numerical and final platform/network/performance acceptance remains sepa
 now also executes on an independent registered owner: scene/raw supplied-pose
 recovery retains the restored physical duration, including portable correction
 before the next interval. This bounded verification leaves full motion acceptance open.
+
+
+[Special source motion](../components/physics-registered-adapter.md#special-source-motion)
+retains represented family across physical pieces and live shape replacement.
+Initial recovery/residual stopping still executes; ignored special displacement
+cannot manufacture a new sweep, and two concave resources cannot contact through
+private edge pieces. Shared public CPU/software-GPU/registered assertions cover
+logical slots, analytical boundaries, fractions and zero warmed full-frame bytes.

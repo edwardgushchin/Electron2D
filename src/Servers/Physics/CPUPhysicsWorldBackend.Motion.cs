@@ -54,6 +54,7 @@ internal sealed partial class CPUPhysicsWorldBackend
                 if (ray is null) query.radius += queryMargin;
                 foreach (var candidate in _motionCandidates)
                 {
+                    if (ownTag.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon && candidate.Tag.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon) continue;
                     if (candidate.Tag.Compound is not null && candidate.Tag.CompoundPiece != 0) continue;
                     var other = b2MakeShapeDistanceProxy(b2GetShape(world, candidate.ShapeID));
                     var otherTransform = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
@@ -114,6 +115,9 @@ internal sealed partial class CPUPhysicsWorldBackend
                     WorldProxy(b2MakeShapeDistanceProxy(b2GetShape(world, ownID)), fromTransform, recovery);
                 foreach (var candidate in _motionCandidates)
                 {
+                    if (ownTag.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon && candidate.Tag.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon) continue;
+                    var sweep = ownTag.Kind == PhysicsShapeGeometry.ShapeKind.WorldBoundary ||
+                        ownTag.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon && candidate.Tag.Kind != PhysicsShapeGeometry.ShapeKind.WorldBoundary ? default : requested;
                     var other = b2MakeShapeDistanceProxy(b2GetShape(world, candidate.ShapeID));
                     var otherTransform = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
                     if (!AcceptOneWayMotion(candidate, requested, otherTransform)) continue;
@@ -121,7 +125,7 @@ internal sealed partial class CPUPhysicsWorldBackend
                     {
                         if (ownTag.Compound is not null && ownTag.CompoundPiece != 0 ||
                             candidate.Tag.Compound is not null && candidate.Tag.CompoundPiece != 0) continue;
-                        var full = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, requested * safe, 0);
+                        var full = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, sweep * safe, 0);
                         if (full.pointCount == 0) continue;
                         var initial = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, default, 0);
                         if (initial.pointCount != 0 && -initial.points[0].separation <= 0.1f * B2_LINEAR_SLOP &&
@@ -132,15 +136,15 @@ internal sealed partial class CPUPhysicsWorldBackend
                             for (var step = 0; step < 8; step++)
                             {
                                 var middle = (lowRay + highRay) * 0.5f;
-                                var partial = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, requested * middle, 0);
+                                var partial = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, sweep * middle, 0);
                                 if (partial.pointCount != 0) highRay = middle;
                                 else lowRay = middle;
                             }
                         if (lowRay >= safe && hasMotionHit) continue;
                         var rayImpact = query;
                         for (var pointIndex = 0; pointIndex < rayImpact.count; pointIndex++)
-                            rayImpact.points[pointIndex] += requested * highRay;
-                        var rayContact = MotionRayContact(rayImpact, ownTag, fromTransform, recovery + requested * highRay, other, candidate.Tag, otherTransform, default, queryMargin);
+                            rayImpact.points[pointIndex] += sweep * highRay;
+                        var rayContact = MotionRayContact(rayImpact, ownTag, fromTransform, recovery + sweep * highRay, other, candidate.Tag, otherTransform, default, queryMargin);
                         if (rayContact.pointCount == 0) rayContact = full;
                         var point = rayContact.points[0];
                         var normal = -rayContact.normal;
@@ -170,14 +174,15 @@ internal sealed partial class CPUPhysicsWorldBackend
                         }
                         continue;
                     }
-                    var cast = CPUPhysicsWorldBackend.Cast(query, other, otherTransform, requested, safe);
+                    if (sweep == default) continue;
+                    var cast = CPUPhysicsWorldBackend.Cast(query, other, otherTransform, sweep, safe);
                     if (!cast.hit) continue;
                     var low = 0f;
                     var high = safe;
                     for (var step = 0; step < 8; step++)
                     {
                         var middle = (low + high) * 0.5f;
-                        if (CPUPhysicsWorldBackend.Cast(query, other, otherTransform, requested, middle).hit)
+                        if (CPUPhysicsWorldBackend.Cast(query, other, otherTransform, sweep, middle).hit)
                             high = middle;
                         else low = middle;
                     }
@@ -185,9 +190,9 @@ internal sealed partial class CPUPhysicsWorldBackend
                     safe = low;
                     unsafeFraction = high;
                     var impact = WorldProxy(b2MakeShapeDistanceProxy(b2GetShape(world, ownID)), fromTransform,
-                        recovery + requested * MathF.Min(1f, high + 2f * B2_LINEAR_SLOP / b2Length(requested)));
+                        recovery + sweep * MathF.Min(1f, high + 2f * B2_LINEAR_SLOP / b2Length(sweep)));
                     var manifold = MotionManifold(impact, ownTag, fromTransform,
-                        recovery + requested * MathF.Min(1f, high + 2f * B2_LINEAR_SLOP / b2Length(requested)), other, candidate.Tag, otherTransform);
+                        recovery + sweep * MathF.Min(1f, high + 2f * B2_LINEAR_SLOP / b2Length(sweep)), other, candidate.Tag, otherTransform);
                     if (manifold.pointCount != 0)
                     {
                         var point = manifold.points[0];
@@ -196,6 +201,8 @@ internal sealed partial class CPUPhysicsWorldBackend
                             -manifold.normal, MathF.Max(0, -point.separation));
                     }
                     else motionHit = new(candidate, ownTag.ShapeIndex, cast.point, cast.normal, 0);
+                    // A speculative pose may cross a zero-width edge; keep the cast's incoming side.
+                    if (b2Dot(motionHit.Normal, requested) > 0) motionHit = motionHit with { Normal = cast.normal };
                     hasMotionHit = true;
                 }
             }
