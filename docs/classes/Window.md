@@ -1,6 +1,6 @@
 # Window
 
-Last updated: 2026-10-17
+Last updated: 2026-10-19
 
 **Inherits:** [Viewport](Viewport.md)
 
@@ -19,7 +19,7 @@ A configurable native root window that owns scene children.
 
 Pass a detached window to `Engine.Run(Window)` or `Engine.RunAsync(Window)`. The runtime opens its native window before scene entry and releases it after scene teardown. One native root window is supported. The client size uses pixels on Wayland, Android, iOS, tvOS and browsers, and native window units elsewhere. On mobile/TV/browser targets the actual native surface size replaces the initial requested size; nonzero configured minimum or maximum dimensions fail at startup. The root canvas renders after scene processing; embedded child windows execute beneath a viewport configured with GUIEmbedSubwindows; independent native children remain absent.
 
-Native lifetime belongs to Engine.Run or Engine.RunAsync. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation is rejected. Embedded Window children execute under GUIEmbedSubwindows, and SubViewport children supply offscreen targets; independent native child windows remain unavailable. The root canvas supports retained rectangles, lines, textures and GPU shader materials. Full multiwindow rendering remains incomplete; see the [coverage page](../coverage/classes/Window.md).
+Native lifetime belongs to Engine.Run or Engine.RunAsync. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Window.Position uses native desktop coordinates for the root and embedding-viewport coordinates for child windows. Direct SceneTree(Window) activation is rejected. Embedded Window children execute under GUIEmbedSubwindows, and SubViewport children supply offscreen targets; independent native child windows remain unavailable. The root canvas supports retained rectangles, lines, textures and GPU shader materials. Full multiwindow rendering remains incomplete; see the [coverage page](../coverage/classes/Window.md).
 
 Inherited Node.GetViewport/GetWindow return this window only while it is active;
 detached windows return null. Nested offscreen viewports preserve the containing
@@ -51,14 +51,14 @@ Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested cod
 | --- | --- |
 | [`public Vector2i MaxSize { get; set; }`](#maxsize) | Gets or sets nonnegative maximum client dimensions; zero means no limit on that axis. |
 | [`public Vector2i MinSize { get; set; }`](#minsize) | Gets or sets nonnegative minimum client dimensions; zero means no limit on that axis. |
-| [`public Vector2i Position { get; set; }`](#position) | Gets or requests the client origin in native desktop coordinates. |
+| [`public Vector2i Position { get; set; }`](#position) | Gets or requests the client origin in native desktop or embedded-host coordinates. |
 | [`public Vector2i Size { get; set; }`](#size) | Gets the observed client size or requests a positive client size. |
 | [`public string Title { get; set; }`](#title) | Gets or sets the native window title. |
 | [`public bool Visible { get; set; }`](#visible) | Gets or sets the root window's native visibility. |
 | [`public WindowMode Mode { get; set; }`](#mode) | Gets the observed native mode, or configures a presentation-mode request. |
 | [`public int CurrentScreen { get; set; }`](#currentscreen) | Gets the observed display index, or requests placement on a zero-based display index. |
 | [`public bool Unresizable { get; set; }`](#unresizable) | Gets or sets the policy preventing user border resizing. |
-| [`public bool Borderless { get; set; }`](#borderless) | Gets or sets the policy removing native window borders and title bar. |
+| [`public bool Borderless { get; set; }`](#borderless) | Gets or sets the policy removing native or embedded window borders and title bar. |
 | [`public bool AlwaysOnTop { get; set; }`](#alwaysontop) | Gets or sets the policy requesting placement above ordinary windows. |
 | [`public bool Unfocusable { get; set; }`](#unfocusable) | Gets or sets the policy preventing keyboard focus. |
 
@@ -81,8 +81,8 @@ Window owns `Show()` and `Hide()`; both assign Visible and preserve native failu
 | [`public bool GetFlag(Flags flag)`](#getflag) | Gets a configured window policy. |
 | [`public void SetFlag(Flags flag, bool enabled)`](#setflag) | Configures an executable policy and requests its native application when active. |
 | [`public bool IsMaximizeAllowed()`](#ismaximizeallowed) | Reports whether the current resize policy permits native maximization. |
-| [`public Vector2i GetPositionWithDecorations()`](#getpositionwithdecorations) | Gets the outer window origin, including native borders when visible and active. |
-| [`public Vector2i GetSizeWithDecorations()`](#getsizewithdecorations) | Gets the outer window size, including native borders when visible and active. |
+| [`public Vector2i GetPositionWithDecorations()`](#getpositionwithdecorations) | Gets the outer window origin, including visible native or embedded decoration margins. |
+| [`public Vector2i GetSizeWithDecorations()`](#getsizewithdecorations) | Gets the outer window size, including visible native or embedded decoration margins. |
 | [`public void MoveToCenter()`](#movetocenter) | Requests centering of the active client area in its current screen's usable rectangle. |
 | [`public void SetIMEActive(bool active)`](#setimeactive) | Enables or disables native text input for the active window. |
 | [`public void SetIMEPosition(Vector2i position)`](#setimeposition) | Requests native IME candidate placement at a client-coordinate caret. |
@@ -154,7 +154,7 @@ Zero by default.
 <a id="position"></a>
 ### `public Vector2i Position { get; set; }`
 
-Gets or requests the client origin in native desktop coordinates.
+Gets or requests the client origin in native desktop or embedded-host coordinates.
 
 The configured position before startup, or zero if no position was requested.
 
@@ -257,7 +257,7 @@ Uses GetFlag and SetFlag, including their lifecycle and failure contract.
 <a id="borderless"></a>
 ### `public bool Borderless { get; set; }`
 
-Gets or sets the policy removing native window borders and title bar.
+Gets or sets the policy removing native or embedded window borders and title bar.
 
 **Value:** False by default.
 
@@ -405,9 +405,9 @@ Reports whether the current resize policy permits native maximization.
 <a id="getpositionwithdecorations"></a>
 ### `public Vector2i GetPositionWithDecorations()`
 
-Gets the outer window origin, including native borders when visible and active.
+Gets the outer window origin, including visible native or embedded decoration margins.
 
-**Returns:** Desktop coordinates; Position while hidden or detached.
+**Returns:** Native desktop coordinates or embedded host coordinates. Hidden/detached windows return Position. Embedded margins use maximum focused/unfocused content offsets, truncated before integer arithmetic.
 
 **NotSupportedException:** The active Wayland compositor does not disclose global positions.
 
@@ -420,9 +420,9 @@ Gets the outer window origin, including native borders when visible and active.
 <a id="getsizewithdecorations"></a>
 ### `public Vector2i GetSizeWithDecorations()`
 
-Gets the outer window size, including native borders when visible and active.
+Gets the outer window size, including visible native or embedded decoration margins.
 
-**Returns:** Native window units; on Wayland, client pixels because decoration extents are unavailable. Hidden or detached windows return Size.
+**Returns:** Native units; a native Wayland root reports client pixels because decoration extents are unavailable. Visible embedded windows add the maximum focused/unfocused content minimum, truncated before integer arithmetic. Hidden/detached or borderless windows return Size.
 
 **InvalidOperationException:** The caller is not the owner or native geometry is unavailable.
 
@@ -666,7 +666,7 @@ See [the component](../components/popup-windows.md) for input/target ownership, 
 | `public System.Void PopupExclusiveCenteredRatio(Electron2D.Node fromNode, System.Single ratio = 0.8f)` | Parents a detached dialog to the last exclusive window and shows it with a proportional host size. |
 | `public System.Void PopupExclusiveOnParent(Electron2D.Node fromNode, Electron2D.Rect2i parentRect)` | Parents a detached dialog to the last exclusive window and shows it with a parent-relative rectangle. |
 | `public System.Void PopupOnParent(Electron2D.Rect2i parentRect)` | Shows this window at a rectangle relative to its parent window. |
-| `public System.Boolean Borderless { get; set; }` | Gets or sets the policy removing native window borders and title bar. |
+| `public System.Boolean Borderless { get; set; }` | Gets or sets the policy removing native or embedded window borders and title bar. |
 | `public System.Boolean Exclusive { get; set; }` | Gets or sets whether input outside this window is blocked while visible. |
 | `public Electron2D.LayoutDirection LayoutDirection { get; set; }` | Gets or sets the direction inherited by this window's controls. |
 | `public System.Boolean MaximizeDisabled { get; set; }` | Gets or sets whether user maximization is disabled. |
@@ -828,3 +828,9 @@ GPU performance and foreign native hosts remain separate acceptance gates.
 Hovered-window disposal clears routing ownership without invoking live mutation on the
 retired window. Focus cleanup does not raise another departing child during subtree
 removal or tree shutdown. Regression checks cover both cleanup paths.
+
+## Embedded decoration themes
+
+All thirteen Window theme items now have executing embedded consumers. The built-in theme supplies focused `embedded_border` and `embedded_unfocused_border` styles, borrowed `title_font` and fallback `title_font_size`, `title_color`, `title_outline_modulate`, `title_outline_size`, `title_height`, `resize_margin`, real DPITexture `close` and `close_pressed` icons, and `close_h_offset`/`close_v_offset`. Normal defaults are 16-pixel icons, offsets 18 and 24, title height 36, resize margin 4 and outline size zero. Resource and local override changes use ordinary deferred/direct ThemeOwner invalidation and batching. Subclasses inherit the Window item type chain; custom variation/owner/project themes remain supported.
+
+The [complete chrome contract](../components/popup-windows.md#embedded-decoration-theme-and-input) covers retained shaped titles, pressed/canceled/released close capture, outside resizing, geometry queries, source-resource changes, scene persistence and verified limits.

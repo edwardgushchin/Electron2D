@@ -5,10 +5,10 @@ public sealed partial class SceneTree
     private readonly Dictionary<Viewport, Window> _embeddedFocus = [];
     private readonly Dictionary<Viewport, Window> _embeddedWindowHover = [];
     private readonly Dictionary<Viewport, Window> _embeddedMouseCapture = [];
-    private readonly Dictionary<Viewport, (Window Window, Vector2 Start, Vector2i Position, Vector2i Size, int Edges)> _embeddedDecorDrag = [];
+    private readonly Dictionary<Viewport, (Window Window, Vector2 Start, Vector2i Position, Vector2i Size, int Edges, Rect2 CloseRect)> _embeddedDecorDrag = [];
     private readonly Dictionary<(Viewport, int), Window> _embeddedTouchCapture = [];
     private void ReleaseEmbeddedHost(Viewport host)
-    { _embeddedWindowHover.Remove(host); _embeddedFocus.Remove(host); _embeddedMouseCapture.Remove(host); _embeddedDecorDrag.Remove(host); foreach (var entry in _embeddedTouchCapture.ToArray()) if (entry.Key.Item1 == host) _embeddedTouchCapture.Remove(entry.Key); }
+    { _embeddedWindowHover.Remove(host); _embeddedFocus.Remove(host); _embeddedMouseCapture.Remove(host); CancelEmbeddedDecoration(host); foreach (var entry in _embeddedTouchCapture.ToArray()) if (entry.Key.Item1 == host) _embeddedTouchCapture.Remove(entry.Key); }
     private void UpdateEmbeddedWindowHover(Viewport host, Vector2 point, bool updatePosition = true)
     {
         Window? hovered = null;
@@ -49,6 +49,8 @@ public sealed partial class SceneTree
     {
         EnsureOwnerThread(); if (window.IsDisposed || window.Embedder is not { } host || !window.Visible || window.Unfocusable) return;
         var previous = _embeddedFocus.GetValueOrDefault(host); if (previous == window) return;
+        CancelEmbeddedDecoration(host);
+        previous?.QueueEmbeddedRedraw(); window.QueueEmbeddedRedraw();
         _embeddedFocus[host] = window; host.EmbeddedWindows.Remove(window); host.EmbeddedWindows.Add(window); window.RaiseEmbeddedCanvas();
         List<Exception>? errors = null;
         try { if (previous is { IsDisposed: false }) previous.EmitEmbeddedFocus(false); } catch (Exception error) { CollectException(ref errors, error); }
@@ -68,7 +70,7 @@ public sealed partial class SceneTree
         }
         try { DisableGUIViewport(window); } catch (Exception error) { CollectException(ref errors, error); }
         if (_embeddedMouseCapture.GetValueOrDefault(host) == window) _embeddedMouseCapture.Remove(host);
-        if (_embeddedDecorDrag.TryGetValue(host, out var activeDecor) && activeDecor.Window == window) _embeddedDecorDrag.Remove(host);
+        if (_embeddedDecorDrag.TryGetValue(host, out var activeDecor) && activeDecor.Window == window) CancelEmbeddedDecoration(host);
         foreach (var entry in _embeddedTouchCapture.ToArray()) if (entry.Value == window) _embeddedTouchCapture.Remove(entry.Key);
         if (_embeddedFocus.GetValueOrDefault(host) == window)
         {
@@ -90,28 +92,7 @@ public sealed partial class SceneTree
         }
         target = host; if (host.EmbeddedWindows.Count == 0) return RoutePopupInput(host, input, ref errors);
         Vector2? point = input switch { InputEventMouse mouse => mouse.Position, InputEventScreenTouch touch => touch.Position, InputEventScreenDrag drag => drag.Position, InputEventGesture gesture => gesture.Position, _ => null };
-        if (_embeddedDecorDrag.TryGetValue(host, out var decor))
-        {
-            if (decor.Window.IsDisposed || !decor.Window.Visible) _embeddedDecorDrag.Remove(host);
-            else if (input is InputEventMouseMotion move)
-            {
-                var delta = (Vector2i)(move.Position - decor.Start);
-                if (decor.Edges == 0) decor.Window.Position = decor.Position + delta;
-                else
-                {
-                    var size = decor.Size; var position = decor.Position;
-                    if ((decor.Edges & 1) != 0) { size.X = Math.Max(1, decor.Size.X - delta.X); position.X = decor.Position.X + decor.Size.X - size.X; }
-                    if ((decor.Edges & 2) != 0) size.X = Math.Max(1, decor.Size.X + delta.X);
-                    if ((decor.Edges & 4) != 0) { size.Y = Math.Max(1, decor.Size.Y - delta.Y); position.Y = decor.Position.Y + decor.Size.Y - size.Y; }
-                    if ((decor.Edges & 8) != 0) size.Y = Math.Max(1, decor.Size.Y + delta.Y);
-                    size.X = Math.Max(size.X, Math.Max(1, decor.Window.MinSize.X)); size.Y = Math.Max(size.Y, Math.Max(1, decor.Window.MinSize.Y));
-                    if (decor.Window.MaxSize.X > 0) size.X = Math.Min(size.X, decor.Window.MaxSize.X); if (decor.Window.MaxSize.Y > 0) size.Y = Math.Min(size.Y, decor.Window.MaxSize.Y);
-                    decor.Window.Size = size; decor.Window.Position = position;
-                }
-                return null;
-            }
-            else if (input is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: false }) { _embeddedDecorDrag.Remove(host); return null; }
-        }
+        if (ContinueEmbeddedDecoration(host, input, ref errors)) return null;
         Window? chosen = null;
         if (point is not null)
         {
@@ -126,17 +107,10 @@ public sealed partial class SceneTree
             }
             if (chosen is not null && !chosen.EmbeddedHitRect.HasPoint(point.Value) && chosen.PopupWindow && !chosen.Exclusive && input is InputEventMouseButton { Pressed: true }) { chosen.RequestEmbeddedClose(); return null; }
             if (chosen is { Exclusive: true } && !chosen.EmbeddedHitRect.HasPoint(point.Value) && input is InputEventMouseButton { Pressed: true }) return null;
-            if (chosen is { Borderless: false } framed && input is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: true })
+            if (chosen is { Borderless: false } framed)
             {
-                var titleHeight = framed.GetThemeConstant("title_height", "Window"); var margin = framed.GetThemeConstant("resize_margin", "Window"); var p = point.Value; var pos = framed.Position; var size = framed.Size; var edges = 0;
-                if (!framed.Unresizable) { if (p.X < pos.X + margin) edges |= 1; else if (p.X >= pos.X + size.X - margin) edges |= 2; if (p.Y < pos.Y - titleHeight + margin) edges |= 4; else if (p.Y >= pos.Y + size.Y - margin) edges |= 8; }
-                if (edges != 0 || p.Y < pos.Y)
-                {
-                    FocusEmbeddedWindow(framed);
-                    if (edges == 0 && p.X >= pos.X + size.X - 36) framed.RequestEmbeddedClose();
-                    else _embeddedDecorDrag[host] = (framed, p, pos, size, edges);
-                    return null;
-                }
+                if (input is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: true } && BeginEmbeddedDecoration(host, framed, point.Value, ref errors)) return null;
+                if (input is InputEventMouseMotion && (framed.EmbeddedTitleRect.HasPoint(point.Value) || framed.EmbeddedResizeEdges(point.Value) != 0)) SetEmbeddedCursor(framed.EmbeddedResizeEdges(point.Value), false, ref errors);
             }
             if (input is InputEventMouseButton button)
             {

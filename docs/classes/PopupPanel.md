@@ -1,6 +1,6 @@
 # PopupPanel
 
-Last updated: 2026-10-06
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public class PopupPanel : Popup`. **Source:** [PopupPanel.cs](../../src/Scene/GUI/PopupPanel.cs). **Inherits:** [Popup](Popup.md). **Component:** [Embedded popup windows](../components/popup-windows.md).
 
@@ -10,7 +10,7 @@ A transparent themed panel popup fitting direct child controls and accounting fo
 
 Configure `GUIEmbedSubwindows=true` on a containing viewport before attaching child windows. The viewport owns internal presentation layers; each public Window remains in its original scene hierarchy and owns its own GUI state and native render target. Images share the existing renderer/device, use completed native images, and never pass through per-frame CPU readback/upload. Hidden windows remain attached; temporary layers are released at a safe point after detachment or with their viewport during tree teardown. Public child enumeration and packing omit the presentation layers.
 
-Independent native child windows are not implemented: showing a child without an embedder fails explicitly before visibility commits. Live migration between embedded and independent-native modes is also absent; changing GUIEmbedSubwindows while embedded windows are attached throws. These capabilities retain Partial/Blocked coverage. Native flags that are meaningful only for independent OS windows retain their native integration prerequisite. Full decoration/theme parity, embedded pointer entry/exit signals, cross-window drag sections and platform-specific window modes are separate remaining capabilities; the embedded baseline draws a title/close decoration and supports owner-thread title dragging and border resizing.
+Independent native child windows are not implemented: showing a child without an embedder fails explicitly before visibility commits. Live migration between embedded and independent-native modes is also absent; changing GUIEmbedSubwindows while embedded windows are attached throws. These capabilities retain Partial/Blocked coverage. Native flags that are meaningful only for independent OS windows retain their native integration prerequisite. Embedded decoration themes now execute through [Window chrome](../components/popup-windows.md#embedded-decoration-theme-and-input), with captured release-to-close and constrained outside resizing. Independent native titlebars, cross-window drag and platform-specific modes retain their own prerequisites.
 
 The host routes pointer, touch and gesture coordinates into the selected window and retains button/contact capture outside its rectangle. Keyboard/controller actions go to the focused child viewport. Popup windows intercept outside clicks; Exclusive blocks dismissal and outside input. Opening and hiding update back-to-front ordering and window focus while preserving separate control-focus owners. Hiding a parent also hides its descendant windows. Exceptions from visibility/focus cleanup are collected after required state transitions. Public PushInput re-entry is rejected before routing callbacks. Text and composition can reach an embedded window's focused control; native IME requests use the containing native root and translated caret position.
 

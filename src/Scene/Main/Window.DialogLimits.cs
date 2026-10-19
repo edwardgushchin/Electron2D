@@ -6,7 +6,7 @@ public partial class Window
     internal bool ClampToEmbedder;
     /// <summary>Gets or sets whether embedded window width expands to display its complete title.</summary>
     /// <value>False initially; AcceptDialog defaults to true.</value>
-    /// <remarks>Uses the embedded title font and close-button space. MaxSize still bounds the result.
+    /// <remarks>Uses the embedded title font, maximum focused/unfocused style minimum and close-button space. MaxSize still bounds the result.
     /// Native title measurement is unavailable and a native root rejects this enabled policy.</remarks>
     /// <exception cref="NotSupportedException">Enabled on an active native root.</exception>
     public bool KeepTitleVisible
@@ -17,7 +17,7 @@ public partial class Window
     private Vector2i TitleMinimum()
     {
         if (!_keepTitleVisible || Borderless || GetThemeFont("title_font", "Window") is not { } font) return Vector2i.Zero;
-        return new(checked((int)MathF.Ceiling(font.GetStringSize(Title, fontSize: GetThemeFontSize("title_font_size", "Window")).X + 48)), 0);
+        return new(checked((int)MathF.Ceiling(font.GetStringSize(Title, fontSize: GetThemeFontSize("title_font_size", "Window"), direction: IsLayoutRTL() ? TextDirection.RTL : TextDirection.LTR).X + DecorationMetric(true).X + GetThemeConstant("close_h_offset", "Window"))), 0);
     }
     private Vector2i ClampEmbeddedPosition(Vector2i position)
     {

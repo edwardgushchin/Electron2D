@@ -10122,9 +10122,7 @@
         "Window::method:is_using_font_oversampling()",
         "Window::method:set_use_font_oversampling(bool:)",
         "Window::property:accessibility_description",
-        "Window::property:accessibility_name",
-        "Window::theme_item:title_font",
-        "Window::theme_item:title_font_size"
+        "Window::property:accessibility_name"
       ]
     },
     {
@@ -10137,16 +10135,7 @@
         "Window::property:mouse_passthrough",
         "Window::property:mouse_passthrough_polygon",
         "Window::property:nonclient_area",
-        "Window::property:sharp_corners",
-        "Window::theme_item:close",
-        "Window::theme_item:close_h_offset",
-        "Window::theme_item:close_pressed",
-        "Window::theme_item:close_v_offset",
-        "Window::theme_item:resize_margin",
-        "Window::theme_item:title_color",
-        "Window::theme_item:title_height",
-        "Window::theme_item:title_outline_modulate",
-        "Window::theme_item:title_outline_size"
+        "Window::property:sharp_corners"
       ]
     },
     {
@@ -10166,9 +10155,7 @@
         "Window::method:get_focused_window()",
         "Window::method:set_unparent_when_invisible(bool:)",
         "Window::property:force_native",
-        "Window::property:transient_to_focused",
-        "Window::theme_item:embedded_border",
-        "Window::theme_item:embedded_unfocused_border"
+        "Window::property:transient_to_focused"
       ]
     },
     {

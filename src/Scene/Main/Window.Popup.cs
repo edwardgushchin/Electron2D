@@ -216,7 +216,7 @@ public partial class Window
     }
     internal void QueueEmbeddedRedraw() => _embeddedCanvas?.QueueRedraw();
     internal void RaiseEmbeddedCanvas() { if (_embeddedLayer?.Parent is { } parent) parent.MoveChild(_embeddedLayer, -1); }
-    internal Rect2 EmbeddedHitRect => Borderless ? new(Position, Size) : new((Vector2)Position - new Vector2(0, GetThemeConstant("title_height", "Window")), (Vector2)Size + new Vector2(0, GetThemeConstant("title_height", "Window")));
+    internal Rect2 EmbeddedHitRect => Borderless ? new(Position, Size) : EmbeddedFrameRect.Grow(Unresizable ? 0 : Math.Max(0, GetThemeConstant("resize_margin", "Window")));
     internal void RequestEmbeddedClose() => EmitWindowEvent(NotificationWmCloseRequest);
     internal void EmitEmbeddedFocus(bool focus) => HandleFocus(focus);
     private void UpdateEmbeddedMembership(bool entering)
@@ -246,17 +246,39 @@ public partial class Window
     }
     private sealed class EmbeddedWindowCanvas(Window window) : Control
     {
+        private readonly TextLine _title = new();
+        private string? _titleSource;
+        private Font? _titleFont;
+        private int _titleSize;
+        protected override void Dispose(bool disposing)
+        { try { if (disposing) _title.Dispose(); } finally { base.Dispose(disposing); } }
         protected override void OnDraw()
         {
             base.OnDraw(); if (window.IsDisposed || !window.Visible) return;
             var rect = new Rect2(window.Position, window.Size);
             if (!window.Borderless)
             {
-                var titleHeight = window.GetThemeConstant("title_height", "Window");
-                var title = new Rect2(rect.Position - new Vector2(0, titleHeight), new Vector2(rect.Size.X, titleHeight));
-                DrawStyleBox(window.GetThemeStyleBox("embedded_border", "Window")!, new(title.Position, new Vector2(rect.Size.X, titleHeight + rect.Size.Y)));
-                if (window.GetThemeFont("title_font", "Window") is { } font) DrawString(font, title.Position + new Vector2(8, titleHeight - 10), window.Title, width: MathF.Max(0, rect.Size.X - 40), fontSize: window.GetThemeFontSize("title_font_size", "Window"), modulate: window.GetThemeColor("title_color", "Window"));
-                var close = title.Position + new Vector2(title.Size.X - 18, 18); DrawLine(close - new Vector2(4, 4), close + new Vector2(4, 4), Colors.White, 2); DrawLine(close + new Vector2(-4, 4), close + new Vector2(4, -4), Colors.White, 2);
+                var panel = window.GetThemeStyleBox(window.HasFocus() ? "embedded_border" : "embedded_unfocused_border", "Window");
+                if (panel is not null) DrawStyleBox(panel, rect);
+                if (window.GetThemeFont("title_font", "Window") is { } font)
+                {
+                    var fontSize = window.GetThemeFontSize("title_font_size", "Window");
+                    if (_titleSource != window.Title || _titleFont != font || _titleSize != fontSize)
+                    {
+                        _title.Clear(); _title.AddString(window.Title, font, fontSize); _titleSource = window.Title; _titleFont = font; _titleSize = fontSize;
+                    }
+                    var width = rect.Size.X - (panel?.GetMinimumSize().X ?? 0) - window.GetThemeConstant("close_h_offset", "Window");
+                    if (width > 0)
+                    {
+                        _title.Width = width; _title.Direction = window.IsLayoutRTL() ? TextDirection.RTL : TextDirection.LTR;
+                        var size = _title.GetSize(); var at = rect.Position + new Vector2((int)((rect.Size.X - size.X) / 2), (int)((-window.EmbeddedTitleHeight - size.Y) / 2));
+                        var outline = Math.Max(0, window.GetThemeConstant("title_outline_size", "Window")); var color = window.GetThemeColor("title_outline_modulate", "Window");
+                        if (outline > 0 && color.A > 0) _title.DrawOutline(this, at, outline, color);
+                        _title.Draw(this, at, window.GetThemeColor("title_color", "Window"));
+                    }
+                }
+                if (window.GetThemeIcon(window._embeddedClosePressed && window.HasFocus() ? "close_pressed" : "close", "Window") is { } icon)
+                    DrawTexture(icon, window.EmbeddedCloseRect.Position);
             }
             if (!window.Transparent) DrawRect(rect, Colors.Black);
             var fitted = window.ContentLayout.ScreenRect;

@@ -1,12 +1,12 @@
 # AcceptDialog
 
-Last updated: 2026-10-06
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.AcceptDialog`. **Inherits:** [Window](Window.md). **Inherited By:** [ConfirmationDialog](ConfirmationDialog.md). **Source:** [implementation](../../src/Scene/GUI/AcceptDialog.cs). **Component:** [Embedded dialogs](../components/dialogs.md).
 
 An embedded notification dialog owning a panel, message label and button row. Attach under GUIEmbedSubwindows and call PopupCentered or another inherited Window.Popup method. It starts hidden, exclusive and transient with wrapped controls and an Alert! title. Borrowed required controls must stay alive and owned. Custom buttons can be detached with RemoveButton without disposal, which disconnects their dialog callbacks. Registered LineEdit submission confirms unless OK is disabled. The independently configurable non-echo ui_close_dialog action and close requests cancel.
 
-DialogHideOnOK controls hiding before OnOKPressed and Confirmed. Cancellation emits Canceled before OnCancelPressed and deferred hiding. CustomAction precedes OnCustomAction without automatic hiding. Required delivery continues after callback failure, and reopening supersedes obsolete deferred hiding. Panel padding, buttons_min_width/buttons_min_height and buttons_separation constrain actual content/button layout. KeepTitleVisible expands embedded title width; decorated positioning is clamped separately. Packed scenes restore scalar policies and recreate internal nodes, while custom buttons and registrations remain runtime configuration. Native child-window and inherited capabilities retain their coverage prerequisites.
+DialogHideOnOK controls hiding before OnOKPressed and Confirmed. Cancellation emits Canceled before OnCancelPressed and deferred hiding. CustomAction precedes OnCustomAction without automatic hiding. Required delivery continues after callback failure, and reopening supersedes obsolete deferred hiding. Panel padding, buttons_min_width/buttons_min_height and buttons_separation constrain actual content/button layout. KeepTitleVisible expands embedded title width; decorated positioning is clamped separately. Packed scenes restore scalar policies and recreate internal nodes, while custom buttons and registrations remain runtime configuration. The inherited [Window chrome](../components/popup-windows.md#embedded-decoration-theme-and-input) consumes actual title/outline/focus/icon themes and cancels only after a completed close release. Native child-window and other inherited capabilities retain their coverage prerequisites.
 
 ## Example
 

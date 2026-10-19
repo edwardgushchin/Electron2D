@@ -4,7 +4,7 @@
 
 [Process policy and physics pause](../components/scene-tree.md#process-policy-and-physics-pause) now preserve inherited eligibility notifications, root policy, nested failure handling and worker reads. Paused tree frames stop numerical integration while eligible callbacks continue; explicit owned spaces retain independent clocks. Public CPU/software-Vulkan/registered serial/separate managed and NativeAOT checks cover the slice. Full inherited physics, independent hardware GPU, networking and performance gates remain open.
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 [Window input reception](../classes/Window.md#window-input-reception-and-visibility-notification) now runs before viewport localization and scene callbacks for native and forwarded embedded events. Visibility changes also deliver notification 30 before their typed signal; input ownership and failure cleanup remain in the existing host/tree lifetime.
 
@@ -471,3 +471,7 @@ General notification traversal now runs immediately in the owner/current process
 [Scene cast group access](../components/physics-queries.md#scene-cast-metadata-and-cached-observations-from-groups) now covers local options, exceptions and held results. Numerical sampling remains owner-only, as in the pinned server; it is no longer misclassified as an absent reserved notification consumer. Other reserved consumers remain Partial.
 
 Prepared skeletal modifiers and local bone override requests now execute in their skeleton's current group, including propagated reserved notifications and direct public calls. All target Bone groups are checked before pose changes; metadata gates release before setup/execution callbacks. Configuration, binding/setup, palette replay and numerical collider queries retain their owner domains. See [verification and limits](../components/skeletal-animation.md#prepared-modifications-in-processing-groups).
+
+## Embedded Window decorations
+
+The complete thirteen-item Window theme family now executes focused/unfocused styles, retained shaped and outlined titles and captured normal/pressed close images. Outside resize margins preserve actual constrained opposite edges. [Window chrome](../components/popup-windows.md#embedded-decoration-theme-and-input) records scene/resource authoring, callback cleanup, native pointer/pixel verification and remaining independent native-host limits.

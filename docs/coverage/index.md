@@ -6,6 +6,8 @@
 
 # API coverage register
 
+[Embedded Window chrome](../components/popup-windows.md#embedded-decoration-theme-and-input) now consumes all thirteen Window theme items through focused/unfocused frames, retained shaped titles and outlines, real normal/pressed close textures, captured release/cancel and constrained outside resizing. Managed/fresh-scene and native X11/Wayland GPU/Compatibility checks execute; prepared captured motion and active rendered theme updates retain zero owner-thread managed bytes. Independent native children, OS titlebar policies and foreign/native-allocation acceptance remain separate.
+
 [Public property-list notifications](../components/object-lifecycle.md#public-property-list-notification) now preserve the external caller capability across inherited object roles. Both publisher/event rows become Implemented, with lifetime, blocking, grouped numerical-access and zero-allocation checks. The current physics ledger has 194 open declarations; earlier counts describe their individual slices.
 
 [Prepared grouped skeletal execution](../components/skeletal-animation.md#prepared-modifications-in-processing-groups) now runs every implemented pose modifier, local override requests and logical stack reads through scheduled, propagated and direct public group calls. Owner configuration/setup, target Bone preflight, unlocked callback metadata, rollback and numerical collider-query boundaries remain enforced. The general reserved notification row stays Partial for GUI/world handlers; the physics ledger remains 196 open declarations. Evidence: `bin/physics-group-skeleton/2026-10-18/implementation-validation.json`.

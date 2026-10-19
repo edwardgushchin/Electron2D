@@ -52,7 +52,7 @@ public partial class Window
     /// <remarks>Uses GetFlag and SetFlag, including their lifecycle and failure contract.</remarks>
     public bool Unresizable { get => GetFlag(WindowFlag.ResizeDisabled); set => SetFlag(WindowFlag.ResizeDisabled, value); }
 
-    /// <summary>Gets or sets the policy removing native window borders and title bar.</summary>
+    /// <summary>Gets or sets the policy removing native or embedded window borders and title bar.</summary>
     /// <value>False by default.</value>
     /// <remarks>Uses GetFlag and SetFlag, including their lifecycle and failure contract.</remarks>
     public bool Borderless { get => GetFlag(WindowFlag.Borderless); set => SetFlag(WindowFlag.Borderless, value); }
@@ -101,6 +101,8 @@ public partial class Window
         var bit = 1u << (int)flag;
         _flags = enabled ? _flags | bit : _flags & ~bit;
         if (flag == WindowFlag.Borderless && (_keepTitleVisible || ClampToEmbedder)) UpdateEmbeddedContents();
+        if (flag == WindowFlag.Borderless) Tree?.CancelEmbeddedDecoration(this);
+        else if (flag == WindowFlag.ResizeDisabled && enabled) Tree?.CancelEmbeddedDecoration(this, resizingOnly: true);
         QueueEmbeddedRedraw();
     }
 
@@ -110,21 +112,33 @@ public partial class Window
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public bool IsMaximizeAllowed() { ThrowIfDisposed(); return _display?.WindowIsMaximizeAllowedCore() ?? (!Unresizable && !MaximizeDisabled); }
 
-    /// <summary>Gets the outer window origin, including native borders when visible and active.</summary>
-    /// <returns>Desktop coordinates; Position while hidden or detached.</returns>
+    /// <summary>Gets the outer window origin, including visible native or embedded decoration margins.</summary>
+    /// <returns>Native desktop coordinates or embedded host coordinates. Hidden or detached windows return Position. Embedded margins use the maximum focused/unfocused style offsets, truncated before integer arithmetic.</returns>
     /// <exception cref="NotSupportedException">The active Wayland compositor does not disclose global positions.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or native geometry is unavailable.</exception>
     /// <exception cref="OverflowException">The outer position exceeds integer coordinates.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public Vector2i GetPositionWithDecorations() => _display is null || !Visible ? Position : GetDisplay().WindowGetPositionWithDecorationsCore();
+    public Vector2i GetPositionWithDecorations()
+    {
+        ThrowIfDisposed(); Tree?.EnsureOwnerThread();
+        if (_display is not null && Visible) return GetDisplay().WindowGetPositionWithDecorationsCore();
+        if (Visible && IsEmbedded() && !Borderless) { var offset = DecorationMetric(false); return new(checked(Position.X - (int)offset.X), checked(Position.Y - (int)offset.Y)); }
+        return Position;
+    }
 
-    /// <summary>Gets the outer window size, including native borders when visible and active.</summary>
-    /// <returns>Native window units; on Wayland, client pixels because decoration extents are unavailable.
+    /// <summary>Gets the outer window size, including visible native or embedded decoration margins.</summary>
+    /// <returns>Native window units; a native Wayland root reports client pixels because decoration extents are unavailable. Embedded windows add the maximum focused/unfocused style minimum, truncated before integer arithmetic.
     /// Hidden or detached windows return Size.</returns>
     /// <exception cref="InvalidOperationException">The caller is not the owner or native geometry is unavailable.</exception>
     /// <exception cref="OverflowException">The outer size exceeds integer dimensions.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public Vector2i GetSizeWithDecorations() => _display is null || !Visible ? Size : GetDisplay().WindowGetSizeWithDecorationsCore();
+    public Vector2i GetSizeWithDecorations()
+    {
+        ThrowIfDisposed(); Tree?.EnsureOwnerThread();
+        if (_display is not null && Visible) return GetDisplay().WindowGetSizeWithDecorationsCore();
+        if (Visible && IsEmbedded() && !Borderless) { var extra = DecorationMetric(true); return new(checked(Size.X + (int)extra.X), checked(Size.Y + (int)extra.Y)); }
+        return Size;
+    }
 
     /// <summary>Requests centering of the active client area in its current screen's usable rectangle.</summary>
     /// <remarks>Requires global positioning. Wayland rejects the request.</remarks>

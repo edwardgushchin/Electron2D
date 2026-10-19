@@ -1,6 +1,6 @@
 # ThemeDB
 
-Last updated: 2026-10-15
+Last updated: 2026-10-19
 
 **Inherits:** [ElectronObject](ElectronObject.md) · **Inherited By:** —
 
@@ -10,7 +10,7 @@ Last updated: 2026-10-15
 
 Native type ancestry and variation-name validation use [ThemeDB.Types.cs](../../src/Scene/Resources/ThemeDB.Types.cs), compiled names and ancestry chains generated from the exported type inventory. Coverage checks reject catalog drift. The catalog does not retain runtime `Type` objects or the native theme factory; the service has a separate lazy holder. Native names remain available after trimming without loading fonts or claiming target text/rendering acceptance.
 
-The process-wide service for the current built-in theme and universal typed fallbacks. Consumers borrow the singleton and its built-in resources; they do not own their lifetime. It supplies real data for implemented controls while the complete GUI default catalog remains separate dependencies. Project Theme files and startup selection execute as described below.
+The process-wide service for the current built-in theme and universal typed fallbacks. Consumers borrow the built-in resources; the retained service owns their lifetime. It supplies real data for implemented controls while the complete GUI default catalog remains separate dependencies. Project Theme files and startup selection execute as described below. The built-in Window theme now supplies all thirteen executing embedded decoration entries, including independent focused/unfocused styles and real normal/pressed SVG icons; see [Window chrome](../components/popup-windows.md#embedded-decoration-theme-and-input).
 
 ```csharp
 Theme builtIn = ThemeDB.GetDefaultTheme();

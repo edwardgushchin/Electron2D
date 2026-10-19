@@ -3,263 +3,341 @@
     {
       "godot": "class:Popup",
       "electron2d": "T:Electron2D.Popup",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Popup::property:borderless",
       "electron2d": "property:Electron2D.Window.Borderless()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Popup::property:maximize_disabled",
       "electron2d": "property:Electron2D.Window.MaximizeDisabled()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Popup::property:minimize_disabled",
       "electron2d": "property:Electron2D.Window.MinimizeDisabled()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Popup::property:popup_window",
       "electron2d": "property:Electron2D.Window.PopupWindow()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Popup::property:popup_wm_hint",
       "electron2d": "property:Electron2D.Window.PopupWMHint()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Popup::property:transient",
       "electron2d": "property:Electron2D.Window.Transient()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Popup::property:unresizable",
       "electron2d": "property:Electron2D.Window.Unresizable()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Popup::property:visible",
       "electron2d": "property:Electron2D.Window.Visible()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Popup::property:wrap_controls",
       "electron2d": "property:Electron2D.Window.WrapControls()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Popup::signal:popup_hide()",
       "electron2d": "event:Electron2D.Popup.PopupHide()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "class:PopupPanel",
       "electron2d": "T:Electron2D.PopupPanel",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "PopupPanel::property:canvas_item_default_texture_filter",
       "electron2d": "property:Electron2D.Viewport.CanvasItemDefaultTextureFilter()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "PopupPanel::property:canvas_item_default_texture_repeat",
       "electron2d": "property:Electron2D.Viewport.CanvasItemDefaultTextureRepeat()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "PopupPanel::property:transparent",
       "electron2d": "property:Electron2D.Window.Transparent()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "PopupPanel::property:transparent_bg",
       "electron2d": "property:Electron2D.Viewport.TransparentBG()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "PopupPanel::theme_item:panel",
       "electron2d": "method:Electron2D.Window.GetThemeStyleBox(System.String,System.String)",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::method:_get_contents_minimum_size()",
       "electron2d": "method:Electron2D.Window.OnGetContentsMinimumSize()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::method:get_contents_minimum_size()",
       "electron2d": "method:Electron2D.Window.GetContentsMinimumSize()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::method:is_embedded()",
       "electron2d": "method:Electron2D.Window.IsEmbedded()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::method:popup(Rect2i:)",
       "electron2d": "method:Electron2D.Window.Popup(Electron2D.Rect2i)",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::method:popup_centered(Vector2i:)",
       "electron2d": "method:Electron2D.Window.PopupCentered(Electron2D.Vector2i)",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::method:popup_centered_clamped(Vector2i:,float:)",
       "electron2d": "method:Electron2D.Window.PopupCenteredClamped(Electron2D.Vector2i,System.Single)",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::method:popup_centered_ratio(float:)",
       "electron2d": "method:Electron2D.Window.PopupCenteredRatio(System.Single)",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::method:popup_exclusive(Node:,Rect2i:)",
       "electron2d": "method:Electron2D.Window.PopupExclusive(Electron2D.Node,Electron2D.Rect2i)",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::method:popup_exclusive_centered(Node:,Vector2i:)",
       "electron2d": "method:Electron2D.Window.PopupExclusiveCentered(Electron2D.Node,Electron2D.Vector2i)",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::method:popup_exclusive_centered_clamped(Node:,Vector2i:,float:)",
       "electron2d": "method:Electron2D.Window.PopupExclusiveCenteredClamped(Electron2D.Node,Electron2D.Vector2i,System.Single)",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::method:popup_exclusive_centered_ratio(Node:,float:)",
       "electron2d": "method:Electron2D.Window.PopupExclusiveCenteredRatio(Electron2D.Node,System.Single)",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::method:popup_exclusive_on_parent(Node:,Rect2i:)",
       "electron2d": "method:Electron2D.Window.PopupExclusiveOnParent(Electron2D.Node,Electron2D.Rect2i)",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::method:popup_on_parent(Rect2i:)",
       "electron2d": "method:Electron2D.Window.PopupOnParent(Electron2D.Rect2i)",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::property:exclusive",
       "electron2d": "property:Electron2D.Window.Exclusive()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::property:maximize_disabled",
       "electron2d": "property:Electron2D.Window.MaximizeDisabled()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::property:minimize_disabled",
       "electron2d": "property:Electron2D.Window.MinimizeDisabled()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::property:popup_window",
       "electron2d": "property:Electron2D.Window.PopupWindow()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::property:popup_wm_hint",
       "electron2d": "property:Electron2D.Window.PopupWMHint()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::property:transient",
       "electron2d": "property:Electron2D.Window.Transient()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::property:transparent",
       "electron2d": "property:Electron2D.Window.Transparent()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::property:wrap_controls",
       "electron2d": "property:Electron2D.Window.WrapControls()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::signal:about_to_popup()",
       "electron2d": "event:Electron2D.Window.AboutToPopup()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::method:get_layout_direction()",
       "electron2d": "property:Electron2D.Window.LayoutDirection()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::method:set_layout_direction(int:Window.LayoutDirection)",
       "electron2d": "property:Electron2D.Window.LayoutDirection()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::method:is_layout_rtl()",
       "electron2d": "method:Electron2D.Window.IsLayoutRTL()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::enum:LayoutDirection",
       "electron2d": "T:Electron2D.LayoutDirection",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_APPLICATION_LOCALE",
       "electron2d": "enumValue:Electron2D.LayoutDirection.ApplicationLocale()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_INHERITED",
       "electron2d": "enumValue:Electron2D.LayoutDirection.Inherited()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_LTR",
       "electron2d": "enumValue:Electron2D.LayoutDirection.LTR()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_MAX",
       "electron2d": "enumValue:Electron2D.LayoutDirection.Max()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_RTL",
       "electron2d": "enumValue:Electron2D.LayoutDirection.RTL()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_SYSTEM_LOCALE",
       "electron2d": "enumValue:Electron2D.LayoutDirection.SystemLocale()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Viewport::method:get_embedded_subwindows()",
       "electron2d": "method:Electron2D.Viewport.GetEmbeddedSubwindows()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Viewport::property:gui_embed_subwindows",
       "electron2d": "property:Electron2D.Viewport.GUIEmbedSubwindows()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
       "godot": "Viewport::method:push_input(InputEvent:,bool:)",
       "electron2d": "method:Electron2D.Viewport.PushInput(Electron2D.InputEvent,System.Boolean)",
       "state": "Partial",
       "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection. Direct popup injection retains acceptance/cancellation after localization while bypassing its own WindowInput event; only the final nested popup applies this policy. WindowInputTests covers direct/forwarded cancellation, disabled GUI, exact signal counts, nested ownership and reception edits; ColorPickerTests covers focused text commitment and cancellation restoration. This correction does not promote the remaining viewport gaps."
+    },
+    {
+      "godot": "Window::theme_item:title_color",
+      "electron2d": "method:Electron2D.Window.GetThemeColor(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0040/0083: all thirteen embedded Window theme entries execute through typed Window lookup and borrowed defaults/resources. Focused/unfocused style boxes draw against the content rectangle with their own expansion; shaped centered LTR/RTL titles consume the resolved font/size/color/outline; real normal/pressed icons use theme offsets and independent visual dimensions. Captured close commits only on release inside the original normal-icon rectangle, with outside/focus/hide/policy/lifetime cancellation; external resize margins preserve constrained opposite edges. Decoration queries use the maximum focused/unfocused content metrics. Managed and fresh-process custom theme scenes, native injected pointer/focus transitions, GPU/compatibility pixel captures and 64 prepared active theme/redraw/render frames with zero managed owner bytes verify Linux. Independent native children, OS titlebar policies, foreign platforms, physical input acceptance and native allocator totals remain separate gates."
+    },
+    {
+      "godot": "Window::theme_item:title_outline_modulate",
+      "electron2d": "method:Electron2D.Window.GetThemeColor(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0040/0083: all thirteen embedded Window theme entries execute through typed Window lookup and borrowed defaults/resources. Focused/unfocused style boxes draw against the content rectangle with their own expansion; shaped centered LTR/RTL titles consume the resolved font/size/color/outline; real normal/pressed icons use theme offsets and independent visual dimensions. Captured close commits only on release inside the original normal-icon rectangle, with outside/focus/hide/policy/lifetime cancellation; external resize margins preserve constrained opposite edges. Decoration queries use the maximum focused/unfocused content metrics. Managed and fresh-process custom theme scenes, native injected pointer/focus transitions, GPU/compatibility pixel captures and 64 prepared active theme/redraw/render frames with zero managed owner bytes verify Linux. Independent native children, OS titlebar policies, foreign platforms, physical input acceptance and native allocator totals remain separate gates."
+    },
+    {
+      "godot": "Window::theme_item:close_h_offset",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0040/0083: all thirteen embedded Window theme entries execute through typed Window lookup and borrowed defaults/resources. Focused/unfocused style boxes draw against the content rectangle with their own expansion; shaped centered LTR/RTL titles consume the resolved font/size/color/outline; real normal/pressed icons use theme offsets and independent visual dimensions. Captured close commits only on release inside the original normal-icon rectangle, with outside/focus/hide/policy/lifetime cancellation; external resize margins preserve constrained opposite edges. Decoration queries use the maximum focused/unfocused content metrics. Managed and fresh-process custom theme scenes, native injected pointer/focus transitions, GPU/compatibility pixel captures and 64 prepared active theme/redraw/render frames with zero managed owner bytes verify Linux. Independent native children, OS titlebar policies, foreign platforms, physical input acceptance and native allocator totals remain separate gates."
+    },
+    {
+      "godot": "Window::theme_item:close_v_offset",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0040/0083: all thirteen embedded Window theme entries execute through typed Window lookup and borrowed defaults/resources. Focused/unfocused style boxes draw against the content rectangle with their own expansion; shaped centered LTR/RTL titles consume the resolved font/size/color/outline; real normal/pressed icons use theme offsets and independent visual dimensions. Captured close commits only on release inside the original normal-icon rectangle, with outside/focus/hide/policy/lifetime cancellation; external resize margins preserve constrained opposite edges. Decoration queries use the maximum focused/unfocused content metrics. Managed and fresh-process custom theme scenes, native injected pointer/focus transitions, GPU/compatibility pixel captures and 64 prepared active theme/redraw/render frames with zero managed owner bytes verify Linux. Independent native children, OS titlebar policies, foreign platforms, physical input acceptance and native allocator totals remain separate gates."
+    },
+    {
+      "godot": "Window::theme_item:resize_margin",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0040/0083: all thirteen embedded Window theme entries execute through typed Window lookup and borrowed defaults/resources. Focused/unfocused style boxes draw against the content rectangle with their own expansion; shaped centered LTR/RTL titles consume the resolved font/size/color/outline; real normal/pressed icons use theme offsets and independent visual dimensions. Captured close commits only on release inside the original normal-icon rectangle, with outside/focus/hide/policy/lifetime cancellation; external resize margins preserve constrained opposite edges. Decoration queries use the maximum focused/unfocused content metrics. Managed and fresh-process custom theme scenes, native injected pointer/focus transitions, GPU/compatibility pixel captures and 64 prepared active theme/redraw/render frames with zero managed owner bytes verify Linux. Independent native children, OS titlebar policies, foreign platforms, physical input acceptance and native allocator totals remain separate gates."
+    },
+    {
+      "godot": "Window::theme_item:title_height",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0040/0083: all thirteen embedded Window theme entries execute through typed Window lookup and borrowed defaults/resources. Focused/unfocused style boxes draw against the content rectangle with their own expansion; shaped centered LTR/RTL titles consume the resolved font/size/color/outline; real normal/pressed icons use theme offsets and independent visual dimensions. Captured close commits only on release inside the original normal-icon rectangle, with outside/focus/hide/policy/lifetime cancellation; external resize margins preserve constrained opposite edges. Decoration queries use the maximum focused/unfocused content metrics. Managed and fresh-process custom theme scenes, native injected pointer/focus transitions, GPU/compatibility pixel captures and 64 prepared active theme/redraw/render frames with zero managed owner bytes verify Linux. Independent native children, OS titlebar policies, foreign platforms, physical input acceptance and native allocator totals remain separate gates."
+    },
+    {
+      "godot": "Window::theme_item:title_outline_size",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0040/0083: all thirteen embedded Window theme entries execute through typed Window lookup and borrowed defaults/resources. Focused/unfocused style boxes draw against the content rectangle with their own expansion; shaped centered LTR/RTL titles consume the resolved font/size/color/outline; real normal/pressed icons use theme offsets and independent visual dimensions. Captured close commits only on release inside the original normal-icon rectangle, with outside/focus/hide/policy/lifetime cancellation; external resize margins preserve constrained opposite edges. Decoration queries use the maximum focused/unfocused content metrics. Managed and fresh-process custom theme scenes, native injected pointer/focus transitions, GPU/compatibility pixel captures and 64 prepared active theme/redraw/render frames with zero managed owner bytes verify Linux. Independent native children, OS titlebar policies, foreign platforms, physical input acceptance and native allocator totals remain separate gates."
+    },
+    {
+      "godot": "Window::theme_item:title_font",
+      "electron2d": "method:Electron2D.Window.GetThemeFont(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0040/0083: all thirteen embedded Window theme entries execute through typed Window lookup and borrowed defaults/resources. Focused/unfocused style boxes draw against the content rectangle with their own expansion; shaped centered LTR/RTL titles consume the resolved font/size/color/outline; real normal/pressed icons use theme offsets and independent visual dimensions. Captured close commits only on release inside the original normal-icon rectangle, with outside/focus/hide/policy/lifetime cancellation; external resize margins preserve constrained opposite edges. Decoration queries use the maximum focused/unfocused content metrics. Managed and fresh-process custom theme scenes, native injected pointer/focus transitions, GPU/compatibility pixel captures and 64 prepared active theme/redraw/render frames with zero managed owner bytes verify Linux. Independent native children, OS titlebar policies, foreign platforms, physical input acceptance and native allocator totals remain separate gates."
+    },
+    {
+      "godot": "Window::theme_item:title_font_size",
+      "electron2d": "method:Electron2D.Window.GetThemeFontSize(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0040/0083: all thirteen embedded Window theme entries execute through typed Window lookup and borrowed defaults/resources. Focused/unfocused style boxes draw against the content rectangle with their own expansion; shaped centered LTR/RTL titles consume the resolved font/size/color/outline; real normal/pressed icons use theme offsets and independent visual dimensions. Captured close commits only on release inside the original normal-icon rectangle, with outside/focus/hide/policy/lifetime cancellation; external resize margins preserve constrained opposite edges. Decoration queries use the maximum focused/unfocused content metrics. Managed and fresh-process custom theme scenes, native injected pointer/focus transitions, GPU/compatibility pixel captures and 64 prepared active theme/redraw/render frames with zero managed owner bytes verify Linux. Independent native children, OS titlebar policies, foreign platforms, physical input acceptance and native allocator totals remain separate gates."
+    },
+    {
+      "godot": "Window::theme_item:close",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0040/0083: all thirteen embedded Window theme entries execute through typed Window lookup and borrowed defaults/resources. Focused/unfocused style boxes draw against the content rectangle with their own expansion; shaped centered LTR/RTL titles consume the resolved font/size/color/outline; real normal/pressed icons use theme offsets and independent visual dimensions. Captured close commits only on release inside the original normal-icon rectangle, with outside/focus/hide/policy/lifetime cancellation; external resize margins preserve constrained opposite edges. Decoration queries use the maximum focused/unfocused content metrics. Managed and fresh-process custom theme scenes, native injected pointer/focus transitions, GPU/compatibility pixel captures and 64 prepared active theme/redraw/render frames with zero managed owner bytes verify Linux. Independent native children, OS titlebar policies, foreign platforms, physical input acceptance and native allocator totals remain separate gates."
+    },
+    {
+      "godot": "Window::theme_item:close_pressed",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0040/0083: all thirteen embedded Window theme entries execute through typed Window lookup and borrowed defaults/resources. Focused/unfocused style boxes draw against the content rectangle with their own expansion; shaped centered LTR/RTL titles consume the resolved font/size/color/outline; real normal/pressed icons use theme offsets and independent visual dimensions. Captured close commits only on release inside the original normal-icon rectangle, with outside/focus/hide/policy/lifetime cancellation; external resize margins preserve constrained opposite edges. Decoration queries use the maximum focused/unfocused content metrics. Managed and fresh-process custom theme scenes, native injected pointer/focus transitions, GPU/compatibility pixel captures and 64 prepared active theme/redraw/render frames with zero managed owner bytes verify Linux. Independent native children, OS titlebar policies, foreign platforms, physical input acceptance and native allocator totals remain separate gates."
+    },
+    {
+      "godot": "Window::theme_item:embedded_border",
+      "electron2d": "method:Electron2D.Window.GetThemeStyleBox(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0040/0083: all thirteen embedded Window theme entries execute through typed Window lookup and borrowed defaults/resources. Focused/unfocused style boxes draw against the content rectangle with their own expansion; shaped centered LTR/RTL titles consume the resolved font/size/color/outline; real normal/pressed icons use theme offsets and independent visual dimensions. Captured close commits only on release inside the original normal-icon rectangle, with outside/focus/hide/policy/lifetime cancellation; external resize margins preserve constrained opposite edges. Decoration queries use the maximum focused/unfocused content metrics. Managed and fresh-process custom theme scenes, native injected pointer/focus transitions, GPU/compatibility pixel captures and 64 prepared active theme/redraw/render frames with zero managed owner bytes verify Linux. Independent native children, OS titlebar policies, foreign platforms, physical input acceptance and native allocator totals remain separate gates."
+    },
+    {
+      "godot": "Window::theme_item:embedded_unfocused_border",
+      "electron2d": "method:Electron2D.Window.GetThemeStyleBox(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0040/0083: all thirteen embedded Window theme entries execute through typed Window lookup and borrowed defaults/resources. Focused/unfocused style boxes draw against the content rectangle with their own expansion; shaped centered LTR/RTL titles consume the resolved font/size/color/outline; real normal/pressed icons use theme offsets and independent visual dimensions. Captured close commits only on release inside the original normal-icon rectangle, with outside/focus/hide/policy/lifetime cancellation; external resize margins preserve constrained opposite edges. Decoration queries use the maximum focused/unfocused content metrics. Managed and fresh-process custom theme scenes, native injected pointer/focus transitions, GPU/compatibility pixel captures and 64 prepared active theme/redraw/render frames with zero managed owner bytes verify Linux. Independent native children, OS titlebar policies, foreign platforms, physical input acceptance and native allocator totals remain separate gates."
     }
   ],
   "extras": [
@@ -307,7 +385,7 @@
   "statusGroups": [
     {
       "state": "Implemented",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states.",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states.",
       "godot": [
         "Popup::property:borderless",
         "Popup::property:maximize_disabled",
@@ -341,7 +419,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states.",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, native titlebar policies, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states.",
       "godot": [
         "class:Popup",
         "class:PopupPanel",
@@ -374,6 +452,25 @@
       ],
       "state": "Excluded",
       "reason": "Pinned doc/classes/Window.xml enum_value deprecated metadata: Use [constant LAYOUT_DIRECTION_APPLICATION_LOCALE] instead. ADR 0004 excludes deprecated public mirrors; numeric 1 remains ApplicationLocale. No implementation trigger."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "Window::theme_item:close",
+        "Window::theme_item:close_h_offset",
+        "Window::theme_item:close_pressed",
+        "Window::theme_item:close_v_offset",
+        "Window::theme_item:embedded_border",
+        "Window::theme_item:embedded_unfocused_border",
+        "Window::theme_item:resize_margin",
+        "Window::theme_item:title_color",
+        "Window::theme_item:title_font",
+        "Window::theme_item:title_font_size",
+        "Window::theme_item:title_height",
+        "Window::theme_item:title_outline_modulate",
+        "Window::theme_item:title_outline_size"
+      ],
+      "reason": "ADRs 0008/0038/0040/0083: all thirteen embedded Window theme entries execute through typed Window lookup and borrowed defaults/resources. Focused/unfocused style boxes draw against the content rectangle with their own expansion; shaped centered LTR/RTL titles consume the resolved font/size/color/outline; real normal/pressed icons use theme offsets and independent visual dimensions. Captured close commits only on release inside the original normal-icon rectangle, with outside/focus/hide/policy/lifetime cancellation; external resize margins preserve constrained opposite edges. Decoration queries use the maximum focused/unfocused content metrics. Managed and fresh-process custom theme scenes, native injected pointer/focus transitions, GPU/compatibility pixel captures and 64 prepared active theme/redraw/render frames with zero managed owner bytes verify Linux. Independent native children, OS titlebar policies, foreign platforms, physical input acceptance and native allocator totals remain separate gates."
     }
   ]
 }

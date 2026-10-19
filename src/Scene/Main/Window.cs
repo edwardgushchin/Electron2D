@@ -123,11 +123,11 @@ public partial class Window : Viewport
         set { EnsureMutable(); ValidateLimits(MinSize, value); _display?.WindowSetMaxSizeCore(value); _maxSize = value; if (_keepTitleVisible) UpdateEmbeddedContents(); }
     }
 
-    /// <summary>Gets or requests the client origin in native desktop coordinates.</summary>
+    /// <summary>Gets or requests the client origin in native desktop or embedded-host coordinates.</summary>
     /// <value>The configured position before startup, or zero if no position was requested.</value>
     /// <remarks>Leaving it unset lets the system place
     /// the window. PackedScene preserves this unset policy; an explicit zero position remains an authored request.
-    /// A preconfigured position is applied at startup and can fail on an unsupported platform.</remarks>
+    /// A preconfigured native root position is applied at startup and can fail on an unsupported platform. Embedded children use their containing viewport coordinates.</remarks>
     /// <exception cref="NotSupportedException">The active compositor does not expose or accept global window positions, including Wayland.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
@@ -416,6 +416,7 @@ public partial class Window : Viewport
     {
         EnsureMutable();
         List<Exception>? errors = null;
+        if (what == NotificationWmWindowFocusOut) try { Tree?.CancelEmbeddedDecorationTree(this); } catch (Exception error) { CollectException(ref errors, error); }
         try { PropagateWindowNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
         var handlers = what switch
         {

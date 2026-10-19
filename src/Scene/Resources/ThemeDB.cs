@@ -39,13 +39,9 @@ public sealed partial class ThemeDB : ElectronObject
         foreach (var name in new[] { "GridContainer", "FlowContainer", "HFlowContainer", "VFlowContainer" })
         { _defaultTheme.SetConstant("h_separation", name, 4); _defaultTheme.SetConstant("v_separation", name, 4); }
         foreach (var side in new[] { "left", "top", "right", "bottom" }) _defaultTheme.SetConstant("margin_" + side, "MarginContainer", 0);
-        var windowBorder = new StyleBoxFlat { BGColor = new(.13f, .13f, .13f) }; windowBorder.SetContentMarginAll(4); _owned.Add(windowBorder);
-        _defaultTheme.SetStyleBox("embedded_border", "Window", windowBorder);
-        _defaultTheme.SetConstant("title_height", "Window", 36); _defaultTheme.SetConstant("resize_margin", "Window", 4);
-        _defaultTheme.SetColor("title_color", "Window", new(.875f, .875f, .875f)); _defaultTheme.SetFontSize("title_font_size", "Window", 16);
         var fallback = new StyleBoxFlat { BGColor = new(1, .365f, .365f), DrawCenter = false, CornerDetail = 1 };
         fallback.SetContentMarginAll(4); fallback.SetBorderWidthAll(2); _style = fallback; _owned.Add(fallback);
-        try { AddSliderDefaults(); AddTextDefaults(); AddProgressBarDefaults(); AddButtonDefaults(); AddFoldableDefaults(); AddVirtualJoystickDefaults(); AddScrollDefaults(); AddItemListDefaults(); AddSplitDefaults(); AddLineEditDefaults(); AddTextEditDefaults(); AddCodeEditDefaults(); AddRichTextDefaults(); AddGraphDefaults(); AddTreeDefaults(); AddTabDefaults(); AddMenuDefaults(); AddDialogDefaults(); AddFileDialogDefaults(); AddSpinBoxDefaults(); AddColorPickerDefaults(); }
+        try { AddSliderDefaults(); AddTextDefaults(); AddWindowDefaults(); AddProgressBarDefaults(); AddButtonDefaults(); AddFoldableDefaults(); AddVirtualJoystickDefaults(); AddScrollDefaults(); AddItemListDefaults(); AddSplitDefaults(); AddLineEditDefaults(); AddTextEditDefaults(); AddCodeEditDefaults(); AddRichTextDefaults(); AddGraphDefaults(); AddTreeDefaults(); AddTabDefaults(); AddMenuDefaults(); AddDialogDefaults(); AddFileDialogDefaults(); AddSpinBoxDefaults(); AddColorPickerDefaults(); }
         catch
         {
             _defaultTheme.Dispose(); foreach (var owned in _owned) owned.Dispose(); _owned.Clear();
