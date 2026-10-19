@@ -280,7 +280,8 @@ public sealed partial class PhysicsServer
     /// <param name="area">A live Area RID.</param>
     /// <returns>Stored scene or server translation and rotation.</returns>
     /// <remarks>The owning numerical hook may read its prepared global pose without observing live solver state.
-    /// Ordinary scene reads retain current authored presentation and do not prepare incomplete publication.</remarks>
+    /// Ordinary scene reads retain current authored presentation and do not prepare incomplete publication.
+    /// Physics attachment/preparation rejects a nonfinite composed global pose; a getter does not repair invalid ancestor authoring.</remarks>
     /// <exception cref="ArgumentException">The RID does not identify a live Area.</exception>
     /// <exception cref="InvalidOperationException">The attached world has failed or access is outside its owner or borrowed numerical hook.</exception>
     public static Transform AreaGetTransform(RID area) => Service.AreaGetTransformCore(area);

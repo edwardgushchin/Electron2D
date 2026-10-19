@@ -7,6 +7,10 @@
 
 Last updated: 2026-10-19
 
+## Finite composed physics poses
+
+[Hierarchy pose validation](physics-registered-adapter.md#finite-hierarchy-pose-and-area-transform-audit) now rejects translation overflow from finite local transforms before attachment, queries or positive steps can publish it to a numerical collider. The body basis cache cannot bypass the finite-origin check. Correcting authored transforms recovers the original hierarchy; top-level finite poses remain valid. Public CPU/software-GPU/registered JIT/NativeAOT profiles retain actual rotated geometry, callbacks and zero warmed managed-byte full frames. Wider acceptance remains open.
+
 [Gravity publication and terminal parameter guards](physics-registered-adapter.md#gravity-publication-and-terminal-parameter-guards) retry the latest effective native gravity/omission request after a selected error and discard it on attachment retirement. Scene damping, omission and inherited material setters reject failed worlds before changing authoring while healthy post-solver callbacks retain writes. Public CPU/software-GPU/registered JIT/NativeAOT profiles verify real motion, history boundaries and strict zero managed-byte frames; wider acceptance remains open.
 
 [Mass profile publication recovery](physics-registered-adapter.md#mass-profile-publication-recovery) now restores preceding authoring after a partial selected error before numerical use, with all scene/raw siblings, real automatic reset/impulse response, history boundaries and strict zero managed allocation. Configured reads and post-commit notification semantics retain their documented behavior; complete numerical/native/platform/performance acceptance remains open.

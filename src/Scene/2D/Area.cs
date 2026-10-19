@@ -6,7 +6,9 @@ namespace Electron2D;
 /// Failed pose publication retries current authoring before live queries or a nonzero step, including a return to the previous pose.
 /// Authored transform reads do not force numerical preparation; detachment discards incomplete attachment publication.
 /// The sensor remains bound through TreeExiting and releases during engine membership cleanup before NodeRemoved and TreeExited.
-/// Failed initial attachment retires its partial binding and preserves the original preparation error alongside any cleanup errors.</remarks>
+/// Failed initial attachment retires its partial binding and preserves the original preparation error alongside any cleanup errors.
+/// Physics attachment and preparation require a finite hierarchy-global transform, unit scale and zero skew.
+/// Finite local transforms can overflow through composition; correct authored transforms before retrying a failed physics operation.</remarks>
 public sealed partial class Area : CollisionObject
 {
     private EventHandlers<Action<Area>>? _eventAreaEntered;
@@ -409,6 +411,7 @@ public sealed partial class Area : CollisionObject
     private void ValidatePhysicsTransform()
     {
         var transform = GlobalTransform;
+        if (!transform.IsFinite()) throw new InvalidOperationException("Physics areas require a finite global transform.");
         if (!transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(transform.Skew))
             throw new InvalidOperationException("Physics areas require unit global scale and zero skew.");
     }

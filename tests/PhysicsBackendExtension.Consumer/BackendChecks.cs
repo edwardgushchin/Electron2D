@@ -43,6 +43,7 @@ public static partial class BackendChecks
         JointLifecycleChecks();
         ResourceReleaseChecks();
         RunAreaMonitors();
+        RunHierarchyPoses();
         RunAreaOverlapPublication();
         RunContactThreshold();
         RunMotionExclusions();

@@ -9,7 +9,9 @@ namespace Electron2D;
 /// including after a failed local or portable restore. Teardown remains available.
 /// Changed one-way slot policies are captured during authoring; numerical shape preparation reuses those immutable values.
 /// Failed initial attachment retires its partial binding and preserves the original preparation error alongside any cleanup errors.
-/// That failed binding cannot replace authored motion or sleep with incomplete numerical state. Ordinary retirement retains accepted solver motion.</remarks>
+/// That failed binding cannot replace authored motion or sleep with incomplete numerical state. Ordinary retirement retains accepted solver motion.
+/// Physics attachment and preparation require a finite hierarchy-global transform, unit scale and zero skew.
+/// Finite local transforms can overflow through composition; correct authored transforms before retrying a failed physics operation.</remarks>
 public abstract partial class PhysicsBody : CollisionObject
 {
     private readonly List<ulong> _appliedShapeRevisions = [];
@@ -394,6 +396,7 @@ public abstract partial class PhysicsBody : CollisionObject
 
     private void ValidatePhysicsTransform(Transform transform)
     {
+        if (!transform.IsFinite()) throw new InvalidOperationException("Physics bodies require a finite global transform.");
         if (transform.X == _validatedTransform.X && transform.Y == _validatedTransform.Y) return;
         if (!transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(transform.Skew))
             throw new InvalidOperationException("Physics bodies require unit global scale and zero skew.");

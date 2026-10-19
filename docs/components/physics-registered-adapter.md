@@ -2,6 +2,53 @@
 
 Last updated: 2026-10-19
 
+## Finite hierarchy pose and Area transform audit
+
+Finite local Entity transforms can compose into an infinite global translation.
+Scene Area validation previously checked only scale/skew; body validation also
+cached the basis alone, allowing a changed invalid origin through its fast path.
+A single public consumer DLL reaches the selected collider factory on the old
+runtime for both body and Area cases. Controlled factories stop before creating
+invalid numerical state. Replacing only the runtime makes that same DLL pass.
+
+PhysicsBody and Area now reject nonfinite composed global transforms before
+numerical attachment or pose publication. The body check runs before its basis
+cache. Invalid authoring remains available to inspect and correct; failed whole-
+tree activation retains the original nodes, failed live insertion stays explicitly
+removable and explicit detached scene binding uses the same gate. Query and
+positive-step preparation reject without reaching SetPose/Solve or advancing the
+tick. Repairing the original hierarchy restores selected geometry, normal frames
+and owner callbacks. A top-level collider's finite pose stays independent of its
+ancestor. Runtime guards change in two lines; there is no public signature change.
+
+The public --hierarchy-poses fixture covers StaticBody, AnimatableBody,
+CharacterBody, RigidBody, PhysicalBone and Area. Five rejected paths per owner
+provide 30 boundary cases per shared profile. Warm frames rotate transformed
+parents and asymmetric rectangle geometry with disabled slot 0/active slot 1.
+Scene Area global API writes and raw Area writes/reads agree with actual selected
+inside/outside point queries; numerical hooks read the prepared poses on the
+captured owner or separate solver thread. A separate rigid body really moves.
+Each full frame advances one tick and delivers one owner callback.
+
+Twelve fresh JIT/strict NativeAOT CPU/no-device, private software-GPU and registered
+owner/separate profiles measure 9216 complete frames, 9216 callbacks and 36864
+queries at strict zero owner/all-thread managed bytes, plus 360 rejected global
+poses outside allocation brackets. Pose comparison tolerance 0.0001 covers float
+parent composition; moving-body travel tolerance 0.001 covers 128 intervals at
+speed 1 and delta 0.01. Existing pose-transaction/Area-monitor profiles retain
+partial numerical error recovery, non-preparing author reads, transformed parent
+inputs and monitoring semantics. Scene binding/construction, ordinary public
+consumer and root Area/shape-slot/ownership companions complete 57/57 profiles.
+No hardware GPU driver or target-GPU load ran; the RTX cable is still unchecked.
+
+Only the two extension Area transform operations become Implemented. The unique
+physics census is 1213/1369 Implemented (88.60482103725347%), with 156 open:
+125 Partial, 14 Unimplemented and 17 Blocked; 92 are Excluded. Body/Area membership
+operations remain Partial. Full numerical/custom geometry/inherited/network/native
+retained-memory/platform and target-GPU/window performance acceptance remains open.
+Evidence: bin/physics-hierarchy-poses/2026-10-19/validation.json. Earlier sections
+below describe their recorded checkpoints and census counts.
+
 ## Area overlap publication operation audit
 
 The selected Area policy receives effective monitoring from scene Monitoring or

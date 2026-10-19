@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-19
 
+## Finite composed physics poses
+
+[Hierarchy pose validation](physics-registered-adapter.md#finite-hierarchy-pose-and-area-transform-audit) now rejects translation overflow from finite local transforms before attachment, queries or positive steps can publish it to a numerical collider. The body basis cache cannot bypass the finite-origin check. Correcting authored transforms recovers the original hierarchy; top-level finite poses remain valid. Public CPU/software-GPU/registered JIT/NativeAOT profiles retain actual rotated geometry, callbacks and zero warmed managed-byte full frames. Wider acceptance remains open.
+
 ## Complete selected monitoring operations
 
 [Area overlap publication](physics-registered-adapter.md#area-overlap-publication-operation-audit) now verifies both scene/raw callback lanes, independent monitorability, exact compound indices and custom annulus data. Invalid selected results retain the previous complete history; callback failure, association edits, receiver reentry and raw retirement preserve sampled payloads. Fresh CPU/no-device, software-GPU and registered owner/separate JIT/NativeAOT consumers retain strict zero managed-byte full frames. This closes only three monitoring extension operations; wider numerical/network/native/platform/performance acceptance remains open.

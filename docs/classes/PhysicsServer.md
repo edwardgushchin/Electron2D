@@ -6,6 +6,17 @@ The [Body/Area append audit](../components/physics-shapes.md#bodyarea-append-con
 
 Last updated: 2026-10-19
 
+## Finite hierarchy-global poses
+
+Finite local values can overflow through parent composition. Physics attachment
+and preparation reject a nonfinite global pose before selected collider creation,
+SetPose or Solve; body validation checks finiteness before its basis cache. The
+caller can inspect and repair authored transforms, then retry the original nodes.
+Getters retain their non-preparing presentation contract. Finite top-level poses
+remain independent of ancestors. See [the hierarchy/Area pose audit](../components/physics-registered-adapter.md#finite-hierarchy-pose-and-area-transform-audit)
+for all scene siblings, raw Area, rotated geometry, original errors, lifecycle and
+strict zero warmed managed-byte checks and their acceptance limits.
+
 ## Selected Area overlap publication
 
 Selected monitoring combines scene observation with either server callback;
