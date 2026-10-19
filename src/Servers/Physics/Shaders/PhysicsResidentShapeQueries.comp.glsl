@@ -68,12 +68,14 @@ void emitPoint(vec2 a,vec2 b,vec2 normal,uvec4 features)
 #include "PhysicsDirectedQuery.inc.glsl"
 bool piecesContact(Hull a,Hull b,Geometry ga,Geometry gb,vec2 motion,bool emit,uint pieceA,uint pieceB)
 {
+    motion=ga.data.z==7u||(gb.data.z!=7u&&(ga.data.z==5u||gb.data.z==6u))?vec2(0):motion;
     bool boundary=a.boundary||b.boundary;
     if(boundary)
     {
         if(a.boundary&&b.boundary)return false;
         if(ga.data.z==6u){vec2 axis=vertex(a,1u)-vertex(a,0u);if(axis==vec2(0))return false;a.extension=normalized(axis)*activeQuery.rotationMargin.z;}
         if(gb.data.z==6u&&vertex(b,1u)==vertex(b,0u))return false;
+        if(activeQuery.geometry.z!=3u){a.pose.xy+=motion;motion=vec2(0);}
     }
     if(!boundary&&ga.data.z==6u)return gb.data.z!=6u&&directedQuery(a,b,vec2(0),activeQuery.rotationMargin.z,ga.parameters.y!=0,false,motion,pieceA,pieceB,emit);
     if(!boundary&&gb.data.z==6u)return directedQuery(b,a,motion,0,gb.parameters.y!=0,true,vec2(0),pieceA,pieceB,emit);
@@ -127,7 +129,7 @@ void main()
                 if(sb.owner.x>=bodyCount||mapping.identity.w!=sb.policy.x){fail();return;}
                 bodyB=bodies[sb.owner.x];Geometry gb=geometries[sb.owner.z];
                 if(bodyB.flags.x!=sb.owner.y||bodyB.flags.w==0u||gb.data.w!=sb.owner.w){fail();return;}
-                if(gb.data.y!=0u)
+                if(gb.data.y!=0u&&!(ga.data.z==5u&&gb.data.z==5u))
                 {
                     activeShape=sb;activeKey=uvec4(mapping.identity.xyz,index);
                     uint na=ga.data.z==5u?ga.data.y/2u:1u,nb=gb.data.z==5u?gb.data.y/2u:1u;

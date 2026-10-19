@@ -16,6 +16,7 @@ internal sealed partial class CPUPhysicsWorldBackend
     private bool? _queryRaySlide;
     private bool _queryCompoundConvex;
     private float _queryMargin;
+    private PhysicsShapeGeometry.ShapeKind _queryKind;
 
     private readonly record struct ShapeCandidate(B2ShapeId ShapeID, PhysicsFixtureTag Tag);
 
@@ -26,17 +27,23 @@ internal sealed partial class CPUPhysicsWorldBackend
         hits.Clear();
         if (_queryProxies.Count == 0 || _shapeCandidates.Count == 0) return hits;
         var world = b2GetWorldFromId(space.WorldID);
-        var motion = PhysicsShapeBackend.ToBackend(parameters.Motion);
+        var requested = PhysicsShapeBackend.ToBackend(parameters.Motion);
         foreach (var candidate in _shapeCandidates)
         {
+            var motion = QueryMotion(candidate.Tag, requested);
             var backendShape = b2GetShape(world, candidate.ShapeID);
             var other = PhysicsShapeBackend.GetQueryProxy(backendShape);
             var otherTransform = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
             for (var piece = 0; piece < _queryProxies.Count; piece++)
             {
                 var query = _queryProxies[piece];
-                if (query.isBoundary || other.isBoundary) query = BoundaryQuery(query);
-                if (!query.isBoundary && !other.isBoundary && (_queryRaySlide is not null || candidate.Tag.SeparationRay is not null))
+                if (query.isBoundary || other.isBoundary)
+                {
+                    query = BoundaryQuery(query);
+                    for (var point = 0; point < query.count; point++) query.points[point] += motion;
+                    if (!Overlaps(query, other, otherTransform)) continue;
+                }
+                else if (!query.isBoundary && !other.isBoundary && (_queryRaySlide is not null || candidate.Tag.SeparationRay is not null))
                 {
                     if (PhysicsSeparationRay.PairContact(query, _queryRaySlide, other, otherTransform,
                         candidate.Tag.SeparationRay, motion, _queryMargin).pointCount == 0) continue;
@@ -68,8 +75,8 @@ internal sealed partial class CPUPhysicsWorldBackend
     internal override (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters parameters)
     {
         var space = PrepareShapeQuery(parameters);
-        var motion = PhysicsShapeBackend.ToBackend(parameters.Motion);
-        if ((motion.X == 0 && motion.Y == 0) || _queryProxies.Count == 0 || _shapeCandidates.Count == 0)
+        var requested = PhysicsShapeBackend.ToBackend(parameters.Motion);
+        if ((requested.X == 0 && requested.Y == 0) || _queryProxies.Count == 0 || _shapeCandidates.Count == 0)
             return (1, 1);
         var world = b2GetWorldFromId(space.WorldID);
         RemoveInitiallyOverlappingSlots(world);
@@ -77,6 +84,8 @@ internal sealed partial class CPUPhysicsWorldBackend
         var bestUnsafe = 1f;
         foreach (var candidate in _shapeCandidates)
         {
+            var motion = QueryMotion(candidate.Tag, requested);
+            if (motion == default) continue;
             var backendShape = b2GetShape(world, candidate.ShapeID);
             var other = PhysicsShapeBackend.GetQueryProxy(backendShape);
             var otherTransform = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
@@ -121,6 +130,11 @@ internal sealed partial class CPUPhysicsWorldBackend
         return (bestSafe, bestUnsafe);
     }
 
+    private B2Vec2 QueryMotion(PhysicsFixtureTag target, B2Vec2 motion) =>
+        _queryKind == PhysicsShapeGeometry.ShapeKind.WorldBoundary ||
+        target.Kind != PhysicsShapeGeometry.ShapeKind.WorldBoundary &&
+        (_queryKind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon || target.Kind == PhysicsShapeGeometry.ShapeKind.SeparationRay) ? default : motion;
+
     private int CandidateGroupEnd(int first)
     {
         var tag = _shapeCandidates[first].Tag; var end = first + 1;
@@ -155,7 +169,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         if (kept < _shapeCandidates.Count) _shapeCandidates.RemoveRange(kept, _shapeCandidates.Count - kept);
     }
 
-    private void RemoveContainedRaySlots(B2Vec2 motion)
+    private void RemoveContainedRaySlots()
     {
         if (_queryRaySlide is null && !_queryCompoundConvex || _queryProxies.Count == 0) return;
         var kept = 0;
@@ -169,7 +183,7 @@ internal sealed partial class CPUPhysicsWorldBackend
             {
                 var pose = b2Body_GetTransform(b2Shape_GetBody(_shapeCandidates[first].ShapeID));
                 var origin = PhysicsSeparationRay.WorldProxy(ray, pose, default).points[0];
-                foreach (var query in _queryProxies) if (PhysicsSeparationRay.ContainsSweptRegion(query, origin, motion)) { inside = true; break; }
+                foreach (var query in _queryProxies) if (PhysicsSeparationRay.Contains(query, origin)) { inside = true; break; }
             }
             if (!inside) for (var i = first; i < end; i++) _shapeCandidates[kept++] = _shapeCandidates[i];
             first = end;
@@ -183,6 +197,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         var shape = parameters.Shape ?? PhysicsServer.Service.GetShapeGeometry(parameters.ShapeRID);
         _ = PhysicsShapeBackend.ReadQueryGeometry(space, shape);
         var geometry = shape.GetGeometry();
+        _queryKind = geometry.Kind;
         _queryRaySlide = geometry.Kind == PhysicsShapeGeometry.ShapeKind.SeparationRay ? geometry.SlideOnSlope : null;
         _queryProxies.Clear();
         PhysicsShapeBackend.AppendQueryProxies(shape, _queryProxies);
@@ -222,7 +237,7 @@ internal sealed partial class CPUPhysicsWorldBackend
             if (collider.IsArea ? parameters.CollideWithAreas : parameters.CollideWithBodies)
                 AddCandidates(NativeCollider(collider.Backend).Shapes, mask, excluded);
         }
-        RemoveContainedRaySlots(PhysicsShapeBackend.ToBackend(parameters.Motion));
+        RemoveContainedRaySlots();
         return space;
     }
 
@@ -238,7 +253,8 @@ internal sealed partial class CPUPhysicsWorldBackend
         for (var index = 0; index < shapes.Count; index++)
         {
             var shape = shapes[index];
-            if (Eligible(shape, mask, excluded, out var tag, includeSeparationRays: true))
+            if (Eligible(shape, mask, excluded, out var tag, includeSeparationRays: true) &&
+                !(_queryKind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon && tag.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon))
                 _shapeCandidates.Add(new(shape, tag));
         }
     }

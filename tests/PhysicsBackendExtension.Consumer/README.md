@@ -384,3 +384,11 @@ unit normals and eight-refinement fractions. Recovery/residual, two-concave and
 live source/target replacement controls precede 128 warmed complete moving frames
 at strict zero owner/all-thread managed bytes. Special source motion follows the
 logical resource family across private numerical pieces.
+
+
+`--special-space-motion`, optionally `--cpu`, `--gpu` and `--threaded`, checks
+all 64 ordered families across four direct shape operations, array/span outputs,
+scene/server targets, rigid covariance, margins and supplied-pose body motion.
+Initial special contacts, ignored displacement and finite boundary endpoints retain
+resource-family semantics. Warm span cycles advance a real moving body and require
+zero owner/all-thread managed bytes.

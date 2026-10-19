@@ -2,7 +2,7 @@
 
 [Unrounded polygon origin containment](../components/physics-point-containment.md) now uses the same exact CPU edge test for directed query/proxy regions. An exterior start cannot be discarded through distance-convergence slack; genuinely contained logical slots still hide their partition seams.
 
-Last updated: 2026-10-16
+Last updated: 2026-10-20
 
 [Angular normal/friction coupling](../components/gpu-contact-solver.md#angular-normalfriction-coupling-2026-10-16) now preserves oblique rotating-ray response through colored and high-degree resident contacts, without increasing solver sweeps or the CCD budget. The public reset/full-frame fixture checks actual motion and reported impulse balance.
 
@@ -61,7 +61,7 @@ Returns `new Rect2(0, 0, 0, Length).Grow(MathF.Sqrt(0.5f) * 4f)`, including draw
 
 ## Motion, queries and limits
 
-Contact requires a front-facing surface crossing. A ray starting inside filled geometry has no entry hit; ray-ray pairs never contact. Margin extends the endpoint along the axis. Ray motion extends it by the positive axial displacement; transverse movement does not create a swept solid segment. For an ordinary shape moving against a stationary ray, the union of initial/final native primitives and swept edges supplies directed contact, including rounded margins.
+Contact requires a front-facing surface crossing. A ray starting inside filled geometry has no entry hit; ray-ray pairs never contact. Margin extends the endpoint along the axis. Ray motion extends it by the positive axial displacement; transverse movement does not create a swept solid segment. For an ordinary shape queried against a stationary ray, counterpart displacement is ignored; its current geometry and margin still participate. [Special query displacement](../components/physics-queries.md#special-query-displacement) shares this policy with body motion and preserves finite boundary endpoint precedence.
 
 Recovery always includes rays. The motion phase includes sliding rays automatically and other rays only when PhysicsTestMotionParameters.CollideSeparationRay is true. CharacterBody floor snap explicitly sets that flag. A touching ray may move away. RID, shape indices, point velocity, masks and exclusions retain the shared contract. Complete convex targets reject origin containment and select exactly one first-entry partition, avoiding internal seam contacts and duplicate constraints. CastRay CCD validates the complete ray after reducing the sweep proxy to a support point; CastShape uses complete fixture trajectories.
 

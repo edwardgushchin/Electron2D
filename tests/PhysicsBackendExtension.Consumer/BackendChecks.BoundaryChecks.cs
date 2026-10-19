@@ -85,9 +85,9 @@ public static partial class BackendChecks
             using var tree = new SceneTree(root);
             using var query = new PhysicsShapeQueryParameters { Shape = plane, Margin = 0, Motion = new(0, -10) };
             var hits = new PhysicsShapeResult[2]; var contacts = new Vector2[4];
-            Check(world.DirectSpaceState.IntersectShape(query, hits) == 1 && hits[0].ColliderRID == peer.GetRID(), "Infinite query source sweeps into the finite counterpart");
-            var cast = world.DirectSpaceState.CastMotion(query); Check(MathF.Abs(cast.UnsafeFraction - .4f) < 1f / 256 + .00002f, "Boundary source cast brackets counterpart support");
-            Check(world.DirectSpaceState.CollideShape(query, contacts) > 0 && world.DirectSpaceState.GetRestInfo(query)?.ColliderRID == peer.GetRID(), "Boundary source contacts and rest retain finite target");
+            Check(world.DirectSpaceState.IntersectShape(query, hits) == 0, "Infinite query source ignores its own displacement");
+            var cast = world.DirectSpaceState.CastMotion(query); Check(cast == (1, 1), "Boundary source displacement cannot create a new impact");
+            Check(world.DirectSpaceState.CollideShape(query, contacts) == 0 && world.DirectSpaceState.GetRestInfo(query) is null, "Ignored boundary displacement cannot manufacture contact or rest data");
             query.Motion = Vector2.Zero; query.Margin = 4.25f;
             Check(world.DirectSpaceState.IntersectShape(query, hits) == 1, "Margin shifts query plane outward without bounded inflation");
         }

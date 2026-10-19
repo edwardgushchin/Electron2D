@@ -1663,3 +1663,9 @@ motion operation stays Partial; the ledger remains 1279/1369 (93.43%), 90 open.
 now preserves source-family displacement and recovery across CPU/software-GPU/
 registered scene/raw callers, including live shape replacement. The complete
 selected motion operation remains Partial: 1279/1369 (93.43%), 90 open.
+
+
+[Special direct-query displacement](../components/physics-queries.md#special-query-displacement)
+now retains represented family precedence across CPU/software-GPU/registered paths,
+including stationary ray counterparts and finite boundary endpoints. The full
+physics ledger remains 1279/1369 (93.43%), with 90 applicable declarations open.

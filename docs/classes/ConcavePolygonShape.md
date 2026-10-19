@@ -1,6 +1,6 @@
 # ConcavePolygonShape
 
-Last updated: 2026-10-14
+Last updated: 2026-10-20
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 
@@ -89,3 +89,9 @@ contacts and linear/angular CCD in the independent public-only provider. Shared
 CPU/software-GPU serial/separate profiles retain zero warmed managed bytes, with
 two corner features and one logical event. Boundary/ray, inherited/network/native/
 hardware and final acceptance remain open.
+
+
+[Special query displacement](../components/physics-queries.md#special-query-displacement)
+retains this resource's represented family across private pieces in direct-space
+and body-motion queries. Ignored displacement preserves initial contacts; finite
+boundary tests retain endpoint precedence rather than a swept half-plane.

@@ -1,6 +1,6 @@
 # WorldBoundaryShape
 
-Last updated: 2026-10-14
+Last updated: 2026-10-20
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 
@@ -114,3 +114,9 @@ use ordinary sine/cosine; the far rotated query retains its .005-unit bound rath
 than absorbing the former approximate-angle drift. Directed-ray, arbitrary/coupled,
 complete inherited/extension/network/native/platform and hardware-performance
 acceptance remain open; coverage states are unchanged.
+
+
+[Special query displacement](../components/physics-queries.md#special-query-displacement)
+retains this resource's represented family across private pieces in direct-space
+and body-motion queries. Ignored displacement preserves initial contacts; finite
+boundary tests retain endpoint precedence rather than a swept half-plane.

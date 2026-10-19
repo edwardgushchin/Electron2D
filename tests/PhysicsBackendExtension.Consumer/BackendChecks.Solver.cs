@@ -93,8 +93,18 @@ public static partial class BackendChecks
             var part = GeometryPart(geometry, parameters.Transform, 0, element);
             return ExpandPart(part, parameters.Margin);
         }
+        private static Vector2 QueryMotion(in Part query, in Part target, Vector2 motion) =>
+            query.Boundary || !target.Boundary && (query.Concave || target.Directed) ? Vector2.Zero : motion;
         private static bool QuerySweep(in Part query, Vector2 motion, in Part target, Transform pose, out float fraction)
         {
+            fraction = 0;
+            if (query.Concave && target.Concave) return false;
+            motion = QueryMotion(query, target, motion);
+            if (query.Boundary || target.Boundary)
+            {
+                var endpoint = Transform.Identity; endpoint.Origin = motion;
+                if (PartGap(query, endpoint, target, pose, out _, out _, out _) > 0) return false;
+            }
             if (query.Boundary || target.Boundary || query.Contour || target.Contour) return SweepParts(query, Transform.Identity, motion, target, pose, out fraction);
             return Annulus.Sweep(query.Offset, motion, PartAt(target, pose), MathF.Max(0, target.Inner - query.Outer), target.Outer + query.Outer, out fraction);
         }
@@ -134,7 +144,7 @@ public static partial class BackendChecks
                         if (InitiallyOverlapping(b, p.Index, parameters, geometry)) continue;
                         if (query.Directed || p.Directed)
                         {
-                            if (DirectedSweepRange(query, Transform.Identity, parameters.Motion, p, b.Pose, out var low, out var high) && high <= fraction)
+                            if (DirectedSweepRange(query, Transform.Identity, QueryMotion(query, p, parameters.Motion), p, b.Pose, out var low, out var high) && high <= fraction)
                             { safeFraction = low; fraction = high; }
                         }
                         else if (QuerySweep(query, parameters.Motion, p, b.Pose, out var f) && f <= fraction) { safeFraction = fraction = f; }
@@ -157,20 +167,22 @@ public static partial class BackendChecks
                     {
                         var p = b.Parts[i]; var query = QueryPart(parameters, geometry, piece);
                         if (!QuerySweep(query, parameters.Motion, p, b.Pose, out var f)) continue;
+                        var motion = QueryMotion(query, p, parameters.Motion);
                         Vector2 firstPoint, secondPoint;
                         if (query.Directed || p.Directed)
                         {
-                            if (!DirectedContact(query, Transform.Identity, parameters.Motion, p, b.Pose, Vector2.Zero,
+                            if (!DirectedContact(query, Transform.Identity, motion, p, b.Pose, Vector2.Zero,
                                 out _, out firstPoint, out secondPoint, out _)) continue;
                         }
                         else if (query.Boundary || p.Boundary || query.Contour || p.Contour)
                         {
-                            var pose = Transform.Identity; pose.Origin = parameters.Motion * f;
+                            var pose = Transform.Identity; pose.Origin = motion * (query.Boundary || p.Boundary ? 1 : f);
                             PartGap(query, pose, p, b.Pose, out _, out firstPoint, out secondPoint);
                         }
                         else
                         {
-                            var center = query.Offset + parameters.Motion * f; var at = b.PartCenter(p); var normal = PartNormal(center, at, p);
+                            var center = query.Offset + motion * f; var at = b.PartCenter(p); var normal = PartNormal(center, at, p);
+                            if (normal == Vector2.Zero) normal = Vector2.Right;
                             firstPoint = center - normal * query.Outer; secondPoint = at + normal * (center.DistanceTo(at) < p.Inner ? -p.Inner : p.Outer);
                         }
                         _queryContacts.Add(new(new(b.RID, p.Index, piece, firstPoint, secondPoint), query, p with { Source = null }));
@@ -192,16 +204,17 @@ public static partial class BackendChecks
             for (var i = 0; i < hits.Count; i++)
             {
                 var h = hits[i]; var body = Bodies[h.RID]; var query = _queryContacts[i].Query; var part = _queryContacts[i].Collider;
-                var normal = PartNormal(h.QueryPoint, body.PartCenter(part), part); var depth = h.QueryPoint.DistanceTo(h.ColliderPoint);
+                var normal = PartNormal(h.ColliderPoint, body.PartCenter(part), part); var depth = h.QueryPoint.DistanceTo(h.ColliderPoint);
+                if (normal == Vector2.Zero) normal = Vector2.Right;
                 if (query.Directed || part.Directed)
                 {
-                    DirectedContact(query, Transform.Identity, parameters.Motion, part, body.Pose, Vector2.Zero,
+                    DirectedContact(query, Transform.Identity, QueryMotion(query, part, parameters.Motion), part, body.Pose, Vector2.Zero,
                         out var toward, out _, out _, out depth); normal = -toward;
                 }
                 else if (query.Boundary || part.Boundary || query.Contour || part.Contour)
                 {
                     QuerySweep(query, parameters.Motion, part, body.Pose, out var fraction);
-                    var pose = Transform.Identity; pose.Origin = parameters.Motion * fraction;
+                    var pose = Transform.Identity; pose.Origin = QueryMotion(query, part, parameters.Motion) * (query.Boundary || part.Boundary ? 1 : fraction);
                     depth = -PartGap(query, pose, part, body.Pose, out var inward, out _, out _); normal = -inward;
                 }
                 if (depth > deepest)

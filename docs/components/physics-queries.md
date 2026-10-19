@@ -33,6 +33,54 @@ hardware/FPS, native-memory, network and foreign-platform acceptance remain open
 
 Last updated: 2026-10-20
 
+## Special query displacement
+
+Direct-space IntersectShape, CastMotion, CollideShape and GetRestInfo retain the
+represented resource-family dispatch under [ADR 0063](../decisions/physics.md#adr-0063)
+and [ADR 0068](../decisions/physics.md#adr-0068). An infinite boundary ignores its
+own requested displacement. A concave source ignores displacement except against
+a world boundary. A stationary separation ray ignores counterpart displacement.
+Two concave resources cannot create contacts from their private segment pieces.
+Initial overlap/contact/rest still executes with the current margin; CastMotion
+ignores initially overlapping logical slots. Boundary intersection/contact/rest
+uses the finite operand endpoint, including departure from the solid half-plane;
+finite entry casts retain their first-impact bracket.
+
+CPU retains the query resource kind and fixture tags' represented kind across
+private decomposition. Its reverse ray path tests the current counterpart instead
+of constructing a swept region; the obsolete private extrusion helpers are removed.
+Resident GPU geometry applies the same policy before piece tests. Independent
+registered queries keep the policy in their own public-only implementation.
+Body motion shares the stationary-ray counterpart correction. A circle exactly
+centered on another CPU circle or capsule/segment core now receives a unit side
+and matching surface points rather than a zero normal; no arbitrary side is compared across
+backends in that degenerate configuration.
+
+The --special-space-motion consumer checks all 64 ordered built-in families across
+scene/server targets, two rigid poses, margins 0/.75, forward/reverse controls and
+all four direct operations, including array/span overloads. Supplied-pose server
+body motion independently checks separated witnesses. Positive initial concave/
+boundary contacts prevent an implementation from dropping special resources.
+Identity and logical slots are exact; fraction slack is .0002 with an eight-step
+1/256 plus .000002 maximum bracket. Rest normals are unit within .001; circle
+surface membership allows .02 scene units for float/native composition. Steady
+frames use span results and a real moving body; array-return allocation is cold.
+Evidence: bin/physics-special-space-motion/2026-10-20/.
+
+The final source-bound cohort passes 120 processes: 57 JIT, 57 strict NativeAOT
+and six root profiles. Twelve new matrix profiles measure 1536 full moving frames
+at strict zero owner/all-thread managed bytes after 128 warmups each. Six DLL/PDB
+sets match 3460 non-generated C# inputs, including vendor, and the linked root
+consumer matches the separately qualified consumer. Fresh compilation/validation
+of both shaders matches 51 tracked shader/tool inputs and both embedded blobs in
+all four runtime/native payloads. No public declaration or wire format changes.
+The CPU normal correction belongs to query/body-motion projection; native solver
+response for coincident rounded cores remains separately unverified.
+
+This bounded correction does not establish complete custom/coupled motion,
+network/native/platform or target hardware/window/performance acceptance. GPU
+execution uses private software Vulkan while the power cable remains unchecked.
+
 ## Contact reporting write preflight
 
 Common body writes check numerical borrowing before scene participation, selected
@@ -102,11 +150,11 @@ The server builds on existing Shape resources, SceneTree owner-thread rules and 
 
 [PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) checks RID and ray/point behavior. [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks resource/RID shape selection and four direct operations. [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks body sweeps; [PhysicsCollisionExceptionTests](../../tests/Electron2D.Tests/PhysicsCollisionExceptionTests.cs) checks pair suppression in motion and regular solver contact. [RayCastTests](../../tests/Electron2D.Tests/RayCastTests.cs) and [ShapeCastTests](../../tests/Electron2D.Tests/ShapeCastTests.cs) check scene node timing and lifecycle. Physics debug-gizmo drawing and virtual tile collision-object results remain separate dependencies. [ADR 0063](../decisions/physics.md#adr-0063) defines the ownership and query contract.
 
-Separation rays execute directed direct queries, reverse sweeps and special body-motion recovery. CollideSeparationRay defaults false, includes non-sliding rays only in the motion phase, and leaves recovery participation unconditional. Sliding rays participate automatically; CharacterBody snap explicitly enables all rays. Shared motion results reconstruct the collider-side point from the manifold. Ordinary CPU dynamic ray impulses now use directed alternative manifolds under [ADR 0068](../decisions/physics.md#adr-0068), without changing query visibility or motion flags.
+Separation rays execute directed direct queries, current-counterpart reverse queries and special body-motion recovery. CollideSeparationRay defaults false, includes non-sliding rays only in the motion phase, and leaves recovery participation unconditional. Sliding rays participate automatically; CharacterBody snap explicitly enables all rays. Shared motion results reconstruct the collider-side point from the manifold. Ordinary CPU dynamic ray impulses now use directed alternative manifolds under [ADR 0068](../decisions/physics.md#adr-0068), without changing query visibility or motion flags.
 
-The internal PhysicsSeparationRay kernel owns directed contact and swept primitive composition; immutable SeparationRayData in PhysicsFixtureTag carries exact local endpoints and slope policy across fixture rebuilds. Both are private runtime integration details shared with PhysicsSpace.
+The internal PhysicsSeparationRay kernel owns directed contact and current counterpart containment; immutable SeparationRayData in PhysicsFixtureTag carries exact local endpoints and slope policy across fixture rebuilds. Both are private runtime integration details shared with PhysicsSpace.
 
-[Shape collision methods](../classes/Shape.md#collide) are independent resource-pair geometry operations under [ADR 0069](../decisions/physics.md#adr-0069). They do not create a direct-space query or consult scene filters. Their motion evaluates independently swept regions; concave terrain motion is ignored and rays ignore counterpart motion. These rules differ from a direct query's swept-shape wrapper.
+[Shape collision methods](../classes/Shape.md#collide) are independent resource-pair geometry operations under [ADR 0069](../decisions/physics.md#adr-0069). They do not create a direct-space query or consult scene filters. Their motion evaluates independently swept regions; concave terrain motion is ignored and rays ignore counterpart motion. Direct-space queries preserve the same represented-family precedence, including finite boundary endpoints.
 
 [PhysicsDirectBodyState](../classes/PhysicsDirectBodyState.md) and RigidBody custom integration now expose live owner-thread fields and immutable solved contact values after native stepping. PhysicsBodyRuntime owns body callback/persistent-force configuration; PhysicsSpace snapshots callback entries, aggregates failures and resynchronizes scene state. Typed userdata adapters allocate at registration. Sixty-four warmed active callback frames allocate zero managed bytes on Linux/.NET 10; whole-step normal/tangent impulses are complete; virtual tile identities remain Partial under [ADR 0070](../decisions/physics.md#adr-0070).
 

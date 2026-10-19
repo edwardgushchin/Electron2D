@@ -110,3 +110,9 @@ worlds. Six query families run over complete moving frames at strict zero manage
 bytes; independent geometry preserves whole logical initial-overlap suppression
 and identity ordering before contact caps. Invalid external factories and borrowed
 view lifetime retain their companion checks.
+
+
+[Special query displacement](../components/physics-queries.md#special-query-displacement)
+retains represented concave/boundary/ray precedence across all four direct shape
+operations, current initial contacts and finite boundary endpoints. CPU collinear
+circle/core contacts retain a unit normal and corresponding surface points.

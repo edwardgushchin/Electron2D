@@ -1486,6 +1486,15 @@ Local activation still commits only after selected SetActive succeeds. One pendi
 
 The public-only --activation-transactions fixture uses actual selected activity to gate its independent Solve, reproducing the old mismatch: public active=true, zero selected retry, no motion and an advanced tick after partial deactivation. Registered profiles each cover 64 scene/raw cases (both committed flags, before/after side effects, eight repair routes), original/repeated errors, off-owner and borrowed guards, actual movement, healthy equality, post-step callbacks, failed startup cleanup and pending retirement. An inactive-step route verifies skipping before an allowed query repair. CPU/private software-Vulkan/registered owner/separate healthy profiles toggle local/global activity and actual state callbacks, then measure 128 complete moving intervals at strict 0/0 owner/all-thread managed bytes. All 123 final profiles pass: 51 managed consumer, 51 strict NativeAOT consumer and 21 root profiles. The twelve healthy activation profiles measure 1536 complete moving intervals at 0/0 owner/all-thread managed bytes. Seven portable-PDB proofs match 2273 runtime, 164 consumer and 755 root documents without DEBUG/missing/mismatch; their 3187 unique tracked inputs are retained for committed-source readback. Evidence: bin/physics-activation-transactions/2026-10-18/validation.json; SHA-256 72adf281501f153352a895a232dc59f581412b859cdd5bc8af2482a8105ccb24. The frozen full software/offscreen suite for runtime sources at aa0b0cb5ad5458719a0d3311071cce550bebeeb3 completed with exit 0 in 1533.086791 seconds. Host SHA-256: e488c6f96fd1387bb536fb4be183b5dd5a93fec36401fe603a604d51b80beebd. Across 45236 parent-process map samples private lavapipe was observed and no hardware driver was observed. Post-run readback matches all 3187 unique committed source documents and 78 frozen payload files. Evidence: bin/physics-activation-transactions/2026-10-18/verified/full-runs.json (SHA-256 e709da4a0e99e52727c1a15e3b026e3980da752dec8c5c84d7a7fcfb12c910c7), full-binding.json, full-inputs.json and post-run-source-check.json. The later 12bf2f8a iteration verification changes runtime XML only and retains its separate eighteen-profile evidence; it is not an execution of that newer test host or of the subsequent ee899e11 frame-monitor change. This does not inject physical GPU failure or close native/foreign, complete numerical/network, hardware/window/FPS or performance acceptance.
 
+## Special direct-query displacement
+
+[Special query displacement](physics-queries.md#special-query-displacement) now
+shares the public 64-family operation matrix across an independent registered
+solver and CPU/software-GPU controls. The provider retains resource-kind policy
+before part sweeps and boundary endpoint contact/rest evaluation. Initial contacts
+remain visible while CastMotion ignores their complete logical slots. This does
+not close the broader Partial body-motion operation or hardware/performance gates.
+
 ## Special source motion
 
 The public-only --motion-matrix consumer audits all 64 ordered built-in families

@@ -53,7 +53,7 @@ public static partial class BackendChecks
                     {
                         var own = local.Parts[i]; var a = own; var b = other.Parts[j];
                         if (a.Concave && b.Concave) continue;
-                        var sweptMotion = a.Boundary || a.Concave && !b.Boundary ? Vector2.Zero : motion;
+                        var sweptMotion = a.Boundary || !b.Boundary && (a.Concave || b.Directed) ? Vector2.Zero : motion;
                         if (b.OneWay is { } policy && motion.Dot(policy.LocalDirection.Rotated(other.Rotation)) <= 0) continue;
                         if (a.Directed && !a.Slide && !collideSeparationRay) continue;
                         float low, f;

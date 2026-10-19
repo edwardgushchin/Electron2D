@@ -78,6 +78,10 @@ public sealed class PhysicsShapeQueryParameters : ElectronObject
     /// <summary>Gets or sets the finite global motion used by a sweep.</summary>
     /// <value>Zero by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">A component is nonfinite.</exception>
+    /// <remarks>An infinite boundary ignores its own displacement. A concave source ignores
+    /// displacement except against an infinite boundary. A stationary separation ray ignores
+    /// counterpart displacement. Boundary contacts use the finite shape endpoint; initial
+    /// contacts remain available to overlap, contact and rest queries.</remarks>
     public Vector2 Motion
     {
         get { ThrowIfDisposed(); return _motion; }

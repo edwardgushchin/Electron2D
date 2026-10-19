@@ -1,13 +1,13 @@
 # PhysicsSeparationRay
 
-Last updated: 2026-10-15
+Last updated: 2026-10-20
 
 **Declaration:** `internal static class PhysicsSeparationRay` · **Source:**
 [PhysicsSeparationRay.cs](../../src/Servers/Physics/PhysicsSeparationRay.cs) ·
 **Component:** [Physics queries](../components/physics-queries.md)
 
 This CPU adapter combines directed separation-ray contacts, body-local authored
-ray data, native fixture/proxy geometry and swept regions. Inputs and outputs use
+ray data, native fixture/proxy geometry and current counterpart containment. Inputs and outputs use
 CPU solver units; adapters convert public scene values at their boundary. The
 helper owns no world, body or native allocation. Callers qualify resource lifetime,
 world access and numerical borrowing before invoking it.
@@ -16,9 +16,11 @@ world access and numerical borrowing before invoking it.
 compound outer contours, then returns a native manifold with origin-relative body
 anchors. `PairContact` selects ordinary, ray or reverse-query composition.
 `WorldProxy` transforms local endpoints into a two-point zero-radius proxy.
-`ContainsSweptRegion` tests the original or decomposed swept region; `Contact`
-evaluates the directed segment, supplied counterpart pose/motion, margin and
-slope policy. Private swept pieces use bounded local scratch.
+`Contains` tests the current proxy region. `Contact` evaluates the directed segment,
+current counterpart pose, positive axial extension, margin and slope policy.
+`PairContact` ignores requested ordinary counterpart displacement when the ray is
+stationary; the former private swept-region helpers are removed. See
+[special query displacement](../components/physics-queries.md#special-query-displacement).
 
 Unrounded polygon origin containment uses
 [PhysicsShapeBackend.ContainsPoint](PhysicsShapeBackend.md) with stable native

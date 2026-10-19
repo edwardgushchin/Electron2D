@@ -85,7 +85,7 @@ Contact evaluate(Hull a,Hull b,Geometry ga,Geometry gb,vec2 extension,float marg
     {
         if(ga.data.z==6u&&gb.data.z==6u)return pairContact;
         bool flip=gb.data.z==6u;
-        directedQuery(flip?b:a,flip?a:b,flip?extension:vec2(0),flip?0:margin,
+        directedQuery(flip?b:a,flip?a:b,vec2(0),flip?0:margin,
             (flip?gb.parameters.y:ga.parameters.y)!=0,flip,flip?vec2(0):extension,0u,0u,true);
     }
     else

@@ -52,9 +52,9 @@ public static partial class BackendChecks
             query.Margin = 0; ray.Length = 15; query.Exclude = [floor.GetRID()]; Check(world.DirectSpaceState.IntersectShape(query, hits) == 0, "Directed query exclusions apply");
             query.Exclude = []; query.CollisionMask = 4; Check(world.DirectSpaceState.IntersectShape(query, hits) == 0, "Ray/ray query pairs never contact");
             query.Shape = circle; query.Transform = new(0, pose * new Vector2(-20, -10)); query.Motion = pose.X * 40;
-            Check(world.DirectSpaceState.IntersectShape(query, hits) == 1 && hits[0].ColliderRID == holder.GetRID(), "Moving ordinary source crosses a stationary ray");
-            var cast = world.DirectSpaceState.CastMotion(query); Check(MathF.Abs(cast.UnsafeFraction - .45f) < 1f / 256 + .00005f, "Reverse cast uses the swept circle boundary");
-            Check(world.DirectSpaceState.GetRestInfo(query) is not null, "Reverse directed rest retains target identity");
+            Check(world.DirectSpaceState.IntersectShape(query, hits) == 0, "Stationary rays ignore ordinary counterpart displacement");
+            var cast = world.DirectSpaceState.CastMotion(query); Check(cast == (1, 1), "Ignored ordinary counterpart displacement cannot create a reverse impact");
+            Check(world.DirectSpaceState.CollideShape(query, contacts) == 0 && world.DirectSpaceState.GetRestInfo(query) is null, "Ignored reverse displacement cannot create contact or rest data");
             peer.Position = from; tree.PhysicsFrame(1d / 60); Check(!area.OverlapsBody(peer), "Area ray ignores a peer containing its origin");
             void Verify()
             {

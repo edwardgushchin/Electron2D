@@ -2,7 +2,7 @@
 
 [Cold query geometry](physics-queries.md#cold-query-geometry) is resolved under the using-world numerical/lifetime guard before retained query-cache selection or replacement. Nested queries complete before outer cache preparation; resident algorithms, transfers and result formats are unchanged.
 
-Last updated: 2026-10-12
+Last updated: 2026-10-20
 
 ## Boundary and ownership
 
@@ -38,7 +38,9 @@ shared directed-contact include for supplied-pose recovery and sweeps.
 
 ## Geometry and public-query semantics
 
-Intersections include the initial pose and requested translation. Contacts report
+Intersections include the initial pose and applicable requested translation;
+[special query displacement](physics-queries.md#special-query-displacement) preserves
+resource-family precedence and boundary endpoint contacts. Contacts report
 query/collider surface pairs; rest information chooses greatest penetration, with
 logical key ties, and reads collider point velocity from resident actual plus
 surface motion about its center of mass. Sensors report zero velocity. Results
@@ -65,9 +67,9 @@ both simulation and queries. Shader loops retain their iterative form instead of
 requesting large constant unrolling.
 
 Directed queries extend only along their positive local axis, including margin and
-the positive projection of motion. Reverse queries test the ray against the swept
-convex region; support mapping represents that extrusion without adding vertices
-or imposing an eight-vertex limit. Containment and ray/ray pairs reject; front-facing
+the positive projection of motion. Reverse queries test the ray against the current
+counterpart, ignoring that counterpart's requested displacement. Infinite-boundary
+precedence retains its finite operand endpoint. Containment and ray/ray pairs reject; front-facing
 hits retain SlideOnSlope or axis-directed normals. Existing device analytic ray routines
 handle stationary primitive boundaries; advancement handles extrusions and rounded
 polygons. The query bounds use the projected extension for a directed ray, which
@@ -143,3 +145,10 @@ retain their own directed-ray policy. The [public GPU world adapter](physics-bac
 ObjectID now travels with each selected result, adding 16 B per record. The [object association report](physics-object-bindings.md) records the new transfer measurement and snapshot/lifetime checks.
 
 The public GPU adapter retains one rebindable query-geometry lease. Alternating live resources reuses its wrapper and retires the previous reference; past resources are not accumulated. ConvexPolygonShapeTests exercises 128 warmed overlap/contact/rest/motion cycles between shared and standalone geometry on CPU/GPU with zero owner/all-thread bytes, preserving current contour results and initial-overlap fractions. GPUPhysicsShapeQueryTests checks successful replacement, null/disposed/thread rejection with preserved previous geometry, and retired lease failure. Geometry uploads and query waits retain their existing separate costs.
+
+
+ELECTRON2D_TEST_GPU_SHAPE_QUERIES=functional runs resident shape geometry,
+filter/publication/lifetime and public shape/ShapeCast checks. Value 1 and the
+ordinary complete runner retain the massive shape and ray/point measurements.
+The separate query-contract profile retains functional ray/point coverage.
+Functional execution does not establish throughput or hardware acceptance.

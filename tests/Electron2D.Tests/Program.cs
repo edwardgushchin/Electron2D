@@ -834,7 +834,13 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_MOTION_QUERIES") is 
     GPUPhysicsMotionQueryTests.Run(measure: Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_MOTION_QUERIES") == "1");
     PhysicsMotionTests.Run(PhysicsServer.Backend.GPU); SeparationRayShapeTests.Run(); return;
 }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_SHAPE_QUERIES") == "1") { GPUPhysicsShapeQueryTests.Run(); GPUPhysicsQueryTests.Run(); PhysicsShapeQueryTests.Run(PhysicsServer.Backend.GPU); ShapeCastTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_SHAPE_QUERIES") is "1" or "functional")
+{
+    var measure = Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_SHAPE_QUERIES") == "1";
+    GPUPhysicsShapeQueryTests.Run(measure);
+    if (measure) GPUPhysicsQueryTests.Run();
+    PhysicsShapeQueryTests.Run(PhysicsServer.Backend.GPU); ShapeCastTests.Run(); return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_OBJECTS") == "1") { PhysicsObjectBindingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_OBJECTS_GPU") == "1") { PhysicsObjectBindingTests.Run(true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_CANVAS") == "1") { PhysicsCanvasTests.Run(); return; }
