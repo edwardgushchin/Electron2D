@@ -1,6 +1,6 @@
 # RDAttachmentFormat
 
-Last updated: 2026-10-12
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDAttachmentFormat`. **Source:** [RDAttachmentFormat.cs](../../src/Servers/Rendering/Device/RDAttachmentFormat.cs). **Component:** [Local device](../components/local-compute.md).
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-12
 
 ## Description
 
-A caller-owned color or depth/stencil attachment format description. FramebufferFormatCreate copies its encoding, required usage and sample count. ColorAttachment or DepthStencilAttachment selects the corresponding role; all raster targets require the same exact sample count, while resolve destinations require one sample. Explicit pass indices select render/depth/resolve roles. Multiview retains its native prerequisite.
+A caller-owned color or depth/stencil attachment format description. FramebufferFormatCreate copies its encoding, required usage and sample count. ColorAttachment or DepthStencilAttachment selects the corresponding role; raster targets within each pass require the same exact sample count, while resolve destinations require one sample. Explicit ordered pass indices select render/depth/resolve/input/preserve roles. Multiview retains its native prerequisite.
 
 ## Example
 

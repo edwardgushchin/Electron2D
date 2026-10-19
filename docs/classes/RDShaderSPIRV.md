@@ -1,6 +1,6 @@
 # RDShaderSPIRV
 
-Last updated: 2026-10-12
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDShaderSPIRV`. **Source:** [RDShaderSPIRV.cs](../../src/Servers/Rendering/Device/RDShaderSPIRV.cs). **Component:** [Local device](../components/local-compute.md).
 
@@ -9,6 +9,8 @@ Last updated: 2026-10-12
 ## Description
 
 A Resource owning copied stage bytecode and diagnostics. Every bytecode getter returns an independent array; setters copy and emit Changed. Duplication and resource archives preserve vertex, fragment and compute modules independently. RenderingDevice creation accepts either compute or both vertex and fragment; mixed, failed or incomplete programs reject. Geometry/tessellation and raytracing stages remain precise backend/product boundaries.
+
+Compiled GLSL/HLSL fragment input attachments now execute single/multisample loads through private pixel-coordinate image-fetch translation, preserving the original public module bytes. The [ordered framebuffer input contract](../components/local-compute.md#ordered-framebuffer-passes-and-inputs) defines descriptor indices, scalar/sample validation and verified native limits.
 
 ## Example
 

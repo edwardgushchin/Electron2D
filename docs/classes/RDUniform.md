@@ -1,6 +1,6 @@
 # RDUniform
 
-Last updated: 2026-10-11
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDUniform`. **Source:** [RDUniform.cs](../../src/Servers/Rendering/Device/RDUniform.cs). **Component:** [Local compute](../components/local-compute.md).
 
@@ -9,6 +9,8 @@ Last updated: 2026-10-11
 ## Description
 
 A copied binding description with a descriptor category, nonnegative binding number and an ordered list of borrowed RIDs. UniformSetCreate validates it against a shader and copies its contents, so later descriptor edits do not alter an existing set. GetIDs returns an independent array. The default category is Image; the current device compute slice executes UniformBuffer, StorageBuffer, Image and SamplerWithTexture descriptors. Image borrows one writable texture; SamplerWithTexture borrows sampler first, texture second. Creation validates scalar, array, format, role and integer-filter contracts. Other enum values describe categories and are rejected at set creation when unsupported.
+
+UniformType.InputAttachment consumes one image RID matching the active framebuffer input index, scalar type and sample role. It executes single/multisample readonly fragment loads; see [ordered framebuffer inputs](../components/local-compute.md#ordered-framebuffer-passes-and-inputs).
 
 ## Example
 

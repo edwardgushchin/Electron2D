@@ -4,11 +4,12 @@ namespace Electron2D;
 
 public sealed unsafe partial class RenderingDevice
 {
-    private readonly record struct Binding(uint Set, int Slot, UniformType Type, int Native, bool Array = false, uint ImageFormat = 0, int PixelType = 0, ShaderStage Stage = ShaderStage.Compute, uint MinimumSize = 0, bool Depth = false);
+    private readonly record struct Binding(uint Set, int Slot, UniformType Type, int Native, bool Array = false, uint ImageFormat = 0, int PixelType = 0, ShaderStage Stage = ShaderStage.Compute, uint MinimumSize = 0, bool Depth = false, int Attachment = -1, bool Multisample = false);
     private static (byte[] Code, Binding[] Layout, PushStage[] Push) Remap(byte[] code, ShaderStage stage = ShaderStage.Compute) => RemapCore(code, stage, false);
     private static (byte[] Code, Binding[] Layout, PushStage[] Push) RemapCore(byte[] code, ShaderStage stage, bool template)
     {
         if (code.Length < 20 || code.Length > 16 * 1024 * 1024 || code.Length % 4 != 0) throw new ArgumentException("A compute module must contain aligned SPIR-V words.", nameof(code));
+        var inputTranslation = LowerInputAttachments(code, stage); code = inputTranslation.Code;
         (byte[] Code, uint Variable, uint Size) translated;
         try { translated = template ? (code, 0u, 0u) : new PushLowering(code).Translate(); }
         catch (OverflowException error) { throw new ArgumentException("The push layout exceeds module bounds.", nameof(code), error); }
@@ -24,7 +25,7 @@ public sealed unsafe partial class RenderingDevice
         var sets = new Dictionary<uint, int>(); var slots = new Dictionary<uint, int>();
         var pointers = new Dictionary<uint, uint>(); var bufferBlocks = new HashSet<uint>();
         var variables = new List<(uint ID, uint Type, uint Storage)>();
-        var images = new Dictionary<uint, (uint Scalar, uint Array, uint Sampled, uint Format, uint Depth)>(); var scalars = new Dictionary<uint, int>(); var pairedSamplers = new HashSet<uint>(); var sampled = new Dictionary<uint, uint>(); var samplerTypes = new HashSet<uint>();
+        var images = new Dictionary<uint, (uint Scalar, uint Array, uint Sampled, uint Format, uint Depth, uint Multisample)>(); var scalars = new Dictionary<uint, int>(); var pairedSamplers = new HashSet<uint>(); var sampled = new Dictionary<uint, uint>(); var samplerTypes = new HashSet<uint>();
         var entry = false; var localSize = false;
         for (var i = 5; i < words.Length;)
         {
@@ -46,8 +47,8 @@ public sealed unsafe partial class RenderingDevice
                     if (words[i + 2] == 32) scalars.Add(words[i + 1], 0);
                     break;
                 case 25 when size is 9 or 10:
-                    if (words[i + 3] != 1 || words[i + 4] > 1 || words[i + 5] > 1 || words[i + 6] != 0 || words[i + 7] is not (1 or 2)) throw new NotSupportedException("Device images must be non-multisampled two-dimensional textures.");
-                    images.Add(words[i + 1], (words[i + 2], words[i + 5], words[i + 7], words[i + 8], words[i + 4])); break;
+                    if (words[i + 3] != 1 || words[i + 4] > 1 || words[i + 5] > 1 || words[i + 6] > 1 || words[i + 7] is not (1 or 2)) throw new NotSupportedException("Device images must be non-multisampled two-dimensional textures.");
+                    images.Add(words[i + 1], (words[i + 2], words[i + 5], words[i + 7], words[i + 8], words[i + 4], words[i + 6])); break;
                 case 26 when size == 2: samplerTypes.Add(words[i + 1]); break;
                 case 27 when size == 3: sampled.Add(words[i + 1], words[i + 2]); break;
                 case 30 when size >= 2: members.Add(words[i + 1], size - 2); break;
@@ -82,6 +83,14 @@ public sealed unsafe partial class RenderingDevice
                 var combined = sampled.TryGetValue(imageType, out var underlying); if (combined) imageType = underlying;
                 if (!images.TryGetValue(imageType, out var image)) throw new NotSupportedException("Image descriptor arrays are not integrated.");
                 if (!scalars.TryGetValue(image.Scalar, out var pixelType)) throw new NotSupportedException("Compute images require 32-bit float, signed or unsigned pixel scalars.");
+                if (inputTranslation.Inputs.TryGetValue(variable.ID, out var input))
+                {
+                    if (imageSlot >= 8) throw new NotSupportedException("Input and readonly image descriptors exceed the eight native storage texture slots.");
+                    var inputOrigin = logical[variable.ID]; if (layout.Any(b => b.Set == inputOrigin.Set && b.Slot == inputOrigin.Slot)) throw new ArgumentException("Duplicate input descriptor binding.", nameof(code));
+                    layout.Add(new(inputOrigin.Set, inputOrigin.Slot, UniformType.InputAttachment, imageSlot, PixelType: pixelType, Stage: stage, Attachment: input.Index, Multisample: input.Multisample));
+                    words[imageSet] = nativeSet; words[imageBinding] = (uint)imageSlot++; continue;
+                }
+                if (image.Multisample != 0) throw new NotSupportedException("Multisample shader images require their input-attachment/sample-load adapter.");
                 var writable = image.Sampled == 2;
                 if (image.Depth == 1 && (writable || pixelType != 0)) throw new NotSupportedException("Depth comparison requires a sampled floating-point image.");
                 if (!compute && writable && !readOnly.Contains(variable.ID)) throw new NotSupportedException("Graphics image storage requires a readonly declaration.");
@@ -122,7 +131,7 @@ public sealed unsafe partial class RenderingDevice
         foreach (var variable in variables.Where(v => v.Storage is 2 or 12))
             if (sets.TryGetValue(variable.ID, out var si) && slots.TryGetValue(variable.ID, out var bi) && (compute ? words[si] == 1 : words[si] == nativeSet)) words[bi] += (uint)(compute ? imageSlot : imageSlot + textureSlot);
         if (!compute) foreach (var variable in variables.Where(v => v.Storage == 0))
-                if (sets.TryGetValue(variable.ID, out var si) && slots.TryGetValue(variable.ID, out var bi) && pointers.TryGetValue(variable.Type, out var ty) && images.TryGetValue(ty, out var image) && image.Sampled == 2)
+                if (sets.TryGetValue(variable.ID, out var si) && slots.TryGetValue(variable.ID, out var bi) && pointers.TryGetValue(variable.Type, out var ty) && images.TryGetValue(ty, out var image) && (image.Sampled == 2 || inputTranslation.Inputs.ContainsKey(variable.ID)))
                     words[bi] += (uint)textureSlot;
         return (code, layout.ToArray(), push is null ? [] : [push]);
     }

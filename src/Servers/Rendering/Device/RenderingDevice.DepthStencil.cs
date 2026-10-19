@@ -52,7 +52,7 @@ public sealed unsafe partial class RenderingDevice
     private static SDL.GPUStencilOp Stencil(StencilOperation value) => value is >= StencilOperation.Keep and < StencilOperation.Max ? (SDL.GPUStencilOp)((int)value + 1) : throw new ArgumentOutOfRangeException(nameof(value));
     private static bool DepthFormat(DataFormat format) => format is DataFormat.D16UNORM or DataFormat.X8D24UNORMPACK32 or DataFormat.D32SFLOAT or DataFormat.D16UNORMS8UINT or DataFormat.D24UNORMS8UINT or DataFormat.D32SFLOATS8UINT;
     private static bool StencilFormat(DataFormat format) => format is DataFormat.D24UNORMS8UINT or DataFormat.D32SFLOATS8UINT;
-    private static SDL.GPUDepthStencilState DepthState(RDPipelineDepthStencilState state, RDPipelineRasterizationState raster, FramebufferLayout target, out byte reference)
+    private static SDL.GPUDepthStencilState DepthState(RDPipelineDepthStencilState state, RDPipelineRasterizationState raster, FramebufferPassLayout target, out byte reference)
     {
         var enabled = state.EnableDepthTest || state.EnableDepthWrite || state.EnableStencil;
         if (enabled && target.DepthIndex < 0) throw new ArgumentException("Depth/stencil state requires a depth attachment.", nameof(state));

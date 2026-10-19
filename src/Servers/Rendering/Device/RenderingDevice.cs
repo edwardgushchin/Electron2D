@@ -62,7 +62,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal bool Expired;
         internal bool Alive => !Expired && (Borrowed?.Alive ?? true) && (MeshOwner?.Alive ?? true) && (!MeshCommand || MeshOwner?.CommandsAlive != false);
         internal nint NativeHandle => Borrowed?.Native ?? Handle!.DangerousGetHandle();
-        internal RenderHandle? Handle, Upload, Download, TextureScratch;
+        internal RenderHandle? Handle, Upload, Download, TextureScratch, InputShadow;
         internal bool ScratchColorTarget;
         internal byte[] Data = [];
         internal uint Size;
@@ -407,7 +407,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         IdleList(); if (!_entries.TryGetValue(rid, out var entry)) throw new ArgumentException("The resource identity is not owned by this device.", nameof(rid)); if (entry.MeshOwner is not null && entry.Alive) throw new InvalidOperationException("The instance resource owns this retained buffer lifetime."); CompleteSubmission();
         if (_command != 0 || _recordedReadbacks.Count != 0) { SubmitRecorded(); CompleteSubmission(); }
         RenderingServer.NotifyRenderMutation();
-        _entries.Remove(rid); if (entry.Borrowed is { } borrow && _rendererTextures.GetValueOrDefault(borrow.Source) == rid) _rendererTextures.Remove(borrow.Source); entry.Borrowed?.Dispose(); ReleaseProgram(entry.Variant); entry.Handle?.Dispose(); entry.FragmentHandle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose();
+        _entries.Remove(rid); if (entry.Borrowed is { } borrow && _rendererTextures.GetValueOrDefault(borrow.Source) == rid) _rendererTextures.Remove(borrow.Source); entry.Borrowed?.Dispose(); ReleaseProgram(entry.Variant); entry.Handle?.Dispose(); entry.FragmentHandle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose(); entry.InputShadow?.Dispose();
         DeliverReadbacks();
     }
     /// <inheritdoc />
@@ -422,7 +422,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (_command != 0) { SDL.CancelGPUCommandBuffer(_command); _command = 0; }
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
             CancelRendererUploads(); ReleaseDrawablePipelines();
-            foreach (var e in _entries.Values) { e.Borrowed?.Dispose(); ReleaseProgram(e.Variant); e.Handle?.Dispose(); e.FragmentHandle?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); }
+            foreach (var e in _entries.Values) { e.Borrowed?.Dispose(); ReleaseProgram(e.Variant); e.Handle?.Dispose(); e.FragmentHandle?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); e.InputShadow?.Dispose(); }
             _entries.Clear(); _rendererTextures.Clear(); _sourceCache.Clear(); _sourceCacheBytes = 0; _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _activeList = 0; CancelReadbacks(); _context.Dispose();
         }
         base.Dispose(disposing);

@@ -4,25 +4,29 @@ namespace Electron2D;
 
 public sealed unsafe partial class RenderingDevice
 {
-    private sealed record FramebufferLayout(DataFormat[] Formats, TextureUsageBits[] Usage, TextureSamples[] AttachmentSamples, int[] Colors, int DepthIndex, int[] Resolves, TextureSamples Samples);
-    private sealed record Framebuffer(RID[] Textures, int Format, Vector2i Size);
+    private sealed record FramebufferPassLayout(DataFormat[] Formats, TextureUsageBits[] Usage, TextureSamples[] AttachmentSamples,
+        int[] Colors, int DepthIndex, int[] Resolves, TextureSamples Samples, int[] Inputs, int[] Preserves);
+    private sealed record FramebufferLayout(FramebufferPassLayout[] Passes);
+    private FramebufferLayout FramebufferLayouts(int format) => _framebufferFormats.TryGetValue(format, out var layout) ? layout : throw new ArgumentException("Unknown framebuffer format.", nameof(format));
+    private sealed record Framebuffer(RID[] Textures, int Format, Vector2i Size)
+    { internal readonly bool[] Touched = new bool[Textures.Length]; }
     private readonly Dictionary<int, FramebufferLayout> _framebufferFormats = [];
     /// <summary>Creates a copied single-pass color and depth/stencil attachment layout.</summary>
     /// <param name="attachments">Up to eight render color targets and one depth/stencil target with the same exact sample count.</param>
     /// <returns>A device-local framebuffer format identifier.</returns>
     /// <exception cref="NotSupportedException">A format or exact sample count is unavailable.</exception>
-    public int FramebufferFormatCreate(ReadOnlySpan<RDAttachmentFormat> attachments) => CreateFramebufferFormat(attachments, null);
+    public int FramebufferFormatCreate(ReadOnlySpan<RDAttachmentFormat> attachments) => CreateFramebufferFormat(attachments, default);
     /// <summary>Creates a copied explicit pass layout, including per-color resolve destinations.</summary>
     /// <param name="attachments">Render and resolve attachment formats in caller-defined order.</param>
-    /// <param name="passes">Exactly one executable pass; additional subpasses require their native input/preservation adapters.</param>
+    /// <param name="passes">Ordered copied color/depth/resolve passes and their input/preservation roles.</param>
     /// <returns>A device-local layout retaining copied indices and formats.</returns>
     /// <exception cref="ArgumentException">Indices, formats, roles or sample counts disagree.</exception>
-    /// <exception cref="NotSupportedException">Multiple native subpasses or an exact sample count are unavailable.</exception>
+    /// <exception cref="NotSupportedException">An exact sample count or attachment role is unavailable.</exception>
     public int FramebufferFormatCreateMultipass(ReadOnlySpan<RDAttachmentFormat> attachments, ReadOnlySpan<RDFramebufferPass> passes)
-    { if (passes.Length != 1) throw new NotSupportedException("Multiple subpasses require native input/preservation integration."); ArgumentNullException.ThrowIfNull(passes[0]); return CreateFramebufferFormat(attachments, passes[0]); }
-    private int CreateFramebufferFormat(ReadOnlySpan<RDAttachmentFormat> attachments, RDFramebufferPass? pass)
+    { if (passes.IsEmpty) throw new ArgumentException("Provide one or more passes.", nameof(passes)); return CreateFramebufferFormat(attachments, passes); }
+    private int CreateFramebufferFormat(ReadOnlySpan<RDAttachmentFormat> attachments, ReadOnlySpan<RDFramebufferPass> passes)
     {
-        IdleList(); if (attachments.Length is < 1 or > 17) throw new ArgumentOutOfRangeException(nameof(attachments));
+        IdleList(); if (attachments.IsEmpty) throw new ArgumentOutOfRangeException(nameof(attachments));
         var formats = new DataFormat[attachments.Length]; var usage = new TextureUsageBits[attachments.Length]; var samples = new TextureSamples[attachments.Length];
         for (var i = 0; i < attachments.Length; i++)
         {
@@ -30,9 +34,9 @@ public sealed unsafe partial class RenderingDevice
             if (!TextureIsFormatSupportedForUsage(formats[i], samples[i] != TextureSamples.Samples1 ? usage[i] & ~(TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo) : usage[i])) throw new NotSupportedException("Unsupported attachment format/usage.");
             ExactSamples(formats[i], samples[i]);
         }
-        var layout = AttachmentLayout(formats, usage, samples, pass); var id = NextFormatID(ref _nextGraphicsFormat); _framebufferFormats.Add(id, layout); return id;
+        var layout = AttachmentLayouts(formats, usage, samples, passes); var id = NextFormatID(ref _nextGraphicsFormat); _framebufferFormats.Add(id, layout); return id;
     }
-    private static FramebufferLayout AttachmentLayout(DataFormat[] formats, TextureUsageBits[] usage, TextureSamples[] samples, RDFramebufferPass? pass)
+    private static FramebufferPassLayout AttachmentLayout(DataFormat[] formats, TextureUsageBits[] usage, TextureSamples[] samples, RDFramebufferPass? pass)
     {
         var depth = -1; int[] colors, resolves;
         if (pass is null)
@@ -64,34 +68,61 @@ public sealed unsafe partial class RenderingDevice
             var resolve = resolves[i]; if (resolve == -1) continue; Index(resolve, formats.Length);
             if (!used.Add(resolve) || rasterSamples == TextureSamples.Samples1 || samples[resolve] != TextureSamples.Samples1 || formats[resolve] != formats[colors[i]] || (usage[resolve] & TextureUsageBits.ColorAttachment) == 0) throw new ArgumentException("Resolve slots require distinct matching single-sample color targets.");
         }
-        if (used.Count != formats.Length) throw new ArgumentException("Every attachment must have an executing render or resolve role in this pass.");
-        return new(formats, usage, samples, colors, depth, resolves, rasterSamples);
+        var inputs = pass?.InputAttachments ?? []; var preserves = pass?.PreserveAttachments ?? [];
+        foreach (var input in inputs)
+        {
+            if (input == RDFramebufferPass.AttachmentUnused) continue;
+            Index(input, formats.Length);
+            if (!used.Add(input) || DepthFormat(formats[input]) || (usage[input] & TextureUsageBits.InputAttachment) == 0)
+                throw new ArgumentException("Inputs require distinct color input attachments, separate from the pass outputs.");
+        }
+        foreach (var preserve in preserves) Index(preserve, formats.Length);
+        return new(formats, usage, samples, colors, depth, resolves, rasterSamples, inputs, preserves);
     }
     private static int Index(int index, int length) => index >= 0 && index < length ? index : throw new ArgumentOutOfRangeException(nameof(index));
-    private FramebufferLayout FramebufferFormat(int format) => _framebufferFormats.TryGetValue(format, out var layout) ? layout : throw new ArgumentException("Unknown framebuffer format.", nameof(format));
+    private static FramebufferLayout AttachmentLayouts(DataFormat[] formats, TextureUsageBits[] usage, TextureSamples[] samples, ReadOnlySpan<RDFramebufferPass> descriptions)
+    {
+        var passes = new FramebufferPassLayout[Math.Max(1, descriptions.Length)]; var used = new HashSet<int>();
+        for (var i = 0; i < passes.Length; i++)
+        {
+            RDFramebufferPass? description = null;
+            if (!descriptions.IsEmpty) { description = descriptions[i]; ArgumentNullException.ThrowIfNull(description); }
+            var pass = passes[i] = AttachmentLayout(formats, usage, samples, description);
+            foreach (var color in pass.Colors) used.Add(color);
+            if (pass.DepthIndex >= 0) used.Add(pass.DepthIndex);
+            foreach (var resolve in pass.Resolves) if (resolve >= 0) used.Add(resolve);
+            foreach (var input in pass.Inputs) if (input >= 0) used.Add(input);
+        }
+        if (used.Count != formats.Length) throw new ArgumentException("Every attachment must have an executing render, resolve or input role.");
+        return new(passes);
+    }
+    private FramebufferPassLayout FramebufferFormat(int format, uint renderPass = 0)
+    { var passes = FramebufferLayouts(format).Passes; if (renderPass >= passes.Length) throw new ArgumentOutOfRangeException(nameof(renderPass)); return passes[renderPass]; }
+    private static bool SamePass(FramebufferPassLayout a, FramebufferPassLayout b) => a.DepthIndex == b.DepthIndex && a.Colors.AsSpan().SequenceEqual(b.Colors) && a.Resolves.AsSpan().SequenceEqual(b.Resolves) && a.Inputs.AsSpan().SequenceEqual(b.Inputs) && a.Preserves.AsSpan().SequenceEqual(b.Preserves);
+
     /// <summary>Reports the exact raster sample count of a framebuffer pass.</summary>
-    /// <param name="framebufferFormat">A live single-pass format identifier.</param>
-    /// <param name="renderPass">Zero for the supported single pass.</param>
+    /// <param name="framebufferFormat">A live framebuffer format identifier.</param>
+    /// <param name="renderPass">The zero-based pass index.</param>
     /// <returns>The copied raster sample count.</returns>
     public TextureSamples FramebufferFormatGetTextureSamples(int framebufferFormat, uint renderPass = 0)
-    { Access(); var layout = FramebufferFormat(framebufferFormat); if (renderPass != 0) throw new ArgumentOutOfRangeException(nameof(renderPass)); return layout.Samples; }
+    { Access(); return FramebufferFormat(framebufferFormat, renderPass).Samples; }
     /// <summary>Creates a framebuffer borrowing device-owned color and depth/stencil images.</summary>
     /// <param name="textures">Distinct ordinary single-layer, single-mip images with matching dimensions.</param>
     /// <param name="validateWithFormat">An existing matching layout including resolve roles, or -1 for an implicit render-only pass.</param>
     /// <returns>A framebuffer invalidated when any borrowed image is freed.</returns>
-    public RID FramebufferCreate(ReadOnlySpan<RID> textures, int validateWithFormat = -1) => CreateFramebuffer(textures, null, validateWithFormat);
-    /// <summary>Creates a framebuffer borrowing the images selected by a copied explicit pass.</summary>
-    /// <param name="textures">Ordinary render and marked resolve images, in the pass's index order.</param>
-    /// <param name="passes">Exactly one executable color/depth/resolve pass.</param>
+    public RID FramebufferCreate(ReadOnlySpan<RID> textures, int validateWithFormat = -1) => CreateFramebuffer(textures, default, validateWithFormat);
+    /// <summary>Creates a framebuffer borrowing the images selected by ordered copied passes.</summary>
+    /// <param name="textures">Ordinary render, marked resolve and input images in caller-defined attachment order.</param>
+    /// <param name="passes">One or more ordered executable passes.</param>
     /// <param name="validateWithFormat">An existing matching layout, or -1 to create its copied format.</param>
-    /// <returns>A framebuffer borrowing all render and resolve images.</returns>
+    /// <returns>A framebuffer borrowing all images used by its ordered passes.</returns>
     /// <exception cref="ArgumentException">Images, sample counts, roles or requested layout disagree.</exception>
-    /// <exception cref="NotSupportedException">Multiple subpasses require their native adapters.</exception>
+    /// <exception cref="NotSupportedException">An attachment role requires its native adapter.</exception>
     public RID FramebufferCreateMultipass(ReadOnlySpan<RID> textures, ReadOnlySpan<RDFramebufferPass> passes, int validateWithFormat = -1)
-    { if (passes.Length != 1) throw new NotSupportedException("Multiple subpasses require native input/preservation integration."); ArgumentNullException.ThrowIfNull(passes[0]); return CreateFramebuffer(textures, passes[0], validateWithFormat); }
-    private RID CreateFramebuffer(ReadOnlySpan<RID> textures, RDFramebufferPass? pass, int validateWithFormat)
+    { if (passes.IsEmpty) throw new ArgumentException("Provide one or more passes.", nameof(passes)); return CreateFramebuffer(textures, passes, validateWithFormat); }
+    private RID CreateFramebuffer(ReadOnlySpan<RID> textures, ReadOnlySpan<RDFramebufferPass> passes, int validateWithFormat)
     {
-        IdleList(); if (textures.Length is < 1 or > 17) throw new ArgumentOutOfRangeException(nameof(textures));
+        IdleList(); if (textures.IsEmpty) throw new ArgumentOutOfRangeException(nameof(textures));
         var formats = new DataFormat[textures.Length]; var usage = new TextureUsageBits[textures.Length]; var samples = new TextureSamples[textures.Length]; var unique = new HashSet<nint>(); Vector2i size = default;
         for (var i = 0; i < textures.Length; i++)
         {
@@ -101,24 +132,27 @@ public sealed unsafe partial class RenderingDevice
             formats[i] = info.Format; usage[i] = info.Usage; samples[i] = info.Samples;
         }
         var format = validateWithFormat; FramebufferLayout layout;
-        if (format == -1) { layout = AttachmentLayout(formats, usage, samples, pass); format = NextFormatID(ref _nextGraphicsFormat); }
+        if (format == -1) { layout = AttachmentLayouts(formats, usage, samples, passes); format = NextFormatID(ref _nextGraphicsFormat); }
         else
         {
-            layout = FramebufferFormat(format);
-            if (!layout.Formats.AsSpan().SequenceEqual(formats) || !layout.AttachmentSamples.AsSpan().SequenceEqual(samples) || layout.Usage.Where((u, i) => (usage[i] & u) != u).Any()) throw new ArgumentException("Images do not match the requested layout.", nameof(validateWithFormat));
-            if (pass is not null)
+            layout = FramebufferLayouts(format); var first = layout.Passes[0];
+            if (!first.Formats.AsSpan().SequenceEqual(formats) || !first.AttachmentSamples.AsSpan().SequenceEqual(samples) || first.Usage.Where((u, i) => (usage[i] & u) != u).Any()) throw new ArgumentException("Images do not match the requested layout.", nameof(validateWithFormat));
+            if (!passes.IsEmpty)
             {
-                var actual = AttachmentLayout(formats, usage, samples, pass);
-                if (actual.DepthIndex != layout.DepthIndex || !actual.Colors.AsSpan().SequenceEqual(layout.Colors) || !actual.Resolves.AsSpan().SequenceEqual(layout.Resolves)) throw new ArgumentException("Pass indices do not match the requested layout.", nameof(validateWithFormat));
+                var actual = AttachmentLayouts(formats, usage, samples, passes);
+                if (actual.Passes.Length != layout.Passes.Length || actual.Passes.Where((pass, i) => !SamePass(pass, layout.Passes[i])).Any()) throw new ArgumentException("Pass indices do not match the requested layout.", nameof(validateWithFormat));
             }
         }
-        for (var i = 0; i < layout.Resolves.Length; i++)
-            if (layout.Resolves[i] >= 0) ResolvePair(Get(textures[layout.Colors[i]], Kind.Texture).Texture!, Get(textures[layout.Resolves[i]], Kind.Texture).Texture!);
-        foreach (var color in layout.Colors) if (Get(textures[color], Kind.Texture).Texture!.Resolve) throw new ArgumentException("Marked resolve images must occupy resolve slots, not render slots.", nameof(textures));
+        foreach (var pass in layout.Passes)
+        {
+            for (var i = 0; i < pass.Resolves.Length; i++)
+                if (pass.Resolves[i] >= 0) ResolvePair(Get(textures[pass.Colors[i]], Kind.Texture).Texture!, Get(textures[pass.Resolves[i]], Kind.Texture).Texture!);
+            foreach (var color in pass.Colors) if (Get(textures[color], Kind.Texture).Texture!.Resolve) throw new ArgumentException("Marked resolve images must occupy resolve slots, not render slots.", nameof(textures));
+        }
         if (validateWithFormat == -1) _framebufferFormats.Add(format, layout);
         return Add(new Entry { Kind = Kind.Framebuffer, Target = new(textures.ToArray(), format, size) });
     }
-    private static bool SameRasterLayout(FramebufferLayout a, FramebufferLayout b)
+    private static bool SameRasterLayout(FramebufferPassLayout a, FramebufferPassLayout b)
     {
         if (a.Samples != b.Samples || a.Colors.Length != b.Colors.Length || (a.DepthIndex < 0) != (b.DepthIndex < 0)) return false;
         for (var i = 0; i < a.Colors.Length; i++) if (a.Formats[a.Colors[i]] != b.Formats[b.Colors[i]]) return false;

@@ -4,7 +4,7 @@ namespace Electron2D;
 
 public sealed unsafe partial class RenderingDevice
 {
-    private sealed record GraphicsPipeline(int FramebufferFormat, int VertexFormat, RenderPrimitive Primitive, Color Constant, PipelineDynamicStateFlags Dynamic, byte StencilReference);
+    private sealed record GraphicsPipeline(int FramebufferFormat, int VertexFormat, RenderPrimitive Primitive, Color Constant, PipelineDynamicStateFlags Dynamic, byte StencilReference, uint ForRenderPass);
     private static SDL.GPUBlendFactor Blend(BlendFactor value) => value switch
     {
         >= BlendFactor.Zero and <= BlendFactor.OneMinusConstantColor => (SDL.GPUBlendFactor)((int)value + 1),
@@ -23,16 +23,17 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="depthStencilState">Copied depth/stencil configuration; null disables both tests and depth writes.</param>
     /// <param name="multisampleState">Copied sample count and alpha-to-coverage state; null selects one sample.</param>
     /// <param name="specializationConstants">Copied scalar overrides shared by the paired stages; omitted values retain defaults.</param>
+    /// <param name="forRenderPass">Zero-based framebuffer pass whose outputs and inputs this pipeline consumes.</param>
     /// <returns>A pipeline borrowing the shader identity and owning specialized native stages when needed.</returns>
     /// <exception cref="ArgumentException">Shader interfaces, layouts or configurations disagree.</exception>
-    /// <remarks>Depth-bounds tests, sample shading, subpasses require their additional attachment interfaces. Typed specialization freezes constants before native creation.</remarks>
+    /// <remarks>Depth-bounds tests and sample shading require their native state adapters. Ordered passes select forRenderPass. Typed specialization freezes constants before native creation.</remarks>
     public RID RenderPipelineCreate(RID shader, int framebufferFormat, int vertexFormat, RenderPrimitive primitive,
-        RDPipelineRasterizationState rasterizationState, RDPipelineColorBlendState colorBlendState, PipelineDynamicStateFlags dynamicStateFlags = 0, RDPipelineDepthStencilState? depthStencilState = null, RDPipelineMultisampleState? multisampleState = null, ReadOnlySpan<RDPipelineSpecializationConstant> specializationConstants = default)
+        RDPipelineRasterizationState rasterizationState, RDPipelineColorBlendState colorBlendState, PipelineDynamicStateFlags dynamicStateFlags = 0, RDPipelineDepthStencilState? depthStencilState = null, RDPipelineMultisampleState? multisampleState = null, ReadOnlySpan<RDPipelineSpecializationConstant> specializationConstants = default, uint forRenderPass = 0)
     {
         IdleList(); ArgumentNullException.ThrowIfNull(rasterizationState); ArgumentNullException.ThrowIfNull(colorBlendState);
         var program = Get(shader, Kind.Shader); if (program.Stage != ShaderStage.Vertex) throw new ArgumentException("A paired graphics shader is required.", nameof(shader));
         if ((dynamicStateFlags & ~PipelineDynamicStateFlags.BlendConstants) != 0) throw new ArgumentOutOfRangeException(nameof(dynamicStateFlags));
-        var target = FramebufferFormat(framebufferFormat);
+        var target = FramebufferFormat(framebufferFormat, forRenderPass);
         var samples = multisampleState?.SampleCount ?? TextureSamples.Samples1;
         if (samples != target.Samples) throw new ArgumentException("Pipeline sample count must match the framebuffer raster targets.", nameof(multisampleState));
         using var defaultDepth = depthStencilState is null ? new RDPipelineDepthStencilState() : null;
@@ -43,6 +44,7 @@ public sealed unsafe partial class RenderingDevice
             program = variant ?? program;
             var vertex = vertexFormat == -1 ? new VertexLayout([], [], []) : VertexFormat(vertexFormat);
             ValidateVertexInterface(program, vertex);
+            ValidateInputLayout(program, target);
             foreach (var output in program.Outputs)
                 if (output.Location >= target.Colors.Length || output.Type != PixelType(target.Formats[target.Colors[output.Location]])) throw new ArgumentException("Fragment outputs must match the framebuffer scalar formats.", nameof(framebufferFormat));
             var topology = primitive switch
@@ -104,7 +106,7 @@ public sealed unsafe partial class RenderingDevice
                     TargetInfo = new() { ColorTargetDescriptions = (nint)colors, NumColorTargets = (uint)attachments.Length, HasDepthStencilTarget = target.DepthIndex >= 0, DepthStencilFormat = target.DepthIndex >= 0 ? NativeFormat(target.Formats[target.DepthIndex]) : SDL.GPUTextureFormat.Invalid }
                 };
                 var handle = new RenderHandle(SDL.CreateGPUGraphicsPipeline(Device, in info), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
-                return Add(new Entry { Kind = Kind.GraphicsPipeline, Shader = shader, Handle = handle, Variant = variant, Graphics = new(framebufferFormat, vertexFormat, primitive, colorBlendState.BlendConstant, dynamicStateFlags, stencilReference) });
+                return Add(new Entry { Kind = Kind.GraphicsPipeline, Shader = shader, Handle = handle, Variant = variant, Graphics = new(framebufferFormat, vertexFormat, primitive, colorBlendState.BlendConstant, dynamicStateFlags, stencilReference, forRenderPass) });
             }
         }
         catch { ReleaseProgram(variant); throw; }

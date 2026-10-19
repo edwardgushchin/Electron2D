@@ -1,6 +1,6 @@
 # RDFramebufferPass
 
-Last updated: 2026-10-12
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDFramebufferPass`. **Component:** [Local device](../components/local-compute.md#multisample-graphics-and-resolve).
 
@@ -8,9 +8,9 @@ Last updated: 2026-10-12
 
 ## Description
 
-Describes a copied color/depth pass and its multisample resolve destinations.
+Describes an ordered color/depth pass, its resolve destinations, inputs and preserved attachments.
 
-Color indices follow shader output order; depth and resolve indices refer to the supplied attachment array. AttachmentUnused disables depth or individual resolves. Empty resolves select a stored render-only pass. Arrays copy writes and reads; native creation copies all fields. Dense color slots execute; sparse color holes, input/preserve attachments and multiple subpasses require adapters.
+Color indices follow shader output order; depth and resolve indices refer to the supplied attachment array. AttachmentUnused disables depth or individual resolves. Empty resolves select a stored render-only pass. Arrays copy writes and reads; native creation copies all fields. Ordered passes execute input loads and preservation across inactive intermediate passes. Inputs allow AttachmentUnused holes; duplicate preserves are idempotent. Dense color output slots execute; sparse color output holes require a native target/output-location adapter. See [ordered passes](../components/local-compute.md#ordered-framebuffer-passes-and-inputs) for allocation and shader limits.
 
 ## Example
 
@@ -25,12 +25,14 @@ var target = device.FramebufferCreateMultipass([multisampleColor, resolveColor],
 
 | Declaration | Contract |
 | --- | --- |
-| [`public const System.Int32 AttachmentUnused = -1`](#member-c9289044de4e) | Marks an unused depth attachment or color resolve slot. |
+| [`public const System.Int32 AttachmentUnused = -1`](#member-c9289044de4e) | Marks an unused depth attachment, resolve slot or input slot. |
 | [`public RDFramebufferPass()`](#member-ca2b8c572f89) | Creates the default configuration. |
 | [`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`](#member-9dca4417ba9f) | Projects inherited metadata followed by the executing configuration fields. |
 | [`public System.Int32[] ColorAttachments { get; set; }`](#member-1c5793321e5e) | Selects color attachment indices in shader output order. |
 | [`public System.Int32 DepthAttachment { get; set; }`](#member-fde6f81eda57) | Selects the depth/stencil attachment index, or AttachmentUnused. |
 | [`public System.Int32[] ResolveAttachments { get; set; }`](#member-11934a339e55) | Selects one resolve destination index per color slot, or AttachmentUnused. |
+| [`public System.Int32[] InputAttachments { get; set; }`](#member-input-attachments) | Selects input attachment indices in shader input-attachment-index order. |
+| [`public System.Int32[] PreserveAttachments { get; set; }`](#member-preserve-attachments) | Selects attachments whose contents survive this pass without active use. |
 
 ## Member descriptions
 
@@ -41,7 +43,7 @@ var target = device.FramebufferCreateMultipass([multisampleColor, resolveColor],
 public const System.Int32 AttachmentUnused = -1
 ```
 
-Marks an unused depth attachment or color resolve slot.
+Marks an unused depth attachment, resolve slot or input slot.
 
 <a id="member-ca2b8c572f89"></a>
 ### RDFramebufferPass()
@@ -96,6 +98,30 @@ Selects one resolve destination index per color slot, or AttachmentUnused.
 
 Initially []; copied when the device consumes this configuration.
 
+
+<a id="member-input-attachments"></a>
+### InputAttachments
+
+```csharp
+public System.Int32[] InputAttachments { get; set; }
+```
+
+Selects input attachment indices in shader input-attachment-index order.
+
+Initially empty. Reads and writes copy. AttachmentUnused leaves an unbound input slot.
+
+
+<a id="member-preserve-attachments"></a>
+### PreserveAttachments
+
+```csharp
+public System.Int32[] PreserveAttachments { get; set; }
+```
+
+Selects attachments whose contents survive this pass without active use.
+
+Initially empty. Reads and writes copy. Indices are validated at creation; duplicate preserves are idempotent.
+
 ## Lifecycle, errors and verification
 
-Descriptions borrow no native resources and can be disposed after creation. Invalid indices, repeated roles, mismatched formats/dimensions/sample counts and unavailable native counts reject before framebuffer or pipeline creation. Device RIDs retain owner-thread lifetime and feedback validation. [RenderingDeviceMultisampleTests](../../tests/Electron2D.Tests/RenderingDeviceMultisampleTests.cs) verifies native pixels, resolve/clear/canvas integration and warmed managed allocation on Linux/Vulkan. Foreign platforms and native/driver allocations remain unverified. See [ADR 0028](../decisions/rendering.md#adr-0028).
+Descriptions borrow no native resources and can be disposed after creation. Invalid indices, repeated roles, mismatched formats/dimensions/sample counts and unavailable native counts reject before framebuffer or pipeline creation. Device RIDs retain owner-thread lifetime and active-pass feedback validation. RenderingDevicePassTests verifies single/multisample inputs, exact integer loads, preservation, copied metadata and errors plus prepared zero managed owner bytes; its canvas profile checks retained output pixels. [RenderingDeviceMultisampleTests](../../tests/Electron2D.Tests/RenderingDeviceMultisampleTests.cs) verifies native pixels, resolve/clear/canvas integration and warmed managed allocation on Linux/Vulkan. Foreign platforms and native/driver allocations remain unverified. See [ADR 0028](../decisions/rendering.md#adr-0028).

@@ -155458,6 +155458,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingDevice.DrawListSwitchToNextPass()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListSwitchToNextPass",
+    "signature": "public System.Int64 DrawListSwitchToNextPass()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingDevice.FramebufferCreate(System.ReadOnlySpan\u003CElectron2D.RID\u003E,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
@@ -155716,11 +155729,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RenderingDevice.RenderPipelineCreate(Electron2D.RID,System.Int32,System.Int32,Electron2D.RenderingDevice.RenderPrimitive,Electron2D.RDPipelineRasterizationState,Electron2D.RDPipelineColorBlendState,Electron2D.RenderingDevice.PipelineDynamicStateFlags,Electron2D.RDPipelineDepthStencilState,Electron2D.RDPipelineMultisampleState,System.ReadOnlySpan\u003CElectron2D.RDPipelineSpecializationConstant\u003E)",
+    "id": "method:Electron2D.RenderingDevice.RenderPipelineCreate(Electron2D.RID,System.Int32,System.Int32,Electron2D.RenderingDevice.RenderPrimitive,Electron2D.RDPipelineRasterizationState,Electron2D.RDPipelineColorBlendState,Electron2D.RenderingDevice.PipelineDynamicStateFlags,Electron2D.RDPipelineDepthStencilState,Electron2D.RDPipelineMultisampleState,System.ReadOnlySpan\u003CElectron2D.RDPipelineSpecializationConstant\u003E,System.UInt32)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
     "name": "RenderPipelineCreate",
-    "signature": "public Electron2D.RID RenderPipelineCreate(Electron2D.RID shader, System.Int32 framebufferFormat, System.Int32 vertexFormat, Electron2D.RenderingDevice.RenderPrimitive primitive, Electron2D.RDPipelineRasterizationState rasterizationState, Electron2D.RDPipelineColorBlendState colorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags dynamicStateFlags = 0, Electron2D.RDPipelineDepthStencilState depthStencilState = null, Electron2D.RDPipelineMultisampleState multisampleState = null, System.ReadOnlySpan\u003CElectron2D.RDPipelineSpecializationConstant\u003E specializationConstants = default)",
+    "signature": "public Electron2D.RID RenderPipelineCreate(Electron2D.RID shader, System.Int32 framebufferFormat, System.Int32 vertexFormat, Electron2D.RenderingDevice.RenderPrimitive primitive, Electron2D.RDPipelineRasterizationState rasterizationState, Electron2D.RDPipelineColorBlendState colorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags dynamicStateFlags = 0, Electron2D.RDPipelineDepthStencilState depthStencilState = null, Electron2D.RDPipelineMultisampleState multisampleState = null, System.ReadOnlySpan\u003CElectron2D.RDPipelineSpecializationConstant\u003E specializationConstants = default, System.UInt32 forRenderPass = 0)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -155774,6 +155787,11 @@
         "name": "specializationConstants",
         "type": "System.ReadOnlySpan\u003CElectron2D.RDPipelineSpecializationConstant\u003E",
         "default": "default"
+      },
+      {
+        "name": "forRenderPass",
+        "type": "System.UInt32",
+        "default": "0"
       }
     ],
     "returnType": "Electron2D.RID",
@@ -245392,6 +245410,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDFramebufferPass.InputAttachments()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDFramebufferPass",
+    "name": "InputAttachments",
+    "signature": "public System.Int32[] InputAttachments { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDFramebufferPass.PreserveAttachments()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDFramebufferPass",
+    "name": "PreserveAttachments",
+    "signature": "public System.Int32[] PreserveAttachments { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
     "value": null
   },
   {

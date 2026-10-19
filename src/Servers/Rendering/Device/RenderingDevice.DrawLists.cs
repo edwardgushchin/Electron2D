@@ -9,6 +9,9 @@ public sealed unsafe partial class RenderingDevice
     private VertexArray? _drawVertices;
     private IndexArray? _drawIndices;
     private Rect2 _drawRegion;
+    private uint _drawSubpass;
+    private DrawFlags _drawFlags;
+    private FramebufferPassLayout DrawPassLayout => FramebufferFormat(_drawTarget!.Format, _drawSubpass);
     private void DrawList(long id) { Access(); if (_drawPass == 0 || id != _activeList) throw new ArgumentException("The draw list is not active.", nameof(id)); }
     private static void FiniteColor(Color color) { if (!float.IsFinite(color.R) || !float.IsFinite(color.G) || !float.IsFinite(color.B) || !float.IsFinite(color.A)) throw new ArgumentOutOfRangeException(nameof(color)); }
     private static Rect2 DrawRegion(Rect2 region, Vector2i size)
@@ -18,10 +21,10 @@ public sealed unsafe partial class RenderingDevice
         if (!float.IsFinite(p.X) || !float.IsFinite(p.Y) || !float.IsFinite(s.X) || !float.IsFinite(s.Y) || p.X < 0 || p.Y < 0 || s.X <= 0 || s.Y <= 0 || p.X + s.X > size.X || p.Y + s.Y > size.Y) throw new ArgumentOutOfRangeException(nameof(region));
         return region;
     }
-    /// <summary>Begins an ordered color and depth/stencil render pass on borrowed framebuffer images.</summary>
+    /// <summary>Begins an ordered framebuffer draw list at its first pass.</summary>
     /// <param name="framebuffer">A live framebuffer with matching raster sample counts and optional resolve destinations.</param>
     /// <param name="drawFlags">Per-target clear or discard load flags; default loads existing pixels.</param>
-    /// <param name="clearColorValues">One clear value per color render slot when a color clear flag is set; finite float components or raw integer lane bits as in TextureClear.</param>
+    /// <param name="clearColorValues">Clear values index every color-attachment image, including resolve images, in framebuffer order; finite float components or raw integer lane bits as in TextureClear.</param>
     /// <param name="region">Viewport and initial scissor; zero selects the whole framebuffer.</param>
     /// <param name="clearDepthValue">Finite depth clear from zero through one; defaults to one.</param>
     /// <param name="clearStencilValue">Eight-bit stencil clear; defaults to zero.</param>
@@ -30,47 +33,133 @@ public sealed unsafe partial class RenderingDevice
     public long DrawListBegin(RID framebuffer, DrawFlags drawFlags = 0, ReadOnlySpan<Color> clearColorValues = default, Rect2 region = default, float clearDepthValue = 1, int clearStencilValue = 0)
     {
         IdleList(); var target = GetFramebuffer(framebuffer); var actual = DrawRegion(region, target.Size);
-        var layout = FramebufferFormat(target.Format); var depthIndex = layout.DepthIndex;
+        var layout = FramebufferFormat(target.Format);
         if (!float.IsFinite(clearDepthValue) || clearDepthValue is < 0 or > 1 || clearStencilValue is < 0 or > 255) throw new ArgumentOutOfRangeException(nameof(clearDepthValue));
         if ((drawFlags & DrawFlags.ClearDepth) != 0 && (drawFlags & DrawFlags.IgnoreDepth) != 0 || (drawFlags & DrawFlags.ClearStencil) != 0 && (drawFlags & DrawFlags.IgnoreStencil) != 0) throw new ArgumentException("An aspect cannot both clear and discard.", nameof(drawFlags));
 
         if (((uint)drawFlags & ~1048575u) != 0) throw new ArgumentOutOfRangeException(nameof(drawFlags));
         var clears = (uint)drawFlags & 255; var ignores = ((uint)drawFlags >> 8) & 255;
-        if ((clears & ignores) != 0 || clears != 0 && clearColorValues.Length != layout.Colors.Length || clears == 0 && !clearColorValues.IsEmpty && clearColorValues.Length != layout.Colors.Length) throw new ArgumentException("Clear colors and flags do not match the attachments.");
-        for (var i = 0; i < clearColorValues.Length; i++)
+        var colorCount = layout.Usage.Count(u => (u & TextureUsageBits.ColorAttachment) != 0);
+        if ((clears & ignores) != 0 || clearColorValues.Length > colorCount) throw new ArgumentException("Clear colors and flags do not match the attachments.");
+        var colorIndex = 0;
+        for (var i = 0; i < layout.Formats.Length; i++)
         {
-            var format = Get(target.Textures[layout.Colors[i]], Kind.Texture).Texture!.Format;
-            if (PixelType(format) == 0) FiniteColor(clearColorValues[i]);
-            else { if (TextureDriver != "vulkan") throw new NotSupportedException("Integer clear lanes require verification of this native backend."); ValidateSignedClear(format, clearColorValues[i]); }
+            if ((layout.Usage[i] & TextureUsageBits.ColorAttachment) == 0) continue;
+            if (colorIndex < 8 && (clears & (1u << colorIndex)) != 0 && colorIndex >= clearColorValues.Length) throw new ArgumentException("Provide a clear value for each selected framebuffer color attachment.", nameof(clearColorValues));
+            if (colorIndex < clearColorValues.Length)
+            {
+                var value = clearColorValues[colorIndex]; var format = layout.Formats[i];
+                if (PixelType(format) == 0) FiniteColor(value);
+                else { if (TextureDriver != "vulkan") throw new NotSupportedException("Integer clear lanes require verification of this native backend."); ValidateSignedClear(format, value); }
+            }
+            colorIndex++;
         }
+        ClearFramebufferAttachments(target, drawFlags, clearColorValues, clearDepthValue, (byte)clearStencilValue);
+        _drawTarget = target; _drawRegion = actual; _drawFlags = drawFlags; _drawSubpass = 0;
+        Array.Clear(target.Touched);
+        try
+        {
+            BeginDrawPass();
+            return _activeList = ++_nextList;
+        }
+        catch { _drawTarget = null; throw; }
+    }
+    private bool KeepAttachment(int attachment)
+    {
+        var passes = FramebufferLayouts(_drawTarget!.Format).Passes;
+        if (_drawSubpass + 1 >= passes.Length) return true;
+        var next = passes[_drawSubpass + 1];
+        return next.Colors.Contains(attachment) || next.DepthIndex == attachment || next.Resolves.Contains(attachment) || next.Inputs.Contains(attachment) || next.Preserves.Contains(attachment);
+    }
+    private bool ActiveAttachment(Entry entry)
+    {
+        var layout = DrawPassLayout; var target = _drawTarget!;
+        foreach (var index in layout.Colors) if (Get(target.Textures[index], Kind.Texture).NativeHandle == entry.NativeHandle) return true;
+        if (layout.DepthIndex >= 0 && Get(target.Textures[layout.DepthIndex], Kind.Texture).NativeHandle == entry.NativeHandle) return true;
+        foreach (var index in layout.Resolves) if (index >= 0 && Get(target.Textures[index], Kind.Texture).NativeHandle == entry.NativeHandle) return true;
+        return false;
+    }
+    private bool AttachmentIgnored(int index)
+    {
+        var usage = DrawPassLayout.Usage; var slot = 0;
+        for (var i = 0; i < index; i++) if ((usage[i] & TextureUsageBits.ColorAttachment) != 0) slot++;
+        return slot < 8 && (((uint)_drawFlags >> (8 + slot)) & 1) != 0;
+    }
+    private void ClearFramebufferAttachments(Framebuffer target, DrawFlags flags, ReadOnlySpan<Color> values, float clearDepth, byte clearStencil)
+    {
+        var layout = FramebufferFormat(target.Format); var slot = 0;
+        for (var i = 0; i < target.Textures.Length; i++)
+        {
+            var image = Get(target.Textures[i], Kind.Texture);
+            if ((layout.Usage[i] & TextureUsageBits.ColorAttachment) != 0)
+            {
+                if (slot < 8 && (((uint)flags >> slot) & 1) != 0) ClearMultisample(image, values[slot]);
+                slot++;
+            }
+            else if (DepthFormat(image.Texture!.Format) && (flags & (DrawFlags.ClearDepth | DrawFlags.ClearStencil)) != 0)
+            {
+                var depth = new SDL.GPUDepthStencilTargetInfo
+                {
+                    Texture = image.NativeHandle,
+                    ClearDepth = clearDepth,
+                    ClearStencil = clearStencil,
+                    LoadOp = (flags & DrawFlags.ClearDepth) != 0 ? SDL.GPULoadOp.Clear : SDL.GPULoadOp.Load,
+                    StencilLoadOp = (flags & DrawFlags.ClearStencil) != 0 ? SDL.GPULoadOp.Clear : SDL.GPULoadOp.Load,
+                    StoreOp = SDL.GPUStoreOp.Store,
+                    StencilStoreOp = SDL.GPUStoreOp.Store
+                };
+                var pass = SDL.BeginGPURenderPass(Commands(), 0, 0, (nint)(&depth)); if (pass == 0) throw GPUPhysicsDevice.Failure("clear framebuffer depth/stencil"); SDL.EndGPURenderPass(pass);
+            }
+        }
+    }
+    private void BeginDrawPass()
+    {
+        var target = _drawTarget!; var layout = DrawPassLayout; var depthIndex = layout.DepthIndex;
+        CaptureInputAttachments(layout);
         var colors = stackalloc SDL.GPUColorTargetInfo[8];
         for (var i = 0; i < layout.Colors.Length; i++)
         {
-            var color = clearColorValues.IsEmpty ? default : clearColorValues[i];
+            var index = layout.Colors[i]; var keep = KeepAttachment(index);
             colors[i] = new()
             {
-                Texture = Get(target.Textures[layout.Colors[i]], Kind.Texture).NativeHandle,
-                ClearColor = new() { R = color.R, G = color.G, B = color.B, A = color.A },
-                LoadOp = (clears & (1u << i)) != 0 ? SDL.GPULoadOp.Clear : (ignores & (1u << i)) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load,
-                StoreOp = layout.Resolves[i] >= 0 ? SDL.GPUStoreOp.ResolveAndStore : SDL.GPUStoreOp.Store,
+                Texture = Get(target.Textures[index], Kind.Texture).NativeHandle,
+                LoadOp = !target.Touched[index] && AttachmentIgnored(index) ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load,
+                StoreOp = layout.Resolves[i] >= 0 ? (keep ? SDL.GPUStoreOp.ResolveAndStore : SDL.GPUStoreOp.Resolve) : (keep ? SDL.GPUStoreOp.Store : SDL.GPUStoreOp.DontCare),
                 ResolveTexture = layout.Resolves[i] >= 0 ? Get(target.Textures[layout.Resolves[i]], Kind.Texture).NativeHandle : 0
             };
         }
         var depth = new SDL.GPUDepthStencilTargetInfo();
         if (depthIndex >= 0)
         {
-            depth.Texture = Get(target.Textures[depthIndex], Kind.Texture).NativeHandle; depth.ClearDepth = clearDepthValue; depth.ClearStencil = (byte)clearStencilValue;
-            depth.LoadOp = (drawFlags & DrawFlags.ClearDepth) != 0 ? SDL.GPULoadOp.Clear : (drawFlags & DrawFlags.IgnoreDepth) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load;
-            depth.StencilLoadOp = (drawFlags & DrawFlags.ClearStencil) != 0 ? SDL.GPULoadOp.Clear : (drawFlags & DrawFlags.IgnoreStencil) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load;
-            depth.StoreOp = SDL.GPUStoreOp.Store; depth.StencilStoreOp = SDL.GPUStoreOp.Store;
+            var keep = KeepAttachment(depthIndex);
+            depth.Texture = Get(target.Textures[depthIndex], Kind.Texture).NativeHandle;
+            depth.LoadOp = !target.Touched[depthIndex] && (_drawFlags & DrawFlags.IgnoreDepth) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load;
+            depth.StencilLoadOp = !target.Touched[depthIndex] && (_drawFlags & DrawFlags.IgnoreStencil) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load;
+            depth.StoreOp = keep ? SDL.GPUStoreOp.Store : SDL.GPUStoreOp.DontCare; depth.StencilStoreOp = depth.StoreOp;
         }
         var pass = SDL.BeginGPURenderPass(Commands(), (nint)colors, (uint)layout.Colors.Length, depthIndex >= 0 ? (nint)(&depth) : 0);
         if (pass == 0) throw GPUPhysicsDevice.Failure("begin device graphics pass");
-        _drawPass = pass; _drawTarget = target; _drawRegion = actual; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear(); ResetPush();
-        SDL.SetGPUViewport(pass, new() { X = actual.Position.X, Y = actual.Position.Y, W = actual.Size.X, H = actual.Size.Y, MinDepth = 0, MaxDepth = 1 });
-        SetScissor(actual);
-        return _activeList = ++_nextList;
+        _drawPass = pass; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear(); ResetPush();
+        foreach (var index in layout.Colors) target.Touched[index] = true;
+        if (depthIndex >= 0) target.Touched[depthIndex] = true;
+        foreach (var index in layout.Resolves) if (index >= 0) target.Touched[index] = true;
+        foreach (var index in layout.Inputs) if (index >= 0) target.Touched[index] = true;
+        var actual = _drawRegion;
+        SDL.SetGPUViewport(pass, new() { X = actual.Position.X, Y = actual.Position.Y, W = actual.Size.X, H = actual.Size.Y, MinDepth = 0, MaxDepth = 1 }); SetScissor(actual);
     }
+    /// <summary>Advances the active framebuffer to its next ordered pass and resets draw bindings.</summary>
+    /// <returns>The retained active draw-list identity.</returns>
+    /// <exception cref="InvalidOperationException">No draw list is active, or its final pass is already selected.</exception>
+    public long DrawListSwitchToNextPass()
+    {
+        Access(); if (_drawPass == 0) throw new InvalidOperationException("No draw list is active.");
+        if (_drawSubpass + 1 >= FramebufferLayouts(_drawTarget!.Format).Passes.Length) throw new InvalidOperationException("The final framebuffer pass is already active.");
+        SDL.EndGPURenderPass(_drawPass); _drawPass = 0; _drawSubpass++;
+        try { BeginDrawPass(); }
+        catch { _activeList = 0; _drawTarget = null; _graphicsPipeline = null; _sets.Clear(); ResetPush(); throw; }
+        return _activeList;
+    }
+
     /// <summary>Binds a graphics pipeline matching the active framebuffer.</summary>
     /// <param name="drawList">The active draw-list identity.</param>
     /// <param name="renderPipeline">A live matching pipeline of this device.</param>
@@ -79,7 +168,9 @@ public sealed unsafe partial class RenderingDevice
     public void DrawListBindRenderPipeline(long drawList, RID renderPipeline)
     {
         DrawList(drawList); var entry = Get(renderPipeline, Kind.GraphicsPipeline); Get(entry.Shader, Kind.Shader);
-        if (!SameRasterLayout(FramebufferFormat(entry.Graphics!.FramebufferFormat), FramebufferFormat(_drawTarget!.Format))) throw new ArgumentException("The pipeline framebuffer layout does not match.", nameof(renderPipeline));
+        if (!SameRasterLayout(FramebufferFormat(entry.Graphics!.FramebufferFormat, entry.Graphics.ForRenderPass), DrawPassLayout)) throw new ArgumentException("The pipeline framebuffer layout does not match.", nameof(renderPipeline));
+        ValidateInputLayout(PipelineProgram(entry), DrawPassLayout);
+        if (entry.Graphics.ForRenderPass != _drawSubpass) throw new ArgumentException("The pipeline was created for a different framebuffer pass.", nameof(renderPipeline));
         _graphicsPipeline = entry; SelectPushPipeline(renderPipeline); SDL.BindGPUGraphicsPipeline(_drawPass, entry.Handle!.DangerousGetHandle()); SetBlendConstants(entry.Graphics.Constant); SDL.SetGPUStencilReference(_drawPass, entry.Graphics.StencilReference);
     }
     /// <summary>Binds a live borrowed vertex array for subsequent draws.</summary>
@@ -154,16 +245,18 @@ public sealed unsafe partial class RenderingDevice
             }
             else if (descriptor.Type == UniformType.SamplerWithTexture)
             {
-                var image = Get(ids[1]); foreach (var target in _drawTarget!.Textures) if (Get(target, Kind.Texture).NativeHandle == image.NativeHandle) throw new InvalidOperationException("An attachment cannot be sampled during its render pass.");
+                var image = Get(ids[1]); if (ActiveAttachment(image)) throw new InvalidOperationException("An active output attachment cannot be sampled during its render pass.");
                 var binding = samplerBinding; binding[0] = new() { Sampler = resource.NativeHandle, Texture = image.NativeHandle };
                 if (fragment) SDL.BindGPUFragmentSamplers(_drawPass, (uint)descriptor.Native, binding, 1); else SDL.BindGPUVertexSamplers(_drawPass, (uint)descriptor.Native, binding, 1);
             }
             else
             {
                 var binding = storageBinding; binding[0] = resource.NativeHandle;
-                if (descriptor.Type == UniformType.Image)
+                if (descriptor.Type == UniformType.InputAttachment)
+                { binding[0] = InputAttachment(descriptor, resource); SDL.BindGPUFragmentStorageTextures(_drawPass, (uint)descriptor.Native, binding, 1); }
+                else if (descriptor.Type == UniformType.Image)
                 {
-                    foreach (var target in _drawTarget!.Textures) if (Get(target, Kind.Texture).NativeHandle == resource.NativeHandle) throw new InvalidOperationException("An attachment cannot be read as storage during its render pass.");
+                    if (ActiveAttachment(resource)) throw new InvalidOperationException("An active output attachment cannot be read as storage during its render pass.");
                     if (fragment) SDL.BindGPUFragmentStorageTextures(_drawPass, (uint)descriptor.Native, binding, 1); else SDL.BindGPUVertexStorageTextures(_drawPass, (uint)descriptor.Native, binding, 1);
                 }
                 else { if (fragment) SDL.BindGPUFragmentStorageBuffers(_drawPass, (uint)descriptor.Native, binding, 1); else SDL.BindGPUVertexStorageBuffers(_drawPass, (uint)descriptor.Native, binding, 1); }
@@ -262,6 +355,6 @@ public sealed unsafe partial class RenderingDevice
     /// <summary>Ends the active draw list, preserving its results for subsequent device work.</summary>
     public void DrawListEnd()
     {
-        DrawList(_activeList); SDL.EndGPURenderPass(_drawPass); _drawPass = 0; _activeList = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear(); ResetPush();
+        DrawList(_activeList); while (_drawSubpass + 1 < FramebufferLayouts(_drawTarget!.Format).Passes.Length) DrawListSwitchToNextPass(); SDL.EndGPURenderPass(_drawPass); _drawPass = 0; _activeList = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear(); ResetPush();
     }
 }

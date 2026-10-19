@@ -1,6 +1,6 @@
 # RDTextureFormat
 
-Last updated: 2026-10-12
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDTextureFormat`. **Source:** [RDTextureFormat.cs](../../src/Servers/Rendering/Device/RDTextureFormat.cs). **Component:** [Local compute](../components/local-compute.md).
 
@@ -9,6 +9,8 @@ Last updated: 2026-10-12
 ## Description
 
 A caller-owned allocation description copied during TextureCreate. Width and Height are texels; ArrayLayers counts independently sampled 2D images; MIPMaps includes the base level. Values are validated on assignment and again as a complete allocation. One ordinary image has one layer. Data is one tightly packed encoded mip chain per layer, or omitted for zero encoded bytes. Native alignment remains internal. The format vocabulary is queried against the current device; unsupported allocations throw before returning an identity. Alternate shareable formats require a native view adapter and are rejected explicitly. ColorAttachment allocations now feed executable device color passes and retained canvas consumers. Depth/stencil and exact multisample render targets execute. Samples defaults to Samples1; IsResolveBuffer defaults to false and marks a single-sample color resolve destination. Multisample images require empty ordinary single-layer/single-mip target allocations; resolve before sampling or readback. Discardable lifetime hints retain their last-use prerequisite.
+
+InputAttachment supports ordinary single-layer/single-mip color images, including exact multisample targets. Combining it with Sampling retains a private readonly GPU snapshot for the input pass; see [ordered framebuffer inputs](../components/local-compute.md#ordered-framebuffer-passes-and-inputs). Depth/stencil input aspects retain their separate native prerequisite.
 
 ## Example
 
