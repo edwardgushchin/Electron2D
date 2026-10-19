@@ -69,12 +69,13 @@ public abstract class PhysicsServerBackend : ElectronObject
         return PhysicsServer.Service.GetSceneSpace(_space).IsObjectExcludedFromMotionTest(objectID);
     }
     /// <summary>Returns the body's retained explicit and active-joint collision exceptions.</summary>
-    /// <param name="body">A live scene or server body in this world, or a detached body.</param>
+    /// <param name="body">A live scene or server body in this world, or a detached body. An existing scene tree must share this world's owner.</param>
     /// <returns>A caller-owned deduplicated RID array, with explicit entries in insertion order before active joint targets. Empty and retired target RIDs remain inert entries.</returns>
     /// <remarks>This input read is available during numerical hooks, including solving, without observing numerical state.
-    /// Each call creates a snapshot; retain supplied exception-pair spans or implementation-owned buffers for warmed solver work.</remarks>
+    /// Each call creates a snapshot; retain supplied exception-pair spans or implementation-owned buffers for warmed solver work.
+    /// Pending joint collision publication is not repaired by this retained input read.</remarks>
     /// <exception cref="ArgumentException">The owner is not a live body or belongs to another world.</exception>
-    /// <exception cref="InvalidOperationException">The implementation is unbound, called outside an authorized lane, or its world has failed outside a numerical hook.</exception>
+    /// <exception cref="InvalidOperationException">The implementation is unbound, called outside an authorized lane, the scene tree has a different owner, or its world has failed outside a numerical hook.</exception>
     /// <exception cref="ObjectDisposedException">The implementation or its world is disposed.</exception>
     protected RID[] GetCollisionExceptions(RID body)
     {

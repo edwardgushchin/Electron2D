@@ -104,7 +104,9 @@ interception would leave scene behavior and direct queries outside the extension
   belong to the caller and intentionally allocate. Selected pair spans remain
   the allocation-free input for steady simulation. Scene enumeration projects the
   same list to nodes/null slots. This is the typed projection of the pinned
-  `_body_get_collision_exceptions` capability, not backend state exposure.
+  `_body_get_collision_exceptions` capability, not backend state exposure. A detached
+  scene body's existing tree must share the world owner; an authorized separate
+  numerical lane does not borrow inputs from a foreign-owner tree.
 - Direct-body and direct-space extensions preserve their applicable base API and
   inheritance through guarded public operations and typed protected implementation
   hooks. Library context constructors bind current space/body attachment identity;

@@ -119,8 +119,9 @@ public abstract class Joint : Entity
     /// <value>True by default. A change updates contact policy without resampling the local anchors.</value>
     /// <remarks>Changing this value refreshes contact policy and the pair contribution used by body motion tests.
     /// Numerical implementation hooks reject writes before changing this policy.
-    /// Other joints and explicit body exceptions can independently retain suppression.</remarks>
-    /// <exception cref="InvalidOperationException">An attached write is off the owner thread or occurs during a solver step.</exception>
+    /// Other joints and explicit body exceptions can independently retain suppression.
+    /// A selected publication failure retains this requested flag and its common contribution for retry before a world query, capture or active positive step; an equal setter retries too.</remarks>
+    /// <exception cref="InvalidOperationException">An attached write violates owner, solver-phase, numerical-borrow or failed-world access rules.</exception>
     public bool DisableCollision
     {
         get { ThrowIfDisposed(); return Runtime.DisableCollision; }

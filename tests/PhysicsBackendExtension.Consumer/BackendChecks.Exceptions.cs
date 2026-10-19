@@ -2,9 +2,15 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunExceptions(PhysicsServer.Backend? backend = null) => ExceptionChecks(backend);
+    public static void RunExceptions(PhysicsServer.Backend? backend = null, bool threaded = false)
+    {
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { ExceptionChecks(backend, threaded); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
 
-    private static void ExceptionChecks(PhysicsServer.Backend? backend = null)
+    private static void ExceptionChecks(PhysicsServer.Backend? backend = null, bool threaded = false)
     {
         Solver? solver = null;
         if (backend is null) PhysicsServerManager.RegisterServer("ExceptionChecks", () => solver = new());
@@ -21,6 +27,8 @@ public static partial class BackendChecks
             siblings[i].Position = new(1000 + i * 100, 0); siblings[i].AddChild(new CollisionShape { Shape = circle }); root.AddChild(siblings[i]);
         }
         using var tree = new SceneTree(root);
+        var ownerThread = Thread.CurrentThread;
+        if (solver is not null) solver.StepHook = () => Check((Thread.CurrentThread != ownerThread) == threaded, "Exceptions use the actual captured numerical thread");
         var raw = PhysicsServer.BodyCreate();
         try
         {

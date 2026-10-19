@@ -132,7 +132,9 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
         }
         if (HasBackend || next is null || a.Space is null || BodyB.IsValid() && !ReferenceEquals(a.Space, b.Space)) return;
         Backend.Attach(next, a.Backend!, BodyB.IsValid() ? b.Backend : null, this);
-        if (DisableCollision && BodyB.IsValid()) PhysicsServer.Service.JointCollisionContribution(BodyA, BodyB, add: true);
+        SetCollisionPolicyDirty(true);
+        UpdateCollisionContribution(DisableCollision && BodyB.IsValid());
+        SetCollisionPolicyDirty(false);
     }
 
     internal void BodyLeaving(RID body)
@@ -154,8 +156,14 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
 
     private void DetachNative()
     {
-        if (HasBackend && DisableCollision && BodyB.IsValid())
-            PhysicsServer.Service.JointCollisionContribution(BodyA, BodyB, add: false);
+        try { UpdateCollisionContribution(false); }
+        catch (Exception error)
+        {
+            try { Backend.Detach(); }
+            catch (Exception cleanup) { throw new AggregateException("Joint collision cleanup and detach failed.", error, cleanup); }
+            throw;
+        }
+        finally { SetCollisionPolicyDirty(false); }
         Backend.Detach();
     }
 
@@ -181,13 +189,12 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
         Space?.EnsureImplementationWriteAccess();
         if (BodyA.IsValid()) PhysicsServer.Service.BodyRuntime(BodyA).EnsureAccess(writing: true);
         if (BodyB.IsValid()) PhysicsServer.Service.BodyRuntime(BodyB).EnsureAccess(writing: true);
-        if (DisableCollision == value) return;
-        if (HasBackend && DisableCollision && BodyB.IsValid())
-            PhysicsServer.Service.JointCollisionContribution(BodyA, BodyB, add: false);
+        if (DisableCollision == value && !_collisionPolicyDirty) return;
         DisableCollision = value;
-        if (HasBackend) Backend.SetCollideConnected(!value);
-        if (HasBackend && value && BodyB.IsValid())
-            PhysicsServer.Service.JointCollisionContribution(BodyA, BodyB, add: true);
+        if (!HasBackend) return;
+        SetCollisionPolicyDirty(true);
+        UpdateCollisionContribution(value && BodyB.IsValid());
+        PrepareCollisionPolicy();
     }
 
     internal void SetBias(float value) { EnsureWriteAccess(); ValidateBias(value); if (Bias == value) return; Bias = value; ApplySolverPolicy(); }

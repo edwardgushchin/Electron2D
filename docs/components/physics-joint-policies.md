@@ -1,6 +1,14 @@
 # Joint solver policies
 
-Last updated: 2026-10-13
+Last updated: 2026-10-19
+
+Collision-policy publication now retains the latest requested flag and complete
+common pair contribution through selected errors. Equal setters and world
+query/history/positive-active-step preparation retry before numerical use, while
+zero/inactive intervals and configured input reads do not repair. Retirement drops
+the pending request and exactly one contribution. See [complete exception operations](physics-registered-adapter.md#complete-exception-operations)
+and the updated [ADR 0087](../decisions/physics-joints.md#adr-0087).
+
 
 ## Public boundary
 

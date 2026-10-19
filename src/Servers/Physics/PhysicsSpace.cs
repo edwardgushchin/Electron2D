@@ -48,6 +48,10 @@ internal sealed partial class PhysicsSpace : IDisposable
     private int _solverBorrowThreadID;
     private bool IsSolverThread => _solverBorrowThreadID != 0 && Environment.CurrentManagedThreadId == _solverBorrowThreadID;
     internal bool IsNumericalInputThread => _implementationCallbackDepth != 0 && IsSolverThread;
+    internal void EnsureSceneInputOwner(SceneTree tree)
+    {
+        if (!tree.HasOwnerThread(_ownerThreadID)) throw new InvalidOperationException("Scene physics inputs require the same world owner.");
+    }
     internal PhysicsAreaFields DefaultAreaFields { get; }
     private bool _stepping;
     private bool _dispatching;

@@ -1,6 +1,6 @@
 # PhysicsJointRuntime
 
-Last updated: 2026-10-12
+Last updated: 2026-10-19
 
 **Inherits:** System.Object · **Declaration:** `internal sealed class PhysicsJointRuntime`
 
@@ -24,6 +24,8 @@ Neither this runtime nor the scene joint classes expose or store vendor types.
 | `Space`, `BodyA`, `BodyB`, `Backend`, `HasBackend` | Current logical owner world, public endpoint identities and borrowed attachment status through the backend. |
 | `FrameA`, `FrameB`, `LowerTranslation`, `UpperTranslation` | Engine Transform frames and scene-unit guide bounds preserve sampled geometry across pending detach/reentry; one-body pin B uses fixed world coordinates. |
 | `DisableCollision` and pin limit/motor scalar settings | Shared native contact/angle/motor configuration. |
+| `PrepareCollisionPolicy()` and private contribution/dirty/publication flags | Retain requested collision policy and exactly one common pair contribution across selected errors; reject preparation reentry and retry before world preparation. |
+| [CollisionPolicy partial](../../src/Servers/Physics/PhysicsJointRuntime.CollisionPolicy.cs) | Register pending work in the world's counter so healthy queries do not scan joints; drop that work on attachment retirement. |
 | Spring rest/coefficient/automatic-length settings | Literal server rest or scene zero fallback; Hooke/drag parameters. |
 | `EnsureAccess()`, `Require(JointType type)` | Validate all related world threads/phases and concrete role. |
 | `ConfigurePin`, `ConfigureGroove`, `ConfigureSceneGroove`, `ConfigureSpring` | Validate input and sample frames before replacing the old connection; optionally retain scene scalars. |

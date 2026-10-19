@@ -38,6 +38,8 @@ public static partial class BackendChecks
         internal Action<RID, uint, uint, bool>? FilterPolicyHook;
         internal Action<RID>? BodyHook;
         internal Action<RID>? JointHook;
+        internal Action<RID>? JointCollisionHook;
+        internal Action<RID>? ExceptionWakeHook;
         internal Action<RID>? JointFactoryHook, JointReleaseHook;
         internal bool FailJointFactory, NullJointFactory, FailJointAttach, FailJointDetach;
         internal PhysicsBackendJoint? ReusedJoint;
@@ -422,7 +424,7 @@ public static partial class BackendChecks
         protected override float InverseInertia => Dynamic && !Locked && Inertia > 0 ? 1 / Inertia : 0;
         protected override PhysicsMassProperties ApplyMassProfile(float mass, float inertia, Vector2? center)
         { solver.MassHook?.Invoke(rid); return PartMass(mass, inertia, center); }
-        protected override void WakeTouching() => solver.WakeConnected(this);
+        protected override void WakeTouching() { solver.ExceptionWakeHook?.Invoke(rid); solver.WakeConnected(this); }
         protected override Vector2 GetPointVelocity(Vector2 offset)
         {
             var arm = offset - CenterOfMass;
@@ -466,7 +468,7 @@ public static partial class BackendChecks
             solver.JointHook?.Invoke(rid);
         }
         protected override void ApplyPortableFrames(Transform first, Transform second) => Settings = Settings with { FrameA = first, FrameB = second };
-        protected override void SetCollideConnected(bool value) { Settings = Settings with { DisableCollision = !value }; solver.JointHook?.Invoke(rid); }
+        protected override void SetCollideConnected(bool value) { solver.JointCollisionHook?.Invoke(rid); Settings = Settings with { DisableCollision = !value }; solver.JointHook?.Invoke(rid); }
         protected override void SetPinLimits(bool enabled, float lower, float upper) { Settings = Settings with { PinLimitEnabled = enabled, PinLimitLower = lower, PinLimitUpper = upper }; solver.JointHook?.Invoke(rid); }
         protected override void SetPinMotorEnabled(bool value) { Settings = Settings with { PinMotorEnabled = value }; solver.JointHook?.Invoke(rid); }
         protected override void SetPinMotorVelocity(float value) { Settings = Settings with { PinMotorVelocity = value }; solver.JointHook?.Invoke(rid); }

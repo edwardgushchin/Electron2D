@@ -93,6 +93,8 @@ public static partial class BackendChecks
                 {
                     var id = ids[i]; var view = views[i];
                     foreach (var action in ForceCalls(id).Concat(ForceCalls(id, view))) Denied(action);
+                    Denied(() => PhysicsServer.BodyAddCollisionException(id, default));
+                    Denied(() => PhysicsServer.BodyRemoveCollisionException(id, default));
                     Denied(() => PhysicsServer.BodySetLinearVelocity(id, Vector2.One));
                     Denied(() => PhysicsServer.BodySetAngularVelocity(id, 9));
                     Denied(() => PhysicsServer.BodySetCanSleep(id, true));
@@ -102,6 +104,8 @@ public static partial class BackendChecks
                 }
                 foreach (var body in bodies)
                 {
+                    Denied(() => body.AddCollisionExceptionWith(bodies[0]));
+                    Denied(() => body.RemoveCollisionExceptionWith(bodies[0]));
                     Denied(() => body.DisableMode = CollisionDisableMode.KeepActive);
                     Denied(() => body.DisableMode = body.DisableMode);
                     if (body is StaticBody surface)

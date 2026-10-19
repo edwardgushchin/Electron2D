@@ -6,6 +6,21 @@ The [Body/Area append audit](../components/physics-shapes.md#bodyarea-append-con
 
 Last updated: 2026-10-19
 
+## Collision exception publication
+
+Explicit body exceptions and independently counted active-joint contributions
+share one deduplicated input union. A failed joint collision-policy publication
+retains the requested flag and complete common contribution, then retries before
+a world query, local/portable capture or active positive step. An equal setter
+also retries; configured flag and scoped exception-input reads do not repair.
+Clear, free, endpoint departure and scene disposal remove only that attachment's
+contribution and pending request. Reentry applies the retained flag to a fresh
+attachment. The selected SetCollideConnected hook applies a complete value and
+may be retried after a publication error.
+See [complete exception operations](../components/physics-registered-adapter.md#complete-exception-operations)
+for threading, response, snapshots, cleanup checks and remaining limits.
+
+
 ## Force operation family
 
 All thirteen central/positioned/torque transient, impulse and persistent operations

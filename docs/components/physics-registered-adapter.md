@@ -2,6 +2,96 @@
 
 Last updated: 2026-10-19
 
+## Complete exception operations
+
+All five extension body-exception and joint collision-policy operations now have
+an operation audit across scene, facade and scoped implementation inputs. The
+pinned 4.7.2-stable metadata at ed1daf0bf001b61586d9930840f2f1394092c079
+contains thirteen non-deprecated records: five extension methods, four server
+methods, three PhysicsBody methods and the Joint collision property. The protected
+PhysicsServerBackend.GetCollisionExceptions projection supplies the extension
+getter; no global server getter or new numerical interface is added.
+
+The audit reproduced two runtime defects with the identical final consumer and
+an old/corrected runtime pair. Failed selected joint policy publication could
+retain DisableCollision=true without its common contribution. Separate Solve
+could also read a detached scene body owned by another thread's tree. Both old
+payloads terminate with -6 at their exact regression assertion; both corrected
+payloads return 0. See runtime-regression-proof.json and
+owner-runtime-regression-proof.json in `bin/physics-exception-operations/2026-10-19/`.
+
+The requested joint flag and independently counted common contribution now commit
+before selected publication, with a pending complete-value retry. Equal setters,
+live world queries, local/portable capture and active positive steps retry; retained
+flag/exception reads and zero/inactive intervals do not. A world counter avoids
+scanning healthy joints. Clear, free, body departure and scene disposal discard
+only the retiring attachment's contribution/debt; independent joints and explicit
+entries retain their edges. Reentry applies the retained flag to a fresh attachment.
+Combined invalidation/detach failures retain both original exceptions and still
+release the selected attachment. No failed numerical Solve is replayed.
+
+The public --exception-transactions fixture executes 144 cases per profile across
+pin/groove/spring, scene/raw routes, before/after publication errors, both requested
+values and six recovery triggers. Another 24 cases cover pending clear/free/body
+departure/scene disposal and independent union accounting. Four registered
+JIT/strict NativeAOT owner/separate profiles pass all 672 cases. Repeated errors
+retain the original error, requested inputs and tick; a successful retry publishes
+the latest value before one actual step. Live query reentry and equal writes from
+a borrowed hook reject. The numerical-thread checks observe the actual solver
+thread rather than merely changing the project setting.
+
+The expanded --exceptions fixture retains ordered caller-owned snapshots, inert
+and retired target RID entries, scene node/null projection, duplicate/absent wake,
+all five scene siblings and raw bodies, wrong-kind/stale/empty/foreign-owner guards,
+status-hook non-reentry and implementation retirement. A detached scene input
+with a tree requires that tree to share the world's owner even during an authorized
+separate Solve.
+The scoped getter reads common authored input without repairing pending joint
+publication. Its snapshot arrays intentionally allocate outside warmed frames;
+selected pair spans remain the steady numerical input. Global joint live getters
+and all scene/facade body/joint writes retain their numerical-borrow rejection.
+
+The explicit-body fixture verifies real contact response, immediate forward/reverse
+motion filtering and independent direct-query/Area sensing. Each raw pin, groove,
+spring and scene spring policy separately verifies real contact response and
+forward motion filtering. Joint force is zero during this response probe, so a
+constraint cannot conceal the contact result. Removing the last edge restores contact with the exact peer RID;
+the stopped circle lies at 23..25.1 units around the ideal 24, allowing configured
+skin/penetration, with normal speed below 0.01 units/s. Identity, ordering and
+contribution accounting compare exactly. Body and joint edited fixtures each
+measure 128 complete frames after warmup and collection, at strict 0/0 owner/all-thread
+managed bytes: 3072 measured frames across twelve JIT/NativeAOT CPU/no-device,
+private software-GPU and registered owner/separate profiles. Terminal selected
+Solve/local-history/portable-apply failures reject 1836 operations in each of four
+registered profiles, including both scene/facade exception writes, before mutation.
+
+The final same-source cohort passes 58/58 distinct profiles:
+
+| Executed profile family | Profiles |
+| --- | ---: |
+| JIT/NativeAOT, three backends, owner/separate, exceptions/integration/failed-world authoring | 36 |
+| JIT/NativeAOT, three backends, serial joint parameter/lifecycle companions | 12 |
+| JIT/NativeAOT registered owner/separate publication/retirement cases | 4 |
+| JIT/NativeAOT default registered consumers | 2 |
+| Serial CPU/software-GPU root filter contract | 2 |
+| Serial combined CPU/GPU root joint contract and GPU resident exceptions | 2 |
+
+Serial joint/root entrypoints do not consume a separate-thread flag and are
+counted once per executable variant. Six PDB/Compile proofs match 3403
+authored sources without DEBUG or missing/mismatched source inputs. Evidence:
+`bin/physics-exception-operations/2026-10-19/validation.json`, current-source-proof.json,
+current-source-inputs.json and reference-contract.json. CPU/registered payloads
+use an empty ICD; GPU payloads use only the pinned private lavapipe, with process
+map sampling rejecting hardware drivers and requiring no CoreCLR for NativeAOT.
+
+Only these five extension rows become Implemented. The current physics census is
+1244/1369 (90.86924762600438%), with 125 open declarations: 94 Partial,
+14 Unimplemented and 17 Blocked; 92 remain Excluded. Earlier counts describe their
+recorded checkpoints. Full ordinary root, complete numerical/custom geometry and
+extension, native allocations, portable network, other platforms and hardware
+real-window/FPS/performance acceptance remain open. Hardware GPU load did not run;
+the RTX power cable remains unchecked.
+
 ## Complete force operations
 
 All thirteen extension central/positioned force, impulse, torque and persistent
@@ -1274,8 +1364,8 @@ penetration/skin allowance; normal velocity is below 0.01 units/s. IDs, ordering
 source retention and wake state compare exactly. Body and joint edit fixtures each
 run 64 warmed/64 measured cycles with two complete PhysicsFrame calls per cycle
 and collection between brackets: 128 measured frames at 0/0 owner/all-thread B
-on CPU/GPU/registered paths. Five extension rows remain Partial pending complete
-numerical-extension acceptance. Snapshot-getter allocations are outside that
+on CPU/GPU/registered paths. The subsequent [complete exception operation audit](#complete-exception-operations)
+closes these five extension rows with publication recovery and retirement checks. Snapshot-getter allocations are outside that
 physical-frame bracket by their documented caller-owned contract.
 
 

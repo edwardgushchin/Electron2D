@@ -38,8 +38,13 @@ internal sealed partial class PhysicsSpace
         _backend.SetContactSettings(ContactSettings);
         _contactSettingsDirty = false;
     }
+    private int _pendingJointCollisionPolicies;
+    internal void ChangePendingJointCollisionPolicies(int delta) => _pendingJointCollisionPolicies += delta;
+
     private void PrepareWorldPolicies()
     {
+        if (_pendingJointCollisionPolicies != 0)
+            foreach (var joint in _jointRuntimes) joint.PrepareCollisionPolicy();
         _backend.PrepareActive();
         PrepareSleepSettings();
         PrepareContactSettings();

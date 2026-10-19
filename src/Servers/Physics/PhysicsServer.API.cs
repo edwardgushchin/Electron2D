@@ -509,6 +509,7 @@ public sealed partial class PhysicsServer
     /// <param name="disable">Whether the connected pair omits body contacts.</param>
     /// <exception cref="ArgumentException">The RID is stale, has the wrong kind or lacks the requested joint role.</exception>
     /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping, or a scene joint would change its concrete role/world.</exception>
+    /// <remarks>A selected publication error retains the requested flag and complete common pair contribution. An equal setter, world query, capture or active positive step retries publication before numerical use.</remarks>
     public static void JointDisableCollisionsBetweenBodies(RID joint, bool disable) => Service.JointDisableCollisionsBetweenBodiesCore(joint, disable);
 
     /// <summary>Returns the joint's stored mutual collision policy.</summary>

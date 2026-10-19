@@ -24,8 +24,8 @@ public abstract class PhysicsBackendJoint
     /// <summary>Supplies the selected implementation operation: apply portable frames.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract void ApplyPortableFrames(Transform first, Transform second);
-    /// <summary>Supplies the selected implementation operation: set collide connected.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <summary>Publishes the complete connected-body collision flag.</summary>
+    /// <remarks>Runs on the owning world thread. After a publication error the same retained value may be retried before a world query, capture or active positive step. Apply the complete value idempotently; no failed simulation step is replayed.</remarks>
     protected internal abstract void SetCollideConnected(bool value);
     /// <summary>Supplies the selected implementation operation: set pin limits.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
