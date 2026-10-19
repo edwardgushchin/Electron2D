@@ -22,7 +22,8 @@ public sealed class GrooveJoint : Joint
     /// <summary>Gets or sets the signed distance from the groove origin to its far endpoint.</summary>
     /// <value>50 scene units by default. Zero keeps the anchor at one point while permitting rotation.</value>
     /// <remarks>Negative values reverse the groove direction. An attached change updates both solver limits immediately
-    /// while retaining the current body-local anchors. The solver accepts magnitudes through ten million scene units.</remarks>
+    /// while retaining the current body-local anchors. The solver accepts magnitudes through ten million scene units.
+    /// A selected publication error retains the requested length; an equal setter or world query/capture/active positive step retries the complete limits.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite or exceeds the solver's extent range.</exception>
     public float Length
     {
@@ -31,7 +32,7 @@ public sealed class GrooveJoint : Joint
         {
             EnsureJointChange();
             ValidateExtent(value, nameof(value));
-            if (_length == value) return;
+            if (_length == value) { Runtime.RetryGrooveLimits(); return; }
             _length = value; InvalidateCanvas();
             Runtime.SetGrooveLength(value);
             if (!Runtime.HasBackend || HasServerOverride) MarkJointDirty();

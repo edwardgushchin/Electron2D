@@ -8,7 +8,7 @@ internal sealed partial class PhysicsJointRuntime
     {
         if (_collisionPolicyDirty == value) return;
         _collisionPolicyDirty = value;
-        Space!.ChangePendingJointCollisionPolicies(value ? 1 : -1);
+        Space!.ChangePendingJointPolicies(value ? 1 : -1);
     }
 
     private void UpdateCollisionContribution(bool value)

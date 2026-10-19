@@ -2,6 +2,89 @@
 
 Last updated: 2026-10-19
 
+## Complete joint parameter operations
+
+The eight extension numeric parameter/flag operations project to the complete
+existing typed C# family: common bias/correction/force, positional pin compliance,
+limits and motor channels, and spring rest/stiffness/damping. Groove Length shares
+the selected limit-publication boundary. The pinned 4.7.2-stable reference at
+ed1daf0bf001b61586d9930840f2f1394092c079 supplies 27 method/property and 16 selector
+records, all non-deprecated, in reference-contract.json. Accepted scene caps and
+motor torque retain ADR 0087's adaptations; selector representation exclusions
+remain unchanged. No public declaration or numerical interface is added.
+
+The audit reproduced a lost retry: a failed selected Bias publication retained
+the new common value, but the equal setter returned without publishing it. A live
+query from the unfinished hook could also continue against uncertain selected
+policy. The identical final consumer fails on the old runtime (-6, Joint parameter
+retry skipped failed publication) and passes with the corrected runtime (0).
+See `bin/physics-joint-parameters/2026-10-19/runtime-regression-proof.json`.
+
+PhysicsJointRuntime.Parameters.cs retains six independent complete channels:
+solver profile, pin limits, motor enabled/velocity/torque and groove limits. A failed
+hook preserves the latest request and original error. Equal setters, world queries,
+local/portable capture and active positive intervals retry before numerical use;
+configured reads and zero/inactive intervals do not repair. Completed channels
+retire independently when another channel fails. Live preparation reentry rejects.
+Detach/clear/free discards the old attachment debt; fresh attachment receives the
+retained configuration. A space counter avoids an additional healthy joint scan.
+Terminal implementation failure keeps its existing rejection and cleanup rules.
+Existing per-interval solver-profile refresh keeps its previous call paths; no
+failed Solve is replayed. Ordinary scene configured reads remain non-preparing;
+global typed getters retain their owner, query-phase and world-failure guards,
+including rejection from actual Solve.
+
+The public --joint-transactions fixture runs 468 role/field/scene-or-raw/before-or-after
+publication/recovery cases and 48 channel/retirement cases per profile, plus a
+multi-channel failure that verifies successful channels are not replayed. Four
+registered JIT/strict NativeAOT owner/separate profiles therefore exercise 1872
+recovery and 192 retirement cases, with four multi-channel sequences. They also
+reject 1392 operations after real selected local-history, portable-apply and Solve
+failures (348 per profile), including equal/changed writes, complete global getter
+pairs and retained scene values. The actual recovered numerical thread is asserted.
+
+The expanded --joint-parameters fixture exercises wrong-kind/empty/stale IDs for
+every typed pair, concrete-role mismatch, the complete off-owner and actual Solve
+family, ordinary state-callback writes, numeric validation and endpoint reentry.
+Its selected initial/live publication guards, shared scene descriptors and actual
+capped spring response remain. Twelve JIT/NativeAOT CPU/no-device, private software-GPU
+and registered owner/separate profiles measure 768 edited complete frames at strict
+0/0 owner/all-thread managed bytes. The original 0.001 scene-unit/s spring response
+tolerance covers float conversion/integration. Pin/groove force budgets, compliance,
+motor/stops, world/off-center anchors, spring force/moment/caps and stable damping
+retain their individual [conformance bounds](physics-joint-policies.md#public-cpu-gpu-conformance).
+Portable joint correction/private replay, coupled graphs/contact/sleep/CCD and
+root CPU/GPU joint companions pass on this same source cohort; those exercised
+scenarios do not certify arbitrary geometry or a complete multiplayer workload.
+
+The final cohort passes 95/95 distinct profiles:
+
+| Executed profile family | Profiles |
+| --- | ---: |
+| JIT/NativeAOT, three backends, owner/separate, parameter/exception/world/portable-joint/spring-anchor families | 60 |
+| JIT/NativeAOT, three backends, serial joint response/lifecycle | 12 |
+| JIT/NativeAOT registered owner/separate joint/exception recovery | 8 |
+| JIT/NativeAOT default registered consumer | 2 |
+| JIT three backends, owner/separate coupled-joint/contact companions | 12 |
+| Serial combined CPU/GPU root joint contract | 1 |
+
+Serial response/lifecycle/root entrypoints do not consume a separate-thread flag
+and are counted once per executable variant. Registered coupled/contact profiles
+explicitly pass --registered. Six PDB/Compile proofs match 3409 authored
+sources without DEBUG or missing/mismatched inputs. Evidence:
+`bin/physics-joint-parameters/2026-10-19/validation.json`, current-source-proof.json
+and current-source-inputs.json. Process maps require private lavapipe for GPU,
+reject hardware drivers, and require no CoreCLR for NativeAOT. CPU/registered
+profiles use an empty ICD. Frozen payloads from the preceding exception slice
+retain their hashes despite sharing unchanged dependencies.
+
+Only these eight extension rows become Implemented. The current physics census is
+1252/1369 (91.4536157779401%), with 117 open declarations: 86 Partial, 14 Unimplemented
+and 17 Blocked; 92 remain Excluded. Earlier counts describe recorded checkpoints.
+Full ordinary root, complete numerical/custom geometry/extension, native allocations,
+portable multiplayer, other platforms and hardware real-window/FPS/performance
+acceptance remain open. Hardware GPU load did not run; the RTX cable remains unchecked.
+
 ## Complete exception operations
 
 All five extension body-exception and joint collision-policy operations now have

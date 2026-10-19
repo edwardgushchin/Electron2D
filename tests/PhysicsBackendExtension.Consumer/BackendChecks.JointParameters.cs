@@ -2,9 +2,15 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunJointParameters(PhysicsServer.Backend? backend = null) => JointParameterChecks(backend);
+    public static void RunJointParameters(PhysicsServer.Backend? backend = null, bool threaded = false)
+    {
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { JointParameterChecks(backend, threaded); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
 
-    private static void JointParameterChecks(PhysicsServer.Backend? backend = null)
+    private static void JointParameterChecks(PhysicsServer.Backend? backend = null, bool threaded = false)
     {
         Solver? solver = null;
         if (backend is null) PhysicsServerManager.RegisterServer("JointParameters", () => solver = new());
@@ -16,6 +22,8 @@ public static partial class BackendChecks
         Joint[] nodes = [new PinJoint(), new GrooveJoint(), new DampedSpringJoint()];
         foreach (var node in nodes) root.AddChild(node);
         using var tree = new SceneTree(root);
+        var ownerThread = Thread.CurrentThread;
+        if (solver is not null) solver.StepHook = () => Check((Thread.CurrentThread != ownerThread) == threaded, "Parameters use the actual selected numerical thread");
         var raw = PhysicsServer.BodyCreate();
         var joints = new[] { PhysicsServer.JointCreate(), PhysicsServer.JointCreate(), PhysicsServer.JointCreate() };
         try
@@ -70,6 +78,7 @@ public static partial class BackendChecks
                 PhysicsServer.JointMakeGroove(ids[1], new(-10, 0), new(10, 0), Vector2.Zero, scene.GetRID(), raw);
                 PhysicsServer.JointMakeDampedSpring(ids[2], Vector2.Zero, new(100, 0), scene.GetRID(), raw);
             }
+            JointParameterAccess(tree, world, raw, nodes, joints, solver);
             for (var i = 0; i < 64; i++) Cycle(i);
             GC.Collect(); GC.WaitForPendingFinalizers();
             var owner = GC.GetAllocatedBytesForCurrentThread(); var total = GC.GetTotalAllocatedBytes(true);

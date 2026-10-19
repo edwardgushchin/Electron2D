@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>Fixes two body anchors together while allowing relative rotation, optional limits and a motor.</summary>
 /// <remarks>The relative angle starts at zero when the joint attaches. A finite motor torque cap keeps angular
-/// limits stable and can be tuned for the connected bodies' inertia.</remarks>
+/// limits stable and can be tuned for the connected bodies' inertia.
+/// Typed parameter writes retain their requested value after selected publication errors and retry pending channels before a world query, capture or active positive step; equal setters also retry.</remarks>
 public sealed class PinJoint : Joint
 {
     private static readonly PropertyDescriptor[] PinProperties =

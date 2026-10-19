@@ -41,7 +41,8 @@ public static partial class BackendChecks
         RunForces();
         RunExceptions();
         RunExceptionTransactions();
-        JointParameterChecks();
+        RunJointParameters();
+        RunJointTransactions();
         JointLifecycleChecks();
         ResourceReleaseChecks();
         RunAreaMonitors();

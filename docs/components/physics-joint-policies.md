@@ -10,6 +10,19 @@ the pending request and exactly one contribution. See [complete exception operat
 and the updated [ADR 0087](../decisions/physics-joints.md#adr-0087).
 
 
+## Typed parameter publication
+
+A selected publication error retains the requested typed parameter channel.
+Equal setters, live world queries, local/portable capture and active positive
+steps retry before numerical use. Configured reads and zero/inactive intervals
+do not repair. Solver policy, pin limits, each motor channel and groove limits
+retire their debt independently; a later channel failure does not replay an
+already completed channel. Publication reentry rejects live preparation.
+Detach/clear/free discards the old attachment's debt; reentry applies retained
+configuration to a fresh attachment. Existing per-interval refresh remains separate.
+See [complete joint parameter operations](physics-registered-adapter.md#complete-joint-parameter-operations)
+for actual scope, response checks and remaining acceptance limits.
+
 ## Public boundary
 
 Joint bias, correction-speed limits, force limits and pin linear softness now run

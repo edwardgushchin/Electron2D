@@ -571,7 +571,7 @@ public sealed partial class PhysicsServer
     /// <summary>Sets the positional correction fraction.</summary>
     /// <param name="joint">A live joint RID, including an unconfigured joint.</param>
     /// <param name="value">A finite zero-to-one value; zero inherits the space default.</param>
-    /// <remarks>Preserves sampled anchors and identity, wakes connected bodies and clears old impulses. General settings survive clear and concrete-role replacement.</remarks>
+    /// <remarks>Preserves sampled anchors and identity, wakes connected bodies and clears old impulses. General settings survive clear and concrete-role replacement. A selected publication error retains the latest requested value. An equal setter, world query, local or portable capture, or active positive step retries the pending complete parameter channel before numerical use; configured reads and skipped intervals do not repair it.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or has the wrong resource or joint role.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is outside the documented finite range.</exception>
     /// <exception cref="InvalidOperationException">Access violates the owning world thread or phase.</exception>
@@ -587,7 +587,7 @@ public sealed partial class PhysicsServer
     /// <summary>Sets the positional correction speed cap.</summary>
     /// <param name="joint">A live joint RID, including an unconfigured joint.</param>
     /// <param name="value">Nonnegative scene units/s for linear correction and radians/s for angular stops; float.MaxValue by default, additionally bounded by the world correction guard.</param>
-    /// <remarks>Preserves sampled anchors and identity, wakes connected bodies and clears old impulses. All linear axes share a vector cap; springs have no positional recovery rows. General settings survive clear and concrete-role replacement.</remarks>
+    /// <remarks>Preserves sampled anchors and identity, wakes connected bodies and clears old impulses. All linear axes share a vector cap; springs have no positional recovery rows. General settings survive clear and concrete-role replacement. A selected publication error retains the latest requested value. An equal setter, world query, local or portable capture, or active positive step retries the pending complete parameter channel before numerical use; configured reads and skipped intervals do not repair it.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or has the wrong resource or joint role.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is outside the documented finite range.</exception>
     /// <exception cref="InvalidOperationException">Access violates the owning world thread or phase.</exception>
@@ -603,7 +603,7 @@ public sealed partial class PhysicsServer
     /// <summary>Sets the per-second impulse budget.</summary>
     /// <param name="joint">A live joint RID, including an unconfigured joint.</param>
     /// <param name="value">Nonnegative; float.MaxValue means unlimited. Linear and pure-angular channels use scene-unit and squared-scene-unit force units respectively.</param>
-    /// <remarks>Preserves sampled anchors and identity, wakes connected bodies and clears old impulses. Each substep permits the value times its duration; all linear axes share a vector budget. Springs cap their combined elastic and damping impulse. MotorMaxTorque remains an additional cap. General settings survive clear and concrete-role replacement.</remarks>
+    /// <remarks>Preserves sampled anchors and identity, wakes connected bodies and clears old impulses. Each substep permits the value times its duration; all linear axes share a vector budget. Springs cap their combined elastic and damping impulse. MotorMaxTorque remains an additional cap. General settings survive clear and concrete-role replacement. A selected publication error retains the latest requested value. An equal setter, world query, local or portable capture, or active positive step retries the pending complete parameter channel before numerical use; configured reads and skipped intervals do not repair it.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or has the wrong resource or joint role.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is outside the documented finite range.</exception>
     /// <exception cref="InvalidOperationException">Access violates the owning world thread or phase.</exception>
@@ -619,7 +619,7 @@ public sealed partial class PhysicsServer
     /// <summary>Sets the linear anchor compliance.</summary>
     /// <param name="joint">A live pin RID or unconfigured scene PinJoint RID.</param>
     /// <param name="value">Finite nonnegative inverse-kilogram softness, zero by default.</param>
-    /// <remarks>Preserves sampled anchors and identity, wakes connected bodies and clears old impulses. This affects linear anchors, not an angular spring. A raw concrete-role replacement resets pin-specific softness.</remarks>
+    /// <remarks>Preserves sampled anchors and identity, wakes connected bodies and clears old impulses. This affects linear anchors, not an angular spring. A raw concrete-role replacement resets pin-specific softness. A selected publication error retains the latest requested value. An equal setter, world query, local or portable capture, or active positive step retries the pending complete parameter channel before numerical use; configured reads and skipped intervals do not repair it.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or has the wrong resource or joint role.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is outside the documented finite range.</exception>
     /// <exception cref="InvalidOperationException">Access violates the owning world thread or phase.</exception>
@@ -654,7 +654,7 @@ public sealed partial class PhysicsServer
     /// <summary>Changes whether the relative angle is limited.</summary>
     /// <param name="joint">A live Pin joint RID.</param>
     /// <param name="value">Whether the relative angle is limited.</param>
-    /// <remarks>Updates the shared scene/server settings and active backend before the next solve.</remarks>
+    /// <remarks>Updates the shared scene/server settings and active backend before the next solve. A selected publication error retains the latest requested value. An equal setter, world query, local or portable capture, or active positive step retries the pending complete parameter channel before numerical use; configured reads and skipped intervals do not repair it.</remarks>
     /// <exception cref="ArgumentException">The RID is stale, has the wrong kind or lacks the requested joint role.</exception>
     /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping, or a scene joint would change its concrete role/world.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Numeric input is nonfinite, outside the backend extent, or violates the active physical parameter range.</exception>
@@ -670,7 +670,7 @@ public sealed partial class PhysicsServer
     /// <summary>Changes lower relative angle in radians.</summary>
     /// <param name="joint">A live Pin joint RID.</param>
     /// <param name="value">Lower relative angle in radians.</param>
-    /// <remarks>Updates the shared scene/server settings and active backend before the next solve.</remarks>
+    /// <remarks>Updates the shared scene/server settings and active backend before the next solve. A selected publication error retains the latest requested value. An equal setter, world query, local or portable capture, or active positive step retries the pending complete parameter channel before numerical use; configured reads and skipped intervals do not repair it.</remarks>
     /// <exception cref="ArgumentException">The RID is stale, has the wrong kind or lacks the requested joint role.</exception>
     /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping, or a scene joint would change its concrete role/world.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Numeric input is nonfinite, outside the backend extent, or violates the active physical parameter range.</exception>
@@ -686,7 +686,7 @@ public sealed partial class PhysicsServer
     /// <summary>Changes upper relative angle in radians.</summary>
     /// <param name="joint">A live Pin joint RID.</param>
     /// <param name="value">Upper relative angle in radians.</param>
-    /// <remarks>Updates the shared scene/server settings and active backend before the next solve.</remarks>
+    /// <remarks>Updates the shared scene/server settings and active backend before the next solve. A selected publication error retains the latest requested value. An equal setter, world query, local or portable capture, or active positive step retries the pending complete parameter channel before numerical use; configured reads and skipped intervals do not repair it.</remarks>
     /// <exception cref="ArgumentException">The RID is stale, has the wrong kind or lacks the requested joint role.</exception>
     /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping, or a scene joint would change its concrete role/world.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Numeric input is nonfinite, outside the backend extent, or violates the active physical parameter range.</exception>
@@ -702,7 +702,7 @@ public sealed partial class PhysicsServer
     /// <summary>Changes whether the angular motor runs.</summary>
     /// <param name="joint">A live Pin joint RID.</param>
     /// <param name="value">Whether the angular motor runs.</param>
-    /// <remarks>Updates the shared scene/server settings and active backend before the next solve.</remarks>
+    /// <remarks>Updates the shared scene/server settings and active backend before the next solve. A selected publication error retains the latest requested value. An equal setter, world query, local or portable capture, or active positive step retries the pending complete parameter channel before numerical use; configured reads and skipped intervals do not repair it.</remarks>
     /// <exception cref="ArgumentException">The RID is stale, has the wrong kind or lacks the requested joint role.</exception>
     /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping, or a scene joint would change its concrete role/world.</exception>
     public static void PinJointSetMotorEnabled(RID joint, bool value) => Service.PinJointSetMotorEnabledCore(joint, value);
@@ -717,7 +717,7 @@ public sealed partial class PhysicsServer
     /// <summary>Changes desired relative radians per second.</summary>
     /// <param name="joint">A live Pin joint RID.</param>
     /// <param name="value">Desired relative radians per second.</param>
-    /// <remarks>Updates the shared scene/server settings and active backend before the next solve.</remarks>
+    /// <remarks>Updates the shared scene/server settings and active backend before the next solve. A selected publication error retains the latest requested value. An equal setter, world query, local or portable capture, or active positive step retries the pending complete parameter channel before numerical use; configured reads and skipped intervals do not repair it.</remarks>
     /// <exception cref="ArgumentException">The RID is stale, has the wrong kind or lacks the requested joint role.</exception>
     /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping, or a scene joint would change its concrete role/world.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Numeric input is nonfinite, outside the backend extent, or violates the active physical parameter range.</exception>
@@ -733,7 +733,7 @@ public sealed partial class PhysicsServer
     /// <summary>Changes finite nonnegative torque cap in newton-meters.</summary>
     /// <param name="joint">A live Pin joint RID.</param>
     /// <param name="value">Finite nonnegative torque cap in newton-meters.</param>
-    /// <remarks>Updates the shared scene/server settings and active backend before the next solve.</remarks>
+    /// <remarks>Updates the shared scene/server settings and active backend before the next solve. A selected publication error retains the latest requested value. An equal setter, world query, local or portable capture, or active positive step retries the pending complete parameter channel before numerical use; configured reads and skipped intervals do not repair it.</remarks>
     /// <exception cref="ArgumentException">The RID is stale, has the wrong kind or lacks the requested joint role.</exception>
     /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping, or a scene joint would change its concrete role/world.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Numeric input is nonfinite, outside the backend extent, or violates the active physical parameter range.</exception>
@@ -749,7 +749,7 @@ public sealed partial class PhysicsServer
     /// <summary>Changes nonnegative relaxed separation in scene units; server zero is literal.</summary>
     /// <param name="joint">A live DampedSpring joint RID.</param>
     /// <param name="value">Nonnegative relaxed separation in scene units; server zero is literal.</param>
-    /// <remarks>Updates the shared scene/server settings and active backend before the next solve.</remarks>
+    /// <remarks>Updates the shared scene/server settings and active backend before the next solve. A selected publication error retains the latest requested value. An equal setter, world query, local or portable capture, or active positive step retries the pending complete parameter channel before numerical use; configured reads and skipped intervals do not repair it.</remarks>
     /// <exception cref="ArgumentException">The RID is stale, has the wrong kind or lacks the requested joint role.</exception>
     /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping, or a scene joint would change its concrete role/world.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Numeric input is nonfinite, outside the backend extent, or violates the active physical parameter range.</exception>
@@ -765,7 +765,7 @@ public sealed partial class PhysicsServer
     /// <summary>Changes nonnegative Hooke coefficient in kilograms per second squared.</summary>
     /// <param name="joint">A live DampedSpring joint RID.</param>
     /// <param name="value">Nonnegative Hooke coefficient in kilograms per second squared.</param>
-    /// <remarks>Updates the shared scene/server settings and active backend before the next solve.</remarks>
+    /// <remarks>Updates the shared scene/server settings and active backend before the next solve. A selected publication error retains the latest requested value. An equal setter, world query, local or portable capture, or active positive step retries the pending complete parameter channel before numerical use; configured reads and skipped intervals do not repair it.</remarks>
     /// <exception cref="ArgumentException">The RID is stale, has the wrong kind or lacks the requested joint role.</exception>
     /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping, or a scene joint would change its concrete role/world.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Numeric input is nonfinite, outside the backend extent, or violates the active physical parameter range.</exception>
@@ -781,7 +781,7 @@ public sealed partial class PhysicsServer
     /// <summary>Changes nonnegative axial drag coefficient in kilograms per second.</summary>
     /// <param name="joint">A live DampedSpring joint RID.</param>
     /// <param name="value">Nonnegative axial drag coefficient in kilograms per second.</param>
-    /// <remarks>Updates the shared scene/server settings and active backend before the next solve.</remarks>
+    /// <remarks>Updates the shared scene/server settings and active backend before the next solve. A selected publication error retains the latest requested value. An equal setter, world query, local or portable capture, or active positive step retries the pending complete parameter channel before numerical use; configured reads and skipped intervals do not repair it.</remarks>
     /// <exception cref="ArgumentException">The RID is stale, has the wrong kind or lacks the requested joint role.</exception>
     /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping, or a scene joint would change its concrete role/world.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Numeric input is nonfinite, outside the backend extent, or violates the active physical parameter range.</exception>

@@ -2,6 +2,20 @@
 
 Last updated: 2026-10-19
 
+## Typed parameter publication
+
+A selected publication error retains the requested typed parameter channel.
+Equal setters, live world queries, local/portable capture and active positive
+steps retry before numerical use. Configured reads and zero/inactive intervals
+do not repair. Solver policy, pin limits, each motor channel and groove limits
+retire their debt independently; a later channel failure does not replay an
+already completed channel. Publication reentry rejects live preparation.
+Detach/clear/free discards the old attachment's debt; reentry applies retained
+configuration to a fresh attachment. Existing per-interval refresh remains separate.
+See [complete joint parameter operations](../components/physics-registered-adapter.md#complete-joint-parameter-operations)
+for actual scope, response checks and remaining acceptance limits.
+
+
 **Inherits:** System.Object · **Declaration:** `internal sealed class PhysicsJointRuntime`
 
 **Source:** [PhysicsJointRuntime.cs](../../src/Servers/Physics/PhysicsJointRuntime.cs) · **Component:** [Physics joints](../components/physics-joints.md)
@@ -24,6 +38,8 @@ Neither this runtime nor the scene joint classes expose or store vendor types.
 | `Space`, `BodyA`, `BodyB`, `Backend`, `HasBackend` | Current logical owner world, public endpoint identities and borrowed attachment status through the backend. |
 | `FrameA`, `FrameB`, `LowerTranslation`, `UpperTranslation` | Engine Transform frames and scene-unit guide bounds preserve sampled geometry across pending detach/reentry; one-body pin B uses fixed world coordinates. |
 | `DisableCollision` and pin limit/motor scalar settings | Shared native contact/angle/motor configuration. |
+| `PreparePendingParameters()` / `RetryGrooveLimits()` | Retry independently pending complete parameter channels or the scene groove's existing request; live preparation reentry rejects. |
+| `_pendingParameters` / `_preparingParameters` | Retain six channel bits and publication ownership in `PhysicsJointRuntime.Parameters.cs`; clear attachment debt on detach. |
 | `PrepareCollisionPolicy()` and private contribution/dirty/publication flags | Retain requested collision policy and exactly one common pair contribution across selected errors; reject preparation reentry and retry before world preparation. |
 | [CollisionPolicy partial](../../src/Servers/Physics/PhysicsJointRuntime.CollisionPolicy.cs) | Register pending work in the world's counter so healthy queries do not scan joints; drop that work on attachment retirement. |
 | Spring rest/coefficient/automatic-length settings | Literal server rest or scene zero fallback; Hooke/drag parameters. |

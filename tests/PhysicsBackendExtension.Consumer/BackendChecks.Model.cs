@@ -39,6 +39,7 @@ public static partial class BackendChecks
         internal Action<RID>? BodyHook;
         internal Action<RID>? JointHook;
         internal Action<RID>? JointCollisionHook;
+        internal Action<RID>? JointParameterHook;
         internal Action<RID>? ExceptionWakeHook;
         internal Action<RID>? JointFactoryHook, JointReleaseHook;
         internal bool FailJointFactory, NullJointFactory, FailJointAttach, FailJointDetach;
@@ -463,17 +464,18 @@ public static partial class BackendChecks
         }
         protected override void ApplySolverPolicy(in PhysicsJointConfiguration settings)
         {
+            solver.JointParameterHook?.Invoke(rid);
             var changed = Settings != settings; Settings = settings;
             if (changed && _attached) solver.WakeConnected(solver.Bodies[_first]);
             solver.JointHook?.Invoke(rid);
         }
         protected override void ApplyPortableFrames(Transform first, Transform second) => Settings = Settings with { FrameA = first, FrameB = second };
         protected override void SetCollideConnected(bool value) { solver.JointCollisionHook?.Invoke(rid); Settings = Settings with { DisableCollision = !value }; solver.JointHook?.Invoke(rid); }
-        protected override void SetPinLimits(bool enabled, float lower, float upper) { Settings = Settings with { PinLimitEnabled = enabled, PinLimitLower = lower, PinLimitUpper = upper }; solver.JointHook?.Invoke(rid); }
-        protected override void SetPinMotorEnabled(bool value) { Settings = Settings with { PinMotorEnabled = value }; solver.JointHook?.Invoke(rid); }
-        protected override void SetPinMotorVelocity(float value) { Settings = Settings with { PinMotorVelocity = value }; solver.JointHook?.Invoke(rid); }
-        protected override void SetPinMotorMaxTorque(float value) { Settings = Settings with { PinMotorMaxTorque = value }; solver.JointHook?.Invoke(rid); }
-        protected override void SetGrooveLimits(float lower, float upper) { Settings = Settings with { LowerTranslation = lower, UpperTranslation = upper }; solver.JointHook?.Invoke(rid); }
+        protected override void SetPinLimits(bool enabled, float lower, float upper) { solver.JointParameterHook?.Invoke(rid); Settings = Settings with { PinLimitEnabled = enabled, PinLimitLower = lower, PinLimitUpper = upper }; solver.JointHook?.Invoke(rid); }
+        protected override void SetPinMotorEnabled(bool value) { solver.JointParameterHook?.Invoke(rid); Settings = Settings with { PinMotorEnabled = value }; solver.JointHook?.Invoke(rid); }
+        protected override void SetPinMotorVelocity(float value) { solver.JointParameterHook?.Invoke(rid); Settings = Settings with { PinMotorVelocity = value }; solver.JointHook?.Invoke(rid); }
+        protected override void SetPinMotorMaxTorque(float value) { solver.JointParameterHook?.Invoke(rid); Settings = Settings with { PinMotorMaxTorque = value }; solver.JointHook?.Invoke(rid); }
+        protected override void SetGrooveLimits(float lower, float upper) { solver.JointParameterHook?.Invoke(rid); Settings = Settings with { LowerTranslation = lower, UpperTranslation = upper }; solver.JointHook?.Invoke(rid); }
         private void SolveSpring(float dt)
         {
             if (Settings.Type != PhysicsServer.JointType.DampedSpring) return;

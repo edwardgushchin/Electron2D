@@ -163,7 +163,7 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
             catch (Exception cleanup) { throw new AggregateException("Joint collision cleanup and detach failed.", error, cleanup); }
             throw;
         }
-        finally { SetCollisionPolicyDirty(false); }
+        finally { ClearPendingParameters(); SetCollisionPolicyDirty(false); }
         Backend.Detach();
     }
 
@@ -197,10 +197,10 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
         PrepareCollisionPolicy();
     }
 
-    internal void SetBias(float value) { EnsureWriteAccess(); ValidateBias(value); if (Bias == value) return; Bias = value; ApplySolverPolicy(); }
-    internal void SetMaxBias(float value) { EnsureWriteAccess(); Coefficient(value); if (MaxBias == value) return; MaxBias = value; ApplySolverPolicy(); }
-    internal void SetMaxForce(float value) { EnsureWriteAccess(); Coefficient(value); if (MaxForce == value) return; MaxForce = value; ApplySolverPolicy(); }
-    internal void SetPinSoftness(float value) { EnsureWriteAccess(); Coefficient(value); if (PinSoftness == value) return; PinSoftness = value; ApplySolverPolicy(); }
+    internal void SetBias(float value) { EnsureWriteAccess(); ValidateBias(value); if (Bias == value && !IsParameterPending(SolverPolicy)) return; Bias = value; PublishParameterPolicy(SolverPolicy); }
+    internal void SetMaxBias(float value) { EnsureWriteAccess(); Coefficient(value); if (MaxBias == value && !IsParameterPending(SolverPolicy)) return; MaxBias = value; PublishParameterPolicy(SolverPolicy); }
+    internal void SetMaxForce(float value) { EnsureWriteAccess(); Coefficient(value); if (MaxForce == value && !IsParameterPending(SolverPolicy)) return; MaxForce = value; PublishParameterPolicy(SolverPolicy); }
+    internal void SetPinSoftness(float value) { EnsureWriteAccess(); Coefficient(value); if (PinSoftness == value && !IsParameterPending(SolverPolicy)) return; PinSoftness = value; PublishParameterPolicy(SolverPolicy); }
     internal void ApplySolverPolicy() { if (HasBackend) Backend.ApplySolverPolicy(this); }
     internal static void ValidateBias(float value)
     { if (!float.IsFinite(value) || value < 0 || value > 1) throw new ArgumentOutOfRangeException(nameof(value)); }
@@ -226,25 +226,25 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
     private void ApplyPinLimits()
     {
         if (!HasBackend || Type != PhysicsServer.JointType.Pin) return;
-        Backend.SetPinLimits(PinLimitEnabled, PinLimitLower, PinLimitUpper);
+        PublishParameterPolicy(PinLimitsPolicy);
     }
     internal void SetPinMotorEnabled(bool value)
     {
         EnsureWriteAccess();
         PinMotorEnabled = value;
-        if (HasBackend && Type == PhysicsServer.JointType.Pin) Backend.SetPinMotorEnabled(value);
+        if (HasBackend && Type == PhysicsServer.JointType.Pin) PublishParameterPolicy(MotorEnabledPolicy);
     }
     internal void SetPinMotorVelocity(float value)
     {
         EnsureWriteAccess();
         Finite(value); PinMotorVelocity = value;
-        if (HasBackend && Type == PhysicsServer.JointType.Pin) Backend.SetPinMotorVelocity(value);
+        if (HasBackend && Type == PhysicsServer.JointType.Pin) PublishParameterPolicy(MotorVelocityPolicy);
     }
     internal void SetPinMotorMaxTorque(float value)
     {
         EnsureWriteAccess();
         Coefficient(value); PinMotorMaxTorque = value;
-        if (HasBackend && Type == PhysicsServer.JointType.Pin) Backend.SetPinMotorMaxTorque(value);
+        if (HasBackend && Type == PhysicsServer.JointType.Pin) PublishParameterPolicy(MotorTorquePolicy);
     }
     internal void SetGrooveLength(float value)
     {
@@ -253,18 +253,18 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
         LowerTranslation = MathF.Min(0, value);
         UpperTranslation = MathF.Max(0, value);
         if (HasBackend && Type == PhysicsServer.JointType.Groove)
-            Backend.SetGrooveLimits(LowerTranslation, UpperTranslation);
+            PublishParameterPolicy(GrooveLimitsPolicy);
     }
     internal void SetSpringRestLength(float value, bool automatic = false)
     {
         EnsureWriteAccess();
         ValidateExtent(value); if (value < 0) throw new ArgumentOutOfRangeException(nameof(value));
         var automaticRest = automatic && value == 0;
-        if (SpringRestLength == value && SpringAutomaticRest == automaticRest) return;
-        SpringRestLength = value; SpringAutomaticRest = automaticRest; ApplySolverPolicy();
+        if (SpringRestLength == value && SpringAutomaticRest == automaticRest && !IsParameterPending(SolverPolicy)) return;
+        SpringRestLength = value; SpringAutomaticRest = automaticRest; PublishParameterPolicy(SolverPolicy);
     }
-    internal void SetSpringStiffness(float value) { EnsureWriteAccess(); Coefficient(value); if (SpringStiffness == value) return; SpringStiffness = value; ApplySolverPolicy(); }
-    internal void SetSpringDamping(float value) { EnsureWriteAccess(); Coefficient(value); if (SpringDamping == value) return; SpringDamping = value; ApplySolverPolicy(); }
+    internal void SetSpringStiffness(float value) { EnsureWriteAccess(); Coefficient(value); if (SpringStiffness == value && !IsParameterPending(SolverPolicy)) return; SpringStiffness = value; PublishParameterPolicy(SolverPolicy); }
+    internal void SetSpringDamping(float value) { EnsureWriteAccess(); Coefficient(value); if (SpringDamping == value && !IsParameterPending(SolverPolicy)) return; SpringDamping = value; PublishParameterPolicy(SolverPolicy); }
 
     internal PhysicsJointConfiguration Configuration => new(Type, FrameA, FrameB, DisableCollision, LowerTranslation, UpperTranslation,
         Bias, MaxBias, MaxForce, PinSoftness, PinLimitEnabled, PinLimitLower, PinLimitUpper, PinMotorEnabled,

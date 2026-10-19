@@ -19,7 +19,7 @@ public abstract class PhysicsBackendJoint
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract void Detach();
     /// <summary>Supplies the selected implementation operation: apply solver policy.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Publishes a complete parameter channel on the owning world thread. The latest retained value may be retried after a publication error before query, capture or an active positive step; apply it idempotently. Borrowed data is valid only for this call.</remarks>
     protected internal abstract void ApplySolverPolicy(in PhysicsJointConfiguration settings);
     /// <summary>Supplies the selected implementation operation: apply portable frames.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
@@ -28,18 +28,18 @@ public abstract class PhysicsBackendJoint
     /// <remarks>Runs on the owning world thread. After a publication error the same retained value may be retried before a world query, capture or active positive step. Apply the complete value idempotently; no failed simulation step is replayed.</remarks>
     protected internal abstract void SetCollideConnected(bool value);
     /// <summary>Supplies the selected implementation operation: set pin limits.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Publishes a complete parameter channel on the owning world thread. The latest retained value may be retried after a publication error before query, capture or an active positive step; apply it idempotently. Borrowed data is valid only for this call.</remarks>
     protected internal abstract void SetPinLimits(bool enabled, float lower, float upper);
     /// <summary>Supplies the selected implementation operation: set pin motor enabled.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Publishes a complete parameter channel on the owning world thread. The latest retained value may be retried after a publication error before query, capture or an active positive step; apply it idempotently. Borrowed data is valid only for this call.</remarks>
     protected internal abstract void SetPinMotorEnabled(bool value);
     /// <summary>Supplies the selected implementation operation: set pin motor velocity.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Publishes a complete parameter channel on the owning world thread. The latest retained value may be retried after a publication error before query, capture or an active positive step; apply it idempotently. Borrowed data is valid only for this call.</remarks>
     protected internal abstract void SetPinMotorVelocity(float value);
     /// <summary>Supplies the selected implementation operation: set pin motor max torque.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Publishes a complete parameter channel on the owning world thread. The latest retained value may be retried after a publication error before query, capture or an active positive step; apply it idempotently. Borrowed data is valid only for this call.</remarks>
     protected internal abstract void SetPinMotorMaxTorque(float value);
     /// <summary>Supplies the selected implementation operation: set groove limits.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Publishes a complete parameter channel on the owning world thread. The latest retained value may be retried after a publication error before query, capture or an active positive step; apply it idempotently. Borrowed data is valid only for this call.</remarks>
     protected internal abstract void SetGrooveLimits(float lower, float upper);
 }

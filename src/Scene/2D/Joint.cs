@@ -9,7 +9,8 @@ namespace Electron2D;
 /// Ordinary game callbacks may author the next interval. Scene departure retains the joint through TreeExiting;
 /// engine membership cleanup then releases it even when a user exit callback fails.
 /// NodeA/NodeB also allow managed path authoring from the current processing group. Native connection work
-/// remains on the owner before the next fixed step; other joint parameters retain their numerical guards.</remarks>
+/// remains on the owner before the next fixed step; other joint parameters retain their numerical guards.
+/// Typed parameter writes retain their requested value after selected publication errors and retry pending channels before a world query, capture or active positive step; equal setters also retry.</remarks>
 public abstract class Joint : Entity
 {
     private static readonly PropertyDescriptor[] JointProperties =
