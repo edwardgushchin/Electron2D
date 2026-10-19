@@ -14,6 +14,8 @@ Last updated: 2026-10-19
 
 AnimatedSprite uses the existing internal idle lane and tree pause/process policy. Worker SpriteFrames changes remain pending until owner-thread reconciliation; they do not dispatch scene callbacks from a worker. No new public scheduling API is introduced.
 
+[The native window allocation regression](../components/physics-window-allocations.md) covers passive pointer picking alongside complete CPU/software-GPU scene physics, rendering and scheduling after warmup. It retains the live picking path.
+
 ## Selected authoring context
 
 EditedSceneRoot also selects Node.IsPartOfEditedScene and EditorStateChanged membership. The selected live root, including this tree's Root, and all its descendants participate. Detached nodes do not. Selection changes emit no Node authoring event and create no editor UI or simulation mode. See [Node authoring state](Node.md#scene-authoring-state).

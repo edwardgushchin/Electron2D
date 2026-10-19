@@ -657,7 +657,7 @@
     },
     {
       "state": "Blocked",
-      "reason": "The query reports integrated SDL-backed paths and current device state; Wayland IME advertising and SDL text-input activation passed native smoke, and the native message dialog opened. However, a true IME or file-dialog result is not yet backed by a non-UI check that the Wayland text-input-v3 protocol or Linux FileChooser service is available. Trigger: add a Wayland text-input protocol capability probe in the first native keyboard/text adapter slice and a portal FileChooser capability probe in the first Linux native chooser slice; then verify positive and absent-service results without opening UI. Other driver/device-dependent results remain separate executable verification work (ADR 0040).",
+      "reason": "The query reports integrated SDL-backed paths and current device state; the driver identity is retained per display lifetime to remove per-tick string marshaling in passive physics picking (see [native allocation check](../../components/physics-window-allocations.md)); Wayland IME advertising and SDL text-input activation passed native smoke, and the native message dialog opened. However, a true IME or file-dialog result is not yet backed by a non-UI check that the Wayland text-input-v3 protocol or Linux FileChooser service is available. Trigger: add a Wayland text-input protocol capability probe in the first native keyboard/text adapter slice and a portal FileChooser capability probe in the first Linux native chooser slice; then verify positive and absent-service results without opening UI. Other driver/device-dependent results remain separate executable verification work (ADR 0040).",
       "godot": [
         "DisplayServer::method:has_feature(int:DisplayServer.Feature)"
       ]

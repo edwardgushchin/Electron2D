@@ -79,10 +79,12 @@ public sealed partial class DisplayServer
         PipMode = 36,
     }
 
+    private readonly string? _videoDriver;
+
     internal bool HasFeatureCore(Feature feature)
     {
         EnsureOwner();
-        var driver = SDL.GetCurrentVideoDriver();
+        var driver = _videoDriver;
         var desktop = driver is "windows" or "x11" or "wayland" or "cocoa";
         return feature switch
         {

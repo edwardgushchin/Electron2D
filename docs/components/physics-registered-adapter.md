@@ -55,8 +55,10 @@ The 512-body, requested 60-Hz, VSync-enabled samples observed 62.29/27.68 FPS
 for CPU/software-GPU physics over about four seconds; each measured 240 ticks and
 9600 owner-managed bytes over the whole window loop. That aggregate includes
 physics, rendering, input and scheduling, so it does not identify the allocating
-stage. This nonzero native-host interval remains an open localization/zero gate;
-it is distinct from the strict zero headless physics intervals above.
+stage. The subsequent [native window allocation audit](physics-window-allocations.md)
+localizes this burst to capability-query string marshaling in passive picking
+and verifies the corrected complete warm window interval. The older aggregate
+above remains the original observation; native allocator totals stay unmeasured.
 
 Axis projection deliberately reads current selected motion for its one body;
 ordinary component assignments retain their queued path. This adds no full-world

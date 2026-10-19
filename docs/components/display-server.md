@@ -76,6 +76,10 @@ On Wayland, `HasFeature(Ime)` and `HasFeature(NativeDialogFile)` currently ident
 
 `SetIcon` retains a copied default for current and future native windows, preserving each successful `WindowSetIcon` override. On Wayland, nonsquare images are rejected and `HasFeature(Icon)` becomes true only after a native icon request succeeds. The default is applied before a new child presents. Launcher icons remain external host configuration.
 
+## Capability query allocation
+
+The display captures its native video-driver name during construction and reuses that identity in HasFeature. Device presence, touch emulation, rendering attachment and discovered Wayland icon support are still queried from their current state. Each new main or child display context captures its own lifetime identity; no process-global capability result is cached. [The native physics window regression](physics-window-allocations.md) measures passive picking together with simulation, input, rendering and frame scheduling.
+
 ## Native controller ownership
 
 The display server owns SDL's gamepad subsystem and each opened gamepad/joystick handle for its own lifetime. It restores the previous SDL background-controller hint on close. Joystick and gamepad events share the ordered `ProcessEvents` pump; recognized devices use the standardized stream and raw joysticks use the joystick stream. Initial devices are registered before the first pump and announced there. Disconnect releases handles and the corresponding Input state; other devices remain active. `ForceProcessAndDropEvents` discards controller input while retaining connection changes. A failing connection subscriber is aggregated after other queued events.

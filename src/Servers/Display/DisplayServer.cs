@@ -63,7 +63,7 @@ public sealed partial class DisplayServer : ElectronObject
         _sdlWindowId = SDL.GetWindowID(window);
         if (_sdlWindowId == 0)
             throw SDLFailure("identify the main window");
-        var videoDriver = SDL.GetCurrentVideoDriver();
+        var videoDriver = _videoDriver = SDL.GetCurrentVideoDriver();
         _waylandWindowPosition = videoDriver == "wayland";
         _pixelWindowCoordinates = _waylandWindowPosition || OperatingSystem.IsAndroid() ||
             OperatingSystem.IsIOS() || OperatingSystem.IsTvOS() || OperatingSystem.IsBrowser();

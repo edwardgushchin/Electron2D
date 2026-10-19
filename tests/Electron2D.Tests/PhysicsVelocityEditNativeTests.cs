@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Electron2D;
 using static PhysicsDebugTests;
+using SDL = SDL3.SDL;
 
 internal static class PhysicsVelocityEditNativeTests
 {
@@ -31,6 +32,7 @@ internal static class PhysicsVelocityEditNativeTests
             ids[i] = body.GetRID(); poses[i] = body.Transform;
         }
         var times = new double[16384]; var frames = 0; long began = 0, previous = 0, allocated = 0;
+        ulong? warmStartTick = null;
         ulong startTick = 0, measuredTicks = 0; double elapsed = 0, waits = 0; long up = 0, down = 0, submits = 0;
         var finished = false; var vsync = DisplayServer.VSyncMode.Enabled;
         window.Ready += _ =>
@@ -38,6 +40,10 @@ internal static class PhysicsVelocityEditNativeTests
             DisplayServer.WindowSetVSyncMode(DisplayServer.VSyncMode.Disabled); vsync = DisplayServer.WindowGetVSyncMode();
             RenderingServer.SetDefaultClearColor(new(.12f, .09f, .14f));
             var tree = window.Tree!; var gpu = PhysicsServer.Service.GetSceneSpace(world.Space).GPUStore;
+            Check(window.PhysicsObjectPicking, "The native allocation interval retains physics pointer picking");
+            var windows = SDL.GetWindows(out var windowCount); Check(windowCount == 1, "One native allocation-test window");
+            var mouse = new SDL.Event { Motion = new SDL.MouseMotionEvent { Type = SDL.EventType.MouseMotion, WindowID = SDL.GetWindowID(windows![0]), X = 20, Y = 12 } };
+            Check(SDL.PushEvent(ref mouse), "Queue native motion to retain passive picking during measurement");
             tree.PhysicsFrameStarted += _ =>
             {
                 for (var i = 0; i < ids.Length; i++)
@@ -45,10 +51,17 @@ internal static class PhysicsVelocityEditNativeTests
             };
             RenderingServer.FramePostDraw += () =>
             {
-                if (tree.PhysicsFrameCount < 96) return;
+                if (warmStartTick is null)
+                {
+                    GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: false); GC.WaitForPendingFinalizers();
+                    GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: false); GC.WaitForPendingFinalizers();
+                    warmStartTick = tree.PhysicsFrameCount;
+                }
+                if (tree.PhysicsFrameCount - warmStartTick.Value < 96) return;
                 var now = Stopwatch.GetTimestamp();
                 if (began == 0)
                 {
+                    Check(window.Picking?.MouseKnown == true, "Passive picking is warm before the allocation interval");
                     began = previous = now; startTick = tree.PhysicsFrameCount; allocated = GC.GetAllocatedBytesForCurrentThread();
                     up = gpu?.UploadBytes ?? 0; down = gpu?.ReadbackBytes ?? 0; waits = gpu?.WaitMS ?? 0; submits = gpu?.SubmissionCount ?? 0;
                     return;
@@ -66,6 +79,7 @@ internal static class PhysicsVelocityEditNativeTests
             };
         };
         Check(Engine.Run(window) == 0 && finished && measuredTicks > 0, "Window physics/render sequence completed");
+        Check(allocated == 0, $"Warm window loop allocated {allocated} managed bytes across {measuredTicks} physics ticks ({backend})");
         Array.Sort(times, 0, frames);
         Console.WriteLine($"Component edits real window {backend}: 640x520 GPU renderer, vsync={vsync}, MaxFPS=0, 512 circle bodies, 256 pose/linear/angular edits per physics tick, requested 60 Hz; after 96 physics warmups, {elapsed:F3} s, {frames} frames, {measuredTicks} physics ticks; FPS={frames / elapsed:F2}, actual ticks/s={measuredTicks / elapsed:F2}, frame p50/p95/p99={times[frames / 2]:F4}/{times[(int)(frames * .95)]:F4}/{times[(int)(frames * .99)]:F4} ms; owner managed={allocated} B, GPU up/down={up}/{down} B, submissions={submits}, wait={waits:F3} ms.");
     }

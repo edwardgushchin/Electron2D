@@ -145,6 +145,8 @@ Last updated: 2026-10-19
 
 [World policy publication recovery](../components/physics-registered-adapter.md#failed-world-policy-publication) retains complete current profiles after partial selected errors, retries before numerical preparation and preserves skipped-interval and cleanup behavior.
 
+[Native window allocation verification](../components/physics-window-allocations.md) tracks the complete warm host interval, including passive picking, beyond the headless step checks.
+
 ## Scene role publication recovery
 
 [Configured role changes](../components/physics-registered-adapter.md#failed-scene-role-publication) retain committed descriptors through partial selected errors and repair the complete role before numerical use. Rotation locking preserves actual selected linear motion; direct server role publication retains its own surface policy. Precondition rejection remains separate from accepted authoring followed by a publication error.

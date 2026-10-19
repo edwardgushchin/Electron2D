@@ -18,7 +18,8 @@ public sealed partial class DisplayServer
     /// <returns><see langword="true"/> for an integrated capability advertised for the current native driver or device state.</returns>
     /// <remarks>
     /// A false result may mean that the platform offers a service that this engine has not integrated. Text clipboard
-    /// access is available while open. Mouse follows connected devices; touchscreen also follows mouse-to-touch emulation. Pointer warp, cursor
+    /// access is available while open. The native driver identity is retained for this display lifetime. Mouse follows connected devices;
+    /// touchscreen also follows mouse-to-touch emulation. Pointer warp, cursor
     /// shapes, content scale, native dialogs, primary selection, and input-method composition are advertised only on
     /// the native drivers listed in the feature reference. On Wayland, icon support becomes known after a successful native icon request;
     /// a false result before that request does not prove the compositor lacks the icon protocol. Other defined values and unknown numeric values return
