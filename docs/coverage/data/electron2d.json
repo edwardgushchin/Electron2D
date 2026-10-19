@@ -188476,6 +188476,79 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServer.ShapedTextGetLineBreaks(Electron2D.RID,System.Single,System.Int32,Electron2D.TextLineBreakFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetLineBreaks",
+    "signature": "public System.Int32[] ShapedTextGetLineBreaks(Electron2D.RID shaped, System.Single width, System.Int32 start = 0, Electron2D.TextLineBreakFlags breakFlags = Mandatory, WordBound)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "start",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "breakFlags",
+        "type": "Electron2D.TextLineBreakFlags",
+        "default": "Mandatory, WordBound"
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetLineBreaksAdv(Electron2D.RID,System.ReadOnlySpan\u003CSystem.Single\u003E,System.Int32,System.Boolean,Electron2D.TextLineBreakFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetLineBreaksAdv",
+    "signature": "public System.Int32[] ShapedTextGetLineBreaksAdv(Electron2D.RID shaped, System.ReadOnlySpan\u003CSystem.Single\u003E width, System.Int32 start = 0, System.Boolean once = true, Electron2D.TextLineBreakFlags breakFlags = Mandatory, WordBound)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
+        "default": null
+      },
+      {
+        "name": "start",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "once",
+        "type": "System.Boolean",
+        "default": "true"
+      },
+      {
+        "name": "breakFlags",
+        "type": "Electron2D.TextLineBreakFlags",
+        "default": "Mandatory, WordBound"
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServer.ShapedTextGetObjectRange(Electron2D.RID,Electron2D.TextObjectKey)",
     "kind": "method",
     "declaringType": "Electron2D.TextServer",
@@ -188559,6 +188632,25 @@
       }
     ],
     "returnType": "Electron2D.TextOrientation",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetParent(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetParent",
+    "signature": "public Electron2D.RID ShapedTextGetParent(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
     "value": null
   },
   {
@@ -189105,6 +189197,35 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextSubstr(Electron2D.RID,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextSubstr",
+    "signature": "public Electron2D.RID ShapedTextSubstr(Electron2D.RID shaped, System.Int32 start, System.Int32 length)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "start",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "length",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
     "value": null
   },
   {

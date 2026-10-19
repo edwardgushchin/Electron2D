@@ -133,7 +133,7 @@ internal sealed partial class TextLayout
     {
         if (IsBusy) throw new InvalidOperationException("Active text layout cannot release its content.");
         _richReadFonts.Clear(); _richReads.Clear(); _options = default; Key = default; _font = null!; _ellipsis = null; _count = 0; CharacterCount = 0; Size = default;
-        _glyphs.Clear(); _rawGlyphs.Clear(); _lineGlyphs.Clear(); _lines.Clear(); _runs.Clear(); _shaped.Clear();
+        _serverLogicalGlyphs.Clear(); _serverBreakClusters.Clear(); _glyphs.Clear(); _rawGlyphs.Clear(); _lineGlyphs.Clear(); _lines.Clear(); _runs.Clear(); _shaped.Clear();
         Array.Clear(_faces); Array.Clear(_richStyles); Array.Clear(_richObjects); _caretsReady = false;
     }
 }

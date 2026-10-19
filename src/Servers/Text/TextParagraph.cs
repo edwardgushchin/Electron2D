@@ -257,7 +257,7 @@ public sealed partial class TextParagraph : ElectronObject
         var capCross = Vertical ? _capSize.X : _capSize.Y;
         var key = new TextLayoutKey(string.Empty, 16, _width, _alignment, _maxLines, _breaks, _justification, _source.Direction, _source.Orientation, true);
         var options = new TextLayoutOptions(LineSpacing: _spacing, Overrun: (int)_overrun, Ellipsis: _ellipsis.Length == 0 ? "…" : _ellipsis,
-            ApplyAlignment: false, DropcapWidth: CapAdvance, DropcapHeight: capCross, ParagraphBuffers: true, CustomPunctuation: _punctuation);
+            ApplyAlignment: false, DropcapWidth: CapAdvance, DropcapHeight: capCross, ParagraphBuffers: true, CustomPunctuation: _punctuation, ServerBuffers: true);
         _source.BuildBuffer(_geometry, key, options with { Overrun = 0 }); _source.BuildBuffer(_display, key, options);
         RetireLines(); _lines.EnsureCapacity(_display.LineCount);
         for (var i = 0; i < _display.LineCount; i++) _lines.Add(TextBuffers.Register(this, i));

@@ -12,7 +12,7 @@ Last updated: 2026-10-19
 
 ## Description
 
-A retained implementation object discovered through TextServerManager. Each shaped buffer belongs to its creating thread. CreateShapedText/duplicate IDs are strongly retained until FreeRID; TextLine and TextParagraph IDs remain borrowed and cannot be freed here. Text, ordered Font lists and OpenType selectors are copied; caller fonts, keys and typed metadata remain borrowed. Prepared queries and drawing reuse storage; authoring and returned snapshots are cold. Width/size are ceiled display metrics; ascent/descent remain fractional. Object rectangles and drawing are baseline-relative. Active work rejects reentry and mutation. See the complete [buffer contract](../components/text-server.md) for source limits, paragraph line detachment, range/index units, readiness and remaining family dependencies.
+A retained implementation object discovered through TextServerManager. Each shaped buffer belongs to its creating thread. CreateShapedText/duplicate/substring IDs are strongly retained until FreeRID; TextLine and TextParagraph IDs remain borrowed and cannot be freed here. Text, ordered Font lists and OpenType selectors are copied; caller fonts, keys and typed metadata remain borrowed. Prepared queries and drawing reuse storage; authoring and returned snapshots are cold. Width/size are ceiled display metrics; ascent/descent remain fractional. Object rectangles and drawing are baseline-relative. Active work rejects reentry and mutation. See the complete [buffer contract](../components/text-server.md) for source limits, paragraph line detachment, range/index units, readiness and remaining family dependencies.
 
 ## Example
 
@@ -97,6 +97,52 @@ Caret results use [TextCaretInfo](TextCaretInfo.md); Unicode composite-character
 | `public System.Int32 ShapedTextPrevCharacterPos(Electron2D.RID shaped, System.Int32 position)` | Finds the composite-character boundary strictly before a position. |
 | `public System.Int32 ShapedTextPrevGraphemePos(Electron2D.RID shaped, System.Int32 position)` | Returns the start of the shaped cluster immediately before a scalar position. |
 | `public System.Int32[] ShapedTextGetCharacterBreaks(Electron2D.RID shaped)` | Returns composite-character end boundaries, including the buffer end. |
+
+## Wrapping and substrings
+
+The complete [wrapping/ownership contract](../components/text-server.md#line-wrapping-and-owned-substrings) specifies global scalar positions, whole native clusters, source versions and parent retirement.
+
+| Signature | Contract |
+| --- | --- |
+| `int[] ShapedTextGetLineBreaks(RID shaped, float width, int start = 0, TextLineBreakFlags breakFlags = TextLineBreakFlags.Mandatory \| TextLineBreakFlags.WordBound)` | Single-width line ranges. |
+| `int[] ShapedTextGetLineBreaksAdv(RID shaped, ReadOnlySpan<float> width, int start = 0, bool once = true, TextLineBreakFlags breakFlags = TextLineBreakFlags.Mandatory \| TextLineBreakFlags.WordBound)` | Successive-width ranges, optionally one cycle. |
+| `RID ShapedTextSubstr(RID shaped, int start, int length)` | Owned complete-cluster slice with retained source context. |
+| `RID ShapedTextGetParent(RID shaped)` | Original parent RID, possibly retired, or empty after detachment. |
+
+### ShapedTextGetLineBreaks
+
+Returns an independent alternating start/end array in global Unicode scalar units. Width is finite; nonpositive values disable width wrapping. Start is clamped. Undefined flags throw ArgumentOutOfRangeException. Empty/exhausted ranges return their own origin twice. Word, cluster, adaptive, mandatory and trimming policies follow the linked contract. The query prepares native shaping and may allocate its result/workspace.
+
+### ShapedTextGetLineBreaksAdv
+
+Accepts 1–4096 finite widths synchronously; invalid length throws ArgumentException and nonfinite entries throw ArgumentOutOfRangeException. With once=true it stops after the first width cycle or mandatory separator. Otherwise widths repeat and mandatory separators restart the column sequence. The same break flags apply as the single-width operation. Array/range units and owner-thread/error rules are identical.
+
+### ShapedTextSubstr
+
+Start/length identify a nonnegative range inside the original source; invalid or overflowing ranges throw ArgumentOutOfRangeException before creating an identity. A nested slice addresses its original parent range. Release the returned identity with FreeRID. Whole shaping clusters, inline keys and typed metadata are preserved. Cutting a ligature/object does not create new glyphs. Shared source-version leases survive parent retirement while caller fonts remain borrowed. Parent mutation does not rewrite children. First successful child mutation detaches; failed/no-op mutation leaves the relationship intact.
+
+### ShapedTextGetParent
+
+Returns the original root RID, or empty for independent/duplicated/detached buffers. An unedited borrowed paragraph line reports the paragraph's full buffer. The identity may be retired after source disposal or reflow; Has can test it. Querying a retired child still fails under the usual live-buffer checks.
+
+Example with a live borrowed `Font font` and a recording `CanvasItem canvas`:
+
+```csharp
+var server = TextServerManager.GetPrimaryInterface();
+var source = server.CreateShapedText();
+server.ShapedTextAddString(source, "First column, then another line", [font], 24);
+try
+{
+    var ranges = server.ShapedTextGetLineBreaksAdv(source, [120, 180], once: false);
+    for (var i = 0; i < ranges.Length; i += 2)
+    {
+        var line = server.ShapedTextSubstr(source, ranges[i], ranges[i + 1] - ranges[i]);
+        try { server.ShapedTextDraw(line, canvas, new Vector2(0, 30 + i * 20)); }
+        finally { server.FreeRID(line); }
+    }
+}
+finally { server.FreeRID(source); }
+```
 
 ## Protected integration
 

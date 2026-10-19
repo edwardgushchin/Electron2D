@@ -85,6 +85,8 @@ public sealed partial class TextParagraph
     {
         _serverLines.Add(line, copy); copy.ServerChanged = ServerLineChanged; ServerLineChanged();
     }
+    internal RID ServerLineParent(int line, RID rid)
+    { ServerCheckLine(line, rid); return _serverLines.ContainsKey(line) ? default : _source.GetRID(); }
     internal bool ServerIsReady(int line, RID rid)
     {
         Check(); if (_dirty || !_source.ServerReady || !_dropcap.ServerReady || _source.ServerCurrentRevision != _sourceVersion || _dropcap.ServerCurrentRevision != _dropcapVersion) return false;

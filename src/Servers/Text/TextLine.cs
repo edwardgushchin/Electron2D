@@ -180,10 +180,12 @@ public sealed partial class TextLine : ElectronObject
     public TextLine Duplicate()
     {
         Check(); var copy = new TextLine { _source = _source, _count = _count, _alignment = _alignment, _direction = _direction, _orientation = _orientation, _ellipsis = _ellipsis, _flags = _flags, _overrun = _overrun, _width = _width, _preserveControl = _preserveControl, _preserveInvalid = _preserveInvalid, _tabs = (float[])_tabs.Clone(), _bidi = (TextBIDIRange[])_bidi.Clone() };
-        copy._text.Append(_text); copy._spans.AddRange(_spans); copy._objects.AddRange(_objects); copy._fonts.AddRange(_fonts); ServerCopyFonts(copy); copy.ServerOffset = ServerOffset; copy.ServerOuterScalars = ServerOuterScalars; copy.ServerPrefix = ServerPrefix; copy.ServerSuffix = ServerSuffix; return copy;
+        copy._text.Append(_text);
+        foreach (var span in _spans) copy._spans.Add(ReferenceEquals(span.Font, _neutral) ? span with { Font = copy._neutral } : span);
+        copy._objects.AddRange(_objects); foreach (var font in _fonts) copy._fonts.Add(ReferenceEquals(font, _neutral) ? copy._neutral : font); ServerCopyFonts(copy); copy.ServerOffset = ServerOffset; copy.ServerOuterScalars = ServerOuterScalars; copy.ServerPrefix = ServerPrefix; copy.ServerSuffix = ServerSuffix; return copy;
     }
     /// <summary>Removes content, objects and BIDI contexts while preserving RID, tabs and line policies.</summary>
-    public void Clear() { CheckMutation(); ServerOffset = ServerOuterScalars = 0; ServerPrefix = ServerSuffix = string.Empty; _text.Clear(); _spans.Clear(); ReleaseServerFonts(); _objects.Clear(); _fonts.Clear(); _bidi = []; _count = 0; _source = string.Empty; _styles = []; _inline = []; _full.ReleaseContent(); _display.ReleaseContent(); _dirty = _contentDirty = true; }
+    public void Clear() { CheckMutation(); ServerDetachSubstring(); ServerReleaseSnapshot(); ServerOffset = ServerOuterScalars = 0; ServerPrefix = ServerSuffix = default; _text.Clear(); _spans.Clear(); ReleaseServerFonts(); _objects.Clear(); _fonts.Clear(); _bidi = []; _count = 0; _source = string.Empty; _styles = []; _inline = []; _full.ReleaseContent(); _display.ReleaseContent(); _dirty = _contentDirty = true; }
     private void Ensure()
     {
         Check(); if (_busy) throw new InvalidOperationException("Text buffer cannot reenter active layout work."); _busy = true;
@@ -209,6 +211,7 @@ public sealed partial class TextLine : ElectronObject
     private bool FontsChanged() { if (_generations.Count != _fonts.Count) return true; for (var i = 0; i < _fonts.Count; i++) if (_fonts[i].GetContentGeneration() != _generations[i]) return true; return false; }
     private void Prepare()
     {
+        ServerReleaseSnapshot();
         if (_contentDirty)
         {
             _source = _text.ToString(); _styles = new TextLayoutStyleSpan[_spans.Count]; _inline = new TextLayoutInlineObject[_objects.Count];
@@ -218,8 +221,9 @@ public sealed partial class TextLine : ElectronObject
         var ellipsis = _ellipsis.EnumerateRunes(); var symbol = ellipsis.MoveNext() ? ellipsis.Current.ToString() : "…";
         var direction = _direction is TextDirection.Auto or TextDirection.Inherited && (ServerPrefix.Length != 0 || ServerSuffix.Length != 0) ? ServerSourceDirection() : _direction;
         var key = new TextLayoutKey(_source, 16, _width, _alignment, 1, TextLineBreakFlags.None, _flags, direction, _orientation);
-        var options = new TextLayoutOptions(TabStops: _tabs, Overrun: 0, Ellipsis: symbol, BIDIOverride: _bidi, ApplyAlignment: false, PreserveControl: _preserveControl, Styles: _styles, Objects: _inline, PreserveInvalid: _preserveInvalid, GlobalObjectMetrics: true);
+        var options = new TextLayoutOptions(TabStops: _tabs, Overrun: 0, Ellipsis: symbol, BIDIOverride: _bidi, ApplyAlignment: false, PreserveControl: _preserveControl, Styles: _styles, Objects: _inline, PreserveInvalid: _preserveInvalid, GlobalObjectMetrics: true, ServerBuffers: true);
         _full.Build(_neutral, key, options); _display.Build(_neutral, key, options with { Overrun = (int)_overrun });
+        if (ServerShapingSource is { } original) original.ServerCopyShaping(this);
         _generations.Clear(); foreach (var font in _fonts) _generations.Add(font.GetContentGeneration()); _dirty = _contentDirty = false; _revision++;
     }
     internal long PreparedRevision { get { Ensure(); return _revision; } }
@@ -272,7 +276,7 @@ public sealed partial class TextLine : ElectronObject
     /// <inheritdoc />
     protected override void ValidateDisposal() { CheckMutation(); base.ValidateDisposal(); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { TextBuffers.Remove(_rid); ReleaseServerFonts(); _neutral.Dispose(); _full = null!; _display = null!; _source = string.Empty; _text.Clear(); _text.Capacity = 0; _spans.Clear(); _objects.Clear(); _fonts.Clear(); _reads.Clear(); _styles = []; _inline = []; _tabs = []; _bidi = []; base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { TextBuffers.Remove(_rid); ServerDetachSubstring(); ServerReleaseSnapshot(); ReleaseServerFonts(); _neutral.Dispose(); _full = null!; _display = null!; _source = string.Empty; _text.Clear(); _text.Capacity = 0; _spans.Clear(); _objects.Clear(); _fonts.Clear(); _reads.Clear(); _styles = []; _inline = []; _tabs = []; _bidi = []; base.Dispose(disposing); }
 }
 
 internal static class TextBuffers

@@ -27,7 +27,7 @@ public abstract partial class TextServer : ElectronObject
     }
     /// <summary>Reports whether an identity resolves to a live shaped buffer on this interface.</summary><param name="rid">Buffer identity.</param><returns>False for empty, retired or foreign identities.</returns>
     public bool Has(RID rid) => TextBuffers.TryResolve(rid, out _);
-    /// <summary>Releases an owned buffer, preserving borrowed text-object lifetimes.</summary><param name="rid">Identity returned by CreateShapedText or ShapedTextDuplicate.</param>
+    /// <summary>Releases an owned buffer, preserving borrowed text-object lifetimes.</summary><param name="rid">Identity returned by buffer creation, duplication or substring operations.</param>
     /// <exception cref="InvalidOperationException">The identity is borrowed, unknown, off-owner or active.</exception>
     public void FreeRID(RID rid)
     {
@@ -58,7 +58,7 @@ public abstract partial class TextServer : ElectronObject
     public bool ShapedTextResizeObject(RID shaped, TextObjectKey key, Vector2 size, InlineAlignment inlineAlign = InlineAlignment.Center, float baseline = 0)
     { using var mutation = Mutation(shaped); var b = mutation.Buffer; var result = b.ResizeObject(key, size, inlineAlign, baseline); if (result) { b.ServerChanged?.Invoke(); mutation.Commit(); } return result; }
     /// <summary>Clears authored text, objects and BIDI overrides while retaining policies and identity.</summary><param name="shaped">Live buffer.</param>
-    public void ShapedTextClear(RID shaped) { using var mutation = Mutation(shaped); var b = mutation.Buffer; b.Clear(); b.ServerOffset = 0; b.ServerPrefix = b.ServerSuffix = string.Empty; b.ServerChanged?.Invoke(); mutation.Commit(); }
+    public void ShapedTextClear(RID shaped) { using var mutation = Mutation(shaped); var b = mutation.Buffer; b.Clear(); b.ServerOffset = 0; b.ServerPrefix = b.ServerSuffix = default; b.ServerChanged?.Invoke(); mutation.Commit(); }
     /// <summary>Prepares the real native layout and metrics.</summary><param name="shaped">Buffer identity.</param><returns>True on successful preparation; errors throw.</returns>
     public bool ShapedTextShape(RID shaped) { _ = View(shaped); return true; }
     /// <summary>Reports whether a prepared buffer remains current without forcing a rebuild.</summary><param name="shaped">Buffer identity.</param><returns>Whether the authored content and borrowed font generations match.</returns>
@@ -174,7 +174,7 @@ public abstract partial class TextServer : ElectronObject
     {
         internal TextLine Buffer { get; } = buffer;
         private bool _pending = parent is not null;
-        internal void Commit() { if (!_pending) return; parent!.ServerPublishLine(line, Buffer); _pending = false; }
+        internal void Commit() { Buffer.ServerDetachSubstring(); if (!_pending) return; parent!.ServerPublishLine(line, Buffer); _pending = false; }
         public void Dispose() { if (_pending) Buffer.Dispose(); }
     }
     private static BufferMutation Mutation(RID rid)

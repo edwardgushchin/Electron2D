@@ -5,8 +5,11 @@ public sealed partial class TextLine
     private readonly List<TextBufferFont> _serverFonts = [];
     internal Action? ServerChanged, ServerGuard;
     internal int ServerOffset, ServerOuterScalars;
-    internal string ServerPrefix = string.Empty, ServerSuffix = string.Empty;
-    internal string ServerFullText { get { Check(); return ServerPrefix + _text + ServerSuffix; } }
+    internal ReadOnlyMemory<char> ServerPrefix, ServerSuffix;
+    internal string ServerFullText
+    {
+        get { Check(); var text = _contentDirty ? _text.ToString() : _source; return ServerPrefix.IsEmpty && ServerSuffix.IsEmpty ? text : string.Concat(ServerPrefix.Span, text.AsSpan(), ServerSuffix.Span); }
+    }
     private TextDirection ServerSourceDirection()
     {
         var full = ServerFullText; var scalar = 0; var utf16 = 0; var from = 0; var to = full.Length;
@@ -65,12 +68,15 @@ public sealed partial class TextLine
         if (_serverFonts.Count == 0) return; var used = new HashSet<Font>(copy._fonts);
         foreach (var font in _serverFonts) if (used.Contains(font)) { font.Retain(); copy._serverFonts.Add(font); }
     }
-    internal TextLine ServerSlice(int from, int to)
+    internal TextLine ServerSlice(int from, int to, bool completeObjectsOnly = false)
     {
         Check(); if (from < 0 || to < from || to > _count) throw new ArgumentOutOfRangeException(nameof(from));
-        var copy = new TextLine { _direction = _direction, _orientation = _orientation, _preserveControl = _preserveControl, _preserveInvalid = _preserveInvalid, _overrun = TextOverrunBehavior.NoTrimming, ServerOffset = ServerOffset + from, ServerOuterScalars = ServerOuterScalars + from + _count - to, ServerPrefix = ServerPrefix + ServerSliceText(0, from), ServerSuffix = ServerSliceText(to, _count) + ServerSuffix };
+        var copy = new TextLine { _direction = _direction, _orientation = _orientation, _preserveControl = _preserveControl, _preserveInvalid = _preserveInvalid, _overrun = TextOverrunBehavior.NoTrimming, ServerOffset = ServerOffset + from, ServerOuterScalars = ServerOuterScalars + from + _count - to, ServerPrefix = default, ServerSuffix = default };
         try
         {
+            var text = ServerFullText; var prefixLength = ServerPrefix.Length;
+            var fromUTF16 = prefixLength + ServerUTF16(from); var toUTF16 = prefixLength + ServerUTF16(to);
+            copy.ServerPrefix = text.AsMemory(0, fromUTF16); copy.ServerSuffix = text.AsMemory(toUTF16);
             var spanIndex = 0; var objectIndex = 0; var at = from;
             while (at < to)
             {
@@ -79,12 +85,14 @@ public sealed partial class TextLine
                 if (objectIndex < _objects.Count && _objects[objectIndex].At <= at)
                 {
                     var item = _objects[objectIndex++]; var end = Math.Min(to, item.At + item.Length);
-                    copy.AddObject(item.Key, item.Size, item.Alignment, end - at, item.Baseline); at = end;
+                    if (completeObjectsOnly && (at != item.At || end != item.At + item.Length)) copy.AddText(ServerSliceText(at, end), copy._neutral, 16, string.Empty, null);
+                    else copy.AddObject(item.Key, item.Size, item.Alignment, end - at, item.Baseline);
+                    at = end;
                 }
                 else
                 {
                     var span = _spans[spanIndex++]; var end = Math.Min(to, span.At + span.Length);
-                    copy.AddText(ServerSliceText(at, end), span.Font, span.Size, span.Language, span.Metadata); at = end;
+                    copy.AddText(ServerSliceText(at, end), ReferenceEquals(span.Font, _neutral) ? copy._neutral : span.Font, span.Size, span.Language, span.Metadata); at = end;
                 }
             }
             ServerCopyFonts(copy); copy._tabs = (float[])_tabs.Clone();
@@ -93,11 +101,17 @@ public sealed partial class TextLine
         }
         catch { copy.Dispose(); throw; }
     }
+    private int ServerUTF16(int scalar)
+    {
+        if (!_contentDirty) return _full.ServerScalarUTF16(scalar);
+        var position = 0; var index = 0;
+        foreach (var rune in _text.ToString().EnumerateRunes()) { if (index++ == scalar) break; position += rune.Utf16SequenceLength; }
+        return position;
+    }
     internal string ServerSliceText(int from, int to)
     {
-        Check(); var text = _text.ToString(); var scalar = 0; var start = 0; var end = 0;
-        foreach (var rune in text.EnumerateRunes()) { if (scalar < from) start += rune.Utf16SequenceLength; if (scalar < to) end += rune.Utf16SequenceLength; scalar++; }
-        return text[start..end];
+        Check(); var text = _contentDirty ? _text.ToString() : _source;
+        return text[ServerUTF16(from)..ServerUTF16(to)];
     }
     private void ReleaseServerFonts() { foreach (var font in _serverFonts) font.Release(); _serverFonts.Clear(); }
     internal void ServerDraw(CanvasItem canvas, Vector2 baseline, float clipL, float clipR, int outline, Color color, float oversampling, bool outlinePass)
