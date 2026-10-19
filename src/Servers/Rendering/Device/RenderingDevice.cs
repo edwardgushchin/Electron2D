@@ -223,7 +223,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         var symbolic = sources.Any(code => new SpecializationModule(code, [], []).HasSpecialization);
         var program = CreateDeviceProgram(sources, name, [], symbolic); program.Sources = sources; return Add(program);
     }
-    private Entry CreateDeviceProgram(byte[][] sources, string name, Dictionary<uint, Specialization> constants, bool template = false)
+    private Entry CreateDeviceProgram(byte[][] sources, string name, Dictionary<uint, Specialization> constants, bool template = false, int[]? outputSlots = null)
     {
         var used = new HashSet<uint>(); var modules = sources.Select(code => template ? code.ToArray() : new SpecializationModule(code, constants, used).Freeze()).ToArray();
         if (!template && constants.Keys.Any(id => !used.Contains(id))) throw new ArgumentException("A specialization identifier is not declared by this shader.", nameof(constants));
@@ -236,6 +236,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         var interfaces = modules.Length == 2 ? ShaderCompiler.ValidateDeviceGraphics(modules[0], modules[1]) : default;
         var entry = new Entry { Kind = Kind.Shader, Stage = modules.Length == 1 ? ShaderStage.Compute : ShaderStage.Vertex, Layout = layout, Push = pushes.SelectMany(p => p).ToArray(), Name = name, Inputs = interfaces.Inputs ?? [], Outputs = interfaces.Outputs ?? [] };
         if (template) return entry;
+        if (outputSlots is not null) modules[1] = RemapFragmentOutputs(modules[1], outputSlots, entry.Outputs);
         try
         {
             if (modules.Length == 1) entry.Handle = new(ShaderCompiler.CreateComputePipeline(Device, modules[0]), h => SDL.ReleaseGPUComputePipeline(Device, h), _context.Handle);
@@ -246,9 +247,10 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     }
     private static void ReleaseProgram(Entry? program) { program?.FragmentHandle?.Dispose(); program?.Handle?.Dispose(); }
     private Entry PipelineProgram(Entry pipeline) { var source = Get(pipeline.Shader, Kind.Shader); return pipeline.Variant ?? source; }
-    private Entry? PipelineVariant(Entry source, ReadOnlySpan<RDPipelineSpecializationConstant> constants)
+    private Entry? PipelineVariant(Entry source, ReadOnlySpan<RDPipelineSpecializationConstant> constants, int[]? outputSlots = null)
     {
-        var values = CaptureSpecialization(constants); return values.Count == 0 && source.Handle is not null ? null : CreateDeviceProgram(source.Sources, source.Name, values);
+        if (outputSlots is not null && !outputSlots.Where((slot, index) => slot != index).Any()) outputSlots = null;
+        var values = CaptureSpecialization(constants); return values.Count == 0 && source.Handle is not null && outputSlots is null ? null : CreateDeviceProgram(source.Sources, source.Name, values, outputSlots: outputSlots);
     }
     /// <summary>Creates an executable compute pipeline with copied typed specialization values.</summary>
     /// <param name="shader">A live compute shader on this device.</param>

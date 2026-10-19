@@ -5,7 +5,7 @@ namespace Electron2D;
 public sealed unsafe partial class RenderingDevice
 {
     private sealed record FramebufferPassLayout(DataFormat[] Formats, TextureUsageBits[] Usage, TextureSamples[] AttachmentSamples,
-        int[] Colors, int DepthIndex, int[] Resolves, TextureSamples Samples, int[] Inputs, int[] Preserves);
+        int[] Colors, int[] ColorSlots, int DepthIndex, int[] Resolves, TextureSamples Samples, int[] Inputs, int[] Preserves);
     private sealed record FramebufferLayout(FramebufferPassLayout[] Passes);
     private FramebufferLayout FramebufferLayouts(int format) => _framebufferFormats.TryGetValue(format, out var layout) ? layout : throw new ArgumentException("Unknown framebuffer format.", nameof(format));
     private sealed record Framebuffer(RID[] Textures, int Format, Vector2i Size)
@@ -52,9 +52,12 @@ public sealed unsafe partial class RenderingDevice
             if (resolves.Length == 0) { resolves = new int[colors.Length]; Array.Fill(resolves, RDFramebufferPass.AttachmentUnused); }
         }
         if (colors.Length > 8 || resolves.Length != colors.Length || colors.Length == 0 && depth == -1) throw new ArgumentException("Provide one or more render targets and a resolve slot per color target.");
-        var used = new HashSet<int>(); var rasterSamples = samples[colors.Length > 0 ? Index(colors[0], formats.Length) : Index(depth, formats.Length)];
+        var slots = Enumerable.Range(0, colors.Length).Where(i => colors[i] != RDFramebufferPass.AttachmentUnused).ToArray();
+        if (slots.Length == 0 && depth == -1) throw new ArgumentException("Provide an active color or depth/stencil target.");
+        var used = new HashSet<int>(); var rasterSamples = samples[slots.Length > 0 ? Index(colors[slots[0]], formats.Length) : Index(depth, formats.Length)];
         foreach (var color in colors)
         {
+            if (color == RDFramebufferPass.AttachmentUnused) continue;
             Index(color, formats.Length);
             if (!used.Add(color) || DepthFormat(formats[color]) || (usage[color] & TextureUsageBits.ColorAttachment) == 0 || samples[color] != rasterSamples) throw new ArgumentException("Color targets require distinct matching raster sample counts and color usage.");
         }
@@ -66,6 +69,7 @@ public sealed unsafe partial class RenderingDevice
         for (var i = 0; i < resolves.Length; i++)
         {
             var resolve = resolves[i]; if (resolve == -1) continue; Index(resolve, formats.Length);
+            if (colors[i] == RDFramebufferPass.AttachmentUnused) throw new ArgumentException("An unused color slot cannot resolve.");
             if (!used.Add(resolve) || rasterSamples == TextureSamples.Samples1 || samples[resolve] != TextureSamples.Samples1 || formats[resolve] != formats[colors[i]] || (usage[resolve] & TextureUsageBits.ColorAttachment) == 0) throw new ArgumentException("Resolve slots require distinct matching single-sample color targets.");
         }
         var inputs = pass?.InputAttachments ?? []; var preserves = pass?.PreserveAttachments ?? [];
@@ -77,7 +81,7 @@ public sealed unsafe partial class RenderingDevice
                 throw new ArgumentException("Inputs require distinct color input attachments, separate from the pass outputs.");
         }
         foreach (var preserve in preserves) Index(preserve, formats.Length);
-        return new(formats, usage, samples, colors, depth, resolves, rasterSamples, inputs, preserves);
+        return new(formats, usage, samples, colors, slots, depth, resolves, rasterSamples, inputs, preserves);
     }
     private static int Index(int index, int length) => index >= 0 && index < length ? index : throw new ArgumentOutOfRangeException(nameof(index));
     private static FramebufferLayout AttachmentLayouts(DataFormat[] formats, TextureUsageBits[] usage, TextureSamples[] samples, ReadOnlySpan<RDFramebufferPass> descriptions)
@@ -88,7 +92,7 @@ public sealed unsafe partial class RenderingDevice
             RDFramebufferPass? description = null;
             if (!descriptions.IsEmpty) { description = descriptions[i]; ArgumentNullException.ThrowIfNull(description); }
             var pass = passes[i] = AttachmentLayout(formats, usage, samples, description);
-            foreach (var color in pass.Colors) used.Add(color);
+            foreach (var color in pass.Colors) if (color >= 0) used.Add(color);
             if (pass.DepthIndex >= 0) used.Add(pass.DepthIndex);
             foreach (var resolve in pass.Resolves) if (resolve >= 0) used.Add(resolve);
             foreach (var input in pass.Inputs) if (input >= 0) used.Add(input);
@@ -147,7 +151,7 @@ public sealed unsafe partial class RenderingDevice
         {
             for (var i = 0; i < pass.Resolves.Length; i++)
                 if (pass.Resolves[i] >= 0) ResolvePair(Get(textures[pass.Colors[i]], Kind.Texture).Texture!, Get(textures[pass.Resolves[i]], Kind.Texture).Texture!);
-            foreach (var color in pass.Colors) if (Get(textures[color], Kind.Texture).Texture!.Resolve) throw new ArgumentException("Marked resolve images must occupy resolve slots, not render slots.", nameof(textures));
+            foreach (var color in pass.Colors) if (color >= 0 && Get(textures[color], Kind.Texture).Texture!.Resolve) throw new ArgumentException("Marked resolve images must occupy resolve slots, not render slots.", nameof(textures));
         }
         if (validateWithFormat == -1) _framebufferFormats.Add(format, layout);
         return Add(new Entry { Kind = Kind.Framebuffer, Target = new(textures.ToArray(), format, size) });
@@ -155,7 +159,8 @@ public sealed unsafe partial class RenderingDevice
     private static bool SameRasterLayout(FramebufferPassLayout a, FramebufferPassLayout b)
     {
         if (a.Samples != b.Samples || a.Colors.Length != b.Colors.Length || (a.DepthIndex < 0) != (b.DepthIndex < 0)) return false;
-        for (var i = 0; i < a.Colors.Length; i++) if (a.Formats[a.Colors[i]] != b.Formats[b.Colors[i]]) return false;
+        for (var i = 0; i < a.Colors.Length; i++)
+            if (a.Colors[i] < 0 ? b.Colors[i] >= 0 : b.Colors[i] < 0 || a.Formats[a.Colors[i]] != b.Formats[b.Colors[i]]) return false;
         return a.DepthIndex < 0 || a.Formats[a.DepthIndex] == b.Formats[b.DepthIndex];
     }
     /// <summary>Reads the framebuffer's matching layout identity.</summary>

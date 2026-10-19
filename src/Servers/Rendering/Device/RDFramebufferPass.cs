@@ -5,11 +5,11 @@ public sealed class RDFramebufferPass : ElectronObject
 {
     /// <summary>Creates the default configuration.</summary>
     public RDFramebufferPass() { }
-    /// <summary>Marks an unused depth attachment, resolve slot or input slot.</summary>
+    /// <summary>Marks an unused color, depth, resolve or input slot.</summary>
     public const int AttachmentUnused = -1;
     private int[] _colorAttachments = [];
-    /// <summary>Selects color attachment indices in shader output order.</summary>
-    /// <value>Initially []; copied when the device consumes this configuration.</value>
+    /// <summary>Selects color attachment indices in logical shader output order; AttachmentUnused skips a location.</summary>
+    /// <value>Initially []; reads and writes copy. Active slots must exactly match fragment outputs; at least one color or depth target is required.</value>
     public int[] ColorAttachments { get { ThrowIfDisposed(); return _colorAttachments.ToArray(); } set { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(value); _colorAttachments = value.ToArray(); } }
     private int _depthAttachment = -1;
     /// <summary>Selects the depth/stencil attachment index, or AttachmentUnused.</summary>

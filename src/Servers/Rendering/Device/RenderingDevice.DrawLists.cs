@@ -74,7 +74,7 @@ public sealed unsafe partial class RenderingDevice
     private bool ActiveAttachment(Entry entry)
     {
         var layout = DrawPassLayout; var target = _drawTarget!;
-        foreach (var index in layout.Colors) if (Get(target.Textures[index], Kind.Texture).NativeHandle == entry.NativeHandle) return true;
+        foreach (var index in layout.Colors) if (index >= 0 && Get(target.Textures[index], Kind.Texture).NativeHandle == entry.NativeHandle) return true;
         if (layout.DepthIndex >= 0 && Get(target.Textures[layout.DepthIndex], Kind.Texture).NativeHandle == entry.NativeHandle) return true;
         foreach (var index in layout.Resolves) if (index >= 0 && Get(target.Textures[index], Kind.Texture).NativeHandle == entry.NativeHandle) return true;
         return false;
@@ -117,10 +117,10 @@ public sealed unsafe partial class RenderingDevice
         var target = _drawTarget!; var layout = DrawPassLayout; var depthIndex = layout.DepthIndex;
         CaptureInputAttachments(layout);
         var colors = stackalloc SDL.GPUColorTargetInfo[8];
-        for (var i = 0; i < layout.Colors.Length; i++)
+        for (var native = 0; native < layout.ColorSlots.Length; native++)
         {
-            var index = layout.Colors[i]; var keep = KeepAttachment(index);
-            colors[i] = new()
+            var i = layout.ColorSlots[native]; var index = layout.Colors[i]; var keep = KeepAttachment(index);
+            colors[native] = new()
             {
                 Texture = Get(target.Textures[index], Kind.Texture).NativeHandle,
                 LoadOp = !target.Touched[index] && AttachmentIgnored(index) ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load,
@@ -137,10 +137,10 @@ public sealed unsafe partial class RenderingDevice
             depth.StencilLoadOp = !target.Touched[depthIndex] && (_drawFlags & DrawFlags.IgnoreStencil) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load;
             depth.StoreOp = keep ? SDL.GPUStoreOp.Store : SDL.GPUStoreOp.DontCare; depth.StencilStoreOp = depth.StoreOp;
         }
-        var pass = SDL.BeginGPURenderPass(Commands(), (nint)colors, (uint)layout.Colors.Length, depthIndex >= 0 ? (nint)(&depth) : 0);
+        var pass = SDL.BeginGPURenderPass(Commands(), (nint)colors, (uint)layout.ColorSlots.Length, depthIndex >= 0 ? (nint)(&depth) : 0);
         if (pass == 0) throw GPUPhysicsDevice.Failure("begin device graphics pass");
         _drawPass = pass; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear(); ResetPush();
-        foreach (var index in layout.Colors) target.Touched[index] = true;
+        foreach (var index in layout.Colors) if (index >= 0) target.Touched[index] = true;
         if (depthIndex >= 0) target.Touched[depthIndex] = true;
         foreach (var index in layout.Resolves) if (index >= 0) target.Touched[index] = true;
         foreach (var index in layout.Inputs) if (index >= 0) target.Touched[index] = true;

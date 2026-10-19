@@ -1,6 +1,6 @@
 # RDPipelineColorBlendState
 
-Last updated: 2026-10-11
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDPipelineColorBlendState`. **Source:** [RDPipelineColorBlendState.cs](../../src/Servers/Rendering/Device/RDPipelineColorBlendState.cs). **Component:** [Local device](../components/local-compute.md).
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-11
 
 ## Description
 
-A caller-owned container copied by RenderPipelineCreate. Attachments getters/setters copy the array while borrowing its elements until creation. The pipeline copies every attachment value and finite initial BlendConstant. One attachment is required per framebuffer color target; integer targets reject enabled blending. Logic operations require native backend support and have no inert public fields.
+A caller-owned container copied by RenderPipelineCreate. Attachments getters/setters copy the array while borrowing its elements until creation. The pipeline copies active attachment values and finite initial BlendConstant. Attachments cover logical color slots, including unused holes; unused slots and extra trailing entries are ignored. Active integer targets reject enabled blending. Logic operations require native backend support and have no inert public fields.
 
 ## Example
 
@@ -60,7 +60,7 @@ public Electron2D.RDPipelineColorBlendStateAttachment[] Attachments { get; set; 
 
 Gets or replaces the attachment list, copying its array and borrowing its elements.
 
-One entry per framebuffer color target when creating a pipeline.
+At least one entry per logical framebuffer color slot. Unused slots and extra trailing entries are ignored.
 
 
 <a id="member-5587000f8796"></a>

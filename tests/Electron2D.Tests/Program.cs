@@ -12,6 +12,7 @@ using EngineTimer = Electron2D.Timer;
 if (args.Length == 2 && args[0] == "--window-chrome-archive") { try { WindowDecorationTests.RunArchive(args[1]); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CHROME") == "managed") { try { WindowDecorationTests.RunManaged(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CHROME") is { } windowChromeProfile) { try { WindowDecorationTests.RunNative(windowChromeProfile); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SPARSE") is { } sparseProfile) { try { if (sparseProfile == "canvas") RenderingDeviceSparseTests.Canvas(); else RenderingDeviceSparseTests.Run(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_PASSES") is { } devicePassProfile)
 {
     try { if (devicePassProfile == "canvas") RenderingDevicePassTests.Canvas(); else RenderingDevicePassTests.Run(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; }

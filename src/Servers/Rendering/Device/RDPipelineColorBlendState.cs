@@ -8,7 +8,7 @@ public sealed class RDPipelineColorBlendState : ElectronObject
     /// <summary>Creates an empty attachment configuration.</summary>
     public RDPipelineColorBlendState() { }
     /// <summary>Gets or replaces the attachment list, copying its array and borrowing its elements.</summary>
-    /// <value>One entry per framebuffer color target when creating a pipeline.</value>
+    /// <value>At least one entry per logical framebuffer color slot. Unused slots and extra trailing entries are ignored.</value>
     public RDPipelineColorBlendStateAttachment[] Attachments
     {
         get { ThrowIfDisposed(); return (RDPipelineColorBlendStateAttachment[])_attachments.Clone(); }

@@ -2236,13 +2236,13 @@
       "godot": "class:RDPipelineColorBlendState",
       "electron2d": "T:Electron2D.RDPipelineColorBlendState",
       "state": "Partial",
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Logic operations require native per-target logic-operation support."
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Logic operations require native per-target logic-operation support. Blending addresses logical color slots; unused slots and extra trailing entries are ignored. Sparse native output maps execute in RenderingDeviceSparseTests."
     },
     {
       "godot": "RDPipelineColorBlendState::property:attachments",
       "electron2d": "property:Electron2D.RDPipelineColorBlendState.Attachments()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Blending addresses logical color slots; unused slots and extra trailing entries are ignored. Sparse native output maps execute in RenderingDeviceSparseTests."
     },
     {
       "godot": "RDPipelineColorBlendState::property:blend_constant",
@@ -2956,7 +2956,7 @@
       "godot": "RenderingDevice::method:framebuffer_format_create(RDAttachmentFormat[]:,int:)",
       "electron2d": "method:Electron2D.RenderingDevice.FramebufferFormatCreate(System.ReadOnlySpan<Electron2D.RDAttachmentFormat>)",
       "state": "Partial",
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Multisample/depth/stencil/multiview layouts require allocation/resolve and native view-index attachment integration."
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Color/depth/stencil/MSAA and sparse color layouts execute; multiview requires layered attachment views and native view-index integration."
     },
     {
       "godot": "RenderingDevice::method:framebuffer_format_get_texture_samples(int:,int:)",
@@ -3376,8 +3376,8 @@
     {
       "godot": "class:RDFramebufferPass",
       "electron2d": "T:Electron2D.RDFramebufferPass",
-      "state": "Partial",
-      "reason": "ADR 0028: copied ordered framebuffer passes execute on SDL_GPU with native color/depth/resolve output, readonly fragment input loads, per-pass pipeline selection and preservation across inactive intermediate passes. GLSL/HLSL float and 2DMS input pixels, independent native resolve edge oracles, signed/unsigned exact bits, sparse input indices, logical sets, copied layout/state/lifetime errors, retained canvas output and 32 prepared zero-managed-owner-byte cycles are checked on Linux/Vulkan. Input+Sampling uses a retained private GPU snapshot; input-only images bind directly. Foreign platforms, native/driver allocation and throughput remain unverified. Dense color outputs execute; AttachmentUnused color output holes require native target/output-location remapping."
+      "state": "Implemented",
+      "reason": "ADR 0028: copied framebuffer color slots retain AttachmentUnused holes in logical shader output order. Pipelines require the exact active shader output mask and matching scalar formats; native target/blend arrays and private SPIR-V output locations compact active slots, including grouped location decorations and specialization. Original modules remain unchanged. Leading/middle/trailing holes, float/signed/unsigned pixels, eight-slot boundaries, ignored unused/trailing blend entries, copied metadata, MSAA resolve/input/preservation, depth-only passes, owner/lifetime errors and retained canvas execute in RenderingDeviceSparseTests. GLSL/HLSL prepared active/unchanged draw/readback intervals require zero managed owner bytes. Foreign platforms, native/driver allocation and throughput remain unverified."
     },
     {
       "godot": "class:RDPipelineMultisampleState",
@@ -3413,13 +3413,13 @@
       "godot": "RenderingDevice::method:framebuffer_create_multipass(RID[]:,RDFramebufferPass[]:,int:,int:)",
       "electron2d": "method:Electron2D.RenderingDevice.FramebufferCreateMultipass(System.ReadOnlySpan<Electron2D.RID>,System.ReadOnlySpan<Electron2D.RDFramebufferPass>,System.Int32)",
       "state": "Partial",
-      "reason": "ADR 0028: copied ordered framebuffer passes execute on SDL_GPU with native color/depth/resolve output, readonly fragment input loads, per-pass pipeline selection and preservation across inactive intermediate passes. GLSL/HLSL float and 2DMS input pixels, independent native resolve edge oracles, signed/unsigned exact bits, sparse input indices, logical sets, copied layout/state/lifetime errors, retained canvas output and 32 prepared zero-managed-owner-byte cycles are checked on Linux/Vulkan. Input+Sampling uses a retained private GPU snapshot; input-only images bind directly. Foreign platforms, native/driver allocation and throughput remain unverified. Nonunit view counts require the native multiview adapter; sparse color output holes require native target/output-location remapping."
+      "reason": "ADR 0028: copied ordered framebuffer passes execute on SDL_GPU with native color/depth/resolve output, readonly fragment input loads, per-pass pipeline selection and preservation across inactive intermediate passes. GLSL/HLSL float and 2DMS input pixels, independent native resolve edge oracles, signed/unsigned exact bits, sparse input indices, logical sets, copied layout/state/lifetime errors, retained canvas output and 32 prepared zero-managed-owner-byte cycles are checked on Linux/Vulkan. Input+Sampling uses a retained private GPU snapshot; input-only images bind directly. Foreign platforms, native/driver allocation and throughput remain unverified. Sparse logical color slots execute through native output remapping; nonunit view counts still require the native multiview adapter."
     },
     {
       "godot": "RenderingDevice::method:framebuffer_format_create_multipass(RDAttachmentFormat[]:,RDFramebufferPass[]:,int:)",
       "electron2d": "method:Electron2D.RenderingDevice.FramebufferFormatCreateMultipass(System.ReadOnlySpan<Electron2D.RDAttachmentFormat>,System.ReadOnlySpan<Electron2D.RDFramebufferPass>)",
       "state": "Partial",
-      "reason": "ADR 0028: copied ordered framebuffer passes execute on SDL_GPU with native color/depth/resolve output, readonly fragment input loads, per-pass pipeline selection and preservation across inactive intermediate passes. GLSL/HLSL float and 2DMS input pixels, independent native resolve edge oracles, signed/unsigned exact bits, sparse input indices, logical sets, copied layout/state/lifetime errors, retained canvas output and 32 prepared zero-managed-owner-byte cycles are checked on Linux/Vulkan. Input+Sampling uses a retained private GPU snapshot; input-only images bind directly. Foreign platforms, native/driver allocation and throughput remain unverified. Nonunit view counts require the native multiview adapter; sparse color output holes require native target/output-location remapping."
+      "reason": "ADR 0028: copied ordered framebuffer passes execute on SDL_GPU with native color/depth/resolve output, readonly fragment input loads, per-pass pipeline selection and preservation across inactive intermediate passes. GLSL/HLSL float and 2DMS input pixels, independent native resolve edge oracles, signed/unsigned exact bits, sparse input indices, logical sets, copied layout/state/lifetime errors, retained canvas output and 32 prepared zero-managed-owner-byte cycles are checked on Linux/Vulkan. Input+Sampling uses a retained private GPU snapshot; input-only images bind directly. Foreign platforms, native/driver allocation and throughput remain unverified. Sparse logical color slots execute through native output remapping; nonunit view counts still require the native multiview adapter."
     },
     {
       "godot": "RenderingDevice::method:texture_resolve_multisample(RID:,RID:)",
@@ -3430,8 +3430,8 @@
     {
       "godot": "RDFramebufferPass::property:color_attachments",
       "electron2d": "property:Electron2D.RDFramebufferPass.ColorAttachments()",
-      "state": "Partial",
-      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Unused holes in color output locations require a native sparse-target adapter; the current color list is dense."
+      "state": "Implemented",
+      "reason": "ADR 0028: copied framebuffer color slots retain AttachmentUnused holes in logical shader output order. Pipelines require the exact active shader output mask and matching scalar formats; native target/blend arrays and private SPIR-V output locations compact active slots, including grouped location decorations and specialization. Original modules remain unchanged. Leading/middle/trailing holes, float/signed/unsigned pixels, eight-slot boundaries, ignored unused/trailing blend entries, copied metadata, MSAA resolve/input/preservation, depth-only passes, owner/lifetime errors and retained canvas execute in RenderingDeviceSparseTests. GLSL/HLSL prepared active/unchanged draw/readback intervals require zero managed owner bytes. Foreign platforms, native/driver allocation and throughput remain unverified."
     },
     {
       "godot": "RDFramebufferPass::property:depth_attachment",
@@ -4745,11 +4745,11 @@
       "reason": "ADR 0028: native color/depth/stencil clear/load/store, color-slot ordering and viewport/scissor execute with default depth one and stencil zero. Typed clear-depth/stencil arguments follow the established optional region argument. GPU crash breadcrumb recording requires a backend diagnostics adapter; no inert breadcrumb argument is exposed. MSAA targets require the separate resolve attachment lifetime slice. Linux/Vulkan GLSL/HLSL pixels and prepared zero managed bytes are checked; foreign backends/native allocations remain unverified."
     },
     {
-      "state": "Partial",
+      "state": "Implemented",
       "godot": [
         "class:RDFramebufferPass"
       ],
-      "reason": "ADR 0028: copied ordered framebuffer passes execute on SDL_GPU with native color/depth/resolve output, readonly fragment input loads, per-pass pipeline selection and preservation across inactive intermediate passes. GLSL/HLSL float and 2DMS input pixels, independent native resolve edge oracles, signed/unsigned exact bits, sparse input indices, logical sets, copied layout/state/lifetime errors, retained canvas output and 32 prepared zero-managed-owner-byte cycles are checked on Linux/Vulkan. Input+Sampling uses a retained private GPU snapshot; input-only images bind directly. Foreign platforms, native/driver allocation and throughput remain unverified. Dense color outputs execute; AttachmentUnused color output holes require native target/output-location remapping."
+      "reason": "ADR 0028: copied framebuffer color slots retain AttachmentUnused holes in logical shader output order. Pipelines require the exact active shader output mask and matching scalar formats; native target/blend arrays and private SPIR-V output locations compact active slots, including grouped location decorations and specialization. Original modules remain unchanged. Leading/middle/trailing holes, float/signed/unsigned pixels, eight-slot boundaries, ignored unused/trailing blend entries, copied metadata, MSAA resolve/input/preservation, depth-only passes, owner/lifetime errors and retained canvas execute in RenderingDeviceSparseTests. GLSL/HLSL prepared active/unchanged draw/readback intervals require zero managed owner bytes. Foreign platforms, native/driver allocation and throughput remain unverified."
     },
     {
       "state": "Partial",
@@ -4787,7 +4787,7 @@
         "RenderingDevice::method:framebuffer_create_multipass(RID[]:,RDFramebufferPass[]:,int:,int:)",
         "RenderingDevice::method:framebuffer_format_create_multipass(RDAttachmentFormat[]:,RDFramebufferPass[]:,int:)"
       ],
-      "reason": "ADR 0028: copied ordered framebuffer passes execute on SDL_GPU with native color/depth/resolve output, readonly fragment input loads, per-pass pipeline selection and preservation across inactive intermediate passes. GLSL/HLSL float and 2DMS input pixels, independent native resolve edge oracles, signed/unsigned exact bits, sparse input indices, logical sets, copied layout/state/lifetime errors, retained canvas output and 32 prepared zero-managed-owner-byte cycles are checked on Linux/Vulkan. Input+Sampling uses a retained private GPU snapshot; input-only images bind directly. Foreign platforms, native/driver allocation and throughput remain unverified. Nonunit view counts require the native multiview adapter; sparse color output holes require native target/output-location remapping."
+      "reason": "ADR 0028: copied ordered framebuffer passes execute on SDL_GPU with native color/depth/resolve output, readonly fragment input loads, per-pass pipeline selection and preservation across inactive intermediate passes. GLSL/HLSL float and 2DMS input pixels, independent native resolve edge oracles, signed/unsigned exact bits, sparse input indices, logical sets, copied layout/state/lifetime errors, retained canvas output and 32 prepared zero-managed-owner-byte cycles are checked on Linux/Vulkan. Input+Sampling uses a retained private GPU snapshot; input-only images bind directly. Foreign platforms, native/driver allocation and throughput remain unverified. Sparse logical color slots execute through native output remapping; nonunit view counts still require the native multiview adapter."
     },
     {
       "state": "Implemented",
@@ -4797,11 +4797,11 @@
       "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Typed exceptions replace Error results; source CanCopyFrom and marked destination CanCopyTo are required. Native depth resolve is a distinct unavailable aspect adapter."
     },
     {
-      "state": "Partial",
+      "state": "Implemented",
       "godot": [
         "RDFramebufferPass::property:color_attachments"
       ],
-      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Unused holes in color output locations require a native sparse-target adapter; the current color list is dense."
+      "reason": "ADR 0028: copied framebuffer color slots retain AttachmentUnused holes in logical shader output order. Pipelines require the exact active shader output mask and matching scalar formats; native target/blend arrays and private SPIR-V output locations compact active slots, including grouped location decorations and specialization. Original modules remain unchanged. Leading/middle/trailing holes, float/signed/unsigned pixels, eight-slot boundaries, ignored unused/trailing blend entries, copied metadata, MSAA resolve/input/preservation, depth-only passes, owner/lifetime errors and retained canvas execute in RenderingDeviceSparseTests. GLSL/HLSL prepared active/unchanged draw/readback intervals require zero managed owner bytes. Foreign platforms, native/driver allocation and throughput remain unverified."
     },
     {
       "state": "Partial",

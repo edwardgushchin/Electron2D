@@ -1271,3 +1271,9 @@ public System.Int64 DrawListSwitchToNextPass()
 ```
 
 Advances the active framebuffer to its next ordered pass, returning the retained list identity. Pipeline, resource, vertex/index and push bindings reset; viewport and scissor return to the original region. No active list or advancing past the final pass throws InvalidOperationException. See [ordered framebuffer passes](../components/local-compute.md#ordered-framebuffer-passes-and-inputs) for copied layouts, GPU input snapshots, preservation, clear ordering and verified limits.
+
+## Sparse framebuffer outputs
+
+Color slots retain logical shader output indices and may contain leading, intermediate or trailing AttachmentUnused holes. Fragment outputs must exactly match the active slot mask and scalar formats. Blend arrays cover every logical slot; unused entries and extra trailing entries are ignored. The device compacts native target/blend arrays and remaps a private copy of fragment SPIR-V output locations when creating a pipeline, preserving input varyings, grouped location decorations, descriptors and specialization. Original module descriptions remain unchanged. No dummy color textures or runtime source compiler are needed. Resolve slots remain logical; a resolve beside an unused color rejects. Sample count comes from the first active color or the depth target. All-unused colors work with a depth target; attachmentless passes retain their separate prerequisite.
+
+See [native verification](../components/local-compute.md#sparse-framebuffer-outputs) for pixels, state and allocation evidence.

@@ -670,7 +670,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RDAccelerationStructureGeometry](classes/RDAccelerationStructureGeometry.md) | RefCounted | Excluded | 9 |
 | [RDAccelerationStructureInstance](classes/RDAccelerationStructureInstance.md) | RefCounted | Excluded | 6 |
 | [RDAttachmentFormat](classes/RDAttachmentFormat.md) | RefCounted | Partial | 3 |
-| [RDFramebufferPass](classes/RDFramebufferPass.md) | RefCounted | Partial | 6 |
+| [RDFramebufferPass](classes/RDFramebufferPass.md) | RefCounted | Implemented | 6 |
 | [RDHitGroup](classes/RDHitGroup.md) | RefCounted | Excluded | 3 |
 | [RDPipelineColorBlendState](classes/RDPipelineColorBlendState.md) | RefCounted | Partial | 4 |
 | [RDPipelineColorBlendStateAttachment](classes/RDPipelineColorBlendStateAttachment.md) | RefCounted | Implemented | 12 |

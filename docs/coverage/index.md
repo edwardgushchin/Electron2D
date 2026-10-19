@@ -8,6 +8,8 @@
 
 # API coverage register
 
+[Sparse framebuffer outputs](../components/local-compute.md#sparse-framebuffer-outputs) now execute logical unused output slots, exact shader masks and native target/SPIR-V location mapping. RDFramebufferPass and ColorAttachments become Implemented; typed MRT, specialization, grouped locations, MSAA/input/resolve and retained canvas consumers have native checks. Prepared changing/unchanged frames retain zero managed owner bytes; multiview, attachmentless graphics and foreign/native-allocation acceptance remain separate.
+
 [Embedded Window chrome](../components/popup-windows.md#embedded-decoration-theme-and-input) now consumes all thirteen Window theme items through focused/unfocused frames, retained shaped titles and outlines, real normal/pressed close textures, captured release/cancel and constrained outside resizing. Managed/fresh-scene and native X11/Wayland GPU/Compatibility checks execute; prepared captured motion and active rendered theme updates retain zero owner-thread managed bytes. Independent native children, OS titlebar policies and foreign/native-allocation acceptance remain separate.
 
 [Public property-list notifications](../components/object-lifecycle.md#public-property-list-notification) now preserve the external caller capability across inherited object roles. Both publisher/event rows become Implemented, with lifetime, blocking, grouped numerical-access and zero-allocation checks. The current physics ledger has 194 open declarations; earlier counts describe their individual slices.
