@@ -4,7 +4,7 @@ Cold world-query geometry now uses the [shared using-world borrow](../components
 
 The query/Area partials now share body-local unrounded polygon containment through PhysicsShapeBackend. Direct points, ordinary ray inside-start policy, directed shape-query origin filtering and Area audio no longer inherit GJK zero-distance slack outside an edge. [Public CPU/GPU checks](../components/physics-point-containment.md) preserve logical identity and warmed allocation bounds.
 
-Last updated: 2026-10-16
+Last updated: 2026-10-20
 
 **Declaration:** `internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend` · **Source:** [CPUPhysicsWorldBackend.cs](../../src/Servers/Physics/CPUPhysicsWorldBackend.cs) · **Component:** [Physics backends](../components/physics-backends.md)
 
@@ -157,3 +157,9 @@ Initial recovery/residual stopping still executes; ignored special displacement
 cannot manufacture a new sweep, and two concave resources cannot contact through
 private edge pieces. Shared public CPU/software-GPU/registered assertions cover
 logical slots, analytical boundaries, fractions and zero warmed full-frame bytes.
+
+
+[Special query displacement](../components/physics-queries.md#special-query-displacement)
+retains represented concave/boundary/ray precedence across all four direct shape
+operations, current initial contacts and finite boundary endpoints. CPU collinear
+circle/core contacts retain a unit normal and corresponding surface points.

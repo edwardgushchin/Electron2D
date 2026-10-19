@@ -1,6 +1,6 @@
 # PhysicsShapeQueryParameters
 
-Last updated: 2026-10-17
+Last updated: 2026-10-20
 
 **Inherits:** ElectronObject · **Source:** [PhysicsShapeQueryParameters.cs](../../src/Servers/Physics/PhysicsShapeQueryParameters.cs) · **Component:** [Physics queries](../components/physics-queries.md)
 
@@ -48,3 +48,9 @@ var fractions = player.GetWorld()!.DirectSpaceState.CastMotion(query);
 ## Verification and limits
 
 [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) covers defaults, invalid rollback, copies, RID/resource switching, live geometry edits after a throwing listener, borrowed fixture lifetime, and all four direct operations. Independent viewport canvas filtering remains a separate world-identity prerequisite. Native allocator, other platforms and owner visual acceptance are unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
+
+
+[Special query displacement](../components/physics-queries.md#special-query-displacement)
+retains represented concave/boundary/ray precedence across all four direct shape
+operations, current initial contacts and finite boundary endpoints. CPU collinear
+circle/core contacts retain a unit normal and corresponding surface points.

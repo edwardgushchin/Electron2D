@@ -115,14 +115,15 @@ internal sealed class SeparationRayShapeTests(PhysicsServer.Backend backend)
             Transform = new(0, Vector2.One, 0, new(-20, 15)),
             Motion = new(40, 0)
         };
-        Check(direct.IntersectShape(solidQuery) is [var reverse] && reverse.ColliderRID == holder &&
-            direct.CastMotion(solidQuery).SafeFraction is > 0.42f and < 0.43f &&
-            direct.GetRestInfo(solidQuery) is not null,
-            "A moving circle sweeps against a stationary separation ray.");
+        Check(direct.IntersectShape(solidQuery).Length == 0 && direct.CastMotion(solidQuery) == (1, 1) && direct.GetRestInfo(solidQuery) is null,
+            "A stationary separation ray ignores circle counterpart displacement.");
         using var square = new RectangleShape { Size = new(6, 6) };
         solidQuery.Shape = square;
-        Check(direct.CastMotion(solidQuery).SafeFraction is > 0.42f and < 0.43f,
-            "A moving polygon sweeps against a stationary separation ray.");
+        Check(direct.IntersectShape(solidQuery).Length == 0 && direct.CastMotion(solidQuery) == (1, 1) && direct.GetRestInfo(solidQuery) is null,
+            "A stationary separation ray ignores polygon counterpart displacement.");
+        solidQuery.Transform = new(0, new(0, 15));
+        Check(direct.IntersectShape(solidQuery) is [var reverse] && reverse.ColliderRID == holder && direct.CastMotion(solidQuery) == (1, 1) && direct.GetRestInfo(solidQuery) is not null,
+            "Ignored counterpart displacement preserves the current directed contact and initial-overlap cast policy.");
         for (var index = 0; index < 64; index++) { direct.CastMotion(solidQuery); direct.GetRestInfo(solidQuery); }
         var before = GC.GetTotalAllocatedBytes(true);
         for (var index = 0; index < 64; index++) { direct.CastMotion(solidQuery); direct.GetRestInfo(solidQuery); }

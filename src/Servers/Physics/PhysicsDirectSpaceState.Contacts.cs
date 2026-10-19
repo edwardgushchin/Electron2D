@@ -125,6 +125,7 @@ public partial class PhysicsDirectSpaceState
     /// <summary>Returns the deepest contact across the shape's pose and motion, with collider velocity.</summary>
     /// <param name="parameters">A live shape, pose, global motion, margin and filters.</param>
     /// <returns>A typed contact, or null when the shape touches no eligible collider.</returns>
+    /// <remarks>Displacement follows the resource-family rules of PhysicsShapeQueryParameters.Motion; boundary contacts use the finite shape endpoint.</remarks>
     public PhysicsRestInfo? GetRestInfo(PhysicsShapeQueryParameters parameters)
     {
         var backend = PrepareQuery(parameters);

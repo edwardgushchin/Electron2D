@@ -269,8 +269,8 @@ public static partial class BackendChecks
                 "Concave query source preserves actual edge contact and rest data");
             query.Transform = new(0, new Vector2(-5, 0)); query.Motion = new(10, 0);
             var motion = world.DirectSpaceState.CastMotion(query);
-            Check(MathF.Abs(motion.UnsafeFraction - .35f) <= 1f / 256 + .00002f,
-                "Concave query motion selects the earliest translated input edge");
+            Check(motion == (1, 1) && world.DirectSpaceState.IntersectShape(query, hits) == 0 && world.DirectSpaceState.CollideShape(query, contacts) == 0 && world.DirectSpaceState.GetRestInfo(query) is null,
+                "Concave query displacement cannot manufacture a swept edge contact");
             source.Segments = [];
             Check(world.DirectSpaceState.IntersectShape(query, hits) == 0 && world.DirectSpaceState.CollideShape(query, contacts) == 0 &&
                 world.DirectSpaceState.GetRestInfo(query) is null && world.DirectSpaceState.CastMotion(query).UnsafeFraction == 1,

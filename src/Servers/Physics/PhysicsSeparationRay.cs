@@ -80,80 +80,12 @@ internal static class PhysicsSeparationRay
             return otherRay is null ? Contact(query, slide, other, otherTransform, motion, margin) : default;
         if (otherRay is not { } ray) return default;
         var worldRay = WorldProxy(ray, otherTransform, default);
-        var manifold = SweptContact(worldRay, ray.SlideOnSlope, query, motion);
+        var manifold = Contact(worldRay, ray.SlideOnSlope, query, b2Transform_identity, default);
         manifold.normal = -manifold.normal;
         return manifold;
     }
 
-    private static B2Manifold SweptContact(in B2ShapeProxy ray, bool slide, in B2ShapeProxy query,
-        in B2Vec2 motion)
-    {
-        if (motion.X == 0 && motion.Y == 0) return Contact(ray, slide, query, b2Transform_identity, default);
-        Span<B2ShapeProxy> pieces = stackalloc B2ShapeProxy[10];
-        var count = SweptPieces(query, motion, pieces);
-        var best = default(B2Manifold);
-        for (var index = 0; index < count; index++)
-        {
-            var piece = pieces[index];
-            // A composite cast must reject containment in any piece before selecting another piece's entry.
-            if (Contains(piece, ray.points[0])) return default;
-            var contact = Contact(ray, slide, piece, b2Transform_identity, default);
-            if (contact.pointCount != 0 && (best.pointCount == 0 ||
-                contact.points[0].separation < best.points[0].separation)) best = contact;
-        }
-        return best;
-    }
-
-    internal static bool ContainsSweptRegion(in B2ShapeProxy query, in B2Vec2 point, in B2Vec2 motion)
-    {
-        if (motion.X == 0 && motion.Y == 0) return Contains(query, point);
-        Span<B2ShapeProxy> pieces = stackalloc B2ShapeProxy[10];
-        var count = SweptPieces(query, motion, pieces);
-        for (var i = 0; i < count; i++) if (Contains(pieces[i], point)) return true;
-        return false;
-    }
-
-    private static int SweptPieces(in B2ShapeProxy query, in B2Vec2 motion, Span<B2ShapeProxy> pieces)
-    {
-        // The swept convex region is the union of the initial/final shape and each swept edge.
-        // Reuse native primitives without exceeding their eight-vertex hull capacity.
-        var count = 0;
-        if (query.count == 1)
-            pieces[count++] = b2MakeProxy(query.points[0], query.points[0] + motion, 2, query.radius);
-        else
-        {
-            pieces[count++] = query;
-            var end = query;
-            for (var index = 0; index < end.count; index++) end.points[index] += motion;
-            pieces[count++] = end;
-            var edgeCount = query.count == 2 ? 1 : query.count;
-            for (var index = 0; index < edgeCount; index++)
-                pieces[count++] = SweptEdge(query.points[index], query.points[(index + 1) % query.count], motion, query.radius);
-        }
-        return count;
-    }
-
-    private static B2ShapeProxy SweptEdge(in B2Vec2 a, in B2Vec2 b, in B2Vec2 motion, float radius)
-    {
-        var cross = b2Cross(b - a, motion);
-        if (cross == 0)
-        {
-            var from = a;
-            var to = b;
-            var axis = b - a;
-            if (b2Dot(axis, motion) < 0) from += motion;
-            else to += motion;
-            return b2MakeProxy(from, to, 2, radius);
-        }
-        Span<B2Vec2> vertices = stackalloc B2Vec2[4];
-        vertices[0] = a;
-        vertices[1] = cross > 0 ? b : a + motion;
-        vertices[2] = b + motion;
-        vertices[3] = cross > 0 ? a + motion : b;
-        return b2MakeProxy(vertices, 4, radius);
-    }
-
-    private static bool Contains(in B2ShapeProxy proxy, in B2Vec2 point)
+    internal static bool Contains(in B2ShapeProxy proxy, in B2Vec2 point)
     {
         if (proxy.count == 1)
             return b2PointInCircle(new B2Circle { center = proxy.points[0], radius = proxy.radius }, point);

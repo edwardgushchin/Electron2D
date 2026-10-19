@@ -28,7 +28,7 @@ internal sealed partial class CPUPhysicsWorldBackend
             for (var piece = 0; piece < _queryProxies.Count; piece++)
             {
                 var query = _queryProxies[piece];
-                if (!TryQueryContact(query, other, otherTransform, candidate.Tag, motion, out var manifold)) continue;
+                if (!TryQueryContact(query, other, otherTransform, candidate.Tag, QueryMotion(candidate.Tag, motion), out var manifold)) continue;
                 for (var index = 0; index < manifold.pointCount; index++)
                 {
                     var contact = manifold.points[index];
@@ -66,7 +66,7 @@ internal sealed partial class CPUPhysicsWorldBackend
             for (var piece = 0; piece < _queryProxies.Count; piece++)
             {
                 var query = _queryProxies[piece];
-                if (!TryQueryContact(query, other, otherTransform, candidate.Tag, motion, out var manifold)) continue;
+                if (!TryQueryContact(query, other, otherTransform, candidate.Tag, QueryMotion(candidate.Tag, motion), out var manifold)) continue;
                 for (var index = 0; index < manifold.pointCount; index++)
                 {
                     var contact = manifold.points[index];
@@ -121,7 +121,13 @@ internal sealed partial class CPUPhysicsWorldBackend
     private bool TryQueryContact(in B2ShapeProxy query, in B2ShapeProxy other,
         in B2Transform otherTransform, PhysicsFixtureTag tag, in B2Vec2 motion, out B2Manifold manifold)
     {
-        if (query.isBoundary || other.isBoundary) return TryContact(BoundaryQuery(query), other, otherTransform, motion, out manifold);
+        if (query.isBoundary || other.isBoundary)
+        {
+            var endpoint = BoundaryQuery(query);
+            for (var point = 0; point < endpoint.count; point++) endpoint.points[point] += motion;
+            manifold = GetManifold(endpoint, other, otherTransform);
+            return manifold.pointCount != 0;
+        }
         if (_queryRaySlide is null && tag.SeparationRay is null)
             return TryContact(query, other, otherTransform, motion, out manifold);
         manifold = PhysicsSeparationRay.PairContact(query, _queryRaySlide, other, otherTransform,
@@ -184,6 +190,19 @@ internal sealed partial class CPUPhysicsWorldBackend
                 var otherPolygon = Polygon(other);
                 manifold = b2CollidePolygons(ref polygon, identity, ref otherPolygon, otherTransform);
             }
+        }
+        if (manifold.pointCount != 0 && manifold.normal == default &&
+            queryKind <= 2 && otherKind <= 2 && (queryKind == 1 || otherKind == 1))
+        {
+            // Coincident rounded cores still need a unit side and matching surface points.
+            var axis = queryKind == 2 ? query.points[1] - query.points[0] : otherKind == 2 ? b2RotateVector(otherTransform.q, other.points[1] - other.points[0]) : new B2Vec2(0, 1);
+            var normal = b2Normalize(b2RightPerp(axis));
+            if (normal == default) normal = new(1, 0);
+            var center = queryKind == 1 ? query.points[0] : b2TransformPoint(otherTransform, other.points[0]);
+            var firstRadius = flipped ? other.radius : query.radius;
+            var secondRadius = flipped ? query.radius : other.radius;
+            manifold.normal = normal;
+            manifold.points[0].point = center + .5f * (firstRadius - secondRadius) * normal;
         }
         if (flipped) manifold.normal = -manifold.normal;
         return manifold;

@@ -6,10 +6,12 @@ using Mode = Electron2D.GPUPhysicsBodyStore.ShapeQueryMode;
 
 internal static class GPUPhysicsShapeQueryTests
 {
-    internal static void Run()
+    internal static void Run(bool measure = true)
     {
-        CompareCPU(); SpecialGeometry(); GeometryAndFilters(); Publication(); Lifetime(); Measure();
-        Console.WriteLine("Resident shape queries: CPU overlap/cast/contact/rest contracts, complete geometry, filters, lifetime and warmed allocation passed.");
+        CompareCPU(); SpecialGeometry(); GeometryAndFilters(); Publication(); Lifetime(); if (measure) Measure();
+        Console.WriteLine(measure
+            ? "Resident shape queries: CPU overlap/cast/contact/rest contracts, complete geometry, filters, lifetime and warmed allocation passed."
+            : "Resident shape queries: functional geometry, overlap/cast/contact/rest, filters, publication and lifetime checks passed.");
     }
     private static int Query(Store store, Query query, Span<Store.ShapeQueryHit> hits, ReadOnlySpan<ulong> exclusions = default)
     { Span<int> counts = stackalloc int[1]; store.QueryShapes([query], exclusions, counts, hits); return counts[0]; }
