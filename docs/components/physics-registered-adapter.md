@@ -2,6 +2,89 @@
 
 Last updated: 2026-10-19
 
+## Complete reporting threshold operations
+
+The two non-deprecated extension depth-threshold operations project to the typed
+retained PhysicsServer getter/setter under ADR 0070. The pinned 4.7.2-stable XML at
+ed1daf0bf001b61586d9930840f2f1394092c079 has no corresponding global-server threshold
+declarations; the accepted facade maps the extension concepts rather than adding
+an inert mirror. reference-contract.json records the two extension methods, two
+server contact-cap siblings, the RigidBody cap property and owning class metadata.
+No public declaration or architecture decision changes.
+
+The audit reproduced an ordering defect: a rejected threshold write from a selected
+numerical hook first inspected HasFailure. The identical final consumer fails on
+the old runtime (-6, Contact reporting writes inspected selected status while
+numerically borrowed) and passes on the corrected runtime (0). Common body write
+access now checks numerical borrowing before scene participation, selected status
+observation and pending body preparation. Readonly configured inputs retain their
+non-preparing owner/borrowed-Solve path. Ordinary gameplay writes and existing
+failed-world rejection keep their respective guards. See
+`bin/physics-contact-threshold-operations/2026-10-19/runtime-regression-proof.json`.
+
+The expanded guards exercise all five scene body siblings and four raw motion
+modes. Empty/wrong-kind/stale IDs, negative/nonfinite inputs, foreign-owner reads/
+writes, owner numerical publication and actual Solve are covered. Both equal and
+changed writes reject without selected status observation; configured reads keep
+exact retained values. Direct scene contact-cap writes retain their existing guard.
+Zero, the smallest positive float and float.MaxValue remain valid scene-unit input;
+positive/negative zero retain the disabled-filter meaning. Explicitly sleeping
+scene/raw dynamic bodies stay asleep across reporting edits. Cold guard setup is
+outside the allocation bracket.
+
+Four registered JIT/strict NativeAOT owner/separate profiles exercise 324 terminal
+getter/equal-setter/changed-setter rejections across actual Solve/Sync/Statistics
+failures and nine body roles. Failed-world retirement detaches retained scene/raw
+identities; the previous threshold survives, and all raw modes can enter a healthy
+replacement world without replaying Solve. The initial recovery fixture attempted
+scene transfer before retiring the failed world; the existing terminal world policy
+correctly rejected that operation. Verification uses the allowed retirement path.
+
+The shared physical fixture retains signed depth, equality and pre-cap filtering,
+scene/raw/static snapshots, object/shape monitor transitions and immutable completed
+reports. Positive .5 and high 100 thresholds leave the same-backend response within
+.00001 scene units; the registered exact two-unit sample checks equality. Callback
+failure retains its completed tick, policy edit and pre-edit snapshot; the next
+publication applies the edit. Checkpoint and portable-schema mismatches reject and
+recover when configuration matches again. Twelve CPU/no-device, private software-GPU
+and registered JIT/NativeAOT owner/separate profiles measure 768 edited complete
+PhysicsFrame intervals at strict 0/0 owner/all-thread managed bytes, including 384
+scene entries and 384 exits after warmup.
+
+Body parameter/state, collider input and contact-response companions exercise the
+shared write path on the same cohort. Serial contact-frame companions retain
+multi-peer CCD observations, signed impulses/momentum, deepest caps/ties, immediate
+private restoration, 128 replay cycles and 768 changed-policy zero-byte frames per
+profile. Their existing numerical bounds remain unchanged; they do not certify
+arbitrary custom geometry or a full multiplayer workload.
+
+The final cohort passes 74/74 distinct profiles:
+
+| Executed profile family | Profiles |
+| --- | ---: |
+| JIT/NativeAOT, three backends, owner/separate threshold/parameter/state/collider-input/contact-response families | 60 |
+| JIT/NativeAOT, three backends, serial multi-peer contact frames | 6 |
+| JIT/NativeAOT registered owner/separate borrowed-write/terminal threshold guards | 4 |
+| JIT/NativeAOT default registered consumer | 2 |
+| Serial CPU/GPU root contact-publication companions | 2 |
+
+Contact-frame and root entrypoints are counted once per executable/backend because
+they do not consume a separate-thread flag. Root backend selection uses its environment,
+with distinct CPU/GPU output and observed ICD/process maps. Threshold entrypoints capture the
+setting and assert the actual registered numerical lane. Six PDB/Compile proofs
+match 3415 authored source inputs without DEBUG or missing/mismatched files.
+Process maps require private lavapipe for GPU, reject hardware drivers and require
+no CoreCLR for NativeAOT; CPU/registered profiles use an empty ICD. Evidence:
+`bin/physics-contact-threshold-operations/2026-10-19/validation.json`,
+current-source-proof.json and current-source-inputs.json.
+
+Only the two extension rows become Implemented. The current physics census is
+1262/1369 (92.18407596785974%), with 107 open declarations: 76 Partial, 14 Unimplemented and
+17 Blocked; 92 remain Excluded. Earlier counts describe recorded checkpoints.
+Full ordinary root, complete numerical/custom/extension behavior, native allocations,
+multiplayer, other platforms and hardware real-window/FPS/performance acceptance
+remain open. Hardware GPU load did not run; the power cable remains unchecked.
+
 ## Complete resource retirement operations
 
 The server FreeRID and extension retirement projection own Shape/Body/Area/Joint/
@@ -1756,7 +1839,9 @@ converts native metre depths; GPU retains resident reports in scene units. No ne
 GPU readback or CPU mirror is introduced. Factory contact projection uses its own
 explicit sampled depth and applies the same common threshold before committing.
 
-The public-only `--contact-threshold` runs on CPU/GPU/registered owners. Two
+The public-only `--contact-threshold` now captures owner/separate numerical execution
+on CPU/GPU/registered worlds; the [complete operation audit](#complete-reporting-threshold-operations)
+closes its two extension rows. Two
 independent circle contacts exercise scene/raw defaults, all five scene body sibling
 roles, raw static reporting, invalid input, numerical
 borrow reads/rejected writes, positive .5 and high 100 thresholds, monitor exits,

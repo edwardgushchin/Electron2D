@@ -51,6 +51,7 @@ public static partial class BackendChecks
         RunHierarchyPoses();
         RunAreaOverlapPublication();
         RunContactThreshold();
+        RunContactThresholdGuards();
         RunMotionExclusions();
         RunNotificationPhase();
         RunShapePairs();

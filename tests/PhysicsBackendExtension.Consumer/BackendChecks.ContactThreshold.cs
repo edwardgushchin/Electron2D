@@ -2,7 +2,15 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunContactThreshold(PhysicsServer.Backend? backend = null)
+    public static void RunContactThreshold(PhysicsServer.Backend? backend = null, bool threaded = false)
+    {
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { ContactThresholdChecks(backend, threaded); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
+
+    private static void ContactThresholdChecks(PhysicsServer.Backend? backend, bool threaded)
     {
         Solver? solver = null;
         if (backend is null) PhysicsServerManager.RegisterServer("ContactThreshold", () => solver = new());
@@ -14,6 +22,8 @@ public static partial class BackendChecks
         var obstacle = new StaticBody { Position = new(4, 0) };
         obstacle.AddChild(new CollisionShape { Shape = circle }); root.AddChild(obstacle);
         using var tree = new SceneTree(root);
+        var ownerThread = Thread.CurrentThread;
+        if (solver is not null) solver.StepHook = () => Check((Thread.CurrentThread != ownerThread) == threaded, "Reporting threshold uses the actual selected numerical lane");
         var raw = PhysicsServer.BodyCreate(); var remote = PhysicsServer.BodyCreate(); var sceneID = scene.GetRID();
         var enters = 0; var exits = 0; scene.BodyEntered += _ => enters++; scene.BodyExited += _ => exits++;
         try
@@ -40,8 +50,13 @@ public static partial class BackendChecks
             foreach (var id in new[] { sceneID, raw, remote })
             {
                 Check(PhysicsServer.BodyGetContactsReportedDepthThreshold(id) == 0, "Scene/raw reporting threshold defaults to zero");
+                foreach (var valid in new[] { -0f, float.Epsilon, float.MaxValue })
+                {
+                    PhysicsServer.BodySetContactsReportedDepthThreshold(id, valid);
+                    Check(PhysicsServer.BodyGetContactsReportedDepthThreshold(id) == valid, "Finite threshold bounds remain authored in scene units without backend conversion");
+                }
                 PhysicsServer.BodySetContactsReportedDepthThreshold(id, 100);
-                foreach (var invalid in new[] { -1f, float.NaN, float.PositiveInfinity })
+                foreach (var invalid in new[] { -1f, -float.Epsilon, -float.MaxValue, float.NaN, float.PositiveInfinity, float.NegativeInfinity })
                     Reject<ArgumentOutOfRangeException>(() => PhysicsServer.BodySetContactsReportedDepthThreshold(id, invalid));
                 Check(PhysicsServer.BodyGetContactsReportedDepthThreshold(id) == 100, "Invalid threshold preserves retained authoring");
             }

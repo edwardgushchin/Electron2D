@@ -31,7 +31,16 @@ hardware/FPS, native-memory, network and foreign-platform acceptance remain open
 
 [Polygon point containment and ray origins](physics-point-containment.md) now share strict unrounded CPU half-planes across direct queries, Area audio and directed query/proxy regions. Public scene/server CPU/GPU checks preserve filters, logical identities and warmed allocations.
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
+
+## Contact reporting write preflight
+
+Common body writes check numerical borrowing before scene participation, selected
+status hooks or pending state preparation. Configured reporting reads still use
+the non-preparing retained-input path during owner hooks and actual Solve.
+The [reporting threshold audit](physics-registered-adapter.md#complete-reporting-threshold-operations)
+records scene/raw roles, publication timing, numeric/failure/history checks,
+CPU/software-GPU/registered profiles and zero warmed managed bytes.
 
 [Local activation recovery](physics-registered-adapter.md#failed-local-activation) restores the last committed selected flag after partial hook errors, before space query/history or active-step preparation. Metadata, skipped intervals and cleanup retain their non-preparing rules.
 

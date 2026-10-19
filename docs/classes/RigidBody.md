@@ -2,6 +2,17 @@
 
 Last updated: 2026-10-19
 
+## Contact reporting policy guards
+
+Configured depth reads remain non-preparing during selected hooks and actual Solve.
+Numerical write preflight rejects equal/changed assignments before selected status
+observation, scene participation checks or pending body preparation. The common
+body guard supplies this order across scene/raw roles. Reporting changes preserve
+completed snapshots, explicit sleep and physical response; the next publication
+uses the retained scene-unit threshold before caps, with equality eligible.
+See [complete reporting threshold operations](../components/physics-registered-adapter.md#complete-reporting-threshold-operations)
+for actual verification and remaining limits.
+
 ## Persistent force authoring guards
 
 ConstantForce and ConstantTorque reject attached writes after terminal world

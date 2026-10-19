@@ -345,7 +345,8 @@ public sealed partial class PhysicsServer
 
     /// <summary>Sets the minimum signed penetration depth included in future body contact reports.</summary>
     /// <remarks>Zero disables depth filtering. Positive thresholds retain equal/deeper candidates before capped publication.
-    /// The policy uses scene units, survives detach/reentry and does not alter solving or the completed contact snapshot.</remarks>
+    /// The policy uses scene units, survives detach/reentry and does not alter solving or the completed contact snapshot.
+    /// Numerical write preflight precedes selected status observation or pending body preparation, including equal writes.</remarks>
     /// <param name="body">A live scene/server body RID.</param>
     /// <param name="threshold">Finite nonnegative scene-unit depth; zero initially.</param>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>

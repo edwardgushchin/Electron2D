@@ -2,6 +2,17 @@
 
 Last updated: 2026-10-19
 
+## Contact reporting policy guards
+
+Configured depth reads remain non-preparing during selected hooks and actual Solve.
+Numerical write preflight rejects equal/changed assignments before selected status
+observation, scene participation checks or pending body preparation. The common
+body guard supplies this order across scene/raw roles. Reporting changes preserve
+completed snapshots, explicit sleep and physical response; the next publication
+uses the retained scene-unit threshold before caps, with equality eligible.
+See [complete reporting threshold operations](../components/physics-registered-adapter.md#complete-reporting-threshold-operations)
+for actual verification and remaining limits.
+
 [Gravity publication and terminal parameter guards](../components/physics-registered-adapter.md#gravity-publication-and-terminal-parameter-guards) retry the latest effective native gravity/omission request after a selected error and discard it on attachment retirement. Scene damping, omission and inherited material setters reject failed worlds before changing authoring while healthy post-solver callbacks retain writes. Public CPU/software-GPU/registered JIT/NativeAOT profiles verify real motion, history boundaries and strict zero managed-byte frames; wider acceptance remains open.
 
 [Mass profile publication recovery](../components/physics-registered-adapter.md#mass-profile-publication-recovery) preserves preceding authoring after selected mass/inertia/center/reset errors and prepares it before numerical use. Cached views, space/force/checkpoint/portable boundaries, attachment retirement, in-flight rejection and post-commit notification behavior execute across all scene/raw roles. Public JIT/strict NativeAOT CPU/software-GPU/registered full-frame checks retain strict zero managed allocation; wider native/platform/network/performance gates remain open.
@@ -122,7 +133,7 @@ A factory-returned cached body extension now projects its contact count/values o
 
 ## Value-only integration preparation
 
-[Force and policy inputs](../components/physics-backends.md#value-only-body-integration-inputs) now separate engine-owned authoring/command state from numerical preparation. Default forces use PhysicsBodyForceConfiguration; CPU fields and GPU parameters use PhysicsBodyIntegrationConfiguration. Pending command retirement and GPU dirty flags stay in the binding layer; numerical methods receive finite authored values and return complete field/preparation results. CPU/GPU/no-device, replay, parameter and full operation checks remain the acceptance boundaries; public registration stays open.
+[Force and policy inputs](../components/physics-backends.md#value-only-body-integration-inputs) now separate engine-owned authoring/command state from numerical preparation. Default forces use PhysicsBodyForceConfiguration; CPU fields and GPU parameters use PhysicsBodyIntegrationConfiguration. Pending command retirement and GPU dirty flags stay in the binding layer; numerical methods receive finite authored values and return complete field/preparation results. CPU/GPU/no-device, replay, parameter and full operation checks remain the acceptance boundaries; public registration executes through the selected adapter; wider acceptance remains open.
 
 
 Retains scene/raw ContactsReportedDepthThreshold independently of numerical storage. It survives detach/reentry and participates in immutable checkpoint configuration and portable schema. Publication filters signed scene-unit candidate depths; changing policy preserves the completed snapshot.

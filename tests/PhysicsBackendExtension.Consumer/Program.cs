@@ -1,4 +1,5 @@
-if (args.Contains("--resource-transactions")) BackendChecks.RunResourceTransactions(args.Contains("--threaded"));
+if (args.Contains("--contact-threshold-guards")) BackendChecks.RunContactThresholdGuards(args.Contains("--threaded"));
+else if (args.Contains("--resource-transactions")) BackendChecks.RunResourceTransactions(args.Contains("--threaded"));
 else if (args.Contains("--joint-lifecycle-transactions")) BackendChecks.RunJointLifecycleTransactions(args.Contains("--threaded"), args.Contains("--requests-first"));
 else if (args.Contains("--joint-transactions")) BackendChecks.RunJointTransactions(args.Contains("--threaded"));
 else if (args.Contains("--exception-transactions")) BackendChecks.RunExceptionTransactions(args.Contains("--threaded"));
@@ -207,7 +208,7 @@ else if (args.Contains("--notification-phase")) BackendChecks.RunNotificationPha
 else if (args.Contains("--motion-exclusions")) BackendChecks.RunMotionExclusions(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
 else if (args.Contains("--contact-threshold")) BackendChecks.RunContactThreshold(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
-    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--area-monitors")) BackendChecks.RunAreaMonitors(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--resources")) BackendChecks.RunResources(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :

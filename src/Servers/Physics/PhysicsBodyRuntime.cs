@@ -48,10 +48,10 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
     {
         var owners = Owners;
         owners.Scene?.Tree?.EnsureOwnerThread();
-        if (writing) owners.Scene?.EnsurePhysicsParticipationChange();
         var space = Space;
-        space?.EnsureQueryAccess();
         if (writing) space?.EnsureImplementationWriteAccess();
+        if (writing) owners.Scene?.EnsurePhysicsParticipationChange();
+        space?.EnsureQueryAccess();
         PreparePendingMode();
     }
 
