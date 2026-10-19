@@ -1,6 +1,6 @@
 # Engine runtime component
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 [Frame timing monitors](frame-monitors.md) observe completed execution using monotonic timestamps. Duration maxima publish once per unscaled host-second window; native process timing ends after presentation and before movie encoding/frame waits. Successful attachment resets samples; failed frames retain completed diagnostics.
 
@@ -86,3 +86,5 @@ Configured recording uses Engine.RunMovie/RunMovieAsync and the typed MovieWrite
 ## Rendering changes and low-processor scheduling
 
 [Low-processor rendering](low-processor-rendering.md) connects retained change producers, static RenderingServer.HasChanged, the two OS policies and typed startup settings to Engine.Run/RunAsync. Static output skips submissions while processing and input continue; time-driven drawing and capture retain their executing consumers. Verification limits remain explicit in the component.
+
+The [Time service](time-service.md) now supplies typed calendar conversions, system wall-time and monotonic ticks with a permanent Engine registry identity. Its origin is independent of loop start/stop, scene pause and TimeScale.

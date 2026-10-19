@@ -1,6 +1,6 @@
 # Engine
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 [Frame timing monitors](../components/frame-monitors.md) expose actual completed-window process, fixed-step and navigation wall time through Performance. Start resets their current-run samples; Stop retains completed observations. Owned Window presentation contributes to process timing; manual AdvanceFrame adds no implicit rendering.
 
@@ -560,3 +560,5 @@ Uses the same configured profile and validation as RunMovie while retaining RunA
 Registered `shader_globals/name` definitions use [GlobalShaderParameterSettings<T>](GlobalShaderParameterSettings.Generic.md) with exact numeric carriers, copied matrices or image-path strings. Rendering-session preparation samples active features before scene Ready and owns loaded images through shutdown; later setting edits apply to the next session. Headless configuration authoring remains independent of a renderer. See [project global behavior](../components/global-shader-parameters.md#project-authored-globals).
 
 [Low-processor rendering](../components/low-processor-rendering.md) adds typed startup settings and live OS policy to Run/RunAsync. Unchanged output can skip submission while process/physics/input continue. The configured nonnegative microsecond wait combines with MaxFPS and remains responsive to events/quit; manual AdvanceFrame and movie capture do not apply that additional wait.
+
+Time now supplies a permanent process service identity. Register/Unregister preserve its lifetime, and NavigationServer is also protected by the permanent-service guard. Elapsed Time ticks survive Engine loop stop/start independently of TimeScale. See [Time](Time.md).

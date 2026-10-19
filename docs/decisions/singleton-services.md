@@ -1,6 +1,6 @@
 # Process-wide service API decisions
 
-Last updated: 2026-10-14
+Last updated: 2026-10-19
 
 This document owns public access to process-wide engine services. Owning domain decisions continue to define state, lifetime, threading and resource ownership.
 
@@ -13,7 +13,7 @@ Accepted.
 
 ### Context
 
-`Engine.Instance.Run(window)` repeats an access step for a service that is already process-wide. Engine, OS, WorkerThreadPool, ProjectSettings, Input, InputMap, IP, ThemeDB, AudioServer, PhysicsServer, Performance, ResourceLoader, ResourceSaver and ResourceUID retain permanent objects; DisplayServer and RenderingServer retain objects only during an active native session. Those objects also support identity, typed property discovery, service lookup and native resource ownership.
+`Engine.Instance.Run(window)` repeats an access step for a service that is already process-wide. Engine, OS, Time, WorkerThreadPool, ProjectSettings, Input, InputMap, IP, ThemeDB, AudioServer, PhysicsServer, Performance, ResourceLoader, ResourceSaver and ResourceUID retain permanent objects; DisplayServer and RenderingServer retain objects only during an active native session. Those objects also support identity, typed property discovery, service lookup and native resource ownership.
 
 The selected convention shortens ordinary calls to `Engine.Run(window)` across the family while preserving the stateful implementations.
 
@@ -35,6 +35,8 @@ and PhysicsServerManager facades keep static process-wide access. This follows
 the explicit-context principle of ProjectSettingsRegistry and does not authorize
 public Instance accessors or instance calls to permanent service operations.
 Implementation and full extension-family acceptance remain open.
+
+- Time follows this same retained-object rule under [ADR 0111](time.md#adr-0111), including permanent Engine registry identity and rejected disposal; its public service operations are static.
 
 ### Consequences
 

@@ -3767,6 +3767,32 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.DateInfo",
+    "kind": "type",
+    "declaringType": "Electron2D.DateInfo",
+    "name": "DateInfo",
+    "signature": "public struct Electron2D.DateInfo",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.DateTimeInfo",
+    "kind": "type",
+    "declaringType": "Electron2D.DateTimeInfo",
+    "name": "DateTimeInfo",
+    "signature": "public struct Electron2D.DateTimeInfo",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.DeepDuplicateMode",
     "kind": "type",
     "declaringType": "Electron2D.DeepDuplicateMode",
@@ -12965,6 +12991,83 @@
       "System.IFormattable",
       "System.ISpanFormattable"
     ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Time",
+    "kind": "type",
+    "declaringType": "Electron2D.Time",
+    "name": "Time",
+    "signature": "public sealed class Electron2D.Time",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Time.Month",
+    "kind": "type",
+    "declaringType": "Electron2D.Time.Month",
+    "name": "Month",
+    "signature": "public enum Electron2D.Time.Month",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Time.Weekday",
+    "kind": "type",
+    "declaringType": "Electron2D.Time.Weekday",
+    "name": "Weekday",
+    "signature": "public enum Electron2D.Time.Weekday",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TimeInfo",
+    "kind": "type",
+    "declaringType": "Electron2D.TimeInfo",
+    "name": "TimeInfo",
+    "signature": "public struct Electron2D.TimeInfo",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TimeZoneData",
+    "kind": "type",
+    "declaringType": "Electron2D.TimeZoneData",
+    "name": "TimeZoneData",
+    "signature": "public struct Electron2D.TimeZoneData",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [],
     "parameters": null,
     "returnType": null,
     "value": null
@@ -50891,6 +50994,253 @@
     "parameters": [],
     "returnType": "Electron2D.TileShape",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Month.April()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Month",
+    "name": "April",
+    "signature": "public const Electron2D.Time.Month April = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Month",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Month.August()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Month",
+    "name": "August",
+    "signature": "public const Electron2D.Time.Month August = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Month",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Month.December()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Month",
+    "name": "December",
+    "signature": "public const Electron2D.Time.Month December = 12",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Month",
+    "value": "12"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Month.February()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Month",
+    "name": "February",
+    "signature": "public const Electron2D.Time.Month February = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Month",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Month.January()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Month",
+    "name": "January",
+    "signature": "public const Electron2D.Time.Month January = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Month",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Month.July()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Month",
+    "name": "July",
+    "signature": "public const Electron2D.Time.Month July = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Month",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Month.June()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Month",
+    "name": "June",
+    "signature": "public const Electron2D.Time.Month June = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Month",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Month.March()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Month",
+    "name": "March",
+    "signature": "public const Electron2D.Time.Month March = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Month",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Month.May()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Month",
+    "name": "May",
+    "signature": "public const Electron2D.Time.Month May = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Month",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Month.November()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Month",
+    "name": "November",
+    "signature": "public const Electron2D.Time.Month November = 11",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Month",
+    "value": "11"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Month.October()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Month",
+    "name": "October",
+    "signature": "public const Electron2D.Time.Month October = 10",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Month",
+    "value": "10"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Month.September()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Month",
+    "name": "September",
+    "signature": "public const Electron2D.Time.Month September = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Month",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Weekday.Friday()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Weekday",
+    "name": "Friday",
+    "signature": "public const Electron2D.Time.Weekday Friday = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Weekday",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Weekday.Monday()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Weekday",
+    "name": "Monday",
+    "signature": "public const Electron2D.Time.Weekday Monday = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Weekday",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Weekday.Saturday()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Weekday",
+    "name": "Saturday",
+    "signature": "public const Electron2D.Time.Weekday Saturday = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Weekday",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Weekday.Sunday()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Weekday",
+    "name": "Sunday",
+    "signature": "public const Electron2D.Time.Weekday Sunday = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Weekday",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Weekday.Thursday()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Weekday",
+    "name": "Thursday",
+    "signature": "public const Electron2D.Time.Weekday Thursday = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Weekday",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Weekday.Tuesday()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Weekday",
+    "name": "Tuesday",
+    "signature": "public const Electron2D.Time.Weekday Tuesday = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Weekday",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Time.Weekday.Wednesday()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Time.Weekday",
+    "name": "Wednesday",
+    "signature": "public const Electron2D.Time.Weekday Wednesday = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Weekday",
+    "value": "3"
   },
   {
     "id": "enumValue:Electron2D.TouchButtonVisibility.Always()",
@@ -194253,6 +194603,414 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Time.GetDateInfoFromSystem(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetDateInfoFromSystem",
+    "signature": "public static Electron2D.DateInfo GetDateInfoFromSystem(System.Boolean UTC = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "UTC",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.DateInfo",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetDateInfoFromUnixTime(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetDateInfoFromUnixTime",
+    "signature": "public static Electron2D.DateInfo GetDateInfoFromUnixTime(System.Int64 unixTime)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "unixTime",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.DateInfo",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetDateStringFromSystem(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetDateStringFromSystem",
+    "signature": "public static System.String GetDateStringFromSystem(System.Boolean UTC = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "UTC",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetDateStringFromUnixTime(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetDateStringFromUnixTime",
+    "signature": "public static System.String GetDateStringFromUnixTime(System.Int64 unixTime)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "unixTime",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetDateTimeInfoFromDateTimeString(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetDateTimeInfoFromDateTimeString",
+    "signature": "public static Electron2D.DateTimeInfo GetDateTimeInfoFromDateTimeString(System.String dateTime, System.Boolean weekday)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "dateTime",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "weekday",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.DateTimeInfo",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetDateTimeInfoFromSystem(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetDateTimeInfoFromSystem",
+    "signature": "public static Electron2D.DateTimeInfo GetDateTimeInfoFromSystem(System.Boolean UTC = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "UTC",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.DateTimeInfo",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetDateTimeInfoFromUnixTime(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetDateTimeInfoFromUnixTime",
+    "signature": "public static Electron2D.DateTimeInfo GetDateTimeInfoFromUnixTime(System.Int64 unixTime)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "unixTime",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.DateTimeInfo",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetDateTimeStringFromDateTimeInfo(Electron2D.DateTimeInfo,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetDateTimeStringFromDateTimeInfo",
+    "signature": "public static System.String GetDateTimeStringFromDateTimeInfo(Electron2D.DateTimeInfo dateTime, System.Boolean useSpace)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "dateTime",
+        "type": "Electron2D.DateTimeInfo",
+        "default": null
+      },
+      {
+        "name": "useSpace",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetDateTimeStringFromSystem(System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetDateTimeStringFromSystem",
+    "signature": "public static System.String GetDateTimeStringFromSystem(System.Boolean UTC = false, System.Boolean useSpace = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "UTC",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "useSpace",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetDateTimeStringFromUnixTime(System.Int64,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetDateTimeStringFromUnixTime",
+    "signature": "public static System.String GetDateTimeStringFromUnixTime(System.Int64 unixTime, System.Boolean useSpace = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "unixTime",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "useSpace",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetOffsetStringFromOffsetMinutes(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetOffsetStringFromOffsetMinutes",
+    "signature": "public static System.String GetOffsetStringFromOffsetMinutes(System.Int64 offsetMinutes)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "offsetMinutes",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetTicksMSEC()",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetTicksMSEC",
+    "signature": "public static System.UInt64 GetTicksMSEC()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetTicksUSEC()",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetTicksUSEC",
+    "signature": "public static System.UInt64 GetTicksUSEC()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetTimeInfoFromSystem(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetTimeInfoFromSystem",
+    "signature": "public static Electron2D.TimeInfo GetTimeInfoFromSystem(System.Boolean UTC = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "UTC",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.TimeInfo",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetTimeInfoFromUnixTime(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetTimeInfoFromUnixTime",
+    "signature": "public static Electron2D.TimeInfo GetTimeInfoFromUnixTime(System.Int64 unixTime)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "unixTime",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TimeInfo",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetTimeStringFromSystem(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetTimeStringFromSystem",
+    "signature": "public static System.String GetTimeStringFromSystem(System.Boolean UTC = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "UTC",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetTimeStringFromUnixTime(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetTimeStringFromUnixTime",
+    "signature": "public static System.String GetTimeStringFromUnixTime(System.Int64 unixTime)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "unixTime",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetTimeZoneFromSystem()",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetTimeZoneFromSystem",
+    "signature": "public static Electron2D.TimeZoneData GetTimeZoneFromSystem()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TimeZoneData",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetUnixTimeFromDateTimeInfo(Electron2D.DateTimeInfo)",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetUnixTimeFromDateTimeInfo",
+    "signature": "public static System.Int64 GetUnixTimeFromDateTimeInfo(Electron2D.DateTimeInfo dateTime)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "dateTime",
+        "type": "Electron2D.DateTimeInfo",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetUnixTimeFromDateTimeString(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetUnixTimeFromDateTimeString",
+    "signature": "public static System.Int64 GetUnixTimeFromDateTimeString(System.String dateTime)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "dateTime",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.GetUnixTimeFromSystem()",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "GetUnixTimeFromSystem",
+    "signature": "public static System.Double GetUnixTimeFromSystem()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Time.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.Time",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Timer.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Timer",
@@ -225623,6 +226381,162 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.DateInfo.Day()",
+    "kind": "property",
+    "declaringType": "Electron2D.DateInfo",
+    "name": "Day",
+    "signature": "public System.Int32 Day { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DateInfo.Month()",
+    "kind": "property",
+    "declaringType": "Electron2D.DateInfo",
+    "name": "Month",
+    "signature": "public Electron2D.Time.Month Month { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Month",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DateInfo.Weekday()",
+    "kind": "property",
+    "declaringType": "Electron2D.DateInfo",
+    "name": "Weekday",
+    "signature": "public Electron2D.Time.Weekday Weekday { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Time.Weekday",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DateInfo.Year()",
+    "kind": "property",
+    "declaringType": "Electron2D.DateInfo",
+    "name": "Year",
+    "signature": "public System.Int64 Year { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DateTimeInfo.DST()",
+    "kind": "property",
+    "declaringType": "Electron2D.DateTimeInfo",
+    "name": "DST",
+    "signature": "public System.Nullable\u003CSystem.Boolean\u003E DST { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Nullable\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DateTimeInfo.Day()",
+    "kind": "property",
+    "declaringType": "Electron2D.DateTimeInfo",
+    "name": "Day",
+    "signature": "public System.Nullable\u003CSystem.Int32\u003E Day { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Nullable\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DateTimeInfo.Hour()",
+    "kind": "property",
+    "declaringType": "Electron2D.DateTimeInfo",
+    "name": "Hour",
+    "signature": "public System.Nullable\u003CSystem.Int32\u003E Hour { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Nullable\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DateTimeInfo.Minute()",
+    "kind": "property",
+    "declaringType": "Electron2D.DateTimeInfo",
+    "name": "Minute",
+    "signature": "public System.Nullable\u003CSystem.Int32\u003E Minute { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Nullable\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DateTimeInfo.Month()",
+    "kind": "property",
+    "declaringType": "Electron2D.DateTimeInfo",
+    "name": "Month",
+    "signature": "public System.Nullable\u003CElectron2D.Time.Month\u003E Month { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Nullable\u003CElectron2D.Time.Month\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DateTimeInfo.Second()",
+    "kind": "property",
+    "declaringType": "Electron2D.DateTimeInfo",
+    "name": "Second",
+    "signature": "public System.Nullable\u003CSystem.Int32\u003E Second { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Nullable\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DateTimeInfo.Weekday()",
+    "kind": "property",
+    "declaringType": "Electron2D.DateTimeInfo",
+    "name": "Weekday",
+    "signature": "public System.Nullable\u003CElectron2D.Time.Weekday\u003E Weekday { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Nullable\u003CElectron2D.Time.Weekday\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DateTimeInfo.Year()",
+    "kind": "property",
+    "declaringType": "Electron2D.DateTimeInfo",
+    "name": "Year",
+    "signature": "public System.Nullable\u003CSystem.Int64\u003E Year { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Nullable\u003CSystem.Int64\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.DirAccess.IncludeHidden()",
     "kind": "property",
     "declaringType": "Electron2D.DirAccess",
@@ -250034,6 +250948,71 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TimeInfo.Hour()",
+    "kind": "property",
+    "declaringType": "Electron2D.TimeInfo",
+    "name": "Hour",
+    "signature": "public System.Int32 Hour { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TimeInfo.Minute()",
+    "kind": "property",
+    "declaringType": "Electron2D.TimeInfo",
+    "name": "Minute",
+    "signature": "public System.Int32 Minute { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TimeInfo.Second()",
+    "kind": "property",
+    "declaringType": "Electron2D.TimeInfo",
+    "name": "Second",
+    "signature": "public System.Int32 Second { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TimeZoneData.Bias()",
+    "kind": "property",
+    "declaringType": "Electron2D.TimeZoneData",
+    "name": "Bias",
+    "signature": "public System.Int32 Bias { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TimeZoneData.Name()",
+    "kind": "property",
+    "declaringType": "Electron2D.TimeZoneData",
+    "name": "Name",
+    "signature": "public System.String Name { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {

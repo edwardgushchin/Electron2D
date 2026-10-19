@@ -95,8 +95,8 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 6 |
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
 | ADR 0094: Requires a WebRTC backend with ICE/STUN/TURN, SDP, DTLS/SCTP and data-channel state/ownership, plus native/browser packaging. Managed extension hooks follow the executable typed owner. | 4 |
-| Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 4 |
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
+| Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 3 |
 | Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. | 3 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
 | ADR 0094: Typed MultiplayerPeer now executes. Requires executable WebRTCPeerConnection/DataChannel SDP/ICE/DTLS/SCTP host integration and an owned WebRTC multiplayer cohort. | 1 |

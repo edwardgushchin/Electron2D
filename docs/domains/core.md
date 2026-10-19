@@ -1,6 +1,6 @@
 # Core domain
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 [Custom object iteration](../components/object-lifecycle.md#custom-typed-iteration) uses the ordinary typed C# enumerator protocol on concrete compiled subclasses. Independent cursor state, readonly value retrieval, early exit/error cleanup and caller-owned lifetime guards preserve the applicable capability without a universal enumerable ElectronObject or dynamic value system.
 
@@ -315,3 +315,5 @@ Registered `shader_globals/name` definitions use [GlobalShaderParameterSettings<
 [Navigation agent diagnostics](../components/navigation-maps.md#agent-path-diagnostics) consume three nonbasic typed project definitions for default path enablement, color and square waypoint size. Their first-use retained configuration honors loaded feature overrides and restart metadata; fresh-process settings checks exercise real canvas output.
 
 [Public property-list notifications](../components/object-lifecycle.md#public-property-list-notification) now expose the existing typed metadata publisher to ordinary external callers on every object role. Caller-thread delivery, blocking, deferred connections and lifetime retain their existing contract; physical authoring permissions are unchanged.
+
+The [Time service](../components/time-service.md) now supplies typed Gregorian calendar values, signed Unix/string conversions, UTC/local system samples, timezone metadata and monotonic elapsed ticks. Static calls address one permanent registry identity and do not depend on a native session or game scheduling.

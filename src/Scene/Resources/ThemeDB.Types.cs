@@ -430,6 +430,7 @@ public sealed partial class ThemeDB
         ["TileSetAtlasSource"] = ["TileSetAtlasSource", "TileSetSource", "Resource", "ElectronObject"],
         ["TileSetScenesCollectionSource"] = ["TileSetScenesCollectionSource", "TileSetSource", "Resource", "ElectronObject"],
         ["TileSetSource"] = ["TileSetSource", "Resource", "ElectronObject"],
+        ["Time"] = ["Time", "ElectronObject"],
         ["Timer"] = ["Timer", "Node", "ElectronObject"],
         ["TouchScreenButton"] = ["TouchScreenButton", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["Translation"] = ["Translation", "Resource", "ElectronObject"],

@@ -879,7 +879,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [TileSetAtlasSource](classes/TileSetAtlasSource.md) | TileSetSource | Partial | 43 |
 | [TileSetScenesCollectionSource](classes/TileSetScenesCollectionSource.md) | TileSetSource | Partial | 11 |
 | [TileSetSource](classes/TileSetSource.md) | Resource | Implemented | 6 |
-| [Time](classes/Time.md) | Object | Blocked | 42 |
+| [Time](classes/Time.md) | Object | Implemented | 42 |
 | [Timer](classes/Timer.md) | Node | Partial | 14 |
 | [TorusMesh](classes/TorusMesh.md) | PrimitiveMesh | Excluded | 4 |
 | [TouchScreenButton](classes/TouchScreenButton.md) | Node2D | Implemented | 15 |
