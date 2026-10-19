@@ -2,6 +2,71 @@
 
 Last updated: 2026-10-19
 
+## Complete body state operations
+
+All five typed state pairs expose actual selected pose, linear/angular velocity,
+Sleeping and CanSleep across StaticBody, AnimatableBody, CharacterBody, RigidBody,
+PhysicalBone and raw bodies. The public-only --body-states fixture cycles Static,
+Kinematic, Rigid and RigidLinear roles, alternating sleep permission and resetting
+nonzero motion before complete fixed frames. Queries verify the active logical
+shape slot and exact collider identity; state callbacks retain the owner thread
+and selected query space. Static surface motion leaves the pose stationary;
+kinematic targets and dynamic integration produce the expected selected motion.
+
+Detached static scene roles previously reported awake while equivalent raw and
+attached bodies reported inactive. Common runtime and direct scene getters now
+include the effective static role, covering explicit modes, Freeze, inactive
+physical bones and disabled MakeStatic participation. Reads do not replace the
+retained dynamic sleep request. Static/kinematic server sleep assignments remain
+ignored. Dynamic sleep clears both motion channels; disabling automatic sleep
+wakes dynamics. Detachment invalidates retained views and reentry preserves state.
+
+RigidBody previously omitted both sleep properties from packed-scene descriptors.
+CanSleep and Sleeping now use stored typed descriptors inherited by PhysicalBone.
+The internal capture reader complements the existing internal restore hook:
+it retains the dynamic request rather than computed static inactivity, while
+ordinary tooling reads still expose current participation with owner/phase checks.
+Both false and true requests survive frozen RigidBody pack/instantiate/unfreeze.
+No public declaration, replay format or alternate scene schema is introduced.
+
+An identical compiled consumer reproduces the original detached-static failure
+against the old runtime, then the separate packed-state failure against the runtime
+with only the static fix, and passes against the final runtime. Binary hashes and
+exact failures are in
+`bin/physics-body-states/2026-10-19/runtime-regression-proof.json`.
+Pinned reference metadata and inactivity behavior are retained in that directory's
+`reference-contract.json` and `reference/godot_body_2d.cpp`.
+
+Twelve fresh JIT/strict NativeAOT CPU/no-device, private software-GPU and registered
+owner/separate profiles complete 192 cold lifecycle cases, 1536 changed full frames,
+6912 owner callbacks and 9216 selected queries with strict zero owner/all-thread
+managed bytes. Pose/rotation tolerance 0.0002 and velocity/angular tolerance 0.002
+cover float integration and angle decoding. Kinematic linear velocity adds four
+origin float ULPs divided by the 0.01-second target interval, because differentiation
+amplifies coordinate rounding at the fixture's 400-unit origin. This replaces an
+initial fixed-0.002 fixture failure at 1.9979477 instead of 2, without changing the
+runtime or relaxing dynamic checks. Identities, flags, ticks, counts and allocations
+remain exact; kinematic inactivity follows selected participation rather than a
+forced cross-backend normalization.
+
+Pose/motion transaction and direct-mode companions retain existing partial-error,
+retry, terminal-world, reentry and authoring contracts across the three selections
+and both thread profiles. Registered sleep/replay/group cycles, mixed CPU/GPU
+membership, ordinary consumers, root body/force/contact/reporting/state/surface
+contracts and resource/local-scene storage complete 67/67 profiles on the same
+compiled sources. Six PDB/Compile comparisons cover 3391 authored inputs with no
+missing or mismatched checksums. Evidence:
+`bin/physics-body-states/2026-10-19/validation.json`,
+`current-source-proof.json` and `current-source-inputs.json` in the same directory.
+
+Only the two extension get/set state operations become Implemented. The physics
+census is 1219/1369 (89.043097151205%), with 150 open declarations: 119 Partial,
+14 Unimplemented and 17 Blocked; 92 remain Excluded. Earlier counts below retain
+their historical checkpoints. The full ordinary root suite was not rerun.
+Complete numerical/custom geometry/inherited, portable networking, native retained
+memory, other platforms and target-GPU rendered/FPS/performance acceptance remain
+open. The RTX cable remains unchecked; hardware GPU load did not run.
+
 ## Complete body parameter operations
 
 All ten typed parameter pairs share configured scene/raw ownership: mass, inertia,

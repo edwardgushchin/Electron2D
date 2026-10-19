@@ -15,7 +15,7 @@ public abstract partial class PhysicsBody
     internal PhysicsServer.BodyMode EffectiveBodyMode => PhysicsMadeStatic ? PhysicsServer.BodyMode.Static : _serverMode ?? RequestedBodyMode;
     internal Vector2 ServerLinearVelocity { get { PreparePendingServerMode(); return HasBackend && EffectiveBodyMode != PhysicsServer.BodyMode.Static ? Backend.LinearVelocity : _serverLinear; } }
     internal float ServerAngularVelocity { get { PreparePendingServerMode(); return HasBackend && EffectiveBodyMode != PhysicsServer.BodyMode.Static ? Backend.AngularVelocity : _serverAngular; } }
-    internal bool ServerSleeping { get { PreparePendingServerMode(); return HasBackend ? !Backend.IsAwake : _serverSleeping; } }
+    internal bool ServerSleeping { get { PreparePendingServerMode(); return HasBackend ? !Backend.IsAwake : EffectiveBodyMode == PhysicsServer.BodyMode.Static || _serverSleeping; } }
 
     internal void SetServerMode(PhysicsServer.BodyMode mode)
     {

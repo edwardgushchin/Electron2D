@@ -2,6 +2,14 @@
 
 Last updated: 2026-10-19
 
+## Inactive sleep state
+
+An inactive physical bone has a static effective role and reports Sleeping through
+both its inherited scene property and PhysicsServer even while detached. This read
+preserves its retained dynamic sleep request. Inherited CanSleep and Sleeping
+storage use the RigidBody property descriptors. See [body state checks](../components/physics-registered-adapter.md#complete-body-state-operations).
+
+
 [Gravity publication and terminal parameter guards](../components/physics-registered-adapter.md#gravity-publication-and-terminal-parameter-guards) retry the latest effective native gravity/omission request after a selected error and discard it on attachment retirement. Scene damping, omission and inherited material setters reject failed worlds before changing authoring while healthy post-solver callbacks retain writes. Public CPU/software-GPU/registered JIT/NativeAOT profiles verify real motion, history boundaries and strict zero managed-byte frames; wider acceptance remains open.
 
 ## Activation role recovery

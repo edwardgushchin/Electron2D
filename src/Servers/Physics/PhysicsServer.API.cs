@@ -1252,7 +1252,7 @@ public sealed partial class PhysicsServer
 
     /// <summary>Gets whether the current body is inactive in the solver.</summary>
     /// <param name="body">A live scene or server body RID.</param>
-    /// <returns>The live or retained sleep state; static bodies are inactive.</returns>
+    /// <returns>The live or retained sleep state; static bodies remain inactive while detached, including frozen and inactive scene roles.</returns>
     public static bool BodyGetSleeping(RID body) => Service.BodyGetSleepingCore(body);
 
     /// <summary>Sets automatic sleep permission, waking a dynamic body when disabled.</summary>

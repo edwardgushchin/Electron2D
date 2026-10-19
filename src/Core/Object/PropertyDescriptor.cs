@@ -125,6 +125,7 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
     private readonly Action<TOwner, TValue>? _setter;
     private readonly Func<TOwner, TValue>? _revertValue;
     private readonly Func<TOwner, TValue, bool>? _validator;
+    internal Func<TOwner, TValue>? StoredGetter { get; init; }
     internal Action<TOwner, TValue>? StoredSetter { get; init; }
 
     /// <summary>Initializes a strongly typed tooling property descriptor.</summary>
@@ -241,11 +242,12 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
     internal override StoredPropertyValue CaptureStoredValue(ElectronObject owner)
     {
         var typedOwner = GetOwner(owner);
+        var getter = StoredGetter ?? _getter;
 
         if (typeof(Node).IsAssignableFrom(typeof(TValue)))
         {
             if (owner is not Node node) throw new NotSupportedException("Stored node references require a node owner.");
-            var referenced = _getter(typedOwner) as Node;
+            var referenced = getter(typedOwner) as Node;
             return new StoredNodeReferenceValue(typeof(TValue), referenced is null ? null : node.GetPathTo(referenced));
         }
 
@@ -267,7 +269,7 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
                 $"Stored property '{Name}' uses unsupported reference-shaped type {typeof(TValue).FullName}.");
         }
 
-        var value = _getter(typedOwner);
+        var value = getter(typedOwner);
         return new StoredPropertyValue<TValue>(StoredPropertyValue<TValue>.Snapshot(value));
     }
 
