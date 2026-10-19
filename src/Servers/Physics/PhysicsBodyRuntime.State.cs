@@ -75,6 +75,7 @@ internal sealed partial class PhysicsBodyRuntime
     {
         if (Space is not null) return !Backend.IsAwake;
         var owner = Owners;
+        if (owner.Scene?.EffectiveBodyMode == PhysicsServer.BodyMode.Static) return true;
         return owner.Scene is { HasServerMode: true } direct ? direct.ServerSleeping : owner.Scene is RigidBody rigid ? rigid.Sleeping : owner.Server?.GetSleeping() ?? owner.Scene is StaticBody and not AnimatableBody;
     }
 

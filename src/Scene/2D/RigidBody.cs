@@ -41,6 +41,12 @@ public partial class RigidBody : PhysicsBody
         new PropertyDescriptor<RigidBody, RigidFreezeMode>(nameof(FreezeMode), body => body.FreezeMode, (body, value) => body.FreezeMode = value, _ => RigidFreezeMode.Static, stored: true),
         new PropertyDescriptor<RigidBody, bool>(nameof(Freeze), body => body.Freeze, (body, value) => body.Freeze = value, _ => false, stored: true),
         new PropertyDescriptor<RigidBody, bool>(nameof(LockRotation), body => body.LockRotation, (body, value) => body.LockRotation = value, _ => false, stored: true),
+        new PropertyDescriptor<RigidBody, bool>(nameof(CanSleep), body => body.CanSleep, (body, value) => body.CanSleep = value, _ => true, stored: true),
+        new PropertyDescriptor<RigidBody, bool>(nameof(Sleeping), body => body.Sleeping, (body, value) => body.Sleeping = value, _ => false, stored: true)
+        {
+            // Static inactivity must not replace the retained dynamic sleep request in storage.
+            StoredGetter = body => { _ = body.Sleeping; return body._sleeping; }
+        },
         new PropertyDescriptor<RigidBody, PhysicsMaterial?>(nameof(PhysicsMaterialOverride), body => body.PhysicsMaterialOverride,
             (body, value) => body.PhysicsMaterialOverride = value, _ => null, stored: true)
     ];
@@ -214,7 +220,8 @@ public partial class RigidBody : PhysicsBody
 
     /// <summary>Gets or sets whether an idle body may sleep.</summary>
     /// <remarks>Disabling automatic sleep wakes a dynamic body, including detached direct server configuration.
-    /// Assignment rejects during a borrowed numerical implementation call before changing configuration.</remarks>
+    /// Assignment rejects during a borrowed numerical implementation call before changing configuration.
+    /// Packed scenes preserve this permission.</remarks>
     /// <value>True by default.</value>
     /// <exception cref="InvalidOperationException">Assignment is off the scene owner thread or inside a borrowed numerical implementation call.</exception>
     public bool CanSleep
@@ -234,11 +241,13 @@ public partial class RigidBody : PhysicsBody
 
     /// <summary>Gets or sets whether the body is currently asleep.</summary>
     /// <remarks>Explicit dynamic sleep clears velocity and suppresses the automatic sleep-change event.
-    /// This state survives reentry even when automatic sleep is disabled.</remarks>
-    /// <value>False by default.</value>
+    /// This state survives reentry even when automatic sleep is disabled. Static participation reports inactivity
+    /// while detached without changing the retained dynamic sleep request. Packed scenes retain that request
+    /// independently of static inactivity.</remarks>
+    /// <value>False for a new dynamic body; true during static participation.</value>
     public bool Sleeping
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); PreparePendingServerMode(); return HasServerMode ? ServerSleeping : HasBackend ? !Backend.IsAwake : _sleeping; }
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); PreparePendingServerMode(); return HasServerMode ? ServerSleeping : HasBackend ? !Backend.IsAwake : EffectiveBodyMode == PhysicsServer.BodyMode.Static || _sleeping; }
         set
         {
             EnsureMutable(); Space?.EnsureImplementationWriteAccess(); PreparePendingServerMode(writing: true); _sleeping = value; _sleepChangePending = false;

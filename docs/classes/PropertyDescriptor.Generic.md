@@ -1,6 +1,15 @@
 # PropertyDescriptor\<TOwner, TValue\>
 
-Last updated: 2026-10-14
+Last updated: 2026-10-19
+
+## Stored physical state
+
+Packed-scene capture can use an internal typed authored-value reader while ordinary
+tooling reads retain the current observable value. RigidBody uses this existing
+storage path to retain its dynamic sleep request separately from static inactivity.
+This adds no public descriptor option and preserves owner access checks, supported
+value types, snapshot copies and normal restoration validation.
+
 
 **Inherits:** [PropertyDescriptor](PropertyDescriptor.md)
 

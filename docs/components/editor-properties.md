@@ -1,6 +1,17 @@
 # Typed editor properties component
 
-Last updated: 2026-10-14
+Last updated: 2026-10-19
+
+## Stored physical state
+
+RigidBody registers stored CanSleep and Sleeping descriptors, inherited by
+PhysicalBone. Sleeping inspection reports current participation; capture retains
+the authored dynamic request even when static participation is inactive. An internal
+typed capture delegate complements the existing internal restore delegate, without
+changing public descriptor construction or introducing another storage format.
+Ordinary descriptors keep their existing getters, copies, reference resolution and
+validation. See [body state verification](physics-registered-adapter.md#complete-body-state-operations).
+
 
 ## Compiled indexed properties
 

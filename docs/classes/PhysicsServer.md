@@ -6,6 +6,16 @@ The [Body/Area append audit](../components/physics-shapes.md#bodyarea-append-con
 
 Last updated: 2026-10-19
 
+## Complete typed body state
+
+The five typed state pairs expose pose, linear/angular motion, Sleeping and CanSleep
+for every scene body sibling and raw body. Detached static roles report inactivity
+consistently with attached bodies; server sleep writes remain ignored for static
+and kinematic roles. Native frozen/inactive scene roles retain their own policies.
+See [state operation checks](../components/physics-registered-adapter.md#complete-body-state-operations)
+for selected execution, lifecycle, publication errors and allocation limits.
+
+
 [Complete body parameter verification](../components/physics-registered-adapter.md#complete-body-parameter-operations) exercises all ten typed pairs on scene/raw owners, signed material/field effects, damping-before-forces and wake behavior, invalid input, configured numerical reads and zero managed-byte warmed frames across CPU/software-GPU/registered JIT/NativeAOT owner/separate runs. Runtime/API behavior is unchanged; complete numerical and full-goal acceptance remain separate.
 
 [Mixed membership verification](../components/physics-registered-adapter.md#mixed-space-membership-operation-audit) covers every ordered selected-backend transfer for all scene/raw Body/Area siblings, all four body roles and sleep, exact identity/state, cached-view lifetime and preflight/target/departure/rollback errors. Original scene drivers execute actual target motion and queries; eight JIT/NativeAOT owner/separate profiles retain strict zero managed-byte warmed full frames. Cold transfers and full numerical/network/native/platform/hardware performance acceptance remain separate. Runtime behavior and public declarations are unchanged.
