@@ -60,6 +60,7 @@ public static partial class BackendChecks
         RunCustom();
         PortableEpisodeChecks();
         RunConstruction();
+        RunAttachmentErrors();
         RunPicking();
         RunShapeOwners();
         SelectionChecks();

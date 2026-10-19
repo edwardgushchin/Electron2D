@@ -9,7 +9,8 @@ public abstract class PhysicsBackendCollider
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract int ShapeCount { get; }
     /// <summary>Supplies the selected implementation operation: attach.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.
+    /// Failure during attachment or subsequent initial preparation attempts Detach and preserves both the original error and cleanup errors.</remarks>
     protected internal abstract void Attach(Vector2 position, float rotation, in PhysicsBodyConfiguration configuration);
     /// <summary>Supplies the selected implementation operation: detach.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>

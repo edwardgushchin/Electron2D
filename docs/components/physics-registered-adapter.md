@@ -2,6 +2,45 @@
 
 Last updated: 2026-10-19
 
+## Initial attachment cleanup errors
+
+A selected initial shape preparation error was previously lost if the subsequent
+collider cleanup also threw. The same public consumer DLL fails against the old
+runtime and passes when only PhysicsBody, Area and PhysicsServerCollider change.
+Those three attachment paths now retain the original preparation exception and
+aggregate any cleanup exception after retiring the partial binding. Successful
+cleanup rethrows the original error unchanged. No retry, numerical solve or CPU
+fallback is added to this error path; successful attachment is unchanged.
+
+The public --attachment-errors fixture checks server Body/Area plus StaticBody,
+AnimatableBody, CharacterBody, RigidBody, PhysicalBone and scene Area. Each of eight
+owners receives factory, initial identity and shape preparation failures with
+successful/failing cleanup: 48 cases per registered profile. Factory rejection
+owns no collider and calls no numerical detach; claimed attachments release once.
+Every original exception retains object identity, secondary errors remain visible,
+and failed target membership disappears while its RID and authored shape remain.
+An unrelated live collider remains numerically queryable. Healthy reattachment
+then executes actual scene/raw motion and exact body/Area logical-shape queries;
+subsequent normal retirement invalidates old direct views.
+
+Twelve fresh public JIT/strict NativeAOT CPU/no-device, private software-GPU and
+registered owner/separate profiles measure 1536 complete edit/step/read/query
+frames and 9216 owner callbacks at strict zero owner/all-thread managed bytes.
+The four registered profiles exercise 192 failures and 128 claimed cleanup calls.
+Each profile warms 128 complete frames, then measures 128; position tolerance
+0.0001 covers single-precision movement at speed 1 for 0.01 seconds, including
+scene-unit offsets up to 700. Areas remain stationary and queryable. Registered
+numerical hooks observe the captured owner/separate lane while callbacks retain
+the owner. Construction/resource/lifecycle/view/mass-reset/space-creation and
+ordinary consumer companions plus root ownership checks complete 57/57 profiles.
+
+Body/Area extension creation and complete typed parameters remain Partial; no
+coverage status closes. The unique physics census stays 1206/1369 Implemented
+(88.09349890430972%), with 163 open declarations. Complete numerical/custom
+geometry/inherited, network, native retained-memory, target-GPU/window performance
+and platform acceptance remain open. Software GPU checks establish functionality
+only. Evidence: bin/physics-attachment-errors/2026-10-19/validation.json.
+
 ## Space creation operation audit
 
 All three PhysicsServer.SpaceCreate overload families use the existing registered

@@ -1,6 +1,10 @@
 # PhysicsServerCollider
 
-Last updated: 2026-10-16
+Last updated: 2026-10-19
+
+## Failed initial attachment
+
+Failed initial preparation retires the partial physical binding. Successful cleanup preserves the original exception; a cleanup failure is aggregated alongside it. The RID and authored shapes remain usable for a healthy later attachment, and unrelated live colliders remain available. This applies to server Body/Area and every scene PhysicsBody sibling plus Area. See [initial attachment checks](../components/physics-registered-adapter.md#initial-attachment-cleanup-errors) for executed scope and limits.
 
 [Retained slot history](../components/physics-snapshots.md#capture-after-topology-edits)
 keeps sampled public values while rejecting portable capture of retired/reindexed

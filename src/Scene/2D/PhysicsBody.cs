@@ -7,7 +7,8 @@ namespace Electron2D;
 /// Scene presentation reads retain authored state without forcing numerical preparation.
 /// Failed numerical worlds reject attached motion/role writes and numerical access before changing authoring,
 /// including after a failed local or portable restore. Teardown remains available.
-/// Changed one-way slot policies are captured during authoring; numerical shape preparation reuses those immutable values.</remarks>
+/// Changed one-way slot policies are captured during authoring; numerical shape preparation reuses those immutable values.
+/// Failed initial attachment retires its partial binding and preserves the original preparation error alongside any cleanup errors.</remarks>
 public abstract partial class PhysicsBody : CollisionObject
 {
     private readonly List<ulong> _appliedShapeRevisions = [];
@@ -83,7 +84,12 @@ public abstract partial class PhysicsBody : CollisionObject
             if (configuration.Sleeping && configuration.Mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear) Backend.SetAwake(false);
             if (PhysicsMadeStatic) OnMadeStatic();
         }
-        catch { DetachBackend(); throw; }
+        catch (Exception error)
+        {
+            try { DetachBackend(); }
+            catch (Exception cleanup) { throw new AggregateException("Collider attachment and cleanup failed.", error, cleanup); }
+            throw;
+        }
     }
 
     internal void DetachBackend()

@@ -82,7 +82,12 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
                 _backend.SetSurfaceVelocity(_linearVelocity, _angularVelocity);
             if (_sleeping) _backend.SetAwake(false);
         }
-        catch { DetachBackend(); throw; }
+        catch (Exception error)
+        {
+            try { DetachBackend(); }
+            catch (Exception cleanup) { throw new AggregateException("Collider attachment and cleanup failed.", error, cleanup); }
+            throw;
+        }
     }
 
     internal void DetachBackend()

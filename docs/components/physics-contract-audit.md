@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-19
 
+[Initial attachment cleanup](physics-registered-adapter.md#initial-attachment-cleanup-errors) now preserves a reproduced preparation error alongside secondary cleanup errors across all scene body siblings and scene/raw Areas and bodies. Healthy retry retains authored shapes and executes real movement/queries; strict warmed frames remain allocation-free. Creation/typed-parameter rows stay Partial and the physics census stays 1206/1369 Implemented (88.0935%), with 163 open declarations.
+
 [Space creation operation audit](physics-registered-adapter.md#space-creation-operation-audit) completes the explicit/named/lazy creation contract, readonly initialization queries, failure cleanup, captured selection/thread policy and worker retirement through real public scene/raw execution. The unique physics census is now 1206/1369 Implemented (88.09349890430972%), with 163 open declarations (132 Partial, 14 Unimplemented, 17 Blocked). Only the space-creation extension row closes; body creation, complete typed parameters and broader full-goal gates remain open. Earlier counts below describe their recorded slices.
 
 [Gravity publication and terminal parameter guards](physics-registered-adapter.md#gravity-publication-and-terminal-parameter-guards) fix a reproduced post-error velocity 99 versus 3 and 14 accepted scene writes after terminal failure. At that slice, extension creation/typed-parameter rows remained Partial and the unique physics census was 1205 Implemented and 164 open (133 Partial, 14 Unimplemented, 17 Blocked). Broader complete-goal gates remain open.

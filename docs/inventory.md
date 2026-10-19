@@ -4,6 +4,8 @@ CanvasItem TopLevel rebinding now connects to the existing recursive presentatio
 
 Last updated: 2026-10-19
 
+[Initial collider attachment](components/physics-registered-adapter.md#initial-attachment-cleanup-errors) now preserves preparation and cleanup errors after retiring partial bindings for scene/raw Body/Area owners. Existing types and public signatures remain unchanged; all scene body siblings use the corrected PhysicsBody path.
+
 [Space creation](components/physics-registered-adapter.md#space-creation-operation-audit) now has a complete public operation audit across explicit/named/lazy worlds, captured policies, readonly initialization queries, startup fallback and failure/resource/thread retirement. Existing PhysicsServer, PhysicsSpace and backend types retain their signatures and algorithms; no production type is added.
 
 Private native libraries are owned by the Linux/macOS/Windows native packages in ordinary desktop builds; [native delivery](native-packaging.md) records source production and target verification limits. Windows resolution/full-suite checks are connected with execution pending. No public runtime type or managed backend assembly is added; internal floating-point atomics preserve Engine/audio snapshots on 32-bit hosts.

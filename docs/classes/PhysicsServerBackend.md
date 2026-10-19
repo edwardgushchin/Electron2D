@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-19
 
+## Failed initial attachment
+
+Failed initial preparation retires the partial physical binding. Successful cleanup preserves the original exception; a cleanup failure is aggregated alongside it. The RID and authored shapes remain usable for a healthy later attachment, and unrelated live colliders remain available. This applies to server Body/Area and every scene PhysicsBody sibling plus Area. See [initial attachment checks](../components/physics-registered-adapter.md#initial-attachment-cleanup-errors) for executed scope and limits.
+
 ## Space creation and initialization
 
 All SpaceCreate overloads publish inactive spaces with tick zero and retain captured selection/thread policy. Parameterless creation stays CPU; explicit enum selection ignores manager defaults. Named factories initialize against a registered context and can use readonly direct-space queries before completion; step, activation, policy writes, binding and release remain blocked. Failed initialization retires registrations/ownership and preserves cleanup errors. See [space creation verification](../components/physics-registered-adapter.md#space-creation-operation-audit) for real scene/raw, startup-fallback, lifecycle and allocation checks and their limits.

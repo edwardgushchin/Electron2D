@@ -5,7 +5,8 @@ namespace Electron2D;
 /// Overlap snapshots update after each nonzero fixed physics step; changing a transform does not update a snapshot immediately.
 /// Failed pose publication retries current authoring before live queries or a nonzero step, including a return to the previous pose.
 /// Authored transform reads do not force numerical preparation; detachment discards incomplete attachment publication.
-/// The sensor remains bound through TreeExiting and releases during engine membership cleanup before NodeRemoved and TreeExited.</remarks>
+/// The sensor remains bound through TreeExiting and releases during engine membership cleanup before NodeRemoved and TreeExited.
+/// Failed initial attachment retires its partial binding and preserves the original preparation error alongside any cleanup errors.</remarks>
 public sealed partial class Area : CollisionObject
 {
     private EventHandlers<Action<Area>>? _eventAreaEntered;
@@ -234,7 +235,12 @@ public sealed partial class Area : CollisionObject
         Backend.Attach(space, _lastPosition, _lastRotation, new(PhysicsServer.BodyMode.Static));
         _shapesDirty = true;
         try { RebuildShapes(); }
-        catch { DetachBackend(); throw; }
+        catch (Exception error)
+        {
+            try { DetachBackend(); }
+            catch (Exception cleanup) { throw new AggregateException("Collider attachment and cleanup failed.", error, cleanup); }
+            throw;
+        }
     }
 
     internal void DetachBackend()

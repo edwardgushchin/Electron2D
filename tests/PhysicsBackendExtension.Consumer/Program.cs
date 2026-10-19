@@ -63,6 +63,7 @@ else if (args.Contains("--motion-transactions")) BackendChecks.RunMotionTransact
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--pose-transactions")) BackendChecks.RunPoseTransactions(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Contains("--attachment-errors")) BackendChecks.RunAttachmentErrors(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--space-startup-unavailable")) BackendChecks.RunSpaceStartupUnavailable(args.Contains("--threaded"));
 else if (args.Contains("--space-creation")) BackendChecks.RunSpaceCreation(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
