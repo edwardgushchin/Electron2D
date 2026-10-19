@@ -127,6 +127,13 @@ first interval. Complete retained-memory budgets remain open.
 
 Last updated: 2026-10-19
 
+[Complete space activation operations](../components/physics-registered-adapter.md#complete-space-activation-operations)
+now have a shared public-only CPU, software-GPU and registered contract. Actual
+motion, force/spring retention, multiple-world statistics, scene scheduling and
+publication-error recovery execute in owner/separate JIT and NativeAOT profiles
+with strict zero warmed managed bytes. Two activation rows close independently
+of the remaining numerical, network, native, platform and hardware gates.
+
 [Gravity publication and terminal parameter guards](../components/physics-registered-adapter.md#gravity-publication-and-terminal-parameter-guards) retry the latest effective native gravity/omission request after a selected error and discard it on attachment retirement. Scene damping, omission and inherited material setters reject failed worlds before changing authoring while healthy post-solver callbacks retain writes. Public CPU/software-GPU/registered JIT/NativeAOT profiles verify real motion, history boundaries and strict zero managed-byte frames; wider acceptance remains open.
 
 [Mass profile publication recovery](../components/physics-registered-adapter.md#mass-profile-publication-recovery) preserves preceding authoring after selected mass/inertia/center/reset errors and prepares it before numerical use. Cached views, space/force/checkpoint/portable boundaries, attachment retirement, in-flight rejection and post-commit notification behavior execute across all scene/raw roles. Public JIT/strict NativeAOT CPU/software-GPU/registered full-frame checks retain strict zero managed allocation; wider native/platform/network/performance gates remain open.

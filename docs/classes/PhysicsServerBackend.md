@@ -7,6 +7,16 @@ body-state observers. Successful retirement after pre-Solve preparation failure
 permits a new interval; gameplay observer/flush/end-sync errors retain their
 notification recovery policy. See [lifecycle publication boundaries](../components/physics-registered-adapter.md#complete-lifecycle-publication-boundaries).
 
+## Complete activation operations
+
+SetActive and the common SpaceIsActive projection retain one engine-owned
+committed flag per world. Successful equality is silent; failed publication keeps
+the last accepted flag for explicit/live-solver-query/history repair. The [shared public
+activation checks](../components/physics-registered-adapter.md#complete-space-activation-operations)
+exercise actual scene/raw pause/resume, forces, springs, multiple worlds,
+statistics and owner/separate execution. This operation acceptance is independent
+of the remaining numerical-extension family gates.
+
 ## Resource retirement errors
 
 Caller-owned retirement attempts every required cleanup stage before propagating

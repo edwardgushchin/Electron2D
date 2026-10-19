@@ -18,4 +18,5 @@
   <ItemGroup><Compile Include="../Electron2D.Tests/PhysicsNodeTweenTests.cs" Link="PhysicsNodeTweenTests.cs" /></ItemGroup>
   <ItemGroup><Compile Include="../Electron2D.Tests/PhysicsBodyParameterTests.cs" Link="PhysicsBodyParameterTests.cs" /></ItemGroup>
   <Import Project="../../tools/native-consumer.props" />
+  <ItemGroup><Compile Include="../Electron2D.Tests/PhysicsActivityTests.cs" Link="PhysicsActivityTests.cs" /></ItemGroup>
 </Project>

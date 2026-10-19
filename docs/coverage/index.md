@@ -148,6 +148,14 @@ status changes; full retained/native/device history budgets remain open.
 
 Last updated: 2026-10-19
 
+[Complete space activation operations](../components/physics-registered-adapter.md#complete-space-activation-operations)
+close the two selected activation rows after shared public CPU/no-device,
+software-GPU and registered owner/separate JIT/NativeAOT checks. Existing runtime
+semantics are unchanged. Physics now has 1275/1369 Implemented declarations
+(93.13%), with 94 open: 63 Partial, 17 Blocked and 14 Unimplemented; 92 are Excluded.
+Full numerical/backend, inherited, network, native/platform and hardware-performance
+acceptance remains open; earlier slice counts below are historical.
+
 [Direct-view lifetime guards](../components/physics-registered-adapter.md#direct-view-release-during-numerical-hooks)
 now reject same-world numerical status/factory disposal before lifetime or cache
 publication changes, across default, cached and independent body/query views.

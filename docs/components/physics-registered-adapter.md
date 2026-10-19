@@ -1442,6 +1442,44 @@ Evidence: bin/physics-body-mode-audit/2026-10-19/validation.json.
 
 The separate ordinary frozen `0236ffd7` suite failed CPU class-spare reuse with 0 owner/288 all-thread bytes after checkpoint scenarios. Three fresh CPU-only pool lifetime processes pass with zero bytes and no graphics services, but do not attribute or close that full-process observation. The mode operation matrix and this broader suite gate remain separately qualified; the latter is retained in bin/physics-body-mode-audit/2026-10-19/pool-failure-triage.json.
 
+## Complete space activation operations
+
+The selected SetActive hook and common SpaceIsActive projection implement the two
+activation operations independently of the world's geometry or solver algorithm.
+The common committed flag controls actual scene/raw intervals. Caller-created
+spaces start inactive, scene worlds start active, and process suspension retains
+each local flag. A running interval completes before a callback's new gate applies
+to the next world boundary. Successful equal assignments are silent; a failed
+selected publication retains the old flag and its explicit/query/history repair
+contract described below. No new runtime declaration or architecture is required.
+
+`--activity` links the existing PhysicsActivityTests into the public-only consumer
+and selects the registered provider, CPU or software GPU explicitly. It exercises
+actual motion, queued force consumed once, retained spring response, paused live
+queries/configuration, independent worlds, callback errors, continued scene
+frames/timers, stale/wrong/thread/phase guards and completed statistics. Each
+measured interval keeps two moving worlds and verifies exactly 64 new ticks per
+world over 64 local/global pause/resume cycles. Both owner and precise all-thread
+managed counters must remain zero after both finalization passes have drained.
+The companion `--activation-transactions` retains startup/retirement and 64
+scene/raw before/after failure cases per registered profile, explicit/query/local/
+portable repair, original error identity and 128 changed full-frame strict gates.
+Broader numerical, native allocation, network, platform and hardware-performance
+acceptance belongs to the remaining family rows and is not inferred from activation.
+
+Final verification passes 25 profiles: twelve JIT, twelve strict NativeAOT and
+one root-suite companion. The twelve public activity profiles measure 768 full
+two-world cycles (1536 positive world intervals); the twelve transaction profiles
+measure 1536 changed scene frames. Every bracket requires strict 0/0 owner/all-
+thread bytes. A preliminary CPU check with incomplete finalizer draining observed
+0/1296 bytes once; two original repeats passed. After matching the repository's
+two-collection/two-wait preparation, five fresh CPU checks and the entire matrix
+pass without weakening either allocation gate. The exact allocating stack of that
+preliminary event was not captured. Six DLL/PDB/Compile sets match 3437 authored
+sources without DEBUG. Evidence: `bin/physics-activity-contract/2026-10-19/`.
+The two non-deprecated pinned activation rows become Implemented; the backend
+family and other open operations retain their acceptance gates.
+
 ## Failed local activation
 
 Local activation still commits only after selected SetActive succeeds. One pending bit records an incomplete publication without storing a second active value. A failed assignment does not become a requested future activation: implicit preparation restores the last committed flag. An explicit changed/equal assignment instead publishes its supplied value and commits only on success. Space queries and local/portable history preparation restore activation before other pending world policies; a positive active step does so before BeginStep/Solve. Metadata reads, zero/local-inactive/globally suspended intervals and retirement do not prepare. Repeated errors preserve identity and tick. A failed state-callback activation retains its completed interval and never replays that callback or Solve.

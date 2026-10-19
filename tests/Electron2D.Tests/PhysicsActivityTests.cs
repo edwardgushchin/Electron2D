@@ -1,13 +1,16 @@
 using Electron2D;
 
-internal static class PhysicsActivityTests
+internal sealed class PhysicsActivityTests(string backendName)
 {
-    internal static void Run()
+    internal static void Run(string backendName = "CPU") => new PhysicsActivityTests(backendName).RunCore();
+
+    private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
         VerifyExplicitPause();
         VerifyGlobalAndLocalPolicy();
         VerifyScenePause();
-        Console.WriteLine("Physics world activation, global/local suspension, callbacks, pending force and allocation checks passed.");
+        Console.WriteLine($"Physics activation {backendName}: global/local suspension, callbacks, retained spring, pending force and 64 full two-world cycles at 0/0 owner/all-thread B passed.");
     }
 
     private sealed class PhysicsTicker : Node
@@ -17,7 +20,7 @@ internal static class PhysicsActivityTests
         protected override void OnPhysicsProcess(double delta) { Calls++; base.OnPhysicsProcess(delta); }
     }
 
-    private static RID MovingBody(PhysicsServer server, RID space, float x = 0)
+    private static RID MovingBody(RID space, float x = 0)
     {
         var body = PhysicsServer.BodyCreate();
         PhysicsServer.BodySetTransform(body, new(0, Vector2.One, 0, new(x, 0)));
@@ -29,10 +32,9 @@ internal static class PhysicsActivityTests
         return body;
     }
 
-    private static void VerifyExplicitPause()
+    private void VerifyExplicitPause()
     {
-        var server = PhysicsServer.Service;
-        var space = PhysicsServer.SpaceCreate(); var body = MovingBody(server, space); var shape = PhysicsServer.CircleShapeCreate();
+        var space = PhysicsServer.SpaceCreate(backendName); var body = MovingBody(space); var shape = PhysicsServer.CircleShapeCreate();
         using (var initialShapeData = new CircleShape()) PhysicsServer.ShapeSetData(shape, initialShapeData);
         var calls = 0;
         try
@@ -90,11 +92,10 @@ internal static class PhysicsActivityTests
         _ = PhysicsServer.SpaceIsActive(first);
     }
 
-    private static void VerifyGlobalAndLocalPolicy()
+    private void VerifyGlobalAndLocalPolicy()
     {
-        var server = PhysicsServer.Service;
-        var first = PhysicsServer.SpaceCreate(); var second = PhysicsServer.SpaceCreate();
-        var a = MovingBody(server, first); var b = MovingBody(server, second);
+        var first = PhysicsServer.SpaceCreate(backendName); var second = PhysicsServer.SpaceCreate(backendName);
+        var a = MovingBody(first); var b = MovingBody(second);
         try
         {
             PhysicsServer.SpaceSetActive(first, true); PhysicsServer.SpaceSetActive(second, false);
@@ -129,11 +130,27 @@ internal static class PhysicsActivityTests
             for (var step = 0; step < 64; step++) { PhysicsServer.SpaceStep(first, 1d / 120); PhysicsServer.SpaceStep(second, 1d / 120); }
             // Prepare the same suspension/resume paths that the allocation interval exercises.
             for (var step = 0; step < 64; step++) SuspensionInterval(first, second);
-            var before = GC.GetAllocatedBytesForCurrentThread();
+            var active = PhysicsServer.GetProcessInfo(PhysicsServer.ProcessInfo.ActiveObjects);
+            var firstTick = PhysicsServer.SpaceGetTick(first); var secondTick = PhysicsServer.SpaceGetTick(second);
+            PhysicsServer.SpaceSetActive(second, false);
+            Check(active == 2 && PhysicsServer.GetProcessInfo(PhysicsServer.ProcessInfo.ActiveObjects) == 1,
+                "Local deactivation removes exactly that world's completed statistics.");
+            PhysicsServer.SetActive(false); PhysicsServer.SpaceSetActive(second, true);
+            Check(PhysicsServer.GetProcessInfo(PhysicsServer.ProcessInfo.ActiveObjects) == active &&
+                PhysicsServer.SpaceGetTick(first) == firstTick && PhysicsServer.SpaceGetTick(second) == secondTick,
+                "Local resume restores its completed statistics without stepping, including global suspension.");
+            PhysicsServer.SetActive(true);
+            GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers();
             for (var step = 0; step < 64; step++) SuspensionInterval(first, second);
-            var bytes = GC.GetAllocatedBytesForCurrentThread() - before;
-            Check(bytes == 0,
-                $"Warmed global/local switches, skipped intervals and active native frames allocated {bytes} managed bytes.");
+            var firstMeasuredTick = PhysicsServer.SpaceGetTick(first); var secondMeasuredTick = PhysicsServer.SpaceGetTick(second);
+            var firstPosition = PhysicsServer.BodyGetTransform(a).Origin.X; var secondPosition = PhysicsServer.BodyGetTransform(b).Origin.X;
+            var before = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+            for (var step = 0; step < 64; step++) SuspensionInterval(first, second);
+            var bytes = GC.GetAllocatedBytesForCurrentThread() - before; all = GC.GetTotalAllocatedBytes(true) - all;
+            Check(bytes == 0 && all == 0 && PhysicsServer.SpaceGetTick(first) == firstMeasuredTick + 64 &&
+                PhysicsServer.SpaceGetTick(second) == secondMeasuredTick + 64 && PhysicsServer.BodyGetTransform(a).Origin.X > firstPosition &&
+                PhysicsServer.BodyGetTransform(b).Origin.X > secondPosition,
+                $"Warmed global/local switches retain two moving worlds and exact ticks, owner/all={bytes}/{all} B.");
         }
         finally
         {
@@ -142,11 +159,11 @@ internal static class PhysicsActivityTests
         }
     }
 
-    private static void VerifyScenePause()
+    private void VerifyScenePause()
     {
-        var server = PhysicsServer.Service;
         using var geometry = new CircleShape { Radius = 5 };
-        var root = new Node(); var ticker = new PhysicsTicker(); root.AddChild(ticker); var anchor = new StaticBody { Name = "Anchor" };
+        using var world = new World(backendName);
+        using var root = new SubViewport { World = world }; var ticker = new PhysicsTicker(); root.AddChild(ticker); var anchor = new StaticBody { Name = "Anchor" };
         var body = new RigidBody
         {
             Name = "Body",
