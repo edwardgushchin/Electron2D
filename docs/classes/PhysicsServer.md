@@ -988,7 +988,10 @@ geometry is always recomputed; query margins and body/shape enter/exit events do
 acquire hysteresis. Reused impulses cannot be duplicated across fresh points.
 See [contact persistence](../components/physics-contact-policy.md#contact-history-limits)
 for backend storage, tests and limits. All nine space-parameter capabilities now
-have concrete typed operations; this does not complete the rest of PhysicsServer.
+have concrete typed operations. The [complete registered operation checks](../components/physics-registered-adapter.md#complete-world-parameter-operations)
+exercise their physical effects, guarded authoring, partial-publication repair and
+private history across CPU/software-GPU/registered worlds. This does not complete
+the rest of PhysicsServer.
 
 ## Body collision priority
 

@@ -2,9 +2,18 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunJointResponse(PhysicsServer.Backend? backend = null)
+    public static void RunJointResponse(PhysicsServer.Backend? backend = null, bool threaded = false)
     {
-        if (backend is null) PhysicsServerManager.RegisterServer("JointResponse", static () => new Solver());
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { RunJointResponseCore(backend, threaded); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
+
+    private static void RunJointResponseCore(PhysicsServer.Backend? backend, bool threaded)
+    {
+        var ownerThread = Thread.CurrentThread;
+        if (backend is null) PhysicsServerManager.RegisterServer("JointResponse", () => new Solver() { StepHook = () => Check((Thread.CurrentThread != ownerThread) == threaded, "Selected Solve retains the requested numerical thread") });
         using var world = backend is { } selected ? new World(selected) : new World("JointResponse");
         Check(world.PhysicsBackend == (backend ?? PhysicsServer.Backend.Extension) && world.PhysicsFallbackReason is null,
             "Joint response runs on the explicitly selected implementation without fallback");

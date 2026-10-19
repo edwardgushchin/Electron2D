@@ -9,17 +9,20 @@ public static partial class BackendChecks
         internal int First = first, Second = second;
         internal Vector2 Normal = normal, Point = point;
         internal float Depth = depth, Residual = residual, Bounce = bounce, NormalImpulse, TangentImpulse;
+        internal Vector2 LocalA, LocalB;
         internal Vector2 Impulse => Normal * NormalImpulse + new Vector2(-Normal.Y, Normal.X) * TangentImpulse;
     }
     private sealed partial class Solver
     {
         private readonly List<ContactConstraint> _constraints = [];
+        internal int ReusedContactPoints;
         private void SolveConstraints(float interval, bool begin, bool first = true)
         {
             if (begin) foreach (var joint in Joints.Values) joint.BeginSolve();
             try
             {
                 PrepareContacts(interval);
+                WarmContacts(interval);
                 if (_constraints.Count != 0 || Joints.Count != 0)
                     for (var iteration = 0; iteration < Iterations; iteration++)
                     {
@@ -33,6 +36,7 @@ public static partial class BackendChecks
                     a.RecordContact(b, own.Index, other.Index, contact.Point, -contact.Normal, -contact.Impulse, contact.Depth, contact.First, contact.Second);
                     b.RecordContact(a, other.Index, own.Index, contact.Point, contact.Normal, contact.Impulse, contact.Depth, contact.Second, contact.First);
                 }
+                SaveContactHistory(interval);
                 if (FailSolve) throw new InvalidOperationException("Injected independent solver failure.");
             }
             finally { _constraints.Clear(); }
@@ -56,7 +60,9 @@ public static partial class BackendChecks
                             var fraction = bias == 1 ? 1 : (float)(1 - Math.Pow(1 - bias, interval / Delta));
                             var residual = depth - MathF.Max(0, depth - _contactSettings.AllowedPenetration) * fraction;
                             var velocity = (b.PointVelocity(point) - a.PointVelocity(point)).Dot(normal);
-                            _constraints.Add(new(a, b, i, j, normal, point, depth, residual, -Math.Clamp(a.Bounce + b.Bounce, 0, 1) * MathF.Min(0, velocity)));
+                            PartGap(own, a.Pose, other, b.Pose, out _, out var anchorA, out var anchorB);
+                            _constraints.Add(new(a, b, i, j, normal, point, depth, residual, -Math.Clamp(a.Bounce + b.Bounce, 0, 1) * MathF.Min(0, velocity))
+                            { LocalA = (anchorA - a.Position).Rotated(-a.Rotation), LocalB = (anchorB - b.Position).Rotated(-b.Rotation) });
                             if (depth > 0 && ContactActive(a, b))
                             {
                                 var half = normal * (depth * .5f); var midpoint = point;

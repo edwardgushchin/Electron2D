@@ -1,4 +1,14 @@
-[Lifecycle publication boundaries](../components/physics-registered-adapter.md#complete-lifecycle-publication-boundaries) now stop scene/server publication after selected completion or retirement failure, preserve original/cleanup errors and keep gameplay-notification recovery separate. Seven lifecycle rows become Implemented after public JIT/NativeAOT CPU/software-GPU/registered owner/separate checks. Current physics census: 1273/1369 Implemented (92.9876%), with 96 open declarations (65 Partial, 17 Blocked, 14 Unimplemented), 92 Excluded. Full numerical, networking, native/platform and hardware-performance acceptance remain open; earlier counts record their checkpoints.
+[Complete world parameter operations](../components/physics-registered-adapter.md#complete-world-parameter-operations)
+close the selected setter after physical effects for all nine typed settings,
+publication/borrowing guards and contact-history replay. The independent provider
+now uses its cache settings numerically; four legacy test commands also apply and
+verify their actual requested numerical lane. The current physics ledger has
+1276/1369 Implemented declarations (93.21%), with 93 open: 62 Partial, 17 Blocked
+and 14 Unimplemented; 92 are Excluded. Earlier counts record their checkpoints.
+Complete numerical/backend, inherited/network, native/platform and target-hardware
+performance acceptance remains open.
+
+[Lifecycle publication boundaries](../components/physics-registered-adapter.md#complete-lifecycle-publication-boundaries) now stop scene/server publication after selected completion or retirement failure, preserve original/cleanup errors and keep gameplay-notification recovery separate. Seven lifecycle rows become Implemented after public JIT/NativeAOT CPU/software-GPU/registered owner/separate checks. That checkpoint recorded 1273/1369 Implemented (92.9876%), with 96 open declarations (65 Partial, 17 Blocked, 14 Unimplemented), 92 Excluded. Full numerical, networking, native/platform and hardware-performance acceptance remain open; earlier counts record their checkpoints.
 
 [Independent native windows](../components/window-runtime.md#independent-native-windows) now execute ordinary desktop child creation, separate presentation and input/text, monotonic native IDs, hide/recreate, transient/modal ownership and cold viewport-history preservation. GPU windows share one device; compatibility windows replay frozen submissions without repeating scene callbacks. Five Window lifetime/policy rows become Implemented; three absent public DisplayServer projections become Unimplemented after their native ownership prerequisite is supplied. Native popup surfaces, decoration controls, typed per-window DisplayServer callback registration and the existing Wayland Vulkan root remap gap retain separate obligations. NativeChildWindowTests covers fresh-process policies and current Linux X11/Wayland backends; physical/compositor and foreign-platform acceptance remain separate.
 
@@ -151,7 +161,7 @@ Last updated: 2026-10-19
 [Complete space activation operations](../components/physics-registered-adapter.md#complete-space-activation-operations)
 close the two selected activation rows after shared public CPU/no-device,
 software-GPU and registered owner/separate JIT/NativeAOT checks. Existing runtime
-semantics are unchanged. Physics now has 1275/1369 Implemented declarations
+semantics are unchanged. That checkpoint recorded 1275/1369 Implemented declarations
 (93.13%), with 94 open: 63 Partial, 17 Blocked and 14 Unimplemented; 92 are Excluded.
 Full numerical/backend, inherited, network, native/platform and hardware-performance
 acceptance remains open; earlier slice counts below are historical.

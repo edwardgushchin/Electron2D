@@ -127,6 +127,7 @@ else if (args.Contains("--node-scheduling")) BackendChecks.RunNodeScheduling(arg
 else if (args.Contains("--resource-identity")) BackendChecks.RunResourceIdentity(args[0] == "gpu" ? Electron2D.PhysicsServer.Backend.GPU : args[0] == "cpu" ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("threaded"));
 else if (args.Contains("--local-scenes")) BackendChecks.RunLocalScenes(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--contact-policy")) BackendChecks.RunContactPolicy(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Contains("--contact-cache")) BackendChecks.RunContactCache(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--priority-geometry")) BackendChecks.RunPriorityGeometry(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--directed-geometry") || args.Contains("--directed-angular")) BackendChecks.RunDirectedGeometry(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"), args.Contains("--directed-angular"));
 else if (args.Contains("--boundary-geometry")) BackendChecks.RunBoundaryGeometry(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
@@ -170,17 +171,17 @@ else if (args.Contains("--compound")) BackendChecks.RunCompound(args.Contains("-
 else if (args.Contains("--project-selection")) BackendChecks.RunProjectSelection();
 else if (args.Contains("--allocation-warmup")) BackendChecks.RunAllocationWarmup();
 else if (args.Contains("--contact-frames")) BackendChecks.RunContactFrames(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
-    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--continuous-response")) BackendChecks.RunContinuousResponse(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
-    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--contact-response")) BackendChecks.RunContactResponse(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded") ? true : null);
 else if (args.Contains("--sleep")) BackendChecks.RunSleep(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--history")) BackendChecks.RunHistory(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
-    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--joint-response")) BackendChecks.RunJointResponse(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
-    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--shape-owners")) BackendChecks.RunShapeOwners(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
 else if (args.Contains("--picking")) BackendChecks.RunPicking(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :

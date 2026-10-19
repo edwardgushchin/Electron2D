@@ -20,19 +20,9 @@ public static partial class BackendChecks
             Check(world.PhysicsBackendName == (backend?.ToString() ?? "PolicySolver"), "Contact correction uses the selected implementation");
             return world;
         }
-        static Shape ShapeFor(int family) => family switch
-        {
-            0 => new CircleShape { Radius = 5 },
-            1 => new RectangleShape { Size = new(10, 10) },
-            2 => new CapsuleShape { Radius = 5, Height = 10 },
-            3 => new SegmentShape { A = new(-5, 5), B = new(5, 5) },
-            4 => new ConvexPolygonShape { Points = [new(-5, -5), new(5, -5), new(5, 5), new(-5, 5)] },
-            5 => new ConcavePolygonShape { Segments = [new(-5, 5), new(5, 5)] },
-            _ => new SeparationRayShape { Length = 5 }
-        };
         void Correction(int family)
         {
-            using var world = Create(); using var root = new SubViewport { World = world }; using var shape = ShapeFor(family);
+            using var world = Create(); using var root = new SubViewport { World = world }; using var shape = ContactPolicyShape(family);
             using var plane = new WorldBoundaryShape { Normal = Vector2.Up, Distance = -5 };
             using var material = new PhysicsMaterial { Friction = .5f, Bounce = 0 };
             var floor = new StaticBody { PhysicsMaterialOverride = material }; floor.AddChild(new CollisionShape { Shape = plane }); root.AddChild(floor);
@@ -192,4 +182,15 @@ public static partial class BackendChecks
             Check(owner == 0 && all == 0, $"Contact policy {label} allocated {owner}/{all} B"); Console.WriteLine($"Contact policy {label}: 128 full frames {owner}/{all} B.");
         }
     }
+    private static Shape ContactPolicyShape(int family) => family switch
+    {
+        0 => new CircleShape { Radius = 5 },
+        1 => new RectangleShape { Size = new(10, 10) },
+        2 => new CapsuleShape { Radius = 5, Height = 10 },
+        3 => new SegmentShape { A = new(-5, 5), B = new(5, 5) },
+        4 => new ConvexPolygonShape { Points = [new(-5, -5), new(5, -5), new(5, 5), new(-5, 5)] },
+        5 => new ConcavePolygonShape { Segments = [new(-5, 5), new(5, 5)] },
+        _ => new SeparationRayShape { Length = 5 }
+    };
+
 }

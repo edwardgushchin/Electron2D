@@ -196,7 +196,7 @@ public static partial class BackendChecks
             try
             {
                 LifecycleHook?.Invoke(LifecyclePhase.Solve); StepHook?.Invoke();
-                Pairs = 0; DebugPointCount = 0; Delta = (float)delta;
+                Pairs = 0; DebugPointCount = 0; ReusedContactPoints = 0; Delta = (float)delta;
                 _framePairs.Clear();
                 foreach (var b in Bodies.Values)
                 {
@@ -247,7 +247,7 @@ public static partial class BackendChecks
         protected override void EndStep(Exception? failure) { EndStepHook?.Invoke(failure); }
         protected override void FlushQueries() { LifecycleHook?.Invoke(LifecyclePhase.Flush); Flushes++; FlushHook?.Invoke(); }
         protected override void EndSync(Exception? failure) { EndFailure = failure; LifecycleHook?.Invoke(LifecyclePhase.End); Synchronizations++; SyncHook?.Invoke(); }
-        protected override void Finish() { LifecycleHook?.Invoke(LifecyclePhase.Finish); FinishHook?.Invoke(); Finished = true; Bodies.Clear(); Joints.Clear(); if (FailFinish) throw new InvalidOperationException("Finish failure"); }
+        protected override void Finish() { LifecycleHook?.Invoke(LifecyclePhase.Finish); FinishHook?.Invoke(); Finished = true; Bodies.Clear(); Joints.Clear(); CachedContacts = []; _nextContacts = []; if (FailFinish) throw new InvalidOperationException("Finish failure"); }
         protected override void PrepareCheckpoint() { }
         internal WeakReference<PhysicsBackendCheckpoint>? HistoryReference;
         internal bool FailHistoryRelease;
@@ -263,7 +263,7 @@ public static partial class BackendChecks
         protected override float ReadPortableSleepTime(RID collider) => Bodies[collider].SleepTime;
         protected override void ApplyPortableSleep(RID collider, float time, bool canSleep, bool sleeping)
         { var b = Bodies[collider]; b.SleepTime = time; b.Awake = !sleeping; b.CanSleep = canSleep; }
-        protected override void BeginPortableRestore() { }
+        protected override void BeginPortableRestore() { CachedContacts.Clear(); }
         internal readonly List<PhysicsBackendOneWay> OneWays = [];
         internal int OneWayCapacity = -1, OneWayReturn = -1, OneWaySpanLength;
         protected override void CompletePortableRestore(ReadOnlySpan<PhysicsBackendOneWay> pairs, ulong tick)
@@ -337,7 +337,7 @@ public static partial class BackendChecks
         protected override void Detach()
         {
             try { solver.BodyReleaseHook?.Invoke(rid); if (solver.FailBodyDetach) throw new InvalidOperationException("Collider detach failure"); }
-            finally { Detached = true; solver.Bodies.Remove(rid); }
+            finally { Detached = true; solver.ForgetContactHistory(rid); solver.Bodies.Remove(rid); }
         }
         protected override void PrepareDefaultForces(in PhysicsBodyForceConfiguration configuration)
         {
@@ -393,6 +393,7 @@ public static partial class BackendChecks
             Shapes = 0; Layer = layer; Mask = mask;
             Friction = friction; Bounce = bounce;
             LastShape = slots.IsEmpty ? default : slots[^1];
+            solver.ForgetContactHistory(rid);
             RebuildParts(slots);
         }
         protected override (Vector2 Position, float Rotation) GetPose() => (Position, Rotation);

@@ -156,8 +156,8 @@ of the remaining numerical, network, native, platform and hardware gates.
 
 [Lifecycle publication boundaries](../components/physics-registered-adapter.md#complete-lifecycle-publication-boundaries)
 separate terminal selected completion/retirement errors from recoverable gameplay
-notification errors, with the same scene/server behavior and no solver replay. The current
-API census is 1273/1369 Implemented (92.9876%), with 96 open declarations
+notification errors, with the same scene/server behavior and no solver replay. That checkpoint
+recorded 1273/1369 Implemented (92.9876%), with 96 open declarations
 (65 Partial, 17 Blocked, 14 Unimplemented) and 92 Excluded. This does not establish
 full numerical, networking, native/platform or hardware-performance acceptance.
 
@@ -1623,3 +1623,13 @@ live error, nine body owners/four direct modes, publication recovery and 1536 co
 warmed frames at 0/0 owner/all-thread managed bytes pass in the 58-profile
 JIT/NativeAOT CPU/software-GPU/registered cohort. This closes the extension axis
 operation; broader numerical, networking and hardware acceptance remain open.
+
+
+[Complete world parameter operations](../components/physics-registered-adapter.md#complete-world-parameter-operations)
+exercise all nine typed settings through actual sleep, contact-cache support and
+replay, correction/slack, complete solver sweeps and joint default bias. Shared
+CPU/no-device, software-GPU and registered owner/separate consumers retain input,
+publication/error/lifetime and strict warmed managed-allocation checks. The current
+API ledger is 1276/1369 Implemented (93.21%), with 93 open declarations (62 Partial,
+17 Blocked, 14 Unimplemented) and 92 Excluded. This declaration ratio does not
+establish complete backend/network/native/platform or hardware performance acceptance.

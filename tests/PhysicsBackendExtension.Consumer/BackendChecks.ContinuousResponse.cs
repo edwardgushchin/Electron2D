@@ -2,9 +2,18 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunContinuousResponse(PhysicsServer.Backend? backend = null)
+    public static void RunContinuousResponse(PhysicsServer.Backend? backend = null, bool threaded = false)
     {
-        if (backend is null) PhysicsServerManager.RegisterServer("ContinuousResponse", () => new Solver());
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { RunContinuousResponseCore(backend, threaded); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
+
+    private static void RunContinuousResponseCore(PhysicsServer.Backend? backend, bool threaded)
+    {
+        var ownerThread = Thread.CurrentThread;
+        if (backend is null) PhysicsServerManager.RegisterServer("ContinuousResponse", () => new Solver() { StepHook = () => Check((Thread.CurrentThread != ownerThread) == threaded, "Selected Solve retains the requested numerical thread") });
         using var world = backend is { } selected ? new World(selected) : new World("ContinuousResponse");
         Check(world.PhysicsBackend == (backend ?? PhysicsServer.Backend.Extension) && world.PhysicsFallbackReason is null,
             "Numerical CCD uses the requested implementation without fallback");

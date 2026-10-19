@@ -31,6 +31,8 @@ public static partial class BackendChecks
         private PhysicsBackendOneWay[] _oneWays = [];
         private Vector2[] _debug = [];
         private FrameContact[] _contacts = [];
+        private CachedContact[] _cache = [];
+        private int _cacheCount, _reused;
         private int _contactCount;
         private int _count, _oneWayCount, _debugCount, _pairs;
         private float _delta;
@@ -57,6 +59,9 @@ public static partial class BackendChecks
             if (_debug.Length < _debugCount) Array.Resize(ref _debug, _debugCount);
             owner.DebugPoints.AsSpan(0, _debugCount).CopyTo(_debug);
             _delta = owner.Delta; _pairs = owner.Pairs; _ready = owner.Ready;
+            _cacheCount = owner.CachedContacts.Count;
+            if (_cache.Length < _cacheCount) Array.Resize(ref _cache, _cacheCount);
+            owner.CachedContacts.CopyTo(_cache); _reused = owner.ReusedContactPoints;
         }
         protected override void ValidateRestore()
         {
@@ -70,6 +75,7 @@ public static partial class BackendChecks
                 body.Contacts.EnsureCapacity(_states[i].ContactCount);
             }
             owner.OneWays.EnsureCapacity(_oneWayCount);
+            owner.CachedContacts.EnsureCapacity(_cacheCount);
         }
         protected override void Restore()
         {
@@ -83,12 +89,14 @@ public static partial class BackendChecks
             owner.DebugPointCount = Math.Min(_debugCount, owner.DebugLimit);
             _debug.AsSpan(0, owner.DebugPointCount).CopyTo(owner.DebugPoints);
             owner.Delta = _delta; owner.Pairs = _pairs; owner.Ready = _ready;
+            owner.CachedContacts.Clear(); for (var i = 0; i < _cacheCount; i++) owner.CachedContacts.Add(_cache[i]);
+            owner.ReusedContactPoints = _reused;
             owner.RestoreExecutionHook?.Invoke();
         }
         public override void Dispose()
         {
             var fail = _owner?.FailHistoryRelease ?? false;
-            _owner = null; _states = []; _oneWays = []; _debug = []; _contacts = []; _count = _oneWayCount = _debugCount = _contactCount = 0;
+            _owner = null; _states = []; _oneWays = []; _debug = []; _contacts = []; _cache = []; _count = _oneWayCount = _debugCount = _contactCount = _cacheCount = 0;
             if (fail) throw new InvalidOperationException("Expected independent history release failure.");
         }
     }

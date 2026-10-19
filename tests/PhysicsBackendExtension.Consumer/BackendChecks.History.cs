@@ -2,10 +2,19 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunHistory(PhysicsServer.Backend? backend = null)
+    public static void RunHistory(PhysicsServer.Backend? backend = null, bool threaded = false)
     {
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { RunHistoryCore(backend, threaded); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
+
+    private static void RunHistoryCore(PhysicsServer.Backend? backend, bool threaded)
+    {
+        var ownerThread = Thread.CurrentThread;
         Solver? solver = null;
-        if (backend is null) PhysicsServerManager.RegisterServer("History", () => solver = new());
+        if (backend is null) PhysicsServerManager.RegisterServer("History", () => solver = new() { StepHook = () => Check((Thread.CurrentThread != ownerThread) == threaded, "Selected Solve retains the requested numerical thread") });
         using var world = backend is { } selected ? new World(selected) : new World("History");
         Check(world.PhysicsBackend == (backend ?? PhysicsServer.Backend.Extension) && world.PhysicsFallbackReason is null,
             "History exercises the requested numerical owner without fallback");

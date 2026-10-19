@@ -1486,6 +1486,99 @@ Local activation still commits only after selected SetActive succeeds. One pendi
 
 The public-only --activation-transactions fixture uses actual selected activity to gate its independent Solve, reproducing the old mismatch: public active=true, zero selected retry, no motion and an advanced tick after partial deactivation. Registered profiles each cover 64 scene/raw cases (both committed flags, before/after side effects, eight repair routes), original/repeated errors, off-owner and borrowed guards, actual movement, healthy equality, post-step callbacks, failed startup cleanup and pending retirement. An inactive-step route verifies skipping before an allowed query repair. CPU/private software-Vulkan/registered owner/separate healthy profiles toggle local/global activity and actual state callbacks, then measure 128 complete moving intervals at strict 0/0 owner/all-thread managed bytes. All 123 final profiles pass: 51 managed consumer, 51 strict NativeAOT consumer and 21 root profiles. The twelve healthy activation profiles measure 1536 complete moving intervals at 0/0 owner/all-thread managed bytes. Seven portable-PDB proofs match 2273 runtime, 164 consumer and 755 root documents without DEBUG/missing/mismatch; their 3187 unique tracked inputs are retained for committed-source readback. Evidence: bin/physics-activation-transactions/2026-10-18/validation.json; SHA-256 72adf281501f153352a895a232dc59f581412b859cdd5bc8af2482a8105ccb24. The frozen full software/offscreen suite for runtime sources at aa0b0cb5ad5458719a0d3311071cce550bebeeb3 completed with exit 0 in 1533.086791 seconds. Host SHA-256: e488c6f96fd1387bb536fb4be183b5dd5a93fec36401fe603a604d51b80beebd. Across 45236 parent-process map samples private lavapipe was observed and no hardware driver was observed. Post-run readback matches all 3187 unique committed source documents and 78 frozen payload files. Evidence: bin/physics-activation-transactions/2026-10-18/verified/full-runs.json (SHA-256 e709da4a0e99e52727c1a15e3b026e3980da752dec8c5c84d7a7fcfb12c910c7), full-binding.json, full-inputs.json and post-run-source-check.json. The later 12bf2f8a iteration verification changes runtime XML only and retains its separate eighteen-profile evidence; it is not an execution of that newer test host or of the subsequent ee899e11 frame-monitor change. This does not inject physical GPU failure or close native/foreign, complete numerical/network, hardware/window/FPS or performance acceptance.
 
+## Complete world parameter operations
+
+The extension space-parameter setter projects all nine pinned settings through
+four typed profiles. The owning class, setter and parameter constants have no
+deprecation metadata in the pinned 4.7.2 reference. Common authoring supplies
+initial defaults, validation, equal/changed writes, inactive configuration and
+owner/numerical borrowing guards. The implementation consumes these values:
+
+| Typed operation suffix | Selected input | Executable physical evidence |
+| --- | --- | --- |
+| BodyLinearVelocitySleepThreshold | PhysicsSleepSettings.LinearThreshold | Strict linear threshold and contact/joint group sleep in --sleep |
+| BodyAngularVelocitySleepThreshold | PhysicsSleepSettings.AngularThreshold | Strict angular threshold and retained quiet-clock replay in --sleep |
+| BodyTimeToSleep | PhysicsSleepSettings.TimeToSleep | Actual timed/zero-policy transitions and wake in --sleep |
+| ContactRecycleRadius | PhysicsContactSettings.RecycleRadius | Strict two-anchor matching, zero disable and loaded one-sweep convergence in --contact-cache |
+| ContactMaxSeparation | PhysicsContactSettings.MaxSeparation | Inclusive normal/tangent cache bounds, stable penetration and separated geometry in --contact-cache |
+| ContactDefaultBias | PhysicsContactSettings.Bias | Mixed world/shape correction, elapsed-time and dense budgets in --contact-policy |
+| ContactMaxAllowedPenetration | PhysicsContactSettings.AllowedPenetration | Reportable slack and actual residual depth over seven shape families in --contact-policy |
+| SolverIterations | SetSolverIterations | One/16/128 complete contact/joint sweeps, force budgets and convergence in --contact-policy |
+| ConstraintDefaultBias | SetConstraintDefaultBias | Actual pin/groove correction at world bias .05/.4 and explicit joint override in --joint-response |
+
+All operation names above have the SpaceSet prefix. The --world-parameters
+companion verifies all nine inputs through initial/live/nested hooks, rejects
+borrowed equal writes before mutation and permits actual post-solver callbacks.
+The --world-policy-transactions companion retains 126 before/after publication
+cases per registered profile, seven preparation routes, original/repeated errors,
+partial progress, skipped intervals and retirement. These are the existing
+recoverable profiles described below; no new engine operation is introduced.
+
+The independent public-only solver previously stored its recycle/separation
+values but rebuilt contact impulses from zero every interval. Its retained cache
+now contains only engine RIDs, logical part indices, two local boundary anchors,
+normal/world impulse, interval and effective inverse mass/inertia. It retains no
+Body, Shape or resource reference. Fresh geometry is still prepared each interval;
+compatible old impulses seed only one fresh row for their unique part pair. Both
+local-anchor distances are strictly below the radius; transformed old anchors
+must remain within the inclusive normal/tangent separation bounds. Zero radius
+disables reuse. Normal and participation/mass compatibility reject invalid seeds.
+The prior world impulse is projected into the fresh basis, scaled by elapsed
+interval with a twofold cap and clamped to current friction. Restitution targets
+are captured before warm impulses; reported normal/tangent totals remain physical.
+
+Two reusable lists retain steady storage, with one cached point per logical part
+pair as in this fixture's existing narrow phase. Geometry rebuild and detach
+remove affected history; retirement releases both lists. Private checkpoints
+capture/restore the value cache and reuse diagnostic. Portable application clears
+private cache before incoming authoritative state; it never imports solver-private
+anchors from another backend. This bounded consumer solver is an executable
+extension witness; its linear cache search is not a massive-scene implementation.
+
+The new --contact-cache command selects registered, CPU or software GPU with
+optional --threaded. Seven shape families cover live zero/strict/inclusive cache
+limits, support and tangent motion, shape replacement, contact-free intervals
+and private rewind. Public contact checks retain 400 units/s tangent velocity
+(with .02 tolerance) and a full-step (0,-9.8) impulse (with .04 vector tolerance)
+under 980 units/s² gravity and a .01-second interval. Replay pose/velocity tolerances
+are .001; the eight-body coupled replay permits .002. These bounds allow
+single-precision solver roundoff while rejecting a lost support impulse. Reuse
+counts are auxiliary diagnostics of the test-owned implementation, not backend
+parity requirements.
+
+An eight-body loaded circle column at one sweep and 48 intervals supplies the
+primary physical cache witness. With reuse disabled the registered residual RMS
+speed is 82.49176 units/s; reuse reduces it to 0.000005781343. The frozen pre-cache
+consumer fails the same improvement assertion with equal cold/warm 82.49176,
+establishing an actual numerical gap rather than a settings-storage difference.
+After 64 warm gap/restore/step cycles, each of seven families measures another
+128 cycles with strict zero owner/all-thread managed bytes. A coupled one-sweep
+checkpoint also preserves all eight next-step poses and velocities over 64 replays.
+
+Four older commands (--joint-response, --history, --contact-frames and
+--continuous-response) now apply and restore the requested thread setting. Their
+registered Solve hook asserts the actual numerical thread. Earlier candidate
+runs of these four commands that merely supplied --threaded establish serial
+behavior only; the final source-qualified matrix exercises both actual modes.
+
+Final verification passes 92 fresh profiles: 44 JIT, 44 strict NativeAOT and
+four root contact-history companions. Registered, CPU/no-device and private
+software-Vulkan paths execute both numerical modes. Every cache/policy/sleep
+allocation bracket retains its strict zero owner/all-thread gate. Six
+DLL/PDB/Compile sets match 3444 authored sources without DEBUG or missing/mismatched
+inputs, including the independent main text update 1c789dc8. Process-map samples
+observe private lavapipe for GPU paths and no hardware driver; NativeAOT samples
+observe no CoreCLR. The eight commit gates pass formatting, Release, compiled API,
+wiki tests, generation and check. The wiki contains 916 public types and 934 files.
+Validation SHA-256: 090164d55db196c98906b4285ca37f82f81146a1248c63a9ea1d9f85f8c31fca.
+
+Evidence is retained under bin/physics-contact-cache-acceptance/2026-10-19/.
+The typed setter's operation acceptance is separate from arbitrary custom/coupled
+geometry, the complete inherited/extension family, networking, native allocation,
+foreign platforms and target-hardware/window/performance acceptance. Software
+Vulkan establishes functional execution; the unchecked GPU power cable excludes
+hardware load from this slice. This physics slice changes no runtime declaration, XML or wire format.
+
 ## Failed world policy publication
 
 The nine typed world parameters use four existing complete input profiles: sleep, contacts, solver sweeps and default constraint bias. Accepted authoring survives a selected publication error. Four pending-family bits retain no extra input mirror or failure object. Equal setters retry their family; live queries, active positive steps and local/portable history preparation finish current pending profiles. A failure stops preparation before Solve/tick advancement, preserving the original exception. Only completed families clear; a later error does not replay earlier successful publication. Authored policy getters do not prepare. Zero-time, inactive/global-suspended intervals and retirement retain their existing no-preparation behavior. Fixed-configuration local restore validates first and prepares settings outside its terminal execution boundary. Activation retains its separate commit-after-hook contract.
@@ -3967,10 +4060,10 @@ uses .003 and mass .0001. Geometry, identity, filtering, sleep and event counts 
 exact assertions. Evidence lives under bin/physics-priority-provider/2026-10-14.
 
 Production public API/XML and ADRs are unchanged. Priority affects motion recovery,
-not rigid mass or impulses. General registered contact-cache settings and arbitrary coupled/custom solver behavior, complete inherited/extension
+not rigid mass or impulses. Arbitrary coupled/custom solver behavior, the complete inherited/extension
 contract, native/network/platform and target-device performance acceptance remain
-open. The priority profile is complemented by the registered contact numerics below;
-contact-cache acceptance remains separate. Software Vulkan is functional
+open. The priority profile is complemented by the registered contact numerics below
+and the [world-parameter cache checks](#complete-world-parameter-operations). Software Vulkan is functional
 evidence, with physical GPU performance and real-window FPS unverified.
 
 
@@ -4052,10 +4145,10 @@ chain momentum .03; event/identity/geometry/sleep and allocation assertions rema
 exact. Evidence lives under bin/physics-policy-provider/2026-10-14.
 
 Public API, production XML, algorithms and ADRs are unchanged by this consumer
-implementation. Registered geometric cache recycling/max-separation behavior,
-arbitrary coupled/custom correction, full inherited/extension/network contract,
-native allocation, platforms and target-device/window performance acceptance remain
-open. Stored recycling settings do not imply cache acceptance. Software Vulkan
+implementation. The [world-parameter operation checks](#complete-world-parameter-operations) add
+actual registered cache recycling/max-separation response. Arbitrary coupled/custom
+correction, full inherited/extension/network contract, native allocation, platforms
+and target-device/window performance acceptance remain open. Software Vulkan
 establishes functional behavior only.
 
 

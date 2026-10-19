@@ -337,3 +337,14 @@ strings and first snapshot capacity growth remain cold authoring work.
 `--view-lifetimes` rejects same-world selected status/factory/step disposal across cached, default and independent body/query views. It also checks uncaught status error recovery, ordinary gameplay sibling disposal, other-world disposal, cache recreation and expired-context cleanup from backend Finish after the last world alias closes; `--threaded` exercises the retained numerical lane.
 
 `--activity` reuses PhysicsActivityTests through the public API for registered, `--cpu` and `--gpu` worlds, with optional `--threaded`. It checks actual local/global pause/resume, retained forces/spring, scene timers/callbacks, live inactive queries, statistics and 64 two-world cycles at strict zero owner/all-thread managed bytes. `--activation-transactions` supplies the companion failure/recovery checks.
+
+
+`--contact-cache`, optionally `--cpu`, `--gpu` and `--threaded`, exercises seven
+shape families, strict recycle/inclusive separation limits, zero policy, shape
+replacement and private contact-history rewind. Public support/impulse checks
+complement test-owned cache diagnostics. A registered eight-body one-sweep column
+requires a real convergence improvement; seven 128-cycle gap/restore/step brackets
+require strict zero owner/all-thread managed bytes. The consumer cache stores
+value identities/anchors/impulses only and clears private history on portable apply.
+`--joint-response`, `--history`, `--contact-frames` and `--continuous-response`
+now apply/restore `--threaded`; registered hooks assert the actual Solve thread.

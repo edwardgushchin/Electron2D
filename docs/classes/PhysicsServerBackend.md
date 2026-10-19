@@ -7,6 +7,17 @@ body-state observers. Successful retirement after pre-Solve preparation failure
 permits a new interval; gameplay observer/flush/end-sync errors retain their
 notification recovery policy. See [lifecycle publication boundaries](../components/physics-registered-adapter.md#complete-lifecycle-publication-boundaries).
 
+## Complete world parameter operations
+
+SetSleepSettings, SetContactSettings, SetSolverIterations and
+SetConstraintDefaultBias consume all nine typed world settings. The [shared
+operation checks](../components/physics-registered-adapter.md#complete-world-parameter-operations)
+combine actual sleep, cache reuse, correction/slack, complete sweeps and joint
+fallback response with input borrowing, publication repair and private history.
+The public-only provider retains value contact history, including checkpoint
+restore; portable application starts with cold private contacts. Wider custom
+numerics and the complete implementation family retain their separate gates.
+
 ## Complete activation operations
 
 SetActive and the common SpaceIsActive projection retain one engine-owned

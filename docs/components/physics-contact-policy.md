@@ -530,7 +530,7 @@ now exercises weighted motion recovery independently through the public API,
 including finite/directed families, bounded contact planes, exclusions, one-way
 controls, character movement and unchanged rigid momentum. The shared CPU/GPU/
 registered profile covers five 128-warmup/128-measured full-frame brackets at zero
-managed allocation. Wider registered contact-cache settings and arbitrary coupled correction and complete numerical,
+managed allocation. Wider arbitrary coupled correction and complete numerical,
 native/network/platform/performance acceptance remain open.
 
 
@@ -539,6 +539,19 @@ now exercises actual world/shape bias and penetration slack, complete contact/jo
 sweeps, full physical impulses and identity-preserving live policy through the
 public-only provider. Seven source families, dense contacts, CCD durations and
 contact/pin convergence use nineteen complete 128-warmup/128-measured brackets
-at zero managed allocation. Registered contact-cache, arbitrary coupled/custom,
+at zero managed allocation. Arbitrary coupled/custom,
 full inherited/extension/network and native/platform/performance acceptance remain
 open.
+
+
+## Registered contact history
+
+The [complete world parameter operation checks](physics-registered-adapter.md#complete-world-parameter-operations)
+now give the independent public-only provider an actual value cache and private
+checkpoint restoration. Strict radius, inclusive separation, live policy, seven
+shape families and contact-free intervals retain physical support/momentum.
+An eight-body one-sweep column supplies a real cold/warm convergence control;
+seven 128-cycle gap/restore/step brackets retain zero managed bytes. The same
+public command selects CPU/software GPU, and the native root history fixture
+retains its independent geometry/cache tests. Complete custom/coupled numerical,
+network/native/foreign and hardware performance acceptance remains separate.
