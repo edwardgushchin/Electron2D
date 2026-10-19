@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-19
 
+[Body mode operation audit](physics-registered-adapter.md#body-mode-operation-audit) closes both extension mode rows after complete pinned/default/value, selected numerical input, real motion, recovery and lifecycle verification. The current unique physics census is 167 open declarations: 136 Partial, 14 Unimplemented and 17 Blocked. Wider full-goal requirements remain open; earlier counts below are historical.
+
 [Complete Area parameter operations](physics-areas.md#complete-area-parameter-operations) verify all ten typed pairs, distinct scene/raw/default profiles, lifetime and six partial-preparation retry cases. The two extension get/set operation rows become Implemented; the current unique physics census is 169 open declarations: 138 Partial, 14 Unimplemented and 17 Blocked. All wider full-goal requirements remain open. Earlier counts below are historical.
 
 [Prepared Area field inputs](physics-areas.md#prepared-area-field-inputs) now permit all ten configured getters for scene/raw Areas and space defaults inside their selected numerical hook, including the captured solver thread. A public separate-thread owner error is reproduced and fixed with common input guards; writes and off-owner/failed-world reads retain rejection. Fresh public and CPU/software-GPU companion checks preserve actual field effects and zero managed allocation. The later complete parameter audit closes its two operation rows; wider numerical/extension/network/native/platform/hardware acceptance stays open.

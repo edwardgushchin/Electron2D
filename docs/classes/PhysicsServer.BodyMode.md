@@ -2,6 +2,8 @@
 
 Last updated: 2026-09-26
 
+[Body mode operation audit](../components/physics-registered-adapter.md#body-mode-operation-audit) now checks all four roles across five scene siblings and raw bodies, real changed-frame motion, captured numerical input reads, guarded writes and complete mode-publication recovery. Public JIT/strict NativeAOT CPU/software-GPU/registered companions retain strict zero managed-byte frames; broader numerical/native/network/performance acceptance remains open.
+
 **Owner:** [PhysicsServer](PhysicsServer.md) · **Source:** [PhysicsServer.cs](../../src/Servers/Physics/PhysicsServer.cs)
 
 Selects a server-created body's backend motion policy.

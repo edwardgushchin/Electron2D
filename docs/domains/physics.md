@@ -89,6 +89,8 @@ first interval. Complete retained-memory budgets remain open.
 
 Last updated: 2026-10-18
 
+[Body mode operation audit](../components/physics-registered-adapter.md#body-mode-operation-audit) now checks all four roles across five scene siblings and raw bodies, real changed-frame motion, captured numerical input reads, guarded writes and complete mode-publication recovery. Public JIT/strict NativeAOT CPU/software-GPU/registered companions retain strict zero managed-byte frames; broader numerical/native/network/performance acceptance remains open.
+
 [Complete Area parameter operations](../components/physics-areas.md#complete-area-parameter-operations) now have a public-only component, lifetime, selected-preparation failure and warmed complete-frame audit across CPU/GPU/registered implementations. The engine-owned ten-field contract preserves independent defaults, prepared reads and retry without replaying Solve; broader numerical/native/network/performance acceptance remains open.
 
 [Prepared Area pose inputs](../components/physics-areas.md#prepared-area-pose-inputs) correct a reproduced separate-thread getter failure. The public-only monitor fixture now checks real numerical reads, ancestor composition, write/lifetime/failure guards and complete-frame allocations; broader extension and hardware performance gates remain open.

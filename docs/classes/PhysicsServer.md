@@ -6,6 +6,8 @@ The [Body/Area append audit](../components/physics-shapes.md#bodyarea-append-con
 
 Last updated: 2026-10-19
 
+[Body mode operation audit](../components/physics-registered-adapter.md#body-mode-operation-audit) now checks all four roles across five scene siblings and raw bodies, real changed-frame motion, captured numerical input reads, guarded writes and complete mode-publication recovery. Public JIT/strict NativeAOT CPU/software-GPU/registered companions retain strict zero managed-byte frames; broader numerical/native/network/performance acceptance remains open.
+
 [Complete Area parameter operations](../components/physics-areas.md#complete-area-parameter-operations) now have a public-only component, lifetime, selected-preparation failure and warmed complete-frame audit across CPU/GPU/registered implementations. The engine-owned ten-field contract preserves independent defaults, prepared reads and retry without replaying Solve; broader numerical/native/network/performance acceptance remains open.
 
 [Prepared Area pose inputs](../components/physics-areas.md#prepared-area-pose-inputs) let AreaGetTransform read scene/raw configured poses from selected numerical hooks, without live solver queries or general scene observation. Ordinary reads retain owner/failure guards and non-preparing presentation.

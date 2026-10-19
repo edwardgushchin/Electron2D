@@ -2,6 +2,46 @@
 
 Last updated: 2026-10-19
 
+## Body mode operation audit
+
+BodySetMode/BodyGetMode now have a complete operation audit for all four modes
+across static, animatable, character, rigid and physical-bone scene nodes and raw
+bodies. Pinned public/extension declarations and owning classes are current;
+compiled enum values retain Static=0, Kinematic=1, Rigid=2 and RigidLinear=3.
+Common effective-mode reads remain non-preparing while incomplete selected
+publication retains authored input for the established retry boundaries.
+
+The public --mode-transactions fixture now reads all six modes inside actual
+selected Solve on its captured owner/separate lane and compares selected prepared
+roles. Changed/equal borrowed writes reject before mutation. Initial defaults,
+invalid mode values and empty/wrong/retired RID kinds, foreign-thread reads/writes,
+six live view identities and disabled logical shape gaps are checked. Existing
+96 ordinary transitions and 1,690 fault scenarios retain complete preparation,
+retirement, view-creation and scene-takeover coverage; older 960 repair-case counts
+predate the added access paths. Complete repair cases are now 1,440, with 220
+retirement, 24 cold-view and six scene-takeover cases.
+
+The measured changed-mode frames now perform real motion for every owner:
+Static keeps its pose and both virtual surface velocities, Kinematic reaches a
+one-unit target, Rigid moves 0.06 units and rotates 0.02 radians per 0.01-second
+step, and RigidLinear moves with rotation locked. Position/angular tolerances are
+0.001 scene units/radians for accumulated single-precision solver state; role,
+identity and prepared enum comparisons are exact. Each registered measured bracket
+requires 128 real numerical hooks and 768 mode reads, with strict zero owner and
+all-thread managed bytes. Cold negative-probe closures are outside that bracket.
+The initial test scope allocated 192 bytes per separate Solve; splitting its
+read-only loop from one-time captured negative probes removes that fixture cost.
+
+Fresh JIT/strict NativeAOT CPU/no-device, software-GPU and registered owner/separate
+checks run the same contract, with server-mode, mass-role, scene-role and configured
+input companions. Both extension mode operation rows are Implemented. Other
+creation/CCD/mass/parameter operations, complete numerical/custom geometry,
+inherited/network/native/platform and target GPU/window performance acceptance
+remain open. No runtime API, wire format or implementation behavior changed.
+Evidence: bin/physics-body-mode-audit/2026-10-19/validation.json.
+
+The separate ordinary frozen `0236ffd7` suite failed CPU class-spare reuse with 0 owner/288 all-thread bytes after checkpoint scenarios. Three fresh CPU-only pool lifetime processes pass with zero bytes and no graphics services, but do not attribute or close that full-process observation. The mode operation matrix and this broader suite gate remain separately qualified; the latter is retained in bin/physics-body-mode-audit/2026-10-19/pool-failure-triage.json.
+
 ## Failed local activation
 
 Local activation still commits only after selected SetActive succeeds. One pending bit records an incomplete publication without storing a second active value. A failed assignment does not become a requested future activation: implicit preparation restores the last committed flag. An explicit changed/equal assignment instead publishes its supplied value and commits only on success. Space queries and local/portable history preparation restore activation before other pending world policies; a positive active step does so before BeginStep/Solve. Metadata reads, zero/local-inactive/globally suspended intervals and retirement do not prepare. Repeated errors preserve identity and tick. A failed state-callback activation retains its completed interval and never replays that callback or Solve.
@@ -959,7 +999,7 @@ unchanged pre-fix measurement allocated 248/248 B in the first CCD setter after
 collection. The registered fixture records delivered CCD configuration; it does
 not implement or establish independent numerical CCD.
 
-The eight creation/mode/CCD/mass/typed-parameter extension rows are Partial.
+The six creation/CCD/mass/typed-parameter extension rows remain Partial; the [mode operation pair](#body-mode-operation-audit) is Implemented.
 `ELECTRON2D_TEST_GPU_CCD_CONTRACT=1` separately verifies actual CCD, boundaries and
 directed-ray dynamics on CPU and resident GPU. Frozen runner evidence is under
 `bin/physics-construction/2026-10-12/final/`. Full registered numerical, physical,

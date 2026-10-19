@@ -1908,3 +1908,5 @@ reuses existing PhysicsServer/PhysicsSpace prepared input guards for ten configu
 getters across scene/raw/default profiles. No production type is added. Public
 thread/read/write/failure and real field-frame evidence remains separate from full
 parameter/numerical/platform/performance acceptance.
+
+[Body mode operation audit](components/physics-registered-adapter.md#body-mode-operation-audit) verifies the existing PhysicsBody/PhysicsServer/PhysicsBackendCollider role family without adding production declarations; actual motion, prepared inputs, lifecycle and complete recovery remain shared across selected owners.

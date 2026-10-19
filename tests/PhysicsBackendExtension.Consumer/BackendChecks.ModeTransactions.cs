@@ -17,9 +17,12 @@ public static partial class BackendChecks
             for (var i = 0; i < nodes.Length; i++) { nodes[i].Position = new(i * 100, 0); nodes[i].CollisionMask = 0; root.AddChild(nodes[i]); }
             using var tree = new SceneTree(root); var raw = PhysicsServer.BodyCreate();
             RID[] ids = [.. nodes.Select(node => node.GetRID()), raw]; var views = new PhysicsDirectBodyState[ids.Length];
+            var poses = new Transform[ids.Length]; var ownerThread = Environment.CurrentManagedThreadId; var numericalReads = 0; var probeWrites = true;
             using var point = new PhysicsPointQueryParameters(); var hits = new PhysicsPointResult[1]; var faults = 0;
             try
             {
+                Mode[] defaults = [Mode.Static, Mode.Kinematic, Mode.Kinematic, Mode.Rigid, Mode.Static, Mode.Rigid];
+                for (var i = 0; i < ids.Length; i++) Check(PhysicsServer.BodyGetMode(ids[i]) == defaults[i], "Every scene sibling and raw body retains its initial motion role");
                 PhysicsServer.BodySetTransform(raw, new(0, new(500, 0))); PhysicsServer.BodySetCollisionMask(raw, 0);
                 for (var i = 0; i < ids.Length; i++)
                 {
@@ -31,6 +34,49 @@ public static partial class BackendChecks
                     views[i] = PhysicsServer.BodyGetDirectState(ids[i])!;
                 }
                 tree.PhysicsFrame(.01);
+                Check(world.PhysicsBackendName == (backend?.ToString() ?? "ModeTransactions"), "Mode operations use the actual requested implementation");
+                var stale = PhysicsServer.BodyCreate(); PhysicsServer.FreeRID(stale);
+                var wrongArea = PhysicsServer.AreaCreate();
+                try
+                {
+                    foreach (var wrong in new[] { default, wrongArea, circle.GetRID(), world.Space, stale })
+                    {
+                        Reject<ArgumentException>(() => PhysicsServer.BodyGetMode(wrong));
+                        Reject<ArgumentException>(() => PhysicsServer.BodySetMode(wrong, Mode.Rigid));
+                    }
+                }
+                finally { PhysicsServer.FreeRID(wrongArea); }
+                foreach (var id in ids)
+                {
+                    foreach (var invalid in new[] { (Mode)(-1), (Mode)4 }) Reject<ArgumentOutOfRangeException>(() => PhysicsServer.BodySetMode(id, invalid));
+                    Check(PhysicsServer.BodyGetMode(id) == Mode.Rigid, "Rejected modes preserve accepted role authoring");
+                }
+                Task.Run(() =>
+                {
+                    foreach (var id in ids)
+                    {
+                        Reject<InvalidOperationException>(() => PhysicsServer.BodyGetMode(id));
+                        Reject<InvalidOperationException>(() => PhysicsServer.BodySetMode(id, Mode.Static));
+                    }
+                }).GetAwaiter().GetResult();
+                if (solver is not null) solver.StepHook = () =>
+                {
+                    Check((Environment.CurrentManagedThreadId != ownerThread) == threaded, "Configured modes are read on the captured numerical lane");
+                    foreach (var id in ids)
+                    {
+                        Check(PhysicsServer.BodyGetMode(id) == solver.Bodies[id].Mode, "All six configured modes agree with the selected prepared roles");
+                    }
+                    numericalReads++;
+                    if (!probeWrites) return;
+                    foreach (var id in ids)
+                    {
+                        var mode = PhysicsServer.BodyGetMode(id);
+                        Reject<InvalidOperationException>(() => PhysicsServer.BodySetMode(id, mode));
+                        Reject<InvalidOperationException>(() => PhysicsServer.BodySetMode(id, (Mode)(((int)mode + 1) & 3)));
+                        Check(PhysicsServer.BodyGetMode(id) == mode && solver.Bodies[id].Mode == mode, "Changed and equal borrowed writes reject before role mutation");
+                    }
+                    probeWrites = false;
+                };
                 for (var i = 0; i < ids.Length; i++)
                     foreach (var mode in new[] { Mode.Static, Mode.Kinematic, Mode.Rigid, Mode.RigidLinear })
                     {
@@ -166,12 +212,14 @@ public static partial class BackendChecks
                         }
                 for (var frame = 0; frame < 128; frame++) Frame(frame);
                 Collect(); var own = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+                var beforeReads = numericalReads;
                 for (var frame = 0; frame < 128; frame++) Frame(frame);
                 own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
                 Check(own == 0 && all == 0, $"128 complete changed-mode frames allocated {own}/{all} owner/all-thread bytes");
+                Check(solver is null || numericalReads == beforeReads + 128, "Every measured moving frame reads six modes inside the actual selected Solve");
                 Console.WriteLine($"Mode transactions {backend?.ToString() ?? "registered"}/{(threaded ? "separate" : "owner")}: 96 transitions, {faults} partial failures, shape/view identity and 128 changed-mode frames {own}/{all} B passed.");
             }
-            finally { ClearHooks(); if (solver is not null) solver.BodyViewFactory = null; PhysicsServer.FreeRID(raw); }
+            finally { ClearHooks(); if (solver is not null) { solver.BodyViewFactory = null; solver.StepHook = null; } PhysicsServer.FreeRID(raw); }
             void ClearHooks() { if (solver is not null) solver.ModeHook = solver.RotationHook = solver.BodyHook = solver.SurfaceHook = solver.ShapeHook = null; }
             void Install(int stage, Action<RID> hook)
             {
@@ -199,9 +247,25 @@ public static partial class BackendChecks
             void Frame(int frame)
             {
                 var mode = (Mode)(frame & 3);
-                foreach (var id in ids) { PhysicsServer.BodySetMode(id, mode); PhysicsServer.BodySetLinearVelocity(id, default); PhysicsServer.BodySetAngularVelocity(id, 0); }
+                for (var i = 0; i < ids.Length; i++)
+                {
+                    poses[i] = PhysicsServer.BodyGetTransform(ids[i]);
+                    PhysicsServer.BodySetMode(ids[i], mode); PhysicsServer.BodySetLinearVelocity(ids[i], new(6, 0)); PhysicsServer.BodySetAngularVelocity(ids[i], 2);
+                    if (mode != Mode.Kinematic) continue;
+                    PhysicsServer.BodySetTransform(ids[i], poses[i]);
+                    PhysicsServer.BodySetTransform(ids[i], new(poses[i].Rotation, poses[i].Origin + Vector2.Right));
+                }
                 tree.PhysicsFrame(.01);
-                for (var i = 0; i < ids.Length; i++) Prepared(i, mode);
+                for (var i = 0; i < ids.Length; i++)
+                {
+                    Prepared(i, mode); var actual = PhysicsServer.BodyGetTransform(ids[i]);
+                    var movement = mode == Mode.Static ? 0 : mode == Mode.Kinematic ? 1 : .06f;
+                    Check((actual.Origin - poses[i].Origin - new Vector2(movement, 0)).Length() < .001f &&
+                        MathF.Abs(Mathf.AngleDifference(poses[i].Rotation, actual.Rotation) - (mode == Mode.Rigid ? .02f : 0)) < .001f,
+                        "Static surface motion, kinematic targets, rigid integration and linear-only rotation lock retain actual pose semantics");
+                    if (mode == Mode.Static) Check(PhysicsServer.BodyGetLinearVelocity(ids[i]) == new Vector2(6, 0) && PhysicsServer.BodyGetAngularVelocity(ids[i]) == 2,
+                        "Static mode retains both virtual surface velocities while its pose stays fixed");
+                }
             }
         }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
