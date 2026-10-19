@@ -6,6 +6,7 @@ namespace Electron2D;
 /// Construction and access retry incomplete direct body-mode preparation before acquiring, reading or changing numerical state.
 /// Numerical access also retries incomplete authored pose publication; repeated failures retain the pending pose and tick.
 /// Failed velocity or sleep publication retains the requested channels for retry before numerical access, without repeating Solve.
+/// Failed mass publication retains preceding authoring and prepares that profile before numerical reads; live access rejects inside the selected mass hook.
 /// The selected world owner creates cached views; caller-created consumer implementations derive from PhysicsDirectBodyStateExtension. It owns no body or world. Detachment, replacement or
 /// disposal invalidates access; a later attachment receives a new view. Access is permitted outside
 /// solver execution, including post-solver integration callbacks. Backend storage and contact traversal stay inside the attachment adapter;

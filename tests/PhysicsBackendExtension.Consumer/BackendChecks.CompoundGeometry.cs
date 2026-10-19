@@ -53,7 +53,7 @@ public static partial class BackendChecks
             }
             Parts.AsSpan(Shapes).Clear();
         }
-        private PhysicsMassProperties PartMass(float mass, float inertia, Vector2? center)
+        internal PhysicsMassProperties PartMass(float mass, float inertia, Vector2? center)
         {
             var weight = 0f; var weighted = Vector2.Zero;
             for (var i = 0; i < Shapes; i++)

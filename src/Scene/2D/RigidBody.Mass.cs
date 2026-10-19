@@ -18,6 +18,7 @@ public partial class RigidBody
     /// <summary>Gets or sets rotational inertia in kilograms times squared scene units.</summary>
     /// <value>Zero by default, selecting geometry-derived inertia without changing this stored value.</value>
     /// <exception cref="ArgumentOutOfRangeException">The value is negative, nonfinite or outside the solver range.</exception>
+    /// <remarks>A selected publication failure preserves the preceding configured profile; later numerical access prepares it again before use. Configured reads do not perform that repair.</remarks>
     public float Inertia
     {
         get { ThrowIfDisposed(); return _inertia; }
@@ -27,7 +28,8 @@ public partial class RigidBody
     /// <summary>Gets or sets how the body's local center of mass is chosen.</summary>
     /// <value><see cref="RigidCenterOfMassMode.Auto"/> by default.</value>
     /// <remarks>Returning to Auto clears the stored custom center and retains an explicit Inertia override.
-    /// A changed mode reports PropertyListChanged after committing the new profile.</remarks>
+    /// A changed mode reports PropertyListChanged after committing the new profile.
+    /// A selected publication failure preserves the preceding configured profile; later numerical access prepares it again before use. Configured reads do not perform that repair.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The mode is undefined.</exception>
     /// <exception cref="Exception">A property-list subscriber throws after the profile is committed.</exception>
     public RigidCenterOfMassMode CenterOfMassMode
@@ -46,6 +48,7 @@ public partial class RigidBody
     /// <value>Zero by default. Automatic geometry calculations do not replace this stored value.</value>
     /// <exception cref="InvalidOperationException">A changed center is assigned outside Custom mode or during solver ownership.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The vector or resulting mass geometry exceeds the finite solver range.</exception>
+    /// <remarks>A selected publication failure preserves the preceding configured profile; later numerical access prepares it again before use. Configured reads do not perform that repair.</remarks>
     public Vector2 CenterOfMass
     {
         get { ThrowIfDisposed(); return _centerOfMass; }

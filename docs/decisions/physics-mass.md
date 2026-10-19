@@ -1,13 +1,13 @@
 # Electron2D body parameter decisions
 
-Last updated: 2026-09-26
+Last updated: 2026-10-19
 
 This bounded document owns body parameter projection, configured and geometry-derived mass, signed material and field policy. [The decision index](index.md) routes other physics capabilities.
 
 <a id="adr-0073"></a>
 ## ADR 0073: Shared body mass profiles and typed parameter branches
 
-Last updated: 2026-09-26
+Last updated: 2026-10-19
 
 - Status: Accepted
 - Scope: RigidBody center/inertia and scene/server mass parameter branches
@@ -24,6 +24,7 @@ RigidBody normalizes native fixture mass to its stored kilograms, but its existi
 - For a custom center, derive automatic inertia with the parallel-axis theorem around that selected local point. An explicit positive inertia stays independent of subsequent mass or shape changes. Calculate using the fixture primitives with unit density independently of their static/dynamic density; do not derive the next profile by repeatedly scaling an already overridden native mass. Keep body origin, scene pose and configured velocity unchanged on profile edits. Refresh solver shape extents relative to the chosen center because native SetMassData does not do so.
 - Keep configured profile and cached resolved geometry separate from physical inverse values. Static/kinematic bodies have zero solver mass/inertia while retaining the resolved center; Freeze/MakeStatic, mode switches, fixture edits, removal and reentry preserve configured profile and restore it with dynamic participation.
 - Expose typed PhysicsServer BodySet/GetMass, BodySet/GetInertia, BodySet/GetCenterOfMass and BodyResetMassProperties for all live body RIDs. GetMass returns configured kilograms; GetInertia/GetCenterOfMass return explicit configuration or the most recently resolved automatic geometry, initially zero until attachment or a geometry-dependent force call first resolves them. Configured mass and explicit inertia/custom center are read-only authoring projections and do not prepare solver state. Automatic inertia/center reads synchronize pending geometry outside numerical borrowing; if numerical preparation would be required inside a selected implementation hook, reject before preparation. Material, gravity and damping parameter reads follow the same authoring-only rule. Reset chooses both automatic channels without changing mass. Scene RigidBody descriptors share this server profile and reset clears their stored inertia and custom center. This is a typed ownership adaptation; no Variant dispatcher or inert selector enum is added. [ADR 0076](#adr-0076) now implements all remaining material, gravity and damping parameter branches.
+- Selected profile publication commits common mass/center/inertia only after its validated result. If an implementation changes numerical mass and throws, retain the preceding authoring and repair that profile before later numerical use under [ADR 0103](physics-extensions.md#adr-0103). Configured reads do not trigger repair; property-list notification failures after a successful commit retain the new configuration.
 - Validate finite units, reciprocal native inertia and center-relative shape extents before native/profile mutation. Reject undefined enum values, negative inertia, off-owner attached changes and solver-owned pose callback edits. Property-list failures report after complete profile commit. Serialize mode before center, preserving zero versus explicit inertia. Reuse indexed shape scans with no per-change collections or native world allocation; vendored source stays unchanged.
 
 ### Consequences and verification

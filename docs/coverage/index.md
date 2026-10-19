@@ -132,6 +132,8 @@ status changes; full retained/native/device history budgets remain open.
 
 Last updated: 2026-10-19
 
+[Mass profile publication recovery](../components/physics-registered-adapter.md#mass-profile-publication-recovery) closes the reset operation row after six-owner role/lifetime, partial failure, actual impulse and strict zero-allocation checks. Current unique physics scope has 164 open declarations: 133 Partial, 14 Unimplemented and 17 Blocked. Wider numerical/inherited/network/native/platform and hardware/window performance acceptance remain open; earlier counts below are historical.
+
 [CCD policy operation audit](../components/physics-registered-adapter.md#ccd-policy-operation-audit) closes the two extension CCD-setting rows, with all scene/raw body roles, actual selected integration inputs, wake repair and real contact response at zero warmed managed bytes. The current unique physics ledger has 165 open declarations: 134 Partial, 14 Unimplemented and 17 Blocked. Wider numerical/inherited/network/native/platform and hardware/window performance acceptance remain open; earlier counts below are historical.
 
 [Body mode operation audit](../components/physics-registered-adapter.md#body-mode-operation-audit) closes the two mode operation rows. All four roles across scene/raw owners retain actual movement/surface/rotation semantics, six prepared mode reads per numerical hook, complete failure recovery and strict zero managed-byte full frames in public CPU/software-GPU/registered JIT/NativeAOT checks. The current physics census is 167 open declarations: 136 Partial, 14 Unimplemented and 17 Blocked. Broader numerical/inherited/network/native/platform and hardware/window performance acceptance remain open; earlier counts below are historical.

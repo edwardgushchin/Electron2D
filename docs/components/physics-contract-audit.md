@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-19
 
+[Mass profile publication recovery](physics-registered-adapter.md#mass-profile-publication-recovery) fixes a reproduced configured/numerical mass mismatch and in-flight cached-view access, with attachment-qualified preparation across body/query/force/history paths. The reset operation row becomes Implemented. The unique physics ledger is 164 open declarations: 133 Partial, 14 Unimplemented and 17 Blocked. Broader complete-goal gates remain open; earlier counts below are historical.
+
 [CCD policy operation audit](physics-registered-adapter.md#ccd-policy-operation-audit) closes both extension CCD-setting rows after pinned metadata, six-owner lifecycle and wake repair, numerical input reads, real discrete/continuous contact response and strict zero-allocation full-frame checks. The current physics census is 165 open declarations: 134 Partial, 14 Unimplemented and 17 Blocked. Complete numerical/inherited/network/native/platform and target-GPU performance acceptance remains open; earlier counts below are historical.
 
 [Body mode operation audit](physics-registered-adapter.md#body-mode-operation-audit) closes both extension mode rows after complete pinned/default/value, selected numerical input, real motion, recovery and lifecycle verification. The current unique physics census is 167 open declarations: 136 Partial, 14 Unimplemented and 17 Blocked. Wider full-goal requirements remain open; earlier counts below are historical.

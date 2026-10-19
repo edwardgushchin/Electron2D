@@ -110,6 +110,7 @@ public abstract partial class PhysicsBody : CollisionObject
     {
         if (Space is null) return;
         if (!_preparingServerMode) PreparePendingServerMode();
+        Runtime.PreparePendingMass();
         Backend.PrepareContactPolicy();
         var transform = GlobalTransform;
         var geometryEpoch = Shape.GeometryEpoch;

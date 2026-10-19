@@ -783,7 +783,8 @@ public sealed partial class PhysicsServer
     /// <summary>Sets a body's positive finite mass in kilograms.</summary>
     /// <param name="body">A live scene or server body RID.</param>
     /// <param name="mass">Positive kilograms within the finite solver range; default is one.</param>
-    /// <remarks>Retains center and inertia policy. Detached configuration is applied on attachment.</remarks>
+    /// <remarks>Retains center and inertia policy. Detached configuration is applied on attachment.
+    /// A selected publication failure preserves the preceding configured profile; later numerical access prepares it again before use. Configured reads do not perform that repair.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The mass or resulting geometry is outside the solver range.</exception>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
     /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
@@ -804,6 +805,7 @@ public sealed partial class PhysicsServer
     /// <exception cref="ArgumentOutOfRangeException">The inertia is negative, nonfinite or outside the solver range.</exception>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
     /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <remarks>A selected publication failure preserves the preceding configured profile; later numerical access prepares it again before use. Configured reads do not perform that repair.</remarks>
     public static void BodySetInertia(RID body, float inertia) => Service.BodySetInertiaCore(body, inertia);
 
     /// <summary>Gets configured or most recently resolved rotational inertia in scene units.</summary>
@@ -819,7 +821,8 @@ public sealed partial class PhysicsServer
     /// <summary>Sets a custom center of mass relative to body origin in local scene units.</summary>
     /// <param name="body">A live scene or server body RID.</param>
     /// <param name="center">Finite local offset within the solver range.</param>
-    /// <remarks>Scene RigidBody switches to Custom mode. The profile is committed before property-list callbacks.</remarks>
+    /// <remarks>Scene RigidBody switches to Custom mode. The profile is committed before property-list callbacks.
+    /// A selected publication failure preserves the preceding configured profile; later numerical access prepares it again before use. Configured reads do not perform that repair.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The center or resulting inertia exceeds the finite solver range.</exception>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
     /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
@@ -837,7 +840,8 @@ public sealed partial class PhysicsServer
 
     /// <summary>Restores automatic center and inertia while retaining configured body mass.</summary>
     /// <param name="body">A live scene or server body RID.</param>
-    /// <remarks>Scene RigidBody stored Inertia becomes zero and CenterOfMassMode becomes Auto with a zero stored center.</remarks>
+    /// <remarks>Scene RigidBody stored Inertia becomes zero and CenterOfMassMode becomes Auto with a zero stored center.
+    /// A selected publication failure preserves the preceding configured profile; later numerical access prepares it again before use. Configured reads do not perform that repair.</remarks>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
     /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
     public static void BodyResetMassProperties(RID body) => Service.BodyResetMassPropertiesCore(body);

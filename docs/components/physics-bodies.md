@@ -5,7 +5,9 @@
 
 [Failed direct-mode publication](physics-registered-adapter.md#failed-body-mode-publication) retains authored mode/motion and retries complete numerical preparation before body access, space queries or steps. Detachment preserves that authored state, and scene role takeover prepares the prior direct profile before changing descriptors.
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
+
+[Mass profile publication recovery](physics-registered-adapter.md#mass-profile-publication-recovery) now restores preceding authoring after a partial selected error before numerical use, with all scene/raw siblings, real automatic reset/impulse response, history boundaries and strict zero managed allocation. Configured reads and post-commit notification semantics retain their documented behavior; complete numerical/native/platform/performance acceptance remains open.
 
 ## Scene role publication recovery
 

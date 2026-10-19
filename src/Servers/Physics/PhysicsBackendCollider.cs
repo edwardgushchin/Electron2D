@@ -160,7 +160,8 @@ public abstract class PhysicsBackendCollider
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract float InverseInertia { get; }
     /// <summary>Supplies the selected implementation operation: apply mass profile.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.
+    /// Preserve body pose and velocity. Common authoring commits after a validated result; a failed selected publication is prepared again from the preceding profile before later numerical use. Configured parameter reads remain available inside this hook; access to this body's live numerical state rejects until publication returns.</remarks>
     protected internal abstract PhysicsMassProperties ApplyMassProfile(float mass, float inertia, Vector2? center);
     /// <summary>Supplies the selected implementation operation: wake touching.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>

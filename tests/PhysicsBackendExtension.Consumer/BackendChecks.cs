@@ -20,6 +20,7 @@ public static partial class BackendChecks
         RunAngularGeometry(PhysicsServer.Backend.CPU);
         RunCurvedAnnulus();
         RunMassRoles();
+        RunMassReset();
         RunPortableRoles();
         RunPortableContacts();
         RunPortableCapture();

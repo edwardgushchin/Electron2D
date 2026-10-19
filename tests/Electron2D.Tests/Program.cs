@@ -522,6 +522,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_MORPH_NATIVE") == "
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_MORPH") == "1") { MeshMorphTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MASS_PROFILE") == "1")
 {
+    ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1");
     PhysicsMassProfileTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU);
     return;
 }

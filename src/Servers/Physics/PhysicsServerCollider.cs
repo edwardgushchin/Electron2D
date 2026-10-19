@@ -61,6 +61,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
     {
         _backend.PreparePendingMotion();
         PreparePendingPose();
+        if (!IsArea) Runtime.PreparePendingMass();
         _backend.PrepareContactPolicy();
         if (_shapesDirty) RebuildShapes();
     }

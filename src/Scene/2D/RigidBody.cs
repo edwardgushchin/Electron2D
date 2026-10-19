@@ -75,6 +75,7 @@ public partial class RigidBody : PhysicsBody
     /// <summary>Gets or sets positive finite body mass in kilograms.</summary>
     /// <value>One by default. Automatic inertia scales with mass; an explicit Inertia override is retained.</value>
     /// <exception cref="ArgumentOutOfRangeException">The mass is not positive and finite, is below the solver range, or its shape inertia would overflow or underflow the solver range.</exception>
+    /// <remarks>A selected publication failure preserves the preceding configured profile; later numerical access prepares it again before use. Configured reads do not perform that repair.</remarks>
     public float Mass
     {
         get { ThrowIfDisposed(); return _mass; }

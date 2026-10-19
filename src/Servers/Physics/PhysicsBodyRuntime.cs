@@ -61,6 +61,7 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
         var owners = Owners;
         if (owners.Scene is { } scene) scene.PreparePendingServerMode();
         else { owners.Server!.PreparePendingMode(); owners.Server.PreparePendingPose(); }
+        PreparePendingMass();
     }
 
     internal void EnsureAuthoringReadAccess()
@@ -68,6 +69,20 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
         var space = Space;
         if (space?.IsNumericalInputThread != true) Owners.Scene?.Tree?.EnsureOwnerThread();
         space?.EnsureImplementationInputReadAccess();
+    }
+
+    private long _failedMassAttachment;
+    private bool _preparingMass;
+
+    internal void PreparePendingMass()
+    {
+        if (_preparingMass) throw new InvalidOperationException("Mass profile preparation cannot reenter its own transition.");
+        if (_failedMassAttachment == 0) return;
+        var backend = Backend; var space = Space;
+        if (space is null || backend.Space != space || backend.AttachmentVersion != _failedMassAttachment)
+        { _failedMassAttachment = 0; return; }
+        space.EnsureImplementationWriteAccess(); space.EnsureBackendAccess();
+        ApplyMassProfile();
     }
 
     internal void ApplyMassProfile()
@@ -98,8 +113,14 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
         Mass = mass; Inertia = inertia; CustomCenter = center;
     }
 
-    internal void SetAttachedMassProfile(float mass, float inertia, Vector2? center) =>
-        MassProperties = Backend.ApplyMassProfile(mass, inertia, center);
+    internal void SetAttachedMassProfile(float mass, float inertia, Vector2? center)
+    {
+        if (_preparingMass) throw new InvalidOperationException("Mass profile preparation cannot reenter its own transition.");
+        var backend = Backend; var attachment = backend.AttachmentVersion; _preparingMass = true;
+        try { MassProperties = backend.ApplyMassProfile(mass, inertia, center); _failedMassAttachment = 0; }
+        catch { _failedMassAttachment = attachment; throw; }
+        finally { _preparingMass = false; }
+    }
 
     internal PhysicsBodyIntegrationConfiguration CaptureIntegrationConfiguration()
     {

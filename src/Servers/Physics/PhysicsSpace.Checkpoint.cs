@@ -118,6 +118,8 @@ internal sealed partial class PhysicsSpace
                 PhysicsReplayCopy.Require(_joints[i].Joint == s._jointRuntimes[i] && _joints[i].Configuration == s._jointRuntimes[i].CaptureReplay());
             for (var i = 0; i < _sceneJoints.Count; i++)
                 PhysicsReplayCopy.Require(_sceneJoints[i] == s._joints[i] && !_sceneJoints[i].HasPendingReplayConfiguration);
+            foreach (var body in s._bodies) body.Runtime.PreparePendingMass();
+            foreach (var collider in s._serverColliders) if (!collider.IsArea) collider.Runtime.PreparePendingMass();
             s.PrepareWorldPolicies();
             BeginSolverAccess(s);
             try { _solver!.ValidateRestore(); }

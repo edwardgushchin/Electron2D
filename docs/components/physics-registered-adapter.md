@@ -2,6 +2,67 @@
 
 Last updated: 2026-10-19
 
+## Mass profile publication recovery
+
+A failed selected mass operation previously left preceding common configuration
+alongside changed numerical mass. The public regression reproduced configured
+mass 2 with inverse mass 1/99 through an existing view. The initial repair then
+exposed a second gap: that cached view was still readable inside the first mass
+hook. Identical consumer DLL bytes fail/pass against the two runtime candidates;
+only PhysicsBodyRuntime changes between their runtime PDB documents.
+
+PhysicsBodyRuntime now retains the failed attachment generation and a publication
+guard. A selected exception preserves preceding mass/inertia/center authoring;
+retry that authoritative profile before cached/live body-state access, body/space
+queries, force preparation or nonzero steps. Configured mass and explicit
+inertia/custom-center reads remain non-preparing. In-flight numerical access and
+recursive publication reject. A repeated failure returns its own original error
+without advancing the tick. Retiring/replacing the attachment discards that old
+generation's debt. No numerical Solve or CPU fallback is performed by preparation.
+
+Checkpoint capture prepares the current profile through ordinary query
+preparation. Checkpoint restore also prepares unchanged authoritative mass after
+configuration validation and before selected history access: a fixed-configuration
+implementation may keep mass outside its numerical history. Portable capture and
+apply use their existing preparation boundary. Property-list subscriber errors
+after a validated profile commit retain the new profile. The two primitive retry
+fields add no variable-capacity history or wire data; managed/native retained size
+and complete frame performance remain separate measurement gates.
+
+The public --mass-reset fixture covers all five scene Body siblings and raw
+bodies, every physical role, wrong/retired/foreign/borrowed/failed-world access,
+24 role/reset/reentry cases, active/disabled logical shape slots, empty bodies,
+changed shape transforms and ordinary shared-resource edits. Automatic reset
+keeps mass 2, clears rigid/bone stored overrides and restores the two-circle
+center (3,0) and inertia 51; moving one circle gives center (4,0)/inertia 73 and
+radius-two circles give inertia 54. Unshaped automatic inertia/center are zero.
+
+Registered profiles execute 1,728 partial failure cases: six owners, four roles,
+mass/inertia/center/reset operations, nine preparation boundaries and one/two
+failures. The boundaries are cached view, fresh view, point query, nonzero step,
+impulse, private capture, portable capture/apply and private restore. Six
+retirement cases and two post-commit notification failures remain distinct.
+Each operation reports its own exception unchanged; authoring, view identity and
+ticks are checked. Portable maps are bound after each cold configuration change,
+as required by their fixed-configuration fingerprint.
+
+The warmed fixture performs 128 full reset/impulse/step/query cycles with six
+owners at strict zero owner/all-thread managed bytes. Mass-two central impulse 2
+produces speed 1 for dynamic roles; torque impulse 51 produces angular speed 1
+only for unlocked rigid motion. Metadata/speed tolerances are 0.002 scene units
+or corresponding engine units; inverse-value tolerance is 0.0001, covering
+single-precision geometry and unit conversion. Registered Solve checks all six
+actual prepared automatic profiles on captured owner/separate lanes, requiring
+128 hooks and 768 mass reads in each measured bracket.
+
+Fresh JIT/strict NativeAOT CPU/no-device, software-GPU and registered
+owner/separate profiles, mass-role/mode/portable/history/configured-input
+companions and root mass/parameter checks qualify this operation. The extension
+reset row is Implemented; creation and complete typed-parameter operations remain
+Partial. Full numerical/custom geometry, inherited/network/native/platform and
+target-GPU/window performance acceptance remain open. Evidence:
+bin/physics-mass-reset-audit/2026-10-19/validation.json.
+
 ## CCD policy operation audit
 
 BodySetContinuousCollisionDetectionMode/BodyGetContinuousCollisionDetectionMode
@@ -45,7 +106,7 @@ profiles exercise this contract, with continuous-response and configured-input
 companions. Fresh CPU/no-device and owner/separate public CPU/GPU continuous
 contract groups retain geometry, boundary, directed-ray, motion/force/joint,
 filter, scene-storage and strict allocation checks. Both extension CCD policy
-operation rows are Implemented; four creation/mass/typed-parameter rows remain
+operation rows are Implemented; three creation/typed-parameter rows remain
 Partial. Complete numerical/custom geometry, inherited/network/native/platform
 and target-GPU/window performance acceptance remain open. Runtime API, XML and
 wire formats are unchanged. Evidence: bin/physics-ccd-policy-audit/2026-10-19/validation.json.
@@ -1047,7 +1108,7 @@ unchanged pre-fix measurement allocated 248/248 B in the first CCD setter after
 collection. The registered fixture records delivered CCD configuration; it does
 not implement or establish independent numerical CCD.
 
-The four creation/mass/typed-parameter extension rows remain Partial; the [mode operation pair](#body-mode-operation-audit) and [CCD policy pair](#ccd-policy-operation-audit) are Implemented.
+The three creation/typed-parameter extension rows remain Partial; the [mode operation pair](#body-mode-operation-audit), [CCD policy pair](#ccd-policy-operation-audit) and [mass reset](#mass-profile-publication-recovery) are Implemented.
 `ELECTRON2D_TEST_GPU_CCD_CONTRACT=1` separately verifies actual CCD, boundaries and
 directed-ray dynamics on CPU and resident GPU. Frozen runner evidence is under
 `bin/physics-construction/2026-10-12/final/`. Full registered numerical, physical,
