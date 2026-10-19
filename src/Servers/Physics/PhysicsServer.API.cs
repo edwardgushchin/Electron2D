@@ -43,7 +43,9 @@ public sealed partial class PhysicsServer
     /// <param name="area">A live scene/server Area RID or a space RID for its unbounded default field.</param>
     /// <returns>The stored value; default Disabled.</returns>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access violates the owner or current solver/failure phase.</exception>
+    /// <remarks>Configured input reads are permitted in this owning world's selected numerical hook.
+    /// Ordinary reads retain owner, lifetime and failed-world guards; no live solver query or device transfer is required.</remarks>
     public static Area.SpaceOverride AreaGetGravitySpaceOverride(RID area) => Service.AreaGetGravitySpaceOverrideCore(area);
 
     /// <summary>Sets signed gravity strength in scene units per second squared.</summary>
@@ -61,8 +63,10 @@ public sealed partial class PhysicsServer
     /// <param name="area">A live scene/server Area RID or a space RID for its unbounded default field.</param>
     /// <returns>The stored value; default 9.80665 for server-only Areas; 980 for scene Areas.</returns>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
-    /// <remarks>Space initial values are sampled from the corresponding ProjectSettings override when the world is created.</remarks>
+    /// <exception cref="InvalidOperationException">Attached access violates the owner or current solver/failure phase.</exception>
+    /// <remarks>Space initial values are sampled from the corresponding ProjectSettings override when the world is created.
+    /// Configured input reads are permitted in this owning world's selected numerical hook.
+    /// Ordinary reads retain owner, lifetime and failed-world guards; no live solver query or device transfer is required.</remarks>
     public static float AreaGetGravity(RID area) => Service.AreaGetGravityCore(area);
 
     /// <summary>Sets the unnormalized direction or local point center.</summary>
@@ -80,8 +84,10 @@ public sealed partial class PhysicsServer
     /// <param name="area">A live scene/server Area RID or a space RID for its unbounded default field.</param>
     /// <returns>The stored value; default (0, -1) for server-only Areas; (0, 1) for scene Areas.</returns>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
-    /// <remarks>Space initial values are sampled from the corresponding ProjectSettings override when the world is created.</remarks>
+    /// <exception cref="InvalidOperationException">Attached access violates the owner or current solver/failure phase.</exception>
+    /// <remarks>Space initial values are sampled from the corresponding ProjectSettings override when the world is created.
+    /// Configured input reads are permitted in this owning world's selected numerical hook.
+    /// Ordinary reads retain owner, lifetime and failed-world guards; no live solver query or device transfer is required.</remarks>
     public static Vector2 AreaGetGravityVector(RID area) => Service.AreaGetGravityVectorCore(area);
 
     /// <summary>Sets whether the vector is a transformed attraction center.</summary>
@@ -98,7 +104,9 @@ public sealed partial class PhysicsServer
     /// <param name="area">A live scene/server Area RID or a space RID for its unbounded default field.</param>
     /// <returns>The stored value; default false.</returns>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access violates the owner or current solver/failure phase.</exception>
+    /// <remarks>Configured input reads are permitted in this owning world's selected numerical hook.
+    /// Ordinary reads retain owner, lifetime and failed-world guards; no live solver query or device transfer is required.</remarks>
     public static bool AreaGetGravityPoint(RID area) => Service.AreaGetGravityPointCore(area);
 
     /// <summary>Sets the unit distance of inverse-square point gravity; nonpositive means constant strength.</summary>
@@ -117,7 +125,9 @@ public sealed partial class PhysicsServer
     /// <param name="area">A live scene/server Area RID or a space RID for its unbounded default field.</param>
     /// <returns>The stored value; default zero.</returns>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access violates the owner or current solver/failure phase.</exception>
+    /// <remarks>Configured input reads are permitted in this owning world's selected numerical hook.
+    /// Ordinary reads retain owner, lifetime and failed-world guards; no live solver query or device transfer is required.</remarks>
     public static float AreaGetGravityPointUnitDistance(RID area) => Service.AreaGetGravityPointUnitDistanceCore(area);
 
     /// <summary>Sets the linear damping reduction mode.</summary>
@@ -135,7 +145,9 @@ public sealed partial class PhysicsServer
     /// <param name="area">A live scene/server Area RID or a space RID for its unbounded default field.</param>
     /// <returns>The stored value; default Disabled.</returns>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access violates the owner or current solver/failure phase.</exception>
+    /// <remarks>Configured input reads are permitted in this owning world's selected numerical hook.
+    /// Ordinary reads retain owner, lifetime and failed-world guards; no live solver query or device transfer is required.</remarks>
     public static Area.SpaceOverride AreaGetLinearDampSpaceOverride(RID area) => Service.AreaGetLinearDampSpaceOverrideCore(area);
 
     /// <summary>Sets signed linear damping in inverse seconds.</summary>
@@ -153,8 +165,10 @@ public sealed partial class PhysicsServer
     /// <param name="area">A live scene/server Area RID or a space RID for its unbounded default field.</param>
     /// <returns>The stored value; default 0.1.</returns>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
-    /// <remarks>Space initial values are sampled from the corresponding ProjectSettings override when the world is created.</remarks>
+    /// <exception cref="InvalidOperationException">Attached access violates the owner or current solver/failure phase.</exception>
+    /// <remarks>Space initial values are sampled from the corresponding ProjectSettings override when the world is created.
+    /// Configured input reads are permitted in this owning world's selected numerical hook.
+    /// Ordinary reads retain owner, lifetime and failed-world guards; no live solver query or device transfer is required.</remarks>
     public static float AreaGetLinearDamp(RID area) => Service.AreaGetLinearDampCore(area);
 
     /// <summary>Sets the angular damping reduction mode.</summary>
@@ -172,7 +186,9 @@ public sealed partial class PhysicsServer
     /// <param name="area">A live scene/server Area RID or a space RID for its unbounded default field.</param>
     /// <returns>The stored value; default Disabled.</returns>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access violates the owner or current solver/failure phase.</exception>
+    /// <remarks>Configured input reads are permitted in this owning world's selected numerical hook.
+    /// Ordinary reads retain owner, lifetime and failed-world guards; no live solver query or device transfer is required.</remarks>
     public static Area.SpaceOverride AreaGetAngularDampSpaceOverride(RID area) => Service.AreaGetAngularDampSpaceOverrideCore(area);
 
     /// <summary>Sets signed angular damping in inverse seconds.</summary>
@@ -190,8 +206,10 @@ public sealed partial class PhysicsServer
     /// <param name="area">A live scene/server Area RID or a space RID for its unbounded default field.</param>
     /// <returns>The stored value; default one.</returns>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
-    /// <remarks>Space initial values are sampled from the corresponding ProjectSettings override when the world is created.</remarks>
+    /// <exception cref="InvalidOperationException">Attached access violates the owner or current solver/failure phase.</exception>
+    /// <remarks>Space initial values are sampled from the corresponding ProjectSettings override when the world is created.
+    /// Configured input reads are permitted in this owning world's selected numerical hook.
+    /// Ordinary reads retain owner, lifetime and failed-world guards; no live solver query or device transfer is required.</remarks>
     public static float AreaGetAngularDamp(RID area) => Service.AreaGetAngularDampCore(area);
 
     /// <summary>Sets the integer reduction priority; larger values run first.</summary>
@@ -208,7 +226,9 @@ public sealed partial class PhysicsServer
     /// <param name="area">A live scene/server Area RID or a space RID for its unbounded default field.</param>
     /// <returns>The stored value; default zero for a bounded Area, -1 for a space.</returns>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access violates the owner or current solver/failure phase.</exception>
+    /// <remarks>Configured input reads are permitted in this owning world's selected numerical hook.
+    /// Ordinary reads retain owner, lifetime and failed-world guards; no live solver query or device transfer is required.</remarks>
     public static int AreaGetPriority(RID area) => Service.AreaGetPriorityCore(area);
 
     /// <summary>Sets or clears the receiver's body-pair overlap callback.</summary>

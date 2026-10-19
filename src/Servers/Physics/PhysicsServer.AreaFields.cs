@@ -77,14 +77,19 @@ public sealed partial class PhysicsServer
         lock (_registryGate) _sceneSpaces.TryGetValue(area, out space);
         if (space is not null)
         {
-            space.EnsureQueryAccess();
-            if (writing) space.EnsureImplementationWriteAccess();
+            if (writing) { space.EnsureQueryAccess(); space.EnsureImplementationWriteAccess(); }
+            else space.EnsureImplementationInputReadAccess();
             return space.DefaultAreaFields;
+        }
+        if (!writing)
+        {
+            var inputs = ShapeOwners(area, isArea: true, input: true);
+            return ((Area?)inputs.Scene)?.Fields ?? inputs.Server!.AreaFields!;
         }
         var runtime = AreaRuntime(area);
         runtime.EnsureAccess();
         var owners = runtime.Owners;
-        if (writing) { runtime.Space?.EnsureImplementationWriteAccess(); owners.Scene?.EnsureFieldChange(); }
+        runtime.Space?.EnsureImplementationWriteAccess(); owners.Scene?.EnsureFieldChange();
         return owners.Scene?.Fields ?? owners.Server!.AreaFields!;
     }
 }

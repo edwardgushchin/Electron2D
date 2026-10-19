@@ -220,6 +220,11 @@ registered numerical sleep/contact response, native allocations or other platfor
 
 ## Registered Area fields
 
+The [prepared input correction](physics-areas.md#prepared-area-field-inputs) now
+executes all ten scene/raw/default getters from the selected numerical lane.
+A reproduced scene-owner failure is fixed through the common input guard; write,
+ordinary off-owner and failed-world rejection remain intact.
+
 The ten typed Area fields and the space-default shortcut retain one common
 profile. Writes reject during a numerical hook before authoring changes,
 including initial raw attachment. Guarded getters remain available. Default-field

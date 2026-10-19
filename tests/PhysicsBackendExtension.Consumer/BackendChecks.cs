@@ -49,7 +49,7 @@ public static partial class BackendChecks
         ParameterReadChecks();
         WorldPolicyChecks();
         SceneSpaceChecks();
-        AreaFieldChecks();
+        RunAreaFields();
         BodyMutationChecks();
         ShapeMutationChecks();
         IdentityChecks();

@@ -1,6 +1,6 @@
 # PhysicsAreaFieldConfiguration
 
-Last updated: 2026-10-11
+Last updated: 2026-10-19
 
 **Declaration:** `public readonly record struct PhysicsAreaFieldConfiguration` · **Source:** [PhysicsAreaFieldConfiguration.cs](../../src/Servers/Physics/PhysicsAreaFieldConfiguration.cs) · **Component:** [Selected checkpoint ownership](../components/physics-backends.md#selected-checkpoint-ownership)
 
@@ -19,8 +19,15 @@ Internal flow: `fields.Configuration` is stored in a replay configuration or pas
 
 ## Verification and limits
 
-Shared checkpoint tests reject mismatched world/Area authoring before mutation. Portable snapshot tests exercise CPU/GPU schema agreement, all three joint roles, fields, contacts and silent restoration. This internal data type does not expose public backend registration or custom geometry. Native allocator and foreign-platform acceptance remain separate.
+Shared checkpoint tests reject mismatched world/Area authoring before mutation. Portable snapshot tests exercise CPU/GPU schema agreement, all three joint roles, fields, contacts and silent restoration. This configuration value does not expose backend storage or native geometry. Native allocator and foreign-platform acceptance remain separate.
 
 This immutable value is now public and crosses the [registered implementation boundary](../components/physics-registered-adapter.md); complete sampled fields retain the contracts above. No backend storage or native handles are exposed.
 
 [Registered Area fields](../components/physics-registered-adapter.md#registered-area-fields) now exercise the complete typed profile/default shortcut through the selected hooks, including independent override/point/mask response and zero warmed edited full frames. Numerical-hook writes reject before mutation; authored reads and ordinary Area callback edits retain their guards and overlap history. Generic solver/extension acceptance remains open.
+
+[Prepared Area field inputs](../components/physics-areas.md#prepared-area-field-inputs)
+permit all ten configured getters for the owning scene/raw/default profile inside
+selected numerical hooks, including the captured solver thread. Existing common
+input guards preserve ordinary owner/failure/lifetime checks; writes remain guarded.
+Readonly profiles match selected preparation and require no live field-state query.
+The public 64-frame edited/acceleration fixture retains strict zero managed bytes.

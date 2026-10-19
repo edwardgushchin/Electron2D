@@ -1,8 +1,48 @@
 # Physics areas component
 
-Last updated: 2026-10-17
+Last updated: 2026-10-19
 
 [Failed authored pose publication](physics-registered-adapter.md#failed-pose-publication) retains current input through partial selected errors, including authoring returned to the previous prepared pose. Numerical preparation retries before live queries/nonzero steps; body views also prepare incomplete body publication. Scene/Area transform presentation remains non-preparing, and retirement retains authoring without repairing the discarded attachment.
+
+## Prepared Area field inputs
+
+All ten typed PhysicsServer Area field getters now share the established prepared
+input guard for scene Areas, server-created Areas and a space's unbounded default
+Area. The selected implementation may read its own authored profile inside Solve,
+including on its captured separate numerical thread. It reads common configuration,
+without querying live solver state, repairing numerical debt or adding field
+transfers. Ordinary reads retain owner, lifetime and failed-world guards. Writes
+keep the existing owner/capture/implementation-borrow checks and callback policy.
+
+The previous AreaFieldState path always applied the ordinary query guard (and the
+scene owner check). A public-only separate Solve that read AreaGetGravityVector
+failed the whole physics frame with a SceneTree owner-thread error. The same
+consumer DLL now executes every field read; scene/raw profiles match SetAreaFields
+and space defaults match PrepareWorld. The common ShapeOwners input path is reused
+for Area RIDs, and the space shortcut uses EnsureImplementationInputReadAccess.
+No new public type, API, mirror, backend storage or numerical algorithm is added.
+
+The public-only `--area-fields` entry captures/restores serial/separate policy and
+checks actual named ownership and numerical hook execution. Each hook reads three
+ten-field profiles. First use checks all ten write operations on all three RIDs,
+including an equal gravity write; ordinary Area callbacks still author next-step
+values without resetting observer history. Status-hook reads remain outside the
+RID registry lock. Every getter rejects unrelated threads and ordinary reads after
+a failed selected Solve. The existing override, priority, point/vector, filtering,
+monitor independence and actual acceleration assertions remain active. Sixty-four
+measured edited/full frames require 0/0 owner/all-thread managed bytes and exactly
+64 numerical hooks, exercising 1,920 configured field reads per bracket.
+
+Evidence: `bin/physics-area-field-inputs/2026-10-19/red-green-proof.json` and
+`validation.json` in the same directory. Fresh JIT/strict Linux x64 NativeAOT
+registered serial/separate profiles and CPU/software-GPU prepared-input/complete
+Area contracts qualify the correction. Existing numerical tolerances remain
+unchanged; configured profile equality is exact. This correction does not close
+full parameter-operation or numerical-extension accounting: coverage states retain
+171 open declarations (140 Partial, 14 Unimplemented, 17 Blocked). Wider native
+memory, foreign-platform, impaired-network and target-GPU/window acceptance remain
+open. The earlier successful ordinary frozen `8912effe` root predates this runtime
+fix; a new source-qualified ordinary run is required.
 
 ## Scope and owned types
 

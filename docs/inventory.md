@@ -1895,3 +1895,9 @@ The [filter setter audit](components/physics-filters.md#filter-setter-operation-
 completes four existing common Body/Area layer/mask operations through selected
 UpdateFilter. No production type, API or runtime behavior is added. Complete
 registered numerical/extension/network/platform/performance gates stay open.
+
+The [Area field input correction](components/physics-areas.md#prepared-area-field-inputs)
+reuses existing PhysicsServer/PhysicsSpace prepared input guards for ten configured
+getters across scene/raw/default profiles. No production type is added. Public
+thread/read/write/failure and real field-frame evidence remains separate from full
+parameter/numerical/platform/performance acceptance.

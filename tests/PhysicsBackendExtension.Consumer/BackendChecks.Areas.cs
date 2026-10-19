@@ -2,7 +2,15 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    private static void AreaFieldChecks()
+    public static void RunAreaFields(bool threaded = false)
+    {
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { AreaFieldChecks(threaded); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
+
+    private static void AreaFieldChecks(bool threaded)
     {
         Solver? solver = null;
         PhysicsServerManager.RegisterServer("AreaFields", () => solver = new());
@@ -24,6 +32,8 @@ public static partial class BackendChecks
         root.AddChild(sceneArea); root.AddChild(sceneBody);
         using var tree = new SceneTree(root);
         var raw = PhysicsServer.AreaCreate(); var enters = 0;
+        var ownerThread = Environment.CurrentManagedThreadId; var numericalReads = 0; var probeWrites = true;
+        var ids = new[] { sceneArea.GetRID(), raw, space };
         try
         {
             PhysicsServer.AreaAddShape(raw, circle.GetRID());
@@ -45,12 +55,27 @@ public static partial class BackendChecks
                 if (status != PhysicsServer.AreaBodyStatus.Added) return;
                 enters++; PhysicsServer.AreaSetGravity(raw, 21); PhysicsServer.AreaSetGravity(space, 3);
             });
+            Check(world.PhysicsBackendName == "AreaFields", "Area fields use the actual registered implementation");
+            solver.StepHook = () =>
+            {
+                Check((Environment.CurrentManagedThreadId != ownerThread) == threaded, "Area input reads execute on the captured numerical lane");
+                ReadAllFields(); numericalReads++;
+                if (!probeWrites) return;
+                foreach (var id in ids)
+                {
+                    RejectFieldWrites(id);
+                    Reject<InvalidOperationException>(() => PhysicsServer.AreaSetGravity(id, PhysicsServer.AreaGetGravity(id)));
+                }
+                probeWrites = false;
+            };
             tree.PhysicsFrame(1d / 60);
+            Check(numericalReads == 1, "The selected numerical hook actually reads all thirty Area/default inputs");
             Check(enters == 1 && PhysicsServer.AreaGetGravity(raw) == 21 && PhysicsServer.AreaGetGravity(space) == 3,
                 $"Ordinary Area callback edits preserve history: enters={enters}, Area/default gravity={PhysicsServer.AreaGetGravity(raw)}/{PhysicsServer.AreaGetGravity(space)}");
             PhysicsServer.AreaSetGravity(raw, 20); PhysicsServer.AreaSetGravity(space, 2);
             solver.StatusHook = () =>
             {
+                ReadAllFields();
                 var worker = Task.Run(() => { var body = PhysicsServer.BodyCreate(); PhysicsServer.FreeRID(body); });
                 Check(worker.Wait(TimeSpan.FromSeconds(2)), "Default-field status hooks execute outside the RID registry lock");
             };
@@ -101,19 +126,48 @@ public static partial class BackendChecks
                 "Area fields remain active without monitor callbacks or monitorability");
             Collect(); _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < 64; i++) EditAndStep(i);
-            var own = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+            var beforeReads = numericalReads; var own = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < 64; i++) EditAndStep(i);
             own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
-            Check(own == 0 && all == 0, $"Registered Area edits/full frames allocated {own}/{all} owner/all-thread B");
+            Check(own == 0 && all == 0 && numericalReads == beforeReads + 64, $"Registered Area edits/full frames allocated {own}/{all} owner/all-thread B");
             Task.Run(() =>
             {
                 Reject<InvalidOperationException>(() => PhysicsServer.AreaSetGravity(raw, 9));
                 Reject<InvalidOperationException>(() => PhysicsServer.AreaSetGravity(space, 9));
                 Reject<InvalidOperationException>(() => PhysicsServer.AreaGetGravity(sceneArea.GetRID()));
+                foreach (var id in ids) RejectFieldReads(id);
             }).GetAwaiter().GetResult();
             Console.WriteLine($"Registered Area/default fields: all override modes, point gravity, callbacks and 64 warm full frames {own}/{all} owner/all-thread B");
+            solver.StepHook = null; solver.FailSolve = true;
+            Reject<AggregateException>(() => tree.PhysicsFrame(1d / 60));
+            foreach (var id in ids) RejectFieldReads(id);
         }
-        finally { solver!.IdentityHook = null; solver.StatusHook = null; PhysicsServer.FreeRID(raw); }
+        finally { solver!.IdentityHook = null; solver.StatusHook = null; solver.StepHook = null; PhysicsServer.FreeRID(raw); }
+
+        void ReadAllFields()
+        {
+            foreach (var id in ids)
+            {
+                var actual = new PhysicsAreaFieldConfiguration(PhysicsServer.AreaGetGravityVector(id), PhysicsServer.AreaGetGravity(id),
+                    PhysicsServer.AreaGetGravityPoint(id), PhysicsServer.AreaGetGravityPointUnitDistance(id), PhysicsServer.AreaGetLinearDamp(id),
+                    PhysicsServer.AreaGetAngularDamp(id), PhysicsServer.AreaGetGravitySpaceOverride(id), PhysicsServer.AreaGetLinearDampSpaceOverride(id),
+                    PhysicsServer.AreaGetAngularDampSpaceOverride(id), PhysicsServer.AreaGetPriority(id));
+                Check(actual == (id == space ? solver!.Fields : solver!.Bodies[id].AreaFields), "Every configured Area/default field agrees with the selected prepared profile");
+            }
+        }
+        void RejectFieldReads(RID id)
+        {
+            Reject<InvalidOperationException>(() => PhysicsServer.AreaGetGravity(id));
+            Reject<InvalidOperationException>(() => PhysicsServer.AreaGetGravityVector(id));
+            Reject<InvalidOperationException>(() => PhysicsServer.AreaGetGravityPoint(id));
+            Reject<InvalidOperationException>(() => PhysicsServer.AreaGetGravityPointUnitDistance(id));
+            Reject<InvalidOperationException>(() => PhysicsServer.AreaGetGravitySpaceOverride(id));
+            Reject<InvalidOperationException>(() => PhysicsServer.AreaGetLinearDamp(id));
+            Reject<InvalidOperationException>(() => PhysicsServer.AreaGetLinearDampSpaceOverride(id));
+            Reject<InvalidOperationException>(() => PhysicsServer.AreaGetAngularDamp(id));
+            Reject<InvalidOperationException>(() => PhysicsServer.AreaGetAngularDampSpaceOverride(id));
+            Reject<InvalidOperationException>(() => PhysicsServer.AreaGetPriority(id));
+        }
 
         void EditAndStep(int i)
         {

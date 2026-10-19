@@ -1237,3 +1237,10 @@ completes shared Body/Area layer/mask authoring through selected UpdateFilter.
 Argument/wake/thread checks, eight-role failure repair and real directional response
 retain configured metadata, logical identity and zero managed allocation in full
 moving frames. Geometry, numerical and platform/performance gates remain separate.
+
+[Prepared Area field inputs](../components/physics-areas.md#prepared-area-field-inputs)
+permit all ten configured getters for the owning scene/raw/default profile inside
+selected numerical hooks, including the captured solver thread. Existing common
+input guards preserve ordinary owner/failure/lifetime checks; writes remain guarded.
+Readonly profiles match selected preparation and require no live field-state query.
+The public 64-frame edited/acceleration fixture retains strict zero managed bytes.

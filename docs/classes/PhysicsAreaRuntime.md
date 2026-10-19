@@ -1,6 +1,6 @@
 # PhysicsAreaRuntime
 
-Last updated: 2026-10-16
+Last updated: 2026-10-19
 
 **Declaration:** `internal sealed class PhysicsAreaRuntime`
 
@@ -29,3 +29,10 @@ The public-only transaction profile verifies 24 registered preparation failures,
 rejected candidate weak targets, both callback lanes, logical index gaps and exact
 queued delivery, together with complete CPU/software-GPU/registered warm frames.
 Broader numerical/native/foreign/performance acceptance remains separate.
+
+[Prepared Area field inputs](../components/physics-areas.md#prepared-area-field-inputs)
+permit all ten configured getters for the owning scene/raw/default profile inside
+selected numerical hooks, including the captured solver thread. Existing common
+input guards preserve ordinary owner/failure/lifetime checks; writes remain guarded.
+Readonly profiles match selected preparation and require no live field-state query.
+The public 64-frame edited/acceleration fixture retains strict zero managed bytes.

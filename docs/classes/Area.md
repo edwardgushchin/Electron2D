@@ -1,6 +1,6 @@
 # Area
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 ## Geometry preparation
 
@@ -279,3 +279,10 @@ preserves prior callback histories and logical slot identities.
 Scene departure retains the physical binding through the inherited OnExitTree hook and TreeExiting. Non-public membership cleanup then retires it before NodeRemoved/TreeExited even if a user hook or event fails. The OnExitTree hook is inherited from Node; no separate public cleanup alias is added. The [public lifecycle consumer](../components/scene-hierarchy.md#entry-readiness-and-departure) verifies live body/Area bindings, joint snapshot-map admission/removal and multi-error release on selected CPU/software-GPU/registered worlds.
 
 Inherited [ordinary event blocking](../classes/ElectronObject.md#ordinary-event-delivery) suppresses new event emissions at the publisher, preserving subscriptions and already accepted deferred work. Notifications, virtual callbacks, committed physical state and resource revisions continue; Disposed cleanup remains independent.
+
+[Prepared Area field inputs](../components/physics-areas.md#prepared-area-field-inputs)
+permit all ten configured getters for the owning scene/raw/default profile inside
+selected numerical hooks, including the captured solver thread. Existing common
+input guards preserve ordinary owner/failure/lifetime checks; writes remain guarded.
+Readonly profiles match selected preparation and require no live field-state query.
+The public 64-frame edited/acceleration fixture retains strict zero managed bytes.
