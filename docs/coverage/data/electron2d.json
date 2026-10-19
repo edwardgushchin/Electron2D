@@ -4722,6 +4722,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.GPUParticles",
+    "kind": "type",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "GPUParticles",
+    "signature": "public class Electron2D.GPUParticles",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.GPUParticles.EmitFlags",
+    "kind": "type",
+    "declaringType": "Electron2D.GPUParticles.EmitFlags",
+    "name": "EmitFlags",
+    "signature": "public enum Electron2D.GPUParticles.EmitFlags",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Geometry",
     "kind": "type",
     "declaringType": "Electron2D.Geometry",
@@ -8069,6 +8102,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ParticlesDrawOrder",
+    "kind": "type",
+    "declaringType": "Electron2D.ParticlesDrawOrder",
+    "name": "ParticlesDrawOrder",
+    "signature": "public enum Electron2D.ParticlesDrawOrder",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ParticlesEmissionShape",
     "kind": "type",
     "declaringType": "Electron2D.ParticlesEmissionShape",
@@ -10302,24 +10353,6 @@
     "declaringType": "Electron2D.RenderingServer.GlobalShaderParameterType",
     "name": "GlobalShaderParameterType",
     "signature": "public enum Electron2D.RenderingServer.GlobalShaderParameterType",
-    "visibility": "public",
-    "baseType": "System.Enum",
-    "interfaces": [
-      "System.IComparable",
-      "System.IConvertible",
-      "System.IFormattable",
-      "System.ISpanFormattable"
-    ],
-    "parameters": null,
-    "returnType": null,
-    "value": null
-  },
-  {
-    "id": "T:Electron2D.RenderingServer.ParticlesDrawOrder",
-    "kind": "type",
-    "declaringType": "Electron2D.RenderingServer.ParticlesDrawOrder",
-    "name": "ParticlesDrawOrder",
-    "signature": "public enum Electron2D.RenderingServer.ParticlesDrawOrder",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -18655,6 +18688,19 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.GPUParticles..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": ".ctor",
+    "signature": "public GPUParticles()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -31360,6 +31406,71 @@
     "value": "2"
   },
   {
+    "id": "enumValue:Electron2D.GPUParticles.EmitFlags.Color()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.GPUParticles.EmitFlags",
+    "name": "Color",
+    "signature": "public const Electron2D.GPUParticles.EmitFlags Color = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GPUParticles.EmitFlags",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.GPUParticles.EmitFlags.Custom()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.GPUParticles.EmitFlags",
+    "name": "Custom",
+    "signature": "public const Electron2D.GPUParticles.EmitFlags Custom = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GPUParticles.EmitFlags",
+    "value": "16"
+  },
+  {
+    "id": "enumValue:Electron2D.GPUParticles.EmitFlags.Position()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.GPUParticles.EmitFlags",
+    "name": "Position",
+    "signature": "public const Electron2D.GPUParticles.EmitFlags Position = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GPUParticles.EmitFlags",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.GPUParticles.EmitFlags.RotationScale()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.GPUParticles.EmitFlags",
+    "name": "RotationScale",
+    "signature": "public const Electron2D.GPUParticles.EmitFlags RotationScale = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GPUParticles.EmitFlags",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.GPUParticles.EmitFlags.Velocity()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.GPUParticles.EmitFlags",
+    "name": "Velocity",
+    "signature": "public const Electron2D.GPUParticles.EmitFlags Velocity = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GPUParticles.EmitFlags",
+    "value": "4"
+  },
+  {
     "id": "enumValue:Electron2D.Geometry.PolyBooleanOperation.Difference()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Geometry.PolyBooleanOperation",
@@ -40811,6 +40922,45 @@
     "value": "5"
   },
   {
+    "id": "enumValue:Electron2D.ParticlesDrawOrder.Index()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ParticlesDrawOrder",
+    "name": "Index",
+    "signature": "public const Electron2D.ParticlesDrawOrder Index = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ParticlesDrawOrder",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ParticlesDrawOrder.Lifetime()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ParticlesDrawOrder",
+    "name": "Lifetime",
+    "signature": "public const Electron2D.ParticlesDrawOrder Lifetime = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ParticlesDrawOrder",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ParticlesDrawOrder.ReverseLifetime()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ParticlesDrawOrder",
+    "name": "ReverseLifetime",
+    "signature": "public const Electron2D.ParticlesDrawOrder ReverseLifetime = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ParticlesDrawOrder",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.ParticlesEmissionShape.DirectedPoints()",
     "kind": "enumValue",
     "declaringType": "Electron2D.ParticlesEmissionShape",
@@ -46997,45 +47147,6 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingServer.GlobalShaderParameterType",
     "value": "16"
-  },
-  {
-    "id": "enumValue:Electron2D.RenderingServer.ParticlesDrawOrder.Index()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.RenderingServer.ParticlesDrawOrder",
-    "name": "Index",
-    "signature": "public const Electron2D.RenderingServer.ParticlesDrawOrder Index = 0",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.RenderingServer.ParticlesDrawOrder",
-    "value": "0"
-  },
-  {
-    "id": "enumValue:Electron2D.RenderingServer.ParticlesDrawOrder.Lifetime()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.RenderingServer.ParticlesDrawOrder",
-    "name": "Lifetime",
-    "signature": "public const Electron2D.RenderingServer.ParticlesDrawOrder Lifetime = 1",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.RenderingServer.ParticlesDrawOrder",
-    "value": "1"
-  },
-  {
-    "id": "enumValue:Electron2D.RenderingServer.ParticlesDrawOrder.ReverseLifetime()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.RenderingServer.ParticlesDrawOrder",
-    "name": "ReverseLifetime",
-    "signature": "public const Electron2D.RenderingServer.ParticlesDrawOrder ReverseLifetime = 2",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.RenderingServer.ParticlesDrawOrder",
-    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.RenderingServer.ParticlesTransformAlign.Disabled()",
@@ -54484,6 +54595,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.FoldableContainer\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GPUParticles.Finished()",
+    "kind": "event",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "Finished",
+    "signature": "public event System.Action Finished",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
     "value": null
   },
   {
@@ -76999,6 +77123,25 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CPUParticles.ConvertFromParticles(Electron2D.Node)",
+    "kind": "method",
+    "declaringType": "Electron2D.CPUParticles",
+    "name": "ConvertFromParticles",
+    "signature": "public System.Void ConvertFromParticles(Electron2D.Node particles)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.Node",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -100504,6 +100647,210 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GPUParticles.CaptureRect()",
+    "kind": "method",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "CaptureRect",
+    "signature": "public Electron2D.Rect2 CaptureRect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GPUParticles.ConvertFromParticles(Electron2D.Node)",
+    "kind": "method",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "ConvertFromParticles",
+    "signature": "public System.Void ConvertFromParticles(Electron2D.Node particles)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "particles",
+        "type": "Electron2D.Node",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GPUParticles.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GPUParticles.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GPUParticles.EmitParticle(Electron2D.Transform,Electron2D.Vector2,Electron2D.Color,Electron2D.Color,Electron2D.GPUParticles.EmitFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "EmitParticle",
+    "signature": "public System.Void EmitParticle(Electron2D.Transform transform, Electron2D.Vector2 velocity, Electron2D.Color color, Electron2D.Color custom, Electron2D.GPUParticles.EmitFlags flags)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "velocity",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "custom",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "flags",
+        "type": "Electron2D.GPUParticles.EmitFlags",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GPUParticles.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GPUParticles.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GPUParticles.OnDraw()",
+    "kind": "method",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "OnDraw",
+    "signature": "protected override System.Void OnDraw()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GPUParticles.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GPUParticles.RequestParticlesProcess(System.Single,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "RequestParticlesProcess",
+    "signature": "public System.Void RequestParticlesProcess(System.Single processTime, System.Single processTimeResidual = 0f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "processTime",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "processTimeResidual",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GPUParticles.Restart(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "Restart",
+    "signature": "public System.Void Restart(System.Boolean keepSeed = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "keepSeed",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -160518,11 +160865,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RenderingServer.ParticlesSetDrawOrder(Electron2D.RID,Electron2D.RenderingServer.ParticlesDrawOrder)",
+    "id": "method:Electron2D.RenderingServer.ParticlesSetDrawOrder(Electron2D.RID,Electron2D.ParticlesDrawOrder)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
     "name": "ParticlesSetDrawOrder",
-    "signature": "public static System.Void ParticlesSetDrawOrder(Electron2D.RID particles, Electron2D.RenderingServer.ParticlesDrawOrder value)",
+    "signature": "public static System.Void ParticlesSetDrawOrder(Electron2D.RID particles, Electron2D.ParticlesDrawOrder value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -160534,7 +160881,7 @@
       },
       {
         "name": "value",
-        "type": "Electron2D.RenderingServer.ParticlesDrawOrder",
+        "type": "Electron2D.ParticlesDrawOrder",
         "default": null
       }
     ],
@@ -227418,6 +227765,344 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.Amount()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "Amount",
+    "signature": "public System.Int32 Amount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.AmountRatio()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "AmountRatio",
+    "signature": "public System.Single AmountRatio { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.CollisionBaseSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "CollisionBaseSize",
+    "signature": "public System.Single CollisionBaseSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.DrawOrder()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "DrawOrder",
+    "signature": "public Electron2D.ParticlesDrawOrder DrawOrder { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ParticlesDrawOrder",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.Emitting()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "Emitting",
+    "signature": "public System.Boolean Emitting { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.Explosiveness()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "Explosiveness",
+    "signature": "public System.Single Explosiveness { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.FixedFPS()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "FixedFPS",
+    "signature": "public System.Int32 FixedFPS { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.FractDelta()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "FractDelta",
+    "signature": "public System.Boolean FractDelta { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.InterpToEnd()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "InterpToEnd",
+    "signature": "public System.Single InterpToEnd { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.Interpolate()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "Interpolate",
+    "signature": "public System.Boolean Interpolate { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.Lifetime()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "Lifetime",
+    "signature": "public System.Double Lifetime { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.LocalCoords()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "LocalCoords",
+    "signature": "public System.Boolean LocalCoords { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.OneShot()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "OneShot",
+    "signature": "public System.Boolean OneShot { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.Preprocess()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "Preprocess",
+    "signature": "public System.Double Preprocess { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.ProcessMaterial()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "ProcessMaterial",
+    "signature": "public Electron2D.Material ProcessMaterial { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Material",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.Randomness()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "Randomness",
+    "signature": "public System.Single Randomness { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.Seed()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "Seed",
+    "signature": "public System.UInt32 Seed { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.SpeedScale()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "SpeedScale",
+    "signature": "public System.Double SpeedScale { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.SubEmitter()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "SubEmitter",
+    "signature": "public System.String SubEmitter { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.Texture()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "Texture",
+    "signature": "public Electron2D.Texture Texture { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.TrailEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "TrailEnabled",
+    "signature": "public System.Boolean TrailEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.TrailLifetime()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "TrailLifetime",
+    "signature": "public System.Double TrailLifetime { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.TrailSectionSubdivisions()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "TrailSectionSubdivisions",
+    "signature": "public System.Int32 TrailSectionSubdivisions { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.TrailSections()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "TrailSections",
+    "signature": "public System.Int32 TrailSections { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.UseFixedSeed()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "UseFixedSeed",
+    "signature": "public System.Boolean UseFixedSeed { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GPUParticles.VisibilityRect()",
+    "kind": "property",
+    "declaringType": "Electron2D.GPUParticles",
+    "name": "VisibilityRect",
+    "signature": "public Electron2D.Rect2 VisibilityRect { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {

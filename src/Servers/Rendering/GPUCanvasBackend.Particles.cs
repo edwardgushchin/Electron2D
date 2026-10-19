@@ -29,7 +29,7 @@ internal sealed unsafe partial class GPUCanvasBackend
         foreach (var source in server.ParticleSchedule)
         {
             if (!source.Requested || source.LastFrame == server.ParticleFrame || source.Amount == 0 || source.Released) continue;
-            source.Preparing = true;
+            server.BeginParticleScenePreparation(); source.Preparing = true;
             try
             {
                 var material = source.ProcessMaterial; var state = material?.GetCanvasState();
@@ -43,7 +43,7 @@ internal sealed unsafe partial class GPUCanvasBackend
                 source.GPU ??= new(source, _device);
                 _particlePrepared.Add(source);
             }
-            finally { source.Preparing = false; }
+            finally { source.Preparing = false; server.EndParticleScenePreparation(); }
             if (source.Subemitter is { Released: false, Amount: > 0 } child && source.PreparedProcess?.Program.ParticleStorageBuffers == 2)
                 child.Requested = true;
         }
@@ -182,7 +182,7 @@ internal sealed unsafe partial class GPUCanvasBackend
     {
         var gpu = source.GPU!; var groups = ParticleDispatch(gpu.OrderCount); var dimensions = new Vector4i(checked((int)groups.Width * 64), 0, 0, 0);
         Dispatch(0, (int)source.DrawOrder);
-        if (source.DrawOrder == RenderingServer.ParticlesDrawOrder.Index) return;
+        if (source.DrawOrder == ParticlesDrawOrder.Index) return;
         for (var level = 2; level <= gpu.OrderCount; level = checked(level * 2))
         {
             for (var stride = level / 2; stride > 0; stride /= 2) Dispatch(stride, level);
@@ -241,9 +241,9 @@ internal sealed unsafe partial class GPUCanvasBackend
             if (!position.IsFinite()) throw new ArithmeticException("Native particle bounds contain nonfinite coordinates.");
             bounds = found ? bounds.Expand(position) : new(position, Vector2.Zero); found = true;
         }
-        var longest = 0f; var revision = source.Revision; source.Preparing = true;
+        var longest = 0f; var revision = source.Revision; source.Owner.BeginParticleScenePreparation(); source.Preparing = true;
         try { foreach (var mesh in source.DrawPasses) if (mesh is not null) { ObjectDisposedException.ThrowIf(mesh.IsDisposed, mesh); var box = mesh.GetAABB(); longest = Math.Max(longest, Math.Max(box.Size.X, box.Size.Y)); } }
-        finally { source.Preparing = false; }
+        finally { source.Preparing = false; source.Owner.EndParticleScenePreparation(); }
         if (source.Released || source.Revision != revision) throw new InvalidOperationException("Mesh callbacks changed particle bounds ownership.");
         return bounds.Grow(longest);
     }

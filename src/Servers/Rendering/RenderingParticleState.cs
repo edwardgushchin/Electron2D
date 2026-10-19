@@ -12,7 +12,7 @@ internal sealed class RenderingParticleState(RenderingServer owner, GPUCanvasBac
     internal Rect2 CustomAABB = new(-4, -4, 8, 8);
     internal Transform Emission = Transform.Identity, PreviousEmission = Transform.Identity;
     internal Vector2 EmitterVelocity;
-    internal RenderingServer.ParticlesDrawOrder DrawOrder;
+    internal ParticlesDrawOrder DrawOrder;
     internal RenderingServer.ParticlesTransformAlign Align;
     internal RenderingServer.ParticlesTransformAlignAxis AlignAxis = RenderingServer.ParticlesTransformAlignAxis.Y;
     internal Transform[] BindPoses = [];

@@ -17,6 +17,9 @@ layout(set = 0, binding = 8) uniform sampler2D Curve15;
 layout(set = 0, binding = 9) uniform sampler2D Curve16;
 layout(set = 0, binding = 10) uniform sampler2D Curve22;
 layout(set = 0, binding = 11) uniform sampler2D SDF_TEXTURE;
+#ifdef ELECTRON2D_CPU_PARTICLE_CURVES
+layout(set = 0, binding = 12) uniform sampler2D Curve0;
+#endif
 #else
 layout(set = 0, binding = 0) uniform sampler2D Points;
 layout(set = 0, binding = 1) uniform sampler2D PointColors;
@@ -31,6 +34,9 @@ layout(set = 0, binding = 9) uniform sampler2D Curve18;
 layout(set = 0, binding = 10) uniform sampler2D Curve19;
 layout(set = 0, binding = 11) uniform sampler2D Curve20;
 layout(set = 0, binding = 12) uniform sampler2D Curve21;
+#ifdef ELECTRON2D_CPU_PARTICLE_CURVES
+layout(set = 0, binding = 13) uniform sampler2D Curve23;
+#endif
 #endif
 layout(std140, set = 2, binding = 1) uniform Parameters
 {
@@ -57,6 +63,9 @@ vec4 curve(int channel, float phase, vec4 fallback)
     switch (channel)
     {
 #ifdef ELECTRON2D_PARTICLE_MOTION
+#ifdef ELECTRON2D_CPU_PARTICLE_CURVES
+        case 0: return textureLod(Curve0, vec2(phase), 0);
+#endif
         case 2: return textureLod(Curve2, vec2(phase), 0);
         case 3: return textureLod(Curve3, vec2(phase), 0);
         case 4: return textureLod(Curve4, vec2(phase), 0);
@@ -78,6 +87,9 @@ vec4 curve(int channel, float phase, vec4 fallback)
         case 19: return textureLod(Curve19, vec2(phase), 0);
         case 20: return textureLod(Curve20, vec2(phase), 0);
         case 21: return textureLod(Curve21, vec2(phase), 0);
+#ifdef ELECTRON2D_CPU_PARTICLE_CURVES
+        case 23: return textureLod(Curve23, vec2(phase), 0);
+#endif
 #endif
         default: return fallback;
     }
@@ -217,6 +229,9 @@ void main()
         + radial * parameter(4, seed) * curve(4, phase, vec4(1)).r
         + vec2(-radial.y, radial.x) * parameter(5, seed) * curve(5, phase, vec4(1)).r;
     physical += force * delta;
+#ifdef ELECTRON2D_CPU_PARTICLE_CURVES
+    if (hasCurve(0)) physical = unitVector(physical) * curve(0, phase, vec4(0)).r;
+#endif
     float damping = parameter(6, seed) * curve(6, phase, vec4(1)).r;
     float speed = length(physical);
     if (damping > 0 && speed > 0) physical *= max(0.0, speed - damping * delta * ((flags & 2u) != 0 ? speed * speed * .05 : 1.0)) / speed;
@@ -263,6 +278,9 @@ void main()
     float phase = life > 0 ? particle.Custom.y / life : 1.0;
     float baseScale = parameter(8, seed); baseScale = sign(baseScale) * max(abs(baseScale), .001);
     vec2 scale = vec2(baseScale) * curve(8, phase, vec4(1)).xy;
+#ifdef ELECTRON2D_CPU_PARTICLE_CURVES
+    scale *= curve(23, phase, vec4(1)).r;
+#endif
     float angle = parameter(7, seed) * curve(7, phase, vec4(1)).r;
     if (hasCurve(1)) { particle.VelocityAge.w += curve(1, phase, vec4(1)).r * delta * parameter(1, seed); particle.Custom.x = radians(angle) + particle.VelocityAge.w; }
     else particle.Custom.x = radians(angle + particle.Custom.y * Time.y * parameter(1, seed));

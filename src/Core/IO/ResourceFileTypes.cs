@@ -32,6 +32,7 @@ public static partial class ResourceFileTypes
         RegisterResource("CanvasTexture", CreateCanvasTexture);
         RegisterResource("OccluderPolygon", CreateOccluderPolygon);
         RegisterNode("CPUParticles", CreateCPUParticles);
+        RegisterNode("GPUParticles", CreateGPUParticles);
         RegisterNode("Skeleton", CreateSkeleton);
         RegisterNode("Bone", CreateBone);
         RegisterNode("PhysicalBone", CreatePhysicalBone);
@@ -157,6 +158,7 @@ public static partial class ResourceFileTypes
     private static CanvasTexture CreateCanvasTexture() => new();
     private static OccluderPolygon CreateOccluderPolygon() => new();
     private static CPUParticles CreateCPUParticles() => new();
+    private static GPUParticles CreateGPUParticles() => new();
     private static Skeleton CreateSkeleton() => new();
     private static Bone CreateBone() => new();
     private static PhysicalBone CreatePhysicalBone() => new();

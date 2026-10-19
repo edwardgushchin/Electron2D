@@ -12,6 +12,17 @@ internal static partial class ParticleServerTests
     private sealed class Control : Entity { protected override void OnDraw() => DrawRect(new(40, 10, 8, 8), Colors.Green); }
     internal static void Run(string profile)
     {
+        if (profile == "node-cpu-curves") { GPUParticlesNodeTests.CPUCurves(); return; }
+        if (profile == "node-cpu-file") { GPUParticlesNodeTests.CPUCurves(Environment.GetEnvironmentVariable("ELECTRON2D_GPU_NODE_FILE") ?? throw new ArgumentException("Missing GPU curve file.")); return; }
+        if (profile == "node-file") { GPUParticlesNodeTests.FileChild(Environment.GetEnvironmentVariable("ELECTRON2D_GPU_NODE_FILE") ?? throw new ArgumentException("Missing GPU scene file.")); return; }
+        if (profile == "node-sessions") { GPUParticlesNodeTests.Sessions(); return; }
+        if (profile == "node-routing") { GPUParticlesNodeTests.Routing(); return; }
+        if (profile == "node-atlas") { GPUParticlesNodeTests.Atlas(); return; }
+        if (profile == "node-world") { GPUParticlesNodeTests.WorldAndPause(); return; }
+        if (profile == "node-callbacks") { GPUParticlesNodeTests.Callbacks(); return; }
+        if (profile == "node-warm") { GPUParticlesNodeTests.Warm(); return; }
+        if (profile == "node-managed") { GPUParticlesNodeTests.RunManaged(); return; }
+        if (profile == "node") { GPUParticlesNodeTests.Run(); return; }
         if (profile == "material-callbacks") { MaterialCallbacks(); return; }
         if (profile == "material-textures") { MaterialTextures(); return; }
         if (profile == "material-allocations") { Allocations(true); return; }

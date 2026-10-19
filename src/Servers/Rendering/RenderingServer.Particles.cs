@@ -6,6 +6,15 @@ public sealed partial class RenderingServer
     private readonly List<RenderingParticleState> _particleOrder = [];
     private readonly List<RenderingParticleState> _particleSchedule = [];
     private bool _particleGraphChanged = true;
+    private int _particleScenePreparation;
+    internal void BeginParticleScenePreparation() { EnsureOwner(); _particleScenePreparation++; }
+    internal void EndParticleScenePreparation() => _particleScenePreparation--;
+    internal static void ValidateParticleSceneMutation()
+    {
+        if (Service is { } server && (Volatile.Read(ref server._particleScenePreparation) != 0 || server.HasParticleSources && server._submittingTextures))
+            throw new InvalidOperationException("Scene nodes cannot change during particle texture preparation.");
+    }
+    internal bool CanChangeParticleSceneState => !_submittingTextures && !_closing && _particleScenePreparation == 0;
     internal List<RenderingParticleState> ParticleSchedule
     {
         get
@@ -26,6 +35,7 @@ public sealed partial class RenderingServer
     private double _particleDelta;
     internal bool HasParticleSources => _particleOrder.Count != 0;
     internal void NotifyParticleChanged() => MarkChanged();
+    internal void SetParticleSeed(RID particles, uint seed) => ChangeParticle(particles).Seed = seed;
     private RenderingParticleState Particle(RID rid)
     { EnsureOwner(); return _particles.TryGetValue(rid, out var state) && !state.Released ? state : throw new ArgumentException("The particle identity does not belong to this rendering session.", nameof(rid)); }
     private RenderingParticleState ChangeParticle(RID rid)

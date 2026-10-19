@@ -12,7 +12,7 @@ internal static partial class ParticleServerTests
         {
             RenderingServer.SetDefaultClearColor(Colors.Black); particles = RenderingServer.ParticlesCreate(); RenderingServer.ParticlesSetAmount(particles, 2);
             RenderingServer.ParticlesSetFixedFPS(particles, 0); RenderingServer.ParticlesSetUseLocalCoordinates(particles, true); RenderingServer.ParticlesSetLifetime(particles, 100); RenderingServer.ParticlesSetSpeedScale(particles, 0);
-            RenderingServer.ParticlesSetDrawOrder(particles, RenderingServer.ParticlesDrawOrder.Lifetime); item = Attach(owner, particles, mesh);
+            RenderingServer.ParticlesSetDrawOrder(particles, ParticlesDrawOrder.Lifetime); item = Attach(owner, particles, mesh);
             RenderingServer.ParticlesEmit(particles, new Transform(0, new Vector2(20, 20)), new(0, 1), Colors.Red, Colors.White, 31); RenderingServer.ParticlesRequestProcessTime(particles, .25f);
             RenderingServer.FramePostDraw += () =>
             {
@@ -22,7 +22,7 @@ internal static partial class ParticleServerTests
                     Pixel(image, 20, 20, Colors.Red); RenderingServer.ParticlesEmit(particles, new Transform(0, new Vector2(20, 20)), new(0, 1), Colors.Blue, Colors.White, 31); RenderingServer.ParticlesRequestProcessTime(particles, .01f);
                 }
                 else if (frame == 1)
-                { Pixel(image, 20, 20, Colors.Blue); RenderingServer.ParticlesSetDrawOrder(particles, RenderingServer.ParticlesDrawOrder.ReverseLifetime); }
+                { Pixel(image, 20, 20, Colors.Blue); RenderingServer.ParticlesSetDrawOrder(particles, ParticlesDrawOrder.ReverseLifetime); }
                 else if (frame == 2)
                 { Pixel(image, 20, 20, Colors.Red); Pixel(image, 24, 20, Colors.Red); Pixel(image, 20, 24, Colors.Black); RenderingServer.ParticlesSetTransformAlign(particles, RenderingServer.ParticlesTransformAlign.YToVelocity); RenderingServer.ParticlesSetTransformAlignAxis(particles, RenderingServer.ParticlesTransformAlignAxis.X); }
                 else
@@ -45,7 +45,7 @@ internal static partial class ParticleServerTests
         {
             particles = RenderingServer.ParticlesCreate(); RenderingServer.ParticlesSetAmount(particles, 8); RenderingServer.ParticlesSetUseLocalCoordinates(particles, true);
             RenderingServer.ParticlesSetLifetime(particles, 100); RenderingServer.ParticlesSetExplosivenessRatio(particles, 1); RenderingServer.ParticlesSetEmitting(particles, true); RenderingServer.ParticlesSetProcessMaterial(particles, material.GetRID());
-            RenderingServer.ParticlesSetDrawOrder(particles, RenderingServer.ParticlesDrawOrder.Lifetime); item = Attach(owner, particles, mesh);
+            RenderingServer.ParticlesSetDrawOrder(particles, ParticlesDrawOrder.Lifetime); item = Attach(owner, particles, mesh);
             RenderingServer.FramePreDraw += () => start = GC.GetAllocatedBytesForCurrentThread();
             RenderingServer.FramePostDraw += () =>
             {
@@ -87,7 +87,7 @@ internal static partial class ParticleServerTests
             Reject<NotSupportedException>(() => RenderingServer.ParticlesSetProcessMaterial(particles, wrongProgram.GetRID()));
             Reject<ArgumentOutOfRangeException>(() => RenderingServer.ParticlesSetLifetime(particles, float.NaN));
             Reject<ArgumentOutOfRangeException>(() => RenderingServer.ParticlesSetAmount(particles, int.MaxValue));
-            Reject<ArgumentOutOfRangeException>(() => RenderingServer.ParticlesSetDrawOrder(particles, (RenderingServer.ParticlesDrawOrder)3));
+            Reject<ArgumentOutOfRangeException>(() => RenderingServer.ParticlesSetDrawOrder(particles, (ParticlesDrawOrder)3));
             Reject<ArgumentOutOfRangeException>(() => RenderingServer.ParticlesSetTrails(particles, true, 0));
             RenderingServer.ParticlesSetAmount(particles, 5_000_000); RenderingServer.ParticlesSetFixedFPS(particles, int.MaxValue);
             RenderingServer.ParticlesSetTrailBindPoses(particles, [Transform.Identity, Transform.Identity]); RenderingServer.ParticlesSetTrails(particles, true, 10); RenderingServer.ParticlesRequestProcess(particles);

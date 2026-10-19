@@ -170,6 +170,7 @@ public sealed partial class ThemeDB
         ["Font"] = ["Font", "Resource", "ElectronObject"],
         ["FontFile"] = ["FontFile", "Font", "Resource", "ElectronObject"],
         ["FontVariation"] = ["FontVariation", "Font", "Resource", "ElectronObject"],
+        ["GPUParticles"] = ["GPUParticles", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["Gradient"] = ["Gradient", "Resource", "ElectronObject"],
         ["GradientRampTexture"] = ["GradientRampTexture", "Texture", "Resource", "ElectronObject"],
         ["GradientTexture"] = ["GradientTexture", "Texture", "Resource", "ElectronObject"],

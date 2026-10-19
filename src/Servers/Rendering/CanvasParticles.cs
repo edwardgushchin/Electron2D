@@ -8,7 +8,7 @@ internal sealed class CanvasParticles(RenderingParticleState source)
         MaterialState? material, BlendMode blend, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, bool snap, bool linear, CanvasItem owner)
     {
         if (source.Released || source.Amount == 0) return;
-        source.Owner.RequestParticleCanvas(source); var revision = source.Revision; source.Preparing = true;
+        source.Owner.RequestParticleCanvas(source); var revision = source.Revision; source.Owner.BeginParticleScenePreparation(); source.Preparing = true;
         try
         {
             while (_meshes.Count < source.DrawPasses.Length) _meshes.Add(null!);
@@ -25,7 +25,7 @@ internal sealed class CanvasParticles(RenderingParticleState source)
                 if (source.Released || source.Revision != revision) throw new InvalidOperationException("Mesh callbacks changed particle geometry ownership.");
             }
         }
-        finally { source.Preparing = false; }
+        finally { source.Preparing = false; source.Owner.EndParticleScenePreparation(); }
     }
 }
 

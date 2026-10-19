@@ -90,12 +90,14 @@ public sealed partial class ParticleProcessMaterial : Material
     }
     private readonly object _gate = new();
     private readonly Vector4[] _ranges = new Vector4[18];
-    private readonly Texture?[] _curves = new Texture?[23];
+    private readonly Texture?[] _curves = new Texture?[24];
     private MaterialState? _state;
     private bool _dirty = true, _preparing;
     private int _flags;
     private static readonly Lazy<Shader> BuiltInShader = new(() => LoadShader("ParticleProcess"));
     private static readonly Lazy<Shader> MotionShader = new(() => LoadShader("ParticleMotion"));
+    private static readonly Lazy<Shader> CPUMotionShader = new(() => LoadShader("ParticleCPUMotion"));
+    private static readonly Lazy<Shader> CPUProcessShader = new(() => LoadShader("ParticleCPUProcess"));
     private static Shader LoadShader(string name)
     {
         using var source = typeof(Shader).Assembly.GetManifestResourceStream("Electron2D.Shaders." + name + ".comp.spv")!;
@@ -169,6 +171,14 @@ public sealed partial class ParticleProcessMaterial : Material
     /// <param name="parameter">A texture channel.</param>
     /// <param name="texture">A floating-point sampled texture, or null to remove modulation.</param>
     public void SetParamTexture(Parameter parameter, Texture? texture) => SetCurve(Channel(parameter, true), texture);
+    internal CurveTexture? CPUInitialVelocityCurve { get => ReadCurve(0) as CurveTexture; set => SetCPUCurve(0, value); }
+    internal CurveTexture? CPUScalarScaleCurve { get => ReadCurve(23) as CurveTexture; set => SetCPUCurve(23, value); }
+    private void SetCPUCurve(int channel, CurveTexture? curve)
+    {
+        if (curve is not null) ObjectDisposedException.ThrowIf(curve.IsDisposed, curve);
+        lock (_gate) { Edit(); _curves[channel] = curve; _state = null; }
+        EmitChanged();
+    }
     private Texture? ReadCurve(int index) { lock (_gate) { ThrowIfDisposed(); return _curves[index]; } }
     private void SetCurve(int index, Texture? texture)
     {

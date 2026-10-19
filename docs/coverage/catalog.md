@@ -132,7 +132,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Button](classes/Button.md) | BaseButton | Implemented | 45 |
 | [ButtonGroup](classes/ButtonGroup.md) | Resource | Implemented | 5 |
 | [CCDIK3D](classes/CCDIK3D.md) | IterateIK3D | Excluded | 0 |
-| [CPUParticles2D](classes/CPUParticles2D.md) | Node2D | Partial | 113 |
+| [CPUParticles2D](classes/CPUParticles2D.md) | Node2D | Implemented | 113 |
 | [CPUParticles3D](classes/CPUParticles3D.md) | GeometryInstance3D | Excluded | 122 |
 | [CSGBox3D](classes/CSGBox3D.md) | CSGPrimitive3D | Excluded | 2 |
 | [CSGCombiner3D](classes/CSGCombiner3D.md) | CSGShape3D | Excluded | 0 |
@@ -331,7 +331,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [GLTFState](classes/GLTFState.md) | Resource | Excluded | 65 |
 | [GLTFTexture](classes/GLTFTexture.md) | Resource | Excluded | 2 |
 | [GLTFTextureSampler](classes/GLTFTextureSampler.md) | Resource | Excluded | 4 |
-| [GPUParticles2D](classes/GPUParticles2D.md) | Node2D | Blocked | 42 |
+| [GPUParticles2D](classes/GPUParticles2D.md) | Node2D | Implemented | 42 |
 | [GPUParticles3D](classes/GPUParticles3D.md) | GeometryInstance3D | Excluded | 58 |
 | [GPUParticlesAttractor3D](classes/GPUParticlesAttractor3D.md) | VisualInstance3D | Excluded | 4 |
 | [GPUParticlesAttractorBox3D](classes/GPUParticlesAttractorBox3D.md) | GPUParticlesAttractor3D | Excluded | 1 |

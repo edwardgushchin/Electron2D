@@ -18,7 +18,11 @@ public sealed partial class ParticleProcessMaterial
                 if (_emissionRingInnerRadius > _emissionRingRadius) throw new InvalidOperationException("The ring inner radius exceeds its outer radius.");
                 var pointCount = _emissionPointTexture is null ? 0 : _emissionPointCount;
                 ThrowIfDisposed();
-                _state ??= new MaterialState(_gate, BuiltInShader.Value.GetProgram(), null) { ParticleMotion = new MaterialState(_gate, MotionShader.Value.GetProgram(), null) };
+                if (_state is null)
+                {
+                    var CPU = _curves[0] is not null || _curves[23] is not null;
+                    _state = new MaterialState(_gate, (CPU ? CPUProcessShader : BuiltInShader).Value.GetProgram(), null) { ParticleMotion = new MaterialState(_gate, (CPU ? CPUMotionShader : MotionShader).Value.GetProgram(), null) };
+                }
                 if (_dirty)
                 {
                     Write("Ranges", _ranges);

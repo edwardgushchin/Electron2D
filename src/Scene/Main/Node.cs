@@ -1976,6 +1976,7 @@ public partial class Node : ElectronObject
     protected override void ValidateMutation()
     {
         base.ValidateMutation();
+        RenderingServer.ValidateParticleSceneMutation();
         EnsureNotSceneCapture();
     }
 
@@ -1988,6 +1989,7 @@ public partial class Node : ElectronObject
     /// <exception cref="InvalidOperationException">This node is in lifecycle or notification delivery, its parent is exiting or propagating a notification, it is an active tree root, or disposal is attempted off the owner thread.</exception>
     protected override void ValidateDisposal()
     {
+        RenderingServer.ValidateParticleSceneMutation();
         EnsurePhysicsObjectAccess();
         if (_notificationPropagationDepth != 0 || (Parent?._notificationPropagationDepth ?? 0) != 0)
             throw new InvalidOperationException("A node cannot be disposed during subtree propagation through its parent.");

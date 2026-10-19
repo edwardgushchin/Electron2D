@@ -1473,7 +1473,7 @@ Engine.Run(window);
 
 ### Particle method summary
 
-Signatures below are declared on `RenderingServer`; the nested draw policy types are [ParticlesDrawOrder](RenderingServer.ParticlesDrawOrder.md), [ParticlesTransformAlign](RenderingServer.ParticlesTransformAlign.md) and [ParticlesTransformAlignAxis](RenderingServer.ParticlesTransformAlignAxis.md).
+Signatures below are declared on `RenderingServer`; the nested draw policy types are [ParticlesDrawOrder](ParticlesDrawOrder.md), [ParticlesTransformAlign](RenderingServer.ParticlesTransformAlign.md) and [ParticlesTransformAlignAxis](RenderingServer.ParticlesTransformAlignAxis.md).
 
 | C# signature | Contract |
 | --- | --- |

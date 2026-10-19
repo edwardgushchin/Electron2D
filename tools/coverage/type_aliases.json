@@ -105,7 +105,8 @@
     "CompressedTexture2D": "CompressedTexture",
     "PlaceholderTexture2D": "PlaceholderTexture",
     "DrawableTexture2D": "DrawableTexture",
-    "PortableCompressedTexture2D": "PortableCompressedTexture"
+    "PortableCompressedTexture2D": "PortableCompressedTexture",
+    "GPUParticles2D": "GPUParticles"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",
@@ -229,6 +230,9 @@
     "PortableCompressedTexture2D.CompressionMode": "PortableCompressedTexture.CompressionMode",
     "ParticleProcessMaterial.EmissionShape": "ParticlesEmissionShape",
     "ParticleProcessMaterial.CollisionMode": "ParticleProcessMaterial.CollisionModeEnum",
-    "ParticleProcessMaterial.SubEmitterMode": "ParticleProcessMaterial.SubEmitterModeEnum"
+    "ParticleProcessMaterial.SubEmitterMode": "ParticleProcessMaterial.SubEmitterModeEnum",
+    "GPUParticles2D.DrawOrder": "ParticlesDrawOrder",
+    "GPUParticles2D.EmitFlags": "GPUParticles.EmitFlags",
+    "RenderingServer.ParticlesDrawOrder": "ParticlesDrawOrder"
   }
 }

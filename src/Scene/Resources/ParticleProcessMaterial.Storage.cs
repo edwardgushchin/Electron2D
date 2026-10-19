@@ -4,6 +4,8 @@ public sealed partial class ParticleProcessMaterial
 {
     private static readonly PropertyDescriptor[] Properties =
     [
+        new PropertyDescriptor<ParticleProcessMaterial, CurveTexture?>("_cpu_initial_velocity_curve", p => p.CPUInitialVelocityCurve, (p, v) => p.CPUInitialVelocityCurve = v, _ => null, stored: true),
+        new PropertyDescriptor<ParticleProcessMaterial, CurveTexture?>("_cpu_scalar_scale_curve", p => p.CPUScalarScaleCurve, (p, v) => p.CPUScalarScaleCurve = v, _ => null, stored: true),
         new PropertyDescriptor<ParticleProcessMaterial, Vector2>(nameof(Direction), p => p.Direction, (p, v) => p.Direction = v, _ => new(1, 0), stored: true),
         new PropertyDescriptor<ParticleProcessMaterial, Vector2>(nameof(Gravity), p => p.Gravity, (p, v) => p.Gravity = v, _ => new(0, -9.8f), stored: true),
         new PropertyDescriptor<ParticleProcessMaterial, float>(nameof(Spread), p => p.Spread, (p, v) => p.Spread = v, _ => 45, stored: true),

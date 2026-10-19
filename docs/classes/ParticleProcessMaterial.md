@@ -66,3 +66,5 @@ GetPropertyDescriptors, CreateDuplicateInstance and CopyCustomStateTo implement 
 ## Verification
 
 ParticleServerTests material profiles exercise authoring/defaults/range roles, shared graph duplication, same/fresh-process files, malformed frozen-pixel rejection, native distribution/channel/noise/finite edge cases, world/local emission basis, SDF contact, bounded/timed subemission, live viewport texture dependencies and callback failure/retry. Thirty-two warmed built-in process/sort/render frames allocate zero managed owner bytes on Linux Wayland software Vulkan. Physical GPU performance, native allocator accounting, foreign platforms, editor UI and owner acceptance remain separate gates.
+
+CPU emitter conversion also retains private stored initial-speed lifetime and scalar-times-split scale curves. Dedicated built-in compute variants execute them after file loading; they do not add public Parameter roles.

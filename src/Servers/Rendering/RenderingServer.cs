@@ -195,7 +195,7 @@ public sealed partial class RenderingServer : ElectronObject
             CanvasTime = (CanvasTime + step) % ProjectSettings.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
             _interpolationFraction = tree.PhysicsInterpolation ? (float)Engine.PhysicsInterpolationFraction : 1f;
             _activeFrames.Clear(); CaptureViewports(tree.Root);
-            if (_activeFrames.Count != 0) { UseFrame(_activeFrames[0]); _nodes.Clear(); CaptureCanvasScene(tree.Root); foreach (var node in _nodes) if (!node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.RenderVisible && node.RenderCanvas() is not null && node.ServerState is not { Owned: true }) node.PrepareCanvas(); }
+            if (_activeFrames.Count != 0) { UseFrame(_activeFrames[0]); _nodes.Clear(); CaptureCanvasScene(tree.Root); foreach (var node in _nodes) { if (node is GPUParticles particles && !particles.IsDisposed) particles.PrepareParticleFrame(); if (!node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.RenderVisible && node.RenderCanvas() is not null && node.ServerState is not { Owned: true }) node.PrepareCanvas(); } }
             _activeFrames.Clear(); CaptureViewports(tree.Root);
             _staleViewports.Clear(); foreach (var viewport in _canvasFrames.Keys) if (!ViewportLive(viewport, tree)) _staleViewports.Add(viewport);
             foreach (var viewport in _staleViewports) ReleaseViewport(viewport); _staleViewports.Clear();
@@ -288,7 +288,7 @@ public sealed partial class RenderingServer : ElectronObject
         {
             if (!source.Requested || source.LastFrame == _particleFrame || source.Amount == 0 || source.Released) continue;
             MaterialState? material; var count = 0;
-            source.Preparing = true;
+            BeginParticleScenePreparation(); source.Preparing = true;
             try
             {
                 var resource = source.ProcessMaterial; material = resource?.GetCanvasState();
@@ -299,7 +299,7 @@ public sealed partial class RenderingServer : ElectronObject
                 if (!ReferenceEquals(resource, source.ProcessMaterial) || !ReferenceEquals(material, resource?.GetCanvasState()) || material.ParticleConfigurationVersion != version)
                     throw new InvalidOperationException("Particle texture callbacks require stable borrowed state.");
             }
-            finally { source.Preparing = false; }
+            finally { source.Preparing = false; EndParticleScenePreparation(); }
             if (source.Subemitter is { Released: false, Amount: > 0 } child && material.Program.ParticleStorageBuffers == 2) child.Requested = true;
             if (material.Program.TimeUniform is not null || material.ParticleMotion?.Program.TimeUniform is not null) _continuousCanvas = true;
             for (var i = 0; i < count; i++) SubmitTexture(frame.TextureScratch[i] as Texture, tree);

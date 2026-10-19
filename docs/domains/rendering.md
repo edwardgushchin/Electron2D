@@ -2,7 +2,7 @@
 
 [Mesh textures](../components/meshes.md#mesh-textures) connect real retained mesh geometry to Texture consumers and static texture draw identities, with borrowed source lifetime and typed graph/scene storage.
 
-[Particle shaders](../components/particle-shaders.md) now execute a validated HLSL/GLSL compute profile through public RenderingDevice, with typed material/archive state and portable bounded-subemission includes. [Retained GPU particles](../components/gpu-particles.md) now execute server-owned simulation, mesh canvas output, trails and subemitters. [ParticleProcessMaterial](../classes/ParticleProcessMaterial.md) now authors the native built-in process. The high-level emitter node and CPU conversion remain pending.
+[Particle shaders](../components/particle-shaders.md) now execute a validated HLSL/GLSL compute profile through public RenderingDevice, with typed material/archive state and portable bounded-subemission includes. [Retained GPU particles](../components/gpu-particles.md) now execute server-owned simulation, mesh canvas output, trails and subemitters. [ParticleProcessMaterial](../classes/ParticleProcessMaterial.md) now authors the native built-in process. [GPUParticles](../classes/GPUParticles.md) now executes scene emission and CPU conversion.
 
 [Numeric material matrices](../components/shader-materials.md#numeric-material-matrices) support copied mat3/mat4 values and fixed arrays through resources and static server identities, with typed storage, identity defaults and layout-aware paired-stage reload.
 
@@ -233,7 +233,7 @@ The executable [multiline editing component](../components/multiline-editing.md)
 
 ## CPU particle integration
 
-[CPUParticles](../classes/CPUParticles.md) and [CPU particles](../components/cpu-particles.md) connect ordinary scene internal processing, scalar curves/gradients, borrowed textures/materials, typed file graphs and shared canvas output. Configured CPU simulation and sprite-sheet replay execute on current GPU/compatibility. World emission follows complete physics poses and uses a separate canvas basis for visible world quads. The [GPU particle server](../components/gpu-particles.md) executes compute simulation and canvas output; built-in process materials now execute, while high-level GPU scene emitters, CPU conversion, foreign/native allocator and owner acceptance remain separate exact dependencies.
+[CPUParticles](../classes/CPUParticles.md) and [CPU particles](../components/cpu-particles.md) connect ordinary scene internal processing, scalar curves/gradients, borrowed textures/materials, typed file graphs and shared canvas output. Configured CPU simulation and sprite-sheet replay execute on current GPU/compatibility. World emission follows complete physics poses and uses a separate canvas basis for visible world quads. The [GPU particle server](../components/gpu-particles.md) executes compute simulation and canvas output; built-in process materials now execute, and GPUParticles now connects scene emission and CPU conversion. Foreign/native allocator and owner acceptance remain separate gates.
 
 ## Executable viewport worlds
 

@@ -2,17 +2,6 @@ namespace Electron2D;
 
 public sealed partial class RenderingServer
 {
-    /// <summary>Selects planar particle draw ordering.</summary>
-    public enum ParticlesDrawOrder
-    {
-        /// <summary>Original particle index.</summary>
-        Index = 0,
-        /// <summary>Oldest particles first.</summary>
-        Lifetime = 1,
-        /// <summary>Youngest particles first.</summary>
-        ReverseLifetime = 2,
-    }
-
     /// <summary>Selects planar particle orientation.</summary>
     public enum ParticlesTransformAlign
     {
