@@ -86,6 +86,42 @@ try
     Console.WriteLine("Public text, audio, ENet, WebP, EXR, KTX/Basis, file codecs and mesh consumer passed");
 }
 finally { Engine.Stop(); }
+tree.Dispose();
+using var movieStream = new AudioStreamWAV { SampleFormat = AudioStreamWAV.Format.PCM16,
+    Data = Enumerable.Repeat((byte)32, 48000 * 2).ToArray(), MixRate = 48000 };
+var movieWindow = new Window { Size = new(64, 48) };
+var movieCanvas = new Entity();
+movieCanvas.Draw += item => item.DrawRect(new Rect2(Vector2.Zero, movieWindow.Size), Colors.Red);
+movieWindow.AddChild(movieCanvas);
+movieWindow.AddChild(new AudioStreamPlayer { Stream = movieStream, Autoplay = true });
+using var movieWriter = new ConsumerMovieWriter(movieWindow);
+MovieWriter.AddWriter(movieWriter);
+ProjectSettings.Set(ProjectSettings.RenderingMethod, "compatibility");
+ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
+Engine.Run(movieWindow, "consumer.movieprobe", 59);
+if (movieWriter.Frames != 8 || movieWriter.Ends != 1 || movieWriter.Samples != 8L * 48000 / 59 || movieWriter.Sum < 1)
+    throw new Exception("Native offline movie clock, PCM or cleanup failed");
+Console.WriteLine("Public offline movie consumer passed: 8 RGB frames, 6508 PCM frames, one End");
+
+sealed class ConsumerMovieWriter(Window window) : MovieWriter
+{
+    public int Frames, Ends;
+    public long Samples;
+    public double Sum;
+    protected override string[] OnGetSupportedExtensions() => ["movieprobe"];
+    protected override bool OnHandlesFile(string path) => path.EndsWith(".movieprobe", StringComparison.Ordinal);
+    protected override void OnWriteBegin(Vector2i size, int fps, string path) { }
+    protected override void OnWriteFrame(Image image, ReadOnlySpan<int> audio)
+    {
+        var color = image.GetPixel(5, 5);
+        if (image.PixelFormat != Image.Format.Rgb8 || color.R < .9f || color.G > .02f)
+            throw new Exception("Native movie RGB readback failed");
+        Frames++; Samples += audio.Length / 2;
+        foreach (var value in audio) Sum += Math.Abs((double)value) / int.MaxValue;
+        if (Frames == 8) window.Tree!.Quit();
+    }
+    protected override void OnWriteEnd() => Ends++;
+}
 '''
 
 
@@ -194,7 +230,7 @@ def check(feed, rid):
             if os.name != "nt":
                 command.chmod(0o755)
         environment = dict(os.environ, PATH=str(blocked) + os.pathsep + os.environ["PATH"],
-                           RestoreAdditionalProjectSources=str(feed), NUGET_PACKAGES=str(work / "packages"), SDL_AUDIODRIVER="dummy")
+                           RestoreAdditionalProjectSources=str(feed), NUGET_PACKAGES=str(work / "packages"), SDL_AUDIODRIVER="dummy", SDL_VIDEO_DRIVER="dummy")
         environment.pop("LD_LIBRARY_PATH", None)
         environment.pop("Electron2DBuildNativeFromSource", None)
         run([dotnet, "build", "Electron2D.csproj", "-c", "Release", "--nologo"], engine, environment)

@@ -10,6 +10,8 @@
 
 # API coverage register
 
+[Explicit native audio delivery](../native-packaging.md#maintainer-audio-asset-selection) now preserves the selected Linux/macOS library through repository consumer build/publish. The executable consumer protocol includes realtime output and actual RGB/offline PCM recording; the locally restored alpha bundle's missing offline exports retain an explicit publication gate. No declaration state changes in this delivery repair.
+
 [Viewport GUI control snapping](../components/canvas-rendering.md#gui-control-pixel-snapping) now executes a stored true-by-default policy across Window/SubViewport and Control descendants. It preserves fractional logical/input geometry while rounding eligible local visual translations before visual offsets. Managed/fresh-process and native GPU/compatibility checks include prepared zero-managed-byte active/idle intervals; foreign/native-allocation acceptance remains separate.
 
 [Sparse framebuffer outputs](../components/local-compute.md#sparse-framebuffer-outputs) now execute logical unused output slots, exact shader masks and native target/SPIR-V location mapping. RDFramebufferPass and ColorAttachments become Implemented; typed MRT, specialization, grouped locations, MSAA/input/resolve and retained canvas consumers have native checks. Prepared changing/unchanged frames retain zero managed owner bytes; multiview, attachmentless graphics and foreign/native-allocation acceptance remain separate.

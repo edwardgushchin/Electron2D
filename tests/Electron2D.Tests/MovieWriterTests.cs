@@ -132,7 +132,7 @@ internal static class MovieWriterTests
     }
     internal static Window Scene(AudioStream source, bool sample = false, bool failReady = false)
     {
-        var window = new Window { Size = new(64, 48), Title = "Electron2D offline movie" };
+        var window = new Window { Size = new(64, 48), Title = "Electron2D offline movie", Borderless = true };
         var canvas = new Entity(); canvas.Draw += item => item.DrawRect(new(0, 0, 64, 48), Colors.Red); window.AddChild(canvas);
         var player = new AudioStreamPlayer { Stream = source, Autoplay = true, PlaybackType = sample ? AudioServer.PlaybackType.Sample : AudioServer.PlaybackType.Stream };
         window.AddChild(player);

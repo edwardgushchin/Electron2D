@@ -1,6 +1,6 @@
 # Movie writing
 
-Last updated: 2026-10-16
+Last updated: 2026-10-19
 
 Owns non-real-time rendered recording through [MovieWriter](../classes/MovieWriter.md), [MovieRecording](../classes/MovieRecording.md) and internal [PNGMovieWriter](../classes/PNGMovieWriter.md)/[AVIMovieWriter](../classes/AVIMovieWriter.md)/[OGVMovieWriter](../classes/OGVMovieWriter.md). [ADR 0109](../decisions/movie-writing.md#adr-0109) owns the typed protocol and host adaptations.
 
@@ -11,6 +11,8 @@ Engine.Run(window, path, fps) and its RunAsync counterpart reserve the ordinary 
 Fixed mode uses a rational integer physics-tick remainder and bypasses realtime jitter compensation/catch-up dropping. One second at 7 FPS contains exactly 60 ticks at the default physics rate, avoiding a floating-accumulator boundary loss. Process/render delta is exactly 1/FPS times TimeScale; fixed physics callbacks execute every due step, including more than MaxPhysicsStepsPerFrame at low FPS. Audio duration uses an independent output clock. For 48000 Hz at 59 FPS, successive stereo blocks have 1626 or 1628 samples and the total after N frames is floor(N*48000/59) stereo frames. Native mixer quanta may prefetch less than one quantum beyond that consumed boundary; unused PCM is retained, not remixed or lost.
 
 The private audio bridge initializes a master with no platform output stream and invokes the existing FAudio engine procedure. Voices, native SRC, source callbacks, ordered effects and meters use the same graph as live output. The native procedure still contains callback failures; the owner checks source/effect failures before publishing a movie frame. Device switching rejects. Last-player detachment retains the offline graph until Engine cleanup. Recording does not make external microphone input deterministic.
+
+The selected native payload must contain both offline bridge exports. [Maintainer asset selection](../native-packaging.md#maintainer-audio-asset-selection) now carries an explicit Linux/macOS FAudio through consumer build/publish without manual output replacement. The locally restored alpha asset lacks those exports; ordinary package restore still needs a refreshed published bundle. Public consumer checks cover realtime output followed by eight real RGB/PCM movie frames and balanced End. A compositor may enlarge a requested native window; the test canvas fills its current size so the existing centered recording crop retains the expected pixels.
 
 Automatic pre-delete veto retains a borrowed custom writer registration; later AddWriter calls reclaim only committed disposal entries. Runtime-active and callback owner guards still reject before notification.
 

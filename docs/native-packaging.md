@@ -1,12 +1,20 @@
 # Electron2D NuGet delivery
 
-Last updated: 2026-10-16
+Last updated: 2026-10-19
 
 A private prerelease consumer supplies its exact expected native version to the notice audit with --native-package-version; the ordinary release default still requires the product version. Native dependency versions, 72 ELF classification and all 92 notice byte comparisons remain strict.
 
 The desktop publish checker accepts an optional third application-name argument (default CharacterMovement); the movie consumer uses Consumer. It checks a self-contained managed publish, since NativeAOT embeds the engine instead of shipping Electron2D.dll.
 
 Movie recording requires the current four-export audio bridge: e2d_audio_select_output, e2d_audio_output_latency, e2d_audio_create_offline_master and e2d_audio_mix_offline. Source receipts/package and publish validators require all four; an older native bundle does not provide the new offline entry points. [Movie writing](components/movie-writing.md) records the executed package and host scope.
+
+## Maintainer audio asset selection
+
+Repository consumers importing `tools/native-consumer.props` honor an explicit `Electron2DAudioNativeLibrary` on Linux and macOS. Pass an absolute path to an already built, audited library for the selected RID, for example `dotnet build tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -p:Electron2DAudioNativeLibrary=/absolute/path/libFAudio.so.0`. The same property applies to `dotnet publish`. The consumer target copies it after ordinary package assets into `runtimes/<RID>/native/libFAudio.so.0` or `libFAudio.0.dylib`, even when the selected file is older than a packaged copy. A missing explicit file fails the copy. An unset property retains ordinary package selection; other platform profiles do not copy this desktop override. It invokes no native compiler and changes no restored package or cache file. The caller must select the matching target ABI; package/publish export and architecture audits remain required.
+
+The locally restored Linux x64 `0.1.0-alpha` FAudio asset checked on 2026-10-19 has SHA-256 `1812b5cedffa899f488d4fea00eef2b44d7d48d1d454c3c2068610255a268fa5` and lacks both offline exports. Default restore of that asset still requires a newly produced, audited and published platform bundle before movie recording is available. The explicit-library path permits development execution with the existing approved producer while that publication gate remains open.
+
+`tools/native/test_audio_delivery.py` executes the actual MSBuild targets for both Linux/macOS RIDs, stale build/publish copies, paths containing spaces, an absent publish directory, missing-file failure and unchanged default/foreign selection. The fresh consumer protocol in `tools/native/test_consumer.py` also exercises ordinary audio followed by eight real RGB movie frames, 6,508 PCM frames at 48 kHz/59 FPS and one End. Local Linux x64 project-reference and package-consumer execution is recorded separately from foreign-host execution and publication.
 
 ## Installation model
 

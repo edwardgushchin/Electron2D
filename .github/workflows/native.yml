@@ -274,7 +274,9 @@ jobs:
           merge-multiple: true
           path: bin/native-feed/
       - name: Verify public native consumers with native tools blocked
-        run: python -B tools/native/test_consumer.py bin/native-feed '${{ matrix.rid }}'
+        run: |
+          python -B tools/native/test_audio_delivery.py
+          python -B tools/native/test_consumer.py bin/native-feed '${{ matrix.rid }}'
   native_cross:
     needs: cross_matrix
     strategy:

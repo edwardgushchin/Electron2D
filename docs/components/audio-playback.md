@@ -1,6 +1,6 @@
 # Audio playback and routed buses
 
-Last updated: 2026-10-15
+Last updated: 2026-10-19
 
 [Movie recording](movie-writing.md) drives this same prepared FAudio graph synchronously through a no-output-device master. Existing buses/effects, native sample voices and stream sources feed the recording PCM. Prepared quantum storage survives frame boundaries; source/effect failures abort capture. Live playback/input remain separate capabilities.
 
@@ -16,6 +16,8 @@ Implements reusable [AudioStream](../classes/AudioStream.md), caller-owned [Audi
 Internal FAudioContext owns engine/master/submix voices and native volume meters; FAudioStreamVoice owns callback/ring storage and one borrowed playback; AudioPCMCodec owns cold PCM/IMA/QOA encoding/decoding. Backend bindings and codec types are internal to Electron2D.dll. Vendor manifests pin FAudio 26.10 and qoa-fu; their executable algorithms are preserved, with namespace/visibility/diagnostic integration changes only.
 
 Native FAudio build and package entries use `runtimes/<RID>/native/libFAudio.so.0`, preserved in project-reference build/publish outputs. The [native resolver](../classes/NativeLibraries.md) loads the shared SDL3 core before FAudio and permits ordinary .NET resolution for flattened RID-specific NuGet deployments. Consumers require no backend dependency or loader configuration.
+
+Repository Linux/macOS consumers can select an already built target FAudio with `Electron2DAudioNativeLibrary`; [native delivery](../native-packaging.md#maintainer-audio-asset-selection) documents build/publish precedence and the missing offline exports in the locally restored alpha bundle. Native compiler execution and package publication remain separate gates. The consumer protocol now checks ordinary output followed by synchronous movie PCM on the same runtime lifecycle.
 
 Native output selects packaged FAudio and a shared SDL core. Desktop/Android use dynamic assets; iOS/tvOS/Web use target static archives. Windows full-suite acceptance remains pending; target-specific results are recorded in [the platform report](../platform-verification.md). Backend replacement remains subject to ADR 0047.
 

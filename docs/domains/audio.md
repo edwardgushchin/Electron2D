@@ -1,6 +1,6 @@
 # Audio domain
 
-Last updated: 2026-10-16
+Last updated: 2026-10-19
 
 [Movie writing](../components/movie-writing.md) reuses this domain's FAudio graph through an offline mastering voice without an SDL output stream. Prepared PCM is consumed on the recording owner; native sample/stream sources and bus effects retain their ordinary roles.
 
@@ -11,6 +11,8 @@ Web connects the same native FAudio/SDL graph through its static platform packag
 Consecutive randomizer factory selection now traverses iteratively without changing resource history or wrapper identity. The 256-operation bound rejects a 257-node chain on a 256 KiB worker stack, and same-thread construction/mix recovery passes. Composite failures preserve their original exception after successful cleanup and aggregate distinct cleanup errors. Linux checks passed; Windows/macOS full-suite acceptance remains pending.
 
 Private native binaries come from versioned Linux/macOS/Windows packages in ordinary desktop builds. [Native delivery](../native-packaging.md) separates source production, audited packages and target execution. Complete Windows/macOS full-suite acceptance remains pending.
+
+Repository Linux/macOS consumers now propagate explicit target FAudio selection through both build and publish. The [delivery contract](../native-packaging.md#maintainer-audio-asset-selection) records executable movie/realtime checks and the exact locally restored alpha asset that still requires refreshed publication for default movie startup. The public audio API and backend ownership are unchanged.
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
