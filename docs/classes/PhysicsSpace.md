@@ -413,3 +413,14 @@ before selected pair dispatch. The composed pose validates before that hook. Err
 resource-only queries remain independent, and later kinematic targets retain their
 step boundary. Expanded public profiles keep strict zero-allocation complete
 frames and the existing GPU pose-only transfer boundary. Full acceptance is separate.
+
+
+[Complete diagnostic contact operations](../components/physics-registered-adapter.md#complete-diagnostic-contact-operations)
+verify selected capacity/count/point publication and multi-world preparation rollback.
+The original error remains first, every rollback is attempted and the next frame
+repairs outstanding disable requests before solving. The registered consumer checks
+scene/raw boundary coordinates, sleep/filter/sensors, caps 0/1/3/8, actual owner/separate
+lanes and 2048 complete measured diagnostic frames at strict zero owner/all-thread
+managed bytes. Built-in no-device/software-GPU and real-window renderer companions
+complete 43 processes. These three operation rows close; complete numerical,
+network/native/platform and hardware performance gates remain open.

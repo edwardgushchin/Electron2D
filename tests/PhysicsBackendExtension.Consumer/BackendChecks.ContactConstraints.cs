@@ -57,8 +57,13 @@ public static partial class BackendChecks
                             var residual = depth - MathF.Max(0, depth - _contactSettings.AllowedPenetration) * fraction;
                             var velocity = (b.PointVelocity(point) - a.PointVelocity(point)).Dot(normal);
                             _constraints.Add(new(a, b, i, j, normal, point, depth, residual, -Math.Clamp(a.Bounce + b.Bounce, 0, 1) * MathF.Min(0, velocity)));
-                            if (depth > 0 && (a.Awake || b.Awake))
-                            { var half = normal * (depth * .5f); AddDebugPoint(point - half); AddDebugPoint(point + half); }
+                            if (depth > 0 && ContactActive(a, b))
+                            {
+                                var half = normal * (depth * .5f); var midpoint = point;
+                                if (!own.Boundary && !other.Boundary && !own.Contour && !other.Contour)
+                                    midpoint += other.Inner > 0 ? half : -half;
+                                AddDebugPoint(midpoint - half); AddDebugPoint(midpoint + half);
+                            }
                             if (_framePairs.Add((a.RID, i, b.RID, j))) Pairs++;
                         }
                 }

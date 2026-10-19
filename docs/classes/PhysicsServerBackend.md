@@ -356,3 +356,11 @@ before selected pair dispatch. The composed pose validates before that hook. Err
 resource-only queries remain independent, and later kinematic targets retain their
 step boundary. Expanded public profiles keep strict zero-allocation complete
 frames and the existing GPU pose-only transfer boundary. Full acceptance is separate.
+
+
+The three selected debug-space operations now have a complete bounded
+[capacity/point/count audit](../components/physics-registered-adapter.md#complete-diagnostic-contact-operations),
+including actual scene/raw contacts, terminal rejection/cleanup, owner/separate
+execution, validated count bounds and rendered marker consumers. Preparation errors
+preserve prior implementation policy; tree-wide rollback attempts every request and
+retains original errors. This closes those operations, not the whole numerical family.

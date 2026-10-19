@@ -128,7 +128,7 @@ The full extension family retains its operation-specific acceptance gates.
 geometry tolerance), odd/zero/invalid limits, sampled settings, zero time, sleep/wake,
 filters/sensors, body removal, owner guards, failed-world cleanup and warm allocation
 on explicit CPU/GPU. `ELECTRON2D_CONTACT_DEBUG_CPU_ONLY=1` also verifies no renderer or
-display was initialized and runs with missing GPU/display drivers.
+display was initialized and runs with missing GPU/display drivers. `ELECTRON2D_CONTACT_DEBUG_THREADED=1` selects the separate numerical lane for this focused runner; ordinary runs retain the serial profile.
 `ELECTRON2D_TEST_PHYSICS_CONTACT_DEBUG_NATIVE=1` checks rendered contact pixels,
 shared-world deduplication, separate viewport transforms, toggle/removal and resource
 release on all four physics/renderer combinations. Pixel tolerance is .05 red/.04
@@ -170,3 +170,14 @@ they do not establish real-window rendered acceptance.
 
 
 Registered implementations receive capacity before solving and publish a validated synchronized prefix through the same scene canvas. The external [diagnostic consumer](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.DebugContacts.cs) and [real-window pixel check](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.DebugDrawing.cs) verify preparation, cleanup, owner/borrow guards, zero warm managed allocations and both renderers. See [the selected diagnostic contract](physics-registered-adapter.md#diagnostic-capacity-and-publication) for exact scope and tolerances.
+
+
+[Complete diagnostic contact operations](physics-registered-adapter.md#complete-diagnostic-contact-operations)
+verify selected capacity/count/point publication and multi-world preparation rollback.
+The original error remains first, every rollback is attempted and the next frame
+repairs outstanding disable requests before solving. The registered consumer checks
+scene/raw boundary coordinates, sleep/filter/sensors, caps 0/1/3/8, actual owner/separate
+lanes and 2048 complete measured diagnostic frames at strict zero owner/all-thread
+managed bytes. Built-in no-device/software-GPU and real-window renderer companions
+complete 43 processes. These three operation rows close; complete numerical,
+network/native/platform and hardware performance gates remain open.

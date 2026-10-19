@@ -269,3 +269,11 @@ open.
 ## Pending server geometry
 
 The shared factory/type/data family preserves unconfigured raw RIDs. The selected implementation receives inactive logical slots until ShapeSetData commits and GetShapeGeometry rejects pending query sources. See [raw shape initialization](../components/physics-registered-adapter.md#raw-shape-initialization).
+
+
+The three selected debug-space operations now have a complete bounded
+[capacity/point/count audit](../components/physics-registered-adapter.md#complete-diagnostic-contact-operations),
+including actual scene/raw contacts, terminal rejection/cleanup, owner/separate
+execution, validated count bounds and rendered marker consumers. Preparation errors
+preserve prior implementation policy; tree-wide rollback attempts every request and
+retains original errors. This closes those operations, not the whole numerical family.

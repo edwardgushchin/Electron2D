@@ -15,10 +15,13 @@ public sealed partial class SceneTree
     /// authored geometry, cached cast results and bounded contact snapshots from the last completed physics step.
     /// GPU worlds read only selected point coordinates when contact diagnostics are enabled; no renderer is started on a server.
     /// The tree samples the project shape color at construction; CollisionShape uses its own DebugColor.
-    /// Contact color and point limit are sampled from project settings at tree construction. No game controls are added.</remarks>
+    /// Contact color and point limit are sampled from project settings at tree construction. If enabling fails,
+    /// every world receives a disable attempt; the original error precedes any rollback errors. A later frame
+    /// retries remaining disabled requests before solving. No game controls are added.</remarks>
     /// <exception cref="ObjectDisposedException">The tree is finalized or disposed.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the scene owner thread, a world is stepping or failed, or diagnostic GPU preparation fails.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The sampled contact limit exceeds addressable diagnostic storage.</exception>
+    /// <exception cref="AggregateException">Diagnostic preparation and one or more rollback operations failed.</exception>
     public bool DebugCollisionsHint
     {
         get { EnsureOwnerThread(); EnsureAcceptingWork(); return _debugCollisionsHint; }
@@ -26,11 +29,19 @@ public sealed partial class SceneTree
         {
             EnsureOwnerThread(); EnsureAcceptingWork();
             if (_debugCollisionsHint == value) return;
+            foreach (var runtime in _physicsWorlds) runtime.ExistingSpace?.EnsureImplementationWriteAccess();
             EnsurePhysicsParticipationChange(releasing: !value);
             try { foreach (var runtime in _physicsWorlds) runtime.ExistingSpace?.SetDebugContacts(value ? DebugContactLimit : 0); }
-            catch
+            catch (Exception failure)
             {
-                if (value) foreach (var runtime in _physicsWorlds) runtime.ExistingSpace?.SetDebugContacts(0);
+                if (value)
+                {
+                    var errors = new List<Exception> { failure };
+                    foreach (var runtime in _physicsWorlds)
+                        try { runtime.ExistingSpace?.SetDebugContacts(0); }
+                        catch (Exception rollback) { errors.Add(rollback); }
+                    if (errors.Count > 1) throw new AggregateException("Physics diagnostic preparation and rollback failed.", errors);
+                }
                 throw;
             }
             _debugCollisionsHint = value;

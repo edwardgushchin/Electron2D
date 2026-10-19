@@ -2,19 +2,26 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunDebugContacts()
+    public static void RunDebugContacts(bool threaded = false)
     {
         var original = ProjectSettings.Get(ProjectSettings.DebugCollisionMaxContacts);
+        var previousThread = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
         try
         {
-            DebugContactScope(3); DebugContactScope(0);
+            DebugContactTransactions();
+            foreach (var cap in new[] { 0, 1, 3, 8 }) DebugContactScope(cap, threaded);
             for (var failure = 0; failure < 3; failure++) DebugContactFailure(failure);
         }
-        finally { ProjectSettings.Set(ProjectSettings.DebugCollisionMaxContacts, original); }
+        finally
+        {
+            ProjectSettings.Set(ProjectSettings.DebugCollisionMaxContacts, original);
+            ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previousThread);
+        }
         Console.WriteLine("Registered diagnostics: preparation before solve, odd/zero caps, pause, errors, cleanup and zero warm allocations passed.");
     }
 
-    private static void DebugContactScope(int cap)
+    private static void DebugContactScope(int cap, bool threaded)
     {
         ProjectSettings.Set(ProjectSettings.DebugCollisionMaxContacts, cap);
         Solver? solver = null;
@@ -29,12 +36,13 @@ public static partial class BackendChecks
             var moving = new RigidBody { Name = $"Moving{i}", Position = new(i * 20, 3), GravityScale = 0, CanSleep = false, MaxContactsReported = 0 };
             moving.AddChild(new CollisionShape { Shape = circle }); root.AddChild(moving);
         }
-        using var tree = new SceneTree(root);
+        using var tree = new SceneTree(root); var owner = Thread.CurrentThread;
         tree.PhysicsFrame(1d / 120);
         Check(solver!.DebugReads == 0 && solver.DebugSets == 0, "Capture remains off independently of actual solving");
         ProjectSettings.Set(ProjectSettings.DebugCollisionMaxContacts, 7);
         solver.DebugPolicyHook = _ =>
         {
+            Check(Thread.CurrentThread == owner, "Diagnostic policy stays on the scene owner");
             Reject<InvalidOperationException>(() => tree.DebugCollisionsHint = true);
             Reject<InvalidOperationException>(() => tree.Dispose());
             Reject<InvalidOperationException>(() => tree.FinalizeLoop());
@@ -47,19 +55,26 @@ public static partial class BackendChecks
         var sets = solver.DebugSets;
         tree.DebugCollisionsHint = true;
         Check(solver.DebugSets == sets, "Equal hints do not repeat preparation");
-        solver.StepHook = () => Check(solver.DebugLimit == cap, "Solve sees the already prepared diagnostic cap");
+        var inspectBorrowing = true;
+        solver.StepHook = () =>
+        {
+            Check((Thread.CurrentThread != owner) == threaded, "Diagnostics use the actual captured numerical lane");
+            Check(solver.DebugLimit == cap, "Solve sees the already prepared diagnostic cap");
+            if (inspectBorrowing) Reject<InvalidOperationException>(() => tree.DebugCollisionsHint = false);
+        };
         solver.DebugReadHook = () =>
         {
+            Check(Thread.CurrentThread == owner && solver.Ready, "Diagnostic publication follows synchronization on the owner");
             Reject<InvalidOperationException>(() => tree.DebugCollisionsHint = false);
             Reject<InvalidOperationException>(() => tree.Dispose());
             Reject<InvalidOperationException>(() => tree.FinalizeLoop());
         };
-        Reset(); tree.PhysicsFrame(1d / 120); solver.DebugReadHook = null;
-        Check(solver.DebugLastCount == cap && solver.DebugReads == (cap == 0 ? 0 : 1),
+        Reset(); tree.PhysicsFrame(1d / 120); solver.DebugReadHook = null; inspectBorrowing = false;
+        Check(solver.DebugLastCount == Math.Min(cap, 4) && solver.DebugReads == (cap == 0 ? 0 : 1),
             "Two real circle pairs publish the odd point prefix despite zero gameplay contact caps");
         var reads = solver.DebugReads;
         tree.PhysicsFrame(0); PhysicsServer.SpaceSetActive(world.Space, false); tree.PhysicsFrame(1d / 120);
-        Check(solver.DebugReads == reads && solver.DebugLastCount == cap, "Zero and inactive steps retain the latest diagnostic sample");
+        Check(solver.DebugReads == reads && solver.DebugLastCount == Math.Min(cap, 4), "Zero and inactive steps retain the latest diagnostic sample");
         PhysicsServer.SpaceSetActive(world.Space, true);
         Task.Run(() => Reject<InvalidOperationException>(() => tree.DebugCollisionsHint = false)).GetAwaiter().GetResult();
         Collect(); _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
@@ -72,6 +87,7 @@ public static partial class BackendChecks
             if (b.InvMass > 0) PhysicsServer.BodySetTransform(b.RID, new(0, b.Position + new Vector2(0, 100)));
         tree.PhysicsFrame(1d / 120);
         Check(solver.DebugPointCount == 0 && solver.DebugLastCount == 0, "An active noncontacting interval replaces the sample with empty output");
+        if (cap == 8) DebugContactRaw(solver, world, tree, circle);
         solver.StepHook = null;
         tree.DebugCollisionsHint = false;
         Check(solver.DebugLimit == 0 && solver.DebugPointCount == 0, "Disable clears and stops numerical diagnostic capture immediately");
@@ -90,7 +106,7 @@ public static partial class BackendChecks
         _ = PhysicsServer.SpaceGetTick(world.Space);
         world.Dispose();
         Check(solver.Finished && solver.IsDisposed, "Final caller-owned World release retires the implementation");
-        Console.WriteLine($"Registered debug cap={cap}: 128 active measured frames, owner/all={own}/{all} B.");
+        Console.WriteLine($"Registered debug cap={cap}/{threaded}: 128 active measured frames, owner/all={own}/{all} B.");
         void Reset()
         {
             foreach (var b in solver.Bodies.Values)
@@ -116,6 +132,7 @@ public static partial class BackendChecks
         Reject<AggregateException>(() => tree.PhysicsFrame(1d / 120));
         Reject<InvalidOperationException>(() => PhysicsServer.SpaceGetTick(world.Space));
         Reject<AggregateException>(() => tree.PhysicsFrame(1d / 120));
+        Check(solver.Steps == 1 && solver.DebugReads == 1, "A terminal diagnostic failure never replays Solve or publication");
         tree.DebugCollisionsHint = false;
         Check(solver.DebugLimit == 0 && solver.DebugSets == 2, "Terminal diagnostic errors still permit the zero-cap cleanup hook");
         Reject<InvalidOperationException>(() => tree.DebugCollisionsHint = true);

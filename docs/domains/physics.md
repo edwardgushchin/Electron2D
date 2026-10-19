@@ -1587,3 +1587,14 @@ The [complete Node processing contract](../components/scene-tree.md#complete-pro
 [Physics picking](../components/physics-picking.md#collapsed-canvas-mappings) now skips only a noninvertible or numerically unusable canvas map before CPU/GPU point queries. Other canvases, queued event disposal, hover departure/reentry and scene processing continue through the existing owner/lifetime path. Authored zero-scale CanvasLayer/follow states remain valid scene values.
 
 Prepared grouped skeletal execution now consumes solved PhysicalBone poses alongside ordinary IK/Jiggle/held stacks; real selected body following and point queries observe joined authored bone poses. Numerical collider-enabled Jiggle remains owner-only. [The grouped execution contract](../components/skeletal-animation.md#prepared-modifications-in-processing-groups) records functional and rendered evidence separately from hardware performance.
+
+
+[Complete diagnostic contact operations](../components/physics-registered-adapter.md#complete-diagnostic-contact-operations)
+verify selected capacity/count/point publication and multi-world preparation rollback.
+The original error remains first, every rollback is attempted and the next frame
+repairs outstanding disable requests before solving. The registered consumer checks
+scene/raw boundary coordinates, sleep/filter/sensors, caps 0/1/3/8, actual owner/separate
+lanes and 2048 complete measured diagnostic frames at strict zero owner/all-thread
+managed bytes. Built-in no-device/software-GPU and real-window renderer companions
+complete 43 processes. These three operation rows close; complete numerical,
+network/native/platform and hardware performance gates remain open.

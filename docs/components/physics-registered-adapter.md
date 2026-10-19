@@ -2,6 +2,63 @@
 
 Last updated: 2026-10-19
 
+## Complete diagnostic contact operations
+
+The three non-deprecated extension debug-space operations project to selected
+SetDebugContacts plus bounded ReadDebugContacts under ADRs 0100/0103. The pinned
+4.7.2-stable metadata at ed1daf0bf001b61586d9930840f2f1394092c079 declares the
+required capacity hook and const point/count hooks; they are internal server
+operations rather than scripted static facade methods. reference-contract.json
+also audits the SceneTree hint and declaring metadata. No new public API or
+architectural decision is introduced.
+
+The audit reproduced failed multi-world enable rollback masking the original
+capacity error and skipping later worlds. The identical final consumer fails on
+the old runtime (-6) and passes on the corrected runtime (0). SceneTree now
+preflights numerical writes across its existing worlds before preparation. Failed
+enable attempts disable every world, keep the tree flag false, preserve a lone
+original exception and aggregate rollback failures after that exact original
+object. Provider-owned aggregate boundaries remain intact. The next ordinary
+frame retries outstanding zero requests before solving; a later explicit enable
+can prepare every world. This is preparation recovery without solver replay.
+
+The public-only --debug-contacts fixture checks six three-world error combinations:
+plain/aggregate original failures with zero/one/two rollback failures. It also
+checks sampled caps 0/1/3/8, repeated limits, actual selected numerical threading,
+owner-only preparation and synchronized publication, borrowed/foreign writes,
+ordinary teardown, invalid counts/nonfinite points, terminal disable and no replay.
+Two real scene circle pairs publish independently of gameplay report limits.
+Raw circles additionally check exact pre-correction surface coordinates within
+0.00001 scene units, sleep/wake, bilateral masks, a real Area overlap and retirement.
+The independent consumer corrected its round-contact diagnostic midpoint and
+active-pair predicate; numerical constraint points and physical impulses are unchanged.
+
+Four JIT/strict NativeAOT owner/separate debug profiles each run four caps with
+64 warmup and 128 measured edited complete frames: 2048 measured frames total,
+strictly zero owner/all-thread managed bytes. Cold failure and geometry setup
+remain outside those brackets. Built-in CPU/no-device and software-GPU diagnostic
+companions verify real boundary samples within 0.02 scene units, point buffers,
+odd/invalid caps, unchanged gameplay caps, sleep/filter/sensors, inactive/zero
+retention, failed GPU cleanup and 256-pair full-path managed allocation intervals.
+Serial and separate policies are exercised separately. The no-device process
+also asserts no display or renderer starts.
+
+JIT and NativeAOT registered real-window tests execute both canvas renderers;
+the built-in native suite executes all four CPU/GPU physics versus canvas-renderer
+combinations, including shared-world deduplication and viewport transforms.
+Markers are actual surface samples, toggles/separation clear pixels, and resources
+retire. Registered pixel tolerances are 0.05 green/0.04 other channels; built-in
+markers use 0.05 red/0.04 other channels. Native suites are serial profiles.
+
+Contact response, depth-threshold, private frame-history and ordinary registered
+consumer companions complete 43 distinct processes. Every GPU/renderer process
+uses the private software Vulkan profile; process maps reject hardware drivers
+and NativeAOT maps reject CoreCLR. Six assembly/PDB source proofs bind these
+checks to current source. Artifacts: bin/physics-debug-contact-operations/2026-10-19/.
+Only the three diagnostic operation rows close. Complete numerical/custom geometry,
+network, native allocator, foreign-platform and target GPU/window performance
+acceptance remain open; software rendered pixels are not hardware throughput.
+
 ## Complete reporting threshold operations
 
 The two non-deprecated extension depth-threshold operations project to the typed

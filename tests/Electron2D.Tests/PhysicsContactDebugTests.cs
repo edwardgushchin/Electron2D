@@ -4,7 +4,14 @@ using static PhysicsDebugTests;
 
 internal static class PhysicsContactDebugTests
 {
-    internal static void Run(bool includeGPU = true)
+    internal static void Run(bool includeGPU = true, bool threaded = false)
+    {
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { RunCore(includeGPU); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
+    private static void RunCore(bool includeGPU)
     {
         Settings();
         Verify(PhysicsServer.Backend.CPU); ScenePolicy(PhysicsServer.Backend.CPU); Measure(PhysicsServer.Backend.CPU, false); Measure(PhysicsServer.Backend.CPU, true);
