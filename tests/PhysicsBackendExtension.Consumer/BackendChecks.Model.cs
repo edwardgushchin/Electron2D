@@ -31,6 +31,8 @@ public static partial class BackendChecks
         internal RID ContactFailure;
         internal Action<RID>? IdentityHook, ColliderFactoryHook, ModeHook, RotationHook, SurfaceHook, PoseHook, AngularHook, AwakeHook, CanSleepHook, MassHook;
         internal Action<RID>? ShapeHook, FilterHook;
+        internal Action<RID>? AreaFieldsHook;
+        internal Action? DefaultFieldsHook;
         internal Action<RID, uint, uint, bool>? FilterPolicyHook;
         internal Action<RID>? BodyHook;
         internal Action<RID>? JointHook;
@@ -160,7 +162,7 @@ public static partial class BackendChecks
             var created = new Constraint(this, joint); Joints.Add(joint, created); JointFactoryHook?.Invoke(joint); return created;
         }
         protected override void BeginStep(double delta) { LifecycleHook?.Invoke(LifecyclePhase.Begin); Ready = false; }
-        protected override void PrepareWorld(double delta, in PhysicsAreaFieldConfiguration fields) { Fields = fields; PrepareFieldAreas(); }
+        protected override void PrepareWorld(double delta, in PhysicsAreaFieldConfiguration fields) { Fields = fields; DefaultFieldsHook?.Invoke(); PrepareFieldAreas(); }
         protected override void PrepareBodies(double delta) { }
         internal bool CountSolveAllocations;
         internal long SolveAllocatedBytes;
@@ -346,7 +348,7 @@ public static partial class BackendChecks
                 configuration.AngularDamp + (configuration.AngularDampMode == RigidBody.DampMode.Combine ? f.AngularDamp : 0), true);
         }
         protected override void SetAreaMonitoring(bool monitoring, bool monitorable) { Monitoring = monitoring; Monitorable = monitorable; }
-        protected override void SetAreaFields(in PhysicsAreaFieldConfiguration configuration) => AreaFields = configuration;
+        protected override void SetAreaFields(in PhysicsAreaFieldConfiguration configuration) { AreaFields = configuration; solver.AreaFieldsHook?.Invoke(rid); }
         protected override PhysicsBodyFields ReadResolvedFields(in PhysicsBodyFields current) => _fields;
         protected override void RefreshIdentity(ulong objectID, ulong canvasID)
         { solver.IdentityHook?.Invoke(rid); ObjectID = objectID; Canvas = canvasID; }

@@ -89,6 +89,8 @@ first interval. Complete retained-memory budgets remain open.
 
 Last updated: 2026-10-18
 
+[Complete Area parameter operations](../components/physics-areas.md#complete-area-parameter-operations) now have a public-only component, lifetime, selected-preparation failure and warmed complete-frame audit across CPU/GPU/registered implementations. The engine-owned ten-field contract preserves independent defaults, prepared reads and retry without replaying Solve; broader numerical/native/network/performance acceptance remains open.
+
 [Prepared Area pose inputs](../components/physics-areas.md#prepared-area-pose-inputs) correct a reproduced separate-thread getter failure. The public-only monitor fixture now checks real numerical reads, ancestor composition, write/lifetime/failure guards and complete-frame allocations; broader extension and hardware performance gates remain open.
 
 [Inherited custom iteration](../components/object-lifecycle.md#custom-typed-iteration) uses ordinary typed C# enumerators on compiled object/body subtypes. Force and state callbacks exercise actual selected simulation while retaining independent cursor state and warmed zero-managed-allocation full frames; user cursors do not bypass ordinary lifetime, owner or numerical borrowing guards.

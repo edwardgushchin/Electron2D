@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-19
 
+[Complete Area parameter operations](../components/physics-areas.md#complete-area-parameter-operations) now have a public-only component, lifetime, selected-preparation failure and warmed complete-frame audit across CPU/GPU/registered implementations. The engine-owned ten-field contract preserves independent defaults, prepared reads and retry without replaying Solve; broader numerical/native/network/performance acceptance remains open.
+
 **Declaration:** `public readonly record struct PhysicsAreaFieldConfiguration` · **Source:** [PhysicsAreaFieldConfiguration.cs](../../src/Servers/Physics/PhysicsAreaFieldConfiguration.cs) · **Component:** [Selected checkpoint ownership](../components/physics-backends.md#selected-checkpoint-ownership)
 
 ## Description and values

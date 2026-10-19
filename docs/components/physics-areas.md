@@ -2,6 +2,61 @@
 
 Last updated: 2026-10-19
 
+## Complete Area parameter operations
+
+The public-only --area-parameters fixture now audits all ten concrete parameter
+pairs for scene Areas, raw Areas and the default-space shortcut. It checks distinct
+initial profiles, 150 isolated component assignments across five mode profiles,
+shared scene vector aliases, signed finite boundaries and full integer priorities.
+Rejected nonfinite/vector/mode values preserve the accepted profile. All getters
+and setters reject empty, wrong-kind and retired scene/raw/space RIDs; attached
+foreign-thread calls reject. Default edits preserve other spaces and ProjectSettings.
+Scene/raw detach, transfer and reentry retain the full profile and logical RID.
+
+The actual registered Solve reads all thirty common values and compares complete
+SetAreaFields/PrepareWorld inputs on the captured owner or separate numerical lane.
+Equal selected-hook writes reject before mutation. The provider fixture injects
+one or two errors after corrupting a partially published scene, raw or default
+profile: six cases preserve the original exception, common authoring and tick.
+Authored reads and zero intervals do not publish; the next successful positive
+interval resubmits the complete current profile before exactly one Solve. A failed
+numerical Solve retains its separate terminal policy; this recovery never replays it.
+
+The JIT/strict NativeAOT CPU, software-GPU and registered owner/separate profiles
+each measure 128 changed full frames at strict owner/all-thread zero managed bytes.
+Every frame writes and reads all three profiles, changes point/mode/priority data
+and advances a real moving body. Existing field companions retain exact reduction,
+all five modes, masks, callback history, failed-world guards, overflow policy and
+point-range behavior. The independent solver remains a bounded circle fixture;
+general geometry and the complete numerical-extension contract are separate work.
+
+Both parameter-operation extension rows are Implemented under ADRs 0056/0103.
+Numeric selectors remain excluded only as the untyped dispatch representation;
+all ten field capabilities have concrete typed pairs. The current unique physics
+census is 169 open declarations: 138 Partial, 14 Unimplemented and 17 Blocked.
+Native allocations, full impaired client/server scenarios, foreign execution,
+target GPU throughput/window FPS and overall physics acceptance remain open.
+Evidence: bin/physics-area-parameter-audit/2026-10-19/validation.json.
+
+## Resident Area sorting in NativeAOT
+
+Changing complete Area profiles exposed a resident preparation allocation that
+ordinary JIT profiles did not show: strict NativeAOT GPU frames allocated 48 bytes
+per dirty-profile sort in the two-Area fixture, 6,144 bytes over 128 measured full frames. An isolated
+NativeAOT BCL check reproduced 6,144 bytes with the default sort and zero with a
+warmed explicit comparison at one shared call site. The initial diagnostic used
+two separate lambda sites and measured a cold 48-byte delegate; that setup was
+corrected before drawing the warmed comparison.
+
+Resident preparation now sorts its existing active prefix through a cached static
+comparison calling the same FieldData.CompareTo. Descending priority and ascending
+traversal order, packed data, resident buffers, transfers and waits are unchanged.
+The complete public fixture retains its strict zero owner/all-thread byte gate
+across JIT and NativeAOT. This is a managed allocation correction, not target GPU
+throughput or native allocator acceptance. The failed native run is retained under
+bin/physics-area-parameter-audit/2026-10-19/before-aot-gpu-serial-area-parameters;
+sort-probe/result-shared-callsite.log records the isolated comparison.
+
 ## Prepared Area pose inputs
 
 AreaGetTransform now uses the common prepared-input guard for scene and raw
@@ -66,12 +121,12 @@ Evidence: `bin/physics-area-field-inputs/2026-10-19/red-green-proof.json` and
 `validation.json` in the same directory. Fresh JIT/strict Linux x64 NativeAOT
 registered serial/separate profiles and CPU/software-GPU prepared-input/complete
 Area contracts qualify the correction. Existing numerical tolerances remain
-unchanged; configured profile equality is exact. This correction does not close
-full parameter-operation or numerical-extension accounting: coverage states retain
-171 open declarations (140 Partial, 14 Unimplemented, 17 Blocked). Wider native
-memory, foreign-platform, impaired-network and target-GPU/window acceptance remain
-open. The earlier successful ordinary frozen `8912effe` root predates this runtime
-fix; a new source-qualified ordinary run is required.
+unchanged; configured profile equality is exact. The later [complete parameter audit](#complete-area-parameter-operations) closes
+the two parameter operation rows; this prepared-input correction alone did not
+close them. Wider numerical-extension, native memory, foreign-platform,
+impaired-network and target-GPU/window acceptance remain open. The ordinary
+frozen `4ef30b2e` root subsequently passed; newer main cohorts retain their own
+source-qualified ordinary verification.
 
 ## Scope and owned types
 

@@ -132,6 +132,8 @@ status changes; full retained/native/device history budgets remain open.
 
 Last updated: 2026-10-18
 
+[Complete Area parameter operations](../components/physics-areas.md#complete-area-parameter-operations) close the two extension getter/setter rows after auditing ten typed pairs, scene/raw/default-space profiles, independent fields, invalid/lifetime guards, complete selected preparation retries and actual numerical input reads. Public JIT/strict NativeAOT CPU/software-GPU/registered owner/separate companions retain exact field behavior and strict zero managed allocation in changed complete frames. The current unique physics census is 169 open declarations: 138 Partial, 14 Unimplemented and 17 Blocked. Wider numerical-extension, native/network/platform and target GPU/window performance gates remain open. Earlier counts below are historical.
+
 [Agent path diagnostics](../components/navigation-maps.md#agent-path-diagnostics) now connect five stored NavigationAgent properties and three typed project defaults to retained world-path geometry. Managed/fresh-process/lifetime checks and actual local software GPU/Compatibility pixel/frame checks cover the connected slice. Global map diagnostics retain their exact separate producers; shared path-search equivalence remains on server query rows.
 
 [Low-processor rendering](../components/low-processor-rendering.md) connects rendering change reporting, two OS policies and two typed startup settings to the existing owned window loop. Five reference rows are Implemented. Node/resource/retained/device/native-event and time-consumer producers execute on the current backends; static-camera idle and movie capture retain their own checks and platform limits.

@@ -6,6 +6,8 @@ The [Body/Area append audit](../components/physics-shapes.md#bodyarea-append-con
 
 Last updated: 2026-10-19
 
+[Complete Area parameter operations](../components/physics-areas.md#complete-area-parameter-operations) now have a public-only component, lifetime, selected-preparation failure and warmed complete-frame audit across CPU/GPU/registered implementations. The engine-owned ten-field contract preserves independent defaults, prepared reads and retry without replaying Solve; broader numerical/native/network/performance acceptance remains open.
+
 [Prepared Area pose inputs](../components/physics-areas.md#prepared-area-pose-inputs) let AreaGetTransform read scene/raw configured poses from selected numerical hooks, without live solver queries or general scene observation. Ordinary reads retain owner/failure guards and non-preparing presentation.
 
 ## Failed local activation

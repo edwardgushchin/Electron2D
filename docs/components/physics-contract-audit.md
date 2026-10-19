@@ -1,6 +1,10 @@
 # Physics contract and backend audit
 
-[Prepared Area field inputs](physics-areas.md#prepared-area-field-inputs) now permit all ten configured getters for scene/raw Areas and space defaults inside their selected numerical hook, including the captured solver thread. A public separate-thread owner error is reproduced and fixed with common input guards; writes and off-owner/failed-world reads retain rejection. Fresh public and CPU/software-GPU companion checks preserve actual field effects and zero managed allocation. Coverage states remain unchanged at 171 open declarations; complete parameter/numerical/extension/network/native/platform/hardware acceptance stays open.
+Last updated: 2026-10-19
+
+[Complete Area parameter operations](physics-areas.md#complete-area-parameter-operations) verify all ten typed pairs, distinct scene/raw/default profiles, lifetime and six partial-preparation retry cases. The two extension get/set operation rows become Implemented; the current unique physics census is 169 open declarations: 138 Partial, 14 Unimplemented and 17 Blocked. All wider full-goal requirements remain open. Earlier counts below are historical.
+
+[Prepared Area field inputs](physics-areas.md#prepared-area-field-inputs) now permit all ten configured getters for scene/raw Areas and space defaults inside their selected numerical hook, including the captured solver thread. A public separate-thread owner error is reproduced and fixed with common input guards; writes and off-owner/failed-world reads retain rejection. Fresh public and CPU/software-GPU companion checks preserve actual field effects and zero managed allocation. The later complete parameter audit closes its two operation rows; wider numerical/extension/network/native/platform/hardware acceptance stays open.
 
 [Filter setter operation audit](physics-filters.md#filter-setter-operation-audit) completes all four Body/Area layer/mask input operations with 22 pinned declaration checks, selected argument/wake/thread observations, original failure repair and real directional response. Fresh public JIT/NativeAOT CPU/software-GPU/registered profiles retain strict zero-allocation full frames; root and generated tile consumers retain identity and wake behavior. The physics ledger has 171 open declarations (140 Partial, 14 Unimplemented, 17 Blocked). Complete numerical/extension/inherited/network/native/platform and target-GPU performance acceptance remain open.
 
@@ -166,9 +170,7 @@ The preceding raw-initialization slice passed 89 scoped profiles; its full headl
 
 [Tile owner projections and failure cleanup](tiles.md) now execute through explicit CPU/GPU tests, including object deduplication, shape/RID payloads, canvas and weak lifetime, scene/server motion and callback-failed replacement/retirement. The formerly tile-blocked Area, KinematicCollision, PhysicsTestMotionResult and point-query rows are reconciled against actual production paths. This closes those recorded implementation triggers; full inherited, numerical-extension, network/platform and performance acceptance remain open.
 
-Last updated: 2026-10-18
-
-[Prepared Area pose inputs](physics-areas.md#prepared-area-pose-inputs) correct the common getter without changing public declarations or coverage states. The exact solver thread reads existing prepared scene pose caches; ordinary authoring and live-body guards remain separate. The current unique physics census remains 171 open declarations: 140 Partial, 14 Unimplemented and 17 Blocked.
+[Prepared Area pose inputs](physics-areas.md#prepared-area-pose-inputs) correct the common getter without changing public declarations or coverage states. The exact solver thread reads existing prepared scene pose caches; ordinary authoring and live-body guards remain separate. This prepared-pose correction did not change coverage; the later parameter operation audit owns the current census.
 
 [Prepared handoff input](physics-network-example.md#prepared-future-input-at-control-handoff-2026-10-16) strengthens the separate-process check: both retired commands must actually be queued, replaced by the new epochs and applied at the same future tick. Ordinary sessions retain their pacing. This closes no additional reference declaration or hardware/performance gate.
 

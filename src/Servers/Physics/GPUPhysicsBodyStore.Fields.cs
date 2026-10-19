@@ -105,7 +105,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         {
             if (_fieldEdits.Length < _activeAreaCount) Array.Resize(ref _fieldEdits, Capacity(_activeAreaCount));
             var at = 0; foreach (var field in _areaFields.Values) if (field.HasOverrides) _fieldEdits[at++] = field;
-            Array.Sort(_fieldEdits, 0, _activeAreaCount);
+            // Reuse the comparison delegate; default sorting allocates per call in NativeAOT.
+            _fieldEdits.AsSpan(0, _activeAreaCount).Sort(static (a, b) => a.CompareTo(b));
         }
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw GPUPhysicsDevice.Failure("acquire resident field reduction");

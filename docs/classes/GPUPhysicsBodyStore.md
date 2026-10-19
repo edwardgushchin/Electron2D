@@ -2,7 +2,9 @@
 
 [Buffer memory observations](../components/gpu-memory.md) are implemented in [GPUPhysicsBodyStore.Memory.cs](../../src/Servers/Physics/GPUPhysicsBodyStore.Memory.cs). They track all requested storage/transfer resources, growth overlap and checkpoint copies through native release, without a simulation mirror or extra GPU work. Complete driver/native and managed memory remains outside this counter.
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
+
+[Resident Area sorting](../components/physics-areas.md#resident-area-sorting-in-nativeaot) now uses one cached explicit comparison over the existing active prefix. This removes a reproduced 48-byte NativeAOT allocation per dirty-profile sort while retaining priority/traversal order, buffers and transfer/wait policy. The full changed-parameter fixture keeps a strict zero managed-byte gate; native allocation and target GPU performance remain separate.
 
 [Validated color reuse](../components/gpu-contact-colors.md#validated-device-color-cache-2026-10-18) seeds schedules through retained device contact keys, then checks every current row and dynamic endpoint. Any miss/conflict rebuilds the complete schedule. `ContactColorReuseCount` counts accepted seeds; `ContactColorCacheStorageBytes` reports 48-byte record and four-byte table-slot capacity. This adds no CPU contact mirror, portable payload or cache-specific readback. Local GPU checkpoints retain this scheduling cache and its logical lookup size for bounded replay. A reused subset can leave empty color ranges; `ContactColorCount` is their exclusive upper index, and only populated ranges solve. `ContactColorRounds` is zero when validation needs no productive proposal round. Exact native/driver overhead and final hardware acceptance remain outside these counters.
 

@@ -220,6 +220,8 @@ registered numerical sleep/contact response, native allocations or other platfor
 
 ## Registered Area fields
 
+[Complete parameter operations](physics-areas.md#complete-area-parameter-operations) now verify component isolation, common lifecycle/defaults, actual numerical inputs and complete retry after partial selected preparation errors. This closes the two scalar parameter-operation rows while preserving the broader numerical-extension acceptance boundary.
+
 The [prepared input correction](physics-areas.md#prepared-area-field-inputs) now
 executes all ten scene/raw/default getters from the selected numerical lane.
 A reproduced scene-owner failure is fixed through the common input guard; write,
@@ -243,7 +245,7 @@ frames attach objects but do not simulate or publish overlap events, so numerica
 checks use nonzero intervals. Field tolerance is 0.00001 for the bounded fixtures;
 the point-motion velocity interval 0.49..0.51 includes the changing field distance.
 
-The two extension parameter rows remain Partial. Arbitrary geometry, full
+The [complete parameter operation audit](physics-areas.md#complete-area-parameter-operations) now closes both extension parameter rows. Arbitrary geometry, full
 numerical/extension acceptance and final platform/performance gates remain open.
 
 ## Parameter reads and preparation

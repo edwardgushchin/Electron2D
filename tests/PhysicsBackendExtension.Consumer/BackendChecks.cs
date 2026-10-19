@@ -50,6 +50,7 @@ public static partial class BackendChecks
         WorldPolicyChecks();
         SceneSpaceChecks();
         RunAreaFields();
+        RunAreaParameters();
         BodyMutationChecks();
         ShapeMutationChecks();
         IdentityChecks();
