@@ -4,6 +4,16 @@ Cold world-query geometry now uses the [shared using-world borrow](../components
 
 Last updated: 2026-10-19
 
+## Resource retirement errors
+
+Caller-owned retirement attempts every required cleanup stage before propagating
+failure. A lone error retains its original exception instance and throwing stack,
+including selected Finish/disposal and the outer world release. Multiple errors
+aggregate after all attempts. Freed RIDs and borrowed views expire even on errors;
+preflight owner/borrow rejection preserves live resources. Scene-owned identities
+remain with their owners. See [complete resource retirement operations](../components/physics-registered-adapter.md#complete-resource-retirement-operations)
+for actual coverage and remaining limits.
+
 ## Typed parameter publication
 
 A selected publication error retains the requested typed parameter channel.
@@ -84,7 +94,7 @@ One owner-thread world shared by scene bodies/Areas/joints and caller-owned coll
 | `LastStep`, cached body-state callback list | Last actual interval and generation-aware delivery; skipped intervals retain data. |
 | `Add` / `Remove` scene/server objects | Native membership, dependent joint/monitor lifetime and identity. |
 | `CreateCheckpoint()` | Capture a reusable same-world CPU/GPU rewind point including attached observer state; restore validates configuration and silently resets physics poses. See [local world checkpoints](../components/physics-space-checkpoints.md). |
-| `Dispose()` | Attempt every checkpoint/map, joint, body/Area/collider and query-cache release; clear registrations and finally release the selected implementation. Aggregate cleanup failures after all attempts, including native world destruction. |
+| `Dispose()` | Attempt every checkpoint/map, joint, body/Area/collider and query-cache release; clear registrations and finally release the selected implementation. Preserve one original exception/stack or aggregate several failures after all attempts, including native world destruction. |
 
 An internally enabled GPU-stage failure releases solver scratch/lock ownership,
 marks the space failed and rejects later stepping/queries rather than replaying

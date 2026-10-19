@@ -234,6 +234,6 @@ internal sealed partial class RegisteredPhysicsWorldBackend : PhysicsWorldBacken
             Exit(); _disposed = true; _colliders.Clear(); _joints.Clear();
             try { _motion.ReleaseImplementationResult(); } catch (Exception error) { (errors ??= []).Add(error); }
         }
-        if (errors is not null) throw new AggregateException("Registered physics cleanup failed.", errors);
+        PhysicsSpace.FinishCleanup(errors);
     }
 }

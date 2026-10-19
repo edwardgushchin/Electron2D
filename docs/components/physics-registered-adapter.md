@@ -2,6 +2,82 @@
 
 Last updated: 2026-10-19
 
+## Complete resource retirement operations
+
+The server FreeRID and extension retirement projection own Shape/Body/Area/Joint/
+Space cleanup through the common registry and selected attachments. The pinned
+4.7.2-stable metadata at ed1daf0bf001b61586d9930840f2f1394092c079 contains both
+non-deprecated method/owning-type records in reference-contract.json. Scene-owned
+resources remain borrowed; no public declaration or architecture decision changes.
+
+The audit found that a lone selected Finish error was wrapped twice: selected
+world cleanup and outer space cleanup each created an AggregateException. The
+previous fixture flattened exceptions and could not detect the lost original type.
+The identical final consumer fails on the old runtime (-6, Single resource retirement
+error was wrapped or replaced) and passes with the corrected runtime (0). Both
+boundaries now use the existing shared FinishCleanup: one error preserves its exact
+instance/type/throwing stack, several errors aggregate after all required attempts.
+Provider-thrown aggregates remain original errors rather than being unwrapped.
+Retirement still unregisters the freed RID and invalidates borrowed views despite
+cleanup errors; preflight failures leave the resource intact. Evidence:
+`bin/physics-resource-operations/2026-10-19/runtime-regression-proof.json`.
+
+Four registered JIT/strict NativeAOT owner/separate transaction profiles check 28
+exact single-error cases across body, Area, joint, shared shape, world Finish,
+implementation disposal and world collider cleanup. They check original stacks,
+stale identities, expired body/space views and complete selected release. Another
+24 cases retire all five kinds after actual Solve/Sync/Statistics failures in two
+orders, with no repeated Solve. Foreign-thread release still rejects after failure.
+Actual Solve rejects every attached kind while permitting detached process-global
+resources. Ordinary state callbacks release other body/Area/joint/shape resources;
+world release remains rejected until callback delivery completes.
+
+The existing public resource fixture retains all scene body siblings, scene Area/
+joints, borrowed identity and initial/live/release guards, pending/reentry and
+ordinary Area departure errors. Its five-error body and thirteen-error world
+injections still preserve every failure. Twelve CPU/no-device, private software-GPU
+and registered JIT/NativeAOT owner/separate profiles measure 768 warmed active
+SpaceStep intervals at strict 0/0 owner/all-thread managed bytes after release and
+repair. Cold topology operations intentionally allocate outside that bracket.
+
+Sixteen shared-free profiles cover both world creation orders and numerical thread
+policies across CPU/CPU/registered or CPU/software-GPU/registered worlds. They retain
+all twelve scene/raw body/Area roles, exact slot/event identities, status-preflight
+rollback, four numerical failure/retirement combinations, query repair, incoming/
+recursive/cross-world guards and unrelated slots. Their existing 128 warmed full
+three-world groups per profile retain strict zero owner/all-thread managed bytes.
+The serial CPU world-lifetime root companion still checks real contact worlds,
+retained histories, failed steps and collected managed array roots; it does not
+measure native/driver/global allocator retention.
+
+The same source cohort passes 55/55 distinct profiles:
+
+| Executed profile family | Profiles |
+| --- | ---: |
+| JIT/NativeAOT, three backends, owner/separate resources and joint lifecycle | 24 |
+| JIT/NativeAOT, three backends, serial shape resource/factory family | 6 |
+| JIT/NativeAOT mixed three-world shared-free, two orders and thread policies | 16 |
+| JIT/NativeAOT registered owner/separate exact-error/terminal retirement | 4 |
+| JIT/NativeAOT registered lifecycle/default consumers | 4 |
+| Serial CPU root world-lifetime companion | 1 |
+
+Shape resource and registered lifecycle entrypoints are counted once per executable
+variant because they do not consume the threaded flag. Resource and joint-lifecycle
+entrypoints do consume it and assert the actual selected numerical lane. Six
+PDB/Compile proofs match 3413 authored source inputs, without DEBUG or missing/
+mismatched files. Process maps require private lavapipe for GPU, reject hardware
+drivers and require no CoreCLR for NativeAOT. CPU/registered profiles use an empty
+ICD. Evidence: `bin/physics-resource-operations/2026-10-19/validation.json`,
+current-source-proof.json and current-source-inputs.json.
+
+Only FreeRID and its extension row become Implemented. The current physics census
+is 1260/1369 (92.03798392987582%), with 109 open declarations: 78 Partial, 14 Unimplemented
+and 17 Blocked; 92 remain Excluded. Earlier counts describe recorded checkpoints.
+Full ordinary root, arbitrary numerical/custom geometry/extension acceptance,
+native allocations, multiplayer, other platforms and hardware real-window/FPS/
+performance acceptance remain open. Hardware GPU load did not run; the power cable
+remains unchecked.
+
 ## Complete joint lifecycle operations
 
 The six extension create/type/clear/make operations execute through the shared
@@ -1621,8 +1697,8 @@ After 64 warmup steps, 64 active steps after shape retirement/recovery allocate
 0 owner/all-thread managed bytes, with six bodies and three constraints. Cold
 resource creation/retirement intentionally allocates outside that bracket.
 
-The extension FreeRID row remains Partial until complete numerical-extension
-acceptance. Native allocation, other platforms, final network scenarios and
+The [complete retirement audit](#complete-resource-retirement-operations) closes
+FreeRID and its extension projection; complete numerical-extension acceptance remains open. Native allocation, other platforms, final network scenarios and
 real-window/performance acceptance are unverified here.
 
 

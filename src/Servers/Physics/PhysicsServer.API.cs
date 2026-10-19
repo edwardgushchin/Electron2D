@@ -1366,7 +1366,7 @@ public sealed partial class PhysicsServer
     /// Hooks cannot attach incoming consumers, recursively release the shape or mutate other participating worlds.
     /// A status-preflight failure preserves the live resource and its slots. Once removal starts, all users and geometry retirement
     /// are attempted and the RID is unregistered even when cleanup reports errors. Unrelated slots retain their identities.
-    /// A single error preserves its type;
+    /// A single error preserves its original instance, type and throwing stack, including world/implementation cleanup;
     /// multiple cleanup errors aggregate.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or has no server-owned resource.</exception>
     /// <exception cref="InvalidOperationException">The RID belongs to a scene owner or the space is being stepped or dispatching callbacks.</exception>

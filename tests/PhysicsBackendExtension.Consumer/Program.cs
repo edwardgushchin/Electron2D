@@ -1,4 +1,5 @@
-if (args.Contains("--joint-lifecycle-transactions")) BackendChecks.RunJointLifecycleTransactions(args.Contains("--threaded"), args.Contains("--requests-first"));
+if (args.Contains("--resource-transactions")) BackendChecks.RunResourceTransactions(args.Contains("--threaded"));
+else if (args.Contains("--joint-lifecycle-transactions")) BackendChecks.RunJointLifecycleTransactions(args.Contains("--threaded"), args.Contains("--requests-first"));
 else if (args.Contains("--joint-transactions")) BackendChecks.RunJointTransactions(args.Contains("--threaded"));
 else if (args.Contains("--exception-transactions")) BackendChecks.RunExceptionTransactions(args.Contains("--threaded"));
 else if (args.Contains("--world-parameters")) BackendChecks.RunWorldParameters(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
@@ -210,7 +211,7 @@ else if (args.Contains("--contact-threshold")) BackendChecks.RunContactThreshold
 else if (args.Contains("--area-monitors")) BackendChecks.RunAreaMonitors(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--resources")) BackendChecks.RunResources(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
-    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--joint-lifecycle")) BackendChecks.RunJointLifecycle(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--joint-parameters")) BackendChecks.RunJointParameters(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :

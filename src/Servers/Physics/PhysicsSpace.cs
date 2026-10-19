@@ -585,7 +585,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (GPUStore is not null) Release(ReleaseGPUState);
         _disposed = true;
         if (_backend is not null) Release(_backend.Dispose);
-        if (errors is not null) throw new AggregateException("Physics-world cleanup failed.", errors);
+        PhysicsSpace.FinishCleanup(errors);
 
         void Release(Action action)
         {

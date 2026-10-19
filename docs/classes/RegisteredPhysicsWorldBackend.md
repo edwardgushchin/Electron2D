@@ -1,6 +1,16 @@
 # RegisteredPhysicsWorldBackend
 
-Last updated: 2026-10-12
+Last updated: 2026-10-19
+
+## Resource retirement errors
+
+Caller-owned retirement attempts every required cleanup stage before propagating
+failure. A lone error retains its original exception instance and throwing stack,
+including selected Finish/disposal and the outer world release. Multiple errors
+aggregate after all attempts. Freed RIDs and borrowed views expire even on errors;
+preflight owner/borrow rejection preserves live resources. Scene-owned identities
+remain with their owners. See [complete resource retirement operations](../components/physics-registered-adapter.md#complete-resource-retirement-operations)
+for actual coverage and remaining limits.
 
 **Declaration:** `internal sealed partial class RegisteredPhysicsWorldBackend : PhysicsWorldBackend` · **Source:** [RegisteredPhysicsWorldBackend.cs](../../src/Servers/Physics/RegisteredPhysicsWorldBackend.cs) · **Component:** [Registered solver adapter](../components/physics-registered-adapter.md)
 

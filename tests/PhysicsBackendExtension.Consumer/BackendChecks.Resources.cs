@@ -2,9 +2,15 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunResources(PhysicsServer.Backend? backend = null) => ResourceReleaseChecks(backend);
+    public static void RunResources(PhysicsServer.Backend? backend = null, bool threaded = false)
+    {
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { ResourceReleaseChecks(backend, threaded); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
 
-    private static void ResourceReleaseChecks(PhysicsServer.Backend? backend = null)
+    private static void ResourceReleaseChecks(PhysicsServer.Backend? backend = null, bool threaded = false)
     {
         Solver? solver = null; Solver? sceneSolver = null;
         if (backend is null)
@@ -29,6 +35,9 @@ public static partial class BackendChecks
         using var tree = new SceneTree(root);
         PhysicalPublisherReleaseFailures(sceneSolver, root);
         var space = backend is { } chosen ? PhysicsServer.SpaceCreate(chosen) : PhysicsServer.SpaceCreate("ResourcesOwned");
+        var ownerThread = Thread.CurrentThread;
+        if (solver is not null) solver.StepHook = () => Check((Thread.CurrentThread != ownerThread) == threaded, "Owned resource checks use the actual selected numerical thread");
+        if (sceneSolver is not null) sceneSolver.StepHook = () => Check((Thread.CurrentThread != ownerThread) == threaded, "Scene resource checks use the actual selected numerical thread");
         var first = PhysicsServer.BodyCreate(); var second = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate();
         var shape = PhysicsServer.CircleShapeCreate();
         var joints = new[] { PhysicsServer.JointCreate(), PhysicsServer.JointCreate(), PhysicsServer.JointCreate() };

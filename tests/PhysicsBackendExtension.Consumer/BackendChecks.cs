@@ -46,6 +46,7 @@ public static partial class BackendChecks
         RunJointLifecycle();
         RunJointLifecycleTransactions();
         ResourceReleaseChecks();
+        RunResourceTransactions();
         RunAreaMonitors();
         RunHierarchyPoses();
         RunAreaOverlapPublication();

@@ -6,6 +6,16 @@ The [Body/Area append audit](../components/physics-shapes.md#bodyarea-append-con
 
 Last updated: 2026-10-19
 
+## Resource retirement errors
+
+Caller-owned retirement attempts every required cleanup stage before propagating
+failure. A lone error retains its original exception instance and throwing stack,
+including selected Finish/disposal and the outer world release. Multiple errors
+aggregate after all attempts. Freed RIDs and borrowed views expire even on errors;
+preflight owner/borrow rejection preserves live resources. Scene-owned identities
+remain with their owners. See [complete resource retirement operations](../components/physics-registered-adapter.md#complete-resource-retirement-operations)
+for actual coverage and remaining limits.
+
 ## Lifecycle request ownership
 
 After clear passes its access preflight, cleanup always commits Empty and forgets
@@ -316,7 +326,7 @@ Use this overload when a renderer needs many server-body poses in one interval. 
 
 Frees only caller-owned server resources. Joint free removes its native handle and pair contribution, then invalidates its RID; body free clears dependent joints. World free suspends caller-owned connections with local frames/settings retained. A shape free removes its slots from live users; a body/Area free detaches its backend object; a space free detaches its server colliders and invalidates retained query views. Collider RIDs remain live and detached after their space is freed, so they can be assigned to another space. SceneTree spaces, scene joint RIDs and scene CollisionObject RIDs must be released by their owning objects; attempting to free them here throws. Stale or wrong-kind RIDs reject without resolving to a later resource. The `RID` value itself remains nonzero after free.
 
-Space release rejects while a physics step or any body/contact/Area callback is live, preserving its RID and implementation. Once cleanup starts, it attempts all participant and solver releases; AggregateException reports failures after the space RID/direct view are unregistered. An injected worker cleanup failure verifies native world destruction and registry removal.
+Space release rejects while a physics step or any body/contact/Area callback is live, preserving its RID and implementation. Once cleanup starts, it attempts all participant and solver releases; A single original exception or an AggregateException for several failures reports cleanup after the space RID/direct view are unregistered. An injected worker cleanup failure verifies native world destruction and registry removal.
 
 All caller-owned kinds now preflight related access before mutation. Once cleanup
 starts, every dependent/attachment/shape-user action is attempted and the freed RID

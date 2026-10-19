@@ -5,7 +5,16 @@
 
 [Polygon point containment](physics-point-containment.md) corrects CPU GJK false-inside observations across points, ray origins, Area audio and directed proxy regions. CPU/GPU tests use equal authored poses and independent geometric controls.
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
+
+## Resource retirement errors
+
+The selected implementation and outer space cleanup share the common error
+collector: a lone failure preserves its original exception instance and throwing
+stack; multiple failures aggregate after every required release attempt. Retired
+identities and borrowed views expire despite cleanup errors. See the executed
+[resource retirement audit](physics-registered-adapter.md#complete-resource-retirement-operations)
+for scene/raw, failed-world, shared-shape and allocation evidence and limits.
 
 [Same-revision mass measurements](physics-current-performance.md) record complete
 CPU/GPU headless steps and real-window frames at 65,536 awake bodies on

@@ -11,6 +11,7 @@ public static partial class BackendChecks
         internal RID Space => SpaceRID;
         internal RID[] ReadExceptions(RID body) => GetCollisionExceptions(body);
         internal bool Ready, Finished, FailSolve, FailInit, FailFinish, FailDisposal;
+        internal Action? DisposalHook;
         internal int Steps, Flushes, Synchronizations, Pairs, DebugReads, StatePreparations;
         internal bool BadDebugCount, BadDebugPoint, NegativeDebugCount, FailDebugPreparation;
         internal int DebugLimit, DebugSets, DebugPointCount, DebugLastCount;
@@ -91,6 +92,7 @@ public static partial class BackendChecks
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
+            if (disposing) DisposalHook?.Invoke();
             if (disposing && FailDisposal) throw new InvalidOperationException("Disposal failure");
         }
         internal bool SelectedActive;
