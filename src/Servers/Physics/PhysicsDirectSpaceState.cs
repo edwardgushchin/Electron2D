@@ -105,12 +105,19 @@ public readonly struct PhysicsPointResult
 /// <remarks>A view becomes unusable when its owning space is freed. Queries require that space's owner thread
 /// and cannot run during its solver step. Built-in views use that space's selected implementation and prepared scratch storage.
 /// Consumer implementations derive from PhysicsDirectSpaceStateExtension; inherited public queries dispatch its guarded typed hooks.
+/// Disposal rejects while the bound world's numerical implementation is borrowed, including status and factory hooks.
 /// A bound backend may use readonly queries during initialization; its context remains inactive and cannot step, bind colliders or release until initialization completes.</remarks>
 public partial class PhysicsDirectSpaceState : ElectronObject
 {
     private readonly RID _spaceRID;
 
     internal PhysicsDirectSpaceState(RID spaceRID) => _spaceRID = spaceRID;
+    /// <inheritdoc />
+    protected override void ValidateDisposal()
+    {
+        PhysicsServer.Service.ValidateDirectStateRelease(_spaceRID);
+        base.ValidateDisposal();
+    }
     internal void EnsureContext(PhysicsSpace space)
     {
         ThrowIfDisposed(); space.EnsureQueryAccess();

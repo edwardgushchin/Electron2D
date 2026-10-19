@@ -12,7 +12,8 @@ namespace Electron2D;
 /// solver execution, including post-solver integration callbacks. Backend storage and contact traversal stay inside the attachment adapter;
 /// this view retains only its attachment identity and public contact values. Contact positions, normals and velocities
 /// use global axes; the word local identifies this body rather than the collider. Caller disposal affects only the view
-/// and is rejected inside a borrowed callback. Solved contacts are fully captured before user callbacks and remain
+/// and is rejected inside a borrowed callback or while its world's numerical implementation is borrowed,
+/// including status and factory hooks. Solved contacts are fully captured before user callbacks and remain
 /// unchanged by subsequent pose or fixture edits. Contact-limit assignment explicitly clears the retained point count.
 /// Retaining an invalid view does not extend registered callback-data lifetime after body release. Live field reads retain the attachment
 /// internally and validate its lifetime before access; zero-contact views do not request contact snapshots. Contact impulses include all solver intervals of the completed outer physics step. Factory-provided contact extensions
@@ -73,6 +74,7 @@ public class PhysicsDirectBodyState : ElectronObject
     /// <inheritdoc />
     protected override void ValidateDisposal()
     {
+        _space.EnsureDirectStateRelease();
         if (_callbackDepth != 0) throw new InvalidOperationException("A borrowed body view cannot be disposed inside its callback.");
         base.ValidateDisposal();
     }

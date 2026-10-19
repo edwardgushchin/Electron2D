@@ -2274,6 +2274,40 @@ and native four-combination diagnostic checks retain their independent coverage.
 No new overall FPS, network or mass-scene performance acceptance is claimed here.
 
 
+## Direct-view release during numerical hooks
+
+Direct body/space views reject disposal while their bound world's numerical
+implementation is borrowed. Status and factory validation are included, before
+query/state dispatch acquires its own callback scope. This prevents a returned
+factory view from becoming disposed between its initial lifetime check and cache
+publication. The common guard covers default, cached factory and independent
+extension views without retaining a new world reference in default query views.
+A rejected disposal leaves lifetime unchanged. Ordinary gameplay callbacks can
+still dispose unborrowed sibling views; another world's view is independent.
+Expired body/world views remain disposable without querying failed solver state.
+Once the space has closed, backend Finish/disposal can also retire these expired
+views while finishing its own cleanup.
+
+The public-only `--view-lifetimes` regression checks factory validation, ordinary
+query/state reads, actual numerical stepping, uncaught status errors, cache
+recreation, unrelated-world disposal and expired cleanup. The unchanged baseline
+fails with `Selected status hook disposed a live direct-state view`. Broader
+factory operation acceptance remains open; this guard does not promote a row.
+
+Final verification uses 27 successful profiles plus two expected RED replays of
+the identical public consumer against the original library and the candidate that
+incorrectly rejected expired cleanup during Finish. JIT and strict NativeAOT both
+exercise owner/separate view lifetimes, factory contacts/queries, lifecycle,
+publication failures and CPU/no-device, software-GPU and registered stepping.
+The twelve publication profiles measure 1536 full moving frames at strict 0/0
+owner/all-thread bytes; factory frames retain the same strict gate. CPU/GPU body
+and query contracts and the real Wayland window companion also pass; the window
+measures owner bytes only. Six DLL/PDB/Compile sets match 3436 current authored
+sources without DEBUG. Release, compiled API coverage and wiki tests/generation/
+check pass. Evidence: `bin/physics-direct-view/2026-10-19/`. This Linux software-
+Vulkan cohort does not establish hardware GPU speed, native allocation budgets,
+foreign-platform or complete numerical-extension/network acceptance.
+
 ## Factory-selected direct views
 
 The registered backend's existing CreateDirectBodyState and CreateDirectSpaceState

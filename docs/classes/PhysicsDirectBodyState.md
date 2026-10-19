@@ -2,6 +2,14 @@
 
 Last updated: 2026-10-19
 
+## View lifetime guards
+
+Disposal rejects while the bound world's numerical implementation is borrowed,
+including status and factory validation before body-state dispatch. Cached,
+default and independent extension views share this rule. Rejection preserves
+the view lifetime; ordinary unborrowed disposal permits cache recreation and
+expired-attachment/world views remain disposable. See [direct-view lifetime checks](../components/physics-registered-adapter.md#direct-view-release-during-numerical-hooks).
+
 ## Contact reporting policy guards
 
 Configured depth reads remain non-preparing during selected hooks and actual Solve.

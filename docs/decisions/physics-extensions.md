@@ -202,7 +202,10 @@ interception would leave scene behavior and direct queries outside the extension
   Gameplay observer, FlushQueries and EndSync errors retain their notification
   recovery policy. Aggregate cleanup failures after attempting every
   owned resource. Borrowed backend/state objects cannot release a live callback
-  context or retarget to another world.
+  context or retarget to another world. This includes disposal of any direct body/space
+  view bound to a world during its numerical implementation hooks, including status
+  validation and factory-result validation. Independent, cached and default views
+  share this guard; ordinary unborrowed disposal and expired-context cleanup remain valid. Once the space closes, backend finalization may release its expired views.
 - Diagnostic capacity is an implementation input before solving, not a value first
   discovered during readback. Map `_space_set_debug_contacts` to the required
   world-scoped `SetDebugContacts(int maximum)` hook; zero disables capture and remains

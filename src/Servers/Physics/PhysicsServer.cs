@@ -158,6 +158,12 @@ public sealed partial class PhysicsServer : ElectronObject
         return state;
     }
 
+    internal void ValidateDirectStateRelease(RID space)
+    {
+        lock (_registryGate)
+            if (_sceneSpaces.TryGetValue(space, out var world)) world.EnsureDirectStateRelease();
+    }
+
     /// <inheritdoc />
     protected override void ValidateDisposal() =>
         throw new InvalidOperationException("The shared physics server cannot be disposed by a consumer.");

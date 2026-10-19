@@ -237,6 +237,11 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (Environment.CurrentManagedThreadId != _ownerThreadID || _stepping || _extensionCallbackDepth != 0)
             throw new InvalidOperationException("A selected physics implementation cannot be released off-owner or while borrowed.");
     }
+    internal void EnsureDirectStateRelease()
+    {
+        if (!_disposed && _implementationCallbackDepth != 0)
+            throw new InvalidOperationException("Direct physics views cannot be disposed while their world's numerical implementation is borrowed.");
+    }
     internal void EndExtensionCallback() => _extensionCallbackDepth--;
     internal void BeginBackendCallback() { EnsureReleaseAccess(); _extensionCallbackDepth++; }
     internal void BeginBackendPublication()

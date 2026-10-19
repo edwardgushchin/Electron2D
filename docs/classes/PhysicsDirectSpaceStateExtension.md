@@ -89,7 +89,7 @@ Compute the deepest eligible contact over the live query shape and sweep. Return
 
 ### ValidateDisposal and Dispose
 
-The sealed disposal validator rejects disposal during an active hook; derived implementations cannot bypass this guard. The ordinary Dispose(bool) override releases pooled scratch. Derived implementations should call base after releasing their own resources. Disposing the view never releases the world or collider resources.
+The sealed disposal validator rejects disposal during an active query hook or while the bound world's numerical implementation is borrowed, including status/factory validation before query dispatch. Derived implementations cannot bypass this guard. Rejection leaves the view live; unborrowed and expired-world disposal remain valid. The ordinary Dispose(bool) override releases pooled scratch. Derived implementations should call base after releasing their own resources. Disposing the view never releases the world or collider resources.
 
 ## Lifecycle, errors and verification
 

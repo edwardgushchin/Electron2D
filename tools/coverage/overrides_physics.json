@@ -2983,7 +2983,7 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsDirectBodyState.ValidateDisposal()",
-      "reason": "Borrowed view lifecycle rejects disposal during callback execution, projecting its scoped engine ownership.",
+      "reason": "Borrowed body-view lifecycle rejects disposal during its callback or same-world numerical implementation status/factory borrowing; unborrowed and expired-context cleanup remain valid.",
       "adr": "ADRs 0003, 0070"
     },
     {
@@ -5655,6 +5655,10 @@
       "electron2d": "method:Electron2D.PhysicsTestMotionResult.ValidateDisposal()",
       "reason": "Inherited engine-object disposal preflight preserves motion output owned by the selected implementation while ordinary caller snapshots retain their lifetime.",
       "adr": "ADRs 0003, 0063, 0103"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsDirectSpaceState.ValidateDisposal()",
+      "reason": "ADR 0103: inherited object lifecycle rejects direct-query view disposal during same-world numerical implementation borrowing, including status/factory validation; default, cached and independent views preserve ordinary and expired-context cleanup."
     }
   ],
   "statusGroups": [
@@ -7737,7 +7741,7 @@
         "PhysicsServer2DExtension::method:_space_get_direct_state(RID:)"
       ],
       "state": "Partial",
-      "reason": "ADR 0103: selected world factories provide cached generation-qualified body views and scoped query views through the public-only --factory-views consumer. Fresh/disposed-recreated cached contacts start empty without invoking publication hooks; completed immutable contact/identity/impulse snapshots precede raw force/state and scene integration callbacks, while independent caller-created views retain direct dispatch. The consumer exercises all six query families, exclusions/nesting/error validation, public state/forces, disposal/foreign/null/recursive factory failures, retry, detach/reentry and 128 active scene/raw frames with contacts/callbacks/point queries at zero owner/all-thread managed allocation. Full numerical-extension, native allocator, foreign-platform and final performance acceptance remain open. Shared registered/CPU/GPU --contact-frames verifies separated multi-peer CCD reports, signed impulse versus momentum, immediate private restoration, report-only deepest caps/depth/ties; 128 replay cycles and 768 changed-policy full frames each measure strict 0/0 owner/all-thread bytes. Independent bounded per-peer numeric rows replace last-peer storage; arbitrary shape features/coupled extension and final acceptance remain open."
+      "reason": "ADR 0103: selected world factories provide cached generation-qualified body views and scoped query views through the public-only --factory-views consumer. Fresh/disposed-recreated cached contacts start empty without invoking publication hooks; completed immutable contact/identity/impulse snapshots precede raw force/state and scene integration callbacks, while independent caller-created views retain direct dispatch. The consumer exercises all six query families, exclusions/nesting/error validation, public state/forces, disposal/foreign/null/recursive factory failures, retry, detach/reentry and 128 active scene/raw frames with contacts/callbacks/point queries at zero owner/all-thread managed allocation. Full numerical-extension, native allocator, foreign-platform and final performance acceptance remain open. Shared registered/CPU/GPU --contact-frames verifies separated multi-peer CCD reports, signed impulse versus momentum, immediate private restoration, report-only deepest caps/depth/ties; 128 replay cycles and 768 changed-policy full frames each measure strict 0/0 owner/all-thread bytes. Independent bounded per-peer numeric rows replace last-peer storage; arbitrary shape features/coupled extension and final acceptance remain open. Direct-view disposal now rejects any same-world numerical implementation borrow, including status/factory validation before dispatch; --view-lifetimes covers default, cached and independent views, actual owner/separate stepping, uncaught status recovery, ordinary gameplay sibling release, other-world disposal, recreation and expired cleanup. Backend Finish can release expired views after space closure; the candidate regression proves this cleanup boundary. This bounded lifetime fix does not close full factory acceptance."
     },
     {
       "godot": [

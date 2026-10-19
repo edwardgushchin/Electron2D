@@ -148,6 +148,14 @@ status changes; full retained/native/device history budgets remain open.
 
 Last updated: 2026-10-19
 
+[Direct-view lifetime guards](../components/physics-registered-adapter.md#direct-view-release-during-numerical-hooks)
+now reject same-world numerical status/factory disposal before lifetime or cache
+publication changes, across default, cached and independent body/query views.
+The public-only regression covers ordinary sibling disposal and expired cleanup.
+This fixes an existing factory path; the physics ledger remains I1273/P65/B17/U14/X92,
+with 96 applicable declarations open and 92.99% Implemented. Full factory/numerical
+acceptance remains open.
+
 [Gravity publication and terminal parameter guards](../components/physics-registered-adapter.md#gravity-publication-and-terminal-parameter-guards) add verified failure recovery and reject terminal-world scene parameter writes. No declaration changes state: 1205/1369 Implemented, 164 open (133 Partial, 14 Unimplemented, 17 Blocked), 92 Excluded. The three creation/complete typed-parameter extension rows remain Partial; numerical/network/native/hardware performance gates stay open.
 
 [Mass profile publication recovery](../components/physics-registered-adapter.md#mass-profile-publication-recovery) closes the reset operation row after six-owner role/lifetime, partial failure, actual impulse and strict zero-allocation checks. Current unique physics scope has 164 open declarations: 133 Partial, 14 Unimplemented and 17 Blocked. Wider numerical/inherited/network/native/platform and hardware/window performance acceptance remain open; earlier counts below are historical.

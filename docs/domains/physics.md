@@ -1025,7 +1025,7 @@ extension and platform/performance acceptance remain open.
 [Selected contact diagnostics](../components/physics-registered-adapter.md#diagnostic-capacity-and-publication) supply the point cap before solving and relinquish it on disable/detach, including registered implementations. Synchronized count/point output stays bounded and validated; full numerical-extension acceptance remains open.
 
 
-[Registered direct-view factories](../components/physics-registered-adapter.md#factory-selected-direct-views) now execute with cached body/query identity, initially empty contact snapshots, immutable publication before scene/raw callbacks and guarded factory failure/retry. This bounded public-only fixture keeps full numerical-extension acceptance open.
+[Registered direct-view factories](../components/physics-registered-adapter.md#factory-selected-direct-views) now execute with cached body/query identity, initially empty contact snapshots, immutable publication before scene/raw callbacks and guarded factory failure/retry. Default, cached and independent views reject release during their world's numerical status/factory hooks before any lifetime change; ordinary gameplay sibling release and expired-context cleanup remain valid. This bounded public-only fixture keeps full numerical-extension acceptance open.
 
 [Shape correction policy borrowing](../components/physics-registered-adapter.md#borrowed-shape-correction-policy)
 now preflights scene/raw owners, numerical and own geometry hooks before resource

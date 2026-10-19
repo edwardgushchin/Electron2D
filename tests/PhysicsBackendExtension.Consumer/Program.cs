@@ -194,6 +194,7 @@ else if (args.Contains("--shape-policy")) BackendChecks.RunShapePolicy(args.Cont
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--custom")) BackendChecks.RunCustom();
 else if (args.Contains("--factory-views")) BackendChecks.RunFactoryViews();
+else if (args.Contains("--view-lifetimes")) BackendChecks.RunViewLifetimes(args.Contains("--threaded"));
 else if (args.Contains("--debug-drawing")) BackendChecks.RunDebugDrawing();
 else if (args.Contains("--axis-velocity")) BackendChecks.RunAxisVelocity(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));

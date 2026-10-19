@@ -40,7 +40,7 @@ This fixture doubles that impulse. Its getter/force/contact hooks remain attache
 | Declaration | Contract |
 | --- | --- |
 | `protected PhysicsDirectBodyStateExtension(RID body)` | Bind current live attached scene/raw body; Area, detached or invalid RID rejects. |
-| `protected sealed override void ValidateDisposal()` | Reject borrowed-view disposal, preserving the library guard for subclasses. |
+| `protected sealed override void ValidateDisposal()` | Reject borrowed-view disposal and release during any bound-world numerical hook, including status/factory validation; preserve expired-context cleanup. |
 | `protected abstract float GetAngularVelocityCore()` | Implements the inherited AngularVelocity operation in the current borrowed context. |
 | `protected abstract void SetAngularVelocityCore(float value)` | Implements the inherited AngularVelocity operation in the current borrowed context. |
 | `protected abstract Vector2 GetLinearVelocityCore()` | Implements the inherited LinearVelocity operation in the current borrowed context. |

@@ -21,7 +21,11 @@ All six operations use the selected per-world implementation after shared access
 Acquisition, as well as query execution, requires the owning thread outside
 solver execution or terminal failure. The selected world owner creates cached
 views outside the shared service registry lock. Null/foreign/disposed factory
-results and recursive acquisition reject before cache publication. The internal
+results and recursive acquisition reject before cache publication. Disposal also
+rejects while that world's numerical implementation is borrowed, including status
+and factory validation before query dispatch. This applies to default, factory
+and independent extension views. Unborrowed disposal permits cache recreation;
+expired-world views can still be disposed. The internal
 [factory route](../components/physics-backends.md#selected-direct-state-construction)
 executes extensions; public named registration now executes through the same selected owner. Complete custom numerical/geometry acceptance remains open.
 
@@ -78,7 +82,7 @@ current GPU metadata transfer cost.
 
 ## Caller-created extension views
 
-[PhysicsDirectSpaceStateExtension](PhysicsDirectSpaceStateExtension.md) binds a borrowed live space RID and implements all six queries through typed protected hooks. Every inherited public array/span/scalar overload reaches those hooks after common preparation and guards. Hook results are validated before output changes; object associations are sampled from current RID/shape ownership. Nested invocations restore exclusions and use independent retained scratch. The cached server-created view retains its selected built-in solver dispatch; registered-backend integration remains open under ADR 0103.
+[PhysicsDirectSpaceStateExtension](PhysicsDirectSpaceStateExtension.md) binds a borrowed live space RID and implements all six queries through typed protected hooks. Every inherited public array/span/scalar overload reaches those hooks after common preparation and guards. Hook results are validated before output changes; object associations are sampled from current RID/shape ownership. Nested invocations restore exclusions and use independent retained scratch. The selected backend factory supplies the cached view; default views retain selected solver dispatch. Full external numerical/geometry acceptance remains open under ADR 0103.
 
 
 [Registered factory-selected views](../components/physics-registered-adapter.md#factory-selected-direct-views) now execute through a separate public-only consumer: cache identity, an initially empty contact snapshot, synchronized immutable publication before callbacks, result/lifetime validation, recreation and zero warm managed allocations. Independent caller-created body views keep direct hook dispatch; wider numerical-extension acceptance stays open.
