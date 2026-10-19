@@ -1,11 +1,54 @@
 # Physics pointer picking
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 [Viewport](../classes/Viewport.md#physics-picking) queues unhandled pointer events
 for [CollisionObject](../classes/CollisionObject.md#pointer-input) callbacks and
 signals. [ADR 0099](../decisions/physics-picking.md#adr-0099) defines ordering,
 coordinates, eligibility, lifetime and canvas scope.
+
+## Pickability operation audit
+
+The pinned CollisionObject boolean property, inherited PhysicsBody false default
+and both required Body/Area implementation setters now have a complete operation
+projection audit. The pinned public server has no pickable method binding. Under
+ADRs 0099/0103 the common retained `InputPickable` authoring is the implementation
+input used by selected point-query delivery; no parallel numerical flag or public
+server alias is needed. Raw RIDs retain the accepted non-scene-callback policy.
+
+The public-only `--picking` fixture captures and restores serial/separate policy,
+checks the actual implementation name and observes both owner query hooks and the
+captured numerical lane. Equal-value writes reject in both borrowed hooks; both
+Body and Area reject foreign-owner writes and disposed get/set. Ordinary pointer
+callbacks can author the value. A moving RigidBody advances its position and 128
+physical ticks while changed policy produces exactly 64 passive entries and exits
+at strict zero owner/all-thread managed allocation. Position tolerance is .001
+scene unit across 128 steps, allowing float integration rounding while separately
+checking exact ticks, callbacks and policy values.
+
+Fresh JIT/strict Linux x64 NativeAOT CPU/no-device, software-GPU and registered
+serial/separate profiles execute this fixture. Root checks retain defaults/packing,
+canvas and association identity, masks/layers/visibility, GUI and callback/error
+lifetime, sort/cap and stationary transitions. The 1,024-body full-frame bracket
+retains 0/0 managed bytes and the GPU sparse-readback upper bound of 128 bytes per
+frame. Native checks execute both renderers with CPU/GPU/registered physics, real
+SDL pointer events and target-pixel assertions; these use software Vulkan/Mesa.
+They establish exercised Linux rendering and input behavior, not target-GPU FPS
+or a controlled performance comparison. The earlier hardware cost table below is
+historical. The RTX power cable remains unchecked and hardware loads are excluded.
+
+Evidence: `bin/physics-pickability-audit/2026-10-19/validation.json` and its pinned
+four-declaration/eight-source contract receipt. Only the two pickable implementation
+rows become Implemented. The unique physics ledger retains 175 open declarations
+(144 Partial, 14 Unimplemented, 17 Blocked). Complete registered geometry/numerics,
+network, native memory, foreign-platform and hardware/window acceptance stay open.
+The ordinary root frozen at runtime revision `8912effe` completed successfully
+(exit 0, 1271.3658184509986 seconds, 129 observed processes without hardware-driver
+mappings). Its root binary is SHA-256
+`dacaf45c069905605a911a4a660f41fb539fbaf216df95b8b8efdd2ca13d97ef`.
+These expanded test sources have separate fresh build receipts: 15 profiles, six
+native renderer/physics cases and 2,240 complete measured frames at 0/0 managed
+bytes. The ordinary root predates these two test-source edits; runtime C# is unchanged.
 
 ## Using the feature
 

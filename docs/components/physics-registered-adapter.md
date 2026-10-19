@@ -1,6 +1,6 @@
 # Registered numerical solver adapter
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 ## Failed local activation
 
@@ -959,6 +959,12 @@ directed-ray dynamics on CPU and resident GPU. Frozen runner evidence is under
 network, platform and final performance acceptance remain open.
 
 ## Registered pointer delivery
+
+The [pickability operation audit](physics-picking.md#pickability-operation-audit)
+completes both retained input operations with captured serial/separate hooks,
+actual selected ownership, failure/lifetime guards and changed-policy moving
+frames. Other registered query geometry and complete numerical acceptance remain
+separate. Fresh Linux software native checks retain all six renderer/physics pairs.
 
 Scene Body/Area pickability is retained by CollisionObject.InputPickable under
 ADR 0099. The selected point-query owner supplies physical hit geometry, canvas

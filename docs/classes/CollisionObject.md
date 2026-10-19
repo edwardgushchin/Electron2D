@@ -318,3 +318,9 @@ motion/recovery. Warm unchanged-policy query/full-frame intervals require 0/0
 managed bytes; changed immutable authoring remains a separate measured cost.
 Complete registered numerical response and native/platform/network/performance
 acceptance retain their independent gates.
+
+[Pickability operation audit](../components/physics-picking.md#pickability-operation-audit)
+verifies the retained Body/Area input, inherited defaults, actual selected query and
+numerical lanes, owner/disposal guards and callback edits. Changed-policy moving
+frames preserve exact transitions and zero managed allocation; native rendering
+and wider numerical/platform/performance acceptance keep their separate scopes.

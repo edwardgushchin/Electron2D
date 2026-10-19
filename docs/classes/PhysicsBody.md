@@ -1,6 +1,6 @@
 # PhysicsBody
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 ## Terminal world access
 
@@ -183,3 +183,9 @@ the next numerical preparation. The [one-way input profile](../components/physic
 checks edits without an intervening query, retained immutable values and strict
 zero-allocation physical frames; changed authoring measured 32 bytes per
 logical slot on Linux x64. Area sensing policy is unchanged.
+
+[Pickability operation audit](../components/physics-picking.md#pickability-operation-audit)
+verifies the retained Body/Area input, inherited defaults, actual selected query and
+numerical lanes, owner/disposal guards and callback edits. Changed-policy moving
+frames preserve exact transitions and zero managed allocation; native rendering
+and wider numerical/platform/performance acceptance keep their separate scopes.

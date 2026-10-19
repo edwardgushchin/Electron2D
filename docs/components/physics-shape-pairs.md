@@ -46,8 +46,16 @@ Evidence: `bin/physics-shape-pair-audit/2026-10-19/final/validation.json`. This 
 runtime correction and expanded verification; the complete implementation-operation
 accounting stays Partial. Coverage states and the 177-declaration open ledger are
 unchanged. Full numerical-extension/native/foreign/network and target-GPU/window
-performance acceptance remain open. The earlier ordinary frozen `868302d3` success
-predates this fix; a new runtime-source-qualified ordinary run is required.
+performance acceptance remain open. The runtime-source-qualified ordinary root
+frozen at `8912effe` completed with exit 0 in 1271.3658184509986 seconds; all 129
+observed processes stayed free of hardware-driver mappings. Evidence:
+`bin/physics-shape-pair-audit/2026-10-19/final/full-ordinary-current/check.json`,
+SHA-256 `15e0e32964f034264d3cd7f8a8ed20333ebe16cfcf3256fefa24fb37d19af458`.
+The root binary is SHA-256
+`dacaf45c069905605a911a4a660f41fb539fbaf216df95b8b8efdd2ca13d97ef`.
+This confirms the current shared runtime fix; later pickability test edits have
+separate build/profile receipts. It does not establish final target-device or
+whole-goal acceptance.
 
 Both cold operands now use [world-query geometry preflight](physics-queries.md#cold-query-geometry) while their existing resource/pair borrows remain active. Numerical authoring rejects during supplier execution; selected pair hooks, staged output validation and nested scratch retain their existing contracts.
 

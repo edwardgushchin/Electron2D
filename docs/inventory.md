@@ -1885,3 +1885,8 @@ The [body-pair publication correction](components/physics-shape-pairs.md#body-pa
 uses existing PhysicsSpace/PhysicsBodyRuntime scene/raw preparation before selected
 BodyCollideShape dispatch. No production type is added; caller-output/epoch and
 queued-kinematic behavior are verified separately from full numerical acceptance.
+
+The [pickability operation audit](components/physics-picking.md#pickability-operation-audit)
+completes two existing common Body/Area input operations through selected point
+queries. No production type, public declaration or runtime behavior is added;
+complete extension/numerical/network/platform/performance gates stay open.

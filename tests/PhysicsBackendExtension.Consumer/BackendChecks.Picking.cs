@@ -2,7 +2,15 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunPicking(PhysicsServer.Backend? backend = null)
+    public static void RunPicking(PhysicsServer.Backend? backend = null, bool threaded = false)
+    {
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { PickingChecks(backend, threaded); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
+
+    private static void PickingChecks(PhysicsServer.Backend? backend, bool threaded)
     {
         Solver? solver = null;
         if (backend is null) PhysicsServerManager.RegisterServer("Picking", () => solver = new());
@@ -36,7 +44,8 @@ public static partial class BackendChecks
         };
         area.MouseEntered += () => areaEnters++; area.MouseExited += () => areaExits++;
         using var tree = new SceneTree(root);
-        Check(!body.InputPickable && area.InputPickable && PhysicsServer.SpaceGetBackend(world.Space) == (backend ?? PhysicsServer.Backend.Extension),
+        Check(!body.InputPickable && area.InputPickable && PhysicsServer.SpaceGetBackend(world.Space) == (backend ?? PhysicsServer.Backend.Extension) &&
+            world.PhysicsBackendName == (backend?.ToString() ?? "Picking"),
             "Inherited picking defaults and explicit selected ownership survive attachment");
         using var pointQuery = new PhysicsPointQueryParameters { Position = new(20, 20), CollideWithAreas = true };
         Check(world.DirectSpaceState!.IntersectPoint(pointQuery).Length == 1,
@@ -54,25 +63,37 @@ public static partial class BackendChecks
             "Enabled body receives object/shape entry and owns its queued event copy only through delivery");
         if (solver is not null)
         {
-            solver.PointHook = RejectPolicyWrites; solver.StepHook = RejectPolicyWrites;
+            var ownerThread = Environment.CurrentManagedThreadId; var pointReads = 0; var numericalReads = 0;
+            solver.PointHook = () => { Check(Environment.CurrentManagedThreadId == ownerThread, "Picking query hooks retain their owner thread"); pointReads++; RejectPolicyWrites(); };
+            solver.StepHook = () => { Check((Environment.CurrentManagedThreadId != ownerThread) == threaded, "Picking policy reads use the captured numerical lane"); numericalReads++; RejectPolicyWrites(); };
             try { _ = world.DirectSpaceState.IntersectPoint(pointQuery); tree.PhysicsFrame(1d / 120); }
             finally { solver.PointHook = null; solver.StepHook = null; }
+            Check(pointReads > 0 && numericalReads == 1, "Both selected hooks actually exercise readonly picking policy and write rejection");
         }
-        Task.Run(() => Reject<InvalidOperationException>(() => body.InputPickable = true)).GetAwaiter().GetResult();
+        Task.Run(() =>
+        {
+            Reject<InvalidOperationException>(() => body.InputPickable = true);
+            Reject<InvalidOperationException>(() => area.InputPickable = true);
+        }).GetAwaiter().GetResult();
         body.DisableOnInput = true; Mouse(new(44, 46)); tree.PhysicsFrame(1d / 120);
         Check(!body.InputPickable && body.Callbacks == 2 && bodySignals == 2, "Ordinary pointer callbacks may author pickability and still finish their signal");
         tree.PhysicsFrame(1d / 120);
         Check(body.Exits == 1 && body.ShapeExits == 1, "Callback edits retire object and logical-shape hover on the following pass");
         body.DisableOnInput = false;
+        body.LinearDampMode = RigidBody.DampMode.Replace; body.LinearDamp = 0; body.LinearVelocity = new(.125f, 0);
         for (var i = 0; i < 128; i++) Frame(i);
         Collect(); GC.WaitForPendingFinalizers(); _ = GC.GetTotalAllocatedBytes(true);
-        var beforeCallbacks = body.Callbacks; var beforeExits = body.Exits;
+        var beforeCallbacks = body.Callbacks; var beforeExits = body.Exits; var start = body.Position.X; var tick = PhysicsServer.SpaceGetTick(world.Space);
         var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < 128; i++) Frame(i);
         owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
-        Check(owner == 0 && all == 0 && body.Callbacks - beforeCallbacks == 64 && body.Exits - beforeExits == 64,
+        Check(owner == 0 && all == 0 && body.Callbacks - beforeCallbacks == 64 && body.Exits - beforeExits == 64 &&
+            MathF.Abs(body.Position.X - start - .125f * 128 / 120) < .001f && PhysicsServer.SpaceGetTick(world.Space) == tick + 128,
             $"Changed-pickability full frames require real passive transitions and zero allocations: {owner}/{all} B, transitions {body.Callbacks - beforeCallbacks}/{body.Exits - beforeExits}");
         Console.WriteLine($"Picking {backend?.ToString() ?? "registered"}: Body/Area policy, canvas input/hover, numerical guards and 128 changed-policy complete frames {owner}/{all} B passed.");
+        body.Dispose(); area.Dispose();
+        Reject<ObjectDisposedException>(() => _ = body.InputPickable); Reject<ObjectDisposedException>(() => body.InputPickable = false);
+        Reject<ObjectDisposedException>(() => _ = area.InputPickable); Reject<ObjectDisposedException>(() => area.InputPickable = true);
 
         void Mouse(Vector2 position)
         {
