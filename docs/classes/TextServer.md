@@ -159,7 +159,7 @@ See [fitting, spacing and overrun](../components/text-server.md#fitting-spacing-
 | `int ShapedTextGetTrimPos(RID shaped)` | Returns the current buffer-local visual glyph-record trim boundary, or -1 when untrimmed/unprepared. This is not a scalar position. |
 | `int ShapedTextGetEllipsisPos(RID shaped)` | Returns the current buffer-local visual glyph-record ellipsis boundary, or -1 without an active ellipsis. |
 | `void ShapedTextSetCustomEllipsis(RID shaped, int character)` | Sets a valid Unicode scalar for subsequent explicit trims, preserving current display and parent relation. Unsupported glyphs use three periods when available. |
-| `int ShapedTextGetCustomEllipsis(RID shaped)` | Returns the configured Unicode scalar, initially U+2026. |
+| `int ShapedTextGetCustomEllipsis(RID shaped)` | Returns the configured Unicode scalar, initially U+2026. Borrowed paragraph lines inherit the paragraph symbol; overrides retain it until explicitly changed. |
 | `void ShapedTextSetCustomPunctuation(RID shaped, string punctuation)` | Copies punctuation classification, at most 64 MiB UTF-16. Null throws; nonempty text replaces default punctuation. A changed value invalidates shaping and detaches substring authoring. |
 | `string ShapedTextGetCustomPunctuation(RID shaped)` | Returns the source punctuation string, initially empty. The paragraph property shares this same owner. |
 | `void ShapedTextSetSpacing(RID shaped, TextSpacingType spacing, int value)` | Sets signed extra logical-pixel spacing for Glyph, Space, Top or Bottom; Max/undefined categories throw. Changes invalidate shaping and detach authored substrings; equal values are no-ops. |
@@ -205,7 +205,7 @@ Sets a valid Unicode scalar for subsequent explicit trims, preserving current di
 
 `int ShapedTextGetCustomEllipsis(RID shaped)`
 
-Returns the configured Unicode scalar, initially U+2026.
+Returns the configured Unicode scalar, initially U+2026. Borrowed paragraph lines inherit the paragraph symbol; overrides retain it until explicitly changed.
 
 <a id="shapedtextsetcustompunctuation"></a>
 ### ShapedTextSetCustomPunctuation

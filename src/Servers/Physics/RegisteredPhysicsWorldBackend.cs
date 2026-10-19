@@ -179,7 +179,7 @@ internal sealed partial class RegisteredPhysicsWorldBackend : PhysicsWorldBacken
         {
             var p = pairs[i]; _oneWays[i] = new(map.LocalRID(p.A), p.ShapeA, p.PieceA, map.LocalRID(p.B), p.ShapeB, p.PieceB, p.Allowed);
         }
-        Enter(); try { _implementation.CompletePortableRestore(_oneWays.AsSpan(0, pairs.Count), tick); } finally { Exit(); }
+        Enter(); try { _implementation.CompletePortableRestore(_oneWays.AsSpan(0, pairs.Count), tick, Space.LastStep); } finally { Exit(); }
     }
     internal override void CapturePortableOneWays(PhysicsSnapshotMap map, List<PhysicsPortableOneWay> destination)
     {

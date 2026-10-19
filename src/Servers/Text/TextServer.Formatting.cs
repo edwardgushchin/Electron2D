@@ -30,11 +30,16 @@ public abstract partial class TextServer
     /// <summary>Sets the Unicode scalar used by subsequent explicit trimming.</summary><param name="shaped">Live buffer.</param><param name="character">Valid Unicode scalar; unsupported glyphs fall back to three periods when available.</param><exception cref="ArgumentOutOfRangeException">The value is not a Unicode scalar.</exception>
     public void ShapedTextSetCustomEllipsis(RID shaped, int character)
     {
-        if (!Rune.IsValid(character)) throw new ArgumentOutOfRangeException(nameof(character)); if (ReadSource(shaped).ServerEllipsis == character) return;
+        if (!Rune.IsValid(character)) throw new ArgumentOutOfRangeException(nameof(character)); if (ShapedTextGetCustomEllipsis(shaped) == character) return;
         using var mutation = LayoutBuffer(shaped, out var b); b.ServerSetEllipsis(character); mutation?.Commit(false);
     }
-    /// <summary>Returns the configured ellipsis Unicode scalar.</summary><param name="shaped">Live buffer.</param><returns>The scalar; initially U+2026.</returns>
-    public int ShapedTextGetCustomEllipsis(RID shaped) => ReadSource(shaped).ServerEllipsis;
+    /// <summary>Returns the configured ellipsis Unicode scalar.</summary><param name="shaped">Live buffer.</param><returns>The scalar; initially U+2026. Borrowed paragraph lines inherit their paragraph symbol.</returns>
+    public int ShapedTextGetCustomEllipsis(RID shaped)
+    {
+        var owner = TextBuffers.Resolve(shaped);
+        if (owner.Owner is TextParagraph paragraph) return paragraph.ServerLineEllipsis(owner.Line, shaped);
+        var line = (TextLine)owner.Owner; line.ServerAccess(); return line.ServerEllipsis;
+    }
     /// <summary>Replaces the punctuation scalar list used when classifying justification opportunities.</summary><param name="shaped">Live buffer.</param><param name="punctuation">Copied immutable list; empty selects Unicode defaults.</param>
     public void ShapedTextSetCustomPunctuation(RID shaped, string punctuation)
     {

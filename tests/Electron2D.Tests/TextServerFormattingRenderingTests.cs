@@ -12,7 +12,7 @@ internal static class TextServerFormattingRenderingTests
         server.ShapedTextAddString(text, "alpha beta gamma delta epsilon office letters", [font], 28);
         server.ShapedTextAddString(vertical, "ABCD EFGH IJKL", [font], 25);
         server.ShapedTextSetSpacing(text, TextSpacingType.Top, 3); server.ShapedTextSetSpacing(text, TextSpacingType.Glyph, 1); server.ShapedTextSetCustomEllipsis(text, '#');
-        using var paragraph = new TextParagraph { Width = 400 }; paragraph.AddString("first\nborrowed alpha beta gamma delta", font, 26); var line = paragraph.GetLineRID(1);
+        using var paragraph = new TextParagraph { Width = 400, EllipsisChar = "#" }; paragraph.AddString("first\nborrowed alpha beta gamma delta", font, 26); var line = paragraph.GetLineRID(1);
         var textWidth = server.ShapedTextGetWidth(text); var lineWidth = server.ShapedTextGetWidth(line); var verticalWidth = server.ShapedTextGetWidth(vertical);
         var flags = TextOverrunFlags.Trim | TextOverrunFlags.AddEllipsis | TextOverrunFlags.ShortStringEllipsis;
         server.ShapedTextFitToWidth(text, textWidth + 100); server.ShapedTextOverrunTrimToWidth(text, 200, flags);
@@ -60,7 +60,7 @@ internal static class TextServerFormattingRenderingTests
                 Check(Count(image, new(10, 75, 300, 60), 3) > 50, "Trimmed outline reaches the canvas: " + Count(image, new(10, 75, 300, 60), 3) + ", green=" + Colors.Green);
                 Check(Count(image, new(10, 155, 300, 70), 0) > 50, "Borrowed trimmed line reaches its Paragraph consumer.");
                 Check(Count(image, new(460, 10, 90, 180), 0) > 50, "Vertical trimmed ellipsis pixels.");
-                Check(server.ShapedTextGetWidth(text) <= 240 && server.ShapedTextGetEllipsisPos(text) >= 0 && paragraph.GetLineWidth(1) == server.ShapedTextGetWidth(line), "Live display metadata matches the rendered consumer.");
+                Check(server.ShapedTextGetCustomEllipsis(line) == '#' && server.ShapedTextGetWidth(text) <= 240 && server.ShapedTextGetEllipsisPos(text) >= 0 && paragraph.GetLineWidth(1) == server.ShapedTextGetWidth(line), "Live display metadata matches the rendered consumer.");
 
             }
             if (frames < 199) return;

@@ -1486,6 +1486,60 @@ Local activation still commits only after selected SetActive succeeds. One pendi
 
 The public-only --activation-transactions fixture uses actual selected activity to gate its independent Solve, reproducing the old mismatch: public active=true, zero selected retry, no motion and an advanced tick after partial deactivation. Registered profiles each cover 64 scene/raw cases (both committed flags, before/after side effects, eight repair routes), original/repeated errors, off-owner and borrowed guards, actual movement, healthy equality, post-step callbacks, failed startup cleanup and pending retirement. An inactive-step route verifies skipping before an allowed query repair. CPU/private software-Vulkan/registered owner/separate healthy profiles toggle local/global activity and actual state callbacks, then measure 128 complete moving intervals at strict 0/0 owner/all-thread managed bytes. All 123 final profiles pass: 51 managed consumer, 51 strict NativeAOT consumer and 21 root profiles. The twelve healthy activation profiles measure 1536 complete moving intervals at 0/0 owner/all-thread managed bytes. Seven portable-PDB proofs match 2273 runtime, 164 consumer and 755 root documents without DEBUG/missing/mismatch; their 3187 unique tracked inputs are retained for committed-source readback. Evidence: bin/physics-activation-transactions/2026-10-18/validation.json; SHA-256 72adf281501f153352a895a232dc59f581412b859cdd5bc8af2482a8105ccb24. The frozen full software/offscreen suite for runtime sources at aa0b0cb5ad5458719a0d3311071cce550bebeeb3 completed with exit 0 in 1533.086791 seconds. Host SHA-256: e488c6f96fd1387bb536fb4be183b5dd5a93fec36401fe603a604d51b80beebd. Across 45236 parent-process map samples private lavapipe was observed and no hardware driver was observed. Post-run readback matches all 3187 unique committed source documents and 78 frozen payload files. Evidence: bin/physics-activation-transactions/2026-10-18/verified/full-runs.json (SHA-256 e709da4a0e99e52727c1a15e3b026e3980da752dec8c5c84d7a7fcfb12c910c7), full-binding.json, full-inputs.json and post-run-source-check.json. The later 12bf2f8a iteration verification changes runtime XML only and retains its separate eighteen-profile evidence; it is not an execution of that newer test host or of the subsequent ee899e11 frame-monitor change. This does not inject physical GPU failure or close native/foreign, complete numerical/network, hardware/window/FPS or performance acceptance.
 
+## Moving one-way continuation
+
+The public-only --moving-oneway consumer shares the CPU/GPU moving-platform
+contract with the independent registered solver. It tests static, kinematic, rigid
+and rotation-locked rigid targets at two rotations, plus six finite source families.
+A disabled target slot preserves logical index 1; raw supplied-pose BodyTestMotion
+and scene TestMove sample the same recovery without moving either caller.
+
+The provider previously accepted only the authored/query margin. It now adds the
+last step times the positive linear approach along the platform's solid-side
+normal, for kinematic/dynamic roles. Kinematic velocity includes its configured
+virtual surface channel. Receding, tangent and angular-only motion add no depth;
+a static surface remains excluded. Four-step recovery and fixed tolerances remain
+unchanged. This repairs a reproduced rising-platform false miss; it does not close
+the whole TestBodyMotion operation.
+
+A second reproduced miss occurred immediately after portable correction from a
+.01-second source to a receiver whose latest step was .001 seconds. Common timing
+was restored, but the selected hook received only tick and one-way records.
+CompletePortableRestore now also receives the validated source step in seconds.
+The provider restores Delta before its continuation hook; private history already
+retains that field. The portable packet and its existing duration field are
+unchanged. Custom providers must implement the new three-argument hook. ADR 0103,
+source XML and the compiled API inventory describe this required input.
+
+The same fixture restores pre-first-step zero timing and .01-second timing, checks
+immediate recovery and direct-state Step, and uses factory-provided independent
+body views on the registered path. Both private and portable correction, forward
+progress after restore, original larger margins and unmodified caller poses execute.
+Eight circle role/rotation cases each warm 128 and measure 128 complete moving
+intervals with two public queries at strict zero owner/all-thread managed bytes.
+Exact identity/index, hit/miss and restored timing checks complement .003-unit
+scene/raw displacement agreement, .0001-unit unchanged poses and a >2.5-unit
+solid-side recovery witness. These margins are far from the 1/4-unit acceptance
+boundaries; no internal pair order or backend numerical parity is assumed.
+
+All 78 final profiles pass: 35 managed consumer, 35 strict NativeAOT consumer and
+8 root CPU/software-GPU motion/query profiles. The twelve selected moving-platform
+profiles each measure eight 128-frame brackets at 0/0 owner/all-thread managed
+bytes. Six portable-PDB sets match all Compile inputs without DEBUG or missing/
+mismatched source: 2373 runtime, 852 root and 238 consumer documents, 3452 unique
+authored inputs. Validation SHA-256: f92b82a83534448341261e670ea900543afae329b963052668a74c95db3f52fc. JIT consumer SHA-256:
+1e92952df8378bc408230ebbcd0590d14411248ef1dffc0194e370d3a191d7a4; NativeAOT executable SHA-256:
+48aae1c32f3304edb2461bcfb9bb5941ec1a5a41dd3a9733ac48811392267564. Release, all three format checks, API snapshot/coverage and
+wiki tests/generation/check pass. These are functional Linux/software-driver
+checks; the broader gates above remain open.
+
+Evidence: bin/physics-moving-oneway-extension/2026-10-20/. CPU uses no available
+GPU and the GPU functional path uses private software Vulkan. Complete arbitrary
+geometry/recovery/coupled motion, inherited/server/network/native/platform and
+hardware/window/performance gates remain open; the unchecked power cable excludes
+hardware load. The physics ledger remains 1279/1369 Implemented (93.43%), 90 open,
+92 Excluded.
+
 ## Complete selected pair operations
 
 The [selected pair operation audit](physics-shape-pairs.md#complete-selected-pair-operations)

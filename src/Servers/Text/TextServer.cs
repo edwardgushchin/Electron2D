@@ -188,7 +188,7 @@ public abstract partial class TextServer : ElectronObject
     {
         var owner = TextBuffers.Resolve(rid);
         if (owner.Owner is TextLine line) { line.ServerAccess(); return line; }
-        return ((TextParagraph)owner.Owner).ServerAuthoringView(owner.Line, rid).Source;
+        var source = ((TextParagraph)owner.Owner).ServerAuthoringView(owner.Line, rid).Source; source.ServerAccess(); return source;
     }
     private static BufferView AuthoringView(RID rid)
     {

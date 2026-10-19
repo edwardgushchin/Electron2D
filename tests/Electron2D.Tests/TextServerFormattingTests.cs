@@ -45,6 +45,12 @@ internal static class TextServerFormattingTests
             Check(s.ShapedTextGetParent(child) == parent, "Fit preserves parent"); s.ShapedTextOverrunTrimToWidth(child, 80, trimFlags); Check(s.ShapedTextGetParent(child) == parent, "Trim preserves parent");
             s.ShapedTextSetCustomEllipsis(child, '?'); Check(s.ShapedTextGetParent(child) == parent, "Ellipsis configuration preserves parent");
             s.ShapedTextSetSpacing(child, TextSpacingType.Glyph, 0); Check(s.ShapedTextGetParent(child) == parent, "No-op spacing preserves parent"); s.ShapedTextSetSpacing(child, TextSpacingType.Glyph, 2); Check(s.ShapedTextGetParent(child) == default, "Changed spacing detaches authoring");
+            using var customParagraph = new TextParagraph { Width = 180, BreakFlags = TextLineBreakFlags.Mandatory, TextOverrunBehavior = TextOverrunBehavior.TrimEllipsisForce, EllipsisChar = "#" };
+            customParagraph.AddString("borrowed alpha beta gamma delta", font, 28); var customLine = customParagraph.GetLineRID(0);
+            Check(s.ShapedTextGetCustomEllipsis(customLine) == '#' && s.ShapedTextGetCustomEllipsis(customParagraph.GetRID()) == 0x2026, "Borrowed line exposes its paragraph ellipsis independently of full source");
+            s.ShapedTextFitToWidth(customLine, 450); Check(s.ShapedTextGetCustomEllipsis(customLine) == '#', "First formatting override retains the configured paragraph ellipsis");
+            s.ShapedTextSetCustomEllipsis(customLine, 0x2026); Check(s.ShapedTextGetCustomEllipsis(customLine) == 0x2026 && customParagraph.EllipsisChar == "#", "Changing inherited line ellipsis to default is not a source-value no-op");
+            s.ShapedTextOverrunTrimToWidth(customLine, 100, trimFlags); Check(s.ShapedTextGetEllipsisPos(customLine) >= 0 && customParagraph.GetLineWidth(0) == s.ShapedTextGetWidth(customLine), "Changed line ellipsis reaches actual paragraph display");
             using var paragraph = new TextParagraph { Width = 200 }; paragraph.AddString("first\nalpha beta gamma", font, 24); var line = paragraph.GetLineRID(1);
             s.ShapedTextFitToWidth(line, 220); Check(s.ShapedTextGetParent(line) == paragraph.GetRID() && paragraph.GetLineWidth(1) == s.ShapedTextGetWidth(line), "Borrowed fitted line updates real consumer and parent");
             s.ShapedTextOverrunTrimToWidth(line, 100, trimFlags); Check(paragraph.GetLineWidth(1) == s.ShapedTextGetWidth(line) && s.ShapedTextGetEllipsisPos(line) >= 0, "Borrowed line trim metadata and consumer: " + paragraph.GetLineWidth(1) + "/" + s.ShapedTextGetWidth(line) + "/" + s.ShapedTextGetEllipsisPos(line));
@@ -83,6 +89,11 @@ internal static class TextServerFormattingTests
             callback.DuringGlyph = () => { Reject<InvalidOperationException>(() => s.ShapedTextClear(transactional)); throw new CallbackFailure(); };
             Reject<CallbackFailure>(() => s.ShapedTextOverrunTrimToWidth(transactional, 100, trimFlags)); callback.DuringGlyph = null;
             Check(s.ShapedTextGetWidth(transactional) == savedWidth && s.ShapedTextGetTrimPos(transactional) == savedCut && s.ShapedTextGetEllipsisPos(transactional) == savedEllipse, "Failed native/virtual font work publishes no partial geometry");
+            using var callbackParagraph = new TextParagraph { Width = 300 }; callbackParagraph.AddString("borrowed callback alpha beta gamma", callback, 28); var callbackLine = callbackParagraph.GetLineRID(0);
+            s.ShapedTextFitToWidth(callbackLine, 450); var callbackWidth = s.ShapedTextGetWidth(callbackLine);
+            callback.DuringGlyph = () => { Reject<InvalidOperationException>(() => s.ShapedTextGetCustomEllipsis(callbackLine)); Reject<InvalidOperationException>(() => s.ShapedTextGetTrimPos(callbackLine)); Reject<InvalidOperationException>(() => s.ShapedTextGetSpacing(callbackLine, TextSpacingType.Glyph)); throw new CallbackFailure(); };
+            Reject<CallbackFailure>(() => s.ShapedTextOverrunTrimToWidth(callbackLine, 100, trimFlags)); callback.DuringGlyph = null;
+            Check(s.ShapedTextGetWidth(callbackLine) == callbackWidth, "Borrowed formatting queries reject active line reentry and failed trims publish nothing");
             Reject<ArgumentOutOfRangeException>(() => s.ShapedTextSetSpacing(text, TextSpacingType.Max, 1)); Reject<ArgumentOutOfRangeException>(() => s.ShapedTextSetCustomEllipsis(text, 0xd800)); Reject<ArgumentOutOfRangeException>(() => s.ShapedTextSetCustomEllipsis(text, -1));
             Reject<ArgumentOutOfRangeException>(() => s.ShapedTextFitToWidth(text, float.NaN)); Reject<ArgumentOutOfRangeException>(() => s.ShapedTextOverrunTrimToWidth(text, float.PositiveInfinity)); Reject<ArgumentOutOfRangeException>(() => s.ShapedTextOverrunTrimToWidth(text, 1, (TextOverrunFlags)64));
             Task.Run(() => Reject<InvalidOperationException>(() => s.ShapedTextFitToWidth(text, 100))).GetAwaiter().GetResult();

@@ -1,6 +1,6 @@
 # Physics backend extension decisions
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 <a id="adr-0103"></a>
 ## ADR 0103: Registered world backends and typed extension dispatch
@@ -220,7 +220,14 @@ interception would leave scene behavior and direct queries outside the extension
   private replay state belongs to the implementation and must have an executable
   capture/restore ownership path. Portable network state retains common identities,
   authoring compatibility, observer history and silent correction; backend-private
-  handles or unbounded user objects never enter the wire payload.
+  handles or unbounded user objects never enter the wire payload. CompletePortableRestore
+  receives the translated one-way records, source tick and validated source step
+  duration in seconds. Common tick/step values are committed before the hook; the
+  implementation restores its timing before queries or callback views can observe
+  corrected state. Do not infer that duration from the receiver's latest Solve or
+  add backend-specific timing to the portable payload. This completes the existing
+  typed hook with a required float step argument, replacing its earlier two-argument
+  form; custom implementations must consume that value as part of continuation.
 - Custom geometry, typed data, drawing/bounds, resource mutation, body/Area/query/
   contact participation and result construction are one connected extension boundary.
   A reserved Custom enum or an externally non-derivable Shape is insufficient.

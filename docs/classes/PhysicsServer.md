@@ -1447,3 +1447,9 @@ disabled/zero-filter slots, independent motion policies, exact caller capacity a
 borrowed/atomic failure handling. Independent registered math shares the public
 CPU/software-GPU assertions; full moving brackets retain zero managed bytes.
 Broader numerical and final platform/network/performance acceptance remains separate.
+
+
+[Moving one-way continuation](../components/physics-registered-adapter.md#moving-one-way-continuation)
+now also executes on an independent registered owner: scene/raw supplied-pose
+recovery retains the restored physical duration, including portable correction
+before the next interval. This bounded verification leaves full motion acceptance open.

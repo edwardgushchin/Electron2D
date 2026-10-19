@@ -366,3 +366,12 @@ motion policies. After 128 warmups, 128 full moving frames require strict zero
 owner/all-thread managed bytes. Logical source poses follow BodyGetTransform;
 queries preserve pending simulation targets. The existing `--shape-pairs` and
 `--pose-transactions` supply shared lifecycle, fault and dense-capacity companions.
+
+
+`--moving-oneway`, optionally `--cpu`, `--gpu` and `--threaded`, verifies four
+platform modes, two rotations and six finite source families, approach/direction/
+duration controls, private and portable restore (including zero initial timing),
+factory-provided Step and unchanged supplied-pose callers. Eight cases each require
+128 complete warmed moving frames at zero owner/all-thread managed bytes. Custom
+backends implement `CompletePortableRestore(pairs, tick, step)` and restore the
+incoming step duration before exposing corrected motion or callback views.

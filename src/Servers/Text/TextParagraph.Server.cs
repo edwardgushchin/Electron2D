@@ -78,7 +78,7 @@ public sealed partial class TextParagraph
         ServerCheckLine(line, rid);
         if (_serverLines.TryGetValue(line, out var existing)) { pending = false; return existing; }
         var range = _display.Lines[line]; var end = range.RangeEnd < 0 ? range.End : range.RangeEnd;
-        var copy = _source.ServerSlice(range.Start, end);
+        var copy = _source.ServerSlice(range.Start, end); copy.ServerSetEllipsis(ServerParagraphEllipsis);
         copy.ServerGuard = Check; pending = true; return copy;
     }
     internal void ServerPublishLine(int line, TextLine copy)
@@ -87,10 +87,17 @@ public sealed partial class TextParagraph
     }
     internal RID ServerLineParent(int line, RID rid)
     { ServerCheckLine(line, rid); return _serverLines.TryGetValue(line, out var edited) ? edited.ServerParent : _source.GetRID(); }
+    private int ServerParagraphEllipsis => System.Text.Rune.TryGetRuneAt(_ellipsis, 0, out var rune) ? rune.Value : 0x2026;
+    internal int ServerLineEllipsis(int line, RID rid)
+    {
+        Check(); if ((uint)line >= (uint)_lines.Count || _lines[line] != rid) throw new InvalidOperationException("The paragraph line was retired.");
+        if (!_serverLines.TryGetValue(line, out var edited)) return ServerParagraphEllipsis;
+        edited.ServerAccess(); return edited.ServerEllipsis;
+    }
     internal int ServerTrimPosition(int line, RID rid, bool ellipsis)
     {
         Check(); if ((uint)line >= (uint)_lines.Count || _lines[line] != rid) throw new InvalidOperationException("The paragraph line was retired.");
-        if (_serverLines.TryGetValue(line, out var edited)) return edited.ServerTrimPosition(ellipsis);
+        if (_serverLines.TryGetValue(line, out var edited)) { edited.ServerAccess(); return edited.ServerTrimPosition(ellipsis); }
         return ellipsis ? _display.Lines[line].EllipsisPosition : _display.Lines[line].TrimPosition;
     }
     internal void ServerPrepareLayoutLine(int line, RID rid, TextLine copy)

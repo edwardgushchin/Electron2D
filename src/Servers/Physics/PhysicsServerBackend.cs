@@ -160,9 +160,13 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <summary>Supplies the selected implementation operation: begin portable restore.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract void BeginPortableRestore();
-    /// <summary>Supplies the selected implementation operation: complete portable restore.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
-    protected internal abstract void CompletePortableRestore(ReadOnlySpan<PhysicsBackendOneWay> pairs, ulong tick);
+    /// <summary>Completes authoritative portable continuation with restored world timing.</summary>
+    /// <param name="pairs">Validated one-way continuation records translated to local identities, borrowed only for this call.</param>
+    /// <param name="tick">The restored source physics tick, already committed by the owning world.</param>
+    /// <param name="step">The restored finite nonnegative physical step duration in seconds; zero before the source's first interval.</param>
+    /// <remarks>Invoked on the guarded world owner after common tick and step restoration. Restore implementation timing
+    /// before later motion queries or direct-state views. The receiving world's most recent Solve duration may differ.</remarks>
+    protected internal abstract void CompletePortableRestore(ReadOnlySpan<PhysicsBackendOneWay> pairs, ulong tick, float step);
     /// <summary>Supplies the selected implementation operation: get portable one way count.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     /// <returns>The current nonnegative maximum number of episodes supplied by the next capture call.</returns>
