@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-19
 
+Selected CompleteBody and EndStep failures latch the world as unusable and suppress
+body-state observers. Successful retirement after pre-Solve preparation failure
+permits a new interval; gameplay observer/flush/end-sync errors retain their
+notification recovery policy. See [lifecycle publication boundaries](../components/physics-registered-adapter.md#complete-lifecycle-publication-boundaries).
+
 ## Resource retirement errors
 
 Caller-owned retirement attempts every required cleanup stage before propagating

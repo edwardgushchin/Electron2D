@@ -259,8 +259,11 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <remarks>Publishes the completed numerical results before body/contact/Area observations and process counts. ResultsReady must be true after success; failed synchronization terminates the started world.
     /// Hooks use the guarded owning thread; spans and values retain their existing engine-unit contracts.</remarks>
     protected internal abstract void SyncResults();
-    /// <summary>Supplies the selected implementation operation: complete body.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <summary>Publishes one selected collider after numerical synchronization.</summary>
+    /// <param name="body">The engine-assigned collider RID, including server-owned Areas.</param>
+    /// <remarks>Runs on the guarded world owner for scene and server colliders. A thrown error or reported HasFailure
+    /// terminates the interval, prevents later selected publication and state observers, and is passed to EndStep and EndSync.
+    /// A failed world cannot be revived by clearing the implementation's failure flag.</remarks>
     protected internal abstract void CompleteBody(RID body);
     /// <summary>Supplies the selected implementation operation: collect contacts.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
@@ -278,8 +281,11 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <summary>Supplies the selected implementation operation: area contains point.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract bool AreaContainsPoint(RID area, Vector2 point, uint mask);
-    /// <summary>Supplies the selected implementation operation: end step.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <summary>Retires numerical preparation and publication before gameplay state observers.</summary>
+    /// <param name="failure">The preceding numerical or publication error, or null when those phases succeeded.</param>
+    /// <remarks>Runs once on the guarded owner, including failed preparation. Throwing or reporting HasFailure terminates
+    /// the world and suppresses state observers; notification flushing and EndSync are still attempted. Original and cleanup
+    /// errors remain observable. A preparation error before Solve may retry a new interval only when retirement succeeds.</remarks>
     protected internal abstract void EndStep(Exception? failure);
     /// <summary>Supplies the selected implementation operation: flush queries.</summary>
     /// <remarks>Runs after completed body observers within the notification-delivery phase. Common contact/sleep/Area deliveries are attempted even when this hook throws. Such errors do not repeat a committed solve.

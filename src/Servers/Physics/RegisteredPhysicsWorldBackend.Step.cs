@@ -70,16 +70,27 @@ internal sealed partial class RegisteredPhysicsWorldBackend
     }
     internal override void CompleteBody(PhysicsServerCollider body)
     {
-        Enter(); try { _implementation.CompleteBody(body.RID); } finally { Exit(); }
+        CompleteSelectedBody(body.RID);
         if (!body.IsArea) body.Runtime.PublishFields(completingStep: true);
         body.CompleteMotion();
     }
     internal override void CompleteBody(PhysicsBody body)
     {
-        Enter(); try { _implementation.CompleteBody(body.GetRID()); } finally { Exit(); }
+        CompleteSelectedBody(body.GetRID());
         body.Runtime.PublishFields(completingStep: true); body.CompleteBackend();
         if (body is AnimatableBody animatable) animatable.SyncPose();
         else if (body is CharacterBody character) { character.CaptureSolverPose(); character.SetResolvedGravity(body.Runtime.Gravity); }
+    }
+    private void CompleteSelectedBody(RID body)
+    {
+        Enter();
+        try
+        {
+            _implementation.CompleteBody(body);
+            if (_implementation.HasFailure) throw new InvalidOperationException("The registered solver reported failure during body publication.");
+        }
+        catch (Exception error) { _failure ??= error; _resultsReady = false; throw; }
+        finally { Exit(); }
     }
     internal override void CollectContacts(ref List<Exception>? errors)
     {
@@ -98,7 +109,14 @@ internal sealed partial class RegisteredPhysicsWorldBackend
     internal override void EndStep(Exception? failure)
     {
         if (failure is not null && _solving) { _failure = failure; _resultsReady = false; }
-        Enter(); try { _implementation.EndStep(failure); } finally { Exit(); _solving = false; }
+        Enter();
+        try
+        {
+            _implementation.EndStep(failure);
+            if (_failure is null && _implementation.HasFailure) throw new InvalidOperationException("The registered solver reported failure during interval retirement.");
+        }
+        catch (Exception error) { _failure ??= error; _resultsReady = false; throw; }
+        finally { Exit(); _solving = false; }
     }
     internal override bool AreaContainsPoint(Area area, Vector2 point, uint mask)
     { Enter(); try { return _implementation.AreaContainsPoint(area.GetRID(), point, mask); } finally { Exit(); } }

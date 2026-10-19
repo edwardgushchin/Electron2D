@@ -36,6 +36,7 @@ public static partial class BackendChecks
         RunFactoryViews();
         RunDebugContacts();
         RunLifecycle();
+        RunPublicationFailures();
         StateChecks();
         RunBodyStates();
         RunAxisVelocity();

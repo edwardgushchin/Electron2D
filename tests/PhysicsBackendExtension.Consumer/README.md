@@ -76,6 +76,8 @@ the positive/miss and zero-allocation matrix.
 
 The --parameter-reads mode verifies all eighteen retained body parameter/policy getters inside numerical Solve on scene and raw bodies, strict write/query guards, automatic-profile rejection, stale/kind/owner/failed-world errors and 128 warmed active full frames with zero owner/all-thread managed bytes.
 
+The --publication-failures mode checks selected completion/retirement faults across two raw bodies, a raw Area and two scene bodies. It covers thrown and reported failure, error aggregation, callback suppression, irreversible failure, pre-solve recovery and recoverable gameplay observers. CPU/GPU controls and --threaded retain 128 complete moving frames with strict zero owner/all-thread managed bytes. Motion tolerance accounts for four CPU float substeps at the retained x=300 origin; exact tick and observer counts remain independent checks.
+
 The --lifecycle mode traces the actual explicit/scene lifecycle, completed statistics, local/global pause and retirement. It checks activation errors, all negative count fields, terminal numerical failures, recoverable notification/finalization failures and 128 full moving frames per ownership role with zero owner/all-thread managed allocation.
 
 --axis-velocity checks current impulse motion, nine scene/raw owners, four direct modes, signed/zero/tiny/large inputs, inactive future configuration, owner/borrow/terminal guards and 128 complete changed frames at zero owner/all-thread managed bytes. Add --cpu, --gpu or --threaded for the selected profile. Motion-transaction companions exercise scene publication failure and recovery directly.

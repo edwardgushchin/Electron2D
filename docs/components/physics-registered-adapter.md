@@ -2,6 +2,52 @@
 
 Last updated: 2026-10-19
 
+## Complete lifecycle publication boundaries
+
+The seven non-deprecated pinned server-extension lifecycle operations retain
+world-scoped initialization, local activation, BeginStep/Solve, synchronization,
+notification flush, end-sync and final release under ADRs 0089/0095/0103.
+The applicable C# operation family also includes per-collider CompleteBody and
+EndStep retirement. No public declaration is added.
+
+The public-only publication regression reproduced a scene/server mismatch:
+a scene CompleteBody hook threw, but later selected publications and all four
+body-state observers still ran, while EndStep received null. The same server-body
+error already terminated its interval. Both routes now share one guarded hook
+which latches thrown or reported failure and invalidates result readiness.
+The shared scene completion loop propagates that numerical failure to the outer
+step; gameplay notification errors keep their existing recoverable collection.
+EndStep errors and newly reported HasFailure are likewise terminal, even when
+retiring a failed pre-Solve preparation. Clearing the provider flag cannot revive
+the engine's failed world. Original and secondary errors survive aggregation;
+notification flushing and EndSync are still attempted once.
+
+The --publication-failures consumer checks two raw bodies, a raw Area and two
+scene bodies at every completion position, thrown and reported errors, contact/
+Area hook errors, retirement errors, secondary cleanup failure, pre-Solve retry
+and recoverable gameplay observers. Healthy four-body moving frames retain five
+selected collider publications and four observers. At 1/120 s, velocity 1 and
+Replace/zero linear damping, 128 frames must advance 128/120 units within .00625 and advance exactly 128 ticks.
+At native x=3 m, 512 CPU float additions contribute at most 512 × half-ULP / .01
+= .006104 scene units; the bound also covers final unit conversion. GPU/registered
+use the same conservative bound, with exact tick and callback counts.
+The same fixtures run with CPU/software-GPU controls and registered owner/separate
+execution; each strict allocation interval follows 64 warm frames and measures
+128 complete frames at zero owner/all-thread bytes. The older --lifecycle fixture
+retains explicit/scene order, activation, statistics, failed initialization and
+final release checks. Evidence: bin/physics-window-residual/2026-10-19/.
+The final matrix has 24 successful processes plus one expected old-runtime RED.
+Four registered JIT/strict NativeAOT owner/separate profiles execute 64 injected
+fault cases; twelve healthy backend/thread/runtime profiles measure 1536 full
+moving frames and 6144 body-state observers at strict 0/0 managed bytes.
+Native picking and the ordinary window companion retain rendered output and
+zero measured owner bytes on CPU/software-GPU physics. Six assembly/PDB proofs
+match 3429 authored source inputs; the pinned lifecycle owner/member metadata
+contains no deprecation. Seven lifecycle rows close, giving I1273/P65/B17/U14/X92,
+1273/1369 applicable declarations = 92.9876%, with 96 still open.
+Full numerical/custom geometry, networking, native allocator, foreign platforms
+and target hardware performance remain separate open acceptance work.
+
 ## Complete axis velocity operation
 
 BodySetAxisVelocity and RigidBody.SetAxisVelocity share one guarded projection/

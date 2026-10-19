@@ -28,7 +28,7 @@ internal sealed partial class PhysicsSpace
             foreach (var body in _bodies)
             {
                 try { backend.CompleteBody(body); }
-                catch (Exception error) { (errors ??= []).Add(error); }
+                catch (Exception error) { if (!backend.ResultsReady) throw; (errors ??= []).Add(error); }
             }
             RecordCompletionPhase(0, ref completionMark);
             backend.CollectContacts(ref errors);

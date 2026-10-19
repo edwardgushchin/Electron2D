@@ -147,6 +147,13 @@ Last updated: 2026-10-19
 
 [Native window allocation verification](../components/physics-window-allocations.md) tracks the complete warm host interval, including passive picking, beyond the headless step checks.
 
+[Lifecycle publication boundaries](../components/physics-registered-adapter.md#complete-lifecycle-publication-boundaries)
+separate terminal selected completion/retirement errors from recoverable gameplay
+notification errors, with the same scene/server behavior and no solver replay. The current
+API census is 1273/1369 Implemented (92.9876%), with 96 open declarations
+(65 Partial, 17 Blocked, 14 Unimplemented) and 92 Excluded. This does not establish
+full numerical, networking, native/platform or hardware-performance acceptance.
+
 ## Scene role publication recovery
 
 [Configured role changes](../components/physics-registered-adapter.md#failed-scene-role-publication) retain committed descriptors through partial selected errors and repair the complete role before numerical use. Rotation locking preserves actual selected linear motion; direct server role publication retains its own surface policy. Precondition rejection remains separate from accepted authoring followed by a publication error.

@@ -198,6 +198,8 @@ else if (args.Contains("--debug-drawing")) BackendChecks.RunDebugDrawing();
 else if (args.Contains("--axis-velocity")) BackendChecks.RunAxisVelocity(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--debug-contacts")) BackendChecks.RunDebugContacts(args.Contains("--threaded"));
+else if (args.Contains("--publication-failures")) BackendChecks.RunPublicationFailures(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--lifecycle")) BackendChecks.RunLifecycle();
 else if (args.Contains("--area-parameters")) BackendChecks.RunAreaParameters(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));

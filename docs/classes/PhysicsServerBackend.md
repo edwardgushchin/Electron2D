@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-19
 
+Selected CompleteBody and EndStep failures latch the world as unusable and suppress
+body-state observers. Successful retirement after pre-Solve preparation failure
+permits a new interval; gameplay observer/flush/end-sync errors retain their
+notification recovery policy. See [lifecycle publication boundaries](../components/physics-registered-adapter.md#complete-lifecycle-publication-boundaries).
+
 ## Resource retirement errors
 
 Caller-owned retirement attempts every required cleanup stage before propagating
@@ -238,13 +243,13 @@ if (IsBodyExcludedFromMotionTest(candidateRID) ||
 | `protected internal abstract void PrepareBodies(double delta)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract void Solve(double delta)` | Complete numerical interval on the captured owner/separate lane; prepared inputs are read-only and publication waits for completion. |
 | `protected internal abstract void SyncResults()` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
-| `protected internal abstract void CompleteBody(RID body)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
+| `protected internal abstract void CompleteBody(RID body)` | Publishes one scene/server collider, including server Areas; thrown/reported failure terminates the world before later publication and body-state observers. |
 | `protected internal abstract void CollectContacts()` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract void ScanAreas()` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract int GetAreaOverlapCount(RID area)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract int ReadAreaOverlaps(RID area, Span<PhysicsBackendOverlap> output)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract bool AreaContainsPoint(RID area, Vector2 point, uint mask)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
-| `protected internal abstract void EndStep(Exception? failure)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
+| `protected internal abstract void EndStep(Exception? failure)` | Retires preparation/publication once before body-state observers; thrown/reported retirement failure is terminal, while flush/end-sync still run. |
 | `protected internal abstract void FlushQueries()` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract void EndSync(Exception? failure)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract PhysicsRayResult? IntersectRay(Vector2 from, Vector2 to, uint mask, ReadOnlySpan<RID> excluded, bool collideWithAreas, bool collideWithBodies, bool hitFromInside)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |

@@ -46,6 +46,13 @@ sample remains in first-unprepared-validation.json and root-window-managed/.
 The 80-byte cause and ordinary unprepared-host repeatability remain open; later
 prepared samples must not be treated as their diagnosis.
 
+A later single instrumented 30-second interval per backend at fc8f2a2a retained
+all 512 bodies/component edits and omitted forced collections. CPU/GPU each
+measured 1801 physics ticks at zero owner bytes in every phase; no SDL events
+occurred inside either measured interval. This bounded non-reproduction does not
+explain the earlier 80 bytes or establish native-event allocation behavior.
+Evidence: bin/physics-window-residual/2026-10-19/unprepared-30s-stages/.
+
 ## Final prepared sample
 
 The final consumer SHA-256 is
@@ -85,7 +92,8 @@ cable remains unverified. Actual compositor VSync stays enabled despite the
 request to disable it; MaxFPS is zero and the requested physics rate is 60 Hz.
 These small-scene FPS figures do not establish a target-hardware GPU advantage,
 repeatable performance, foreign-platform or NativeAOT acceptance. The broader
-physics and multiprocess-network goal remains open. Physics declaration counts
-are unchanged: I1266/P72/B17/U14/X92, 1266/1369 applicable declarations = 92.48%,
-with 103 applicable declarations still open. This ratio is API coverage, not
-whole-product readiness.
+physics and multiprocess-network goal remains open. At fc8f2a2a the declaration counts
+were: I1266/P72/B17/U14/X92, 1266/1369 applicable declarations = 92.48%,
+with 103 applicable declarations then open. Later lifecycle work updates the
+[current physics census](../coverage/physics-status.md). This ratio is API coverage,
+not whole-product readiness.

@@ -192,8 +192,15 @@ interception would leave scene behavior and direct queries outside the extension
   world's nested motion scope is independent. Hook/result failures clear the scope.
 - Backend lifecycle executes for real: initialization precedes attachment; solve,
   synchronization and query/event flush have explicit phases; end-sync and finish
-  run on all required cleanup paths. A started failing interval becomes unusable
-  without hidden CPU replay. Aggregate cleanup failures after attempting every
+  run on all required cleanup paths. Once Solve starts, numerical or selected
+  body-publication failure makes the world unusable without hidden CPU replay.
+  CompleteBody covers both scene bodies and server colliders, including Areas;
+  thrown errors and reported HasFailure stop later publication and body-state
+  observers. EndStep retires preparation/publication before observers; its thrown
+  or reported failure is terminal even if preparation failed before Solve.
+  Successful retirement after a pre-Solve preparation error permits a new interval.
+  Gameplay observer, FlushQueries and EndSync errors retain their notification
+  recovery policy. Aggregate cleanup failures after attempting every
   owned resource. Borrowed backend/state objects cannot release a live callback
   context or retarget to another world.
 - Diagnostic capacity is an implementation input before solving, not a value first

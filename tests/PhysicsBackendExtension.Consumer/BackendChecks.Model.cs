@@ -10,7 +10,7 @@ public static partial class BackendChecks
         protected override void SetCollisionExceptions(ReadOnlySpan<(RID From, RID To)> pairs) { Exceptions.Clear(); foreach (var p in pairs) Exceptions.Add(p); }
         internal RID Space => SpaceRID;
         internal RID[] ReadExceptions(RID body) => GetCollisionExceptions(body);
-        internal bool Ready, Finished, FailSolve, FailInit, FailFinish, FailDisposal;
+        internal bool Ready, Finished, FailSolve, FailInit, FailFinish, FailDisposal, ReportedFailure;
         internal Action? DisposalHook;
         internal int Steps, Flushes, Synchronizations, Pairs, DebugReads, StatePreparations;
         internal bool BadDebugCount, BadDebugPoint, NegativeDebugCount, FailDebugPreparation;
@@ -58,6 +58,9 @@ public static partial class BackendChecks
         protected override PhysicsDirectBodyState CreateDirectBodyState(RID body)
         { BodyViewCreations++; return BodyViewFactory is { } factory ? factory(body) : base.CreateDirectBodyState(body); }
         internal Action<LifecyclePhase>? LifecycleHook;
+        internal Action<RID>? CompleteBodyHook;
+        internal Action? ContactsHook, AreasHook;
+        internal Action<Exception?>? EndStepHook;
         internal Exception? EndFailure;
         internal PhysicsBackendStatistics? StatisticsOverride;
         internal bool FailBodyDetach;
@@ -76,7 +79,7 @@ public static partial class BackendChecks
         internal AreaReader? AreaReadOverride;
         internal int WorldPolicyCalls;
         internal PhysicsAreaFieldConfiguration Fields;
-        protected override bool HasFailure { get { StatusHook?.Invoke(); return false; } }
+        protected override bool HasFailure { get { StatusHook?.Invoke(); return ReportedFailure; } }
         protected override bool ResultsReady => Ready;
         protected override int PreparedBodyCapacity => Bodies.Count;
         protected override void Initialize()
@@ -217,9 +220,9 @@ public static partial class BackendChecks
         private readonly HashSet<(RID, int, RID, int)> _framePairs = [];
         protected override void SyncResults()
         { foreach (var body in Bodies.Values) body.FreezeContacts(); Ready = true; LifecycleHook?.Invoke(LifecyclePhase.Sync); }
-        protected override void CompleteBody(RID body) { }
-        protected override void CollectContacts() { }
-        protected override void ScanAreas() { }
+        protected override void CompleteBody(RID body) { CompleteBodyHook?.Invoke(body); }
+        protected override void CollectContacts() { ContactsHook?.Invoke(); }
+        protected override void ScanAreas() { AreasHook?.Invoke(); }
         protected override int GetAreaOverlapCount(RID area) => AreaCountOverride?.Invoke(area) ?? ReadAreaOverlaps(area, Span<PhysicsBackendOverlap>.Empty);
 
         protected override int ReadAreaOverlaps(RID area, Span<PhysicsBackendOverlap> output)
@@ -241,7 +244,7 @@ public static partial class BackendChecks
             for (var i = 0; i < b.Shapes; i++) if (ContainsPart(b.Parts[i], new(b.Rotation, b.Position), point)) return true;
             return false;
         }
-        protected override void EndStep(Exception? failure) { }
+        protected override void EndStep(Exception? failure) { EndStepHook?.Invoke(failure); }
         protected override void FlushQueries() { LifecycleHook?.Invoke(LifecyclePhase.Flush); Flushes++; FlushHook?.Invoke(); }
         protected override void EndSync(Exception? failure) { EndFailure = failure; LifecycleHook?.Invoke(LifecyclePhase.End); Synchronizations++; SyncHook?.Invoke(); }
         protected override void Finish() { LifecycleHook?.Invoke(LifecyclePhase.Finish); FinishHook?.Invoke(); Finished = true; Bodies.Clear(); Joints.Clear(); if (FailFinish) throw new InvalidOperationException("Finish failure"); }
