@@ -6,6 +6,19 @@ The [Body/Area append audit](../components/physics-shapes.md#bodyarea-append-con
 
 Last updated: 2026-10-19
 
+## Selected Area overlap publication
+
+Selected monitoring combines scene observation with either server callback;
+monitorability independently gates other receivers and never disables this Area's
+own callback lanes. Overlap output uses live same-world RIDs and enabled global
+logical indices passing the receiver mask and Area monitorability. Validation
+finishes before replacing a receiver's committed history; duplicate numerical
+pieces collapse into one logical pair. Exact compound/custom data, failed output,
+callback continuation, identity, reentry and private correction execute through
+[the public publication checks](../components/physics-registered-adapter.md#area-overlap-publication-operation-audit).
+CPU/software-GPU/registered JIT/NativeAOT consumers cover both numerical policies
+with strict zero warmed managed bytes; broader acceptance remains separate.
+
 ## Collider construction and reentry
 
 BodyCreate/AreaCreate allocate fresh detached logical identities without a selected

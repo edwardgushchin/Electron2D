@@ -2,6 +2,63 @@
 
 Last updated: 2026-10-19
 
+## Area overlap publication operation audit
+
+The selected Area policy receives effective monitoring from scene Monitoring or
+either server callback. Monitorability is independent: disabling it hides this
+Area from other receivers and leaves its own body/Area callback lanes active.
+Body and Area callbacks use the same common receiver, but scene snapshots and
+server observers retain independent histories. Callback registration preparation,
+replacement/reset, queued generations and failure behavior remain covered by the
+existing transaction fixture.
+
+The public --area-overlap-publication fixture adds scene/raw receivers with
+active global logical slots 0 and 2, disabled slot 1, two numerical pieces in a
+concave slot and four scene/raw Body/Area peers. Each logical pair appears once,
+independent of piece traversal order. Directional masks, monitorability changes,
+slot disable/restore, assigned identity replacement, silent receiver detach/reentry,
+continued delivery after a throwing callback and complete raw collider retirement
+retain exact RID, sampled numeric identity and remote/local slot payloads.
+
+Four selected policy-preparation failures per registered profile preserve the
+original error, keep the unstarted tick unchanged and repair both effective flags
+before the next healthy frame without resetting history.
+
+For each registered profile, 36 rejected publications cover negative capacities,
+negative/oversized written counts, original provider errors, self/foreign/stale/
+wrong-kind/missing RIDs, disabled/out-of-range indices, rejected layers and hidden
+Areas. Validation completes before this receiver's tracker changes. Other
+receivers continue, the last accepted scene/raw histories remain intact and a
+healthy next frame does not replay entries. Borrowed writes reject; repeated
+numerical pieces collapse to one logical pair. Six exact custom annulus cases
+exercise the empty hole, inner/outer boundaries, four logical pairs, canonical
+geometry replacement and silent private history restoration without callback replay.
+This verifies Area operation dispatch for custom data, without claiming all custom
+numerical algorithms accepted.
+
+Fresh JIT/strict NativeAOT CPU/no-device, private software-GPU and registered
+owner/separate runs pass. Twelve primary profiles measure 3072 complete frames,
+98304 pair callbacks, 3072 owner body callbacks and 6144 exact live query hits at
+strict zero owner/all-thread managed bytes. Each frame advances one selected tick;
+a separate moving body continues at speed 1 for 0.01 seconds per frame. Its 0.001
+scene-unit tolerance covers float accumulation across 256 measured frames.
+The four registered runs additionally exercise 144 rejected publications, 16
+partial policy failures and 24 custom cases. Area monitor, callback transaction and parameter companions, ordinary
+public consumer/custom checks, root Area/shape-slot and ownership checks complete
+59/59 profiles. Root companions run on the owner; the public consumers cover both
+captured numerical policies. These are warmed managed measurements, not native
+retained-memory or cold construction results.
+
+Only the three extension monitor-callback/monitorable rows become Implemented.
+The unique physics census is 1211/1369 Implemented (88.45872899926954%), with 158
+open declarations: 127 Partial, 14 Unimplemented and 17 Blocked; 92 are Excluded.
+Public signatures and runtime algorithms are unchanged; XML now states overlap
+record validation and independent policy semantics. Complete typed parameters,
+numerical/custom geometry/inherited/network/native/platform and target-GPU/window
+performance acceptance remain open. No hardware GPU load ran while the RTX power
+cable remains unchecked. Evidence: bin/physics-area-overlap-publication/2026-10-19/validation.json.
+Earlier sections below describe their own verification checkpoints and counts.
+
 ## Collider creation operation audit
 
 BodyCreate and AreaCreate produce distinct caller-owned detached identities without
@@ -39,10 +96,10 @@ mass-reset, node-lifecycle, construction/resource/lifecycle/view, ordinary consu
 and root ownership checks complete 69/69 profiles. Allocation brackets measure
 managed frames after warmup, not native retained memory or cold construction.
 
-Only the extension Body/Area creation rows become Implemented. The unique physics
-census is 1208/1369 Implemented (88.23959094229365%), with 161 open declarations:
+Only the extension Body/Area creation rows become Implemented. At that checkpoint, the unique physics
+census was 1208/1369 Implemented (88.23959094229365%), with 161 open declarations:
 130 Partial, 14 Unimplemented and 17 Blocked; 92 are Excluded. Monitoring callbacks
-and complete typed parameters remain Partial. Runtime algorithms and public
+and complete typed parameters remained Partial at that checkpoint. Runtime algorithms and public
 signatures are unchanged; XML now states the deferred factory/permanent claim
 contract. Complete numerical/custom geometry/inherited, networking, native retained
 memory, target-GPU/window performance and platform acceptance remain open. The

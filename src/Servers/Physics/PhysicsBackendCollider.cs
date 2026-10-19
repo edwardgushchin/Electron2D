@@ -46,8 +46,9 @@ public abstract class PhysicsBackendCollider
     /// The immutable configuration contains gravity, point-distance, damping, override modes and priority.
     /// Nested Area/default-world field writes reject before mutation; ordinary post-step Area callbacks may edit the next interval's profile.</remarks>
     protected internal abstract void SetAreaFields(in PhysicsAreaFieldConfiguration configuration);
-    /// <summary>Supplies the selected implementation operation: set area monitoring.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <summary>Supplies the effective receiving and detectable policies for one Area attachment.</summary>
+    /// <remarks>Prepared on the world owner before solving. Monitoring combines scene monitoring with either registered server callback; monitorability independently gates other Area receivers.
+    /// Disabling monitorability does not disable this Area's own callback lanes. Scene and server observers retain independent histories.</remarks>
     protected internal abstract void SetAreaMonitoring(bool monitoring, bool monitorable);
     /// <summary>Supplies the selected implementation operation: invalidate collision exceptions.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>

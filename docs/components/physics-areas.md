@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-19
 
+## Complete selected monitoring operations
+
+[Area overlap publication](physics-registered-adapter.md#area-overlap-publication-operation-audit) now verifies both scene/raw callback lanes, independent monitorability, exact compound indices and custom annulus data. Invalid selected results retain the previous complete history; callback failure, association edits, receiver reentry and raw retirement preserve sampled payloads. Fresh CPU/no-device, software-GPU and registered owner/separate JIT/NativeAOT consumers retain strict zero managed-byte full frames. This closes only three monitoring extension operations; wider numerical/network/native/platform/performance acceptance remains open.
+
 ## Complete Area parameter operations
 
 The public-only --area-parameters fixture now audits all ten concrete parameter

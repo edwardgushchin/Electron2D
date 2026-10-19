@@ -267,11 +267,12 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <summary>Supplies the selected implementation operation: scan areas.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract void ScanAreas();
-    /// <summary>Supplies the selected implementation operation: get area overlap count.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <summary>Returns a nonnegative capacity for the receiving Area's current logical overlap records.</summary>
+    /// <remarks>Invoked on the world owner after synchronization. The following read may return a shorter bounded prefix.</remarks>
     protected internal abstract int GetAreaOverlapCount(RID area);
-    /// <summary>Supplies the selected implementation operation: read area overlaps.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <summary>Fills and returns the bounded prefix of completed logical overlap records for one Area.</summary>
+    /// <remarks>Output is borrowed only for this owner-thread call. Records use enabled global shape indices and live distinct same-world peers passing the receiver mask and Area monitorability.
+    /// The engine validates every record before replacing this receiver's committed snapshot; malformed results retain its previous history. Duplicate numerical pieces collapse into one logical pair.</remarks>
     protected internal abstract int ReadAreaOverlaps(RID area, Span<PhysicsBackendOverlap> output);
     /// <summary>Supplies the selected implementation operation: area contains point.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>

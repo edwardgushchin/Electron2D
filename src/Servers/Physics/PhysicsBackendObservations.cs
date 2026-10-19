@@ -19,9 +19,10 @@ public readonly record struct PhysicsBackendOneWay(RID A, int ShapeA, int PieceA
 public readonly record struct PhysicsBackendShapeContact(RID RID, int ShapeIndex, int Piece, Vector2 QueryPoint, Vector2 ColliderPoint);
 
 /// <summary>Supplies an Area's logical remote/local overlap pair.</summary>
-/// <param name="Other">Other in the owning operation's engine-unit contract.</param>
-/// <param name="RemoteShape">Remote Shape in the owning operation's engine-unit contract.</param>
-/// <param name="LocalShape">Local Shape in the owning operation's engine-unit contract.</param>
+/// <param name="Other">A live body or monitorable Area RID in the receiver's world, distinct from the receiver.</param>
+/// <param name="RemoteShape">Enabled global logical shape index on the other collider, independent of numerical pieces.</param>
+/// <param name="LocalShape">Enabled global logical shape index on the receiving Area.</param>
+/// <remarks>The receiver mask must include the other collider's layer. The engine samples object identity and collapses duplicate logical pairs before callback publication.</remarks>
 public readonly record struct PhysicsBackendOverlap(RID Other, int RemoteShape, int LocalShape);
 
 /// <summary>Returns completed active-body, collision-pair and island counts.</summary>

@@ -1338,10 +1338,11 @@ public sealed partial class PhysicsServer
     /// or receiver configuration changes from its own callback; authoring is unchanged.</exception>
     public static void AreaSetCollisionLayer(RID area, uint layer) => Service.AreaSetCollisionLayerCore(area, layer);
 
-    /// <summary>Sets whether scene monitoring Areas may detect a server-created Area.</summary>
+    /// <summary>Sets whether other monitoring Areas may detect this scene or server Area.</summary>
     /// <param name="area">A live scene or server Area RID.</param>
     /// <param name="monitorable">The sensing policy; server Areas default false.</param>
-    /// <remarks>The next nonzero overlap scan adopts the policy. Attached changes require the space owner thread.</remarks>
+    /// <remarks>The next nonzero overlap scan adopts the policy. It does not disable this Area's own monitoring or callbacks.
+    /// Attached changes require the space owner thread and reject numerical borrowing or receiver configuration changes from its own callback.</remarks>
     public static void AreaSetMonitorable(RID area, bool monitorable) => Service.AreaSetMonitorableCore(area, monitorable);
 
     /// <summary>Frees a server-owned space, collider, shape or joint RID.</summary>

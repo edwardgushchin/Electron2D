@@ -1,6 +1,8 @@
 # Physics domain
 
-[Collider creation operation audit](../components/physics-registered-adapter.md#collider-creation-operation-audit) completes detached Body/Area identity, deferred selected factories, permanent attachment claims and actual scene activation/error/retry behavior. The unique physics census is 1208/1369 Implemented (88.2396%), with 161 open declarations (130 Partial, 14 Unimplemented, 17 Blocked). Typed parameters, monitor callbacks and broader full-goal gates remain open. Earlier census counts below belong to their recorded checkpoints.
+[Area overlap publication operation audit](../components/physics-registered-adapter.md#area-overlap-publication-operation-audit) completes both registered monitor callback lanes and independent monitorability with exact compound/custom indices, result validation, lifecycle and failure continuation. The physics census is 1211/1369 Implemented (88.4587%), with 158 open declarations (127 Partial, 14 Unimplemented, 17 Blocked). Complete typed parameters and broader full-goal gates remain open. Earlier census counts describe their recorded checkpoints.
+
+[Collider creation operation audit](../components/physics-registered-adapter.md#collider-creation-operation-audit) completes detached Body/Area identity, deferred selected factories, permanent attachment claims and actual scene activation/error/retry behavior.
 
 [Failed initial attachment state](../components/physics-registered-adapter.md#authored-state-after-failed-initial-attachment) now retains public pose, motion and sleep instead of sampling incomplete selected state during cleanup. Ordinary retirement still preserves actual accepted impulses.
 

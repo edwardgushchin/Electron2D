@@ -66,6 +66,10 @@ public static partial class BackendChecks
         internal Action? WorldPolicyHook, WorldPolicyPublishedHook;
         internal Action? CapacityHook;
         internal Action? MonitorCapacityHook;
+        internal Action<RID>? AreaMonitoringHook;
+        internal Func<RID, int?>? AreaCountOverride;
+        internal delegate int? AreaReader(RID area, Span<PhysicsBackendOverlap> output);
+        internal AreaReader? AreaReadOverride;
         internal int WorldPolicyCalls;
         internal PhysicsAreaFieldConfiguration Fields;
         protected override bool HasFailure { get { StatusHook?.Invoke(); return false; } }
@@ -209,10 +213,11 @@ public static partial class BackendChecks
         protected override void CompleteBody(RID body) { }
         protected override void CollectContacts() { }
         protected override void ScanAreas() { }
-        protected override int GetAreaOverlapCount(RID area) => ReadAreaOverlaps(area, Span<PhysicsBackendOverlap>.Empty);
+        protected override int GetAreaOverlapCount(RID area) => AreaCountOverride?.Invoke(area) ?? ReadAreaOverlaps(area, Span<PhysicsBackendOverlap>.Empty);
 
         protected override int ReadAreaOverlaps(RID area, Span<PhysicsBackendOverlap> output)
         {
+            if (AreaReadOverride?.Invoke(area, output) is { } supplied) return supplied;
             var self = Bodies[area]; var count = 0;
             foreach (var other in Bodies.Values)
             {
@@ -356,7 +361,7 @@ public static partial class BackendChecks
                 configuration.LinearDamp + (configuration.LinearDampMode == RigidBody.DampMode.Combine ? f.LinearDamp : 0),
                 configuration.AngularDamp + (configuration.AngularDampMode == RigidBody.DampMode.Combine ? f.AngularDamp : 0), true);
         }
-        protected override void SetAreaMonitoring(bool monitoring, bool monitorable) { Monitoring = monitoring; Monitorable = monitorable; }
+        protected override void SetAreaMonitoring(bool monitoring, bool monitorable) { Monitoring = monitoring; Monitorable = monitorable; solver.AreaMonitoringHook?.Invoke(RID); }
         protected override void SetAreaFields(in PhysicsAreaFieldConfiguration configuration) { AreaFields = configuration; solver.AreaFieldsHook?.Invoke(rid); }
         protected override PhysicsBodyFields ReadResolvedFields(in PhysicsBodyFields current) => _fields;
         protected override void RefreshIdentity(ulong objectID, ulong canvasID)
