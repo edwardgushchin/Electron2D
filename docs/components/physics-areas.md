@@ -2,6 +2,35 @@
 
 Last updated: 2026-10-19
 
+## Prepared Area pose inputs
+
+AreaGetTransform now uses the common prepared-input guard for scene and raw
+Areas. On the world's exact borrowed numerical thread, scene reads reconstruct
+the global pose from the existing position/rotation that owner preparation passed
+to the selected collider. They do not enter CanvasItem's scene observation path,
+query live numerical storage, prepare pending publication or add GPU transfers.
+Ordinary owner reads retain current scene presentation and the existing
+non-preparing Area authoring contract. Other threads and failed worlds reject.
+This grants no general scene observation or pose-writing access to a solver.
+
+A public-only separate Solve reproduced the former SceneTree owner-thread failure
+on unchanged runtime inputs. The same consumer binary passes with the corrected
+runtime. The expanded --area-monitors fixture reads the scene and both raw Area
+poses inside the actual selected Solve, compares the prepared selected poses,
+checks rotated/translating ancestor composition and status-hook reads, and rejects
+changed/equal pose writes, live body reads, unrelated-thread reads and ordinary
+reads after a failed selected Solve. Ordinary callback pose reads and writes retain
+their existing rules. The 64 measured full frames include 192 numerical pose reads
+on the registered profiles, actual 128 entries/128 exits and strict owner/all-thread
+zero managed bytes. CPU/GPU companions keep the same public monitoring and pose
+assertions. Existing pose-publication retries remain separately covered.
+
+Evidence: `bin/physics-area-pose-inputs/2026-10-19/red-green-proof.json` and
+`validation.json` in that directory. The public getter remains Implemented;
+the complete numerical-extension operations remain Partial. Native memory,
+foreign execution, target GPU throughput/FPS and full client/server and overall
+physics acceptance remain open.
+
 [Failed authored pose publication](physics-registered-adapter.md#failed-pose-publication) retains current input through partial selected errors, including authoring returned to the previous prepared pose. Numerical preparation retries before live queries/nonzero steps; body views also prepare incomplete body publication. Scene/Area transform presentation remains non-preparing, and retirement retains authoring without repairing the discarded attachment.
 
 ## Prepared Area field inputs

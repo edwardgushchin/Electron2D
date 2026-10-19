@@ -89,6 +89,8 @@ first interval. Complete retained-memory budgets remain open.
 
 Last updated: 2026-10-18
 
+[Prepared Area pose inputs](../components/physics-areas.md#prepared-area-pose-inputs) correct a reproduced separate-thread getter failure. The public-only monitor fixture now checks real numerical reads, ancestor composition, write/lifetime/failure guards and complete-frame allocations; broader extension and hardware performance gates remain open.
+
 [Inherited custom iteration](../components/object-lifecycle.md#custom-typed-iteration) uses ordinary typed C# enumerators on compiled object/body subtypes. Force and state callbacks exercise actual selected simulation while retaining independent cursor state and warmed zero-managed-allocation full frames; user cursors do not bypass ordinary lifetime, owner or numerical borrowing guards.
 
 [Local activation recovery](../components/physics-registered-adapter.md#failed-local-activation) restores the last committed selected flag after partial hook errors, before space query/history or active-step preparation. Metadata, skipped intervals and cleanup retain their non-preparing rules.

@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-19
 
+[Prepared Area pose inputs](../components/physics-areas.md#prepared-area-pose-inputs) reuse the retained global position/rotation on the exact borrowed numerical thread. Ordinary presentation remains current and non-preparing; unrelated-thread access and selected-hook mutation still reject.
+
 ## Geometry preparation
 
 Scene Area shape compilation holds the [using world borrow](../components/physics-backends.md#geometry-input-borrowing) before invoking cold resources. Revision capture uses indexed logical slots, avoiding a managed enumerator per warmed rebuild. The public geometry-input fixture checks edits with full moving physics/query intervals on the selected implementations.

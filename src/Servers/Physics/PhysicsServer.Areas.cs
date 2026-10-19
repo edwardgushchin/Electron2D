@@ -67,7 +67,9 @@ public sealed partial class PhysicsServer
 
     internal Transform AreaGetTransformCore(RID area)
     {
-        ThrowIfDisposed(); var runtime = AreaRuntime(area); runtime.EnsureAccess(); var owners = runtime.Owners;
-        return owners.Scene?.GlobalTransform ?? owners.Server!.GetTransform();
+        var owners = ShapeOwners(area, isArea: true, input: true);
+        if (owners.Scene is Area scene)
+            return scene.Space?.IsNumericalInputThread == true ? scene.PreparedTransform : scene.GlobalTransform;
+        return owners.Server!.GetTransform();
     }
 }

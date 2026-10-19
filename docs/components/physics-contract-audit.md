@@ -168,6 +168,8 @@ The preceding raw-initialization slice passed 89 scoped profiles; its full headl
 
 Last updated: 2026-10-18
 
+[Prepared Area pose inputs](physics-areas.md#prepared-area-pose-inputs) correct the common getter without changing public declarations or coverage states. The exact solver thread reads existing prepared scene pose caches; ordinary authoring and live-body guards remain separate. The current unique physics census remains 171 open declarations: 140 Partial, 14 Unimplemented and 17 Blocked.
+
 [Prepared handoff input](physics-network-example.md#prepared-future-input-at-control-handoff-2026-10-16) strengthens the separate-process check: both retired commands must actually be queued, replaced by the new epochs and applied at the same future tick. Ordinary sessions retain their pacing. This closes no additional reference declaration or hardware/performance gate.
 
 [Complete name assignment](scene-hierarchy.md#child-name-collisions) now normalizes

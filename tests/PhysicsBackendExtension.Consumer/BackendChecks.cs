@@ -39,7 +39,7 @@ public static partial class BackendChecks
         JointParameterChecks();
         JointLifecycleChecks();
         ResourceReleaseChecks();
-        AreaMonitorChecks();
+        RunAreaMonitors();
         RunContactThreshold();
         RunMotionExclusions();
         RunNotificationPhase();
