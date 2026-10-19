@@ -81,3 +81,7 @@ Validation/sampling failure preserves previous texture state. Subscriber failure
 ## Verification and limits
 
 [CurveTextureTests](../../tests/Electron2D.Tests/CurveTextureTests.cs) covers channel values, deduplicated notifications, descriptor edits, shallow/deep/external/local copies, failures and concurrency. [RenderingCurveTextureTests](../../tests/Electron2D.Tests/RenderingCurveTextureTests.cs) verifies Linux Wayland GPU canvas and HLSL/GLSL materials with live channel/width/worker changes and atlas/default bindings. Wayland compatibility and dummy/software reject unsupported float storage. Other platforms, owner visual acceptance, disk import/editor authoring and fresh published/AOT delivery remain unverified. Shared base API gaps stay explicit in coverage. See ADRs [0013](../decisions/resources.md#adr-0013) and [0028](../decisions/rendering.md#adr-0028).
+
+## Typed archives
+
+The registered resource factory and stored descriptors preserve procedural settings and shared source identity in .e2dres graphs, including ParticleProcessMaterial inputs. The initialization flag distinguishes never-generated null curves from initialized zero channels. Fresh-process material-file checks exercise this path. Editor import and foreign rendering remain separate gates.

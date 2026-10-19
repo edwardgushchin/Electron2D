@@ -262,14 +262,9 @@ public sealed partial class RenderingServer : ElectronObject
         foreach (var batch in frame.Batches)
         {
             SubmitTexture(batch.Texture, tree);
-            if (batch.Material is { } material)
-            {
-                if (material.Program.TimeUniform is not null || material.Program.Vertex?.TimeUniform is not null) _continuousCanvas = true;
-                material.CopyTextures(frame.TextureScratch);
-                for (var i = 0; i < material.Textures.Length; i++) SubmitTexture(frame.TextureScratch[i] as Texture, tree);
-                Array.Clear(frame.TextureScratch);
-            }
+            if (batch.Material is { } material) SubmitMaterialTextures(material, frame, tree);
         }
+        SubmitParticleTextures(frame, tree);
         foreach (var mask in frame.Lighting.Masks) SubmitTexture(mask.Texture, tree);
         foreach (var child in _activeFrames) if (UpdateMode(child.Viewport) == ViewportUpdateMode.WhenParentVisible && ReferenceEquals(RenderParent(child.Viewport), frame.Viewport)) { child.Wanted = true; SubmitFrame(child, tree); }
         var target = _backend.FindTarget(frame.Viewport); if (target is null) return;
@@ -279,6 +274,37 @@ public sealed partial class RenderingServer : ElectronObject
         finally { _submittingTextures = false; }
         ViewportSubmitted(frame.Viewport);
         frame.State = 2; frame.Drawn = true;
+    }
+    private void SubmitMaterialTextures(MaterialState material, CanvasFrame frame, SceneTree tree)
+    {
+        if (material.Program.TimeUniform is not null || material.Program.Vertex?.TimeUniform is not null) _continuousCanvas = true;
+        material.CopyTextures(frame.TextureScratch);
+        for (var i = 0; i < material.Textures.Length; i++) SubmitTexture(frame.TextureScratch[i] as Texture, tree);
+        Array.Clear(frame.TextureScratch);
+    }
+    private void SubmitParticleTextures(CanvasFrame frame, SceneTree tree)
+    {
+        foreach (var source in ParticleSchedule)
+        {
+            if (!source.Requested || source.LastFrame == _particleFrame || source.Amount == 0 || source.Released) continue;
+            MaterialState? material; var count = 0;
+            source.Preparing = true;
+            try
+            {
+                var resource = source.ProcessMaterial; material = resource?.GetCanvasState();
+                if (material is null) continue;
+                var version = material.ParticleConfigurationVersion;
+                if (material.ParticleMotion is { } motion) { motion.CopyTextures(frame.TextureScratch); count = motion.Textures.Length; }
+                material.CopyTextures(frame.TextureScratch.AsSpan(count)); count += material.Textures.Length;
+                if (!ReferenceEquals(resource, source.ProcessMaterial) || !ReferenceEquals(material, resource?.GetCanvasState()) || material.ParticleConfigurationVersion != version)
+                    throw new InvalidOperationException("Particle texture callbacks require stable borrowed state.");
+            }
+            finally { source.Preparing = false; }
+            if (source.Subemitter is { Released: false, Amount: > 0 } child && material.Program.ParticleStorageBuffers == 2) child.Requested = true;
+            if (material.Program.TimeUniform is not null || material.ParticleMotion?.Program.TimeUniform is not null) _continuousCanvas = true;
+            for (var i = 0; i < count; i++) SubmitTexture(frame.TextureScratch[i] as Texture, tree);
+            Array.Clear(frame.TextureScratch);
+        }
     }
     private void BuildFrame(CanvasFrame frame, SceneTree tree)
     {

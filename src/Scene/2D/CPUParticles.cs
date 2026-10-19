@@ -15,26 +15,6 @@ public partial class CPUParticles : Entity
         /// <summary>Draw older particles before younger particles.</summary>
         Lifetime = 1
     }
-    /// <summary>Selects the emitter's two-dimensional distribution.</summary>
-    public enum EmissionShapeMode
-    {
-        /// <summary>Emit at the origin.</summary>
-        Point = 0,
-        /// <summary>Emit inside a circular disk with uniform radius.</summary>
-        Sphere = 1,
-        /// <summary>Emit the projected surface of a sphere into the disk.</summary>
-        SphereSurface = 2,
-        /// <summary>Emit inside a rectangle.</summary>
-        Rectangle = 3,
-        /// <summary>Emit at copied points, with optional matching colors.</summary>
-        Points = 4,
-        /// <summary>Emit at copied points with optional matching normal bases.</summary>
-        DirectedPoints = 5,
-        /// <summary>Emit uniformly by area between two radii.</summary>
-        Ring = 6,
-        /// <summary>Nonselectable bound.</summary>
-        Max = 7
-    }
     /// <summary>Selects a scalar simulation channel.</summary>
     public enum Parameter
     {
@@ -88,7 +68,7 @@ public partial class CPUParticles : Entity
     private Gradient? _ramp, _initialRamp;
     private Curve? _scaleX, _scaleY;
     private DrawOrderMode _drawOrder;
-    private EmissionShapeMode _shape;
+    private ParticlesEmissionShape _shape;
     /// <summary>Creates eight emitting particles, with world coordinates and interpolation off.</summary>
     public CPUParticles() { _minimum[8] = _maximum[8] = 1; _seed = _rng.Randi(); PhysicsInterpolationMode = PhysicsInterpolationMode.Off; SetInternalProcessing(true, false); }
     private void Read() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
@@ -192,7 +172,7 @@ public partial class CPUParticles : Entity
     public DrawOrderMode DrawOrder { get { Read(); return _drawOrder; } set { Edit(); if (value < DrawOrderMode.Index || value > DrawOrderMode.Lifetime) throw new ArgumentOutOfRangeException(nameof(value)); _drawOrder = value; InvalidateCanvas(); } }
     /// <summary>Gets or sets the distribution for future births.</summary>
     /// <value>Point initially. Mismatched point normals/colors are ignored.</value>
-    public EmissionShapeMode EmissionShape { get { Read(); return _shape; } set { Edit(); if (value < 0 || value >= EmissionShapeMode.Max) throw new ArgumentOutOfRangeException(nameof(value)); _shape = value; NotifyPropertyListChanged(); } }
+    public ParticlesEmissionShape EmissionShape { get { Read(); return _shape; } set { Edit(); if (value < 0 || value >= ParticlesEmissionShape.Max) throw new ArgumentOutOfRangeException(nameof(value)); _shape = value; NotifyPropertyListChanged(); } }
     /// <summary>Gets or sets the borrowed particle image.</summary>
     /// <value>Null initially, drawing one-pixel centered quads. Sprite-sheet geometry is the full image size.</value>
     public Texture? Texture { get { Read(); return _texture; } set { Edit(); Borrow(value); if (ReferenceEquals(value, _texture)) return; if (_texture is not null) _texture.Changed -= TextureChanged; _texture = value; if (_texture is not null) _texture.Changed += TextureChanged; InvalidateCanvas(); } }

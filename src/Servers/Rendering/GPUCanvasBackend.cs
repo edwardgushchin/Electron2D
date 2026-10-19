@@ -173,7 +173,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         _materialMasks = lighting.Masks.Count != 0;
         var size = output.Size; var lightingUsed = false; var sdfUsed = false; var screen = false; var screenMipmaps = false;
         if (RenderingServer.Service is { } particleServer) PrepareParticleSources(particleServer);
-        foreach (var source in _particlePrepared) sdfUsed |= source.PreparedProcess?.Program.UsesSDFTexture == true;
+        foreach (var source in _particlePrepared) sdfUsed |= source.PreparedProcess?.Program.UsesSDFTexture == true || source.PreparedProcess?.ParticleMotion?.Program.UsesSDFTexture == true;
         foreach (var batch in batches)
         {
             if (batch.Particles is { } particles && (long)batch.Count * particles.Source.Amount * sizeof(CanvasVertex) > int.MaxValue)

@@ -3,7 +3,8 @@ namespace Electron2D;
 /// <summary>A one-row RGB floating-point texture generated from three borrowed scalar curves.</summary>
 /// <remarks>X, Y and Z name the red, green and blue channels, not spatial coordinates. Texel i samples each
 /// curve at i / Width. Missing channels are zero; values are not clamped. A curve shared by multiple channels
-/// causes one rebake and Changed notification per source event. Threading and rendering follow CurveTexture.</remarks>
+/// causes one rebake and Changed notification per source event. Threading and rendering follow CurveTexture.
+/// <para>Typed archives preserve authored curves and initialization state.</para></remarks>
 public sealed class CurveXYZTexture : Texture
 {
     private readonly CurveTextureData _data;
@@ -45,10 +46,11 @@ public sealed class CurveXYZTexture : Texture
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
     [
-        new PropertyDescriptor<CurveXYZTexture, int>(nameof(Width), t => t.Width, (t, v) => t.Width = v, _ => 256),
-        new PropertyDescriptor<CurveXYZTexture, Curve?>(nameof(CurveX), t => t.CurveX, (t, v) => t.CurveX = v, _ => null),
-        new PropertyDescriptor<CurveXYZTexture, Curve?>(nameof(CurveY), t => t.CurveY, (t, v) => t.CurveY = v, _ => null),
-        new PropertyDescriptor<CurveXYZTexture, Curve?>(nameof(CurveZ), t => t.CurveZ, (t, v) => t.CurveZ = v, _ => null),
+        new PropertyDescriptor<CurveXYZTexture, int>(nameof(Width), t => t.Width, (t, v) => t.Width = v, _ => 256, stored: true),
+        new PropertyDescriptor<CurveXYZTexture, Curve?>(nameof(CurveX), t => t.CurveX, (t, v) => t.CurveX = v, _ => null, stored: true),
+        new PropertyDescriptor<CurveXYZTexture, Curve?>(nameof(CurveY), t => t.CurveY, (t, v) => t.CurveY = v, _ => null, stored: true),
+        new PropertyDescriptor<CurveXYZTexture, Curve?>(nameof(CurveZ), t => t.CurveZ, (t, v) => t.CurveZ = v, _ => null, stored: true),
+        new PropertyDescriptor<CurveXYZTexture, bool>("_curve_texture_initialized", t => t._data.Initialized, (t, v) => t._data.Initialized = v, _ => false, stored: true),
     ]);
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new CurveXYZTexture();

@@ -89,7 +89,7 @@ public partial class CPUParticles
         {
             // Prepare curve caches outside the first measured update. Live edits are prepared again on demand.
             var pose = EmissionPose(); if (!pose.IsFinite()) throw new InvalidOperationException("Emitter pose overflowed.");
-            if (_shape == EmissionShapeMode.Ring && _innerRadius > _ringRadius) throw new InvalidOperationException("Inner ring radius exceeds the outer radius.");
+            if (_shape == ParticlesEmissionShape.Ring && _innerRadius > _ringRadius) throw new InvalidOperationException("Inner ring radius exceeds the outer radius.");
             if (!_prepared) { ValidateSeek(_preprocess); _prepared = true; AdvanceInterval(_preprocess, ref finished, ref stopped); }
             if (emitTime > 0) { _emitting = _active = true; AdvanceInterval(emitTime, ref finished, ref stopped); }
             if (residual > 0) { _emitting = false; AdvanceInterval(residual, ref finished, ref stopped); }
@@ -189,19 +189,19 @@ public partial class CPUParticles
         p.Lifetime = _lifetime * (1 - _rng.Randf() * _lifetimeRandomness);
         switch (_shape)
         {
-            case EmissionShapeMode.Sphere: { var theta = Mathf.Tau * _rng.Randf(); p.Pose.Origin = new Vector2(MathF.Cos(theta), MathF.Sin(theta)) * (_sphereRadius * _rng.Randf()); break; }
-            case EmissionShapeMode.SphereSurface: { var sample = _rng.Randf(); var theta = Mathf.Tau * _rng.Randf(); p.Pose.Origin = new Vector2(MathF.Cos(theta), MathF.Sin(theta)) * (_sphereRadius * MathF.Sqrt(1 - sample * sample)); break; }
-            case EmissionShapeMode.Rectangle: p.Pose.Origin = new Vector2(_rng.Randf() * 2 - 1, _rng.Randf() * 2 - 1) * _rectExtents; break;
-            case EmissionShapeMode.Points:
-            case EmissionShapeMode.DirectedPoints:
+            case ParticlesEmissionShape.Sphere: { var theta = Mathf.Tau * _rng.Randf(); p.Pose.Origin = new Vector2(MathF.Cos(theta), MathF.Sin(theta)) * (_sphereRadius * _rng.Randf()); break; }
+            case ParticlesEmissionShape.SphereSurface: { var sample = _rng.Randf(); var theta = Mathf.Tau * _rng.Randf(); p.Pose.Origin = new Vector2(MathF.Cos(theta), MathF.Sin(theta)) * (_sphereRadius * MathF.Sqrt(1 - sample * sample)); break; }
+            case ParticlesEmissionShape.Rectangle: p.Pose.Origin = new Vector2(_rng.Randf() * 2 - 1, _rng.Randf() * 2 - 1) * _rectExtents; break;
+            case ParticlesEmissionShape.Points:
+            case ParticlesEmissionShape.DirectedPoints:
                 if (_points.Length != 0)
                 {
                     var selected = (int)(_rng.Randi() % (uint)_points.Length); p.Pose.Origin = _points[selected];
-                    if (_shape == EmissionShapeMode.DirectedPoints && _normals.Length == _points.Length) { var normal = _normals[selected]; p.Velocity = normal * p.Velocity.X + normal.Orthogonal() * p.Velocity.Y; }
+                    if (_shape == ParticlesEmissionShape.DirectedPoints && _normals.Length == _points.Length) { var normal = _normals[selected]; p.Velocity = normal * p.Velocity.X + normal.Orthogonal() * p.Velocity.Y; }
                     if (_colors.Length == _points.Length) p.BaseColor = _colors[selected];
                 }
                 break;
-            case EmissionShapeMode.Ring:
+            case ParticlesEmissionShape.Ring:
                 var t = Mathf.Tau * _rng.Randf(); var radius = Math.Sqrt(_rng.Randf() * ((double)_ringRadius * _ringRadius - (double)_innerRadius * _innerRadius) + (double)_innerRadius * _innerRadius);
                 p.Pose.Origin = new Vector2(MathF.Cos(t), MathF.Sin(t)) * (float)radius; break;
         }

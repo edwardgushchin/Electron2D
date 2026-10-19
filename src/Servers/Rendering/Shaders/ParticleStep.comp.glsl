@@ -26,7 +26,7 @@ void main()
         particle.TransformX = vec4(1, 0, 0, 0); particle.TransformY = vec4(0, 1, 0, 0);
         particle.Color = vec4(1); particle.Custom = vec4(0); particle.VelocityAge = vec4(0); particle.State = uvec4(0);
     }
-    particle.State.x &= ~2u;
+    particle.State.x &= ~(2u | (31u << 8u));
     float localDelta = Time.x;
     if ((particle.State.x & 1u) != 0)
     {
@@ -61,6 +61,7 @@ void main()
                 uint slot = min(expected, uint(EMISSIONS.length() - 1));
                 Electron2D_Particle incoming = EMISSIONS[slot]; uint flags = incoming.State.x;
                 birth(particle, index);
+                particle.State.x |= (flags & 31u) << 8u;
                 if ((flags & 1u) != 0) { particle.TransformX.w = incoming.TransformX.w; particle.TransformY.w = incoming.TransformY.w; }
                 if ((flags & 2u) != 0) { particle.TransformX.xy = incoming.TransformX.xy; particle.TransformY.xy = incoming.TransformY.xy; }
                 if ((flags & 4u) != 0) particle.VelocityAge.xy = incoming.VelocityAge.xy;

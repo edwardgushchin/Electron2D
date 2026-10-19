@@ -12,6 +12,16 @@ internal static partial class ParticleServerTests
     private sealed class Control : Entity { protected override void OnDraw() => DrawRect(new(40, 10, 8, 8), Colors.Green); }
     internal static void Run(string profile)
     {
+        if (profile == "material-callbacks") { MaterialCallbacks(); return; }
+        if (profile == "material-textures") { MaterialTextures(); return; }
+        if (profile == "material-allocations") { Allocations(true); return; }
+        if (profile == "material-edges") { MaterialEdges(); return; }
+        if (profile == "material-subemission") { MaterialSubemission(); return; }
+        if (profile == "material-contacts") { MaterialContacts(); return; }
+        if (profile == "material-behavior") { MaterialBehavior(); return; }
+        if (profile == "material-managed") { MaterialManaged(); return; }
+        if (profile == "process-material") { ProcessMaterial(); return; }
+        if (profile == "emit-flags") { EmitFlags(); return; }
         if (profile == "instances") { Instances(); return; }
         if (profile == "world-group") { WorldGroup(); return; }
         if (profile == "group") { Group(); return; }

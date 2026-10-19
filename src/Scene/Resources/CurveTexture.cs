@@ -4,7 +4,8 @@ namespace Electron2D;
 /// <remarks>Texel i samples Curve.SampleBaked(i / Width); the endpoint at one is not sampled.
 /// Curve changes synchronously replace the pixels before Changed. Values are not clamped or color-converted.
 /// CPU access needs no renderer; drawing requires native floating-point texture support. State is serialized;
-/// events run outside its lock. Coordinate multi-call edits, copying and disposal with other threads.</remarks>
+/// events run outside its lock. Coordinate multi-call edits, copying and disposal with other threads.
+/// <para>Typed archives preserve authored curves and initialization state.</para></remarks>
 public sealed class CurveTexture : Texture
 {
     /// <summary>Selects the stored channels for the scalar samples.</summary>
@@ -52,9 +53,10 @@ public sealed class CurveTexture : Texture
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
     [
-        new PropertyDescriptor<CurveTexture, int>(nameof(Width), t => t.Width, (t, v) => t.Width = v, _ => 256),
-        new PropertyDescriptor<CurveTexture, Curve?>(nameof(Curve), t => t.Curve, (t, v) => t.Curve = v, _ => null),
-        new PropertyDescriptor<CurveTexture, TextureModeEnum>(nameof(TextureMode), t => t.TextureMode, (t, v) => t.TextureMode = v, _ => TextureModeEnum.RGB),
+        new PropertyDescriptor<CurveTexture, int>(nameof(Width), t => t.Width, (t, v) => t.Width = v, _ => 256, stored: true),
+        new PropertyDescriptor<CurveTexture, Curve?>(nameof(Curve), t => t.Curve, (t, v) => t.Curve = v, _ => null, stored: true),
+        new PropertyDescriptor<CurveTexture, TextureModeEnum>(nameof(TextureMode), t => t.TextureMode, (t, v) => t.TextureMode = v, _ => TextureModeEnum.RGB, stored: true),
+        new PropertyDescriptor<CurveTexture, bool>("_curve_texture_initialized", t => t._data.Initialized, (t, v) => t._data.Initialized = v, _ => false, stored: true),
     ]);
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new CurveTexture();

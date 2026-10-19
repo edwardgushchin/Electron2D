@@ -116,7 +116,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed 2D mesh-data and MeshInstance2D rendering slice; audit 3D-only members individually (ADR 0028). | 1 |
 | Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 1 |
 | Trigger: first typed missing-asset placeholder and loader slice (ADRs 0013 and 0023). | 1 |
-| Trigger: implement the typed planar process-material settings and built-in portable compute generator for distributions, curves, forces, color/animation and SDF collision, then connect its real GPUParticles/CPUParticles conversions under ADR 0028. The compute ABI and retained GPU simulation/draw consumer already execute; spatial scene attractors/colliders remain outside ADR 0004. | 1 |
 | Separate product-scope decision for each of 1 currently unassigned families; see their catalog pages for exact names. | 1 |
 
 Each [catalog entry](catalog.md) opens the complete member table. Excluded rows have an accepted product reason and no implementation task.

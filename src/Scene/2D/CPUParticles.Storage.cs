@@ -10,7 +10,7 @@ public partial class CPUParticles
         new PropertyDescriptor<CPUParticles, double>(nameof(Lifetime), p => p.Lifetime, (p, v) => p.Lifetime = v, _ => 1d, stored: true),
         new PropertyDescriptor<CPUParticles, int>(nameof(FixedFPS), p => p.FixedFPS, (p, v) => p.FixedFPS = v, _ => 0, stored: true),
         new PropertyDescriptor<CPUParticles, DrawOrderMode>(nameof(DrawOrder), p => p.DrawOrder, (p, v) => p.DrawOrder = v, _ => DrawOrderMode.Index, stored: true),
-        new PropertyDescriptor<CPUParticles, EmissionShapeMode>(nameof(EmissionShape), p => p.EmissionShape, (p, v) => p.EmissionShape = v, _ => EmissionShapeMode.Point, stored: true),
+        new PropertyDescriptor<CPUParticles, ParticlesEmissionShape>(nameof(EmissionShape), p => p.EmissionShape, (p, v) => p.EmissionShape = v, _ => ParticlesEmissionShape.Point, stored: true),
         new PropertyDescriptor<CPUParticles, Texture?>(nameof(Texture), p => p.Texture, (p, v) => p.Texture = v, _ => null, stored: true),
         new PropertyDescriptor<CPUParticles, Vector2[]>(nameof(EmissionPoints), p => p.EmissionPoints, (p, v) => p.EmissionPoints = v, _ => [], stored: true),
         new PropertyDescriptor<CPUParticles, Vector2[]>(nameof(EmissionNormals), p => p.EmissionNormals, (p, v) => p.EmissionNormals = v, _ => [], stored: true),

@@ -37,7 +37,7 @@ internal sealed unsafe class ParticleGPUState : IDisposable
     private RenderHandle Transfer(uint bytes, SDL.GPUTransferBufferUsage usage) => new(SDL.CreateGPUTransferBuffer(Device, new() { Size = bytes, Usage = usage }), h => SDL.ReleaseGPUTransferBuffer(Device, h), _device);
     internal void Prepare(RenderingParticleState source, nint command, bool intake)
     {
-        var incoming = intake ? Amount : 0; var outgoing = source.Subemitter is not null ? Amount : 0;
+        var incoming = intake ? Amount : 0; var outgoing = source.Subemitter is { Released: false } child ? child.Amount : 0;
         if (incoming != IncomingCapacity)
         {
             var replacement = Buffer(checked(((uint)incoming + 1) * 96)); Incoming.Dispose(); Incoming = replacement; IncomingCapacity = incoming;

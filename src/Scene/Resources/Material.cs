@@ -301,6 +301,8 @@ internal sealed class MaterialState
     internal readonly byte[][] Buffers;
     internal readonly Resource?[] Textures;
     internal readonly Shader? Shader;
+    internal long ParticleConfigurationVersion;
+    internal MaterialState? ParticleMotion;
 
     internal MaterialState(object gate, ShaderProgram program, MaterialState? previous, Shader? shader = null)
     {

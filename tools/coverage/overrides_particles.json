@@ -12,7 +12,7 @@
     },
     {
       "godot": "CPUParticles2D::enum:EmissionShape",
-      "electron2d": "T:Electron2D.CPUParticles.EmissionShapeMode",
+      "electron2d": "T:Electron2D.ParticlesEmissionShape",
       "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; High-level GPUParticles/ParticleProcessMaterial authoring and their conversion remain exact dependencies; the retained GPU server now executes separately."
     },
     {
@@ -37,42 +37,42 @@
     },
     {
       "godot": "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_DIRECTED_POINTS",
-      "electron2d": "enumValue:Electron2D.CPUParticles.EmissionShapeMode.DirectedPoints()",
+      "electron2d": "enumValue:Electron2D.ParticlesEmissionShape.DirectedPoints()",
       "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; High-level GPUParticles/ParticleProcessMaterial authoring and their conversion remain exact dependencies; the retained GPU server now executes separately."
     },
     {
       "godot": "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_MAX",
-      "electron2d": "enumValue:Electron2D.CPUParticles.EmissionShapeMode.Max()",
+      "electron2d": "enumValue:Electron2D.ParticlesEmissionShape.Max()",
       "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; High-level GPUParticles/ParticleProcessMaterial authoring and their conversion remain exact dependencies; the retained GPU server now executes separately."
     },
     {
       "godot": "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_POINT",
-      "electron2d": "enumValue:Electron2D.CPUParticles.EmissionShapeMode.Point()",
+      "electron2d": "enumValue:Electron2D.ParticlesEmissionShape.Point()",
       "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; High-level GPUParticles/ParticleProcessMaterial authoring and their conversion remain exact dependencies; the retained GPU server now executes separately."
     },
     {
       "godot": "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_POINTS",
-      "electron2d": "enumValue:Electron2D.CPUParticles.EmissionShapeMode.Points()",
+      "electron2d": "enumValue:Electron2D.ParticlesEmissionShape.Points()",
       "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; High-level GPUParticles/ParticleProcessMaterial authoring and their conversion remain exact dependencies; the retained GPU server now executes separately."
     },
     {
       "godot": "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_RECTANGLE",
-      "electron2d": "enumValue:Electron2D.CPUParticles.EmissionShapeMode.Rectangle()",
+      "electron2d": "enumValue:Electron2D.ParticlesEmissionShape.Rectangle()",
       "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; High-level GPUParticles/ParticleProcessMaterial authoring and their conversion remain exact dependencies; the retained GPU server now executes separately."
     },
     {
       "godot": "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_RING",
-      "electron2d": "enumValue:Electron2D.CPUParticles.EmissionShapeMode.Ring()",
+      "electron2d": "enumValue:Electron2D.ParticlesEmissionShape.Ring()",
       "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; High-level GPUParticles/ParticleProcessMaterial authoring and their conversion remain exact dependencies; the retained GPU server now executes separately."
     },
     {
       "godot": "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_SPHERE",
-      "electron2d": "enumValue:Electron2D.CPUParticles.EmissionShapeMode.Sphere()",
+      "electron2d": "enumValue:Electron2D.ParticlesEmissionShape.Sphere()",
       "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; High-level GPUParticles/ParticleProcessMaterial authoring and their conversion remain exact dependencies; the retained GPU server now executes separately."
     },
     {
       "godot": "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_SPHERE_SURFACE",
-      "electron2d": "enumValue:Electron2D.CPUParticles.EmissionShapeMode.SphereSurface()",
+      "electron2d": "enumValue:Electron2D.ParticlesEmissionShape.SphereSurface()",
       "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; High-level GPUParticles/ParticleProcessMaterial authoring and their conversion remain exact dependencies; the retained GPU server now executes separately."
     },
     {
@@ -804,6 +804,56 @@
       "godot": "RenderingServer::method:particles_set_use_local_coordinates(RID:,bool:)",
       "electron2d": "method:Electron2D.RenderingServer.ParticlesSetUseLocalCoordinates(Electron2D.RID,System.Boolean)",
       "reason": "ADR 0028: retained renderer-session GPU particles execute state/lifecycle, fixed/variable/explicit/preprocess/one-shot scheduling, manual flags, portable process materials, planar transforms/SDF inputs, bounded acyclic subemission, age ordering, weighted native trail history and mesh canvas output. ParticleServerTests verifies current Linux software-Vulkan pixels, ownership/finite/capacity edges and 32 warmed process/sort/render frames with zero managed owner bytes. Physical GPU performance, native allocator, other platforms and owner acceptance remain unverified; high-level GPUParticles/ParticleProcessMaterial/conversion remain separate exact integrations."
+    },
+    {
+      "godot": "ParticleProcessMaterial::enum_value:EmissionShape.EMISSION_SHAPE_BOX",
+      "electron2d": "enumValue:Electron2D.ParticlesEmissionShape.Rectangle()",
+      "reason": "ADRs 0004/0028/0051: ParticleProcessMaterial executes planar distributions, force/velocity/texture channels, turbulence, canvas-SDF contact and bounded subemission through native retained compute. Typed stored graphs preserve borrowed curve/gradient textures. ParticleServerTests verifies native records and pixels, live process-only viewport inputs, failure/retry and warmed owner allocation boundaries on Linux software Vulkan; physical GPU, native allocator, foreign and owner acceptance remain open."
+    },
+    {
+      "godot": "ParticleProcessMaterial::enum_value:Parameter.PARAM_TURB_INIT_DISPLACEMENT",
+      "electron2d": "enumValue:Electron2D.ParticleProcessMaterial.Parameter.TurbInitialDisplacement()",
+      "reason": "ADRs 0004/0028/0051: ParticleProcessMaterial executes planar distributions, force/velocity/texture channels, turbulence, canvas-SDF contact and bounded subemission through native retained compute. Typed stored graphs preserve borrowed curve/gradient textures. ParticleServerTests verifies native records and pixels, live process-only viewport inputs, failure/retry and warmed owner allocation boundaries on Linux software Vulkan; physical GPU, native allocator, foreign and owner acceptance remain open."
+    },
+    {
+      "godot": "ParticleProcessMaterial::enum_value:Parameter.PARAM_TURB_VEL_INFLUENCE",
+      "electron2d": "enumValue:Electron2D.ParticleProcessMaterial.Parameter.TurbVelocityInfluence()",
+      "reason": "ADRs 0004/0028/0051: ParticleProcessMaterial executes planar distributions, force/velocity/texture channels, turbulence, canvas-SDF contact and bounded subemission through native retained compute. Typed stored graphs preserve borrowed curve/gradient textures. ParticleServerTests verifies native records and pixels, live process-only viewport inputs, failure/retry and warmed owner allocation boundaries on Linux software Vulkan; physical GPU, native allocator, foreign and owner acceptance remain open."
+    },
+    {
+      "godot": "ParticleProcessMaterial::property:emission_box_extents",
+      "electron2d": "property:Electron2D.ParticleProcessMaterial.EmissionRectExtents()",
+      "reason": "ADRs 0004/0028/0051: ParticleProcessMaterial executes planar distributions, force/velocity/texture channels, turbulence, canvas-SDF contact and bounded subemission through native retained compute. Typed stored graphs preserve borrowed curve/gradient textures. ParticleServerTests verifies native records and pixels, live process-only viewport inputs, failure/retry and warmed owner allocation boundaries on Linux software Vulkan; physical GPU, native allocator, foreign and owner acceptance remain open."
+    },
+    {
+      "godot": "ParticleProcessMaterial::property:direction",
+      "electron2d": "property:Electron2D.ParticleProcessMaterial.Direction()",
+      "reason": "ADRs 0004/0028/0051: ParticleProcessMaterial executes planar distributions, force/velocity/texture channels, turbulence, canvas-SDF contact and bounded subemission through native retained compute. Typed stored graphs preserve borrowed curve/gradient textures. ParticleServerTests verifies native records and pixels, live process-only viewport inputs, failure/retry and warmed owner allocation boundaries on Linux software Vulkan; physical GPU, native allocator, foreign and owner acceptance remain open. Spatial positions/directions use Vector2; TurbulenceNoiseSpeed retains a three-component numeric noise coordinate."
+    },
+    {
+      "godot": "ParticleProcessMaterial::property:gravity",
+      "electron2d": "property:Electron2D.ParticleProcessMaterial.Gravity()",
+      "reason": "ADRs 0004/0028/0051: ParticleProcessMaterial executes planar distributions, force/velocity/texture channels, turbulence, canvas-SDF contact and bounded subemission through native retained compute. Typed stored graphs preserve borrowed curve/gradient textures. ParticleServerTests verifies native records and pixels, live process-only viewport inputs, failure/retry and warmed owner allocation boundaries on Linux software Vulkan; physical GPU, native allocator, foreign and owner acceptance remain open. Spatial positions/directions use Vector2; TurbulenceNoiseSpeed retains a three-component numeric noise coordinate."
+    },
+    {
+      "godot": "ParticleProcessMaterial::property:emission_shape_offset",
+      "electron2d": "property:Electron2D.ParticleProcessMaterial.EmissionShapeOffset()",
+      "reason": "ADRs 0004/0028/0051: ParticleProcessMaterial executes planar distributions, force/velocity/texture channels, turbulence, canvas-SDF contact and bounded subemission through native retained compute. Typed stored graphs preserve borrowed curve/gradient textures. ParticleServerTests verifies native records and pixels, live process-only viewport inputs, failure/retry and warmed owner allocation boundaries on Linux software Vulkan; physical GPU, native allocator, foreign and owner acceptance remain open. Spatial positions/directions use Vector2; TurbulenceNoiseSpeed retains a three-component numeric noise coordinate."
+    },
+    {
+      "godot": "ParticleProcessMaterial::property:emission_shape_scale",
+      "electron2d": "property:Electron2D.ParticleProcessMaterial.EmissionShapeScale()",
+      "reason": "ADRs 0004/0028/0051: ParticleProcessMaterial executes planar distributions, force/velocity/texture channels, turbulence, canvas-SDF contact and bounded subemission through native retained compute. Typed stored graphs preserve borrowed curve/gradient textures. ParticleServerTests verifies native records and pixels, live process-only viewport inputs, failure/retry and warmed owner allocation boundaries on Linux software Vulkan; physical GPU, native allocator, foreign and owner acceptance remain open. Spatial positions/directions use Vector2; TurbulenceNoiseSpeed retains a three-component numeric noise coordinate."
+    },
+    {
+      "godot": "ParticleProcessMaterial::property:velocity_pivot",
+      "electron2d": "property:Electron2D.ParticleProcessMaterial.VelocityPivot()",
+      "reason": "ADRs 0004/0028/0051: ParticleProcessMaterial executes planar distributions, force/velocity/texture channels, turbulence, canvas-SDF contact and bounded subemission through native retained compute. Typed stored graphs preserve borrowed curve/gradient textures. ParticleServerTests verifies native records and pixels, live process-only viewport inputs, failure/retry and warmed owner allocation boundaries on Linux software Vulkan; physical GPU, native allocator, foreign and owner acceptance remain open. Spatial positions/directions use Vector2; TurbulenceNoiseSpeed retains a three-component numeric noise coordinate."
+    },
+    {
+      "godot": "ParticleProcessMaterial::property:turbulence_noise_speed",
+      "electron2d": "property:Electron2D.ParticleProcessMaterial.TurbulenceNoiseSpeed()",
+      "reason": "ADRs 0004/0028/0051: ParticleProcessMaterial executes planar distributions, force/velocity/texture channels, turbulence, canvas-SDF contact and bounded subemission through native retained compute. Typed stored graphs preserve borrowed curve/gradient textures. ParticleServerTests verifies native records and pixels, live process-only viewport inputs, failure/retry and warmed owner allocation boundaries on Linux software Vulkan; physical GPU, native allocator, foreign and owner acceptance remain open. Spatial positions/directions use Vector2; TurbulenceNoiseSpeed retains a three-component numeric noise coordinate."
     }
   ],
   "extras": [
@@ -841,6 +891,26 @@
       "electron2d": "method:Electron2D.CPUParticles.OnNotification(System.Int32)",
       "reason": "Default construction and inherited scene drawing, internal notification, schema, configuration-warning and deterministic disposal overrides of the applicable CPU particle node. These preserve Node/CanvasItem lifecycle without adding a dynamic API.",
       "adr": "ADR 0004/0008/0014/0028"
+    },
+    {
+      "electron2d": "constructor:Electron2D.ParticleProcessMaterial..ctor()",
+      "reason": "Default typed construction of the applicable process material, with no native session or shader compilation during authoring.",
+      "adr": "ADR 0004/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.ParticleProcessMaterial.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed Resource duplication and stored-property hooks of the applicable process material; these preserve borrowed graph identity and use the existing resource lifecycle.",
+      "adr": "ADR 0004/0013/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.ParticleProcessMaterial.CreateDuplicateInstance()",
+      "reason": "Typed Resource duplication and stored-property hooks of the applicable process material; these preserve borrowed graph identity and use the existing resource lifecycle.",
+      "adr": "ADR 0004/0013/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.ParticleProcessMaterial.GetPropertyDescriptors()",
+      "reason": "Typed Resource duplication and stored-property hooks of the applicable process material; these preserve borrowed graph identity and use the existing resource lifecycle.",
+      "adr": "ADR 0004/0013/0028"
     }
   ],
   "statusGroups": [
@@ -1103,6 +1173,191 @@
       ],
       "state": "Excluded",
       "reason": "ADRs 0004/0028: pinned RenderingServer particle scene collision/attractor/heightfield storage and depth/billboard draw policies serve the 3D scene domain. Planar SDF collision input and velocity axes execute in the retained process/canvas path; no spatial API or implementation trigger."
+    },
+    {
+      "godot": [
+        "class:ParticleProcessMaterial",
+        "ParticleProcessMaterial::enum:CollisionMode",
+        "ParticleProcessMaterial::enum:EmissionShape",
+        "ParticleProcessMaterial::enum:Parameter",
+        "ParticleProcessMaterial::enum:ParticleFlags",
+        "ParticleProcessMaterial::enum:SubEmitterMode",
+        "ParticleProcessMaterial::enum_value:CollisionMode.COLLISION_DISABLED",
+        "ParticleProcessMaterial::enum_value:CollisionMode.COLLISION_HIDE_ON_CONTACT",
+        "ParticleProcessMaterial::enum_value:CollisionMode.COLLISION_MAX",
+        "ParticleProcessMaterial::enum_value:CollisionMode.COLLISION_RIGID",
+        "ParticleProcessMaterial::enum_value:EmissionShape.EMISSION_SHAPE_BOX",
+        "ParticleProcessMaterial::enum_value:EmissionShape.EMISSION_SHAPE_DIRECTED_POINTS",
+        "ParticleProcessMaterial::enum_value:EmissionShape.EMISSION_SHAPE_MAX",
+        "ParticleProcessMaterial::enum_value:EmissionShape.EMISSION_SHAPE_POINT",
+        "ParticleProcessMaterial::enum_value:EmissionShape.EMISSION_SHAPE_POINTS",
+        "ParticleProcessMaterial::enum_value:EmissionShape.EMISSION_SHAPE_RING",
+        "ParticleProcessMaterial::enum_value:EmissionShape.EMISSION_SHAPE_SPHERE",
+        "ParticleProcessMaterial::enum_value:EmissionShape.EMISSION_SHAPE_SPHERE_SURFACE",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_ANGLE",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_ANGULAR_VELOCITY",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_ANIM_OFFSET",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_ANIM_SPEED",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_DAMPING",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_DIRECTIONAL_VELOCITY",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_HUE_VARIATION",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_INITIAL_LINEAR_VELOCITY",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_LINEAR_ACCEL",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_MAX",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_ORBIT_VELOCITY",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_RADIAL_ACCEL",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_RADIAL_VELOCITY",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_SCALE",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_SCALE_OVER_VELOCITY",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_TANGENTIAL_ACCEL",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_TURB_INFLUENCE_OVER_LIFE",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_TURB_INIT_DISPLACEMENT",
+        "ParticleProcessMaterial::enum_value:Parameter.PARAM_TURB_VEL_INFLUENCE",
+        "ParticleProcessMaterial::enum_value:ParticleFlags.PARTICLE_FLAG_ALIGN_Y_TO_VELOCITY",
+        "ParticleProcessMaterial::enum_value:ParticleFlags.PARTICLE_FLAG_DAMPING_AS_FRICTION",
+        "ParticleProcessMaterial::enum_value:ParticleFlags.PARTICLE_FLAG_INHERIT_EMITTER_SCALE",
+        "ParticleProcessMaterial::enum_value:ParticleFlags.PARTICLE_FLAG_MAX",
+        "ParticleProcessMaterial::enum_value:SubEmitterMode.SUB_EMITTER_AT_COLLISION",
+        "ParticleProcessMaterial::enum_value:SubEmitterMode.SUB_EMITTER_AT_END",
+        "ParticleProcessMaterial::enum_value:SubEmitterMode.SUB_EMITTER_AT_START",
+        "ParticleProcessMaterial::enum_value:SubEmitterMode.SUB_EMITTER_CONSTANT",
+        "ParticleProcessMaterial::enum_value:SubEmitterMode.SUB_EMITTER_DISABLED",
+        "ParticleProcessMaterial::enum_value:SubEmitterMode.SUB_EMITTER_MAX",
+        "ParticleProcessMaterial::method:get_param(int:ParticleProcessMaterial.Parameter)",
+        "ParticleProcessMaterial::method:get_param_max(int:ParticleProcessMaterial.Parameter)",
+        "ParticleProcessMaterial::method:get_param_min(int:ParticleProcessMaterial.Parameter)",
+        "ParticleProcessMaterial::method:get_param_texture(int:ParticleProcessMaterial.Parameter)",
+        "ParticleProcessMaterial::method:get_particle_flag(int:ParticleProcessMaterial.ParticleFlags)",
+        "ParticleProcessMaterial::method:set_param(int:ParticleProcessMaterial.Parameter,Vector2:)",
+        "ParticleProcessMaterial::method:set_param_max(int:ParticleProcessMaterial.Parameter,float:)",
+        "ParticleProcessMaterial::method:set_param_min(int:ParticleProcessMaterial.Parameter,float:)",
+        "ParticleProcessMaterial::method:set_param_texture(int:ParticleProcessMaterial.Parameter,Texture2D:)",
+        "ParticleProcessMaterial::method:set_particle_flag(int:ParticleProcessMaterial.ParticleFlags,bool:)",
+        "ParticleProcessMaterial::property:alpha_curve",
+        "ParticleProcessMaterial::property:angle_curve",
+        "ParticleProcessMaterial::property:angle_max",
+        "ParticleProcessMaterial::property:angle_min",
+        "ParticleProcessMaterial::property:angular_velocity_curve",
+        "ParticleProcessMaterial::property:angular_velocity_max",
+        "ParticleProcessMaterial::property:angular_velocity_min",
+        "ParticleProcessMaterial::property:anim_offset_curve",
+        "ParticleProcessMaterial::property:anim_offset_max",
+        "ParticleProcessMaterial::property:anim_offset_min",
+        "ParticleProcessMaterial::property:anim_speed_curve",
+        "ParticleProcessMaterial::property:anim_speed_max",
+        "ParticleProcessMaterial::property:anim_speed_min",
+        "ParticleProcessMaterial::property:collision_bounce",
+        "ParticleProcessMaterial::property:collision_friction",
+        "ParticleProcessMaterial::property:collision_mode",
+        "ParticleProcessMaterial::property:collision_use_scale",
+        "ParticleProcessMaterial::property:color",
+        "ParticleProcessMaterial::property:color_initial_ramp",
+        "ParticleProcessMaterial::property:color_ramp",
+        "ParticleProcessMaterial::property:damping_curve",
+        "ParticleProcessMaterial::property:damping_max",
+        "ParticleProcessMaterial::property:damping_min",
+        "ParticleProcessMaterial::property:direction",
+        "ParticleProcessMaterial::property:directional_velocity_curve",
+        "ParticleProcessMaterial::property:directional_velocity_max",
+        "ParticleProcessMaterial::property:directional_velocity_min",
+        "ParticleProcessMaterial::property:emission_box_extents",
+        "ParticleProcessMaterial::property:emission_color_texture",
+        "ParticleProcessMaterial::property:emission_curve",
+        "ParticleProcessMaterial::property:emission_normal_texture",
+        "ParticleProcessMaterial::property:emission_point_count",
+        "ParticleProcessMaterial::property:emission_point_texture",
+        "ParticleProcessMaterial::property:emission_ring_inner_radius",
+        "ParticleProcessMaterial::property:emission_ring_radius",
+        "ParticleProcessMaterial::property:emission_shape",
+        "ParticleProcessMaterial::property:emission_shape_offset",
+        "ParticleProcessMaterial::property:emission_shape_scale",
+        "ParticleProcessMaterial::property:emission_sphere_radius",
+        "ParticleProcessMaterial::property:gravity",
+        "ParticleProcessMaterial::property:hue_variation_curve",
+        "ParticleProcessMaterial::property:hue_variation_max",
+        "ParticleProcessMaterial::property:hue_variation_min",
+        "ParticleProcessMaterial::property:inherit_velocity_ratio",
+        "ParticleProcessMaterial::property:initial_velocity_max",
+        "ParticleProcessMaterial::property:initial_velocity_min",
+        "ParticleProcessMaterial::property:lifetime_randomness",
+        "ParticleProcessMaterial::property:linear_accel_curve",
+        "ParticleProcessMaterial::property:linear_accel_max",
+        "ParticleProcessMaterial::property:linear_accel_min",
+        "ParticleProcessMaterial::property:orbit_velocity_curve",
+        "ParticleProcessMaterial::property:orbit_velocity_max",
+        "ParticleProcessMaterial::property:orbit_velocity_min",
+        "ParticleProcessMaterial::property:particle_flag_align_y",
+        "ParticleProcessMaterial::property:particle_flag_damping_as_friction",
+        "ParticleProcessMaterial::property:particle_flag_inherit_emitter_scale",
+        "ParticleProcessMaterial::property:radial_accel_curve",
+        "ParticleProcessMaterial::property:radial_accel_max",
+        "ParticleProcessMaterial::property:radial_accel_min",
+        "ParticleProcessMaterial::property:radial_velocity_curve",
+        "ParticleProcessMaterial::property:radial_velocity_max",
+        "ParticleProcessMaterial::property:radial_velocity_min",
+        "ParticleProcessMaterial::property:scale_curve",
+        "ParticleProcessMaterial::property:scale_max",
+        "ParticleProcessMaterial::property:scale_min",
+        "ParticleProcessMaterial::property:scale_over_velocity_curve",
+        "ParticleProcessMaterial::property:scale_over_velocity_max",
+        "ParticleProcessMaterial::property:scale_over_velocity_min",
+        "ParticleProcessMaterial::property:spread",
+        "ParticleProcessMaterial::property:sub_emitter_amount_at_collision",
+        "ParticleProcessMaterial::property:sub_emitter_amount_at_end",
+        "ParticleProcessMaterial::property:sub_emitter_amount_at_start",
+        "ParticleProcessMaterial::property:sub_emitter_frequency",
+        "ParticleProcessMaterial::property:sub_emitter_keep_velocity",
+        "ParticleProcessMaterial::property:sub_emitter_mode",
+        "ParticleProcessMaterial::property:tangential_accel_curve",
+        "ParticleProcessMaterial::property:tangential_accel_max",
+        "ParticleProcessMaterial::property:tangential_accel_min",
+        "ParticleProcessMaterial::property:turbulence_enabled",
+        "ParticleProcessMaterial::property:turbulence_influence_max",
+        "ParticleProcessMaterial::property:turbulence_influence_min",
+        "ParticleProcessMaterial::property:turbulence_influence_over_life",
+        "ParticleProcessMaterial::property:turbulence_initial_displacement_max",
+        "ParticleProcessMaterial::property:turbulence_initial_displacement_min",
+        "ParticleProcessMaterial::property:turbulence_noise_scale",
+        "ParticleProcessMaterial::property:turbulence_noise_speed",
+        "ParticleProcessMaterial::property:turbulence_noise_speed_random",
+        "ParticleProcessMaterial::property:turbulence_noise_strength",
+        "ParticleProcessMaterial::property:velocity_limit_curve",
+        "ParticleProcessMaterial::property:velocity_pivot"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0004/0028/0051: ParticleProcessMaterial executes planar distributions, force/velocity/texture channels, turbulence, canvas-SDF contact and bounded subemission through native retained compute. Typed stored graphs preserve borrowed curve/gradient textures. ParticleServerTests verifies native records and pixels, live process-only viewport inputs, failure/retry and warmed owner allocation boundaries on Linux software Vulkan; physical GPU, native allocator, foreign and owner acceptance remain open."
+    },
+    {
+      "godot": [
+        "ParticleProcessMaterial::enum_value:ParticleFlags.PARTICLE_FLAG_DISABLE_Z",
+        "ParticleProcessMaterial::enum_value:ParticleFlags.PARTICLE_FLAG_ROTATE_Y",
+        "ParticleProcessMaterial::property:attractor_interaction_enabled",
+        "ParticleProcessMaterial::property:emission_ring_axis",
+        "ParticleProcessMaterial::property:emission_ring_cone_angle",
+        "ParticleProcessMaterial::property:emission_ring_height",
+        "ParticleProcessMaterial::property:flatness",
+        "ParticleProcessMaterial::property:particle_flag_disable_z",
+        "ParticleProcessMaterial::property:particle_flag_rotate_y",
+        "ParticleProcessMaterial::property:rotation_3d_max",
+        "ParticleProcessMaterial::property:rotation_3d_min",
+        "ParticleProcessMaterial::property:rotation_velocity_3d_curve",
+        "ParticleProcessMaterial::property:rotation_velocity_3d_max",
+        "ParticleProcessMaterial::property:rotation_velocity_3d_min",
+        "ParticleProcessMaterial::property:scale_3d_max",
+        "ParticleProcessMaterial::property:scale_3d_min",
+        "ParticleProcessMaterial::property:use_rotation_3d",
+        "ParticleProcessMaterial::property:use_rotation_velocity_3d",
+        "ParticleProcessMaterial::property:use_scale_3d"
+      ],
+      "state": "Excluded",
+      "reason": "ADRs 0004/0028: pinned ParticleProcessMaterial.xml and scene/resources/particle_process_material.cpp restrict these settings to spatial Z flattening/rotation/scale, cylinder axis/height/cone or GPUParticles3D attractors. The planar process has no such state; DisableZ would be an inert fixed policy. No implementation trigger."
+    },
+    {
+      "godot": [
+        "ParticleProcessMaterial::signal:emission_shape_changed()"
+      ],
+      "state": "Blocked",
+      "reason": "ADRs 0004/0090: pinned ParticleProcessMaterial.xml declares emission_shape_changed editor-only and every producer is guarded by TOOLS_ENABLED in scene/resources/particle_process_material.cpp. Trigger: executable editor emission-shape authoring and notification consumer; ordinary runtime Changed already executes."
     }
   ]
 }

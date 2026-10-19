@@ -33,12 +33,13 @@ internal static partial class ParticleServerTests
         Engine.Run(root); Check(frame == 4, "Four ordered/aligned native HDR/MSAA frames completed.");
         Console.WriteLine("Particle age ordering, selected velocity axis, HDR and MSAA pixel checks passed.");
     }
-    private static void Allocations()
+    private static void Allocations(bool builtIn = false)
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         using var root = new Window { Size = new(64, 64) }; var owner = new Entity(); root.AddChild(owner);
-        using var mesh = Quad(); using var shader = ProcessShader(); using var material = new ShaderMaterial { Shader = shader };
-        material.SetShaderParameter("Tint", Colors.White); material.SetShaderParameter("Velocity", Vector2.Zero); material.SetShaderParameter("Operation", 1u);
+        using var mesh = Quad(); using var shader = builtIn ? null : ProcessShader();
+        using Material material = builtIn ? new ParticleProcessMaterial { Gravity = Vector2.Zero, TurbulenceEnabled = true } : new ShaderMaterial { Shader = shader };
+        if (material is ShaderMaterial custom) { custom.SetShaderParameter("Tint", Colors.White); custom.SetShaderParameter("Velocity", Vector2.Zero); custom.SetShaderParameter("Operation", 1u); }
         RID particles = default, item = default; var frames = 0; long start = 0, bytes = 0;
         root.Ready += _ =>
         {

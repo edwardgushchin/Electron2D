@@ -4,7 +4,8 @@ namespace Electron2D;
 /// <remarks>Pixel work is coalesced until image access or renderer use. Source edits invalidate pixels without
 /// emitting this texture's Changed event. Texture setting notifications are synchronous after mutation.
 /// Input and output resources remain caller-owned; copies follow the Resource graph policy. Native floats
-/// require backend support. Coordinate multi-call edits, resource copying and disposal across threads.</remarks>
+/// require backend support. Coordinate multi-call edits, resource copying and disposal across threads.
+/// <para>Typed archives preserve authored settings and detached cached pixels independently of logical dimensions.</para></remarks>
 public sealed class GradientRampTexture : Texture
 {
     private readonly GradientTextureData _data;
@@ -46,9 +47,10 @@ public sealed class GradientRampTexture : Texture
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
     [
-        new PropertyDescriptor<GradientRampTexture, int>(nameof(Width), t => t.Width, (t, v) => t.Width = v, _ => 256),
-        new PropertyDescriptor<GradientRampTexture, Gradient?>(nameof(Gradient), t => t.Gradient, (t, v) => t.Gradient = v, _ => null),
-        new PropertyDescriptor<GradientRampTexture, bool>(nameof(UseHDR), t => t.UseHDR, (t, v) => t.UseHDR = v, _ => false),
+        new PropertyDescriptor<GradientRampTexture, int>(nameof(Width), t => t.Width, (t, v) => t.Width = v, _ => 256, stored: true),
+        new PropertyDescriptor<GradientRampTexture, Gradient?>(nameof(Gradient), t => t.Gradient, (t, v) => t.Gradient = v, _ => null, stored: true),
+        new PropertyDescriptor<GradientRampTexture, bool>(nameof(UseHDR), t => t.UseHDR, (t, v) => t.UseHDR = v, _ => false, stored: true),
+        new PropertyDescriptor<GradientRampTexture, byte[]>("_frozen_gradient_pixels", t => t._data.StoredPixels, (t, v) => t._data.StoredPixels = v, _ => [], stored: true),
     ]);
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new GradientRampTexture();

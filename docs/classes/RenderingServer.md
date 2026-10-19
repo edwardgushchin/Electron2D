@@ -1744,7 +1744,7 @@ Owner-thread operations require an active GPU rendering session. This is an expl
 
 Sets the borrowed particle process material.
 
-**particles:** A live caller-owned particle identity. **material:** A particle ShaderMaterial identity, or empty for the default process.
+**particles:** A live caller-owned particle identity. **material:** A particle ParticleProcessMaterial or ShaderMaterial identity, or empty for the default process.
 
 #### ParticlesSetSubemitter
 

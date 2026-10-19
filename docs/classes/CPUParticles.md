@@ -1,6 +1,6 @@
 # CPUParticles
 
-Last updated: 2026-10-07
+Last updated: 2026-10-19
 
 - Declaration: `public partial class CPUParticles : Entity`
 - Sources: [configuration](../../src/Scene/2D/CPUParticles.cs), [simulation/drawing](../../src/Scene/2D/CPUParticles.Simulation.cs), [storage/lifetime](../../src/Scene/2D/CPUParticles.Storage.cs)
@@ -89,7 +89,7 @@ FixedFPS=0 uses frame delta. Positive FixedFPS uses a retained wall-time remaind
 | `public Electron2D.Vector2 EmissionRectExtents { get; set; }` | [Set half extents of rectangle emission.](#emissionrectextents) |
 | `public System.Single EmissionRingInnerRadius { get; set; }` | [Set the inner ring radius in pixels.](#emissionringinnerradius) |
 | `public System.Single EmissionRingRadius { get; set; }` | [Set the outer ring radius in pixels.](#emissionringradius) |
-| `public Electron2D.CPUParticles.EmissionShapeMode EmissionShape { get; set; }` | [Gets or sets the distribution for future births.](#emissionshape) |
+| `public Electron2D.ParticlesEmissionShape EmissionShape { get; set; }` | [Gets or sets the distribution for future births.](#emissionshape) |
 | `public System.Single EmissionSphereRadius { get; set; }` | [Set circular emission radius in pixels.](#emissionsphereradius) |
 | `public System.Boolean Emitting { get; set; }` | [Gets or sets emission; stopping allows already active particles to drain.](#emitting) |
 | `public System.Single Explosiveness { get; set; }` | [Compress birth phases toward the cycle start.](#explosiveness) |
@@ -162,7 +162,7 @@ FixedFPS=0 uses frame delta. Positive FixedFPS uses a retained wall-time remaind
 ## Enumerations
 
 - [DrawOrderMode](CPUParticles.DrawOrderMode.md)
-- [EmissionShapeMode](CPUParticles.EmissionShapeMode.md)
+- [ParticlesEmissionShape](ParticlesEmissionShape.md)
 - [Parameter](CPUParticles.Parameter.md)
 - [ParticleFlags](CPUParticles.ParticleFlags.md)
 
@@ -587,7 +587,7 @@ Attached reads require the scene owner; setters reject capture/reentrant mutatio
 
 ### EmissionShape
 
-`public Electron2D.CPUParticles.EmissionShapeMode EmissionShape { get; set; }`
+`public Electron2D.ParticlesEmissionShape EmissionShape { get; set; }`
 
 Gets or sets the distribution for future births.
 
@@ -1014,3 +1014,5 @@ Built-in CPUParticles registration and stored typed descriptors persist configur
 CPUParticlesTests checks defaults/guards, all distributions and forces, fractional and fixed stepping, preprocess/seek/seed, gradients/curves, failure commitment, pause/hidden/world/interpolated follow, actual UV/custom data, duplication and fresh-process storage. Prepared active simulation/record/replay covers 128 iterations; idle replay covers 64. Native Engine.Run hosts exercise current Linux GPU/compatibility pixels and 64 prepared render/simulation intervals; GPU additionally consumes the actual custom channel in a shader. Native/backend allocator activity, foreign targets, broad-emitter performance and owner acceptance remain unverified.
 
 GPUParticles/ParticleProcessMaterial and conversion from their actual settings retain exact [coverage dependencies](../coverage/classes/CPUParticles2D.md). GPU simulation, process shaders/collisions/attractors, lights and editor inspector behavior are not supplied by this CPU emitter. Reference audit and bounded corrections are documented in the component under ADRs 0004/0008/0014/0028/0051/0090.
+
+EmissionShape now uses the shared [ParticlesEmissionShape](ParticlesEmissionShape.md) identity. Stored descriptors use that current enum schema; archives with the earlier nested enum schema reject under strict archive validation. No former public enum alias is retained.

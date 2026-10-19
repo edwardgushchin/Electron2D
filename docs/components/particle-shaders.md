@@ -6,7 +6,7 @@ Last updated: 2026-10-19
 
 `Shader.Mode.Particles` (2) is a compiled compute profile for planar particle state. The HLSL/GLSL importers, project build items, resource reflection, typed `ShaderMaterial` values, duplication and file graphs execute this profile. Export the compute module to the public `RenderingDevice` API to create a compute pipeline, bind buffers and dispatch it. The device owns the native state; reading it is an explicit synchronization/readback operation.
 
-The [retained GPU particle server](gpu-particles.md) now schedules these programs and submits canvas mesh geometry. The GPUParticles node, ParticleProcessMaterial generator and CPU conversion remain their next connected integration. A process material cannot be submitted to canvas or writable-texture drawing. No high-level particle placeholder types are exposed.
+The [retained GPU particle server](gpu-particles.md) now schedules these programs and submits canvas mesh geometry. [ParticleProcessMaterial](../classes/ParticleProcessMaterial.md) now supplies built-in motion and appearance compute. The GPUParticles node and CPU conversion remain their next connected integration. A process material cannot be submitted to canvas or writable-texture drawing. No high-level particle placeholder types are exposed.
 
 ## Authoring and loading
 
@@ -41,8 +41,8 @@ Each `Electron2D_Particle` is a 96-byte record, with six aligned 16-byte lanes:
 
 | Offset | Field | Meaning |
 | --- | --- | --- |
-| 0 | `float4 TransformX` | Planar transform row `(X.x, Y.x, 0, origin.x)`. |
-| 16 | `float4 TransformY` | Planar transform row `(X.y, Y.y, 0, origin.y)`. |
+| 0 | `float4 TransformX` | Planar transform row `(X.x, Y.x, spare, origin.x)`. |
+| 16 | `float4 TransformY` | Planar transform row `(X.y, Y.y, spare, origin.y)`. |
 | 32 | `float4 Color` | Particle color. |
 | 48 | `float4 Custom` | Four numeric user channels. |
 | 64 | `float4 VelocityAge` | XY velocity, elapsed age, fourth numeric channel. |

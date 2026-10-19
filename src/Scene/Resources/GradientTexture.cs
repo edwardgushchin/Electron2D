@@ -28,7 +28,8 @@ public enum Repeat
 /// <remarks>Pixel work is coalesced until image access or renderer use. Source edits invalidate pixels without
 /// emitting this texture's Changed event. Texture setting notifications are synchronous after mutation.
 /// Input and output resources remain caller-owned; copies follow the Resource graph policy. Native floats
-/// require backend support. Coordinate multi-call edits, resource copying and disposal across threads.</remarks>
+/// require backend support. Coordinate multi-call edits, resource copying and disposal across threads.
+/// <para>Typed archives preserve authored settings and detached cached pixels independently of logical dimensions.</para></remarks>
 public sealed class GradientTexture : Texture
 {
     private readonly GradientTextureData _data;
@@ -100,14 +101,15 @@ public sealed class GradientTexture : Texture
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
     [
-        new PropertyDescriptor<GradientTexture, int>(nameof(Width), t => t.Width, (t, v) => t.Width = v, _ => 64),
-        new PropertyDescriptor<GradientTexture, int>(nameof(Height), t => t.Height, (t, v) => t.Height = v, _ => 64),
-        new PropertyDescriptor<GradientTexture, Gradient?>(nameof(Gradient), t => t.Gradient, (t, v) => t.Gradient = v, _ => null),
-        new PropertyDescriptor<GradientTexture, bool>(nameof(UseHDR), t => t.UseHDR, (t, v) => t.UseHDR = v, _ => false),
-        new PropertyDescriptor<GradientTexture, FillEnum>(nameof(Fill), t => t.Fill, (t, v) => t.Fill = v, _ => FillEnum.Linear),
-        new PropertyDescriptor<GradientTexture, Vector2>(nameof(FillFrom), t => t.FillFrom, (t, v) => t.FillFrom = v, _ => new Vector2(0, 0)),
-        new PropertyDescriptor<GradientTexture, Vector2>(nameof(FillTo), t => t.FillTo, (t, v) => t.FillTo = v, _ => new Vector2(1, 0)),
-        new PropertyDescriptor<GradientTexture, Repeat>(nameof(Repeat), t => t.Repeat, (t, v) => t.Repeat = v, _ => Repeat.None),
+        new PropertyDescriptor<GradientTexture, int>(nameof(Width), t => t.Width, (t, v) => t.Width = v, _ => 64, stored: true),
+        new PropertyDescriptor<GradientTexture, int>(nameof(Height), t => t.Height, (t, v) => t.Height = v, _ => 64, stored: true),
+        new PropertyDescriptor<GradientTexture, Gradient?>(nameof(Gradient), t => t.Gradient, (t, v) => t.Gradient = v, _ => null, stored: true),
+        new PropertyDescriptor<GradientTexture, bool>(nameof(UseHDR), t => t.UseHDR, (t, v) => t.UseHDR = v, _ => false, stored: true),
+        new PropertyDescriptor<GradientTexture, FillEnum>(nameof(Fill), t => t.Fill, (t, v) => t.Fill = v, _ => FillEnum.Linear, stored: true),
+        new PropertyDescriptor<GradientTexture, Vector2>(nameof(FillFrom), t => t.FillFrom, (t, v) => t.FillFrom = v, _ => new Vector2(0, 0), stored: true),
+        new PropertyDescriptor<GradientTexture, Vector2>(nameof(FillTo), t => t.FillTo, (t, v) => t.FillTo = v, _ => new Vector2(1, 0), stored: true),
+        new PropertyDescriptor<GradientTexture, Repeat>(nameof(Repeat), t => t.Repeat, (t, v) => t.Repeat = v, _ => Repeat.None, stored: true),
+        new PropertyDescriptor<GradientTexture, byte[]>("_frozen_gradient_pixels", t => t._data.StoredPixels, (t, v) => t._data.StoredPixels = v, _ => [], stored: true),
     ]);
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new GradientTexture();

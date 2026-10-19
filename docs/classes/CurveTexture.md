@@ -81,3 +81,7 @@ GetPropertyDescriptors supplies typed Width/Curve/TextureMode metadata plus inhe
 ## Verification and limits
 
 [CurveTextureTests](../../tests/Electron2D.Tests/CurveTextureTests.cs) and [RenderingCurveTextureTests](../../tests/Electron2D.Tests/RenderingCurveTextureTests.cs) verify managed state, events, copies, local ownership, failures, coherent concurrent publication and native Linux Wayland GPU canvas/HLSL/GLSL samples. Compatibility drivers tested on Wayland and dummy/software reject unsupported float precision explicitly; no byte fallback is used. Other platforms, owner visual acceptance, disk import/editor authoring and a fresh AOT/self-contained publish are unverified. Shared Texture/Resource coverage gaps remain on their own pages. See ADRs [0013](../decisions/resources.md#adr-0013) and [0028](../decisions/rendering.md#adr-0028).
+
+## Typed archives
+
+The registered resource factory and stored descriptors preserve procedural settings and shared source identity in .e2dres graphs, including ParticleProcessMaterial inputs. The initialization flag distinguishes never-generated null curves from initialized zero channels. Fresh-process material-file checks exercise this path. Editor import and foreign rendering remain separate gates.

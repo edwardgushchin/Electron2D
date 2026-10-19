@@ -87,3 +87,7 @@ GetPropertyDescriptors adds typed writable settings to inherited resource/pixel 
 ## Verification and limits
 
 [GradientTests](../../tests/Electron2D.Tests/GradientTests.cs) checks CPU pixels, metadata, events, width bounds, copies/local ownership, failure and concurrent baking. [RenderingGradientTests](../../tests/Electron2D.Tests/RenderingGradientTests.cs) checks real Linux Wayland GPU/compatibility and dummy/software LDR canvas output, retained geometry updates, GPU HDR canvas and six HDR/negative/update stages for each HLSL/GLSL material. Tested compatibility drivers reject unsupported HDR explicitly. Other platforms, owner visual acceptance, fresh AOT/self-contained delivery, disk import and editor authoring remain unverified or absent. Shared Texture/Resource gaps remain separate. See [ADR 0013](../decisions/resources.md#adr-0013) and [ADR 0028](../decisions/rendering.md#adr-0028).
+
+## Typed archives
+
+The registered resource factory and stored descriptors preserve procedural settings and shared source identity in .e2dres graphs, including ParticleProcessMaterial inputs. A detached gradient preserves its cached immutable pixels, their format and dimensions even when current logical dimensions differ; malformed frozen headers reject before publication. Fresh-process material-file checks exercise this path. Editor import and foreign rendering remain separate gates.

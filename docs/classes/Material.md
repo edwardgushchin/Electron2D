@@ -5,12 +5,12 @@ Last updated: 2026-10-11
 - Declaration: `public abstract class Material : Resource`
 - Source: [Material.cs](../../src/Scene/Resources/Material.cs)
 - Inherits: [Resource](Resource.md)
-- Inherited by: [ShaderMaterial](ShaderMaterial.md), [CanvasItemMaterial](CanvasItemMaterial.md)
+- Inherited by: [ShaderMaterial](ShaderMaterial.md), [CanvasItemMaterial](CanvasItemMaterial.md), [ParticleProcessMaterial](ParticleProcessMaterial.md), [BlitMaterial](BlitMaterial.md)
 - Component: [Shader materials](../components/shader-materials.md)
 
 ## Description and API
 
-The base resource for selecting canvas shading. Its `private protected Material()` constructor restricts executable material implementations to the runtime assembly. `override RID GetRID()` supplies a stable borrowed canvas-material identity before native startup; there is no consumer implementation hook. Use ShaderMaterial for programmable fragments or CanvasItemMaterial for fixed blend modes, then assign the resource to `CanvasItem.Material`.
+The base resource for selecting canvas, writable-texture or particle processing. Its `private protected Material()` constructor restricts executable material implementations to the runtime assembly. `override RID GetRID()` supplies a stable borrowed material identity before native startup; there is no consumer implementation hook. Use ShaderMaterial for programmable fragments or CanvasItemMaterial for fixed blend modes, then assign the resource to `CanvasItem.Material`.
 
 Nodes borrow materials. Their disposal does not dispose a shared material. Resource identity, synchronous `Changed`, graph copying and logical disposal follow the inherited Resource contract. The internal render state contains shader code/layout and uniform buffers, without exposing SDL handles to consumers.
 
@@ -27,3 +27,5 @@ BlitMaterial supplies built-in writable-texture blend operations; ShaderMaterial
 ## Particle compute profile
 
 The [particle shader contract](../components/particle-shaders.md) adds compiled HLSL/GLSL compute modules, typed material parameters, portable state/frame/subemission includes and explicit RenderingDevice execution. Process programs preserve their domain through duplication and file graphs and reject canvas/blit submission. Retained emission, particle nodes and canvas output remain separate dependencies.
+
+[ParticleProcessMaterial](ParticleProcessMaterial.md) is compute-only and is assigned through RenderingServer.ParticlesSetProcessMaterial. Canvas and writable-texture drawing reject that role. Its native execution and verification limits are documented with [GPU particles](../components/gpu-particles.md).

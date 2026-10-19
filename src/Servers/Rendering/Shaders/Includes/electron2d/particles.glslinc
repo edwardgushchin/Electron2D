@@ -1,6 +1,9 @@
 #ifndef ELECTRON2D_PARTICLES_INCLUDED
 #define ELECTRON2D_PARTICLES_INCLUDED
 
+const uint ELECTRON2D_PARTICLE_EMIT_FLAGS_SHIFT = 8u;
+const uint ELECTRON2D_PARTICLE_EMIT_FLAGS_MASK = 31u << 8u;
+
 struct Electron2D_Particle
 {
     vec4 TransformX;

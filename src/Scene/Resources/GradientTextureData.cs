@@ -74,6 +74,41 @@ internal sealed class GradientTextureData(Texture owner, bool ramp)
             return _pixels;
         }
     }
+    internal byte[] StoredPixels
+    {
+        get
+        {
+            lock (_gate)
+            {
+                CheckAlive();
+                if (_gradient is not null || _pixels is null) return [];
+                var source = _pixels.Source; var result = new byte[checked(16 + source.Data.Length)];
+                System.Buffers.Binary.BinaryPrimitives.WriteInt32LittleEndian(result, 1);
+                System.Buffers.Binary.BinaryPrimitives.WriteInt32LittleEndian(result.AsSpan(4), source.Width);
+                System.Buffers.Binary.BinaryPrimitives.WriteInt32LittleEndian(result.AsSpan(8), source.Height);
+                System.Buffers.Binary.BinaryPrimitives.WriteInt32LittleEndian(result.AsSpan(12), (int)source.Format);
+                source.Data.CopyTo(result, 16); return result;
+            }
+        }
+        set
+        {
+            ArgumentNullException.ThrowIfNull(value);
+            TexturePixels? pixels = null;
+            if (value.Length != 0)
+            {
+                if (value.Length < 16 || System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(value) != 1) throw new InvalidDataException("Invalid frozen gradient pixel header.");
+                var width = System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(value.AsSpan(4));
+                var height = System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(value.AsSpan(8));
+                var format = (Image.Format)System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(value.AsSpan(12));
+                if (format is not (Image.Format.Rgba8 or Image.Format.Rgbaf)) throw new InvalidDataException("Invalid frozen gradient pixel format.");
+                if (width is < 1 or > 16384 || height is < 1 or > 16384 || (long)width * height * (format == Image.Format.Rgbaf ? 16 : 4) != value.Length - 16) throw new InvalidDataException("Invalid frozen gradient pixel dimensions or byte count.");
+                try { using var image = Image.CreateFromData(width, height, false, format, value.AsSpan(16).ToArray()); pixels = TexturePixels.FromImage(image); }
+                catch (ArgumentException error) { throw new InvalidDataException("Invalid frozen gradient pixel payload.", error); }
+            }
+            lock (_gate) { CheckAlive(); _pixels = pixels; _dirty = true; }
+            owner.EmitChanged();
+        }
+    }
 
     private float Offset(int x, int y)
     {

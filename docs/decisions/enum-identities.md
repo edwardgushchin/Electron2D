@@ -41,6 +41,8 @@ The owning class keeps its applicable property names. Enum numeric values and ob
 
 FontFile/SystemFont use the shared top-level FontAntialiasing contract (None/Gray/LCD). The distinct top-level FontLCDSubpixelLayout contract (None/HorizontalRGB/HorizontalBGR/VerticalRGB/VerticalBGR/Max) owns the project text-startup preference. Layout Max remains nonselectable; these enums do not merge with canvas MSAA or raster hinting.
 
+CPUParticles and ParticleProcessMaterial share top-level `ParticlesEmissionShape` (Point/Sphere/SphereSurface/Rectangle/Points/DirectedPoints/Ring/Max). The planar projection of the process material box is Rectangle. Point payloads remain owner-specific arrays or textures. ParticleProcessMaterial retains owner-specific Parameter and ParticleFlags domains; its CollisionMode and SubEmitterMode properties use nested CollisionModeEnum/SubEmitterModeEnum to avoid C# member/type collisions.
+
 ### Consequences
 
 Moving or unifying public enum types breaks source and binary compatibility. The value-contract rule governs new enum identities; it does not move unrelated owner-specific types. ADR 0045 continues to govern acronyms in function, method and property names, not enum type names.

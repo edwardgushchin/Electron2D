@@ -269,13 +269,13 @@ public sealed partial class RenderingServer
 
     /// <summary>Sets the borrowed particle process material.</summary>
     /// <param name="particles">A live caller-owned particle identity.</param>
-    /// <param name="material">A particle ShaderMaterial identity, or empty for the default process.</param>
+    /// <param name="material">A ParticleProcessMaterial or particle ShaderMaterial identity, or empty for the default process.</param>
     /// <remarks>Owner-thread operations require an active GPU rendering session. Stale, foreign or wrong-kind identities reject; configuration cannot change during native submission or particle preparation.</remarks>
     /// <exception cref="InvalidOperationException">No active session, wrong thread, or invalid owner/preparation state.</exception>
     /// <exception cref="ArgumentException">A particle identity or supplied value is invalid.</exception>
     /// <exception cref="NotSupportedException">The material kind or configured shader domain cannot process particles.</exception>
     public static void ParticlesSetProcessMaterial(RID particles, RID material)
-    { var server = RequireService(); var value = material.IsValid() ? RenderingProgramRegistry<Material>.Resolve(material) : null; if (value is not null && (value is not ShaderMaterial || value.GetCanvasState() is { } process && process.Program.Mode != Shader.Mode.Particles)) throw new NotSupportedException("Particle process materials require a particle compute program."); server.ChangeParticle(particles).ProcessMaterial = value; }
+    { var server = RequireService(); var value = material.IsValid() ? RenderingProgramRegistry<Material>.Resolve(material) : null; if (value is not null && (value is not ShaderMaterial and not ParticleProcessMaterial || value.GetCanvasState() is { } process && process.Program.Mode != Shader.Mode.Particles)) throw new NotSupportedException("Particle process materials require a particle compute program."); server.ChangeParticle(particles).ProcessMaterial = value; }
 
     /// <summary>Selects the borrowed target for GPU-generated subemissions.</summary>
     /// <param name="particles">A live caller-owned particle identity.</param>

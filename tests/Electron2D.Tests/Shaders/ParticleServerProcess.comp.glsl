@@ -25,5 +25,6 @@ void main()
     if ((Operation & 16u) != 0) particle.Color = vec4(uintBitsToFloat(particle.State.w), particle.VelocityAge.z, 0, 1);
     if ((Operation & 64u) != 0) particle.Color = vec4(EmissionX.w, PreviousEmissionX.w, (Options.x & 4u) != 0 ? 1 : 0, 1);
     if ((Operation & 128u) != 0) { particle.Color = vec4(particle.VelocityAge.z, 0, 1 - particle.VelocityAge.z, 1); particle.Custom = particle.Color; }
+    if ((Operation & 256u) != 0) { uint flags = (particle.State.x & ELECTRON2D_PARTICLE_EMIT_FLAGS_MASK) >> ELECTRON2D_PARTICLE_EMIT_FLAGS_SHIFT; particle.Color = vec4((flags & 1u) != 0 ? 1 : 0, (flags & 4u) != 0 ? 1 : 0, (flags & 8u) != 0 ? 1 : 0, 1); }
     PARTICLES[index] = particle;
 }

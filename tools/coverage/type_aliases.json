@@ -109,7 +109,7 @@
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",
-    "CPUParticles2D.EmissionShape": "CPUParticles.EmissionShapeMode",
+    "CPUParticles2D.EmissionShape": "ParticlesEmissionShape",
     "CPUParticles2D.Parameter": "CPUParticles.Parameter",
     "CPUParticles2D.ParticleFlags": "CPUParticles.ParticleFlags",
     "PhysicsServer2D.BodyMode": "PhysicsServer.BodyMode",
@@ -226,6 +226,9 @@
     "ProgressBar.FillMode": "ProgressFillMode",
     "DrawableTexture2D.DrawableFormat": "DrawableTexture.DrawableFormat",
     "BlitMaterial.BlendMode": "BlitBlendMode",
-    "PortableCompressedTexture2D.CompressionMode": "PortableCompressedTexture.CompressionMode"
+    "PortableCompressedTexture2D.CompressionMode": "PortableCompressedTexture.CompressionMode",
+    "ParticleProcessMaterial.EmissionShape": "ParticlesEmissionShape",
+    "ParticleProcessMaterial.CollisionMode": "ParticleProcessMaterial.CollisionModeEnum",
+    "ParticleProcessMaterial.SubEmitterMode": "ParticleProcessMaterial.SubEmitterModeEnum"
   }
 }

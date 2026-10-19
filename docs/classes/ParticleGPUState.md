@@ -8,7 +8,7 @@ Last updated: 2026-10-19
 
 ## Description
 
-Owns current/previous state, bounded incoming/outgoing queues, age ordering, history, copied bind-pose rows and upload/readback transfers on the renderer device. Record and byte budgets are checked before allocation. Prepare uploads changed poses and pending queue headers; cancelled commands invalidate upload caches. CaptureHistory advances the native ring after a step. Read synchronizes and returns a cold copied snapshot. Dispose retires every native handle.
+Owns current/previous state, bounded incoming/outgoing queues (outgoing capacity follows the linked child amount), age ordering, history, copied bind-pose rows and upload/readback transfers on the renderer device. Record and byte budgets are checked before allocation. Prepare uploads changed poses and pending queue headers; cancelled commands invalidate upload caches. CaptureHistory advances the native ring after a step. Read synchronizes and returns a cold copied snapshot. Dispose retires every native handle.
 
 ## Internal usage
 

@@ -107,6 +107,11 @@ internal sealed class CurveTextureData(Texture owner, bool single)
     }
 
     internal TexturePixels? CapturePixels() { lock (_gate) { CheckAlive(); return _pixels; } }
+    internal bool Initialized
+    {
+        get { lock (_gate) { CheckAlive(); return _pixels is not null; } }
+        set { lock (_gate) { CheckAlive(); _pixels = value ? Bake(_width, _mode, _curves) : null; } owner.EmitChanged(); }
+    }
 
     internal void CopyTo(CurveTextureData target, bool deep, Func<Resource?, Resource?> duplicate)
     {

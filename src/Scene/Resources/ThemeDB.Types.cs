@@ -279,6 +279,7 @@ public sealed partial class ThemeDB
         ["Parallax"] = ["Parallax", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["ParallaxBackground"] = ["ParallaxBackground", "CanvasLayer", "Node", "ElectronObject"],
         ["ParallaxLayer"] = ["ParallaxLayer", "Entity", "CanvasItem", "Node", "ElectronObject"],
+        ["ParticleProcessMaterial"] = ["ParticleProcessMaterial", "Material", "Resource", "ElectronObject"],
         ["Path"] = ["Path", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["PathFollow"] = ["PathFollow", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["Performance"] = ["Performance", "ElectronObject"],
