@@ -414,3 +414,5 @@ Ordinary desktop Window children now execute [independent native hosts](../compo
 ## Shaped-buffer editing
 
 [TextServer editing](../components/text-server.md#caret-selection-and-navigation) supplies typed baseline-relative BIDI caret shapes, logical selections, Unicode character boundaries and native shaping-cluster navigation. Existing canvas primitives consume the returned geometry on both renderers; paragraph line views retain global scalar origins and line-local geometry. TextCaretInfo owns no native resources. Snapshot arrays remain cold; prepared value queries retain the existing owner/generation/reentry checks.
+
+[Shaped-buffer wrapping and substrings](../components/text-server.md#line-wrapping-and-owned-substrings) expose variable-width multiline flow and independently owned cluster-preserving draws, including shared source leases, global scalar offsets, BIDI/inline context and explicit parent retirement.

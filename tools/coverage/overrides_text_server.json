@@ -309,6 +309,26 @@
       "godot": "TextServer::method:shaped_text_prev_grapheme_pos(RID:,int:)",
       "electron2d": "method:Electron2D.TextServer.ShapedTextPrevGraphemePos(Electron2D.RID,System.Int32)",
       "reason": "ADR 0107/0004: typed caret shapes/directions, scalar composite-character boundaries versus native shaping clusters, logical selections, visual record hits and cluster-counted dominant direction over the real retained buffer. Preserve global line-view offsets, BIDI, ligature/inline/vertical behavior, explicit empty/outside policies, copied snapshots and zero-allocation prepared value queries. Vertical RTL caret coordinates use the advance axis; complete repeated advances are retained. Owning thread/generation/disposal/reentry and native acceptance remain explicit."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_get_line_breaks(RID:,float:,int:,int:TextServer.LineBreakFlag)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextGetLineBreaks(Electron2D.RID,System.Single,System.Int32,Electron2D.TextLineBreakFlags)",
+      "reason": "ADR 0107/0004/0046: executable single/successive-width wrapping over original logical shaped clusters and locale-native opportunities; same word/grapheme/adaptive flags, mandatory CRLF, edge/indent policies and global scalar ranges. Owned substrings retain complete original clusters, BIDI context, whole inline tokens/typed metadata, shared source-version/font leases and informational root parent identity across retirement/reflow; first successful mutation detaches. Correct advanced adaptive/grapheme policy omissions, reversed/out-of-range starts and empty sliced origins. Parent release safety is a managed ownership adaptation. Cold snapshots/authoring may allocate; prepared values/draw remain reuse paths. Hardware/foreign/native-allocation and owner acceptance remain independent."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_get_line_breaks_adv(RID:,PackedFloat32Array:,int:,bool:,int:TextServer.LineBreakFlag)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextGetLineBreaksAdv(Electron2D.RID,System.ReadOnlySpan<System.Single>,System.Int32,System.Boolean,Electron2D.TextLineBreakFlags)",
+      "reason": "ADR 0107/0004/0046: executable single/successive-width wrapping over original logical shaped clusters and locale-native opportunities; same word/grapheme/adaptive flags, mandatory CRLF, edge/indent policies and global scalar ranges. Owned substrings retain complete original clusters, BIDI context, whole inline tokens/typed metadata, shared source-version/font leases and informational root parent identity across retirement/reflow; first successful mutation detaches. Correct advanced adaptive/grapheme policy omissions, reversed/out-of-range starts and empty sliced origins. Parent release safety is a managed ownership adaptation. Cold snapshots/authoring may allocate; prepared values/draw remain reuse paths. Hardware/foreign/native-allocation and owner acceptance remain independent."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_get_parent(RID:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextGetParent(Electron2D.RID)",
+      "reason": "ADR 0107/0004/0046: executable single/successive-width wrapping over original logical shaped clusters and locale-native opportunities; same word/grapheme/adaptive flags, mandatory CRLF, edge/indent policies and global scalar ranges. Owned substrings retain complete original clusters, BIDI context, whole inline tokens/typed metadata, shared source-version/font leases and informational root parent identity across retirement/reflow; first successful mutation detaches. Correct advanced adaptive/grapheme policy omissions, reversed/out-of-range starts and empty sliced origins. Parent release safety is a managed ownership adaptation. Cold snapshots/authoring may allocate; prepared values/draw remain reuse paths. Hardware/foreign/native-allocation and owner acceptance remain independent."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_substr(RID:,int:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextSubstr(Electron2D.RID,System.Int32,System.Int32)",
+      "reason": "ADR 0107/0004/0046: executable single/successive-width wrapping over original logical shaped clusters and locale-native opportunities; same word/grapheme/adaptive flags, mandatory CRLF, edge/indent policies and global scalar ranges. Owned substrings retain complete original clusters, BIDI context, whole inline tokens/typed metadata, shared source-version/font leases and informational root parent identity across retirement/reflow; first successful mutation detaches. Correct advanced adaptive/grapheme policy omissions, reversed/out-of-range starts and empty sliced origins. Parent release safety is a managed ownership adaptation. Cold snapshots/authoring may allocate; prepared values/draw remain reuse paths. Hardware/foreign/native-allocation and owner acceptance remain independent."
     }
   ],
   "extras": [
@@ -382,10 +402,13 @@
         "TextServer::method:shaped_text_get_glyph_count(RID:)",
         "TextServer::method:shaped_text_get_grapheme_bounds(RID:,int:)",
         "TextServer::method:shaped_text_get_inferred_direction(RID:)",
+        "TextServer::method:shaped_text_get_line_breaks(RID:,float:,int:,int:TextServer.LineBreakFlag)",
+        "TextServer::method:shaped_text_get_line_breaks_adv(RID:,PackedFloat32Array:,int:,bool:,int:TextServer.LineBreakFlag)",
         "TextServer::method:shaped_text_get_object_range(RID:,Variant:)",
         "TextServer::method:shaped_text_get_object_rect(RID:,Variant:)",
         "TextServer::method:shaped_text_get_objects(RID:)",
         "TextServer::method:shaped_text_get_orientation(RID:)",
+        "TextServer::method:shaped_text_get_parent(RID:)",
         "TextServer::method:shaped_text_get_preserve_control(RID:)",
         "TextServer::method:shaped_text_get_preserve_invalid(RID:)",
         "TextServer::method:shaped_text_get_range(RID:)",
@@ -410,6 +433,7 @@
         "TextServer::method:shaped_text_set_preserve_control(RID:,bool:)",
         "TextServer::method:shaped_text_set_preserve_invalid(RID:,bool:)",
         "TextServer::method:shaped_text_shape(RID:)",
+        "TextServer::method:shaped_text_substr(RID:,int:,int:)",
         "TextServer::method:shaped_text_tab_align(RID:,PackedFloat32Array:)",
         "TextServerManager::method:find_interface(String:)",
         "TextServerManager::method:get_interface(int:)",
@@ -599,9 +623,6 @@
         "TextServer::method:shaped_text_get_custom_ellipsis(RID:)",
         "TextServer::method:shaped_text_get_custom_punctuation(RID:)",
         "TextServer::method:shaped_text_get_ellipsis_pos(RID:)",
-        "TextServer::method:shaped_text_get_line_breaks(RID:,float:,int:,int:TextServer.LineBreakFlag)",
-        "TextServer::method:shaped_text_get_line_breaks_adv(RID:,PackedFloat32Array:,int:,bool:,int:TextServer.LineBreakFlag)",
-        "TextServer::method:shaped_text_get_parent(RID:)",
         "TextServer::method:shaped_text_get_spacing(RID:,int:TextServer.SpacingType)",
         "TextServer::method:shaped_text_get_trim_pos(RID:)",
         "TextServer::method:shaped_text_get_word_breaks(RID:,int:TextServer.GraphemeFlag,int:TextServer.GraphemeFlag)",
@@ -609,7 +630,6 @@
         "TextServer::method:shaped_text_set_custom_ellipsis(RID:,int:)",
         "TextServer::method:shaped_text_set_custom_punctuation(RID:,String:)",
         "TextServer::method:shaped_text_set_spacing(RID:,int:TextServer.SpacingType,int:)",
-        "TextServer::method:shaped_text_substr(RID:,int:,int:)",
         "TextServer::method:string_get_character_breaks(String:,String:)",
         "TextServer::method:string_get_word_breaks(String:,String:,int:)",
         "TextServer::method:string_to_lower(String:,String:)",

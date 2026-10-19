@@ -27,3 +27,5 @@ The [shaped-buffer editing](../components/text-server.md#caret-selection-and-nav
 The retained character-end and line-local geometry queries are implemented in [TextLayout.ServerEditing.cs](../../src/Servers/Text/TextLayout.ServerEditing.cs).
 
 Glyph direction is retained from the actual resolved shaping run, including line-ending whitespace resets. Caret, selection, scalar hits and rich glyph flags share that retained metadata across wrapped lines and BIDI override contexts.
+
+[Owned TextServer substrings](../components/text-server.md#line-wrapping-and-owned-substrings) retain complete original clusters and shared source-version leases independently of parent retirement. The line owner uses a private reference-counted source snapshot; the layout caches logical glyph order and shares BIDI run resolution for actual substring drawing. Language-specific native break opportunities preserve adjacent equal-language context.

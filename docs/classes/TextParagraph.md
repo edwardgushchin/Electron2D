@@ -629,3 +629,5 @@ Dispose releases only owned buffers and registered identities, never borrowed fo
 The borrowed identities interoperate with [TextServer](TextServer.md) through the same owner, scalar source and native layouts. The interface cannot free them. [The buffer contract](../components/text-server.md) defines source edits, line-view detachment and reflow retirement.
 
 The [shaped-buffer editing](../components/text-server.md#caret-selection-and-navigation) path retains line-local caret/selection geometry and global scalar origins. Reflow refreshes font dependencies after retiring detached adapters before the next coherence check; character-end caches reset with layout preparation.
+
+[Owned TextServer substrings](../components/text-server.md#line-wrapping-and-owned-substrings) retain complete original clusters and shared source-version leases independently of parent retirement. The line owner uses a private reference-counted source snapshot; the layout caches logical glyph order and shares BIDI run resolution for actual substring drawing. Language-specific native break opportunities preserve adjacent equal-language context.

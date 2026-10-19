@@ -9,7 +9,7 @@ internal readonly record struct TextLayoutKey(string Text, int FontSize, float W
     int MaxLines, TextLineBreakFlags Breaks, TextJustificationFlags Justification, TextDirection Direction, TextOrientation Orientation, bool Multiline = false);
 
 internal readonly record struct TextLayoutOptions(float LineSpacing = 0, float ParagraphSpacing = 0, string Language = "",
-    float[]? TabStops = null, int Overrun = 1, string Ellipsis = "\u2026", int VisibleCharacters = -1, int VisibleBehavior = 1, IReadOnlyList<TextBIDIRange>? BIDIOverride = null, bool ApplyAlignment = true, bool? WrappedBehavior = null, bool PreserveControl = false, IReadOnlyList<TextLayoutStyleSpan>? Styles = null, IReadOnlyList<TextLayoutInlineObject>? Objects = null, float DropcapWidth = 0, float DropcapHeight = 0, bool PreserveInvalid = true, bool GlobalObjectMetrics = false, bool ParagraphBuffers = false, string CustomPunctuation = "");
+    float[]? TabStops = null, int Overrun = 1, string Ellipsis = "\u2026", int VisibleCharacters = -1, int VisibleBehavior = 1, IReadOnlyList<TextBIDIRange>? BIDIOverride = null, bool ApplyAlignment = true, bool? WrappedBehavior = null, bool PreserveControl = false, IReadOnlyList<TextLayoutStyleSpan>? Styles = null, IReadOnlyList<TextLayoutInlineObject>? Objects = null, float DropcapWidth = 0, float DropcapHeight = 0, bool PreserveInvalid = true, bool GlobalObjectMetrics = false, bool ParagraphBuffers = false, string CustomPunctuation = "", bool ServerBuffers = false);
 
 internal readonly record struct TextLayoutLine(int Start, int End, int GlyphStart, int GlyphCount, float Width, float Ascent,
     float Descent, float CrossOffset, bool ParagraphEnd, int ParagraphLevel, int RangeEnd = -1, float UnderlinePosition = 0, float UnderlineThickness = 0)
@@ -88,11 +88,11 @@ internal sealed partial class TextLayout
     {
         _font = font; _options = options ?? new TextLayoutOptions(Overrun: 1, VisibleCharacters: -1);
         Key = key; _caretsReady = false; _serverCharactersReady = false; _glyphs.Clear(); _rawGlyphs.Clear(); _lines.Clear(); Size = Vector2.Zero;
-        Decode(key.Text); CharacterCount = _count; PrepareRichStyles();
+        Decode(key.Text); CharacterCount = _count; PrepareRichStyles(); if (_options.ServerBuffers) PrepareStyleBreaks();
         if (_options.VisibleBehavior == 0 && _options.VisibleCharacters >= 0) _count = Math.Min(_count, _options.VisibleCharacters);
         ResolveProperties(); MeasureParagraphs(); BreakLines(); NaturalWidth = 0;
         foreach (var line in _lines) NaturalWidth = Math.Max(NaturalWidth, MathF.Ceiling(line.Width));
-        TransformLines(); PositionLines();
+        TransformLines(); PositionLines(); if (_options.ServerBuffers) PrepareServerWrapping();
     }
 
     private void Decode(string text)
@@ -377,30 +377,7 @@ internal sealed partial class TextLayout
                     Math.Max(_shapeFontMetrics.UnderlineThickness, style.Font.GetShapingUnderline(face, size, true)));
             }
         }
-        _lineGlyphs.Clear(); _runs.Clear(); var length = end - start;
-        if (length == 0) return; _tabRTL = _paragraphLevels[start] == 1;
-        _scalars.AsSpan(start, length).CopyTo(_shapeScalars);
-        if (_options.BIDIOverride is { Count: > 0 } contexts)
-        {
-            for (var contextIndex = 0; contextIndex < contexts.Count; contextIndex++)
-            {
-                var context = contexts[contextIndex]; var from = Math.Max(start, context.Start); var to = Math.Min(end, context.End);
-                if (from >= to) continue;
-                var contextStart = Math.Clamp(context.Start, 0, _count); var contextEnd = Math.Clamp(context.End, contextStart, _count);
-                var level = context.Direction switch { TextDirection.LTR => (sbyte)0, TextDirection.RTL => (sbyte)1, TextDirection.Auto => (sbyte)2, _ => _paragraphLevels[from] };
-                if (level == 2)
-                {
-                    var strong = false;
-                    for (var i = contextStart; i < contextEnd; i++)
-                        if (new Codepoint(_scalars[i]).BiDiClass is BidiClass.LeftToRight or BidiClass.RightToLeft or BidiClass.ArabicLetter) { strong = true; break; }
-                    if (!strong) level = _paragraphLevels[from];
-                }
-                _bidi.Resolve(Key.Text.AsSpan(_utf16[contextStart], _utf16[contextEnd] - _utf16[contextStart]), level);
-                _bidi.Levels.CopyTo(_levels.AsSpan(contextStart));
-                AppendRuns(from, to, (sbyte)_bidi.ParagraphLevel);
-            }
-        }
-        else AppendRuns(start, end, _paragraphLevels[start]);
+        _lineGlyphs.Clear(); PrepareRuns(start, end); var length = end - start;
         foreach (var run in _runs)
         {
             var runStyle = StyleAt(run.Start); var inline = _richObjects[run.Start]; var rtl = (run.Level & 1) != 0;
@@ -471,6 +448,34 @@ internal sealed partial class TextLayout
             }
         }
         LayoutAdvance();
+    }
+
+    private void PrepareRuns(int start, int end)
+    {
+        _runs.Clear(); var length = end - start;
+        if (length == 0) return; _tabRTL = _paragraphLevels[start] == 1;
+        _scalars.AsSpan(start, length).CopyTo(_shapeScalars);
+        if (_options.BIDIOverride is { Count: > 0 } contexts)
+        {
+            for (var contextIndex = 0; contextIndex < contexts.Count; contextIndex++)
+            {
+                var context = contexts[contextIndex]; var from = Math.Max(start, context.Start); var to = Math.Min(end, context.End);
+                if (from >= to) continue;
+                var contextStart = Math.Clamp(context.Start, 0, _count); var contextEnd = Math.Clamp(context.End, contextStart, _count);
+                var level = context.Direction switch { TextDirection.LTR => (sbyte)0, TextDirection.RTL => (sbyte)1, TextDirection.Auto => (sbyte)2, _ => _paragraphLevels[from] };
+                if (level == 2)
+                {
+                    var strong = false;
+                    for (var i = contextStart; i < contextEnd; i++)
+                        if (new Codepoint(_scalars[i]).BiDiClass is BidiClass.LeftToRight or BidiClass.RightToLeft or BidiClass.ArabicLetter) { strong = true; break; }
+                    if (!strong) level = _paragraphLevels[from];
+                }
+                _bidi.Resolve(Key.Text.AsSpan(_utf16[contextStart], _utf16[contextEnd] - _utf16[contextStart]), level);
+                _bidi.Levels.CopyTo(_levels.AsSpan(contextStart));
+                AppendRuns(from, to, (sbyte)_bidi.ParagraphLevel);
+            }
+        }
+        else AppendRuns(start, end, _paragraphLevels[start]);
     }
 
     private void AppendRuns(int start, int end, sbyte paragraphLevel)
