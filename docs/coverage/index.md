@@ -1,8 +1,25 @@
+[Complete selected pair operations](../components/physics-shape-pairs.md#complete-selected-pair-operations)
+close both selected collision rows after all 64 ordered built-in combinations,
+logical scene/raw slot poses, independent motion/cap policies and lifetime/error
+checks. The current physics ledger has 1279/1369 Implemented declarations (93.43%),
+with 90 open: 59 Partial, 17 Blocked and 14 Unimplemented; 92 are Excluded. Earlier
+counts record historical checkpoints. Complete custom/coupled numerical, inherited/
+server/network/native/platform and target-hardware/window/performance gates stay open.
+
+[Complete direct-space view acquisition](../components/physics-registered-adapter.md#complete-direct-space-view-operation)
+closes the selected getter with guarded cache/factory/lifetime and actual six-query
+behavior. The independent provider now preserves whole logical query origins,
+ray ties and contact ordering before caps. That checkpoint recorded
+1277/1369 Implemented declarations (93.28%), with 92 open: 61 Partial, 17 Blocked
+and 14 Unimplemented; 92 are Excluded. Earlier counts are historical checkpoints.
+Complete custom/coupled, inherited/server, network/native/platform and target-
+hardware/window/performance acceptance remain open.
+
 [Complete world parameter operations](../components/physics-registered-adapter.md#complete-world-parameter-operations)
 close the selected setter after physical effects for all nine typed settings,
 publication/borrowing guards and contact-history replay. The independent provider
 now uses its cache settings numerically; four legacy test commands also apply and
-verify their actual requested numerical lane. The current physics ledger has
+verify their actual requested numerical lane. That checkpoint recorded
 1276/1369 Implemented declarations (93.21%), with 93 open: 62 Partial, 17 Blocked
 and 14 Unimplemented; 92 are Excluded. Earlier counts record their checkpoints.
 Complete numerical/backend, inherited/network, native/platform and target-hardware

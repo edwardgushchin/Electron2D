@@ -1,11 +1,20 @@
 # PhysicsServerBackend
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 Selected CompleteBody and EndStep failures latch the world as unusable and suppress
 body-state observers. Successful retirement after pre-Solve preparation failure
 permits a new interval; gameplay observer/flush/end-sync errors retain their
 notification recovery policy. See [lifecycle publication boundaries](../components/physics-registered-adapter.md#complete-lifecycle-publication-boundaries).
+
+## Complete direct-space view operation
+
+CreateDirectSpaceState supplies the cached World/server query view under owner,
+world-lifetime and numerical-borrow guards. The [complete operation checks](../components/physics-registered-adapter.md#complete-direct-space-view-operation)
+exercise acquisition, invalid factories, disposal/retry and six-query behavior,
+including whole logical origins and identity ordering before caps. The independent
+consumer applies these policies numerically. Broader custom/coupled implementation
+and final acceptance gates remain separate.
 
 ## Complete world parameter operations
 
@@ -390,3 +399,10 @@ including actual scene/raw contacts, terminal rejection/cleanup, owner/separate
 execution, validated count bounds and rendered marker consumers. Preparation errors
 preserve prior implementation policy; tree-wide rollback attempts every request and
 retains original errors. This closes those operations, not the whole numerical family.
+
+Selected CollideShapes and BodyCollideShape now have a [complete operation audit](../components/physics-shape-pairs.md#complete-selected-pair-operations):
+64 ordered built-in combinations, logical pose and local slot composition,
+disabled/zero-filter slots, independent motion policies, exact caller capacity and
+borrowed/atomic failure handling. Independent registered math shares the public
+CPU/software-GPU assertions; full moving brackets retain zero managed bytes.
+Broader numerical and final platform/network/performance acceptance remains separate.

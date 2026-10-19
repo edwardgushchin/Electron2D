@@ -247,7 +247,7 @@ public static partial class BackendChecks
         protected override void EndStep(Exception? failure) { EndStepHook?.Invoke(failure); }
         protected override void FlushQueries() { LifecycleHook?.Invoke(LifecyclePhase.Flush); Flushes++; FlushHook?.Invoke(); }
         protected override void EndSync(Exception? failure) { EndFailure = failure; LifecycleHook?.Invoke(LifecyclePhase.End); Synchronizations++; SyncHook?.Invoke(); }
-        protected override void Finish() { LifecycleHook?.Invoke(LifecyclePhase.Finish); FinishHook?.Invoke(); Finished = true; Bodies.Clear(); Joints.Clear(); CachedContacts = []; _nextContacts = []; if (FailFinish) throw new InvalidOperationException("Finish failure"); }
+        protected override void Finish() { LifecycleHook?.Invoke(LifecyclePhase.Finish); FinishHook?.Invoke(); Finished = true; ClearQueryResults(); Bodies.Clear(); Joints.Clear(); CachedContacts = []; _nextContacts = []; if (FailFinish) throw new InvalidOperationException("Finish failure"); }
         protected override void PrepareCheckpoint() { }
         internal WeakReference<PhysicsBackendCheckpoint>? HistoryReference;
         internal bool FailHistoryRelease;

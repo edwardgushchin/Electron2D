@@ -2,10 +2,20 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunFactoryViews()
+    public static void RunFactoryViews(bool threaded = false)
     {
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { FactoryViewsCore(threaded); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
+
+    private static void FactoryViewsCore(bool threaded)
+    {
+        var owner = Thread.CurrentThread;
         Solver? solver = null;
-        PhysicsServerManager.RegisterServer("FactoryViews", () => solver = new());
+        PhysicsServerManager.RegisterServer("FactoryViews", () => solver = new()
+        { StepHook = () => Check((Thread.CurrentThread != owner) == threaded, "Factory views accompany the requested actual Solve lane") });
         using var world = new World("FactoryViews");
         using var circle = new CircleShape { Radius = 2 };
         using var root = new SubViewport { World = world };

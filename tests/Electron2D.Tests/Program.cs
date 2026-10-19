@@ -590,6 +590,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BODY_CONTRACT") is { } b
     PhysicsReportOnlyTests.Run(backend);
     return;
 }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_COLLISIONS") == "1") { ShapeCollisionTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_QUERY_CONTRACT") is { } queryContract)
 {
     var backend = queryContract == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;

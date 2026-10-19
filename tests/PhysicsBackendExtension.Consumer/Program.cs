@@ -127,6 +127,7 @@ else if (args.Contains("--node-scheduling")) BackendChecks.RunNodeScheduling(arg
 else if (args.Contains("--resource-identity")) BackendChecks.RunResourceIdentity(args[0] == "gpu" ? Electron2D.PhysicsServer.Backend.GPU : args[0] == "cpu" ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("threaded"));
 else if (args.Contains("--local-scenes")) BackendChecks.RunLocalScenes(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--contact-policy")) BackendChecks.RunContactPolicy(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Contains("--logical-queries")) BackendChecks.RunLogicalQueries(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--contact-cache")) BackendChecks.RunContactCache(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--priority-geometry")) BackendChecks.RunPriorityGeometry(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--directed-geometry") || args.Contains("--directed-angular")) BackendChecks.RunDirectedGeometry(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"), args.Contains("--directed-angular"));
@@ -195,7 +196,7 @@ else if (args.Contains("--shape-geometry")) BackendChecks.RunShapeGeometry(args.
 else if (args.Contains("--shape-policy")) BackendChecks.RunShapePolicy(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--custom")) BackendChecks.RunCustom();
-else if (args.Contains("--factory-views")) BackendChecks.RunFactoryViews();
+else if (args.Contains("--factory-views")) BackendChecks.RunFactoryViews(args.Contains("--threaded"));
 else if (args.Contains("--view-lifetimes")) BackendChecks.RunViewLifetimes(args.Contains("--threaded"));
 else if (args.Contains("--debug-drawing")) BackendChecks.RunDebugDrawing();
 else if (args.Contains("--axis-velocity")) BackendChecks.RunAxisVelocity(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
@@ -208,6 +209,7 @@ else if (args.Contains("--area-parameters")) BackendChecks.RunAreaParameters(arg
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--area-fields")) BackendChecks.RunAreaFields(args.Contains("--threaded"));
 else if (args.Contains("--parameter-reads")) BackendChecks.RunParameterReads();
+else if (args.Contains("--shape-pair-matrix")) BackendChecks.RunShapePairMatrix(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--shape-pairs")) BackendChecks.RunShapePairs(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--notification-phase")) BackendChecks.RunNotificationPhase(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :

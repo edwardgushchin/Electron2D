@@ -4,7 +4,7 @@ The [indexed slot operation audit](../components/physics-shapes.md#indexed-slot-
 
 The [Body/Area append audit](../components/physics-shapes.md#bodyarea-append-contract-audit) closes both public append operations and their registered projections under the accepted rigid-pose contract. Pending/disabled slots, exact logical indices, canonical geometry, ownership, rollback/retry and zero warmed managed frames are covered; overall physics acceptance remains separate.
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 ## Contact reporting policy guards
 
@@ -1433,3 +1433,17 @@ live error, nine body owners/four direct modes, publication recovery and 1536 co
 warmed frames at 0/0 owner/all-thread managed bytes pass in the 58-profile
 JIT/NativeAOT CPU/software-GPU/registered cohort. This closes the extension axis
 operation; broader numerical, networking and hardware acceptance remain open.
+
+
+[Complete direct-space view acquisition](../components/physics-registered-adapter.md#complete-direct-space-view-operation)
+shares one live cached view across World/server/viewport consumers. Invalid/retired
+spaces and foreign/numerical access reject; inactive access and disposal/recreation
+retain the live context. The six-query family has shared CPU/software-GPU/registered
+logical-origin, ordering/cap and zero warmed-frame checks.
+
+Selected ShapeCollide and BodyCollideShape now have a [complete operation audit](../components/physics-shape-pairs.md#complete-selected-pair-operations):
+64 ordered built-in combinations, logical pose and local slot composition,
+disabled/zero-filter slots, independent motion policies, exact caller capacity and
+borrowed/atomic failure handling. Independent registered math shares the public
+CPU/software-GPU assertions; full moving brackets retain zero managed bytes.
+Broader numerical and final platform/network/performance acceptance remains separate.
