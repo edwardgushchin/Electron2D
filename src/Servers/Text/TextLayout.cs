@@ -319,7 +319,9 @@ internal sealed partial class TextLayout
         else if (_options.Styles is null) { ascent += _font.GetSpacing(TextSpacingType.Top); descent += _font.GetSpacing(TextSpacingType.Bottom); }
         ascent += _options.BufferTopSpacing; descent += _options.BufferBottomSpacing;
         var paragraphLevel = start < _count ? _paragraphLevels[start] : Key.Direction == TextDirection.RTL ? 1 : 0;
-        var width = LayoutAdvance(); var glyphStart = _rawGlyphs.Count; _rawGlyphs.AddRange(_lineGlyphs);
+        var width = LayoutAdvance();
+        if (_options.ServerBuffers || _options.ParagraphBuffers) PrepareJustificationGlyphs(start, end, true, true);
+        var glyphStart = _rawGlyphs.Count; _rawGlyphs.AddRange(_lineGlyphs);
         _lines.Add(new(start, end, glyphStart, _lineGlyphs.Count, width, ascent, descent, 0, paragraphEnd, paragraphLevel, UnderlinePosition: _shapeFontMetrics.UnderlinePosition, UnderlineThickness: _shapeFontMetrics.UnderlineThickness));
     }
 
@@ -661,7 +663,7 @@ internal sealed partial class TextLayout
         if (word) for (var i = 0; i < _lineGlyphs.Count; i++)
             {
                 var glyph = _lineGlyphs[i];
-                if (glyph.Start <= start || glyph.Start >= end || !_wordEnds[glyph.Start] || glyph.Space || glyph.Virtual || glyph.Missing || glyph.Face is null || IsCustomPunctuation(new Rune(_scalars[glyph.Start]))) continue;
+                if (glyph.Start <= start || glyph.Start >= end || !_wordEnds[glyph.Start] || glyph.Space || glyph.Virtual || IsCustomPunctuation(new Rune(_scalars[glyph.Start]))) continue;
                 var adjacent = !glyph.RTL ? i - 1 : i + 1; if (adjacent >= 0 && adjacent < _lineGlyphs.Count && _lineGlyphs[adjacent].Space) continue;
                 _lineGlyphs.Insert(i, new(glyph.Face, 0, glyph.Start, glyph.End, 0, Vector2.Zero, 0, true, false, glyph.RTL, Virtual: true, Size: GlyphSize(glyph))); i++;
             }

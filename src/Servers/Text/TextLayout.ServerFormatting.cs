@@ -15,7 +15,7 @@ internal sealed partial class TextLayout
         var text = _options.CustomPunctuation ?? string.Empty; if (text == _customPunctuationText) return;
         _customPunctuation.Clear(); foreach (var rune in text.EnumerateRunes()) _customPunctuation.Add((uint)rune.Value); _customPunctuationText = text;
     }
-    private bool IsCustomPunctuation(Rune rune) => !string.IsNullOrEmpty(_options.CustomPunctuation) ? _customPunctuation.Contains((uint)rune.Value) : Rune.IsPunctuation(rune) && (!(_options.ParagraphBuffers || _options.ServerBuffers) || rune.Value != '_');
+    private bool IsCustomPunctuation(Rune rune) => !string.IsNullOrEmpty(_options.CustomPunctuation) ? _customPunctuation.Contains((uint)rune.Value) : IsPinnedPunctuation((uint)rune.Value) && rune.Value != '_';
     internal void ServerCopyFormatting(TextLayout target, bool shareSource = true)
     {
         // Same-owner workspaces share analysis; source snapshots retain independent arrays.

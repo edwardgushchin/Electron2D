@@ -991,6 +991,10 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_LINE_RENDER") is { 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_RENDER") is { } textServerBackend) { TextServerRenderingTests.Run(textServerBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_FORMATTING_RENDER") is { } formattingBackend) { TextServerFormattingRenderingTests.Run(formattingBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_FORMATTING") == "1") { TextServerFormattingTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_SPANS_RENDER") is { Length: > 0 } spanRenderer) { TextServerSpanRenderingTests.Run(spanRenderer); return; }
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_SPANS") == "1") { TextServerSpanTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_UNICODE") == "1") { TextServerUnicodeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_UNICODE_RENDER") is { } unicodeBackend) { TextServerUnicodeRenderingTests.Run(unicodeBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_WRAPPING_RENDER") is { } wrappingBackend) { TextServerWrappingRenderingTests.Run(wrappingBackend); return; }
@@ -1788,7 +1792,7 @@ TextServerTests.Run();
 TextServerEditingTests.Run();
 TextServerWrappingTests.Run();
 TextServerFormattingTests.Run();
-TextServerUnicodeTests.Run();
+TextServerUnicodeTests.Run(); TextServerSpanTests.Run();
 TextLineTests.Run();
 AStarGridTests.Run();
 RemoteTransformTests.Run();

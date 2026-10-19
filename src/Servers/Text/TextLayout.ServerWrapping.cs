@@ -39,7 +39,7 @@ internal sealed partial class TextLayout
             { _serverBreakClusters[^1] = previous with { End = glyph.End, Advance = previous.Advance + advance }; continue; }
             var hyphen = scalar == 0x00ad; var hyphenAdvance = 0f;
             if (hyphen && glyph.Face is { } face) hyphenAdvance = face.GetGlyphAdvance(face.GetGlyphIndex(scalar), GlyphSize(glyph), Key.Orientation == TextOrientation.Vertical);
-            _serverBreakClusters.Add(new(glyph.Start, glyph.End, advance, glyph.Space || glyph.Tab, IsHardBreak(scalar), _breaks[glyph.End], hyphen, hyphenAdvance));
+            _serverBreakClusters.Add(new(glyph.Start, glyph.End, advance, NativeTextBreak.StringWhitespace(scalar), IsHardBreak(scalar), _breaks[glyph.End], hyphen, hyphenAdvance));
         }
     }
     private int CompareServerGlyphs(int a, int b)

@@ -36,8 +36,9 @@ public sealed partial class TextLine
     internal void ServerDetachSubstring()
     {
         if (_serverSubstring is null) return;
-        var lease = _serverSubstring!; _serverSubstring = null; ServerParent = default; _fonts.Clear();
-        foreach (var span in _spans) if (!_fonts.Contains(span.Font)) _fonts.Add(span.Font);
+        var fonts = new HashSet<Font>(ReferenceEqualityComparer.Instance); foreach (var span in _spans) fonts.Add(span.Font);
+        _fonts.EnsureCapacity(fonts.Count);
+        var lease = _serverSubstring!; _serverSubstring = null; ServerParent = default; _fonts.Clear(); _fonts.AddRange(fonts);
         _fonts.Sort(static (a, b) => a.InstanceID.CompareTo(b.InstanceID)); _dirty = true; _generations.Clear(); lease.Release();
     }
     private void ServerReleaseSnapshot() { _serverSliceSnapshot?.Release(); _serverSliceSnapshot = null; }

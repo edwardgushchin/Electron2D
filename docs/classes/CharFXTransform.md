@@ -1,6 +1,6 @@
 # CharFXTransform
 
-Last updated: 2026-10-07
+Last updated: 2026-10-20
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.CharFXTransform`. **Source:** [source](../../src/Scene/Resources/CharFXTransform.cs). **Component:** [Rich text](../components/rich-text.md).
 
@@ -190,3 +190,5 @@ Gets or sets whether this glyph is drawn and occupies visual advance.
 ## Verification and limits
 
 See the rich-text component for actual tests, native artifacts, prepared allocation bounds and exact missing dependencies.
+
+GlyphFlags shares the shaped-word classifier: pinned/custom punctuation, separate underscores, mandatory and soft separators, resolved RTL, native joining/safe-insertion flags and valid inline objects. Virtual records describe synthesized opportunities; the native rendering and failure/allocation limits remain in the text components. See [span/word integration](../components/text-server.md#span-font-replacement-and-shaped-word-ranges).

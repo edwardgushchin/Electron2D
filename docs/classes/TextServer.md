@@ -254,3 +254,14 @@ See the [standalone Unicode contract](../components/text-server.md#standalone-un
 | `string StripDiacritics(string text)` | NFKD compatibility decomposition, removing nonzero canonical combining classes. |
 
 Transformations preserve embedded NUL and unpaired UTF-16. Positive character-width word ranges can split composites; use composite ends when that cut is unwanted. Hard separators do not occur in returned word/width ranges. Native lower/title/strip reject an oversized expanded result before output allocation. Scalar/known-tag queries reuse warmed state; transformations and arrays may allocate.
+
+## Span font replacement and shaped words
+
+| Signature | Behavior |
+| --- | --- |
+| `void ShapedSetSpanUpdateFont(RID shaped, int index, ReadOnlySpan<Font> fonts, int size, IReadOnlyDictionary<string, int>? openTypeFeatures = null)` | Copies ordered fonts/features, replaces a slice-local text-or-object span and invalidates native geometry without changing source, language or typed metadata. |
+| `int[] ShapedTextGetWordBreaks(RID shaped, TextGraphemeFlags graphemeFlags = TextGraphemeFlags.Space \| TextGraphemeFlags.Punctuation, TextGraphemeFlags skipGraphemeFlags = TextGraphemeFlags.Virtual)` | Returns independent global scalar word ranges from logical shaped clusters and selected property masks. |
+
+Font sources require one to sixty-four live entries, a positive size and at most 4096 features. Null removes prior feature overrides. Invalid input does not detach a substring or publish a borrowed line; every successful update is authoring, including an equal setting. Replaced internal adapters retire only when their last source/snapshot/duplicate lease ends. Caller font resources stay borrowed. Explicit inline geometry remains independent of fonts. A replacement can recover a buffer whose previous caller font retired. A borrowed paragraph line publishes its own override, reaching the paragraph consumer until reflow retires the RID.
+
+Word delimiters exclude complete source clusters; virtual opportunities mark boundaries without consuming source characters. No delimiters returns the complete nonempty shaped range, while an empty/unshaped partial-cluster slice has no ranges. Custom punctuation replaces default punctuation; underscore has its own flag. Direction uses actual resolved run metadata; both orientations use scalar units. Undefined flag bits throw ArgumentOutOfRangeException. Queries prepare shape and return cold snapshots; prepared values remain reusable. See the [complete span/word contract](../components/text-server.md#span-font-replacement-and-shaped-word-ranges).

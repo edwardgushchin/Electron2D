@@ -474,6 +474,16 @@
       "godot": "TextServer::method:tag_to_name(int:)",
       "electron2d": "method:Electron2D.TextServer.TagToName(System.UInt32)",
       "reason": "ADR 0004/0046/0107: executable Unicode 17 stateless locale/case/NFKD/identifier/scalar boundary utilities and shared OpenType name/tag conversion. Typed uint preserves the actual 32-bit OpenType tag role. Managed uppercase reuses the existing tested transform; private ICU lower/title/decomposition/properties and independent iterators share serialized immutable data ownership. Explicit UTF-16 lengths preserve NUL and malformed transformation input; scalar snapshots retain final dictionary and single-character hard-line ranges, correcting pinned source boundary losses. Positive widths use scalar limits, word preference, soft whitespace trimming and excluded hard separators. NFC, true XID/recommended scripts and complete single-script UTS39 join-control contexts replace category approximations, with required ulayout.icu properties and explicit missing-data failure. No confusable-service claim. 64 MiB string budgets, native output preflight, concurrency, aliases and zero-byte warm value checks; all-scalar/mixed whole-string normalization oracle, data reproduction, exact 15-export Linux audit, 18 package contract tests and four software native/fresh-font public pixel/full-frame gates. Current source-native assets are required; old package exports, independent repackaged/NativeAOT/foreign/hardware/native-allocation/performance and owner acceptance remain separate."
+    },
+    {
+      "godot": "TextServer::method:shaped_set_span_update_font(RID:,int:,RID[]:,int:,Dictionary:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedSetSpanUpdateFont(Electron2D.RID,System.Int32,System.ReadOnlySpan<Electron2D.Font>,System.Int32,System.Collections.Generic.IReadOnlyDictionary<System.String, System.Int32>)",
+      "reason": "ADR 0004/0046/0107: actual copied ordered Font/size/features replacement with unchanged source/language/exact metadata and slice-local text/object indexes. Successful authoring detaches substrings and publishes borrowed paragraph line consumers; invalid input preserves parent/publication. Current font-generation dependencies retire unused adapter leases while snapshots/duplicates retain theirs and caller fonts remain borrowed; replacing a retired old source recovers the buffer. Inline geometry has no font role. Logical complete-cluster word ranges consume the full typed TextGraphemeFlags family, custom/pinned punctuation, separate underscores, mandatory/soft breaks and actual run metadata. Coherent shaping prepares zero-advance word/Kashida opportunities independent of a prior fit; virtual delimiters are source points, correcting overlapping-record character losses. Shared rich flags preserve native joining and valid inline roles. Scalar/global ranges, both orientations, copied arrays, bounds/callback/owner/lifetime cases and warmed value/native-frame scopes are checked with real font/canvas/fresh-resource consumers; hardware/native-allocation/repackaged-asset/NativeAOT/foreign/performance and owner acceptance remain separate."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_get_word_breaks(RID:,int:TextServer.GraphemeFlag,int:TextServer.GraphemeFlag)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextGetWordBreaks(Electron2D.RID,Electron2D.TextGraphemeFlags,Electron2D.TextGraphemeFlags)",
+      "reason": "ADR 0004/0046/0107: actual copied ordered Font/size/features replacement with unchanged source/language/exact metadata and slice-local text/object indexes. Successful authoring detaches substrings and publishes borrowed paragraph line consumers; invalid input preserves parent/publication. Current font-generation dependencies retire unused adapter leases while snapshots/duplicates retain theirs and caller fonts remain borrowed; replacing a retired old source recovers the buffer. Inline geometry has no font role. Logical complete-cluster word ranges consume the full typed TextGraphemeFlags family, custom/pinned punctuation, separate underscores, mandatory/soft breaks and actual run metadata. Coherent shaping prepares zero-advance word/Kashida opportunities independent of a prior fit; virtual delimiters are source points, correcting overlapping-record character losses. Shared rich flags preserve native joining and valid inline roles. Scalar/global ranges, both orientations, copied arrays, bounds/callback/owner/lifetime cases and warmed value/native-frame scopes are checked with real font/canvas/fresh-resource consumers; hardware/native-allocation/repackaged-asset/NativeAOT/foreign/performance and owner acceptance remain separate."
     }
   ],
   "extras": [
@@ -543,6 +553,7 @@
         "TextServer::method:shaped_get_span_object(RID:,int:)",
         "TextServer::method:shaped_get_span_text(RID:,int:)",
         "TextServer::method:shaped_get_text(RID:)",
+        "TextServer::method:shaped_set_span_update_font(RID:,int:,RID[]:,int:,Dictionary:)",
         "TextServer::method:shaped_text_add_object(RID:,Variant:,Vector2:,int:InlineAlignment,int:,float:)",
         "TextServer::method:shaped_text_add_string(RID:,String:,RID[]:,int:,Dictionary:,String:,Variant:)",
         "TextServer::method:shaped_text_clear(RID:)",
@@ -580,6 +591,7 @@
         "TextServer::method:shaped_text_get_underline_position(RID:)",
         "TextServer::method:shaped_text_get_underline_thickness(RID:)",
         "TextServer::method:shaped_text_get_width(RID:)",
+        "TextServer::method:shaped_text_get_word_breaks(RID:,int:TextServer.GraphemeFlag,int:TextServer.GraphemeFlag)",
         "TextServer::method:shaped_text_has_object(RID:,Variant:)",
         "TextServer::method:shaped_text_has_visible_chars(RID:)",
         "TextServer::method:shaped_text_hit_test_grapheme(RID:,float:)",
@@ -779,9 +791,7 @@
         "TextServer::method:draw_hex_code_box(RID:,int:,Vector2:,int:,Color:)",
         "TextServer::method:get_features()",
         "TextServer::method:get_hex_code_box_size(int:,int:)",
-        "TextServer::method:has_feature(int:TextServer.Feature)",
-        "TextServer::method:shaped_set_span_update_font(RID:,int:,RID[]:,int:,Dictionary:)",
-        "TextServer::method:shaped_text_get_word_breaks(RID:,int:TextServer.GraphemeFlag,int:TextServer.GraphemeFlag)"
+        "TextServer::method:has_feature(int:TextServer.Feature)"
       ],
       "state": "Unimplemented",
       "reason": "ADR 0107/0046: retained buffer/provider and native text/Unicode foundations now exist. Implement this remaining applicable layout, Unicode utility or capability projection with its full typed behavior and executable consumer in the owning next slice; no GUI-startup prerequisite remains."

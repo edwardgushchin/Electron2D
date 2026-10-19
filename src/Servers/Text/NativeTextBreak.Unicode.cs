@@ -129,7 +129,7 @@ internal static unsafe partial class NativeTextBreak
     }
     private static void AppendStringRange(List<int> ranges, int start, int end) { if (start < 0 || start >= end) return; ranges.Add(start); ranges.Add(end); }
     private static bool StringHardBreak(uint scalar) => scalar is >= 0x0a and <= 0x0d or 0x85 or 0x2028 or 0x2029;
-    private static bool StringWhitespace(uint scalar) => scalar is >= 9 and <= 13 or 0x20 or 0x85 or 0xa0 or 0x1680 or >= 0x2000 and <= 0x200b or 0x2028 or 0x2029 or 0x202f or 0x205f or 0x3000;
+    internal static bool StringWhitespace(uint scalar) => scalar is >= 9 and <= 13 or 0x20 or 0x85 or 0xa0 or 0x1680 or >= 0x2000 and <= 0x200b or 0x2028 or 0x2029 or 0x202f or 0x205f or 0x3000;
     private static bool StringWordSeparator(uint scalar) => StringWhitespace(scalar) || scalar is '_' or 0xfffc || (CharacterProperties(scalar) & 2) != 0;
 
     [LibraryImport(Library, EntryPoint = "e2d_text_case"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]

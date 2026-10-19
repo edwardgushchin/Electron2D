@@ -33,3 +33,5 @@ Graph authoring and FontVariation are now implemented connected consumers. Scrip
 ## Native popup integration
 
 Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.
+
+Glyph property classification is shared with [shaped word ranges](text-server.md#span-font-replacement-and-shaped-word-ranges). It supplies pinned/custom punctuation, separate underscores, mandatory/soft separators and valid inline objects alongside resolved direction and native joining flags. This does not expose native glyph handles.

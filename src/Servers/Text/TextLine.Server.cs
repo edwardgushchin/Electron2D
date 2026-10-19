@@ -64,6 +64,27 @@ public sealed partial class TextLine
         }
         finally { group?.Release(); }
     }
+    internal void ServerUpdateFont(int index, ReadOnlySpan<Font> fonts, int size, IReadOnlyDictionary<string, int>? features)
+    {
+        CheckMutation(); var selected = ServerSpan(index, 0, _count); Font.ValidateSize(size);
+        var group = new TextBufferFont(fonts, features);
+        try
+        {
+            if (selected.Key is null)
+            {
+                var at = _spans.FindIndex(span => span.At == selected.At);
+                var replacement = _spans[at] with { Font = group, Size = size };
+                var active = new HashSet<Font>(ReferenceEqualityComparer.Instance);
+                for (var i = 0; i < _spans.Count; i++) active.Add(i == at ? group : _spans[i].Font);
+                _serverFonts.EnsureCapacity(_serverFonts.Count + 1); _fonts.EnsureCapacity(active.Count); _generations.EnsureCapacity(active.Count);
+                _spans[at] = replacement; _serverFonts.Add(group); group = null!;
+                _fonts.Clear(); _fonts.AddRange(active); _fonts.Sort(static (a, b) => a.InstanceID.CompareTo(b.InstanceID));
+                for (var i = _serverFonts.Count - 1; i >= 0; i--) if (!active.Contains(_serverFonts[i])) { var retired = _serverFonts[i]; _serverFonts.RemoveAt(i); retired.Release(); }
+            }
+            _dirty = _contentDirty = true; ServerChanged?.Invoke();
+        }
+        finally { group?.Release(); }
+    }
     internal void ServerCopyFonts(TextLine copy)
     {
         if (_serverFonts.Count == 0) return; var used = new HashSet<Font>(copy._fonts);

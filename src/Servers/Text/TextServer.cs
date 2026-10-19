@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-/// <summary>Provides low-level operations over retained shaped-text buffer identities.</summary>
+/// <summary>Provides retained shaped-text buffers and stateless Unicode, locale and OpenType-name utilities.</summary>
 /// <remarks>Obtain the retained interface from TextServerManager. Each buffer belongs to its creating thread.
 /// Caller fonts, inline keys and metadata remain borrowed; only buffers returned by this interface may be freed through FreeRID.</remarks>
 public abstract partial class TextServer : ElectronObject

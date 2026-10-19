@@ -77,17 +77,7 @@ internal sealed partial class TextLayout
                     state.Position = origin + glyph.Position - new Vector2(removed, 0); state.Offset = Vector2.Zero;
                     state.Transform = Transform.Identity.Translated(state.Position); state.Color = Colors.White; state.Visible = true; state.Outline = outline;
                     state.OutlineSize = outlineSize; state.ObjectIndex = objectIndex; state.Missing = glyph.Missing;
-                    var scalar = glyph.Start < _count ? new Rune((int)_scalars[glyph.Start]) : Rune.ReplacementChar;
-                    state.Flags = (glyph.Face is not null && glyph.Index != 0 ? TextGraphemeFlags.Valid : 0) |
-                        (glyph.RTL ? TextGraphemeFlags.RTL : 0) |
-                        (glyph.Virtual ? TextGraphemeFlags.Virtual : 0) | (glyph.Space ? TextGraphemeFlags.Space : 0) |
-                        (glyph.Tab ? TextGraphemeFlags.Tab : 0) | (glyph.Elongation ? TextGraphemeFlags.Elongation : 0) |
-                        (objectIndex >= 0 ? TextGraphemeFlags.EmbeddedObject : 0) |
-                        (Rune.IsPunctuation(scalar) ? TextGraphemeFlags.Punctuation : 0) |
-                        (scalar.Value == '_' ? TextGraphemeFlags.Underscore : 0) |
-                        (scalar.Value == 0x00ad ? TextGraphemeFlags.SoftHyphen : 0) |
-                        ((glyph.Flags & 1) != 0 ? TextGraphemeFlags.Connected : 0) |
-                        ((glyph.Flags & 4) != 0 ? TextGraphemeFlags.SafeToInsertTatweel : 0);
+                    state.Flags = ServerGraphemeFlags(glyph);
                     renderer(state);
                     if (!state.Visible) { removed += state.Advance; continue; }
                     if (objectIndex >= 0 || glyph.Tab) continue;
