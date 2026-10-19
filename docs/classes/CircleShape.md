@@ -1,5 +1,7 @@
 # CircleShape
 
+[Coincident rounded-core contacts](../components/physics-contact-policy.md#coincident-rounded-cores) now retain unit normals and real penetration correction on the CPU solver; shared CPU/software-GPU/registered tests cover ordered transformed scene/server pairs.
+
 Last updated: 2026-10-12
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)

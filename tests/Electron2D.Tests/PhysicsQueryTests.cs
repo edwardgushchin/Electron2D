@@ -283,6 +283,8 @@ internal sealed class PhysicsQueryTests(PhysicsServer.Backend backend)
         Reject<ArgumentOutOfRangeException>(() => PhysicsServer.BodySetMode(body, (PhysicsServer.BodyMode)99));
         Reject<ArgumentOutOfRangeException>(() => PhysicsServer.SpaceStep(space, -1));
 
+        // The earlier point-query overlap must not constrain the free-fall witness.
+        PhysicsServer.BodySetSpace(secondBody, default);
         PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Rigid);
         PhysicsServer.SpaceStep(space, 1d / 60);
         var movedPosition = PhysicsServer.BodyGetTransform(body).Origin.Y;

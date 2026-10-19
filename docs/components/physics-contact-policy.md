@@ -1,6 +1,64 @@
 # World and shape contact policy
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
+
+## Coincident rounded cores
+
+CPU circle/circle and capsule/circle manifolds now select a unit normal before
+computing surface midpoints and body-local anchors when the closest cores coincide
+or their difference falls below native normalization tolerance. A noncollapsed
+capsule or segment chooses a perpendicular axis; a circle chooses a finite local
+axis. The arbitrary side of an exactly coincident pair is backend-specific.
+Collapsed capsules and point segments retain their existing circular/point compiler
+route. Real dynamics, direct queries and body-motion recovery use the same native
+primitive implementation; the former query-only correction is removed. GPU and
+registered numerics retain their own geometry and solver paths.
+
+The public `--rounded-cores` consumer exercises 40 isolated scene/server pairs:
+circle/circle, circle/capsule and circle/segment pairs, circle/collapsed-capsule
+and circle/point pairs in both orders, a capsule/capsule positive control,
+two body rotations, transformed active slot 1
+following disabled slot 0, and static or unequal-mass movable counterparts.
+It verifies actual 24-tick convergence under bias .8 and penetration slack .25,
+unit/perpendicular normals, exact RID/slot metadata, finite contact points, unchanged
+static pose and weighted center of mass. Raw counterparts without an associated
+Node do not emit scene body events. After 128 warm frames, 128 reset/full-step/
+contact-observation frames require strict zero owner/all-thread managed bytes,
+positive geometric correction, full reported impulse versus momentum and conserved
+free-pair momentum. Incoming speed is eight scene units per second; a degenerate
+pair may choose a different unit side after integration, so an arbitrary side
+or a minimum physical impulse is not required across implementations. Cached direct-state views are borrowed throughout the bracket.
+
+Normal length tolerance is .001 and axis orthogonality .002; converged geometric
+gap is [-.28,.35] scene units, compared with .25 allowed penetration. Weighted
+center error is below .02 mass-times-scene-units for this bounded grid (coordinates
+up to 140/80); per-frame impulse error is below .08 and free-pair momentum below
+.02. These bounds cover float/solver rounding and do not compare arbitrary sides
+or internal manifold counts. The native primitive check separately covers 24
+exact/near-zero/finite offsets, unequal radii, rotations and translations with
+unit normals, actual surface midpoints and both anchors within 1e-5 native units.
+
+The pre-fix CPU control reports zero normals and unchanged deep penetration;
+its original fixture's invalid scene-event expectation and disposal-induced view
+allocations were corrected before the final measured profiles. The former large
+fixture grid also exceeded its weighted center tolerance through float drift; the
+qualified fixture uses the stated bounded grid. This evidence does not establish
+large-coordinate precision, complete coupled geometry/network/platform acceptance
+or target GPU/window/performance readiness. The older direct-query test now
+detaches its coincident static query counterpart before the separate free-fall
+witness, preserving all overlapping point-query assertions. GPU checks use private software Vulkan
+while the device power cable remains unchecked. Evidence:
+`bin/physics-rounded-cores/2026-10-20/`.
+
+The final current-main cohort passes 116 processes: 54 JIT, 54 strict NativeAOT
+and eight root profiles. Twelve rounded-core profiles measure 1536 complete frames
+at strict 0/0 owner/all-thread managed bytes. Six DLL/PDB sets match all 3470
+non-generated C# inputs, including vendor; linked root consumer/runtime DLL and
+PDB match the separate consumer. Both freshly compiled/validated query shaders
+match 51 tracked shader/tool inputs and embedded blobs in four payloads.
+An earlier 116-process cohort is retained separately before the concurrent text
+merge; it is not added to this current-main count. No physics declaration states
+or wire formats change: the ledger remains 1279/1369 (93.43%), 90 open.
 
 ## Configured world parameter reads
 

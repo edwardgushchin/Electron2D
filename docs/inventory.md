@@ -1,5 +1,7 @@
 # Engine inventory
 
+[Coincident rounded-core response](components/physics-contact-policy.md#coincident-rounded-cores) now shares CPU circle/capsule/segment primitive manifolds between actual dynamics and query/body-motion projection. The query-only fallback is removed; public scene/raw checks retain logical slots, physical invariants and zero warmed allocation across independently selected implementations.
+
 CanvasItem TopLevel rebinding now connects to the existing recursive presentation reset, with allocation-free sampling propagation and [physical/pixel verification](components/canvas-rendering.md#toplevel-transition-resets-2026-10-18). This adds no production type or public declaration.
 
 Last updated: 2026-10-20

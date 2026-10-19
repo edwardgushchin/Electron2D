@@ -191,19 +191,6 @@ internal sealed partial class CPUPhysicsWorldBackend
                 manifold = b2CollidePolygons(ref polygon, identity, ref otherPolygon, otherTransform);
             }
         }
-        if (manifold.pointCount != 0 && manifold.normal == default &&
-            queryKind <= 2 && otherKind <= 2 && (queryKind == 1 || otherKind == 1))
-        {
-            // Coincident rounded cores still need a unit side and matching surface points.
-            var axis = queryKind == 2 ? query.points[1] - query.points[0] : otherKind == 2 ? b2RotateVector(otherTransform.q, other.points[1] - other.points[0]) : new B2Vec2(0, 1);
-            var normal = b2Normalize(b2RightPerp(axis));
-            if (normal == default) normal = new(1, 0);
-            var center = queryKind == 1 ? query.points[0] : b2TransformPoint(otherTransform, other.points[0]);
-            var firstRadius = flipped ? other.radius : query.radius;
-            var secondRadius = flipped ? query.radius : other.radius;
-            manifold.normal = normal;
-            manifold.points[0].point = center + .5f * (firstRadius - secondRadius) * normal;
-        }
         if (flipped) manifold.normal = -manifold.normal;
         return manifold;
     }

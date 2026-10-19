@@ -55,6 +55,10 @@ namespace Box2D.NET
 
             float distance = 0;
             B2Vec2 normal = b2GetLengthAndNormalize(ref distance, b2Sub(pointB, pointA));
+            if (normal == default)
+            {
+                normal = new B2Vec2(1.0f, 0.0f);
+            }
 
             float radiusA = circleA.radius;
             float radiusB = circleB.radius;
@@ -122,6 +126,14 @@ namespace Box2D.NET
 
             float distance = 0;
             B2Vec2 normal = b2GetLengthAndNormalize(ref distance, b2Sub(pB, pA));
+            if (normal == default)
+            {
+                normal = b2Normalize(b2RightPerp(e));
+                if (normal == default)
+                {
+                    normal = new B2Vec2(1.0f, 0.0f);
+                }
+            }
 
             float radiusA = capsuleA.radius;
             float radiusB = circleB.radius;

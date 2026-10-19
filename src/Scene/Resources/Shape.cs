@@ -226,6 +226,7 @@ public abstract partial class Shape : Resource
 }
 
 /// <summary>A circular collision shape with a configurable radius.</summary>
+/// <remarks>Coincident-center contacts retain a unit normal; the arbitrary side is backend-specific.</remarks>
 public sealed class CircleShape : Shape
 {
     private float _radius = 10f;
@@ -283,7 +284,8 @@ public sealed class CircleShape : Shape
 
 /// <summary>A vertical capsule collision shape with linked radius and full height.</summary>
 /// <remarks>A direct <see cref="CollisionShape"/> borrows this resource. Center segments within the physics
-/// backend's linear tolerance use a circular fixture while public dimensions and bounds remain exact.</remarks>
+/// backend's linear tolerance use a circular fixture while public dimensions and bounds remain exact.
+/// A circle centered on a noncollapsed core receives a perpendicular unit contact normal.</remarks>
 public sealed class CapsuleShape : Shape
 {
     private float _radius = 10f;
@@ -387,7 +389,8 @@ public sealed class CapsuleShape : Shape
 }
 
 /// <summary>A two-sided line-segment collision shape between two local points.</summary>
-/// <remarks>A segment shorter than the backend's linear tolerance uses a point fixture while retaining its exact endpoints and bounds.</remarks>
+/// <remarks>A segment shorter than the backend's linear tolerance uses a point fixture while retaining its exact endpoints and bounds.
+/// A circle centered on a noncollapsed segment receives a perpendicular unit contact normal.</remarks>
 public sealed class SegmentShape : Shape
 {
     private Vector2 _a;

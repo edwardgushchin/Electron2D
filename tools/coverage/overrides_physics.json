@@ -6383,7 +6383,7 @@
         "SegmentShape2D::property:b"
       ],
       "state": "Implemented",
-      "reason": "Two-sided segment fixtures, exact endpoints/bounds, copying and live body/area contacts execute under ADR 0061; SegmentShapeTests covers rotated and dynamic geometry, degenerate fallback, mass/inertia, packing, failures and warm allocation. Complete existing fixtures now run explicitly selected CPU/GPU worlds, with unchanged physical tolerances, actual packed-scene ray queries and zero owner/all-thread bytes over warmed full frames or repeated queries (ELECTRON2D_TEST_GEOMETRY_CONTRACT). Native/platform/visual and broader solver acceptance remain separate."
+      "reason": "Two-sided segment fixtures, exact endpoints/bounds, copying and live body/area contacts execute under ADR 0061; SegmentShapeTests covers rotated and dynamic geometry, degenerate fallback, mass/inertia, packing, failures and warm allocation. Complete existing fixtures now run explicitly selected CPU/GPU worlds, with unchanged physical tolerances, actual packed-scene ray queries and zero owner/all-thread bytes over warmed full frames or repeated queries (ELECTRON2D_TEST_GEOMETRY_CONTRACT). Native/platform/visual and broader solver acceptance remain separate. Shared --rounded-cores checks add coincident circle/capsule/segment and collapsed/point physical response, transformed scene/raw slot identity, unequal-mass center/momentum and strict zero warmed managed bytes; native primitive unit normals, unequal-radius surface midpoints and both anchors execute. See docs/components/physics-contact-policy.md#coincident-rounded-cores for bounds and remaining gates."
     },
     {
       "godot": [
@@ -6426,7 +6426,7 @@
         "class:CircleShape2D"
       ],
       "state": "Implemented",
-      "reason": "Complete own shape dimensions and bounds execute; inherited Shape queries retain separate rows."
+      "reason": "Complete own shape dimensions and bounds execute; inherited Shape queries retain separate rows. Shared --rounded-cores checks add coincident circle/capsule/segment and collapsed/point physical response, transformed scene/raw slot identity, unequal-mass center/momentum and strict zero warmed managed bytes; native primitive unit normals, unequal-radius surface midpoints and both anchors execute. See docs/components/physics-contact-policy.md#coincident-rounded-cores for bounds and remaining gates."
     },
     {
       "godot": [
@@ -6436,7 +6436,7 @@
         "CapsuleShape2D::property:radius"
       ],
       "state": "Implemented",
-      "reason": "Coupled dimensions, bounds, resource copying and live body/area fixtures execute under ADR 0059; CapsuleShapeTests covers defaults, degenerate values, rotation, contacts, packing, callback failure and warm allocation. Complete existing fixtures now run explicitly selected CPU/GPU worlds, with unchanged physical tolerances, actual packed-scene ray queries and zero owner/all-thread bytes over warmed full frames or repeated queries (ELECTRON2D_TEST_GEOMETRY_CONTRACT). Native/platform/visual and broader solver acceptance remain separate."
+      "reason": "Coupled dimensions, bounds, resource copying and live body/area fixtures execute under ADR 0059; CapsuleShapeTests covers defaults, degenerate values, rotation, contacts, packing, callback failure and warm allocation. Complete existing fixtures now run explicitly selected CPU/GPU worlds, with unchanged physical tolerances, actual packed-scene ray queries and zero owner/all-thread bytes over warmed full frames or repeated queries (ELECTRON2D_TEST_GEOMETRY_CONTRACT). Native/platform/visual and broader solver acceptance remain separate. Shared --rounded-cores checks add coincident circle/capsule/segment and collapsed/point physical response, transformed scene/raw slot identity, unequal-mass center/momentum and strict zero warmed managed bytes; native primitive unit normals, unequal-radius surface midpoints and both anchors execute. See docs/components/physics-contact-policy.md#coincident-rounded-cores for bounds and remaining gates."
     },
     {
       "godot": [

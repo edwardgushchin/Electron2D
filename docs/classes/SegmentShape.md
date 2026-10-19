@@ -1,5 +1,7 @@
 # SegmentShape
 
+[Coincident rounded-core contacts](../components/physics-contact-policy.md#coincident-rounded-cores) now preserve perpendicular circle/segment response in either order, including transformed slots and point limits, with real correction and zero warmed allocations.
+
 Last updated: 2026-10-14
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)

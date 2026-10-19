@@ -1,3 +1,5 @@
+[Coincident rounded-core response](../components/physics-contact-policy.md#coincident-rounded-cores) repairs native CPU dynamics without adding declarations or changing states. Shared public physical-invariant and warmed allocation checks retain 1279/1369 Implemented (93.43%), with 90 open applicable declarations; final native/network/target-device/performance gates remain separate.
+
 [Complete selected pair operations](../components/physics-shape-pairs.md#complete-selected-pair-operations)
 close both selected collision rows after all 64 ordered built-in combinations,
 logical scene/raw slot poses, independent motion/cap policies and lifetime/error

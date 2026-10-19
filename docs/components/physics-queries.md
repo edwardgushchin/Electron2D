@@ -74,8 +74,10 @@ sets match 3460 non-generated C# inputs, including vendor, and the linked root
 consumer matches the separately qualified consumer. Fresh compilation/validation
 of both shaders matches 51 tracked shader/tool inputs and both embedded blobs in
 all four runtime/native payloads. No public declaration or wire format changes.
-The CPU normal correction belongs to query/body-motion projection; native solver
-response for coincident rounded cores remains separately unverified.
+The later [coincident rounded-core fix](physics-contact-policy.md#coincident-rounded-cores)
+now places unit-normal and surface-anchor construction in shared native primitives,
+covering actual dynamics and removing this query-only correction. The cohort above
+remains its earlier frozen query evidence.
 
 This bounded correction does not establish complete custom/coupled motion,
 network/native/platform or target hardware/window/performance acceptance. GPU

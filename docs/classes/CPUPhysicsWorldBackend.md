@@ -1,5 +1,7 @@
 # CPUPhysicsWorldBackend
 
+CPU dynamics and query/motion manifolds now share the [coincident rounded-core fix](../components/physics-contact-policy.md#coincident-rounded-cores), including transformed circle/capsule/segment contacts and collapsed/point compiler limits.
+
 Cold world-query geometry now uses the [shared using-world borrow](../components/physics-queries.md#cold-query-geometry) before user suppliers run. Numerical writes, collider retirement/transfer and final world release reject; original supplier failures can retry. Existing pure input reads and nested query behavior are retained.
 
 The query/Area partials now share body-local unrounded polygon containment through PhysicsShapeBackend. Direct points, ordinary ray inside-start policy, directed shape-query origin filtering and Area audio no longer inherit GJK zero-distance slack outside an edge. [Public CPU/GPU checks](../components/physics-point-containment.md) preserve logical identity and warmed allocation bounds.

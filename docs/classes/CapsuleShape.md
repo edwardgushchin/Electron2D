@@ -1,5 +1,7 @@
 # CapsuleShape
 
+[Coincident rounded-core contacts](../components/physics-contact-policy.md#coincident-rounded-cores) now use a perpendicular unit normal before CPU surface anchors are computed. Shared checks include either operand order, collapsed capsules, unequal masses and zero warmed allocations.
+
 Last updated: 2026-10-14
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
