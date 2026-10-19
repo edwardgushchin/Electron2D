@@ -2,6 +2,55 @@
 
 Last updated: 2026-10-19
 
+## Complete body parameter operations
+
+All ten typed parameter pairs share configured scene/raw ownership: mass, inertia,
+center of mass, signed friction/bounce, gravity scale, linear/angular damping and
+their Combine/Replace policies. The existing PhysicsBodyParameterTests now run
+shared physical scenarios through the separate public consumer as well as the
+root suite. Unused internal Service locals were removed; a named registered World
+is the only selected-provider adaptation. Every scenario checks actual requested
+backend identity and absence of fallback.
+
+The independent provider's old rational, force-before-damping update produced
+97.49999 linear and 10.909091 angular velocity where the accepted equation requires
+97.333336 and 10.799999. It now applies max(0, 1 - damping * delta) before gravity,
+force and torque, and wakes dynamics when their resolved fields change. The shared
+suite tightens single-step scalar tolerances from 1% to 0.1% (minimum 0.001), checks
+large-damping clamping, signed acceleration and four damping/policy wake edits.
+This repairs the test implementation; production runtime/API/XML are unchanged.
+
+All five scene body siblings consume explicit profiles and actual damping, alongside
+raw bodies. Tests retain material sharing/revision/disposal, rough/absorbent real
+contact response, bidirectional scene descriptors, character gravity, omission,
+constant force/torque, rotation locks and detach/reentry. Ten invalid parameter
+branches preserve the complete prior profile. Each measured frame alternates all ten values/policies, reads them, resets
+nonzero linear/angular motion and runs the full scene physics path. Analytic
+velocity/field and inverse-mass/inertia/center checks observe the selected result.
+Warm velocity tolerance 0.001 covers float integration; mass, inertia and center
+tolerance 0.0001 covers native unit conversion. Authored identity/counts are exact. Both finalization passes are
+drained before all-thread measurement. The first fixture candidate omitted the
+second finalizer wait and reported 2304 non-owner bytes; completing the existing
+drain pattern restored strict zero without an allocation allowance.
+
+Twelve fresh JIT/strict NativeAOT CPU/no-device, private software-GPU and registered
+owner/separate profiles measure 768 changed complete frames and 120 numeric
+rejections at strict zero owner/all-thread managed bytes. Four registered profiles
+also execute the existing 128-frame prepared-input fixture, adding 512 frames with
+all eighteen configured reads inside numerical Solve, guarded writes and automatic
+mass/lifetime/owner/failure checks. Mass-role/reset, gravity and motion publication,
+integration and ordinary public-consumer companions retain complete existing
+failure recovery and role behavior. Root shared-physics, mass-profile and resident
+parameter checks complete 73/73 on the same frozen sources.
+
+Only the two extension get/set parameter operations become Implemented. The physics
+census is 1217/1369 (88.897005113221%), with 152 open declarations: 121 Partial,
+14 Unimplemented and 17 Blocked; 92 remain Excluded. The full ordinary root suite
+was not rerun. Complete numerical/custom geometry/inherited, network, native
+retained memory, other platforms and target-GPU rendered/FPS and performance
+acceptance stay open. The RTX cable is still unchecked; hardware GPU load did not
+run. Evidence: `bin/physics-body-parameters/2026-10-19/final/validation.json`.
+
 ## Mixed space membership operation audit
 
 BodySetSpace and AreaSetSpace execute every ordered CPU, GPU and registered

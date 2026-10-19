@@ -2,6 +2,19 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
+    public static void RunBodyParameters(PhysicsServer.Backend? backend = null, bool threaded = false)
+    {
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try
+        {
+            if (backend is null) PhysicsServerManager.RegisterServer("BodyParameters", () => new Solver());
+            PhysicsBodyParameterTests.Run(backend);
+            if (backend is null) ParameterReadChecks();
+        }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
+
     public static void RunParameterReads() => ParameterReadChecks();
     private static void ParameterReadChecks()
     {

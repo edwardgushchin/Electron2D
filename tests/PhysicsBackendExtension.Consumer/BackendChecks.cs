@@ -51,7 +51,7 @@ public static partial class BackendChecks
         RunShapePairs();
         IntegrationChecks();
         MotionRoleChecks();
-        ParameterReadChecks();
+        RunBodyParameters();
         WorldPolicyChecks();
         SceneSpaceChecks();
         RunMembership();

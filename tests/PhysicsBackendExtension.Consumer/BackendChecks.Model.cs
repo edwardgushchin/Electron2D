@@ -307,9 +307,8 @@ public static partial class BackendChecks
             if (!Awake || area || Mode == PhysicsServer.BodyMode.Static) return false;
             if (Dynamic && !Omit)
             {
-                Velocity += (_fields.Gravity + Force / Mass) * dt;
-                if (!Locked) Angular += Torque * InverseInertia * dt;
-                Velocity /= 1 + _fields.LinearDamp * dt; Angular /= 1 + _fields.AngularDamp * dt;
+                Velocity = Velocity * MathF.Max(0, 1 - _fields.LinearDamp * dt) + (_fields.Gravity + Force / Mass) * dt;
+                if (!Locked) Angular = Angular * MathF.Max(0, 1 - _fields.AngularDamp * dt) + Torque * InverseInertia * dt;
             }
             Force = default; Torque = 0; return true;
         }
@@ -357,9 +356,11 @@ public static partial class BackendChecks
             ContinuousMode = configuration.CCDMode;
             Locked = configuration.LockRotation; Omit = configuration.OmitForces;
             var f = solver.ResolveFields(this);
-            _fields = new(f.Gravity * (solver.UsePublishedGravityScale && !configuration.OmitForces ? PublishedGravityScale : configuration.GravityScale),
+            var fields = new PhysicsBodyFields(f.Gravity * (solver.UsePublishedGravityScale && !configuration.OmitForces ? PublishedGravityScale : configuration.GravityScale),
                 configuration.LinearDamp + (configuration.LinearDampMode == RigidBody.DampMode.Combine ? f.LinearDamp : 0),
                 configuration.AngularDamp + (configuration.AngularDampMode == RigidBody.DampMode.Combine ? f.AngularDamp : 0), true);
+            if (_fields.Initialized && _fields != fields && Dynamic) SetAwake(true);
+            _fields = fields;
         }
         protected override void SetAreaMonitoring(bool monitoring, bool monitorable) { Monitoring = monitoring; Monitorable = monitorable; solver.AreaMonitoringHook?.Invoke(RID); }
         protected override void SetAreaFields(in PhysicsAreaFieldConfiguration configuration) { AreaFields = configuration; solver.AreaFieldsHook?.Invoke(rid); }

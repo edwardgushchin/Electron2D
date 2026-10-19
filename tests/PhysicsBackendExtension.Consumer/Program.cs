@@ -63,6 +63,7 @@ else if (args.Contains("--motion-transactions")) BackendChecks.RunMotionTransact
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--pose-transactions")) BackendChecks.RunPoseTransactions(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Contains("--body-parameters")) BackendChecks.RunBodyParameters(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--membership")) BackendChecks.RunMembership(args.Contains("--gpu"), args.Contains("--threaded"));
 else if (args.Contains("--hierarchy-poses")) BackendChecks.RunHierarchyPoses(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"), args.Contains("--area-only"));
 else if (args.Contains("--area-overlap-publication")) BackendChecks.RunAreaOverlapPublication(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
