@@ -2,6 +2,20 @@
 
 Last updated: 2026-10-19
 
+## Integration callback lifetime
+
+Detachment preserves force/sync registrations for reentry with a fresh direct-state
+view. Replacing or clearing a registration releases its previous delegate and typed
+user data. Body release clears both callback references and its cached view through
+one common registry retirement path, including raw-body cleanup errors and stale
+scene registration removal. Keeping an invalid old view no longer keeps those
+registrations alive. Explicit local history retains its own captured callback
+identities under the existing replay contract.
+
+See [complete integration operations](../components/physics-registered-adapter.md#complete-integration-policy-operations)
+for owner/phase, selected motion, contact reporting and lifetime checks.
+
+
 [Gravity publication and terminal parameter guards](../components/physics-registered-adapter.md#gravity-publication-and-terminal-parameter-guards) retry the latest effective native gravity/omission request after a selected error and discard it on attachment retirement. Scene damping, omission and inherited material setters reject failed worlds before changing authoring while healthy post-solver callbacks retain writes. Public CPU/software-GPU/registered JIT/NativeAOT profiles verify real motion, history boundaries and strict zero managed-byte frames; wider acceptance remains open.
 
 [Mass profile publication recovery](../components/physics-registered-adapter.md#mass-profile-publication-recovery) preserves preceding authoring after selected mass/inertia/center/reset errors and prepares it before numerical use. Cached views, space/force/checkpoint/portable boundaries, attachment retirement, in-flight rejection and post-commit notification behavior execute across all scene/raw roles. Public JIT/strict NativeAOT CPU/software-GPU/registered full-frame checks retain strict zero managed allocation; wider native/platform/network/performance gates remain open.

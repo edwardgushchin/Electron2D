@@ -6,6 +6,20 @@ The [Body/Area append audit](../components/physics-shapes.md#bodyarea-append-con
 
 Last updated: 2026-10-19
 
+## Integration callback lifetime
+
+Detachment preserves force/sync registrations for reentry with a fresh direct-state
+view. Replacing or clearing a registration releases its previous delegate and typed
+user data. Body release clears both callback references and its cached view through
+one common registry retirement path, including raw-body cleanup errors and stale
+scene registration removal. Keeping an invalid old view no longer keeps those
+registrations alive. Explicit local history retains its own captured callback
+identities under the existing replay contract.
+
+See [complete integration operations](../components/physics-registered-adapter.md#complete-integration-policy-operations)
+for owner/phase, selected motion, contact reporting and lifetime checks.
+
+
 ## Complete typed body state
 
 The five typed state pairs expose pose, linear/angular motion, Sleeping and CanSleep

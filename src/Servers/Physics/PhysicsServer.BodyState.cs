@@ -33,6 +33,18 @@ public sealed partial class PhysicsServer
             if (_bodyRuntimes.TryGetValue(body, out var runtime)) runtime.InvalidateView();
     }
 
+    private void ReleaseBodyRuntime(RID body)
+    {
+        lock (_registryGate)
+            if (_bodyRuntimes.Remove(body, out var runtime))
+            {
+                runtime.Released = true;
+                runtime.ForceCallback = null;
+                runtime.SyncCallback = null;
+                runtime.InvalidateView();
+            }
+    }
+
     internal PhysicsDirectBodyState? BodyGetDirectStateCore(RID body)
     {
         var runtime = PrepareBodyStateAccess(body);

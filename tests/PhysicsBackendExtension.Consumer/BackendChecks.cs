@@ -50,7 +50,7 @@ public static partial class BackendChecks
         RunMotionExclusions();
         RunNotificationPhase();
         RunShapePairs();
-        IntegrationChecks();
+        RunIntegration();
         MotionRoleChecks();
         RunBodyParameters();
         WorldPolicyChecks();

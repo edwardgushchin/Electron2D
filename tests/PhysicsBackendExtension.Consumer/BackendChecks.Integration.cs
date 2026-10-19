@@ -2,7 +2,13 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunIntegration(PhysicsServer.Backend? backend = null) => IntegrationChecks(backend);
+    public static void RunIntegration(PhysicsServer.Backend? backend = null, bool threaded = false)
+    {
+        var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+        try { IntegrationChecks(backend); IntegrationOperations(backend); }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
     private static void IntegrationChecks(PhysicsServer.Backend? backend = null)
     {
         Solver? solver = null;

@@ -2,6 +2,79 @@
 
 Last updated: 2026-10-19
 
+## Complete integration policy operations
+
+The common contact-limit, omission and force/sync callback family now has a complete
+public operation audit. The existing --integration fixture retains actual omission
+of gravity/damping/one-step and constant forces, immediate impulses, reenabled force
+integration without replaying discarded inputs, force/scene/sync ordering, reference
+userdata, committed edits after callback errors and real capped contact response.
+It now runs under the captured owner/separate numerical-thread setting.
+
+A new connected operation fixture exercises all five scene body siblings plus raw
+bodies in Static, Kinematic, Rigid and RigidLinear modes. Changed omission and contact
+caps precede each complete fixed frame. Analytic final linear/angular velocity and
+bounded pose/angle observe actual selected integration before user edits. Typed int
+userdata reaches force callbacks without boxing; sync observers see committed edits.
+Queries inside callbacks retain the exact RID and active logical shape index while
+owner identity and notification-delivery status remain exact. Static and kinematic
+roles retain their established force/target policy. Caps accept 4095 and reject -1
+and 4096 without replacing the accepted value. Wrong-kind, stale and empty IDs reject
+the full typed operation family, including the null generic callback overload.
+
+Retained invalid direct views previously kept the runtime's delegates and their
+userdata alive after the body was released. One registry retirement helper now
+clears force/sync references and cached views for explicit scene release, stale
+scene removal and raw release, including cleanup errors. Detachment deliberately
+retains registrations for reentry. Weak-reference checks keep both old views alive,
+verify invocation after reentry, retain data through one remaining callback, release
+it after both callbacks clear, and collect a new registration after body disposal.
+All five scene siblings and raw bodies execute these controls; registered raw detach
+failure also reports its error and releases callback data. Explicit local history
+continues to own its independently captured callback identities. No public API,
+backend algorithm, history format or scene-storage schema is added.
+
+An identical final consumer reproduces the original StaticBody retention failure
+with the old runtime (-6) and passes with the corrected runtime (0). Exact binaries,
+errors and hashes are in
+`bin/physics-integration-operations/2026-10-19/runtime-regression-proof.json`.
+Pinned non-deprecated owner/member metadata, defaults and licensed server source are
+retained in that directory's `reference-contract.json` and `reference/`.
+
+Twelve fresh JIT/strict NativeAOT CPU/no-device, private software-GPU and registered
+owner/separate profiles execute 220 counted cold lifecycle controls, 1536 changed
+complete frames, 6912 force callbacks, 6912 sync callbacks and 6912 selected queries
+at strict zero owner/all-thread managed bytes. The retained legacy fixture adds
+768 measured complete frames with force/scene/sync hooks at the same zero boundary.
+Velocity/angular tolerance 0.002 covers float integration and native unit conversion;
+a first exact sync-write check observed 9.999999 instead of 10. Kinematic linear
+velocity adds four origin float ULPs divided by 0.01 seconds for target differentiation.
+Pose/angle have a 0.0002 rounding allowance and the acceleration-derived displacement
+interval between initial-velocity and final-velocity integration. An initial fixture
+incorrectly required the single-substep endpoint: CPU produced 240.03029 rather than
+240.0305 after valid substep acceleration. The corrected physical interval preserves
+the same final-velocity checks without requiring identical internal integration.
+Flags, ticks, counts, identities, callback order and managed allocation remain exact.
+
+Contact-frame/deepest/depth/tie/replay, notification phase, gravity/omission publication,
+all body states, prepared input reads, lifecycle failures, joint lifecycle, ordinary
+consumers and root body/state/surface/resource companions complete 61/61 distinct profiles.
+The runner made 75 successful executions; 14 companion repetitions with an unused
+--threaded flag are excluded from that count in duplicate-companions.json.
+Six PDB/Compile comparisons qualify 3392 authored inputs on the same sources,
+including the current main native-audio delivery changes. Evidence:
+`bin/physics-integration-operations/2026-10-19/validation.json`,
+`current-source-proof.json` and `current-source-inputs.json` in the same directory.
+
+Only the six extension contact-limit/omission/callback operations become Implemented.
+The physics census is 1225/1369 (89.481373265157%), with 144 open declarations:
+113 Partial, 14 Unimplemented and 17 Blocked; 92 remain Excluded. Earlier counts
+retain their historical checkpoints. The full ordinary root suite was not rerun.
+Arbitrary numerical/custom geometry/inherited and complete extension acceptance,
+portable networking, native retained memory, other platforms and target-GPU real
+window/FPS/performance acceptance remain open. Hardware GPU load did not run;
+the RTX power cable remains unchecked.
+
 ## Complete body state operations
 
 All five typed state pairs expose actual selected pose, linear/angular velocity,

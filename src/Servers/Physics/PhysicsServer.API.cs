@@ -301,7 +301,8 @@ public sealed partial class PhysicsServer
     /// <summary>Sets or clears the body's post-solver force-integration callback.</summary>
     /// <param name="body">A live body RID.</param>
     /// <param name="callback">Owner-thread callback invoked before state synchronization, or null to clear.</param>
-    /// <remarks>Scene bodies retain their tree-owned pose synchronization. Registration does not enable custom integration.</remarks>
+    /// <remarks>Scene bodies retain their tree-owned pose synchronization. Registration does not enable custom integration.
+    /// Detachment retains the registration for reentry; replacing, clearing or releasing the body releases the previous callback reference.</remarks>
     public static void BodySetForceIntegrationCallback(RID body, Action<PhysicsDirectBodyState>? callback) => Service.BodySetForceIntegrationCallbackCore(body, callback);
 
     /// <summary>Sets a post-solver force callback with strongly typed user data.</summary>
@@ -309,13 +310,15 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live body RID.</param>
     /// <param name="callback">Callback receiving the view and user data, or null to clear.</param>
     /// <param name="userData">Data retained with the registered callback.</param>
-    /// <remarks>The adapter is allocated at registration; invocation does not box value-type data.</remarks>
+    /// <remarks>The adapter is allocated at registration; invocation does not box value-type data.
+    /// Replacing, clearing or releasing the body releases this registration's retained data, even when an invalid attachment view is retained.</remarks>
     public static void BodySetForceIntegrationCallback<T>(RID body, Action<PhysicsDirectBodyState, T>? callback, T userData) => Service.BodySetForceIntegrationCallbackCore<T>(body, callback, userData);
 
     /// <summary>Sets or clears an owner-thread observer of the body's solved state.</summary>
     /// <param name="body">A live body RID.</param>
     /// <param name="callback">Post-integration state callback, or null to clear.</param>
-    /// <remarks>A previous user callback is replaced. Scene-owned pose synchronization remains mandatory.</remarks>
+    /// <remarks>A previous user callback is replaced. Scene-owned pose synchronization remains mandatory.
+    /// Detachment retains the registration for reentry; releasing the body clears its callback references even when cleanup reports an error.</remarks>
     public static void BodySetStateSyncCallback(RID body, Action<PhysicsDirectBodyState>? callback) => Service.BodySetStateSyncCallbackCore(body, callback);
 
     /// <summary>Enables or disables omission of automatic gravity, damping and accumulated forces.</summary>

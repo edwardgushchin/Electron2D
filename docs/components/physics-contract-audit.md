@@ -1,5 +1,8 @@
 # Physics contract and backend audit
 
+[Complete integration policy operations](physics-registered-adapter.md#complete-integration-policy-operations) release callback data after body disposal despite retained invalid views, and audit contact caps, omission and force/sync callbacks for all scene/raw roles. JIT/strict NativeAOT CPU/no-device, software-GPU and registered owner/separate profiles retain strict zero warmed managed bytes; 61/61 profiles pass. The current physics census is 1225/1369 Implemented (89.4814%), with 144 open declarations (113 Partial, 14 Unimplemented, 17 Blocked), 92 Excluded. Wider numerical/network/native/platform/hardware performance acceptance remains open; earlier counts record their checkpoints.
+
+
 [Complete body state operations](physics-registered-adapter.md#complete-body-state-operations) fix detached static inactivity and stored sleep requests, and verify all five state pairs across every scene/raw body role. Public JIT/strict NativeAOT CPU/no-device, software-GPU and registered owner/separate profiles retain strict zero warmed managed bytes; 67/67 profiles pass. The current physics census is 1219/1369 Implemented (89.0431%), with 150 open declarations (119 Partial, 14 Unimplemented, 17 Blocked), 92 Excluded. Broader numerical/network/native/platform/hardware performance acceptance remains open; earlier counts record their checkpoints.
 
 

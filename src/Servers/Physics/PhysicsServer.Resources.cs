@@ -423,7 +423,7 @@ public sealed partial class PhysicsServer
                 lock (_registryGate)
                 {
                     _serverColliders.Remove(rid);
-                    if (_bodyRuntimes.Remove(rid, out var runtime)) runtime.Released = true;
+                    ReleaseBodyRuntime(rid);
                     _areaRuntimes.Remove(rid);
                     _bodyExceptions.Remove(rid);
                     _jointBodyExceptions.Remove(rid);
