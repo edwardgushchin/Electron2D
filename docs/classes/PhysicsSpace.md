@@ -4,6 +4,10 @@ Cold world-query geometry now uses the [shared using-world borrow](../components
 
 Last updated: 2026-10-19
 
+## Space creation and initialization
+
+All SpaceCreate overloads publish inactive spaces with tick zero and retain captured selection/thread policy. Parameterless creation stays CPU; explicit enum selection ignores manager defaults. Named factories initialize against a registered context and can use readonly direct-space queries before completion; step, activation, policy writes, binding and release remain blocked. Failed initialization retires registrations/ownership and preserves cleanup errors. See [space creation verification](../components/physics-registered-adapter.md#space-creation-operation-audit) for real scene/raw, startup-fallback, lifecycle and allocation checks and their limits.
+
 ## Failed local activation
 
 A failed selected activation leaves the prior public flag committed. Equal writes retry incomplete publication; live space queries, local/portable history and active positive intervals restore that committed policy before numerical use. Explicit writes may instead commit a different supplied choice. Metadata reads and skipped intervals remain non-preparing. Post-solver failure keeps its completed tick and callbacks; retirement discards pending activation. See [activation recovery](../components/physics-registered-adapter.md#failed-local-activation) for exercised scope and limits.
@@ -261,7 +265,7 @@ Native discrete/CCD/kinematic scheduling, one-way episodes, contact impulse/moti
 
 Explicit and lazy scene worlds now use PhysicsServer.CreateRegisteredSpace. It allocates and registers an immutable space RID before invoking the selected implementation factory outside the registry lock. Metadata/settings exist first; ordinary query access rejects until an implementation is retained. The initialization phase can then construct guarded direct-space extensions and query the real selected world. Activation, stepping, attachment changes, recursive initialization and release reject until it completes. Explicit spaces publish inactive; scene spaces become active after successful initialization.
 
-Failure retires owned/direct-state/space registrations and releases any implementation retained by that space. A foreign implementation is rejected without disposing its original world. Initialization and cleanup errors are aggregated after cleanup attempts. [Ownership tests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.Initialization.cs) exercise live RID lookup, registry-lock independence, all six query hooks, transfer rejection, real motion after publication and CPU/GPU native retirement. This is the internal construction transaction; public registered factories and their complete operation bridge remain open.
+Failure retires owned/direct-state/space registrations and releases any implementation retained by that space. A foreign implementation is rejected without disposing its original world. Initialization and cleanup errors are aggregated after cleanup attempts. [Ownership tests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.Initialization.cs) exercise live RID lookup, registry-lock independence, all six query hooks, transfer rejection, real motion after publication and CPU/GPU native retirement. Public registered factories now pass the [space creation audit](../components/physics-registered-adapter.md#space-creation-operation-audit); complete extension-operation acceptance remains open.
 
 ## Borrowed selected checkpoint lifetime
 

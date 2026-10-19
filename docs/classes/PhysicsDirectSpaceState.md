@@ -2,7 +2,11 @@
 
 [Unrounded polygon containment](../components/physics-point-containment.md) now excludes an exterior CPU point through fixture half-planes and applies the same decision to ordinary/directed ray origins. Logical seams, inside-start policy, filters and result identity retain their existing contract; float boundary rounding remains bounded separately.
 
-Last updated: 2026-10-15
+Last updated: 2026-10-19
+
+## Space creation and initialization
+
+All SpaceCreate overloads publish inactive spaces with tick zero and retain captured selection/thread policy. Parameterless creation stays CPU; explicit enum selection ignores manager defaults. Named factories initialize against a registered context and can use readonly direct-space queries before completion; step, activation, policy writes, binding and release remain blocked. Failed initialization retires registrations/ownership and preserves cleanup errors. See [space creation verification](../components/physics-registered-adapter.md#space-creation-operation-audit) for real scene/raw, startup-fallback, lifecycle and allocation checks and their limits.
 
 **Inherits:** ElectronObject · **Inherited By:** [PhysicsDirectSpaceStateExtension](PhysicsDirectSpaceStateExtension.md) · **Source:** [PhysicsDirectSpaceState.cs](../../src/Servers/Physics/PhysicsDirectSpaceState.cs)
 

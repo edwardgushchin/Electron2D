@@ -6,6 +6,7 @@ public static partial class BackendChecks
     {
         private readonly List<PhysicsPointResult> _pointHits = [];
         internal Action? PointHook;
+        internal Action<int>? SpaceQueryHook;
         private readonly List<PhysicsShapeResult> _shapeHits = [];
         private readonly List<PhysicsBackendShapeContact> _shapeContacts = [];
         protected override int ReadDebugContacts(Span<Vector2> output)
@@ -33,6 +34,7 @@ public static partial class BackendChecks
         protected override PhysicsRayResult? IntersectRay(Vector2 from, Vector2 to, uint mask, ReadOnlySpan<RID> excluded,
             bool collideWithAreas, bool collideWithBodies, bool hitFromInside)
         {
+            SpaceQueryHook?.Invoke(0);
             Body? best = null; Part part = default; var fraction = 1f; var motion = to - from;
             foreach (var b in Bodies.Values)
             {
@@ -57,6 +59,7 @@ public static partial class BackendChecks
         }
         protected override List<PhysicsPointResult> CollectPointHits(PhysicsPointQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
+            SpaceQueryHook?.Invoke(1);
             PointHook?.Invoke(); _pointHits.Clear();
             foreach (var b in Bodies.Values)
             {
@@ -78,6 +81,7 @@ public static partial class BackendChecks
         }
         protected override List<PhysicsShapeResult> CollectShapeHits(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
+            SpaceQueryHook?.Invoke(2);
             _shapeHits.Clear(); var geometry = GetShapeGeometry(parameters.ShapeRID);
             foreach (var b in Bodies.Values)
             {
@@ -100,6 +104,7 @@ public static partial class BackendChecks
         }
         protected override (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
+            SpaceQueryHook?.Invoke(3);
             var fraction = 1f; var safeFraction = 1f; var geometry = GetShapeGeometry(parameters.ShapeRID);
             foreach (var b in Bodies.Values)
             {
@@ -121,6 +126,7 @@ public static partial class BackendChecks
         private readonly List<Part> _contactQueryParts = [], _contactColliderParts = [];
         protected override List<PhysicsBackendShapeContact> CollectShapeContacts(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded, int limit)
         {
+            SpaceQueryHook?.Invoke(4);
             _shapeContacts.Clear(); _contactQueryParts.Clear(); _contactColliderParts.Clear(); var geometry = GetShapeGeometry(parameters.ShapeRID);
             foreach (var b in Bodies.Values)
             {
@@ -154,6 +160,7 @@ public static partial class BackendChecks
         }
         protected override PhysicsRestInfo? GetRestInfo(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
+            SpaceQueryHook?.Invoke(5);
             var hits = CollectShapeContacts(parameters, excluded, int.MaxValue); if (hits.Count == 0) return null;
             PhysicsRestInfo? result = null; var deepest = float.NegativeInfinity;
             for (var i = 0; i < hits.Count; i++)

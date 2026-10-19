@@ -1031,6 +1031,8 @@ acceptance remain open.
 
 ## Space construction transaction
 
+The [public space creation audit](physics-registered-adapter.md#space-creation-operation-audit) now covers all explicit overloads and aliased lazy scene creation, captured default/thread choices, readonly initialization queries, native/registered failure cleanup, no-device GPU fallback and retained worker retirement. Only the creation operation closes; wider extension and hardware/performance acceptance remain open.
+
 Space RID registration now precedes selected-owner construction for both explicit and lazy scene worlds. A retained owner can initialize against a live context and execute guarded query extensions before publication, while step/activation/attachment/release remain blocked. Failure cleans registry and native ownership; a rejected foreign owner stays alive in its original world. Constructor recursion cannot create a second implementation on the same context. [Initialization ownership checks](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.Initialization.cs) cover these phases on CPU/GPU/no-device. Public registration now executes under ADR 0103; arbitrary geometry and unexercised operation acceptance remain open.
 
 ## Named implementation selection

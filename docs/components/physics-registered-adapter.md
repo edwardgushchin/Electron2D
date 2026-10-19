@@ -2,6 +2,54 @@
 
 Last updated: 2026-10-19
 
+## Space creation operation audit
+
+All three PhysicsServer.SpaceCreate overload families use the existing registered
+creation transaction. Parameterless creation remains CPU independently of manager
+or project defaults. Explicit enum selection remains CPU/GPU; named DEFAULT
+captures the current priority registration. New explicit spaces publish inactive
+with tick zero. Lazy World resources capture registration and the feature-aware
+separate-thread policy before allocation; aliases retain one actual space despite
+later default/project edits and original-resource disposal.
+
+The fresh selected implementation initializes on the owner against its registered
+inactive context. All six readonly direct-space query families reach the real
+selected world during initialization; the completed world retains that cached
+view. Step, activation, policy writes, attachment and release reject until the
+transaction completes. Scene worlds activate only after successful initialization.
+Factories execute outside registry locks. Null/disposed/already-bound/recursive
+or throwing factories reject without CPU fallback or damage to existing worlds.
+Initialization and secondary Finish/disposal errors survive complete retirement;
+old RIDs/views become unusable. Releasing a stepped separate-thread world joins
+its retained numerical thread.
+
+The public --space-creation fixture covers four explicit creation forms and one
+aliased scene world per profile, with actual moving scene/raw bodies, exact
+RID/shape query results and owner callbacks. It warms 128 frames per form and
+measures 128 complete edit/step/read/query frames at strict zero owner/all-thread
+managed bytes. Position/speed tolerance 0.0001 covers single-precision integration
+of speed 1 for 0.01 seconds, including the second body's offset of 100 scene units.
+GPU-unavailable enum/named controls reject by default and expose permitted CPU
+startup fallback with actual motion; its position tolerance is 0.001 at speed
+120 for 1/60 second. No started numerical step is replayed on CPU.
+
+Fresh JIT/strict NativeAOT CPU/no-device, private software-GPU and registered
+owner/separate profiles pass: twelve shared profiles execute 7680 measured frames,
+9216 callbacks, 216 readonly initialization query calls and 168 rejected creations.
+Four no-device startup profiles, construction/resource/lifecycle/view/project and
+ordinary public consumer companions, plus root CPU/GPU/no-device native cleanup
+checks complete 39/39 profiles. The ordinary consumer's repeated creation audit
+is additional to those twelve-profile totals. All monitored processes exclude
+hardware drivers; software Vulkan establishes functional behavior only.
+
+Only the extension space-creation row becomes Implemented. The unique physics
+census is 1206/1369 Implemented (88.09349890430972%), with 163 open declarations:
+132 Partial, 14 Unimplemented and 17 Blocked. Body creation and the complete typed
+parameter family remain Partial. Complete numerical/custom-geometry/inherited,
+network, native retained-memory, target-GPU/window performance and platform
+acceptance remain open. No runtime algorithm or public signature changes.
+Evidence: bin/physics-space-creation/2026-10-19/validation.json.
+
 ## Gravity publication and terminal parameter guards
 
 A selected scene gravity hook could partially change its native multiplier and
@@ -51,8 +99,8 @@ both native multipliers on the captured owner/separate lane: 128 hooks and
 
 Fresh public JIT/strict NativeAOT CPU/no-device, private software-GPU and registered
 owner/separate profiles, mass/motion/terminal/portable/history/input companions
-and root CPU/GPU body parameter checks qualify these paths. Creation and complete
-typed-parameter extension operations remain Partial; the unique physics census
+and root CPU/GPU body parameter checks qualify these paths. At that slice, creation and complete
+typed-parameter extension operations remained Partial; the unique physics census
 stays 1205/1369 Implemented (88.02045288531775%), with 164 open declarations.
 This is declaration coverage. Complete numerical/custom-geometry, network,
 native retained-memory, target-GPU/window performance and platform acceptance

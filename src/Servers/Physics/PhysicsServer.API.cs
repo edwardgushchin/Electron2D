@@ -979,7 +979,8 @@ public sealed partial class PhysicsServer
 
     /// <summary>Creates an inactive physics space independent of any scene tree.</summary>
     /// <returns>A caller-owned space RID; activate it with SpaceSetActive before advancing simulation.</returns>
-    /// <remarks>Uses CPU and captures the feature-aware separate numerical thread setting for this space.</remarks>
+    /// <remarks>Uses CPU independently of named defaults and captures the feature-aware separate numerical thread setting.
+    /// The returned space is inactive with tick zero; its owner thread controls stepping and release.</remarks>
     /// <exception cref="PlatformNotSupportedException">The project requests an unavailable separate numerical thread.</exception>
     public static RID SpaceCreate() => Service.SpaceCreateCore();
 

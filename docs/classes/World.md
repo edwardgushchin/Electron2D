@@ -9,6 +9,8 @@ Last updated: 2026-10-14
 
 ## Description
 
+Lazy aliases preserve the selected registration and separate numerical thread policy captured by their shared runtime. Disposing the original resource does not retire an alias-owned space; the final resource release retires the space and joins its retained numerical worker. See [creation verification](../components/physics-registered-adapter.md#space-creation-operation-audit).
+
 Combines a stable rendering canvas and lazily created physics space. Viewport.World selects its live runtime and CanvasItem.GetWorld resolves that selection. Independent viewports isolate canvas and physics; explicitly shared worlds expose the same content, body identities and direct queries. A scene without viewports uses its SceneTree fallback world.
 
 ## API summary

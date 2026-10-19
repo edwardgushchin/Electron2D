@@ -125,6 +125,8 @@ public abstract class PhysicsServerBackend : ElectronObject
     protected internal abstract int PreparedBodyCapacity { get; }
     /// <summary>Supplies the selected implementation operation: initialize.</summary>
     /// <remarks>Runs once after this implementation is bound to its inactive world, before activation or collider attachment. Initialization failure still attempts Finish and disposal.
+    /// Readonly direct-space queries can inspect the real selected world after binding. Stepping, activation,
+    /// collider attachment, policy writes and release reject until initialization completes.
     /// Hooks use the guarded owning thread; spans and values retain their existing engine-unit contracts.</remarks>
     protected internal abstract void Initialize();
     /// <summary>Supplies the selected implementation operation: set active.</summary>

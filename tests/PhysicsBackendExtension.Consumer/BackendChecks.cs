@@ -63,6 +63,7 @@ public static partial class BackendChecks
         RunPicking();
         RunShapeOwners();
         SelectionChecks();
+        RunSpaceCreation();
         DebugFailureChecks();
         var calls = 0;
         PhysicsServerManager.RegisterServer("Circles", () => { calls++; return solver = new(); });

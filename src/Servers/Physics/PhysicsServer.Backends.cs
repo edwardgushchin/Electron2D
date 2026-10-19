@@ -21,16 +21,24 @@ public sealed partial class PhysicsServer
     /// <exception cref="InvalidOperationException">GPU initialization fails and fallback is disabled.</exception>
     /// <exception cref="PlatformNotSupportedException">The project requests an unavailable separate numerical thread.</exception>
     /// <remarks>Fallback occurs only during creation. A failed GPU step never replays on CPU.
-    /// Captures the feature-aware separate numerical thread setting for this space; publication and callbacks retain the owner.</remarks>
+    /// Captures the feature-aware separate numerical thread setting for this space; publication and callbacks retain the owner.
+    /// The returned space is inactive with tick zero. Named defaults do not replace this explicit built-in choice.</remarks>
     public static RID SpaceCreate(Backend backend, bool allowCPUFallback = false) => Service.SpaceCreateCore(backend, allowCPUFallback);
 
     /// <summary>Creates an inactive space using a captured named registration.</summary>
     /// <param name="backendName">A registered name, CPU, GPU or DEFAULT.</param>
     /// <param name="allowCPUFallback">Allows startup fallback only for built-in GPU.</param>
     /// <returns>A caller-owned space RID released with FreeRID.</returns>
+    /// <exception cref="ArgumentNullException">The name is null.</exception>
     /// <exception cref="ArgumentException">The registration is unknown or empty.</exception>
+    /// <exception cref="InvalidOperationException">The factory returns an unusable implementation or GPU startup fails without permitted fallback.</exception>
     /// <exception cref="PlatformNotSupportedException">The project requests an unavailable separate numerical thread.</exception>
-    /// <remarks>Captures the feature-aware separate numerical thread setting; later edits affect new spaces only.</remarks>
+    /// <remarks>Captures the registration and feature-aware separate numerical thread setting; later edits affect new spaces only.
+    /// Factories run outside registry locks. The implementation initializes against its registered inactive context;
+    /// readonly direct-space queries are available after binding, while stepping, activation, attachment and release reject until initialization completes.
+    /// The returned space is inactive with tick zero. Failed creation retires its registrations and retained implementation,
+    /// preserving initialization and cleanup errors; a rejected implementation already owned by another world remains with that owner.
+    /// Custom factory or initialization errors propagate without CPU fallback.</remarks>
     public static RID SpaceCreate(string backendName, bool allowCPUFallback = false)
     {
         var selection = Service.BackendRegistry.Resolve(backendName);
