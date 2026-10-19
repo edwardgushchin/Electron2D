@@ -189,11 +189,15 @@ public static partial class BackendChecks
             tree.Dispose(); world.Dispose(); Reject<ObjectDisposedException>(() => solver.ReadGeometry(circle.GetRID()));
             Reject<ArgumentException>(() => Pair(near, output, out _));
             var failedSpace = PhysicsServer.SpaceCreate("ShapePairs"); var failed = factory!;
-            PhysicsServer.SpaceSetActive(failedSpace, true); failed.FailSolve = true;
+            PhysicsServer.SpaceSetActive(failedSpace, true);
+            using var failedView = PhysicsServer.SpaceGetDirectState(failedSpace); var creations = failed.SpaceViewCreations; failed.FailSolve = true;
             try
             {
                 Reject<AggregateException>(() => PhysicsServer.SpaceStep(failedSpace, 1d / 120));
                 Reject<InvalidOperationException>(() => failed.ReadGeometry(circle.GetRID()));
+                Reject<InvalidOperationException>(() => PhysicsServer.SpaceGetDirectState(failedSpace));
+                failedView.Dispose(); Reject<InvalidOperationException>(() => PhysicsServer.SpaceGetDirectState(failedSpace));
+                Check(failed.SpaceViewCreations == creations, "A terminal world neither returns its cached query view nor invokes another factory");
                 Reject<InvalidOperationException>(() => PhysicsServer.ShapeCollide(failedSpace, circle.GetRID(), Transform.Identity, Vector2.Zero, circle.GetRID(), near, Vector2.Zero, output, out _));
             }
             finally { PhysicsServer.FreeRID(failedSpace); }

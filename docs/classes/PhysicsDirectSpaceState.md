@@ -2,7 +2,7 @@
 
 [Unrounded polygon containment](../components/physics-point-containment.md) now excludes an exterior CPU point through fixture half-planes and applies the same decision to ordinary/directed ray origins. Logical seams, inside-start policy, filters and result identity retain their existing contract; float boundary rounding remains bounded separately.
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 ## Space creation and initialization
 
@@ -59,7 +59,7 @@ Both methods honor all 32 layer bits, RID exclusions and independent body/Area f
 
 Shape operations share [PhysicsShapeQueryParameters](PhysicsShapeQueryParameters.md). `IntersectShape` includes geometry crossed by `Motion`, sorts by collider RID and direct shape-owner index, deduplicates compound pieces and then applies `maxResults`. `CastMotion` ignores an entire logical collider slot already intersecting any query piece at its origin and returns eight-refinement safe/unsafe fractions around the earliest new collision. `CollideShape` returns query point then collider point for each contact, applies the pair cap after RID/index ordering, and returns an empty array on a miss. `GetRestInfo` returns null on a miss and reports the deepest contact with collider point, normal directed toward the query and velocity at that point. Query shapes and server fixtures are live; geometry edits are prepared before querying. Invalid or stale shape RIDs reject the query. Negative result caps throw `ArgumentOutOfRangeException`; a zero cap returns an empty array. All shape operations reject off-owner or in-step access.
 
-Compound polygon seams never count as new hits after an initial overlap. Directed shape queries also reject a ray origin contained by any piece of a logical compound polygon, including a compound query's swept region in the reverse case. Other slots remain independently eligible. PhysicsShapeQueryTests covers these CPU regressions. [Resident GPU shape queries](../components/gpu-resident-shape-queries.md) execute internally, but this public view remains CPU-backed.
+Compound polygon seams never count as new hits after an initial overlap. Directed shape queries also reject a ray origin contained by any piece of a logical compound polygon, including a compound query's swept region in the reverse case. Other slots remain independently eligible. PhysicsShapeQueryTests covers these CPU regressions. [Resident GPU shape queries](../components/gpu-resident-shape-queries.md) execute through the public view when its world selects GPU.
 
 The span overloads execute the same queries and ordering as the array overloads. They return the written hit or pair count, truncate excess results, leave unused elements unchanged, and accept empty destinations. An odd contact destination leaves its final element unchanged. Query scratch storage is reused after preparation. Array overloads remain independent copied exports. Ray and point queries borrow their already-copied parameter exclusions internally without cloning on each call. `PhysicsShapeQueryTests` checks compound owner identity, arrays versus spans, truncation, odd/empty capacity, exclusions, errors and zero managed allocation across warmed active/miss queries.
 
@@ -101,3 +101,12 @@ Built-in shape casts now target geometric boundaries in CPU conservative advance
 
 
 [Query-shape borrowing](../components/physics-space-extensions.md#query-shape-borrowing-2026-10-14) retains resource/owned RID geometry through preparation, hooks and validated publication, with nested/error continuation and zero warmed full-frame allocations. Existing declarations and coverage states remain unchanged; full numerical/foreign/hardware acceptance stays open.
+
+
+[Complete selected view checks](../components/physics-registered-adapter.md#complete-direct-space-view-operation)
+exercise shared World/server/viewport cache identity, inactive access, stale/kind/
+owner/numerical guards and disposal/recreation across CPU/software-GPU/registered
+worlds. Six query families run over complete moving frames at strict zero managed
+bytes; independent geometry preserves whole logical initial-overlap suppression
+and identity ordering before contact caps. Invalid external factories and borrowed
+view lifetime retain their companion checks.

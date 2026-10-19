@@ -348,3 +348,12 @@ require strict zero owner/all-thread managed bytes. The consumer cache stores
 value identities/anchors/impulses only and clears private history on portable apply.
 `--joint-response`, `--history`, `--contact-frames` and `--continuous-response`
 now apply/restore `--threaded`; registered hooks assert the actual Solve thread.
+
+
+`--logical-queries`, optionally `--cpu`, `--gpu` and `--threaded`, exercises all
+six query families: ray ties/inside policy, logical point/shape identities,
+whole-slot initial-overlap suppression, ordered contact caps and rest point velocity.
+It checks cached view identity, inactive/invalid/stale/thread/phase acquisition and
+view replacement, then 128 full moving scene frames at strict zero owner/all-thread
+managed bytes. `--factory-views --threaded` applies the requested policy and
+asserts actual Solve threading while retaining external subclass/factory checks.

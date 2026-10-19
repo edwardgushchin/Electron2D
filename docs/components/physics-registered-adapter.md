@@ -1,6 +1,6 @@
 # Registered numerical solver adapter
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 ## Complete lifecycle publication boundaries
 
@@ -643,7 +643,7 @@ complete numerical/custom geometry/extension, native allocation, portable networ
 other platforms and hardware real-window/FPS/performance acceptance remain open.
 Hardware GPU load did not run; the RTX power cable remains unchecked.
 
-## Complete world parameter operations
+## World parameter input reads
 
 All nine typed space-parameter branches expose common retained input: three sleep
 thresholds/duration, four contact correction/cache values, solver iteration count
@@ -1486,10 +1486,82 @@ Local activation still commits only after selected SetActive succeeds. One pendi
 
 The public-only --activation-transactions fixture uses actual selected activity to gate its independent Solve, reproducing the old mismatch: public active=true, zero selected retry, no motion and an advanced tick after partial deactivation. Registered profiles each cover 64 scene/raw cases (both committed flags, before/after side effects, eight repair routes), original/repeated errors, off-owner and borrowed guards, actual movement, healthy equality, post-step callbacks, failed startup cleanup and pending retirement. An inactive-step route verifies skipping before an allowed query repair. CPU/private software-Vulkan/registered owner/separate healthy profiles toggle local/global activity and actual state callbacks, then measure 128 complete moving intervals at strict 0/0 owner/all-thread managed bytes. All 123 final profiles pass: 51 managed consumer, 51 strict NativeAOT consumer and 21 root profiles. The twelve healthy activation profiles measure 1536 complete moving intervals at 0/0 owner/all-thread managed bytes. Seven portable-PDB proofs match 2273 runtime, 164 consumer and 755 root documents without DEBUG/missing/mismatch; their 3187 unique tracked inputs are retained for committed-source readback. Evidence: bin/physics-activation-transactions/2026-10-18/validation.json; SHA-256 72adf281501f153352a895a232dc59f581412b859cdd5bc8af2482a8105ccb24. The frozen full software/offscreen suite for runtime sources at aa0b0cb5ad5458719a0d3311071cce550bebeeb3 completed with exit 0 in 1533.086791 seconds. Host SHA-256: e488c6f96fd1387bb536fb4be183b5dd5a93fec36401fe603a604d51b80beebd. Across 45236 parent-process map samples private lavapipe was observed and no hardware driver was observed. Post-run readback matches all 3187 unique committed source documents and 78 frozen payload files. Evidence: bin/physics-activation-transactions/2026-10-18/verified/full-runs.json (SHA-256 e709da4a0e99e52727c1a15e3b026e3980da752dec8c5c84d7a7fcfb12c910c7), full-binding.json, full-inputs.json and post-run-source-check.json. The later 12bf2f8a iteration verification changes runtime XML only and retains its separate eighteen-profile evidence; it is not an execution of that newer test host or of the subsequent ee899e11 frame-monitor change. This does not inject physical GPU failure or close native/foreign, complete numerical/network, hardware/window/FPS or performance acceptance.
 
+## Complete direct-space view operation
+
+The selected CreateDirectSpaceState hook and common SpaceGetDirectState getter
+retain one live cached view per space, shared by World, Viewport.FindWorld and
+server consumers. The pinned owner and required getter have no deprecated metadata.
+Existing owner/numerical/failure guards precede cached return or factory execution.
+Disposed views are replaced once; retired space RIDs cannot create or revive a view.
+Inactive worlds remain queryable. This operation does not add a second solver.
+
+The public-only --logical-queries fixture checks the complete returned family:
+
+| Query | Executable public behavior |
+| --- | --- |
+| IntersectRay | Nearest hit, lowest RID/logical-index ties, disabled gaps, inside suppression and enabled zero-normal hits |
+| IntersectPoint | Ordered distinct logical slots and array/span projections |
+| IntersectShape | Ordered unique logical identities in array/span projections |
+| CastMotion | Initial circle overlap, whole multi-edge target/query suppression, later different slots/bodies and exclusions |
+| CollideShape | RID/logical-slot ordering before a one-pair cap with reversed attachment/RID ordering |
+| GetRestInfo | Actual deepest collider and static surface point velocity |
+
+It rejects empty/body/expired space RIDs, foreign-thread acquisition and registered
+acquisition inside actual owner/separate Solve. World/server/viewport cache identity,
+inactive access and disposal/recreation use the same public getter. The raw-body
+fixture explicitly calls FindWorld to bind its lazily used runtime to SceneTree.
+An initial control without that binding did not advance; it is not a passed frame.
+--factory-views supplies independent query/body subclasses, real callbacks and
+null/foreign/disposed/recursive/throwing factory rejection, retry and attachment
+expiry. It now applies/restores --threaded and asserts actual registered Solve
+threading. Earlier flag-only invocations of this command establish serial behavior.
+--view-lifetimes retains status/factory/step borrowing, ordinary gameplay disposal
+and expired Finish cleanup.
+
+A frozen prior consumer reproduces five query failures: a ray tie chooses the later
+body; initial circle overlap reports (0,0) instead of (.25,.25); one target edge's
+initial overlap yields .35 instead of the next logical slot's .55; a query already
+touching through one edge reports .3 through another instead of (1,1); a one-pair
+cap returns the later RID. Built-in CPU/GPU paths already pass these cold query
+assertions. The provider now checks all parts of a logical slot before ray/cast
+traversal and resolves ray ties by RID/slot. Contact rows retain numerical geometry
+together, sort by RID/slot/query-piece before truncation and preserve rest-result
+alignment. Contact scratch strips Shape source references and clears on Finish.
+Production physics runtime, API/XML and wire formats are unchanged.
+
+Each shared profile warms 128 and measures 128 complete moving SceneTree frames,
+requiring strict zero owner/all-thread managed bytes. Every frame advances the
+control by .01 scene units and exercises all six query families. Cast fractions
+bracket analytic first touch within .0001, with width below .01 (eight refinements
+permit 1/256). Motion tolerance is .0001 scene units per interval and surface
+velocity .001 units/s; identity, logical indices, zero/no-hit and cache identity
+are exact. These bounds admit single-precision roundoff without a phantom hit.
+
+Final verification passes 66 profiles: 31 JIT, 31 strict NativeAOT and four
+native query/motion companions. Twelve shared logical-query profiles measure 1536
+complete moving frames at 0/0 owner/all-thread managed bytes. Seven built-in
+geometry families, custom annulus/compound, query geometry borrowing, shape pairs,
+factory views and view lifetimes retain their independent regression checks.
+Terminal shape-pair companions also reject cached and recreated view acquisition
+without another selected factory call. The four unchanged root hosts retain their
+exact previously executed binary hashes after the final consumer-only assertion.
+Six DLL/PDB/Compile sets match 3450 authored inputs without DEBUG/missing/mismatch,
+including the independent text-wrapping merge dda2131b. Process-map samples observe
+private lavapipe on GPU paths and no hardware driver; NativeAOT observes no CoreCLR.
+Formatting, Release, compiled API, wiki tests, generation and check all pass.
+Validation SHA-256: d3cab330e43a28924be6660a39842284a904e34e4add27624f989446940832c1.
+
+Evidence: bin/physics-logical-query-contract/2026-10-19/. The getter operation is
+complete independently of the remaining server-family, arbitrary custom/coupled
+simulation, networking, native allocation, foreign-platform and target-hardware/
+window/performance gates. Software Vulkan is functional verification; the unchecked
+GPU power cable excludes hardware load from this slice.
+
 ## Complete world parameter operations
 
 The extension space-parameter setter projects all nine pinned settings through
-four typed profiles. The owning class, setter and parameter constants have no
+four typed profiles. Read-only numerical getters are described in
+[world parameter input reads](#world-parameter-input-reads). The owning class, setter and parameter constants have no
 deprecation metadata in the pinned 4.7.2 reference. Common authoring supplies
 initial defaults, validation, equal/changed writes, inactive configuration and
 owner/numerical borrowing guards. The implementation consumes these values:

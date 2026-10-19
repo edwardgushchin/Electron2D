@@ -125,7 +125,7 @@ first interval. Complete retained-memory budgets remain open.
 
 [Resident GPU buffer accounting](../components/gpu-memory.md) now distinguishes storage, transfer and transient growth capacity, including replay copies and failed preparation. Full CPU/managed/native/driver memory budgets remain open.
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 [Complete space activation operations](../components/physics-registered-adapter.md#complete-space-activation-operations)
 now have a shared public-only CPU, software-GPU and registered contract. Actual
@@ -1629,7 +1629,15 @@ operation; broader numerical, networking and hardware acceptance remain open.
 exercise all nine typed settings through actual sleep, contact-cache support and
 replay, correction/slack, complete solver sweeps and joint default bias. Shared
 CPU/no-device, software-GPU and registered owner/separate consumers retain input,
-publication/error/lifetime and strict warmed managed-allocation checks. The current
-API ledger is 1276/1369 Implemented (93.21%), with 93 open declarations (62 Partial,
+publication/error/lifetime and strict warmed managed-allocation checks. That checkpoint
+recorded 1276/1369 Implemented (93.21%), with 93 open declarations (62 Partial,
 17 Blocked, 14 Unimplemented) and 92 Excluded. This declaration ratio does not
 establish complete backend/network/native/platform or hardware performance acceptance.
+
+
+[Complete direct-space view acquisition](../components/physics-registered-adapter.md#complete-direct-space-view-operation)
+verifies the selected cache/factory/lifetime and six-query logical-origin/ordering/
+cap contract over actual moving CPU/software-GPU/registered frames at zero warmed
+managed bytes. The current ledger is 1277/1369 Implemented (93.28%), with 92 open
+(61 Partial, 17 Blocked, 14 Unimplemented) and 92 Excluded. Broader custom/coupled,
+inherited/server/network/native/platform and hardware performance gates stay open.

@@ -31,7 +31,7 @@ hardware/FPS, native-memory, network and foreign-platform acceptance remain open
 
 [Polygon point containment and ray origins](physics-point-containment.md) now share strict unrounded CPU half-planes across direct queries, Area audio and directed query/proxy regions. Public scene/server CPU/GPU checks preserve filters, logical identities and warmed allocations.
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 ## Contact reporting write preflight
 
@@ -365,3 +365,15 @@ live error, nine body owners/four direct modes, publication recovery and 1536 co
 warmed frames at 0/0 owner/all-thread managed bytes pass in the 58-profile
 JIT/NativeAOT CPU/software-GPU/registered cohort. This closes the extension axis
 operation; broader numerical, networking and hardware acceptance remain open.
+
+
+## Selected logical query origins and ordering
+
+The [direct-space view checks](physics-registered-adapter.md#complete-direct-space-view-operation)
+verify six public query families over selected moving worlds. The independent
+provider ignores complete initially intersecting logical slots, including all
+query/target pieces, resolves equal ray hits by RID/index and orders contact rows
+before caps. Rest contacts retain their own numerical geometry after sorting.
+CPU/software GPU share the public assertions; every 128-frame warmed bracket
+requires strict zero owner/all-thread managed bytes. Arbitrary custom/coupled
+simulation and hardware performance acceptance remain separate.

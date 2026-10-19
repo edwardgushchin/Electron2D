@@ -1,8 +1,17 @@
+[Complete direct-space view acquisition](../components/physics-registered-adapter.md#complete-direct-space-view-operation)
+closes the selected getter with guarded cache/factory/lifetime and actual six-query
+behavior. The independent provider now preserves whole logical query origins,
+ray ties and contact ordering before caps. The current physics ledger records
+1277/1369 Implemented declarations (93.28%), with 92 open: 61 Partial, 17 Blocked
+and 14 Unimplemented; 92 are Excluded. Earlier counts are historical checkpoints.
+Complete custom/coupled, inherited/server, network/native/platform and target-
+hardware/window/performance acceptance remain open.
+
 [Complete world parameter operations](../components/physics-registered-adapter.md#complete-world-parameter-operations)
 close the selected setter after physical effects for all nine typed settings,
 publication/borrowing guards and contact-history replay. The independent provider
 now uses its cache settings numerically; four legacy test commands also apply and
-verify their actual requested numerical lane. The current physics ledger has
+verify their actual requested numerical lane. That checkpoint recorded
 1276/1369 Implemented declarations (93.21%), with 93 open: 62 Partial, 17 Blocked
 and 14 Unimplemented; 92 are Excluded. Earlier counts record their checkpoints.
 Complete numerical/backend, inherited/network, native/platform and target-hardware

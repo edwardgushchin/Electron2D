@@ -42,8 +42,9 @@ public static partial class BackendChecks
                 for (var i = 0; i < b.Shapes; i++)
                 {
                     var p = b.Parts[i]; var center = b.PartCenter(p);
-                    if (!hitFromInside && ContainsPart(p, new(b.Rotation, b.Position), from) ||
-                        !RayPart(p, new(b.Rotation, b.Position), from, motion, out var f, out _) || f > fraction) continue;
+                    if (!hitFromInside && LogicalContains(b, p.Index, from) ||
+                        !RayPart(p, b.Pose, from, motion, out var f, out _) || f > fraction ||
+                        f == fraction && best is not null && CompareQueryIdentity(b.RID, p.Index, best.RID, part.Index) >= 0) continue;
                     best = b; part = p; fraction = f;
                 }
             }
@@ -51,6 +52,24 @@ public static partial class BackendChecks
             var point = from + motion * fraction;
             RayPart(part, new(best.Rotation, best.Position), from, motion, out _, out var hitNormal);
             return new(best.RID, part.Index, point, hitNormal);
+        }
+        private static int CompareQueryIdentity(RID first, int firstIndex, RID second, int secondIndex) =>
+            first == second ? firstIndex.CompareTo(secondIndex) : first.GetID().CompareTo(second.GetID());
+        private static bool LogicalContains(Body body, int index, Vector2 point)
+        {
+            for (var i = 0; i < body.Shapes; i++)
+                if (body.Parts[i].Index == index && ContainsPart(body.Parts[i], body.Pose, point)) return true;
+            return false;
+        }
+        private bool InitiallyOverlapping(Body body, int index, PhysicsShapeQueryParameters parameters, ShapeGeometry geometry)
+        {
+            for (var i = 0; i < body.Shapes; i++)
+            {
+                if (body.Parts[i].Index != index) continue;
+                for (var piece = 0; piece < GeometryCount(geometry); piece++)
+                    if (PartGap(QueryPart(parameters, geometry, piece), Transform.Identity, body.Parts[i], body.Pose, out _, out _, out _) <= 0) return true;
+            }
+            return false;
         }
         internal static Vector2 PartNormal(Vector2 point, Vector2 center, in Part part)
         {
@@ -112,7 +131,7 @@ public static partial class BackendChecks
                 for (var i = 0; i < b.Shapes; i++) for (var piece = 0; piece < GeometryCount(geometry); piece++)
                     {
                         var p = b.Parts[i]; var query = QueryPart(parameters, geometry, piece);
-                        if ((query.Boundary || p.Boundary || query.Contour || p.Contour) && PartGap(query, Transform.Identity, p, b.Pose, out _, out _, out _) <= 0) continue;
+                        if (InitiallyOverlapping(b, p.Index, parameters, geometry)) continue;
                         if (query.Directed || p.Directed)
                         {
                             if (DirectedSweepRange(query, Transform.Identity, parameters.Motion, p, b.Pose, out var low, out var high) && high <= fraction)
@@ -123,16 +142,18 @@ public static partial class BackendChecks
             }
             return (safeFraction, fraction);
         }
-        private readonly List<Part> _contactQueryParts = [], _contactColliderParts = [];
+        private readonly record struct QueryContact(PhysicsBackendShapeContact Contact, Part Query, Part Collider);
+        private readonly List<QueryContact> _queryContacts = [];
+        private void ClearQueryResults() { _pointHits.Clear(); _shapeHits.Clear(); _shapeContacts.Clear(); _queryContacts.Clear(); }
         protected override List<PhysicsBackendShapeContact> CollectShapeContacts(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded, int limit)
         {
             SpaceQueryHook?.Invoke(4);
-            _shapeContacts.Clear(); _contactQueryParts.Clear(); _contactColliderParts.Clear(); var geometry = GetShapeGeometry(parameters.ShapeRID);
+            _shapeContacts.Clear(); _queryContacts.Clear(); var geometry = GetShapeGeometry(parameters.ShapeRID);
             foreach (var b in Bodies.Values)
             {
                 if (!Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded)) continue;
-                for (var i = 0; i < b.Shapes && _shapeContacts.Count < limit; i++)
-                    for (var piece = 0; piece < GeometryCount(geometry) && _shapeContacts.Count < limit; piece++)
+                for (var i = 0; i < b.Shapes; i++)
+                    for (var piece = 0; piece < GeometryCount(geometry); piece++)
                     {
                         var p = b.Parts[i]; var query = QueryPart(parameters, geometry, piece);
                         if (!QuerySweep(query, parameters.Motion, p, b.Pose, out var f)) continue;
@@ -152,10 +173,15 @@ public static partial class BackendChecks
                             var center = query.Offset + parameters.Motion * f; var at = b.PartCenter(p); var normal = PartNormal(center, at, p);
                             firstPoint = center - normal * query.Outer; secondPoint = at + normal * (center.DistanceTo(at) < p.Inner ? -p.Inner : p.Outer);
                         }
-                        _shapeContacts.Add(new(b.RID, p.Index, 0, firstPoint, secondPoint));
-                        _contactQueryParts.Add(query); _contactColliderParts.Add(p);
+                        _queryContacts.Add(new(new(b.RID, p.Index, piece, firstPoint, secondPoint), query, p with { Source = null }));
                     }
             }
+            _queryContacts.Sort(static (a, b) =>
+            {
+                var order = CompareQueryIdentity(a.Contact.RID, a.Contact.ShapeIndex, b.Contact.RID, b.Contact.ShapeIndex);
+                return order != 0 ? order : a.Contact.Piece.CompareTo(b.Contact.Piece);
+            });
+            for (var i = 0; i < Math.Min(limit, _queryContacts.Count); i++) _shapeContacts.Add(_queryContacts[i].Contact);
             return _shapeContacts;
         }
         protected override PhysicsRestInfo? GetRestInfo(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
@@ -165,7 +191,7 @@ public static partial class BackendChecks
             PhysicsRestInfo? result = null; var deepest = float.NegativeInfinity;
             for (var i = 0; i < hits.Count; i++)
             {
-                var h = hits[i]; var body = Bodies[h.RID]; var query = _contactQueryParts[i]; var part = _contactColliderParts[i];
+                var h = hits[i]; var body = Bodies[h.RID]; var query = _queryContacts[i].Query; var part = _queryContacts[i].Collider;
                 var normal = PartNormal(h.QueryPoint, body.PartCenter(part), part); var depth = h.QueryPoint.DistanceTo(h.ColliderPoint);
                 if (query.Directed || part.Directed)
                 {

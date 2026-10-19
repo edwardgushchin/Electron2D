@@ -1,11 +1,20 @@
 # PhysicsServerBackend
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 Selected CompleteBody and EndStep failures latch the world as unusable and suppress
 body-state observers. Successful retirement after pre-Solve preparation failure
 permits a new interval; gameplay observer/flush/end-sync errors retain their
 notification recovery policy. See [lifecycle publication boundaries](../components/physics-registered-adapter.md#complete-lifecycle-publication-boundaries).
+
+## Complete direct-space view operation
+
+CreateDirectSpaceState supplies the cached World/server query view under owner,
+world-lifetime and numerical-borrow guards. The [complete operation checks](../components/physics-registered-adapter.md#complete-direct-space-view-operation)
+exercise acquisition, invalid factories, disposal/retry and six-query behavior,
+including whole logical origins and identity ordering before caps. The independent
+consumer applies these policies numerically. Broader custom/coupled implementation
+and final acceptance gates remain separate.
 
 ## Complete world parameter operations
 
