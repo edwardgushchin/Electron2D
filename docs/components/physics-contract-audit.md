@@ -1122,6 +1122,20 @@ unchanged. Original and diagnostic logs are retained under
 bin/physics-custom-sweep/2026-10-13/; the custom/no-GPU and CPU/GPU pair profiles
 separately passed their own unchanged warm gates.
 
+CPU pool allocation setup now uses the same controlled second-finalization
+regression. Its former helper returned while that pass was held; adding the
+missing final drain fixes this preparation defect without changing the runtime,
+64 warm/measured spare cycles or strict owner/all-thread zero-byte checks. The
+earlier full-suite `0/288 B` failure was not traced, so its exact allocating
+objects remain unassigned. A successful unchanged isolated or full repetition
+does not establish attribution for that failed interval. Focused evidence is
+retained under `bin/physics-pool-warmup/2026-10-19/`. Fresh CoreCLR pool,
+checkpoint and world-lifetime profiles and strict Linux NativeAOT pool/checkpoint
+profiles all pass without a GPU device. Pool spare reuse retains `0/0 B`,
+checkpoint capture/restore retains `0/0 B`, and all 64 retired world scratch
+targets collect in the CoreCLR world-lifetime profile. NativeAOT execution covers
+the focused linked host, not the wider reflection-based test executable.
+
 Allocation warmup in PhysicsBackendOwnershipTests and the public-only registered
 consumer now drains pending finalizers after the final forced collection. A shared
 cold regression object re-registers after its first finalization and blocks the

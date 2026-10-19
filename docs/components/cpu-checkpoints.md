@@ -68,8 +68,12 @@ checkpoint payloads remain retained until replacement or disposal.
 body/shape/joint retirement, ordinary and checkpoint event replacement, value
 array removals and engine collider detachment. It also checks that a live history
 retains and restores the same mutable borrowed object, and that class-spare reuse
-allocates zero managed bytes after warmup. These ownership checks do not measure
-the total retained heap or native/device memory.
+allocates zero managed bytes after warmup. Its collection helper drains pending
+finalizers after both forced collections. The shared `AllocationWarmupCheck`
+holds a controlled second finalization pass to reject setup that returns early;
+the 64 warm and 64 measured spare cycles still require exactly zero owner and
+all-thread bytes. These ownership checks do not measure the total retained heap
+or native/device memory.
 
 Focused Linux NativeAOT verification compiles these same pool-lifetime and CPU
 checkpoint test files in an isolated test host. The general test executable's

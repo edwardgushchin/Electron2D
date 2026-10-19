@@ -21,6 +21,7 @@ internal static class CPUPhysicsPoolLifetimeTests
     }
     internal static void Run()
     {
+        AllocationWarmupCheck.Verify(Collect);
         List<string> retained = [];
         foreach (var parent in new[] { false, true })
             foreach (var history in new[] { false, true })
@@ -171,6 +172,6 @@ internal static class CPUPhysicsPoolLifetimeTests
     private static void Collect()
     {
         GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers();
-        GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
+        GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers();
     }
 }
