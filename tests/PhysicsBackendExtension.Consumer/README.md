@@ -357,3 +357,12 @@ It checks cached view identity, inactive/invalid/stale/thread/phase acquisition 
 view replacement, then 128 full moving scene frames at strict zero owner/all-thread
 managed bytes. `--factory-views --threaded` applies the requested policy and
 asserts actual Solve threading while retaining external subclass/factory checks.
+
+`--shape-pair-matrix`, optionally `--cpu`, `--gpu` and `--threaded`, checks all 64
+ordered built-in shape combinations through explicit resource, raw disabled slot
+and scene disabled slot routes. It verifies analytic boundaries, transformed poses,
+capacities 0/1/4, separated controls, seven scene roles and independent/special
+motion policies. After 128 warmups, 128 full moving frames require strict zero
+owner/all-thread managed bytes. Logical source poses follow BodyGetTransform;
+queries preserve pending simulation targets. The existing `--shape-pairs` and
+`--pose-transactions` supply shared lifecycle, fault and dense-capacity companions.

@@ -399,3 +399,10 @@ including actual scene/raw contacts, terminal rejection/cleanup, owner/separate
 execution, validated count bounds and rendered marker consumers. Preparation errors
 preserve prior implementation policy; tree-wide rollback attempts every request and
 retains original errors. This closes those operations, not the whole numerical family.
+
+Selected CollideShapes and BodyCollideShape now have a [complete operation audit](../components/physics-shape-pairs.md#complete-selected-pair-operations):
+64 ordered built-in combinations, logical pose and local slot composition,
+disabled/zero-filter slots, independent motion policies, exact caller capacity and
+borrowed/atomic failure handling. Independent registered math shares the public
+CPU/software-GPU assertions; full moving brackets retain zero managed bytes.
+Broader numerical and final platform/network/performance acceptance remains separate.

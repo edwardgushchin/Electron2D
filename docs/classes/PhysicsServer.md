@@ -1440,3 +1440,10 @@ shares one live cached view across World/server/viewport consumers. Invalid/reti
 spaces and foreign/numerical access reject; inactive access and disposal/recreation
 retain the live context. The six-query family has shared CPU/software-GPU/registered
 logical-origin, ordering/cap and zero warmed-frame checks.
+
+Selected ShapeCollide and BodyCollideShape now have a [complete operation audit](../components/physics-shape-pairs.md#complete-selected-pair-operations):
+64 ordered built-in combinations, logical pose and local slot composition,
+disabled/zero-filter slots, independent motion policies, exact caller capacity and
+borrowed/atomic failure handling. Independent registered math shares the public
+CPU/software-GPU assertions; full moving brackets retain zero managed bytes.
+Broader numerical and final platform/network/performance acceptance remains separate.

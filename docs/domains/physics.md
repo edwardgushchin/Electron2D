@@ -1638,6 +1638,15 @@ establish complete backend/network/native/platform or hardware performance accep
 [Complete direct-space view acquisition](../components/physics-registered-adapter.md#complete-direct-space-view-operation)
 verifies the selected cache/factory/lifetime and six-query logical-origin/ordering/
 cap contract over actual moving CPU/software-GPU/registered frames at zero warmed
-managed bytes. The current ledger is 1277/1369 Implemented (93.28%), with 92 open
+managed bytes. That checkpoint recorded 1277/1369 Implemented (93.28%), with 92 open
 (61 Partial, 17 Blocked, 14 Unimplemented) and 92 Excluded. Broader custom/coupled,
 inherited/server/network/native/platform and hardware performance gates stay open.
+
+
+[Complete selected pair operations](../components/physics-shape-pairs.md#complete-selected-pair-operations)
+verify all 64 ordered built-in combinations through resource/raw/scene routes,
+logical source pose and slot ownership, independent motion and special policies,
+atomic failure handling and strict zero warmed full-frame managed bytes. The
+current ledger is 1279/1369 Implemented (93.43%), with 90 open (59 Partial,
+17 Blocked, 14 Unimplemented), 92 Excluded. Arbitrary custom/coupled, inherited/
+server/network/native/platform and target-hardware performance acceptance stay open.

@@ -1,5 +1,74 @@
 # Selected shape-pair queries
 
+## Complete selected pair operations
+
+The two selected CollideShapes/BodyCollideShape operations now have a complete
+public operation audit. The pinned required members and owning type have no
+deprecated metadata. The explicit space selects resource/resource math; attached
+body queries select their actual owner, while detached bodies retain the resource
+path. Logical slots participate independently of slot enable, collision filters
+and one-way response. Existing validation, world/resource borrowing, nested scratch
+and atomic caller publication retain their own failure controls below.
+
+The --shape-pair-matrix public-only consumer checks all 64 ordered combinations
+of circle, rectangle, capsule, segment, convex polygon, concave edges, separation
+ray and world boundary. Sixty-one deliberate intersection witnesses complement
+three accepted noncolliding pairs (two concave resources, two rays, two boundaries).
+Each combination runs resource, disabled raw slot and disabled scene slot routes
+with pair capacities 0/1/4, both original and rigidly transformed poses, plus
+separated controls. Every reported point lies on its own analytic resource boundary;
+all unused caller storage retains its sentinel. Strict penetration must produce
+points when capacity permits; zero-area exact touching may report only a boolean.
+No internal manifold order, point count parity or backend implementation is assumed.
+
+The same profile checks 25 finite-family independently displaced swept regions
+and 50 raw/scene counterpart-motion queries. Explicit controls preserve boundary
+endpoint/own-motion precedence, ignored concave displacement and ray positive-axial
+motion while rejecting negative/perpendicular or counterpart displacement. A ray
+against a boundary uses the full finite endpoint displacement, with original point
+ownership. The existing --shape-pairs companion retains genuinely asynchronous
+swept-region intersection, 20 distinct deep edges, 0/1/4/24 capacities, custom annulus,
+invalid output, input failures, nesting and terminal-world rejection.
+
+The independent provider previously read its last numerical body pose for a
+logical source-slot operation. Immediately edited scene poses therefore missed
+in its transformed matrix while built-ins succeeded. Its BodyCollideShape now reads
+PhysicsServer.BodyGetTransform and the public local slot transform, matching the
+common logical pose. This avoids forcing a numerical pose update just to query
+resources. Seven scene controls cover StaticBody, synchronized/unsynchronized
+AnimatableBody, CharacterBody, RigidBody, frozen kinematic RigidBody and PhysicalBone.
+Pair queries preserve pose and tick; a synchronized animation target remains pending
+until its next real interval. Existing direct-mode/pose transaction checks retain
+partial-publication repair and deferred server-kinematic targets. Production runtime,
+API/XML, resource wire formats and architectural decisions are unchanged.
+
+After 128 warmups, 128 complete moving frames cycle every ordered combination in
+both poses through all three routes, requiring strict zero owner/all-thread managed
+bytes. Boundary distance tolerance is .002 scene units for float support geometry
+and composed rigid transforms; shape dimensions are 6 units and separated controls
+are tens of units apart. Moving-frame displacement tolerance is .0001 units; IDs,
+flags, hit/miss, cap bounds, untouched tails and tick/pending-target state are exact.
+Point arrays from standalone Shape methods retain their separately measured allocation.
+
+All 75 qualified profiles pass: 35 managed consumer, 35 strict NativeAOT consumer
+and five root scenarios. The latter retain their exact rebuilt DLL hash after the
+consumer-only formatting correction. Twelve matrix profiles each measure 128
+complete moving frames at 0/0 owner/all-thread managed bytes. Six portable-PDB
+checks match all Compile inputs without DEBUG or missing/mismatched source: 2373
+runtime, 852 root and 237 consumer documents; 3451 authored inputs are retained.
+Validation SHA-256: dab62c1165adeb26dd8f04f7ae606f41bbba1616c6e34b64e7c0296e97823c88. The JIT consumer is
+SHA-256 685717552f5d00fe447aed17dc300c2fc0b0c9eac72d04f6de4fe68d801f33a7; the strict NativeAOT executable is
+SHA-256 7a7995e86f5d5452f519ee1326c5a468f28b580ce68ebd231649cdb3cfe08ab4. Release, all three format checks, compiled API coverage,
+wiki tests and generation/check pass. The ledger is 1279/1369 Implemented
+(93.43%), 90 open and 92 Excluded.
+
+Evidence: bin/physics-shape-pair-matrix/2026-10-20/. The two operation rows close
+independently of arbitrary custom/coupled numerical simulation, BodyTestMotion,
+complete inherited/server/network acceptance, native allocation, other platforms
+and target-hardware/window/performance gates. Software Vulkan is functional
+execution; the unchecked GPU power cable excludes hardware load from this slice.
+
+
 ## Body-pair publication recovery and composed-pose validation
 
 An attached `BodyCollideShape` query validates the logical slot and both live
@@ -44,8 +113,8 @@ retain the dynamic GPU pose query's one submission and 24 readback bytes.
 
 Evidence: `bin/physics-shape-pair-audit/2026-10-19/final/validation.json`. This is a shared
 runtime correction and expanded verification; the complete implementation-operation
-accounting stays Partial. Coverage states and the 177-declaration open ledger are
-unchanged. Full numerical-extension/native/foreign/network and target-GPU/window
+accounting stays Partial. That checkpoint retained the 177-declaration open ledger; the complete operation
+audit above records the later state. Full numerical-extension/native/foreign/network and target-GPU/window
 performance acceptance remain open. The runtime-source-qualified ordinary root
 frozen at `8912effe` completed with exit 0 in 1271.3658184509986 seconds; all 129
 observed processes stayed free of hardware-driver mappings. Evidence:
@@ -59,7 +128,7 @@ whole-goal acceptance.
 
 Both cold operands now use [world-query geometry preflight](physics-queries.md#cold-query-geometry) while their existing resource/pair borrows remain active. Numerical authoring rejects during supplier execution; selected pair hooks, staged output validation and nested scratch retain their existing contracts.
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 The internal selected-owner bridge executes resource/resource and body-slot/resource
 collision for the pending complete server-extension family. No new public family is

@@ -244,9 +244,8 @@ public static partial class BackendChecks
         }
         protected override bool BodyCollideShape(RID body, int index, RID shape, Transform pose, Vector2 motion, Span<Vector2> contacts, out int count)
         {
-            var b = Bodies[body];
             var local = PhysicsServer.BodyGetShapeTransform(body, index);
-            return CollideShapes(PhysicsServer.BodyGetShape(body, index), new Transform(b.Rotation, b.Position) * local,
+            return CollideShapes(PhysicsServer.BodyGetShape(body, index), PhysicsServer.BodyGetTransform(body) * local,
                 Vector2.Zero, shape, pose, motion, contacts, out count);
         }
         private static bool Pair(Vector2 first, float firstRadius, Vector2 firstMotion, Vector2 second, float secondRadius,
