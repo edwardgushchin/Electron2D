@@ -2,6 +2,52 @@
 
 Last updated: 2026-10-19
 
+## Mixed space membership operation audit
+
+BodySetSpace and AreaSetSpace execute every ordered CPU, GPU and registered
+source/target route through actual selected attachment ownership. The public-only
+--membership fixture covers StaticBody, AnimatableBody, CharacterBody, RigidBody,
+PhysicalBone, scene Area and raw Body/Area. Each body crosses both directions in
+all four motion roles, then as a sleeping dynamic. Object/canvas IDs, logical
+shape RIDs, disabled slot 0/active slot 1, pose, velocities, mass/inertia, material,
+filters, CCD, persistent force/torque and Area fields retain their public values.
+Rebinding the current space retains its direct view; a real departure expires it.
+Hierarchy, World descriptor and existing scene drivers keep their ownership.
+
+Foreign-thread requests and unsupported custom geometry reject before source
+retirement, preserving the existing view and state. Registered target failures at
+factory, identity, shape and post-attachment capacity stages retire the partial
+target and restore the source. A source departure error commits visible detachment
+and stops target entry. Compound target-cleanup/source-restoration failures retain
+all errors and leave both partial owners retired. Healthy attachment then succeeds.
+These checks verify the existing runtime; no runtime API or behavior changes.
+The independent provider now reports static bodies inactive, matching the role
+contract instead of exposing its unused internal awake flag.
+
+Eight fresh JIT/strict NativeAOT owner/separate profiles execute 52 ordered routes,
+4368 successful role/identity transfers, 512 preflight rejections, 640 target
+failures, 160 departure failures and 64 compound rollbacks. Four CPU profiles have
+no graphics device; four mixed profiles use private software Vulkan. Their 6656
+measured full frames, 39936 owner callbacks and 53248 selected point queries require
+strict zero owner/all-thread managed bytes. Every frame advances the original
+source and target clocks exactly once, moves all six dynamics only in the target,
+and publishes callbacks on the owner thread. Pose/state tolerance 0.0001 allows
+float rotation conversion and short scene-unit travel; IDs, membership, slots,
+counts and original exception identity are exact. Cold transfers, failure handling
+and allocation-heavy state snapshots remain outside the warmed frame brackets.
+
+Existing spaces, resource retirement, pose transactions, custom geometry and
+ordinary public-consumer checks retain scene reclaim, owned-space release,
+preflight/borrow guards, joint endpoint departure/reentry, monitor departure errors
+and partial-state recovery. Root ownership and shape-slot checks complete 45/45
+profiles on the same frozen sources. The full ordinary root suite was not rerun.
+Only the two extension membership operation rows become Implemented: 1215/1369
+(88.75091307523741%), with 154 open declarations: 123 Partial, 14 Unimplemented and 17 Blocked;
+92 declarations remain Excluded. Complete numerical/custom geometry/inherited,
+network, native retained memory, other platforms and target-GPU rendered/FPS and
+performance acceptance remain open. The RTX power cable is still unchecked; no
+hardware GPU load ran. Evidence: `bin/physics-membership/2026-10-19/validation.json`.
+
 ## Finite hierarchy pose and Area transform audit
 
 Finite local Entity transforms can compose into an infinite global translation.

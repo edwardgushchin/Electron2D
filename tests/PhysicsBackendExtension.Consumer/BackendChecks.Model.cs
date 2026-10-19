@@ -394,7 +394,7 @@ public static partial class BackendChecks
         protected override (Vector2 LinearVelocity, float AngularVelocity, bool Sleeping) GetSolverMotion() => (Velocity, Angular, !Awake);
         protected override Vector2 LinearVelocity => Mode == PhysicsServer.BodyMode.Static ? Surface : Velocity + (Mode == PhysicsServer.BodyMode.Kinematic ? Surface : Vector2.Zero);
         protected override float AngularVelocity => Mode == PhysicsServer.BodyMode.Static ? SurfaceAngular : Angular + (Mode == PhysicsServer.BodyMode.Kinematic ? SurfaceAngular : 0);
-        protected override bool IsAwake => Awake;
+        protected override bool IsAwake => Mode != PhysicsServer.BodyMode.Static && Awake;
         protected override void SetPose(Vector2 position, float rotation)
         {
             solver.PoseHook?.Invoke(rid);
