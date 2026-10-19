@@ -1,6 +1,6 @@
 # Retained standalone text objects
 
-Last updated: 2026-10-17
+Last updated: 2026-10-19
 
 TextLine exposes the complete single-line contract over the existing FreeType/HarfBuzz/TextLayout owner. Text spans borrow Font resources with their own size/language and exact typed metadata; a generic AddString overload and TryGetSpanMetadata make metadata observable. TextObjectKey supplies reference identity in every inline parameter/result position without universal value dispatch.
 
@@ -21,3 +21,5 @@ The independent public-only NuGet/NativeAOT consumer passes with reflection-disa
 The complete related Font and RichText groups pass. Two existing scene-copy tests in LabelSettings/Label incorrectly expected non-local fonts to be cloned; the same LabelSettings failure was reproduced with the baseline assembly. Expectations now retain the non-local source, and an additional explicitly local shared-font case verifies one scene copy and disposal. Runtime resource-copy rules remain under ADRs 0013/0023. Foreign platforms, native allocations, large-input performance and human owner acceptance remain separate gates. [ADR 0107](../decisions/text-objects.md#adr-0107) owns the full contract.
 
 TextParagraphTests and TextParagraphRenderingTests cover full typed authoring/query families, CRLF/supplementary ranges, empty/hidden lines, wrapping/visibility/spacing, inline length/resize and full geometry, dropcap/duplicates, BIDI/both axes, generation replacement and failure/reentry. Native gates exercise paragraph, hidden independent lines, isolated cap, outline/raster scale, overflow clipping and live RTL/reflow with an explicit 64 warmed full-frame allocation interval. Package/fresh-process authoring and foreign/native-allocation/performance/owner acceptance remain separately evidenced.
+
+[TextServer](text-server.md) now consumes these actual full/dropcap/line identities. The interface cannot free a borrowed identity. Full/dropcap service authoring invalidates the original paragraph; line-view edits detach a bounded authored slice and reach real line metrics, objects and drawing until the next reflow retires that identity. Failed first edits discard the tentative slice. Native draw/read scopes use the same bounded coherent font-generation preparation as metric consumers.

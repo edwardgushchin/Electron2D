@@ -25,7 +25,7 @@ This file routes architecture work to bounded domain decision documents. Read th
 | Scene animation | [scene-animation.md](scene-animation.md) | 0093 |
 | Resources | [resources.md](resources.md) | 0013, 0014, 0039 |
 | Localization | [localization.md](localization.md) | 0007 |
-| Standalone text objects | [text-objects.md](text-objects.md) | 0107 |
+| Text buffers and standalone objects | [text-objects.md](text-objects.md) | 0107 |
 | Rendering | [rendering.md](rendering.md) | 0028, 0046, 0078, 0079, 0080, 0081, 0082, 0083 |
 | Typed 2D meshes and skeletal palettes | [mesh.md](mesh.md) | 0092 |
 | Tile resources and layers | [tiles.md](tiles.md) | 0101 |

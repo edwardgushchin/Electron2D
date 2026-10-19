@@ -406,3 +406,7 @@ Window placement and ResetSize use the existing viewport/native resize lifecycle
 [GUI control pixel snapping](../components/canvas-rendering.md#gui-control-pixel-snapping) is independent of canvas transform/vertex snapping. The viewport-owned flag acts on eligible Control local visual translations before visual-only offsets; Entity/layer/canvas matrices keep their separate stages. Both current renderers consume retained commands without additional redraw callbacks.
 
 Ordinary desktop Window children now execute [independent native hosts](../components/window-runtime.md#independent-native-windows), sharing one display/event service and scene renderer. GPU device targets are shared; compatibility contexts replay frozen commands with cold history transfer. Native popup surfaces and platform-specific decoration controls retain separate prerequisites.
+
+## Low-level shaped text
+
+[TextServer buffers](../components/text-server.md) connect retained provider discovery, owned buffer creation/release and borrowed TextLine/TextParagraph identities to typed authoring, native shaping, ceiled dimensions, fractional baseline metrics and baseline canvas drawing. Paragraph line edits detach atomically and retire at reflow. The same FreeType/HarfBuzz and canvas owners remain in use; raw font-cache and extension families retain separate coverage prerequisites.

@@ -12,7 +12,7 @@ internal readonly record struct TextLayoutOptions(float LineSpacing = 0, float P
     float[]? TabStops = null, int Overrun = 1, string Ellipsis = "\u2026", int VisibleCharacters = -1, int VisibleBehavior = 1, IReadOnlyList<TextBIDIRange>? BIDIOverride = null, bool ApplyAlignment = true, bool? WrappedBehavior = null, bool PreserveControl = false, IReadOnlyList<TextLayoutStyleSpan>? Styles = null, IReadOnlyList<TextLayoutInlineObject>? Objects = null, float DropcapWidth = 0, float DropcapHeight = 0, bool PreserveInvalid = true, bool GlobalObjectMetrics = false, bool ParagraphBuffers = false, string CustomPunctuation = "");
 
 internal readonly record struct TextLayoutLine(int Start, int End, int GlyphStart, int GlyphCount, float Width, float Ascent,
-    float Descent, float CrossOffset, bool ParagraphEnd, int ParagraphLevel, int RangeEnd = -1)
+    float Descent, float CrossOffset, bool ParagraphEnd, int ParagraphLevel, int RangeEnd = -1, float UnderlinePosition = 0, float UnderlineThickness = 0)
 {
     internal float Height => Ascent + Descent;
 }
@@ -38,6 +38,7 @@ internal sealed partial class TextLayout
     private TextLayoutOptions _options;
     private int _count;
     private bool _lineTrimmed, _tabRTL;
+    private (float Ascent, float Descent, float UnderlinePosition, float UnderlineThickness) _shapeFontMetrics;
     private int _active;
     private long _builtFontGeneration = -1;
     internal bool IsBusy => _active != 0;
@@ -292,11 +293,7 @@ internal sealed partial class TextLayout
         var sources = _font.GetSources(); var lastSource = _options.Styles is null && start < end && sources.Count > 0 ? 0 : -1;
         for (var i = start; i < end; i++)
             if (_options.Styles is null) lastSource = Math.Max(lastSource, _faces[i] is null ? sources.Count - 1 : sources.IndexOf(_faces[i]!));
-            else
-            {
-                var style = StyleAt(i);
-                ascent = Math.Max(ascent, style.Font.GetAscent(style.Size)); descent = Math.Max(descent, style.Font.GetDescent(style.Size));
-            }
+        if (_options.Styles is not null) { ascent = _shapeFontMetrics.Ascent; descent = _shapeFontMetrics.Descent; }
         for (var i = 0; i <= lastSource; i++)
         {
             var metrics = sources[i].GetMetrics(Key.FontSize); ascent = Math.Max(ascent, metrics.Ascent); descent = Math.Max(descent, metrics.Descent);
@@ -313,8 +310,8 @@ internal sealed partial class TextLayout
             }
             if (glyph.Face is null) continue; var metrics = glyph.Face.GetMetrics(GlyphSize(glyph));
             var styleFont = StyleAt(glyph.Start).Font;
-            ascent = Math.Max(ascent, metrics.Ascent + (_options.Styles is null ? 0 : styleFont.GetSpacing(TextSpacingType.Top)));
-            descent = Math.Max(descent, metrics.Descent + (_options.Styles is null ? 0 : styleFont.GetSpacing(TextSpacingType.Bottom)));
+            ascent = Math.Max(ascent, metrics.Ascent + (_options.Styles is null ? 0 : styleFont.GetShapingSpacing(glyph.Face, TextSpacingType.Top)));
+            descent = Math.Max(descent, metrics.Descent + (_options.Styles is null ? 0 : styleFont.GetShapingSpacing(glyph.Face, TextSpacingType.Bottom)));
             if (Key.Orientation == TextOrientation.Horizontal) { ascent = Math.Max(ascent, -glyph.Offset.Y); descent = Math.Max(descent, glyph.Offset.Y); }
             else { var halfAdvance = MathF.Round(glyph.Face.GetGlyphAdvance(glyph.Index, GlyphSize(glyph)) * .5f, MidpointRounding.AwayFromZero); ascent = Math.Max(ascent, halfAdvance); descent = Math.Max(descent, halfAdvance); }
         }
@@ -322,7 +319,7 @@ internal sealed partial class TextLayout
         else if (_options.Styles is null) { ascent += _font.GetSpacing(TextSpacingType.Top); descent += _font.GetSpacing(TextSpacingType.Bottom); }
         var paragraphLevel = start < _count ? _paragraphLevels[start] : Key.Direction == TextDirection.RTL ? 1 : 0;
         var width = LayoutAdvance(); var glyphStart = _rawGlyphs.Count; _rawGlyphs.AddRange(_lineGlyphs);
-        _lines.Add(new(start, end, glyphStart, _lineGlyphs.Count, width, ascent, descent, 0, paragraphEnd, paragraphLevel));
+        _lines.Add(new(start, end, glyphStart, _lineGlyphs.Count, width, ascent, descent, 0, paragraphEnd, paragraphLevel, UnderlinePosition: _shapeFontMetrics.UnderlinePosition, UnderlineThickness: _shapeFontMetrics.UnderlineThickness));
     }
 
     private void TransformLines()
@@ -366,6 +363,20 @@ internal sealed partial class TextLayout
 
     private void ShapeLine(int start, int end)
     {
+        _shapeFontMetrics = default;
+        if (_options.Styles is not null)
+        {
+            Font? previous = null; FontData? face = null; var size = 0;
+            for (var i = start; i < end; i++)
+            {
+                var style = StyleAt(i);
+                if (ReferenceEquals(previous, style.Font) && ReferenceEquals(face, _faces[i]) && size == style.Size) continue;
+                previous = style.Font; face = _faces[i]; size = style.Size; var metrics = style.Font.GetShapingMetrics(face, size);
+                _shapeFontMetrics = (Math.Max(_shapeFontMetrics.Ascent, metrics.Ascent), Math.Max(_shapeFontMetrics.Descent, metrics.Descent),
+                    Math.Max(_shapeFontMetrics.UnderlinePosition, style.Font.GetShapingUnderline(face, size, false)),
+                    Math.Max(_shapeFontMetrics.UnderlineThickness, style.Font.GetShapingUnderline(face, size, true)));
+            }
+        }
         _lineGlyphs.Clear(); _runs.Clear(); var length = end - start;
         if (length == 0) return; _tabRTL = _paragraphLevels[start] == 1;
         _scalars.AsSpan(start, length).CopyTo(_shapeScalars);
@@ -396,8 +407,8 @@ internal sealed partial class TextLayout
             if (inline.At >= 0)
             {
                 var ascent = runStyle.Font.GetAscent(runStyle.Size); var descent = runStyle.Font.GetDescent(runStyle.Size);
-                if (_options.GlobalObjectMetrics && _options.Styles is { } styles)
-                    foreach (var style in styles) if (style.Start < end && style.End > start) { ascent = Math.Max(ascent, style.Font.GetAscent(style.Size)); descent = Math.Max(descent, style.Font.GetDescent(style.Size)); }
+                if (_options.GlobalObjectMetrics && _options.Styles is not null)
+                { ascent = Math.Max(ascent, _shapeFontMetrics.Ascent); descent = Math.Max(descent, _shapeFontMetrics.Descent); }
                 var vertical = Key.Orientation == TextOrientation.Vertical; var cross = vertical ? inline.Size.X : inline.Size.Y;
                 var anchor = ((int)inline.Alignment & 12) switch { 0 => -ascent, 4 => (descent - ascent) / 2, 8 => 0, _ => descent };
                 var own = ((int)inline.Alignment & 3) switch { 0 => 0, 1 => cross / 2, 2 => cross, _ => inline.ExplicitBaseline || inline.Baseline >= 0 ? inline.Baseline : cross };
@@ -451,8 +462,8 @@ internal sealed partial class TextLayout
                 if (shaped.GlyphIndex == 0) advance = 0;
                 if (advance != 0)
                 {
-                    var spaceSpacing = space ? runStyle.Font.GetSpacing(TextSpacingType.Space) : 0;
-                    var extraSpacing = spaceSpacing != 0 ? spaceSpacing : runStyle.Font.GetSpacing(TextSpacingType.Glyph);
+                    var spaceSpacing = space ? runStyle.Font.GetShapingSpacing(run.Face, TextSpacingType.Space) : 0;
+                    var extraSpacing = spaceSpacing != 0 ? spaceSpacing : runStyle.Font.GetShapingSpacing(run.Face, TextSpacingType.Glyph);
                     if (shapedIndex < lastAdvance) advance += extraSpacing;
                 }
                 _lineGlyphs.Add(new(run.Face, shaped.GlyphIndex, cluster, clusterEnd, advance,
@@ -681,7 +692,7 @@ internal sealed partial class TextLayout
     }
 
     internal void Draw(CanvasItem canvas, Vector2 baseline, Color color, int outline = 0, float oversampling = 0,
-        int firstLine = 0, int maxLines = -1, int visibleCharacters = -1, int visibleBehavior = 1, bool outlinePass = false, bool clipToWidth = false, Rect2? clipRect = null, ReadOnlySpan<Color> characterColors = default, float clipStart = 0, bool ignoreLineLimit = false, float? advanceClipWidth = null)
+        int firstLine = 0, int maxLines = -1, int visibleCharacters = -1, int visibleBehavior = 1, bool outlinePass = false, bool clipToWidth = false, Rect2? clipRect = null, ReadOnlySpan<Color> characterColors = default, float clipStart = 0, bool ignoreLineLimit = false, float? advanceClipWidth = null, float advanceClipLeft = -1, float advanceClipRight = -1)
     {
         if (IsBusy) throw new InvalidOperationException("An active text layout cannot record itself recursively.");
         for (var attempt = 0; attempt < Font.MaximumReadAttempts; attempt++)
@@ -690,14 +701,20 @@ internal sealed partial class TextLayout
             if (_builtFontGeneration != read.Generation) { Build(_font, Key, _options); continue; }
             if (!read.IsCurrent) continue;
             _active++;
-            try { DrawCore(canvas, baseline, color, outline, oversampling, firstLine, maxLines, visibleCharacters, visibleBehavior, outlinePass, clipToWidth, clipRect, characterColors, clipStart, ignoreLineLimit, advanceClipWidth); return; }
+            try { DrawCore(canvas, baseline, color, outline, oversampling, firstLine, maxLines, visibleCharacters, visibleBehavior, outlinePass, clipToWidth, clipRect, characterColors, clipStart, ignoreLineLimit, advanceClipWidth, advanceClipLeft, advanceClipRight); return; }
             finally { _active--; }
         }
         throw Font.UnsettledRead();
     }
 
+    private bool OutsideAdvanceClip(Glyph glyph, int repeat, float left, float right)
+    {
+        var pen = (Key.Orientation == TextOrientation.Horizontal ? glyph.Position.X - glyph.Offset.X : glyph.Position.Y - glyph.Offset.Y) + repeat * glyph.Advance;
+        return left >= 0 && pen < left || right >= 0 && pen + glyph.Advance > right;
+    }
+
     private void DrawCore(CanvasItem canvas, Vector2 baseline, Color color, int outline, float oversampling,
-        int firstLine, int maxLines, int visibleCharacters, int visibleBehavior, bool outlinePass, bool clipToWidth, Rect2? clipRect, ReadOnlySpan<Color> characterColors, float clipStart, bool ignoreLineLimit, float? advanceClipWidth)
+        int firstLine, int maxLines, int visibleCharacters, int visibleBehavior, bool outlinePass, bool clipToWidth, Rect2? clipRect, ReadOnlySpan<Color> characterColors, float clipStart, bool ignoreLineLimit, float? advanceClipWidth, float advanceClipLeft, float advanceClipRight)
     {
         if (firstLine < 0 || firstLine >= _lines.Count) return;
         var clipWidth = advanceClipWidth ?? Key.Width;
@@ -721,6 +738,7 @@ internal sealed partial class TextLayout
                 }
                 budget++;
                 if ((!glyph.Missing && (glyph.Face is null || glyph.Index == 0)) || glyph.Tab || glyph.Virtual && glyph.Index == 0) continue;
+                if (glyph.Missing && OutsideAdvanceClip(glyph, 0, advanceClipLeft, advanceClipRight)) continue;
                 if (glyph.Missing)
                 {
                     if (clipToWidth && clipWidth > 0) { var pen = Key.Orientation == TextOrientation.Horizontal ? glyph.Position.X - glyph.Offset.X : glyph.Position.Y - glyph.Offset.Y; if (pen < clipStart || pen + glyph.Advance > clipStart + clipWidth) continue; }
@@ -729,6 +747,7 @@ internal sealed partial class TextLayout
                 }
                 for (var repeat = 0; repeat < glyph.Repeat; repeat++)
                 {
+                    if (OutsideAdvanceClip(glyph, repeat, advanceClipLeft, advanceClipRight)) continue;
                     if (clipToWidth && clipWidth > 0 && (!glyph.Virtual || glyph.Elongation))
                     {
                         var pen = (Key.Orientation == TextOrientation.Horizontal ? glyph.Position.X - glyph.Offset.X : glyph.Position.Y - glyph.Offset.Y) + repeat * glyph.Advance;

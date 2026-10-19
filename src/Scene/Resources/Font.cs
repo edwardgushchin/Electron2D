@@ -14,6 +14,9 @@ public abstract partial class Font : Resource
     internal abstract FontData? PrimaryData { get; }
     internal virtual Font? BaseDependency => null;
     internal virtual NativeFontFeature[]? GetShapingFeatures(FontData source) => null;
+    internal virtual int GetShapingSpacing(FontData? source, TextSpacingType spacing) => GetSpacing(spacing);
+    internal virtual (float Ascent, float Descent) GetShapingMetrics(FontData? source, int size) => (GetAscent(size), GetDescent(size));
+    internal virtual float GetShapingUnderline(FontData? source, int size, bool thickness) => thickness ? GetUnderlineThickness(size) : GetUnderlinePosition(size);
     internal Font?[] LocalFallbacks => _fallbacks;
     internal virtual Font?[] EffectiveFallbacks => _fallbacks;
     private Font?[] _fallbacks = [];

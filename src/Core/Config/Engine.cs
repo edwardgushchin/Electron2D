@@ -89,6 +89,8 @@ public sealed partial class Engine : ElectronObject
         _singletonNames.Add(nameof(Engine));
         _singletons.Add(nameof(OS), OS.Service);
         _singletonNames.Add(nameof(OS));
+        _singletons.Add(nameof(TextServerManager), TextServerManager.Service);
+        _singletonNames.Add(nameof(TextServerManager));
         _singletons.Add(nameof(Time), Time.Service);
         _singletonNames.Add(nameof(Time));
         _singletons.Add(nameof(WorkerThreadPool), WorkerThreadPool.Service);

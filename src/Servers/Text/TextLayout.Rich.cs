@@ -137,3 +137,58 @@ internal sealed partial class TextLayout
         Array.Clear(_faces); Array.Clear(_richStyles); Array.Clear(_richObjects); _caretsReady = false;
     }
 }
+
+internal sealed partial class TextLayout
+{
+    internal Rect2 ServerObjectRect(int index, Vector2 size, int line)
+    {
+        if ((uint)line >= (uint)_lines.Count) return default;
+        var metrics = _lines[line]; var vertical = Key.Orientation == TextOrientation.Vertical;
+        for (var i = metrics.GlyphStart; i < metrics.GlyphStart + metrics.GlyphCount; i++)
+        {
+            var glyph = _glyphs[i]; if (glyph.ObjectIndex != index) continue;
+            var cross = vertical ? size.X : size.Y;
+            var top = glyph.ObjectAscent > 0 ? -glyph.ObjectAscent : glyph.ObjectDescent - cross;
+            var rect = new Rect2(glyph.Position + (vertical ? new Vector2(top, 0) : new Vector2(0, top)), size);
+            rect.Position -= vertical ? new Vector2(metrics.CrossOffset + metrics.Ascent, 0) : new Vector2(0, metrics.CrossOffset + metrics.Ascent);
+            return rect;
+        }
+        return default;
+    }
+}
+
+internal sealed partial class TextLayout
+{
+    internal int ServerHitPosition(int index, float coordinate, float width)
+    {
+        var line = _lines[index]; if (line.GlyphCount == 0) return 0;
+        var first = _glyphs[line.GlyphStart]; var last = _glyphs[line.GlyphStart + line.GlyphCount - 1];
+        bool RTL(Glyph glyph) => (uint)glyph.Start < (uint)_count && (_levels[glyph.Start] & 1) != 0;
+        if (MathF.Floor(coordinate) <= 0) return RTL(first) ? first.End : first.Start;
+        if (MathF.Ceiling(coordinate) >= width) return RTL(last) ? last.Start : last.End;
+        var pen = 0f;
+        for (var i = line.GlyphStart; i < line.GlyphStart + line.GlyphCount;)
+        {
+            var glyph = _glyphs[i]; var end = i + 1; var advance = glyph.Advance * glyph.Repeat;
+            while (end < line.GlyphStart + line.GlyphCount && _glyphs[end].Start == glyph.Start && _glyphs[end].End == glyph.End) { advance += _glyphs[end].Advance * _glyphs[end].Repeat; end++; }
+            if (coordinate >= pen && coordinate < pen + advance)
+            {
+                if (glyph.Virtual) return RTL(glyph) ? glyph.End : glyph.Start;
+                var count = glyph.End - glyph.Start;
+                var position = count > 0 ? Math.Clamp((int)MathF.Floor((coordinate - pen) * count / advance + .5f), 0, count) : 0;
+                return RTL(glyph) ? glyph.End - position : glyph.Start + position;
+            }
+            pen += advance; i = end;
+        }
+        return -1;
+    }
+}
+
+internal sealed partial class TextLayout
+{
+    internal float ServerUnderline(int line, bool thickness)
+    {
+        if ((uint)line >= (uint)_lines.Count) return 0;
+        return thickness ? _lines[line].UnderlineThickness : _lines[line].UnderlinePosition;
+    }
+}

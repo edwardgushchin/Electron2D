@@ -1,6 +1,6 @@
 # TextLine
 
-Last updated: 2026-10-17
+Last updated: 2026-10-19
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -74,3 +74,5 @@ Related paragraph preparation shares the typed span builder. All captured font r
 ## Verification
 
 TextLineTests completes outstanding collections and drains finalizers after fixture preparation, before the unchanged 128 warmup and 128 measured metric/caret cycles. AllocationWarmupCheck exercises that same preparation helper with a controlled second finalization pass. The interval retains all eight queries and its strict zero-byte owner-thread assertion; failures report the observed delta. Collection setup stays outside the interval and production hosts retain their ordinary GC policy. See the [allocation measurement contract](../maintaining.md#native-enet-source-and-interoperability-checks).
+
+The borrowed identities interoperate with [TextServer](TextServer.md) through the same owner, scalar source and native layouts. The interface cannot free them. [The buffer contract](../components/text-server.md) defines source edits, line-view detachment and reflow retirement.
