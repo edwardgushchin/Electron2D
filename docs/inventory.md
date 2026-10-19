@@ -4,6 +4,8 @@ CanvasItem TopLevel rebinding now connects to the existing recursive presentatio
 
 Last updated: 2026-10-19
 
+[Failed initial collider preparation](components/physics-registered-adapter.md#authored-state-after-failed-initial-attachment) now discards partial numerical readback while retaining common body authoring. Ordinary retirement still captures accepted motion; no production type or public declaration is added.
+
 [Initial collider attachment](components/physics-registered-adapter.md#initial-attachment-cleanup-errors) now preserves preparation and cleanup errors after retiring partial bindings for scene/raw Body/Area owners. Existing types and public signatures remain unchanged; all scene body siblings use the corrected PhysicsBody path.
 
 [Space creation](components/physics-registered-adapter.md#space-creation-operation-audit) now has a complete public operation audit across explicit/named/lazy worlds, captured policies, readonly initialization queries, startup fallback and failure/resource/thread retirement. Existing PhysicsServer, PhysicsSpace and backend types retain their signatures and algorithms; no production type is added.

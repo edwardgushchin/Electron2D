@@ -350,15 +350,24 @@ internal sealed partial class PhysicsSpace : IDisposable
         _bodies.EnsureCapacity(_bodies.Count + 1);
         body.AttachBackend(this);
         _bodies.Add(body);
-        PrepareSolverCapacity();
-        if (_areas.Count == 0 && _serverColliders.Count == 0 && (body is not RigidBody rigid || rigid.MaxContactsReported == 0))
-            _sleepEvents.EnsureCapacity(_bodies.Count);
-        else PrepareMonitoringCapacity();
-        foreach (var joint in _joints) joint.BodyArrived();
-        PhysicsServer.Service.NotifyJointBodySpaceChanged(body.PhysicsRID);
+        try
+        {
+            PrepareSolverCapacity();
+            if (_areas.Count == 0 && _serverColliders.Count == 0 && (body is not RigidBody rigid || rigid.MaxContactsReported == 0))
+                _sleepEvents.EnsureCapacity(_bodies.Count);
+            else PrepareMonitoringCapacity();
+            foreach (var joint in _joints) joint.BodyArrived();
+            PhysicsServer.Service.NotifyJointBodySpaceChanged(body.PhysicsRID);
+        }
+        catch (Exception error)
+        {
+            try { Remove(body, captureMotion: false); }
+            catch (Exception cleanup) { throw new AggregateException("Body initialization and cleanup failed.", error, cleanup); }
+            throw;
+        }
     }
 
-    internal void Remove(PhysicsBody body)
+    internal void Remove(PhysicsBody body, bool captureMotion = true)
     {
         EnsureExtensionHierarchyChange();
         if (_disposed) return;
@@ -370,8 +379,9 @@ internal sealed partial class PhysicsSpace : IDisposable
         List<Exception>? errors = null;
         foreach (var runtime in _jointRuntimes) Cleanup(() => runtime.BodyLeaving(body.PhysicsRID), ref errors);
         foreach (var joint in _joints) Cleanup(() => joint.BodyLeaving(body), ref errors);
-        if (body is RigidBody departing) { _contactBodies.Remove(departing); Cleanup(departing.CaptureBackendSleep, ref errors); }
-        Cleanup(body.DetachBackend, ref errors);
+        if (body is RigidBody departing) { _contactBodies.Remove(departing); if (captureMotion) Cleanup(departing.CaptureBackendSleep, ref errors); }
+        if (captureMotion) Cleanup(body.DetachBackend, ref errors);
+        else Cleanup(() => body.DetachBackend(captureMotion: false), ref errors);
         Cleanup(() => { if (!HasBackendFailure) PhysicsServer.Service.NotifyJointBodySpaceChanged(body.PhysicsRID); }, ref errors);
         if (body is RigidBody removed) Cleanup(removed.ClearContactState, ref errors);
         foreach (var rigid in _contactBodies) Cleanup(() => rigid.ForgetContact(body.PhysicsRID, _contactEvents), ref errors);
@@ -409,8 +419,13 @@ internal sealed partial class PhysicsSpace : IDisposable
         _areas.EnsureCapacity(_areas.Count + 1);
         area.AttachBackend(this);
         _areas.Add(area);
-        PrepareSolverCapacity();
-        PrepareMonitoringCapacity();
+        try { PrepareSolverCapacity(); PrepareMonitoringCapacity(); }
+        catch (Exception error)
+        {
+            try { Remove(area); }
+            catch (Exception cleanup) { throw new AggregateException("Area initialization and cleanup failed.", error, cleanup); }
+            throw;
+        }
     }
 
     internal void Add(PhysicsServerCollider collider)
@@ -423,12 +438,21 @@ internal sealed partial class PhysicsSpace : IDisposable
         collider.AttachBackend(this);
         _serverColliders.Add(collider);
         if (collider.IsArea) _serverAreaCount++;
-        PrepareSolverCapacity();
-        if (_areas.Count != 0 || _serverAreaCount != 0) PrepareMonitoringCapacity();
-        if (!collider.IsArea) PhysicsServer.Service.NotifyJointBodySpaceChanged(collider.RID);
+        try
+        {
+            PrepareSolverCapacity();
+            if (_areas.Count != 0 || _serverAreaCount != 0) PrepareMonitoringCapacity();
+            if (!collider.IsArea) PhysicsServer.Service.NotifyJointBodySpaceChanged(collider.RID);
+        }
+        catch (Exception error)
+        {
+            try { Remove(collider, captureMotion: false); }
+            catch (Exception cleanup) { throw new AggregateException("Collider initialization and cleanup failed.", error, cleanup); }
+            throw;
+        }
     }
 
-    internal void Remove(PhysicsServerCollider collider)
+    internal void Remove(PhysicsServerCollider collider, bool captureMotion = true)
     {
         EnsureExtensionHierarchyChange();
         if (_disposed) return;
@@ -443,7 +467,8 @@ internal sealed partial class PhysicsSpace : IDisposable
         foreach (var rigid in _contactBodies) Cleanup(() => rigid.ForgetContact(collider.RID, _contactEvents), ref errors);
         foreach (var area in _areas) Cleanup(() => area.ForgetRID(collider.RID, _overlapEvents), ref errors);
         Cleanup(() => ForgetAreaMonitors(collider.RID), ref errors);
-        Cleanup(collider.DetachBackend, ref errors);
+        if (captureMotion) Cleanup(collider.DetachBackend, ref errors);
+        else Cleanup(() => collider.DetachBackend(captureMotion: false), ref errors);
         Cleanup(() => { if (!HasBackendFailure && !collider.IsArea) PhysicsServer.Service.NotifyJointBodySpaceChanged(collider.RID); }, ref errors);
         Cleanup(_backend.FlushQueryEvents, ref errors);
         FinishCleanup(errors);

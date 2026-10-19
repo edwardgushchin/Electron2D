@@ -994,13 +994,15 @@ public sealed partial class PhysicsServer
     /// <summary>Creates a detached rigid body with layer and mask one.</summary>
     /// <returns>A caller-owned body RID.</returns>
     /// <remarks>Numerical attachment is deferred until BodySetSpace. Failed initial preparation retires its partial binding;
-    /// the original error and any cleanup errors propagate without discarding the body RID or authored shapes.</remarks>
+    /// the original error and any cleanup errors propagate without discarding the body RID or authored shapes.
+    /// Failed creation preserves authored pose, motion and sleep instead of sampling incomplete numerical state;
+    /// ordinary retirement still retains accepted solver motion.</remarks>
     public static RID BodyCreate() => Service.BodyCreateCore();
 
     /// <summary>Creates a detached sensor Area with layer and mask one.</summary>
     /// <returns>A caller-owned Area RID.</returns>
     /// <remarks>Numerical attachment is deferred until AreaSetSpace. Failed initial preparation retires its partial binding;
-    /// the original error and any cleanup errors propagate without discarding the Area RID or authored shapes.</remarks>
+    /// the original error and any cleanup errors propagate without discarding the Area RID, authored pose or shapes.</remarks>
     public static RID AreaCreate() => Service.AreaCreateCore();
 
     /// <summary>Creates a caller-owned unconfigured circle shape.</summary>

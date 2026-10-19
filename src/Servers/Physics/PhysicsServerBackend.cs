@@ -215,7 +215,8 @@ public abstract class PhysicsServerBackend : ElectronObject
     protected internal abstract PhysicsBackendStatistics ReadStatistics();
     /// <summary>Supplies the selected implementation operation: create collider.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only. The engine establishes target-world and associated-node borrowing before invoking this factory; factory or attachment failure releases both.
-    /// A claimed collider is detached after failed initial preparation; the original error and all cleanup errors remain observable.</remarks>
+    /// A claimed collider is detached after failed initial preparation; the original error and all cleanup errors remain observable.
+    /// Failed creation discards partial numerical pose, motion and sleep while retaining common authoring for a later attachment.</remarks>
     protected internal abstract PhysicsBackendCollider CreateCollider(RID collider, bool area);
     /// <summary>Supplies the selected implementation operation: create joint.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>

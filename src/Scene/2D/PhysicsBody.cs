@@ -8,7 +8,8 @@ namespace Electron2D;
 /// Failed numerical worlds reject attached motion/role writes and numerical access before changing authoring,
 /// including after a failed local or portable restore. Teardown remains available.
 /// Changed one-way slot policies are captured during authoring; numerical shape preparation reuses those immutable values.
-/// Failed initial attachment retires its partial binding and preserves the original preparation error alongside any cleanup errors.</remarks>
+/// Failed initial attachment retires its partial binding and preserves the original preparation error alongside any cleanup errors.
+/// That failed binding cannot replace authored motion or sleep with incomplete numerical state. Ordinary retirement retains accepted solver motion.</remarks>
 public abstract partial class PhysicsBody : CollisionObject
 {
     private readonly List<ulong> _appliedShapeRevisions = [];
@@ -86,25 +87,28 @@ public abstract partial class PhysicsBody : CollisionObject
         }
         catch (Exception error)
         {
-            try { DetachBackend(); }
+            try { DetachBackend(captureMotion: false); }
             catch (Exception cleanup) { throw new AggregateException("Collider attachment and cleanup failed.", error, cleanup); }
             throw;
         }
     }
 
-    internal void DetachBackend()
+    internal void DetachBackend() => DetachBackend(captureMotion: true);
+
+    internal void DetachBackend(bool captureMotion)
     {
         PhysicsServer.Service.InvalidateBodyView(PhysicsRID);
         var space = Space;
         if (space is null) return;
         if (this is PhysicalBone physical) physical.DiscardPendingActivation();
         List<Exception>? errors = null;
-        PhysicsSpace.Cleanup(() =>
-        {
-            if (!space.HasBackendFailure && !_serverModeDirty && this is RigidBody rigid && Backend.HasMotionMode(PhysicsServer.BodyMode.Rigid))
-                rigid.OnBackendAdvanced();
-            if (!space.HasBackendFailure) CaptureServerMotion();
-        }, ref errors);
+        if (captureMotion)
+            PhysicsSpace.Cleanup(() =>
+            {
+                if (!space.HasBackendFailure && !_serverModeDirty && this is RigidBody rigid && Backend.HasMotionMode(PhysicsServer.BodyMode.Rigid))
+                    rigid.OnBackendAdvanced();
+                if (!space.HasBackendFailure) CaptureServerMotion();
+            }, ref errors);
         PhysicsSpace.Cleanup(Backend.Detach, ref errors);
         _serverModeDirty = false;
         _poseDirty = false;

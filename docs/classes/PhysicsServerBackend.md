@@ -4,6 +4,8 @@ Last updated: 2026-10-19
 
 ## Failed initial attachment
 
+Failed initial preparation discards incomplete numerical pose, velocity and sleep instead of reading them into common authoring. Public authored state remains available for healthy reattachment. Ordinary retirement of a successfully attached body still preserves accepted solver motion, including immediate impulses. See [state preservation checks](../components/physics-registered-adapter.md#authored-state-after-failed-initial-attachment) for all owner/role, sleep, error and lifecycle controls and their limits.
+
 Failed initial preparation retires the partial physical binding. Successful cleanup preserves the original exception; a cleanup failure is aggregated alongside it. The RID and authored shapes remain usable for a healthy later attachment, and unrelated live colliders remain available. This applies to server Body/Area and every scene PhysicsBody sibling plus Area. See [initial attachment checks](../components/physics-registered-adapter.md#initial-attachment-cleanup-errors) for executed scope and limits.
 
 ## Space creation and initialization

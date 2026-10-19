@@ -2,6 +2,58 @@
 
 Last updated: 2026-10-19
 
+## Authored state after failed initial attachment
+
+Initial failure cleanup previously sampled a partially prepared implementation as
+though a live body were departing. A failed shape hook that changed numerical
+pose, velocity and sleep could therefore overwrite the caller's authored state
+without a completed attachment or physics tick. One unchanged public consumer DLL
+fails against the old runtime and passes after the PhysicsBody, PhysicsServerCollider and PhysicsSpace
+initialization cleanup paths change.
+
+Failed initial preparation now retires the binding without motion readback.
+Late solver/monitor capacity or joint-publication errors also roll back the owning
+world collection before propagating; Area counters, views and observer ownership
+retire through the existing cleanup path. Synthetic body sleep capture is skipped.
+Common pose, linear/angular velocity, sleep, sleep permission, physical mode and
+configured mass/inertia/center remain authoritative for a later attachment.
+Automatic geometry-derived caches may resolve during the attempt; they are not
+compared to configured inputs or rolled back to an unresolved value.
+Original and secondary cleanup errors retain their existing aggregation. Scene
+Area already retained its authored pose and remains a control. Ordinary release
+of a successfully attached body still captures accepted selected motion; public
+central-impulse controls verify that this state survives subsequent detachment.
+No new retained fields, history/wire schema, numerical Solve or CPU fallback.
+
+The expanded public --attachment-errors fixture now poisons partial numerical
+pose/motion/sleep before initial identity/shape errors and compares complete
+public authored tuples after cleanup. Eight scene/raw Body/Area owners cover 80 factory/identity/shape/solver-capacity/
+monitor-capacity cases. Two unrelated resident owners ensure monitoring is
+prepared and remain available throughout. Another 348 initial-preparation failure
+cases cover 29 owner/role combinations: six body owners in all four explicit physical
+roles plus all five native scene roles, each with two requested sleep choices and
+two cleanup outcomes across shape/solver-capacity/monitor-capacity failures.
+Native PhysicalBone is an inactive-role control outside a
+skeleton tree; direct roles and existing real-tree companions remain separate.
+Healthy retry, real impulse retention on ordinary departure, stale-view rejection,
+unrelated live queries and absence of synthetic scene sleep events are checked.
+
+Twelve fresh JIT/strict NativeAOT CPU/no-device, private software-GPU and registered
+owner/separate profiles measure 1536 complete edit/step/read/query frames and 9216
+owner callbacks at strict zero owner/all-thread managed bytes. Four registered
+profiles exercise 1712 initial failures and 1648 claimed cleanup calls. Each profile
+warms 128 frames and measures 128; moving circles use speed 1 for 0.01 seconds and
+position tolerance 0.0001 at scene offsets up to 700. Authored failure tuples use
+exact equality because no simulation interval commits. Construction, resources,
+lifecycle, factory-view, mass-reset, space-creation and ordinary public consumers
+plus root ownership checks complete 57/57 profiles.
+
+Creation and complete typed-parameter operations remain Partial. The unique
+physics census stays 1206/1369 Implemented (88.09349890430972%), with 163 open
+declarations. Complete numerical/custom geometry/inherited, network, native
+retained-memory, target-GPU/window performance and platform acceptance remain
+open. Evidence: bin/physics-attachment-state/2026-10-19/validation.json.
+
 ## Initial attachment cleanup errors
 
 A selected initial shape preparation error was previously lost if the subsequent
@@ -12,12 +64,12 @@ aggregate any cleanup exception after retiring the partial binding. Successful
 cleanup rethrows the original error unchanged. No retry, numerical solve or CPU
 fallback is added to this error path; successful attachment is unchanged.
 
-The public --attachment-errors fixture checks server Body/Area plus StaticBody,
+The original --attachment-errors cleanup audit checked server Body/Area plus StaticBody,
 AnimatableBody, CharacterBody, RigidBody, PhysicalBone and scene Area. Each of eight
 owners receives factory, initial identity and shape preparation failures with
 successful/failing cleanup: 48 cases per registered profile. Factory rejection
 owns no collider and calls no numerical detach; claimed attachments release once.
-Every original exception retains object identity, secondary errors remain visible,
+In that original audit, every exception retained object identity, secondary errors remained visible,
 and failed target membership disappears while its RID and authored shape remain.
 An unrelated live collider remains numerically queryable. Healthy reattachment
 then executes actual scene/raw motion and exact body/Area logical-shape queries;
@@ -26,7 +78,7 @@ subsequent normal retirement invalidates old direct views.
 Twelve fresh public JIT/strict NativeAOT CPU/no-device, private software-GPU and
 registered owner/separate profiles measure 1536 complete edit/step/read/query
 frames and 9216 owner callbacks at strict zero owner/all-thread managed bytes.
-The four registered profiles exercise 192 failures and 128 claimed cleanup calls.
+The original four registered profiles exercised 192 failures and 128 claimed cleanup calls; the expanded authored-state audit above supersedes these totals.
 Each profile warms 128 complete frames, then measures 128; position tolerance
 0.0001 covers single-precision movement at speed 1 for 0.01 seconds, including
 scene-unit offsets up to 700. Areas remain stationary and queryable. Registered

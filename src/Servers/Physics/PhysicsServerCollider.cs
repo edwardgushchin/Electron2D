@@ -84,20 +84,22 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
         }
         catch (Exception error)
         {
-            try { DetachBackend(); }
+            try { DetachBackend(captureMotion: false); }
             catch (Exception cleanup) { throw new AggregateException("Collider attachment and cleanup failed.", error, cleanup); }
             throw;
         }
     }
 
-    internal void DetachBackend()
+    internal void DetachBackend() => DetachBackend(captureMotion: true);
+
+    internal void DetachBackend(bool captureMotion)
     {
         if (IsArea) PhysicsServer.Service.FindAreaRuntime(RID)?.Reset();
         PhysicsServer.Service.InvalidateBodyView(RID);
         var space = Space;
         if (space is null) return;
         List<Exception>? errors = null;
-        PhysicsSpace.Cleanup(() => { if (!space.HasBackendFailure) CaptureMotion(); }, ref errors);
+        if (captureMotion) PhysicsSpace.Cleanup(() => { if (!space.HasBackendFailure) CaptureMotion(); }, ref errors);
         PhysicsSpace.Cleanup(_backend.Detach, ref errors);
         _modeDirty = false;
         _poseDirty = false;
