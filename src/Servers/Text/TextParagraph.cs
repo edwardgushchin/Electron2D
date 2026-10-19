@@ -7,7 +7,7 @@ namespace Electron2D;
 /// Full/dropcap identities are stable; reflow retires borrowed line identities. Indexed queries include hidden lines.
 /// Prepared queries/drawing reuse storage; authoring, reflow and returned snapshots may allocate.
 /// This transient object is reconstructed from authored source rather than serialized.</remarks>
-public sealed class TextParagraph : ElectronObject
+public sealed partial class TextParagraph : ElectronObject
 {
     private TextLine _source = new(), _dropcap = new();
     private TextLayout _geometry = new(), _display = new();
@@ -32,7 +32,7 @@ public sealed class TextParagraph : ElectronObject
     private float CapAdvance => Vertical ? _capSize.Y : _capSize.X;
 
     /// <summary>Creates an empty thread-owned paragraph with mandatory word wrapping and unlimited visible lines.</summary>
-    public TextParagraph() { }
+    public TextParagraph() => ServerAttachSources();
     /// <summary>Gets or sets Advance-axis paragraph alignment; initially Left.</summary><value>The current policy.</value>
     public HorizontalAlignment Alignment { get { Check(); return _alignment; } set { CheckMutation(); ValidateEnum(value); if (_alignment == value) return; _alignment = value; _dirty = true; } }
     /// <summary>Gets or sets Mandatory and width-dependent breaks; initially Mandatory and WordBound.</summary><value>The current policy.</value>
@@ -114,7 +114,7 @@ public sealed class TextParagraph : ElectronObject
         copy._source = _source.Duplicate(); copy._dropcap = _dropcap.Duplicate(); copy._margins = _margins;
         copy._width = _width; copy._spacing = _spacing; copy._maxLines = _maxLines; copy._alignment = _alignment;
         copy._breaks = _breaks; copy._justification = _justification; copy._overrun = _overrun; copy._punctuation = _punctuation; copy._ellipsis = _ellipsis;
-        copy.ContentChanged(); return copy;
+        copy.ServerAttachSources(); copy.ContentChanged(); return copy;
     }
     /// <summary>Returns the stable borrowed full-string buffer identity.</summary><returns>Valid until disposal.</returns>
     public RID GetRID() { Check(); return _source.GetRID(); }
@@ -126,7 +126,7 @@ public sealed class TextParagraph : ElectronObject
     /// <summary>Returns the complete half-open Unicode scalar range.</summary><returns>Zero to authored scalar count.</returns>
     public Vector2i GetRange() { Check(); return new(0, _source.ScalarCount); }
     /// <summary>Returns a line's half-open scalar range, including mandatory separators unless trimmed.</summary><param name="line">Index including hidden lines.</param><returns>Scalar start and end.</returns>
-    public Vector2i GetLineRange(int line) { EnsureLine(line); var value = _display.Lines[line]; return new(value.Start, value.RangeEnd < 0 ? value.End : value.RangeEnd); }
+    public Vector2i GetLineRange(int line) { EnsureLine(line); var value = ServerMetrics(line); return new(value.Start, value.RangeEnd < 0 ? value.End : value.RangeEnd); }
     /// <summary>Returns total shaped line count independently of visibility.</summary><returns>One zero-sized line for empty text.</returns>
     public int GetLineCount() { Ensure(); return _display.LineCount; }
     /// <summary>Returns inferred full-string writing direction.</summary><returns>LTR or RTL.</returns>
@@ -136,17 +136,17 @@ public sealed class TextParagraph : ElectronObject
     /// <summary>Returns the visible paragraph bounding size, including spacing and dropcap reservation.</summary><returns>Finite dimensions; signed spacing/margins may reduce them.</returns>
     public Vector2 GetSize() { Ensure(); return _size; }
     /// <summary>Returns one display line's ceiled bounding size.</summary><param name="line">Index including hidden lines.</param><returns>Ceiled dimensions with the selected orientation.</returns>
-    public Vector2 GetLineSize(int line) { EnsureLine(line); return LineSize(_display.Lines[line]); }
+    public Vector2 GetLineSize(int line) { EnsureLine(line); return ServerLineSize(line); }
     /// <summary>Returns ceiled display advance width, or height in vertical orientation.</summary><param name="line">Index including hidden lines.</param><returns>Advance pixels.</returns>
-    public float GetLineWidth(int line) { EnsureLine(line); return MathF.Ceiling(_display.Lines[line].Width); }
+    public float GetLineWidth(int line) { EnsureLine(line); return MathF.Ceiling(ServerMetrics(line).Width); }
     /// <summary>Returns fractional line ascent.</summary><param name="line">Index including hidden lines.</param><returns>Pixels before the baseline.</returns>
-    public float GetLineAscent(int line) { EnsureLine(line); return _geometry.Lines[line].Ascent; }
+    public float GetLineAscent(int line) { EnsureLine(line); return ServerMetrics(line, true).Ascent; }
     /// <summary>Returns fractional line descent.</summary><param name="line">Index including hidden lines.</param><returns>Pixels after the baseline.</returns>
-    public float GetLineDescent(int line) { EnsureLine(line); return _geometry.Lines[line].Descent; }
+    public float GetLineDescent(int line) { EnsureLine(line); return ServerMetrics(line, true).Descent; }
     /// <summary>Returns maximum underline offset across a line's authored fonts.</summary><param name="line">Index including hidden lines.</param><returns>Fractional pixels.</returns>
-    public float GetLineUnderlinePosition(int line) { EnsureLine(line); var value = _geometry.Lines[line]; return _source.Underline(value.Start, value.End, false); }
+    public float GetLineUnderlinePosition(int line) { EnsureLine(line); if (_serverLines.TryGetValue(line, out var edited)) return edited.GetLineUnderlinePosition(); return _geometry.ServerUnderline(line, false); }
     /// <summary>Returns maximum underline thickness across a line's authored fonts.</summary><param name="line">Index including hidden lines.</param><returns>Fractional pixels.</returns>
-    public float GetLineUnderlineThickness(int line) { EnsureLine(line); var value = _geometry.Lines[line]; return _source.Underline(value.Start, value.End, true); }
+    public float GetLineUnderlineThickness(int line) { EnsureLine(line); if (_serverLines.TryGetValue(line, out var edited)) return edited.GetLineUnderlineThickness(); return _geometry.ServerUnderline(line, true); }
     /// <summary>Returns the dropcap bounding size plus leading and trailing margins.</summary><returns>Finite signed dimensions.</returns>
     public Vector2 GetDropcapSize() { Ensure(); return _capSize; }
     /// <summary>Returns the number of complete line extents covered by dropcap reservation.</summary><returns>Zero when no line is completely covered.</returns>
@@ -154,7 +154,7 @@ public sealed class TextParagraph : ElectronObject
     /// <summary>Returns borrowed inline tokens in one complete line as a caller-owned snapshot.</summary><param name="line">Index including hidden lines.</param><returns>Tokens in authored order, including trimmed objects.</returns>
     public TextObjectKey[] GetLineObjects(int line)
     {
-        EnsureLine(line); var value = _geometry.Lines[line]; var count = 0;
+        EnsureLine(line); if (_serverLines.TryGetValue(line, out var edited)) return edited.GetObjects(); var value = _geometry.Lines[line]; var count = 0;
         for (var i = 0; i < _source.ObjectCount; i++) { var item = _source.ObjectAt(i); if (item.At >= value.Start && item.At < value.End) count++; }
         var keys = new TextObjectKey[count]; count = 0;
         for (var i = 0; i < _source.ObjectCount; i++) { var item = _source.ObjectAt(i); if (item.At >= value.Start && item.At < value.End) keys[count++] = item.Key; }
@@ -164,7 +164,9 @@ public sealed class TextParagraph : ElectronObject
     /// <param name="line">Index including hidden lines.</param><param name="key">Borrowed token.</param><returns>Zero for an object absent from this line.</returns>
     public Rect2 GetLineObjectRect(int line, TextObjectKey key)
     {
-        ArgumentNullException.ThrowIfNull(key); EnsureLine(line); var value = _geometry.Lines[line];
+        ArgumentNullException.ThrowIfNull(key); EnsureLine(line);
+        if (_serverLines.TryGetValue(line, out var edited)) { if (!edited.HasObject(key)) return default; var rect = edited.GetObjectRect(key); rect.Position += LineOrigin(line); return rect; }
+        var value = _geometry.Lines[line];
         for (var i = 0; i < _source.ObjectCount; i++)
         {
             var item = _source.ObjectAt(i); if (!ReferenceEquals(item.Key, key) || item.At < value.Start || item.At >= value.End) continue;
@@ -180,8 +182,8 @@ public sealed class TextParagraph : ElectronObject
         var cross = Vertical ? coords.X : coords.Y; if (cross < 0) return 0; float offset = 0;
         for (var i = 0; i < _geometry.LineCount; i++)
         {
-            var size = LineSize(_geometry.Lines[i]); var extent = Vertical ? size.X : size.Y;
-            if (cross >= offset && cross <= offset + extent) return _geometry.HitLine(i, Vertical ? coords.Y : coords.X);
+            var size = _serverLines.ContainsKey(i) ? ServerLineSize(i) : LineSize(_geometry.Lines[i]); var extent = Vertical ? size.X : size.Y;
+            if (cross >= offset && cross <= offset + extent) return _serverLines.TryGetValue(i, out var edited) ? edited.HitTest(edited.Orientation == TextOrientation.Vertical ? coords.Y - (Vertical ? 0 : offset) : coords.X - (Vertical ? offset : 0)) + edited.ServerOffset : _geometry.HitLine(i, Vertical ? coords.Y : coords.X);
             offset += extent + _spacing;
         }
         return _source.ScalarCount;
@@ -220,10 +222,11 @@ public sealed class TextParagraph : ElectronObject
             for (var i = first; i < end; i++)
             {
                 var owner = TextBuffers.Resolve(_lines[i]); if (!ReferenceEquals(owner.Owner, this) || owner.Line != i) throw new InvalidOperationException("Invalid paragraph line owner.");
-                var origin = position + (line < 0 ? LineOrigin(i) : Vector2.Zero) + Axis(0, _display.Lines[i].Ascent);
+                var origin = position + (line < 0 ? LineOrigin(i) : Vector2.Zero) + ServerBaseline(i);
                 if (!origin.IsFinite()) throw new OverflowException("Paragraph draw origin exceeds finite geometry.");
                 var clip = line < 0 && _width > 0; var clipStart = clip ? Math.Max(0, -(Vertical ? LineOrigin(i).Y : LineOrigin(i).X)) : 0;
-                _display.Draw(canvas, origin, color, outline, oversampling, firstLine: i, maxLines: 1, outlinePass: outlinePass, clipToWidth: clip, clipStart: clipStart, ignoreLineLimit: true, advanceClipWidth: clip ? _width - (CapAdvance > 0 && i <= _display.DropcapLines ? CapAdvance : 0) : null);
+                if (_serverLines.TryGetValue(i, out var edited)) edited.ServerDraw(canvas, origin, clip ? clipStart : -1, clip ? _width : -1, outline, color, oversampling, outlinePass);
+                else _display.Draw(canvas, origin, color, outline, oversampling, firstLine: i, maxLines: 1, outlinePass: outlinePass, clipToWidth: clip, clipStart: clipStart, ignoreLineLimit: true, advanceClipWidth: clip ? _width - (CapAdvance > 0 && i <= _display.DropcapLines ? CapAdvance : 0) : null);
             }
         }
         finally { try { EndReads(); } finally { _busy = false; } }
@@ -238,7 +241,7 @@ public sealed class TextParagraph : ElectronObject
     {
         for (var attempt = 0; attempt < Font.MaximumReadAttempts; attempt++)
         {
-            BeginReads(); Prepare(); if (ReadsCurrent()) return;
+            BeginReads(); Prepare(); RefreshServerLines(); if (ReadsCurrent()) return;
             _dirty = true; EndReads();
         }
         throw Font.UnsettledRead();
@@ -276,8 +279,8 @@ public sealed class TextParagraph : ElectronObject
     private Vector2 CalculateLineOrigin(int index, float cross, bool capLTR)
     {
         var cap = CapAdvance > 0 && index <= _display.DropcapLines ? CapAdvance : 0;
-        var available = (_width > 0 ? _width : (Vertical ? _size.Y : _size.X)) - cap; var width = MathF.Ceiling(_display.Lines[index].Width);
-        var rtl = _display.Lines[index].ParagraphLevel == 1;
+        var available = (_width > 0 ? _width : (Vertical ? _size.Y : _size.X)) - cap; var actualSize = ServerLineSize(index); var width = Vertical ? actualSize.Y : actualSize.X;
+        var rtl = ServerMetrics(index).ParagraphLevel == 1;
         var align = available <= 0 ? 0 : _alignment switch
         { HorizontalAlignment.Center when width <= available => MathF.Floor((available - width) * .5f), HorizontalAlignment.Center when rtl => available - width, HorizontalAlignment.Right => available - width, HorizontalAlignment.Fill when rtl => available - width, _ => 0 };
         return Axis(align + (capLTR ? cap : 0), cross);
@@ -285,7 +288,7 @@ public sealed class TextParagraph : ElectronObject
     private void ContentChanged() { _dirty = true; _fonts.Clear(); _source.CollectFonts(_fonts); _dropcap.CollectFonts(_fonts); _fonts.Sort(static (a, b) => a.InstanceID.CompareTo(b.InstanceID)); }
     private void BeginReads() { foreach (var font in _fonts) _reads.Add(font.BeginRead()); }
     private void EndReads() { for (var i = _reads.Count - 1; i >= 0; i--) _reads[i].Dispose(); _reads.Clear(); }
-    private void RetireLines() { foreach (var rid in _lines) TextBuffers.Remove(rid); _lines.Clear(); }
+    private void RetireLines() { RetireServerLines(); foreach (var rid in _lines) TextBuffers.Remove(rid); _lines.Clear(); }
     private void EnsureLine(int line) { Ensure(); if ((uint)line >= (uint)_display.LineCount) throw new ArgumentOutOfRangeException(nameof(line)); }
     private void Check() { if (Environment.CurrentManagedThreadId != _thread) throw new InvalidOperationException("TextParagraph belongs to its creating thread."); ThrowIfDisposed(); if (_busy) throw new InvalidOperationException("An active paragraph cannot reenter, mutate or dispose."); }
     private void CheckMutation() => Check();

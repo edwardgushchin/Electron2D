@@ -12492,6 +12492,36 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.TextServer",
+    "kind": "type",
+    "declaringType": "Electron2D.TextServer",
+    "name": "TextServer",
+    "signature": "public abstract class Electron2D.TextServer",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TextServerManager",
+    "kind": "type",
+    "declaringType": "Electron2D.TextServerManager",
+    "name": "TextServerManager",
+    "signature": "public sealed class Electron2D.TextServerManager",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TextSpacingType",
     "kind": "type",
     "declaringType": "Electron2D.TextSpacingType",
@@ -187734,6 +187764,1184 @@
     "declaringType": "Electron2D.TextParagraph",
     "name": "ValidateMutation",
     "signature": "protected override System.Void ValidateMutation()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.CreateShapedText(Electron2D.TextDirection,Electron2D.TextOrientation)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "CreateShapedText",
+    "signature": "public Electron2D.RID CreateShapedText(Electron2D.TextDirection direction = Auto, Electron2D.TextOrientation orientation = Horizontal)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "direction",
+        "type": "Electron2D.TextDirection",
+        "default": "Auto"
+      },
+      {
+        "name": "orientation",
+        "type": "Electron2D.TextOrientation",
+        "default": "Horizontal"
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FreeRID(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FreeRID",
+    "signature": "public System.Void FreeRID(Electron2D.RID rid)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rid",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.GetName()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "GetName",
+    "signature": "public abstract System.String GetName()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.Has(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "Has",
+    "signature": "public System.Boolean Has(Electron2D.RID rid)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rid",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedGetSpanCount(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedGetSpanCount",
+    "signature": "public System.Int32 ShapedGetSpanCount(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedGetSpanEmbeddedObject(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedGetSpanEmbeddedObject",
+    "signature": "public Electron2D.TextObjectKey ShapedGetSpanEmbeddedObject(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextObjectKey",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedGetSpanObject(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedGetSpanObject",
+    "signature": "public Electron2D.TextObjectKey ShapedGetSpanObject(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextObjectKey",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedGetSpanText(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedGetSpanText",
+    "signature": "public System.String ShapedGetSpanText(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedGetText(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedGetText",
+    "signature": "public System.String ShapedGetText(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextAddObject(Electron2D.RID,Electron2D.TextObjectKey,Electron2D.Vector2,Electron2D.InlineAlignment,System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextAddObject",
+    "signature": "public System.Boolean ShapedTextAddObject(Electron2D.RID shaped, Electron2D.TextObjectKey key, Electron2D.Vector2 size, Electron2D.InlineAlignment inlineAlign = Center, System.Int32 length = 1, System.Single baseline = 0f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "Electron2D.TextObjectKey",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "inlineAlign",
+        "type": "Electron2D.InlineAlignment",
+        "default": "Center"
+      },
+      {
+        "name": "length",
+        "type": "System.Int32",
+        "default": "1"
+      },
+      {
+        "name": "baseline",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextAddString(Electron2D.RID,System.String,System.ReadOnlySpan\u003CElectron2D.Font\u003E,System.Int32,System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Int32\u003E,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextAddString",
+    "signature": "public System.Boolean ShapedTextAddString(Electron2D.RID shaped, System.String text, System.ReadOnlySpan\u003CElectron2D.Font\u003E fonts, System.Int32 size, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Int32\u003E openTypeFeatures = null, System.String language = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fonts",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Font\u003E",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "openTypeFeatures",
+        "type": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Int32\u003E",
+        "default": "null"
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextAddString\u00601(Electron2D.RID,System.String,System.ReadOnlySpan\u003CElectron2D.Font\u003E,System.Int32,System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Int32\u003E,System.String,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextAddString",
+    "signature": "public System.Boolean ShapedTextAddString\u003CT\u003E(Electron2D.RID shaped, System.String text, System.ReadOnlySpan\u003CElectron2D.Font\u003E fonts, System.Int32 size, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Int32\u003E openTypeFeatures, System.String language, T metadata)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fonts",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Font\u003E",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "openTypeFeatures",
+        "type": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Int32\u003E",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "metadata",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextClear(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextClear",
+    "signature": "public System.Void ShapedTextClear(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextDraw(Electron2D.RID,Electron2D.CanvasItem,Electron2D.Vector2,System.Single,System.Single,System.Nullable\u003CElectron2D.Color\u003E,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextDraw",
+    "signature": "public System.Void ShapedTextDraw(Electron2D.RID shaped, Electron2D.CanvasItem canvas, Electron2D.Vector2 position, System.Single clipL = -1f, System.Single clipR = -1f, System.Nullable\u003CElectron2D.Color\u003E color = null, System.Single oversampling = 0f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "canvas",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "clipL",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "clipR",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "oversampling",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextDrawOutline(Electron2D.RID,Electron2D.CanvasItem,Electron2D.Vector2,System.Single,System.Single,System.Int32,System.Nullable\u003CElectron2D.Color\u003E,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextDrawOutline",
+    "signature": "public System.Void ShapedTextDrawOutline(Electron2D.RID shaped, Electron2D.CanvasItem canvas, Electron2D.Vector2 position, System.Single clipL = -1f, System.Single clipR = -1f, System.Int32 outlineSize = 1, System.Nullable\u003CElectron2D.Color\u003E color = null, System.Single oversampling = 0f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "canvas",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "clipL",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "clipR",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "outlineSize",
+        "type": "System.Int32",
+        "default": "1"
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "oversampling",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextDuplicate(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextDuplicate",
+    "signature": "public Electron2D.RID ShapedTextDuplicate(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetAscent(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetAscent",
+    "signature": "public System.Single ShapedTextGetAscent(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetDescent(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetDescent",
+    "signature": "public System.Single ShapedTextGetDescent(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetDirection(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetDirection",
+    "signature": "public Electron2D.TextDirection ShapedTextGetDirection(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetGlyphCount(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetGlyphCount",
+    "signature": "public System.Int32 ShapedTextGetGlyphCount(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetInferredDirection(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetInferredDirection",
+    "signature": "public Electron2D.TextDirection ShapedTextGetInferredDirection(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetObjectRange(Electron2D.RID,Electron2D.TextObjectKey)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetObjectRange",
+    "signature": "public Electron2D.Vector2i ShapedTextGetObjectRange(Electron2D.RID shaped, Electron2D.TextObjectKey key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "Electron2D.TextObjectKey",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetObjectRect(Electron2D.RID,Electron2D.TextObjectKey)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetObjectRect",
+    "signature": "public Electron2D.Rect2 ShapedTextGetObjectRect(Electron2D.RID shaped, Electron2D.TextObjectKey key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "Electron2D.TextObjectKey",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetObjects(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetObjects",
+    "signature": "public Electron2D.TextObjectKey[] ShapedTextGetObjects(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextObjectKey[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetOrientation(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetOrientation",
+    "signature": "public Electron2D.TextOrientation ShapedTextGetOrientation(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextOrientation",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetPreserveControl(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetPreserveControl",
+    "signature": "public System.Boolean ShapedTextGetPreserveControl(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetPreserveInvalid(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetPreserveInvalid",
+    "signature": "public System.Boolean ShapedTextGetPreserveInvalid(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetRange(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetRange",
+    "signature": "public Electron2D.Vector2i ShapedTextGetRange(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetSize(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetSize",
+    "signature": "public Electron2D.Vector2 ShapedTextGetSize(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetUnderlinePosition(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetUnderlinePosition",
+    "signature": "public System.Single ShapedTextGetUnderlinePosition(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetUnderlineThickness(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetUnderlineThickness",
+    "signature": "public System.Single ShapedTextGetUnderlineThickness(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetWidth(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetWidth",
+    "signature": "public System.Single ShapedTextGetWidth(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextHasObject(Electron2D.RID,Electron2D.TextObjectKey)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextHasObject",
+    "signature": "public System.Boolean ShapedTextHasObject(Electron2D.RID shaped, Electron2D.TextObjectKey key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "Electron2D.TextObjectKey",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextHitTestPosition(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextHitTestPosition",
+    "signature": "public System.Int32 ShapedTextHitTestPosition(Electron2D.RID shaped, System.Single coords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "coords",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextIsReady(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextIsReady",
+    "signature": "public System.Boolean ShapedTextIsReady(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextResizeObject(Electron2D.RID,Electron2D.TextObjectKey,Electron2D.Vector2,Electron2D.InlineAlignment,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextResizeObject",
+    "signature": "public System.Boolean ShapedTextResizeObject(Electron2D.RID shaped, Electron2D.TextObjectKey key, Electron2D.Vector2 size, Electron2D.InlineAlignment inlineAlign = Center, System.Single baseline = 0f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "Electron2D.TextObjectKey",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "inlineAlign",
+        "type": "Electron2D.InlineAlignment",
+        "default": "Center"
+      },
+      {
+        "name": "baseline",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextSetBIDIOverride(Electron2D.RID,System.ReadOnlySpan\u003CElectron2D.TextBIDIRange\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextSetBIDIOverride",
+    "signature": "public System.Void ShapedTextSetBIDIOverride(Electron2D.RID shaped, System.ReadOnlySpan\u003CElectron2D.TextBIDIRange\u003E ranges)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "ranges",
+        "type": "System.ReadOnlySpan\u003CElectron2D.TextBIDIRange\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextSetDirection(Electron2D.RID,Electron2D.TextDirection)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextSetDirection",
+    "signature": "public System.Void ShapedTextSetDirection(Electron2D.RID shaped, Electron2D.TextDirection direction = Auto)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "direction",
+        "type": "Electron2D.TextDirection",
+        "default": "Auto"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextSetOrientation(Electron2D.RID,Electron2D.TextOrientation)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextSetOrientation",
+    "signature": "public System.Void ShapedTextSetOrientation(Electron2D.RID shaped, Electron2D.TextOrientation orientation = Horizontal)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "orientation",
+        "type": "Electron2D.TextOrientation",
+        "default": "Horizontal"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextSetPreserveControl(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextSetPreserveControl",
+    "signature": "public System.Void ShapedTextSetPreserveControl(Electron2D.RID shaped, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextSetPreserveInvalid(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextSetPreserveInvalid",
+    "signature": "public System.Void ShapedTextSetPreserveInvalid(Electron2D.RID shaped, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextShape(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextShape",
+    "signature": "public System.Boolean ShapedTextShape(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextTabAlign(Electron2D.RID,System.ReadOnlySpan\u003CSystem.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextTabAlign",
+    "signature": "public System.Single ShapedTextTabAlign(Electron2D.RID shaped, System.ReadOnlySpan\u003CSystem.Single\u003E tabStops)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "tabStops",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.TryGetSpanMetadata\u00601(Electron2D.RID,System.Int32,ref T)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "TryGetSpanMetadata",
+    "signature": "public System.Boolean TryGetSpanMetadata\u003CT\u003E(Electron2D.RID shaped, System.Int32 index, out T metadata)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "metadata",
+        "type": "ref T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerManager.FindInterface(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerManager",
+    "name": "FindInterface",
+    "signature": "public static Electron2D.TextServer FindInterface(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextServer",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerManager.GetInterface(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerManager",
+    "name": "GetInterface",
+    "signature": "public static Electron2D.TextServer GetInterface(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextServer",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerManager.GetInterfaceCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerManager",
+    "name": "GetInterfaceCount",
+    "signature": "public static System.Int32 GetInterfaceCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerManager.GetInterfaces()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerManager",
+    "name": "GetInterfaces",
+    "signature": "public static Electron2D.TextServer[] GetInterfaces()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextServer[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerManager.GetPrimaryInterface()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerManager",
+    "name": "GetPrimaryInterface",
+    "signature": "public static Electron2D.TextServer GetPrimaryInterface()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextServer",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerManager.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerManager",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
     "visibility": "protected",
     "baseType": null,
     "interfaces": null,

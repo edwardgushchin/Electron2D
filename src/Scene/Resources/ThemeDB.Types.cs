@@ -412,6 +412,8 @@ public sealed partial class ThemeDB
         ["TextEdit"] = ["TextEdit", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["TextLine"] = ["TextLine", "ElectronObject"],
         ["TextParagraph"] = ["TextParagraph", "ElectronObject"],
+        ["TextServer"] = ["TextServer", "ElectronObject"],
+        ["TextServerManager"] = ["TextServerManager", "ElectronObject"],
         ["Texture"] = ["Texture", "Resource", "ElectronObject"],
         ["TextureArray"] = ["TextureArray", "ImageTextureLayered", "TextureLayered", "Resource", "ElectronObject"],
         ["TextureArrayRD"] = ["TextureArrayRD", "TextureLayeredRD", "TextureLayered", "Resource", "ElectronObject"],

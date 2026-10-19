@@ -983,6 +983,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POLYGON_PATH_RENDER") is
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_PARAGRAPH_RENDER") is { } paragraphBackend) { TextParagraphRenderingTests.Run(paragraphBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_PARAGRAPH") == "1") { TextParagraphTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_LINE_RENDER") is { } textLineBackend) { TextLineRenderingTests.Run(textLineBackend); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_RENDER") is { } textServerBackend) { TextServerRenderingTests.Run(textServerBackend); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER") == "1") { TextServerTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_LINE") == "1") { TextLineTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POLYGON_PATH") == "1") { PolygonPathFinderTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_UNDO") == "1") { UndoRedoTests.Run(); return; }
@@ -1769,6 +1771,7 @@ PhysicsBodyParameterTests.Run(); PhysicsBodyParameterTests.Run(PhysicsServer.Bac
 PhysicsAreaMonitorTests.Run(); PhysicsAreaMonitorTests.Run(PhysicsServer.Backend.GPU);
 AStarTests.Run();
 PolygonPathFinderTests.Run();
+TextServerTests.Run();
 TextLineTests.Run();
 AStarGridTests.Run();
 RemoteTransformTests.Run();

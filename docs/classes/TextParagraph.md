@@ -1,6 +1,6 @@
 # TextParagraph
 
-Last updated: 2026-10-15
+Last updated: 2026-10-19
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -625,3 +625,5 @@ Dispose releases only owned buffers and registered identities, never borrowed fo
 ## Dependencies and verification
 
 [Text objects](../components/text-objects.md) and [ADR 0107](../decisions/text-objects.md#adr-0107) own the typed buffer, lifecycle and coordinate contract. TextParagraphTests exercises the complete query/authoring family and native preparation, including Unicode ranges, wrapping/visibility, inline/dropcap, duplicates, both axes, font generations and failure/reentry. TextParagraphRenderingTests exercises actual paragraph/line/dropcap draw variants, outline, vertical text, clipping, live reflow and the warmed full-frame allocation gate on each selected backend. These local gates do not establish foreign platform execution, native allocator totals, large-input performance or owner acceptance. Independent package/fresh-process scene reconstruction has its own evidence.
+
+The borrowed identities interoperate with [TextServer](TextServer.md) through the same owner, scalar source and native layouts. The interface cannot free them. [The buffer contract](../components/text-server.md) defines source edits, line-view detachment and reflow retirement.

@@ -37,6 +37,7 @@ public Instance accessors or instance calls to permanent service operations.
 Implementation and full extension-family acceptance remain open.
 
 - Time follows this same retained-object rule under [ADR 0111](time.md#adr-0111), including permanent Engine registry identity and rejected disposal; its public service operations are static.
+- TextServerManager follows the permanent static service rule. Its TextServer interfaces are explicit implementation objects under [ADR 0107](text-objects.md#adr-0107), so their buffer operations are instance operations on that exact owner; they do not introduce a public Instance accessor.
 
 ### Consequences
 

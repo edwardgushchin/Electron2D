@@ -15,7 +15,7 @@ public sealed class TextObjectKey
 /// duplicates copy authored state and own separate buffers. Prepared queries and drawing reuse layout storage.
 /// Size/width describe the trimmed display; carets and inline geometry retain the complete shaped buffer.
 /// Authoring is bounded to 1,048,576 Unicode scalars and 64 MiB UTF-16 text. This transient object is not serialized.</remarks>
-public sealed class TextLine : ElectronObject
+public sealed partial class TextLine : ElectronObject
 {
     private sealed class NeutralFont : Font { internal override FontData? PrimaryData => null; }
     private sealed record Span(int At, int Length, Font Font, int Size, string Language, RichTextMetadata? Metadata);
@@ -153,9 +153,9 @@ public sealed class TextLine : ElectronObject
     /// <summary>Returns the ceiled trimmed bounding size.</summary><returns>Width/height follow Orientation.</returns>
     public Vector2 GetSize() { Check(); Ensure(); return _display.Size; }
     /// <summary>Returns maximum authored-font underline offset below the baseline.</summary><returns>Zero for no font spans.</returns>
-    public float GetLineUnderlinePosition() { Check(); Ensure(); float result = 0; foreach (var span in _spans) result = Math.Max(result, span.Font.GetUnderlinePosition(span.Size)); return result; }
+    public float GetLineUnderlinePosition() { Check(); Ensure(); return _full.ServerUnderline(0, false); }
     /// <summary>Returns maximum authored-font underline thickness.</summary><returns>Zero for no font spans.</returns>
-    public float GetLineUnderlineThickness() { Check(); Ensure(); float result = 0; foreach (var span in _spans) result = Math.Max(result, span.Font.GetUnderlineThickness(span.Size)); return result; }
+    public float GetLineUnderlineThickness() { Check(); Ensure(); return _full.ServerUnderline(0, true); }
     /// <summary>Returns a valid complete-buffer scalar caret position near the baseline offset.</summary><param name="coords">Finite advance-axis pixels, including positions outside the line.</param><returns>Unicode scalar index with grapheme-boundary preference.</returns>
     public int HitTest(float coords) { Check(); if (!float.IsFinite(coords)) throw new ArgumentOutOfRangeException(nameof(coords)); Ensure(); var limit = _full.LineCount > 0 ? MathF.Ceiling(_full.Lines[0].Width) + 1 : 1; return _full.HitColumn(Math.Clamp(coords, -1, limit), false); }
     /// <summary>Draws the trimmed line from its top-left origin into a recording canvas.</summary><param name="canvas">Live recording canvas item.</param><param name="position">Finite top-left position.</param><param name="color">Finite modulation, or white.</param><param name="oversampling">Finite positive raster scale, or nonpositive for automatic scale.</param>
@@ -167,7 +167,7 @@ public sealed class TextLine : ElectronObject
         Check(); Font.ValidateDraw(canvas, position, color, oversampling); Ensure(); _busy = true;
         try
         {
-            BeginReads(); if (FontsChanged()) Prepare();
+            BeginPreparedReads();
             var owner = TextBuffers.Resolve(_rid); if (!ReferenceEquals(owner.Owner, this)) throw new InvalidOperationException("Wrong text buffer owner.");
             var origin = position + AlignmentOffset() + (_orientation == TextOrientation.Horizontal ? new Vector2(0, _full.FirstAscent) : new Vector2(_full.FirstAscent, 0));
             if (!origin.IsFinite()) throw new OverflowException("Text draw origin exceeds finite geometry.");
@@ -180,23 +180,28 @@ public sealed class TextLine : ElectronObject
     public TextLine Duplicate()
     {
         Check(); var copy = new TextLine { _source = _source, _count = _count, _alignment = _alignment, _direction = _direction, _orientation = _orientation, _ellipsis = _ellipsis, _flags = _flags, _overrun = _overrun, _width = _width, _preserveControl = _preserveControl, _preserveInvalid = _preserveInvalid, _tabs = (float[])_tabs.Clone(), _bidi = (TextBIDIRange[])_bidi.Clone() };
-        copy._text.Append(_text); copy._spans.AddRange(_spans); copy._objects.AddRange(_objects); copy._fonts.AddRange(_fonts); return copy;
+        copy._text.Append(_text); copy._spans.AddRange(_spans); copy._objects.AddRange(_objects); copy._fonts.AddRange(_fonts); ServerCopyFonts(copy); copy.ServerOffset = ServerOffset; copy.ServerOuterScalars = ServerOuterScalars; copy.ServerPrefix = ServerPrefix; copy.ServerSuffix = ServerSuffix; return copy;
     }
     /// <summary>Removes content, objects and BIDI contexts while preserving RID, tabs and line policies.</summary>
-    public void Clear() { CheckMutation(); _text.Clear(); _spans.Clear(); _objects.Clear(); _fonts.Clear(); _bidi = []; _count = 0; _source = string.Empty; _styles = []; _inline = []; _full.ReleaseContent(); _display.ReleaseContent(); _dirty = _contentDirty = true; }
+    public void Clear() { CheckMutation(); ServerOffset = ServerOuterScalars = 0; ServerPrefix = ServerSuffix = string.Empty; _text.Clear(); _spans.Clear(); ReleaseServerFonts(); _objects.Clear(); _fonts.Clear(); _bidi = []; _count = 0; _source = string.Empty; _styles = []; _inline = []; _full.ReleaseContent(); _display.ReleaseContent(); _dirty = _contentDirty = true; }
     private void Ensure()
     {
         Check(); if (_busy) throw new InvalidOperationException("Text buffer cannot reenter active layout work."); _busy = true;
         try
         {
-            for (var attempt = 0; attempt < Font.MaximumReadAttempts; attempt++)
-            {
-                try { BeginReads(); if (_dirty || FontsChanged()) Prepare(); if (ReadsCurrent()) return; _dirty = true; }
-                finally { EndReads(); }
-            }
-            throw Font.UnsettledRead();
+            try { BeginPreparedReads(); }
+            finally { EndReads(); }
         }
         finally { _busy = false; }
+    }
+    private void BeginPreparedReads()
+    {
+        for (var attempt = 0; attempt < Font.MaximumReadAttempts; attempt++)
+        {
+            BeginReads(); if (_dirty || FontsChanged()) Prepare(); if (ReadsCurrent()) return;
+            _dirty = true; EndReads();
+        }
+        throw Font.UnsettledRead();
     }
     private void BeginReads() { foreach (var font in _fonts) _reads.Add(font.BeginRead()); }
     private void EndReads() { for (var i = _reads.Count - 1; i >= 0; i--) _reads[i].Dispose(); _reads.Clear(); }
@@ -211,7 +216,8 @@ public sealed class TextLine : ElectronObject
             for (var i = 0; i < _objects.Count; i++) { var item = _objects[i]; _inline[i] = new(item.At, item.Size, item.Alignment, i, item.Baseline, item.Length, true); }
         }
         var ellipsis = _ellipsis.EnumerateRunes(); var symbol = ellipsis.MoveNext() ? ellipsis.Current.ToString() : "…";
-        var key = new TextLayoutKey(_source, 16, _width, _alignment, 1, TextLineBreakFlags.None, _flags, _direction, _orientation);
+        var direction = _direction is TextDirection.Auto or TextDirection.Inherited && (ServerPrefix.Length != 0 || ServerSuffix.Length != 0) ? ServerSourceDirection() : _direction;
+        var key = new TextLayoutKey(_source, 16, _width, _alignment, 1, TextLineBreakFlags.None, _flags, direction, _orientation);
         var options = new TextLayoutOptions(TabStops: _tabs, Overrun: 0, Ellipsis: symbol, BIDIOverride: _bidi, ApplyAlignment: false, PreserveControl: _preserveControl, Styles: _styles, Objects: _inline, PreserveInvalid: _preserveInvalid, GlobalObjectMetrics: true);
         _full.Build(_neutral, key, options); _display.Build(_neutral, key, options with { Overrun = (int)_overrun });
         _generations.Clear(); foreach (var font in _fonts) _generations.Add(font.GetContentGeneration()); _dirty = _contentDirty = false; _revision++;
@@ -222,13 +228,6 @@ public sealed class TextLine : ElectronObject
     internal (TextObjectKey Key, int At, int Length, Vector2 Size) ObjectAt(int index)
     { var value = _objects[index]; return (value.Key, value.At, value.Length, value.Size); }
     internal void CollectFonts(List<Font> fonts) { foreach (var font in _fonts) if (!fonts.Contains(font)) fonts.Add(font); }
-    internal float Underline(int start, int end, bool thickness)
-    {
-        float result = 0;
-        foreach (var span in _spans) if (span.At < end && span.At + span.Length > start)
-                result = Math.Max(result, thickness ? span.Font.GetUnderlineThickness(span.Size) : span.Font.GetUnderlinePosition(span.Size));
-        return result;
-    }
     internal void BuildBuffer(TextLayout target, TextLayoutKey key, TextLayoutOptions options)
     {
         Ensure(); _busy = true;
@@ -251,7 +250,7 @@ public sealed class TextLine : ElectronObject
     private static void ValidateObject(TextObjectKey key, Vector2 size, InlineAlignment alignment, float baseline)
     { ArgumentNullException.ThrowIfNull(key); if (!size.IsFinite() || size.X < 0 || size.Y < 0 || !float.IsFinite(baseline)) throw new ArgumentException("Inline geometry must be finite and nonnegative."); if ((uint)alignment > 15) throw new ArgumentOutOfRangeException(nameof(alignment)); }
     private void RequireAppend() { if (_bidi.Length > 0) throw new InvalidOperationException("Clear explicit BIDI ranges before appending source text."); }
-    private void ValidateExpansion(int utf16, int scalars) { if (utf16 > 33554432 - _text.Length || scalars > 1048576 - _count) throw new ArgumentException("Text buffer exceeds preparation limits."); }
+    private void ValidateExpansion(int utf16, int scalars) { if (utf16 > 33554432 - _text.Length - ServerPrefix.Length - ServerSuffix.Length || scalars > 1048576 - _count - ServerOuterScalars) throw new ArgumentException("Text buffer exceeds preparation limits."); }
     private static int Count(string text) { var count = 0; foreach (var rune in text.EnumerateRunes()) count++; return count; }
     private static readonly PropertyDescriptor[] LineProperties =
     [
@@ -273,7 +272,7 @@ public sealed class TextLine : ElectronObject
     /// <inheritdoc />
     protected override void ValidateDisposal() { CheckMutation(); base.ValidateDisposal(); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { TextBuffers.Remove(_rid); _neutral.Dispose(); _full = null!; _display = null!; _source = string.Empty; _text.Clear(); _text.Capacity = 0; _spans.Clear(); _objects.Clear(); _fonts.Clear(); _reads.Clear(); _styles = []; _inline = []; _tabs = []; _bidi = []; base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { TextBuffers.Remove(_rid); ReleaseServerFonts(); _neutral.Dispose(); _full = null!; _display = null!; _source = string.Empty; _text.Clear(); _text.Capacity = 0; _spans.Clear(); _objects.Clear(); _fonts.Clear(); _reads.Clear(); _styles = []; _inline = []; _tabs = []; _bidi = []; base.Dispose(disposing); }
 }
 
 internal static class TextBuffers
@@ -292,5 +291,13 @@ internal static class TextBuffers
         }
     }
     internal static (ElectronObject Owner, int Line) Resolve(RID id) { lock (Gate) { if (Buffers.TryGetValue(id, out var weak) && weak.Owner.TryGetTarget(out var owner) && !owner.IsDisposed) return (owner, weak.Line); throw new InvalidOperationException("Text buffer is absent or disposed."); } }
+    internal static bool TryResolve(RID id, out (ElectronObject Owner, int Line) result)
+    {
+        lock (Gate)
+        {
+            if (Buffers.TryGetValue(id, out var value) && value.Owner.TryGetTarget(out var owner) && !owner.IsDisposed) { result = (owner, value.Line); return true; }
+            result = default; return false;
+        }
+    }
     internal static void Remove(RID id) { lock (Gate) Buffers.Remove(id); }
 }
