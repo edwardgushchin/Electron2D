@@ -11,6 +11,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
     private readonly HashSet<Texture> _usedTextures = [];
     private (nint Context, nint EGLDisplay, nint EGLConfig, nint GLXVisualID, nint GLXFBConfig) _graphics;
     private DisplayServer.VSyncMode _vSync;
+    private readonly bool _transparentWindow;
     internal override DisplayServer.VSyncMode VSync => _vSync;
     internal override void SetVSync(DisplayServer.VSyncMode mode)
     {
@@ -24,6 +25,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
 
     internal CompatibilityCanvasBackend(SafeHandle window, string? driver = null)
     {
+        _transparentWindow = (SDL.GetWindowFlags(window.DangerousGetHandle()) & SDL.WindowFlags.Transparent) != 0;
         _renderer = new RenderHandle(SDL.CreateRenderer(window.DangerousGetHandle(), driver), SDL.DestroyRenderer, window);
         try
         {
@@ -269,7 +271,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         Check(SDL.SetRenderTarget(renderer, presentation.Next.DangerousGetHandle()), "bind presentation target");
         try
         {
-            Check(SDL.SetRenderDrawColorFloat(renderer, 0, 0, 0, 1), "set presentation margins");
+            Check(SDL.SetRenderDrawColorFloat(renderer, 0, 0, 0, _transparentWindow ? 0 : 1), "set presentation margins");
             Check(SDL.RenderClear(renderer), "clear presentation margins");
             foreach (var view in viewports)
             {

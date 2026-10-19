@@ -119,8 +119,14 @@ internal static partial class NativeChildWindowTests
                 var count = DisplayServer.GetWindowList().Length;
                 var failing = new Window { Name = "FailedHost", Visible = false, Transparent = true, Borderless = true };
                 root.AddChild(failing);
-                Reject<NotSupportedException>(failing.Show);
-                Check(!failing.Visible && failing.GetWindowID() == -1 && DisplayServer.GetWindowList().Length == count, "Failed native startup leaves visibility and the display census intact.");
+                if (backend == "gpu") Reject<NotSupportedException>(failing.Show);
+                else
+                {
+                    failing.Show();
+                    Check(failing.Visible && DisplayServer.WindowGetFlag(WindowFlag.Transparent, failing.GetWindowID()), "Compatibility child creation applies the requested native alpha role.");
+                    failing.Hide();
+                }
+                Check(!failing.Visible && failing.GetWindowID() == -1 && DisplayServer.GetWindowList().Length == count, "Failed or retired native startup preserves the display census.");
                 failing.Transparent = false; failing.ForceNative = true; failing.Show();
                 Check(failing.GetWindowID() > 0, "A failed child can activate after its unsupported policy is corrected.");
                 failing.SetUnparentWhenInvisible(true); failing.Hide();

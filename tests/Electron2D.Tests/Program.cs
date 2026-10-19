@@ -9,6 +9,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_POPUP_SCENE") is { } nativePopupScene) { try { NativePopupWindowTests.RunScene(nativePopupScene, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_POPUPS")!); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_POPUPS") is { } nativePopupBackend) { try { NativePopupWindowTests.Run(nativePopupBackend); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_TEXT") == "managed") { try { ViewportTextInputTests.RunManaged(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_TEXT") is { } viewportTextBackend) { try { ViewportTextInputTests.RunNative(viewportTextBackend); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (args.Length == 2 && args[0] == "--native-window-archive") { try { NativeChildWindowTests.RunArchive(args[1]); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }

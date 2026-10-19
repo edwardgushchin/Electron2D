@@ -412,7 +412,9 @@ public sealed partial class DisplayServer : ElectronObject
     /// <returns>The title observed by SDL.</returns>
     internal string WindowGetTitle(int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) return ResolveWindow(windowId).WindowGetTitle();
         EnsureOwner();
+        if (IsNativePopup) return _popupTitle;
         return SDL.GetWindowTitle(GetWindow(windowId));
     }
 
@@ -421,6 +423,8 @@ public sealed partial class DisplayServer : ElectronObject
         if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetTitleCore(title, MainWindowId); return; }
         EnsureOwner();
         ArgumentNullException.ThrowIfNull(title);
+        if (title.Contains('\0')) throw new ArgumentException("Window titles cannot contain null characters.", nameof(title));
+        if (IsNativePopup) { _popupTitle = title; return; }
         if (!SDL.SetWindowTitle(GetWindow(windowId), title))
             throw SDLFailure("set window title");
     }
@@ -494,7 +498,8 @@ public sealed partial class DisplayServer : ElectronObject
         EnsureGlobalWindowCoordinatesAvailable();
         if (!SDL.GetWindowPosition(window, out var x, out var y))
             throw SDLFailure("read window position");
-        return new Vector2i(x, y);
+        var position = new Vector2i(x, y);
+        return NativePopupParent is { } parent ? parent.WindowGetPositionCore() + position : position;
     }
 
     internal void WindowSetPositionCore(Vector2i position, int windowId = MainWindowId)
@@ -503,6 +508,7 @@ public sealed partial class DisplayServer : ElectronObject
         EnsureOwner();
         var window = GetWindow(windowId);
         EnsureGlobalWindowCoordinatesAvailable();
+        if (NativePopupParent is { } parent) position -= parent.WindowGetPositionCore();
         if (!SDL.SetWindowPosition(window, position.X, position.Y))
             throw SDLFailure("set window position");
     }
@@ -564,9 +570,10 @@ public sealed partial class DisplayServer : ElectronObject
     {
         if (!disposing)
             return;
+        Exception? retirementFailure;
         lock (InstanceGate)
         {
-            PrepareNativeWindowRetirement();
+            retirementFailure = !_retiringNativeWindow ? PrepareNativeWindowRetirement() : null;
             if (_rootDisplay is { } root)
             {
                 if (ReferenceEquals(root.FocusedWindow(), this) || ReferenceEquals(root._pressedInputWindow, this))
@@ -580,6 +587,7 @@ public sealed partial class DisplayServer : ElectronObject
                 _pendingDroppedFiles = null;
                 _window.Dispose();
                 base.Dispose(disposing);
+                if (retirementFailure is not null) throw retirementFailure;
                 return;
             }
             foreach (var child in _childWindows.Values.ToArray()) child.Dispose();
@@ -600,12 +608,14 @@ public sealed partial class DisplayServer : ElectronObject
                 _instance = null;
         }
         base.Dispose(disposing);
+        if (retirementFailure is not null) throw retirementFailure;
     }
 
     internal void SetWindowVisible(bool visible)
     {
         EnsureOwner();
         var window = GetWindow(MainWindowId);
+        if (!visible && RetireNativePopupChildren() is { } failure) throw failure;
         if (!(visible ? SDL.ShowWindow(window) : SDL.HideWindow(window)))
             throw SDLFailure("change window visibility");
         if (!visible) ApplyGamepadFocusPolicy();

@@ -105,3 +105,7 @@ CreateTarget accepts the common HDR argument but rejects true explicitly. Normal
 `internal override void Present(ReadOnlySpan<CanvasPresentation> viewports)` composes completed native images at clipped client rectangles after drawing, replacing destination RGBA and clearing uncovered pixels black. The shared contract declares this operation abstract. An empty list clears the implicit zero-raster root presentation. ReadbackScreen returns the latest completed composition independently of source texture updates. See [screen attachment](../components/canvas-rendering.md#viewport-screen-attachment).
 
 The [independent native window path](../components/window-runtime.md#independent-native-windows) retains one scene renderer and display service. GPU surfaces share the authoritative device/targets; compatibility surfaces use the main driver and replay frozen submissions after cold history import. Native window IDs expire on child hide/detachment; viewport resources survive hiding.
+
+## Transparent native presentation
+
+Native compatibility windows capture their transparency role when creating the renderer. Fitted presentation margins clear to transparent for that role, and viewport/presentation copies preserve alpha. Ordinary opaque windows keep black opaque margins. NativePopupWindowTests verifies fitted content and margin alpha through actual native presentation readback; desktop compositor screenshot acceptance remains separate.

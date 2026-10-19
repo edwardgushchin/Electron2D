@@ -1,6 +1,6 @@
 # Input decisions
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 
 Public process-wide service operations delegate statically to retained objects under [ADR 0095](singleton-services.md#adr-0095). Owning lifetime, threading and native resource contracts below continue to apply.
@@ -88,3 +88,5 @@ CPU/GPU and native-window tests; remaining unrelated Input and GUI gaps stay ope
 TouchScreenButton and VirtualJoystick publish independent owner/slot contributions into the retained Input action aggregate. Releasing or rebinding one control cannot release another control or a physical/manual source; duplicate joystick action names aggregate separate axis slots. Unknown/empty actions do not publish a contribution and remain inspectable configuration warnings. Touch-button action notifications use a bounded owner-thread FIFO after the current input traversal, avoiding unsafe traversal reentry; scene callbacks observe committed state. Discrete generated InputEventAction notifications allocate and are disposed after delivery. Joystick motion reuses prepared contribution storage. Hide, pause, disable, focus loss, exit and disposal retire held contributions. Canceled touch contacts do not produce tap/flick outcomes.
 
 Active virtual contacts use the existing internal processing lane to retire a lease at the next frame when inherited input/pointer/viewport policy prevents further contact delivery. Selected authoring subtrees suppress gameplay input and retain preview decoration; runtime hardware availability still controls TouchscreenOnly outside authoring.
+
+Native popup input extends the existing Window host with retained opening order, owner safe areas and native root-client positional routing. Exclusive children with a distinct native host suppress parent WindowInput reception. Embedded exclusive children share their native ancestor and continue through embedded routing. Nonexclusive retargeting preserves the original native window ID, localizes only the popup delivery and releases transformed events. The native popup profile exercises exclusive, mouse/touch, consumer and force-retirement paths; prepared render intervals exclude the existing allocation-capable SDL event producer.

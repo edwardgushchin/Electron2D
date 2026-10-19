@@ -3,7 +3,8 @@ namespace Electron2D;
 /// <summary>Displays one selected item and opens an owned themed dropdown menu.</summary>
 /// <remarks>The internal popup owns item records and borrows icons/shortcuts. IDs are independent of indices;
 /// metadata uses exact generic types and remains runtime-only. Programmatic selection emits no ItemSelected.
-/// An attached embedded window host is required for dropdown presentation. Mutations follow scene ownership.</remarks>
+/// An active embedded or native desktop host is required for dropdown presentation. Transparent native menus require
+/// the compatibility renderer; an opaque borrowed popup also executes with the GPU backend. Mutations follow scene ownership.</remarks>
 public partial class OptionButton : Button
 {
     private readonly PopupMenu _popup;
@@ -131,12 +132,11 @@ public partial class OptionButton : Button
     /// <inheritdoc />
     protected override void OnPressed() { if (_popup.Visible) { _popup.Hide(); return; } try { ShowPopup(); } catch { if (!IsDisposed) SetPressedNoSignal(false); throw; } }
     /// <summary>Opens the owned menu beneath the button; keyboard/programmatic opening focuses selection or the first selectable item.</summary>
-    /// <remarks>Detached buttons return without opening. Attached presentation requires an embedded window host.</remarks>
+    /// <remarks>Detached buttons return without opening. Attached presentation uses its containing viewport and native or embedded host.</remarks>
     public void ShowPopup()
     {
         EnsureMutable(); if (GetViewport() is null) return; var transform = GetGlobalTransformWithCanvas(); var rect = new Rect2(transform.Origin, transform.Scale * Size); var at = rect.Position + new Vector2(0, rect.Size.Y);
-        if (GetViewport() is Window { Embedder: not null } window && _popup.Embedder != window) at += (Vector2)window.Position;
-        _popup.LayoutDirection = LayoutDirection; _popup.MinSize = Vector2i.Zero; _popup.Popup(new((Vector2i)at, new(Math.Max(1, (int)MathF.Ceiling(rect.Size.X)), 1)));
+        _popup.LayoutDirection = LayoutDirection; _popup.MinSize = Vector2i.Zero; _popup.PopupFromViewport(GetViewport()!, new((Vector2i)at, new(Math.Max(1, (int)MathF.Ceiling(rect.Size.X)), 1)), new((Vector2i)rect.Position, (Vector2i)rect.Size));
         var focus = _selected >= 0 && !_popup.IsItemDisabled(_selected) && !_popup.IsItemSeparator(_selected) ? _selected : GetSelectableItem();
         if (focus >= 0) { if (!WasPressedByMouse) _popup.SetFocusedItem(focus); _popup.ScrollToItem(focus); }
     }

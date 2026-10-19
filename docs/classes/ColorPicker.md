@@ -1,6 +1,6 @@
 # ColorPicker
 
-Last updated: 2026-10-06
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.ColorPicker`. **Base:** `Electron2D.VBoxContainer`. **Source:** [source](../../src/Scene/GUI/ColorPicker.cs). **Component:** [Color authoring](../components/color-authoring.md).
 
@@ -52,3 +52,7 @@ A color editor connecting six spatial shapes, shared SpinBox/slider channels, in
 | `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` | Extends the inherited typed lifecycle contract. |
 | `public Electron2D.Color[] GetRecentPresets()` | Returns a caller-owned copy of recent swatches, oldest first. An independent array containing at most nine colors. |
 | `protected override System.Void OnNotification(System.Int32 what)` | Extends the inherited typed lifecycle contract. |
+
+## Native popup integration
+
+Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](../components/popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.

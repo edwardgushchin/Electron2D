@@ -1,6 +1,6 @@
 # Menu strips
 
-Last updated: 2026-10-10
+Last updated: 2026-10-19
 
 [MenuBar](../classes/MenuBar.md) is a Control presenting its direct ordinary [PopupMenu](../classes/PopupMenu.md) children through the existing embedded window, text/theme and scene/file backends. It does not reparent, copy or replace caller menu nodes. Internal children and neutral nodes do not become headers; reorder retains each menu's configuration, and removal detaches subscriptions and closes a visible menu without disposing it. Normal parent disposal owns child lifetime.
 
@@ -27,3 +27,7 @@ IsNativeMenu reports false for the current embedded menu backend. `prefer_global
 [MenuBarTests](../../tests/Electron2D.Tests/MenuBarTests.cs) checks defaults, direct/internal membership, title/tooltip identity, reordering/removal, keyboard/pointer/hover, no eligible headers, disabled/hidden/echo shortcuts, owner/thread boundaries, failed hide cleanup, AboutToPopup detach, RTL/canvas/nested anchors, reentrant presentation and shaping/descriptor guards, pruned siblings and fresh-process saved scenes. [Native tests](../../tests/Electron2D.Tests/MenuBarRenderingTests.cs) exercise queued SDL pointer/key events, actual header/menu pixels and warm title/focus/render frames. Linux Wayland GPU and compatibility pass the SDL/pixel sequence and 64 active title/focus/render frames after 32 warmup frames with zero managed bytes between ProcessFrameStarted and FramePostDraw. Both header and open-menu PNGs were inspected; other platforms, native allocation totals, large menu workloads and human visual acceptance remain separate gates.
 
 Decisions: [0008](../decisions/scene.md#adr-0008), [0038](../decisions/input.md#adr-0038), [0040/0041](../decisions/display.md#adr-0040), [0083](../decisions/rendering.md#adr-0083).
+
+## Native popup integration
+
+Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.

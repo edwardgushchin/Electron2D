@@ -160,6 +160,7 @@ public sealed partial class DisplayServer
             throw SDLFailure("find the window's current display");
         if (display == currentDisplay)
             return;
+        if (IsNativePopup) throw new NotSupportedException("A native popup follows its parent's display; move the parent window instead.");
         EnsureGlobalWindowCoordinatesAvailable();
 
         var mode = WindowGetModeCore(windowId);
@@ -359,6 +360,12 @@ public sealed partial class DisplayServer
     {
         if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetModeCore(mode, MainWindowId); return; }
         EnsureOwner();
+        if (IsNativePopup)
+        {
+            if (!Enum.IsDefined(mode)) throw new ArgumentOutOfRangeException(nameof(mode));
+            if (mode != WindowMode.Windowed) throw new NotSupportedException("Native popup surfaces cannot change top-level presentation mode.");
+            return;
+        }
         var window = GetWindow(windowId);
         var success = mode switch
         {
@@ -407,6 +414,7 @@ public sealed partial class DisplayServer
         if (windowId != MainWindowId) return ResolveWindow(windowId).WindowIsFocusedCore(MainWindowId);
         EnsureOwner();
         var window = GetWindow(windowId);
+        if (IsNativePopup) return SDL.GetKeyboardFocus() == window;
         return SDL.GetCurrentVideoDriver() == "wayland"
             ? SDL.GetMouseFocus() == window
             : (SDL.GetWindowFlags(window) & SDL.WindowFlags.InputFocus) != 0;
@@ -417,15 +425,19 @@ public sealed partial class DisplayServer
         if (windowId != MainWindowId) return ResolveWindow(windowId).WindowGetFlagCore(flag, MainWindowId);
         EnsureOwner();
         var window = GetWindow(windowId);
-        if (SDL.GetCurrentVideoDriver() == "wayland" && flag is (WindowFlag.AlwaysOnTop or WindowFlag.NoFocus))
+        if (SDL.GetCurrentVideoDriver() == "wayland" && (flag == WindowFlag.AlwaysOnTop || flag == WindowFlag.NoFocus && !IsNativePopup))
             throw new NotSupportedException($"Window flag {flag} is unavailable for a Wayland top-level window.");
         var native = SDL.GetWindowFlags(window);
         return flag switch
         {
-            WindowFlag.Borderless => (native & SDL.WindowFlags.Borderless) != 0,
+            WindowFlag.Borderless => IsNativePopup || (native & SDL.WindowFlags.Borderless) != 0,
             WindowFlag.ResizeDisabled => (native & SDL.WindowFlags.Resizable) == 0,
             WindowFlag.AlwaysOnTop => (native & SDL.WindowFlags.AlwaysOnTop) != 0,
             WindowFlag.NoFocus => (native & SDL.WindowFlags.NotFocusable) != 0,
+            WindowFlag.Popup when IsNativePopup => PopupInputPolicy,
+            WindowFlag.PopupWmHint when IsNativePopup => true,
+            WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled when IsNativePopup => true,
+            WindowFlag.Transparent => (native & SDL.WindowFlags.Transparent) != 0,
             >= WindowFlag.Transparent and < WindowFlag.Max => throw new NotSupportedException($"Window flag {flag} requires a display capability that is not integrated."),
             _ => throw new ArgumentOutOfRangeException(nameof(flag), flag, "Unknown window flag."),
         };
@@ -436,7 +448,18 @@ public sealed partial class DisplayServer
         if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetFlagCore(flag, enabled, MainWindowId); return; }
         EnsureOwner();
         var window = GetWindow(windowId);
-        if (SDL.GetCurrentVideoDriver() == "wayland" && flag is (WindowFlag.AlwaysOnTop or WindowFlag.NoFocus))
+        if (IsNativePopup && flag is WindowFlag.PopupWmHint or WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled or WindowFlag.Borderless or WindowFlag.ResizeDisabled)
+        {
+            if (!enabled) throw new NotSupportedException("A native popup cannot enable top-level decoration or presentation policies.");
+            return;
+        }
+        if (IsNativePopup && flag == WindowFlag.Popup) { SetPopupInputPolicy(enabled); return; }
+        if (flag == WindowFlag.Transparent)
+        {
+            if (WindowGetFlagCore(flag) != enabled) throw new NotSupportedException("Configure native transparency before creating a child window.");
+            return;
+        }
+        if (SDL.GetCurrentVideoDriver() == "wayland" && (flag == WindowFlag.AlwaysOnTop || flag == WindowFlag.NoFocus && !IsNativePopup))
             throw new NotSupportedException($"Window flag {flag} is unavailable for a Wayland top-level window.");
         var success = flag switch
         {
@@ -464,6 +487,7 @@ public sealed partial class DisplayServer
         if (windowId != MainWindowId) { ResolveWindow(windowId).WindowMoveToForegroundCore(MainWindowId); return; }
         EnsureOwner();
         var window = GetWindow(windowId);
+        if (IsNativePopup) return;
         if (SDL.GetCurrentVideoDriver() == "wayland")
             return;
         if (!SDL.RaiseWindow(window))

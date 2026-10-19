@@ -55,7 +55,7 @@ public partial class ColorPickerButton : Button
         if (!IsInsideTree) return;
         var minimum = _popup!.GetContentsMinimumSize(); var transform = GetGlobalTransformWithCanvas(); var at = transform.Origin; var viewport = _popup.Embedder?.GetVisibleRect() ?? GetViewport()!.GetVisibleRect();
         at.X += (Size.X - minimum.X) / 2; var below = at.Y + Size.Y; at.Y = below + minimum.Y > viewport.End.Y && at.Y * 2 + Size.Y > viewport.End.Y ? at.Y - minimum.Y : below;
-        _popup.Position = (Vector2i)at; _popup.Size = (Vector2i)minimum.Ceil(); _popup.Canceled = false; _popup.Popup(); _picker!.FocusEditor();
+        _popup.Canceled = false; _popup.PopupFromViewport(GetViewport()!, new((Vector2i)at, (Vector2i)minimum.Ceil()), new((Vector2i)transform.Origin, (Vector2i)(transform.Scale * Size))); _picker!.FocusEditor();
     }
     /// <inheritdoc />
     protected override void OnDraw()

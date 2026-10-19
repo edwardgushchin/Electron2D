@@ -1,6 +1,6 @@
 # Command menu buttons
 
-Last updated: 2026-10-06
+Last updated: 2026-10-19
 
 MenuButton : Button owns one internal PopupMenu and supplies command menus for toolbar and menu-bar consumers. The popup's item model, check/radio state, shortcuts, submenus, search, scrolling and themes remain the existing PopupMenu implementation. This control is also an executable prerequisite for FileDialog's drive and file-sort menus.
 
@@ -27,3 +27,7 @@ Own MenuButton members execute in this embedded profile. The class remains Parti
 Decisions: [0008](../decisions/scene.md#adr-0008), [0038](../decisions/input.md#adr-0038), [0040](../decisions/display.md#adr-0040), [0083](../decisions/rendering.md#adr-0083). Owned type: [MenuButton](../classes/MenuButton.md).
 
 Popup anchors include GetGlobalTransformWithCanvas before any embedder offset, so a changed canvas translation moves the command/choice popup by the same amount exactly once. MenuButtonTests verifies both consumers under a translated inner viewport.
+
+## Native popup integration
+
+Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.

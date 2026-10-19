@@ -426,6 +426,26 @@
       "electron2d": "enumValue:Electron2D.DisplayServer.VSyncMode.Mailbox()",
       "state": "Implemented",
       "reason": "Main-window presentation policy executes through the active GPU or compatibility renderer, with owner/identity validation, pending startup configuration, actual supported-mode fallback and getter readback. WaterPlaygroundTests checks native XWayland immediate output, mode round-trips, invalid requests and both canvas backends; other platforms remain unverified."
+    },
+    {
+      "godot": "DisplayServer::method:window_get_active_popup()",
+      "electron2d": "method:Electron2D.DisplayServer.WindowGetActivePopup()",
+      "reason": "ADRs 0038/0040/0095: real parent-relative native popup lifetimes, opening-order queries and global safe rectangles; control anchors use actual root-client areas. Native popup-done force-hides before Window.VisibilityChanged/PopupHide and does not emit a user CloseRequested. NativePopupWindowTests covers real GPU/compatibility output, nested retirement, outside/safe input, owner/ID guards and callback failure on Linux Wayland/X11 software backends. Wayland global safe areas reject explicitly; physical compositor and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "DisplayServer::method:window_get_popup_safe_rect(int:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowGetPopupSafeRect(System.Int32)",
+      "reason": "ADRs 0038/0040/0095: real parent-relative native popup lifetimes, opening-order queries and global safe rectangles; control anchors use actual root-client areas. Native popup-done force-hides before Window.VisibilityChanged/PopupHide and does not emit a user CloseRequested. NativePopupWindowTests covers real GPU/compatibility output, nested retirement, outside/safe input, owner/ID guards and callback failure on Linux Wayland/X11 software backends. Wayland global safe areas reject explicitly; physical compositor and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "DisplayServer::method:window_set_popup_safe_rect(int:,Rect2i:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowSetPopupSafeRect(System.Int32,Electron2D.Rect2i)",
+      "reason": "ADRs 0038/0040/0095: real parent-relative native popup lifetimes, opening-order queries and global safe rectangles; control anchors use actual root-client areas. Native popup-done force-hides before Window.VisibilityChanged/PopupHide and does not emit a user CloseRequested. NativePopupWindowTests covers real GPU/compatibility output, nested retirement, outside/safe input, owner/ID guards and callback failure on Linux Wayland/X11 software backends. Wayland global safe areas reject explicitly; physical compositor and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_FORCE_CLOSE",
+      "electron2d": "event:Electron2D.Window.VisibilityChanged()",
+      "reason": "ADRs 0038/0040/0095: real parent-relative native popup lifetimes, opening-order queries and global safe rectangles; control anchors use actual root-client areas. Native popup-done force-hides before Window.VisibilityChanged/PopupHide and does not emit a user CloseRequested. NativePopupWindowTests covers real GPU/compatibility output, nested retirement, outside/safe input, owner/ID guards and callback failure on Linux Wayland/X11 software backends. Wayland global safe areas reject explicitly; physical compositor and other-platform acceptance remain separate."
     }
   ],
   "extras": [
@@ -852,12 +872,9 @@
     },
     {
       "state": "Blocked",
-      "reason": "Exact prerequisite: native popup surface/grab and safe-area/color roles. Ordinary independent Window hosts now execute; those popup-specific producers are not supplied by normal desktop top levels.",
+      "reason": "Pinned doc/classes/DisplayServer.xml explicitly limits window_set_color to Android. Exact prerequisite: the Android application-host background-color bridge and native root-surface lifecycle; implement in its first executing host slice (ADRs 0021/0040). Desktop popup safe areas do not supply this Android-only producer.",
       "godot": [
-        "DisplayServer::method:window_get_active_popup()",
-        "DisplayServer::method:window_get_popup_safe_rect(int:)",
-        "DisplayServer::method:window_set_color(Color:)",
-        "DisplayServer::method:window_set_popup_safe_rect(int:,Rect2i:)"
+        "DisplayServer::method:window_set_color(Color:)"
       ]
     },
     {
@@ -1195,7 +1212,7 @@
     },
     {
       "state": "Blocked",
-      "reason": "Typed C# events replace the numeric WindowEvent vocabulary for the one-window host. The aggregate waits for the first Wayland Window/Popup scene-host slice (FORCE_CLOSE), first Android application-host slice (GO_BACK_REQUEST), first HDR renderer/output slice (OUTPUT_MAX_LINEAR_VALUE_CHANGED), and native macOS title-bar integration after that platform enters scope (TITLEBAR_CHANGE); those values retain separate triggers below (ADRs 0002/0040).",
+      "reason": "Typed C# lifecycle events replace the numeric WindowEvent vocabulary. Native popup FORCE_CLOSE now executes through forced Window visibility retirement; the aggregate still waits for Android GO_BACK_REQUEST, HDR OUTPUT_MAX_LINEAR_VALUE_CHANGED and native title-bar TITLEBAR_CHANGE producers under ADR 0040.",
       "godot": [
         "DisplayServer::enum:WindowEvent"
       ]
@@ -1216,13 +1233,6 @@
       "reason": "Typed WindowDpiChanged follows SDL window content-scale changes on the main window in ProcessEvents, matching the pinned Wayland scale-change trigger despite the DPI name. A user-driven 1.25-to-1-to-1.25 move produced two native events. Exact ordering relative to the event-time client rectangle and first rendered buffer still requires the renderer vertical slice (ADR 0044).",
       "godot": [
         "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_DPI_CHANGE"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: First Wayland Window/Popup scene-host slice with independently owned subwindows and renderer references. The pinned Wayland backend emits this event when unwinding an XDG popup stack or when a native window readiness wait times out; its typed notification must hide the affected window and release rendering references in callback order, distinct from a user close request (ADRs 0021/0040).",
-      "godot": [
-        "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_FORCE_CLOSE"
       ]
     },
     {
@@ -1511,6 +1521,22 @@
         "DisplayServer::method:window_set_exclusive(int:,bool:)",
         "DisplayServer::method:window_set_transient(int:,int:)"
       ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0038/0040/0095: real parent-relative native popup lifetimes, opening-order queries and global safe rectangles; control anchors use actual root-client areas. Native popup-done force-hides before Window.VisibilityChanged/PopupHide and does not emit a user CloseRequested. NativePopupWindowTests covers real GPU/compatibility output, nested retirement, outside/safe input, owner/ID guards and callback failure on Linux Wayland/X11 software backends. Wayland global safe areas reject explicitly; physical compositor and other-platform acceptance remain separate.",
+      "godot": [
+        "DisplayServer::method:window_get_active_popup()",
+        "DisplayServer::method:window_get_popup_safe_rect(int:)",
+        "DisplayServer::method:window_set_popup_safe_rect(int:,Rect2i:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_FORCE_CLOSE"
+      ],
+      "reason": "Native popup-done now force-hides its Window synchronously, releases presentation/native ownership before Window.VisibilityChanged/PopupHide and emits no ordinary CloseRequested; NativePopupWindowTests verifies nested callback order. Remaining exact producer: ordinary native-window readiness-timeout/forced-invalidation observation. SDL reports synchronous readiness failures through request errors, which already roll back creation, but supplies no separate typed top-level FORCE_CLOSE event; include that producer in the first native readiness/lost-window lifecycle adapter under ADR 0040."
     }
   ]
 }

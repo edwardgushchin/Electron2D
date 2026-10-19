@@ -1,6 +1,6 @@
 # Rich text
 
-Last updated: 2026-10-07
+Last updated: 2026-10-19
 
 RichTextLabel connects the existing Control, themed FontFile/FreeType/HarfBuzz/ICU text, retained canvas, input, scrolling and typed scene-resource storage. RichTextEffect and CharFXTransform add executable application glyph effects. RichTextEffectEnvironment and RichTextMetadata replace untyped effect dictionaries and link payloads with exact generic borrowed values. InlineAlignment and TextGraphemeFlags retain shared semantic domains. No additional renderer or vendored code change is introduced.
 
@@ -29,3 +29,7 @@ Advanced font-tag spacing, embolden, slant, collection face, variable coordinate
 Paragraph rebuilding and the document snapshot are cold O(document size) operations. Pointer hit lookup currently scans loaded paragraph/scalar bounds; a retained per-line interval index is the upgrade if very large documents make pointer motion material. Table nesting is bounded to 256 layout levels. A complete API inventory is not proof that these separate dependencies are implemented.
 
 Graph authoring and FontVariation are now implemented connected consumers. Script/CSharpScript and typed visual shader resources retain their own source/live-owner and graph/code-generation dependencies.
+
+## Native popup integration
+
+Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.

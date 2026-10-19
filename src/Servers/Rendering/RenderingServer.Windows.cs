@@ -22,6 +22,8 @@ public sealed partial class RenderingServer
     internal void RegisterNativeWindow(Window window, DisplayServer display)
     {
         EnsureNativeWindowMutation();
+        if (window.Transparent && _backend is GPUCanvasBackend)
+            throw new NotSupportedException("The SDL GPU API cannot present transparent native windows; use the compatibility renderer or configure an opaque child before showing it.");
         var handle = display.AcquireRenderingWindow();
         CanvasBackend? compatibility = null;
         GPUCanvasBackend.ChildPresentation? presentation = null;

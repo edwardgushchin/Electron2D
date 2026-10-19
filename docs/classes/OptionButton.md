@@ -1,6 +1,6 @@
 # OptionButton
 
-Last updated: 2026-10-13
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public partial class OptionButton : Button`. **Inherits:** [Button](Button.md). **Inherited By:** —. **Source:** [model](../../src/Scene/GUI/OptionButton.cs), [layout](../../src/Scene/GUI/OptionButton.Layout.cs), [storage](../../src/Scene/GUI/OptionButton.Storage.cs). **Component:** [Dropdown choices](../components/dropdown-choices.md).
 
@@ -14,7 +14,7 @@ AddItem/AddIconItem create radio records and select the first selectable item wi
 
 User activation applies the menu's hide policy before selection delivery. ItemSelected reports the committed index only when attached; AllowReselect controls delivery for equal user choices. ItemFocused maps the menu's ID focus signal to its first matching index, so duplicate IDs follow that same first-ID behavior. Public item setters accept end-relative indices through PopupMenu, while getters/removal are strict; GetItemID(-1) returns -1. Current text/icon edits, direct popup changes and icon disposal refresh the caption. Required first-item selection, radio/caption/property-list work and subsequent selection delivery continue after observer failures, reporting aggregated errors afterward. Nested selection supersedes obsolete outer radio/caption updates.
 
-ShowPopup opens beneath the button in viewport coordinates, retaining at least button width and fitting the shared menu height. An embedded Window host requires GUIEmbedSubwindows; independent native children remain an inherited popup prerequisite. Detached buttons return without opening. Keyboard/programmatic opening focuses the selected enabled nonseparator item or first selectable record after menu preparation; pointer opening scrolls to it and preserves grabbed-click behavior. The popup owns its panel, scroll, real search field and timer. Hiding the popup resets pressed toggle state; hiding the button hides its menu. Failed press-triggered presentation resets transient toggle state. Menu item shortcuts/accelerators use ordinary shortcut input when visible, enabled and non-echo; SetDisableShortcuts gates that stage, including the inherited button shortcut. Search policies forward to the owned real menu.
+ShowPopup opens beneath the button in viewport coordinates, retaining at least button width and fitting the shared menu height. An embedded Window host requires GUIEmbedSubwindows; native desktop anchors use parent-client popup geometry. Transparent native menus require compatibility; explicitly opaque native menus also execute with the GPU backend. Detached buttons return without opening. Keyboard/programmatic opening focuses the selected enabled nonseparator item or first selectable record after menu preparation; pointer opening scrolls to it and preserves grabbed-click behavior. The popup owns its panel, scroll, real search field and timer. Hiding the popup resets pressed toggle state; hiding the button hides its menu. Failed press-triggered presentation resets transient toggle state. Menu item shortcuts/accelerators use ordinary shortcut input when visible, enabled and non-echo; SetDisableShortcuts gates that stage, including the inherited button shortcut. Search policies forward to the owned real menu.
 
 FitToLongestItem measures every translated item using the button font, icon policy and retained text layouts, adds the themed arrow and ensures width is at least the menu minimum. Turning it off uses the current Button content minimum. Selected translation follows each item's Inherit/Always/Disabled policy through the existing node domain. The arrow reserves the logical trailing margin, mirrors in RTL and supports state-font modulation through arrow, arrow_margin and modulate_arrow. Those three own theme keys augment inherited Button themes; fonts, icons and styles stay borrowed. A shared Button polling correction clears a disposed borrowed icon before internal processing and exposes it as null instead of throwing while deferred cleanup is pending.
 
@@ -624,7 +624,7 @@ public System.Void ShowPopup()
 
 Opens the owned menu beneath the button; keyboard/programmatic opening focuses selection or the first selectable item.
 
-Detached buttons return without opening. Attached presentation requires an embedded window host.
+Detached buttons return without opening. Attached presentation uses an active embedded or native desktop host.
 
 
 ## Event Descriptions
@@ -651,3 +651,7 @@ Nested embedded window routing descends to the owned popup. Anchor placement now
 Popup anchors include GetGlobalTransformWithCanvas before any embedder offset, so a changed canvas translation moves the command/choice popup by the same amount exactly once. MenuButtonTests verifies both consumers under a translated inner viewport.
 
 Inherited-policy item captions use [Control.TranslationContext](Control.md#automatic-translation-context) when automatic translation supplies no explicit context. Set it before assigning text; changing the context alone preserves prepared text until a translation-change notification or another layout invalidation. Always item policy uses explicit `Tr` and keeps its explicit context; Disabled preserves the source.
+
+## Native popup integration
+
+Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](../components/popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.

@@ -1,6 +1,6 @@
 # FileDialog
 
-Last updated: 2026-10-06
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.FileDialog`. **Inherits:** [ConfirmationDialog](ConfirmationDialog.md). **Inherited By:** —. **Source:** [source](../../src/Scene/GUI/FileDialog.cs). **Component:** [File dialogs](../components/file-dialogs.md).
 
@@ -102,3 +102,7 @@ Own enum identities: [Customization](FileDialog.Customization.md) and [DisplayMo
 ## Storage, verification and decisions
 
 FileDialogTests, DisplayServerDialogTests and FileDialogRenderingTests exercise the connected owner workflow, saved fresh-process scenes, current Linux native keyboard/pointer/pixels and retained rendering. Their exact measured boundaries and absent native chooser/platform prerequisites are recorded in the [component](../components/file-dialogs.md). [ADR 0051](../decisions/enum-identities.md#adr-0051) controls enum identity; [ADR 0095](../decisions/singleton-services.md#adr-0095) controls static retained service access.
+
+## Native popup integration
+
+Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](../components/popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.

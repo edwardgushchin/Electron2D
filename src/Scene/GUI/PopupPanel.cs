@@ -30,7 +30,7 @@ public class PopupPanel : Popup
     private StyleBox? Style => GetThemeStyleBox("panel");
     private void PanelVisibility()
     {
-        if (!Visible && _contentRect is { } rect) { _contentRect = null; _shadowStart = _shadowEnd = default; Position = rect.Position; Size = rect.Size; }
+        if (!Visible && _contentRect is { } rect) { _contentRect = null; _shadowStart = _shadowEnd = default; PopupPosition = rect.Position; Size = rect.Size; }
         Arrange();
     }
     private void Resized()
@@ -65,10 +65,10 @@ public class PopupPanel : Popup
     }
     internal override void AdjustPopup()
     {
-        base.AdjustPopup(); _contentRect = new(Position, Size);
+        base.AdjustPopup(); _contentRect = new(PopupPosition, Size);
         ShadowInsets(true); _expandedSize = Size + (Vector2i)(_shadowStart + _shadowEnd);
         _arranging = true;
-        try { Position -= (Vector2i)_shadowStart; Size = _expandedSize; }
+        try { PopupPosition -= (Vector2i)_shadowStart; Size = _expandedSize; }
         finally { _arranging = false; }
         Arrange();
     }

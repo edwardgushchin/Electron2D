@@ -92498,6 +92498,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.WindowGetActivePopup()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetActivePopup",
+    "signature": "public static System.Int32 WindowGetActivePopup()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.WindowGetCurrentScreen(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
@@ -92619,6 +92632,25 @@
       }
     ],
     "returnType": "System.IntPtr",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowGetPopupSafeRect(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetPopupSafeRect",
+    "signature": "public static Electron2D.Rect2i WindowGetPopupSafeRect(System.Int32 windowID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Rect2i",
     "value": null
   },
   {
@@ -92984,6 +93016,30 @@
         "name": "windowId",
         "type": "System.Int32",
         "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetPopupSafeRect(System.Int32,Electron2D.Rect2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetPopupSafeRect",
+    "signature": "public static System.Void WindowSetPopupSafeRect(System.Int32 windowID, Electron2D.Rect2i rectangle)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "rectangle",
+        "type": "Electron2D.Rect2i",
+        "default": null
       }
     ],
     "returnType": "System.Void",

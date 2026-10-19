@@ -55,8 +55,8 @@ public partial class Window
     /// <value>False initially; Popup defaults to true.</value>
     /// <exception cref="InvalidOperationException">The policy changes while visible and attached.</exception>
     public bool PopupWindow { get => GetFlag(WindowFlag.Popup); set => SetFlag(WindowFlag.Popup, value); }
-    /// <summary>Gets or sets the popup window-manager hint, retained by the embedded host.</summary>
-    /// <value>False initially; Popup defaults to true. Native child windows remain unavailable.</value>
+    /// <summary>Gets or sets the popup window-manager role, using an embedded host or a native parent-relative surface.</summary>
+    /// <value>False initially; Popup defaults to true. Hide a native child before changing its role.</value>
     public bool PopupWMHint { get => GetFlag(WindowFlag.PopupWmHint); set => SetFlag(WindowFlag.PopupWmHint, value); }
     /// <summary>Gets or sets whether user maximization is disabled.</summary>
     /// <value>False initially; Popup defaults to true.</value>
@@ -64,7 +64,7 @@ public partial class Window
     /// <summary>Gets or sets whether user minimization is disabled.</summary>
     /// <value>False initially; Popup defaults to true.</value>
     public bool MinimizeDisabled { get => GetFlag(WindowFlag.MinimizeDisabled); set => SetFlag(WindowFlag.MinimizeDisabled, value); }
-    /// <summary>Gets or sets transparent embedded window composition.</summary>
+    /// <summary>Gets or sets transparent window composition, configured before native child creation.</summary>
     /// <value>False initially; PopupPanel defaults to true.</value>
     public bool Transparent { get => GetFlag(WindowFlag.Transparent); set => SetFlag(WindowFlag.Transparent, value); }
     /// <summary>Occurs before popup positioning, sizing and visibility changes.</summary>
@@ -83,38 +83,40 @@ public partial class Window
         for (var i = 0; i < GetChildCount(); i++) if (GetChild(i) is Control control) size = size.Max(control.Position + control.GetBoundMinimumSize());
         return size;
     }
-    /// <summary>Returns the embedded host's usable client rectangle.</summary>
-    /// <returns>The containing viewport rectangle; native child-window geometry is unavailable.</returns>
+    /// <summary>Returns the embedded client rectangle or the native parent's usable display rectangle.</summary>
+    /// <returns>Coordinates in the embedded host or native desktop plane.</returns>
     /// <exception cref="InvalidOperationException">The window is detached or is the root window.</exception>
-    internal Rect2i GetUsableParentRect() { CheckPopup(); var rect = Embedder!.GetVisibleRect(); return new((Vector2i)rect.Position, (Vector2i)rect.Size); }
+    internal Rect2i GetUsableParentRect() { CheckPopup(); if (Embedder is null) { var parent = PopupParentDisplay(); return parent.ScreenGetUsableRectCore(parent.WindowGetCurrentScreenCore()); } var rect = Embedder.GetVisibleRect(); return new((Vector2i)rect.Position, (Vector2i)rect.Size); }
     /// <summary>Shows this child window, applying an optional host-coordinate rectangle.</summary>
     /// <param name="rect">An explicit position and size, or zero to retain configured geometry.</param>
-    /// <remarks>Requires an embedding viewport. AboutToPopup precedes changes; popup subclasses fit their rectangle into the host.</remarks>
+    /// <remarks>Requires an embedding viewport or active native desktop host. Native explicit rectangles use desktop coordinates;
+    /// Wayland rejects unavailable global placement. PopupOnParent uses real relative native placement. AboutToPopup precedes geometry changes.</remarks>
     public void Popup(Rect2i rect = default)
     {
         PopupAt(rect, false);
     }
-    private void PopupAt(Rect2i rect, bool centered)
+    private void PopupAt(Rect2i rect, bool centered, bool nativeRelative = false)
     {
-        EnsureMutable(); if (TryNativePopup()) return; CheckPopup(); BeginEventEmission(AboutToPopup)?.Invoke(); if (IsDisposed || !IsInsideTree) return;
-        if (rect != default) { Size = rect.Size; Position = rect.Position; }
+        EnsureMutable(); if (TryNativePopup()) return; CheckPopup(); var placementRoot = _popupPlacementRoot; BeginEventEmission(AboutToPopup)?.Invoke(); if (IsDisposed || !IsInsideTree) return; if (nativeRelative) _popupPlacementRoot = placementRoot;
+        if (rect != default) { Size = rect.Size; if (nativeRelative) PopupPosition = rect.Position; else Position = rect.Position; }
         PreparePopup();
-        UpdateEmbeddedContents(); if (centered) { var area = GetUsableParentRect(); Position = area.Position + (area.Size - Size) / 2; }
+        UpdateEmbeddedContents(); if (centered) { var area = GetPopupCenterRect(); Position = area.Position + (area.Size - Size) / 2; }
         AdjustPopup(); Transient = true; Show(); GrabFocus();
     }
     /// <summary>Shows this window at a rectangle relative to its parent window.</summary>
-    /// <param name="parentRect">An embedded host-coordinate rectangle.</param>
-    public void PopupOnParent(Rect2i parentRect) => Popup(parentRect);
-    /// <summary>Shows this window centered in its embedding viewport.</summary>
+    /// <param name="parentRect">An embedded host rectangle, or native parent-client rectangle in public window units.</param>
+    /// <exception cref="OverflowException">The transformed rectangle exceeds native integer coordinates.</exception>
+    public void PopupOnParent(Rect2i parentRect) => PopupRelativeToParent(parentRect);
+    /// <summary>Shows this window centered in its embedding viewport or the complete native parent display.</summary>
     /// <param name="minSize">Requested dimensions, or zero to retain the current size.</param>
-    public void PopupCentered(Vector2i minSize = default) { EnsureMutable(); if (TryNativePopup()) return; CheckPopup(); if (minSize == default) minSize = Size; var area = GetUsableParentRect(); PopupAt(new(area.Position + (area.Size - minSize) / 2, minSize), true); }
-    /// <summary>Shows this window centered with dimensions proportional to its host.</summary>
+    public void PopupCentered(Vector2i minSize = default) { EnsureMutable(); if (TryNativePopup()) return; CheckPopup(); if (minSize == default) minSize = Size; var area = GetPopupCenterRect(); PopupAt(new(area.Position + (area.Size - minSize) / 2, minSize), true); }
+    /// <summary>Shows this window centered with dimensions proportional to its embedded host or native parent display.</summary>
     /// <param name="ratio">A finite ratio greater than zero and at most one.</param>
-    public void PopupCenteredRatio(float ratio = .8f) { EnsureMutable(); CheckRatio(ratio); if (TryNativePopup()) return; CheckPopup(); PopupCentered((Vector2i)((Vector2)GetUsableParentRect().Size * ratio)); }
-    /// <summary>Shows this window centered, limiting requested dimensions to a host-size ratio.</summary>
+    public void PopupCenteredRatio(float ratio = .8f) { EnsureMutable(); CheckRatio(ratio); if (TryNativePopup()) return; CheckPopup(); PopupCentered((Vector2i)((Vector2)GetPopupCenterRect().Size * ratio)); }
+    /// <summary>Shows this window centered, limiting dimensions to an embedded-host or native-display ratio.</summary>
     /// <param name="minSize">Requested dimensions, or zero to retain current dimensions.</param>
     /// <param name="fallbackRatio">A finite ratio greater than zero and at most one.</param>
-    public void PopupCenteredClamped(Vector2i minSize = default, float fallbackRatio = .75f) { EnsureMutable(); CheckRatio(fallbackRatio); if (TryNativePopup()) return; CheckPopup(); if (minSize == default) minSize = Size; var limit = (Vector2i)((Vector2)GetUsableParentRect().Size * fallbackRatio); PopupCentered(new(Math.Min(minSize.X, limit.X), Math.Min(minSize.Y, limit.Y))); }
+    public void PopupCenteredClamped(Vector2i minSize = default, float fallbackRatio = .75f) { EnsureMutable(); CheckRatio(fallbackRatio); if (TryNativePopup()) return; CheckPopup(); if (minSize == default) minSize = Size; var limit = (Vector2i)((Vector2)GetPopupCenterRect().Size * fallbackRatio); PopupCentered(new(Math.Min(minSize.X, limit.X), Math.Min(minSize.Y, limit.Y))); }
     /// <summary>Parents a detached dialog to the last exclusive window and shows it with an optional host-coordinate rectangle.</summary>
     /// <param name="fromNode">An attached node identifying the owning window.</param>
     /// <param name="rect">The popup geometry argument passed to Popup.</param>
@@ -195,7 +197,7 @@ public partial class Window
         }
         else if (parent.ExclusiveChild == this) parent.ExclusiveChild = null;
     }
-    private void CheckPopup() { EnsureMutable(); if (!IsInsideTree || Parent is null) throw new InvalidOperationException("Popup requires an attached child window."); if (Embedder is null) throw new NotSupportedException("Enable GUIEmbedSubwindows on a containing viewport; independent native child windows are unavailable."); }
+    private void CheckPopup() { EnsureMutable(); if (!IsInsideTree || Parent is null) throw new InvalidOperationException("Popup requires an attached child window."); if (Embedder is null && (Tree?.Root is not Window { NativeDisplay: not null } || RenderingServer.Service is null)) throw new NotSupportedException("Popup presentation requires an embedded viewport or an active native scene host."); }
     internal virtual bool TryNativeVisibility(bool visible) => false;
     internal virtual bool TryNativePopup() => false;
     internal virtual void AfterVisibilityChanged(bool visible) { }

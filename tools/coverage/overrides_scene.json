@@ -1635,7 +1635,7 @@
       "electron2d": "method:Electron2D.Window.GetFlag(Electron2D.WindowFlag)",
       "godot": "Window::method:get_flag(int:Window.Flags)",
       "state": "Partial",
-      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040."
+      "reason": "Configured Window policies execute through embedded, independent native and parent-relative popup hosts. Failed native requests preserve stored values; visible native popup-role mutation rejects. NativePopupWindowTests covers role flags, no-focus, fixed decoration/modes, transparent compatibility and explicit unsupported GPU alpha requests on Wayland/X11. Still Partial for remaining native capture/mouse-pass/titlebar/sharp-corner policies, ordinary top-level popup input without PopupWMHint and platform-specific decoration capabilities under ADRs 0008/0040; these are not closed by declaring their IDs."
     },
     {
       "electron2d": "method:Electron2D.Window.GetPositionWithDecorations()",
@@ -1665,7 +1665,7 @@
       "electron2d": "method:Electron2D.Window.SetFlag(Electron2D.WindowFlag,System.Boolean)",
       "godot": "Window::method:set_flag(int:Window.Flags,bool:)",
       "state": "Partial",
-      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040."
+      "reason": "Configured Window policies execute through embedded, independent native and parent-relative popup hosts. Failed native requests preserve stored values; visible native popup-role mutation rejects. NativePopupWindowTests covers role flags, no-focus, fixed decoration/modes, transparent compatibility and explicit unsupported GPU alpha requests on Wayland/X11. Still Partial for remaining native capture/mouse-pass/titlebar/sharp-corner policies, ordinary top-level popup input without PopupWMHint and platform-specific decoration capabilities under ADRs 0008/0040; these are not closed by declaring their IDs."
     },
     {
       "electron2d": "method:Electron2D.Window.SetIMEActive(System.Boolean)",

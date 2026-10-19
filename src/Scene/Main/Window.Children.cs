@@ -72,7 +72,9 @@ public partial class Window
             if (_transientParent?.ExclusiveChild == this) _transientParent.ExclusiveChild = null;
             _transientParent = owner;
         }
-        _display = root.CreateChildWindow(_title, _size, this);
+        var popupParent = PopupWMHint ? PopupParentDisplay() : null;
+        var popupOffset = popupParent is null ? Vector2i.Zero : InitialNativePopupOffset(popupParent);
+        _display = root.CreateChildWindow(_title, _size, this, popupParent, popupOffset);
         try
         {
             ConfigureNative();
@@ -80,6 +82,7 @@ public partial class Window
             _renderer = renderer;
             UpdateNativeTransient();
             _display.SetWindowVisible(true);
+            Tree?.RegisterNativePopup(this);
             root.RefreshNativeTransients();
         }
         catch (Exception error)

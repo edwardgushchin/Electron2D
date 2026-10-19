@@ -97,6 +97,7 @@ public partial class Window
         if (GetFlag(flag) == enabled)
             return;
         if (flag == WindowFlag.Popup && IsInsideTree && Visible) throw new InvalidOperationException("Popup policy cannot change while visible.");
+        if (flag == WindowFlag.PopupWmHint && _display is not null) throw new InvalidOperationException("Hide the window before changing its native popup role.");
         _display?.WindowSetFlagCore(flag, enabled);
         var bit = 1u << (int)flag;
         _flags = enabled ? _flags | bit : _flags & ~bit;

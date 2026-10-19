@@ -76,7 +76,7 @@ public partial class MenuBar : Control
     /// <summary>Changes header visibility without changing child membership.</summary><param name="menu">A valid menu index.</param><param name="hidden">Whether the header is hidden.</param>
     public void SetMenuHidden(int menu, bool hidden) { EnsureMutable(); var item = At(menu); if (item.Hidden == hidden) return; item.Hidden = hidden; MenuEligibilityChanged(item); }
     /// <summary>Reports whether this strip currently uses a system global menu.</summary>
-    /// <returns>False for the current embedded menu backend.</returns>
+    /// <returns>False for the current canvas menu backend, including native popup windows.</returns>
     public bool IsNativeMenu() { CheckMenus(); return false; }
     /// <summary>Disables the owner shortcut stage without changing individual popup item records.</summary>
     /// <param name="disabled">Whether shortcuts are disabled.</param>

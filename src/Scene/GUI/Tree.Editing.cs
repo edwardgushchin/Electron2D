@@ -33,19 +33,19 @@ public partial class Tree
             ThrowCollected("Tree custom editor callbacks failed.", errors); return true;
         }
         if (cell.Mode == TreeItem.TreeCellMode.Icon) { _editingItem = null; return false; }
-        var screen = GetViewport()?.GetScreenTransform() ?? Transform.Identity; var position = screen * GetGlobalTransformWithCanvas() * rect.Position; var width = Math.Max(100, rect.Size.X);
+        var position = GetGlobalTransformWithCanvas() * rect.Position; var width = Math.Max(100, rect.Size.X);
         if (cell.Mode == TreeItem.TreeCellMode.Range && cell.Text.Length > 0)
         {
             _choicePopup.Clear(); var choices = cell.Text.Split(','); for (var i = 0; i < choices.Length; i++) { var split = choices[i].LastIndexOf(':'); var id = split >= 0 && int.TryParse(choices[i].AsSpan(split + 1), out var parsed) ? parsed : i; _choicePopup.AddRadioCheckItem(split >= 0 ? choices[i][..split] : choices[i], id); _choicePopup.SetItemChecked(i, id == cell.Value); }
-            _choicePopup.Popup(new((Vector2i)(position + new Vector2(0, rect.Size.Y)), new((int)width, 1))); return true;
+            _choicePopup.PopupFromViewport(GetViewport()!, new((Vector2i)(position + new Vector2(0, rect.Size.Y)), new((int)width, 1))); return true;
         }
         _settingEditor = true; try
         {
             _editorPopup.Canceled = false; _lineEditor.Visible = !cell.Multiline || cell.Mode == TreeItem.TreeCellMode.Range; _textEditor.Visible = !_lineEditor.Visible; _valueEditor.Visible = cell.Mode == TreeItem.TreeCellMode.Range;
-            var height = _textEditor.Visible ? Math.Max(120, rect.Size.Y) : Math.Max(32, rect.Size.Y) + (_valueEditor.Visible ? 24 : 0); _editorPopup.Size = new((int)width, (int)height); _editorPopup.Position = (Vector2i)position;
+            var height = _textEditor.Visible ? Math.Max(120, rect.Size.Y) : Math.Max(32, rect.Size.Y) + (_valueEditor.Visible ? 24 : 0); _editorPopup.Size = new((int)width, (int)height);
             if (_textEditor.Visible) { _textEditor.Text = cell.Text; _textEditor.Size = new(width, height); _textEditor.SelectAll(); }
             else { _lineEditor.Text = cell.Mode == TreeItem.TreeCellMode.Range ? cell.Value.ToString("G", CultureInfo.InvariantCulture) : cell.Text; _lineEditor.Size = new(width, height - (_valueEditor.Visible ? 24 : 0)); _lineEditor.SelectAll(); if (_valueEditor.Visible) { _valueEditor.MinValue = cell.Min; _valueEditor.MaxValue = cell.Max; _valueEditor.Step = Math.Max(0, cell.Step); _valueEditor.ExpEdit = cell.Exponential; _valueEditor.SetValueNoSignal(cell.Value); _valueEditor.Position = new(0, height - 24); _valueEditor.Size = new(width, 24); } }
-            _editorPopup.Popup(); if (_textEditor.Visible) _textEditor.GrabFocus(); else _lineEditor.GrabFocus(); return true;
+            _editorPopup.PopupFromViewport(GetViewport()!, new((Vector2i)position, _editorPopup.Size)); if (_textEditor.Visible) _textEditor.GrabFocus(); else _lineEditor.GrabFocus(); return true;
         }
         finally { _settingEditor = false; }
     }

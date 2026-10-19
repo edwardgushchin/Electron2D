@@ -1,6 +1,6 @@
 # Dropdown choices
 
-Last updated: 2026-10-06
+Last updated: 2026-10-19
 
 Owns [OptionButton](../classes/OptionButton.md), composing Button, PopupMenu, text/theme and typed scene contracts under ADRs 0004, 0008, 0038, 0046 and 0083.
 
@@ -33,3 +33,7 @@ Engine.Run(root);
 PackedScene and the exact built-in file factory restore scalar policies, ItemCount, five indexed popup fields (text/icon/ID/disabled/separator), then Selected and its caption/radio state. Count creates real radio records before indexed restore. Text/Icon inherited descriptors are omitted because selection owns them; ActionMode/Alignment/ToggleMode restore their concrete defaults. Each scene instance recreates its independent internal menu. Metadata, item tooltip/translation mode, shortcuts and transient pressed/focus/input state remain runtime configuration. ResourceSaver/ResourceLoader fresh-process tests execute the reconstructed dropdown.
 
 OptionButtonTests verifies defaults, first selectable/radio state, exact metadata, selected identity under remove/grow/shrink, end-relative edits, caption/icon lifetime, programmatic versus user/reselect events, focus/navigation, real popup/search/shortcut input, owner guards, nested/throwing observers and fresh scenes. Native tests use actual SDL Space/Down/Return events to open/navigate/activate, read back caption/icon/arrow and radio popup pixels on current Linux Wayland GPU and compatibility backends, and produce visually inspected PNGs. On each backend, 32 warmup plus 64 active selection/measurement/caption/render frames measure zero managed bytes. Cold structural changes, readback, native allocations, physical devices, other platforms and owner acceptance remain outside that result. The full own API executes; inherited accessibility/editor/native popup and migration work retains its separate coverage.
+
+## Native popup integration
+
+Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.

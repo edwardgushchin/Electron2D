@@ -23,8 +23,15 @@ internal static partial class RenderingRuntimeTests
         };
         };
         Engine.Run(root); Released(root); Check(frame == 6, "File browser native sequence completed.");
-        var warmRoot = new Window { Size = new(900, 600), GUIEmbedSubwindows = true }; var warm = new FileDialog { Access = FileDialogAccess.FileSystem, CurrentDir = temp.GetCurrentDir(), FileMode = FileDialogMode.OpenFile, DisplayMode = FileDialog.DisplayModeType.Thumbnails }; warmRoot.AddChild(warm); frame = 0; long before = 0, bytes = 0;
-        warmRoot.Ready += _ => { warm.PopupFileDialog(); warmRoot.Tree!.ProcessFrameStarted += _ => before = GC.GetAllocatedBytesForCurrentThread(); RenderingServer.FramePostDraw += () => { if (frame == 30) { using var pixels = RenderingServer.Service!.Readback(); File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-filedialog-thumbnails-{backend}.png"), pixels.SavePNGToBuffer()); } if (frame >= 32) bytes += GC.GetAllocatedBytesForCurrentThread() - before; if (++frame == 96) warmRoot.Tree!.Quit(); }; };
-        Engine.Run(warmRoot); Released(warmRoot); Check(frame == 96 && bytes == 0, $"FileDialog {backend}: warm retained rendering allocated {bytes} managed bytes."); Console.WriteLine($"FileDialog {backend}: native key/pointer, browser pixels, 64 warmed retained frames with {bytes} managed bytes passed.");
+        var tooltipDelay = ProjectSettings.Get(ProjectSettings.TooltipDelaySeconds);
+        ProjectSettings.Set(ProjectSettings.TooltipDelaySeconds, 0);
+        try
+        {
+            // Prepare any pointer tooltip before the retained-render allocation interval.
+            var warmRoot = new Window { Size = new(900, 600), GUIEmbedSubwindows = true }; var warm = new FileDialog { Access = FileDialogAccess.FileSystem, CurrentDir = temp.GetCurrentDir(), FileMode = FileDialogMode.OpenFile, DisplayMode = FileDialog.DisplayModeType.Thumbnails }; warmRoot.AddChild(warm); frame = 0; long before = 0, bytes = 0;
+            warmRoot.Ready += _ => { warm.PopupFileDialog(); warmRoot.Tree!.ProcessFrameStarted += _ => before = GC.GetAllocatedBytesForCurrentThread(); RenderingServer.FramePostDraw += () => { if (frame == 30) { using var pixels = RenderingServer.Service!.Readback(); File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-filedialog-thumbnails-{backend}.png"), pixels.SavePNGToBuffer()); } if (frame >= 32) bytes += GC.GetAllocatedBytesForCurrentThread() - before; if (++frame == 96) warmRoot.Tree!.Quit(); }; };
+            Engine.Run(warmRoot); Released(warmRoot); Check(frame == 96 && bytes == 0, $"FileDialog {backend}: warm retained rendering allocated {bytes} managed bytes."); Console.WriteLine($"FileDialog {backend}: native key/pointer, browser pixels, 64 warmed retained frames with {bytes} managed bytes passed.");
+        }
+        finally { ProjectSettings.Set(ProjectSettings.TooltipDelaySeconds, tooltipDelay); }
     }
 }

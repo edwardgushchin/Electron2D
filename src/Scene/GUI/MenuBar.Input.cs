@@ -16,12 +16,11 @@ public partial class MenuBar
             if (!IsDisposed && !item.Popup.IsDisposed && item.Popup.Parent == this && !item.Hidden && !item.Disabled && IsInsideTree)
             {
                 MeasureMenus(); var transform = GetGlobalTransformWithCanvas(); var at = transform * item.Rect.Position; var size = transform.Scale * item.Rect.Size;
-                if (viewport is Window { Embedder: not null } window && item.Popup.Embedder != viewport) at += (Vector2)window.Position;
                 item.Popup.LayoutDirection = LayoutDirection;
                 var popupSize = item.Popup.GetContentsMinimumSize().Max(new Vector2(Math.Abs(size.X), 0)).Ceil();
                 at.Y += size.Y; if (IsLayoutRTL()) at.X += size.X - popupSize.X;
                 _selected = _menus.IndexOf(item); _active = item;
-                item.Popup.Popup(new((Vector2i)at, (Vector2i)popupSize));
+                item.Popup.PopupFromViewport(viewport, new((Vector2i)at, (Vector2i)popupSize), new((Vector2i)transform.Origin, (Vector2i)(transform.Scale * Size)));
                 if (!IsDisposed && !item.Popup.IsDisposed && item.Popup.Visible && item.Popup.Parent == this)
                 {
                     var first = -1;

@@ -889,7 +889,7 @@ public sealed partial class SceneTree : MainLoop
         if (Root is Window && DisplayServer.Service is { } display)
         {
             var window = @event is InputEventFromWindow source ? display.FindSceneWindow(source.WindowID) : display.HasEventContext ? display.EventWindow : (Window)Root;
-            if (window is not null && !window.IsDisposed && ReferenceEquals(window.Tree, this) && window.GetLastExclusiveWindow() == window)
+            if (window is not null && !window.IsDisposed && ReferenceEquals(window.Tree, this))
                 DispatchViewportInput(window, @event, inLocalCoordinates: false, fromWindow: true);
             return;
         }
@@ -903,11 +903,19 @@ public sealed partial class SceneTree : MainLoop
         ThrowIfDisposed(); EnsureOwnerThread(); EnsureAcceptingWork(); if (!executionOwned) EnsureExecutionAvailable();
         if (!ReferenceEquals(viewport.Tree, this)) throw new InvalidOperationException("Viewport is not attached to this tree.");
         InputEvent? localized = null, routed = null;
+        InputEvent? nativeRouted = null; var originalInput = inputEvent;
         List<Exception>? errors = null;
         if (!executionOwned) BeginExecution();
         try
         {
+            if (fromWindow && viewport is Window origin && NativeInputBlockedByExclusive(origin)) return;
             if (fromWindow && viewport is Window window) ReceiveWindowInput(window, inputEvent, ref errors);
+            if (fromWindow && !viewport.IsDisposed && ReferenceEquals(viewport.Tree, this) && viewport is Window nativeSource)
+            {
+                nativeRouted = RouteNativePopupInput(nativeSource, inputEvent, out var nativeTarget);
+                if (nativeRouted is null) { ThrowCollected("Window input callbacks failed.", errors); return; }
+                viewport = nativeTarget; inputEvent = nativeRouted;
+            }
             if (!viewport.IsDisposed && ReferenceEquals(viewport.Tree, this) && !viewport.GUIDisableInput)
             {
                 localized = inLocalCoordinates ? inputEvent : viewport.MakeViewportInputLocal(inputEvent);
@@ -916,7 +924,7 @@ public sealed partial class SceneTree : MainLoop
             }
             ThrowCollected("Window input callbacks failed.", errors);
         }
-        finally { if (routed is not null && !ReferenceEquals(routed, localized)) routed.Dispose(); if (localized is not null && !ReferenceEquals(localized, inputEvent)) localized.Dispose(); if (!executionOwned) EndExecution(); }
+        finally { if (routed is not null && !ReferenceEquals(routed, localized)) routed.Dispose(); if (localized is not null && !ReferenceEquals(localized, inputEvent)) localized.Dispose(); if (nativeRouted is not null && !ReferenceEquals(nativeRouted, originalInput)) nativeRouted.Dispose(); if (!executionOwned) EndExecution(); }
     }
 
     internal void DispatchEmbeddedViewportInput(SubViewportContainer container, SubViewport viewport, InputEvent input)

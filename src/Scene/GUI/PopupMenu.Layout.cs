@@ -103,12 +103,12 @@ public partial class PopupMenu
     {
         ApplyGraphScale(GraphScaleFromOwner()); base.PreparePopup(); _search.Text = ""; FilterChanged(""); Measure(); var width = _shrinkWidth ? Math.Max(1, (int)MathF.Ceiling(_minimum.X * _graphScale)) : Size.X; var height = _shrinkHeight ? Math.Max(1, (int)MathF.Ceiling(_minimum.Y * _graphScale)) : Size.Y; Size = new(width, height);
     }
-    internal override void AdjustPopup() { base.AdjustPopup(); Measure(); _contentRect = new(Position, Size); ShadowInsets(true); _expandedSize = Size + (Vector2i)((_shadowStart + _shadowEnd) * _graphScale); _arranging = true; try { Position -= (Vector2i)(_shadowStart * _graphScale); Size = _expandedSize; } finally { _arranging = false; } Arrange(); }
+    internal override void AdjustPopup() { base.AdjustPopup(); Measure(); _contentRect = new(PopupPosition, Size); ShadowInsets(true); _expandedSize = Size + (Vector2i)((_shadowStart + _shadowEnd) * _graphScale); _arranging = true; try { PopupPosition -= (Vector2i)(_shadowStart * _graphScale); Size = _expandedSize; } finally { _arranging = false; } Arrange(); }
     private static MouseButtonMask InitialButtonMask() { MouseButtonMask mask = 0; for (var i = 1; i <= 9; i++) if (Input.IsMouseButtonPressed((MouseButton)i)) mask |= (MouseButtonMask)(1u << (i - 1)); return mask; }
     private void VisibilityUpdated()
     {
         if (Visible) { _openedElapsed = 0; _initialButtons = InitialButtonMask(); _grabbedOpen = _initialButtons != 0; _dirty = true; Arrange(); _scroll.ScrollVertical = 0; SetInternalProcessing(true, false); }
-        else { _submenuTimer.Stop(); _gamepadDirection = 0; _pendingSubmenu = -1; _activeSubmenu = null; _focused = -1; _search.Text = ""; FilterChanged(""); if (_contentRect is { } rect) { _contentRect = null; Position = rect.Position; Size = rect.Size; } SetInternalProcessing(false, false); }
+        else { _submenuTimer.Stop(); _gamepadDirection = 0; _pendingSubmenu = -1; _activeSubmenu = null; _focused = -1; _search.Text = ""; FilterChanged(""); if (_contentRect is { } rect) { _contentRect = null; PopupPosition = rect.Position; Size = rect.Size; } SetInternalProcessing(false, false); }
     }
     internal override void AfterVisibilityChanged(bool visible) { base.AfterVisibilityChanged(visible); if (visible) { if (_searchVisible) _search.GrabFocus(); else _view.GrabFocus(); } }
     /// <summary>Scrolls the item rectangle fully into the visible menu body.</summary><param name="index">A nonnegative item index.</param>

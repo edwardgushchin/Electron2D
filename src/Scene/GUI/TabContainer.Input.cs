@@ -19,9 +19,8 @@ public partial class TabContainer
     {
         var popup = GetPopup(); if (popup is null) return; BeginEventEmission(PrePopupPressed)?.Invoke(); if (IsDisposed || popup.IsDisposed) return;
         var at = _popupButton.GetGlobalRect(); var position = at.Position;
-        if (GetViewport() is Window { Embedder: not null } window) position += (Vector2)window.Position;
         position.X += IsLayoutRTL() ? 0 : at.Size.X - popup.Size.X; position.Y += _position == BarPosition.Bottom ? -popup.Size.Y : at.Size.Y;
-        popup.Position = (Vector2i)position; popup.Popup();
+        popup.PopupFromViewport(GetViewport()!, new((Vector2i)position, popup.Size));
     }
     private sealed class PageDrag(TabContainer source, Control control, DragPayload stripPayload) : DragPayload
     { internal readonly TabContainer Source = source; internal readonly Control Control = control; internal readonly DragPayload StripPayload = stripPayload; }

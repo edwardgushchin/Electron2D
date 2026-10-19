@@ -1,6 +1,6 @@
 # MenuButton
 
-Last updated: 2026-10-06
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.MenuButton`. **Inherits:** [Button](Button.md). **Inherited By:** —. **Source:** [model](../../src/Scene/GUI/MenuButton.cs), [storage](../../src/Scene/GUI/MenuButton.Storage.cs). **Component:** [Command menu buttons](../components/command-menu-buttons.md).
 
@@ -8,7 +8,7 @@ Owns a command PopupMenu with flat, press-edge, toggle and accessibility-focus d
 
 SwitchOnHover replaces the open menu with a related enabled opt-in menu button during internal processing, without item focus. SceneTree's existing hit test supplies the underlying menu-bar hover while the popup owns input. Nested embedded routing and anchor handling execute through the common Window host; unrelated/disabled/hidden targets stay closed. Failed and reentrant presentation leaves state coherent and reports errors. Node configuration warnings combine button/popup queries.
 
-Scenes store concrete defaults, SwitchOnHover, ItemCount and seven indexed popup fields. Each instance recreates its internal popup; runtime delegates, shortcut-disable policy, metadata and input state remain runtime-only. The full own API executes in the embedded profile. Inherited accessibility/editor/native menu/native child-window capabilities retain separate coverage prerequisites.
+Scenes store concrete defaults, SwitchOnHover, ItemCount and seven indexed popup fields. Each instance recreates its internal popup; runtime delegates, shortcut-disable policy, metadata and input state remain runtime-only. The own API also opens native desktop popups with the renderer limits below. Inherited accessibility/editor/native menu/native child-window capabilities retain separate coverage prerequisites.
 
 ## Example
 
@@ -190,3 +190,7 @@ public System.Boolean SwitchOnHover { get; set; }
 Gets or sets switching to an enabled related menu button hovered while this menu is open.
 
 False initially; both buttons must opt in.
+
+## Native popup integration
+
+Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](../components/popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.

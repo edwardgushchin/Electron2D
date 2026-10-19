@@ -288,7 +288,8 @@ public sealed partial class DisplayServer
                 break;
             case SDL.EventType.WindowCloseRequested:
                 _pendingDroppedFiles = null;
-                BeginEventEmission(CloseRequestedCore)?.Invoke();
+                if (IsNativePopup && SceneWindow is { } popup) popup.Hide();
+                else BeginEventEmission(CloseRequestedCore)?.Invoke();
                 break;
             case SDL.EventType.WindowResized when !_pixelWindowCoordinates:
             case SDL.EventType.WindowPixelSizeChanged when _pixelWindowCoordinates:
@@ -306,7 +307,9 @@ public sealed partial class DisplayServer
             case SDL.EventType.WindowMoved:
                 if (_waylandWindowPosition)
                     break;
-                var movedRect = new Rect2i(new Vector2i(nativeEvent.Window.Data1, nativeEvent.Window.Data2),
+                var movedOrigin = new Vector2i(nativeEvent.Window.Data1, nativeEvent.Window.Data2);
+                if (NativePopupParent is { } popupParent) movedOrigin += popupParent.WindowGetPositionCore();
+                var movedRect = new Rect2i(movedOrigin,
                     _windowRect.Size);
                 if (movedRect != _windowRect)
                 {

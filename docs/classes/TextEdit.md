@@ -249,3 +249,7 @@ TextEditTests covers scalar/grapheme edits, multicaret ordering, grouped undo/re
 The [CodeEdit](CodeEdit.md) specialization uses this same document and typed hooks. GetLineRangesFromCarets uses an unselected caret location rather than its stale selection origin, preserving correct duplicate/move/indent ranges.
 
 The placeholder use [Control.TranslationContext](Control.md#automatic-translation-context) when automatic translation supplies no explicit context. Set it before assigning text; changing the context alone preserves prepared text until a translation-change notification or another layout invalidation. User-entered text stays literal.
+
+## Native popup integration
+
+Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](../components/popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.

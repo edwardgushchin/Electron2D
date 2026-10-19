@@ -1,6 +1,6 @@
 # Tab panels
 
-Last updated: 2026-10-06
+Last updated: 2026-10-19
 
 Owns [TabContainer](../classes/TabContainer.md) and shared [BarPosition](../classes/BarPosition.md), composing existing TabBar, Control/Container, Button, theme and Popup contracts under ADRs 0004, 0008, 0038, 0081 and 0083.
 
@@ -40,3 +40,7 @@ PackedScene captures scalar tab policies, current selection and four indexed fie
 TabContainerTests exercises ordinary/top-level/neutral eligibility, pending selection/indexed fields, automatic/custom titles, show/hide/deselect/disabled/hidden transitions, ordering and disposal, exact typed null metadata, bottom/header-hidden layout, minimum policy, routed popup clicks/disposal, owner-thread rejection, identity-stable page drags, callback failure and reentrant child additions. Native tests use SDL keyboard input and actual root Engine.Run targets on current Linux Wayland GPU and compatibility backends, verify exclusive selected-page pixels, header/popup affordance and bottom/RTL geometry, and save visually inspected PNGs. Each backend measures zero managed bytes across 64 warmed selection/layout/visibility/render frames after 32 warmup frames. Cold theme/model/structural work and readback allocate. Physical hardware input, native allocations, large-page performance, other targets and owner acceptance remain unverified.
 
 The complete own API executes on the current backends. Native accessibility remains inherited Control/Container service work; editor authoring and broader platform acceptance remain separate. Popup bindings inherit independent native-child and embedding-policy limitations. No architectural decision or vendor dependency change was required.
+
+## Native popup integration
+
+Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.

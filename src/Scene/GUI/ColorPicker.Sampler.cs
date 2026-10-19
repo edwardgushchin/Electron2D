@@ -10,7 +10,7 @@ public partial class ColorPicker
             var viewport = GetViewport()!; while (viewport is Window { Embedder: { } parent }) viewport = parent;
             using var image = viewport.GetTexture().GetImage() ?? throw new InvalidOperationException("The application viewport has no completed rendered image.");
             _sampler ??= new SamplerPopup(this) { Name = "_color_sampler" }; if (_sampler.Parent == null) AddChild(_sampler, InternalMode.Front);
-            _sampler.Capture(image); _sampler.Position = Vector2i.Zero; _sampler.Size = (Vector2i)viewport.GetVisibleRect().Size; _sampler.Popup(); _sampler.FitCapture();
+            _sampler.Capture(image); _sampler.PopupFromViewport(viewport, new(Vector2i.Zero, (Vector2i)viewport.GetVisibleRect().Size)); _sampler.FitCapture();
         }
         catch (Exception error) { ShowError(error.Message); }
     }

@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>A command button owning a themed popup menu and optional hover switching between related menu buttons.</summary>
 /// <remarks>The internal popup is borrowed through GetPopup and remains owned by this button. Attach below an
-/// embedding viewport for presentation. Commands use PopupMenu events; shortcuts and metadata follow that menu's contracts.</remarks>
+/// viewport for embedded or native desktop presentation. Transparent native menus require the compatibility renderer;
+/// configure the borrowed popup as opaque before showing it with the GPU backend. Commands use PopupMenu events; shortcuts and metadata follow that menu's contracts.</remarks>
 public partial class MenuButton : Button
 {
     private readonly PopupMenu _popup;
@@ -58,12 +59,11 @@ public partial class MenuButton : Button
         {
             BeginEventEmission(AboutToPopup)?.Invoke(); if (IsDisposed || !IsInsideTree || _popup.IsDisposed) return;
             var transform = GetGlobalTransformWithCanvas(); var rect = new Rect2(transform.Origin, transform.Scale * Size); var at = rect.Position + new Vector2(0, rect.Size.Y);
-            if (viewport is Window { Embedder: not null } window && _popup.Embedder != viewport) at += (Vector2)window.Position;
             _popup.LayoutDirection = LayoutDirection;
             var area = _popup.Embedder?.GetVisibleRect() ?? viewport.GetVisibleRect(); var available = Math.Max(0, (int)MathF.Floor(area.End.Y - at.Y));
             _popup.MaxSize = available >= 4 * rect.Size.Y ? new(0, Math.Max(available, _popup.MinSize.Y)) : Vector2i.Zero;
             if (IsLayoutRTL()) { var width = _popup.ShrinkWidth ? _popup.GetContentsMinimumSize().X : _popup.Size.X; at.X += rect.Size.X - width; }
-            _popup.Position = (Vector2i)at; _popup.Popup();
+            _popup.PopupFromViewport(viewport, new((Vector2i)at, _popup.Size), new((Vector2i)rect.Position, (Vector2i)rect.Size));
             if (!_popup.IsDisposed && _popup.Visible && !WasPressedByMouse)
             {
                 var first = -1; for (var i = 0; i < _popup.ItemCount; i++) if (!_popup.IsItemDisabled(i) && !_popup.IsItemSeparator(i)) { first = i; break; }

@@ -1,6 +1,6 @@
 # PopupMenu
 
-Last updated: 2026-10-10
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public partial class PopupMenu : Popup`. **Inherits:** [Popup](Popup.md). **Inherited By:** —. **Source:** [model](../../src/Scene/GUI/PopupMenu.cs), [layout](../../src/Scene/GUI/PopupMenu.Layout.cs), [input](../../src/Scene/GUI/PopupMenu.Input.cs), [search](../../src/Scene/GUI/PopupMenu.Search.cs), [storage](../../src/Scene/GUI/PopupMenu.Storage.cs). **Component:** [Popup menus](../components/popup-menus.md).
 
@@ -10,7 +10,7 @@ A themed, scrollable embedded command menu with typed items, search and submenus
 
 A [MenuBar](MenuBar.md) parent uses four typed private scene fields on each popup for its header title override, tooltip, disabled and hidden state. They follow child identity across scene pruning; top-level horizontal input forwards to the owning strip after submenu handling.
 
-PopupMenu presents themed text, borrowed icons/shortcuts, checkbox/radio decorations, explicit multistate values, titled separators and direct child submenus through the existing embedded Window host. Configure `GUIEmbedSubwindows=true` on the containing viewport before attaching menus. Each menu owns an internal Panel, ScrollContainer, LineEdit, item canvas and one-shot Timer; ordinary child enumeration and packing omit these implementation nodes. Showing requires an attached embedder. The [popup host](../components/popup-windows.md) defines viewport coordinates, modal routing, focus restoration, renderer target ownership and cancellation.
+PopupMenu presents themed text, borrowed icons/shortcuts, checkbox/radio decorations, explicit multistate values, titled separators and direct child submenus through the embedded Window host or native desktop popup surfaces. Configure `GUIEmbedSubwindows=true` for embedded presentation, or use the active native containing Window. Each menu owns an internal Panel, ScrollContainer, LineEdit, item canvas and one-shot Timer; ordinary child enumeration and packing omit these implementation nodes. Showing requires an attached embedded or native scene host. The [popup host](../components/popup-windows.md) defines viewport coordinates, modal routing, focus restoration, renderer target ownership and cancellation.
 
 IDs are signed integers independent of current indices. ID -1 on insertion assigns the new index; activation falls back to the current index for other negative IDs. Getters, toggles, removal and focus use nonnegative indices; item setters accept indices counted from the end. `SetFocusedItem(-1)` clears focus. Reordering preserves the item and borrowed resource identities. Check/radio/state changes are explicit; activation does not toggle them. State/range values remain caller-controlled; positive-range toggling wraps at the upper bound. ItemCount supports 0 through 65536 and adds empty records with automatic IDs. Public operations reject disposed menus and attached mutations require the tree owner thread.
 
@@ -1206,3 +1206,13 @@ Occurs after an item mutation commits.
 The string-path submenu declarations were removed under ADR 0004 because their pinned source metadata is deprecated. Use the node-based AddSubmenuNodeItem/GetItemSubmenuNode/SetItemSubmenuNode family; coverage retains those three source rows as Excluded.
 
 Under a GraphElement with ScalingMenus enabled, popup content and routed pointer coordinates follow GraphEdit.Zoom through the existing viewport canvas transform. The physical popup footprint, shadows and submenu placement scale with it; ordinary menus retain scale one. See [graph authoring](../components/graph-authoring.md).
+
+## Native menu windows
+
+Native desktop popups use real parent-relative SDL surfaces when `PopupWMHint` is enabled. `PopupOnParent` accepts parent-client geometry and works without fabricated Wayland desktop positions. Public native `Position`, explicit global `Popup(rect)` and display-centered placement retain the global-position capability guard; centered geometry uses the complete parent display, while fitting uses its usable area. Attached embedded children keep their existing viewport coordinates. Runtime control anchors compose the source viewport transform, including nested and scaled hosts.
+
+The native role is fixed-size and borderless, cannot minimize/maximize/fullscreen, and follows its physical parent's display. Hide before changing native role or transparency. Native children recreate their identity after hide. Retiring or hiding a native parent first retires popup descendants; independent ordinary child windows survive parent hide. Popup visibility observer failures are reported after required retirement and committed visibility. SDL popup-done force-hides without emitting a user `CloseRequested`; ordinary close requests and scene cancellation retain their own behavior.
+
+Transparent native PopupPanel/PopupMenu output executes through the compatibility backend. SDL 3.4.18's GPU API rejects transparent windows; GPU native menus require explicit `Transparent=false` before showing. The unsupported request releases its attempted native lifetime and preserves hidden state. Embedded transparent popups continue to execute on both renderers. Native titled-popup variants without the popup role, live embedding migration, foreign-platform acceptance and native system-menu service retain their exact coverage prerequisites.
+
+`NativePopupWindowTests` uses `ELECTRON2D_TEST_NATIVE_POPUPS=gpu` or `compatibility` with the Release runner. It exercises native nested parenting, IDs, outside dismissal, owner-safe rectangles, no-focus and exclusive policies, forced retirement, callback failure, real menu/option/panel/context output, and fresh-process public scene loading. Active focus/render and idle/render measurements cover 64 owner-thread intervals after 32 warmup intervals. SDL event construction, cold model edits/readback, native allocator counts, compositor screenshot acceptance, physical input and other platforms are outside the measured interval.

@@ -46,7 +46,8 @@ public partial class Window : Viewport
     }
 
     /// <summary>Gets or sets the native window title.</summary>
-    /// <remarks>A changed title requests configuration-warning refresh after the native and managed values commit.</remarks>
+    /// <remarks>A changed title requests configuration-warning refresh after the native and managed values commit.
+    /// Undecorated native popups retain logical title metadata because their native role has no title bar.</remarks>
     /// <exception cref="Exception">A configuration-warning subscriber fails after title assignment.</exception>
     /// <value>An empty string by default.</value>
     /// <exception cref="ArgumentNullException">The new title is null.</exception>
@@ -134,16 +135,18 @@ public partial class Window : Viewport
     public Vector2i Position
     {
         get { ThrowIfDisposed(); return _display?.WindowGetPositionCore() ?? _screenPosition ?? Vector2i.Zero; }
-        set { EnsureMutable(); RenderingOwner?.EnsureViewportMutation(); value = ClampEmbeddedPosition(value); _display?.WindowSetPositionCore(value); _screenPosition = value; _embeddedCanvas?.QueueRedraw(); }
+        set { EnsureMutable(); RenderingOwner?.EnsureViewportMutation(); value = ClampEmbeddedPosition(value); _display?.WindowSetPositionCore(value); _screenPosition = value; _popupClientPosition = null; _popupPlacementRoot = null; _embeddedCanvas?.QueueRedraw(); }
     }
 
     /// <summary>Gets or sets native or embedded visibility.</summary>
     /// <value>True by default. A native failure leaves managed visibility unchanged.</value>
     /// <remarks>A native child destroys its host on hide and allocates a new identity on show, preserving the viewport texture.
-    /// GPU work drains and root swapchain storage releases before hiding. Showing reclaims
+    /// Hiding or retiring a native parent first retires its popup descendants, preserving independent native children.
+    /// Popup observer failures are aggregated after required retirement and visibility changes.
+    /// Transparent native children require the compatibility renderer. GPU work drains and root swapchain storage releases before hiding. Showing reclaims
     /// presentation storage; independent offscreen targets remain live. The current Wayland Vulkan
     /// profile rejects remapping a previously presented surface until native unmap acknowledgement is available.</remarks>
-    /// <exception cref="NotSupportedException">The active profile cannot safely remap a previously presented window.</exception>
+    /// <exception cref="NotSupportedException">The active profile cannot safely remap a previously presented window or present a requested transparent child.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     /// <exception cref="AggregateException">Visibility callbacks fail after the new visibility commits.</exception>
@@ -155,17 +158,20 @@ public partial class Window : Viewport
             EnsureMutable();
             if (TryNativeVisibility(value)) return;
             if (_visible == value) return;
+            List<Exception>? errors = null;
             if (IsInsideTree && Parent is not null && Embedder is null)
             {
-                if (value) OpenNativeChild(); else CloseNative();
+                if (value) OpenNativeChild();
+                else try { CloseNative(); } catch (Exception error) when (_display is null) { CollectException(ref errors, error); }
             }
             if (_display is { } display)
             {
+                if (!value && display.RetireNativePopupChildren() is { } failure) CollectException(ref errors, failure);
                 if (_renderer is { } renderer) renderer.SetWindowVisible(display, value);
                 else display.SetWindowVisible(value);
             }
             _visible = value;
-            List<Exception>? errors = null;
+            if (value) Tree?.RegisterNativePopup(this);
             try { UpdateExclusiveSelection(); } catch (Exception error) { CollectException(ref errors, error); }
             try { EmbeddedVisibilityChanged(); } catch (Exception error) { CollectException(ref errors, error); }
             try { Notify(NotificationVisibilityChanged); } catch (Exception error) { CollectException(ref errors, error); }
@@ -307,7 +313,7 @@ public partial class Window : Viewport
                 display.WindowSetFlagCore(flag, true);
         if (_currentScreen is { } screen)
             display.WindowSetCurrentScreenCore(screen);
-        ApplyInitialNativePosition();
+        if (!display.IsNativePopup || _popupClientPosition is null) ApplyInitialNativePosition();
         if (_mode != WindowMode.Windowed)
             display.WindowSetModeCore(_mode);
         _size = display.WindowGetSizeCore(); _contentLayoutValid = false;
@@ -347,21 +353,22 @@ public partial class Window : Viewport
         if (_display is not { } display)
             return;
         _renderer?.EnsureNativeWindowMutation();
-        display.PrepareNativeWindowRetirement();
+        List<Exception>? errors = null;
+        if (display.PrepareNativeWindowRetirement() is { } retirementFailure) CollectException(ref errors, retirementFailure);
+        if (display.IsNativePopup) { _popupClientPosition = display.PopupClientOrigin; _popupPlacementRoot = display.NativePopupRoot.SceneWindow; }
+        Tree?.UnregisterNativePopup(this);
         if (ReferenceEquals(_focusedWindow, this)) _focusedWindow = null;
-        Exception? renderFailure = null;
         try
         {
             if (display.WindowID == DisplayServer.MainWindowId) _renderer?.Close();
             else
             {
                 try { _mode = display.WindowGetModeCore(); _size = display.WindowGetSizeCore(); }
-                catch (Exception error) { renderFailure = error; }
-                try { _renderer?.UnregisterNativeWindow(display); }
-                catch (Exception error) when (renderFailure is not null) { throw new AggregateException(renderFailure, error); }
+                catch (Exception error) { CollectException(ref errors, error); }
+                _renderer?.UnregisterNativeWindow(display);
             }
         }
-        catch (Exception error) { renderFailure = error; }
+        catch (Exception error) { CollectException(ref errors, error); }
         finally { _renderer = null; display.ReleaseRenderingWindow(); }
         display.CloseRequestedCore -= HandleClose;
         display.QuitRequestedCore -= HandleClose;
@@ -374,9 +381,9 @@ public partial class Window : Viewport
         display.TextEditingCore -= HandleTextEditing;
         display.FilesDroppedCore -= HandleFilesDropped;
         try { display.Dispose(); }
-        catch (Exception error) when (renderFailure is not null) { throw new AggregateException(renderFailure, error); }
+        catch (Exception error) { CollectException(ref errors, error); }
         finally { _display = null; _contentLayoutValid = false; }
-        if (renderFailure is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(renderFailure).Throw();
+        ThrowCollected("Native window retirement failed.", errors);
     }
 
     internal void PumpEvents() => GetDisplay().ProcessEventsCore();

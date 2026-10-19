@@ -35,6 +35,12 @@ public sealed partial class DisplayServer
 
     private void ApplyTransientParent(DisplayServer? parent, bool modal)
     {
+        if (NativePopupParent is not null)
+        {
+            if (parent is not null && !ReferenceEquals(parent, NativePopupParent)) throw new InvalidOperationException("Hide a native popup before changing its parent.");
+            _transientDisplay = parent;
+            return;
+        }
         var window = _window.DangerousGetHandle();
         if (_nativeModal && (!modal || !ReferenceEquals(parent, _transientDisplay)))
         {
@@ -68,12 +74,50 @@ public sealed partial class DisplayServer
         foreach (var context in (_rootDisplay ?? this)._childWindows.Values) context.SceneWindow?.UpdateNativeTransient();
     }
 
-    internal void PrepareNativeWindowRetirement()
+    internal Exception? PrepareNativeWindowRetirement()
     {
+        var failure = RetireNativePopupChildren(keepRetiring: true);
+        try
+        {
+            foreach (var child in (_rootDisplay ?? this)._childWindows.Values)
+                if (child.NativePopupParent is null && ReferenceEquals(child._transientDisplay, this)) child.SetTransientParent(null, false);
+        }
+        catch { _retiringNativeWindow = false; throw; }
+        return failure;
+    }
+
+    internal Exception? RetireNativePopupChildren(bool keepRetiring = false)
+    {
+        EnsureOwner();
+        if (_retiringNativeWindow) throw new InvalidOperationException("Native window retirement cannot reenter callbacks.");
+        SceneWindow?.RenderingOwner?.EnsureNativeWindowMutation();
         ValidateNativeWindowRetirement();
         var root = _rootDisplay ?? this;
         foreach (var child in root._childWindows.Values)
-            if (ReferenceEquals(child._transientDisplay, this)) child.SetTransientParent(null, false);
+            if (child.IsPopupDescendantOf(this))
+            {
+                child.ValidateNativeWindowRetirement();
+                if (child.SceneWindow is null && child._renderingAttached) throw new InvalidOperationException("Release descendant popup rendering owners before retiring their parent.");
+            }
+        _retiringNativeWindow = true;
+        try
+        {
+            List<Exception>? errors = null;
+            foreach (var child in root._childWindows.Values.ToArray())
+                if (ReferenceEquals(child.NativePopupParent, this))
+                    try { if (child.SceneWindow is { } scene) scene.Hide(); else child.Dispose(); }
+                    catch (Exception error) { (errors ??= []).Add(error); }
+            if (errors is not null)
+            {
+                var failure = new AggregateException("Native popup retirement callbacks failed.", errors);
+                if (root._childWindows.Values.Any(child => child.IsPopupDescendantOf(this))) throw failure;
+                if (!keepRetiring) _retiringNativeWindow = false;
+                return failure;
+            }
+        }
+        catch { _retiringNativeWindow = false; throw; }
+        if (!keepRetiring) _retiringNativeWindow = false;
+        return null;
     }
 
     private void ClearWindowComposition()
@@ -117,7 +161,7 @@ public sealed partial class DisplayServer
         throw new ArgumentOutOfRangeException(nameof(windowID), windowID, "The native window is absent or retired.");
     }
 
-    internal DisplayServer CreateChildWindow(string title, Vector2i size, Window? sceneWindow = null)
+    internal DisplayServer CreateChildWindow(string title, Vector2i size, Window? sceneWindow = null, DisplayServer? popupParent = null, Vector2i popupOffset = default)
     {
         EnsureOwner();
         var root = _rootDisplay ?? this;
@@ -127,13 +171,28 @@ public sealed partial class DisplayServer
         if (title.Contains('\0')) throw new ArgumentException("Window titles cannot contain null characters.", nameof(title));
         if (size.X <= 0 || size.Y <= 0) throw new ArgumentOutOfRangeException(nameof(size));
         var id = checked(root._nextWindowID + 1);
-        var handle = SDL.CreateWindow(title, size.X, size.Y, SDL.WindowFlags.Hidden | SDL.WindowFlags.Resizable | SDL.WindowFlags.HighPixelDensity);
+        var flags = SDL.WindowFlags.Hidden | SDL.WindowFlags.Resizable | SDL.WindowFlags.HighPixelDensity;
+        if (sceneWindow?.Transparent == true) flags |= SDL.WindowFlags.Transparent;
+        nint handle;
+        if (popupParent is null) handle = SDL.CreateWindow(title, size.X, size.Y, flags);
+        else
+        {
+            popupParent.EnsureOwner();
+            if (popupParent._retiringNativeWindow) throw new InvalidOperationException("The popup parent is retiring.");
+            var offset = SDL.GetCurrentVideoDriver() == "wayland" ? WaylandLogicalWindowSize(popupOffset, popupParent._window.DangerousGetHandle()) : popupOffset;
+            flags = (flags & ~SDL.WindowFlags.Resizable) | SDL.WindowFlags.PopupMenu;
+            if (sceneWindow?.Unfocusable == true) flags |= SDL.WindowFlags.NotFocusable;
+            handle = SDL.CreatePopupWindow(popupParent._window.DangerousGetHandle(), offset.X, offset.Y, size.X, size.Y, flags);
+        }
         if (handle == 0) throw SDLFailure("create a child window");
         DisplayServer? child = null;
         try
         {
             child = new(handle, 0, 0, null, root, id);
+            child.NativePopupParent = popupParent;
+            child._popupTitle = title;
             child.SceneWindow = sceneWindow;
+            child.PopupInputPolicy = popupParent is not null && (sceneWindow?.PopupWindow ?? true);
             child.ApplyDefaultWindowIcon();
             child._waylandMinimumSize = Vector2i.Zero;
             child._requestedVSync = WindowGetVSyncMode();

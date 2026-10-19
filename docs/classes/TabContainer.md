@@ -1,6 +1,6 @@
 # TabContainer
 
-Last updated: 2026-10-06
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public partial class TabContainer : Container`. **Inherits:** [Container](Container.md). **Inherited By:** —. **Source:** [model](../../src/Scene/GUI/TabContainer.cs), [layout](../../src/Scene/GUI/TabContainer.Layout.cs), [input](../../src/Scene/GUI/TabContainer.Input.cs), [storage](../../src/Scene/GUI/TabContainer.Storage.cs). **Component:** [Tab panels](../components/tab-panels.md).
 
@@ -718,3 +718,7 @@ public event System.Action<System.Int32> TabSelected
 ```
 
 Occurs when a valid assignment selects a tab, including an equal assignment.
+
+## Native popup integration
+
+Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](../components/popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.

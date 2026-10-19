@@ -1,6 +1,6 @@
 # MenuBar
 
-Last updated: 2026-10-13
+Last updated: 2026-10-19
 
 **Namespace:** `Electron2D`. **Declaration:** `public partial class Electron2D.MenuBar : Control`. **Source:** [model](../../src/Scene/GUI/MenuBar.cs), [layout](../../src/Scene/GUI/MenuBar.Layout.cs), [input](../../src/Scene/GUI/MenuBar.Input.cs), [storage](../../src/Scene/GUI/MenuBar.Storage.cs). **Component:** [Menu strips](../components/menu-strips.md).
 
@@ -456,3 +456,7 @@ Gets or sets the base writing direction independently of visual layout direction
 Auto initially; Inherited follows layout direction.
 
 Menu headers use [Control.TranslationContext](Control.md#automatic-translation-context) when automatic translation supplies no explicit context. Set it before assigning text; changing the context alone preserves prepared text until a translation-change notification or another layout invalidation.
+
+## Native popup integration
+
+Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](../components/popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.

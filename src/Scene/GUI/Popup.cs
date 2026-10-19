@@ -1,8 +1,8 @@
 namespace Electron2D;
 
-/// <summary>A transient embedded window that hides after cancellation, outside clicks or parent focus.</summary>
-/// <remarks>Attach beneath a viewport with GUIEmbedSubwindows enabled. Rendering and input belong to this window's
-/// viewport; hide requests are deferred on its SceneTree. Independent native child windows remain unavailable.</remarks>
+/// <summary>A transient child window that hides after cancellation, outside clicks or application focus loss.</summary>
+/// <remarks>Uses an embedding viewport or a native desktop popup parent. Cancellation defers hide on SceneTree;
+/// native popup-done retires the surface immediately without a user close request. Rendering and input belong to this viewport.</remarks>
 public class Popup : Window
 {
     private bool _closePending;
@@ -28,6 +28,7 @@ public class Popup : Window
     { if (PopupWindow && input.IsActionPressed("ui_cancel", false, true)) ClosePopup(); }
     internal override void AdjustPopup()
     {
+        if (Embedder is null && PopupWMHint) return;
         var area = GetUsableParentRect(); var size = Size; var position = Position;
         position = new((int)Math.Clamp((long)position.X, area.Position.X, Math.Max((long)area.Position.X, (long)area.Position.X + area.Size.X - size.X)), (int)Math.Clamp((long)position.Y, area.Position.Y, Math.Max((long)area.Position.Y, (long)area.Position.Y + area.Size.Y - size.Y)));
         size = new(Math.Min(size.X, area.Size.X), Math.Min(size.Y, area.Size.Y));
