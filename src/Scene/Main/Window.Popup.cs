@@ -181,9 +181,11 @@ public partial class Window
         if (_transientParent?.ExclusiveChild == this) _transientParent.ExclusiveChild = null;
         _transientParent = entering && _transient ? Parent?.GetWindow() : null;
         UpdateExclusiveSelection();
+        UpdateNativeTransient();
     }
     private void UpdateExclusiveSelection()
     {
+        UpdateNativeTransient();
         if (_transientParent is not { } parent) return;
         if (_exclusive && _visible && IsInsideTree)
         {
@@ -208,7 +210,7 @@ public partial class Window
     }
     internal void EmbeddedVisibilityChanged()
     {
-        if (Embedder is null) { if (Visible && IsInsideTree && Parent is not null) throw new NotSupportedException("Native child windows are unavailable."); return; }
+        if (Embedder is null) { if (Visible && IsInsideTree && Parent is not null) OpenNativeChild(); return; }
         if (Visible) ApplyInitialEmbeddedPosition();
         if (_embeddedCanvas is not null) { _embeddedCanvas.Visible = Visible; _embeddedCanvas.QueueRedraw(); }
         if (Visible) { Embedder.EmbeddedWindows.Remove(this); Embedder.EmbeddedWindows.Add(this); if (_embeddedLayer?.Parent is { } p) p.MoveChild(_embeddedLayer, -1); Tree?.FocusEmbeddedWindow(this); }
@@ -224,7 +226,9 @@ public partial class Window
         if (!entering)
         {
             List<Exception>? errors = null;
+            if (ReferenceEquals(_focusedWindow, this)) _focusedWindow = null;
             try { if (Embedder is not null) Tree?.HideEmbeddedWindow(this); } catch (Exception error) { CollectException(ref errors, error); }
+            try { if (Parent is not null) CloseNative(); } catch (Exception error) { CollectException(ref errors, error); }
             Embedder?.EmbeddedWindows.Remove(this); Embedder = null;
             try
             {
@@ -236,8 +240,8 @@ public partial class Window
             ThrowCollected("Embedded window cleanup failed.", errors); return;
         }
         if (Parent is null) return;
-        for (var parent = Parent; parent is not null; parent = parent.Parent) if (parent is Viewport { GUIEmbedSubwindows: true } viewport) { Embedder = viewport; break; }
-        if (Embedder is null) { if (Visible) throw new NotSupportedException("Native child windows are unavailable; configure an embedding viewport."); return; }
+        for (var parent = Parent; parent is not null; parent = parent.Parent) if (!_forceNative && parent is Viewport { GUIEmbedSubwindows: true } viewport) { Embedder = viewport; break; }
+        if (Embedder is null) { if (Visible) OpenNativeChild(); return; }
         Embedder.EmbeddedWindows.Add(this);
         _embeddedLayer = new CanvasLayer { Name = "_embedded_window_" + InstanceID + "_" + (++_embeddedSerial), Layer = int.MaxValue };
         _embeddedCanvas = new(this) { Name = "_window_canvas", MouseFilter = MouseFilter.Ignore, Visible = Visible };
@@ -293,6 +297,8 @@ public partial class Window
     }
     private static readonly PropertyDescriptor[] PopupProperties =
     [
+        new PropertyDescriptor<Window,bool>(nameof(TransientToFocused),w=>w.TransientToFocused,(w,v)=>w.TransientToFocused=v,_=>false,stored:true),
+        new PropertyDescriptor<Window,bool>(nameof(ForceNative),w=>w.ForceNative,(w,v)=>w.ForceNative=v,_=>false,stored:true),
         new PropertyDescriptor<Window,bool>(nameof(KeepTitleVisible),w=>w.KeepTitleVisible,(w,v)=>w.KeepTitleVisible=v,_=>false,stored:true),
         new PropertyDescriptor<Window,LayoutDirection>(nameof(LayoutDirection),w=>w.LayoutDirection,(w,v)=>w.LayoutDirection=v,_=>LayoutDirection.Inherited,stored:true),
         new PropertyDescriptor<Window,bool>(nameof(Transient),w=>w.Transient,(w,v)=>w.Transient=v,_=>false,stored:true),

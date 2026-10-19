@@ -7,10 +7,12 @@ namespace Electron2D;
 public sealed partial class DisplayServer
 {
     private bool _windowIconOverridden;
+    private Image? _defaultWindowIcon;
     private bool _nativeWaylandIconAvailable;
 
     internal void WindowSetIconCore(Image image, int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetIconCore(image, MainWindowId); return; }
         EnsureOwner();
         ArgumentNullException.ThrowIfNull(image);
         var window = GetWindow(windowId);
@@ -20,22 +22,38 @@ public sealed partial class DisplayServer
             if (!SDL.SetWindowIcon(window, surface))
                 throw SDLFailure("set window icon");
         });
-        _nativeWaylandIconAvailable = true;
+        (_rootDisplay ?? this)._nativeWaylandIconAvailable = true;
         _windowIconOverridden = true;
     }
 
     internal void SetIconCore(Image image)
     {
-        EnsureOwner();
-        ValidateIcon(image);
-        if (_windowIconOverridden)
-            return;
-        WithImageSurface(image, surface =>
+        EnsureOwner(); ValidateIcon(image);
+        var copy = new Image();
+        try
         {
-            if (!SDL.SetWindowIcon(GetWindow(MainWindowId), surface))
-                throw SDLFailure("set default window icon");
-        });
+            copy.CopyFrom(image);
+            WithImageSurface(copy, surface =>
+            {
+                if (!_windowIconOverridden && !SDL.SetWindowIcon(_window.DangerousGetHandle(), surface))
+                    throw SDLFailure("set default window icon");
+                foreach (var child in _childWindows.Values)
+                    if (!child._windowIconOverridden && !SDL.SetWindowIcon(child._window.DangerousGetHandle(), surface))
+                        throw SDLFailure("set child default window icon");
+            });
+        }
+        catch { copy.Dispose(); throw; }
+        var previous = _defaultWindowIcon; _defaultWindowIcon = copy; previous?.Dispose();
         _nativeWaylandIconAvailable = true;
+    }
+
+    private void ApplyDefaultWindowIcon()
+    {
+        if ((_rootDisplay ?? this)._defaultWindowIcon is not { } icon) return;
+        WithImageSurface(icon, surface =>
+        {
+            if (!SDL.SetWindowIcon(_window.DangerousGetHandle(), surface)) throw SDLFailure("apply default window icon");
+        });
     }
 
     private static void ValidateIcon(Image image)

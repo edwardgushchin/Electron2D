@@ -5,8 +5,9 @@ namespace Electron2D;
 internal sealed unsafe partial class GPUCanvasBackend
 {
     internal override void Present(ReadOnlySpan<CanvasPresentation> viewports)
+        => PresentToWindow(_window, PreparePresentation(), viewports, root: true);
+    private void PresentToWindow(nint window, CanvasRenderTarget presentation, ReadOnlySpan<CanvasPresentation> viewports, bool root)
     {
-        var presentation = PreparePresentation();
         _presentationPipeline ??= CreatePipeline(BuiltInShaders.ColorFragment, BlendMode.Mix, overwrite: true);
         _ = Sampler(TextureFilter.NearestWithMipmaps, TextureRepeat.Disabled);
         var bytes = checked(viewports.Length * 6 * sizeof(CanvasVertex)); EnsureBuffers(bytes);
@@ -45,10 +46,11 @@ internal sealed unsafe partial class GPUCanvasBackend
                 if (PresentationRegion(viewports[i].Rect, presentation.Size, out _, out _))
                     BindColorCopy(command, pass, _presentationPipeline, viewports[i].Target.Current.DangerousGetHandle(), new(0, 0, viewports[i].Target.HDR ? 1 : 0, 0), 0, i * 6);
             SDL.EndGPURenderPass(pass); pass = 0;
-            Check(SDL.WaitAndAcquireGPUSwapchainTexture(command, _window, out var swapchain, out var width, out var height), "acquire swapchain texture");
+            Check(SDL.WaitAndAcquireGPUSwapchainTexture(command, window, out var swapchain, out var width, out var height), "acquire swapchain texture");
             if (swapchain != 0)
             {
-                acquired = _hasPresented = true;
+                acquired = true;
+                if (root) _hasPresented = true;
                 var blit = new SDL.GPUBlitInfo { Source = new() { Texture = presentation.Next.DangerousGetHandle(), W = (uint)presentation.Size.X, H = (uint)presentation.Size.Y }, Destination = new() { Texture = swapchain, W = width, H = height }, LoadOp = SDL.GPULoadOp.DontCare, Filter = SDL.GPUFilter.Nearest };
                 SDL.BlitGPUTexture(command, in blit);
             }

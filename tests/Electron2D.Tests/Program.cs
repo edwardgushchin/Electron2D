@@ -9,6 +9,10 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length == 2 && args[0] == "--native-window-archive") { try { NativeChildWindowTests.RunArchive(args[1]); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_WINDOWS") == "managed") { try { NativeChildWindowTests.RunManaged(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_WINDOWS") == "display") { try { NativeChildWindowTests.Display(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_WINDOWS") is { } nativeWindowProfile) { try { NativeChildWindowTests.RunNative(nativeWindowProfile); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (args.Length == 2 && args[0] == "--gui-snap-archive") { try { GUISnapControlTests.RunArchive(args[1]); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_SNAP") == "managed") { try { GUISnapControlTests.RunManaged(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_SNAP") is { } guiSnapProfile) { try { GUISnapControlTests.RunNative(guiSnapProfile); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }

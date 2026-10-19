@@ -106,8 +106,8 @@ public abstract partial class Viewport
             else if (section is SubViewport { Parent: SubViewportContainer container } && container.GetViewport() is { } parent) section = parent;
             else break;
         }
-        if (!ReferenceEquals(section, tree.Root)) return _lastMousePosition;
-        var position = tree.Root is Window window && DisplayServer.IsAvailable && DisplayServer.HasFeature(DisplayServer.Feature.Mouse)
+        if (section is not Window { NativeDisplay: not null } && !ReferenceEquals(section, tree.Root)) return _lastMousePosition;
+        var position = section is Window window && DisplayServer.IsAvailable && DisplayServer.HasFeature(DisplayServer.Feature.Mouse)
             ? window.GetClientMousePosition() : Input.Service.GetLastMousePositionCore();
         var transform = GetScreenTransform();
         return transform.Determinant() == 0 ? Vector2.Zero : transform.AffineInverse() * position;

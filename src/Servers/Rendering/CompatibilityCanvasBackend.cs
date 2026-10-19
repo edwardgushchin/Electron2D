@@ -22,9 +22,9 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
     internal override string Method => "compatibility";
     internal override string Driver { get; }
 
-    internal CompatibilityCanvasBackend(SafeHandle window)
+    internal CompatibilityCanvasBackend(SafeHandle window, string? driver = null)
     {
-        _renderer = new RenderHandle(SDL.CreateRenderer(window.DangerousGetHandle(), null), SDL.DestroyRenderer, window);
+        _renderer = new RenderHandle(SDL.CreateRenderer(window.DangerousGetHandle(), driver), SDL.DestroyRenderer, window);
         try
         {
             Driver = SDL.GetRendererName(_renderer.DangerousGetHandle()) ?? "unknown";
@@ -385,9 +385,9 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         _textures[texture] = (handle, pixels, pixels.Revision);
     }
 
-    internal override Image Readback(CanvasRenderTarget output, bool backBuffer = false)
+    internal override Image Readback(CanvasRenderTarget output, bool backBuffer = false, bool requireFrame = true)
     {
-        if (!output.HasFrame) throw new InvalidOperationException("No canvas frame has completed.");
+        if (requireFrame && !output.HasFrame) throw new InvalidOperationException("No canvas frame has completed.");
         var renderer = _renderer.DangerousGetHandle();
         Check(SDL.SetRenderTarget(renderer, (backBuffer ? output.BackBuffer ?? throw new InvalidOperationException("No screen backbuffer is available.") : output.Current).DangerousGetHandle()), "bind readback target");
         try
@@ -400,6 +400,12 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
             return Image.CreateFromData(data.Width, data.Height, false, Image.Format.Rgba8, pixels);
         }
         finally { Check(SDL.SetRenderTarget(renderer, 0), "restore readback target"); }
+    }
+
+    protected override unsafe void ImportPixels(RenderHandle target, Image pixels)
+    {
+        fixed (byte* data = pixels.GetData())
+            Check(SDL.UpdateTexture(target.DangerousGetHandle(), 0, (nint)data, checked(pixels.Width * 4)), "seed canvas history");
     }
 
     public override void Dispose()

@@ -166,6 +166,7 @@ public sealed partial class DisplayServer
     internal void ApplyGamepadFocusPolicy()
     {
         EnsureOwner();
+        if (_rootDisplay is { } root) { root.ApplyGamepadFocusPolicy(); return; }
         var ignored = ShouldIgnoreGamepads();
         Input.Service.SetNativeJoyMotionSuppressed(ignored);
         if (!ignored) return;
@@ -180,8 +181,8 @@ public sealed partial class DisplayServer
     internal bool ShouldIgnoreGamepads()
     {
         if (!Input.IgnoreJoypadOnUnfocusedApplication) return false;
-        var flags = SDL.GetWindowFlags(GetWindow(MainWindowId));
-        return (flags & (SDL.WindowFlags.Hidden | SDL.WindowFlags.Minimized)) != 0 || !WindowIsFocusedCore();
+        var focused = FocusedWindow();
+        return focused is null || (SDL.GetWindowFlags(focused._window.DangerousGetHandle()) & (SDL.WindowFlags.Hidden | SDL.WindowFlags.Minimized)) != 0;
     }
 
     internal void UpdateJoyMapping(string guid, string? mapping)

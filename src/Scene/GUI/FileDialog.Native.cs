@@ -10,7 +10,7 @@ public partial class FileDialog
         EnsureMutable(); if (!CanUseNative()) { PopupCentered(); return; }
         if (_nativePending) throw new InvalidOperationException("A native file chooser is already pending.");
         var directory = ProjectSettings.GlobalizePath(CurrentDir); var file = CurrentFile; var filters = (string[])_filters.Clone(); var nativeFilters = NativeFilters(filters); var mode = _mode; var parentId = DisplayServer.MainWindowId;
-        for (var node = Parent; node != null; node = node.Parent) if (node is Window window && window.GetWindowID() == DisplayServer.MainWindowId) { parentId = window.GetWindowID(); break; }
+        for (var node = Parent; node != null; node = node.Parent) if (node is Window window && window.GetWindowID() >= DisplayServer.MainWindowId) { parentId = window.GetWindowID(); break; }
         _nativePending = true;
         try { DisplayServer.FileDialogShow(Title, directory, file, _showHidden, mode, nativeFilters, (ok, paths, filter) => NativeCompleted(mode, ok, paths, filter, filters), parentId); }
         catch { _nativePending = false; throw; }

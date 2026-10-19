@@ -2010,6 +2010,7 @@ public partial class Node : ElectronObject
             throw new InvalidOperationException("An active SceneTree root can only be disposed by disposing its SceneTree.");
 
         Tree?.EnsureOwnerThread();
+        ValidateNativeWindowRetirement();
         base.ValidateDisposal();
     }
 
@@ -2817,8 +2818,12 @@ public partial class Node : ElectronObject
         child.EnsurePhysicsObjectAccess();
         if (child._isEnteringTree || child._isMakingReady || child._isExitingTree || child._hasPendingTreeExit)
             throw new InvalidOperationException("A node cannot be inserted while its tree lifecycle is in progress.");
-        if (child is Window { Visible: true } && Tree is not null && !EnumerateAncestorsForEmbedding())
-            throw new NotSupportedException("Visible child windows require an embedding viewport.");
+        if (child is Window { Visible: true } window && Tree is not null && (window.ForceNative || !EnumerateAncestorsForEmbedding()))
+        {
+            if (Tree.Root is not Window { NativeDisplay: not null } || RenderingServer.Service is not { } renderer)
+                throw new NotSupportedException("Visible independent windows require an active native scene host; otherwise configure an embedding viewport.");
+            renderer.EnsureNativeWindowMutation();
+        }
         Tree?.EnsureOwnerThread();
 
         if (ReferenceEquals(child, this))
@@ -2841,6 +2846,15 @@ public partial class Node : ElectronObject
 
     }
 
+    private void ValidateNativeWindowRetirement()
+    {
+        var display = DisplayServer.Service; var renderer = RenderingServer.Service;
+        if (display?.HasPendingNativeDialogs != true && renderer?.NativeWindowMutationBlocked != true) return;
+        foreach (var node in EnumerateDepthFirst())
+            if (node is Window { NativeDisplay: { } context })
+            { renderer?.EnsureNativeWindowMutation(); context.ValidateNativeWindowRetirement(); }
+    }
+
     private bool RemoveChildCore(Node child, bool disposingParent = false)
     {
         EnsureChildOrderMutable();
@@ -2853,6 +2867,7 @@ public partial class Node : ElectronObject
         if (child._isEnteringTree || child._isMakingReady || child._isExitingTree)
             throw new InvalidOperationException("A node cannot be structurally removed while its tree lifecycle callbacks are running.");
 
+        child.ValidateNativeWindowRetirement();
         var tree = Tree;
         tree?.BeginNodeLifecycle();
         try

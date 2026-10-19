@@ -4,7 +4,7 @@ using SDL3;
 
 namespace Electron2D;
 
-/// <summary>Owns the process's native display connection and main window.</summary>
+/// <summary>Owns the process's native display connection and native window contexts.</summary>
 /// <remarks>Public static operations delegate to the retained service object; state, identity and ownership remain object-scoped.
 ///
 /// Open one server on the SDL main thread. Window and display calls are confined to the opening thread; dispose the
@@ -51,8 +51,11 @@ public sealed partial class DisplayServer : ElectronObject
     private Vector2i _waylandMinimumSize = new(64, 64);
     private Vector2i _waylandMaximumSize;
 
-    private DisplayServer(nint window, nint gtkScreen, nint gtkTitlebarProvider, string? previousGamepadBackgroundHint)
+    private DisplayServer(nint window, nint gtkScreen, nint gtkTitlebarProvider, string? previousGamepadBackgroundHint,
+        DisplayServer? root = null, int windowID = MainWindowId)
     {
+        _rootDisplay = root;
+        WindowID = windowID;
         _previousGamepadBackgroundHint = previousGamepadBackgroundHint;
         _gtkScreen = gtkScreen;
         _gtkTitlebarProvider = gtkTitlebarProvider;
@@ -65,7 +68,7 @@ public sealed partial class DisplayServer : ElectronObject
         _pixelWindowCoordinates = _waylandWindowPosition || OperatingSystem.IsAndroid() ||
             OperatingSystem.IsIOS() || OperatingSystem.IsTvOS() || OperatingSystem.IsBrowser();
         _linuxPortalThemeDriver = videoDriver is "wayland" or "x11";
-        _linuxPortalThemeSupported = _linuxPortalThemeDriver && LinuxPortalThemeSupport.Query();
+        _linuxPortalThemeSupported = root?._linuxPortalThemeSupported ?? (_linuxPortalThemeDriver && LinuxPortalThemeSupport.Query());
         int width;
         int height;
         var sizeRead = _pixelWindowCoordinates
@@ -415,6 +418,7 @@ public sealed partial class DisplayServer : ElectronObject
 
     internal void WindowSetTitleCore(string title, int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetTitleCore(title, MainWindowId); return; }
         EnsureOwner();
         ArgumentNullException.ThrowIfNull(title);
         if (!SDL.SetWindowTitle(GetWindow(windowId), title))
@@ -423,6 +427,7 @@ public sealed partial class DisplayServer : ElectronObject
 
     internal Vector2i WindowGetSizeCore(int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) return ResolveWindow(windowId).WindowGetSizeCore(MainWindowId);
         EnsureOwner();
         var window = GetWindow(windowId);
         int width;
@@ -437,6 +442,7 @@ public sealed partial class DisplayServer : ElectronObject
 
     internal void WindowSetSizeCore(Vector2i size, int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetSizeCore(size, MainWindowId); return; }
         EnsureOwner();
         var requestedSize = SDL.GetCurrentVideoDriver() == "wayland"
             ? new Vector2i(Math.Max(1, size.X), Math.Max(1, size.Y))
@@ -482,6 +488,7 @@ public sealed partial class DisplayServer : ElectronObject
 
     internal Vector2i WindowGetPositionCore(int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) return ResolveWindow(windowId).WindowGetPositionCore(MainWindowId);
         EnsureOwner();
         var window = GetWindow(windowId);
         EnsureGlobalWindowCoordinatesAvailable();
@@ -492,6 +499,7 @@ public sealed partial class DisplayServer : ElectronObject
 
     internal void WindowSetPositionCore(Vector2i position, int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetPositionCore(position, MainWindowId); return; }
         EnsureOwner();
         var window = GetWindow(windowId);
         EnsureGlobalWindowCoordinatesAvailable();
@@ -546,7 +554,9 @@ public sealed partial class DisplayServer : ElectronObject
             throw new InvalidOperationException("The rendering owner must release the window before display disposal.");
         if (_processingEvents)
             throw new InvalidOperationException("The display server cannot be disposed during event delivery.");
-        ValidateDialogDisposal();
+        if (_childWindows.Values.Any(window => window._renderingAttached))
+            throw new InvalidOperationException("Child rendering owners must release their windows before display disposal.");
+        ValidateNativeWindowRetirement();
     }
 
     /// <inheritdoc />
@@ -556,8 +566,27 @@ public sealed partial class DisplayServer : ElectronObject
             return;
         lock (InstanceGate)
         {
+            PrepareNativeWindowRetirement();
+            if (_rootDisplay is { } root)
+            {
+                if (ReferenceEquals(root.FocusedWindow(), this) || ReferenceEquals(root._pressedInputWindow, this))
+                { Input.ReleasePressedEvents(); root._pressedInputWindow = null; }
+                ClearWindowComposition(); ReleaseWindowTouches();
+                if (ReferenceEquals(root._mouseModeWindow, this)) root._mouseModeWindow = null;
+                root._childWindows.Remove(WindowID);
+                root._nativeChildren.Remove(_sdlWindowId);
+                if (ReferenceEquals(root._pendingInputWindow, this)) root._pendingInputWindow = null;
+                SceneWindow = null;
+                _pendingDroppedFiles = null;
+                _window.Dispose();
+                base.Dispose(disposing);
+                return;
+            }
+            foreach (var child in _childWindows.Values.ToArray()) child.Dispose();
+            SceneWindow = null;
             _pendingDroppedFiles = null;
             DisposeDialogs();
+            _defaultWindowIcon?.Dispose(); _defaultWindowIcon = null;
             ReleasePointer();
             CloseGamepads();
             Input.Service.SetNativeFlush(null);
@@ -622,7 +651,7 @@ public sealed partial class DisplayServer : ElectronObject
     private nint GetWindow(int windowId)
     {
         if (windowId != MainWindowId)
-            throw new ArgumentOutOfRangeException(nameof(windowId), windowId, "Only the main window exists.");
+            return ResolveWindow(windowId)._window.DangerousGetHandle();
         return _window.DangerousGetHandle();
     }
 

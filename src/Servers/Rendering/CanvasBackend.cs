@@ -19,15 +19,15 @@ internal readonly record struct CanvasPresentation(CanvasRenderTarget Target, Re
 internal abstract class CanvasBackend : IDisposable
 {
     private CanvasRenderTarget? _presentation;
-    protected CanvasRenderTarget PreparePresentation()
+    protected CanvasRenderTarget PreparePresentation() => PreparePresentation(GetPixelSize(), ref _presentation);
+    protected CanvasRenderTarget PreparePresentation(Vector2i size, ref CanvasRenderTarget? storage)
     {
-        var size = GetPixelSize();
         if (size.X is < 1 or > 16384 || size.Y is < 1 or > 16384) throw new NotSupportedException("Presentation targets require 1..16384 pixels per axis on this backend profile.");
-        if (_presentation?.Size == size) return _presentation;
+        if (storage?.Size == size) return storage;
         var current = CreateTarget(size, Colors.Black); RenderHandle next;
         try { next = CreateTarget(size, Colors.Black); } catch { current.Dispose(); throw; }
         var replacement = new CanvasRenderTarget(current, next, size);
-        _presentation?.Dispose(); return _presentation = replacement;
+        storage?.Dispose(); return storage = replacement;
     }
     internal Image ReadbackScreen(CanvasRenderTarget? content) => Readback(_presentation is { HasFrame: true } ? _presentation : content ?? throw new InvalidOperationException("No canvas frame has completed."));
     internal abstract void Present(ReadOnlySpan<CanvasPresentation> viewports);
@@ -75,7 +75,24 @@ internal abstract class CanvasBackend : IDisposable
     internal virtual void EndFrame() { }
     internal abstract void Sync(CanvasRenderTarget? target);
     internal abstract void Draw(CanvasRenderTarget target, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting);
-    internal abstract Image Readback(CanvasRenderTarget target, bool backBuffer = false);
+    internal abstract Image Readback(CanvasRenderTarget target, bool backBuffer = false, bool requireFrame = true);
+    internal void SeedHistory(CanvasBackend source)
+    {
+        ReleaseTargets();
+        foreach (var pair in source._targets)
+        {
+            var sourceTarget = pair.Value;
+            var target = Target(pair.Key, sourceTarget.Size, default);
+            using (var pixels = source.Readback(sourceTarget, requireFrame: false)) ImportPixels(target.Current, pixels);
+            if (sourceTarget.BackBuffer is not null)
+            {
+                using var pixels = source.Readback(sourceTarget, backBuffer: true, requireFrame: false);
+                ImportPixels(BackBuffer(target, sourceTarget.BackBufferMipmaps), pixels);
+            }
+            target.HasFrame = sourceTarget.HasFrame;
+        }
+    }
+    protected virtual void ImportPixels(RenderHandle target, Image pixels) => throw new NotSupportedException("This backend cannot import canvas history.");
     internal virtual nint GetNativeHandle(DisplayServer.HandleType type) =>
         throw new NotSupportedException($"The {Driver} renderer has no {type} identity.");
     public abstract void Dispose();

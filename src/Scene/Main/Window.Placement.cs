@@ -24,7 +24,7 @@ public partial class Window
     /// <value>Absolute initially. Every centered mode uses the containing viewport for embedded windows.</value>
     /// <remarks>Changing this value does not move an already visible window. Native root placement runs before
     /// scene entry and centers in full screen bounds. Wayland rejects explicit native positioning; embedded
-    /// centering is available there. Independent native children retain their separate host requirement.
+    /// centering is available there. Native children apply the same policies when their host is created.
     /// Every valid assignment notifies PropertyListChanged after commitment, including an equal value.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The policy is undefined.</exception>
     /// <exception cref="Exception">A property-list observer fails after policy commitment.</exception>

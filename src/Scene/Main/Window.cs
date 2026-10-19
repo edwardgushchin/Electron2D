@@ -137,9 +137,10 @@ public partial class Window : Viewport
         set { EnsureMutable(); RenderingOwner?.EnsureViewportMutation(); value = ClampEmbeddedPosition(value); _display?.WindowSetPositionCore(value); _screenPosition = value; _embeddedCanvas?.QueueRedraw(); }
     }
 
-    /// <summary>Gets or sets native-root or embedded-child visibility.</summary>
+    /// <summary>Gets or sets native or embedded visibility.</summary>
     /// <value>True by default. A native failure leaves managed visibility unchanged.</value>
-    /// <remarks>GPU work drains and root swapchain storage releases before hiding. Showing reclaims
+    /// <remarks>A native child destroys its host on hide and allocates a new identity on show, preserving the viewport texture.
+    /// GPU work drains and root swapchain storage releases before hiding. Showing reclaims
     /// presentation storage; independent offscreen targets remain live. The current Wayland Vulkan
     /// profile rejects remapping a previously presented surface until native unmap acknowledgement is available.</remarks>
     /// <exception cref="NotSupportedException">The active profile cannot safely remap a previously presented window.</exception>
@@ -154,7 +155,10 @@ public partial class Window : Viewport
             EnsureMutable();
             if (TryNativeVisibility(value)) return;
             if (_visible == value) return;
-            if (value && IsInsideTree && Parent is not null && Embedder is null) throw new NotSupportedException("Native child windows are unavailable.");
+            if (IsInsideTree && Parent is not null && Embedder is null)
+            {
+                if (value) OpenNativeChild(); else CloseNative();
+            }
             if (_display is { } display)
             {
                 if (_renderer is { } renderer) renderer.SetWindowVisible(display, value);
@@ -199,7 +203,7 @@ public partial class Window : Viewport
     /// <summary>Occurs when the native system or embedded host requests window closure.</summary>
     /// <remarks>Handlers may disable SceneTree.AutoAcceptQuit to keep running, or call SceneTree.Quit with an exit code.
     /// Containing-window notifications precede all signal delegates; failures are aggregated after remaining receivers.
-    /// The default quit decision follows delivery even on failure. Handler failures terminate Engine.Run with cleanup.</remarks>
+    /// The root default quit decision follows delivery even on failure; a child request does not imply application quit. Handler failures terminate Engine.Run with cleanup.</remarks>
     public event Action? CloseRequested;
 
     /// <summary>Occurs after Title commits a different value.</summary>
@@ -212,9 +216,9 @@ public partial class Window : Viewport
     public event Action? FocusExited;
 
     /// <summary>Gets the native window identity while running.</summary>
-    /// <returns>Zero for the active native root window; minus one while detached or embedded.</returns>
+    /// <returns>Zero for the active native root, a positive identity for an active native child, and minus one while detached, embedded or a native child is hidden.</returns>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public int GetWindowID() { ThrowIfDisposed(); return _display is null ? DisplayServer.InvalidWindowId : DisplayServer.MainWindowId; }
+    public int GetWindowID() { ThrowIfDisposed(); return _display?.WindowID ?? DisplayServer.InvalidWindowId; }
 
     /// <summary>Reports whether the active native window has keyboard focus.</summary>
     /// <returns>The platform's current focus observation.</returns>
@@ -254,6 +258,7 @@ public partial class Window : Viewport
     {
         if (disposing)
         {
+            if (ReferenceEquals(_focusedWindow, this)) _focusedWindow = null;
             _themeOwner?.Dispose(); ThemeChanged = null;
             AboutToPopup = null;
             CloseRequested = null;
@@ -270,10 +275,22 @@ public partial class Window : Viewport
         base.Dispose(disposing);
     }
 
+    internal DisplayServer? NativeDisplay => _display;
+
     internal void OpenNative(bool disableVSync = false)
     {
-        if (_keepTitleVisible) throw new NotSupportedException("Native title measurement is unavailable.");
         _display = DisplayServer.OpenForRendering(_title, _size, hidden: !Visible);
+        _display.SceneWindow = this;
+        ConfigureNative();
+        if (disableVSync) DisplayServer.WindowSetVSyncMode(DisplayServer.VSyncMode.Disabled);
+        _renderer = RenderingServer.Open(this, _display.AcquireRenderingWindow());
+        _display.SetGraphicsHandleQuery(_renderer.GetNativeHandle);
+    }
+
+    private void ConfigureNative()
+    {
+        if (_keepTitleVisible) throw new NotSupportedException("Native title measurement is unavailable.");
+        var display = _display ?? throw new InvalidOperationException("The native window is absent.");
         if (OperatingSystem.IsAndroid() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS() || OperatingSystem.IsBrowser())
         {
             if (_minSize.X != 0 || _minSize.Y != 0 || _maxSize.X != 0 || _maxSize.Y != 0)
@@ -281,32 +298,29 @@ public partial class Window : Viewport
         }
         else
         {
-            _display.WindowSetMinSizeCore(_minSize);
-            _display.WindowSetMaxSizeCore(_maxSize);
-            _display.WindowSetSizeCore(_size);
+            display.WindowSetMinSizeCore(_minSize);
+            display.WindowSetMaxSizeCore(_maxSize);
+            display.WindowSetSizeCore(_size);
         }
         foreach (var flag in new[] { WindowFlag.ResizeDisabled, WindowFlag.Borderless, WindowFlag.AlwaysOnTop, WindowFlag.NoFocus, WindowFlag.Popup, WindowFlag.Transparent, WindowFlag.PopupWmHint, WindowFlag.MinimizeDisabled, WindowFlag.MaximizeDisabled })
             if (GetFlag(flag))
-                _display.WindowSetFlagCore(flag, true);
+                display.WindowSetFlagCore(flag, true);
         if (_currentScreen is { } screen)
-            _display.WindowSetCurrentScreenCore(screen);
+            display.WindowSetCurrentScreenCore(screen);
         ApplyInitialNativePosition();
         if (_mode != WindowMode.Windowed)
-            _display.WindowSetModeCore(_mode);
-        _size = _display.WindowGetSizeCore(); _contentLayoutValid = false;
-        _display.CloseRequestedCore += HandleClose;
-        _display.QuitRequestedCore += HandleClose;
-        _display.WindowRectChangedCore += HandleRect;
-        _display.WindowFocusChangedCore += HandleFocus;
-        _display.WindowMouseEnteredCore += HandleMouseEntered;
-        _display.WindowMouseExitedCore += HandleMouseExited;
-        _display.WindowDpiChangedCore += HandleDPIChanged;
-        _display.TextInputCore += HandleTextInput;
-        _display.TextEditingCore += HandleTextEditing;
-        _display.FilesDroppedCore += HandleFilesDropped;
-        if (disableVSync) DisplayServer.WindowSetVSyncMode(DisplayServer.VSyncMode.Disabled);
-        _renderer = RenderingServer.Open(this, _display.AcquireRenderingWindow());
-        _display.SetGraphicsHandleQuery(_renderer.GetNativeHandle);
+            display.WindowSetModeCore(_mode);
+        _size = display.WindowGetSizeCore(); _contentLayoutValid = false;
+        display.CloseRequestedCore += HandleClose;
+        display.QuitRequestedCore += HandleClose;
+        display.WindowRectChangedCore += HandleRect;
+        display.WindowFocusChangedCore += HandleFocus;
+        display.WindowMouseEnteredCore += HandleMouseEntered;
+        display.WindowMouseExitedCore += HandleMouseExited;
+        display.WindowDpiChangedCore += HandleDPIChanged;
+        display.TextInputCore += HandleTextInput;
+        display.TextEditingCore += HandleTextEditing;
+        display.FilesDroppedCore += HandleFilesDropped;
     }
 
     internal Vector2 GetClientMousePosition()
@@ -319,7 +333,7 @@ public partial class Window : Viewport
     {
         ThrowIfDisposed(); Tree?.EnsureOwnerThread();
         if (Embedder is { } embedder) { (embedder.GetWindow() ?? throw new InvalidOperationException("Pointer warping requires an active containing native Window.")).WarpClientMouse(position); return; }
-        EnsureNativeOpen(); _display!.WarpMouseCore(position);
+        EnsureNativeOpen(); _display!.WarpClientMouse(position);
     }
 
     internal void EnsureNativeOpen()
@@ -332,8 +346,21 @@ public partial class Window : Viewport
     {
         if (_display is not { } display)
             return;
+        _renderer?.EnsureNativeWindowMutation();
+        display.PrepareNativeWindowRetirement();
+        if (ReferenceEquals(_focusedWindow, this)) _focusedWindow = null;
         Exception? renderFailure = null;
-        try { _renderer?.Close(); }
+        try
+        {
+            if (display.WindowID == DisplayServer.MainWindowId) _renderer?.Close();
+            else
+            {
+                try { _mode = display.WindowGetModeCore(); _size = display.WindowGetSizeCore(); }
+                catch (Exception error) { renderFailure = error; }
+                try { _renderer?.UnregisterNativeWindow(display); }
+                catch (Exception error) when (renderFailure is not null) { throw new AggregateException(renderFailure, error); }
+            }
+        }
         catch (Exception error) { renderFailure = error; }
         finally { _renderer = null; display.ReleaseRenderingWindow(); }
         display.CloseRequestedCore -= HandleClose;
@@ -346,8 +373,9 @@ public partial class Window : Viewport
         display.TextInputCore -= HandleTextInput;
         display.TextEditingCore -= HandleTextEditing;
         display.FilesDroppedCore -= HandleFilesDropped;
-        try { display.Dispose(); _display = null; }
+        try { display.Dispose(); }
         catch (Exception error) when (renderFailure is not null) { throw new AggregateException(renderFailure, error); }
+        finally { _display = null; _contentLayoutValid = false; }
         if (renderFailure is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(renderFailure).Throw();
     }
 
@@ -366,7 +394,7 @@ public partial class Window : Viewport
         try { RequestEmbeddedClose(); }
         finally
         {
-            Tree?.AcceptWindowClose();
+            if (Parent is null) Tree?.AcceptWindowClose();
         }
     }
 
@@ -381,7 +409,12 @@ public partial class Window : Viewport
         try { CommitSize(rect.Size); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Window rectangle callbacks failed.", errors);
     }
-    private void HandleFocus(bool focused) => EmitWindowEvent(focused ? NotificationWmWindowFocusIn : NotificationWmWindowFocusOut);
+    private void HandleFocus(bool focused)
+    {
+        if (focused) _focusedWindow = this;
+        else if (ReferenceEquals(_focusedWindow, this)) _focusedWindow = null;
+        EmitWindowEvent(focused ? NotificationWmWindowFocusIn : NotificationWmWindowFocusOut);
+    }
     private void HandleMouseEntered()
     {
         List<Exception>? errors = null;

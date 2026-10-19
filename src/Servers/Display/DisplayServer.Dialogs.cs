@@ -14,6 +14,8 @@ public sealed partial class DisplayServer
     private readonly object _dialogGate = new();
     private readonly Queue<DialogCompletion> _dialogCompletions = new();
     private int _pendingNativeDialogs;
+    private int _pendingOwnedNativeDialogs;
+    internal bool HasPendingNativeDialogs => Volatile.Read(ref _pendingNativeDialogs) != 0;
     private bool _dialogsDisposed;
 
     internal void DialogShowCore(string title, string description, IReadOnlyList<string> buttons, Action<int> callback)
@@ -89,7 +91,7 @@ public sealed partial class DisplayServer
         };
 
         var nativeFilters = nativeMode == SDL.FileDialogType.OpenFolder ? [] : CreateDialogFilters(filters);
-        var request = new DialogRequest(this, callback, nativeFilters);
+        var request = new DialogRequest(this, ResolveWindow(parentWindowId), callback, nativeFilters);
         var properties = SDL.CreateProperties();
         if (properties == 0)
         {
@@ -117,6 +119,7 @@ public sealed partial class DisplayServer
             {
                 requestId = Interlocked.Increment(ref _nextDialogRequestId);
             } while (requestId == 0 || !DialogRequests.TryAdd(requestId, request));
+            request.RetainParent();
             lock (_dialogGate)
                 _pendingNativeDialogs++;
             try
@@ -266,6 +269,14 @@ public sealed partial class DisplayServer
                 throw new InvalidOperationException("Complete and pump native file dialogs before disposing the display server.");
     }
 
+    internal void ValidateNativeWindowRetirement()
+    {
+        EnsureOwner();
+        if (Volatile.Read(ref _pendingOwnedNativeDialogs) != 0)
+            throw new InvalidOperationException("Complete native file dialogs before retiring their parent window.");
+        ValidateDialogDisposal();
+    }
+
     private void DisposeDialogs()
     {
         lock (_dialogGate)
@@ -277,24 +288,34 @@ public sealed partial class DisplayServer
 
     private sealed class DialogRequest(
         DisplayServer owner,
+        DisplayServer parent,
         Action<bool, IReadOnlyList<string>, int> callback,
         SDL.DialogFileFilter[] filters)
     {
         private readonly GCHandle _filterPin = filters.Length == 0 ? default : GCHandle.Alloc(filters, GCHandleType.Pinned);
         private int _filtersDisposed;
+        private int _parentRetained;
 
         public DisplayServer Owner { get; } = owner;
         public Action<bool, IReadOnlyList<string>, int> Callback { get; } = callback;
         public nint FiltersPointer => _filterPin.IsAllocated ? _filterPin.AddrOfPinnedObject() : 0;
 
+        internal void RetainParent()
+        { Interlocked.Increment(ref parent._pendingOwnedNativeDialogs); _parentRetained = 1; }
+
         public void DisposeFilters()
         {
             if (Interlocked.Exchange(ref _filtersDisposed, 1) != 0)
                 return;
-            if (_filterPin.IsAllocated)
-                _filterPin.Free();
-            foreach (var filter in filters)
-                filter.Dispose();
+            try
+            {
+                if (_filterPin.IsAllocated) _filterPin.Free();
+                foreach (var filter in filters) filter.Dispose();
+            }
+            finally
+            {
+                if (Interlocked.Exchange(ref _parentRetained, 0) != 0) Interlocked.Decrement(ref parent._pendingOwnedNativeDialogs);
+            }
         }
     }
 

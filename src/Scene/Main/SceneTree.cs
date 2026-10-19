@@ -886,6 +886,13 @@ public sealed partial class SceneTree : MainLoop
 
     internal override void DispatchInputEvent(InputEvent @event)
     {
+        if (Root is Window && DisplayServer.Service is { } display)
+        {
+            var window = @event is InputEventFromWindow source ? display.FindSceneWindow(source.WindowID) : display.HasEventContext ? display.EventWindow : (Window)Root;
+            if (window is not null && !window.IsDisposed && ReferenceEquals(window.Tree, this) && window.GetLastExclusiveWindow() == window)
+                DispatchViewportInput(window, @event, inLocalCoordinates: false, fromWindow: true);
+            return;
+        }
         if (Root is Viewport viewport) DispatchViewportInput(viewport, @event, inLocalCoordinates: false, fromWindow: viewport is Window);
         else DispatchLocalInputEvent(@event);
     }

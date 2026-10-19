@@ -712,3 +712,7 @@ The method remains Partial for nonzero native window identities. Exact dependenc
 MultiMeshInstance interpolation reset also covers its undrawn borrowed source. A deterministic pre-draw resource-history test and delayed-first-frame Wayland pixels reproduce the previous missing reset; the shared canvas reset now includes the assigned resource and excludes it from duplicate cached-command resets. Generic notification propagation and the typed reset API use this same path.
 
 [Physical canvas notification publication](scene-hierarchy.md#physical-canvas-notifications-from-processing-groups) now preserves current-group body/Area/tile identity requests and effective participation through the joined owner phase. Logical canvas-layer reads accept active groups; attachment epochs and exact generated RID targets protect owner reentry. General reserved notification consumers remain Partial.
+
+### Independent native window presentation
+
+The same viewport graph now supplies independent desktop Window surfaces. GPU windows share authoritative targets and device state; compatibility windows replay frozen dependency submissions and cold-copy retained history when joining or recovering. Native child IDs select ViewportAttachToScreen destinations; a hidden root does not prevent visible children from drawing/presenting. Viewport release removes every compatibility mirror. See [the complete ownership and capability contract](window-runtime.md#independent-native-windows).

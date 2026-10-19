@@ -1,6 +1,6 @@
 # Display domain
 
-Last updated: 2026-10-13
+Last updated: 2026-10-19
 
 ## Responsibility
 
@@ -101,3 +101,5 @@ order, stop before nested Window scopes and continue after callback failures.
 WindowNotificationTests exercises eight event kinds through embedded/public and SDL
 dummy routes plus 1024 zero-byte warmed operations. DPI/position platform limits and
 missing go-back/HDR sources remain open; see [window runtime](../components/window-runtime.md#containing-window-notifications).
+
+Ordinary desktop Window children now execute [independent native hosts](../components/window-runtime.md#independent-native-windows), sharing one display/event service and scene renderer. GPU device targets are shared; compatibility contexts replay frozen commands with cold history transfer. Native popup surfaces and platform-specific decoration controls retain separate prerequisites.

@@ -210380,6 +210380,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Window.GetFocusedWindow()",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "GetFocusedWindow",
+    "signature": "public static Electron2D.Window GetFocusedWindow()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Window",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Window.GetPositionWithDecorations()",
     "kind": "method",
     "declaringType": "Electron2D.Window",
@@ -211467,6 +211480,25 @@
       {
         "name": "value",
         "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.SetUnparentWhenInvisible(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "SetUnparentWhenInvisible",
+    "signature": "public System.Void SetUnparentWhenInvisible(System.Boolean unparent)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "unparent",
+        "type": "System.Boolean",
         "default": null
       }
     ],
@@ -255696,6 +255728,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Window.ForceNative()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "ForceNative",
+    "signature": "public System.Boolean ForceNative { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Window.InitialPosition()",
     "kind": "property",
     "declaringType": "Electron2D.Window",
@@ -255896,6 +255941,19 @@
     "declaringType": "Electron2D.Window",
     "name": "Transient",
     "signature": "public System.Boolean Transient { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Window.TransientToFocused()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "TransientToFocused",
+    "signature": "public System.Boolean TransientToFocused { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

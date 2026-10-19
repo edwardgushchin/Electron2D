@@ -119,3 +119,21 @@ The native decoration producer for TitlebarChanged, custom nonclient input owner
 for NonclientWindowInput, and host go-back request/policy integration are distinct
 prerequisites. TitleChanged already covers text changes and does not establish a
 native decoration-change signal.
+
+## Independent native windows
+
+Ordinary desktop Window children now own independent native presentation surfaces under the active Engine.Run session. Native IDs are zero for main and increasing positive values for child lifetimes. Hidden/detached children retire their native ID; reactivation allocates a new one. Hiding preserves the viewport resource, texture and completed history. Native close requests affect the child signal and do not automatically quit. Native child surfaces remain visible when their scene parent hides.
+
+The retained DisplayServer owns one native pump and private per-window contexts. Queue events resolve native handles to public IDs, accumulated motion flushes across window/device boundaries, and retired IDs no longer route to the scene. Window signals and GUI/text input address their own viewport. Touch indexes share a session pool; composition and pointer state remain window-specific. Static service identity and SDL initialization remain process-owned. Core per-window operations, borrowed graphics handles, VSync and file-dialog parents resolve the chosen context.
+
+One RenderingServer captures and simulates the scene. GPU windows share its device and authoritative targets; each owns a separate claimed presentation surface. Compatibility windows replay the same frozen dependency-ordered submissions on separate renderers using the main driver. Cold activation/recovery imports retained current/backbuffer pixels once, including disabled/once and feedback history. Prepared frames introduce no CPU readback bridge. Compatibility draw/target storage scales with the number of native windows. Native lifecycle mutation rejects native submission; renderer shutdown also retires orphaned child contexts after callback failures.
+
+ForceNative and TransientToFocused are stored typed policies. Focus observation and runtime-only automatic unparenting apply to native and embedded windows. Native popup subclasses still require their surface/grab, native transparency and decoration adapters; desktop ordinary windows do not claim those capabilities. Mobile/TV/browser hosts retain embedded windows until independent-surface integration exists. The existing Wayland Vulkan root unmap/presentation-acknowledgement prerequisite remains.
+
+Native file-dialog requests pin their selected parent lifetime until native completion. Hiding/disposing that parent rejects before rendering ownership or native identity changes; the existing display-wide pending/completion guard still owns application shutdown. Native chooser interaction and cancellation remain their separate integration checks.
+
+### Native child-window verification
+
+NativeChildWindowTests managed mode verifies stored policies in a fresh process, owner/capture guards, missing-host rejection, embedded focus and automatic unparenting. Display mode uses dummy, X11 and Wayland native queues for metadata, invalid/retired IDs, per-window key/motion density/order, distinct contact indexes and held-input retirement. Application focus tracks an unknown initial state so a first focus-out is delivered without requiring a prior focus-in.
+
+The GPU and compatibility profiles on X11/Wayland inspect actual presentation images independently of authoritative viewport textures. They cover cross-window sampling, once/disabled and ClearNever contents, cyclic history, creation failure/recovery, explicit attachments, hidden/recreated native parents, native transient/modal links, host-policy switching, committed text/IME and independent VSync/borrowed context identities. After 32 warmups, 64 unchanged and 64 changing frames measure owner-thread managed allocation and retained/active draw counts. Native/driver allocations, physical input, compositor icon output and other target platforms are not established by those checks. The pending native-dialog guard is tested without opening a chooser; actual chooser interaction retains its separate native gate.

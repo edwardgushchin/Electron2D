@@ -1,6 +1,6 @@
 # Display server component
 
-Last updated: 2026-10-06
+Last updated: 2026-10-19
 
 ## Scope
 
@@ -38,7 +38,7 @@ Taskbar progress setters reject Wayland because this host has no verified deskto
 
 ## Invariants
 
-One active server and one engine-owned window exist at most. Instance operations, theme and native handle queries, and disposal are owner-thread only; SDL's file-dialog completion callback may run elsewhere but does not invoke game code there. `WindowGetNativeHandle` validates the main-window ID and returns a nonzero borrowed identity or throws; callers must never close or free it, must requery after native window changes, and must stop using it after disposal. The private `SDL_Window*` never crosses the public API. Reentrant pumping and disposal during delivery fail before native state is torn down. Disposal also rejects pending native dialogs and undelivered results. Callback failures are aggregated while later events continue. Native operation failures do not become false success.
+One active process server owns the main native window and independent desktop child contexts. Static operations, theme and native handle queries, and disposal are owner-thread only; SDL's file-dialog completion callback may run elsewhere but does not invoke game code there. `WindowGetNativeHandle` validates the selected live native-window ID and returns a nonzero borrowed identity or throws; callers must never close or free it, must requery after native window changes, and must stop using it after disposal. The private `SDL_Window*` never crosses the public API. Reentrant pumping and disposal during delivery fail before native state is torn down. Disposal also rejects pending native dialogs and undelivered results. Callback failures are aggregated while later events continue. Native operation failures do not become false success.
 
 The Wayland keyboard-focus screen query and selector return the primary screen because global keyboard focus is unavailable there. Other desktop drivers select the focused main window's center display or fall back to the primary display.
 
@@ -74,7 +74,7 @@ On Wayland, `HasFeature(Ime)` and `HasFeature(NativeDialogFile)` currently ident
 
 `WindowRectChanged` replaces split move and resize notifications with one typed full-rectangle callback. The event uses observed native payloads in queue order; a real compositor move/resize sequence and Wayland's zero-position convention still need native verification.
 
-`SetIcon` sets the current main window's default icon until a successful `WindowSetIcon` establishes a window-specific override. On Wayland, nonsquare images are rejected and `HasFeature(Icon)` becomes true only after a native icon request succeeds. Launcher icons and future-window default propagation are outside this one-window host.
+`SetIcon` retains a copied default for current and future native windows, preserving each successful `WindowSetIcon` override. On Wayland, nonsquare images are rejected and `HasFeature(Icon)` becomes true only after a native icon request succeeds. The default is applied before a new child presents. Launcher icons remain external host configuration.
 
 ## Native controller ownership
 
@@ -128,3 +128,5 @@ Graphics handle verification uses `ELECTRON2D_TEST_RENDER_HANDLES=1`: Wayland EG
 ## Presentation policy
 
 The main window exposes [DisplayServer.WindowSetVSyncMode and WindowGetVSyncMode](../classes/DisplayServer.md#presentation-synchronization), with [VSyncMode](../classes/DisplayServer.VSyncMode.md) identities. Native unsupported modes fall back to Enabled and the getter reports the applied mode. Engine.MaxFPS independently caps host frames. Managed video-driver environment edits are honored at display/compute initialization with the previous native hint restored afterward. The [WaterPlayground](../../examples/WaterPlayground/README.md) consumer verifies the connected policy, including XWayland immediate presentation.
+
+Independent native Window contexts share this service and its event pump; see [lifetime, rendering and verification](window-runtime.md#independent-native-windows). Native callback registration on the public DisplayServer surface remains distinct from the integrated per-Window scene signals.

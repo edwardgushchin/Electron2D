@@ -260,5 +260,6 @@ public partial class Window
         else if (what == NotificationEnterTree) ThemeOwner.NotifySelf();
         else if (what is NotificationParented or NotificationUnparented) ThemeOwner.ParentChanged();
         else if (what == NotificationThemeChanged) ProcessThemeNotification();
+        else if (what == NotificationVisibilityChanged && _unparentWhenInvisible && !_visible) Parent?.RemoveChild(this);
     }
 }

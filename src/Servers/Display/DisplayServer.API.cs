@@ -49,7 +49,7 @@ public sealed partial class DisplayServer
     /// <param name="mode">The selection mode. <see cref="FileDialogMode.OpenAny"/> has no equivalent in the current native backend.</param>
     /// <param name="filters">Extension filters such as <c>*.png,*.jpg;Images</c>. File modes accept but do not apply a trailing MIME section; MIME-only filters are unavailable. Folder mode ignores filters.</param>
     /// <param name="callback">Receives success, selected paths, and the selected filter index. Cancellation and native failure both deliver false and an empty path list.</param>
-    /// <param name="parentWindowId">The parent window ID; only <see cref="MainWindowId"/> is owned.</param>
+    /// <param name="parentWindowId">An active native parent window ID; zero selects the main window. The selected parent must survive until native completion.</param>
     /// <remarks>The native callback may run on another thread. Paths are copied immediately and the typed callback runs only on the owner thread during <see cref="ProcessEvents"/>. A native failure still completes the callback, then the event pump reports it in an aggregate exception. Disposal is rejected until the native chooser completes and its result has been pumped. The operating system may ignore the title, initial location, or filters; Android may return content URIs instead of filesystem paths.</remarks>
     /// <exception cref="ArgumentNullException">A required argument is null.</exception>
     /// <exception cref="ArgumentException">A filter is malformed.</exception>
@@ -209,21 +209,21 @@ public sealed partial class DisplayServer
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static Key KeyboardGetLabelFromPhysical(Key physical) => RequireService().KeyboardGetLabelFromPhysicalCore(physical);
 
-    /// <summary>Sets an icon specifically for the main window.</summary>
+    /// <summary>Sets an icon specifically for the selected native window.</summary>
     /// <param name="image">A live nonempty source image.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <remarks>The image is copied and converted to eight-bit RGBA before native submission; the caller retains it. A successful call overrides subsequent <see cref="SetIcon"/> changes for this window. Wayland requires a square image and a compositor that supports window icons.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="image"/> is null.</exception>
     /// <exception cref="ArgumentException"><paramref name="image"/> is empty or is not square on Wayland.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="windowId"/> is not the main-window ID.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="windowId"/> is not a live native-window ID.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner thread or the native icon request fails.</exception>
     /// <exception cref="ObjectDisposedException">The display server or image has been disposed.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void WindowSetIcon(Image image, int windowId = MainWindowId) => RequireService().WindowSetIconCore(image, windowId);
 
-    /// <summary>Sets the default icon for the engine-owned main window unless it has an explicit icon.</summary>
+    /// <summary>Sets the default icon for current and future native windows without an explicit icon.</summary>
     /// <param name="image">A live nonempty source image.</param>
-    /// <remarks>The image is copied before native submission. A prior successful <see cref="WindowSetIcon"/> call keeps its window-specific icon. The current host owns only one window and does not install a desktop-launcher icon. Wayland requires a square image and a compositor that supports window icons.</remarks>
+    /// <remarks>The image is copied before native submission. A prior successful <see cref="WindowSetIcon"/> call keeps its window-specific icon. The default is retained as a copied image for later child creation; it does not install a desktop-launcher icon. A failure can leave earlier windows updated before a later native request rejects. Wayland requires a square image and a compositor that supports window icons.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="image"/> is null.</exception>
     /// <exception cref="ArgumentException"><paramref name="image"/> is empty or is not square on Wayland.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner thread or the native icon request fails.</exception>
@@ -237,7 +237,7 @@ public sealed partial class DisplayServer
     public static MouseMode MouseGetMode() => RequireService().MouseGetModeCore();
 
     /// <summary>Requests cursor visibility, capture, and confinement as one mode.</summary>
-    /// <param name="mode">The mode to apply to the main window.</param>
+    /// <param name="mode">The process mode to apply to the focused owned native window.</param>
     /// <remarks>
     /// Repeating the current mode does not resubmit native operations. Window managers may release grabs while the
     /// window lacks focus. If any native change fails, the prior mode is restored on a best-effort basis and the
@@ -250,7 +250,7 @@ public sealed partial class DisplayServer
     public static void MouseSetMode(MouseMode mode) => RequireService().MouseSetModeCore(mode);
 
     /// <summary>Gets the last reported mouse cursor position.</summary>
-    /// <returns>Desktop coordinates on other desktop profiles; on Wayland, Android, iOS, tvOS and browsers, the last position in physical pixels relative to the main window.</returns>
+    /// <returns>Desktop coordinates on other desktop profiles; on Wayland, Android, iOS, tvOS and browsers, the last position in physical pixels relative to the mouse-focused owned window.</returns>
     /// <remarks>Pixel-surface profiles do not use a global desktop pointer position. The window-relative SDL position is scaled to the physical client pixels used by <see cref="WindowGetSize(int)"/> and truncated toward zero.</remarks>
     /// <exception cref="InvalidOperationException">The native window pixel density cannot be read.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
@@ -261,7 +261,7 @@ public sealed partial class DisplayServer
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static MouseButtonMask MouseGetButtonState() => RequireService().MouseGetButtonStateCore();
 
-    /// <summary>Requests a pointer move within the main window's client area when the backend supports warping.</summary>
+    /// <summary>Requests a pointer move within the focused owned window's client area when the backend supports warping.</summary>
     /// <param name="position">Target coordinates relative to the client area's upper-left corner in native client units.</param>
     /// <remarks>
     /// The request is available only when <see cref="HasFeature(Feature)"/> reports <see cref="Feature.MouseWarp"/>.
@@ -314,9 +314,9 @@ public sealed partial class DisplayServer
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static Vector2i IMEGetSelection() => RequireService().IMEGetSelectionCore();
 
-    /// <summary>Enables or disables native text input for the main window.</summary>
+    /// <summary>Enables or disables native text input for the selected native window.</summary>
     /// <param name="active">Whether to accept committed text and composition updates.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <remarks>The host should enable text input only while a text field owns focus.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The window ID is invalid.</exception>
     /// <exception cref="ObjectDisposedException">The server is disposing or disposed.</exception>
@@ -326,7 +326,7 @@ public sealed partial class DisplayServer
 
     /// <summary>Moves the native IME candidate area to a window-local text caret.</summary>
     /// <param name="position">Caret position in client pixels on Wayland, or platform-native window coordinates elsewhere.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <remarks>On Wayland, the requested client-pixel position is converted to SDL logical window coordinates using the current pixel density. The native candidate area is one by ten window-coordinate units with a zero cursor offset. Text input must be active for a candidate popup to be shown.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The window ID is invalid.</exception>
     /// <exception cref="ObjectDisposedException">The server is disposing or disposed.</exception>
@@ -343,14 +343,14 @@ public sealed partial class DisplayServer
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static bool IsTouchscreenAvailable() => RequireService().IsTouchscreenAvailableCore();
 
-    /// <summary>Gets the current screen index containing the main window.</summary>
+    /// <summary>Gets the current screen index containing the selected native window.</summary>
     /// <param name="windowId">The window ID; only zero identifies an owned window.</param>
     /// <returns>The zero-based screen index or <see cref="InvalidScreen"/> when the window has no display.</returns>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static int WindowGetCurrentScreen(int windowId = MainWindowId) => RequireService().WindowGetCurrentScreenCore(windowId);
 
     /// <summary>Gets the index of the display with keyboard focus.</summary>
-    /// <returns>The main window's screen when it has focus on a backend with global focus information; otherwise the primary screen.</returns>
+    /// <returns>The focused owned window's screen on a backend with global focus information; otherwise the primary screen.</returns>
     /// <remarks>Wayland does not expose a process-wide keyboard-focus window, so its result is always the primary screen.</remarks>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static int GetKeyboardFocusScreen() => RequireService().GetKeyboardFocusScreenCore();
@@ -363,13 +363,13 @@ public sealed partial class DisplayServer
     public static int GetScreenFromRect(Rect2 rectangle) => RequireService().GetScreenFromRectCore(rectangle);
 
     /// <summary>Gets a snapshot of the engine-owned native window IDs.</summary>
-    /// <returns>A one-element snapshot containing <see cref="MainWindowId"/>.</returns>
+    /// <returns>A new snapshot containing the main ID followed by active child IDs. Retired IDs are absent.</returns>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static int[] GetWindowList() => RequireService().GetWindowListCore();
 
-    /// <summary>Gets a borrowed operating-system or graphics-context handle for the main window.</summary>
+    /// <summary>Gets a borrowed operating-system or graphics-context handle for the selected native window.</summary>
     /// <param name="handleType">The native handle category to query.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <returns>A nonzero pointer or platform window ID represented as a pointer-sized integer.</returns>
     /// <remarks>
     /// The caller does not own the returned handle and must never destroy or release it. Query it again after native
@@ -389,17 +389,17 @@ public sealed partial class DisplayServer
 
     /// <summary>Finds the engine-owned window at a desktop position.</summary>
     /// <param name="position">Global desktop point in platform-native coordinates.</param>
-    /// <returns><see cref="MainWindowId"/> when the point is inside the visible main window; otherwise <see cref="InvalidWindowId"/>.</returns>
+    /// <returns>An owned visible window containing the point, or <see cref="InvalidWindowId"/>. A matching mouse-focused window wins; overlapping unfocused windows retain registration order.</returns>
     /// <remarks>On X11, only the client area is counted; the native border and title bar are excluded. Other desktop drivers use decorated bounds.</remarks>
     /// <exception cref="NotSupportedException">The active Wayland compositor does not expose a reliable global window position.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static int GetWindowAtScreenPosition(Vector2i position) => RequireService().GetWindowAtScreenPositionCore(position);
 
-    /// <summary>Requests that the main window move to another connected display.</summary>
+    /// <summary>Requests that the selected native window move to another connected display.</summary>
     /// <param name="screen">A zero-based display index or a negative display selector.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <remarks>A request for the current screen does nothing. A floating window retains its offset from the source display, clamped so part of it remains in the target work area. Fullscreen and maximized windows keep their mode. The window manager may apply or deny a move asynchronously.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="screen"/> or <paramref name="windowId"/> does not identify an available display or the main window.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="screen"/> or <paramref name="windowId"/> does not identify an available display or the selected native window.</exception>
     /// <exception cref="NotSupportedException">Wayland does not allow this top-level window to choose another display.</exception>
     /// <exception cref="InvalidOperationException">A native display query or move fails, or the window state fails to synchronize.</exception>
     /// <exception cref="AggregateException">A transfer fails and restoring the previous window mode also fails.</exception>
@@ -417,43 +417,43 @@ public sealed partial class DisplayServer
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static float ScreenGetMaxScale() => RequireService().ScreenGetMaxScaleCore();
 
-    /// <summary>Gets the requested minimum size of the main window.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <summary>Gets the requested minimum size of the selected native window.</summary>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <returns>The requested pixel dimensions on Wayland or native window dimensions elsewhere; zero means no bound on that axis.</returns>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static Vector2i WindowGetMinSize(int windowId = MainWindowId) => RequireService().WindowGetMinSizeCore(windowId);
 
-    /// <summary>Requests minimum dimensions for the main window.</summary>
+    /// <summary>Requests minimum dimensions for the selected native window.</summary>
     /// <param name="size">Nonnegative lower bounds in client pixels on Wayland and native window coordinates elsewhere; zero leaves that axis unbounded.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <remarks>Wayland rounds each pixel lower bound upward to native window coordinates and reapplies it when the window pixel density changes.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">A bound is negative, exceeds a nonzero maximum, or cannot coexist with it after native pixel-density conversion.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void WindowSetMinSize(Vector2i size, int windowId = MainWindowId) => RequireService().WindowSetMinSizeCore(size, windowId);
 
-    /// <summary>Gets the requested maximum size of the main window.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <summary>Gets the requested maximum size of the selected native window.</summary>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <returns>The requested pixel dimensions on Wayland or native window dimensions elsewhere; zero means no bound on that axis.</returns>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static Vector2i WindowGetMaxSize(int windowId = MainWindowId) => RequireService().WindowGetMaxSizeCore(windowId);
 
-    /// <summary>Requests maximum dimensions for the main window.</summary>
+    /// <summary>Requests maximum dimensions for the selected native window.</summary>
     /// <param name="size">Nonnegative upper bounds in client pixels on Wayland and native window coordinates elsewhere; zero leaves that axis unbounded.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <remarks>Wayland rounds each pixel upper bound downward to native window coordinates and reapplies it when the window pixel density changes.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">A bound is negative, falls below a nonzero minimum, or cannot represent a finite maximum after native pixel-density conversion.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void WindowSetMaxSize(Vector2i size, int windowId = MainWindowId) => RequireService().WindowSetMaxSizeCore(size, windowId);
 
-    /// <summary>Gets the main window's current native mode.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <summary>Gets the selected native window's current native mode.</summary>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <returns>The state reported by SDL; an exclusive display mode is distinguished from desktop fullscreen. Wayland can retain a requested minimized state until the window regains focus.</returns>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static WindowMode WindowGetMode(int windowId = MainWindowId) => RequireService().WindowGetModeCore(windowId);
 
     /// <summary>Requests a native main-window mode.</summary>
     /// <param name="mode">Windowed, minimized, maximized, borderless fullscreen, or exclusive fullscreen.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <remarks>On Wayland, exclusive fullscreen uses the compositor's ordinary fullscreen request and is observed as <see cref="WindowMode.Fullscreen"/> if accepted. Wayland has no reliable programmatic restoration from a minimized state; the minimized flag can remain set until the window regains focus. Elsewhere exclusive mode chooses the closest native mode to the current logical window size. Mode transitions may complete asynchronously; call <see cref="WindowGetMode"/> for the reported state.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="mode"/> is unknown.</exception>
     /// <exception cref="InvalidOperationException">No suitable exclusive mode exists or the native window manager rejects a transition.</exception>
@@ -461,8 +461,8 @@ public sealed partial class DisplayServer
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void WindowSetMode(WindowMode mode, int windowId = MainWindowId) => RequireService().WindowSetModeCore(mode, windowId);
 
-    /// <summary>Gets whether the main window currently has native focus.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <summary>Gets whether the selected native window currently has native focus.</summary>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <returns><see langword="true"/> when the window is focused.</returns>
     /// <remarks>On Wayland, focus follows SDL's mouse-focused window; tablet and touch focus are not merged into this query. Other video drivers use keyboard focus.</remarks>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
@@ -470,9 +470,9 @@ public sealed partial class DisplayServer
 
     /// <summary>Reads a supported native window flag.</summary>
     /// <param name="flag">Policy to inspect.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <returns>Whether the policy is enabled in the observed native flags.</returns>
-    /// <remarks>On Wayland, <see cref="WindowFlag.AlwaysOnTop"/> and <see cref="WindowFlag.NoFocus"/> are unavailable for the main window.</remarks>
+    /// <remarks>On Wayland, <see cref="WindowFlag.AlwaysOnTop"/> and <see cref="WindowFlag.NoFocus"/> are unavailable for the selected native window.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="flag"/> is not a defined policy.</exception>
     /// <exception cref="NotSupportedException">The defined policy requires a display capability that is not integrated.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
@@ -481,7 +481,7 @@ public sealed partial class DisplayServer
     /// <summary>Requests a supported native window policy.</summary>
     /// <param name="flag">Policy to change.</param>
     /// <param name="enabled">Whether to enable the policy.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <remarks>A platform may reject the policy or apply it asynchronously. Wayland cannot apply <see cref="WindowFlag.AlwaysOnTop"/> to an ordinary top-level window, and SDL can change its internal focusable flag before rejecting <see cref="WindowFlag.NoFocus"/> there; both requests are rejected before native mutation.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="flag"/> is not a defined policy.</exception>
     /// <exception cref="NotSupportedException">The defined policy requires a display capability that is not integrated.</exception>
@@ -489,49 +489,49 @@ public sealed partial class DisplayServer
     public static void WindowSetFlag(WindowFlag flag, bool enabled, int windowId = MainWindowId) => RequireService().WindowSetFlagCore(flag, enabled, windowId);
 
     /// <summary>Gets whether the current SDL resize policy permits a maximize request.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <returns><see langword="true"/> when the window is resizable, regardless of its current mode.</returns>
     /// <remarks>The Wayland compositor may independently disable maximization through its window-manager capabilities; SDL does not expose that native policy here. A fullscreen window can leave fullscreen before requesting maximization.</remarks>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static bool WindowIsMaximizeAllowed(int windowId = MainWindowId) => RequireService().WindowIsMaximizeAllowedCore(windowId);
 
-    /// <summary>Requests that the window manager bring the main window to the foreground.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <summary>Requests that the window manager bring the selected native window to the foreground.</summary>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <remarks>Wayland has no standard foreground request for an existing top-level window, so this is a no-op there. Other window managers may refuse a native raise request under their focus policy.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="windowId"/> does not identify the main window.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="windowId"/> does not identify the selected native window.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the opening thread or the native raise request fails.</exception>
     /// <exception cref="ObjectDisposedException">The display server is disposing or disposed.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void WindowMoveToForeground(int windowId = MainWindowId) => RequireService().WindowMoveToForegroundCore(windowId);
 
-    /// <summary>Requests user attention until the main window receives focus.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <summary>Requests user attention until the selected native window receives focus.</summary>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <remarks>On Wayland this submits an activation request without an input serial, allowing the compositor to mark the window urgent without switching focus. The platform chooses how, or whether, to display the request; a focused window may show no effect.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="windowId"/> does not identify the main window.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="windowId"/> does not identify the selected native window.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the opening thread or the native attention request fails.</exception>
     /// <exception cref="ObjectDisposedException">The display server is disposing or disposed.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void WindowRequestAttention(int windowId = MainWindowId) => RequireService().WindowRequestAttentionCore(windowId);
 
     /// <summary>Gets the main-window position including its left and top decorations.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <returns>The outer upper-left position in platform-native desktop coordinates.</returns>
     /// <exception cref="NotSupportedException">The active Wayland compositor does not expose a reliable global window position.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static Vector2i WindowGetPositionWithDecorations(int windowId = MainWindowId) => RequireService().WindowGetPositionWithDecorationsCore(windowId);
 
     /// <summary>Gets the main-window size including native decorations.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <returns>Outer window dimensions in platform-native window coordinates; on Wayland, the client size in pixels.</returns>
     /// <remarks>Wayland does not provide a reliable server-side decoration size for a top-level window.</remarks>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static Vector2i WindowGetSizeWithDecorations(int windowId = MainWindowId) => RequireService().WindowGetSizeWithDecorationsCore(windowId);
 
-    /// <summary>Requests a taskbar progress state for the main window where the desktop supports it.</summary>
+    /// <summary>Requests a taskbar progress state for the selected native window where the desktop supports it.</summary>
     /// <param name="state">The indication to show.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="state"/> is unknown.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="windowId"/> does not identify the main window.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="windowId"/> does not identify the selected native window.</exception>
     /// <exception cref="InvalidOperationException">The call is off the opening thread or a supported native backend rejects the request.</exception>
     /// <exception cref="NotSupportedException">Taskbar progress integration is unavailable on the active Wayland backend.</exception>
     /// <exception cref="ObjectDisposedException">The display server has been disposed.</exception>
@@ -539,11 +539,11 @@ public sealed partial class DisplayServer
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void WindowSetTaskbarProgressState(ProgressState state, int windowId = MainWindowId) => RequireService().WindowSetTaskbarProgressStateCore(state, windowId);
 
-    /// <summary>Requests a taskbar progress fraction for the main window where the desktop supports it.</summary>
+    /// <summary>Requests a taskbar progress fraction for the selected native window where the desktop supports it.</summary>
     /// <param name="value">A finite fraction from zero through one.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is outside the supported range.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="windowId"/> does not identify the main window.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="windowId"/> does not identify the selected native window.</exception>
     /// <exception cref="InvalidOperationException">The call is off the opening thread or a supported native backend rejects the request.</exception>
     /// <exception cref="NotSupportedException">Taskbar progress integration is unavailable on the active Wayland backend.</exception>
     /// <exception cref="ObjectDisposedException">The display server has been disposed.</exception>
@@ -632,38 +632,38 @@ public sealed partial class DisplayServer
 
     /// <summary>Requests a new main-window title.</summary>
     /// <param name="title">New UTF-8 title.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <exception cref="ArgumentNullException"><paramref name="title"/> is null.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="windowId"/> does not identify the main window.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="windowId"/> does not identify the selected native window.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner thread or the native title request fails.</exception>
     /// <exception cref="ObjectDisposedException">The display server has been disposed.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void WindowSetTitle(string title, int windowId = MainWindowId) => RequireService().WindowSetTitleCore(title, windowId);
 
-    /// <summary>Gets the main window's client size.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <summary>Gets the selected native window's client size.</summary>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <returns>Pixel dimensions on Wayland, Android, iOS, tvOS and browsers; platform-native window dimensions elsewhere.</returns>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static Vector2i WindowGetSize(int windowId = MainWindowId) => RequireService().WindowGetSizeCore(windowId);
 
     /// <summary>Requests a new main-window client size.</summary>
     /// <param name="size">Requested pixel dimensions on Wayland, Android, iOS, tvOS and browsers; platform-native window dimensions elsewhere.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <remarks>Wayland clamps each requested component below one to one before applying native minimum-size constraints. Other video drivers require positive dimensions.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">A dimension is not positive on a non-Wayland video driver.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void WindowSetSize(Vector2i size, int windowId = MainWindowId) => RequireService().WindowSetSizeCore(size, windowId);
 
-    /// <summary>Gets the main window's global desktop position.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <summary>Gets the selected native window's global desktop position.</summary>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <returns>The upper-left position in platform-native desktop coordinates.</returns>
     /// <exception cref="NotSupportedException">The active Wayland compositor does not expose a reliable global window position.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static Vector2i WindowGetPosition(int windowId = MainWindowId) => RequireService().WindowGetPositionCore(windowId);
 
-    /// <summary>Requests a global desktop position for the main window.</summary>
+    /// <summary>Requests a global desktop position for the selected native window.</summary>
     /// <param name="position">Upper-left position in platform-native desktop coordinates.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
+    /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <exception cref="NotSupportedException">Wayland does not allow this top-level window to choose its desktop position.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void WindowSetPosition(Vector2i position, int windowId = MainWindowId) => RequireService().WindowSetPositionCore(position, windowId);

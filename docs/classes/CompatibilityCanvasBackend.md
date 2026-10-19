@@ -1,6 +1,6 @@
 # CompatibilityCanvasBackend
 
-Last updated: 2026-10-16
+Last updated: 2026-10-19
 
 - Declaration: `internal sealed class CompatibilityCanvasBackend : CanvasBackend`
 - Source: [CompatibilityCanvasBackend.cs](../../src/Servers/Rendering/CompatibilityCanvasBackend.cs)
@@ -103,3 +103,5 @@ Texture cache entries retain both source snapshot identity and its uploaded revi
 CreateTarget accepts the common HDR argument but rejects true explicitly. Normal byte rendering multiplies each batch's separate canvas color into its borrowed source vertices without retaining a preceding mask/color pass factor. Built-in group/Only-mask owners are unshaded, and AndDraw shares geometry while retaining separate pass factors. Native GPU/Compatibility modulation profiles verify RGB/alpha and warm allocation behavior.
 
 `internal override void Present(ReadOnlySpan<CanvasPresentation> viewports)` composes completed native images at clipped client rectangles after drawing, replacing destination RGBA and clearing uncovered pixels black. The shared contract declares this operation abstract. An empty list clears the implicit zero-raster root presentation. ReadbackScreen returns the latest completed composition independently of source texture updates. See [screen attachment](../components/canvas-rendering.md#viewport-screen-attachment).
+
+The [independent native window path](../components/window-runtime.md#independent-native-windows) retains one scene renderer and display service. GPU surfaces share the authoritative device/targets; compatibility surfaces use the main driver and replay frozen submissions after cold history import. Native window IDs expire on child hide/detachment; viewport resources survive hiding.

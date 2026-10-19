@@ -10,17 +10,18 @@ public sealed partial class DisplayServer
     internal string IMEGetTextCore()
     {
         EnsureOwner();
-        return _imeText;
+        return (_rootDisplay ?? this)._compositionWindow?._imeText ?? string.Empty;
     }
 
     internal Vector2i IMEGetSelectionCore()
     {
         EnsureOwner();
-        return _imeSelection;
+        return (_rootDisplay ?? this)._compositionWindow?._imeSelection ?? Vector2i.Zero;
     }
 
     internal void WindowSetIMEActiveCore(bool active, int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetIMEActiveCore(active, MainWindowId); return; }
         EnsureOwner();
         var window = GetWindow(windowId);
         var success = active ? SDL.StartTextInput(window) : SDL.StopTextInput(window);
@@ -28,13 +29,13 @@ public sealed partial class DisplayServer
             throw SDLFailure("change text input state");
         if (!active)
         {
-            _imeText = string.Empty;
-            _imeSelection = Vector2i.Zero;
+            ClearWindowComposition();
         }
     }
 
     internal void WindowSetIMEPositionCore(Vector2i position, int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetIMEPositionCore(position, MainWindowId); return; }
         EnsureOwner();
         var window = GetWindow(windowId);
         var nativePosition = _waylandWindowPosition ? WaylandLogicalWindowSize(position, window) : position;

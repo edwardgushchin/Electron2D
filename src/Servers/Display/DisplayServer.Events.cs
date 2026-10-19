@@ -58,28 +58,40 @@ public sealed partial class DisplayServer
 
         _processingEvents = true;
         _hasEventKeyModifiers = false;
+        foreach (var child in _childWindows.Values) child._hasEventKeyModifiers = false;
         List<Exception>? failures = null;
         try
         {
             DispatchPendingGamepadConnections(ref failures);
             if (dropInput)
             {
+                _pendingInputWindow = null;
                 _hasPendingMouseMotion = false;
                 _touchContacts.Clear();
                 _freeTouchIndexes.Clear();
                 _nextTouchIndex = 0;
                 _heldMouseButtons = MouseButtonMask.None;
+                foreach (var child in _childWindows.Values)
+                {
+                    child._hasPendingMouseMotion = false;
+                    child._touchContacts.Clear();
+                    child._freeTouchIndexes.Clear();
+                    child._nextTouchIndex = 0;
+                    child._heldMouseButtons = MouseButtonMask.None;
+                }
                 Input.ReleasePressedEvents();
             }
             while (SDL.PollEvent(out var nativeEvent))
             {
                 if (dropInput && IsInputEvent((SDL.EventType)nativeEvent.Type))
                     continue;
+                var context = EventContext(nativeEvent);
                 if ((SDL.EventType)nativeEvent.Type == SDL.EventType.MouseMotion &&
-                    nativeEvent.Motion.WindowID == _sdlWindowId &&
+                    context is not null &&
                     nativeEvent.Motion.Which != SDL.TouchMouseID && Input.UseAccumulatedInput)
                 {
-                    if (_hasPendingMouseMotion && _pendingMouseMotion.Which != nativeEvent.Motion.Which)
+                    if (_pendingInputWindow is { } pending &&
+                        (pending != context || pending._pendingMouseMotion.Which != nativeEvent.Motion.Which))
                     {
                         try
                         {
@@ -90,7 +102,11 @@ public sealed partial class DisplayServer
                             (failures ??= new List<Exception>()).Add(exception);
                         }
                     }
-                    AccumulateMouseMotion(nativeEvent.Motion);
+                    if (!context.IsDisposed)
+                    {
+                        _pendingInputWindow = context;
+                        context.AccumulateMouseMotion(nativeEvent.Motion);
+                    }
                     continue;
                 }
                 try
@@ -103,7 +119,13 @@ public sealed partial class DisplayServer
                 }
                 try
                 {
-                    DispatchEvent(nativeEvent);
+                    if (context is { IsDisposed: false })
+                    {
+                        var type = (SDL.EventType)nativeEvent.Type;
+                        _eventInputWindow = type is >= SDL.EventType.JoystickAxisMotion and <= SDL.EventType.GamepadSteamHandleUpdated ? FocusedWindow() ?? this : context;
+                        try { context.DispatchEvent(nativeEvent); }
+                        finally { _eventInputWindow = null; }
+                    }
                 }
                 catch (Exception exception)
                 {
@@ -155,6 +177,20 @@ public sealed partial class DisplayServer
     internal void FlushBufferedInput()
     {
         EnsureOwner();
+        if (_pendingInputWindow is { } context)
+        {
+            _pendingInputWindow = null;
+            if (!context.IsDisposed)
+            {
+                var previous = _eventInputWindow; _eventInputWindow = context;
+                try { context.FlushOwnBufferedInput(); } finally { _eventInputWindow = previous; }
+            }
+        }
+        else FlushOwnBufferedInput();
+    }
+
+    private void FlushOwnBufferedInput()
+    {
         if (!_hasPendingMouseMotion)
             return;
         var motion = _pendingMouseMotion;
@@ -279,16 +315,15 @@ public sealed partial class DisplayServer
                 }
                 break;
             case SDL.EventType.WindowFocusGained:
+                var root = _rootDisplay ?? this;
+                if (root._mouseMode != MouseMode.Visible) root.ApplyMouseMode(root._mouseMode);
                 DispatchFocusChanged(focused: true);
                 break;
             case SDL.EventType.WindowFocusLost:
-                _imeText = string.Empty;
-                _imeSelection = Vector2i.Zero;
+                ClearWindowComposition();
                 _eventKeyModifiers = SDL.Keymod.None;
                 _hasEventKeyModifiers = true;
-                _touchContacts.Clear();
-                _freeTouchIndexes.Clear();
-                _nextTouchIndex = 0;
+                ReleaseWindowTouches();
                 _heldMouseButtons = MouseButtonMask.None;
                 try { DispatchFocusChanged(focused: false); }
                 finally { ApplyGamepadFocusPolicy(); }
@@ -298,11 +333,11 @@ public sealed partial class DisplayServer
                 DispatchKey(nativeEvent.Key);
                 break;
             case SDL.EventType.TextInput:
-                _imeText = string.Empty;
-                _imeSelection = Vector2i.Zero;
+                ClearWindowComposition();
                 BeginEventEmission(TextInputCore)?.Invoke(Marshal.PtrToStringUTF8(nativeEvent.Text.Text) ?? string.Empty);
                 break;
             case SDL.EventType.TextEditing:
+                (_rootDisplay ?? this)._compositionWindow = this;
                 _imeText = Marshal.PtrToStringUTF8(nativeEvent.Edit.Text) ?? string.Empty;
                 _imeSelection = new Vector2i(Math.Max(0, nativeEvent.Edit.Start),
                     Math.Max(0, nativeEvent.Edit.Length));
@@ -337,9 +372,13 @@ public sealed partial class DisplayServer
 
             try
             {
-                Engine.MainLoop?.Notify(focused
-                    ? MainLoop.NotificationApplicationFocusIn
-                    : MainLoop.NotificationApplicationFocusOut);
+                var root = _rootDisplay ?? this;
+                var applicationFocused = focused || root.FocusedWindow() is { } other && !ReferenceEquals(other, this);
+                if (applicationFocused != root._applicationFocused)
+                {
+                    root._applicationFocused = applicationFocused;
+                    Engine.MainLoop?.Notify(applicationFocused ? MainLoop.NotificationApplicationFocusIn : MainLoop.NotificationApplicationFocusOut);
+                }
             }
             catch (Exception exception)
             {
@@ -349,7 +388,10 @@ public sealed partial class DisplayServer
         finally
         {
             if (!focused)
+            {
+                (_rootDisplay ?? this)._pressedInputWindow = null;
                 Input.ReleasePressedEvents();
+            }
         }
 
         if (callbackFailure is not null && notificationFailure is not null)
@@ -386,6 +428,7 @@ public sealed partial class DisplayServer
 
     private void DispatchKey(SDL.KeyboardEvent source)
     {
+        if (source.Down) (_rootDisplay ?? this)._pressedInputWindow = this;
         _eventKeyModifiers = source.Mod;
         _hasEventKeyModifiers = true;
         var ownModifier = source.Scancode switch
@@ -403,7 +446,7 @@ public sealed partial class DisplayServer
         var modifiers = source.Mod & ~ownModifier;
         using var @event = new InputEventKey
         {
-            WindowID = MainWindowId,
+            WindowID = this.WindowID,
             Pressed = source.Down,
             Echo = source.Repeat,
             Keycode = MapKeycode(source.Key),
@@ -430,13 +473,14 @@ public sealed partial class DisplayServer
         var relative = new Vector2(source.XRel * scale, source.YRel * scale);
         var dt = source.Timestamp > _lastMouseMotionTimestamp
             ? (source.Timestamp - _lastMouseMotionTimestamp) / 1_000_000_000f : 0f;
-        var velocity = _mouseMode != MouseMode.Captured && dt > 0f ? relative / dt : Vector2.Zero;
+        var velocity = (_rootDisplay ?? this)._mouseMode != MouseMode.Captured && dt > 0f ? relative / dt : Vector2.Zero;
         if (!position.IsFinite() || !relative.IsFinite() || !velocity.IsFinite())
             throw new ArgumentOutOfRangeException(nameof(source), "Native mouse motion must have finite coordinates and velocity.");
         _lastMouseMotionTimestamp = source.Timestamp;
+        _lastClientMousePosition = position;
         using var @event = new InputEventMouseMotion
         {
-            WindowID = MainWindowId,
+            WindowID = this.WindowID,
             ButtonMask = _heldMouseButtons,
             Position = position,
             GlobalPosition = position,
@@ -451,6 +495,7 @@ public sealed partial class DisplayServer
 
     private void DispatchMouseButton(SDL.MouseButtonEvent source)
     {
+        if (source.Down) (_rootDisplay ?? this)._pressedInputWindow = this;
         var button = source.Button switch
         {
             1 => MouseButton.Left,
@@ -470,7 +515,7 @@ public sealed partial class DisplayServer
         _heldMouseButtons = source.Down ? _heldMouseButtons | mask : _heldMouseButtons & ~mask;
         using var @event = new InputEventMouseButton
         {
-            WindowID = MainWindowId,
+            WindowID = this.WindowID,
             ButtonIndex = button,
             ButtonMask = _heldMouseButtons,
             Position = position,
@@ -527,7 +572,7 @@ public sealed partial class DisplayServer
             throw new ArgumentOutOfRangeException(nameof(factor), "Native mouse-wheel coordinates and amount must be finite.");
         using var @event = new InputEventMouseButton
         {
-            WindowID = MainWindowId,
+            WindowID = this.WindowID,
             ButtonIndex = button,
             ButtonMask = _heldMouseButtons,
             Position = position,
@@ -583,7 +628,8 @@ public sealed partial class DisplayServer
             throw new ArgumentOutOfRangeException(nameof(source), "Native touch coordinates must be finite.");
         if (down)
         {
-            var index = _freeTouchIndexes.Count > 0 ? _freeTouchIndexes.Pop() : checked(_nextTouchIndex++);
+            var root = _rootDisplay ?? this;
+            var index = root._freeTouchIndexes.Count > 0 ? root._freeTouchIndexes.Pop() : checked(root._nextTouchIndex++);
             contact = new TouchContact(index, source.Timestamp);
             _touchContacts.Add(id, contact);
         }
@@ -598,7 +644,7 @@ public sealed partial class DisplayServer
             _touchContacts[id] = contact with { Timestamp = source.Timestamp };
             using var @event = new InputEventScreenDrag
             {
-                WindowID = MainWindowId,
+                WindowID = this.WindowID,
                 Device = 0,
                 Index = contact.Index,
                 Position = position,
@@ -616,7 +662,7 @@ public sealed partial class DisplayServer
         {
             using var @event = new InputEventScreenTouch
             {
-                WindowID = MainWindowId,
+                WindowID = this.WindowID,
                 Device = 0,
                 Index = contact.Index,
                 Position = position,
@@ -630,7 +676,7 @@ public sealed partial class DisplayServer
             if (source.Type != SDL.EventType.FingerDown)
             {
                 _touchContacts.Remove(id);
-                _freeTouchIndexes.Push(contact.Index);
+                (_rootDisplay ?? this)._freeTouchIndexes.Push(contact.Index);
             }
         }
     }

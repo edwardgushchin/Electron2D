@@ -62,7 +62,7 @@ internal static class ViewportPresentationTests
             foreach (var rect in new[] { new Rect2(float.NaN, 0, 1, 1), new Rect2(0, 0, float.PositiveInfinity, 1), new Rect2(0, 0, -1, 1), new Rect2(float.MaxValue, 0, float.MaxValue, 1) })
                 Reject<ArgumentException>(() => RenderingServer.ViewportAttachToScreen(view, rect));
             Reject<ArgumentOutOfRangeException>(() => RenderingServer.ViewportAttachToScreen(view, screen: -2));
-            Reject<NotSupportedException>(() => RenderingServer.ViewportAttachToScreen(view, screen: 1));
+            Reject<ArgumentOutOfRangeException>(() => RenderingServer.ViewportAttachToScreen(view, screen: 1));
             Reject<ArgumentException>(() => RenderingServer.ViewportAttachToScreen(default));
             using (var foreign = new SubViewport()) Reject<InvalidOperationException>(() => RenderingServer.ViewportAttachToScreen(foreign.GetViewportRID()));
             Task.Run(() => Reject<InvalidOperationException>(() => RenderingServer.ViewportAttachToScreen(view))).GetAwaiter().GetResult();

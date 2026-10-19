@@ -6,7 +6,7 @@ Last updated: 2026-10-19
 
 **Inherited By:** [Popup](Popup.md), [AcceptDialog](AcceptDialog.md)
 
-- **Source:** [`Window.cs`](../../src/Scene/Main/Window.cs), [`Window.Native.cs`](../../src/Scene/Main/Window.Native.cs), [`Window.Placement.cs`](../../src/Scene/Main/Window.Placement.cs)
+- **Source:** [`Window.cs`](../../src/Scene/Main/Window.cs), [`Window.Native.cs`](../../src/Scene/Main/Window.Native.cs), [`Window.Placement.cs`](../../src/Scene/Main/Window.Placement.cs), [`Window.Children.cs`](../../src/Scene/Main/Window.Children.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public partial class Window : Viewport`
 
@@ -15,11 +15,11 @@ Last updated: 2026-10-19
 Physics interpolation defaults to `On` at the inherited Node policy. Explicit `Inherit` follows the parent and `Off` disables presentation history for inheriting descendants; scene-wide enablement remains required. Stored scenes, resource duplication/copy and property reversion preserve this per-type default and explicit overrides. Logical transforms and input coordinates remain current.
 
 
-A configurable native root window that owns scene children.
+A configurable native or embedded window with an independent scene viewport.
 
-Pass a detached window to `Engine.Run(Window)` or `Engine.RunAsync(Window)`. The runtime opens its native window before scene entry and releases it after scene teardown. One native root window is supported. The client size uses pixels on Wayland, Android, iOS, tvOS and browsers, and native window units elsewhere. On mobile/TV/browser targets the actual native surface size replaces the initial requested size; nonzero configured minimum or maximum dimensions fail at startup. The root canvas renders after scene processing; embedded child windows execute beneath a viewport configured with GUIEmbedSubwindows; independent native children remain absent.
+Pass a detached window to `Engine.Run(Window)` or `Engine.RunAsync(Window)`. The runtime opens its native window before scene entry and releases it after scene teardown. One native root owns the application session; visible desktop children may use independent native hosts. The client size uses pixels on Wayland, Android, iOS, tvOS and browsers, and native window units elsewhere. On mobile/TV/browser targets the actual native surface size replaces the initial requested size; nonzero configured minimum or maximum dimensions fail at startup. The root canvas renders after scene processing; embedded child windows execute beneath a viewport configured with GUIEmbedSubwindows; non-embedded desktop children use their own native presentation surfaces.
 
-Native lifetime belongs to Engine.Run or Engine.RunAsync. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Window.Position uses native desktop coordinates for the root and embedding-viewport coordinates for child windows. Direct SceneTree(Window) activation is rejected. Embedded Window children execute under GUIEmbedSubwindows, and SubViewport children supply offscreen targets; independent native child windows remain unavailable. The root canvas supports retained rectangles, lines, textures and GPU shader materials. Full multiwindow rendering remains incomplete; see the [coverage page](../coverage/classes/Window.md).
+Native lifetime belongs to Engine.Run or Engine.RunAsync. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Window.Position uses native desktop coordinates for native windows and embedding-viewport coordinates for embedded children. Direct SceneTree(Window) activation is rejected. Embedded Window children execute under GUIEmbedSubwindows, and SubViewport children supply offscreen targets; independent desktop Window children share the active engine session. The root canvas supports retained rectangles, lines, textures and GPU shader materials. Native popup surfaces, native decoration policies and cross-window drag retain their separate dependencies; see the [coverage page](../coverage/classes/Window.md).
 
 Inherited Node.GetViewport/GetWindow return this window only while it is active;
 detached windows return null. Nested offscreen viewports preserve the containing
@@ -54,13 +54,15 @@ Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested cod
 | [`public Vector2i Position { get; set; }`](#position) | Gets or requests the client origin in native desktop or embedded-host coordinates. |
 | [`public Vector2i Size { get; set; }`](#size) | Gets the observed client size or requests a positive client size. |
 | [`public string Title { get; set; }`](#title) | Gets or sets the native window title. |
-| [`public bool Visible { get; set; }`](#visible) | Gets or sets the root window's native visibility. |
+| [`public bool Visible { get; set; }`](#visible) | Gets or sets native or embedded visibility; hiding a native child retires its host. |
 | [`public WindowMode Mode { get; set; }`](#mode) | Gets the observed native mode, or configures a presentation-mode request. |
 | [`public int CurrentScreen { get; set; }`](#currentscreen) | Gets the observed display index, or requests placement on a zero-based display index. |
 | [`public bool Unresizable { get; set; }`](#unresizable) | Gets or sets the policy preventing user border resizing. |
 | [`public bool Borderless { get; set; }`](#borderless) | Gets or sets the policy removing native or embedded window borders and title bar. |
 | [`public bool AlwaysOnTop { get; set; }`](#alwaysontop) | Gets or sets the policy requesting placement above ordinary windows. |
 | [`public bool Unfocusable { get; set; }`](#unfocusable) | Gets or sets the policy preventing keyboard focus. |
+| [`public bool ForceNative { get; set; }`](#forcenative) | Overrides a containing embedding viewport while hidden. |
+| [`public bool TransientToFocused { get; set; }`](#transienttofocused) | Chooses the focused native transient owner on the next show. |
 
 ## Methods
 
@@ -88,6 +90,8 @@ Window owns `Show()` and `Hide()`; both assign Visible and preserve native failu
 | [`public void SetIMEPosition(Vector2i position)`](#setimeposition) | Requests native IME candidate placement at a client-coordinate caret. |
 | [`public void SetTaskbarProgressState(DisplayServer.ProgressState state)`](#settaskbarprogressstate) | Requests a native taskbar progress indication for the active window. |
 | [`public void SetTaskbarProgressValue(float value)`](#settaskbarprogressvalue) | Requests a native taskbar progress fraction for the active window. |
+| [`public static Window? GetFocusedWindow()`](#getfocusedwindow) | Returns the borrowed native or embedded focus identity. |
+| [`public void SetUnparentWhenInvisible(bool unparent)`](#setunparentwheninvisible) | Detaches on a later hidden visibility notification without disposing. |
 
 ## Events
 
@@ -199,7 +203,7 @@ An empty string by default.
 <a id="visible"></a>
 ### `public bool Visible { get; set; }`
 
-Gets or sets the root window's native visibility.
+Gets or sets native or embedded visibility; hiding a native child retires its host.
 
 `true` by default. Before Engine.Run this only configures startup visibility.
 
@@ -784,7 +788,7 @@ combined failures retain both errors. See [the current popup contract](../compon
 
 `InitialPosition` defaults to Absolute and is stored by PackedScene and typed archives separately from Position. Undefined enum values fail before commitment. Every valid assignment emits PropertyListChanged after commitment, including equal values; observer failure leaves the new policy stored. Native roots request placement before scene entry, using full screen bounds. These are requests subject to native constraints and focus-selector capability limits. Wayland rejects explicit root positioning and releases the failed host; the default unset Absolute policy works normally. CurrentScreen retains its existing non-stored native configuration role.
 
-Embedded windows center in their actual containing viewport for every non-absolute policy. Entry/show applies the policy, including showing through Popup; changing it while visible or resizing its parent does not move the window, and hide/show applies it again. Absolute keeps the authored local position. Independent native child-window creation remains unavailable.
+Embedded windows center in their actual containing viewport for every non-absolute policy. Entry/show applies the policy, including showing through Popup; changing it while visible or resizing its parent does not move the window, and hide/show applies it again. Absolute keeps the authored local position. Independent native children apply the same native placement policies on creation and recreation.
 
 `ResetSize()` requests the smallest constrained client extent. It combines MinSize, the title minimum when required, and `ceil(GetContentsMinimumSize() * ContentScaleFactor)` when WrapControls is enabled, then honors each nonzero MaxSize axis. The portable viewport retains at least one pixel per axis. Measurement failures and unrepresentable scaled dimensions leave the old size intact. Source content is sampled once by a reset. Actual native geometry and SizeChanged retain the normal asynchronous resize contract.
 
@@ -838,3 +842,25 @@ The [complete chrome contract](../components/popup-windows.md#embedded-decoratio
 ## GUI control pixel policy
 
 The inherited [GUISnapControlsToPixels](Viewport.md#guisnapcontrolstopixels) defaults true independently on this viewport and is stored in typed scenes. It rounds eligible Control rendering translations while preserving logical layout/input geometry. Nested viewports use their own flag. See [executing checks](../components/canvas-rendering.md#gui-control-pixel-snapping).
+
+## Independent native window lifetime
+
+Desktop children without an embedder create an independent native host when entering visible or becoming visible. The root remains identity zero; each child lifetime has a positive, monotonically increasing `GetWindowID()`. Hiding or detaching a child retires that ID and its presentation resources. Showing creates a new ID while preserving the Window object and viewport RID; hiding also preserves the completed viewport texture. The main session owns SDL and one RenderingServer. Child close requests deliver `CloseRequested` without implicitly quitting the application. Native child visibility remains independent when its scene parent hides.
+
+### ForceNative
+
+`public bool ForceNative { get; set; }` defaults to false and is stored by PackedScene. A true value overrides ancestor `GUIEmbedSubwindows`. Configure it before scene entry or while hidden; changing a displayed attached child throws InvalidOperationException. The active root retains its application host. Hidden policy changes rebuild embedded membership without creating an invisible native surface. Position retains its numeric value when host units change; assign embedded coordinates before showing a former native window. A native child requires an active desktop scene host; an absent host fails before visibility commits.
+
+### TransientToFocused
+
+`public bool TransientToFocused { get; set; }` defaults to false and is stored. With `Transient`, native activation selects the currently focused native Window, falling back to the nearest scene Window. Embedded children retain scene ownership. Changing the policy while visible affects the next show. Native SDL parent/modal requests preserve explicit backend errors; transient ownership must remain acyclic. `Exclusive` also blocks scene input directed to its parent. Native surface retirement clears dependent native parent links; recreation restores surviving scene links.
+
+### GetFocusedWindow
+
+`public static Window? GetFocusedWindow()` returns the borrowed scene Window most recently assigned focus by native or embedded focus events, or null. The identity commits before focus notifications/signals and retires on hide, detachment and disposal. Active scene owner checks apply; this is an event observation rather than a request to change focus.
+
+### SetUnparentWhenInvisible
+
+`public void SetUnparentWhenInvisible(bool unparent)` configures a runtime-only flag, initially false. A subsequent hidden visibility notification removes the Window from its parent before the VisibilityChanged signal. The object remains caller-owned and may be reattached or explicitly disposed. Equal hidden assignments do not synthesize another transition. Packing does not preserve this method-only request.
+
+Each native context receives its own size, limits, title, mode, focus, pointer, text/IME and drop stream through the unique display service. GPU children share device targets. Compatibility children replay frozen canvas submissions on a renderer using the main driver's implementation, copying existing viewport history once on creation/recovery. Scene callbacks and simulation run once. Native popup surfaces, transparent top levels, native title metrics and unsupported decoration controls remain separate capabilities. The existing Wayland Vulkan root remap gap remains explicit; child hide/show uses destruction/recreation.

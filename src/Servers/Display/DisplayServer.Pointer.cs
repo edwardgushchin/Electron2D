@@ -6,6 +6,8 @@ namespace Electron2D;
 public sealed partial class DisplayServer
 {
     private MouseMode _mouseMode;
+    private DisplayServer? _mouseModeWindow;
+    private Vector2 _lastClientMousePosition;
     private CursorShape _cursorShape;
     private SdlCursorHandle? _cursor;
     private readonly SdlCursorHandle?[] _customCursors = new SdlCursorHandle?[(int)CursorShape.Max];
@@ -49,7 +51,8 @@ public sealed partial class DisplayServer
         if (_pixelWindowCoordinates)
         {
             SDL.GetMouseState(out var windowX, out var windowY);
-            var scale = GetMousePixelScale();
+            var context = NativeContext(SDL.GetMouseFocus()) ?? this;
+            var scale = context.GetMousePixelScale();
             return new Vector2i((int)(windowX * scale), (int)(windowY * scale));
         }
         SDL.GetGlobalMouseState(out var x, out var y);
@@ -72,6 +75,12 @@ public sealed partial class DisplayServer
     internal void WarpMouseCore(Vector2i position)
     {
         EnsureOwner();
+        (NativeContext(SDL.GetMouseFocus()) ?? FocusedWindow() ?? this).WarpClientMouse(position);
+    }
+
+    internal void WarpClientMouse(Vector2i position)
+    {
+        EnsureOwner();
         if (!HasFeatureCore(Feature.MouseWarp))
             throw new NotSupportedException("Pointer warping is unavailable on the current display backend.");
         var scale = GetMousePixelScale();
@@ -80,8 +89,10 @@ public sealed partial class DisplayServer
 
     internal Vector2 GetClientMousePosition()
     {
-        EnsureOwner(); SDL.GetMouseState(out var x, out var y);
-        return new Vector2(x, y) * GetMousePixelScale();
+        EnsureOwner();
+        if (SDL.GetMouseFocus() != _window.DangerousGetHandle()) return _lastClientMousePosition;
+        SDL.GetMouseState(out var x, out var y);
+        return _lastClientMousePosition = new Vector2(x, y) * GetMousePixelScale();
     }
 
     private float GetMousePixelScale()
@@ -228,19 +239,29 @@ public sealed partial class DisplayServer
 
     private void ApplyMouseMode(MouseMode mode)
     {
-        var window = _window.DangerousGetHandle();
+        var context = FocusedWindow() ?? this;
+        if (_mouseModeWindow is { IsDisposed: false } previous && !ReferenceEquals(previous, context))
+        {
+            if (!SDL.SetWindowRelativeMouseMode(previous._window.DangerousGetHandle(), false) ||
+                !SDL.SetWindowMouseGrab(previous._window.DangerousGetHandle(), false))
+                throw SDLFailure("release previous pointer capture");
+        }
+        var window = context._window.DangerousGetHandle();
         if (!SDL.SetWindowRelativeMouseMode(window, mode == MouseMode.Captured) ||
             !SDL.SetWindowMouseGrab(window, mode is MouseMode.Confined or MouseMode.ConfinedHidden))
             throw SDLFailure("change pointer capture");
         var success = mode is MouseMode.Visible or MouseMode.Confined ? SDL.ShowCursor() : SDL.HideCursor();
         if (!success)
             throw SDLFailure("change pointer visibility");
+        _mouseModeWindow = context;
     }
 
     private void ReleasePointer()
     {
-        _ = SDL.SetWindowRelativeMouseMode(_window.DangerousGetHandle(), false);
-        _ = SDL.SetWindowMouseGrab(_window.DangerousGetHandle(), false);
+        var context = _mouseModeWindow is { IsDisposed: false } captured ? captured : this;
+        _ = SDL.SetWindowRelativeMouseMode(context._window.DangerousGetHandle(), false);
+        _ = SDL.SetWindowMouseGrab(context._window.DangerousGetHandle(), false);
+        _mouseModeWindow = null;
         _ = SDL.ShowCursor();
         _ = SDL.SetCursor(SDL.GetDefaultCursor());
         _cursor?.Dispose();

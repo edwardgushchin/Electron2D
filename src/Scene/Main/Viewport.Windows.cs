@@ -6,12 +6,12 @@ public abstract partial class Viewport
     internal readonly List<Window> EmbeddedWindows = [];
     /// <summary>Gets or sets whether child windows are composed into this viewport.</summary>
     /// <value>False initially. Configure before attaching visible windows.</value>
-    /// <remarks>Independent native child windows are unavailable. Changing the embedding policy while windows are attached is rejected.</remarks>
+    /// <remarks>Desktop children without embedding use the active native scene host. ForceNative overrides embedding. Changing the policy with affected children attached is rejected.</remarks>
     /// <exception cref="InvalidOperationException">An attached child window requires the current policy or mutation is off-owner.</exception>
     public bool GUIEmbedSubwindows
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _embedSubwindows; }
-        set { EnsureMutable(); if (_embedSubwindows == value) return; if (EmbeddedWindows.Count != 0) throw new InvalidOperationException("Detach child windows before changing their embedding policy."); _embedSubwindows = value; }
+        set { EnsureMutable(); if (_embedSubwindows == value) return; if (EmbeddedWindows.Count != 0 || IsInsideTree && EnumerateDepthFirst().Any(node => node is Window window && !ReferenceEquals(window, this) && !window.ForceNative)) throw new InvalidOperationException("Detach child windows before changing their embedding policy."); _embedSubwindows = value; }
     }
     /// <summary>Returns the visible embedded child windows in back-to-front order.</summary>
     /// <returns>A new array of borrowed window identities.</returns>

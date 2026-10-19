@@ -1,6 +1,6 @@
 # CanvasBackend
 
-Last updated: 2026-10-16
+Last updated: 2026-10-19
 
 - Declaration: `internal abstract class CanvasBackend : IDisposable`
 - Source: [CanvasBackend.cs](../../src/Servers/Rendering/CanvasBackend.cs)
@@ -9,7 +9,7 @@ Last updated: 2026-10-16
 
 ## Description
 
-The shared internal contract for [GPUCanvasBackend](GPUCanvasBackend.md) and [CompatibilityCanvasBackend](CompatibilityCanvasBackend.md). RenderingServer exclusively owns one backend and serializes access on the scene thread. Games cannot construct it. Draw consumes prepared borrowed data synchronously; submission does not imply GPU completion or compositor display.
+The shared internal contract for [GPUCanvasBackend](GPUCanvasBackend.md) and [CompatibilityCanvasBackend](CompatibilityCanvasBackend.md). RenderingServer owns the authoritative backend and serializes access on the scene thread. Compatibility child windows add private backends with mirrored canvas history; GPU windows share one backend/device and retain independent presentation claims. Games cannot construct it. Draw consumes prepared borrowed data synchronously; submission does not imply GPU completion or compositor display.
 
 ## Internal usage
 
@@ -106,3 +106,5 @@ ClipChildren uses the shared screen backbuffer. Hardware compatibility lazily cr
 Target identity includes HDR and MSAA as well as dimensions. Optional half-float storage flows through native pipeline selection, backbuffers, resolves and explicit readback. PreparePresentation retains SDR byte storage and creates a separate output for every HDR root. ValidateHDR rejects unsupported backends before target publication. [HDR canvas targets](../components/hdr-canvas.md) describes color views, linear readback and transfer boundaries.
 
 `internal abstract void Present(ReadOnlySpan<CanvasPresentation> viewports)` composes completed native images at clipped client rectangles after drawing, replacing destination RGBA and clearing uncovered pixels black. The shared contract declares this operation abstract. An empty list clears the implicit zero-raster root presentation. ReadbackScreen returns the latest completed composition independently of source texture updates. See [screen attachment](../components/canvas-rendering.md#viewport-screen-attachment).
+
+The [independent native window path](../components/window-runtime.md#independent-native-windows) retains one scene renderer and display service. GPU surfaces share the authoritative device/targets; compatibility surfaces use the main driver and replay frozen submissions after cold history import. Native window IDs expire on child hide/detachment; viewport resources survive hiding.

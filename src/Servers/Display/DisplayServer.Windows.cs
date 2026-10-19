@@ -40,6 +40,11 @@ public sealed partial class DisplayServer
 
     internal int WindowGetCurrentScreenCore(int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId)
+        {
+            EnsureOwner();
+            return (_rootDisplay ?? this)._childWindows.TryGetValue(windowId, out var child) ? child.WindowGetCurrentScreenCore() : InvalidScreen;
+        }
         EnsureOwner();
         if (windowId != MainWindowId)
             return InvalidScreen;
@@ -50,8 +55,8 @@ public sealed partial class DisplayServer
     internal int GetKeyboardFocusScreenCore()
     {
         EnsureOwner();
-        return SDL.GetCurrentVideoDriver() != "wayland" && SDL.GetKeyboardFocus() == _window.DangerousGetHandle()
-            ? WindowGetCurrentScreenCore() : GetPrimaryScreenCore();
+        return SDL.GetCurrentVideoDriver() != "wayland" && FocusedWindow() is { } focused
+            ? focused.WindowGetCurrentScreenCore() : GetPrimaryScreenCore();
     }
 
     internal int GetScreenFromRectCore(Rect2 rectangle)
@@ -85,11 +90,16 @@ public sealed partial class DisplayServer
     internal int[] GetWindowListCore()
     {
         EnsureOwner();
-        return [MainWindowId];
+        var root = _rootDisplay ?? this;
+        var ids = new int[root._childWindows.Count + 1];
+        var index = 1;
+        foreach (var id in root._childWindows.Keys) ids[index++] = id;
+        return ids;
     }
 
     internal nint WindowGetNativeHandleCore(HandleType handleType, int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) return ResolveWindow(windowId).WindowGetNativeHandleCore(handleType, MainWindowId);
         EnsureOwner();
         var window = GetWindow(windowId);
         if (handleType is not (HandleType.DisplayHandle or HandleType.WindowHandle or HandleType.OpenGLContext or
@@ -121,21 +131,27 @@ public sealed partial class DisplayServer
 
     internal int GetWindowAtScreenPositionCore(Vector2i position)
     {
-        EnsureOwner();
-        var flags = SDL.GetWindowFlags(GetWindow(MainWindowId));
-        EnsureGlobalWindowCoordinatesAvailable();
-        if ((flags & (SDL.WindowFlags.Hidden | SDL.WindowFlags.Minimized)) != 0)
-            return InvalidWindowId;
+        EnsureOwner(); EnsureGlobalWindowCoordinatesAvailable();
+        var root = _rootDisplay ?? this;
+        if (root.NativeContext(SDL.GetMouseFocus()) is { } focused && focused.ContainsScreenPosition(position)) return focused.WindowID;
+        foreach (var child in root._childWindows.Values) if (child.ContainsScreenPosition(position)) return child.WindowID;
+        return root.ContainsScreenPosition(position) ? MainWindowId : InvalidWindowId;
+    }
+
+    private bool ContainsScreenPosition(Vector2i position)
+    {
+        var flags = SDL.GetWindowFlags(_window.DangerousGetHandle());
+        if ((flags & (SDL.WindowFlags.Hidden | SDL.WindowFlags.Minimized)) != 0) return false;
         var x11 = SDL.GetCurrentVideoDriver() == "x11";
         var origin = x11 ? WindowGetPositionCore() : WindowGetPositionWithDecorationsCore();
         var size = x11 ? WindowGetSizeCore() : WindowGetSizeWithDecorationsCore();
         return (long)position.X >= origin.X && (long)position.X < (long)origin.X + size.X &&
-               (long)position.Y >= origin.Y && (long)position.Y < (long)origin.Y + size.Y
-            ? MainWindowId : InvalidWindowId;
+               (long)position.Y >= origin.Y && (long)position.Y < (long)origin.Y + size.Y;
     }
 
     internal void WindowSetCurrentScreenCore(int screen, int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetCurrentScreenCore(screen, MainWindowId); return; }
         EnsureOwner();
         var window = GetWindow(windowId);
         var display = GetDisplayID(screen);
@@ -240,6 +256,7 @@ public sealed partial class DisplayServer
 
     internal Vector2i WindowGetMinSizeCore(int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) return ResolveWindow(windowId).WindowGetMinSizeCore(MainWindowId);
         EnsureOwner();
         if (_waylandWindowPosition)
         {
@@ -253,6 +270,7 @@ public sealed partial class DisplayServer
 
     internal void WindowSetMinSizeCore(Vector2i size, int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetMinSizeCore(size, MainWindowId); return; }
         EnsureOwner();
         if (size.X < 0 || size.Y < 0)
             throw new ArgumentOutOfRangeException(nameof(size), size, "Minimum dimensions cannot be negative.");
@@ -276,6 +294,7 @@ public sealed partial class DisplayServer
 
     internal Vector2i WindowGetMaxSizeCore(int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) return ResolveWindow(windowId).WindowGetMaxSizeCore(MainWindowId);
         EnsureOwner();
         if (_waylandWindowPosition)
         {
@@ -289,6 +308,7 @@ public sealed partial class DisplayServer
 
     internal void WindowSetMaxSizeCore(Vector2i size, int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetMaxSizeCore(size, MainWindowId); return; }
         EnsureOwner();
         if (size.X < 0 || size.Y < 0)
             throw new ArgumentOutOfRangeException(nameof(size), size, "Maximum dimensions cannot be negative.");
@@ -322,6 +342,7 @@ public sealed partial class DisplayServer
 
     internal WindowMode WindowGetModeCore(int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) return ResolveWindow(windowId).WindowGetModeCore(MainWindowId);
         EnsureOwner();
         var flags = SDL.GetWindowFlags(GetWindow(windowId));
         if ((flags & SDL.WindowFlags.Fullscreen) != 0)
@@ -336,6 +357,7 @@ public sealed partial class DisplayServer
 
     internal void WindowSetModeCore(WindowMode mode, int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetModeCore(mode, MainWindowId); return; }
         EnsureOwner();
         var window = GetWindow(windowId);
         var success = mode switch
@@ -382,6 +404,7 @@ public sealed partial class DisplayServer
 
     internal bool WindowIsFocusedCore(int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) return ResolveWindow(windowId).WindowIsFocusedCore(MainWindowId);
         EnsureOwner();
         var window = GetWindow(windowId);
         return SDL.GetCurrentVideoDriver() == "wayland"
@@ -391,6 +414,7 @@ public sealed partial class DisplayServer
 
     internal bool WindowGetFlagCore(WindowFlag flag, int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) return ResolveWindow(windowId).WindowGetFlagCore(flag, MainWindowId);
         EnsureOwner();
         var window = GetWindow(windowId);
         if (SDL.GetCurrentVideoDriver() == "wayland" && flag is (WindowFlag.AlwaysOnTop or WindowFlag.NoFocus))
@@ -409,6 +433,7 @@ public sealed partial class DisplayServer
 
     internal void WindowSetFlagCore(WindowFlag flag, bool enabled, int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetFlagCore(flag, enabled, MainWindowId); return; }
         EnsureOwner();
         var window = GetWindow(windowId);
         if (SDL.GetCurrentVideoDriver() == "wayland" && flag is (WindowFlag.AlwaysOnTop or WindowFlag.NoFocus))
@@ -428,6 +453,7 @@ public sealed partial class DisplayServer
 
     internal bool WindowIsMaximizeAllowedCore(int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) return ResolveWindow(windowId).WindowIsMaximizeAllowedCore(MainWindowId);
         EnsureOwner();
         var flags = SDL.GetWindowFlags(GetWindow(windowId));
         return (flags & SDL.WindowFlags.Resizable) != 0;
@@ -435,6 +461,7 @@ public sealed partial class DisplayServer
 
     internal void WindowMoveToForegroundCore(int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowMoveToForegroundCore(MainWindowId); return; }
         EnsureOwner();
         var window = GetWindow(windowId);
         if (SDL.GetCurrentVideoDriver() == "wayland")
@@ -445,6 +472,7 @@ public sealed partial class DisplayServer
 
     internal void WindowRequestAttentionCore(int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowRequestAttentionCore(MainWindowId); return; }
         EnsureOwner();
         if (!SDL.FlashWindow(GetWindow(windowId), SDL.FlashOperation.UntilFocused))
             throw SDLFailure("request window attention");
@@ -452,6 +480,7 @@ public sealed partial class DisplayServer
 
     internal Vector2i WindowGetPositionWithDecorationsCore(int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) return ResolveWindow(windowId).WindowGetPositionWithDecorationsCore(MainWindowId);
         EnsureOwner();
         var window = GetWindow(windowId);
         EnsureGlobalWindowCoordinatesAvailable();
@@ -463,6 +492,7 @@ public sealed partial class DisplayServer
 
     internal Vector2i WindowGetSizeWithDecorationsCore(int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) return ResolveWindow(windowId).WindowGetSizeWithDecorationsCore(MainWindowId);
         EnsureOwner();
         var window = GetWindow(windowId);
         if (SDL.GetCurrentVideoDriver() == "wayland")
@@ -475,6 +505,7 @@ public sealed partial class DisplayServer
 
     internal void WindowSetTaskbarProgressStateCore(ProgressState state, int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetTaskbarProgressStateCore(state, MainWindowId); return; }
         EnsureOwner();
         var native = state switch
         {
@@ -494,6 +525,7 @@ public sealed partial class DisplayServer
 
     internal void WindowSetTaskbarProgressValueCore(float value, int windowId = MainWindowId)
     {
+        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetTaskbarProgressValueCore(value, MainWindowId); return; }
         EnsureOwner();
         if (!float.IsFinite(value) || value < 0f || value > 1f)
             throw new ArgumentOutOfRangeException(nameof(value), value, "Progress must be between zero and one.");

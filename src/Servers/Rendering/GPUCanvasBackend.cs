@@ -32,11 +32,13 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     private DisplayServer.VSyncMode _vSync = DisplayServer.VSyncMode.Enabled;
     internal override DisplayServer.VSyncMode VSync => _vSync;
     internal override void SetVSync(DisplayServer.VSyncMode mode)
+        => _vSync = ApplyVSync(_window, mode);
+    private DisplayServer.VSyncMode ApplyVSync(nint window, DisplayServer.VSyncMode mode)
     {
         var native = mode switch { DisplayServer.VSyncMode.Disabled => SDL.GPUPresentMode.Immediate, DisplayServer.VSyncMode.Mailbox => SDL.GPUPresentMode.Mailbox, _ => SDL.GPUPresentMode.VSync };
-        if (!SDL.WindowSupportsGPUPresentMode(Device, _window, native)) native = SDL.GPUPresentMode.VSync;
-        Check(SDL.SetGPUSwapchainParameters(Device, _window, SDL.GPUSwapchainComposition.SDR, native), "set GPU presentation policy");
-        _vSync = native switch { SDL.GPUPresentMode.Immediate => DisplayServer.VSyncMode.Disabled, SDL.GPUPresentMode.Mailbox => DisplayServer.VSyncMode.Mailbox, _ => DisplayServer.VSyncMode.Enabled };
+        if (!SDL.WindowSupportsGPUPresentMode(Device, window, native)) native = SDL.GPUPresentMode.VSync;
+        Check(SDL.SetGPUSwapchainParameters(Device, window, SDL.GPUSwapchainComposition.SDR, native), "set GPU presentation policy");
+        return native switch { SDL.GPUPresentMode.Immediate => DisplayServer.VSyncMode.Disabled, SDL.GPUPresentMode.Mailbox => DisplayServer.VSyncMode.Mailbox, _ => DisplayServer.VSyncMode.Enabled };
     }
     internal override string Method => "gpu";
     internal override string Driver { get; }
@@ -607,9 +609,9 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         _vertexBuffer = buffer; _transfer = transfer; _bufferSize = size;
     }
 
-    internal override Image Readback(CanvasRenderTarget output, bool backBuffer = false)
+    internal override Image Readback(CanvasRenderTarget output, bool backBuffer = false, bool requireFrame = true)
     {
-        if (!output.HasFrame) throw new InvalidOperationException("No canvas frame has completed.");
+        if (requireFrame && !output.HasFrame) throw new InvalidOperationException("No canvas frame has completed.");
         var bytesPerPixel = output.BytesPerPixel;
         if ((long)output.Size.X * output.Size.Y * bytesPerPixel > Array.MaxLength) throw new NotSupportedException("Canvas readback exceeds the managed image storage limit.");
         var pitch = checked((output.Size.X + 63) / 64 * 64);
@@ -648,6 +650,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         if (_disposed) return;
         _disposed = true;
         var idle = SDL.WaitForGPUIdle(Device);
+        foreach (var child in _childPresentations.ToArray()) child.Dispose();
         foreach (var pipeline in _pipelines.Values) pipeline.Dispose();
         foreach (var texture in _textures.Values) texture.Dispose();
         foreach (var texture in _layeredTextures.Values) texture.Dispose();

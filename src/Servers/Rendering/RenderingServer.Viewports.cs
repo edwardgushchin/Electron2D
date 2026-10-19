@@ -97,7 +97,7 @@ public sealed partial class RenderingServer
         if (width > 16384 || height > 16384) throw new NotSupportedException("Canvas targets support at most 16384 pixels per axis.");
         var state = ChangeViewport(rid, out var view); var size = new Vector2i(width, height);
         if (view is SubViewport { Parent: SubViewportContainer { Stretch: true } }) throw new InvalidOperationException("A stretched container owns its child viewport size.");
-        if (TargetSize(view) != size || state.ViewCount != viewCount) _backend.ReleaseTarget(view);
+        if (TargetSize(view) != size || state.ViewCount != viewCount) ReleaseNativeTarget(view);
         state.ViewCount = viewCount;
         if (view is SubViewport sub) sub.SetServerSize(size);
         else { state.Size = size; view.TextureSizeChanged(); }

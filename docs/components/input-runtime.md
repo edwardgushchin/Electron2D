@@ -1,6 +1,6 @@
 # Input runtime component
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 [Manual device sensor values](device-sensors.md) retain four independent Vector3 snapshots under the Input lock. Their setters are callable from any thread and their values feed headless scene execution; hardware acquisition remains absent.
 
@@ -69,7 +69,7 @@ Keyboard, mouse buttons/motion, touch/drag, magnify/pan gestures, controller but
 
 The separate [Display server](display-server.md) supplies native keyboard, mouse, wheel, and touch input and basic cursor/window control through this component's typed event surface. `Input.MouseMode`, current cursor shape, shape selection, custom image and warp use that native display path. Mouse-motion accumulation, explicit flush, mouse/touch emulation, and SDL-origin duplicate filtering are implemented. `SetDefaultCursorShape` retains the root-viewport default and immediately reapplies a hovered Control override; it does not synthesize the pinned mouse-motion event. Wayland rejects pointer warping; supported backend movement is unverified. Root viewport Control mouse/touch/gesture routing, hover, keyboard focus and managed Tab/arrow/D-pad/left-stick navigation run between input and unhandled stages. The viewport exposes the focus owner and release, while focus change, enter and exit notifications run on the scene owner thread; [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs), [ControlFocusNavigationTests](../../tests/Electron2D.Tests/ControlFocusNavigationTests.cs) and [ControlHoverTests](../../tests/Electron2D.Tests/ControlHoverTests.cs) check these managed paths. Controller motion sensors, MIDI and complete GUI/nested viewport routing retain their separate prerequisites under [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers).
 
-`InputEventFromWindow.WindowID` is a signed 64-bit stored event value. The current SDL host filters foreign native window events and writes public main-window ID zero to delivered keyboard, mouse and touch events. Caller-created events may retain any ID; owning additional windows and routing their input requires the separate multiwindow host slice.
+`InputEventFromWindow.WindowID` is a signed 64-bit stored event value. The SDL host filters foreign/retired native events and writes the originating public window ID to keyboard, mouse and touch events. Main is zero; active native children have positive lifetime IDs. Motion accumulation flushes across window/device boundaries. Scene input and native text/IME route through that Window viewport, while caller-created events may retain any signed ID. Contact indexes use one session pool, and retiring a native pressed-input source clears its held state.
 
 Gesture resources retain source `Position`, `Factor` and `Delta` values, including zero, negative or non-finite values where applicable. `InputEventGesture` uses the inherited `Device` property with revert default zero. A positional `XformedBy` call still rejects non-finite coordinates before making a copy. The current SDL adapter delivers finger touch/drag and wheel-button input but does not synthesize magnify or pan gesture events; gesture delivery from native input needs the first touch/trackpad recognition slice.
 

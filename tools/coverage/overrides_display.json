@@ -620,7 +620,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "The native Wayland smoke checks the connected-display snapshot, primary index, center-containing window display, invalid-window fallback, and sole owned window ID against SDL; the dummy suite checks selectors and invalid IDs.",
+      "reason": "The native Wayland smoke checks the connected-display snapshot, primary index, center-containing window display, invalid-window fallback, and owned window ID census, including independent native child identities and retirement against SDL; the dummy suite checks selectors and invalid IDs.",
       "godot": [
         "DisplayServer::method:get_primary_screen()",
         "DisplayServer::method:get_screen_count()",
@@ -743,8 +743,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "SetIcon currently applies the default to the only owned window and preserves an explicit per-window override. Propagation to windows created later requires the first multiwindow window-host vertical slice, which must store the default icon and apply it to each new window before presentation (ADR 0040).",
+      "state": "Partial",
+      "reason": "ADRs 0040/0042: SetIcon now retains a copied default for current and future native windows, applies it before child presentation and preserves successful per-window overrides. The former one-window dependency is implemented. Complete per-window native icon/property and compositor-output verification remains its own acceptance gate; this slice does not infer icon pixels from rendered canvas tests.",
       "godot": [
         "DisplayServer::method:set_icon(Image:)"
       ]
@@ -852,15 +852,12 @@
     },
     {
       "state": "Blocked",
-      "reason": "Trigger: First Window/viewport/popup scene domain with hierarchy, attachment, composition and native-window ownership.",
+      "reason": "Exact prerequisite: native popup surface/grab and safe-area/color roles. Ordinary independent Window hosts now execute; those popup-specific producers are not supplied by normal desktop top levels.",
       "godot": [
         "DisplayServer::method:window_get_active_popup()",
-        "DisplayServer::method:window_get_attached_instance_id(int:)",
         "DisplayServer::method:window_get_popup_safe_rect(int:)",
         "DisplayServer::method:window_set_color(Color:)",
-        "DisplayServer::method:window_set_exclusive(int:,bool:)",
-        "DisplayServer::method:window_set_popup_safe_rect(int:,Rect2i:)",
-        "DisplayServer::method:window_set_transient(int:,int:)"
+        "DisplayServer::method:window_set_popup_safe_rect(int:,Rect2i:)"
       ]
     },
     {
@@ -1145,8 +1142,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Typed Input delivery and DisplayServer events replace callback setters on the current main window. Complete key/text association requires the first native text-input and IME integration slice; per-window callback routing requires the first multiwindow window-host slice. Both must verify owner-thread ordering and callback failure behavior before these adapted contracts are complete (ADRs 0038/0040).",
+      "state": "Partial",
+      "reason": "Typed Input events now carry native child IDs and each scene Window receives its own input, focus, close, text and drop stream. Static DisplayServer events retain main-window scope. Exact remaining work: the complete typed per-window public DisplayServer callback-registration contract and its owner/failure/replacement tests; ordinary child-host creation/rendering is no longer a prerequisite (ADRs 0004/0038/0040).",
       "godot": [
         "DisplayServer::method:window_set_input_event_callback(Callable:,int:)",
         "DisplayServer::method:window_set_window_event_callback(Callable:,int:)"
@@ -1504,6 +1501,15 @@
         "DisplayServer::enum_value:VSyncMode.VSYNC_ENABLED",
         "DisplayServer::enum_value:VSyncMode.VSYNC_ADAPTIVE",
         "DisplayServer::enum_value:VSyncMode.VSYNC_MAILBOX"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "Independent native Window ownership, scene identity and native transient/modal operations now exist. Exact remaining work: typed public static DisplayServer projection for this operation, including invalid/retired IDs, root/child policy, runtime-versus-scene override ownership and callback/native-failure tests. The internal Window consumer does not supply the absent public service operation.",
+      "godot": [
+        "DisplayServer::method:window_get_attached_instance_id(int:)",
+        "DisplayServer::method:window_set_exclusive(int:,bool:)",
+        "DisplayServer::method:window_set_transient(int:,int:)"
       ]
     }
   ]
