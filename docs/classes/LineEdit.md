@@ -805,3 +805,7 @@ The owned SpinBox input reuses editing, scalar selection/caret, submission and t
 Editing commands use [TextMenuAction](TextMenuAction.md), shared with TextEdit under ADR 0051. The former owner-specific enum identity is removed; command numbers and behavior remain.
 
 The placeholder use [Control.TranslationContext](Control.md#automatic-translation-context) when automatic translation supplies no explicit context. Set it before assigning text; changing the context alone preserves prepared text until a translation-change notification or another layout invalidation. User-entered text stays literal.
+
+Visual selection adjacency uses a fixed .001 logical-pixel tolerance in the shared layout helper, preserving real unselected BIDI gaps at large advance coordinates. See [the text editing contract](../components/text-server.md#caret-selection-and-navigation).
+
+Glyph direction is retained from the actual resolved shaping run, including line-ending whitespace resets. Caret, selection, scalar hits and rich glyph flags share that retained metadata across wrapped lines and BIDI override contexts.

@@ -249,6 +249,66 @@
       "godot": "TextServerManager::method:get_primary_interface()",
       "electron2d": "method:Electron2D.TextServerManager.GetPrimaryInterface()",
       "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0095: real shared FreeType/HarfBuzz shaped-buffer ownership, typed copied font sources/features and exact metadata, scalar/inline authoring, fractional metrics, native baseline/outline/clipping and both axes. Owned IDs retire through FreeRID; borrowed text-object IDs share the original owner and paragraph line edits detach atomically until reflow. Prepared queries/drawing retain generation/reentry/thread/lifetime gates. Native/platform, allocator and owner verification remain independently reported."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_closest_character_pos(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextClosestCharacterPos(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0107/0004: typed caret shapes/directions, scalar composite-character boundaries versus native shaping clusters, logical selections, visual record hits and cluster-counted dominant direction over the real retained buffer. Preserve global line-view offsets, BIDI, ligature/inline/vertical behavior, explicit empty/outside policies, copied snapshots and zero-allocation prepared value queries. Vertical RTL caret coordinates use the advance axis; complete repeated advances are retained. Owning thread/generation/disposal/reentry and native acceptance remain explicit."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_get_carets(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextGetCarets(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0107/0004: typed caret shapes/directions, scalar composite-character boundaries versus native shaping clusters, logical selections, visual record hits and cluster-counted dominant direction over the real retained buffer. Preserve global line-view offsets, BIDI, ligature/inline/vertical behavior, explicit empty/outside policies, copied snapshots and zero-allocation prepared value queries. Vertical RTL caret coordinates use the advance axis; complete repeated advances are retained. Owning thread/generation/disposal/reentry and native acceptance remain explicit."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_get_character_breaks(RID:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextGetCharacterBreaks(Electron2D.RID)",
+      "reason": "ADR 0107/0004: typed caret shapes/directions, scalar composite-character boundaries versus native shaping clusters, logical selections, visual record hits and cluster-counted dominant direction over the real retained buffer. Preserve global line-view offsets, BIDI, ligature/inline/vertical behavior, explicit empty/outside policies, copied snapshots and zero-allocation prepared value queries. Vertical RTL caret coordinates use the advance axis; complete repeated advances are retained. Owning thread/generation/disposal/reentry and native acceptance remain explicit."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_get_dominant_direction_in_range(RID:,int:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextGetDominantDirectionInRange(Electron2D.RID,System.Int32,System.Int32)",
+      "reason": "ADR 0107/0004: typed caret shapes/directions, scalar composite-character boundaries versus native shaping clusters, logical selections, visual record hits and cluster-counted dominant direction over the real retained buffer. Preserve global line-view offsets, BIDI, ligature/inline/vertical behavior, explicit empty/outside policies, copied snapshots and zero-allocation prepared value queries. Vertical RTL caret coordinates use the advance axis; complete repeated advances are retained. Owning thread/generation/disposal/reentry and native acceptance remain explicit."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_get_grapheme_bounds(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextGetGraphemeBounds(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0107/0004: typed caret shapes/directions, scalar composite-character boundaries versus native shaping clusters, logical selections, visual record hits and cluster-counted dominant direction over the real retained buffer. Preserve global line-view offsets, BIDI, ligature/inline/vertical behavior, explicit empty/outside policies, copied snapshots and zero-allocation prepared value queries. Vertical RTL caret coordinates use the advance axis; complete repeated advances are retained. Owning thread/generation/disposal/reentry and native acceptance remain explicit."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_get_selection(RID:,int:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextGetSelection(Electron2D.RID,System.Int32,System.Int32)",
+      "reason": "ADR 0107/0004: typed caret shapes/directions, scalar composite-character boundaries versus native shaping clusters, logical selections, visual record hits and cluster-counted dominant direction over the real retained buffer. Preserve global line-view offsets, BIDI, ligature/inline/vertical behavior, explicit empty/outside policies, copied snapshots and zero-allocation prepared value queries. Vertical RTL caret coordinates use the advance axis; complete repeated advances are retained. Owning thread/generation/disposal/reentry and native acceptance remain explicit."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_has_visible_chars(RID:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextHasVisibleChars(Electron2D.RID)",
+      "reason": "ADR 0107/0004: typed caret shapes/directions, scalar composite-character boundaries versus native shaping clusters, logical selections, visual record hits and cluster-counted dominant direction over the real retained buffer. Preserve global line-view offsets, BIDI, ligature/inline/vertical behavior, explicit empty/outside policies, copied snapshots and zero-allocation prepared value queries. Vertical RTL caret coordinates use the advance axis; complete repeated advances are retained. Owning thread/generation/disposal/reentry and native acceptance remain explicit."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_hit_test_grapheme(RID:,float:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextHitTestGrapheme(Electron2D.RID,System.Single)",
+      "reason": "ADR 0107/0004: typed caret shapes/directions, scalar composite-character boundaries versus native shaping clusters, logical selections, visual record hits and cluster-counted dominant direction over the real retained buffer. Preserve global line-view offsets, BIDI, ligature/inline/vertical behavior, explicit empty/outside policies, copied snapshots and zero-allocation prepared value queries. Vertical RTL caret coordinates use the advance axis; complete repeated advances are retained. Owning thread/generation/disposal/reentry and native acceptance remain explicit."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_next_character_pos(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextNextCharacterPos(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0107/0004: typed caret shapes/directions, scalar composite-character boundaries versus native shaping clusters, logical selections, visual record hits and cluster-counted dominant direction over the real retained buffer. Preserve global line-view offsets, BIDI, ligature/inline/vertical behavior, explicit empty/outside policies, copied snapshots and zero-allocation prepared value queries. Vertical RTL caret coordinates use the advance axis; complete repeated advances are retained. Owning thread/generation/disposal/reentry and native acceptance remain explicit."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_next_grapheme_pos(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextNextGraphemePos(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0107/0004: typed caret shapes/directions, scalar composite-character boundaries versus native shaping clusters, logical selections, visual record hits and cluster-counted dominant direction over the real retained buffer. Preserve global line-view offsets, BIDI, ligature/inline/vertical behavior, explicit empty/outside policies, copied snapshots and zero-allocation prepared value queries. Vertical RTL caret coordinates use the advance axis; complete repeated advances are retained. Owning thread/generation/disposal/reentry and native acceptance remain explicit."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_prev_character_pos(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextPrevCharacterPos(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0107/0004: typed caret shapes/directions, scalar composite-character boundaries versus native shaping clusters, logical selections, visual record hits and cluster-counted dominant direction over the real retained buffer. Preserve global line-view offsets, BIDI, ligature/inline/vertical behavior, explicit empty/outside policies, copied snapshots and zero-allocation prepared value queries. Vertical RTL caret coordinates use the advance axis; complete repeated advances are retained. Owning thread/generation/disposal/reentry and native acceptance remain explicit."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_prev_grapheme_pos(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextPrevGraphemePos(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0107/0004: typed caret shapes/directions, scalar composite-character boundaries versus native shaping clusters, logical selections, visual record hits and cluster-counted dominant direction over the real retained buffer. Preserve global line-view offsets, BIDI, ligature/inline/vertical behavior, explicit empty/outside policies, copied snapshots and zero-allocation prepared value queries. Vertical RTL caret coordinates use the advance axis; complete repeated advances are retained. Owning thread/generation/disposal/reentry and native acceptance remain explicit."
     }
   ],
   "extras": [
@@ -263,6 +323,26 @@
     {
       "electron2d": "method:Electron2D.TextServerManager.ValidateDisposal()",
       "reason": "ADR 0107/0095 retained implementation/service identity rejects caller disposal; buffer ownership is released separately."
+    },
+    {
+      "electron2d": "T:Electron2D.TextCaretInfo",
+      "reason": "ADR 0107/0004: immutable typed projection of the existing shaped_text_get_carets dictionary and its leading_rect/leading_direction/trailing_rect/trailing_direction fields. This result carries existing caret geometry; it adds no independent capability."
+    },
+    {
+      "electron2d": "property:Electron2D.TextCaretInfo.LeadingDirection()",
+      "reason": "ADR 0107/0004: immutable typed projection of the existing shaped_text_get_carets dictionary and its leading_rect/leading_direction/trailing_rect/trailing_direction fields. This result carries existing caret geometry; it adds no independent capability."
+    },
+    {
+      "electron2d": "property:Electron2D.TextCaretInfo.LeadingRect()",
+      "reason": "ADR 0107/0004: immutable typed projection of the existing shaped_text_get_carets dictionary and its leading_rect/leading_direction/trailing_rect/trailing_direction fields. This result carries existing caret geometry; it adds no independent capability."
+    },
+    {
+      "electron2d": "property:Electron2D.TextCaretInfo.TrailingDirection()",
+      "reason": "ADR 0107/0004: immutable typed projection of the existing shaped_text_get_carets dictionary and its leading_rect/leading_direction/trailing_rect/trailing_direction fields. This result carries existing caret geometry; it adds no independent capability."
+    },
+    {
+      "electron2d": "property:Electron2D.TextCaretInfo.TrailingRect()",
+      "reason": "ADR 0107/0004: immutable typed projection of the existing shaped_text_get_carets dictionary and its leading_rect/leading_direction/trailing_rect/trailing_direction fields. This result carries existing caret geometry; it adds no independent capability."
     }
   ],
   "statusGroups": [
@@ -282,19 +362,25 @@
         "TextServer::method:has(RID:)",
         "TextServer::method:shaped_get_span_count(RID:)",
         "TextServer::method:shaped_get_span_embedded_object(RID:,int:)",
+        "TextServer::method:shaped_get_span_meta(RID:,int:)",
         "TextServer::method:shaped_get_span_object(RID:,int:)",
         "TextServer::method:shaped_get_span_text(RID:,int:)",
         "TextServer::method:shaped_get_text(RID:)",
         "TextServer::method:shaped_text_add_object(RID:,Variant:,Vector2:,int:InlineAlignment,int:,float:)",
         "TextServer::method:shaped_text_add_string(RID:,String:,RID[]:,int:,Dictionary:,String:,Variant:)",
         "TextServer::method:shaped_text_clear(RID:)",
+        "TextServer::method:shaped_text_closest_character_pos(RID:,int:)",
         "TextServer::method:shaped_text_draw(RID:,RID:,Vector2:,float:,float:,Color:,float:)",
         "TextServer::method:shaped_text_draw_outline(RID:,RID:,Vector2:,float:,float:,int:,Color:,float:)",
         "TextServer::method:shaped_text_duplicate(RID:)",
         "TextServer::method:shaped_text_get_ascent(RID:)",
+        "TextServer::method:shaped_text_get_carets(RID:,int:)",
+        "TextServer::method:shaped_text_get_character_breaks(RID:)",
         "TextServer::method:shaped_text_get_descent(RID:)",
         "TextServer::method:shaped_text_get_direction(RID:)",
+        "TextServer::method:shaped_text_get_dominant_direction_in_range(RID:,int:,int:)",
         "TextServer::method:shaped_text_get_glyph_count(RID:)",
+        "TextServer::method:shaped_text_get_grapheme_bounds(RID:,int:)",
         "TextServer::method:shaped_text_get_inferred_direction(RID:)",
         "TextServer::method:shaped_text_get_object_range(RID:,Variant:)",
         "TextServer::method:shaped_text_get_object_rect(RID:,Variant:)",
@@ -303,13 +389,20 @@
         "TextServer::method:shaped_text_get_preserve_control(RID:)",
         "TextServer::method:shaped_text_get_preserve_invalid(RID:)",
         "TextServer::method:shaped_text_get_range(RID:)",
+        "TextServer::method:shaped_text_get_selection(RID:,int:,int:)",
         "TextServer::method:shaped_text_get_size(RID:)",
         "TextServer::method:shaped_text_get_underline_position(RID:)",
         "TextServer::method:shaped_text_get_underline_thickness(RID:)",
         "TextServer::method:shaped_text_get_width(RID:)",
         "TextServer::method:shaped_text_has_object(RID:,Variant:)",
+        "TextServer::method:shaped_text_has_visible_chars(RID:)",
+        "TextServer::method:shaped_text_hit_test_grapheme(RID:,float:)",
         "TextServer::method:shaped_text_hit_test_position(RID:,float:)",
         "TextServer::method:shaped_text_is_ready(RID:)",
+        "TextServer::method:shaped_text_next_character_pos(RID:,int:)",
+        "TextServer::method:shaped_text_next_grapheme_pos(RID:,int:)",
+        "TextServer::method:shaped_text_prev_character_pos(RID:,int:)",
+        "TextServer::method:shaped_text_prev_grapheme_pos(RID:,int:)",
         "TextServer::method:shaped_text_resize_object(RID:,Variant:,Vector2:,int:InlineAlignment,float:)",
         "TextServer::method:shaped_text_set_bidi_override(RID:,Array:)",
         "TextServer::method:shaped_text_set_direction(RID:,int:TextServer.Direction)",
@@ -318,7 +411,6 @@
         "TextServer::method:shaped_text_set_preserve_invalid(RID:,bool:)",
         "TextServer::method:shaped_text_shape(RID:)",
         "TextServer::method:shaped_text_tab_align(RID:,PackedFloat32Array:)",
-        "TextServer::method:shaped_get_span_meta(RID:,int:)",
         "TextServerManager::method:find_interface(String:)",
         "TextServerManager::method:get_interface(int:)",
         "TextServerManager::method:get_interface_count()",
@@ -503,29 +595,17 @@
         "TextServer::method:is_valid_letter(int:)",
         "TextServer::method:name_to_tag(String:)",
         "TextServer::method:shaped_set_span_update_font(RID:,int:,RID[]:,int:,Dictionary:)",
-        "TextServer::method:shaped_text_closest_character_pos(RID:,int:)",
         "TextServer::method:shaped_text_fit_to_width(RID:,float:,int:TextServer.JustificationFlag)",
-        "TextServer::method:shaped_text_get_carets(RID:,int:)",
-        "TextServer::method:shaped_text_get_character_breaks(RID:)",
         "TextServer::method:shaped_text_get_custom_ellipsis(RID:)",
         "TextServer::method:shaped_text_get_custom_punctuation(RID:)",
-        "TextServer::method:shaped_text_get_dominant_direction_in_range(RID:,int:,int:)",
         "TextServer::method:shaped_text_get_ellipsis_pos(RID:)",
-        "TextServer::method:shaped_text_get_grapheme_bounds(RID:,int:)",
         "TextServer::method:shaped_text_get_line_breaks(RID:,float:,int:,int:TextServer.LineBreakFlag)",
         "TextServer::method:shaped_text_get_line_breaks_adv(RID:,PackedFloat32Array:,int:,bool:,int:TextServer.LineBreakFlag)",
         "TextServer::method:shaped_text_get_parent(RID:)",
-        "TextServer::method:shaped_text_get_selection(RID:,int:,int:)",
         "TextServer::method:shaped_text_get_spacing(RID:,int:TextServer.SpacingType)",
         "TextServer::method:shaped_text_get_trim_pos(RID:)",
         "TextServer::method:shaped_text_get_word_breaks(RID:,int:TextServer.GraphemeFlag,int:TextServer.GraphemeFlag)",
-        "TextServer::method:shaped_text_has_visible_chars(RID:)",
-        "TextServer::method:shaped_text_hit_test_grapheme(RID:,float:)",
-        "TextServer::method:shaped_text_next_character_pos(RID:,int:)",
-        "TextServer::method:shaped_text_next_grapheme_pos(RID:,int:)",
         "TextServer::method:shaped_text_overrun_trim_to_width(RID:,float:,int:TextServer.TextOverrunFlag)",
-        "TextServer::method:shaped_text_prev_character_pos(RID:,int:)",
-        "TextServer::method:shaped_text_prev_grapheme_pos(RID:,int:)",
         "TextServer::method:shaped_text_set_custom_ellipsis(RID:,int:)",
         "TextServer::method:shaped_text_set_custom_punctuation(RID:,String:)",
         "TextServer::method:shaped_text_set_spacing(RID:,int:TextServer.SpacingType,int:)",

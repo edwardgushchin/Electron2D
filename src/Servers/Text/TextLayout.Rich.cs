@@ -46,7 +46,7 @@ internal sealed partial class TextLayout
     {
         if (_lines.Count == 0) return 0; var lineIndex = 0; for (var i = 0; i < _lines.Count; i++) { lineIndex = i; if (point.Y < _lines[i].CrossOffset + _lines[i].Height) break; }
         var line = _lines[lineIndex]; var result = line.Start; var distance = float.PositiveInfinity;
-        for (var i = line.GlyphStart; i < line.GlyphStart + line.GlyphCount; i++) { var glyph = _glyphs[i]; var left = glyph.Position.X - glyph.Offset.X; var right = left + glyph.Advance * glyph.Repeat; var rtl = (_levels[Math.Min(glyph.Start, Math.Max(0, _count - 1))] & 1) != 0; var nearLeft = Math.Abs(point.X - left); var nearRight = Math.Abs(point.X - right); if (nearLeft < distance) { distance = nearLeft; result = rtl ? glyph.End : glyph.Start; } if (nearRight < distance) { distance = nearRight; result = rtl ? glyph.Start : glyph.End; } }
+        for (var i = line.GlyphStart; i < line.GlyphStart + line.GlyphCount; i++) { var glyph = _glyphs[i]; var left = glyph.Position.X - glyph.Offset.X; var right = left + glyph.Advance * glyph.Repeat; var rtl = glyph.RTL; var nearLeft = Math.Abs(point.X - left); var nearRight = Math.Abs(point.X - right); if (nearLeft < distance) { distance = nearLeft; result = rtl ? glyph.End : glyph.Start; } if (nearRight < distance) { distance = nearRight; result = rtl ? glyph.Start : glyph.End; } }
         return result;
     }
     internal void DrawRich(CanvasItem canvas, Vector2 baseline, Action<TextGlyphDrawing> renderer, int firstLine = 0,
@@ -79,7 +79,7 @@ internal sealed partial class TextLayout
                     state.OutlineSize = outlineSize; state.ObjectIndex = objectIndex; state.Missing = glyph.Missing;
                     var scalar = glyph.Start < _count ? new Rune((int)_scalars[glyph.Start]) : Rune.ReplacementChar;
                     state.Flags = (glyph.Face is not null && glyph.Index != 0 ? TextGraphemeFlags.Valid : 0) |
-                        ((_levels[Math.Min(glyph.Start, Math.Max(0, _count - 1))] & 1) != 0 ? TextGraphemeFlags.RTL : 0) |
+                        (glyph.RTL ? TextGraphemeFlags.RTL : 0) |
                         (glyph.Virtual ? TextGraphemeFlags.Virtual : 0) | (glyph.Space ? TextGraphemeFlags.Space : 0) |
                         (glyph.Tab ? TextGraphemeFlags.Tab : 0) | (glyph.Elongation ? TextGraphemeFlags.Elongation : 0) |
                         (objectIndex >= 0 ? TextGraphemeFlags.EmbeddedObject : 0) |
@@ -163,9 +163,8 @@ internal sealed partial class TextLayout
     {
         var line = _lines[index]; if (line.GlyphCount == 0) return 0;
         var first = _glyphs[line.GlyphStart]; var last = _glyphs[line.GlyphStart + line.GlyphCount - 1];
-        bool RTL(Glyph glyph) => (uint)glyph.Start < (uint)_count && (_levels[glyph.Start] & 1) != 0;
-        if (MathF.Floor(coordinate) <= 0) return RTL(first) ? first.End : first.Start;
-        if (MathF.Ceiling(coordinate) >= width) return RTL(last) ? last.Start : last.End;
+        if (MathF.Floor(coordinate) <= 0) return first.RTL ? first.End : first.Start;
+        if (MathF.Ceiling(coordinate) >= width) return last.RTL ? last.Start : last.End;
         var pen = 0f;
         for (var i = line.GlyphStart; i < line.GlyphStart + line.GlyphCount;)
         {
@@ -173,10 +172,10 @@ internal sealed partial class TextLayout
             while (end < line.GlyphStart + line.GlyphCount && _glyphs[end].Start == glyph.Start && _glyphs[end].End == glyph.End) { advance += _glyphs[end].Advance * _glyphs[end].Repeat; end++; }
             if (coordinate >= pen && coordinate < pen + advance)
             {
-                if (glyph.Virtual) return RTL(glyph) ? glyph.End : glyph.Start;
+                if (glyph.Virtual) return glyph.RTL ? glyph.End : glyph.Start;
                 var count = glyph.End - glyph.Start;
                 var position = count > 0 ? Math.Clamp((int)MathF.Floor((coordinate - pen) * count / advance + .5f), 0, count) : 0;
-                return RTL(glyph) ? glyph.End - position : glyph.Start + position;
+                return glyph.RTL ? glyph.End - position : glyph.Start + position;
             }
             pen += advance; i = end;
         }

@@ -253,3 +253,7 @@ The placeholder use [Control.TranslationContext](Control.md#automatic-translatio
 ## Native popup integration
 
 Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](../components/popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.
+
+Visual selection adjacency uses a fixed .001 logical-pixel tolerance in the shared layout helper, preserving real unselected BIDI gaps at large advance coordinates. See [the text editing contract](../components/text-server.md#caret-selection-and-navigation).
+
+Glyph direction is retained from the actual resolved shaping run, including line-ending whitespace resets. Caret, selection, scalar hits and rich glyph flags share that retained metadata across wrapped lines and BIDI override contexts.

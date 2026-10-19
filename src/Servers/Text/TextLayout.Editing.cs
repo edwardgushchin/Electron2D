@@ -2,6 +2,7 @@ namespace Electron2D;
 
 internal sealed partial class TextLayout
 {
+    private const float SelectionAdjacencyTolerance = .001f;
     internal int NextGrapheme(int column) { column = Math.Clamp(column, 0, _count); do { column++; } while (column < _count && !_grapheme[column]); return Math.Min(column, _count); }
     internal int PreviousGrapheme(int column) { column = Math.Clamp(column, 0, _count); do { column--; } while (column > 0 && !_grapheme[column]); return Math.Max(0, column); }
     internal int ClosestGrapheme(int column)
@@ -54,7 +55,7 @@ internal sealed partial class TextLayout
             while (end < _glyphs.Count && _glyphs[end].Start == glyph.Start && _glyphs[end].End == glyph.End) { advance += _glyphs[end].Advance * _glyphs[end].Repeat; end++; }
             if (!glyph.Virtual && glyph.End > glyph.Start)
             {
-                var rtl = (_levels[glyph.Start] & 1) != 0; var direction = rtl ? TextDirection.RTL : TextDirection.LTR;
+                var rtl = glyph.RTL; var direction = rtl ? TextDirection.RTL : TextDirection.LTR;
                 var start = Key.Orientation == TextOrientation.Horizontal ? glyph.Position.X - glyph.Offset.X : glyph.Position.Y - glyph.Offset.Y;
                 for (var column = glyph.Start; column <= glyph.End; column++)
                 {
@@ -96,7 +97,7 @@ internal sealed partial class TextLayout
             while (end < line.GlyphStart + line.GlyphCount && _glyphs[end].Start == glyph.Start && _glyphs[end].End == glyph.End) { advance += _glyphs[end].Advance * _glyphs[end].Repeat; end++; }
             if (!glyph.Virtual && glyph.End > glyph.Start)
             {
-                var rtl = (_levels[glyph.Start] & 1) != 0;
+                var rtl = glyph.RTL;
                 var start = Key.Orientation == TextOrientation.Horizontal ? glyph.Position.X - glyph.Offset.X : glyph.Position.Y - glyph.Offset.Y;
                 for (var column = glyph.Start; column <= glyph.End; column++)
                 {
@@ -119,9 +120,9 @@ internal sealed partial class TextLayout
             while (end < _glyphs.Count && _glyphs[end].Start == glyph.Start && _glyphs[end].End == glyph.End) { advance += _glyphs[end].Advance * _glyphs[end].Repeat; end++; }
             if (!glyph.Virtual && glyph.End > glyph.Start && glyph.Start < to && glyph.End > from)
             {
-                var a = Math.Max(from, glyph.Start); var b = Math.Min(to, glyph.End); var rtl = (_levels[glyph.Start] & 1) != 0; var pen = glyph.Position.X - glyph.Offset.X;
+                var a = Math.Max(from, glyph.Start); var b = Math.Min(to, glyph.End); var rtl = glyph.RTL; var pen = glyph.Position.X - glyph.Offset.X;
                 var lo = pen + advance * (rtl ? glyph.End - b : a - glyph.Start) / (glyph.End - glyph.Start); var hi = pen + advance * (rtl ? glyph.End - a : b - glyph.Start) / (glyph.End - glyph.Start);
-                if (output.Count > 0 && Mathf.IsEqualApprox(output[^1].Y, lo)) output[^1] = new(output[^1].X, hi); else output.Add(new(lo, hi));
+                if (output.Count > 0 && Mathf.IsEqualApprox(output[^1].Y, lo, SelectionAdjacencyTolerance)) output[^1] = new(output[^1].X, hi); else output.Add(new(lo, hi));
             }
             i = end;
         }

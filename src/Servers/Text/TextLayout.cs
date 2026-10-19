@@ -44,7 +44,7 @@ internal sealed partial class TextLayout
     internal bool IsBusy => _active != 0;
     private readonly record struct Run(int Start, int End, FontData? Face, UnicodeScript Script, sbyte Level);
     private readonly record struct Glyph(FontData? Face, uint Index, int Start, int End, float Advance, Vector2 Offset,
-        uint Flags, bool Space, bool Tab, int Repeat = 1, bool Virtual = false, bool Missing = false, bool Elongation = false, int Size = 0, int ObjectIndex = -1, float ObjectAscent = 0, float ObjectDescent = 0)
+        uint Flags, bool Space, bool Tab, bool RTL, int Repeat = 1, bool Virtual = false, bool Missing = false, bool Elongation = false, int Size = 0, int ObjectIndex = -1, float ObjectAscent = 0, float ObjectDescent = 0)
     {
         internal Vector2 Position { get; init; }
     }
@@ -87,7 +87,7 @@ internal sealed partial class TextLayout
     private void BuildCore(Font font, TextLayoutKey key, TextLayoutOptions? options)
     {
         _font = font; _options = options ?? new TextLayoutOptions(Overrun: 1, VisibleCharacters: -1);
-        Key = key; _caretsReady = false; _glyphs.Clear(); _rawGlyphs.Clear(); _lines.Clear(); Size = Vector2.Zero;
+        Key = key; _caretsReady = false; _serverCharactersReady = false; _glyphs.Clear(); _rawGlyphs.Clear(); _lines.Clear(); Size = Vector2.Zero;
         Decode(key.Text); CharacterCount = _count; PrepareRichStyles();
         if (_options.VisibleBehavior == 0 && _options.VisibleCharacters >= 0) _count = Math.Min(_count, _options.VisibleCharacters);
         ResolveProperties(); MeasureParagraphs(); BreakLines(); NaturalWidth = 0;
@@ -285,7 +285,7 @@ internal sealed partial class TextLayout
             if (face is not null)
             {
                 for (var i = _lineGlyphs.Count - 1; i >= 0; i--) if (_lineGlyphs[i].Start == end - 1) _lineGlyphs.RemoveAt(i);
-                var glyph = new Glyph(face, face.GetGlyphIndex(0x00ad), end - 1, end, SoftHyphenAdvance(end - 1), Vector2.Zero, 0, false, false);
+                var glyph = new Glyph(face, face.GetGlyphIndex(0x00ad), end - 1, end, SoftHyphenAdvance(end - 1), Vector2.Zero, 0, false, false, (_levels[end - 1] & 1) != 0);
                 _lineGlyphs.Insert(_paragraphLevels[start] == 1 ? 0 : _lineGlyphs.Count, glyph);
             }
         }
@@ -403,7 +403,7 @@ internal sealed partial class TextLayout
         else AppendRuns(start, end, _paragraphLevels[start]);
         foreach (var run in _runs)
         {
-            var runStyle = StyleAt(run.Start); var inline = _richObjects[run.Start];
+            var runStyle = StyleAt(run.Start); var inline = _richObjects[run.Start]; var rtl = (run.Level & 1) != 0;
             if (inline.At >= 0)
             {
                 var ascent = runStyle.Font.GetAscent(runStyle.Size); var descent = runStyle.Font.GetDescent(runStyle.Size);
@@ -413,20 +413,20 @@ internal sealed partial class TextLayout
                 var anchor = ((int)inline.Alignment & 12) switch { 0 => -ascent, 4 => (descent - ascent) / 2, 8 => 0, _ => descent };
                 var own = ((int)inline.Alignment & 3) switch { 0 => 0, 1 => cross / 2, 2 => cross, _ => inline.ExplicitBaseline || inline.Baseline >= 0 ? inline.Baseline : cross };
                 var top = anchor - own;
-                _lineGlyphs.Add(new(null, 0, run.Start, run.End, vertical ? inline.Size.Y : inline.Size.X, Vector2.Zero, 0, false, false, Size: runStyle.Size, ObjectIndex: inline.Index, ObjectAscent: Math.Max(0, -top), ObjectDescent: Math.Max(0, top + cross)));
+                _lineGlyphs.Add(new(null, 0, run.Start, run.End, vertical ? inline.Size.Y : inline.Size.X, Vector2.Zero, 0, false, false, rtl, Size: runStyle.Size, ObjectIndex: inline.Index, ObjectAscent: Math.Max(0, -top), ObjectDescent: Math.Max(0, top + cross)));
                 for (var index = run.Start; index < run.End; index++) _clusterEnds[index] = run.End;
                 continue;
             }
-            if (_options.PreserveControl && _nonprinting[run.Start]) { AddMissingGlyph(run.Start); continue; }
+            if (_options.PreserveControl && _nonprinting[run.Start]) { AddMissingGlyph(run.Start, rtl); continue; }
             if (IsSpecial(_scalars[run.Start]))
             {
                 var tab = _scalars[run.Start] == '\t';
-                _lineGlyphs.Add(new(null, 0, run.Start, run.End, 0, Vector2.Zero, 0, tab, tab)); continue;
+                _lineGlyphs.Add(new(null, 0, run.Start, run.End, 0, Vector2.Zero, 0, tab, tab, rtl)); continue;
             }
             if (run.Face is null)
             {
                 var reverse = Key.Orientation == TextOrientation.Horizontal && (run.Level & 1) != 0;
-                for (var index = reverse ? run.End - 1 : run.Start; reverse ? index >= run.Start : index < run.End; index += reverse ? -1 : 1) AddMissingGlyph(index);
+                for (var index = reverse ? run.End - 1 : run.Start; reverse ? index >= run.Start : index < run.End; index += reverse ? -1 : 1) AddMissingGlyph(index, rtl);
                 continue;
             }
             var direction = Key.Orientation == TextOrientation.Vertical
@@ -456,7 +456,7 @@ internal sealed partial class TextLayout
                 var space = IsSpace(_scalars[cluster]);
                 if (shaped.GlyphIndex == 0 && !IsIgnorable(cluster))
                 {
-                    for (var scalar = cluster; scalar < clusterEnd; scalar++) AddMissingGlyph(scalar);
+                    for (var scalar = cluster; scalar < clusterEnd; scalar++) AddMissingGlyph(scalar, rtl);
                     continue;
                 }
                 if (shaped.GlyphIndex == 0) advance = 0;
@@ -467,7 +467,7 @@ internal sealed partial class TextLayout
                     if (shapedIndex < lastAdvance) advance += extraSpacing;
                 }
                 _lineGlyphs.Add(new(run.Face, shaped.GlyphIndex, cluster, clusterEnd, advance,
-                    shaped.GlyphIndex == 0 ? Vector2.Zero : new(shaped.XOffset / 64f, -shaped.YOffset / 64f), shaped.Flags, space, false, Size: runStyle.Size));
+                    shaped.GlyphIndex == 0 ? Vector2.Zero : new(shaped.XOffset / 64f, -shaped.YOffset / 64f), shaped.Flags, space, false, rtl, Size: runStyle.Size));
             }
         }
         LayoutAdvance();
@@ -502,7 +502,7 @@ internal sealed partial class TextLayout
         }
     }
 
-    private void AddMissingGlyph(int index)
+    private void AddMissingGlyph(int index, bool rtl)
     {
         var scalar = _scalars[index];
         if (!_options.PreserveInvalid && !(_options.PreserveControl && _nonprinting[index])) return;
@@ -510,7 +510,7 @@ internal sealed partial class TextLayout
         var fontSize = StyleAt(index).Size; var size = TextMissingGlyph.Size(fontSize, scalar);
         var vertical = Key.Orientation == TextOrientation.Vertical;
         var offset = vertical ? new Vector2(-MathF.Round(size.X * .5f, MidpointRounding.AwayFromZero), size.Y) : Vector2.Zero;
-        _lineGlyphs.Add(new(null, scalar, index, index + 1, vertical ? size.Y : size.X, offset, 0, IsSpace(scalar), false, Missing: true, Size: fontSize));
+        _lineGlyphs.Add(new(null, scalar, index, index + 1, vertical ? size.Y : size.X, offset, 0, IsSpace(scalar), false, rtl, Missing: true, Size: fontSize));
     }
 
     private float LayoutAdvance()
@@ -600,9 +600,9 @@ internal sealed partial class TextLayout
                 if (glyph.Start <= start || glyph.Start >= end || !_wordEnds[glyph.Start] || glyph.Space || glyph.Virtual || glyph.Missing || glyph.Face is null) continue;
                 var scalar = new Rune(_scalars[glyph.Start]);
                 if (_options.ParagraphBuffers ? (!string.IsNullOrEmpty(_options.CustomPunctuation) ? _options.CustomPunctuation.Contains(scalar.ToString(), StringComparison.Ordinal) : Rune.IsPunctuation(scalar) && scalar.Value != '_') : Rune.IsPunctuation(scalar)) continue;
-                var adjacent = (_levels[glyph.Start] & 1) == 0 ? i - 1 : i + 1;
+                var adjacent = !glyph.RTL ? i - 1 : i + 1;
                 if (adjacent >= 0 && adjacent < limit && _lineGlyphs[adjacent].Space) continue;
-                _lineGlyphs.Insert(i, new(glyph.Face, 0, glyph.Start, glyph.End, 0, Vector2.Zero, 0, true, false, Virtual: true));
+                _lineGlyphs.Insert(i, new(glyph.Face, 0, glyph.Start, glyph.End, 0, Vector2.Zero, 0, true, false, glyph.RTL, Virtual: true));
                 i++; limit++;
             }
         }
@@ -624,7 +624,7 @@ internal sealed partial class TextLayout
                         if (i > 0 && (_lineGlyphs[i - 1].Flags & 4) == 0) continue;
                         var index = glyph.Face.GetGlyphIndex(0x0640); if (index == 0) break;
                         var advance = glyph.Face.GetGlyphAdvance(index, Key.FontSize); if (advance <= 0) break;
-                        _lineGlyphs.Insert(i, new(glyph.Face, index, glyph.Start, glyph.End, advance, new(0, glyph.Offset.Y), 0, false, false, 0, true, Elongation: true));
+                        _lineGlyphs.Insert(i, new(glyph.Face, index, glyph.Start, glyph.End, advance, new(0, glyph.Offset.Y), 0, false, false, glyph.RTL, 0, true, Elongation: true));
                         opportunities++; limit++; break;
                     }
                 }

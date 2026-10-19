@@ -79,6 +79,25 @@ finally { text.FreeRID(buffer); }
 | `public System.Single ShapedTextTabAlign(Electron2D.RID shaped, System.ReadOnlySpan<System.Single> tabStops)` | Aligns tabs to repeating positive interval lengths. |
 | `public System.Boolean TryGetSpanMetadata<T>(Electron2D.RID shaped, System.Int32 index, out T metadata)` | Reads span metadata under its exact original type. |
 
+## Buffer editing
+
+Caret results use [TextCaretInfo](TextCaretInfo.md); Unicode composite-character and native shaping-cluster navigation remain separate. Selection and caret geometry are baseline-relative and line-local; paragraph positions retain global scalar origins. See [editing behavior](../components/text-server.md#caret-selection-and-navigation).
+
+| Signature | Contract |
+| --- | --- |
+| `public Electron2D.TextCaretInfo ShapedTextGetCarets(Electron2D.RID shaped, System.Int32 position)` | Returns the two baseline-relative caret shapes at a Unicode scalar position. |
+| `public Electron2D.TextDirection ShapedTextGetDominantDirectionInRange(Electron2D.RID shaped, System.Int32 start, System.Int32 end)` | Returns the direction represented by more overlapping shaped clusters. |
+| `public Electron2D.Vector2 ShapedTextGetGraphemeBounds(Electron2D.RID shaped, System.Int32 position)` | Returns the first visual shaped-cluster interval containing a scalar position, including its end. |
+| `public Electron2D.Vector2[] ShapedTextGetSelection(Electron2D.RID shaped, System.Int32 start, System.Int32 end)` | Returns ordered visual advance intervals for a logical scalar selection. |
+| `public System.Boolean ShapedTextHasVisibleChars(Electron2D.RID shaped)` | Reports whether the buffer has a nonzero, nonvirtual glyph index. |
+| `public System.Int32 ShapedTextClosestCharacterPos(Electron2D.RID shaped, System.Int32 position)` | Finds the closest composite-character boundary, choosing the preceding one on a tie. |
+| `public System.Int32 ShapedTextHitTestGrapheme(Electron2D.RID shaped, System.Single coords)` | Finds the visual glyph record intersected by an advance coordinate. |
+| `public System.Int32 ShapedTextNextCharacterPos(Electron2D.RID shaped, System.Int32 position)` | Finds the first composite-character end strictly after a position. |
+| `public System.Int32 ShapedTextNextGraphemePos(Electron2D.RID shaped, System.Int32 position)` | Returns the end of the shaped cluster containing a scalar position. |
+| `public System.Int32 ShapedTextPrevCharacterPos(Electron2D.RID shaped, System.Int32 position)` | Finds the composite-character boundary strictly before a position. |
+| `public System.Int32 ShapedTextPrevGraphemePos(Electron2D.RID shaped, System.Int32 position)` | Returns the start of the shaped cluster immediately before a scalar position. |
+| `public System.Int32[] ShapedTextGetCharacterBreaks(Electron2D.RID shaped)` | Returns composite-character end boundaries, including the buffer end. |
+
 ## Protected integration
 
 ValidateDisposal rejects disposal of the retained object. Native source ownership, font-cache/extension gaps and verification limits are described in [the component contract](../components/text-server.md).
