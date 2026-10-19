@@ -21,6 +21,7 @@ public static partial class BackendChecks
                     for (var i = 0; i < local.Shapes; i++) for (var j = 0; j < other.Shapes; j++)
                         {
                             var own = local.Parts[i]; var b = other.Parts[j];
+                            if (own.Concave && b.Concave) continue;
                             var a = MotionRecoveryPart(own, b, queryMargin); var pose = from; pose.Origin += recovery;
                             var gap = PartGap(a, pose, b, other.Pose, out var toward, out _, out var onOther);
                             var away = -toward;
@@ -51,12 +52,14 @@ public static partial class BackendChecks
                 for (var i = 0; i < local.Shapes; i++) for (var j = 0; j < other.Shapes; j++)
                     {
                         var own = local.Parts[i]; var a = own; var b = other.Parts[j];
+                        if (a.Concave && b.Concave) continue;
+                        var sweptMotion = a.Boundary || a.Concave && !b.Boundary ? Vector2.Zero : motion;
                         if (b.OneWay is { } policy && motion.Dot(policy.LocalDirection.Rotated(other.Rotation)) <= 0) continue;
                         if (a.Directed && !a.Slide && !collideSeparationRay) continue;
                         float low, f;
                         if (a.Directed || b.Directed)
-                        { if (!DirectedSweepRange(a, start, motion, b, other.Pose, out low, out f)) continue; }
-                        else { if (!SweepParts(a, start, motion, b, other.Pose, out f)) continue; low = f; }
+                        { if (!DirectedSweepRange(a, start, sweptMotion, b, other.Pose, out low, out f)) continue; }
+                        else { if (!SweepParts(a, start, sweptMotion, b, other.Pose, out f)) continue; low = f; }
                         if (f > fraction) continue;
                         var initial = PartGap(a, start, b, other.Pose, out var toward, out _, out _);
                         if (initial <= 0 && -initial <= .05f && motion.Dot(-toward) >= -.000001f) continue;
@@ -70,6 +73,8 @@ public static partial class BackendChecks
                 var pose = from; pose.Origin += recovery + motion * fraction;
                 depth = MathF.Max(0, -PartGap(MotionRecoveryPart(source, target, queryMargin), pose, target, hit.Pose, out var toward, out _, out point));
                 normal = -toward; best = hit;
+                // Exact zero-area contact has two sides; retain the incoming side of a new ordinary impact.
+                if (fraction > 0 && !source.Directed && !target.Directed && normal.Dot(motion) > 0) normal = -normal;
             }
             result.SetCollision(body, source.Index, best!.RID, target.Index, point, normal, depth, best.PointVelocity(point),
                 travel, motion * (1 - safeFraction), safeFraction, fraction);

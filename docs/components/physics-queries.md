@@ -377,3 +377,9 @@ before caps. Rest contacts retain their own numerical geometry after sorting.
 CPU/software GPU share the public assertions; every 128-frame warmed bracket
 requires strict zero owner/all-thread managed bytes. Arbitrary custom/coupled
 simulation and hardware performance acceptance remain separate.
+
+
+[Special body-motion sources](physics-registered-adapter.md#special-source-motion)
+now retain canonical geometry kind across private CPU pieces, resident GPU geometry
+and independent provider parts. All-family public motion, recovery/residual and
+live replacement checks retain logical indices and zero warmed frame allocations.

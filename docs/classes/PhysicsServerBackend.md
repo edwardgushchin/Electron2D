@@ -411,3 +411,11 @@ Broader numerical and final platform/network/performance acceptance remains sepa
 [Moving one-way continuation](../components/physics-registered-adapter.md#moving-one-way-continuation)
 checks the restored source duration through immediate supplied-pose recovery and
 factory-provided direct-state Step. Full numerical-extension acceptance stays open.
+
+
+[Special source motion](../components/physics-registered-adapter.md#special-source-motion)
+retains represented family across physical pieces and live shape replacement.
+Initial recovery/residual stopping still executes; ignored special displacement
+cannot manufacture a new sweep, and two concave resources cannot contact through
+private edge pieces. Shared public CPU/software-GPU/registered assertions cover
+logical slots, analytical boundaries, fractions and zero warmed full-frame bytes.

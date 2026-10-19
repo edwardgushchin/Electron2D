@@ -123,8 +123,9 @@ bool candidate(Shape s,Mapping mapping)
 }
 void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
 {
-    vec2 motion=q.motionMargin.xy;
-    if((shapeB.policy.w&4u)!=0u&&dot2(motion,passDirection())<=0)return;
+    bool ignored=ga.data.z==7u||(ga.data.z==5u&&gb.data.z!=7u);
+    vec2 motion=ignored?vec2(0):q.motionMargin.xy;
+    if((shapeB.policy.w&4u)!=0u&&dot2(q.motionMargin.xy,passDirection())<=0)return;
     bool directed=ga.data.z==6u||gb.data.z==6u,requireOverlap=true;
     // Keep one geometry call site across phases to limit driver inlining and cold compilation.
     const uint initialPhase=0u,reachPhase=1u,bisectPhase=2u,rayImpactPhase=3u,shapeImpactPhase=4u;
@@ -140,11 +141,11 @@ void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
             if(directed){extension=motion*safe;phase=reachPhase;continue;}
             if(contact.valid)
             {
-                if((contact.depth>0.05||dot2(motion,contact.normal)<-0.0001)&&oneWayContact(contact))
+                if((contact.depth>0.05||dot2(q.motionMargin.xy,contact.normal)<-0.0001)&&oneWayContact(contact))
                 {safe=unsafeFraction=0;motionResult=snapshot(contact);blocked=true;}
                 return;
             }
-            if(safe==0)return;
+            if(safe==0||ignored)return;
             float fraction;
             if(!querySweep(a,b,motion*safe,vec2(0),a.radius+b.radius,0.00001,fraction,normal))return;
             low=max(0,ceil(fraction*256)-1)/256*safe;high=min(safe,low+safe/256);
@@ -160,6 +161,7 @@ void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
                 uint unused;vec2 toward=querySupportVertex(probe,normal),point=support(b,-normal,toward,unused)-b.radius*normal;
                 contact=Contact(point,-normal,0,true);
             }
+            if(dot2(contact.normal,motion)>0)contact.normal=-normal;
             motionResult=snapshot(contact);blocked=true;return;
         }
         if(phase==rayImpactPhase)
@@ -171,7 +173,7 @@ void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
         if(phase==reachPhase)
         {
             full=contact;if(!full.valid)return;
-            if(initial.valid&&initial.depth<=0.05&&dot2(motion,initial.normal)>=-0.0001)return;
+            if(initial.valid&&initial.depth<=0.05&&dot2(q.motionMargin.xy,initial.normal)>=-0.0001)return;
             high=initial.valid?0:safe;
             if(!initial.valid){middle=(low+high)*0.5;extension=motion*middle;phase=bisectPhase;continue;}
         }
@@ -226,7 +228,7 @@ void scan(bool recovering)
                     if(shapeB.owner.x>=bodyCount||mapB.identity.w!=shapeB.policy.x){fail();return;}
                     bodyB=bodies[shapeB.owner.x];Geometry gb=geometries[shapeB.owner.z];
                     if(bodyB.flags.x!=shapeB.owner.y||bodyB.flags.w==0u||gb.data.w!=shapeB.owner.w){fail();return;}
-                    if(gb.data.y!=0u)
+                    if(gb.data.y!=0u&&!(ga.data.z==5u&&gb.data.z==5u))
                     {
                         uint na=ga.data.z==5u?ga.data.y/2u:1u,nb=gb.data.z==5u?gb.data.y/2u:1u;
                         for(uint pa=0u;pa<na;pa++)for(uint pb=0u;pb<nb;pb++)

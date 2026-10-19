@@ -19,6 +19,7 @@ internal sealed record PhysicsFixtureTag(RID ColliderRID, int ShapeIndex, OneWay
     internal CompoundContour? Compound { get; set; }
     internal CompoundContour? CachedCompound;
     internal int CompoundPiece { get; set; }
+    internal PhysicsShapeGeometry.ShapeKind Kind { get; set; }
     internal WeakReference<Shape>? Source { get; set; }
     internal WeakReference<CollisionObject>? SceneOwner { get; set; }
     internal PhysicsColliderBackend? Owner { get; set; }

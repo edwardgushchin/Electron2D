@@ -6,10 +6,12 @@ using Mode = Electron2D.PhysicsServer.BodyMode;
 
 internal static class GPUPhysicsMotionQueryTests
 {
-    internal static void Run()
+    internal static void Run(bool measure = true)
     {
-        CompareCPU(); ShapesAndRays(); CompoundRays(); FiltersAndLifetime(); PointVelocityAndBatch(); Measure();
-        Console.WriteLine("Resident body motion: CPU recovery/sweep/one-way semantics, identity, directional filters, exceptions, unchanged poses and warmed allocation passed.");
+        CompareCPU(); ShapesAndRays(); CompoundRays(); FiltersAndLifetime(); PointVelocityAndBatch(); if (measure) Measure();
+        Console.WriteLine(measure
+            ? "Resident body motion: CPU recovery/sweep/one-way semantics, identity, directional filters, exceptions, unchanged poses and warmed allocation passed."
+            : "Resident body motion: functional geometry, recovery/sweep, filters, lifetime, point velocity and batch checks passed.");
     }
     private static Store.BodyHandle Body(Store s, Vector2 position = default, Mode mode = Mode.Static) => s.Add(new(mode, position, 0, default, 0));
     private static Store.MotionQueryResult Test(Store s, Query query, ReadOnlySpan<ulong> bodies = default, ReadOnlySpan<ulong> objects = default)

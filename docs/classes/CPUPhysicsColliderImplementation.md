@@ -1,6 +1,6 @@
 # CPUPhysicsColliderImplementation
 
-Last updated: 2026-10-16
+Last updated: 2026-10-20
 
 **Declaration:** `internal sealed partial class CPUPhysicsColliderImplementation : PhysicsColliderImplementation` · **Source:** [CPUPhysicsColliderImplementation.cs](../../src/Servers/Physics/CPUPhysicsColliderImplementation.cs) · **Component:** [Physics backends](../components/physics-backends.md#runtime-flow-and-ownership)
 
@@ -83,3 +83,11 @@ compound contour pose/piece and directed-ray values. Sensor visitor capacity is
 reused by the owning CPU world and released on world destruction. Neither cache
 owns application Shape resources. [Shared edit verification](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse)
 keeps compound/ray queries and sensor history alongside strict warm allocation checks.
+
+
+[Special source motion](../components/physics-registered-adapter.md#special-source-motion)
+retains represented family across physical pieces and live shape replacement.
+Initial recovery/residual stopping still executes; ignored special displacement
+cannot manufacture a new sweep, and two concave resources cannot contact through
+private edge pieces. Shared public CPU/software-GPU/registered assertions cover
+logical slots, analytical boundaries, fractions and zero warmed full-frame bytes.
