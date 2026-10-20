@@ -85,7 +85,7 @@ public sealed partial class RenderingServer
         finally { _canvasVisibilityChanges.Clear(); }
     }
     private static void AddCanvasVisibilityError(ref Exception? error, Exception next) =>
-        error = error is null ? next : new AggregateException("Canvas frame callbacks failed.", error, next);
+        error = error is null ? next : new AggregateException("Rendering callbacks failed.", error, next);
 }
 
 internal sealed class CanvasVisibilityNotification(CanvasItem item)

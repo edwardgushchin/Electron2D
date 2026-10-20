@@ -1,6 +1,6 @@
 # Explicit canvas frame execution
 
-Last updated: 2026-10-13
+Last updated: 2026-10-20
 
 ## Executable scope
 
@@ -12,7 +12,7 @@ frameStep advances only the rendering clock, using the existing rollover setting
 
 ## Synchronization and completion
 
-ForceSync flushes the renderer-owned command/readback pipeline and waits for preceding GPU operations. The primary backend waits for its SDL GPU device. Compatibility uses a bounded one-pixel readback and restores the previous render target, providing a driver completion point without allocating a full image. This is a cold blocking operation with a synchronization cost. It does not draw, present, advance clocks/counters or consume frame requests. Calls before an in-flight frame finishes submission are rejected; post-draw observers/actions can synchronize.
+ForceSync first drains selected [render-thread actions](render-thread-callbacks.md), then flushes the renderer-owned command/readback pipeline and waits for preceding GPU operations. The primary backend waits for its SDL GPU device. Compatibility uses a bounded one-pixel readback and restores the previous render target, providing a driver completion point without allocating a full image. This is a cold blocking operation with a synchronization cost. The synchronization itself does not draw, present, advance clocks/counters or consume frame requests; user actions retain their ordinary public operations. Selected callback failures are reported after native synchronization/readback completion. Calls before an in-flight frame finishes submission are rejected; post-draw observers/actions can synchronize.
 
 RequestFrameDrawnCallback(Action callback) accepts an application-owned action. The owner-thread service preserves request order. Requests queued before or during capture join the completed frame; requests after native submission, including post-draw/completion requests, wait for a later frame. Selected actions run after normal readback/post-draw processing and each executes once. A failure in another observer/action does not discard selected actions. Errors propagate after native commitment and frame cleanup; multiple errors are aggregated. If capture/submission fails, pending requests remain for the next successfully completed frame. Callback captures are released before/after invocation, and teardown releases pending captures without invoking them.
 

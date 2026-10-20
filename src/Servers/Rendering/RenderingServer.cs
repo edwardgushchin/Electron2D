@@ -179,17 +179,18 @@ public sealed partial class RenderingServer : ElectronObject
     { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport readback cannot reenter native submission."); if (viewport is Window w && (w.ContentLayout.TargetSize.X == 0 || w.ContentLayout.TargetSize.Y == 0)) return null; var target = _backend.FindTarget(viewport); return target?.HasFrame == true ? _backend.Readback(target) : null; }
     internal void Render(SceneTree tree, double step, bool force = false, bool swapBuffers = true)
     {
-        EnsureOwner(); if (!_renderLoopEnabled && !force) return;
+        EnsureOwner();
         if (_rendering) throw new InvalidOperationException("Canvas rendering cannot be re-entered.");
         if (!double.IsFinite(step) || step < 0 || !double.IsFinite(CanvasTime + step)) throw new ArgumentOutOfRangeException(nameof(step));
+        var frameError = DrainRenderCallbacks(); EnsureOwner();
+        if (!_renderLoopEnabled && !force) { if (frameError is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(frameError).Throw(); return; }
         _rendering = true;
         _swapBuffers = swapBuffers;
-        Exception? frameError = null;
         long capturedRevision = 0;
         try
         {
             AnimatedTexture.AdvanceAll(this, Stopwatch.GetTimestamp(), _animatedChanges);
-            if (!force && OS.LowProcessorUsageMode && Engine.GetWriteMoviePath().Length == 0 && !HasChangedCore())
+            if (!force && frameError is null && OS.LowProcessorUsageMode && Engine.GetWriteMoviePath().Length == 0 && !HasChangedCore())
             {
                 CanvasTime = (CanvasTime + step) % ProjectSettings.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
                 return;
@@ -603,6 +604,7 @@ public sealed partial class RenderingServer : ElectronObject
     {
         if (disposing)
         {
+            RetireRenderCallbacks();
             List<Exception>? errors = null;
             try
             {

@@ -16,6 +16,8 @@
 
 Last updated: 2026-10-20
 
+[Render-thread callbacks](../components/render-thread-callbacks.md) connect worker requests to the exact native owner, existing device/canvas operations, disabled/idle render attempts and explicit synchronization, with bounded snapshot ordering and session cancellation.
+
 [Shader binaries and deferred identities](../components/local-compute.md#shader-binaries-and-deferred-identities) connect copied versioned stage containers and reserved RIDs to ordinary compute, graphics, specialization and retained canvas consumers.
 
 [Movie writing](../components/movie-writing.md) consumes completed root-viewport pixels through the actual renderer and fixes capture dimensions across later resizes. It does not create a headless renderer or claim readback/encoding is allocation-free.

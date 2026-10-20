@@ -22,16 +22,25 @@ public sealed partial class RenderingServer
     }
 
     /// <summary>Submits pending renderer compute work and waits for prior GPU operations to complete.</summary>
-    /// <remarks>This cold blocking operation has a synchronization cost. It does not draw, present or dispatch frame callbacks.
-    /// Use the native owner thread outside capture/submission, or after a frame has completed.</remarks>
+    /// <remarks>First drains queued render-thread actions. The synchronization itself does not draw, present or consume
+    /// completed-frame requests; user actions retain their ordinary operations. This cold blocking operation has a
+    /// synchronization cost. Use the native owner outside capture/submission, or after a frame has completed.
+    /// Selected action errors propagate after native synchronization/readback completion; several errors aggregate.</remarks>
     /// <exception cref="InvalidOperationException">No renderer exists, the caller is off-owner or a frame is still being captured/submitted.</exception>
     public static void ForceSync()
     {
         var server = RequireService(); server.EnsureOwner();
         if (server._rendering && !server._frameSubmitted) throw new InvalidOperationException("A frame cannot be synchronized before its submission completes.");
-        server._renderingDevice?.FlushRendererCommands();
-        server._backend.Sync(server._backend.FindTarget(server._window));
-        server._renderingDevice?.CompleteRendererReadbacks();
+        var error = server.DrainRenderCallbacks();
+        try
+        {
+            server.EnsureOwner();
+            server._renderingDevice?.FlushRendererCommands();
+            server._backend.Sync(server._backend.FindTarget(server._window));
+            server._renderingDevice?.CompleteRendererReadbacks();
+        }
+        catch (Exception next) { AddCanvasVisibilityError(ref error, next); }
+        if (error is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(error).Throw();
     }
 
     /// <summary>Schedules an owner-thread callback after the next completed canvas frame.</summary>

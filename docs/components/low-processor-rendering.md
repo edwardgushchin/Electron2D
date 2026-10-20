@@ -1,6 +1,6 @@
 # Rendering changes and low-processor scheduling
 
-Last updated: 2026-10-18
+Last updated: 2026-10-20
 
 ## Scope and selection
 
@@ -49,3 +49,5 @@ The final source cohort passed the ordinary executable suite in 1672.43 seconds 
 ## Decisions
 
 [ADR 0016](../decisions/core-object-runtime.md#adr-0016) owns scheduling; [ADR 0019](../decisions/core-data-io.md#adr-0019) owns typed startup settings; [ADR 0028](../decisions/rendering.md#adr-0028) owns the existing canvas backends; [ADR 0095](../decisions/singleton-services.md#adr-0095) owns retained static services. This adds executing producers and no new service lifetime or rendering backend.
+
+Worker [render-thread requests](render-thread-callbacks.md) conservatively increment the session change revision and drain before automatic idle-frame selection, including render attempts with drawing disabled. A callback error remains observable even after a nested manual draw consumes that revision.

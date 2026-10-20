@@ -92,3 +92,5 @@ Configured recording uses Engine.RunMovie/RunMovieAsync and the typed MovieWrite
 The [Time service](time-service.md) now supplies typed calendar conversions, system wall-time and monotonic ticks with a permanent Engine registry identity. Its origin is independent of loop start/stop, scene pause and TimeScale.
 
 The [MainLoop callback audit](main-loop.md#complete-frame-and-lifecycle-callback-audit) verifies initialization, fixed/idle deltas and stop results, failure recovery and terminal finalization with real selected CPU/software-GPU/registered worlds. Explicit library-host ownership and warmed zero managed allocation remain distinct from platform permissions and hardware performance.
+
+The window loop drains [render-thread requests](render-thread-callbacks.md) at each render attempt, including disabled rendering and low-processor skipping. It uses the existing native owner and does not advance extra process/physics callbacks. Queued action errors propagate after selected native frame work; shutdown cancels remaining captures.

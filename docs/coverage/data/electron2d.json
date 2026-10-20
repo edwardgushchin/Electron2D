@@ -157729,6 +157729,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.CallOnRenderThread(System.Action)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CallOnRenderThread",
+    "signature": "public static System.Void CallOnRenderThread(System.Action callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "callback",
+        "type": "System.Action",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.CanvasCreate()",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -160989,6 +161008,19 @@
     "declaringType": "Electron2D.RenderingServer",
     "name": "HasChanged",
     "signature": "public static System.Boolean HasChanged()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.IsOnRenderThread()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "IsOnRenderThread",
+    "signature": "public static System.Boolean IsOnRenderThread()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

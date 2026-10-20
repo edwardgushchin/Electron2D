@@ -1,9 +1,9 @@
 # RenderingServer
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
-- Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
+- Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs), [RenderingServer.Threads.cs](../../src/Servers/Rendering/RenderingServer.Threads.cs)
 - Inherits: [ElectronObject](ElectronObject.md)
 - Component: [Canvas rendering](../components/canvas-rendering.md)
 
@@ -1293,7 +1293,7 @@ Uses the initialized process service on its owner thread. Invalid/disposed ident
 
 ## Explicit frame execution
 
-ForceDraw(bool swapBuffers = true, double frameStep = 0) executes the current native scene even when RenderLoopEnabled is false; non-presenting frames still update viewport textures. ForceSync submits pending renderer device work and waits for prior GPU operations without drawing. RequestFrameDrawnCallback(Action) schedules an ordered one-shot owner-thread action after a completed frame, with capture release and error cleanup. See [clock, ownership, failure and actual pixel verification](../components/manual-render-frames.md).
+ForceDraw(bool swapBuffers = true, double frameStep = 0) executes the current native scene even when RenderLoopEnabled is false; non-presenting frames still update viewport textures. ForceSync drains selected render-thread requests, submits pending renderer device work and waits for prior GPU operations. Synchronization itself does not draw; user actions retain their ordinary operations. RequestFrameDrawnCallback(Action) schedules an ordered one-shot owner-thread action after a completed frame, with capture release and error cleanup. See [clock, ownership, failure and actual pixel verification](../components/manual-render-frames.md).
 
 
 ## Retained canvas visibility callbacks
@@ -1823,3 +1823,22 @@ Owner-thread operations require an active GPU rendering session. If automatic em
 All per-member failures also follow the shared owner/identity/preparation contract above. Invalid numeric, enum and capacity values reject before the corresponding operation commits; disposed borrowed resources reject their next use. The native/readback and platform limits are documented in the linked component.
 
 The [independent native window path](../components/window-runtime.md#independent-native-windows) retains one scene renderer and display service. GPU surfaces share the authoritative device/targets; compatibility surfaces use the main driver and replay frozen submissions after cold history import. Native window IDs expire on child hide/detachment; viewport resources survive hiding.
+
+## Render-thread callback bridge
+
+| Declaration | Contract |
+| --- | --- |
+| [`public static bool IsOnRenderThread()`](#member-render-thread-identity) | Thread-safe active-session observation of the native owner identity. |
+| [`public static void CallOnRenderThread(System.Action callback)`](#member-render-thread-callback) | Queues from another thread; drains prior requests and invokes inline on the owner. |
+
+<a id="member-render-thread-identity"></a>
+### IsOnRenderThread
+
+Returns true on the current scene/native owner and false on another thread. Requires an active, non-retiring renderer; otherwise throws InvalidOperationException. The observation does not reserve native lifetime or relax access rules. Both current canvas backends share the scene owner. Use IsAvailable for availability and CallOnRenderThread for worker-requested operations.
+
+<a id="member-render-thread-callback"></a>
+### CallOnRenderThread
+
+Accepts a nonnull borrowed Action from any thread. Workers return after enqueue; automatic/forced render attempts and ForceSync invoke a FIFO snapshot on the owner, including disabled-render and low-processor loops. Owner callers first drain prior requests, then invoke inline; nested calls are inline. Requests arriving during the selected batch wait for a later drain. Captured objects remain the application's responsibility. Calls after session retirement cannot target a new session implicitly.
+
+Null throws ArgumentNullException; absent/retiring service throws InvalidOperationException. Selected callback failures propagate on the owner after the selected work and native frame/sync attempt; several failures aggregate. All selected actions are tried, including the caller's owner action after a preceding error. Ordinary device/list/submission/lifetime guards still apply. Teardown cancels pending captures. Reuse prepared delegates to avoid application closure allocation. See [the executable workflow, ordering and verification](../components/render-thread-callbacks.md).

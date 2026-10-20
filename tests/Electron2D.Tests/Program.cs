@@ -23,6 +23,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_ATOMICS") is { } i
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_ARRAYS") is { } descriptorProfile) { if (descriptorProfile == "1") RenderingDeviceDescriptorArrayTests.Run(); else RenderingDeviceDescriptorArrayTests.Canvas(descriptorProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXEL_BUFFERS") is { } texelProfile) { if (texelProfile == "1") RenderingDeviceTexelTests.Run(); else RenderingDeviceTexelTests.Canvas(texelProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_BINARY") is { } binaryProfile) { if (binaryProfile is "1" or "read") RenderingDeviceBinaryTests.Run(binaryProfile); else RenderingDeviceBinaryTests.Canvas(binaryProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDER_THREAD") is { } renderThreadProfile) { if (renderThreadProfile == "managed") RenderThreadTests.Managed(); else RenderThreadTests.Native(renderThreadProfile); return; }
 
 if (args.Contains("--save-scene-child"))
 {
