@@ -209,6 +209,7 @@ else if (args.Contains("--area-parameters")) BackendChecks.RunAreaParameters(arg
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--area-fields")) BackendChecks.RunAreaFields(args.Contains("--threaded"));
 else if (args.Contains("--parameter-reads")) BackendChecks.RunParameterReads();
+else if (args.Contains("--adaptive-motion")) BackendChecks.RunAdaptiveMotion(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--motion-oneway-pairs")) BackendChecks.RunMotionOneWayPairs(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--motion-rest")) BackendChecks.RunMotionRest(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--rounded-cores")) BackendChecks.RunRoundedCores(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));

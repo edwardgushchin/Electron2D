@@ -31,7 +31,7 @@ public static partial class BackendChecks
                     {
                         var cast = world.DirectSpaceState.CastMotion(query);
                         if (!(cast.SafeFraction <= analytic + .00001f && cast.UnsafeFraction >= analytic - .00001f &&
-                            cast.UnsafeFraction - cast.SafeFraction <= 1f / 256 + .00001f && MathF.Abs(cast.UnsafeFraction - analytic) <= 1f / 256 + .00001f))
+                            cast.UnsafeFraction - cast.SafeFraction <= 3f / 512 + .00001f && MathF.Abs(cast.UnsafeFraction - analytic) <= 1f / 256 + .00001f))
                             throw new InvalidOperationException($"{queryShape.GetType().Name}/{shape.GetType().Name} cast first touch {analytic}: {cast.SafeFraction}/{cast.UnsafeFraction}");
                     }
                 }

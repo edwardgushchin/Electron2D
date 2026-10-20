@@ -132,7 +132,7 @@ void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
     // Keep one geometry call site across phases to limit driver inlining and cold compilation.
     const uint initialPhase=0u,reachPhase=1u,bisectPhase=2u,rayImpactPhase=3u;
     uint phase=initialPhase,refinements=0u;
-    float low=0,high=0,margin=0,middle=0;vec2 extension=vec2(0),normal=vec2(0);
+    float low=0,high=0,margin=0,middle=0,coefficient=0.5;vec2 extension=vec2(0),normal=vec2(0);
     Hull probe=a;Contact initial,full;
     [[dont_unroll]] for(;;)
     {
@@ -141,7 +141,7 @@ void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
         if(phase==initialPhase)
         {
             initial=contact;
-            if(directed){extension=motion*safe;phase=reachPhase;continue;}
+            if(directed){extension=motion;phase=reachPhase;continue;}
             if(contact.valid)
             {
                 if((contact.depth>0.05||dot2(q.motionMargin.xy,contact.normal)<-0.0001)&&oneWayContact(contact))
@@ -150,8 +150,8 @@ void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
             }
             if(safe==0||ignored)return;
             float fraction;
-            if(!querySweep(a,b,motion*safe,vec2(0),a.radius+b.radius,0.00001,fraction,normal))return;
-            low=max(0,ceil(fraction*256)-1)/256*safe;high=clamp(fraction*safe,low,safe);
+            if(!querySweep(a,b,motion,vec2(0),a.radius+b.radius,0.00001,fraction,normal))return;
+            vec2 bracket=querySweepBracket(fraction);low=bracket.x;high=bracket.y;
             if(low>=safe)return;
             safe=low;unsafeFraction=high;
             motionShape=mapA.identity.z;blocked=true;return;
@@ -166,15 +166,21 @@ void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
         {
             full=contact;if(!full.valid)return;
             if(initial.valid&&initial.depth<=0.05&&dot2(q.motionMargin.xy,initial.normal)>=-0.0001)return;
-            high=initial.valid?0:safe;
-            if(!initial.valid){middle=(low+high)*0.5;extension=motion*middle;phase=bisectPhase;continue;}
+            high=initial.valid?0:1;
+            if(!initial.valid){middle=low+(high-low)*coefficient;extension=motion*middle;phase=bisectPhase;continue;}
         }
         else
         {
-            if(contact.valid)high=middle;else low=middle;
-            if(++refinements<8u){middle=(low+high)*0.5;extension=motion*middle;continue;}
+            if(contact.valid){high=middle;coefficient=refinements==0u||low>0?0.5:0.25;}
+            else{low=middle;coefficient=refinements==0u||high<1?0.5:0.75;}
+            if(++refinements<8u){middle=low+(high-low)*coefficient;extension=motion*middle;continue;}
         }
         if(low>=safe&&blocked)return;
+        if(ga.data.z==6u&&gb.data.z!=7u&&!initial.valid)
+        {
+            float advance=dot2(normalized(vertex(a,1u)-vertex(a,0u)),motion);
+            if(advance>0)high=clamp(1-full.depth/advance,low,high);
+        }
         probe.pose.xy+=high*motion;extension=vec2(0);margin=q.motionMargin.z;phase=rayImpactPhase;
     }
 }

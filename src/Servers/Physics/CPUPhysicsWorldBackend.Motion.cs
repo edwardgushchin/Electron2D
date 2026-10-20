@@ -97,22 +97,30 @@ internal sealed partial class CPUPhysicsWorldBackend
                     {
                         if (ownTag.Compound is not null && ownTag.CompoundPiece != 0 ||
                             candidate.Tag.Compound is not null && candidate.Tag.CompoundPiece != 0) continue;
-                        var full = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, sweep * safe, 0);
+                        var full = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, sweep, 0);
                         if (full.pointCount == 0) continue;
                         var initial = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, default, 0);
                         if (initial.pointCount != 0 && -initial.points[0].separation <= 0.1f * B2_LINEAR_SLOP &&
                             b2Dot(requested, -initial.normal) >= -1e-6f) continue;
                         var lowRay = 0f;
-                        var highRay = initial.pointCount == 0 ? safe : 0f;
+                        var highRay = initial.pointCount == 0 ? 1f : 0f;
+                        var coefficientRay = .5f;
                         if (initial.pointCount == 0)
                             for (var step = 0; step < 8; step++)
                             {
-                                var middle = (lowRay + highRay) * 0.5f;
+                                var middle = lowRay + (highRay - lowRay) * coefficientRay;
                                 var partial = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, sweep * middle, 0);
-                                if (partial.pointCount != 0) highRay = middle;
-                                else lowRay = middle;
+                                if (partial.pointCount != 0)
+                                { highRay = middle; coefficientRay = step == 0 || lowRay > 0 ? .5f : .25f; }
+                                else
+                                { lowRay = middle; coefficientRay = step == 0 || highRay < 1 ? .5f : .75f; }
                             }
                         if (lowRay >= safe && hasMotionHit) continue;
+                        if (ray is not null && !other.isBoundary && initial.pointCount == 0)
+                        {
+                            var advance = b2Dot(b2Normalize(query.points[1] - query.points[0]), sweep);
+                            if (advance > 0) highRay = Math.Clamp(1 + full.points[0].separation / advance, lowRay, highRay);
+                        }
                         var rayImpact = query;
                         for (var pointIndex = 0; pointIndex < rayImpact.count; pointIndex++)
                             rayImpact.points[pointIndex] += sweep * highRay;
@@ -144,16 +152,18 @@ internal sealed partial class CPUPhysicsWorldBackend
                         continue;
                     }
                     if (sweep == default) continue;
-                    var cast = CPUPhysicsWorldBackend.Cast(query, other, otherTransform, sweep, safe);
+                    var cast = CPUPhysicsWorldBackend.Cast(query, other, otherTransform, sweep, 1);
                     if (!cast.hit) continue;
                     var low = 0f;
-                    var high = safe;
+                    var high = 1f;
+                    var coefficient = .5f;
                     for (var step = 0; step < 8; step++)
                     {
-                        var middle = (low + high) * 0.5f;
+                        var middle = low + (high - low) * coefficient;
                         if (CPUPhysicsWorldBackend.Cast(query, other, otherTransform, sweep, middle).hit)
-                            high = middle;
-                        else low = middle;
+                        { high = middle; coefficient = step == 0 || low > 0 ? .5f : .25f; }
+                        else
+                        { low = middle; coefficient = step == 0 || high < 1 ? .5f : .75f; }
                     }
                     if (low >= safe) continue;
                     safe = low;

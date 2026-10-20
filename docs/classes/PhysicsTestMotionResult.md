@@ -36,7 +36,7 @@ if (PhysicsServer.BodyTestMotion(bodyRID, parameters, result))
 | `public Vector2 GetColliderVelocity()` | Collider point velocity, scene units per second. |
 | `public float GetCollisionDepth()` | Contact penetration depth in scene units. |
 | `public Vector2 GetCollisionNormal()` / `GetCollisionPoint()` | Global outward normal and point on collider. |
-| `public float GetCollisionSafeFraction()` / `GetCollisionUnsafeFraction()` | First impact bracket from zero through one. |
+| `public float GetCollisionSafeFraction()` / `GetCollisionUnsafeFraction()` | First impact bracket from zero through one, with [adaptive endpoint refinement](../components/physics-queries.md#adaptive-sweep-refinement) and an accurate geometric unsafe sample where available. |
 | `public Vector2 GetTravel()` / `GetRemainder()` | Travel including recovery and untraveled requested motion. |
 
 ## Method descriptions

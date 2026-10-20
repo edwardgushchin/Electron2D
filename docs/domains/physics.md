@@ -1,5 +1,7 @@
 # Physics domain
 
+[Adaptive sweep refinement](../components/physics-queries.md#adaptive-sweep-refinement) preserves close and late impacts, geometric initial gaps and logical source ownership across selected implementations.
+
 [Directed source one-way policy](../components/physics-contact-policy.md#directed-sources-and-one-way-targets) preserves ray contacts while ordinary siblings retain the target filter. Recovery, sweeps and final rest use represented source kind.
 
 [Coincident rounded cores](../components/physics-contact-policy.md#coincident-rounded-cores) now receive unit normals and surface anchors in shared CPU primitive code, reaching actual dynamics as well as queries/recovery. The bounded public consumer compares CPU/software-GPU/registered physical invariants and warm allocation. No declaration states change: 1279/1369 Implemented (93.43%), 90 open.

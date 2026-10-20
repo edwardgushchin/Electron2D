@@ -86,7 +86,20 @@ bool querySweep(Hull a,Hull b,vec2 motion,vec2 sweptB,float target,float toleran
         if(gap<=tolerance){fraction=time;return true;}
         float closing=dot2(motion,normal);if(closing<=0)return false;
         float next=time+gap/closing;if(!finite2(vec2(next))){fail();return false;}if(next>1)return false;
-        if(next<=time){failQuery(8u);return false;}time=next;
+        if(next==time){fraction=time;return true;}
+        if(next<time){failQuery(8u);return false;}time=next;
     }
     failQuery(16u);return false;
+}
+
+vec2 querySweepBracket(float impact)
+{
+    float low=0,high=1,coefficient=0.5;
+    for(uint step=0u;step<8u;step++)
+    {
+        float middle=low+(high-low)*coefficient;
+        if(impact<=middle){high=middle;coefficient=step==0u||low>0?0.5:0.25;}
+        else{low=middle;coefficient=step==0u||high<1?0.5:0.75;}
+    }
+    return vec2(low,clamp(impact,low,high));
 }

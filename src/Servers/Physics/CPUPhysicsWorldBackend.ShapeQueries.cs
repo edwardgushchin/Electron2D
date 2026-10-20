@@ -95,35 +95,48 @@ internal sealed partial class CPUPhysicsWorldBackend
                 if (query.isBoundary || other.isBoundary) query = BoundaryQuery(query);
                 if (!query.isBoundary && !other.isBoundary && (_queryRaySlide is not null || candidate.Tag.SeparationRay is not null))
                 {
-                    if (PhysicsSeparationRay.PairContact(query, _queryRaySlide, other, otherTransform,
-                            candidate.Tag.SeparationRay, motion * bestSafe, _queryMargin).pointCount == 0) continue;
+                    var full = PhysicsSeparationRay.PairContact(query, _queryRaySlide, other, otherTransform,
+                        candidate.Tag.SeparationRay, motion, _queryMargin);
+                    if (full.pointCount == 0) continue;
                     var lowRay = 0f;
-                    var highRay = bestSafe;
+                    var highRay = 1f;
+                    var coefficientRay = .5f;
                     for (var step = 0; step < 8; step++)
                     {
-                        var middle = (lowRay + highRay) * 0.5f;
+                        var middle = lowRay + (highRay - lowRay) * coefficientRay;
                         if (PhysicsSeparationRay.PairContact(query, _queryRaySlide, other, otherTransform,
                                 candidate.Tag.SeparationRay, motion * middle, _queryMargin).pointCount != 0)
-                            highRay = middle;
-                        else lowRay = middle;
+                        { highRay = middle; coefficientRay = step == 0 || lowRay > 0 ? .5f : .25f; }
+                        else
+                        { lowRay = middle; coefficientRay = step == 0 || highRay < 1 ? .5f : .75f; }
+                    }
+                    if (lowRay >= bestSafe) continue;
+                    if (_queryRaySlide is not null && !other.isBoundary)
+                    {
+                        var advance = b2Dot(b2Normalize(query.points[1] - query.points[0]), motion);
+                        if (advance > 0) highRay = Math.Clamp(1 + full.points[0].separation / advance, lowRay, highRay);
                     }
                     bestSafe = lowRay;
                     bestUnsafe = highRay;
                     continue;
                 }
-                if (!SweepsInto(query, other, otherTransform, motion, bestSafe)) continue;
+                var cast = Cast(query, other, otherTransform, motion, 1);
+                if (!cast.hit) continue;
                 var low = 0f;
-                var high = bestSafe;
+                var high = 1f;
+                var coefficient = .5f;
                 for (var step = 0; step < 8; step++)
                 {
-                    var middle = (low + high) * 0.5f;
-                    if (SweepsInto(query, other, otherTransform, motion, middle)) high = middle;
-                    else low = middle;
+                    var middle = low + (high - low) * coefficient;
+                    if (SweepsInto(query, other, otherTransform, motion, middle))
+                    { high = middle; coefficient = step == 0 || low > 0 ? .5f : .25f; }
+                    else
+                    { low = middle; coefficient = step == 0 || high < 1 ? .5f : .75f; }
                 }
                 if (low < bestSafe)
                 {
                     bestSafe = low;
-                    bestUnsafe = high;
+                    bestUnsafe = Math.Clamp(cast.fraction, low, high);
                 }
             }
         }
@@ -270,7 +283,7 @@ internal sealed partial class CPUPhysicsWorldBackend
             useRadii = true
         };
         var cache = new B2SimplexCache();
-        return b2ShapeDistance(ref input, ref cache, null, 0).distance <= 0.1f * B2_LINEAR_SLOP;
+        return b2ShapeDistance(ref input, ref cache, null, 0).distance <= .00001f * PhysicsSpace.MetersPerUnit;
     }
 
     private static bool SweepsInto(in B2ShapeProxy query, in B2ShapeProxy other,

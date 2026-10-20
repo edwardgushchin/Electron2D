@@ -114,12 +114,20 @@ public static partial class BackendChecks
     {
         safe = fraction = 0;
         if (DirectedContact(first, a, Vector2.Zero, second, b, Vector2.Zero, out _, out _, out _, out _)) return true;
-        if (!DirectedContact(first, a, motion, second, b, Vector2.Zero, out _, out _, out _, out _)) return false;
-        var low = 0f; var high = 1f;
+        if (!DirectedContact(first, a, motion, second, b, Vector2.Zero, out _, out _, out _, out var fullDepth)) return false;
+        var low = 0f; var high = 1f; var coefficient = .5f;
         for (var i = 0; i < 8; i++)
         {
-            var middle = (low + high) / 2;
-            if (DirectedContact(first, a, motion * middle, second, b, Vector2.Zero, out _, out _, out _, out _)) high = middle; else low = middle;
+            var middle = low + (high - low) * coefficient;
+            if (DirectedContact(first, a, motion * middle, second, b, Vector2.Zero, out _, out _, out _, out _))
+            { high = middle; coefficient = i == 0 || low > 0 ? .5f : .25f; }
+            else
+            { low = middle; coefficient = i == 0 || high < 1 ? .5f : .75f; }
+        }
+        if (first.Directed && !second.Boundary)
+        {
+            var advance = motion.Dot(EdgeY(first, a).Normalized());
+            if (advance > 0) high = Math.Clamp(1 - fullDepth / advance, low, high);
         }
         safe = low; fraction = high; return true;
     }
