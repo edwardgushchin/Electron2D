@@ -48,6 +48,8 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
 
     internal GPUCanvasBackend(SafeHandle window)
     {
+        if ((SDL.GetWindowFlags(window.DangerousGetHandle()) & SDL.WindowFlags.Transparent) != 0)
+            throw new NotSupportedException("The SDL GPU API cannot present transparent native windows; use compatibility rendering.");
         _window = window.DangerousGetHandle();
         var (device, relaxed) = CreateDevice();
         _relaxedAndroidDevice = relaxed;
@@ -167,15 +169,15 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         return new RenderHandle(SDL.CreateGPUGraphicsPipeline(Device, in info), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _device);
     }
 
-    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)
+    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true)
     {
         _currentHDR = output.HDR; _linearSources.Clear();
         if (output.HDR) clear = LinearColor(clear);
         var samples = (SDL.GPUSampleCount)output.MSAA; var format = CanvasFormat(output.HDR);
         _materialMasks = lighting.Masks.Count != 0;
         var size = output.Size; var lightingUsed = false; var sdfUsed = false; var screen = false; var screenMipmaps = false;
-        if (RenderingServer.Service is { } particleServer) PrepareParticleSources(particleServer);
-        foreach (var source in _particlePrepared) sdfUsed |= source.PreparedProcess?.Program.UsesSDFTexture == true || source.PreparedProcess?.ParticleMotion?.Program.UsesSDFTexture == true;
+        if (processParticles && RenderingServer.Service is { } particleServer) PrepareParticleSources(particleServer);
+        if (processParticles) foreach (var source in _particlePrepared) sdfUsed |= source.PreparedProcess?.Program.UsesSDFTexture == true || source.PreparedProcess?.ParticleMotion?.Program.UsesSDFTexture == true;
         foreach (var batch in batches)
         {
             if (batch.Particles is { } particles && (long)batch.Count * particles.Source.Amount * sizeof(CanvasVertex) > int.MaxValue)
@@ -267,8 +269,8 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             if (_linearSources.Count != 0) ConvertColorSources(command, lightingBytes, colorFirst);
             if (lightingUsed) CopyLightingAtlas(command, lighting, lightingBytes, maskFirst);
             if (sdfUsed) DrawSDF(command, lighting, lightingBytes, vertices.Length);
-            if (RenderingServer.Service is { } particleOwner) ProcessParticles(command, particleOwner, time, lighting);
-            PrepareParticleVertices(command, batches, lightingBytes, size);
+            if (processParticles && RenderingServer.Service is { } particleOwner) ProcessParticles(command, particleOwner, time, lighting);
+            if (processParticles) PrepareParticleVertices(command, batches, lightingBytes, size);
             PrepareInstanceStreams(command, batches);
             if (!clearEnabled && output.Multisample is null) Blit(command, output.Current.DangerousGetHandle(), output.Next.DangerousGetHandle(), new(0, 0, size.X, size.Y));
             pass = BeginCanvasPass(command, output, false, clearEnabled ? SDL.GPULoadOp.Clear : SDL.GPULoadOp.Load, clear);
@@ -390,7 +392,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             }
             SDL.EndGPURenderPass(pass); pass = 0;
             var submitted = command; command = 0; Check(SDL.SubmitGPUCommandBuffer(submitted), "submit canvas frame");
-            CommitParticleChanges(); particlesCommitted = true;
+            if (processParticles) { CommitParticleChanges(); particlesCommitted = true; }
             foreach (var texture in _textures.Values) texture.CommitUpload();
             foreach (var texture in _layeredTextures.Values) texture.CommitUpload(); output.Commit();
         }
@@ -398,7 +400,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         {
             if (pass != 0) SDL.EndGPURenderPass(pass);
             if (command != 0) SDL.CancelGPUCommandBuffer(command);
-            RollbackParticleChanges(particlesCommitted);
+            if (processParticles) RollbackParticleChanges(particlesCommitted);
         }
     }
     private nint BeginPass(nint command, nint texture, SDL.GPULoadOp load, Color clear)
@@ -546,6 +548,9 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         if (visible) { Check(SDL.ClaimWindowForGPUDevice(Device, _window), "reclaim visible window"); _windowClaimed = true; SetVSync(_vSync); }
     }
     internal override void Sync(CanvasRenderTarget? target) => Check(SDL.WaitForGPUIdle(Device), "synchronize canvas GPU");
+
+    internal override void ReleaseTemporaryTexture(Texture texture)
+    { _usedTextures.Remove(texture); if (_textures.Remove(texture, out var value)) value.Dispose(); }
 
     internal override void BeginFrame() { BeginParticleFrame(); (_usedPrograms, _previousPrograms) = (_previousPrograms, _usedPrograms); _usedLinearViews.Clear(); _usedGlyphPrograms.Clear(); _usedLitPrograms.Clear(); _usedPrograms.Clear(); _usedPrograms.Add((_defaultFragment, null, BlendMode.Mix, false, SDL.GPUSampleCount.SampleCount1, false, SDL.GPUTextureFormat.R8G8B8A8Unorm, Mesh.PrimitiveType.Triangles)); _usedTextures.Clear(); _usedLayeredTextures.Clear(); _usedMaterials.Clear(); }
     internal override void EndFrame()

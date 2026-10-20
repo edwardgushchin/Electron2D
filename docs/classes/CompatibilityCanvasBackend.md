@@ -1,6 +1,6 @@
 # CompatibilityCanvasBackend
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 - Declaration: `internal sealed class CompatibilityCanvasBackend : CanvasBackend`
 - Source: [CompatibilityCanvasBackend.cs](../../src/Servers/Rendering/CompatibilityCanvasBackend.cs)
@@ -109,3 +109,5 @@ The [independent native window path](../components/window-runtime.md#independent
 ## Transparent native presentation
 
 Native compatibility windows capture their transparency role when creating the renderer. Fitted presentation margins clear to transparent for that role, and viewport/presentation copies preserve alpha. Ordinary opaque windows keep black opaque margins. NativePopupWindowTests verifies fitted content and margin alpha through actual native presentation readback; desktop compositor screenshot acceptance remains separate.
+
+[Loading-image presentation](../components/boot-images.md) reuses ordinary color targets and native presentation without mutating scene viewport targets. ReleaseTemporaryTexture removes a cold loading image from the native image cache immediately after submission, including failed attempts; no caller-owned image resource is disposed.

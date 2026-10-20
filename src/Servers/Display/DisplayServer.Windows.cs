@@ -458,7 +458,7 @@ public sealed partial class DisplayServer
         if (IsNativePopup && flag == WindowFlag.Popup) { SetPopupInputPolicy(enabled); return; }
         if (flag == WindowFlag.Transparent)
         {
-            if (WindowGetFlagCore(flag) != enabled) throw new NotSupportedException("Configure native transparency before creating a child window.");
+            if (WindowGetFlagCore(flag) != enabled) throw new NotSupportedException("Configure native transparency before creating the window.");
             return;
         }
         if (SDL.GetCurrentVideoDriver() == "wayland" && (flag == WindowFlag.AlwaysOnTop || flag == WindowFlag.NoFocus && !IsNativePopup))

@@ -105,10 +105,10 @@ public sealed partial class DisplayServer : ElectronObject
     public static DisplayServer Open(string title, Vector2i size, bool hidden = false) =>
         OpenCore(title, size, hidden, presentBlank: true);
 
-    internal static DisplayServer OpenForRendering(string title, Vector2i size, bool hidden) =>
-        OpenCore(title, size, hidden, presentBlank: false);
+    internal static DisplayServer OpenForRendering(string title, Vector2i size, bool hidden, bool transparent) =>
+        OpenCore(title, size, hidden, presentBlank: false, transparent);
 
-    private static DisplayServer OpenCore(string title, Vector2i size, bool hidden, bool presentBlank)
+    private static DisplayServer OpenCore(string title, Vector2i size, bool hidden, bool presentBlank, bool transparent = false)
     {
         ArgumentNullException.ThrowIfNull(title);
         if (size.X <= 0 || size.Y <= 0)
@@ -164,6 +164,8 @@ public sealed partial class DisplayServer : ElectronObject
                 var flags = SDL.WindowFlags.Resizable | SDL.WindowFlags.HighPixelDensity;
                 if (hidden)
                     flags |= SDL.WindowFlags.Hidden;
+                if (transparent)
+                    flags |= SDL.WindowFlags.Transparent;
                 var window = SDL.CreateWindow(title, size.X, size.Y, flags);
                 if (window == 0)
                     throw SDLFailure("create the main window");

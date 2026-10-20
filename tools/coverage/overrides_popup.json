@@ -183,7 +183,7 @@
     {
       "godot": "Window::property:transparent",
       "electron2d": "property:Electron2D.Window.Transparent()",
-      "reason": "ADRs 0008/0038/0040/0083: embedded popup composition plus real parent-relative native desktop surfaces, nested menu/panel/control anchors, safe areas, exclusive mouse/touch routing and failure-safe parent retirement. NativePopupWindowTests exercises Linux Wayland/X11 software GPU and compatibility output, prepared render allocation and fresh-process scenes. Transparent native presentation executes on compatibility; SDL GPU alpha presentation, top-level popup input without the popup role, live embedding migration and native decoration capabilities retain exact remaining dependencies. Global Wayland placement is explicitly unavailable."
+      "reason": "ADRs 0008/0040/0041/0083: embedded composition and native main/child creation-time alpha execute. Engine.Run passes authored main-window transparency before SDL creation; Compatibility preserves actual alpha pixels. Strict GPU startup rejects and cleans its attempted lifetime; permitted fallback selects Compatibility. Live native alpha changes reject before flag mutation. NativePopupWindowTests covers native child output, and BootImageTests verifies main/loading alpha, actual native flags, strict failure cleanup, fallback and rollback on software Linux Wayland/X11. Remaining native GPU alpha needs an executing presentation adapter; live native alpha reconfiguration requires lifetime/recreation integration. Foreign platforms/native allocator and owner acceptance remain separate."
     },
     {
       "godot": "Window::property:wrap_controls",
@@ -436,7 +436,6 @@
         "Window::property:minimize_disabled",
         "Window::property:popup_window",
         "Window::property:transient",
-        "Window::property:transparent",
         "Window::method:get_layout_direction()",
         "Window::method:set_layout_direction(int:Window.LayoutDirection)",
         "Window::method:is_layout_rtl()",
@@ -477,6 +476,13 @@
         "Window::method:popup_exclusive_on_parent(Node:,Rect2i:)",
         "Window::property:popup_wm_hint"
       ]
+    },
+    {
+      "godot": [
+        "Window::property:transparent"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0008/0040/0041/0083: embedded composition and native main/child creation-time alpha execute. Engine.Run passes authored main-window transparency before SDL creation; Compatibility preserves actual alpha pixels. Strict GPU startup rejects and cleans its attempted lifetime; permitted fallback selects Compatibility. Live native alpha changes reject before flag mutation. NativePopupWindowTests covers native child output, and BootImageTests verifies main/loading alpha, actual native flags, strict failure cleanup, fallback and rollback on software Linux Wayland/X11. Remaining native GPU alpha needs an executing presentation adapter; live native alpha reconfiguration requires lifetime/recreation integration. Foreign platforms/native allocator and owner acceptance remain separate."
     }
   ]
 }

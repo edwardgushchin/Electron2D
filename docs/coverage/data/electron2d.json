@@ -10527,6 +10527,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RenderingServer.SplashStretchMode",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingServer.SplashStretchMode",
+    "name": "SplashStretchMode",
+    "signature": "public enum Electron2D.RenderingServer.SplashStretchMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RenderingServer.TextureDrawableFormat",
     "kind": "type",
     "declaringType": "Electron2D.RenderingServer.TextureDrawableFormat",
@@ -48136,6 +48154,84 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingServer.ParticlesTransformAlignAxis",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.SplashStretchMode.Cover()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.SplashStretchMode",
+    "name": "Cover",
+    "signature": "public const Electron2D.RenderingServer.SplashStretchMode Cover = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.SplashStretchMode",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.SplashStretchMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.SplashStretchMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.RenderingServer.SplashStretchMode Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.SplashStretchMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.SplashStretchMode.Ignore()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.SplashStretchMode",
+    "name": "Ignore",
+    "signature": "public const Electron2D.RenderingServer.SplashStretchMode Ignore = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.SplashStretchMode",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.SplashStretchMode.Keep()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.SplashStretchMode",
+    "name": "Keep",
+    "signature": "public const Electron2D.RenderingServer.SplashStretchMode Keep = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.SplashStretchMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.SplashStretchMode.KeepHeight()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.SplashStretchMode",
+    "name": "KeepHeight",
+    "signature": "public const Electron2D.RenderingServer.SplashStretchMode KeepHeight = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.SplashStretchMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.SplashStretchMode.KeepWidth()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.SplashStretchMode",
+    "name": "KeepWidth",
+    "signature": "public const Electron2D.RenderingServer.SplashStretchMode KeepWidth = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.SplashStretchMode",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.RenderingServer.TextureDrawableFormat.RGBA8()",
@@ -163670,6 +163766,40 @@
         "name": "callback",
         "type": "System.Action",
         "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.SetBootImageWithStretch(Electron2D.Image,Electron2D.Color,Electron2D.RenderingServer.SplashStretchMode,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "SetBootImageWithStretch",
+    "signature": "public static System.Void SetBootImageWithStretch(Electron2D.Image image, Electron2D.Color color, Electron2D.RenderingServer.SplashStretchMode stretchMode, System.Boolean useFilter = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "image",
+        "type": "Electron2D.Image",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "stretchMode",
+        "type": "Electron2D.RenderingServer.SplashStretchMode",
+        "default": null
+      },
+      {
+        "name": "useFilter",
+        "type": "System.Boolean",
+        "default": "true"
       }
     ],
     "returnType": "System.Void",

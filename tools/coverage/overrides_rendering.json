@@ -5166,6 +5166,46 @@
       "godot": "RenderingServer::method:texture_set_force_redraw_if_visible(RID:,bool:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureSetForceRedrawIfVisible(Electron2D.RID,System.Boolean)",
       "reason": "ADRs 0028/0016/0095: a weak session-owned image/proxy policy consumes the submitted visible canvas graph on both backends, including alias chains, current animation sources, channels, SVG raster origins, shader ordinary/layered/fixed-array bindings and viewport dependencies. Hidden, clipped, offscreen, disabled and unused bindings settle to idle; destination identity survives replacement, consumed-source policy does not transfer, and borrowed resources remain collectable. MeshTexture uses its sampled BaseTexture image identity. TextureRedrawTests verifies public ownership/owner/session boundaries, native pixels/cadence, retained mesh/multimesh alias identity, failure retry and 32 prepared active/idle zero-managed-owner-byte intervals on software Linux Wayland/X11. Visibility is conservative for authored/generated vertices and instances without explicit bounds, bound shader branches and pixel occlusion; native allocator, hardware, full-suite and foreign-platform acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:SplashStretchMode.SPLASH_STRETCH_MODE_DISABLED",
+      "electron2d": "enumValue:Electron2D.RenderingServer.SplashStretchMode.Disabled()",
+      "reason": "ADRs 0028/0095/0004: immediate main-client boot presentation uses copied image data, all six canonical stretch geometries, nearest/linear sampling and current native backends. It preserves viewport contents, scene clocks/counters, pending particle simulation and queued completed-frame callbacks, leaves normal rendering pending and releases temporary image/target storage on success or error. BootImageTests exercises native pixels on landscape/portrait/square clients, odd centering, crop/aspect, alpha/filtering, ownership/phase/invalid/empty guards, failure recovery and 32 prepared subsequent scene frames with zero managed owner bytes on software Linux Wayland/X11. Cold image upload allocates; native allocator, physical GPU, foreign platforms and full-suite acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:SplashStretchMode.SPLASH_STRETCH_MODE_KEEP",
+      "electron2d": "enumValue:Electron2D.RenderingServer.SplashStretchMode.Keep()",
+      "reason": "ADRs 0028/0095/0004: immediate main-client boot presentation uses copied image data, all six canonical stretch geometries, nearest/linear sampling and current native backends. It preserves viewport contents, scene clocks/counters, pending particle simulation and queued completed-frame callbacks, leaves normal rendering pending and releases temporary image/target storage on success or error. BootImageTests exercises native pixels on landscape/portrait/square clients, odd centering, crop/aspect, alpha/filtering, ownership/phase/invalid/empty guards, failure recovery and 32 prepared subsequent scene frames with zero managed owner bytes on software Linux Wayland/X11. Cold image upload allocates; native allocator, physical GPU, foreign platforms and full-suite acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:SplashStretchMode.SPLASH_STRETCH_MODE_KEEP_WIDTH",
+      "electron2d": "enumValue:Electron2D.RenderingServer.SplashStretchMode.KeepWidth()",
+      "reason": "ADRs 0028/0095/0004: immediate main-client boot presentation uses copied image data, all six canonical stretch geometries, nearest/linear sampling and current native backends. It preserves viewport contents, scene clocks/counters, pending particle simulation and queued completed-frame callbacks, leaves normal rendering pending and releases temporary image/target storage on success or error. BootImageTests exercises native pixels on landscape/portrait/square clients, odd centering, crop/aspect, alpha/filtering, ownership/phase/invalid/empty guards, failure recovery and 32 prepared subsequent scene frames with zero managed owner bytes on software Linux Wayland/X11. Cold image upload allocates; native allocator, physical GPU, foreign platforms and full-suite acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:SplashStretchMode.SPLASH_STRETCH_MODE_KEEP_HEIGHT",
+      "electron2d": "enumValue:Electron2D.RenderingServer.SplashStretchMode.KeepHeight()",
+      "reason": "ADRs 0028/0095/0004: immediate main-client boot presentation uses copied image data, all six canonical stretch geometries, nearest/linear sampling and current native backends. It preserves viewport contents, scene clocks/counters, pending particle simulation and queued completed-frame callbacks, leaves normal rendering pending and releases temporary image/target storage on success or error. BootImageTests exercises native pixels on landscape/portrait/square clients, odd centering, crop/aspect, alpha/filtering, ownership/phase/invalid/empty guards, failure recovery and 32 prepared subsequent scene frames with zero managed owner bytes on software Linux Wayland/X11. Cold image upload allocates; native allocator, physical GPU, foreign platforms and full-suite acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:SplashStretchMode.SPLASH_STRETCH_MODE_COVER",
+      "electron2d": "enumValue:Electron2D.RenderingServer.SplashStretchMode.Cover()",
+      "reason": "ADRs 0028/0095/0004: immediate main-client boot presentation uses copied image data, all six canonical stretch geometries, nearest/linear sampling and current native backends. It preserves viewport contents, scene clocks/counters, pending particle simulation and queued completed-frame callbacks, leaves normal rendering pending and releases temporary image/target storage on success or error. BootImageTests exercises native pixels on landscape/portrait/square clients, odd centering, crop/aspect, alpha/filtering, ownership/phase/invalid/empty guards, failure recovery and 32 prepared subsequent scene frames with zero managed owner bytes on software Linux Wayland/X11. Cold image upload allocates; native allocator, physical GPU, foreign platforms and full-suite acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:SplashStretchMode.SPLASH_STRETCH_MODE_IGNORE",
+      "electron2d": "enumValue:Electron2D.RenderingServer.SplashStretchMode.Ignore()",
+      "reason": "ADRs 0028/0095/0004: immediate main-client boot presentation uses copied image data, all six canonical stretch geometries, nearest/linear sampling and current native backends. It preserves viewport contents, scene clocks/counters, pending particle simulation and queued completed-frame callbacks, leaves normal rendering pending and releases temporary image/target storage on success or error. BootImageTests exercises native pixels on landscape/portrait/square clients, odd centering, crop/aspect, alpha/filtering, ownership/phase/invalid/empty guards, failure recovery and 32 prepared subsequent scene frames with zero managed owner bytes on software Linux Wayland/X11. Cold image upload allocates; native allocator, physical GPU, foreign platforms and full-suite acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:set_boot_image_with_stretch(Image:,Color:,int:RenderingServer.SplashStretchMode,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.SetBootImageWithStretch(Electron2D.Image,Electron2D.Color,Electron2D.RenderingServer.SplashStretchMode,System.Boolean)",
+      "reason": "ADRs 0028/0095/0004: immediate main-client boot presentation uses copied image data, all six canonical stretch geometries, nearest/linear sampling and current native backends. It preserves viewport contents, scene clocks/counters, pending particle simulation and queued completed-frame callbacks, leaves normal rendering pending and releases temporary image/target storage on success or error. BootImageTests exercises native pixels on landscape/portrait/square clients, odd centering, crop/aspect, alpha/filtering, ownership/phase/invalid/empty guards, failure recovery and 32 prepared subsequent scene frames with zero managed owner bytes on software Linux Wayland/X11. Cold image upload allocates; native allocator, physical GPU, foreign platforms and full-suite acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum:SplashStretchMode",
+      "electron2d": "T:Electron2D.RenderingServer.SplashStretchMode",
+      "reason": "ADRs 0028/0095/0004: immediate main-client boot presentation uses copied image data, all six canonical stretch geometries, nearest/linear sampling and current native backends. It preserves viewport contents, scene clocks/counters, pending particle simulation and queued completed-frame callbacks, leaves normal rendering pending and releases temporary image/target storage on success or error. BootImageTests exercises native pixels on landscape/portrait/square clients, odd centering, crop/aspect, alpha/filtering, ownership/phase/invalid/empty guards, failure recovery and 32 prepared subsequent scene frames with zero managed owner bytes on software Linux Wayland/X11. Cold image upload allocates; native allocator, physical GPU, foreign platforms and full-suite acceptance remain unverified."
     }
   ],
   "statusGroups": [
@@ -7184,6 +7224,27 @@
         "RenderingServer::method:is_on_render_thread()"
       ],
       "reason": "ADRs 0028/0095/0004: a typed Action bridge targets the exact active scene/native owner on both canvas backends. Workers enqueue under a short session lock; owner calls drain the prior FIFO snapshot then invoke inline, with nested calls, bounded later arrivals, all-selected error continuation and native frame/sync commitment before propagation. Disabled and low-processor render attempts drain; accepted requests cancel at retirement and never transfer sessions. Concurrent producer order, captures, errors, actual GLSL/HLSL native arithmetic/readback and canvas pixels, and 32 prepared zero-managed-owner/producer-byte cycles execute on software Linux Wayland/X11. Hardware, foreign platforms and native allocator totals remain unverified."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:set_boot_image_with_stretch(Image:,Color:,int:RenderingServer.SplashStretchMode,bool:)",
+        "RenderingServer::enum:SplashStretchMode",
+        "RenderingServer::enum_value:SplashStretchMode.SPLASH_STRETCH_MODE_DISABLED",
+        "RenderingServer::enum_value:SplashStretchMode.SPLASH_STRETCH_MODE_KEEP",
+        "RenderingServer::enum_value:SplashStretchMode.SPLASH_STRETCH_MODE_KEEP_WIDTH",
+        "RenderingServer::enum_value:SplashStretchMode.SPLASH_STRETCH_MODE_KEEP_HEIGHT",
+        "RenderingServer::enum_value:SplashStretchMode.SPLASH_STRETCH_MODE_COVER",
+        "RenderingServer::enum_value:SplashStretchMode.SPLASH_STRETCH_MODE_IGNORE"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0028/0095/0004: immediate main-client boot presentation uses copied image data, all six canonical stretch geometries, nearest/linear sampling and current native backends. It preserves viewport contents, scene clocks/counters, pending particle simulation and queued completed-frame callbacks, leaves normal rendering pending and releases temporary image/target storage on success or error. BootImageTests exercises native pixels on landscape/portrait/square clients, odd centering, crop/aspect, alpha/filtering, ownership/phase/invalid/empty guards, failure recovery and 32 prepared subsequent scene frames with zero managed owner bytes on software Linux Wayland/X11. Cold image upload allocates; native allocator, physical GPU, foreign platforms and full-suite acceptance remain unverified."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:set_boot_image(Image:,Color:,bool:,bool:)"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004: pinned RenderingServer.xml at ed1daf0bf001b61586d9930840f2f1394092c079 declares set_boot_image deprecated=\"Use [method set_boot_image_with_stretch] instead.\". The current replacement executes; no deprecated public alias or implementation trigger."
     }
   ],
   "extras": [

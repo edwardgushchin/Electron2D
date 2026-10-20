@@ -448,3 +448,5 @@ Fixed device descriptor arrays now connect ordered RDUniform IDs to compute, gra
 Ordinary signed/unsigned R32 GPU images now execute integer atomics through scalar/fixed-array Image bindings. Actual concurrent kernels, explicit memory semantics, capability checks and GPU-to-canvas consumers are documented in [local compute](../components/local-compute.md#integer-image-atomics).
 
 [Visible texture policies](../components/low-processor-rendering.md#visible-texture-policies) now keep low-processor output active for submitted image bindings, preserving weak session ownership and logical aliases across native replay. Hidden/unused output returns to idle, and failed pre-submission frames retain their retry obligation.
+
+[Loading-image presentation](../components/boot-images.md) executes immediate native-client output during readiness/loading through RenderingServer.SetBootImageWithStretch, with six sizing modes and preserved scene viewport/callback state.

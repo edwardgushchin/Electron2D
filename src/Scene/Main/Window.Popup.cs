@@ -64,8 +64,12 @@ public partial class Window
     /// <summary>Gets or sets whether user minimization is disabled.</summary>
     /// <value>False initially; Popup defaults to true.</value>
     public bool MinimizeDisabled { get => GetFlag(WindowFlag.MinimizeDisabled); set => SetFlag(WindowFlag.MinimizeDisabled, value); }
-    /// <summary>Gets or sets transparent window composition, configured before native child creation.</summary>
+    /// <summary>Gets or sets transparent window composition, configured before native window creation.</summary>
     /// <value>False initially; PopupPanel defaults to true.</value>
+    /// <remarks>Main and child native surfaces select alpha before creation. Compatibility presents native alpha;
+    /// GPU requires permitted fallback or rejects startup. Changing native alpha while open is unsupported.
+    /// Embedded composition retains its viewport host.</remarks>
+    /// <exception cref="NotSupportedException">Native alpha would change after creation or the backend cannot present it.</exception>
     public bool Transparent { get => GetFlag(WindowFlag.Transparent); set => SetFlag(WindowFlag.Transparent, value); }
     /// <summary>Occurs before popup positioning, sizing and visibility changes.</summary>
     public event Action? AboutToPopup;

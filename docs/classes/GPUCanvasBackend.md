@@ -1,6 +1,6 @@
 # GPUCanvasBackend
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 - Declaration: `internal sealed unsafe class GPUCanvasBackend : CanvasBackend`
 - Source: [GPUCanvasBackend.cs](../../src/Servers/Rendering/GPUCanvasBackend.cs)
@@ -124,3 +124,5 @@ Exported/indirect MultiMesh storage selects a retained GPU consumer. CanvasMesh 
 [GPUCanvasBackend.ParticleVertices.cs](../../src/Servers/Rendering/GPUCanvasBackend.ParticleVertices.cs) owns expanded vertex and indirect-draw streams. ParticleVertexParameters carries canvas/color/layout/history/sheet inputs; ParticleStream retires its native vertex/command buffers. Conversion preserves the existing CanvasVertex layout, uses eight stored skin influences and omits inactive draws. Native history/order/state stay on the GPU. See [GPU particles](../components/gpu-particles.md) for the executing contract and exact acceptance limits.
 
 The [independent native window path](../components/window-runtime.md#independent-native-windows) retains one scene renderer and display service. GPU surfaces share the authoritative device/targets; compatibility surfaces use the main driver and replay frozen submissions after cold history import. Native window IDs expire on child hide/detachment; viewport resources survive hiding.
+
+[Loading-image presentation](../components/boot-images.md) reuses ordinary color targets and native presentation without mutating scene viewport targets. ReleaseTemporaryTexture removes a cold loading image from the native image cache immediately after submission, including failed attempts; no caller-owned image resource is disposed.

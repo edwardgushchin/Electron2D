@@ -121,7 +121,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         return new(width, height);
     }
 
-    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)
+    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true)
     {
         foreach (var batch in batches)
             if (batch.Glyph.Mode != CanvasGlyphMode.None) throw new NotSupportedException("Glyph distance and component coverage require GPU rendering.");
@@ -304,6 +304,9 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         }
         finally { Check(SDL.SetRenderTarget(renderer, previous), "restore synchronization target"); }
     }
+
+    internal override void ReleaseTemporaryTexture(Texture texture)
+    { _usedTextures.Remove(texture); if (_textures.Remove(texture, out var value)) value.Handle.Dispose(); }
 
     internal override void BeginFrame() => _usedTextures.Clear();
     internal override void EndFrame() { foreach (var pair in _textures) if (!_usedTextures.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed)) { pair.Value.Handle.Dispose(); _textures.Remove(pair.Key); } }

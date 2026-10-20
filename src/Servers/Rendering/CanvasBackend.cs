@@ -74,7 +74,8 @@ internal abstract class CanvasBackend : IDisposable
     internal virtual void BeginFrame() { }
     internal virtual void EndFrame() { }
     internal abstract void Sync(CanvasRenderTarget? target);
-    internal abstract void Draw(CanvasRenderTarget target, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting);
+    internal abstract void ReleaseTemporaryTexture(Texture texture);
+    internal abstract void Draw(CanvasRenderTarget target, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true);
     internal abstract Image Readback(CanvasRenderTarget target, bool backBuffer = false, bool requireFrame = true);
     internal void SeedHistory(CanvasBackend source)
     {

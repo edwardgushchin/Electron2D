@@ -1,6 +1,6 @@
 # CanvasBackend
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 - Declaration: `internal abstract class CanvasBackend : IDisposable`
 - Source: [CanvasBackend.cs](../../src/Servers/Rendering/CanvasBackend.cs)
@@ -108,3 +108,7 @@ Target identity includes HDR and MSAA as well as dimensions. Optional half-float
 `internal abstract void Present(ReadOnlySpan<CanvasPresentation> viewports)` composes completed native images at clipped client rectangles after drawing, replacing destination RGBA and clearing uncovered pixels black. The shared contract declares this operation abstract. An empty list clears the implicit zero-raster root presentation. ReadbackScreen returns the latest completed composition independently of source texture updates. See [screen attachment](../components/canvas-rendering.md#viewport-screen-attachment).
 
 The [independent native window path](../components/window-runtime.md#independent-native-windows) retains one scene renderer and display service. GPU surfaces share the authoritative device/targets; compatibility surfaces use the main driver and replay frozen submissions after cold history import. Native window IDs expire on child hide/detachment; viewport resources survive hiding.
+
+[Loading-image presentation](../components/boot-images.md) reuses ordinary color targets and native presentation without mutating scene viewport targets. ReleaseTemporaryTexture removes a cold loading image from the native image cache immediately after submission, including failed attempts; no caller-owned image resource is disposed.
+
+The internal Draw processParticles argument defaults to true for ordinary submissions. Loading-image drawing explicitly disables scene particle preparation/dispatch/commit and does not begin or end a scene frame, preserving pending simulation and cache-retirement boundaries.

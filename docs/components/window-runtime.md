@@ -172,3 +172,9 @@ python3 -B tools/ci/test_system_back.py
 ```
 
 Use SDK 32 to exercise the legacy producer. The runner verifies the emulator identity before installing/restarting its own test package. Evidence is `bin/physics-system-back/2026-10-20/validation.json`, including final APK/source/PDB/native-payload bindings and process-map software-driver checks. Physical Android devices, predictive gesture animation/UX, native allocator totals, hardware GPU throughput/FPS and other platforms remain unverified. Those software-only checks did not exercise physical GPU workloads. The subsequently authorized RTX physics runs are qualified separately in [the hardware baseline](physics-rtx-current.md), with their own measured revision and workload scope. The earlier full software regression suite belongs to its recorded source revision; this slice runs focused connected regressions, not a new full-suite acceptance.
+
+## Main-window native transparency
+
+Window.Transparent configured before Engine.Run is passed into native main-window creation, sharing the existing child creation-time alpha policy. Compatibility preserves native alpha, including loading-image backgrounds. Strict GPU startup rejects because the current SDL GPU presentation API cannot present transparent windows; configured RenderingFallback can select Compatibility. Equal live assignments preserve the active flag; changing alpha after native creation rejects without changing authored state.
+
+BootImageTests verifies real main-window alpha pixels, the native transparency flag, strict GPU failure cleanup, permitted fallback and live-change rollback on software Linux Wayland/X11. This does not establish physical compositor appearance, native GPU alpha or other-platform support.
