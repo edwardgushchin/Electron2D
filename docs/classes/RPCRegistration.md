@@ -6,7 +6,7 @@ Last updated: 2026-10-04
 
 ## Description
 
-One immutable configured method and its policy, as returned by Node.GetNodeRPCConfig.
+One immutable configured method and its policy, used by Script declarations and Node.GetNodeRPCConfig snapshots.
 
 
 

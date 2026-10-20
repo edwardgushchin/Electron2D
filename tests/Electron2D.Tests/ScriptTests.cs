@@ -18,6 +18,7 @@ internal static class ScriptTests
     }
     internal static void Run()
     {
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_RPC_PHASE") is { } phase) { ScriptRPCTests.Run(phase); return; }
         Register();
         using var script = ResourceLoader.Load<Script>(ScriptActor.SourcePath);
         BackendChecks.VerifyNestedScript(script);

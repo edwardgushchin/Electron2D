@@ -172225,6 +172225,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Script.GetRPCConfig()",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "GetRPCConfig",
+    "signature": "public Electron2D.RPCRegistration[] GetRPCConfig()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RPCRegistration[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Script.GetScriptConstantMap\u00601()",
     "kind": "method",
     "declaringType": "Electron2D.Script",
@@ -172386,6 +172399,40 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Script.RegisterAbstractWithRPC\u00601(System.String,System.String,System.ReadOnlySpan\u003CElectron2D.RPCRegistration\u003E,Electron2D.PropertyDescriptor[])",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "RegisterAbstractWithRPC",
+    "signature": "public static System.Void RegisterAbstractWithRPC\u003CTNode\u003E(System.String id, System.String sourcePath, System.ReadOnlySpan\u003CElectron2D.RPCRegistration\u003E rpcConfiguration, Electron2D.PropertyDescriptor[] properties)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "sourcePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "rpcConfiguration",
+        "type": "System.ReadOnlySpan\u003CElectron2D.RPCRegistration\u003E",
+        "default": null
+      },
+      {
+        "name": "properties",
+        "type": "Electron2D.PropertyDescriptor[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Script.RegisterAbstract\u00601(System.String,System.String,Electron2D.PropertyDescriptor[])",
     "kind": "method",
     "declaringType": "Electron2D.Script",
@@ -172403,6 +172450,45 @@
       {
         "name": "sourcePath",
         "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "properties",
+        "type": "Electron2D.PropertyDescriptor[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.RegisterNodeWithRPC\u00601(System.String,System.String,Func\u003CTNode\u003E,System.ReadOnlySpan\u003CElectron2D.RPCRegistration\u003E,Electron2D.PropertyDescriptor[])",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "RegisterNodeWithRPC",
+    "signature": "public static System.Void RegisterNodeWithRPC\u003CTNode\u003E(System.String id, System.String sourcePath, Func\u003CTNode\u003E factory, System.ReadOnlySpan\u003CElectron2D.RPCRegistration\u003E rpcConfiguration, Electron2D.PropertyDescriptor[] properties)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "sourcePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "factory",
+        "type": "Func\u003CTNode\u003E",
+        "default": null
+      },
+      {
+        "name": "rpcConfiguration",
+        "type": "System.ReadOnlySpan\u003CElectron2D.RPCRegistration\u003E",
         "default": null
       },
       {

@@ -1,6 +1,6 @@
 # Compiled C# source assets
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 [Script](../classes/Script.md) describes a compiled project Node or Resource and its source/type/schema association under [ADR 0091](../decisions/scripting.md#adr-0091). C# callbacks execute directly on the constructed project class. Source text and shared resource metadata remain separate from the state of a player or effect instance.
 
@@ -75,3 +75,11 @@ full Node.Duplicate and final native/hardware/network acceptance remain open.
 The related World copy regression also asserts the current single-error retirement
 contract: an isolated selected Finish failure remains its original exception while
 the accepted new runtime stays committed. Paired failures retain aggregation.
+
+## Compiled RPC declarations and execution
+
+Script.RegisterNodeWithRPC and RegisterAbstractWithRPC extend the existing source catalog with copied typed RPCRegistration arrays. Script.GetRPCConfig returns effective class declarations without constructing an owner; unbound/Resource roles return empty. Most-derived IDs shadow base declarations, and later base registration is visible. Validation rejects null/default tokens, incompatible receiver roles, duplicate IDs and registrations over 65536 declarations before reserving source/type/file identity. Tokens/codecs/captures are retained with the process catalog.
+
+Every actual project Node uses these defaults, including ordinary construction and fresh file-scene factories. Per-node RPCConfig policy/removal remains local, suppresses inherited defaults, and never changes Script metadata; these runtime overrides require constructor/factory authoring for reconstruction. A removed ID can then accept another compatible token. Node disposal releases per-instance callback captures. Warm send/receive dispatch uses direct typed codecs and catalog lookup without metadata snapshot allocation. Source text edits do not reload declarations.
+
+ScriptRPCTests authors a compressed big-endian scene, starts a fresh process and exchanges real native WS/ENet RPC through the reconstructed classes. It checks inherited dispatch, authority/removal, failed callback scope restoration and 64 prepared active plus idle intervals with zero managed owner bytes. The native window path loads the file scene and verifies actual RPC-driven cyan pixels on software GPU/Compatibility under Wayland/X11. These are local programmatic authoring, headless simulation and rendered checks; they do not establish foreign symbols, physical GPU/mobile, routed deployment, native allocation or human/editor acceptance.

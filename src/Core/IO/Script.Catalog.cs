@@ -9,7 +9,8 @@ namespace Electron2D;
 
 internal sealed record ScriptDocument(string Path, Guid Algorithm, byte[] Hash);
 internal sealed record ScriptRegistration(string ID, Type Type, string Path, Guid Module, ScriptDocument[] Documents,
-    Func<ElectronObject>? Factory, PropertyDescriptor[] Properties, MethodInfo[] Methods, EventInfo[] Events, FieldInfo[] Constants);
+    Func<ElectronObject>? Factory, PropertyDescriptor[] Properties, MethodInfo[] Methods, EventInfo[] Events, FieldInfo[] Constants,
+    Dictionary<uint, RPCRegistration> RPC);
 
 public sealed partial class Script
 {
@@ -62,7 +63,7 @@ public sealed partial class Script
     }
     [RequiresAssemblyFiles("Compiled source registration requires a file-backed assembly and matching portable PDB.")]
     [RequiresUnreferencedCode("Compiled source registration inspects the complete project method, event and constant declarations.")]
-    private static void Register(Type type, string id, string path, Func<ElectronObject>? factory, PropertyDescriptor[] properties, Action? registerFileType, object? factoryTarget)
+    private static void Register(Type type, string id, string path, Func<ElectronObject>? factory, PropertyDescriptor[] properties, Action? registerFileType, object? factoryTarget, ReadOnlySpan<RPCRegistration> rpc = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id); ArgumentNullException.ThrowIfNull(properties);
         if (type.Assembly == typeof(Script).Assembly || type.ContainsGenericParameters || !typeof(Node).IsAssignableFrom(type) && !typeof(Resource).IsAssignableFrom(type)) throw new ArgumentException("Scripts require a closed project Node or Resource type.");
@@ -71,6 +72,11 @@ public sealed partial class Script
         if (!System.IO.Path.GetExtension(path).Equals(".cs", StringComparison.OrdinalIgnoreCase) || type.IsAbstract && factory != null) throw new ArgumentException("Registration requires C# source and an appropriate concrete/abstract factory.");
         var copy = (PropertyDescriptor[])properties.Clone(); var names = new HashSet<string>(StringComparer.Ordinal);
         foreach (var property in copy) if (property == null || property.OwnerType.Assembly == typeof(Script).Assembly || !property.OwnerType.IsAssignableFrom(type) || !names.Add(property.Name)) throw new ArgumentException("Invalid script property schema.", nameof(properties));
+        if (rpc.Length > 65536) throw new ArgumentException("Script RPC declarations exceed the method budget.", nameof(rpc));
+        var declarations = new Dictionary<uint, RPCRegistration>(rpc.Length);
+        foreach (var entry in rpc)
+            if (entry.Method is null || !entry.Method.Accepts(type) || !declarations.TryAdd(entry.Method.ID, entry))
+                throw new ArgumentException("RPC declarations require distinct IDs and compatible Node receiver roles.", nameof(rpc));
         var documents = ReadDocuments(type);
         if (!documents.Any(d => ByPath.Comparer.Equals(d.Path, path))) throw new ArgumentException("The compiled type does not belong to this source document.", nameof(path));
         var projectTypes = new List<Type>();
@@ -79,7 +85,7 @@ public sealed partial class Script
         var methods = projectTypes.SelectMany(t => t.GetMethods(members)).Where(m => !m.IsSpecialName && !m.IsDefined(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute))).OrderBy(m => m.Name, StringComparer.Ordinal).ThenBy(m => m.ToString(), StringComparer.Ordinal).ToArray();
         var events = projectTypes.SelectMany(t => t.GetEvents(members)).OrderBy(e => e.Name, StringComparer.Ordinal).ToArray();
         var constants = projectTypes.SelectMany(t => t.GetFields(members)).Where(f => f.IsLiteral).ToArray();
-        var record = new ScriptRegistration(id, type, path, type.Module.ModuleVersionId, documents, factory, copy, methods, events, constants);
+        var record = new ScriptRegistration(id, type, path, type.Module.ModuleVersionId, documents, factory, copy, methods, events, constants, declarations);
         lock (CatalogGate)
         {
             if (ByID.ContainsKey(id) || ByType.ContainsKey(type) || ByPath.ContainsKey(path)) throw new InvalidOperationException("Script ID, type or primary source is already registered.");

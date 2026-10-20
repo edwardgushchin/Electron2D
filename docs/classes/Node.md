@@ -1625,7 +1625,7 @@ Identifies pointer exit from an embedded viewport.
 
 ## Scene multiplayer integration
 
-Nearest-branch assignment, automatic idle polling and typed RPC/authority configuration execute through [the component](../components/scene-multiplayer.md). RPC method tokens/codecs replace string/reflection invocation; configure derived nodes in their construction/factory for PackedScene reconstruction. Authority/configuration changes remain local and are not automatically replicated. API/transport ownership remains borrowed for caller-supplied interfaces.
+Nearest-branch assignment, automatic idle polling and typed RPC/authority configuration execute through [the component](../components/scene-multiplayer.md). RPC method tokens/codecs replace string/reflection invocation; compiled Script declarations supply inherited class defaults to reconstructed nodes, with instance overrides authored in their construction/factory. Authority/configuration changes remain local and are not automatically replicated. API/transport ownership remains borrowed for caller-supplied interfaces.
 
 ## Property summary
 
@@ -1649,7 +1649,7 @@ Value: The default interface or most specific custom override; detached access f
 | Complete C# signature | Contract |
 | --- | --- |
 | `public System.Int32 GetMultiplayerAuthority()` | Gets the local node's configured multiplayer authority. |
-| `public Electron2D.RPCRegistration[] GetNodeRPCConfig()` | Returns caller-owned typed RPC configuration snapshots. |
+| `public Electron2D.RPCRegistration[] GetNodeRPCConfig()` | Returns effective compiled class defaults and per-instance policies as a caller-owned snapshot. |
 | `public System.Boolean IsMultiplayerAuthority()` | Reports whether this node's authority matches its assigned interface identity. |
 | `public System.Void RPCConfig(Electron2D.RPCMethod method, System.Nullable<Electron2D.RPCOptions> options = null)` | Configures a typed callable and its invocation policy. |
 | `public System.Void RPCID<TNode, T>(System.Int32 id, RPCMethod<TNode, T> method, T arguments)` | Projects inherited lifecycle behavior for this concrete type. |
@@ -1672,9 +1672,9 @@ Returns: Server identity one initially.
 
 `public Electron2D.RPCRegistration[] GetNodeRPCConfig()`
 
-Returns caller-owned typed RPC configuration snapshots.
+Returns effective compiled class defaults and per-instance policies as a caller-owned snapshot.
 
-Returns: Configured immutable tokens and copied policies.
+Returns: Effective immutable tokens and copied policies, excluding locally removed IDs.
 
 <a id="member-01e4daf317d2"></a>
 ### IsMultiplayerAuthority
@@ -1694,9 +1694,9 @@ Configures a typed callable and its invocation policy.
 
 method: Immutable receiver/codec token, unique per node by ID.
 
-options: Policy; null removes the configuration.
+options: Policy; null removes the configuration and suppresses a compiled class default.
 
-Remarks: Tokens/closures are borrowed configuration. Configure derived nodes in their typed scene factory/constructor for scene reconstruction.
+Remarks: Instance policies override compiled Script declarations. Tokens/closures are borrowed configuration; author runtime-only overrides in the typed factory/constructor for reconstruction.
 
 <a id="member-f6a5c8552a83"></a>
 ### RPCID

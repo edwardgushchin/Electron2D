@@ -1,10 +1,10 @@
 # Script
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 **Inherits:** [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
-**Declaration:** `public sealed partial class Script : Resource` · **Source:** [Script.cs](../../src/Core/IO/Script.cs), [Script.Catalog.cs](../../src/Core/IO/Script.Catalog.cs) · **Component:** [Scripting](../components/scripting.md)
+**Declaration:** `public sealed partial class Script : Resource` · **Source:** [Script.cs](../../src/Core/IO/Script.cs), [Script.Catalog.cs](../../src/Core/IO/Script.Catalog.cs), [Script.RPC.cs](../../src/Core/IO/Script.RPC.cs) · **Component:** [Scripting](../components/scripting.md)
 
 A compiled C# source asset for a registered project Node/Resource class. The host supplies stable identity, a static exact factory and typed user property descriptors. Loading `.cs` verifies matching portable compiler symbols and source checksums. Project code remains in its assembly and executes normal typed callbacks.
 
@@ -24,6 +24,9 @@ using Player player = script.New<Player>();
 | `public static void RegisterNode<TNode>(string id, string sourcePath, Func<TNode> factory, params PropertyDescriptor[] properties) where TNode : Node` | Registers source association, static exact scene factory and user schema. |
 | `public static void RegisterResource<TResource>(string id, string sourcePath, Func<TResource> factory, params PropertyDescriptor[] properties) where TResource : Resource` | Same contract for archived Resource/effect instances. |
 | `public static void RegisterAbstract<T>(string id, string sourcePath, params PropertyDescriptor[] properties) where T : ElectronObject` | Abstract project Node/Resource metadata without a factory. |
+| `public static void RegisterNodeWithRPC<TNode>(string id, string sourcePath, Func<TNode> factory, ReadOnlySpan<RPCRegistration> rpcConfiguration, params PropertyDescriptor[] properties) where TNode : Node` | Copies validated class RPC defaults with the existing exact source/factory registration. |
+| `public static void RegisterAbstractWithRPC<TNode>(string id, string sourcePath, ReadOnlySpan<RPCRegistration> rpcConfiguration, params PropertyDescriptor[] properties) where TNode : Node` | Abstract Node source and inherited RPC defaults without a factory. |
+| `public RPCRegistration[] GetRPCConfig()` | Effective most-derived class declarations followed by unshadowed registered bases; caller-owned snapshot. |
 | `public string SourceCode { get; set; }` | Editable text; does not reload compiled implementation; eight MiB UTF-8 budget. |
 | `public string CompiledTypeID { get; }` | Stable portable registration ID; empty when unbound. |
 | `public Type? CompiledType { get; }` | Associated CLR class; null when unbound. |
@@ -56,7 +59,7 @@ The source/type association is proven by assembly MVID and matching portable PDB
 
 Defaults require a registered descriptor and compatible live owner. Missing declared defaults fail explicitly; borrowed resource values retain that owner's lifetime. Metadata queries allocate snapshots and do not execute a universal getter/caller. Private/project methods and events are represented as CLR metadata without treating native inherited members as script declarations. Constants merge inherited project declarations by name, with the most derived declaration first.
 
-Unbound metadata returns empty/null/false as documented, and New fails. Disposed resources reject metadata, source and creation queries. Duplicate/archive identity shares the process-held compiled registration; archive loading requires the host's corresponding registration. Source saving uses the existing atomic resource write protocol. No CLR type reassignment, implementation Reload/keep-state migration, scene RPC configuration or complete editor authoring is implemented by these source/factory APIs. Exact remaining dependencies stay in coverage and ADR 0091.
+Unbound metadata returns empty/null/false as documented, and New fails. Disposed resources reject metadata, source and creation queries. Duplicate/archive identity shares the process-held compiled registration; archive loading requires the host's corresponding registration. Source saving uses the existing atomic resource write protocol. No CLR type reassignment, implementation Reload/keep-state migration or complete editor authoring is implemented by these source/factory APIs. Exact remaining dependencies stay in coverage and ADR 0091.
 
 Ordinary nested Resource copies retain this same Script instance for all deep modes and path classifications. Explicit Script root/force duplication produces independent source wrappers borrowing the same registration. A prior forced copy never remaps ordinary script edges. Scene-local flags control per-scene copies; non-local script references remain shared, and isolated authoring preserves captured text independently of future caller edits. Scene disposal releases acquired wrappers while preserving borrowed scripts and other instances.
 
@@ -67,3 +70,11 @@ RegisterNode, RegisterResource and RegisterAbstract declare their file-backed as
 [Factory result ownership](../components/scripting.md#factory-result-ownership) protects borrowed physical/script resources and live nodes from invalid Script.New and file-factory results. CLR source-asset checks retain actual CPU/software-GPU/registered simulation and zero warmed managed bytes; NativeAOT source registration and full live-script/duplication acceptance remain open.
 
 Factory results require [construction provenance](ElectronObject.md#factory-construction-provenance) in the current invocation. Unrelated concurrent construction cannot transfer caller ownership; nested factories, ordinary Task context flow and engine worker tasks remain supported.
+
+## Compiled RPC defaults
+
+RegisterNodeWithRPC/RegisterAbstractWithRPC validate compatible Node receiver roles, distinct method IDs, nonnull tokens and at most 65536 declarations before publishing registration. Inputs and metadata results are copied; immutable callback/codec tokens and their captured state remain catalog-owned for the process lifetime. No metadata prototype or constructor is invoked. Resource and unbound source assets return empty RPC snapshots.
+
+Derived IDs shadow base declarations; a subsequently registered base is observed on later queries and calls. Ordinary construction, Script.New and file-backed scenes use these defaults through the existing Node multiplayer operations. Per-node RPCConfig changes override policies; null removes/suppresses a class default. These instance changes do not mutate this Script and must be authored again in the constructor/factory to survive reconstruction. Editing SourceCode leaves the compiled RPC declarations unchanged.
+
+[ScriptRPCTests](../../tests/Electron2D.Tests/ScriptRPCTests.cs) verifies metadata without construction, inherited and late-base declarations, overrides/removal, invalid registration rollback, disposed capture release, compressed big-endian fresh-process scenes, real native WS/ENet calls and warmed owner-thread allocation. Its native window scenario reads actual RPC-changed pixels on software GPU and Compatibility renderers; foreign/hardware, routed transport and owner acceptance remain separate.
