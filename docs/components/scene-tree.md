@@ -120,7 +120,7 @@ Existing Timer duration setters, AnimatedSprite library replacement, CanvasItem 
 
 ## Canvas transform phases
 
-Canvas transform notifications use dedicated owner-thread queues. Physics delivers pending entries before PhysicsFrameStarted. Idle delivers after ProcessFrameStarted and again after node callbacks. Both lanes deliver after timers, tweens and the captured deferred-action batch, before queued deletion. Each pass follows pending-list order, capturing the next entry before invoking a callback. Reentrant additions behind an existing successor can be reached in that pass; an addition from the current tail waits for another pass. Cancellation advances the saved cursor before unlinking a pending entry, so force, exit and disposal cannot strand later items. Callback failures are aggregated after the other pending entries and later frame stages are attempted. Explicit FlushDeferred remains an action/deletion flush, not a transform flush. ForceUpdateTransform selects one item inside or outside a frame under the same execution barrier.
+Canvas transform notifications use dedicated owner-thread queues. Physics delivers pending entries before PhysicsFrameStarted. Idle delivers after ProcessFrameStarted and again after node callbacks. Both lanes deliver after timers, tweens and the deferred-action drain, before queued deletion. Each pass follows pending-list order, capturing the next entry before invoking a callback. Reentrant additions behind an existing successor can be reached in that pass; an addition from the current tail waits for another pass. Cancellation advances the saved cursor before unlinking a pending entry, so force, exit and disposal cannot strand later items. Callback failures are aggregated after the other pending entries and later frame stages are attempted. Explicit FlushDeferred remains an action/deletion flush, not a transform flush. ForceUpdateTransform selects one item inside or outside a frame under the same execution barrier.
 
 The queue reuses each CanvasItem's LinkedListNode and one tree-owned list; normal enqueue, cancellation, force and phase delivery allocate no per-change objects. Finalization and activation rollback clear the list and active delivery cursor. [Transform notification checks](../../tests/Electron2D.Tests/CanvasTransformNotificationTests.cs) cover ordering, exceptions, removal, reentry, ownership and allocation.
 
@@ -142,11 +142,11 @@ Changing a built-in node's internal switches directly affects its implementation
 
 NodeInternalProcessingTests verifies both lanes, order and current-state mutation, pause modes, reattachment, errors, ownership/disposal, runtime scene omission and actual idle/physics Timer consumers. Its 1024 warmed set/query/frame operations allocate zero managed owner bytes. Native GPU and compatibility checks verify red pixels, a frozen frame with the internal lane disabled, resumed blue pixels and fixed ticks. Foreign/editor/native allocator and broad load verification remain separate.
 
-The exact SceneTree.Defer scheduler and SceneTree.SetDeferred now use a Scene-owned typed invocation provider. Each accepted call retains independent typed values in a slot and submits its immutable callback into the existing single FIFO queue. Slots recycle only after callback completion or discard, clearing argument/callback references even after failure. Work emitted during a captured batch waits for the next flush. Pool operations share the lifetime/work gate; user handlers run outside it. A weak-owner Core registry recognizes only the exact registered delegate, so Core has no Scene runtime dependency. Public signatures, borrowed reference ownership, event multiplicity and cancellation remain unchanged.
+The exact SceneTree.Defer scheduler and SceneTree.SetDeferred now use a Scene-owned typed invocation provider. Each accepted call retains independent typed values in a slot and submits its immutable callback into the existing single FIFO queue. Slots recycle only after callback completion or discard, clearing argument/callback references even after failure. Work emitted during a drain batch joins the FIFO and runs before that flush completes. Pool operations share the lifetime/work gate; user handlers run outside it. A weak-owner Core registry recognizes only the exact registered delegate, so Core has no Scene runtime dependency. Public signatures, borrowed reference ownership, event multiplicity and cancellation remain unchanged.
 
 Prepared standard-scene delivery and typed setters have zero invocation allocation, including prepared one-shot first delivery. First type/capacity growth, subscription and allocations performed by handlers/accessors remain separate; native multicast removal with multiple listeners can allocate. Arbitrary custom schedulers preserve their independent captured Actions and may allocate. Deferred delivery never extends a borrowed input event lifetime.
 
-EventConnectionPhysicsTests verifies mixed typed/untyped FIFO order, next-batch work, failures followed by later work, closed-scheduler subscription/emission policy, 256 concurrent producers, reference release on execution/failure/finalization/activation rollback, and 640 first one-shot callbacks for immediate and scene-deferred profiles with singleton accessors. Selected CPU/GPU full frames retain 128 callbacks per immediate and deferred arity plus body/shape transitions at strict zero owner/all-thread bytes. Real picking and legacy custom-scheduler/concurrency/error checks remain included. Software Vulkan is functional evidence; hardware/native/foreign/network/performance acceptance stays open.
+EventConnectionPhysicsTests verifies mixed typed/untyped FIFO order, nested same-flush work, failures followed by later work, closed-scheduler subscription/emission policy, 256 concurrent producers, reference release on execution/failure/finalization/activation rollback, and 640 first one-shot callbacks for immediate and scene-deferred profiles with singleton accessors. Selected CPU/GPU full frames retain 128 callbacks per immediate and deferred arity plus body/shape transitions at strict zero owner/all-thread bytes. Real picking and legacy custom-scheduler/concurrency/error checks remain included. Software Vulkan is functional evidence; hardware/native/foreign/network/performance acceptance stays open.
 
 ## Shared node frame time (2026-10-14)
 
@@ -287,3 +287,45 @@ The public-only `--queued-deletion` consumer checks FIFO reissue, real body surv
 [Transform authoring from processing groups](scene-hierarchy.md#transform-authoring-from-processing-groups) now covers all Entity pose setters/helpers and inherited physical/drawable nodes. Cache revisions and a short notification queue gate preserve committed pose/error semantics; existing scene spaces are borrowed for metadata edits and released after every joined stage before selected queries/stepping. The original scene owner temporarily uses current-group rights while helping a parallel stage. General inherited worker operations and native physical writes retain separate coverage.
 
 [Transform notification policies and forcing](scene-hierarchy.md#transform-notification-policies-and-forcing-from-groups) now accept their processing-group contexts. Forced user notifications remain immediate; camera viewport and generated tile physics/navigation updates publish after the joined worker stage before owner queries/stepping. Shared queue cancellation and lifecycle accounting support concurrent forcing without holding gates across callbacks. Inherited interpolation reads permit active groups; mode mutation and reset permit the owner/current group. Reset callbacks remain immediate, with foreign branches reported and later siblings attempted. Ordered camera scroll/reset and borrowed renderer policies publish after the joined worker stage; see [interpolation publication](scene-hierarchy.md#physics-interpolation-from-processing-groups).
+
+## Complete deferred call and setter contract
+
+`SceneTree.Defer(Action)` and `SetDeferred<T>` provide the typed scheduling
+projection under ADRs 0001/0006. A safe point now drains both operations in FIFO
+order until the queue is observed empty under its work gate. A callback may append
+further work, which runs after already accepted entries in that same safe point.
+Two retained queues exchange enqueue/drain roles iteratively; nested delivery
+does not call FlushDeferred recursively or grow the callback stack. The former
+one-batch cutoff delayed required calls/property writes and is removed.
+
+Call/setter failures are collected while later and nested work completes. User
+callbacks run outside the gate. Typed values remain independent until delivery
+or discard, then release their references even after callback failure. Queue
+acceptance stays atomic with closure; finalization discards accepted pending work
+without executing it, and subsequent submissions reject. Once the action queue
+is empty, the existing one-captured-deletion-batch policy runs. Deletion callbacks
+and transform notifications retain their own stage and cursor rules.
+
+A continually self-enqueuing callback can keep a safe point running indefinitely.
+Use a frame-start subscription when the next frame is required. Deferred work
+does not create another simulation tick, replay the physics solver, return a
+method result or resolve a method/property name dynamically. No receiver,
+backend selection or native ownership is inferred from the typed delegate.
+
+The public `--deferred-contract` consumer checks mixed calls/setters, independently
+captured values, a 4096-entry finite chain at callback depth one, original errors
+and later work, foreign submission, rejected reentry, process-frame delivery,
+reference release after success/failure/discard and 16 four-producer closure
+races. Each selected CPU/software-GPU/registered owner/separate profile warms
+128 then measures 128 complete moving physics frames with nested deferred body
+velocity/impulse edits and real point queries at strict 0/0 owner/all-thread
+managed bytes. At 1/128 s, alternating horizontal speeds 3/5 and unit vertical
+speed must travel (4,1) within .003 scene units over 128 measured ticks. The bound
+permits native float accumulation while rejecting an extra or omitted tick.
+
+The identical final consumer fails on the retained old runtime because its nested
+entry remains queued. Root tree/group/failure/event checks and related typed
+event, layout, theme, navigation and network consumers retain their own receipts
+under `bin/physics-deferred-contract/2026-10-20/`. CLR and strict NativeAOT evidence
+does not establish native allocations, hardware speed, foreign platforms or
+complete physics/network acceptance.

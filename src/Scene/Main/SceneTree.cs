@@ -420,7 +420,8 @@ public sealed partial class SceneTree : MainLoop
     /// <summary>Thread-safely queues an action for a future deferred flush while the tree remains live.</summary>
     /// <param name="action">The action to invoke.</param>
     /// <remarks>
-    /// An action queued during a captured flush batch waits for a later flush. Queue acceptance is atomic with the
+    /// Actions queued by deferred callbacks run in FIFO order during the same flush until the queue is empty.
+    /// A callback that continually queues itself can prevent the flush from completing. Queue acceptance is atomic with the
     /// start of tree finalization: a successful call is either captured by a future flush or intentionally discarded by
     /// later finalization; a call that loses that race throws and does not enqueue. Two synchronized action queues
     /// exchange enqueue/captured roles and reuse their prepared capacity; later capacity growth may allocate.
@@ -438,7 +439,7 @@ public sealed partial class SceneTree : MainLoop
     /// <param name="setter">The setter to invoke.</param>
     /// <param name="value">The value captured for the deferred invocation.</param>
     /// <remarks>
-    /// Has the same atomic lifetime and captured-batch behavior as <see cref="Defer"/>. A scene-owned typed slot
+    /// Has the same atomic lifetime and queue-draining behavior as <see cref="Defer"/>. A scene-owned typed slot
     /// retains the supplied value until callback completion or discard, then clears references and is reused.
     /// Value/reference ownership is unchanged. Prepared capacity avoids per-submission capture allocation;
     /// first type/capacity growth and allocations performed by the setter remain separate.
@@ -818,10 +819,10 @@ public sealed partial class SceneTree : MainLoop
         EnqueueDeletion(new DeletionRequest(instance, NodeTicket: 0));
     }
 
-    /// <summary>Executes one captured deferred-action batch followed by one captured deletion batch.</summary>
+    /// <summary>Drains deferred actions until their queue is empty, then executes one captured deletion batch.</summary>
     /// <remarks>
-    /// Every captured entry is attempted. Deferred actions queued after action capture wait for a later flush. The
-    /// deletion batch is captured after those actions, so deletion requested by a captured action runs in the same
+    /// Every accepted action is attempted before the queue is observed empty, including nested submissions. The
+    /// deletion batch is captured after deferred work drains, so deletion requested by an action runs in the same
     /// flush. Re-entrant execution and execution during node lifecycle or pause delivery are rejected. Failures are
     /// reported after both phases. Deletions queued after deletion capture wait for a later flush. Canceled entries
     /// cannot consume a newly issued request. Captured queues retain their prepared capacity after draining.
@@ -1772,31 +1773,29 @@ public sealed partial class SceneTree : MainLoop
 
     private void FlushDeferredCore(ref List<Exception>? errors, bool flushTransforms = false)
     {
-        Queue<Action>? actions = null;
-
-        lock (_workGate)
+        while (true)
         {
-            if (_deferred.Count != 0)
+            Queue<Action> actions;
+            lock (_workGate)
             {
+                if (_deferred.Count == 0) break;
                 actions = _deferred;
                 _deferred = _deferredSpare ?? throw new InvalidOperationException("Deferred action batches cannot be captured recursively.");
                 _deferredSpare = null;
             }
-        }
-
-        while (actions?.TryDequeue(out var action) == true)
-        {
-            try
+            while (actions.TryDequeue(out var action))
             {
-                action();
+                try
+                {
+                    action();
+                }
+                catch (Exception error)
+                {
+                    CollectException(ref errors, error);
+                }
             }
-            catch (Exception error)
-            {
-                CollectException(ref errors, error);
-            }
+            lock (_workGate) _deferredSpare = actions;
         }
-
-        if (actions is not null) lock (_workGate) _deferredSpare = actions;
         if (flushTransforms) FlushTransformNotifications(ref errors);
 
         ConcurrentQueue<DeletionRequest>? deletions = null;

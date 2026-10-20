@@ -171,7 +171,7 @@ internal static class EventConnectionPhysicsTests
         tree.Defer(() => order.Add(10)); tree.SetDeferred(setter, 1); tree.Defer(() => order.Add(20)); tree.SetDeferred(setter, 2);
         Check(value == 0, "Typed deferred setters wait for the safe point."); tree.FlushDeferred(); Check(order.SequenceEqual([10, 1, 20, 2]) && value == 2, "Typed and untyped work retain one FIFO order.");
         Action<int> next = v => { order.Add(v); tree.SetDeferred(setter, v + 1); };
-        tree.SetDeferred(next, 30); tree.FlushDeferred(); Check(order[^1] == 30, "Typed work emitted during a captured batch waits."); tree.FlushDeferred(); Check(order[^1] == 31, "The following flush receives the new typed work.");
+        tree.SetDeferred(next, 30); tree.FlushDeferred(); Check(order[^1] == 31 && order.Count == 6, "Nested typed work completes in the current flush."); tree.FlushDeferred(); Check(order.Count == 6, "The following flush cannot repeat nested work.");
         tree.SetDeferred<int>(_ => throw new ArithmeticException(), 0); tree.SetDeferred(setter, 40); Reject<AggregateException>(tree.FlushDeferred);
         Check(value == 40, "Later work still executes after an earlier typed failure.");
         Action<int> scalar = v => value = v;
