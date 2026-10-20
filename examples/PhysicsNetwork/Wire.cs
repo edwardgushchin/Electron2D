@@ -14,7 +14,7 @@ internal ref struct WireWriter(Span<byte> target)
     internal void Bool(bool value) => U32(value ? 1u : 0u);
     internal void Vector(Vector2 value) { F32(value.X); F32(value.Y); }
     internal void Bytes(scoped ReadOnlySpan<byte> bytes) { bytes.CopyTo(_data[Count..]); Count += bytes.Length; }
-    internal void Header(int kind) { U32(0x34504E45); I32(kind); }
+    internal void Header(int kind) { U32(0x35504E45); I32(kind); }
     internal void Spec(ObjectSpec value)
     {
         U64(value.ID); U32(value.Generation); I32((int)value.Kind); I32(value.Owner); U32(value.ControlEpoch);
@@ -40,7 +40,7 @@ internal ref struct WireReader(ReadOnlySpan<byte> source)
     internal float F32() { var value = BitConverter.UInt32BitsToSingle(U32()); Require(float.IsFinite(value)); return value; }
     internal bool Bool() { var value = U32(); Require(value <= 1); return value != 0; }
     internal Vector2 Vector() => new(F32(), F32());
-    internal int Header() { Require(U32() == 0x34504E45); return I32(); }
+    internal int Header() { Require(U32() == 0x35504E45); return I32(); }
     internal int Count(int maximum, int stride) { var value = I32(); Require(value >= 0 && value <= maximum && value <= Remaining / stride); return value; }
     internal ObjectSpec Spec() => new(U64(), U32(), (ObjectKind)I32(), I32(), U32(), Vector(), U64(), U64());
     internal InputCommand Input()

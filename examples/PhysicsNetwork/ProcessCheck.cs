@@ -104,6 +104,7 @@ internal static partial class ProcessCheck
                 Check(report.GeometryCompoundContacts == 3 && report.GeometryCompoundImpulses == 3 &&
                     report.GeometryRayAngularSteps > 0 && report.MaxGeometryRayAngularSpeed > .1f,
                     "Both compound slots generate physical impulses and the unrestrained ray actually rotates");
+                if (checkProgress || name == "server") Check(report.CrossedContacts > 0, "Participants solve actual crossed capsule contacts under numbered phases");
                 if (checkProgress || name == "server")
                     Check(report.SupportWakes > 0 && report.SupportKicks > 0 && report.GeometryWakes == NetworkWorld.GeometryFamilyMask && report.GeometryKicks > 0,
                         "Authority and phase-paced clients solve the original scripted physical wake impulses");
@@ -113,7 +114,7 @@ internal static partial class ProcessCheck
                 if (report.BackendInstrumented && report.Backend == "CPU")
                     Check(report.NumericalSteps > 0 && report.NumericalThreadVerified, "Actual CPU intervals run on the requested owner or separate numerical lane");
             }
-            Check(authority.Actors.Length == 28 && authority.Actors.Any(actor => actor.ID == 101) && authority.Actors.Any(actor => actor.ID == 102) && authority.Actors.Any(actor => actor.ID == 110) && authority.Actors.Any(actor => actor.ID == 111) && authority.Actors.Any(actor => actor.ID == 112),
+            Check(authority.Actors.Length == 30 && authority.Actors.Any(actor => actor.ID == 101) && authority.Actors.Any(actor => actor.ID == 102) && authority.Actors.Any(actor => actor.ID == 110) && authority.Actors.Any(actor => actor.ID == 111) && authority.Actors.Any(actor => actor.ID == 112),
                 "All three joint families and their endpoints survive authority and late-join topology");
             Check(authority.Actors.Any(actor => Math.Abs(actor.AngularVelocity) > .05),
                 "Final authority state carries a real nonzero angular response for cross-backend restoration");
@@ -137,6 +138,7 @@ internal static partial class ProcessCheck
                 Check(client.SleepObservations > 0 && client.WakeObservations > 0, "Client observes restored sleep and waking");
                 Check(client.InterpolatedSamples > 0 && client.SmoothedSamples > 0 && client.PostDriftCorrections > 0 && client.DriftCorrectionDistance > 10, "Remote interpolation, local smoothing and injected divergence recovery execute");
                 Check(client.AngularDriftCorrection > .1, "Injected rotation/angular-velocity divergence is corrected through real authority state");
+                Check(client.CrossedContactCorrections > 0, "Clients import real crossed capsule impulses, angular response and mapped shape identities");
                 Check(client.SupportCorrections > 0 && client.SupportContactCorrections > 0 && client.SupportSleepingCorrections > 0,
                     "Actual authority corrections restore the coupled graph's floor contacts and sleeping state");
                 Check(client.GeometryCorrections > 0 && client.GeometryContactCorrections == NetworkWorld.GeometryFamilyMask && client.GeometrySleepingCorrections == NetworkWorld.GeometryFamilyMask,

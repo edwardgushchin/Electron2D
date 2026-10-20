@@ -1,6 +1,38 @@
 # Resident GPU contact response
 
-Last updated: 2026-10-16
+Last updated: 2026-10-20
+
+## Saturated angular friction, 2026-10-20
+
+A captured GPU-client replay at tick 23 exposed another angular contact case.
+The same 10,784-byte portable frame failed in a fresh world, without networking;
+selecting only the freely rotating separation ray's CCD reproduced the failure,
+while the capsule controls completed. The ray had mass 1, inertia 2, a ten-unit
+lever and substantial simultaneous translation/rotation. Contact sweeps alternated
+between saturated friction candidates and left positive endpoint closing motion.
+The CCD loop consumed its unchanged 128 intervals before finishing its substep.
+The older, milder public oblique-ray fixture still passed.
+
+Colored and Jacobi contacts now share a local two-row solve. It includes the
+normal/tangent angular coupling, accepts a nonnegative sticking impulse inside
+the Coulomb cone, or solves the appropriate sliding edge of that cone. The
+normalized determinant uses positive mass/inertia terms to avoid cancellation
+between almost aligned angular rows. Independent rows retain their scalar path.
+If single precision cannot resolve the block, the existing projected iteration
+remains the fallback. Global contact scheduling, Jacobi degree relaxation, joint
+rows, positional correction, iteration count and CCD budget are unchanged. No
+host contact mirror, new buffer, submission, transfer or wait is introduced.
+
+The resident store checks both the earlier angle and the saturated case in three
+colored storage layouts and a real 33-contact Jacobi overflow. The public
+`--contact-coupling` consumer exercises both full CCD frames, including mass,
+damping, gravity, stable RID/world, plane identity, summed momentum and 128 warm /
+128 measured reset/full frames with strict zero owner/all-thread managed bytes.
+The old response payload fails the added public case; the new block completes
+both it and the complete saved replay frame. The snapshot, failed application
+profiles, reduced replay and interval traces are retained under
+`bin/physics-network-crossed/2026-10-20/`. Software execution does not establish
+hardware performance, native allocation or platform/owner acceptance.
 
 ## Executing boundary
 
@@ -21,10 +53,9 @@ not establish those requirements.
 
 ## Angular normal/friction coupling (2026-10-16)
 
-Each contact first chooses its normal impulse candidate, then evaluates tangent
-speed including the angular velocity change caused by that candidate. The colored
-kernel applies this contact block directly. The fallback computes the same local
-block before degree relaxation across incident contacts. Fixed and sleeping
+The earlier contact block first chose its normal impulse candidate, then evaluated
+tangent speed including that candidate’s angular velocity change. Both colored
+and fallback kernels used that block before any degree relaxation. Fixed and sleeping
 endpoints contribute no inverse inertia; prescribed surface motion remains input.
 The friction cone, physical/correction separation, solver count and CCD interval
 budget are unchanged. No buffer, layout, readback, fence or CPU contact calculation

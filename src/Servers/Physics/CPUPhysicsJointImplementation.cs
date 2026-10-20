@@ -69,6 +69,7 @@ internal sealed partial class CPUPhysicsJointImplementation(PhysicsSpace space, 
         }
         if (!IsAttached) throw new InvalidOperationException("The physics backend did not create the joint.");
         ApplySolverPolicy(settings);
+        worldOwner.PrepareJointCapacity();
     }
 
     internal override void ApplySolverPolicy(in PhysicsJointConfiguration settings)

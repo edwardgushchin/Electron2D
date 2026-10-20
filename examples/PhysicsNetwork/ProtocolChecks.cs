@@ -20,7 +20,7 @@ internal static class ProtocolChecks
         }
         var header = new byte[8]; var headerWriter = new WireWriter(header); headerWriter.Header(3);
         var headerReader = new WireReader(header); Check(headerReader.Header() == 3, "Current application wire header round trip"); headerReader.End();
-        foreach (var oldVersion in new uint[] { 0x31504E45, 0x32504E45, 0x33504E45 })
+        foreach (var oldVersion in new uint[] { 0x31504E45, 0x32504E45, 0x33504E45, 0x34504E45 })
         {
             BinaryPrimitives.WriteUInt32LittleEndian(header, oldVersion);
             var oldHeaderRejected = false;
@@ -51,6 +51,7 @@ internal static class ProtocolChecks
         CheckJointContinuations();
         CheckSupportControls();
         CheckGeometryControls();
+        CheckCrossedControls();
         CheckWakeCorrections();
         CheckPacketOrder();
         NetworkSession.CheckInputCommands();
@@ -111,6 +112,27 @@ internal static class ProtocolChecks
             catch (InvalidOperationException error) when (error.Message.StartsWith("Network geometry", StringComparison.Ordinal)) { rejected = true; }
             Check(rejected, "Geometry continuation requires its boundary/ledge, both compound slots and unlocked angular response");
         }
+    }
+    private static void CheckCrossedControls()
+    {
+        for (var edit = 0; edit < 3; edit++)
+        {
+            using var world = new NetworkWorld(PhysicsServer.Backend.CPU); world.Reconcile(NetworkWorld.InitialObjects);
+            var body = (RigidBody)world.Find(edit == 0 ? 220u : 221u)!.Body!;
+            if (edit < 2) ((CollisionShape)body.GetChild(1)).Disabled = true;
+            else body.LockRotation = true;
+            var rejected = false;
+            try { world.Step(SimulationPhase.Authority); }
+            catch (InvalidOperationException error) when (error.Message.StartsWith("Network crossed capsules", StringComparison.Ordinal)) { rejected = true; }
+            Check(rejected, "Crossed continuation requires both enabled capsules and actual free angular response");
+        }
+        using var source = new NetworkWorld(PhysicsServer.Backend.CPU); source.Reconcile(NetworkWorld.InitialObjects);
+        using var target = new NetworkWorld(PhysicsServer.Backend.CPU); target.Reconcile(NetworkWorld.InitialObjects);
+        source.Step(SimulationPhase.Authority); var snapshot = new PhysicsSnapshot(24000); source.Map.Capture(snapshot);
+        target.CheckCrossedCorrection(); Check(target.CrossedContactCorrections == 0, "An omitted crossed snapshot supplies no imported contact evidence");
+        target.Map.Apply(snapshot); target.CheckCrossedCorrection();
+        Check(target.CrossedContactCorrections == 1 && target.EventSequence == 0,
+            "A real crossed contact snapshot imports complete paired response silently into distinct local objects");
     }
     private static void CheckWakeCorrections()
     {

@@ -20,8 +20,11 @@ internal static class GPUPhysicsSolverStoreTests
         VerifyBatchedCapacityRetry();
         VerifyColoredContacts();
         for (var layout = 0; layout < 3; layout++) VerifyCoupledLayout(layout);
-        for (var layout = 0; layout < 3; layout++) VerifyObliqueFriction(layout, 1);
-        VerifyObliqueFriction(2, 33);
+        foreach (var saturated in new[] { false, true })
+        {
+            for (var layout = 0; layout < 3; layout++) VerifyObliqueFriction(layout, 1, saturated);
+            VerifyObliqueFriction(2, 33, saturated);
+        }
         VerifyStack();
         VerifyResidency(64);
         VerifyResidency(256);
@@ -429,15 +432,18 @@ internal static class GPUPhysicsSolverStoreTests
         Console.WriteLine($"Resident solver layout {layout}: coupled contact/joint velocity, momentum and report isolation passed.");
     }
 
-    private static void VerifyObliqueFriction(int layout, int planes)
+    private static void VerifyObliqueFriction(int layout, int planes, bool saturated)
     {
         using var store = new GPUPhysicsBodyStore { CaptureContactReports = true, PackColoredContacts = layout > 0, PackSolverBodyState = layout > 1 };
         using var plane = new WorldBoundaryShape { Normal = Vector2.Up };
         using var ray = new SeparationRayShape { Length = 10, SlideOnSlope = true };
         var floor = Add(store, new(1300, 100), mode: Mode.Static);
         for (var i = 0; i < planes; i++) store.AddShape(floor, plane);
-        var velocity = new Vector2(84.51742f, 50.085964f); const float angular = 8.647725f;
-        var body = store.Add(new(Mode.Rigid, new(1702.198f, 91.44969f), .5388814f, velocity, angular, 1, 2,
+        var velocity = saturated ? new Vector2(83.877f, 65.91669f) : new Vector2(84.51742f, 50.085964f);
+        var angular = saturated ? 9.274853f : 8.647725f;
+        var position = saturated ? new Vector2(1703.6022f, 92.384346f) : new Vector2(1702.198f, 91.44969f);
+        var rotation = saturated ? MathF.Atan2(.64686257f, .7626067f) : .5388814f;
+        var body = store.Add(new(Mode.Rigid, position, rotation, velocity, angular, 1, 2,
             CenterOfMass: Vector2.Zero, CanSleep: false, ContinuousMode: CCDMode.CastShape));
         store.AddShape(body, ray);
         store.SolveConstraints(1f / 240, iterations: 16);
@@ -456,7 +462,7 @@ internal static class GPUPhysicsSolverStoreTests
         Near(impulse.Y, after.Y - velocity.Y, .002f, "Normal reports match the full normal momentum change");
         if (planes > 32) Check(store.ContactColorFallbacks > 0 && store.ContactColorCount == 0, "The high-degree case exercises the complete Jacobi fallback");
         else Check(store.ContactColorCount > 0 && store.ContactColorFallbacks == 0, "Every storage layout exercises actual colored contact solving");
-        Console.WriteLine($"Resident oblique friction: layout={layout}, planes={planes}, impulse={impulse}, tip speed={after.Y + spin * tip.X}.");
+        Console.WriteLine($"Resident oblique friction: layout={layout}, planes={planes}, saturated={saturated}, impulse={impulse}, tip speed={after.Y + spin * tip.X}.");
     }
 
     private static void VerifyStack()

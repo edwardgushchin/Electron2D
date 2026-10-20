@@ -56,7 +56,7 @@ public static partial class BackendChecks
                 var callbacks = 0; var entries = 0;
                 PhysicsServer.BodySetStateSyncCallback(ticker.GetRID(), _ => callbacks++);
                 if ((roles & 1) == 0) { aScene.ContactMonitor = true; aScene.BodyEntered += _ => entries++; }
-                var map = new PhysicsSnapshotMap(world.Space); map.Bind(10, 1, a); map.Bind(20, 1, b); map.Bind(30, 1, ticker.GetRID());
+                using var map = new PhysicsSnapshotMap(world.Space); map.Bind(10, 1, a); map.Bind(20, 1, b); map.Bind(30, 1, ticker.GetRID());
                 var snapshot = new PhysicsSnapshot(65536); var received = new PhysicsSnapshot(65536); var packet = new byte[65536];
                 using var checkpoint = PhysicsServer.SpaceCreateCheckpoint(world.Space);
                 var dt = mode == CCDMode.CastShape ? .01 : 1d / 2048;

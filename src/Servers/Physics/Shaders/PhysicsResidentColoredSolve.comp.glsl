@@ -32,11 +32,9 @@ void main()
     if(!responds(c,false))ma=vec2(0);if(!responds(c,true))mb=vec2(0);
     float vn=dot2(bv.xy-av.xy,n)+bv.z*c.normal.w-av.z*c.normal.z;
     float vt=dot2(bv.xy-av.xy,t)+bv.z*c.tangent.w-av.z*c.tangent.z;
-    float pn=max(0,p.physical.x+c.parameters.x*(c.parameters.z-vn));
-    // Friction uses the velocity after the normal impulse, including angular coupling.
-    vt+=(pn-p.physical.x)*(ma.y*c.normal.z*c.tangent.z+mb.y*c.normal.w*c.tangent.w);
-    if(!finite4(vec4(vn,vt,pn,0))){atomicOr(status.x,1u);return;}
-    float pt=clamp(p.physical.y-c.parameters.y*vt,-c.tangent.x*pn,c.tangent.x*pn);
+    vec2 candidate=contactImpulse(c,p.physical.xy,vec2(vn,vt),ma,mb);
+    if(!finite4(vec4(vn,vt,candidate))){atomicOr(status.x,1u);return;}
+    float pn=candidate.x,pt=candidate.y;
     vec2 delta=vec2(pn,pt)-p.physical.xy;
     float speed=dot2(cb.xy-ca.xy,n)+cb.z*c.normal.w-ca.z*c.normal.z;
     float pc=max(0,p.correction.x+c.parameters.x*(c.parameters.w-speed)),dc=pc-p.correction.x;
