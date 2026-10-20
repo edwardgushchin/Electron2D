@@ -482,3 +482,41 @@ Evidence: `bin/physics-adaptive-motion/2026-10-20/validation.json`,
 
 The broader numerical extension, native allocation, hardware performance, other
 platforms and rendered-window acceptance remain separate open work.
+
+
+## Motion source selection and contact velocity
+
+Final body-motion contact sampling retains the logical source that won the new
+impact sweep. A deeper contact involving another source must not replace it.
+When only recovery produces a collision, every enabled logical source remains
+eligible for the deepest final sample. In particular, a concave source whose
+requested sweep is ignored against a finite target still participates in recovery.
+
+The public-only `--motion-selection` fixture places an ordinary disk and a hollow
+concave segment in both source-slot orders, after disabled slot zero. At the disk's
+first impact, the other source lies deep inside a separate circle. The result must
+retain the disk/floor pair; a zero-motion recovery control instead selects the
+concave source/circle pair. Scene TestMove also checks the actual local shape owner.
+
+The same cases use scene and raw peers in all four body modes, poses rotated by
+0/.37 radians, margins .02/.5 and a custom local mass center (2, -3). Collision-point
+velocity must equal linear velocity plus angular velocity crossed with the arm
+from the transformed mass center to the returned world contact. Static surface
+velocity and the zero-angular RigidLinear control use that same equation.
+
+Each measured profile warms 128 frames, then measures 128 full physics frames
+and 1024 public motion calls at strict zero owner/all-thread managed bytes.
+Registered profiles verify the actual numerical thread and measured step count.
+Logical source identity and scene ownership are exact; velocity permits .003 scene units per second and surface coordinates permit .003
+scene units, the normal dot must exceed .999, and safe
+travel permits .24 units for a 40-unit sweep (the adaptive 3/512 bound is .234375).
+These checks exercise the existing implementation; they do not add public API or
+close arbitrary custom-geometry, native/platform, network or hardware acceptance.
+
+The final cohort passes 64 processes: 30 JIT, 30 strict NativeAOT and four root
+profiles. Twelve source-selection profiles measure 1536 full frames and 12288
+motion calls at 0/0 managed bytes. Six DLL/PDB sets match 3489 authored C# inputs;
+51 shader/recipe inputs and fresh motion/shape SPIR-V match four embedded payloads.
+Evidence: `bin/physics-motion-selection/2026-10-20/validation.json`,
+`motion-selection-warm-proof.json`, `current-source-proof.json` and
+`shader-proof.json`. Production algorithms and API declaration states are unchanged.

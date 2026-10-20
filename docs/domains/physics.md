@@ -1,5 +1,7 @@
 # Physics domain
 
+[Motion source selection and contact velocity](../components/physics-queries.md#motion-source-selection-and-contact-velocity) verifies the winning logical source, recovery-only selection and rotated mass-center velocity through scene/raw callers.
+
 [Adaptive sweep refinement](../components/physics-queries.md#adaptive-sweep-refinement) preserves close and late impacts, geometric initial gaps and logical source ownership across selected implementations.
 
 [Directed source one-way policy](../components/physics-contact-policy.md#directed-sources-and-one-way-targets) preserves ray contacts while ordinary siblings retain the target filter. Recovery, sweeps and final rest use represented source kind.

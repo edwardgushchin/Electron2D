@@ -1,5 +1,7 @@
 # PhysicsBody
 
+[Motion source selection and contact velocity](../components/physics-queries.md#motion-source-selection-and-contact-velocity) verifies the winning logical source, recovery-only selection and rotated mass-center velocity through scene/raw callers.
+
 Last updated: 2026-10-20
 
 ## Collision exception publication
