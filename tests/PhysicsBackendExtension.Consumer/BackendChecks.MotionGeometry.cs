@@ -4,6 +4,14 @@ public static partial class BackendChecks
 {
     private sealed partial class Solver
     {
+        private readonly record struct MotionRejectedPair(ulong Source, RID Collider, int Shape);
+        private static bool RejectedMotionPair(ReadOnlySpan<MotionRejectedPair> pairs, int count, in Part source, Body other, in Part target)
+        {
+            for (var i = 0; i < count; i++)
+                if (pairs[i] == new MotionRejectedPair(source.Source!.InstanceID, other.RID, target.Index)) return true;
+            return false;
+        }
+
         private bool TestGeometryBodyMotion(RID body, Transform from, Vector2 motion, float margin, bool recoveryAsCollision,
             bool collideSeparationRay, PhysicsTestMotionResult result)
         {
@@ -11,25 +19,44 @@ public static partial class BackendChecks
             Part source = default, target = default; var normal = Vector2.Zero; var point = Vector2.Zero; var depth = 0f;
             MotionHook?.Invoke(body);
             var queryMargin = MathF.Max(margin, .0001f);
+            Span<MotionRejectedPair> rejected = stackalloc MotionRejectedPair[32]; var rejectedCount = 0;
             Span<System.Numerics.Vector4> planes = stackalloc System.Numerics.Vector4[32];
             for (var attempt = 0; attempt < 4; attempt++)
             {
-                var deepest = 0f; var count = 0;
+                var deepest = 0f; var count = 0; rejectedCount = 0;
                 foreach (var other in Bodies.Values)
                 {
                     if (!EligibleOther(other)) continue;
-                    for (var i = 0; i < local.Shapes; i++) for (var j = 0; j < other.Shapes; j++)
+                    for (var ownStart = 0; ownStart < local.Shapes;)
+                    {
+                        var ownEnd = ownStart + 1;
+                        while (ownEnd < local.Shapes && local.Parts[ownEnd].Index == local.Parts[ownStart].Index) ownEnd++;
+                        var first = ownStart; ownStart = ownEnd;
+                        for (var otherStart = 0; otherStart < other.Shapes;)
                         {
-                            var own = local.Parts[i]; var b = other.Parts[j];
-                            if (own.Concave && b.Concave) continue;
-                            var a = MotionRecoveryPart(own, b, queryMargin); var pose = from; pose.Origin += recovery;
-                            var gap = PartGap(a, pose, b, other.Pose, out var toward, out _, out var onOther);
-                            var away = -toward;
-                            if (gap >= 0 || !AcceptRecovery(b, other, away, -gap, queryMargin)) continue;
-                            RetainMotionPlane(planes, ref count, new(away.X, away.Y, -gap, other.Priority));
-                            if (-gap <= deepest) continue;
-                            deepest = -gap; best = other; source = local.Parts[i]; target = b; normal = away; point = onOther; depth = deepest;
+                            var otherEnd = otherStart + 1;
+                            while (otherEnd < other.Shapes && other.Parts[otherEnd].Index == other.Parts[otherStart].Index) otherEnd++;
+                            var second = otherStart; otherStart = otherEnd;
+                            var accepted = false; var invalid = false;
+                            for (var i = first; i < ownEnd; i++) for (var j = second; j < otherEnd; j++)
+                                {
+                                    var own = local.Parts[i]; var b = other.Parts[j];
+                                    if (own.Concave && b.Concave) continue;
+                                    var a = MotionRecoveryPart(own, b, queryMargin); var pose = from; pose.Origin += recovery;
+                                    var gap = PartGap(a, pose, b, other.Pose, out var toward, out _, out var onOther);
+                                    var away = -toward;
+                                    if (gap > 0) continue;
+                                    if (!AcceptRecovery(b, other, away, -gap, queryMargin)) { invalid = true; continue; }
+                                    accepted = true;
+                                    if (gap == 0) continue;
+                                    RetainMotionPlane(planes, ref count, new(away.X, away.Y, -gap, other.Priority));
+                                    if (-gap <= deepest) continue;
+                                    deepest = -gap; best = other; source = own; target = b; normal = away; point = onOther; depth = deepest;
+                                }
+                            if (invalid && !accepted && rejectedCount < rejected.Length)
+                                rejected[rejectedCount++] = new(local.Parts[first].Source!.InstanceID, other.RID, other.Parts[second].Index);
                         }
+                    }
                 }
                 if (deepest <= 0) break;
                 double total = 0;
@@ -52,7 +79,7 @@ public static partial class BackendChecks
                 for (var i = 0; i < local.Shapes; i++) for (var j = 0; j < other.Shapes; j++)
                     {
                         var own = local.Parts[i]; var a = own; var b = other.Parts[j];
-                        if (a.Concave && b.Concave) continue;
+                        if (a.Concave && b.Concave || RejectedMotionPair(rejected, rejectedCount, own, other, b)) continue;
                         var sweptMotion = a.Boundary || !b.Boundary && (a.Concave || b.Directed) ? Vector2.Zero : motion;
                         if (b.OneWay is { } policy && motion.Dot(policy.LocalDirection.Rotated(other.Rotation)) <= 0) continue;
                         if (a.Directed && !a.Slide && !collideSeparationRay) continue;
@@ -76,7 +103,8 @@ public static partial class BackendChecks
                 for (var i = 0; i < local.Shapes; i++) for (var j = 0; j < other.Shapes; j++)
                     {
                         var own = local.Parts[i]; var b = other.Parts[j];
-                        if (hit is not null && own.Index != source.Index || own.Concave && b.Concave) continue;
+                        if (hit is not null && own.Index != source.Index || own.Concave && b.Concave ||
+                            RejectedMotionPair(rejected, rejectedCount, own, other, b)) continue;
                         var gap = PartGap(MotionRecoveryPart(own, b, queryMargin), restPose, b, other.Pose, out var toward, out _, out var onOther);
                         var away = -toward;
                         if (hit is not null && fraction > 0 && !own.Directed && !b.Directed && away.Dot(motion) > 0) away = -away;

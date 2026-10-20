@@ -55,3 +55,5 @@ allocation-free after warmup. PhysicsMotionTests covers both polygon roles and
 both directed-containment directions. See [body-motion verification](../components/gpu-resident-motion-queries.md).
 
 [Final contact sampling](../components/physics-registered-adapter.md#final-body-motion-contact-sampling) includes the effective query margin and clears obsolete contacts after complete departure.
+
+[Last-recovery one-way pair exclusions](../components/physics-registered-adapter.md#last-recovery-one-way-pair-exclusions) retain rejected source-resource/target-slot pairs through the remaining sweep and final contact sample. The last recovery attempt replaces the set, accepted pieces keep their logical pair eligible, and the next query starts empty.

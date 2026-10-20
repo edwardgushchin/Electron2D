@@ -227,3 +227,5 @@ frames preserve exact transitions and zero managed allocation; native rendering
 and wider numerical/platform/performance acceptance keep their separate scopes.
 
 [Final body-motion contact sampling](../components/physics-registered-adapter.md#final-body-motion-contact-sampling) resamples completed recovery and unsafe motion. Contact geometry is sampled after the completed recovery at the unsafe motion pose, including the query margin. The deepest eligible final contact supplies point, normal, depth, logical identities and point velocity. When requested recovery is followed by an unobstructed departure with no final contact, the result clears collision data and retains full requested motion plus recovery. Safe travel and remainder still use the safe fraction.
+
+[Last-recovery one-way pair exclusions](../components/physics-registered-adapter.md#last-recovery-one-way-pair-exclusions) retain rejected source-resource/target-slot pairs through the remaining sweep and final contact sample. The last recovery attempt replaces the set, accepted pieces keep their logical pair eligible, and the next query starts empty.

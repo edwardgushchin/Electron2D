@@ -14,6 +14,17 @@ internal sealed partial class CPUPhysicsWorldBackend
     private readonly List<MotionCandidate> _motionCandidates = [];
     private readonly record struct MotionCandidate(B2ShapeId ShapeID, PhysicsFixtureTag Tag, float Priority);
 
+    // Query-local numeric keys do not retain borrowed shape resources.
+    private readonly record struct MotionExcludedPair(ulong Source, RID Collider, int Shape);
+    private static ulong MotionSource(PhysicsFixtureTag tag) => tag.Source is { } weak && weak.TryGetTarget(out var shape)
+        ? shape.InstanceID : throw new ObjectDisposedException(nameof(Shape));
+    private static bool ExcludesMotionPair(ReadOnlySpan<MotionExcludedPair> pairs, int count, ulong source, in MotionCandidate other)
+    {
+        for (var i = 0; i < count; i++)
+            if (pairs[i] == new MotionExcludedPair(source, other.Tag.ColliderRID, other.Tag.ShapeIndex)) return true;
+        return false;
+    }
+
     internal override MotionResultData TestBodyMotion(RID ownerRID,
         Transform from, Vector2 motion, float margin, bool recoveryAsCollision,
         RID[] excludedBodies, ulong[] excludedObjects, bool collideSeparationRay = false)
@@ -35,12 +46,13 @@ internal sealed partial class CPUPhysicsWorldBackend
         var hasRecoveryHit = false;
         var world = b2GetWorldFromId(WorldID);
         var queryMargin = MathF.Max(margin * MetersPerUnit, 0.0001f * MetersPerUnit);
+        Span<MotionExcludedPair> rejected = stackalloc MotionExcludedPair[32]; var rejectedCount = 0;
         Span<System.Numerics.Vector4> recoveryPlanes = stackalloc System.Numerics.Vector4[32];
 
         for (var attempt = 0; attempt < 4; attempt++)
         {
             if (FindMotionContact(ownShapes, fromTransform, recovery, queryMargin,
-                recoveryPlanes, out var planeCount) is null) break;
+                recoveryPlanes, rejected, ref rejectedCount, out var planeCount) is null) break;
             hasRecoveryHit = true;
             double totalPriority = 0;
             for (var i = 0; i < planeCount; i++) totalPriority += recoveryPlanes[i].W;
@@ -67,12 +79,14 @@ internal sealed partial class CPUPhysicsWorldBackend
                 var ownID = ownShapes[ownIndex];
                 var ownTag = b2Shape_GetUserData(ownID).GetRef<PhysicsFixtureTag>();
                 if (ownTag is null) continue;
+                var source = MotionSource(ownTag);
                 var ray = ownTag.SeparationRay;
                 if (ray is { SlideOnSlope: false } && !collideSeparationRay) continue;
                 var query = ray is { } data ? PhysicsSeparationRay.WorldProxy(data, fromTransform, recovery) :
                     WorldProxy(b2MakeShapeDistanceProxy(b2GetShape(world, ownID)), fromTransform, recovery);
                 foreach (var candidate in _motionCandidates)
                 {
+                    if (ExcludesMotionPair(rejected, rejectedCount, source, candidate)) continue;
                     if (ownTag.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon && candidate.Tag.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon) continue;
                     var sweep = ownTag.Kind == PhysicsShapeGeometry.ShapeKind.WorldBoundary ||
                         ownTag.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon && candidate.Tag.Kind != PhysicsShapeGeometry.ShapeKind.WorldBoundary ? default : requested;
@@ -153,7 +167,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         MotionContact? finalContact = null;
         if (hasMotionHit || recoveryAsCollision && hasRecoveryHit)
             finalContact = FindMotionContact(ownShapes, fromTransform, recovery + requested * unsafeFraction,
-                queryMargin, default, out _, hasMotionHit ? motionShape : -1,
+                queryMargin, default, rejected, ref rejectedCount, out _, hasMotionHit ? motionShape : -1,
                 MathF.Min(b2Length(requested), queryMargin * 0.05f), hasMotionHit && unsafeFraction > 0 ? requested : default);
         if (finalContact is not { } contact)
             return new(ownerRID, default, 0, 0, 0, default, default, 0, default,
@@ -172,42 +186,70 @@ internal sealed partial class CPUPhysicsWorldBackend
     }
 
     private MotionContact? FindMotionContact(IReadOnlyList<B2ShapeId> ownShapes, B2Transform from, B2Vec2 offset,
-        float margin, Span<System.Numerics.Vector4> planes, out int planeCount, int localShape = -1, float minDepth = 0, B2Vec2 incoming = default)
+        float margin, Span<System.Numerics.Vector4> planes, Span<MotionExcludedPair> rejected, ref int rejectedCount,
+        out int planeCount, int localShape = -1, float minDepth = 0, B2Vec2 incoming = default)
     {
+        var recovering = !planes.IsEmpty;
+        if (recovering) rejectedCount = 0;
         planeCount = 0; MotionContact? best = null; var bestDepth = minDepth;
         var world = b2GetWorldFromId(WorldID);
-        for (var ownIndex = 0; ownIndex < ownShapes.Count; ownIndex++)
+        for (var ownStart = 0; ownStart < ownShapes.Count;)
         {
-            var ownID = ownShapes[ownIndex]; var own = b2Shape_GetUserData(ownID).GetRef<PhysicsFixtureTag>();
-            if (own is null || own.Compound is not null && own.CompoundPiece != 0 ||
-                localShape >= 0 && own.ShapeIndex != localShape) continue;
-            var query = own.SeparationRay is { } ray ? PhysicsSeparationRay.WorldProxy(ray, from, offset) :
-                WorldProxy(b2MakeShapeDistanceProxy(b2GetShape(world, ownID)), from, offset);
-            if (own.SeparationRay is null) query.radius += margin;
-            foreach (var candidate in _motionCandidates)
+            var first = b2Shape_GetUserData(ownShapes[ownStart]).GetRef<PhysicsFixtureTag>();
+            if (first is null) { ownStart++; continue; }
+            var ownEnd = ownStart + 1;
+            while (ownEnd < ownShapes.Count && b2Shape_GetUserData(ownShapes[ownEnd]).GetRef<PhysicsFixtureTag>()?.ShapeIndex == first.ShapeIndex) ownEnd++;
+            var start = ownStart; ownStart = ownEnd;
+            if (localShape >= 0 && first.ShapeIndex != localShape) continue;
+            var source = MotionSource(first);
+            for (var otherStart = 0; otherStart < _motionCandidates.Count;)
             {
-                if (own.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon && candidate.Tag.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon ||
-                    candidate.Tag.Compound is not null && candidate.Tag.CompoundPiece != 0) continue;
-                var other = b2MakeShapeDistanceProxy(b2GetShape(world, candidate.ShapeID));
-                var pose = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
-                B2Manifold manifold;
-                if (own.SeparationRay is not null || candidate.Tag.SeparationRay is not null)
-                    manifold = MotionRayContact(query, own, from, offset, other, candidate.Tag, pose, default, margin);
-                else
+                var otherFirst = _motionCandidates[otherStart]; var otherEnd = otherStart + 1;
+                while (otherEnd < _motionCandidates.Count && _motionCandidates[otherEnd].Tag.ColliderRID == otherFirst.Tag.ColliderRID &&
+                    _motionCandidates[otherEnd].Tag.ShapeIndex == otherFirst.Tag.ShapeIndex) otherEnd++;
+                var targetStart = otherStart; otherStart = otherEnd;
+                if (!recovering && ExcludesMotionPair(rejected, rejectedCount, source, otherFirst)) continue;
+                // A rejected piece must not hide an accepted contact in the same logical pair.
+                var accepted = false; var invalid = false;
+                for (var ownIndex = start; ownIndex < ownEnd; ownIndex++)
                 {
-                    if (own.Compound is null && candidate.Tag.Compound is null && !Overlaps(query, other, pose)) continue;
-                    manifold = MotionManifold(query, own, from, offset, other, candidate.Tag, pose);
+                    var ownID = ownShapes[ownIndex]; var own = b2Shape_GetUserData(ownID).GetRef<PhysicsFixtureTag>()!;
+                    if (own.Compound is not null && own.CompoundPiece != 0) continue;
+                    var query = own.SeparationRay is { } ray ? PhysicsSeparationRay.WorldProxy(ray, from, offset) :
+                        WorldProxy(b2MakeShapeDistanceProxy(b2GetShape(world, ownID)), from, offset);
+                    if (own.SeparationRay is null) query.radius += margin;
+                    for (var otherIndex = targetStart; otherIndex < otherEnd; otherIndex++)
+                    {
+                        var candidate = _motionCandidates[otherIndex];
+                        if (own.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon && candidate.Tag.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon ||
+                            candidate.Tag.Compound is not null && candidate.Tag.CompoundPiece != 0) continue;
+                        var other = b2MakeShapeDistanceProxy(b2GetShape(world, candidate.ShapeID));
+                        var pose = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
+                        B2Manifold manifold;
+                        if (own.SeparationRay is not null || candidate.Tag.SeparationRay is not null)
+                            manifold = MotionRayContact(query, own, from, offset, other, candidate.Tag, pose, default, margin);
+                        else
+                        {
+                            if (own.Compound is null && candidate.Tag.Compound is null && !Overlaps(query, other, pose)) continue;
+                            manifold = MotionManifold(query, own, from, offset, other, candidate.Tag, pose);
+                        }
+                        for (var index = 0; index < manifold.pointCount; index++)
+                        {
+                            var point = manifold.points[index]; var depth = -point.separation; var normal = -manifold.normal;
+                            if (depth < 0) continue;
+                            if (own.SeparationRay is null && candidate.Tag.SeparationRay is null && b2Dot(normal, incoming) > 0) normal = -normal;
+                            if (!AcceptOneWay(candidate, normal, depth, margin)) { invalid = true; continue; }
+                            accepted = true;
+                            if (depth <= minDepth) continue;
+                            if (recovering) RetainRecoveryPlane(planes, ref planeCount, new(normal.X, normal.Y, depth, candidate.Priority));
+                            if (depth <= bestDepth) continue;
+                            bestDepth = depth;
+                            best = new(candidate, own.ShapeIndex, point.point + manifold.normal * (point.separation * 0.5f), normal, depth);
+                        }
+                    }
                 }
-                for (var index = 0; index < manifold.pointCount; index++)
-                {
-                    var point = manifold.points[index]; var depth = -point.separation; var normal = -manifold.normal;
-                    if (own.SeparationRay is null && candidate.Tag.SeparationRay is null && b2Dot(normal, incoming) > 0) normal = -normal;
-                    if (depth <= minDepth || !AcceptOneWay(candidate, normal, depth, margin)) continue;
-                    if (!planes.IsEmpty) RetainRecoveryPlane(planes, ref planeCount, new(normal.X, normal.Y, depth, candidate.Priority));
-                    if (depth <= bestDepth) continue;
-                    bestDepth = depth;
-                    best = new(candidate, own.ShapeIndex, point.point + manifold.normal * (point.separation * 0.5f), normal, depth);
-                }
+                if (recovering && invalid && !accepted && rejectedCount < rejected.Length)
+                    rejected[rejectedCount++] = new(source, otherFirst.Tag.ColliderRID, otherFirst.Tag.ShapeIndex);
             }
         }
         return best;

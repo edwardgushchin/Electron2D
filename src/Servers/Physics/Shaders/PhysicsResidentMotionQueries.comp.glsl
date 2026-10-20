@@ -16,7 +16,7 @@ layout(std430,set=0,binding=4) readonly buffer Nodes { Node nodes[]; };
 layout(std430,set=0,binding=5) readonly buffer Mappings { Mapping mappings[]; };
 layout(std430,set=0,binding=6) readonly buffer Inputs { Query queries[]; };
 layout(std430,set=0,binding=7) readonly buffer Payload { uvec2 payload[]; };
-// Requested result records occupy the prefix; recovery planes use the device-only tail.
+// Result records occupy the prefix; recovery planes and rejected keys stay device-only.
 layout(std430,set=1,binding=0) buffer Results { vec4 outputData[]; };
 layout(std430,set=1,binding=1) buffer Counts { uint counts[]; };
 layout(std430,set=1,binding=2) buffer Status { uvec2 status; };
@@ -33,7 +33,7 @@ void fail(){failQuery(1u);}
 #include "PhysicsQueryDistance.inc.glsl"
 struct Contact { vec2 point; vec2 normal; float depth; bool valid; };
 Contact pairContact,pairSecond;
-uint recoveryCount=0u;
+uint recoveryCount=0u,rejectedCount=0u;
 uint scratchStart;
 bool oneWayContact(Contact c);
 void retainRecovery(Contact c)
@@ -194,10 +194,16 @@ vec4 queryBounds(Shape shape,Geometry g,bool recovering)
     }
     bounds+=bodyA.pose.xyxy;if(!finiteField(bounds))fail();return bounds;
 }
+bool rejectedMotionPair()
+{
+    uvec4 key=uvec4(shapeA.owner.zw,indexB,shapeB.policy.x);
+    for(uint i=0u;i<rejectedCount;i++)if(floatBitsToUint(outputData[scratchStart+32u+i])==key)return true;
+    return false;
+}
 void scan(uint phase)
 {
     bool recovering=phase==0u,resting=phase==2u;
-    recoveryCount=0u;
+    recoveryCount=0u;if(recovering)rejectedCount=0u;
     float bestDepth=resting?min(length(q.motionMargin.xy),q.motionMargin.z*0.05):0;Result best;
     bool found=false;
     for(uint own=0u;own<q.body.w;own++)
@@ -217,7 +223,7 @@ void scan(uint phase)
             {
                 if(at<int(leaves)){at*=2;continue;}
                 indexB=uint(node.shape);if(indexB>=shapeCount){fail();return;}shapeB=shapes[indexB];mapB=mappings[indexB];
-                if(candidate(shapeB,mapB))
+                if(candidate(shapeB,mapB)&&(recovering||!rejectedMotionPair()))
                 {
                     if(shapeB.owner.x>=bodyCount||mapB.identity.w!=shapeB.policy.x){fail();return;}
                     bodyB=bodies[shapeB.owner.x];Geometry gb=geometries[shapeB.owner.z];
@@ -225,21 +231,30 @@ void scan(uint phase)
                     if(gb.data.y!=0u&&!(ga.data.z==5u&&gb.data.z==5u))
                     {
                         uint na=ga.data.z==5u?ga.data.y/2u:1u,nb=gb.data.z==5u?gb.data.y/2u:1u;
+                        bool accepted=false,invalid=false;
                         for(uint pa=0u;pa<na;pa++)for(uint pb=0u;pb<nb;pb++)
                         {
                             Hull a=hull(shapeA,ga,bodyA,pa),b=hull(shapeB,gb,bodyB,pb);
                             if(recovering||resting)
                             {
                                 if(ga.data.z!=6u)a.radius+=q.motionMargin.z;
-                                Contact contact=evaluate(a,b,ga,gb,vec2(0),q.motionMargin.z);
-                                if(resting&&blocked&&unsafeFraction>0&&ga.data.z!=6u&&gb.data.z!=6u&&dot2(contact.normal,q.motionMargin.xy)>0)contact.normal=-contact.normal;
-                                if(recovering&&contact.valid)retainRecovery(contact);
-                                if(recovering&&pairSecond.valid)retainRecovery(pairSecond);
-                                if(contact.valid&&contact.depth>bestDepth&&oneWayContact(contact))
-                                {bestDepth=contact.depth;if(resting)best=snapshot(contact);found=true;}
+                                evaluate(a,b,ga,gb,vec2(0),q.motionMargin.z);
+                                for(uint point=0u;point<2u;point++)
+                                {
+                                    Contact contact=point==0u?pairContact:pairSecond;
+                                    if(!contact.valid||contact.depth<0)continue;
+                                    if(resting&&blocked&&unsafeFraction>0&&ga.data.z!=6u&&gb.data.z!=6u&&dot2(contact.normal,q.motionMargin.xy)>0)contact.normal=-contact.normal;
+                                    if(!oneWayContact(contact)){invalid=true;continue;}
+                                    accepted=true;
+                                    if(recovering)retainRecovery(contact);
+                                    if(contact.depth>bestDepth)
+                                    {bestDepth=contact.depth;if(resting)best=snapshot(contact);found=true;}
+                                }
                             }
                             else movingPair(a,b,ga,gb);
                         }
+                        if(recovering&&invalid&&!accepted&&rejectedCount<32u)
+                            outputData[scratchStart+32u+rejectedCount++]=uintBitsToFloat(uvec4(shapeA.owner.zw,indexB,shapeB.policy.x));
                     }
                 }
             }
@@ -268,7 +283,7 @@ void scan(uint phase)
 void main()
 {
     uint i=gl_GlobalInvocationID.x;if(i>=queryCount)return;counts[i]=1u;q=queries[i];
-    scratchStart=queryCount*8u+i*32u;
+    scratchStart=queryCount*8u+i*64u;
     if(q.body.x>=bodyCount){fail();return;}bodyA=bodies[q.body.x];
     if(bodyA.flags.x!=q.body.y||bodyA.flags.w==0u){fail();return;}
     bodyA.pose=q.pose;

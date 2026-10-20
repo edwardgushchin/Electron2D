@@ -437,3 +437,5 @@ live replacement checks retain logical indices and zero warmed frame allocations
 ## Final body-motion contact sampling
 
 Contact geometry is sampled after the completed recovery at the unsafe motion pose, including the query margin. The deepest eligible final contact supplies point, normal, depth, logical identities and point velocity. When requested recovery is followed by an unobstructed departure with no final contact, the result clears collision data and retains full requested motion plus recovery. Safe travel and remainder still use the safe fraction. See [the public consumer and evidence](physics-registered-adapter.md#final-body-motion-contact-sampling).
+
+[Last-recovery one-way pair exclusions](physics-registered-adapter.md#last-recovery-one-way-pair-exclusions) retain up to 32 rejected source-resource/target-slot pairs for the remaining sweep and final sample. Accepted pieces prevent rejection of their logical pair; later queries start empty.
