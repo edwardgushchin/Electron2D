@@ -9313,6 +9313,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.PrimitiveMesh",
+    "kind": "type",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "PrimitiveMesh",
+    "signature": "public abstract class Electron2D.PrimitiveMesh",
+    "visibility": "public",
+    "baseType": "Electron2D.Mesh",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ProcessMode",
     "kind": "type",
     "declaringType": "Electron2D.ProcessMode",
@@ -22331,6 +22346,19 @@
     "name": ".ctor",
     "signature": "public PortableCompressedTexture()",
     "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PrimitiveMesh..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": ".ctor",
+    "signature": "protected PrimitiveMesh()",
+    "visibility": "protected",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -151099,6 +151127,306 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PrimitiveMesh.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PrimitiveMesh.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PrimitiveMesh.GetMeshArrays()",
+    "kind": "method",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "GetMeshArrays",
+    "signature": "public Electron2D.MeshSurfaceData GetMeshArrays()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshSurfaceData",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PrimitiveMesh.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PrimitiveMesh.GetRID()",
+    "kind": "method",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "GetRID",
+    "signature": "public override Electron2D.RID GetRID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PrimitiveMesh.OnCreateMeshArray()",
+    "kind": "method",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "OnCreateMeshArray",
+    "signature": "protected abstract Electron2D.MeshSurfaceData OnCreateMeshArray()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshSurfaceData",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PrimitiveMesh.OnGetAABB()",
+    "kind": "method",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "OnGetAABB",
+    "signature": "protected override Electron2D.Rect2 OnGetAABB()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PrimitiveMesh.OnGetSurfaceCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "OnGetSurfaceCount",
+    "signature": "protected override System.Int32 OnGetSurfaceCount()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PrimitiveMesh.OnResetState()",
+    "kind": "method",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "OnResetState",
+    "signature": "protected override System.Void OnResetState()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PrimitiveMesh.OnSurfaceGetArrayIndexLen(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "OnSurfaceGetArrayIndexLen",
+    "signature": "protected override System.Int32 OnSurfaceGetArrayIndexLen(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PrimitiveMesh.OnSurfaceGetArrayLen(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "OnSurfaceGetArrayLen",
+    "signature": "protected override System.Int32 OnSurfaceGetArrayLen(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PrimitiveMesh.OnSurfaceGetArrays(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "OnSurfaceGetArrays",
+    "signature": "protected override Electron2D.MeshSurfaceData OnSurfaceGetArrays(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.MeshSurfaceData",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PrimitiveMesh.OnSurfaceGetFormat(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "OnSurfaceGetFormat",
+    "signature": "protected override Electron2D.Mesh.ArrayFormat OnSurfaceGetFormat(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PrimitiveMesh.OnSurfaceGetMaterial(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "OnSurfaceGetMaterial",
+    "signature": "protected override Electron2D.Material OnSurfaceGetMaterial(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Material",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PrimitiveMesh.OnSurfaceGetPrimitiveType(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "OnSurfaceGetPrimitiveType",
+    "signature": "protected override Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PrimitiveMesh.OnSurfaceSetMaterial(System.Int32,Electron2D.Material)",
+    "kind": "method",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "OnSurfaceSetMaterial",
+    "signature": "protected override System.Void OnSurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "material",
+        "type": "Electron2D.Material",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PrimitiveMesh.RequestUpdate()",
+    "kind": "method",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "RequestUpdate",
+    "signature": "public System.Void RequestUpdate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ProcessPipes.Dispose()",
     "kind": "method",
     "declaringType": "Electron2D.ProcessPipes",
@@ -250796,6 +251124,71 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PrimitiveMesh.AddUV2()",
+    "kind": "property",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "AddUV2",
+    "signature": "public System.Boolean AddUV2 { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PrimitiveMesh.CustomAABB()",
+    "kind": "property",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "CustomAABB",
+    "signature": "public Electron2D.Rect2 CustomAABB { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PrimitiveMesh.FlipFaces()",
+    "kind": "property",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "FlipFaces",
+    "signature": "public System.Boolean FlipFaces { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PrimitiveMesh.Material()",
+    "kind": "property",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "Material",
+    "signature": "public Electron2D.Material Material { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Material",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PrimitiveMesh.UV2Padding()",
+    "kind": "property",
+    "declaringType": "Electron2D.PrimitiveMesh",
+    "name": "UV2Padding",
+    "signature": "public System.Single UV2Padding { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {

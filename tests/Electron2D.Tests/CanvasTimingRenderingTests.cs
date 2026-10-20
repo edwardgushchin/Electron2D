@@ -8,6 +8,9 @@ internal static partial class RenderingRuntimeTests
         using var shader = fixture is null ? null : LoadShader(fixture);
         using var material = shader is null ? null : new ShaderMaterial { Shader = shader };
         var window = new Window { Size = new(176, 112) }; var draws = 0; var frames = 0; var ticks = 0; var disabledTicks = 0;
+        var expectedDraws = 1;
+        // Native window resizing is a separate valid recording cause during clock verification.
+        window.SizeChanged += () => expectedDraws = draws + 1;
         var seenRed = false; var seenGreen = false; var changed = false; var lastStep = 0d; var previousTime = 0d;
         var node = new CanvasNode
         {
@@ -77,8 +80,8 @@ internal static partial class RenderingRuntimeTests
                     if (frames == 4) { ProjectSettings.AddCustomFeature("canvas-time-test"); ProjectSettings.SetFeatureOverride(ProjectSettings.RenderingTimeRolloverSeconds, "canvas-time-test", 0.035); }
                     if (frames == 6) RenderingServer.RenderLoopEnabled = false;
                     if (frames == 7) { ProjectSettings.ClearFeatureOverride(ProjectSettings.RenderingTimeRolloverSeconds, "canvas-time-test"); ProjectSettings.RemoveCustomFeature("canvas-time-test"); ProjectSettings.Set(ProjectSettings.RenderingTimeRolloverSeconds, 3600d); }
-                    if (frames == 9) { Check(draws == 1, "Clock and backend state changes do not rerecord geometry."); changed = true; node.QueueRedraw(); }
-                    if (frames >= 12 && seenRed && seenGreen) { Check(draws == 2, "Only explicit redraw rerecords intervals."); window.Tree!.Quit(); }
+                    if (frames == 9) { Check(draws == expectedDraws, "Clock and backend state changes do not rerecord geometry."); changed = true; expectedDraws = draws + 1; node.QueueRedraw(); }
+                    if (frames >= 12 && seenRed && seenGreen) { Check(draws == expectedDraws, "Only explicit redraw or native resizing rerecords intervals."); window.Tree!.Quit(); }
                     if (frames == 90) throw new InvalidOperationException("Both animation phases must become visible.");
                 };
             };

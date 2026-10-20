@@ -657,7 +657,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PopupMenu](classes/PopupMenu.md) | Popup | Partial | 140 |
 | [PopupPanel](classes/PopupPanel.md) | Popup | Partial | 5 |
 | [PortableCompressedTexture2D](classes/PortableCompressedTexture2D.md) | Texture2D | Implemented | 16 |
-| [PrimitiveMesh](classes/PrimitiveMesh.md) | Mesh | Blocked | 8 |
+| [PrimitiveMesh](classes/PrimitiveMesh.md) | Mesh | Implemented | 8 |
 | [PrismMesh](classes/PrismMesh.md) | PrimitiveMesh | Excluded | 5 |
 | [ProceduralSkyMaterial](classes/ProceduralSkyMaterial.md) | Material | Excluded | 14 |
 | [ProgressBar](classes/ProgressBar.md) | Range | Implemented | 16 |

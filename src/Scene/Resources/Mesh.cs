@@ -80,6 +80,7 @@ public abstract partial class Mesh : Resource
         /// <summary>Uses UNORM16 texture coordinates and a six-byte joint numerical normal/tangent frame; XY positions retain float32.</summary>
         CompressAttributes = 536870912
     }
+    internal virtual Rect2 VisibilityOverride => default;
     private readonly object _ridGate = new();
     private RID _rid;
     private CanvasMesh? _boundsCache;

@@ -277,6 +277,7 @@ internal static partial class RenderingRuntimeTests
             };
         };
         window.AddChild(node);
+        window.Ready += _ => { for (var i = 0; i < 14; i++) RenderingServer.ForceDraw(); };
         Engine.Run(window);
         Released(window);
         Check(frames == 14 && !texture.IsDisposed && !detail.IsDisposed && !custom.IsDisposed,
@@ -309,6 +310,7 @@ internal static partial class RenderingRuntimeTests
             new CanvasNode { Name = "shared", Material = material, Position = new(0, 32) }
         };
         foreach (var node in nodes) { node.DrawAction = n => n.DrawRect(new(0, 0, 96, 12), Colors.White); parent.AddChild(node); }
+        var warmDraws = new int[nodes.Length];
         var frames = 0; var before = 0L; var allocated = 0L;
         var settings = ProjectSettings.Service; var nearestMip = ProjectSettings.Get(ProjectSettings.UseNearestMIPMapFilter);
         window.Ready += _ =>
@@ -348,9 +350,11 @@ internal static partial class RenderingRuntimeTests
                     material.SetShaderParameter("detailAmount", 1f); copy.SetShaderParameter("detailAmount", 1f);
                     material.SetShaderParameter("lod", -2f); copy.SetShaderParameter("lod", -2f);
                 }
-                if (frames == 5) shader.SetSPIRV(original);
+                if (frames == 5) { Check(nodes[0].Draws == 2 && nodes[1].Draws == 1 && nodes[2].Draws == 2, "Only inherited filter edits rerecord the affected named-sampler geometry."); shader.SetSPIRV(original); }
+                if (frames == 20) for (var i = 0; i < nodes.Length; i++) warmDraws[i] = nodes[i].Draws;
                 if (frames == 40) window.Tree!.Quit();
             };
+            if (backend == "gpu") for (var i = 0; i < 5; i++) RenderingServer.ForceDraw();
         };
         try
         {
@@ -358,7 +362,7 @@ internal static partial class RenderingRuntimeTests
             else
             {
                 Engine.Run(window);
-                Check(frames == 40 && allocated == 0 && nodes[0].Draws == 2 && nodes[1].Draws == 1 && nodes[2].Draws == 2, $"Named sampler result: frames={frames}, allocated={allocated}, draws={string.Join(",", nodes.Select(n => n.Draws))}.");
+                Check(frames == 40 && allocated == 0 && nodes.Select((n, i) => n.Draws == warmDraws[i]).All(v => v), $"Named sampler result: frames={frames}, allocated={allocated}, draws={string.Join(",", nodes.Select(n => n.Draws))}.");
             }
         }
         finally { ProjectSettings.Set(ProjectSettings.UseNearestMIPMapFilter, nearestMip); }

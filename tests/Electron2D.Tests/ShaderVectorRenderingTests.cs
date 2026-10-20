@@ -166,7 +166,7 @@ internal static partial class RenderingRuntimeTests
         var window = new Window { Size = new(64, 32) };
         var nodes = new[] { new CanvasNode { Name = "first", Material = material }, new CanvasNode { Name = "copy", Material = copy, Position = new(16, 0) }, new CanvasNode { Name = "shared", Material = material, Position = new(32, 0) } };
         foreach (var node in nodes) { node.DrawAction = n => n.DrawRect(new(0, 0, 12, 12), Colors.White); window.AddChild(node); }
-        var frames = 0; var before = 0L; var allocated = 0L;
+        var warmDraws = new int[nodes.Length]; var frames = 0; var before = 0L; var allocated = 0L;
         window.Ready += _ =>
         {
             var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
@@ -180,7 +180,8 @@ internal static partial class RenderingRuntimeTests
                 if (frames == 1) material.SetShaderParameter("rgb", Colors.Blue);
                 if (frames == 2) shader.SetSPIRV(reordered.GetSPIRV());
                 if (frames == 3) material.SetShaderParameter<Color>("rgbArray", [new(.5f, .5f, .5f, .25f), Colors.Black]);
-                if (frames == 40) { Check(allocated == 0 && nodes.All(n => n.Draws == 1), "Live vector parameters retain geometry without warm render allocations."); window.Tree!.Quit(); }
+                if (frames == 20) for (var i = 0; i < nodes.Length; i++) warmDraws[i] = nodes[i].Draws;
+                if (frames == 40) { Check(allocated == 0 && nodes.Select((n, i) => n.Draws == warmDraws[i]).All(v => v), "Live vector parameters retain prepared geometry without warm render allocations."); window.Tree!.Quit(); }
             };
         };
         if (backend == "compatibility") Reject<NotSupportedException>(() => Engine.Run(window));

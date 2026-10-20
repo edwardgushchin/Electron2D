@@ -104,6 +104,7 @@ internal static partial class RenderingRuntimeTests
             };
         };
         window.AddChild(node);
+        window.Ready += _ => { RenderingServer.ForceDraw(); RenderingServer.ForceDraw(); RenderingServer.ForceDraw(); };
         Engine.Run(window);
         Released(window);
         Check(frames == 3 && !texture.IsDisposed, "Canvas texture ownership survives renderer shutdown.");
@@ -191,8 +192,21 @@ internal static partial class RenderingRuntimeTests
         Released(window);
     }
 
+    private static void VerifyTexturePlaceholder(Texture texture)
+    {
+        var window = new Window { Size = new(32, 32), Borderless = true, CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
+        window.AddChild(new CanvasNode { DrawAction = n => n.DrawTextureRect(texture, new(0, 0, 16, 16), false) });
+        window.Ready += _ =>
+        {
+            RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.ForceDraw(); using var image = RenderingServer.Service!.Readback();
+            Pixel(image, 2, 2, Colors.Magenta); Pixel(image, 6, 2, Colors.Black); Pixel(image, 6, 6, Colors.Magenta); window.Tree!.Quit();
+        };
+        Engine.Run(window); Released(window); Check(!texture.IsDisposed, "Diagnostic drawing retains its borrowed texture.");
+    }
+
     private sealed class UnreadableTexture : Texture
     {
+        public override Image? GetImage() => throw new InvalidOperationException("Injected pixel producer failure.");
         public override int GetWidth() => 2;
         public override int GetHeight() => 2;
     }

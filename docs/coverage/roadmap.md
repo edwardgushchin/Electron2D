@@ -105,7 +105,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: actual editor execution-context reporting through Engine.IsEditorHint and editor/runtime border drawing under ADRs 0015/0027/0090. The current runtime has no editor-context producer; do not introduce a constant hint or inert EditorOnly switch. | 1 |
 | Trigger: complete typed thread start/result, priority, main-owner identity and join/retirement, plus a resolved executable safety-check override contract: the pinned set_thread_safety_checks_enabled(bool) must not be an inert flag and current ADRs 0006/0011/0104 require owner-affine scene mutation. | 1 |
 | Trigger: first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028). | 1 |
-| Trigger: first applicable typed 2D procedural geometry producer with concrete generation parameters and visible mesh output; static surface rendering already executes (ADR 0092). | 1 |
 | Trigger: first native-menu service slice with ownership, callbacks and target checks (ADR 0041). | 1 |
 | Trigger: first portable external-image ownership and native texture-import decision (ADRs 0021 and 0028). | 1 |
 | Trigger: first semantic accessibility-tree, focus and native screen-reader bridge slice (ADR 0041). | 1 |

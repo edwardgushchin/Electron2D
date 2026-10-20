@@ -28,7 +28,7 @@ internal static partial class RenderingRuntimeTests
             }
             Check(node.Draws == 1, "Lazy gradient updates keep retained geometry.");
         };
-        window.AddChild(node); Engine.Run(window); Released(window); Check(stage == 3, "Three gradient canvas stages.");
+        window.AddChild(node); window.Ready += _ => { for (var i = 0; i < 3; i++) RenderingServer.ForceDraw(); }; Engine.Run(window); Released(window); Check(stage == 3, "Three gradient canvas stages.");
         Console.WriteLine($"Gradient canvas pattern and live updates passed: {backend}.");
 
         using var hdr = new Gradient { Colors = [new Color(2, 0, 0)] };
@@ -47,8 +47,7 @@ internal static partial class RenderingRuntimeTests
         {
             using (empty)
             {
-                window = new Window { CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest }; window.AddChild(new CanvasNode { DrawAction = n => n.DrawTexture(empty, Vector2.Zero) });
-                Reject<InvalidOperationException>(() => Engine.Run(window)); Released(window);
+                VerifyTexturePlaceholder(empty);
             }
         }
     }
@@ -82,7 +81,7 @@ internal static partial class RenderingRuntimeTests
                 default: n.Tree!.Quit(); break;
             }
         };
-        window.AddChild(node); Engine.Run(window); Released(window);
+        window.AddChild(node); window.Ready += _ => { for (var i = 0; i < 6; i++) RenderingServer.ForceDraw(); }; Engine.Run(window); Released(window);
         Check(stage == 6 && !g.IsDisposed && !ramp.IsDisposed && !fill.IsDisposed, "Six stages and borrowed ownership.");
         Console.WriteLine($"Gradient HDR material and worker updates passed: {fixture}, {stage} stages.");
     }

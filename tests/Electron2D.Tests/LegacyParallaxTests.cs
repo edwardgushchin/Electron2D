@@ -98,6 +98,7 @@ internal static partial class RenderingRuntimeTests
                 if (frames == 1) { camera.Position = new(8, 0); camera.ForceUpdateTransform(); }
                 else window.Tree!.Quit();
             };
+            RenderingServer.ForceDraw(); RenderingServer.ForceDraw();
         };
         Engine.Run(window); Released(window);
         Check(frames == 2 && mark.Draws == 1, "Legacy mirroring reuses retained drawing across camera motion.");

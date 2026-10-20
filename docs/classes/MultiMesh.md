@@ -1,6 +1,6 @@
 # MultiMesh
 
-Last updated: 2026-10-18
+Last updated: 2026-10-20
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.MultiMesh` · **Source:** [MultiMesh.cs](../../src/Scene/Resources/MultiMesh.cs).
 
@@ -379,7 +379,7 @@ Interpolation endpoint changes and explicit ResetInstancesPhysicsInterpolation r
 
 ## Child mesh visibility
 
-Automatic GetAABB and presentation bounds use ArrayMesh.CustomAABB before each visible instance transform when that child override is nonzero. This resource's CustomAABB overrides the complete collection. Both hardware and expanded drawing retain the same child policy; the child mesh's geometric GetAABB remains independent. See [manual mesh bounds](../components/meshes.md#manual-mesh-visibility-bounds).
+Automatic GetAABB and presentation bounds use ArrayMesh.CustomAABB or PrimitiveMesh.CustomAABB before each visible instance transform when that child override is nonzero. This resource's CustomAABB overrides the complete collection. Both hardware and expanded drawing retain the same child policy; the child mesh's geometric GetAABB remains independent. See [manual mesh bounds](../components/meshes.md#manual-mesh-visibility-bounds).
 
 ## Procedural mesh integration
 

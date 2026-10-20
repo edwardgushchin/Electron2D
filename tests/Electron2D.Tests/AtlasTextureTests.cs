@@ -214,7 +214,9 @@ internal static partial class RenderingRuntimeTests
                 };
             }
         };
-        window.AddChild(node); Engine.Run(window); Released(window);
+        window.AddChild(node);
+        window.Ready += _ => { RenderingServer.ForceDraw(); RenderingServer.ForceDraw(); RenderingServer.ForceDraw(); };
+        Engine.Run(window); Released(window);
         Check(frames == 3 && !atlas.IsDisposed && !texture.IsDisposed, "Renderer shutdown retains borrowed atlas resources.");
         Console.WriteLine($"Atlas pixel checks passed: {backend}/{fixture ?? "default"}.");
     }

@@ -40,6 +40,7 @@
     <Compile Include="../../examples/AsyncGallery/Gallery.cs;../../examples/AsyncGallery/GalleryAssets.cs" Link="Examples/AsyncGallery/%(Filename)%(Extension)" />
     <Compile Include="../../examples/PhysicsNetwork/*.cs" Exclude="../../examples/PhysicsNetwork/Program.cs" Link="Examples/PhysicsNetwork/%(Filename)%(Extension)" />
     <Compile Include="../../examples/WaterPlayground/WaterWindow.cs;../../examples/WaterPlayground/WaterWindow.Toys.cs;../../examples/WaterPlayground/WaterSimulation.cs;../../examples/WaterPlayground/WaterSimulation.GPU.cs;../../examples/WaterPlayground/WaterSimulation.Toys.cs;../../examples/WaterPlayground/WaterSurface.cs" Link="Examples/%(Filename)%(Extension)" />
+    <Compile Include="../../examples/PrimitiveMeshes/DiskMesh.cs" Link="Examples/PrimitiveMeshes/DiskMesh.cs" />
     <Compile Include="../../editor/EditorScene.cs" Link="Editor/EditorScene.cs" />
     <Compile Include="../../examples/CharacterMovement/CharacterMovementScene.cs" Link="Examples/CharacterMovementScene.cs" />
     <Compile Include="../../examples/CharacterMovement/Player.cs" Link="Examples/Player.cs" />

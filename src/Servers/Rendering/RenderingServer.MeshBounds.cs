@@ -10,7 +10,7 @@ public sealed partial class RenderingServer
     public static Rect2 MeshGetCustomAABB(RID mesh)
     {
         RequireService().EnsureOwner();
-        return RenderingMeshRegistry.Resolve(mesh) is ArrayMesh arrays ? arrays.CustomAABB : default;
+        return RenderingMeshRegistry.Resolve(mesh).VisibilityOverride;
     }
 
     /// <summary>Sets a caller-owned mesh's local visibility rectangle.</summary>

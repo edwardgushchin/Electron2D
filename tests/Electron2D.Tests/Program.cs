@@ -9,6 +9,9 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_MASKS") is { } maskBackend) { RenderingRuntimeTests.VerifyCanvasMasks(maskBackend); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PRIMITIVE_MESH") is { } primitiveProfile) { if (primitiveProfile == "managed") PrimitiveMeshTests.Managed(); else if (primitiveProfile == "child") PrimitiveMeshTests.Child(args[0]); else if (primitiveProfile == "runtime") RenderingRuntimeTests.Run(); else PrimitiveMeshTests.Native(primitiveProfile); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_BACK") is { } systemBackBackend)
 {
     var selected = systemBackBackend.EndsWith("gpu", StringComparison.Ordinal) ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;
@@ -1767,7 +1770,7 @@ AudioEQTests.Run(); AudioDelayTests.Run(); AudioReverbTests.Run(); AudioChorusTe
 AudioSpatialTests.Run();
 AudioFilterTests.Run();
 MeshTests.Run(); MeshIndexTests.Run();
-MeshPackedTests.Run(); MeshBoundsTests.Run();
+MeshPackedTests.Run(); MeshBoundsTests.Run(); PrimitiveMeshTests.Managed();
 RenderingPrimitiveTests.Run();
 RenderingCanvasTests.Run();
 NavigationTopologyTests.Run();

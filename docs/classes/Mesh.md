@@ -1,12 +1,12 @@
 # Mesh
 
-Last updated: 2026-10-18
+Last updated: 2026-10-20
 
 **Namespace:** `Electron2D` · **Declaration:** `public abstract class Electron2D.Mesh` · **Source:** [Mesh.cs](../../src/Scene/Resources/Mesh.cs).
 
 **Inherits:** [Resource](Resource.md).
 
-**Inherited By:** [ArrayMesh](ArrayMesh.md), [ImmediateMesh](ImmediateMesh.md).
+**Inherited By:** [ArrayMesh](ArrayMesh.md), [ImmediateMesh](ImmediateMesh.md), [PrimitiveMesh](PrimitiveMesh.md).
 
 ## Description
 

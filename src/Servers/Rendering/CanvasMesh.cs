@@ -69,7 +69,7 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
                     var template = Batch(first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, instanceCount: instances.InstanceCount, linear: linear, visibility: transform * instances.GetPresentationBounds(fraction), procedural: surface.Data.IsProcedural, primitive: surface.Primitive, snap: snap, textureSource: textureSource);
                     AddBatch(batches, template with { GPU = batch, SnapGeneratedVertices = snap }); continue;
                 }
-                Rect2? visibility = surface.Data.IsProcedural ? transform * (instances is null ? _customBounds : instances.GetPresentationBounds(fraction)) : null;
+                Rect2? visibility = mesh.VisibilityOverride is var manual && manual != default ? transform * (instances is null ? manual : instances.GetPresentationBounds(fraction)) : surface.Data.IsProcedural ? transform * (instances is null ? _customBounds : instances.GetPresentationBounds(fraction)) : null;
                 if (surface.Data.IsProcedural && instances is not null)
                 {
                     if (instances.DrawCount == 0) continue;
@@ -110,6 +110,7 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
         _preparing = true;
         try
         {
+            if (mesh is PrimitiveMesh generatedMesh) generatedMesh.EnsureGenerated();
             var revision = mesh.ChangeRevision;
             if (_revision != revision)
             {
@@ -130,7 +131,7 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
         }
         finally { _preparing = false; }
     }
-    internal Rect2 GetDrawBounds(CanvasItem owner) => local * (mesh is ArrayMesh { CustomAABB: var manual } && manual != default ? manual : GetLocalBounds(owner));
+    internal Rect2 GetDrawBounds(CanvasItem owner) => local * (mesh.VisibilityOverride is var manual && manual != default ? manual : GetLocalBounds(owner));
     internal Rect2 GetLocalBounds(CanvasItem? owner = null)
     {
         ObjectDisposedException.ThrowIf(mesh.IsDisposed, mesh); var first = true; var minimum = Vector2.Zero; var maximum = Vector2.Zero;

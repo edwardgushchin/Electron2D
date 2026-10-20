@@ -925,6 +925,7 @@ internal static partial class RenderingRuntimeTests
             };
         };
         window.AddChild(left); window.AddChild(right);
+        window.Ready += _ => { for (var i = 0; i < 4; i++) RenderingServer.ForceDraw(); };
         Engine.Run(window);
         Released(window);
         Check(frames == 4, "Both source languages execute material scalars, arrays, vectors and shader reload on the GPU.");

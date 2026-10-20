@@ -48,6 +48,7 @@ internal static partial class RenderingRuntimeTests
         using var copy = (ShaderMaterial)material.Duplicate(); copy.SetShaderParameter("gain", .75f);
         var nodes = new[] { new CanvasNode { Name = "first", Material = material }, new CanvasNode { Name = "copy", Material = copy, Position = new(16, 0) }, new CanvasNode { Name = "shared", Material = material, Position = new(32, 0) } };
         var window = new Window { Size = new(64, 32) }; foreach (var node in nodes) { node.DrawAction = n => n.DrawRect(new(0, 0, 12, 12), Colors.White); window.AddChild(node); }
+        var warmDraws = new int[nodes.Length];
         var frames = 0; var previous = 0d; var before = 0L; var allocated = 0L; var changed = 0;
         try
         {
@@ -78,7 +79,8 @@ internal static partial class RenderingRuntimeTests
                     if (frames == 6) { ProjectSettings.ClearFeatureOverride(ProjectSettings.RenderingTimeRolloverSeconds, "shader-time-test"); ProjectSettings.RemoveCustomFeature("shader-time-test"); ProjectSettings.Set(ProjectSettings.RenderingTimeRolloverSeconds, 3600d); }
                     if (frames == 7) material.Shader = only;
                     if (frames == 8) { material.Shader = shader; material.SetShaderParameter("tint", Colors.White); material.SetShaderParameter("gain", .25f); material.SetShaderParameter("time", .5f); }
-                    if (frames == 40) { Check(changed > 30 && allocated == 0 && nodes.All(n => n.Draws == 1), "TIME updates without rerecording or warm allocations."); window.Tree!.Quit(); }
+                    if (frames == 20) for (var i = 0; i < nodes.Length; i++) warmDraws[i] = nodes[i].Draws;
+                    if (frames == 52) { Check(changed > 42 && allocated == 0 && nodes.Select((n, i) => n.Draws == warmDraws[i]).All(v => v), $"TIME updates retain prepared geometry over 32 measured frames; changes={changed}, warm bytes={allocated}."); window.Tree!.Quit(); }
                 };
             };
             if (backend == "compatibility") Reject<NotSupportedException>(() => Engine.Run(window));

@@ -1749,6 +1749,51 @@
       "godot": "RenderingServer::method:multimesh_get_command_buffer_rd_rid(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.MultiMeshGetCommandBufferRDRID(Electron2D.RID)",
       "reason": "ADR 0092: real renderer-owned canonical float32 instance buffers and five-uint per-surface commands, stable global RenderingDevice RIDs, CPU channel-range uploads, native compute writes, GPU conversion and indexed/nonindexed indirect canvas submission execute without owner readback. Per-instance GPU LOD, current/previous interpolation, skin, authored vertex stages, snapping, groups/masks and HDR/MSAA remain connected. Replacement/session expiry invalidates borrowers; Compatibility returns empty getters and rejects indirect allocation before mutation. Linux software Vulkan pixels and strict warm managed checks retain native-allocation, target-hardware and other-platform limits."
+    },
+    {
+      "godot": "class:PrimitiveMesh",
+      "electron2d": "T:Electron2D.PrimitiveMesh",
+      "reason": "ADR 0092: typed retained single triangle-surface generation executes through the parameterized public-only disk consumer, lazy first use and synchronous updates, validated copied channels, FlipFaces, secondary-UV fallback, borrowed material and Rect2 visibility. PrimitiveMeshTests covers failure/reentry/reset, shallow/deep/local copies, fresh resource/scene files and prepared zero-owner-byte replay. Linux software GPU GLSL/HLSL and Compatibility pixels exercise native consumers; cold generation allocates, hardware/native allocator/other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "PrimitiveMesh::method:_create_mesh_array()",
+      "electron2d": "method:Electron2D.PrimitiveMesh.OnCreateMeshArray()",
+      "reason": "ADR 0092: typed retained single triangle-surface generation executes through the parameterized public-only disk consumer, lazy first use and synchronous updates, validated copied channels, FlipFaces, secondary-UV fallback, borrowed material and Rect2 visibility. PrimitiveMeshTests covers failure/reentry/reset, shallow/deep/local copies, fresh resource/scene files and prepared zero-owner-byte replay. Linux software GPU GLSL/HLSL and Compatibility pixels exercise native consumers; cold generation allocates, hardware/native allocator/other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "PrimitiveMesh::method:get_mesh_arrays()",
+      "electron2d": "method:Electron2D.PrimitiveMesh.GetMeshArrays()",
+      "reason": "ADR 0092: typed retained single triangle-surface generation executes through the parameterized public-only disk consumer, lazy first use and synchronous updates, validated copied channels, FlipFaces, secondary-UV fallback, borrowed material and Rect2 visibility. PrimitiveMeshTests covers failure/reentry/reset, shallow/deep/local copies, fresh resource/scene files and prepared zero-owner-byte replay. Linux software GPU GLSL/HLSL and Compatibility pixels exercise native consumers; cold generation allocates, hardware/native allocator/other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "PrimitiveMesh::method:request_update()",
+      "electron2d": "method:Electron2D.PrimitiveMesh.RequestUpdate()",
+      "reason": "ADR 0092: typed retained single triangle-surface generation executes through the parameterized public-only disk consumer, lazy first use and synchronous updates, validated copied channels, FlipFaces, secondary-UV fallback, borrowed material and Rect2 visibility. PrimitiveMeshTests covers failure/reentry/reset, shallow/deep/local copies, fresh resource/scene files and prepared zero-owner-byte replay. Linux software GPU GLSL/HLSL and Compatibility pixels exercise native consumers; cold generation allocates, hardware/native allocator/other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "PrimitiveMesh::property:add_uv2",
+      "electron2d": "property:Electron2D.PrimitiveMesh.AddUV2()",
+      "reason": "ADR 0092: typed retained single triangle-surface generation executes through the parameterized public-only disk consumer, lazy first use and synchronous updates, validated copied channels, FlipFaces, secondary-UV fallback, borrowed material and Rect2 visibility. PrimitiveMeshTests covers failure/reentry/reset, shallow/deep/local copies, fresh resource/scene files and prepared zero-owner-byte replay. Linux software GPU GLSL/HLSL and Compatibility pixels exercise native consumers; cold generation allocates, hardware/native allocator/other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "PrimitiveMesh::property:custom_aabb",
+      "electron2d": "property:Electron2D.PrimitiveMesh.CustomAABB()",
+      "reason": "ADR 0092: typed retained single triangle-surface generation executes through the parameterized public-only disk consumer, lazy first use and synchronous updates, validated copied channels, FlipFaces, secondary-UV fallback, borrowed material and Rect2 visibility. PrimitiveMeshTests covers failure/reentry/reset, shallow/deep/local copies, fresh resource/scene files and prepared zero-owner-byte replay. Linux software GPU GLSL/HLSL and Compatibility pixels exercise native consumers; cold generation allocates, hardware/native allocator/other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "PrimitiveMesh::property:flip_faces",
+      "electron2d": "property:Electron2D.PrimitiveMesh.FlipFaces()",
+      "reason": "ADR 0092: typed retained single triangle-surface generation executes through the parameterized public-only disk consumer, lazy first use and synchronous updates, validated copied channels, FlipFaces, secondary-UV fallback, borrowed material and Rect2 visibility. PrimitiveMeshTests covers failure/reentry/reset, shallow/deep/local copies, fresh resource/scene files and prepared zero-owner-byte replay. Linux software GPU GLSL/HLSL and Compatibility pixels exercise native consumers; cold generation allocates, hardware/native allocator/other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "PrimitiveMesh::property:material",
+      "electron2d": "property:Electron2D.PrimitiveMesh.Material()",
+      "reason": "ADR 0092: typed retained single triangle-surface generation executes through the parameterized public-only disk consumer, lazy first use and synchronous updates, validated copied channels, FlipFaces, secondary-UV fallback, borrowed material and Rect2 visibility. PrimitiveMeshTests covers failure/reentry/reset, shallow/deep/local copies, fresh resource/scene files and prepared zero-owner-byte replay. Linux software GPU GLSL/HLSL and Compatibility pixels exercise native consumers; cold generation allocates, hardware/native allocator/other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "PrimitiveMesh::property:uv2_padding",
+      "electron2d": "property:Electron2D.PrimitiveMesh.UV2Padding()",
+      "reason": "ADR 0092: typed retained single triangle-surface generation executes through the parameterized public-only disk consumer, lazy first use and synchronous updates, validated copied channels, FlipFaces, secondary-UV fallback, borrowed material and Rect2 visibility. PrimitiveMeshTests covers failure/reentry/reset, shallow/deep/local copies, fresh resource/scene files and prepared zero-owner-byte replay. Linux software GPU GLSL/HLSL and Compatibility pixels exercise native consumers; cold generation allocates, hardware/native allocator/other platforms and owner acceptance remain unverified."
     }
   ],
   "extras": [
@@ -2195,6 +2240,66 @@
     {
       "electron2d": "property:Electron2D.MeshSurfaceData.VertexCount()",
       "reason": "ADRs 0001/0092: typed replacement for the independent logical vertex count used by position-free surfaces. Positive counts size non-position channels; zero preserves uint16 index-only geometry. Copied authoring, packed transport, archives and actual generated drawing consume it; this adds no separate semantic capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PrimitiveMesh..ctor()",
+      "reason": "ADR 0092: protected construction initializes the generated typed mesh contract; consumer factories provide concrete planar parameters."
+    },
+    {
+      "electron2d": "method:Electron2D.PrimitiveMesh.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADR 0013/0092: inherited Resource copy hook preserves generator controls, visibility and shallow/deep/local borrowed material policy; generated arrays remain transient."
+    },
+    {
+      "electron2d": "method:Electron2D.PrimitiveMesh.Dispose(System.Boolean)",
+      "reason": "ADR 0092: inherited resource lifetime hook releases generated storage and borrowed references before ordinary logical RID retirement."
+    },
+    {
+      "electron2d": "method:Electron2D.PrimitiveMesh.GetPropertyDescriptors()",
+      "reason": "ADR 0013/0092: inherited typed resource descriptors expose stored generation controls, material and independent Rect2 visibility for files."
+    },
+    {
+      "electron2d": "method:Electron2D.PrimitiveMesh.GetRID()",
+      "reason": "ADR 0092: inherited mesh identity override realizes pending geometry before returning the ordinary stable borrowed RID."
+    },
+    {
+      "electron2d": "method:Electron2D.PrimitiveMesh.OnGetAABB()",
+      "reason": "ADR 0092: overrides the inherited typed Mesh surface contract with the one validated generated triangle surface; base declaration remains mapped separately."
+    },
+    {
+      "electron2d": "method:Electron2D.PrimitiveMesh.OnGetSurfaceCount()",
+      "reason": "ADR 0092: overrides the inherited typed Mesh surface contract with the one validated generated triangle surface; base declaration remains mapped separately."
+    },
+    {
+      "electron2d": "method:Electron2D.PrimitiveMesh.OnResetState()",
+      "reason": "ADR 0013/0092: inherited Resource reset hook clears generated transient storage while preserving all authored controls, derived parameters and material."
+    },
+    {
+      "electron2d": "method:Electron2D.PrimitiveMesh.OnSurfaceGetArrayIndexLen(System.Int32)",
+      "reason": "ADR 0092: overrides the inherited typed Mesh surface contract with the one validated generated triangle surface; base declaration remains mapped separately."
+    },
+    {
+      "electron2d": "method:Electron2D.PrimitiveMesh.OnSurfaceGetArrayLen(System.Int32)",
+      "reason": "ADR 0092: overrides the inherited typed Mesh surface contract with the one validated generated triangle surface; base declaration remains mapped separately."
+    },
+    {
+      "electron2d": "method:Electron2D.PrimitiveMesh.OnSurfaceGetArrays(System.Int32)",
+      "reason": "ADR 0092: overrides the inherited typed Mesh surface contract with the one validated generated triangle surface; base declaration remains mapped separately."
+    },
+    {
+      "electron2d": "method:Electron2D.PrimitiveMesh.OnSurfaceGetFormat(System.Int32)",
+      "reason": "ADR 0092: overrides the inherited typed Mesh surface contract with the one validated generated triangle surface; base declaration remains mapped separately."
+    },
+    {
+      "electron2d": "method:Electron2D.PrimitiveMesh.OnSurfaceGetMaterial(System.Int32)",
+      "reason": "ADR 0092: overrides the inherited typed Mesh surface contract with the one validated generated triangle surface; base declaration remains mapped separately."
+    },
+    {
+      "electron2d": "method:Electron2D.PrimitiveMesh.OnSurfaceGetPrimitiveType(System.Int32)",
+      "reason": "ADR 0092: overrides the inherited typed Mesh surface contract with the one validated generated triangle surface; base declaration remains mapped separately."
+    },
+    {
+      "electron2d": "method:Electron2D.PrimitiveMesh.OnSurfaceSetMaterial(System.Int32,Electron2D.Material)",
+      "reason": "ADR 0092: overrides the inherited typed Mesh surface contract with the one validated generated triangle surface; base declaration remains mapped separately."
     }
   ],
   "statusGroups": [
@@ -2820,6 +2925,21 @@
         "RenderingServer::method:mesh_set_custom_aabb(RID:,AABB:)"
       ],
       "reason": "ADR 0092: applicable 2D mesh-local visibility overrides project AABB to Rect2, with zero selecting automatic bounds. Stored resource state, both copy policies, committed notifications, live morph propagation, palette precedence, group fitting and hardware/expanded instance culling execute independently of source geometry bounds and packed surface metadata. MeshBoundsTests and Linux Wayland GLSL/HLSL/Compatibility pixels cover guards, validation, reset, archives and 64 active/64 idle owner frames; software-driver evidence does not certify hardware, foreign platforms or native allocations."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:PrimitiveMesh",
+        "PrimitiveMesh::method:_create_mesh_array()",
+        "PrimitiveMesh::method:get_mesh_arrays()",
+        "PrimitiveMesh::method:request_update()",
+        "PrimitiveMesh::property:add_uv2",
+        "PrimitiveMesh::property:custom_aabb",
+        "PrimitiveMesh::property:flip_faces",
+        "PrimitiveMesh::property:material",
+        "PrimitiveMesh::property:uv2_padding"
+      ],
+      "reason": "ADR 0092: typed retained single triangle-surface generation executes through the parameterized public-only disk consumer, lazy first use and synchronous updates, validated copied channels, FlipFaces, secondary-UV fallback, borrowed material and Rect2 visibility. PrimitiveMeshTests covers failure/reentry/reset, shallow/deep/local copies, fresh resource/scene files and prepared zero-owner-byte replay. Linux software GPU GLSL/HLSL and Compatibility pixels exercise native consumers; cold generation allocates, hardware/native allocator/other platforms and owner acceptance remain unverified."
     }
   ]
 }

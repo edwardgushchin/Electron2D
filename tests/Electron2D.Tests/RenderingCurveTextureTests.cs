@@ -45,7 +45,7 @@ internal static partial class RenderingRuntimeTests
                 }
             };
         };
-        window.AddChild(node); Engine.Run(window); Released(window);
+        window.AddChild(node); window.Ready += _ => { for (var i = 0; i < 8; i++) RenderingServer.ForceDraw(); }; Engine.Run(window); Released(window);
         Check(stage == 8 && !curve.IsDisposed && !single.IsDisposed && !xyz.IsDisposed, "Eight frames, borrowed resources survive renderer cleanup.");
         Console.WriteLine($"Curve texture float/HDR channels and worker updates passed: {fixture}, {stage} stages.");
     }
@@ -68,7 +68,6 @@ internal static partial class RenderingRuntimeTests
         { Console.WriteLine("Curve texture floats explicitly rejected by this compatibility driver."); }
         Released(window);
         using var uninitialized = new CurveTexture();
-        window = new Window(); window.AddChild(new CanvasNode { DrawAction = n => n.DrawTexture(uninitialized, Vector2.Zero) });
-        Reject<InvalidOperationException>(() => Engine.Run(window)); Released(window);
+        VerifyTexturePlaceholder(uninitialized);
     }
 }

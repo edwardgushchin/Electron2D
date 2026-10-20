@@ -3,7 +3,7 @@ using SDL = SDL3.SDL;
 
 internal static partial class RenderingRuntimeTests
 {
-    private static void VerifyCanvasMasks(string backend, string? fixture = null)
+    internal static void VerifyCanvasMasks(string backend, string? fixture = null)
     {
         using var shader = fixture is null ? null : LoadShader(fixture);
         using var material = shader is null ? null : new ShaderMaterial { Shader = shader };
@@ -29,12 +29,8 @@ internal static partial class RenderingRuntimeTests
         window.Ready += _ =>
         {
             visibilityEvents = 0;
-            var native = SDL.GetWindows(out var count); Check(count == 1, "One mask window.");
-            var density = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland" ? SDL.GetWindowPixelDensity(native![0]) : 1;
-            var motion = new SDL.Event { Motion = new SDL.MouseMotionEvent { Type = SDL.EventType.MouseMotion, WindowID = SDL.GetWindowID(native![0]), Which = 987, X = 3 / density, Y = 75 / density } };
-            Check(SDL.PushEvent(ref motion), "Inject input for a culled node.");
             var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
-            RenderingServer.FramePostDraw += () =>
+            Action verifyStage = () =>
             {
                 using var pixels = server.Readback(); frames++;
                 try
@@ -67,10 +63,27 @@ internal static partial class RenderingRuntimeTests
                         case 8: window.CanvasCullMask = 0x80000002; break;
                         case 9: window.SetCanvasCullMaskBit(31, false); break;
                         case 10: window.CanvasCullMask = 0; break;
-                        default: Check(probe.Inputs == 1 && probe.Frames > 0, "A culled node still processes frames and native input."); window.Tree!.Quit(); break;
+                        default: break;
                     }
                 }
                 catch (Exception error) { throw new InvalidOperationException($"Canvas masks {backend}/{fixture}, frame {frames}.", error); }
+            };
+            // Native configure events may invalidate commands; compare retention in a fixed redraw sequence.
+            RenderingServer.FramePostDraw += verifyStage;
+            for (var i = 0; i < 11; i++) RenderingServer.ForceDraw();
+            RenderingServer.FramePostDraw -= verifyStage;
+            var inputFrames = 0;
+            RenderingServer.FramePostDraw += () =>
+            {
+                if (inputFrames == 0)
+                {
+                    var native = SDL.GetWindows(out var count); Check(count == 1, "One mask window.");
+                    // Zero stays exact if fractional native scale changes before event dispatch.
+                    var motion = new SDL.Event { Motion = new SDL.MouseMotionEvent { Type = SDL.EventType.MouseMotion, WindowID = SDL.GetWindowID(native![0]), Which = 987, X = 0, Y = 0, XRel = 1, YRel = 1 } };
+                    Check(SDL.PushEvent(ref motion), "Inject input for a culled node.");
+                }
+                if (probe.Inputs != 1 || probe.Frames == 0) { Check(++inputFrames < 60, $"A culled node still processes frames and native input: {probe.Inputs}/{probe.Frames}, mouse {probe.Motions}/{probe.LastMousePosition}."); return; }
+                window.Tree!.Quit();
             };
         };
         Engine.Run(window); Released(window); Check(frames == 11, "Eleven mask and retained submission stages.");
@@ -93,8 +106,9 @@ internal static partial class RenderingRuntimeTests
 
     private sealed class MaskProbe : Entity
     {
-        internal int Inputs, Frames;
+        internal int Inputs, Frames, Motions;
+        internal Vector2 LastMousePosition;
         protected override void OnProcess(double delta) => Frames++;
-        protected override void OnInput(InputEvent input) { if (input is InputEventMouseMotion motion && motion.Position.IsEqualApprox(new(3, 75))) Inputs++; }
+        protected override void OnInput(InputEvent input) { if (input is InputEventMouseMotion motion) { Motions++; LastMousePosition = motion.Position; if (motion.Position == Vector2.Zero && motion.Relative.X > 0 && motion.Relative.X == motion.Relative.Y) Inputs++; } }
     }
 }

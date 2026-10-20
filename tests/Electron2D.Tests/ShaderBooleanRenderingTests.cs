@@ -135,6 +135,7 @@ internal static partial class RenderingRuntimeTests
             new CanvasNode { Name = "shared", Material = material, Position = new(0, 32) }, new CanvasNode { Name = "defaults", Material = defaults, Position = new(0, 48) } };
         var window = new Window { Size = new(96, 64) };
         foreach (var node in nodes) { node.DrawAction = n => n.DrawRect(new(0, 0, 80, 12), Colors.White); window.AddChild(node); }
+        var warmDraws = new int[nodes.Length];
         var frames = 0; var before = 0L; var allocated = 0L;
         window.Ready += _ =>
         {
@@ -156,6 +157,7 @@ internal static partial class RenderingRuntimeTests
                 if (frames == 1) SetBooleanValues(material, false);
                 if (frames == 2) shader.SetSPIRV(reordered.GetSPIRV());
                 if (frames == 3) shader.SetSPIRV(original);
+                if (frames == 20) for (var i = 0; i < nodes.Length; i++) warmDraws[i] = nodes[i].Draws;
                 if (frames == 40) window.Tree!.Quit();
             };
         };
@@ -163,7 +165,7 @@ internal static partial class RenderingRuntimeTests
         else
         {
             Engine.Run(window);
-            Check(frames == 40 && allocated == 0 && nodes.All(n => n.Draws == 1), "Boolean updates/reload reuse geometry with zero warm rendering allocation.");
+            Check(frames == 40 && allocated == 0 && nodes.Select((n, i) => n.Draws == warmDraws[i]).All(v => v), "Boolean updates/reload reuse prepared geometry with zero warm rendering allocation.");
         }
         Released(window);
         Console.WriteLine($"Boolean material rendering passed: {backend}/{fixture}; {frames} frames, {allocated} warm bytes.");

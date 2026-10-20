@@ -1293,7 +1293,7 @@ Paired Shader and RenderingServer SPIR-V setters/factories now execute authored 
 
 [Packed mesh surfaces](../components/meshes.md#packed-server-surfaces) provide real RenderingServer binary creation/append/export over the current channel, shape, LOD and palette consumers. Complete getter data and typed metadata are exercised; creation/append retain the exact procedural position-free format dependency. Ordinary source archives and local software-driver pixel/frame checks remain separate acceptance evidence.
 
-[Manual mesh visibility bounds](../components/meshes.md#manual-mesh-visibility-bounds) apply the Rect2 projection to ArrayMesh.CustomAABB and its static server pair. These three source declarations are applicable culling metadata and no longer excluded by their AABB spelling; source geometry queries remain independent.
+[Manual mesh visibility bounds](../components/meshes.md#manual-mesh-visibility-bounds) apply the Rect2 projection to ArrayMesh.CustomAABB, PrimitiveMesh.CustomAABB and the static server pair. These four source declarations are applicable culling metadata and no longer excluded by their AABB spelling; source geometry queries remain independent.
 
 ## Built-in particle processing (2026-10-19)
 
@@ -1314,3 +1314,5 @@ The TextServer editing slice (2026-10-19) implements twelve caret/selection/navi
 [Standalone Unicode text utilities](../components/text-server.md#standalone-unicode-utilities) implement eleven TextServer methods for locale-sensitive case, NFKD stripping, identifiers, scalar character/word ranges and shared OpenType names. Whole-string native normalization/data/ABI checks and four Linux software parent/fresh-process rendered consumers establish this slice; source-native assets are required and package/foreign/hardware/native-allocation/owner acceptance remain separate.
 
 [Span font replacement and shaped word ranges](../components/text-server.md#span-font-replacement-and-shaped-word-ranges) add two executable TextServer operations with actual font/feature reshaping, retained source and paragraph consumers, typed logical cluster masks and shared rich properties. Remaining service font identities and complete public glyph/provider producers keep their own exact prerequisites.
+
+[Generated planar primitives](../components/meshes.md#generated-planar-primitives) now execute the complete applicable PrimitiveMesh family: typed generation, copied processed arrays, lazy initialization/synchronous updates, face flipping, UV2 fallback/padding, material and Rect2 visibility. The public disk consumer produces actual native output and survives typed resource/scene storage in a fresh process. The nine declarations are Implemented; concrete 3D primitives and lightmap baking remain outside this planar producer. Software-driver validation and prepared replay allocation evidence do not certify physical hardware or other platforms.

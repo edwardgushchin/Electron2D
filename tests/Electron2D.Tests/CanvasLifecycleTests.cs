@@ -186,6 +186,10 @@ internal static partial class RenderingRuntimeTests
                 {
                     window.Hide();
                     Check(!node.IsVisibleInTree && !independent.IsVisibleInTree, "Window hides all canvas roots.");
+                    if (backend == "gpu" && RenderingServer.GetCurrentRenderingDriverName() == "vulkan" && SDL3.SDL.GetCurrentVideoDriver() == "wayland")
+                    {
+                        Reject<NotSupportedException>(window.Show); Check(!window.Visible && !node.IsVisibleInTree, "Rejected native remap retains hidden state pending presentation/unmap acknowledgement."); window.Tree!.Quit(); return;
+                    }
                     window.Show();
                     Check(independent.IsVisibleInTree && hidden == 2, "Window restores neutral-root visibility and raises hidden once.");
                 }

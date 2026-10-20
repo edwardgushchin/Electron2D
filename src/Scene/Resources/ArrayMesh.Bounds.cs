@@ -3,6 +3,7 @@ namespace Electron2D;
 public sealed partial class ArrayMesh
 {
     private Rect2 _customAABB;
+    internal override Rect2 VisibilityOverride => CustomAABB;
 
     /// <summary>Gets or sets a mesh-local visibility rectangle for shader-displaced geometry.</summary>
     /// <value>The zero rectangle selects automatic bounds; any other finite nonnegative rectangle overrides visibility.</value>
