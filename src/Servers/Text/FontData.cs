@@ -211,6 +211,7 @@ internal sealed partial class FontData : IDisposable
             var border = Math.Max(0, outline);
             if (fontSize * (double)factor > 16384 || border * (double)factor > 16384)
                 throw new ArgumentOutOfRangeException(nameof(oversampling), "Font raster dimensions exceed the canvas texture range.");
+            TrackRasterScale(factor, oversampling > 0 || Oversampling > 0);
             var pixels = fontSize * factor;
             var divisions = SubpixelPositioning switch
             {
@@ -347,7 +348,7 @@ internal sealed partial class FontData : IDisposable
         // Recorded canvas commands retain immutable CPU pixels independently of the native face.
         // Retired snapshots follow ordinary renderer eviction and need no native font ownership.
         foreach (var glyph in _glyphs.Values) if (glyph.Texture is { } texture) texture.RetainRendererCache = false;
-        ClearSystemSources(); Authored?.RetireTextures(); _glyphs.Clear();
+        ClearSystemSources(); Authored?.RetireTextures(); _glyphs.Clear(); _rasterLevels.Clear(); _explicitRasterScales?.Clear();
         try { _precision?.Dispose(); }
         catch (Exception error) { (errors ??= []).Add(error); }
         finally

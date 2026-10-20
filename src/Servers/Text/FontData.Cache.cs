@@ -42,12 +42,12 @@ internal sealed partial class FontData
         var size = Authored!.Size(key); var index = -1; Vector2i position = default;
         var width = raster.Width + 2; var height = raster.Height + 2;
         for (var i = 0; i < size.Pages.Count; i++)
-            if (size.Pages[i] is { } page && page.AllowPacking && TryPack(page, width, height, out position)) { index = i; break; }
+            if (size.Pages[i] is { } page && page.AllowPacking && (page.Authored || page.RasterScale == _oversampling) && TryPack(page, width, height, out position)) { index = i; break; }
         if (index < 0)
         {
             var dimension = Math.Max(256, Math.Max(width, height));
             if (dimension > 16384 || (long)dimension * dimension * 4 > 64 * 1024 * 1024) throw new InvalidOperationException("Font atlas page exceeds its pixel budget.");
-            index = size.Pages.FindIndex(static page => page == null); if (index < 0) index = size.Pages.Count; var page = new FontCachePage(dimension, dimension, new byte[dimension * dimension * 4], [], authored: false);
+            index = size.Pages.FindIndex(static page => page == null); if (index < 0) index = size.Pages.Count; var page = new FontCachePage(dimension, dimension, new byte[dimension * dimension * 4], [], authored: false) { RasterScale = _oversampling };
             if (index == size.Pages.Count) size.Pages.Add(page); else size.Pages[index] = page; if (!TryPack(page, width, height, out position)) throw new InvalidOperationException("Font atlas packing failed.");
         }
         var previous = size.Pages[index]!; var pixels = (byte[])previous.Pixels.Clone();
@@ -58,7 +58,7 @@ internal sealed partial class FontData
             var destination = pixels.AsSpan(((position.Y + 1 + y) * previous.Width + position.X) * 4, width * 4);
             source.CopyTo(destination[4..]); source[..4].CopyTo(destination[..4]); source[^4..].CopyTo(destination[^4..]);
         }
-        var replacement = new FontCachePage(previous.Width, previous.Height, pixels, (int[])previous.Offsets.Clone(), previous.Authored) { AllowPacking = previous.AllowPacking };
+        var replacement = new FontCachePage(previous.Width, previous.Height, pixels, (int[])previous.Offsets.Clone(), previous.Authored) { AllowPacking = previous.AllowPacking, RasterScale = previous.RasterScale };
         var texture = replacement.Texture(GenerateMIPMaps);
         if (previous.RealizedTexture is { } previousTexture)
             foreach (var cachedKey in _glyphs.Keys)

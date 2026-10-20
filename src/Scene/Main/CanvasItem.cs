@@ -191,7 +191,7 @@ public abstract partial class CanvasItem : Node
             Tree!.CancelTransformNotification(this);
             InvalidateGlobalTransformCache();
             try { ExitCanvas(); }
-            finally { _parentVisible = false; }
+            finally { _parentVisible = false; ReleaseItemRasterScale(); }
             return;
         }
         InvalidateGlobalTransformCache();
@@ -232,7 +232,7 @@ public abstract partial class CanvasItem : Node
 
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
-        base.GetPropertyDescriptors().Concat(CanvasItemProperties).Concat(DrawingProperties).Concat(SamplingProperties).Concat(_instanceUniforms?.StoredDescriptors ?? []).Concat(InstanceParameterDescriptors(storedNames: true).Where(d => _instanceUniforms?.HasStored(d.Name[27..]) != true));
+        base.GetPropertyDescriptors().Concat(CanvasItemProperties).Concat(DrawingProperties).Concat(SamplingProperties).Concat(ItemOversamplingProperties).Concat(_instanceUniforms?.StoredDescriptors ?? []).Concat(InstanceParameterDescriptors(storedNames: true).Where(d => _instanceUniforms?.HasStored(d.Name[27..]) != true));
 
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
@@ -242,6 +242,7 @@ public abstract partial class CanvasItem : Node
         {
             if (disposing)
             {
+                ReleaseItemRasterScale();
                 lock (_canvasItemGate) { if (_canvasItemRID.IsValid()) RenderingCanvasItemRegistry.Remove(_canvasItemRID); _canvasItemRID = AttachedSkeleton = default; }
                 ServerState?.VisibilityNotifier?.Cancel(); ServerState?.Commands?.Dispose(); ServerState = null;
                 _canvasCommands?.Clear(); _meshes?.Clear(); _meshCount = 0; _multiMeshes?.Clear(); _multiMeshCount = 0; _polygons?.Clear(); _polygonCount = 0; _strokes?.Clear(); _strokePoints = []; _strokeCount = 0; _material = null; _instanceUniforms = null;

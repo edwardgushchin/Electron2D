@@ -1,6 +1,6 @@
 # CanvasItem
 
-Last updated: 2026-10-18
+Last updated: 2026-10-20
 
 **Inherits:** [Node](Node.md)
 
@@ -1367,3 +1367,9 @@ A dirty global matrix is computed through virtual getters outside the retained c
 [Transform notification policies and forcing](../components/scene-hierarchy.md#transform-notification-policies-and-forcing-from-groups) now accept their processing-group contexts. Forced user notifications remain immediate; camera viewport and generated tile physics/navigation updates publish after the joined worker stage before owner queries/stepping. Shared queue cancellation and lifecycle accounting support concurrent forcing without holding gates across callbacks. Inherited interpolation reads permit active groups; mode mutation and reset permit the owner/current group. Reset callbacks remain immediate, with foreign branches reported and later siblings attempted. Ordered camera scroll/reset and borrowed renderer policies publish after the joined worker stage; see [interpolation publication](../components/scene-hierarchy.md#physics-interpolation-from-processing-groups).
 
 DrawMesh and DrawMultiMesh revalidate the selected geometry resource after virtual atlas RID callbacks. Disposal during source resolution fails before appending a retained command; caller-owned resources remain borrowed. MeshTextureTests exercises both paths.
+
+## Scale-dependent rasterization
+
+[OversamplingWithScale](OversamplingWithScale.md) selects ParentNode, Disabled or Enabled. ParentNode inherits only a direct canvas parent; TopLevel and neutral nodes resolve the default to disabled. Enabled automatic fonts and DPITexture multiply the viewport factor by the maximum signed component of GetGlobalTransform().Scale. CanvasLayer/camera, drawing transforms and interpolation do not change that logical factor. A nonpositive item factor falls back to the viewport factor. Explicit font coefficients, authored bitmap glyphs and MSDF retain their own raster rules.
+
+The policy is stored in PackedScene and inherited by Entity, Control and their descendants, including physics nodes. Visible preparation rerecords changed factors without requiring transform notifications. Stable replay keeps logical dimensions and reuses native pixels; scale changes may allocate. Active item/viewport owners share raster-level lifetime, with last-owner release on changes, tree exit and disposal. See [ownership and checks](../components/scalable-svg.md#item-scale-oversampling).

@@ -42,7 +42,6 @@ public abstract partial class Viewport
     internal virtual Transform WindowTransform => Transform.Identity;
     internal Transform RenderFinalTransform => StretchTransform * GlobalCanvasTransform;
     internal Transform CanvasCompositionTransform => StretchTransform * (RenderingOwner?.GlobalCanvasTransform(this) ?? GlobalCanvasTransform);
-    internal float FontRasterScale => GetOversampling();
     internal Vector2i TextureDimensions => RenderingOwner?.ViewportDimensions(this) ?? (this is SubViewport sub ? sub.Size : (this is Window window ? window.ContentRenderSize : default));
     /// <summary>Returns this viewport's live scene-local texture view.</summary>
     /// <returns>A borrowed resource retaining stable RID identity while the target image changes.</returns>

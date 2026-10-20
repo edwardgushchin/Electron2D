@@ -3,7 +3,7 @@
 <a id="adr-0051"></a>
 ## ADR 0051: Public enum identities and declaring owners
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 ### Status
 
@@ -18,6 +18,8 @@ Reference enum names are often scoped by their owner. In typed C#, repeating the
 One semantic value contract has one public enum type. Reuse that type across every public property, method, override and event with the same member meanings and valid-value set. A type used by several owners lives at the top level of the flat `Electron2D` namespace and has a neutral domain name. A contract specific to one owner may remain nested. Matching names or numeric values alone do not justify unification: different meanings or different valid-value sets retain distinct types. `Max` and similar nonselectable sentinels do not create a separate contract; callers reject them where selection is required. Foreign backend enums remain private to their adapters.
 
 Alignment enums preserve the reference declaring owner as part of their public type identity, even when meanings and numeric values agree. `BoxContainer.AlignmentMode`, `AspectRatioContainer.AlignmentMode`, `FlowContainer.AlignmentMode` and `TabBar.AlignmentMode` remain separate nested types; `FlowContainer.LastWrapAlignmentMode` remains nested too. `HorizontalAlignment`, `VerticalAlignment` and the future `InlineAlignment` remain namespace-level types because their reference owner is the global scope. Future `RenderingServer.ParticlesTransformAlign`, `ParticlesTransformAlignAxis` and `ParticlesTransformAlignCustomSrc` belong to RenderingServer. This alignment-family rule overrides semantic unification; do not expose a namespace-level `AlignmentMode`, owner aliases or duplicate mirrors. Missing enums still require their executable owning slice; this placement rule does not authorize inert declarations. The coverage validator rejects exported alignment enums under a different owner before aliases are applied.
+
+CanvasItem.OversamplingWithScale uses the namespace-level OversamplingWithScale enum under ADR 0046, following TextureFilter/TextureRepeat placement to avoid a property/type name collision. Its four numeric identities are distinct from unrelated raster and texture policies.
 
 RenderingServer.CanvasGroupMode remains nested and distinct from ClipChildrenMode: both contain Disabled/ClipOnly/ClipAndDraw meanings, but the group value three executes transparent composition while ClipChildrenMode.Max is not selectable. The accepted valid-value sets therefore differ. No duplicate subset aliases are introduced.
 

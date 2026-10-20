@@ -100,7 +100,7 @@ public partial class FontFile
         {
             using var read = BeginRead(); var sources = GetSources(); var data = sources.Count == 0 ? null : sources[0];
             if (data is null) { if (read.IsCurrent) return; continue; }
-            var image = data.GetGlyph(glyph, size, outline, oversampling, position, out var rasterPosition, canvas.CanvasViewport?.FontRasterScale ?? 1);
+            var image = data.GetGlyph(glyph, size, outline, oversampling, position, out var rasterPosition, canvas.FontRasterScale);
             if (!read.IsCurrent) continue;
             TextLayout.DrawGlyph(canvas, image, rasterPosition, color, !outlinePass && data.ModulateColorGlyphs); return;
         }

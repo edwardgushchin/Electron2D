@@ -1,17 +1,29 @@
 namespace Electron2D;
 
-public sealed partial class DPITexture
+internal static class CanvasRasterScale
 {
-    private sealed class ScaleLevel
+    internal sealed class ScaleLevel
     {
         internal int Count;
         internal readonly List<WeakReference<DPITexture>> Textures = [];
+        internal readonly List<WeakReference<FontData>> Fonts = [];
     }
-    private sealed record RasterVariant(ImageTexture Texture, ScaleLevel? Level);
+    internal static ScaleLevel? ActiveLevel(int key) => key == 64 ? null : Volatile.Read(ref _scales).GetValueOrDefault(key);
+    internal static bool TrackFont(int key, ScaleLevel level, FontData font)
+    {
+        lock (ScaleGate)
+        {
+            if (!_scales.TryGetValue(key, out var current) || !ReferenceEquals(current, level)) return false;
+            for (var i = level.Fonts.Count - 1; i >= 0; i--)
+                if (!level.Fonts[i].TryGetTarget(out _)) level.Fonts.RemoveAt(i);
+            level.Fonts.Add(new(font));
+            return true;
+        }
+    }
     private static readonly object ScaleGate = new();
     private static Dictionary<int, ScaleLevel> _scales = [];
-    internal static int QuantizeScale(float scale) => (int)(Math.Clamp((double)scale, 0.1, 100) * 64);
-    internal static void ChangeScaleReference(int previous, int next)
+    internal static int Quantize(float scale) => (int)(Math.Clamp((double)scale, 0.1, 100) * 64);
+    internal static void ChangeReference(int previous, int next)
     {
         if (previous == next) return;
         ScaleLevel? retired = null;
@@ -27,11 +39,15 @@ public sealed partial class DPITexture
             Volatile.Write(ref _scales, levels);
         }
         if (retired is not null)
+        {
             foreach (var weak in retired.Textures)
                 if (weak.TryGetTarget(out var texture)) texture.RetireScale(previous, retired);
+            foreach (var weak in retired.Fonts)
+                if (weak.TryGetTarget(out var font)) font.RetireRasterScale(previous, retired);
+        }
     }
-    private static ScaleLevel? CurrentLevel(int key) => key == 64 ? null : Volatile.Read(ref _scales).GetValueOrDefault(key) ?? throw new InvalidOperationException("The viewport raster scale is no longer active.");
-    private static void TrackScale(int key, ScaleLevel level, DPITexture texture)
+    internal static ScaleLevel? CurrentLevel(int key) => key == 64 ? null : Volatile.Read(ref _scales).GetValueOrDefault(key) ?? throw new InvalidOperationException("The viewport raster scale is no longer active.");
+    internal static void TrackScale(int key, ScaleLevel level, DPITexture texture)
     {
         lock (ScaleGate)
         {

@@ -231,7 +231,7 @@ This revision changes architecture and documentation only; it does not establish
 <a id="adr-0039"></a>
 ## ADR 0039: Managed image buffers and codec boundaries
 
-Last updated: 2026-10-16
+Last updated: 2026-10-20
 
 ### Status
 
@@ -277,9 +277,9 @@ CompressedTexture directly extends Texture for the ordinary GST2 file role. Reus
 
 DPITexture : Texture retains SVG source and a copied Color-to-Color map. Paint remapping occurs before the existing native SVG decoder, on the pinned fill, stroke and stop-color attribute roles, preserving the reference RGB replacement and separate opacity behavior. No pixel recoloring, new codec dependency or vendored source modification is required. BaseScale, saturation, alpha-edge repair, premultiplication and independent size-override axes feed the same bounded image pipeline. Original source and typed map remain authoring data; transient raster images do not enter resource archives.
 
-Viewport oversampling remains enabled by default, with a zero default override. A positive override selects the raster factor; disabled oversampling selects one. Otherwise use the maximum active stretch axis (including physical embedded-window density). Font glyphs and DPI textures consume that same effective factor. DPI raster cache keys truncate the factor clamped to 0.1..100 into 1/64 steps. The base resource keeps its stable borrowed RID; other scale variants have borrowed RIDs valid until source/settings changes, last matching viewport release or resource disposal. Viewport scale changes invalidate retained recordings. Retained commands keep the source DPITexture and resolve the current viewport variant at replay, so source changes do not leave commands borrowing retired variant objects. Variant generation and scale registration allocate only on cold changes; warmed replay must be measured.
+Viewport oversampling remains enabled by default, with a zero default override. A positive override selects the raster factor; disabled oversampling selects one. Otherwise use the maximum active stretch axis (including physical embedded-window density). Font glyphs and DPI textures consume that same effective factor. DPI raster cache keys truncate the factor clamped to 0.1..100 into 1/64 steps. The base resource keeps its stable borrowed RID; other scale variants have borrowed RIDs valid until source/settings changes, last matching viewport/item release or resource disposal. Viewport scale changes invalidate retained recordings. Retained commands keep the source DPITexture and resolve the current viewport variant at replay, so source changes do not leave commands borrowing retired variant objects. Variant generation and scale registration allocate only on cold changes; warmed replay must be measured.
 
-Scale levels retain weak texture references and matching viewport counts, with deterministic variant retirement outside registry locks. Resource copies and scene-local graphs copy authoring state and acquire independent raster caches. The existing typed archive uses an explicit DPITexture factory and a bounded deterministic Color-to-Color dictionary codec. Native SVG format limitations and foreign platform acceptance remain those of ADR 0039; this slice does not close the entire Image codec audit.
+Scale levels retain weak texture/font references and matching viewport/item counts, with deterministic variant retirement outside registry locks. CanvasItem scale oversampling and font atlas ownership follow ADR 0046; engine-generated font pages keep distinct raster factors so a last-owner release can retire only its own level. Resource copies and scene-local graphs copy authoring state and acquire independent raster caches. The existing typed archive uses an explicit DPITexture factory and a bounded deterministic Color-to-Color dictionary codec. Native SVG format limitations and foreign platform acceptance remain those of ADR 0039; this slice does not close the entire Image codec audit.
 
 ### Audit coverage inventory
 
