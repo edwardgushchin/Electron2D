@@ -82,3 +82,7 @@ The borrowed identities interoperate with [TextServer](TextServer.md) through th
 The [TextServer formatting family](../components/text-server.md#fitting-spacing-and-overrun) adjusts retained raw advances and independent display trimming through this same owner. Fitting/trim/ellipsis preserve substring context and parent identity; changed spacing/punctuation detaches authored data. Repeated Arabic/word fitting, vertical/RTL trimming and borrowed paragraph line metrics are covered by the formatting profiles.
 
 Span font replacement keeps source/language/metadata and publishes a new ordered source adapter before reshaping; unused adapter leases retire while caller fonts remain borrowed. Duplicate/source-version leases preserve prior consumers. Successful replacement detaches substrings and updates paragraph line consumers through the existing owner contract. See [span/word integration](../components/text-server.md#span-font-replacement-and-shaped-word-ranges).
+
+## Glyph and run source mapping
+
+TextServer queries use an internal reusable GlyphSpan map of interleaved text/object spans. Substring source leases retain original indexes and global scalar coordinates; authored detachment rebuilds the local map. Copied glyphs retain concrete resource/fallback/linked source identities. Runtime scalar run queries reuse scratch storage; returned glyph arrays and run text remain cold snapshots. See [TextGlyph](TextGlyph.md) and [TextServer](TextServer.md).

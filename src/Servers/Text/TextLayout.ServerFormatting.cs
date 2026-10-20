@@ -180,14 +180,14 @@ internal sealed partial class TextLayout
         }
         if (index == 0 || face is null) return null;
         if (repeatedFallback) gap = style.Font.GetShapingSpacing(face, TextSpacingType.Glyph) + (float)_options.BufferGlyphSpacing;
-        return new(face, index, 0, 0, face.GetGlyphAdvance(index, size, Key.Orientation == TextOrientation.Vertical), Vector2.Zero, 0, scalar == ' ', false, _lines[0].ParagraphLevel == 1, repeat, true, Size: size);
+        return new(face, index, 0, 0, face.GetGlyphAdvance(index, size, Key.Orientation == TextOrientation.Vertical), Vector2.Zero, 0, scalar == ' ', false, _lines[0].ParagraphLevel == 1, repeat, true, Size: size, SourceRID: style.Font.GetSourceRID(face), Ellipsis: true);
     }
     private void AppendServerEllipsis(Glyph? dot, Glyph? space, float gap, int cluster, bool rtl)
     {
         if (dot is not { } value) return;
         if (!rtl && space is { } leading) _lineGlyphs.Add(leading with { Start = cluster, End = cluster });
         _lineGlyphs.Add(value with { Start = cluster, End = cluster });
-        if (gap != 0) _lineGlyphs.Add(new(null, 0, cluster, cluster, gap, Vector2.Zero, 0, false, false, rtl, Virtual: true));
+        if (gap != 0) _lineGlyphs.Add(new(null, 0, cluster, cluster, gap, Vector2.Zero, 0, false, false, rtl, Virtual: true, Ellipsis: true));
         if (rtl && space is { } trailing) _lineGlyphs.Add(trailing with { Start = cluster, End = cluster });
     }
 }

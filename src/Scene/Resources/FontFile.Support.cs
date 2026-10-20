@@ -52,12 +52,12 @@ public partial class FontFile
     {
         FontSupportPolicy.Validate(key);
         lock (FontGate) { ThrowIfDisposed(); var policy = _fontData!.SupportPolicy.With(script, key, value); if (ReferenceEquals(policy, _fontData.SupportPolicy)) return; ApplySupportLocked(policy); }
-        EmitChanged();
+        EmitFontChanged();
     }
     private void SetSupportPolicy(FontSupportPolicy policy)
     {
         lock (FontGate) { ThrowIfDisposed(); ApplySupportLocked(policy); }
-        EmitChanged();
+        EmitFontChanged();
     }
     private void ApplySupportLocked(FontSupportPolicy policy)
     {

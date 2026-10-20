@@ -112,7 +112,7 @@ public partial class FontFile
     private void NotifyRetired(List<FontData> retired)
     {
         List<Exception>? errors = null;
-        try { EmitChanged(); } catch (Exception error) { (errors ??= []).Add(error); }
+        try { EmitFontChanged(); } catch (Exception error) { (errors ??= []).Add(error); }
         foreach (var data in retired) try { data.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }
         if (errors is { Count: 1 }) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(errors[0]).Throw();
         if (errors != null) throw new AggregateException("Font cache publication cleanup failed.", errors);

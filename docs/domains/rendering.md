@@ -426,3 +426,7 @@ Ordinary desktop Window children now execute [independent native hosts](../compo
 [Font-free hexadecimal replacements](../components/text-server.md#font-free-hexadecimal-replacement) expose shared missing-glyph measurement and baseline rectangle recording directly through TextServer. They use ordinary CanvasItem transforms, colors and clipping without a Font source; two/four/six-digit boundaries, live rendering and prepared managed allocation scopes have dedicated checks.
 
 [Owned TextServer fonts](../components/text-server.md#owned-font-sources-and-caches) connect stable font creation/free, linked shared caches and independent spacing/baseline to existing typed Font consumers and real native glyph/outline drawing. Typed cache and Bézier contour snapshots use actual backend data; ordinary-resource glyph identity and external provider dispatch retain separate coverage obligations.
+
+## Actual text source metadata
+
+The text service exposes borrowed resource source caches and complete copied glyph/run metadata through [TextGlyph](../classes/TextGlyph.md) and [the source contract](../components/text-server.md#resource-sources-glyph-snapshots-and-visual-runs). Custom canvas consumers can use actual font source/index/size/offset/advance without native pointers. Resource data edits, linked state, automatic fallback retirement and immutable recorded pixels retain their existing owners. External provider dispatch and platform/package/hardware/allocator/owner acceptance remain separate gates.

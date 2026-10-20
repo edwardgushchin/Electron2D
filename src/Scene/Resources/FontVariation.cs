@@ -7,7 +7,9 @@ namespace Electron2D;
 public partial class FontVariation : Font
 {
     private Font? _baseFont, _watchedBase;
-    private FontData? _data;
+    private FontFile? _sourceFile;
+    private long _sourceBaseGeneration = -1;
+    private readonly Action<Resource> _backendChanged;
     private Dictionary<uint, float> _coordinates = [];
     private Dictionary<string, int> _features = new(StringComparer.Ordinal);
     private NativeFontFeature[] _compiledFeatures = [];
@@ -31,9 +33,23 @@ public partial class FontVariation : Font
         baseChanged = resource => { if (weak.TryGetTarget(out var owner) && !owner.IsDisposed) owner.BaseChanged(resource); else resource.Changed -= baseChanged; };
         baseDisposed = resource => { if (weak.TryGetTarget(out var owner) && !owner.IsDisposed) owner.BaseChanged((Resource)resource); else resource.Disposed -= baseDisposed; };
         _themeChanged = themeChanged; _baseChanged = baseChanged; _baseDisposed = baseDisposed;
+        Action<Resource>? backendChanged = null;
+        backendChanged = value => { if (weak.TryGetTarget(out var owner) && !owner.IsDisposed) owner.BackendChanged(value); else value.Changed -= backendChanged; };
+        _backendChanged = backendChanged;
+    }
+    private void BackendChanged(Resource source)
+    {
+        lock (FontGate) { if (IsDisposalCommitted || IsDisposed || !ReferenceEquals(source, _sourceFile)) return; InvalidateFontStateLocked(); }
+        EmitFontChanged();
+    }
+    internal override int GetShapingSpacing(FontData? source, TextSpacingType spacing)
+    {
+        if (source?.SourceOwner?.TryGetTarget(out var owner) == true && ReferenceEquals(owner, _sourceFile))
+            return checked((int)((long)owner.GetSpacing(spacing) + GetSpacing(spacing) - _spacing[(int)spacing]));
+        return source is null ? GetSpacing(spacing) : GetSourceSpacing(source, spacing);
     }
     private void ClearShapingFeatures(Resource _) { lock (FontGate) _shapingFeatures.Clear(); }
-    private void ThemeChanged() { lock (FontGate) { if (_baseFont != null || IsDisposed) return; RetireLocked(); } EmitChanged(); }
+    private void ThemeChanged() { lock (FontGate) { if (_baseFont != null || IsDisposed) return; RetireLocked(); } EmitFontChanged(); }
     private Font? ResolveBase()
     {
         lock (FontGate)
@@ -54,6 +70,7 @@ public partial class FontVariation : Font
             return font;
         }
     }
+    internal override Font? SourceDependency => _sourceFile;
     internal override Font? BaseDependency => _baseFont ?? _watchedBase;
     internal override Font?[] EffectiveFallbacks => LocalFallbacks.Length > 0 ? LocalFallbacks : ResolveBase()?.EffectiveFallbacks ?? [];
     internal override FontData? PrimaryData
@@ -63,13 +80,16 @@ public partial class FontVariation : Font
             lock (FontGate)
             {
                 ThrowIfDisposed(); var source = ResolveBase();
+                var sourceGeneration = source?.GetContentGeneration() ?? -1;
+                if (!_dirty && _sourceBaseGeneration != sourceGeneration) RetireLocked();
                 var cursor = source; for (var depth = 0; cursor is FontVariation variation; depth++) { if (depth >= 64 || ReferenceEquals(cursor, this)) throw new InvalidOperationException("Cyclic or excessive font base chain."); cursor = variation.ResolveBase(); }
-                if (!_dirty) return _data;
+                if (!_dirty) return _sourceFile?.PrimaryData;
                 FontData? created = null;
                 var instance = new FontInstance(_face, _coordinates, _embolden, _transform, _baseline, _palette, _colors);
                 if (cursor is FontFile file) created = file.CreateVariationData(instance, _spacing);
                 else if (cursor?.PrimaryData is { } baseData) created = baseData.CreateVariation(instance);
-                _data = created; _dirty = false; return _data;
+                if (created is not null) { _sourceFile = FontFile.AdoptSource(created, _spacing, this); _sourceFile.Changed += _backendChanged; }
+                _sourceBaseGeneration = sourceGeneration; _dirty = false; return _sourceFile?.PrimaryData;
             }
         }
     }
@@ -87,8 +107,8 @@ public partial class FontVariation : Font
         }
     }
     private void Unwatch() { if (_watchedBase != null) { _watchedBase.Changed -= _baseChanged; _watchedBase.Disposed -= _baseDisposed; } _watchedBase = null; }
-    private void BaseChanged(Resource _) { if (IsDisposed) return; lock (FontGate) { if (IsDisposed) return; RetireLocked(); } EmitChanged(); }
-    private void RetireLocked() { _shapingFeatures.Clear(); var old = _data; _data = null; _dirty = true; InvalidateFontStateLocked(); old?.Dispose(); }
+    private void BaseChanged(Resource _) { if (IsDisposed) return; lock (FontGate) { if (IsDisposed) return; RetireLocked(); } EmitFontChanged(); }
+    private void RetireLocked() { _shapingFeatures.Clear(); var old = _sourceFile; if (old is not null) old.Changed -= _backendChanged; _sourceFile = null; _dirty = true; InvalidateFontStateLocked(); if (old is not null) QueueSourceRetirement(old); }
     /// <summary>Gets or sets the borrowed base font; null uses the current theme fallback.</summary>
     /// <value>Null initially. The source remains borrowed; equal assignments are silent.</value>
     /// <exception cref="ObjectDisposedException">This font is disposed.</exception>
@@ -96,7 +116,7 @@ public partial class FontVariation : Font
     public Font? BaseFont
     {
         get { lock (FontGate) { ThrowIfDisposed(); return _baseFont; } }
-        set { lock (FallbackMutationGate) { if (value != null) ValidateFallback(value, this, 1); lock (FontGate) { ThrowIfDisposed(); if (ReferenceEquals(_baseFont, value)) return; Unwatch(); _baseFont = value; _watchedBase = value; if (value != null) { value.Changed += _baseChanged; value.Disposed += _baseDisposed; } RetireLocked(); } } EmitChanged(); NotifyPropertyListChanged(); }
+        set { lock (FallbackMutationGate) { if (value != null) ValidateFallback(value, this, 1); lock (FontGate) { ThrowIfDisposed(); if (ReferenceEquals(_baseFont, value)) return; Unwatch(); _baseFont = value; _watchedBase = value; if (value != null) { value.Changed += _baseChanged; value.Disposed += _baseDisposed; } RetireLocked(); } } EmitFontChanged(); NotifyPropertyListChanged(); }
     }
     /// <summary>Gets or replaces copied numeric OpenType design coordinates; missing axes use defaults and known values clamp to axis bounds.</summary>
     /// <value>Independent dictionary snapshot, initially empty; at most 65,536 finite coordinates.</value>
@@ -106,7 +126,7 @@ public partial class FontVariation : Font
     public Dictionary<uint, float> VariationOpenType
     {
         get { lock (FontGate) { ThrowIfDisposed(); return new(_coordinates); } }
-        set { ArgumentNullException.ThrowIfNull(value); if (value.Count > 65536) throw new ArgumentOutOfRangeException(nameof(value)); foreach (var pair in value) if (!float.IsFinite(pair.Value)) throw new ArgumentOutOfRangeException(nameof(value)); lock (FontGate) { ThrowIfDisposed(); if (_coordinates.Count == value.Count && value.All(pair => _coordinates.TryGetValue(pair.Key, out var old) && old == pair.Value)) return; _coordinates = new(value); RetireLocked(); } EmitChanged(); }
+        set { ArgumentNullException.ThrowIfNull(value); if (value.Count > 65536) throw new ArgumentOutOfRangeException(nameof(value)); foreach (var pair in value) if (!float.IsFinite(pair.Value)) throw new ArgumentOutOfRangeException(nameof(value)); lock (FontGate) { ThrowIfDisposed(); if (_coordinates.Count == value.Count && value.All(pair => _coordinates.TryGetValue(pair.Key, out var old) && old == pair.Value)) return; _coordinates = new(value); RetireLocked(); } EmitFontChanged(); }
     }
     /// <summary>Replaces design coordinates supplied by registered readable axis aliases or custom four-byte tag names.</summary>
     /// <param name="coordinates">Nonnull finite design coordinates. Names use the FontFile OpenType alias rules.</param>
@@ -127,7 +147,7 @@ public partial class FontVariation : Font
     public Dictionary<string, int> OpenTypeFeatures
     {
         get { lock (FontGate) { ThrowIfDisposed(); return new(_features, StringComparer.Ordinal); } }
-        set { ArgumentNullException.ThrowIfNull(value); var copy = new Dictionary<string, int>(value, StringComparer.Ordinal); var compiled = FontFile.CompileFeatures(copy); lock (FontGate) { ThrowIfDisposed(); if (_features.Count == copy.Count && copy.All(pair => _features.TryGetValue(pair.Key, out var old) && old == pair.Value)) return; _features = copy; _compiledFeatures = compiled; RetireLocked(); } EmitChanged(); }
+        set { ArgumentNullException.ThrowIfNull(value); var copy = new Dictionary<string, int>(value, StringComparer.Ordinal); var compiled = FontFile.CompileFeatures(copy); lock (FontGate) { ThrowIfDisposed(); if (_features.Count == copy.Count && copy.All(pair => _features.TryGetValue(pair.Key, out var old) && old == pair.Value)) return; _features = copy; _compiledFeatures = compiled; RetireLocked(); } EmitFontChanged(); }
     }
     /// <inheritdoc />
     public override Dictionary<string, int> GetOpenTypeFeatures() => OpenTypeFeatures;
@@ -135,26 +155,26 @@ public partial class FontVariation : Font
     /// <value>Zero initially; horizontal advances include strength times logical size divided by sixty-four.</value>
     /// <exception cref="ObjectDisposedException">This font is disposed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The configuration is invalid.</exception>
-    public float VariationEmbolden { get { lock (FontGate) { ThrowIfDisposed(); return _embolden; } } set { Finite(value); lock (FontGate) { ThrowIfDisposed(); if (_embolden == value) return; _embolden = value; RetireLocked(); } EmitChanged(); } }
+    public float VariationEmbolden { get { lock (FontGate) { ThrowIfDisposed(); return _embolden; } } set { Finite(value); lock (FontGate) { ThrowIfDisposed(); if (_embolden == value) return; _embolden = value; RetireLocked(); } EmitFontChanged(); } }
     /// <summary>Gets or sets the finite outline basis; its translation is retained but does not move the glyph baseline.</summary>
     /// <value>Identity initially. Basis entries are bounded to plus or minus 32,767.</value>
     /// <exception cref="ObjectDisposedException">This font is disposed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The configuration is invalid.</exception>
-    public Transform VariationTransform { get { lock (FontGate) { ThrowIfDisposed(); return _transform; } } set { if (!value.IsFinite() || Math.Abs(value.X.X) > 32767 || Math.Abs(value.X.Y) > 32767 || Math.Abs(value.Y.X) > 32767 || Math.Abs(value.Y.Y) > 32767) throw new ArgumentOutOfRangeException(nameof(value)); lock (FontGate) { ThrowIfDisposed(); if (_transform == value) return; _transform = value; RetireLocked(); } EmitChanged(); } }
+    public Transform VariationTransform { get { lock (FontGate) { ThrowIfDisposed(); return _transform; } } set { if (!value.IsFinite() || Math.Abs(value.X.X) > 32767 || Math.Abs(value.X.Y) > 32767 || Math.Abs(value.Y.X) > 32767 || Math.Abs(value.Y.Y) > 32767) throw new ArgumentOutOfRangeException(nameof(value)); lock (FontGate) { ThrowIfDisposed(); if (_transform == value) return; _transform = value; RetireLocked(); } EmitFontChanged(); } }
     /// <summary>Gets or sets the nonnegative collection face index used by the next native instance.</summary>
     /// <value>Zero initially. An unavailable index fails on realization and may be corrected for retry.</value>
     /// <exception cref="ObjectDisposedException">This font is disposed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The configuration is invalid.</exception>
-    public int VariationFaceIndex { get { lock (FontGate) { ThrowIfDisposed(); return _face; } } set { ArgumentOutOfRangeException.ThrowIfNegative(value); lock (FontGate) { ThrowIfDisposed(); if (_face == value) return; _face = value; RetireLocked(); } EmitChanged(); } }
+    public int VariationFaceIndex { get { lock (FontGate) { ThrowIfDisposed(); return _face; } } set { ArgumentOutOfRangeException.ThrowIfNegative(value); lock (FontGate) { ThrowIfDisposed(); if (_face == value) return; _face = value; RetireLocked(); } EmitFontChanged(); } }
     /// <summary>Gets or sets the finite baseline shift as a fraction of native ascent plus descent.</summary>
     /// <value>Zero initially. Positive values shift horizontal shaped glyphs downward and vertical glyphs rightward.</value>
     /// <exception cref="ObjectDisposedException">This font is disposed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The configuration is invalid.</exception>
-    public float BaselineOffset { get { lock (FontGate) { ThrowIfDisposed(); return _baseline; } } set { Finite(value); lock (FontGate) { ThrowIfDisposed(); if (_baseline == value) return; _baseline = value; RetireLocked(); } EmitChanged(); } }
+    public float BaselineOffset { get { lock (FontGate) { ThrowIfDisposed(); return _baseline; } } set { Finite(value); lock (FontGate) { ThrowIfDisposed(); if (_baseline == value) return; _baseline = value; RetireLocked(); } EmitFontChanged(); } }
     /// <summary>Gets or sets the selected predefined palette index; rendering clamps it to available palettes.</summary>
     /// <value>Zero initially; signed values remain stored and clamp only during native realization.</value>
     /// <exception cref="ObjectDisposedException">This font is disposed.</exception>
-    public int PaletteIndex { get { lock (FontGate) { ThrowIfDisposed(); return _palette; } } set { lock (FontGate) { ThrowIfDisposed(); if (_palette == value) return; _palette = value; RetireLocked(); } EmitChanged(); } }
+    public int PaletteIndex { get { lock (FontGate) { ThrowIfDisposed(); return _palette; } } set { lock (FontGate) { ThrowIfDisposed(); if (_palette == value) return; _palette = value; RetireLocked(); } EmitFontChanged(); } }
     /// <summary>Gets or replaces copied palette overrides; transparent black retains the predefined entry.</summary>
     /// <value>Independent array snapshot, initially empty. Finite channels clamp to zero through one.</value>
     /// <exception cref="ObjectDisposedException">This font is disposed.</exception>
@@ -163,13 +183,19 @@ public partial class FontVariation : Font
     public Color[] PaletteCustomColors
     {
         get { lock (FontGate) { ThrowIfDisposed(); return (Color[])_colors.Clone(); } }
-        set { ArgumentNullException.ThrowIfNull(value); foreach (var c in value) { Finite(c.R); Finite(c.G); Finite(c.B); Finite(c.A); } lock (FontGate) { ThrowIfDisposed(); if (_colors.AsSpan().SequenceEqual(value)) return; _colors = (Color[])value.Clone(); RetireLocked(); } EmitChanged(); }
+        set { ArgumentNullException.ThrowIfNull(value); foreach (var c in value) { Finite(c.R); Finite(c.G); Finite(c.B); Finite(c.A); } lock (FontGate) { ThrowIfDisposed(); if (_colors.AsSpan().SequenceEqual(value)) return; _colors = (Color[])value.Clone(); RetireLocked(); } EmitFontChanged(); }
     }
     private static void Finite(float value) { if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value)); }
     /// <summary>Assigns signed pixel spacing in one valid text-spacing category.</summary><param name="spacing">Glyph, Space, Top or Bottom.</param><param name="value">Extra pixels.</param>
     /// <exception cref="ArgumentOutOfRangeException">The spacing category is invalid.</exception>
     /// <exception cref="ObjectDisposedException">This font is disposed.</exception>
-    public void SetSpacing(TextSpacingType spacing, int value) { if (spacing is < TextSpacingType.Glyph or >= TextSpacingType.Max) throw new ArgumentOutOfRangeException(nameof(spacing)); lock (FontGate) { ThrowIfDisposed(); if (_spacing[(int)spacing] == value) return; _spacing[(int)spacing] = value; InvalidateFontStateLocked(); } EmitChanged(); }
+    public void SetSpacing(TextSpacingType spacing, int value)
+    {
+        if (spacing is < TextSpacingType.Glyph or >= TextSpacingType.Max) throw new ArgumentOutOfRangeException(nameof(spacing));
+        FontFile? backend;
+        lock (FontGate) { ThrowIfDisposed(); if (_spacing[(int)spacing] == value) return; _spacing[(int)spacing] = value; backend = _sourceFile; backend?.MirrorSpacing(_spacing); InvalidateFontStateLocked(); }
+        try { EmitFontChanged(); } finally { backend?.NotifyMirroredSpacing(); }
+    }
     /// <inheritdoc />
     public override int GetSpacing(TextSpacingType spacing) { if (spacing is < TextSpacingType.Glyph or >= TextSpacingType.Max) throw new ArgumentOutOfRangeException(nameof(spacing)); lock (FontGate) { ThrowIfDisposed(); return _spacing[(int)spacing]; } }
     /// <summary>Gets or sets extra pixels between graphical glyphs.</summary>
@@ -218,8 +244,8 @@ public partial class FontVariation : Font
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        FontData? data;
-        lock (FontGate) { Unwatch(); if (_themeSubscribed) ThemeDB.FallbackChanged -= _themeChanged; _themeSubscribed = false; data = _data; _data = null; _baseFont = null; }
+        FontFile? data;
+        lock (FontGate) { Unwatch(); if (_themeSubscribed) ThemeDB.FallbackChanged -= _themeChanged; _themeSubscribed = false; data = _sourceFile; if (data is not null) data.Changed -= _backendChanged; _sourceFile = null; _baseFont = null; }
         try { data?.Dispose(); } finally { base.Dispose(disposing); }
     }
 }

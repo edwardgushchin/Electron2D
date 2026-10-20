@@ -1,6 +1,6 @@
 # Font
 
-Last updated: 2026-10-13
+Last updated: 2026-10-20
 
 **Inherits:** [Resource](Resource.md) · **Source:** [Font.cs](../../src/Scene/Resources/Font.cs) · **Component:** [Text](../components/text.md)
 
@@ -419,7 +419,7 @@ Uses the inherited [Resource graph/lifecycle contract](Resource.md) for the conc
 
 ## Verification and limits
 
-[FontTests](../../tests/Electron2D.Tests/FontTests.cs) exercises real metrics, ligatures, BiDi, fallbacks, wrapping, justification, character bounds, all six draw entrypoints, native-thread dispatch, graph copying, callback failure and warmed reuse. [FontRenderingTests](../../tests/Electron2D.Tests/FontRenderingTests.cs) supplies the native pixel gate. Empty text, missing glyphs, invalid scalars and disposed resources have explicit checks. Cache misses, public snapshots and first glyph rasterization may allocate; prepared measured paths are checked separately. Public TextServer RID services, font discovery, bitmap/cache authoring and unsupported platforms remain exact [coverage](../coverage/classes/Font.md) gaps. Native allocator counts and owner acceptance are not inferred from managed tests.
+[FontTests](../../tests/Electron2D.Tests/FontTests.cs) exercises real metrics, ligatures, BiDi, fallbacks, wrapping, justification, character bounds, all six draw entrypoints, native-thread dispatch, graph copying, callback failure and warmed reuse. [FontRenderingTests](../../tests/Electron2D.Tests/FontRenderingTests.cs) supplies the native pixel gate. Empty text, missing glyphs, invalid scalars and disposed resources have explicit checks. Cache misses, public snapshots and first glyph rasterization may allocate; prepared measured paths are checked separately. Current implemented source/cache services and source identity queries are described below; remaining provider/platform obligations retain their exact [coverage](../coverage/classes/Font.md) triggers. Native allocator counts and owner acceptance are not inferred from managed tests.
 
 ## System font integration
 
@@ -477,3 +477,7 @@ if (supported.TryGetValue(0x73733031, out var feature) && feature.IsBoolean)
 FontMetadataTests verifies owned multilingual/table fixtures, deep snapshot independence, duplicate-table precedence, selected collections/variations/system sources, source retirement and actual feature-driven shaping. Its native profile exercises distinct glyph pixels and live disablement on Linux Wayland GPU/compatibility. Native/external allocations and other platforms remain unverified.
 
 Name strings are captured lazily on the serialized text owner. Each metadata capture enforces a 64 MiB UTF-16 text budget; excessive alias-expanded tables fail with InvalidDataException before publishing a partial name snapshot. Ordinary shaping does not materialize the localized name map.
+
+## Source cache identities
+
+`public override RID GetRID()` returns the borrowed primary source cache, or an empty RID without a primary source. `public RID[] GetRIDs()` copies primary and explicit fallbacks in traversal order, preserving repeated entries. Automatic fallback sources are reported by shaped glyphs/runs after realization. TextServer reads, edits and draws these actual caches; its FreeRID cannot release resource ownership. Cache removal, full reset, file import and disposal retire identities; FontFile data/configuration replacement preserves them. See [resource glyph metadata](../components/text-server.md#resource-sources-glyph-snapshots-and-visual-runs) for projections, linked variants and lifetime boundaries.

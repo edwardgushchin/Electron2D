@@ -75,6 +75,6 @@ public partial class FontFile
                 retired = PublishCachesLocked(copies, data => set(data, value));
             }
         }
-        if (retired != null) NotifyRetired(retired); else EmitChanged();
+        if (retired != null) NotifyRetired(retired); else EmitFontChanged();
     }
 }

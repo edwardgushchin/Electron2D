@@ -1,6 +1,6 @@
 # FontVariation
 
-Last updated: 2026-10-13
+Last updated: 2026-10-20
 
 **Inherits:** [Font](Font.md), [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
@@ -91,3 +91,7 @@ Independent realized data inherits native bitmap/autohinter/MIP preferences. Nat
 The primary realized face supplies OpenType metadata through `GetSupportedFeatureList()` and `GetOTNameStrings()`. The feature snapshot contains numeric tags and typed optional labels, boolean/integer selection and hidden flags. GSUB is read before GPOS, whose duplicate descriptions win. Name strings are copied by native language spelling and standard role; unknown IDs retain `unknown_N` keys. These cold snapshots allocate independently and omit fallback metadata or authored family overrides. Feature labels retain the tool locale sampled during native realization; source replacement or cache retirement rebuilds metadata.
 
 Type 1 source variations retain the outline and attached PFM/AFM metric snapshot in their independent native face. Source and raster/MSDF policy publication invalidates the variation through the existing borrowed-base lifecycle. See [source-pair verification](../components/text.md#type-1-outline-and-auxiliary-metric-sources).
+
+## Runtime source identity
+
+GetRID/GetRIDs expose the realized private native source and explicit fallback traversal. TextServer cache edits affect actual variation consumers while stored variation preferences remain authored values. SetSpacing mirrors authored spacing into the existing source without rebuilding the face. Native/base configuration changes retire and rebuild its private source. Base-generation checks also detect changes when a prior Changed observer throws. A borrowed runtime projection retains the variation owner and retires with its native cache. Linked source views retain independent spacing/baseline and cancel the source's already-applied native baseline before applying their own offset.

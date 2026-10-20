@@ -1,3 +1,5 @@
+[Resource font identities and glyph/run snapshots](../components/text-server.md#resource-sources-glyph-snapshots-and-visual-runs) implement fifteen declarations through real resource/fallback/linked caches and copied complete metadata. This checkpoint has 11,876 Implemented of 18,841 applicable declarations (63.03% API coverage), with 1,282 Partial, 552 Unimplemented and 5,131 Blocked. Scoped source/lifetime tests, exact reconstructed software-rendered pixels on both Linux display/backend pairs and warmed allocation checks remain separate from external provider, platform/package/hardware/native-allocator/owner gates.
+
 [Native window relationships](../classes/DisplayServer.md#native-window-relationships) add three executable public operations for parenting, exclusivity and attached scene identity. This checkpoint has 11,861 Implemented of 18,841 applicable declarations (62.95% API coverage), with 1,282 Partial, 552 Unimplemented and 5,146 Blocked; platform, package, hardware, allocator and owner gates remain separate.
 
 [Owned text font caches](../components/text-server.md#owned-font-sources-and-caches) implement 134 font-source/cache and contour declarations through stable owned identities, shared linked backends and existing typed consumers. Scoped Linux software rendering, native contour/palette/variation/bitmap consumers and source/lifetime checks remain distinct from resource glyph identity, external providers and final platform/package/hardware/allocator/owner gates.
@@ -180,6 +182,8 @@ status changes; full retained/native/device history budgets remain open.
 [Resident GPU buffer accounting](../components/gpu-memory.md) now covers all storage/transfer allocations, growth peaks and replay retirement. This internal measurement changes no public declaration status and leaves complete retained/native/device budgets open.
 
 Last updated: 2026-10-20
+
+[Resource font identities and glyph/run snapshots](../components/text-server.md#resource-sources-glyph-snapshots-and-visual-runs) implement fifteen declarations through real resource/fallback/linked caches and copied complete metadata. This checkpoint has 11,876 Implemented of 18,841 applicable declarations (63.03% API coverage), with 1,282 Partial, 552 Unimplemented and 5,131 Blocked. Scoped source/lifetime tests, exact reconstructed software-rendered pixels on both Linux display/backend pairs and warmed allocation checks remain separate from external provider, platform/package/hardware/native-allocator/owner gates.
 
 [Complete space activation operations](../components/physics-registered-adapter.md#complete-space-activation-operations)
 close the two selected activation rows after shared public CPU/no-device,

@@ -9,13 +9,16 @@ internal readonly record struct FontGlyph(Texture? Texture, Vector2 Offset, Vect
 // Immutable source bytes and portable glyph textures; mutable native state is confined to FontThread.
 internal sealed partial class FontData : IDisposable
 {
-    private enum Operation { Create, Dispose, Metrics, Index, Advance, Shape, Glyph, Characters, Kerning, Names, Contours }
+    private enum Operation { Create, Dispose, Metrics, Index, Advance, Shape, Glyph, Characters, Kerning, Names, Contours, Baseline }
     private readonly object _gate = new();
     private byte[] _bytes = [];
     private byte[] _auxiliaryMetrics = [];
     private readonly Action _execute;
     private readonly int _faceIndex;
     private readonly FontInstance? _instance;
+    internal WeakReference<FontFile>? SourceOwner;
+    internal float SourceBaseline => _instance?.BaselineOffset ?? 0;
+    internal FontInstance SourceInstance => _instance ?? new(_faceIndex, [], 0, Transform.Identity, 0, 0, []);
     internal Dictionary<uint, FontVariationAxis> VariationAxes { get; private set; } = [];
     internal Color[][] Palettes { get; private set; } = [];
     internal string[] PaletteNames { get; private set; } = [];
@@ -116,13 +119,24 @@ internal sealed partial class FontData : IDisposable
     }
     internal void ReleaseRead()
     {
-        lock (_gate)
+        Exception? failure = null;
+        try
         {
-            if (_readers <= 0) throw new InvalidOperationException("Font data has no active reader.");
-            _readers--;
-            if (_readers == 0) ReleaseRetiredSystemSources();
-            if (_retired && _readers == 0) DisposeNative();
+            lock (_gate)
+            {
+                if (_readers <= 0) throw new InvalidOperationException("Font data has no active reader.");
+                _readers--;
+                if (_readers == 0) ReleaseRetiredSystemSources();
+                if (_retired && _readers == 0) DisposeNative();
+            }
         }
+        catch (Exception error) { failure = error; }
+        DrainSourceRetirements(failure);
+    }
+    internal float GetNativeBaselineShift(int size)
+    {
+        if ((_instance?.BaselineOffset ?? 0) == 0 || _bytes.Length == 0) return 0;
+        lock (_gate) { Check(); _size = size; Run(Operation.Baseline); return _advanceResult; }
     }
     private void Run(Operation operation) { _operation = operation; FontThread.Invoke(_execute); }
     internal FontMetrics GetMetrics(int fontSize)
@@ -253,6 +267,9 @@ internal sealed partial class FontData : IDisposable
                 catch { ReleaseNative(); throw; }
                 break;
             case Operation.Dispose: ReleaseNative(); break;
+            case Operation.Baseline:
+                _precision!.SetSize(FixedNativeSize(_size));
+                _advanceResult = checked((int)Math.Round((_instance?.BaselineOffset ?? 0) * _precision.Height * FixedNativeScale(_size) * 64d)) / 64f; break;
             case Operation.Metrics:
                 _precision!.SetSize(FixedNativeSize(_size)); var metricScale = FixedNativeScale(_size);
                 _metricsResult = new(_precision.Ascent * metricScale, _precision.Descent * metricScale, _precision.Height * metricScale, _precision.UnderlinePosition * metricScale, _precision.UnderlineThickness * metricScale); break;
@@ -318,7 +335,13 @@ internal sealed partial class FontData : IDisposable
         return result;
     }
     private static int Round26(double value) => checked((int)Math.Round(value, MidpointRounding.AwayFromZero) * 64);
+    [ThreadStatic] internal static int NativeCleanupDepth;
     private void ReleaseNative()
+    {
+        NativeCleanupDepth++;
+        try { ReleaseNativeCore(); } finally { NativeCleanupDepth--; }
+    }
+    private void ReleaseNativeCore()
     {
         List<Exception>? errors = null;
         // Recorded canvas commands retain immutable CPU pixels independently of the native face.
@@ -336,8 +359,11 @@ internal sealed partial class FontData : IDisposable
     }
     public void Dispose()
     {
-        lock (_gate) { if (_retired) return; _retired = true; if (_readers == 0) DisposeNative(); }
-        GC.SuppressFinalize(this);
+        Exception? failure = null;
+        try { lock (_gate) { if (!_retired) { _retired = true; if (_readers == 0) DisposeNative(); } } }
+        catch (Exception error) { failure = error; }
+        finally { GC.SuppressFinalize(this); }
+        DrainSourceRetirements(failure);
     }
     private void DisposeNative()
     {

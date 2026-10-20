@@ -184,10 +184,20 @@ internal sealed class TextBufferFont : Font
         var merged = new Dictionary<uint, NativeFontFeature>(); foreach (var item in defaults) merged[item.Tag] = item; foreach (var item in _features) merged[item.Tag] = item;
         var result = merged.Values.ToArray(); _compiled[source] = (defaults, result); return result;
     }
+    internal override RID GetSourceRID(FontData source)
+    {
+        foreach (var font in _fonts) if (font.GetSources().Contains(source)) return font.GetSourceRID(source);
+        return base.GetSourceRID(source);
+    }
     internal override int GetShapingSpacing(FontData? source, TextSpacingType spacing)
     {
-        if (source is not null) foreach (var font in _fonts) if (font.GetSources().Contains(source)) return font.GetSpacing(spacing);
-        return _fonts[0].GetSpacing(spacing);
+        if (source is not null) foreach (var font in _fonts) if (font.GetSources().Contains(source)) return font.GetShapingSpacing(source, spacing);
+        return _fonts[0].GetShapingSpacing(source, spacing);
+    }
+    internal override float GetSystemBaseline(FontData source)
+    {
+        foreach (var font in _fonts) if (font.GetSources().Contains(source)) return font.GetSystemBaseline(source);
+        return _fonts[0].GetSystemBaseline(source);
     }
     internal override float GetShapingBaselineOffset(FontData? source, int size)
     {

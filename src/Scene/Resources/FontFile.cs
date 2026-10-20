@@ -44,7 +44,7 @@ public partial class FontFile : Font
     private Dictionary<string, int> _featureOverrides = new(StringComparer.Ordinal);
     internal override FontData? PrimaryData
     {
-        get { lock (FontGate) { ThrowIfDisposed(); EnsureLoadedLocked(); EnsurePrimaryCacheLocked(); return _fontData; } }
+        get { lock (FontGate) { ThrowIfDisposed(); EnsureLoadedLocked(); EnsurePrimaryCacheLocked(); BindSource(_fontData!); return _fontData; } }
     }
     private static readonly PropertyDescriptor[] FileProperties =
     [
@@ -66,9 +66,9 @@ public partial class FontFile : Font
     ];
 
     /// <summary>Creates an empty font with light hinting, automatic subpixel positioning and remainder preservation.</summary>
-    public FontFile() { }
+    public FontFile() { BindSource(_fontData!); }
 
-    internal FontFile(byte[] immutableEmbeddedData)
+    internal FontFile(byte[] immutableEmbeddedData) : this()
     {
         ArgumentNullException.ThrowIfNull(immutableEmbeddedData);
         if (immutableEmbeddedData.Length > MaximumFontBytes) throw new InvalidDataException("Font data exceeds sixty-four MiB.");
@@ -210,7 +210,7 @@ public partial class FontFile : Font
                 ThrowIfDisposed();
                 lock (_fontData!.Gate) { _featureOverrides = snapshot; _fontData.OpenTypeFeatures = compiled; _fontData.ClearSystemSources(); foreach (var data in _cacheData.Values) lock (data.Gate) { data.OpenTypeFeatures = compiled; data.ClearSystemSources(); } InvalidateFontStateLocked(); }
             }
-            EmitChanged();
+            EmitFontChanged();
         }
     }
 
@@ -247,7 +247,7 @@ public partial class FontFile : Font
                 InvalidateFontStateLocked();
             }
         }
-        EmitChanged();
+        EmitFontChanged();
     }
     internal static NativeFontFeature[] CompileFeatures(Dictionary<string, int> features)
     {
@@ -274,7 +274,7 @@ public partial class FontFile : Font
                 if (!reset) CopyConfiguration(_fontData!, replacement);
                 else { replacement.SubpixelPositioning = FontSubpixelPositioning.Disabled; _fixedSize = 0; _fixedScaleMode = global::Electron2D.FixedSizeScaleMode.Disable; }
                 replacement.SupportPolicy = _fontData!.SupportPolicy; replacement.OpenTypeFeatures = _fontData!.OpenTypeFeatures;
-                previous = _fontData; ClearAuthoredLocked(); _fontData = replacement; _bytes = bytes; _type1Metrics = auxiliaryMetrics ?? []; _deferred = false; InvalidateFontStateLocked();
+                previous = _fontData; ClearAuthoredLocked(); if (reset) RetireSourceIdentityLocked(); _fontData = replacement; _bytes = bytes; _type1Metrics = auxiliaryMetrics ?? []; _deferred = false; InvalidateFontStateLocked();
             }
         }
         catch { replacement.Dispose(); throw; }
@@ -282,6 +282,7 @@ public partial class FontFile : Font
     }
     private static void CopyConfiguration(FontData source, FontData target)
     {
+        target.SystemFaces = source.SystemFaces; target.AdvertisedFaceCount = source.AdvertisedFaceCount;
         target.MultichannelSignedDistanceField = source.MultichannelSignedDistanceField; target.MSDFPixelRange = source.MSDFPixelRange; target.MSDFSize = source.MSDFSize; target.Antialiasing = source.Antialiasing; target.AllowSystemFallback = source.AllowSystemFallback; target.Hinting = source.Hinting; target.SubpixelPositioning = source.SubpixelPositioning;
         target.KeepRoundingRemainders = source.KeepRoundingRemainders; target.Oversampling = source.Oversampling;
         target.DisableEmbeddedBitmaps = source.DisableEmbeddedBitmaps; target.ForceAutohinter = source.ForceAutohinter; target.GenerateMIPMaps = source.GenerateMIPMaps; target.SupportPolicy = source.SupportPolicy; target.ModulateColorGlyphs = source.ModulateColorGlyphs; target.OpenTypeFeatures = source.OpenTypeFeatures;
@@ -289,7 +290,7 @@ public partial class FontFile : Font
     private void FinishReplacement(FontData? previous)
     {
         Exception? failure = null;
-        try { EmitChanged(); } catch (Exception error) { failure = error; }
+        try { EmitFontChanged(); } catch (Exception error) { failure = error; }
         try { previous?.Dispose(); }
         catch (Exception error) { if (failure is not null) throw new AggregateException(failure, error); throw; }
         if (failure is not null) ExceptionDispatchInfo.Capture(failure).Throw();
@@ -344,7 +345,7 @@ public partial class FontFile : Font
     protected override void Dispose(bool disposing)
     {
         FontData? data;
-        lock (FontGate) { data = _fontData; ClearAuthoredLocked(); _fontData = null; _bytes = []; _type1Metrics = []; _deferred = false; _featureOverrides.Clear(); }
+        lock (FontGate) { RetireSourceIdentityLocked(); data = _fontData; ClearAuthoredLocked(); _fontData = null; _bytes = []; _type1Metrics = []; _deferred = false; _featureOverrides.Clear(); }
         try { data?.Dispose(); }
         finally { base.Dispose(disposing); }
     }

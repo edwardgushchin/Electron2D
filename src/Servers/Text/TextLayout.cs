@@ -44,7 +44,7 @@ internal sealed partial class TextLayout
     internal bool IsBusy => _active != 0;
     private readonly record struct Run(int Start, int End, FontData? Face, UnicodeScript Script, sbyte Level);
     private readonly record struct Glyph(FontData? Face, uint Index, int Start, int End, float Advance, Vector2 Offset,
-        uint Flags, bool Space, bool Tab, bool RTL, int Repeat = 1, bool Virtual = false, bool Missing = false, bool Elongation = false, int Size = 0, int ObjectIndex = -1, float ObjectAscent = 0, float ObjectDescent = 0)
+        uint Flags, bool Space, bool Tab, bool RTL, int Repeat = 1, bool Virtual = false, bool Missing = false, bool Elongation = false, int Size = 0, int ObjectIndex = -1, float ObjectAscent = 0, float ObjectDescent = 0, RID SourceRID = default, bool Ellipsis = false)
     {
         internal Vector2 Position { get; init; }
     }
@@ -169,7 +169,7 @@ internal sealed partial class TextLayout
                     if (supported) { face = source; break; }
                 }
             if (face == null)
-                foreach (var source in sources) if (source.FindSystemFallback(_scalars.AsSpan(start, end - start), _options.Language ?? "") is { } fallback) { face = fallback; break; }
+                foreach (var source in sources) if (source.FindSystemFallback(_scalars.AsSpan(start, end - start), style.Language, style.Font) is { } fallback) { face = fallback; break; }
             for (var i = start; i < end; i++)
             {
                 _faces[i] = face;
@@ -178,7 +178,7 @@ internal sealed partial class TextLayout
                     for (var tier = -1; tier <= 2 && _faces[i] is null; tier++) foreach (var source in sources) if ((ReferenceEquals(source, primary) ? tier == -1 : tier == source.FallbackPriority(language, script, emoji)) && source.GetGlyphIndex(_scalars[i]) != 0) { _faces[i] = source; break; }
                 }
                 if (_faces[i] is null && !IsIgnorable(i))
-                    foreach (var source in sources) if (source.FindSystemFallback(_scalars[i], _options.Language ?? "") is { } fallback) { _faces[i] = fallback; break; }
+                    foreach (var source in sources) if (source.FindSystemFallback(_scalars[i], style.Language, style.Font) is { } fallback) { _faces[i] = fallback; break; }
 
             }
             start = end;
@@ -285,7 +285,7 @@ internal sealed partial class TextLayout
             if (face is not null)
             {
                 for (var i = _lineGlyphs.Count - 1; i >= 0; i--) if (_lineGlyphs[i].Start == end - 1) _lineGlyphs.RemoveAt(i);
-                var glyph = new Glyph(face, face.GetGlyphIndex(0x00ad), end - 1, end, SoftHyphenAdvance(end - 1), Vector2.Zero, 0, false, false, (_levels[end - 1] & 1) != 0);
+                var glyph = new Glyph(face, face.GetGlyphIndex(0x00ad), end - 1, end, SoftHyphenAdvance(end - 1), Vector2.Zero, 0, false, false, (_levels[end - 1] & 1) != 0, Size: StyleAt(end - 1).Size, SourceRID: StyleAt(end - 1).Font.GetSourceRID(face));
                 _lineGlyphs.Insert(_paragraphLevels[start] == 1 ? 0 : _lineGlyphs.Count, glyph);
             }
         }
@@ -404,7 +404,7 @@ internal sealed partial class TextLayout
             if (IsSpecial(_scalars[run.Start]))
             {
                 var tab = _scalars[run.Start] == '\t';
-                _lineGlyphs.Add(new(null, 0, run.Start, run.End, 0, Vector2.Zero, 0, tab, tab, rtl)); continue;
+                _lineGlyphs.Add(new(null, 0, run.Start, run.End, 0, Vector2.Zero, 0, tab, tab, rtl, Size: runStyle.Size)); continue;
             }
             if (run.Face is null)
             {
@@ -431,6 +431,7 @@ internal sealed partial class TextLayout
             while (spacingEnd > 0 && (_scalars[spacingEnd - 1] is 10 or 11 or 12 or 13 or 0x85 or 0x2028 or 0x2029 || IsIgnorable(spacingEnd - 1))) spacingEnd--;
             var lastAdvance = _shaped.Count;
             if (run.End >= spacingEnd) for (var i = _shaped.Count - 1; i >= 0; i--) { lastAdvance = i; if ((Key.Orientation == TextOrientation.Vertical ? _shaped[i].YAdvance : _shaped[i].XAdvance) != 0) break; }
+            var sourceRID = runStyle.Font.GetSourceRID(run.Face);
             for (var shapedIndex = 0; shapedIndex < _shaped.Count; shapedIndex++)
             {
                 var shaped = _shaped[shapedIndex];
@@ -456,7 +457,7 @@ internal sealed partial class TextLayout
                     offset += Key.Orientation == TextOrientation.Horizontal ? new Vector2(0, baseline) : new Vector2(baseline, 0);
                 }
                 _lineGlyphs.Add(new(run.Face, shaped.GlyphIndex, cluster, clusterEnd, advance,
-                    offset, shaped.Flags, space, false, rtl, Size: runStyle.Size));
+                    offset, shaped.Flags, space, false, rtl, Size: runStyle.Size, SourceRID: sourceRID));
             }
         }
         LayoutAdvance();
@@ -609,7 +610,7 @@ internal sealed partial class TextLayout
             var cluster = _lineGlyphs.Count > 0 ? _lineGlyphs[paragraphLevel == 1 ? 0 : _lineGlyphs.Count - 1].End : 0;
             var insert = paragraphLevel == 1 ? 0 : _lineGlyphs.Count;
             foreach (var glyph in _ellipsis._glyphs)
-                _lineGlyphs.Insert(insert++, glyph with { Start = cluster, End = cluster, Virtual = true });
+                _lineGlyphs.Insert(insert++, glyph with { Start = cluster, End = cluster, Virtual = true, Ellipsis = true, RTL = paragraphLevel == 1 });
         }
     }
 
@@ -671,7 +672,7 @@ internal sealed partial class TextLayout
                 var glyph = _lineGlyphs[i];
                 if (glyph.Start <= start || glyph.Start >= end || !_wordEnds[glyph.Start] || glyph.Space || glyph.Virtual || IsCustomPunctuation(new Rune(_scalars[glyph.Start]))) continue;
                 var adjacent = !glyph.RTL ? i - 1 : i + 1; if (adjacent >= 0 && adjacent < _lineGlyphs.Count && _lineGlyphs[adjacent].Space) continue;
-                _lineGlyphs.Insert(i, new(glyph.Face, 0, glyph.Start, glyph.End, 0, Vector2.Zero, 0, true, false, glyph.RTL, Virtual: true, Size: GlyphSize(glyph))); i++;
+                _lineGlyphs.Insert(i, new(glyph.Face, 0, glyph.Start, glyph.End, 0, Vector2.Zero, 0, true, false, glyph.RTL, Virtual: true, Size: GlyphSize(glyph), SourceRID: glyph.SourceRID)); i++;
             }
         if (!kashida) return;
         for (var wordStart = start; wordStart < end;)
@@ -689,7 +690,7 @@ internal sealed partial class TextLayout
                     if (_shaped.Count == 0 || _shaped[0].GlyphIndex == 0) break;
                     var shaped = _shaped[0]; var advance = (Key.Orientation == TextOrientation.Horizontal ? shaped.XAdvance : -shaped.YAdvance) / 64f;
                     var offset = Key.Orientation == TextOrientation.Horizontal ? new Vector2(shaped.XOffset / 64f, glyph.Offset.Y) : new Vector2(glyph.Offset.X, -shaped.YOffset / 64f);
-                    _lineGlyphs.Insert(i, new(glyph.Face, shaped.GlyphIndex, glyph.Start, glyph.End, advance, offset, shaped.Flags, false, false, glyph.RTL, 0, true, Elongation: true, Size: GlyphSize(glyph))); break;
+                    _lineGlyphs.Insert(i, new(glyph.Face, shaped.GlyphIndex, glyph.Start, glyph.End, advance, offset, shaped.Flags, false, false, glyph.RTL, 0, true, Elongation: true, Size: GlyphSize(glyph), SourceRID: glyph.SourceRID)); break;
                 }
             wordStart = wordEnd;
         }

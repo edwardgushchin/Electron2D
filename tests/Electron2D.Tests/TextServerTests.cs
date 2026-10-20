@@ -15,7 +15,7 @@ internal static class TextServerTests
         var rid = ts.CreateShapedText(); var key = new TextObjectKey();
         try
         {
-            Check(ts.Has(rid) && !ts.Has(default) && !ts.Has(font.GetRID()) && !ts.ShapedTextIsReady(rid), "Live ownership and initial preparation state.");
+            Check(ts.Has(rid) && !ts.Has(default) && ts.Has(font.GetRID()) && !ts.ShapedTextIsReady(rid), "Live ownership and initial preparation state.");
             Check(ts.ShapedTextGetRange(rid) == default && ts.ShapedGetText(rid) == "" && !ts.ShapedTextIsReady(rid), "Authoring queries do not prepare native layout.");
             Check(ts.ShapedTextGetRange(rid) == default && ts.ShapedTextGetSize(rid) == default && ts.ShapedTextHitTestPosition(rid, 1e30f) == 0, "Empty buffer geometry.");
             Check(ts.ShapedTextIsReady(rid) && ts.ShapedTextShape(rid), "Queries prepare the native buffer.");

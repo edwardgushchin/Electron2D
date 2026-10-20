@@ -633,3 +633,7 @@ The [shaped-buffer editing](../components/text-server.md#caret-selection-and-nav
 [Owned TextServer substrings](../components/text-server.md#line-wrapping-and-owned-substrings) retain complete original clusters and shared source-version leases independently of parent retirement. The line owner uses a private reference-counted source snapshot; the layout caches logical glyph order and shares BIDI run resolution for actual substring drawing. Language-specific native break opportunities preserve adjacent equal-language context.
 
 The [TextServer formatting family](../components/text-server.md#fitting-spacing-and-overrun) adjusts retained raw advances and independent display trimming through this same owner. Fitting/trim/ellipsis preserve substring context and parent identity; changed spacing/punctuation detaches authored data. Repeated Arabic/word fitting, vertical/RTL trimming and borrowed paragraph line metrics are covered by the formatting profiles.
+
+## Glyph metadata for borrowed lines
+
+TextServer glyph/run queries use each borrowed line's raw geometry and global authored span coordinates. Ellipsis queries select its current display, including a line-specific imperative formatting override. Retired line identities fail through the ordinary owner checks; partial objects/clusters have no fabricated glyph metadata.

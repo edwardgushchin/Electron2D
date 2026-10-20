@@ -23,5 +23,5 @@ internal sealed partial class FontData
         }
     }
     internal float[] RasterScales(Vector2i size) => _glyphs.Keys.Where(key => key.Size == size.X && key.Outline == size.Y).Select(static key => key.Oversampling).Distinct().Order().ToArray();
-    internal void ClearSystemFallbackCache() { lock (_gate) { if (!_disposed) ClearSystemSources(); } }
+    internal void ClearSystemFallbackCache() { try { lock (_gate) { if (!_disposed) ClearSystemSources(); } } finally { DrainSourceRetirements(); } }
 }

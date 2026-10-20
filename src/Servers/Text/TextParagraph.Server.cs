@@ -73,6 +73,11 @@ public sealed partial class TextParagraph
         var value = _display.Lines[line];
         return new(_source, _geometry, line, value.Start, value.RangeEnd < 0 ? value.End : value.RangeEnd, 0, value.Width);
     }
+    internal TextServer.BufferView ServerDisplayGlyphView(int line, RID rid)
+    {
+        var view = ServerView(line, rid);
+        return _serverLines.TryGetValue(line, out var edited) ? view with { Layout = edited.ServerPreparedDisplay } : view with { Layout = _display };
+    }
     internal TextLine ServerMutableLine(int line, RID rid, out bool pending)
     {
         ServerCheckLine(line, rid);

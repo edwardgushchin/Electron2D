@@ -13,8 +13,13 @@ public abstract partial class Font : Resource
     internal object FontGate { get; } = new();
     internal abstract FontData? PrimaryData { get; }
     internal virtual Font? BaseDependency => null;
+    internal virtual Font? SourceDependency => null;
+    internal long SourceGeneration => Volatile.Read(ref _generation);
     internal virtual NativeFontFeature[]? GetShapingFeatures(FontData source) => null;
     internal virtual int GetShapingSpacing(FontData? source, TextSpacingType spacing) => GetSpacing(spacing);
+    internal static int GetSourceSpacing(FontData? source, TextSpacingType spacing)
+        => source?.SourceOwner?.TryGetTarget(out var owner) == true ? owner.GetSpacing(spacing) : 0;
+    internal virtual float GetSystemBaseline(FontData source) => source.SourceBaseline;
     internal virtual float GetShapingBaselineOffset(FontData? source, int size) => 0;
     internal virtual (float Ascent, float Descent) GetShapingMetrics(FontData? source, int size) => (GetAscent(size), GetDescent(size));
     internal virtual float GetShapingUnderline(FontData? source, int size, bool thickness) => thickness ? GetUnderlineThickness(size) : GetUnderlinePosition(size);
@@ -56,7 +61,7 @@ public abstract partial class Font : Resource
                 foreach (var font in copy) if (font is not null) ValidateFallback(font, this, 1);
                 lock (FontGate) { ThrowIfDisposed(); UnsubscribeFallbacks(); _fallbacks = copy; SubscribeFallbacks(); ClearLayoutCaches(); }
             }
-            EmitChanged();
+            EmitFontChanged();
         }
     }
 
@@ -91,22 +96,22 @@ public abstract partial class Font : Resource
 
     /// <summary>Returns the primary face's family name, or an empty name without data.</summary>
     /// <returns>The family name.</returns><exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public string GetFontName() { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.FamilyName ?? string.Empty; } }
+    public string GetFontName() { try { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.FamilyName ?? string.Empty; } } finally { DrainSourceRetirements(); } }
     /// <summary>Returns the primary face's style name.</summary>
     /// <returns>The style name, or an empty name without data.</returns><exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public string GetFontStyleName() { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.StyleName ?? string.Empty; } }
+    public string GetFontStyleName() { try { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.StyleName ?? string.Empty; } } finally { DrainSourceRetirements(); } }
     /// <summary>Returns the primary face's intrinsic style flags.</summary>
     /// <returns>The style flags.</returns><exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public FontStyle GetFontStyle() { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.FontStyle ?? FontStyle.None; } }
+    public FontStyle GetFontStyle() { try { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.FontStyle ?? FontStyle.None; } } finally { DrainSourceRetirements(); } }
     /// <summary>Returns the primary face's weight class.</summary>
     /// <returns>The weight, with four hundred representing normal weight.</returns><exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public int GetFontWeight() { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.FontWeight ?? 400; } }
+    public int GetFontWeight() { try { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.FontWeight ?? 400; } } finally { DrainSourceRetirements(); } }
     /// <summary>Returns the primary face's width as a percentage of normal width.</summary>
     /// <returns>The stretch percentage.</returns><exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public int GetFontStretch() { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.FontStretch ?? 100; } }
+    public int GetFontStretch() { try { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.FontStretch ?? 100; } } finally { DrainSourceRetirements(); } }
     /// <summary>Returns the number of faces in the primary font collection.</summary>
     /// <returns>The collection face count, or zero without data.</returns><exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public virtual int GetFaceCount() { lock (FontGate) { ThrowIfDisposed(); var data = PrimaryData; return data?.AdvertisedFaceCount ?? data?.FaceCount ?? 0; } }
+    public virtual int GetFaceCount() { try { lock (FontGate) { ThrowIfDisposed(); var data = PrimaryData; return data?.AdvertisedFaceCount ?? data?.FaceCount ?? 0; } } finally { DrainSourceRetirements(); } }
     /// <summary>Returns additional spacing supplied by this font.</summary>
     /// <param name="spacing">The spacing category.</param><returns>Zero for an unmodified font.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The spacing category is invalid.</exception>
@@ -442,6 +447,7 @@ public abstract partial class Font : Resource
     {
         internal readonly List<FontData> Sources = [];
         internal readonly List<Font> Dependencies = [];
+        internal readonly List<long> SystemGenerations = [];
         internal readonly List<long> Generations = [];
         internal long Generation;
         internal TextLayout? Scratch;
@@ -459,13 +465,21 @@ public abstract partial class Font : Resource
                     var dependency = context.Dependencies[i]; dependency.ThrowIfDisposed();
                     if (Volatile.Read(ref dependency._generation) != context.Generations[i]) return false;
                 }
+                for (var i = 0; i < context.Sources.Count; i++)
+                    if (context.Sources[i].SystemGeneration != context.SystemGenerations[i] || !context.Sources[i].SystemSourcesCurrent) return false;
                 return true;
             }
         }
         public void Dispose()
         {
+            Exception? failure = null;
             try { ReleaseContext(context, context.Sources.Count); }
-            finally { owner._readDepth--; Monitor.Exit(owner.FontGate); }
+            catch (Exception error) { failure = error; }
+            finally { owner._readDepth--; ActiveFontReads--; Monitor.Exit(owner.FontGate); }
+            try { owner.DrainSourceRetirements(failure); } catch (Exception error) { failure = error; }
+            try { DrainPendingSourceRetirements(); }
+            catch (Exception error) { if (failure is not null) throw new AggregateException(failure, error); throw; }
+            if (failure is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(failure).Throw();
         }
     }
     private ReadContext ReadContextAt(int depth)
@@ -476,7 +490,7 @@ public abstract partial class Font : Resource
     }
     internal ReadScope BeginRead()
     {
-        Monitor.Enter(FontGate);
+        Monitor.Enter(FontGate); ActiveFontReads++;
         ReadContext? context = null; var acquired = 0;
         try
         {
@@ -485,6 +499,7 @@ public abstract partial class Font : Resource
             {
                 EnsureSourcesCurrent();
                 context.Generation = _generation; context.Sources.AddRange(_sources);
+                foreach (var source in context.Sources) context.SystemGenerations.Add(source.SystemGeneration);
                 context.Dependencies.AddRange(_dependencies); context.Generations.AddRange(_dependencyGenerations);
                 while (acquired < context.Sources.Count && context.Sources[acquired].TryAcquireRead()) acquired++;
                 if (acquired == context.Sources.Count) { _readDepth++; return new(this, context); }
@@ -495,7 +510,7 @@ public abstract partial class Font : Resource
         catch
         {
             try { if (context is not null) ReleaseContext(context, acquired); }
-            finally { Monitor.Exit(FontGate); }
+            finally { ActiveFontReads--; Monitor.Exit(FontGate); DrainPendingSourceRetirements(); }
             throw;
         }
     }
@@ -504,7 +519,7 @@ public abstract partial class Font : Resource
         List<Exception>? errors = null;
         for (var i = 0; i < acquired; i++)
             try { context.Sources[i].ReleaseRead(); } catch (Exception error) { (errors ??= []).Add(error); }
-        context.Sources.Clear(); context.Dependencies.Clear(); context.Generations.Clear();
+        context.Sources.Clear(); context.SystemGenerations.Clear(); context.Dependencies.Clear(); context.Generations.Clear();
         if (errors is not null) throw new AggregateException("Font read cleanup failed.", errors);
     }
     internal static InvalidOperationException UnsettledRead() => new("Font content did not settle after sixty-four read attempts.");
@@ -512,6 +527,7 @@ public abstract partial class Font : Resource
     {
         if (!_sourcesDirty)
         {
+            foreach (var source in _sources) if (source.RefreshSystemSources()) { ClearLayoutCaches(); break; }
             for (var i = 0; i < _dependencies.Count; i++)
             {
                 var dependency = _dependencies[i];
@@ -536,6 +552,7 @@ public abstract partial class Font : Resource
             var data = font.PrimaryData;
             if (data is not null && (data.HasData || data.AllowSystemFallback) && !_sources.Contains(data)) _sources.Add(data);
             if (font.BaseDependency is { } dependency) CollectDependency(dependency, depth + 1);
+            if (font.SourceDependency is { } backend) CollectDependency(backend, depth + 1);
             foreach (var fallback in font.EffectiveFallbacks) if (fallback is not null) CollectSources(fallback, depth + 1);
         }
     }
@@ -543,12 +560,12 @@ public abstract partial class Font : Resource
     {
         if (depth > 64) throw new InvalidOperationException("Font base depth exceeds sixty-four levels.");
         if (_dependencies.Contains(font)) return;
-        lock (font.FontGate) { font.ThrowIfDisposed(); _dependencies.Add(font); _dependencyGenerations.Add(font._generation); if (font.BaseDependency is { } parent) CollectDependency(parent, depth + 1); }
+        lock (font.FontGate) { font.ThrowIfDisposed(); _dependencies.Add(font); _dependencyGenerations.Add(font._generation); if (font.BaseDependency is { } parent) CollectDependency(parent, depth + 1); if (font.SourceDependency is { } backend) CollectDependency(backend, depth + 1); }
     }
     private FontData? FindSource(uint character, bool systemFallback = false)
     {
         foreach (var source in GetSources()) if (source.GetGlyphIndex(character) != 0) return source;
-        if (systemFallback) foreach (var source in GetSources()) if (source.FindSystemFallback(character, "") is { } fallback) return fallback;
+        if (systemFallback) foreach (var source in GetSources()) if (source.FindSystemFallback(character, "", this) is { } fallback) return fallback;
         return null;
     }
     private float GetMetric(int size, int kind)
@@ -562,8 +579,9 @@ public abstract partial class Font : Resource
                 var m = source.GetMetrics(size);
                 result = Math.Max(result, kind switch { 0 => m.Ascent, 1 => m.Descent, 2 => m.Height, 3 => m.UnderlinePosition, _ => m.UnderlineThickness });
             }
-            if (kind is 0 or 2 or 3) result += GetSpacing(TextSpacingType.Top);
-            if (kind is 1 or 2) result += GetSpacing(TextSpacingType.Bottom);
+            var primary = PrimaryData;
+            if (kind is 0 or 2 or 3) result += GetShapingSpacing(primary, TextSpacingType.Top);
+            if (kind is 1 or 2) result += GetShapingSpacing(primary, TextSpacingType.Bottom);
             if (read.IsCurrent) return result;
         }
         throw UnsettledRead();
@@ -599,7 +617,7 @@ public abstract partial class Font : Resource
     internal void InvalidateFont()
     {
         lock (FontGate) { ThrowIfDisposed(); ClearLayoutCaches(); }
-        EmitChanged();
+        EmitFontChanged();
     }
     internal void InvalidateFontStateLocked()
     {
@@ -626,6 +644,6 @@ public abstract partial class Font : Resource
     protected override void Dispose(bool disposing)
     {
         if (disposing) lock (FontGate) { UnsubscribeFallbacks(); _fallbacks = []; _sources.Clear(); _dependencies.Clear(); _dependencyGenerations.Clear(); _single.Clear(); _multi.Clear(); }
-        base.Dispose(disposing);
+        try { DrainSourceRetirements(); } finally { base.Dispose(disposing); }
     }
 }

@@ -49,7 +49,7 @@ public partial class FontFile
             if (copies.Count > 0) retired = PublishCachesLocked(copies);
             _fixedSize = nextSize; _fixedScaleMode = nextMode; InvalidateFontStateLocked();
         }
-        if (retired != null) NotifyRetired(retired); else EmitChanged();
+        if (retired != null) NotifyRetired(retired); else EmitFontChanged();
     }
     /// <summary>Atomically imports a text or binary version-three AngelCode BMFont and its image pages.</summary>
     /// <param name="path">Operating-system, res:// or user:// font descriptor path.</param>
@@ -68,10 +68,10 @@ public partial class FontFile
             replacement.AllowSystemFallback = true; replacement.Hinting = FontHinting.None; replacement.SubpixelPositioning = FontSubpixelPositioning.Disabled;
             replacement.SupportPolicy = _fontData!.SupportPolicy; replacement.OpenTypeFeatures = _fontData.OpenTypeFeatures; replacement.FamilyName = imported.Name; replacement.FontStyle = imported.Style;
             replacement.FontWeight = (imported.Style & FontStyle.Bold) != 0 ? 700 : 400;
-            retired.Add(_fontData); retired.AddRange(_cacheData.Values); _cacheData.Clear(); _caches.Clear(); _caches.Add(imported.Cache);
+            RetireSourceIdentityLocked(); retired.Add(_fontData); retired.AddRange(_cacheData.Values); _cacheData.Clear(); _caches.Clear(); _caches.Add(imported.Cache);
             _fixedSize = imported.Cache.FixedSize; _fixedScaleMode = imported.Cache.ScaleMode; _fontData = replacement; _bytes = []; _type1Metrics = []; _deferred = false; InvalidateFontStateLocked();
         }
-        try { EmitChanged(); } finally { foreach (var data in retired) data.Dispose(); }
+        try { EmitFontChanged(); } finally { foreach (var data in retired) data.Dispose(); }
     }
     private sealed class BitmapInput
     {

@@ -409,3 +409,26 @@ CreateFont/CreateFontLinkedVariation return stable owned font RIDs. FontGetResou
 | `public System.Void FontSetWeight(Electron2D.RID fontRID, System.Int32 value)` | Executes the shared source/cache operation; see the owning contract. |
 | `public System.Collections.Generic.Dictionary<System.UInt32, Electron2D.FontFeatureInfo> FontSupportedFeatureList(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
 | `public System.Collections.Generic.Dictionary<System.UInt32, Electron2D.FontVariationAxis> FontSupportedVariationList(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+
+## Resource glyphs and visual runs
+
+FontGetResource accepts actual Font.GetRID/GetRIDs and automatic fallback identities as borrowed sources. Disposing a resource projection preserves its source; FreeRID rejects it. Service-created/link projections retain their own owned lifetime. All existing font cache/query/draw methods operate on the actual resource backend. See [source ownership](../components/text-server.md#resource-sources-glyph-snapshots-and-visual-runs).
+
+| Member | Result |
+| --- | --- |
+| `TextGlyph[] ShapedTextGetGlyphs(RID shaped)` | Independent complete visual raw glyph snapshot, unaffected by trimming. |
+| `TextGlyph[] ShapedTextSortLogical(RID shaped)` | Independent stable logical-order snapshot, preserving visual storage. |
+| `TextGlyph[] ShapedTextGetEllipsisGlyphs(RID shaped)` | Current display ellipsis only, with -1 scalar/span sentinels. |
+| `int ShapedTextGetEllipsisGlyphCount(RID shaped)` | Current ellipsis record count; repeats are not expanded. |
+| `int ShapedTextGetObjectGlyph(RID shaped, TextObjectKey key)` | Buffer-local visual index, or -1 for missing/partial objects. |
+| `int ShapedGetRunCount(RID shaped)` | Visual run count; zero for an empty buffer. |
+| `string ShapedGetRunText(RID shaped, int index)` | Copied original run text in logical order. |
+| `Vector2i ShapedGetRunRange(RID shaped, int index)` | Half-open global scalar range. |
+| `Vector2i ShapedGetRunGlyphRange(RID shaped, int index)` | Inclusive first/last cluster-leader indices. Last Count covers continuations. |
+| `RID ShapedGetRunFontRID(RID shaped, int index)` | Actual borrowed font source, or empty for an object/missing replacement. |
+| `int ShapedGetRunFontSize(RID shaped, int index)` | Actual logical size; zero for objects. |
+| `string ShapedGetRunLanguage(RID shaped, int index)` | Authored span language, empty for objects. |
+| `TextDirection ShapedGetRunDirection(RID shaped, int index)` | Resolved LTR or RTL. |
+| `TextObjectKey? ShapedGetRunObject(RID shaped, int index)` | Borrowed inline token, null for ordinary text. |
+
+Run getters reject absent indices. Adjacent visual leaders join only when their span/source/size/direction agree. Substrings retain original span/global coordinates through their source lease; paragraph line views use their current raw/display workspace. Scalar/value run queries reuse storage. Arrays and copied run strings may allocate. TextGlyph source identities stay borrowed and may retire after a query.

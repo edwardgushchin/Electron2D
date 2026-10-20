@@ -12399,6 +12399,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.TextGlyph",
+    "kind": "type",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "TextGlyph",
+    "signature": "public struct Electron2D.TextGlyph",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [
+      "System.IEquatable\u003CElectron2D.TextGlyph\u003E"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TextGraphemeFlags",
     "kind": "type",
     "declaringType": "Electron2D.TextGraphemeFlags",
@@ -24232,6 +24247,75 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.TextGlyph..ctor(System.Int32,System.Int32,System.Int32,System.Int32,Electron2D.TextGraphemeFlags,Electron2D.Vector2,System.Single,Electron2D.RID,System.Int32,System.Int32,System.Int32)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": ".ctor",
+    "signature": "public TextGlyph(System.Int32 Start, System.Int32 End, System.Int32 Repeat, System.Int32 Count, Electron2D.TextGraphemeFlags Flags, Electron2D.Vector2 Offset, System.Single Advance, Electron2D.RID FontRID, System.Int32 FontSize, System.Int32 Index, System.Int32 SpanIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "Start",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "End",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "Repeat",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "Count",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "Flags",
+        "type": "Electron2D.TextGraphemeFlags",
+        "default": null
+      },
+      {
+        "name": "Offset",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "Advance",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "FontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "FontSize",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "Index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "SpanIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -99663,6 +99747,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Font.GetRID()",
+    "kind": "method",
+    "declaringType": "Electron2D.Font",
+    "name": "GetRID",
+    "signature": "public override Electron2D.RID GetRID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Font.GetRIDs()",
+    "kind": "method",
+    "declaringType": "Electron2D.Font",
+    "name": "GetRIDs",
+    "signature": "public Electron2D.RID[] GetRIDs()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID[]",
     "value": null
   },
   {
@@ -186985,6 +187095,139 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextGlyph.Deconstruct(ref System.Int32,ref System.Int32,ref System.Int32,ref System.Int32,ref Electron2D.TextGraphemeFlags,ref Electron2D.Vector2,ref System.Single,ref Electron2D.RID,ref System.Int32,ref System.Int32,ref System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "Deconstruct",
+    "signature": "public System.Void Deconstruct(out System.Int32 Start, out System.Int32 End, out System.Int32 Repeat, out System.Int32 Count, out Electron2D.TextGraphemeFlags Flags, out Electron2D.Vector2 Offset, out System.Single Advance, out Electron2D.RID FontRID, out System.Int32 FontSize, out System.Int32 Index, out System.Int32 SpanIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "Start",
+        "type": "ref System.Int32",
+        "default": null
+      },
+      {
+        "name": "End",
+        "type": "ref System.Int32",
+        "default": null
+      },
+      {
+        "name": "Repeat",
+        "type": "ref System.Int32",
+        "default": null
+      },
+      {
+        "name": "Count",
+        "type": "ref System.Int32",
+        "default": null
+      },
+      {
+        "name": "Flags",
+        "type": "ref Electron2D.TextGraphemeFlags",
+        "default": null
+      },
+      {
+        "name": "Offset",
+        "type": "ref Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "Advance",
+        "type": "ref System.Single",
+        "default": null
+      },
+      {
+        "name": "FontRID",
+        "type": "ref Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "FontSize",
+        "type": "ref System.Int32",
+        "default": null
+      },
+      {
+        "name": "Index",
+        "type": "ref System.Int32",
+        "default": null
+      },
+      {
+        "name": "SpanIndex",
+        "type": "ref System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextGlyph.Equals(Electron2D.TextGlyph)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "Equals",
+    "signature": "public virtual System.Boolean Equals(Electron2D.TextGlyph other)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "other",
+        "type": "Electron2D.TextGlyph",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextGlyph.Equals(System.Object)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "Equals",
+    "signature": "public override System.Boolean Equals(System.Object obj)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "obj",
+        "type": "System.Object",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextGlyph.GetHashCode()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "GetHashCode",
+    "signature": "public override System.Int32 GetHashCode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextGlyph.ToString()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "ToString",
+    "signature": "public override System.String ToString()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextLine.AddObject(Electron2D.TextObjectKey,Electron2D.Vector2,Electron2D.InlineAlignment,System.Int32,System.Single)",
     "kind": "method",
     "declaringType": "Electron2D.TextLine",
@@ -191858,6 +192101,217 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServer.ShapedGetRunCount(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedGetRunCount",
+    "signature": "public System.Int32 ShapedGetRunCount(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedGetRunDirection(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedGetRunDirection",
+    "signature": "public Electron2D.TextDirection ShapedGetRunDirection(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedGetRunFontRID(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedGetRunFontRID",
+    "signature": "public Electron2D.RID ShapedGetRunFontRID(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedGetRunFontSize(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedGetRunFontSize",
+    "signature": "public System.Int32 ShapedGetRunFontSize(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedGetRunGlyphRange(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedGetRunGlyphRange",
+    "signature": "public Electron2D.Vector2i ShapedGetRunGlyphRange(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedGetRunLanguage(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedGetRunLanguage",
+    "signature": "public System.String ShapedGetRunLanguage(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedGetRunObject(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedGetRunObject",
+    "signature": "public Electron2D.TextObjectKey ShapedGetRunObject(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextObjectKey",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedGetRunRange(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedGetRunRange",
+    "signature": "public Electron2D.Vector2i ShapedGetRunRange(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedGetRunText(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedGetRunText",
+    "signature": "public System.String ShapedGetRunText(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServer.ShapedGetSpanCount(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.TextServer",
@@ -192505,6 +192959,44 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServer.ShapedTextGetEllipsisGlyphCount(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetEllipsisGlyphCount",
+    "signature": "public System.Int32 ShapedTextGetEllipsisGlyphCount(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetEllipsisGlyphs(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetEllipsisGlyphs",
+    "signature": "public Electron2D.TextGlyph[] ShapedTextGetEllipsisGlyphs(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextGlyph[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServer.ShapedTextGetEllipsisPos(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.TextServer",
@@ -192540,6 +193032,25 @@
       }
     ],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetGlyphs(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetGlyphs",
+    "signature": "public Electron2D.TextGlyph[] ShapedTextGetGlyphs(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextGlyph[]",
     "value": null
   },
   {
@@ -192656,6 +193167,30 @@
       }
     ],
     "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextGetObjectGlyph(Electron2D.RID,Electron2D.TextObjectKey)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextGetObjectGlyph",
+    "signature": "public System.Int32 ShapedTextGetObjectGlyph(Electron2D.RID shaped, Electron2D.TextObjectKey key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "Electron2D.TextObjectKey",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -193485,6 +194020,25 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.ShapedTextSortLogical(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "ShapedTextSortLogical",
+    "signature": "public Electron2D.TextGlyph[] ShapedTextSortLogical(Electron2D.RID shaped)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextGlyph[]",
     "value": null
   },
   {
@@ -220767,6 +221321,54 @@
       {
         "name": "right",
         "type": "Electron2D.TextBIDIRange",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.TextGlyph.op_Equality(Electron2D.TextGlyph,Electron2D.TextGlyph)",
+    "kind": "operator",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "op_Equality",
+    "signature": "public static System.Boolean op_Equality(Electron2D.TextGlyph left, Electron2D.TextGlyph right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.TextGlyph",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.TextGlyph",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.TextGlyph.op_Inequality(Electron2D.TextGlyph,Electron2D.TextGlyph)",
+    "kind": "operator",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "op_Inequality",
+    "signature": "public static System.Boolean op_Inequality(Electron2D.TextGlyph left, Electron2D.TextGlyph right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.TextGlyph",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.TextGlyph",
         "default": null
       }
     ],
@@ -258086,6 +258688,149 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.TextEdit.LineWrappingMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextGlyph.Advance()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "Advance",
+    "signature": "public System.Single Advance { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextGlyph.Count()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "Count",
+    "signature": "public System.Int32 Count { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextGlyph.End()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "End",
+    "signature": "public System.Int32 End { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextGlyph.Flags()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "Flags",
+    "signature": "public Electron2D.TextGraphemeFlags Flags { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextGraphemeFlags",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextGlyph.FontRID()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "FontRID",
+    "signature": "public Electron2D.RID FontRID { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextGlyph.FontSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "FontSize",
+    "signature": "public System.Int32 FontSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextGlyph.Index()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "Index",
+    "signature": "public System.Int32 Index { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextGlyph.Offset()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "Offset",
+    "signature": "public Electron2D.Vector2 Offset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextGlyph.Repeat()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "Repeat",
+    "signature": "public System.Int32 Repeat { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextGlyph.SpanIndex()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "SpanIndex",
+    "signature": "public System.Int32 SpanIndex { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextGlyph.Start()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextGlyph",
+    "name": "Start",
+    "signature": "public System.Int32 Start { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {

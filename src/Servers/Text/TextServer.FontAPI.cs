@@ -60,7 +60,7 @@ public abstract partial class TextServer
     /// <param name="fontRID">Live root or linked font identity.</param>
     /// <returns>A typed current value or caller-owned snapshot; renderer texture identities remain borrowed.</returns>
     /// <remarks>Source/config/cache edits affect every link. Spacing and baseline belong to the individual identity. Invalid inputs fail before publication; source retirement is explicit.</remarks>
-    public float FontGetBaselineOffset(RID fontRID) => FontEntry(fontRID).Baseline;
+    public float FontGetBaselineOffset(RID fontRID) => SourceBaseline(fontRID);
     /// <summary>Returns the first primary character mapped to a glyph, or zero.</summary>
     /// <param name="fontRID">Live root or linked font identity.</param>
     /// <param name="size">Positive bounded font size, or size and nonnegative outline radius.</param>
@@ -88,7 +88,7 @@ public abstract partial class TextServer
     /// <param name="fontRID">Live root or linked font identity.</param>
     /// <returns>A typed current value or caller-owned snapshot; renderer texture identities remain borrowed.</returns>
     /// <remarks>Source/config/cache edits affect every link. Spacing and baseline belong to the individual identity. Invalid inputs fail before publication; source retirement is explicit.</remarks>
-    public int FontGetFaceCount(RID fontRID) => SourceFont(fontRID).GetFaceCount();
+    public int FontGetFaceCount(RID fontRID) => SourceFont(fontRID).SourceFaceCount;
     /// <summary>Reads the shared font face index.</summary>
     /// <param name="fontRID">Live root or linked font identity.</param>
     /// <returns>A typed current value or caller-owned snapshot; renderer texture identities remain borrowed.</returns>
@@ -297,7 +297,7 @@ public abstract partial class TextServer
     /// <param name="spacing">Typed value or source selector; input collections are copied and output snapshots are independent.</param>
     /// <returns>A typed current value or caller-owned snapshot; renderer texture identities remain borrowed.</returns>
     /// <remarks>Source/config/cache edits affect every link. Spacing and baseline belong to the individual identity. Invalid inputs fail before publication; source retirement is explicit.</remarks>
-    public int FontGetSpacing(RID fontRID, TextSpacingType spacing) => FontEntry(fontRID).GetSpacing(spacing);
+    public int FontGetSpacing(RID fontRID, TextSpacingType spacing) => SourceSpacing(fontRID, spacing);
     /// <summary>Reads the shared font stretch setting.</summary>
     /// <param name="fontRID">Live root or linked font identity.</param>
     /// <returns>A typed current value or caller-owned snapshot; renderer texture identities remain borrowed.</returns>
@@ -484,7 +484,7 @@ public abstract partial class TextServer
     /// <param name="fontRID">Live root or linked font identity.</param>
     /// <param name="value">Typed value or source selector; input collections are copied and output snapshots are independent.</param>
     /// <remarks>Source/config/cache edits affect every link. Spacing and baseline belong to the individual identity. Invalid inputs fail before publication; source retirement is explicit.</remarks>
-    public void FontSetBaselineOffset(RID fontRID, float value) => FontEntry(fontRID).Baseline = value;
+    public void FontSetBaselineOffset(RID fontRID, float value) => SourceBaseline(fontRID, value);
     /// <summary>Copies and validates source bytes before replacing the shared font data.</summary>
     /// <param name="fontRID">Live root or linked font identity.</param>
     /// <param name="data">Typed value or source selector; input collections are copied and output snapshots are independent.</param>
@@ -646,7 +646,7 @@ public abstract partial class TextServer
     /// <param name="spacing">Typed value or source selector; input collections are copied and output snapshots are independent.</param>
     /// <param name="value">Typed value or source selector; input collections are copied and output snapshots are independent.</param>
     /// <remarks>Source/config/cache edits affect every link. Spacing and baseline belong to the individual identity. Invalid inputs fail before publication; source retirement is explicit.</remarks>
-    public void FontSetSpacing(RID fontRID, TextSpacingType spacing, int value) => FontEntry(fontRID).SetSpacing(spacing, value);
+    public void FontSetSpacing(RID fontRID, TextSpacingType spacing, int value) => SourceSpacing(fontRID, spacing, value);
     /// <summary>Sets the shared font stretch setting.</summary>
     /// <param name="fontRID">Live root or linked font identity.</param>
     /// <param name="value">Typed value or source selector; input collections are copied and output snapshots are independent.</param>

@@ -1,6 +1,6 @@
 # SystemFont
 
-Last updated: 2026-10-14
+Last updated: 2026-10-20
 
 **Namespace:** Electron2D · **Declaration:** public partial class SystemFont · **Inherits:** [Font](Font.md) · **Inherited By:** — · **Source:** [SystemFont.cs](../../src/Scene/Resources/SystemFont.cs) · **Component:** [System fonts](../components/system-fonts.md)
 
@@ -208,3 +208,7 @@ using var font = new SystemFont
 FontMSDFTests verifies publication, geometry, canonical caches, active source snapshots, configured and variable variants, authored distance pages, mipmaps, actual isolated color fallback, storage and native failure boundaries. The independent stock FreeType/msdfgen oracle compares 216 exact images/bounds, including quadratic and cubic outlines, hinting, range, size, emboldening and shear. Linux Wayland pixel hosts exercise scalar/string/variation/outline/clip/Label consumers at three source resolutions, MSAA and Compatibility capability cleanup, with 64 active/64 idle zero-managed-byte prepared intervals. Native allocator totals, foreign execution and owner acceptance remain unverified.
 
 Type 1 PFB/PFA sources share native shaping and raster/MSDF consumers. The common file reader resolves optional PFM/AFM metrics and preserves their byte snapshot in variations and reopened native faces. Linux catalog discovery admits scalable Type 1 sources. See [source-pair behavior and verification](../components/text.md#type-1-outline-and-auxiliary-metric-sources).
+
+## Runtime source identity
+
+GetRID/GetRIDs realize the current matched/theme source and expose its private native cache. TextServer queries and edits reach that actual backend, independently of stored matching preferences. Native face-count queries describe the actual selected file; the resource's logical/theme face-count policy is unchanged. Matching or theme/base source changes retire the previous cache and its borrowed views, including changes detected through dependency generations after a failed observer. Source projections keep the owning SystemFont alive. Automatic fallback identities are reported by glyph/run snapshots after realization.

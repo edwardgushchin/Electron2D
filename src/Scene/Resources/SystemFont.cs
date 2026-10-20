@@ -12,7 +12,9 @@ public partial class SystemFont : Font
     private FontHinting _hinting = FontHinting.Light;
     private FontSubpixelPositioning _subpixel = FontSubpixelPositioning.Auto;
     private float _oversampling;
-    private FontData? _data;
+    private FontFile? _sourceFile;
+    private long _sourceThemeGeneration = -1;
+    private readonly Action<Resource> _backendChanged;
     private int[] _faces = [];
     private Font? _theme;
     private bool _themeSubscribed, _usesTheme;
@@ -28,13 +30,28 @@ public partial class SystemFont : Font
         changed = value => { if (weak.TryGetTarget(out var owner) && !owner.IsDisposed) owner.OnSourceChanged(); else value.Changed -= changed; };
         disposed = value => { if (weak.TryGetTarget(out var owner) && !owner.IsDisposed) owner.OnSourceChanged(); else value.Disposed -= disposed; };
         _themeChanged = theme; _sourceChanged = changed; _sourceDisposed = disposed;
+        Action<Resource>? backendChanged = null;
+        backendChanged = value => { if (weak.TryGetTarget(out var owner) && !owner.IsDisposed) owner.BackendChanged(value); else value.Changed -= backendChanged; };
+        _backendChanged = backendChanged;
     }
+    internal override Font? SourceDependency => _sourceFile;
     internal override Font? BaseDependency => _theme;
     internal override Font?[] EffectiveFallbacks => LocalFallbacks.Length > 0 ? LocalFallbacks : _theme?.EffectiveFallbacks ?? [];
-    internal override FontData? PrimaryData { get { lock (FontGate) { ThrowIfDisposed(); if (_data == null) ResolveLocked(); return _data; } } }
-    private void OnThemeChanged() { lock (FontGate) { if (!_usesTheme) return; RetireLocked(); } EmitChanged(); }
-    private void OnSourceChanged() { lock (FontGate) { if (IsDisposed) return; RetireLocked(); } EmitChanged(); }
-    private void RetireLocked() { var old = _data; _data = null; _faces = []; InvalidateFontStateLocked(); old?.Dispose(); }
+    internal override FontData? PrimaryData { get { lock (FontGate) { ThrowIfDisposed(); if (_sourceFile is not null && _theme is not null && _sourceThemeGeneration != _theme.GetContentGeneration()) RetireLocked(); if (_sourceFile == null) ResolveLocked(); return _sourceFile?.PrimaryData; } } }
+    private void OwnBackend(FontData data) { _sourceFile = FontFile.AdoptSource(data, [0, 0, 0, 0], this); _sourceFile.Changed += _backendChanged; }
+    private void BackendChanged(Resource source)
+    {
+        lock (FontGate) { if (IsDisposalCommitted || IsDisposed || !ReferenceEquals(source, _sourceFile)) return; InvalidateFontStateLocked(); }
+        EmitFontChanged();
+    }
+    internal override int GetShapingSpacing(FontData? source, TextSpacingType spacing)
+    {
+        if (source?.SourceOwner?.TryGetTarget(out var owner) == true && ReferenceEquals(owner, _sourceFile)) return checked(owner.GetSpacing(spacing) + GetSpacing(spacing));
+        return source is null ? GetSpacing(spacing) : GetSourceSpacing(source, spacing);
+    }
+    private void OnThemeChanged() { lock (FontGate) { if (!_usesTheme) return; RetireLocked(); } EmitFontChanged(); }
+    private void OnSourceChanged() { lock (FontGate) { if (IsDisposed) return; RetireLocked(); } EmitFontChanged(); }
+    private void RetireLocked() { var old = _sourceFile; if (old is not null) old.Changed -= _backendChanged; _sourceFile = null; _faces = []; InvalidateFontStateLocked(); if (old is not null) QueueSourceRetirement(old); }
     private void Unwatch()
     {
         if (_theme != null) { _theme.Changed -= _sourceChanged; _theme.Disposed -= _sourceDisposed; _theme = null; }
@@ -68,7 +85,7 @@ public partial class SystemFont : Font
                         if (_italic && source.VariationAxes.ContainsKey(0x6974616c)) coordinates[0x6974616c] = 1;
                     }
                     var data = new FontData(bytes, faces[0], new(faces[0], coordinates, 0, Transform.Identity, 0, 0, []), auxiliaryMetrics: source.SourceMetrics);
-                    _faces = faces.ToArray(); data.SystemFaces = _faces; data.AdvertisedFaceCount = _faces.Length; Configure(data); _data = data; return;
+                    _faces = faces.ToArray(); data.SystemFaces = _faces; data.AdvertisedFaceCount = _faces.Length; Configure(data); OwnBackend(data); return;
                 }
                 catch (Exception error) when (error is IOException or ArgumentException or InvalidOperationException or NotSupportedException) { }
                 finally { source?.Dispose(); }
@@ -79,15 +96,15 @@ public partial class SystemFont : Font
         if (ReferenceEquals(theme, this)) throw new InvalidOperationException("Cyclic system font theme fallback.");
         if (theme != null)
         {
-            ValidateFallback(theme, this, 1); _theme = theme; theme.Changed += _sourceChanged; theme.Disposed += _sourceDisposed;
-            if (theme.PrimaryData is { } data) { _data = data.CreateVariation(new(0, [], 0, Transform.Identity, 0, 0, [])); Configure(_data); _data.AdvertisedFaceCount = 0; }
+            ValidateFallback(theme, this, 1); _theme = theme; _sourceThemeGeneration = theme.GetContentGeneration(); theme.Changed += _sourceChanged; theme.Disposed += _sourceDisposed;
+            if (theme.PrimaryData is { } data) { var created = data.CreateVariation(new(0, [], 0, Transform.Identity, 0, 0, [])); Configure(created); created.AdvertisedFaceCount = 0; OwnBackend(created); }
         }
     }
     private void Configure(FontData data) { data.MultichannelSignedDistanceField = _msdf; data.MSDFPixelRange = _msdfRange; data.MSDFSize = _msdfSize; data.Antialiasing = _antialiasing; data.DisableEmbeddedBitmaps = _disableEmbeddedBitmaps; data.ForceAutohinter = _forceAutohinter; data.GenerateMIPMaps = _generateMipmaps; data.Hinting = _hinting; data.SubpixelPositioning = _subpixel; data.KeepRoundingRemainders = _remainders; data.ModulateColorGlyphs = _modulate; data.Oversampling = _oversampling; data.AllowSystemFallback = _allowSystemFallback; }
     private void Set<T>(ref T field, T value)
     {
         lock (FontGate) { ThrowIfDisposed(); if (EqualityComparer<T>.Default.Equals(field, value)) return; field = value; RetireLocked(); }
-        EmitChanged();
+        EmitFontChanged();
     }
     /// <summary>Gets or replaces ordered preferred family names.</summary>
     /// <value>Independent copied array, initially empty. Empty entries are skipped; unavailable names follow platform matching/default-theme behavior.</value>
@@ -95,7 +112,7 @@ public partial class SystemFont : Font
     public string[] FontNames
     {
         get { lock (FontGate) { ThrowIfDisposed(); return (string[])_names.Clone(); } }
-        set { ArgumentNullException.ThrowIfNull(value); if (value.Length > 1024) throw new ArgumentOutOfRangeException(nameof(value)); var copy = (string[])value.Clone(); foreach (var name in copy) { ArgumentNullException.ThrowIfNull(name); if (name.Length > 65536 || name.Contains('\0')) throw new ArgumentException("Invalid font family name.", nameof(value)); } lock (FontGate) { ThrowIfDisposed(); if (_names.AsSpan().SequenceEqual(copy)) return; _names = copy; RetireLocked(); } EmitChanged(); }
+        set { ArgumentNullException.ThrowIfNull(value); if (value.Length > 1024) throw new ArgumentOutOfRangeException(nameof(value)); var copy = (string[])value.Clone(); foreach (var name in copy) { ArgumentNullException.ThrowIfNull(name); if (name.Length > 65536 || name.Contains('\0')) throw new ArgumentException("Invalid font family name.", nameof(value)); } lock (FontGate) { ThrowIfDisposed(); if (_names.AsSpan().SequenceEqual(copy)) return; _names = copy; RetireLocked(); } EmitFontChanged(); }
     }
     /// <summary>Gets or sets whether italic/oblique is preferred.</summary><value>False initially; matching may substitute the nearest style.</value><exception cref="ObjectDisposedException">The font is disposed.</exception>
     public bool FontItalic { get { lock (FontGate) { ThrowIfDisposed(); return _italic; } } set => Set(ref _italic, value); }
@@ -153,7 +170,7 @@ public partial class SystemFont : Font
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        FontData? data; lock (FontGate) { Unwatch(); data = _data; _data = null; _faces = []; _names = []; }
+        FontFile? data; lock (FontGate) { Unwatch(); data = _sourceFile; if (data is not null) data.Changed -= _backendChanged; _sourceFile = null; _faces = []; _names = []; }
         try { data?.Dispose(); } finally { base.Dispose(disposing); }
     }
 }

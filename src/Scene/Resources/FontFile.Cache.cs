@@ -498,9 +498,9 @@ public partial class FontFile
     public override int GetSpacing(TextSpacingType spacing) => GetExtraSpacing(0, spacing);
     private void ResetCaches(int? remove)
     {
-        EditCacheList(caches => { if (remove is { } index) { if (index < 0 || index >= caches.Count) throw new ArgumentOutOfRangeException(nameof(remove)); caches.RemoveAt(index); } else caches.Clear(); }, false);
+        EditCacheList(caches => { if (remove is { } index) { if (index < 0 || index >= caches.Count) throw new ArgumentOutOfRangeException(nameof(remove)); caches.RemoveAt(index); } else caches.Clear(); }, false, remove is null or 0);
     }
-    private void EditCacheList(Action<List<FontCache>> edit, bool ensurePrimary = true)
+    private void EditCacheList(Action<List<FontCache>> edit, bool ensurePrimary = true, bool retireSource = false)
     {
         List<FontData> retired;
         lock (FontGate)
@@ -508,7 +508,7 @@ public partial class FontFile
             ThrowIfDisposed(); EnsureLoadedLocked(); if (ensurePrimary) CacheLocked(0);
             var copies = new List<FontCache>();
             for (var i = 0; i < _caches.Count; i++) { var data = DataLocked(i); lock (data.Gate) copies.Add(_caches[i].Clone()); }
-            edit(copies); retired = PublishCachesLocked(copies);
+            edit(copies); retired = PublishCachesLocked(copies); if (retireSource) RetireSourceIdentityLocked();
         }
         NotifyRetired(retired);
     }

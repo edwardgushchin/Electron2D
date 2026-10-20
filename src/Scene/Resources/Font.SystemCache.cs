@@ -39,7 +39,7 @@ public partial class Font
             foreach (var source in sources) source.ClearSystemFallbackCache();
             List<Exception>? errors = null;
             foreach (var font in fonts)
-                try { if (!font.IsDisposed) font.EmitChanged(); }
+                try { if (!font.IsDisposed) font.EmitFontChanged(); }
                 catch (Exception error) { (errors ??= []).Add(error); }
             if (errors is not null) throw new AggregateException("System font cache invalidation callbacks failed.", errors);
         }

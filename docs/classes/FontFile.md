@@ -1,6 +1,6 @@
 # FontFile
 
-Last updated: 2026-10-14
+Last updated: 2026-10-20
 
 **Inherits:** [Font](Font.md), [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
@@ -603,3 +603,7 @@ using var font = new FontFile
 FontMSDFTests verifies publication, geometry, canonical caches, active source snapshots, configured and variable variants, authored distance pages, mipmaps, actual isolated color fallback, storage and native failure boundaries. The independent stock FreeType/msdfgen oracle compares 216 exact images/bounds, including quadratic and cubic outlines, hinting, range, size, emboldening and shear. Linux Wayland pixel hosts exercise scalar/string/variation/outline/clip/Label consumers at three source resolutions, MSAA and Compatibility capability cleanup, with 64 active/64 idle zero-managed-byte prepared intervals. Native allocator totals, foreign execution and owner acceptance remain unverified.
 
 Native fixed-size cache policies now use the configured source size for metrics, shaping, rasterization and outline geometry, with requested-size scaling applied coherently. Cache raster queries honor font oversampling. Selected collection face changes refresh intrinsic metadata; same-face edits preserve descriptive overrides. [TextServer-owned sources](../components/text-server.md#owned-font-sources-and-caches) reuse this backend through stable service identities.
+
+## Borrowed source cache
+
+GetRID identifies cache zero through a weak register. GetRIDs includes explicit fallback resources in authored order. TextServer operations on this RID use this file's real data/configuration/cache; no source bytes or native face are copied merely to register it. Ordinary data/configuration edits preserve the RID. ClearCache, RemoveCache(0), full ResetState, successful file import, bitmap cache replacement and disposal retire it. A borrowed runtime Font projection may be disposed independently; copying the projection owns an independent FontFile snapshot. The internal SourceProjection and source-retirement queue preserve read leases and deliver invalidation outside font/native locks. Automatic fallback children own distinct private files and source identities.

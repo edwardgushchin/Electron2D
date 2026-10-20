@@ -1,6 +1,6 @@
 # FontData
 
-Last updated: 2026-10-14
+Last updated: 2026-10-20
 
 **Visibility:** internal · **Source:** [FontData.cs](../../src/Servers/Text/FontData.cs) · **Component:** [Text](../components/text.md)
 
@@ -43,3 +43,11 @@ Antialiasing is copied into configured variants and owned automatic fallback sou
 MSDF source settings propagate through owned variants and applicable automatic fallbacks. Canonical source/zero-outline images reuse residency across drawn sizes; returned value snapshots carry range, scale and outline metadata. Authored metrics project to requested size, while unhinted shaping remains independent. Color/non-scalable owned fallbacks retain ordinary images.
 
 Type 1 PFB/PFA sources share native shaping and raster/MSDF consumers. The common file reader resolves optional PFM/AFM metrics and preserves their byte snapshot in variations and reopened native faces. Linux catalog discovery admits scalable Type 1 sources. See [source-pair behavior and verification](../components/text.md#type-1-outline-and-auxiliary-metric-sources).
+
+## Source registration and automatic fallback reads
+
+SourceOwner weakly identifies the owning FontFile cache. Automatic fallback entries retain private FontFile owners and one current data read, with retired reads deferred across active parent readers. Child-generation checks invalidate coherent reads even before a Changed callback completes. Managed file retirement is queued to the owning Font and drained outside font/native gates; native cleanup only enqueues. Private baseline-shift measurement cancels the source's quantized native baseline when an independent linked projection supplies its own offset.
+
+Automatic fallback realization keys its cache by the effective four spacing values and baseline, so linked projections sharing a native source retain independent derived font identities. Derived files inherit the source instance's coordinates, embolden, transform, fixed-size policy and raster configuration. Parent spacing/baseline edits invalidate derived caches; direct child cache edits remain real runtime overrides until that invalidation. The existing sixty-four derived-source bound applies to realized parameter sets. Fallback discovery uses each span's language. Apply the effective baseline in the derived native instance, correcting the pinned factory's captured-but-unused baseline field. Keep public virtual GetSpacing policies active while projecting actual source-cache spacing.
+
+Native data reads and managed source disposal have separate endpoints. Retirement marks lookups unavailable immediately, while per-thread deferred owner lists drain managed files after the outermost font read exits. Native cleanup and source-file gates defer delivery; reentrant reads keep independent contexts. Resource projections and owned resource-linked entries retain their original owner until disposal, then release those references. Weak RID lookup alone never retains a resource.

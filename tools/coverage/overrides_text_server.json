@@ -1164,6 +1164,76 @@
       "godot": "TextServer::method:font_supported_variation_list(RID:)",
       "electron2d": "method:Electron2D.TextServer.FontSupportedVariationList(Electron2D.RID)",
       "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:shaped_get_run_count(RID:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedGetRunCount(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: complete weak resource-source cache RIDs and typed full visual/logical glyph/run producer over the actual FontFile/SystemFont/FontVariation/automatic fallback owners. Preserves copied eleven-field metadata, cluster counts/joining/repeats, global scalar/original span coordinates, inclusive run leader ranges, language/object identity, actual source/size/direction, independent display ellipsis and source-linked lifetime. Raw edits reach actual consumers; borrowed projection disposal/duplicate, cache retirement, callback failure, coherent reads and warmed scalar queries are checked. Native rendered, target package/platform, native allocator and owner gates remain independently reported."
+    },
+    {
+      "godot": "TextServer::method:shaped_get_run_direction(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedGetRunDirection(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: complete weak resource-source cache RIDs and typed full visual/logical glyph/run producer over the actual FontFile/SystemFont/FontVariation/automatic fallback owners. Preserves copied eleven-field metadata, cluster counts/joining/repeats, global scalar/original span coordinates, inclusive run leader ranges, language/object identity, actual source/size/direction, independent display ellipsis and source-linked lifetime. Raw edits reach actual consumers; borrowed projection disposal/duplicate, cache retirement, callback failure, coherent reads and warmed scalar queries are checked. Native rendered, target package/platform, native allocator and owner gates remain independently reported."
+    },
+    {
+      "godot": "TextServer::method:shaped_get_run_font_rid(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedGetRunFontRID(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: complete weak resource-source cache RIDs and typed full visual/logical glyph/run producer over the actual FontFile/SystemFont/FontVariation/automatic fallback owners. Preserves copied eleven-field metadata, cluster counts/joining/repeats, global scalar/original span coordinates, inclusive run leader ranges, language/object identity, actual source/size/direction, independent display ellipsis and source-linked lifetime. Raw edits reach actual consumers; borrowed projection disposal/duplicate, cache retirement, callback failure, coherent reads and warmed scalar queries are checked. Native rendered, target package/platform, native allocator and owner gates remain independently reported."
+    },
+    {
+      "godot": "TextServer::method:shaped_get_run_font_size(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedGetRunFontSize(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: complete weak resource-source cache RIDs and typed full visual/logical glyph/run producer over the actual FontFile/SystemFont/FontVariation/automatic fallback owners. Preserves copied eleven-field metadata, cluster counts/joining/repeats, global scalar/original span coordinates, inclusive run leader ranges, language/object identity, actual source/size/direction, independent display ellipsis and source-linked lifetime. Raw edits reach actual consumers; borrowed projection disposal/duplicate, cache retirement, callback failure, coherent reads and warmed scalar queries are checked. Native rendered, target package/platform, native allocator and owner gates remain independently reported."
+    },
+    {
+      "godot": "TextServer::method:shaped_get_run_glyph_range(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedGetRunGlyphRange(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: complete weak resource-source cache RIDs and typed full visual/logical glyph/run producer over the actual FontFile/SystemFont/FontVariation/automatic fallback owners. Preserves copied eleven-field metadata, cluster counts/joining/repeats, global scalar/original span coordinates, inclusive run leader ranges, language/object identity, actual source/size/direction, independent display ellipsis and source-linked lifetime. Raw edits reach actual consumers; borrowed projection disposal/duplicate, cache retirement, callback failure, coherent reads and warmed scalar queries are checked. Native rendered, target package/platform, native allocator and owner gates remain independently reported."
+    },
+    {
+      "godot": "TextServer::method:shaped_get_run_language(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedGetRunLanguage(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: complete weak resource-source cache RIDs and typed full visual/logical glyph/run producer over the actual FontFile/SystemFont/FontVariation/automatic fallback owners. Preserves copied eleven-field metadata, cluster counts/joining/repeats, global scalar/original span coordinates, inclusive run leader ranges, language/object identity, actual source/size/direction, independent display ellipsis and source-linked lifetime. Raw edits reach actual consumers; borrowed projection disposal/duplicate, cache retirement, callback failure, coherent reads and warmed scalar queries are checked. Native rendered, target package/platform, native allocator and owner gates remain independently reported."
+    },
+    {
+      "godot": "TextServer::method:shaped_get_run_object(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedGetRunObject(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: complete weak resource-source cache RIDs and typed full visual/logical glyph/run producer over the actual FontFile/SystemFont/FontVariation/automatic fallback owners. Preserves copied eleven-field metadata, cluster counts/joining/repeats, global scalar/original span coordinates, inclusive run leader ranges, language/object identity, actual source/size/direction, independent display ellipsis and source-linked lifetime. Raw edits reach actual consumers; borrowed projection disposal/duplicate, cache retirement, callback failure, coherent reads and warmed scalar queries are checked. Native rendered, target package/platform, native allocator and owner gates remain independently reported."
+    },
+    {
+      "godot": "TextServer::method:shaped_get_run_range(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedGetRunRange(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: complete weak resource-source cache RIDs and typed full visual/logical glyph/run producer over the actual FontFile/SystemFont/FontVariation/automatic fallback owners. Preserves copied eleven-field metadata, cluster counts/joining/repeats, global scalar/original span coordinates, inclusive run leader ranges, language/object identity, actual source/size/direction, independent display ellipsis and source-linked lifetime. Raw edits reach actual consumers; borrowed projection disposal/duplicate, cache retirement, callback failure, coherent reads and warmed scalar queries are checked. Native rendered, target package/platform, native allocator and owner gates remain independently reported."
+    },
+    {
+      "godot": "TextServer::method:shaped_get_run_text(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedGetRunText(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: complete weak resource-source cache RIDs and typed full visual/logical glyph/run producer over the actual FontFile/SystemFont/FontVariation/automatic fallback owners. Preserves copied eleven-field metadata, cluster counts/joining/repeats, global scalar/original span coordinates, inclusive run leader ranges, language/object identity, actual source/size/direction, independent display ellipsis and source-linked lifetime. Raw edits reach actual consumers; borrowed projection disposal/duplicate, cache retirement, callback failure, coherent reads and warmed scalar queries are checked. Native rendered, target package/platform, native allocator and owner gates remain independently reported."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_get_ellipsis_glyph_count(RID:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextGetEllipsisGlyphCount(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: complete weak resource-source cache RIDs and typed full visual/logical glyph/run producer over the actual FontFile/SystemFont/FontVariation/automatic fallback owners. Preserves copied eleven-field metadata, cluster counts/joining/repeats, global scalar/original span coordinates, inclusive run leader ranges, language/object identity, actual source/size/direction, independent display ellipsis and source-linked lifetime. Raw edits reach actual consumers; borrowed projection disposal/duplicate, cache retirement, callback failure, coherent reads and warmed scalar queries are checked. Native rendered, target package/platform, native allocator and owner gates remain independently reported."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_get_ellipsis_glyphs(RID:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextGetEllipsisGlyphs(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: complete weak resource-source cache RIDs and typed full visual/logical glyph/run producer over the actual FontFile/SystemFont/FontVariation/automatic fallback owners. Preserves copied eleven-field metadata, cluster counts/joining/repeats, global scalar/original span coordinates, inclusive run leader ranges, language/object identity, actual source/size/direction, independent display ellipsis and source-linked lifetime. Raw edits reach actual consumers; borrowed projection disposal/duplicate, cache retirement, callback failure, coherent reads and warmed scalar queries are checked. Native rendered, target package/platform, native allocator and owner gates remain independently reported."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_get_glyphs(RID:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextGetGlyphs(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: complete weak resource-source cache RIDs and typed full visual/logical glyph/run producer over the actual FontFile/SystemFont/FontVariation/automatic fallback owners. Preserves copied eleven-field metadata, cluster counts/joining/repeats, global scalar/original span coordinates, inclusive run leader ranges, language/object identity, actual source/size/direction, independent display ellipsis and source-linked lifetime. Raw edits reach actual consumers; borrowed projection disposal/duplicate, cache retirement, callback failure, coherent reads and warmed scalar queries are checked. Native rendered, target package/platform, native allocator and owner gates remain independently reported."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_get_object_glyph(RID:,Variant:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextGetObjectGlyph(Electron2D.RID,Electron2D.TextObjectKey)",
+      "reason": "ADR 0004/0046/0107: complete weak resource-source cache RIDs and typed full visual/logical glyph/run producer over the actual FontFile/SystemFont/FontVariation/automatic fallback owners. Preserves copied eleven-field metadata, cluster counts/joining/repeats, global scalar/original span coordinates, inclusive run leader ranges, language/object identity, actual source/size/direction, independent display ellipsis and source-linked lifetime. Raw edits reach actual consumers; borrowed projection disposal/duplicate, cache retirement, callback failure, coherent reads and warmed scalar queries are checked. Native rendered, target package/platform, native allocator and owner gates remain independently reported."
+    },
+    {
+      "godot": "TextServer::method:shaped_text_sort_logical(RID:)",
+      "electron2d": "method:Electron2D.TextServer.ShapedTextSortLogical(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: complete weak resource-source cache RIDs and typed full visual/logical glyph/run producer over the actual FontFile/SystemFont/FontVariation/automatic fallback owners. Preserves copied eleven-field metadata, cluster counts/joining/repeats, global scalar/original span coordinates, inclusive run leader ranges, language/object identity, actual source/size/direction, independent display ellipsis and source-linked lifetime. Raw edits reach actual consumers; borrowed projection disposal/duplicate, cache retirement, callback failure, coherent reads and warmed scalar queries are checked. Native rendered, target package/platform, native allocator and owner gates remain independently reported."
     }
   ],
   "extras": [
@@ -1349,7 +1419,91 @@
     },
     {
       "electron2d": "method:Electron2D.TextServer.FontGetResource(Electron2D.RID)",
-      "reason": "ADR 0004/0107: borrowed live runtime Font projection of an owned font RID for the existing complete typed Font-list authoring/drawing consumers. It preserves service identity/lifetime; duplicates own independent source snapshots and persistent assets use FontFile."
+      "reason": "ADR 0004/0107: stable borrowed runtime Font projection for both service-owned and resource-owned source RIDs, consumed by the existing complete typed Font-list authoring/drawing family. Service projections retire their owned entry; resource projection disposal preserves its source. Duplicates own independent source snapshots. Actual resource/automatic/linked cache identity and retirement execute with the full glyph/run producer."
+    },
+    {
+      "electron2d": "T:Electron2D.TextGlyph",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "constructor:Electron2D.TextGlyph..ctor(System.Int32,System.Int32,System.Int32,System.Int32,Electron2D.TextGraphemeFlags,Electron2D.Vector2,System.Single,Electron2D.RID,System.Int32,System.Int32,System.Int32)",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "method:Electron2D.Font.GetRID()",
+      "reason": "ADR 0004/0046/0107: inherited Resource.GetRID override projects the actual borrowed primary font cache for the complete native font source/glyph/run consumer family, including source generation and retirement. No native pointer or extra font capability is exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.TextGlyph.Deconstruct(ref System.Int32,ref System.Int32,ref System.Int32,ref System.Int32,ref Electron2D.TextGraphemeFlags,ref Electron2D.Vector2,ref System.Single,ref Electron2D.RID,ref System.Int32,ref System.Int32,ref System.Int32)",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "method:Electron2D.TextGlyph.Equals(Electron2D.TextGlyph)",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "method:Electron2D.TextGlyph.Equals(System.Object)",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "method:Electron2D.TextGlyph.GetHashCode()",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "method:Electron2D.TextGlyph.ToString()",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "operator:Electron2D.TextGlyph.op_Equality(Electron2D.TextGlyph,Electron2D.TextGlyph)",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "operator:Electron2D.TextGlyph.op_Inequality(Electron2D.TextGlyph,Electron2D.TextGlyph)",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "property:Electron2D.TextGlyph.Advance()",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "property:Electron2D.TextGlyph.Count()",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "property:Electron2D.TextGlyph.End()",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "property:Electron2D.TextGlyph.Flags()",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "property:Electron2D.TextGlyph.FontRID()",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "property:Electron2D.TextGlyph.FontSize()",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "property:Electron2D.TextGlyph.Index()",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "property:Electron2D.TextGlyph.Offset()",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "property:Electron2D.TextGlyph.Repeat()",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "property:Electron2D.TextGlyph.SpanIndex()",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
+    },
+    {
+      "electron2d": "property:Electron2D.TextGlyph.Start()",
+      "reason": "ADR 0004/0107: immutable typed eleven-field projection of the existing full glyph dictionary/native record result, including scalar range, count/repeat/classification, baseline offset/advance, actual font/size/index and original authored span. Constructor/properties/standard C# equality/deconstruction preserve that result role; no independent feature or native ownership."
     }
   ],
   "statusGroups": [
@@ -1670,26 +1824,6 @@
     },
     {
       "godot": [
-        "TextServer::method:shaped_get_run_count(RID:)",
-        "TextServer::method:shaped_get_run_direction(RID:,int:)",
-        "TextServer::method:shaped_get_run_font_rid(RID:,int:)",
-        "TextServer::method:shaped_get_run_font_size(RID:,int:)",
-        "TextServer::method:shaped_get_run_glyph_range(RID:,int:)",
-        "TextServer::method:shaped_get_run_language(RID:,int:)",
-        "TextServer::method:shaped_get_run_object(RID:,int:)",
-        "TextServer::method:shaped_get_run_range(RID:,int:)",
-        "TextServer::method:shaped_get_run_text(RID:,int:)",
-        "TextServer::method:shaped_text_get_ellipsis_glyph_count(RID:)",
-        "TextServer::method:shaped_text_get_ellipsis_glyphs(RID:)",
-        "TextServer::method:shaped_text_get_glyphs(RID:)",
-        "TextServer::method:shaped_text_get_object_glyph(RID:,Variant:)",
-        "TextServer::method:shaped_text_sort_logical(RID:)"
-      ],
-      "state": "Blocked",
-      "reason": "ADR 0046/0107: built-in service-owned font/cache identities now execute. Requires the complete ordinary FontFile/SystemFont/FontVariation and automatic-fallback source identity register, generation lifetime and typed visual/logical run/glyph snapshots. Current FontData remains internal; integrate source projection and complete copied glyph metadata/ordering together in that first snapshot producer slice."
-    },
-    {
-      "godot": [
         "TextServerManager::method:add_interface(TextServer:)",
         "TextServerManager::method:remove_interface(TextServer:)",
         "TextServerManager::method:set_primary_interface(TextServer:)",
@@ -1953,6 +2087,26 @@
       ],
       "state": "Blocked",
       "reason": "ADR 0046/0107: built-in buffers and service-owned fonts/caches now execute. Requires constructible external TextServerExtension virtual/callback dispatch for the complete family, provider-owned source/cache lifetimes, callback errors/reentry, retirement and public provider registration/replacement integration. This member enters that external implementation/dispatch slice."
+    },
+    {
+      "godot": [
+        "TextServer::method:shaped_get_run_count(RID:)",
+        "TextServer::method:shaped_get_run_direction(RID:,int:)",
+        "TextServer::method:shaped_get_run_font_rid(RID:,int:)",
+        "TextServer::method:shaped_get_run_font_size(RID:,int:)",
+        "TextServer::method:shaped_get_run_glyph_range(RID:,int:)",
+        "TextServer::method:shaped_get_run_language(RID:,int:)",
+        "TextServer::method:shaped_get_run_object(RID:,int:)",
+        "TextServer::method:shaped_get_run_range(RID:,int:)",
+        "TextServer::method:shaped_get_run_text(RID:,int:)",
+        "TextServer::method:shaped_text_get_ellipsis_glyph_count(RID:)",
+        "TextServer::method:shaped_text_get_ellipsis_glyphs(RID:)",
+        "TextServer::method:shaped_text_get_glyphs(RID:)",
+        "TextServer::method:shaped_text_get_object_glyph(RID:,Variant:)",
+        "TextServer::method:shaped_text_sort_logical(RID:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0004/0046/0107: complete weak resource-source cache RIDs and typed full visual/logical glyph/run producer over the actual FontFile/SystemFont/FontVariation/automatic fallback owners. Preserves copied eleven-field metadata, cluster counts/joining/repeats, global scalar/original span coordinates, inclusive run leader ranges, language/object identity, actual source/size/direction, independent display ellipsis and source-linked lifetime. Raw edits reach actual consumers; borrowed projection disposal/duplicate, cache retirement, callback failure, coherent reads and warmed scalar queries are checked. Native rendered, target package/platform, native allocator and owner gates remain independently reported."
     }
   ]
 }

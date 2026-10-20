@@ -27,12 +27,13 @@ public abstract partial class TextServer : ElectronObject
         catch { line.Dispose(); throw; }
     }
     /// <summary>Reports whether an identity resolves to a live font entry or shaped buffer.</summary><param name="rid">Font or buffer identity.</param><returns>False for empty, retired or foreign identities. A surviving link remains present after its source retires.</returns>
-    public bool Has(RID rid) => HasFont(rid) || TextBuffers.TryResolve(rid, out _);
+    public bool Has(RID rid) => HasFont(rid) || FontFile.TryResolveSource(rid, out _) || TextBuffers.TryResolve(rid, out _);
     /// <summary>Releases an owned font or buffer, preserving borrowed text-object lifetimes.</summary><param name="rid">Identity returned by this interface's creation, duplication or substring operations.</param>
     /// <exception cref="InvalidOperationException">The identity is borrowed, unknown, off-owner or active.</exception>
     public void FreeRID(RID rid)
     {
         if (FreeFont(rid)) return;
+        if (FontFile.TryResolveSource(rid, out _)) throw new InvalidOperationException("Resource font identities are borrowed and cannot be freed here.");
         lock (_buffersGate)
         {
             if (!_owned.TryGetValue(rid, out var line)) throw new InvalidOperationException("Only buffers owned by this interface can be freed here.");
