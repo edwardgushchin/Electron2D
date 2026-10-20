@@ -75,17 +75,26 @@ Last updated: 2026-10-20
 
 ## Ordinary runtime-fix verification
 
-The uninstrumented complete suite rooted at frozen `868302d3` passed in
-1374.622614923006 seconds. Its root SHA-256 is
-`864c7c954cf0b004ad2816513066c273b71f912646eb879405ce802e1a4b9453`;
-`bin/physics-one-way-inputs/2026-10-18/full-ordinary-current/check.json` records
-exit zero and 129 observed processes, with no hardware-driver mappings. The root
-uses private software Vulkan/Mesa. This suite includes the one-way authoring fix
-and strict material/one-way managed-allocation gates. It predates the subsequent
-slot and bias audit test changes; those have separate compiled-source/profile
-receipts. Runtime sources remain unchanged through the current bias audit.
-This establishes the stated software-suite run, not native allocation, foreign
-platform, target GPU/window performance or complete-goal acceptance.
+The complete ordinary suite for sources at `352d4499` passed in
+1247.8648819540103 seconds, exit zero, with 131 observed processes. Three processes
+loaded private software Vulkan; no hardware-driver mappings were observed. The
+host uses SDL offscreen and no focused test selector. The strict report-only
+allocation gate and recursive scene-tile regression below both pass in this run.
+All 3626 recorded inputs still match the source tree, and the two runtime/root
+PDB cohorts cover 2411/888 compilation inputs without missing or mismatched files.
+The root SHA-256 is
+`b8da6c01b65b8e1569b09c513ce457e393dfb10cd0306b6ee518a32fffbdd3eb`.
+`bin/physics-deferred-tiles/2026-10-20/full-suite-current-main/check.json` records
+the process result; `full-suite-validation.json` in its parent binds the retained
+payload, environment, logs and source proof. This establishes the stated
+software/offscreen ordinary-suite run. Native allocation, new NativeAOT or native
+window acceptance, foreign platforms, target-GPU advantage, real-window FPS and
+complete-goal acceptance remain separate. The 67 open physical declarations are
+unchanged.
+
+The earlier checkpoint at `868302d3` passed in 1374.622614923006 seconds with 129
+observed processes under `bin/physics-one-way-inputs/2026-10-18/`; it predates the
+later slot/bias audits and the resource, notification and deferred-test changes.
 
 ## Report-only allocation preparation, 2026-10-20
 
@@ -113,8 +122,8 @@ attribute. Concurrent local rendering integration advanced `main` to `7f81e949`;
 the earlier repeat was stopped explicitly, and both focused profiles pass again
 on fresh combined sources with 2411/888-input PDB checks. Evidence is retained in
 `bin/physics-deferred-tiles/2026-10-20/`. The complete software/offscreen repeat
-from that combined payload is running; hardware, native allocation, window
-performance and complete-goal acceptance remain open.
+from that combined payload passed, as recorded above; hardware, native allocation,
+window performance and complete-goal acceptance remain open.
 
 ## Material allocation measurement
 
