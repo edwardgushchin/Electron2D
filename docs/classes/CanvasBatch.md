@@ -1,6 +1,6 @@
 # CanvasBatch
 
-Last updated: 2026-10-19
+Last updated: 2026-10-21
 
 - Declaration: `internal readonly record struct CanvasBatch`
 - Source: [CanvasBackend.cs](../../src/Servers/Rendering/CanvasBackend.cs)
@@ -15,16 +15,17 @@ A contiguous vertex range with one borrowed material state, command texture, fil
 
 | Declaration | Contract |
 | --- | --- |
-| `CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null, TextureFilter Filter = TextureFilter.Nearest, TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1, BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool MIPMaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0, CanvasLightingItem? Lighting = null, CanvasItem? InstanceOwner = null, CanvasGlyph Glyph = default, Color GlyphModulation = default, bool LinearColors = false, Color? CanvasModulation = null, Rect2? VisibilityBounds = null)` | [Construction and values](#construction-and-values) |
+| `CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null, TextureFilter Filter = TextureFilter.Nearest, TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1, BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool MIPMaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0, CanvasLightingItem? Lighting = null, CanvasItem? InstanceOwner = null, CanvasGlyph Glyph = default, Color GlyphModulation = default, bool LinearColors = false, Color? CanvasModulation = null, Rect2? VisibilityBounds = null, bool Procedural = false, Mesh.PrimitiveType Primitive = Mesh.PrimitiveType.Triangles, bool SnapGeneratedVertices = false, bool SnapNativeLines = false, MultiMeshGPUDraw GPU = default, ParticleGPUDraw? Particles = null, Texture? TextureSource = null)` | [Construction and values](#construction-and-values) |
+| `internal float RasterMargin { get; }` | Half-pixel native line coverage; one pixel with deferred endpoint snapping; zero for other topology. Used by group fitting and texture-redraw visibility. |
 | `internal byte[]? ShaderCode { get; }` | [Shader code](#shader-code) |
 
 ## Member descriptions
 
 ### Construction and values
 
-`CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null, TextureFilter Filter = TextureFilter.Nearest, TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1, BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool MIPMaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0, CanvasLightingItem? Lighting = null, CanvasItem? InstanceOwner = null, CanvasGlyph Glyph = default, Color GlyphModulation = default, bool LinearColors = false, Color? CanvasModulation = null, Rect2? VisibilityBounds = null)`
+`CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null, TextureFilter Filter = TextureFilter.Nearest, TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1, BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool MIPMaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0, CanvasLightingItem? Lighting = null, CanvasItem? InstanceOwner = null, CanvasGlyph Glyph = default, Color GlyphModulation = default, bool LinearColors = false, Color? CanvasModulation = null, Rect2? VisibilityBounds = null, bool Procedural = false, Mesh.PrimitiveType Primitive = Mesh.PrimitiveType.Triangles, bool SnapGeneratedVertices = false, bool SnapNativeLines = false, MultiMeshGPUDraw GPU = default, ParticleGPUDraw? Particles = null, Texture? TextureSource = null)`
 
-First and Count index the prepared triangle list. Material null selects the built-in program. Texture null means opaque white for the built-in command sampler. Filter, Repeat and MaxAnisotropy are resolved per item before batching; tiled commands force Enabled addressing. These values participate in batch equality. These arguments become record properties.
+First and Count index the prepared vertex list. Primitive selects triangle, line or point topology; SnapNativeLines requests endpoint snapping only in native upload. The compatibility stroke path expands line ranges before snapping. Matching topology and snap policy are required for coalescing; separate line strips never merge. Material null selects the built-in program. Texture null means opaque white for the built-in command sampler. Filter, Repeat and MaxAnisotropy are resolved per item before batching; tiled commands force Enabled addressing. These values participate in batch equality. These arguments become record properties.
 
 ### Shader code
 

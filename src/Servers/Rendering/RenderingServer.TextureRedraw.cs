@@ -84,7 +84,7 @@ public sealed partial class RenderingServer
         if (batch.Material?.Program.Vertex is not null || batch.InstanceCount > 0 || batch.Procedural || batch.Particles is not null) return true;
         var bounds = new Rect2(frame.Vertices[batch.First].Position, Vector2.Zero);
         for (var i = batch.First + 1; i < batch.First + batch.Count; i++) bounds = bounds.Expand(frame.Vertices[i].Position);
-        return bounds.Intersects(clip, includeBorders: true);
+        return bounds.Grow(batch.RasterMargin).Intersects(clip, includeBorders: true);
     }
 
 }

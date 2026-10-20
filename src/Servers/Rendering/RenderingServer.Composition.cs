@@ -145,7 +145,11 @@ public sealed partial class RenderingServer
             if (batch.InstanceCount > 0) continue;
             var stop = Math.Min(end, batch.First + batch.Count);
             for (var i = Math.Max(first, batch.First); i < stop; i++)
-            { var p = _vertices[i].Position; initial = initial is { } rect ? rect.Expand(p) : new Rect2(p, Vector2.Zero); }
+            {
+                var footprint = new Rect2(_vertices[i].Position, Vector2.Zero).Grow(batch.RasterMargin);
+                if (batch.RasterMargin > 0) footprint = new(footprint.Position.Floor(), footprint.End.Ceil() - footprint.Position.Floor());
+                initial = initial is { } rect ? rect.Merge(footprint) : footprint;
+            }
         }
         return initial;
     }

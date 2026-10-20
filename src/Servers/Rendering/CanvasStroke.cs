@@ -135,22 +135,29 @@ internal sealed class CanvasStroke
         }
     }
 
-    internal void Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap)
+    internal Mesh.PrimitiveType Primitive => _connected ? Mesh.PrimitiveType.LineStrip : Mesh.PrimitiveType.Lines;
+
+    internal int Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap)
     {
         foreach (var vertex in CollectionsMarshal.AsSpan(_triangles)) output.Add(TransformVertex(vertex, transform, modulation, snap));
-        for (var i = 1; i < _thin.Count; i += _connected ? 1 : 2)
-            AppendThinLine(output, TransformVertex(_thin[i - 1], transform, modulation, false), TransformVertex(_thin[i], transform, modulation, false), snap);
+        foreach (var vertex in CollectionsMarshal.AsSpan(_thin)) output.Add(TransformVertex(vertex, transform, modulation, false));
+        return _thin.Count;
     }
 
-    internal static void AppendLine(List<CanvasVertex> output, Vector2 from, Vector2 to, Color color, float width, bool antialiased, Transform transform, bool snap)
+    internal static int AppendLine(List<CanvasVertex> output, Vector2 from, Vector2 to, Color color, float width, bool antialiased, Transform transform, bool snap)
     {
-        if (from == to || width == 0) return;
+        if (from == to || width == 0) return 0;
         if (antialiased) width = CompensatedWidth(width);
         var direction = Direction(from, to); var normal = direction.Orthogonal();
         var edge = normal * (width < 0 ? 0 : width * 0.5f);
-        if (width < 0) AppendThinLine(output, TransformVertex(new(from, color), transform, Colors.White, false), TransformVertex(new(to, color), transform, Colors.White, false), snap);
+        var nativeCount = 0;
+        if (width < 0)
+        {
+            var a = TransformVertex(new(from, color), transform, Colors.White, false); var b = TransformVertex(new(to, color), transform, Colors.White, false);
+            if (a.Position != b.Position) { output.Add(a); output.Add(b); nativeCount = 2; }
+        }
         else AddQuad(from + edge, from - edge, to + edge, to - edge, color, color, color, color);
-        if (!antialiased) return;
+        if (!antialiased) return nativeCount;
         var amount = Feather * (width >= 0 && width < 1 ? width : 1);
         var border = normal * amount; var cap = direction * amount; var clear = color with { A = 0 };
         // Side strips and flat caps remain in local units, including their feather widths.
@@ -167,6 +174,8 @@ internal sealed class CanvasStroke
                 AddQuad(corner + capOffset, corner, corner + capOffset + sideOffset, corner + sideOffset, clear, color, clear, clear);
             }
 
+        return nativeCount;
+
         void AddQuad(Vector2 a, Vector2 b, Vector2 c, Vector2 d, Color ca, Color cb, Color cc, Color cd) =>
             StripQuad(output, TransformVertex(new(a, ca), transform, Colors.White, snap), TransformVertex(new(b, cb), transform, Colors.White, snap),
                 TransformVertex(new(c, cc), transform, Colors.White, snap), TransformVertex(new(d, cd), transform, Colors.White, snap));
@@ -176,11 +185,13 @@ internal sealed class CanvasStroke
     {
         if (a.Position == b.Position) return;
         var first = output.Count;
-        var offset = Direction(a.Position, b.Position).Orthogonal() * 0.5f;
+        var offset = ThinLineOffset(a.Position, b.Position);
         StripQuad(output, a with { Position = a.Position + offset }, a with { Position = a.Position - offset },
             b with { Position = b.Position + offset }, b with { Position = b.Position - offset });
         if (snap) for (var i = first; i < output.Count; i++) output[i] = output[i] with { Position = CanvasGeometry.Snap(output[i].Position) };
     }
+
+    internal static Vector2 ThinLineOffset(Vector2 from, Vector2 to) => Direction(from, to).Orthogonal() * 0.5f;
 
     private static Color ColorAt(ReadOnlySpan<Color> colors, int i) => colors.IsEmpty ? Colors.White : colors[Math.Min(i, colors.Length - 1)];
     private static float CompensatedWidth(float width) => width <= 0 ? width : width <= 2.5f + 0.00001f ? width * 0.5f :

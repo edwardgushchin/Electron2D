@@ -251,6 +251,11 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                     if (!color.IsFinite()) throw new InvalidOperationException("Canvas modulation overflowed finite colors.");
                     _vertices[vertex].Color = new() { R = color.R, G = color.G, B = color.B, A = color.A };
                 }
+                if (batch.Primitive is Mesh.PrimitiveType.Lines or Mesh.PrimitiveType.LineStrip)
+                {
+                    DrawThinLines(renderer, texture, _vertices.AsSpan(batch.First, batch.Count), batch.Primitive, batch.SnapNativeLines);
+                    continue;
+                }
                 // SDL 3.4.16's software quad shortcut loses transposed/constant UVs. Separate triangles bypass it.
                 var step = Driver == "software" && texture != 0 ? 3 : batch.Count;
                 for (var first = batch.First; first < batch.First + batch.Count; first += step)
@@ -262,6 +267,25 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         {
             try { Check(SDL.SetRenderClipRect(renderer, 0), "clear canvas clipping"); }
             finally { Check(SDL.SetRenderTarget(renderer, 0), "restore window render target"); }
+        }
+    }
+
+    private static void DrawThinLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, Mesh.PrimitiveType primitive, bool snap)
+    {
+        Span<SDL.Vertex> quad = stackalloc SDL.Vertex[6];
+        for (var i = 1; i < vertices.Length; i += primitive == Mesh.PrimitiveType.LineStrip ? 1 : 2)
+        {
+            var a = vertices[i - 1]; var b = vertices[i]; var from = new Vector2(a.Position.X, a.Position.Y); var to = new Vector2(b.Position.X, b.Position.Y);
+            if (from == to) continue;
+            var offset = CanvasStroke.ThinLineOffset(from, to);
+            quad[0] = quad[1] = quad[3] = a; quad[2] = quad[4] = quad[5] = b;
+            for (var j = 0; j < quad.Length; j++)
+            {
+                var position = (j is 0 or 2 or 5 ? offset : -offset) + new Vector2(quad[j].Position.X, quad[j].Position.Y);
+                if (snap) position = CanvasGeometry.Snap(position);
+                quad[j].Position = new() { X = position.X, Y = position.Y };
+            }
+            Check(SDL.RenderGeometry(renderer, texture, quad, quad.Length, 0, 0), "draw compatibility thin line");
         }
     }
 

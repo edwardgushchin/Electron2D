@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs), [RenderingServer.Threads.cs](../../src/Servers/Rendering/RenderingServer.Threads.cs)
@@ -1864,3 +1864,5 @@ Unused, hidden, clipped and offscreen bindings settle to idle; disabled viewport
 Immediately presents a copied loading image over a finite background in the main native client. [SplashStretchMode](RenderingServer.SplashStretchMode.md) supplies six centered sizing/crop modes; filtering defaults to linear. Null/empty images preserve output, and the source stays caller-owned. The active native owner may call during readiness or with RenderLoopEnabled=false, outside scene capture/submission. Invalid enum/color, disposed images, off-owner/reentrant/absent service and unsupported native capabilities reject.
 
 The call is cold allocation/upload work. Temporary image storage retires before return; pending particle work and scene caches retain their ordinary frame boundary. Scene viewport contents, scene clear color, clocks/counters and queued frame callbacks remain intact. It emits no frame events, keeps ordinary scene work pending and is replaced by the next normal frame. [Loading-image behavior and verification](../components/boot-images.md) records exact geometry, failure/cleanup and backend limits.
+
+Native thin-stroke batch bounds include half-pixel coverage and an additional half pixel when deferred vertex snapping is active. Group fitting and texture-redraw visibility use that same margin, preserving zero-margin groups with horizontal or vertical lines. Fitted native-line bounds round outward to whole pixels so MSAA group composition does not attenuate a resolved edge a second time. See [stroke commands](../components/canvas-rendering.md#stroke-commands).

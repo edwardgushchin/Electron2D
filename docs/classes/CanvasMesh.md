@@ -1,6 +1,8 @@
 # CanvasMesh
 
-Last updated: 2026-10-19
+Last updated: 2026-10-21
+
+Ordinary mesh batches require matching primitive topology and native-line snapping policy before merging with adjacent canvas ranges.
 
 Internal retained mesh geometry in [CanvasMesh.cs](../../src/Servers/Rendering/CanvasMesh.cs), part of [canvas rendering](../components/canvas-rendering.md) and [mesh rendering](../components/meshes.md). It captures immutable or live mesh surfaces, transform/color/UV/custom instance data and primitive tessellation before appending to the existing canvas vertex/batch stream. Material, texture, filtering, repeat, clipping and native profile rules stay with that stream. Native resources belong to the renderer; this geometry owns no device handles.
 

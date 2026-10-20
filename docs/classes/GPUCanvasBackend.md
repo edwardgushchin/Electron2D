@@ -1,6 +1,6 @@
 # GPUCanvasBackend
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 - Declaration: `internal sealed unsafe class GPUCanvasBackend : CanvasBackend`
 - Source: [GPUCanvasBackend.cs](../../src/Servers/Rendering/GPUCanvasBackend.cs)
@@ -10,6 +10,8 @@ Last updated: 2026-10-20
 [Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Copied byte, normalized/float, block and unsigned-integer images execute; foreign/native-allocation acceptance remains separate.
 
 ## Description
+
+Thin canvas strokes use existing native Lines/LineStrip pipelines. SnapNativeLines rounds original endpoints in the upload copy before the vertex program, without changing shared host geometry; HDR color conversion and canvas modulation keep their existing order.
 
 The SDL GPU implementation of CanvasBackend. Construction retains the display window, creates a device, claims the window, and builds the default pipeline. Construction failure unwinds the completed steps. The five built-in fragment/blend pipelines are retained after first use until backend disposal, so temporarily absent blend modes do not recreate pipelines on their next warmed frame. Unused custom shader pipelines retain the existing eviction policy. The backend owns RGBA8 target/vertex/upload buffers, shader pipelines, samplers and per-Texture GPU caches. All calls require the renderer owner thread. Eligible MultiMesh triangles bind a second per-instance input stream from the same retained upload/vertex buffer, with a distinct built-in vertex shader and pipeline key. Ordinary geometry, compositing and skinning retain their existing vertex layout.
 

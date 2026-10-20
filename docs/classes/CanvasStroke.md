@@ -1,6 +1,6 @@
 # CanvasStroke
 
-Last updated: 2026-09-23
+Last updated: 2026-10-21
 
 - Declaration: `internal sealed class CanvasStroke`
 - Source: [CanvasStroke.cs](../../src/Servers/Rendering/CanvasStroke.cs)
@@ -14,12 +14,14 @@ Item-owned retained geometry for polylines, independent pairs, dashes, sampled a
 
 | Member | Contract |
 | --- | --- |
-| `void Set(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, float width, bool antialiased, bool connected)` | Copies thin points/colors or bakes joined/independent local triangles into reusable lists. Counts and finite inputs are validated by CanvasItem. |
+| `void Set(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, float width, bool antialiased, bool connected, bool perVertexColors = false)` | Copies thin points/colors or bakes joined/independent local triangles into reusable lists. Counts and finite inputs are validated by CanvasItem. |
 | `void SetRect(Rect2 rect, Color color, bool filled, float width, bool antialiased)` | Normalizes dimensions, uses the existing closed strip for ordinary outlines, or bakes a fill with compensated local side/corner feathers. |
 | `void SetEllipse(Vector2 center, float major, float minor, Color color, bool antialiased)` | Bakes a 64-segment fan and optional local alpha ring. |
-| `void Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap)` | Transforms/modulates retained triangles; expands thin lines to one framebuffer pixel on replay. |
-| `static void AppendLine(List<CanvasVertex> output, Vector2 from, Vector2 to, Color color, float width, bool antialiased, Transform transform, bool snap)` | Shared direct DrawLine and positive-width independent-segment tessellation. |
+| `int Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap)` | Transforms/modulates retained triangles or raw native endpoints; returns the native prefix vertex count. |
+| `static int AppendLine(List<CanvasVertex> output, Vector2 from, Vector2 to, Color color, float width, bool antialiased, Transform transform, bool snap)` | Shared direct DrawLine and positive-width independent-segment tessellation; returns the native core count before local AA triangles, including zero when a transform collapses the core. |
 | `static void AppendThinLine(List<CanvasVertex> output, CanvasVertex a, CanvasVertex b, bool snap)` | Expands transformed endpoints and only then snaps final corners. |
+
+`Primitive` selects Lines or LineStrip for retained thin endpoints. `GetLocalBounds()` returns the authored cached geometry bounds; framebuffer line padding belongs to submitted batch bounds. `ThinLineOffset` shares the legacy half-pixel normal with compatibility expansion and low-level primitive geometry.
 
 ## Flow, invariants and limits
 
@@ -27,7 +29,7 @@ Connected positive strokes build shared bisector joins with miter factors clampe
 
 Positive antialiased widths compensate the core and add a local 1.25-unit feather. Thin polyline/multiline paths ignore antialiasing and retain copied endpoint colors. Direct DrawLine can still feather negative widths. Rectangle outlines at least as wide as either dimension become expanded fills, even from zero-area input. Filled AA rectangles shrink by 0.3125 local units and add separate side/corner quads; small adjusted cores scale the 1.25-unit border, while negative adjusted sizes are preserved. Filled ellipses use a 64-segment fan with an optional compensated local ring. See the [public width contract](CanvasItem.md#stroke-recording-contract).
 
-Local overflow throws ArgumentException before command commit. Transformed or modulated overflow throws InvalidOperationException during replay; the caller discards the incomplete frame. Failed recording does not reference a partially changed unused pool slot. Capacity growth allocates; warmed recording and replay reuse all lists. Thin rasterization uses triangles and does not yet guarantee exact native hardware line coverage. No texture is owned or retained here; materials are selected by the existing CanvasItem submission path.
+Local overflow throws ArgumentException before command commit. Transformed or modulated overflow throws InvalidOperationException during replay; the caller discards the incomplete frame. Failed recording does not reference a partially changed unused pool slot. Capacity growth allocates; warmed recording and replay reuse all lists. GPU negative-width cores use native line lists or line strips; separate strips never coalesce. Endpoint snapping occurs in the GPU upload copy before the vertex program. The SDL_Renderer fallback preserves one-pixel triangle expansion and snaps its expanded corners. Direct DrawLine feathers remain separate local triangles. Exact native coverage on the fallback, low-level point/two-vertex DrawPrimitive coverage, other platforms and owner visual acceptance remain open. No texture is owned or retained here; materials are selected by the existing CanvasItem submission path.
 
 ## Verification
 

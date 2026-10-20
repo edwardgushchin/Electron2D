@@ -183,7 +183,7 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
     private static void AddBatch(List<CanvasBatch> batches, CanvasBatch batch)
     {
         if (batch.Count == 0) return;
-        if (!batch.Procedural && batch.InstanceCount == 0 && batches.Count != 0 && batches[^1] is var last && !last.Procedural && last.VisibilityBounds == batch.VisibilityBounds && last.InstanceCount == 0 && last.Operation == CanvasOperation.Draw && last.Glyph.Mode == CanvasGlyphMode.None && last.Material == batch.Material && last.InstanceOwner == batch.InstanceOwner && last.Texture == batch.Texture && last.TextureSource == batch.TextureSource && last.Filter == batch.Filter && last.Repeat == batch.Repeat && last.MaxAnisotropy == batch.MaxAnisotropy && last.Blend == batch.Blend && last.Clip == batch.Clip && last.LinearColors == batch.LinearColors)
+        if (!batch.Procedural && batch.InstanceCount == 0 && batches.Count != 0 && batches[^1] is var last && !last.Procedural && last.VisibilityBounds == batch.VisibilityBounds && last.InstanceCount == 0 && last.Operation == CanvasOperation.Draw && last.Glyph.Mode == CanvasGlyphMode.None && last.Material == batch.Material && last.InstanceOwner == batch.InstanceOwner && last.Texture == batch.Texture && last.TextureSource == batch.TextureSource && last.Filter == batch.Filter && last.Repeat == batch.Repeat && last.MaxAnisotropy == batch.MaxAnisotropy && last.Blend == batch.Blend && last.Clip == batch.Clip && last.LinearColors == batch.LinearColors && last.Primitive == batch.Primitive && last.SnapNativeLines == batch.SnapNativeLines)
             batches[^1] = last with { Count = last.Count + batch.Count };
         else batches.Add(batch);
     }

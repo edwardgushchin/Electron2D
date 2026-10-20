@@ -10,6 +10,7 @@ using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
 if (args.Length == 2 && args[0] == "--debanding-storage") { CanvasDebandingTests.ReadStorage(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_STROKES") is { } nativeStrokeProfile) { if (nativeStrokeProfile == "managed") NativeStrokeTests.Managed(); else NativeStrokeTests.Run(nativeStrokeProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEBANDING") is { } debandingProfile) { if (debandingProfile == "managed") CanvasDebandingTests.Managed(); else CanvasDebandingTests.Native(debandingProfile); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_MASKS") is { } maskBackend) { RenderingRuntimeTests.VerifyCanvasMasks(maskBackend); return; }
@@ -1917,7 +1918,7 @@ CanvasTransformNotificationTests.Run();
 CanvasPolygonTests.Run();
 PolygonTests.Run();
 LineTests.Run();
-CanvasStrokeTests.Run();
+NativeStrokeTests.Managed();
 CanvasTimingTests.Run();
 VerifyInstanceIds();
 VerifyLifetime();

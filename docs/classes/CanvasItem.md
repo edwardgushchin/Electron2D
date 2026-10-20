@@ -1,6 +1,6 @@
 # CanvasItem
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 **Inherits:** [Node](Node.md)
 
@@ -470,7 +470,7 @@ All nine methods below return void and require this item's active NotificationDr
 
 Inputs and generated local geometry are retained in reusable storage until redraw. Item/draw transforms, inherited modulation and current material are applied during submission; changing item placement or modulation requires no redraw. Commands use the same GPU/compatibility triangle batches and HLSL/GLSL material interface as other canvas drawing. Transformed nonfinite positions/colors throw InvalidOperationException. Disposal releases the storage; no borrowed material is disposed.
 
-Unless a filled shape ignores it, positive `width` is local, negative width is one framebuffer pixel regardless of scaling, and zero produces no stroke geometry. Antialiased positive widths compensate the opaque core: widths up to 2.5 are halved, widths from 2.5 to 5 interpolate toward a 0.625 reduction, and larger widths subtract 0.625. The local feather is 1.25 units, proportionally reduced for compensated widths below one. It scales with item/draw transforms. Negative-width polyline/multiline paths ignore `antialiased`; DrawLine and the short-dash fallback can still feather their thin cores. Final vertex snapping occurs after tessellation, including thin-line expansion. Exact hardware line raster coverage is not yet matched; thin lines currently use triangles.
+Unless a filled shape ignores it, positive `width` is local, negative width is one framebuffer pixel regardless of scaling, and zero produces no stroke geometry. Antialiased positive widths compensate the opaque core: widths up to 2.5 are halved, widths from 2.5 to 5 interpolate toward a 0.625 reduction, and larger widths subtract 0.625. The local feather is 1.25 units, proportionally reduced for compensated widths below one. It scales with item/draw transforms. Negative-width polyline/multiline paths ignore `antialiased`; DrawLine and the short-dash fallback can still feather their thin cores. GPU negative-width cores use native line lists or line strips; separate strips never coalesce. Endpoint snapping occurs in the GPU upload copy before the vertex program. The SDL_Renderer fallback preserves one-pixel triangle expansion and snaps its expanded corners. Direct DrawLine feathers remain separate local triangles. Exact native coverage on the fallback, low-level point/two-vertex DrawPrimitive coverage, other platforms and owner visual acceptance remain open.
 
 ### DrawPolyline
 

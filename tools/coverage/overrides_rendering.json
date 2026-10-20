@@ -5890,7 +5890,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Retained copied stroke geometry is executable: joined/closed/repeated polylines, segment/vertex colors, aligned dashes, clamped circular/elliptical arcs, 64-segment filled/outlined/wide ellipses, local compensated antialias feathers and live transforms/modulation. Pinned canvas_item.cpp and renderer_canvas_cull.cpp audit; typed spans, exceptions and finite/count bounds follow ADR 0004. CanvasStrokeTests verifies geometry, guards, rollback and zero warmed allocation; CanvasStrokeRenderingTests verifies Linux Wayland GPU/compatibility HLSL/GLSL and dummy/software pixels. Remaining gap: negative-width cores use triangle expansion; exact native hardware subpixel line/end coverage is not established. Other platforms unverified. See docs/components/canvas-rendering.md#stroke-commands.",
+      "reason": "Retained copied stroke geometry is executable: joined/closed/repeated polylines, segment/vertex colors, aligned dashes, clamped circular/elliptical arcs, 64-segment filled/outlined/wide ellipses, local compensated antialias feathers and live transforms/modulation. Pinned canvas_item.cpp and renderer_canvas_cull.cpp audit; typed spans, exceptions and finite/count bounds follow ADR 0004. CanvasStrokeTests verifies geometry, guards, rollback and zero warmed allocation; CanvasStrokeRenderingTests verifies Linux Wayland GPU/compatibility HLSL/GLSL and dummy/software pixels. NativeStrokeTests independently compares GPU line-list/line-strip pixels with direct RenderingDevice topology across clipped affine cases, endpoint snapping, HDR, MSAA and HLSL/GLSL materials. Compatibility retains triangle expansion and is compared against the prior runtime. Remaining gap: exact native subpixel coverage on SDL_Renderer; broad platform and visual acceptance remain open. Other platforms unverified. See docs/components/canvas-rendering.md#stroke-commands.",
       "godot": [
         "CanvasItem::method:draw_arc(Vector2:,float:,float:,float:,int:,Color:,float:,bool:)",
         "CanvasItem::method:draw_circle(Vector2:,float:,Color:,bool:,float:,bool:)",
@@ -5934,7 +5934,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Audited normalized rectangles, wide/degenerate expanded fills, joined closed outlines and compensated local AA geometry against CanvasItem and renderer_canvas_cull. CanvasTimingTests checks vertices, scaling, rollback and zero warm allocations; native GPU/compatibility, HLSL/GLSL and dummy pixels pass. Partial only for precise hardware thin-line raster coverage: negative-width outlines use portable one-pixel triangles, with the same explicit limit as other stroke commands.",
+      "reason": "Audited normalized rectangles, wide/degenerate expanded fills, joined closed outlines and compensated local AA geometry against CanvasItem and renderer_canvas_cull. CanvasTimingTests checks vertices, scaling, rollback and zero warm allocations; native GPU/compatibility, HLSL/GLSL and dummy pixels pass. GPU negative-width outlines now use native LineStrip topology with independent direct-device pixel checks. Partial remains for exact native coverage on the triangle-based SDL_Renderer fallback and broader platform/visual acceptance.",
       "godot": [
         "CanvasItem::method:draw_rect(Rect2:,Color:,bool:,float:,bool:)"
       ]

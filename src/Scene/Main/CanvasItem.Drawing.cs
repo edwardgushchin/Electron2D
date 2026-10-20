@@ -397,7 +397,7 @@ public abstract partial class CanvasItem
                 blend = canvasMaterial?.GetCanvasBlendMode() ?? BlendMode.Mix;
                 capturedMaterial = true;
             }
-            CanvasGeometry.Append(vertices, replay, transform * drawingTransform, color, viewport?.SnapVerticesToPixel == true, this, linear, blend);
+            var native = CanvasGeometry.Append(vertices, replay, transform * drawingTransform, color, viewport?.SnapVerticesToPixel == true, this, linear, blend);
             if (replay.ParticleCustom is { } particleCustom)
                 for (var vertex = first; vertex < vertices.Count; vertex++) vertices[vertex] = vertices[vertex] with { InstanceCustom = particleCustom };
             if (glyph.Mode != CanvasGlyphMode.None)
@@ -417,13 +417,24 @@ public abstract partial class CanvasItem
                 capturedMaterial = true;
             }
             var repeat = command.Tile ? TextureRepeat.Enabled : inheritedRepeat;
-            if (batches.Count != 0 && batches[^1] is var last && !last.Procedural && last.VisibilityBounds is null && last.Operation == CanvasOperation.Draw && last.InstanceCount == 0 && last.Material == material && last.InstanceOwner == (material?.Program.HasInstanceUniforms == true ? this : null) && last.Texture == replay.Texture && last.TextureSource == command.Texture &&
-                last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == commandClip && last.Glyph == glyph && last.GlyphModulation == glyphModulation && last.LinearColors == linearColors)
-
-                batches[^1] = last with { Count = last.Count + count };
-            else batches.Add(new(first, count, material, replay.Texture, filter, repeat, anisotropy, blend, commandClip, InstanceOwner: material?.Program.HasInstanceUniforms == true ? this : null, Glyph: glyph, GlyphModulation: glyphModulation, LinearColors: linearColors, TextureSource: command.Texture));
+            var batch = new CanvasBatch(first, count, material, replay.Texture, filter, repeat, anisotropy, blend, commandClip, InstanceOwner: material?.Program.HasInstanceUniforms == true ? this : null, Glyph: glyph, GlyphModulation: glyphModulation, LinearColors: linearColors, TextureSource: command.Texture);
+            if (native.Count != 0)
+            {
+                AddCanvasBatch(batches, batch with { Count = native.Count, Primitive = native.Primitive, SnapNativeLines = viewport?.SnapVerticesToPixel == true });
+                batch = batch with { First = first + native.Count, Count = count - native.Count };
+            }
+            AddCanvasBatch(batches, batch);
         }
 
+    }
+
+    private static void AddCanvasBatch(List<CanvasBatch> batches, CanvasBatch batch)
+    {
+        if (batch.Count == 0) return;
+        if (batch.Primitive != Mesh.PrimitiveType.LineStrip && batches.Count != 0 && batches[^1] is var last && !last.Procedural && last.VisibilityBounds is null && last.Operation == CanvasOperation.Draw && last.InstanceCount == 0 && last.Material == batch.Material && last.InstanceOwner == batch.InstanceOwner && last.Texture == batch.Texture && last.TextureSource == batch.TextureSource &&
+            last.Filter == batch.Filter && last.Repeat == batch.Repeat && last.MaxAnisotropy == batch.MaxAnisotropy && last.Blend == batch.Blend && last.Clip == batch.Clip && last.Glyph == batch.Glyph && last.GlyphModulation == batch.GlyphModulation && last.LinearColors == batch.LinearColors && last.Primitive == batch.Primitive && last.SnapNativeLines == batch.SnapNativeLines)
+            batches[^1] = last with { Count = last.Count + batch.Count };
+        else batches.Add(batch);
     }
 
     internal void DrawParticleQuad(Texture? texture, Rect2 destination, Color color, Color custom)

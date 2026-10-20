@@ -33,7 +33,7 @@ internal static class CanvasStrokeTests
         Record(n => n.DrawLine(new(0, 0), new(10, 0), Colors.White, 1, true), new Transform(0, new Vector2(2, 3), 0, Vector2.Zero));
         Check(vertices.Max(v => v.Position.Y) == 2.625f, "Feathers scale in local coordinates.");
         Record(n => n.DrawPolyline([new(0, 0), new(10, 0)], Colors.White, -1, true), new Transform(0, new Vector2(4, 4), 0, Vector2.Zero));
-        Check(vertices.Count == 6 && vertices.Max(v => v.Position.Y) - vertices.Min(v => v.Position.Y) == 1, "Thin polyline ignores AA and stays one pixel wide.");
+        Check(vertices.Count == 2 && batches.Count == 1 && batches[0].Primitive == Mesh.PrimitiveType.LineStrip && vertices.All(v => v.Position.Y == 0), "Thin polyline retains native endpoints and ignores AA.");
         Record(n => n.DrawDashedLine(new(0, 0), new(11, 0), Colors.White, 2, 2, true));
         Check(vertices.Count == 18 && vertices.Min(v => v.Position.X) == 0 && vertices.Max(v => v.Position.X) == 11, "Aligned dash sequence includes both endpoints.");
         Record(n => n.DrawDashedLine(new(0, 0), new(11, 0), Colors.White, 2, 2, false));

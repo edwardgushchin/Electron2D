@@ -18,7 +18,7 @@
 
 [Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. Registered project definitions prepare typed bases before scene readiness and own loaded images through session shutdown. The registry has explicit owner/session lifetime and no material-property aliases.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 [Render-thread callbacks](../components/render-thread-callbacks.md) connect worker requests to the exact native owner, existing device/canvas operations, disabled/idle render attempts and explicit synchronization, with bounded snapshot ordering and session cancellation.
 
@@ -454,3 +454,5 @@ Ordinary signed/unsigned R32 GPU images now execute integer atomics through scal
 [Visible texture policies](../components/low-processor-rendering.md#visible-texture-policies) now keep low-processor output active for submitted image bindings, preserving weak session ownership and logical aliases across native replay. Hidden/unused output returns to idle, and failed pre-submission frames retain their retry obligation.
 
 [Loading-image presentation](../components/boot-images.md) executes immediate native-client output during readiness/loading through RenderingServer.SetBootImageWithStretch, with six sizing modes and preserved scene viewport/callback state.
+
+GPU thin canvas strokes retain native line-list/line-strip topology, including debug-draw consumers. Compatibility preserves its triangle footprint; point/two-vertex DrawPrimitive remains a separate coverage limit. See [stroke commands](../components/canvas-rendering.md#stroke-commands) for the independent pixel oracle, snapping policy and exact verification boundary.

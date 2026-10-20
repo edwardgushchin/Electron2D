@@ -72,9 +72,10 @@ internal static class CanvasPixelSnapTests
         };
         foreach (var shape in shapes)
         {
-            vertices.Clear(); CanvasGeometry.Append(vertices, shape, transform, Colors.White, snapVertices: true);
+            vertices.Clear(); var native = CanvasGeometry.Append(vertices, shape, transform, Colors.White, snapVertices: true);
             Check(vertices.Count > 0 && vertices.All(v => v.Position.IsFinite() && v.UV.IsFinite()), "Lines, outlines, antialiasing, flipped and transposed textures execute.");
-            if (shape.Texture is null) Check(vertices.All(v => v.Position == v.Position.Floor()), "Every final untextured vertex is snapped.");
+            if (shape.Texture is null) Check(vertices.Skip(native.Count).All(v => v.Position == v.Position.Floor()), "Every final untextured triangle vertex is snapped.");
+            if (native.Count != 0) Check(native.Count == 2 && vertices[0].Position == transform * shape.A && vertices[1].Position == transform * shape.B, "Native line endpoints defer snapping to the backend.");
         }
         vertices.Clear(); CanvasGeometry.Append(vertices, command with { B = new(0.1f, 0.1f) }, Transform.Identity, Colors.White, snapVertices: true);
         Check(vertices.Count == 0, "Collapsed snapped textures emit no geometry.");

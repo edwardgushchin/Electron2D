@@ -244,6 +244,10 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                                     // Color/mask passes may share a range; always convert the original source once.
                                     vertexData[i] = vertices[i] with { Color = LinearColor(vertices[i].Color) };
                     foreach (var batch in batches)
+                        if (batch.SnapNativeLines)
+                            for (var i = batch.First; i < batch.First + batch.Count; i++)
+                                vertexData[i] = vertexData[i] with { Position = CanvasGeometry.Snap(vertices[i].Position) };
+                    foreach (var batch in batches)
                         if (batch.CanvasModulation is { } modulation && modulation != Colors.White)
                         {
                             if (output.HDR) modulation = LinearColor(modulation);
