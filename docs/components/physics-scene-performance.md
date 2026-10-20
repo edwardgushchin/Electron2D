@@ -1,6 +1,8 @@
 # Complete scene physics measurements
 
-Last updated: 2026-10-20
+The [2026-10-21 packed contact publication pair](gpu-resident-reports.md#frozen-monitored-scene-pair) measures the complete 16,384-body CPU/GPU scene on its pinned runtime, with unchanged contact/event population and lower selected-report traffic. Its results do not refresh the older revisions below.
+
+Last updated: 2026-10-21
 
 The authorized [2026-10-20 RTX baseline](physics-rtx-current.md) adds physical
 GPU monitored-scene measurements and calibrated native request counts. Its 16,384-body scene medians were close with worse GPU tails. The later

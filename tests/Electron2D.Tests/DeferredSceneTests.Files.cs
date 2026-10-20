@@ -158,7 +158,7 @@ internal static partial class DeferredSceneTests
     {
         var source = At(folder, "plain.e2dscene");
         var payload = ResourceArchive.ReadPayload(source, out var bigEndian, out var version);
-        Check(!bigEndian && version == 6, "Malformed-field fixture uses the plain current archive layout.");
+        Check(!bigEndian && version == 7, "Malformed-field fixture uses the plain current archive layout.");
         using var scan = new StreamPeerBuffer { DataArray = payload };
         _ = scan.Get32(); ResourceArchiveStrings.Read(scan); ResourceArchive.ReadRoleMetadata(scan, version);
         ResourceArchiveStrings.Read(scan); scan.GetU8(); ResourceArchiveStrings.Read(scan); ResourceArchiveStrings.Read(scan); scan.Get64(); scan.Get32();

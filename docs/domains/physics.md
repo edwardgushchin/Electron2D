@@ -1,11 +1,13 @@
 # Physics domain
 
+[Packed GPU contact selection](../components/gpu-resident-reports.md#packed-selection-and-one-completion-readback-2026-10-21) removes capacity-slot traffic with a resident record/multiplicity bound and one completion, preserving caps, receiver fields, lifetime and callback order. Declaration states remain unchanged; whole-goal acceptance stays open. The current unique census is 1304/1369 Implemented (95.25%), 65 open and 92 Excluded; older counts below describe their own checkpoints.
+
 [One-way body-motion entry](../components/physics-queries.md#one-way-body-motion-entry) now distinguishes new front-corner contacts from initial-overlap departure across CPU, resident GPU and public providers. Existing declaration states and wider acceptance gates remain open.
 
 
 [The frozen full Linux suite receipt](../components/physics-contract-audit.md#full-linux-suite-2026-10-20) passes on its recorded physical-GPU cohort after the supported native source build. It qualifies that revision; focused/AOT/native/platform/network and remaining declaration gates stay separate.
 
-[Contact publication workers](../components/physics-scene-performance.md#contact-publication-workers-2026-10-20) reuse joined per-body ranges on the independent GPU host-report path, preserve physical slot lifetimes and keep callbacks on the owner. Declaration states remain 1303/1369 Implemented (95.18%), 66 open and 92 Excluded.
+[Contact publication workers](../components/physics-scene-performance.md#contact-publication-workers-2026-10-20) reuse joined per-body ranges on the independent GPU host-report path, preserve physical slot lifetimes and keep callbacks on the owner. That worker checkpoint recorded 1303/1369 Implemented (95.18%), 66 open and 92 Excluded.
 
 [Contact-peer retirement](../components/physics-scene-performance.md#contact-peer-retirement-2026-10-20)
 now skips unrelated retained pair snapshots while preserving immediate object/

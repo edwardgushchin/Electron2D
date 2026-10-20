@@ -8,7 +8,7 @@ internal static class GPUPhysicsReportTests
     internal static void Run()
     {
         foreach (var steps in new[] { 1, 4, 8 }) { Momentum(steps); Transient(steps); }
-        WarmHistory(); Rotating(); Selection(); Sleeping(); SurfaceAndSensors(); Proximity(); Lifetime(); Measure();
+        WarmHistory(); Rotating(); Selection(); Sleeping(); SurfaceAndSensors(); Proximity(); Lifetime(); PackedSelection(); Measure();
         Console.WriteLine("Resident contact reports: complete impulses, transient/CCD contacts, caps, snapshots, sleep, lifecycle and warmed allocation passed.");
     }
     private static Store.Snapshot State(Store s, Store.BodyHandle body)
@@ -180,6 +180,58 @@ internal static class GPUPhysicsReportTests
         s.AddShape(reused, box); s.Simulate(.01f, Vector2.Zero); Check(Reports(s, reused, reports) > 0, "Reused body can publish new contacts.");
         s.Dispose(); Reject<ObjectDisposedException>(() => Reports(s, reused, new Store.ContactReport[1]));
     }
+    internal static void PackedSelection()
+    {
+        using var s = new Store { CaptureContactReports = true }; using var shape = new RectangleShape { Size = new(10, 10) };
+        var floor = Add(s, Mode.Static, new(0, 10)); var body = Add(s, Mode.Rigid, Vector2.Zero); var idle = Add(s, Mode.Rigid, new(1000, 0));
+        s.AddShape(floor, shape); s.AddShape(body, shape); s.AddShape(idle, shape); s.Simulate(.01f, Vector2.Zero);
+        var expectedBody = new Store.ContactReport[8]; var bodyCount = Reports(s, body, expectedBody);
+        var expectedFloor = new Store.ContactReport[8]; var floorCount = Reports(s, floor, expectedFloor);
+        Check(bodyCount > 0 && floorCount == bodyCount, "Sparse packing starts with real symmetric contact reports");
+        Store.BodyHandle[] receivers = [body, floor, idle]; int[] limits = [32, 64, 8];
+        var counts = new int[4]; var reports = new Store.ContactReport[105];
+        s.ReadContactReports(receivers, limits, counts, reports);
+        var before = s.ReadbackBytes; var submissions = s.SubmissionCount;
+        s.ReadContactReports(receivers, limits, counts, reports);
+        var readBytes = s.ReadbackBytes - before;
+        Check(readBytes < 104 * System.Runtime.CompilerServices.Unsafe.SizeOf<Store.ContactReport>() / 4,
+            $"Sparse contact readback must follow actual record demand, not empty capacity slots: {s.ReadbackBytes - before} bytes");
+        Check(s.SubmissionCount == submissions + 1, "Packed report reads retain one submission/completion barrier");
+        Verify(receivers, limits);
+        Store.BodyHandle[] repeated = [body, body, floor, idle]; int[] repeatedLimits = [1, 64, 2, 8];
+        Verify(repeated, repeatedLimits);
+        var aliased = repeatedLimits.ToArray(); var aliasedResults = new Store.ContactReport[aliased.Sum()];
+        s.ReadContactReports(repeated, aliased, aliased, aliasedResults);
+        Check(aliased[0] == 1 && aliased[1] == bodyCount && aliased[2] == Math.Min(2, floorCount) && aliased[3] == 0 &&
+            aliasedResults[1].Equals(expectedBody[0]) && aliasedResults[repeatedLimits[0] + repeatedLimits[1]].Equals(expectedFloor[0]), "Input limits may alias counts without moving caller result segments");
+        var emptySubmissions = s.SubmissionCount;
+        s.ReadContactReports([body, idle], [0, 0], counts, Span<Store.ContactReport>.Empty);
+        Check(counts[0] == 0 && counts[1] == 0 && s.SubmissionCount == emptySubmissions, "Zero caps clear counts without a submission or result write");
+        for (var i = 0; i < 128; i++) s.ReadContactReports(receivers, limits, counts, reports);
+        var own = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+        for (var i = 0; i < 64; i++) s.ReadContactReports(receivers, limits, counts, reports);
+        own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
+        Check(own == 0 && all == 0, $"Warmed packed reads allocate {own}/{all} managed bytes");
+        Console.WriteLine($"Packed reports: sparse readback={readBytes} B; duplicate receivers, aliased spans, stable fields/caps, single completion and 64 zero-allocation reads passed.");
+
+        void Verify(Store.BodyHandle[] requested, int[] caps)
+        {
+            var marker = new Store.ContactReport { Shape = uint.MaxValue }; var output = Enumerable.Repeat(marker, caps.Sum() + 1).ToArray();
+            var actual = Enumerable.Repeat(-1, requested.Length + 1).ToArray(); s.ReadContactReports(requested, caps, actual, output);
+            var offset = 0;
+            for (var i = 0; i < requested.Length; i++)
+            {
+                var expected = requested[i] == body ? expectedBody : expectedFloor;
+                var count = requested[i] == idle ? 0 : Math.Min(caps[i], requested[i] == body ? bodyCount : floorCount);
+                Check(actual[i] == count, "Packed row preserves each independent cap and receiver identity");
+                for (var j = 0; j < count; j++) Check(output[offset + j].Equals(expected[j]), "All valid report fields and their per-receiver order survive packing");
+                Check(output.AsSpan(offset + count, caps[i] - count).ToArray().All(x => x.Equals(marker)), "Unused caller slots remain untouched");
+                offset += caps[i];
+            }
+            Check(actual[^1] == -1 && output[^1].Equals(marker), "Caller count/result tails remain untouched");
+        }
+    }
+
     private static void Measure()
     {
         using var s = new Store { CaptureContactReports = true }; using var box = new RectangleShape { Size = new(2, 2) };

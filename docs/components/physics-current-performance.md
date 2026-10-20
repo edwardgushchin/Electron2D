@@ -1,6 +1,8 @@
 # Same-revision dense physics measurements
 
-Last updated: 2026-10-20
+The [2026-10-21 packed contact publication pair](gpu-resident-reports.md#frozen-monitored-scene-pair) measures the complete 16,384-body CPU/GPU scene on its pinned runtime, with unchanged contact/event population and lower selected-report traffic. Its results do not refresh the older revisions below.
+
+Last updated: 2026-10-21
 
 The [2026-10-20 RTX baseline](physics-rtx-current.md) repeats complete raw-server
 and monitored-scene paths, real-window FPS and native allocation request traffic.

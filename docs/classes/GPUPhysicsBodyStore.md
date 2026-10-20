@@ -4,7 +4,7 @@
 
 [Buffer memory observations](../components/gpu-memory.md) are implemented in [GPUPhysicsBodyStore.Memory.cs](../../src/Servers/Physics/GPUPhysicsBodyStore.Memory.cs). They track all requested storage/transfer resources, growth overlap and checkpoint copies through native release, without a simulation mirror or extra GPU work. Complete driver/native and managed memory remains outside this counter.
 
-Last updated: 2026-10-19
+Last updated: 2026-10-21
 
 [Resident Area sorting](../components/physics-areas.md#resident-area-sorting-in-nativeaot) now uses one cached explicit comparison over the existing active prefix. This removes a reproduced 48-byte NativeAOT allocation per dirty-profile sort while retaining priority/traversal order, buffers and transfer/wait policy. The full changed-parameter fixture keeps a strict zero managed-byte gate; native allocation and target GPU performance remain separate.
 
@@ -222,7 +222,7 @@ selects each requested body's incident contacts on device with independent limit
 returning observed generations, positions, receiver normal/impulse and final point
 velocities. Completed snapshots survive later authoring and zero-time calls.
 ReportPublicationCount/ReportReadCount count completed frame/read batches;
-ReportDeviceCapacityBytes/ReportTransferCapacityBytes expose retained report storage. No CPU
+ReportDeviceCapacityBytes/ReportTransferCapacityBytes expose retained report storage. Selected rows are packed on device and bounded by frame records and request multiplicity, retaining one completion. Host validation/scatter preserves original caller segments and allows aliased limits/counts; unused slots stay untouched. Scratch epochs/counts retain only duplicate-request bookkeeping, not numerical state. No CPU
 contact mirror is retained; [publication storage and traffic](../components/gpu-resident-reports.md)
 are separate from integration/solver benchmarks. GPUPhysicsReportTests checks the
 shared public momentum/reporting contract and the internal publication lifecycle.
@@ -239,7 +239,7 @@ flag bypasses finite bounds; free-side support culling limits candidates. Device
 manifolds, ray/point/shape/body-motion queries and translating/rotating CCD use the
 plane equation. WorldBoundaryTests additionally verifies sensors, sleeping support,
 resource edits and removal. See the [boundary report](../components/physics-shapes.md#infinite-world-boundaries).
-Public scene/server backend binding remains separate work.
+Public scene/server worlds consume this same resident store through PhysicsSpace; complete numerical/platform/performance acceptance remains open.
 
 GetSleepSettings and SetSleepSettings now use shared PhysicsSleepSettings, sampled
 from project defaults at store creation. Thresholds and duration use strict comparisons;

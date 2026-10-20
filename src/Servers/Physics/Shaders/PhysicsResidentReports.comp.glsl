@@ -7,20 +7,21 @@
 #include "PhysicsPairHash.inc.glsl"
 layout(local_size_x=64) in;
 struct FrameContact { uvec4 pair; uvec4 features; uvec4 owners; uvec4 links; vec4 positions; vec4 normalDepth; vec4 impulse; vec4 velocities; };
+struct ReportRequest { uint body; uint generation; uint limit; };
 struct Report { uvec4 shapes; uvec2 collider; float depth; uint padding; vec4 positions; vec4 normalImpulse; vec4 velocities; };
 layout(std430,set=0,binding=0) readonly buffer Points { ContactPoint points[]; };
 layout(std430,set=0,binding=1) readonly buffer Shapes { Shape shapes[]; };
 layout(std430,set=0,binding=2) readonly buffer Bodies { ResidentBody bodies[]; };
 layout(std430,set=0,binding=3) readonly buffer Centers { vec2 centers[]; };
 layout(std430,set=0,binding=4) readonly buffer Impulses { ContactImpulse impulses[]; };
-layout(std430,set=0,binding=5) readonly buffer Requests { uvec4 requests[]; };
+layout(std430,set=0,binding=5) readonly buffer Requests { ReportRequest requests[]; };
 layout(std430,set=1,binding=0) buffer Records { FrameContact records[]; };
 layout(std430,set=1,binding=1) buffer Table { uint table[]; };
 layout(std430,set=1,binding=2) buffer PointHeads { uint pointHeads[]; };
 layout(std430,set=1,binding=3) buffer PointLinks { uvec2 pointLinks[]; };
 layout(std430,set=1,binding=4) buffer BodyHeads { uint bodyHeads[]; };
 layout(std430,set=1,binding=5) buffer Results { Report results[]; };
-layout(std430,set=1,binding=6) buffer Counts { uint counts[]; };
+layout(std430,set=1,binding=6) buffer Counts { uvec2 counts[]; };
 layout(std430,set=1,binding=7) buffer Summary { uvec2 summary; };
 layout(std140,set=2,binding=0) uniform Settings { uint stage; uint count; uint recordCount; uint tableCapacity; uint bodyCount; uint initialize; uint pointCount; uint capacity; };
 const uint none=0xffffffffu, incoming=0x80000000u;
@@ -106,30 +107,41 @@ void main()
     }
     if(stage==5u)
     {
-        uvec4 request=requests[i];uint selected=0u;
-        if(request.x>=bodyCount){counts[i]=0u;return;}
-        if(request.z==0u){counts[i]=0u;return;}
-        uint at=bodyHeads[request.x];
+        ReportRequest request=requests[i];uint selected=0u,available=0u;
+        if(request.body>=bodyCount||request.limit==0u){counts[i]=uvec2(0);return;}
+        uint at=bodyHeads[request.body];
+        for(uint visited=0u;at!=none&&available<request.limit;visited++)
+        {
+            if(at>=recordCount||visited>=recordCount){fail();return;}
+            FrameContact r=records[at];bool second=r.owners.y==request.body;
+            if(!second&&r.owners.x!=request.body){fail();return;}
+            at=second?r.links.y:r.links.x;
+            if((second?r.owners.w:r.owners.z)==request.generation)available++;
+        }
+        uint first=atomicAdd(summary.y,available);
+        if(first>capacity||available>capacity-first){fail();return;}
+        at=bodyHeads[request.body];
         for(uint visited=0u;at!=none;visited++)
         {
             if(at>=recordCount||visited>=recordCount){fail();return;}
-            FrameContact r=records[at];bool second=r.owners.y==request.x;
-            if(!second&&r.owners.x!=request.x){fail();return;}
+            FrameContact r=records[at];bool second=r.owners.y==request.body;
+            if(!second&&r.owners.x!=request.body){fail();return;}
             at=second?r.links.y:r.links.x;
-            if((second?r.owners.w:r.owners.z)!=request.y)continue;
+            if((second?r.owners.w:r.owners.z)!=request.generation)continue;
             uint target=selected;
-            if(selected==request.z)
+            if(selected==request.limit)
             {
-                // ponytail: O(receiver contacts * limit), matching direct-state cap selection; use a stable min-heap if measured large limits dominate.
-                target=0u;for(uint j=1u;j<selected;j++)if(results[request.w+j].depth<results[request.w+target].depth)target=j;
-                if(r.normalDepth.z<=results[request.w+target].depth)continue;
+                // shortcut: cap selection scans the selected depths; use a stable min-heap if measured large limits dominate.
+                target=0u;for(uint j=1u;j<selected;j++)if(results[first+j].depth<results[first+target].depth)target=j;
+                if(r.normalDepth.z<=results[first+target].depth)continue;
             }
             else selected++;
             float sign=second?1:-1;
-            results[request.w+target]=Report(second?r.pair.ywxz:r.pair.xzyw,second?r.owners.xz:r.owners.yw,r.normalDepth.z,0u,
+            results[first+target]=Report(second?r.pair.ywxz:r.pair.xzyw,second?r.owners.xz:r.owners.yw,r.normalDepth.z,0u,
                 second?r.positions.zwxy:r.positions,vec4(sign*r.normalDepth.xy,sign*r.impulse.xy),second?r.velocities.zwxy:r.velocities);
         }
-        counts[i]=selected;return;
+        if(selected!=available){fail();return;}
+        counts[i]=uvec2(selected,first);return;
     }
     if(stage==6u){records[i].impulse=vec4(0);records[i].velocities=vec4(0);}
 }
