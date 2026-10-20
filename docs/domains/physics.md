@@ -1,5 +1,7 @@
 # Physics domain
 
+[Crossed capsule response](../components/physics-contact-policy.md#crossed-capsule-response-and-portable-contact-state) verifies complete paired impulses, off-centre rotation and silent portable contact state across scene/server bodies and selected numerical owners.
+
 [Long contour pairs](../components/physics-queries.md#long-pairs-of-flat-and-rounded-contours) retain exact first-entry geometry across sixteen ordered finite pairs. Continuous flat-core intervals and geometric capsule contact fallback correct lost motion contacts; software and hardware acceptance remain distinct.
 
 [Long capsule and segment sweeps](../components/physics-queries.md#long-capsule-and-segment-sweeps) verify first-entry geometry and contact identities across scene/raw callers. The independent provider now completes at a converged float-time fraction instead of exhausting its contour-sweep budget.
