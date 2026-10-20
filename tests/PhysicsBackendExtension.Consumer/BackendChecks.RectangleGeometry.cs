@@ -245,7 +245,9 @@ public static partial class BackendChecks
             if (closing <= 0) return false;
             var advance = gap / closing;
             if (!float.IsFinite(advance) || advance <= 0) throw new InvalidOperationException("A contour sweep cannot advance.");
-            fraction += advance; if (fraction > 1) return false;
+            var next = fraction + advance;
+            if (next == fraction) return true;
+            fraction = next; if (fraction > 1) return false;
             current.Origin = a.Origin + motion * fraction;
         }
         throw new InvalidOperationException("A contour sweep exceeded its advancement budget.");

@@ -1,4 +1,5 @@
-if (args.Contains("--oblique-disk-motion")) BackendChecks.RunLongDiskMotion(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"), oblique: true);
+if (args.Contains("--long-capsule-motion")) BackendChecks.RunLongCapsuleMotion(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Contains("--oblique-disk-motion")) BackendChecks.RunLongDiskMotion(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"), oblique: true);
 else if (args.Contains("--hollow-pairs")) BackendChecks.RunHollowPairs(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--contact-threshold-guards")) BackendChecks.RunContactThresholdGuards(args.Contains("--threaded"));
 else if (args.Contains("--resource-transactions")) BackendChecks.RunResourceTransactions(args.Contains("--threaded"));
