@@ -88,3 +88,5 @@ Configured recording uses Engine.RunMovie/RunMovieAsync and the typed MovieWrite
 [Low-processor rendering](low-processor-rendering.md) connects retained change producers, static RenderingServer.HasChanged, the two OS policies and typed startup settings to Engine.Run/RunAsync. Static output skips submissions while processing and input continue; time-driven drawing and capture retain their executing consumers. Verification limits remain explicit in the component.
 
 The [Time service](time-service.md) now supplies typed calendar conversions, system wall-time and monotonic ticks with a permanent Engine registry identity. Its origin is independent of loop start/stop, scene pause and TimeScale.
+
+The [MainLoop callback audit](main-loop.md#complete-frame-and-lifecycle-callback-audit) verifies initialization, fixed/idle deltas and stop results, failure recovery and terminal finalization with real selected CPU/software-GPU/registered worlds. Explicit library-host ownership and warmed zero managed allocation remain distinct from platform permissions and hardware performance.

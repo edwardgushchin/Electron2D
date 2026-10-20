@@ -1,5 +1,7 @@
 # GrooveJoint
 
+[Networked crossed capsules and CPU wake preparation](../components/physics-network-example.md#crossed-capsule-correction-and-cpu-wake-preparation-2026-10-20) extend authoritative correction with complete angular/linear contact state and prepare joint storage before later replayed wake.
+
 Last updated: 2026-10-19
 
 ## Typed parameter publication

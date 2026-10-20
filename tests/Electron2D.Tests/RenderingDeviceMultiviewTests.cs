@@ -23,7 +23,7 @@ internal static partial class RenderingDeviceMultiviewTests
     internal static void Run()
     {
         using var device = RenderingServer.CreateLocalRenderingDevice();
-        foreach (var language in new[] { "GLSL", "HLSL", "Block", "Images" }) Draw(device, language);
+        foreach (var language in new[] { "GLSL", "HLSL", "Block", "BlockWhole", "Images" }) Draw(device, language);
         Inputs(device); Multisample(device);
         Console.WriteLine("Multiview: per-view vertex/fragment indices, ordered pixels, push/scissor state, untouched extra layers, depth, input passes and lifetime checks passed on " + device.GetDeviceName());
     }
@@ -43,8 +43,8 @@ internal static partial class RenderingDeviceMultiviewTests
         Reject<ArgumentOutOfRangeException>(() => device.FramebufferCreate([image], viewCount: 257));
         Reject<ArgumentException>(() => device.FramebufferCreate([image], viewCount: 5));
         Reject<ArgumentException>(() => device.FramebufferCreate([image, depth], format, 1));
-        using var module = RenderingDeviceGraphicsTests.Load("DeviceMultiview" + (language == "Block" ? "GLSL" : language == "Images" ? "ImagesGLSL" : language));
-        if (language == "Block") { using var input = typeof(RenderingDeviceMultiviewTests).Assembly.GetManifestResourceStream("TestShaders.DeviceMultiviewBlock.vert.spv")!; using var bytes = new MemoryStream(); input.CopyTo(bytes); module.BytecodeVertex = bytes.ToArray(); }
+        using var module = RenderingDeviceGraphicsTests.Load("DeviceMultiview" + (language.StartsWith("Block", StringComparison.Ordinal) ? "GLSL" : language == "Images" ? "ImagesGLSL" : language));
+        if (language.StartsWith("Block", StringComparison.Ordinal)) { using var input = typeof(RenderingDeviceMultiviewTests).Assembly.GetManifestResourceStream("TestShaders.DeviceMultiview" + language + ".vert.spv")!; using var bytes = new MemoryStream(); input.CopyTo(bytes); module.BytecodeVertex = bytes.ToArray(); }
         var lower = typeof(RenderingDevice).GetMethod("LowerViewIndex", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!;
         for (uint view = 0; view < 3; view++)
         {

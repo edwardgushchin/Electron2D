@@ -33,7 +33,9 @@ internal sealed partial class NetworkWorld
         new(211, 1, ObjectKind.GeometryPolygon, 0, 1, new(1400, 40)),
         new(212, 1, ObjectKind.GeometryRay, 0, 1, new(1500, 40)),
         new(213, 1, ObjectKind.GeometryCompound, 0, 1, new(1600, 40)),
-        new(214, 1, ObjectKind.GeometryRotatingRay, 0, 1, new(1700, 40))
+        new(214, 1, ObjectKind.GeometryRotatingRay, 0, 1, new(1700, 40)),
+        new(220, 1, ObjectKind.CrossedCapsuleFirst, 0, 1, new(1800, 40)),
+        new(221, 1, ObjectKind.CrossedCapsuleSecond, 0, 1, new(1800, 40))
     ];
     private readonly CircleShape _supportCircle = new() { Radius = 2 };
     private readonly RectangleShape _supportFloor = new() { Size = new(200, 2) };

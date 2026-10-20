@@ -107,7 +107,7 @@ tree.ProcessFrame(1.0 / 60.0);
 | [`public void SetGroup<T>(string group, Action<Node, T> setter, T value, GroupCallFlags flags = GroupCallFlags.Default)`](#m-electron2d-scenetree-setgroup-1-system-string-system-action-electron2d-entity-0-0-electron2d-groupcallflags) | Applies a typed value through a setter for each current node in a group. |
 | [`public void NotifyGroup(string group, int notification, GroupCallFlags flags = GroupCallFlags.Default)`](#m-electron2d-scenetree-notifygroup-system-string-system-int32-electron2d-groupcallflags) | Delivers a numeric notification to each current node in a group. |
 | [`public void QueueDelete(ElectronObject instance)`](#m-electron2d-scenetree-queuedelete-electron2d-electronobject) | Thread-safely queues an engine object for deterministic disposal at a future deletion phase. |
-| [`public void FlushDeferred()`](#m-electron2d-scenetree-flushdeferred) | Executes one captured deferred-action batch followed by one captured deletion batch. |
+| [`public void FlushDeferred()`](#m-electron2d-scenetree-flushdeferred) | Drains deferred actions until their queue is empty, then executes one captured deletion batch. |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-scenetree-getpropertydescriptors) | Returns the typed properties exposed to tooling before validation. |
 | [`protected override bool OnProcess(double delta)`](#m-electron2d-scenetree-onprocess-system-double) | Performs one variable-step frame. |
 | [`protected override bool OnPhysicsProcess(double delta)`](#m-electron2d-scenetree-onphysicsprocess-system-double) | Performs one fixed-step physics frame. |
@@ -277,7 +277,7 @@ Thread-safely queues an action for a future deferred flush while the tree remain
 - `ArgumentNullException`: `action` is `null`.
 - `ObjectDisposedException`: The tree has been finalized, or disposal has started or finished.
 
-**Remarks:** An action queued during a captured flush batch waits for a later flush. Queue acceptance is atomic with the
+**Remarks:** Actions queued by deferred callbacks run in FIFO order during the same flush until the queue is empty. A continually self-enqueuing callback can prevent completion. Queue acceptance is atomic with the
 start of tree finalization: a successful call is either captured by a future flush or intentionally discarded by
 later finalization; a call that loses that race throws and does not enqueue.
 
@@ -300,7 +300,7 @@ Thread-safely queues a typed setter invocation for a future deferred flush.
 - `ArgumentNullException`: `setter` is `null`.
 - `ObjectDisposedException`: The tree has been finalized, or disposal has started or finished.
 
-**Remarks:** Has the same atomic lifetime and captured-batch behavior as [`SceneTree.Defer(Action)`](SceneTree.md#m-electron2d-scenetree-defer-system-action).
+**Remarks:** Has the same atomic lifetime and queue-draining behavior as [`SceneTree.Defer(Action)`](SceneTree.md#m-electron2d-scenetree-defer-system-action).
 
 <a id="m-electron2d-scenetree-createtimer-system-double-system-boolean-system-boolean-system-boolean"></a>
 ### `public SceneTreeTimer CreateTimer(double timeSeconds, bool processAlways = true, bool processInPhysics = false, bool ignoreTimeScale = false)`
@@ -590,7 +590,7 @@ deletion.
 <a id="m-electron2d-scenetree-flushdeferred"></a>
 ### `public void FlushDeferred()`
 
-Executes one captured deferred-action batch followed by one captured deletion batch.
+Drains deferred actions until their queue is empty, then executes one captured deletion batch.
 
 **Exceptions**
 
@@ -598,7 +598,7 @@ Executes one captured deferred-action batch followed by one captured deletion ba
 - `ObjectDisposedException`: The tree has been finalized, or disposal has started or finished.
 - `AggregateException`: One or more actions or deletions fail.
 
-**Remarks:** Every captured entry is attempted. Deferred actions queued after action capture wait for a later flush. The
+**Remarks:** Every accepted action is attempted before the queue is observed empty, including nested submissions. The
 deletion batch is captured after those actions, so deletion requested by a captured action runs in the same
 flush. Re-entrant execution and execution during node lifecycle or pause delivery are rejected. Failures are
 reported after both phases. Deletions enqueued after deletion capture wait for a later flush. Each cancellable entry identifies one request generation; stale entries cannot consume replacements. Two retained queues preserve prepared capacity across batches.
@@ -1051,11 +1051,11 @@ its stored hover on the next input/hide route; callback failures preserve the re
 window and content transition attempts. See [Window](Window.md#containing-window-notifications)
 for notification boundaries and the headless/dummy verification scope.
 
-The exact SceneTree.Defer scheduler and SceneTree.SetDeferred now use a Scene-owned typed invocation provider. Each accepted call retains independent typed values in a slot and submits its immutable callback into the existing single FIFO queue. Slots recycle only after callback completion or discard, clearing argument/callback references even after failure. Work emitted during a captured batch waits for the next flush. Pool operations share the lifetime/work gate; user handlers run outside it. A weak-owner Core registry recognizes only the exact registered delegate, so Core has no Scene runtime dependency. Public signatures, borrowed reference ownership, event multiplicity and cancellation remain unchanged.
+The exact SceneTree.Defer scheduler and SceneTree.SetDeferred now use a Scene-owned typed invocation provider. Each accepted call retains independent typed values in a slot and submits its immutable callback into the existing single FIFO queue. Slots recycle only after callback completion or discard, clearing argument/callback references even after failure. Work emitted during a drain batch joins the FIFO and runs before that flush completes. Pool operations share the lifetime/work gate; user handlers run outside it. A weak-owner Core registry recognizes only the exact registered delegate, so Core has no Scene runtime dependency. Public signatures, borrowed reference ownership, event multiplicity and cancellation remain unchanged.
 
 Prepared standard-scene delivery and typed setters have zero invocation allocation, including prepared one-shot first delivery. First type/capacity growth, subscription and allocations performed by handlers/accessors remain separate; native multicast removal with multiple listeners can allocate. Arbitrary custom schedulers preserve their independent captured Actions and may allocate. Deferred delivery never extends a borrowed input event lifetime.
 
-EventConnectionPhysicsTests verifies mixed typed/untyped FIFO order, next-batch work, failures followed by later work, closed-scheduler subscription/emission policy, 256 concurrent producers, reference release on execution/failure/finalization/activation rollback, and 640 first one-shot callbacks for immediate and scene-deferred profiles with singleton accessors. Selected CPU/GPU full frames retain 128 callbacks per immediate and deferred arity plus body/shape transitions at strict zero owner/all-thread bytes. Real picking and legacy custom-scheduler/concurrency/error checks remain included. Software Vulkan is functional evidence; hardware/native/foreign/network/performance acceptance stays open.
+EventConnectionPhysicsTests verifies mixed typed/untyped FIFO order, nested same-flush work, failures followed by later work, closed-scheduler subscription/emission policy, 256 concurrent producers, reference release on execution/failure/finalization/activation rollback, and 640 first one-shot callbacks for immediate and scene-deferred profiles with singleton accessors. Selected CPU/GPU full frames retain 128 callbacks per immediate and deferred arity plus body/shape transitions at strict zero owner/all-thread bytes. Real picking and legacy custom-scheduler/concurrency/error checks remain included. Software Vulkan is functional evidence; hardware/native/foreign/network/performance acceptance stays open.
 
 ## Shared node frame time (2026-10-14)
 
@@ -1134,3 +1134,5 @@ Native independent Window input uses its public lifetime ID to select the receiv
 ## Native popup input
 
 Native popup lifetimes retain opening order separately from embedded windows. Positional routing uses the native root-client plane, preserves the original window identity and disposes temporary transformed events. Opening-control safe rectangles allow owner input; outside presses request dismissal, while exclusive children with a distinct native host suppress parent native reception and viewport dispatch. Embedded exclusive children continue through their shared native source and its embedded routing. Direct native popup events retain their native origin. Native retirement unregisters hidden/disposed lifetimes; embedded routing remains independent. See [popup windows](../components/popup-windows.md#native-popup-presentation) for backend limits.
+
+The [MainLoop callback audit](../components/main-loop.md#complete-frame-and-lifecycle-callback-audit) verifies initialization, fixed/idle deltas and stop results, failure recovery and terminal finalization with real selected CPU/software-GPU/registered worlds. Explicit library-host ownership and warmed zero managed allocation remain distinct from platform permissions and hardware performance.

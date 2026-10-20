@@ -23,3 +23,36 @@ bool responds(Constraint c,bool second) {return (uint(c.tangent.y)&(second?8u:4u
 vec2 velocity(ResidentBody b,vec2 r) {return b.velocity.xy+b.surface.xy+angular(b.velocity.z+b.surface.z,r);}
 
 ResidentBody worldBody() {return ResidentBody(vec4(0,0,1,0),vec4(0),vec4(0),vec4(0),vec4(0),uvec4(0,0,0,1));}
+
+vec2 contactImpulse(Constraint c,vec2 previous,vec2 speed,vec2 ma,vec2 mb)
+{
+    vec2 normal=c.normal.zw,tangent=c.tangent.zw,inertia=vec2(ma.y,mb.y);
+    float mass=ma.x+mb.x,kn=mass+dot2(inertia,normal*normal),kt=mass+dot2(inertia,tangent*tangent);
+    float coupling=dot2(inertia,normal*tangent);
+    if(coupling==0)
+    {
+        float pn=max(0,previous.x+c.parameters.x*(c.parameters.z-speed.x));
+        return vec2(pn,clamp(previous.y-c.parameters.y*speed.y,-c.tangent.x*pn,c.tangent.x*pn));
+    }
+    float scale=max(kn,kt);
+    vec3 k=vec3(kn,kt,coupling)/scale;
+    vec2 rhs=vec2(c.parameters.z-speed.x,-speed.y)/scale+vec2(k.x*previous.x+k.z*previous.y,k.z*previous.x+k.y*previous.y);
+    if(rhs.x<=0)return vec2(0);
+    vec2 scaledInertia=inertia/scale;float scaledMass=mass/scale,arm=cross2(normal,tangent);
+    // Positive terms retain the determinant when large angular levers nearly align the rows.
+    float determinant=scaledMass*(scaledMass+dot2(scaledInertia,normal*normal+tangent*tangent))+scaledInertia.x*scaledInertia.y*arm*arm;
+    if(determinant>0)
+    {
+        vec2 sticking=vec2(k.y*rhs.x-k.z*rhs.y,k.x*rhs.y-k.z*rhs.x)/determinant;
+        if(sticking.x>=0&&abs(sticking.y)<=c.tangent.x*sticking.x)return sticking;
+        float direction=sign(k.x*rhs.y-k.z*rhs.x),denominator=k.x+direction*c.tangent.x*k.z;
+        if(denominator>0)
+        {
+            float pn=rhs.x/denominator;return vec2(pn,direction*c.tangent.x*pn);
+        }
+    }
+    // shortcut: unresolved single-precision blocks retain projected iteration; widen precision if accepted ranges need it.
+    float pn=max(0,previous.x+c.parameters.x*(c.parameters.z-speed.x));
+    float vt=speed.y+(pn-previous.x)*coupling;
+    return vec2(pn,clamp(previous.y-c.parameters.y*vt,-c.tangent.x*pn,c.tangent.x*pn));
+}

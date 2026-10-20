@@ -1,6 +1,10 @@
 # PhysicsSnapshotMap
 
-Last updated: 2026-10-18
+[Networked crossed capsules and CPU wake preparation](../components/physics-network-example.md#crossed-capsule-correction-and-cpu-wake-preparation-2026-10-20) extend authoritative correction with complete angular/linear contact state and prepare joint storage before later replayed wake.
+
+[Crossed capsule response](../components/physics-contact-policy.md#crossed-capsule-response-and-portable-contact-state) verifies complete paired impulses, off-centre rotation and silent portable contact state across scene/server bodies and selected numerical owners.
+
+Last updated: 2026-10-20
 
 [Publication recovery](../components/physics-registered-adapter.md#failed-motion-publication) distinguishes local rewind from portable preparation. Successful local restore discards superseded motion/pose/mode publication without invoking the failed request. Portable apply first prepares pre-existing local authoring; a preparation failure leaves incoming state unapplied and the tick unchanged, and a later successful apply supplies authoritative state.
 

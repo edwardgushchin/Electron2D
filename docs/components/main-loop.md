@@ -1,6 +1,6 @@
 # Main loop component
 
-Last updated: 2026-09-23
+Last updated: 2026-10-20
 
 ## Scope
 
@@ -22,7 +22,7 @@ The host may deliver system notifications through inherited `Notify(int)` and pu
 
 ## Dependencies
 
-The component depends on Core object lifecycle, the process-wide Input transition service, and the .NET Base Class Library. The Engine runtime depends on this component, SDL `DisplayServer` is called separately by a consumer host, and `SceneTree` depends on it from the Scene domain.
+The component depends on Core object lifecycle, the process-wide Input transition service, and the .NET Base Class Library. The Engine runtime drives this contract; its ordinary `Run(Window)` path coordinates native ownership through DisplayServer and RenderingServer. `SceneTree` supplies the concrete scene and physics frame hooks.
 
 ## Invariants
 
@@ -36,11 +36,49 @@ The component depends on Core object lifecycle, the process-wide Input transitio
 
 ## Current implementation status and exclusions
 
-The managed lifecycle, event, callbacks, stop result, constants, `Engine` attachment, Input transition integration, error states, and `SceneTree` integration are implemented and verified. SDL `DisplayServer` now owns one native window and partial event/focus translation. Permission requests, real clock ownership, frame pacing/waiting, complete application ownership, exit codes, and crash integration remain absent.
+The lifecycle, callbacks, stop results, constants, `Engine` attachment, Input transition integration, error states and `SceneTree` integration execute. `Engine.Run(Window)` owns the ordinary windowed clock, event pump, pacing, exit-code result and cleanup. Those services belong to their respective components; MainLoop itself remains caller-driven. Native permission requests and results retain their separate platform prerequisite. Runtime exception diagnostics do not establish an operating-system crash handler.
 
 ## Verification
 
 Executable checks cover success, invalid order, delta boundaries, wrong-thread calls, frame and lifecycle callback failures, re-entry, deterministic disposal pairing, permission delivery, numeric constants, SceneTree input/system propagation and finalization, independent Input transition lanes, and warmed idle-frame allocations. Optional separate Display tests exercise SDL's dummy video driver but do not prove real operating-system behavior.
+
+## Complete frame and lifecycle callback audit
+
+The four protected hooks preserve the accepted explicit-library-host projection
+under ADRs 0015/0016. Initialization runs once before callbacks; successful
+initialization is paired with at most one finalization. A failed initializer owns
+partial acquisition rollback and cannot be retried. Finalization remains terminal
+even if cleanup throws. Direct frame methods preserve their supplied seconds and
+boolean stop results; they do not apply Engine time scaling themselves.
+
+Engine supplies scaled fixed deltas and bounded variable deltas. Fixed callbacks
+precede the current idle callback. A fixed stop skips the remaining catch-up calls
+and still delivers that idle callback; either boolean stop reaches the embedding
+host without automatically detaching its loop. `Engine.Stop()` finalizes and
+detaches without taking the caller's disposal ownership. Callback exceptions
+restore the running phase so the host can handle the error and issue a later
+frame. A callback failure does not imply that work already completed by the
+application can be rolled back.
+
+The public-only `--loop-lifecycle` consumer implements a custom MainLoop owning a
+SceneTree, selected World, moving RigidBody and real point queries. CPU, software
+GPU and independently registered implementations run with owner/separate numerics.
+It checks direct deltas, half-cadence scheduling, zero scale, the four-step stall
+cap, both stop results, foreign and reentrant rejection, original exception
+identity, initialization rollback, automatic/explicit finalization and terminal
+cleanup. One hundred twenty-eight warm and 128 measured Engine frames at 120 Hz
+and scale .5 must produce exactly 128 physical ticks, both callback counts and
+1.6 units of travel at speed 3, with strict zero owner/all-thread managed bytes.
+The .003-unit travel tolerance covers native float accumulation/unit conversion
+while rejecting an extra, omitted or unscaled physical step.
+
+The root `ELECTRON2D_TEST_LOOP_LIFECYCLE=1` and existing physics-clock selector
+exercise default hooks, SceneTree hooks, input-lane cleanup, captured timing and
+existing lifecycle failure controls. Linux CLR and strict NativeAOT evidence lives
+under `bin/physics-loop-lifecycle/2026-10-20/`. This callback audit does not close
+the permission signal, the MainLoop/Object class-wide inherited audit, native
+allocator totals, hardware performance or another platform. It adds no runtime
+API or numerical algorithm.
 
 ## Decisions
 

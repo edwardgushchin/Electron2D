@@ -2,7 +2,7 @@ using Electron2D;
 
 namespace Electron2D.Examples.PhysicsNetwork;
 
-internal enum ObjectKind { Floor, Sensor, Ball, Box, Pin, Anchor, Groove, Spring, SupportFloor, SupportBody, SupportPin, SupportGroove, SupportSpring, GeometryBoundary, GeometryLedge, GeometryCapsule, GeometryPolygon, GeometryRay, GeometryCompound, GeometryRotatingRay }
+internal enum ObjectKind { Floor, Sensor, Ball, Box, Pin, Anchor, Groove, Spring, SupportFloor, SupportBody, SupportPin, SupportGroove, SupportSpring, GeometryBoundary, GeometryLedge, GeometryCapsule, GeometryPolygon, GeometryRay, GeometryCompound, GeometryRotatingRay, CrossedCapsuleFirst, CrossedCapsuleSecond }
 internal readonly record struct ObjectSpec(ulong ID, uint Generation, ObjectKind Kind, int Owner, uint ControlEpoch,
     Vector2 Spawn, ulong First = 0, ulong Second = 0);
 internal readonly record struct PlayerInput(float Move, bool Jump);
@@ -56,7 +56,7 @@ internal sealed partial class NetworkWorld : IDisposable
         for (var i = 0; i < specs.Length; i++)
         {
             var spec = specs[i];
-            if (spec.ID == 0 || spec.Generation == 0 || spec.ControlEpoch == 0 || spec.Owner < 0 || !spec.Spawn.IsFinite() || (uint)spec.Kind > (uint)ObjectKind.GeometryRotatingRay)
+            if (spec.ID == 0 || spec.Generation == 0 || spec.ControlEpoch == 0 || spec.Owner < 0 || !spec.Spawn.IsFinite() || (uint)spec.Kind > (uint)ObjectKind.CrossedCapsuleSecond)
                 throw new InvalidDataException("Invalid world object definition.");
             for (var j = 0; j < i; j++) if (specs[j].ID == spec.ID) throw new InvalidDataException("Duplicate world object ID.");
             if (IsJoint(spec.Kind) && (!HasBody(specs, spec.First) || !HasBody(specs, spec.Second) || spec.First == spec.Second))
@@ -85,7 +85,7 @@ internal sealed partial class NetworkWorld : IDisposable
             }
     }
     private static bool HasBody(ReadOnlySpan<ObjectSpec> specs, ulong id)
-    { foreach (var spec in specs) if (spec.ID == id) return spec.Kind is ObjectKind.Ball or ObjectKind.Box or ObjectKind.Floor or ObjectKind.Anchor or ObjectKind.SupportFloor or ObjectKind.SupportBody or ObjectKind.GeometryBoundary or ObjectKind.GeometryLedge or ObjectKind.GeometryCapsule or ObjectKind.GeometryPolygon or ObjectKind.GeometryRay or ObjectKind.GeometryCompound or ObjectKind.GeometryRotatingRay; return false; }
+    { foreach (var spec in specs) if (spec.ID == id) return spec.Kind is ObjectKind.Ball or ObjectKind.Box or ObjectKind.Floor or ObjectKind.Anchor or ObjectKind.SupportFloor or ObjectKind.SupportBody or ObjectKind.GeometryBoundary or ObjectKind.GeometryLedge or ObjectKind.GeometryCapsule or ObjectKind.GeometryPolygon or ObjectKind.GeometryRay or ObjectKind.GeometryCompound or ObjectKind.GeometryRotatingRay or ObjectKind.CrossedCapsuleFirst or ObjectKind.CrossedCapsuleSecond; return false; }
     private static bool SameObject(ObjectSpec first, ObjectSpec second) => first.ID == second.ID && first.Generation == second.Generation &&
         first.Kind == second.Kind && first.Spawn == second.Spawn && first.First == second.First && first.Second == second.Second;
     private void Add(ObjectSpec spec)
@@ -104,6 +104,9 @@ internal sealed partial class NetworkWorld : IDisposable
             case ObjectKind.GeometryCompound:
             case ObjectKind.GeometryRotatingRay:
                 body = CreateGeometry(spec, name); break;
+            case ObjectKind.CrossedCapsuleFirst:
+            case ObjectKind.CrossedCapsuleSecond:
+                body = CreateCrossedCapsule(spec, name); break;
             case ObjectKind.Floor:
                 body = new StaticBody { Name = name, Position = spec.Spawn };
                 body.AddChild(new CollisionShape { Shape = _floor }); break;
@@ -201,13 +204,13 @@ internal sealed partial class NetworkWorld : IDisposable
         }
         var final = _finalImpulsesPending; _finalImpulsesPending = false;
         if (final) ((RigidBody)Find(10)!.Body!).ApplyTorqueImpulse(800);
-        KickJoints(_stepTick); PrepareSupport(_stepTick, final); PrepareGeometry(_stepTick, final);
+        KickJoints(_stepTick); PrepareSupport(_stepTick, final); PrepareGeometry(_stepTick, final); PrepareCrossedCapsules(_stepTick, final);
         ProfileForTesting(0, false);
         ProfileForTesting(1, true);
         Tree.PhysicsFrame(FixedStep);
         ProfileForTesting(1, false);
         ProfileForTesting(2, true);
-        CheckJoints(); CheckSupport(); CheckGeometry();
+        CheckJoints(); CheckSupport(); CheckGeometry(); CheckCrossedCapsules();
         ProfileForTesting(2, false);
         if (Tick != _stepTick) throw new InvalidOperationException("Fixed simulation did not advance exactly one tick.");
     }
@@ -225,7 +228,8 @@ internal sealed partial class NetworkWorld : IDisposable
         if (_disposed) return; _disposed = true; Phase = SimulationPhase.Shutdown;
         _supportState?.Dispose();
         foreach (var state in _geometryStates) state?.Dispose();
-        Map.Dispose(); Tree.Dispose(); Root.Dispose(); World.Dispose(); _floor.Dispose(); _box.Dispose(); _region.Dispose(); _circle.Dispose(); _supportCircle.Dispose(); _supportFloor.Dispose(); _supportMaterial.Dispose(); DisposeGeometry();
+        foreach (var state in _crossedStates) state?.Dispose();
+        Map.Dispose(); Tree.Dispose(); Root.Dispose(); World.Dispose(); _floor.Dispose(); _box.Dispose(); _region.Dispose(); _circle.Dispose(); _supportCircle.Dispose(); _supportFloor.Dispose(); _supportMaterial.Dispose(); DisposeGeometry(); DisposeCrossedCapsules();
     }
     partial void ProfileForTesting(int stage, bool begin);
 }

@@ -116,7 +116,7 @@ internal sealed partial class NetworkSession
             Simulation.Map.Apply(_snapshot);
             ProfileForTesting(7, false);
             ProfileForTesting(8, true);
-            Simulation.CheckSupportCorrection(); Simulation.CheckGeometryCorrection();
+            Simulation.CheckSupportCorrection(); Simulation.CheckGeometryCorrection(); Simulation.CheckCrossedCorrection(final);
             ProfileForTesting(8, false);
             Simulation.EventSequence = eventEnd;
             for (var i = 0; i < count; i++)

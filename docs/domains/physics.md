@@ -1,5 +1,11 @@
 # Physics domain
 
+[Networked crossed capsules and CPU wake preparation](../components/physics-network-example.md#crossed-capsule-correction-and-cpu-wake-preparation-2026-10-20) extend authoritative correction with complete angular/linear contact state and prepare joint storage before later replayed wake.
+
+[Crossed capsule response](../components/physics-contact-policy.md#crossed-capsule-response-and-portable-contact-state) verifies complete paired impulses, off-centre rotation and silent portable contact state across scene/server bodies and selected numerical owners.
+
+[Long contour pairs](../components/physics-queries.md#long-pairs-of-flat-and-rounded-contours) retain exact first-entry geometry across sixteen ordered finite pairs. Continuous flat-core intervals and geometric capsule contact fallback correct lost motion contacts; software and hardware acceptance remain distinct.
+
 [Long capsule and segment sweeps](../components/physics-queries.md#long-capsule-and-segment-sweeps) verify first-entry geometry and contact identities across scene/raw callers. The independent provider now completes at a converged float-time fraction instead of exhausting its contour-sweep budget.
 
 [Long circle sweeps and hollow query sources](../components/physics-queries.md#long-circle-sweeps-and-hollow-query-sources) preserve geometric hit truth, first entry and contact ownership across the exercised implementations.
@@ -1689,3 +1695,7 @@ physics ledger remains 1279/1369 (93.43%), with 90 applicable declarations open.
 [Oblique long circle motion](../components/physics-queries.md#oblique-long-circle-motion) verifies the existing public cast/overlap and scene/raw body-motion paths across four unit-basis poses, both source/peer roles and signs. CPU/software-GPU/registered owner/separate CLR and NativeAOT profiles retain the existing tolerances and strict zero warmed managed allocation; wider acceptance remains open.
 
 [Factory result ownership](../components/scripting.md#factory-result-ownership) protects borrowed physical/script resources and live nodes from invalid Script.New and file-factory results. CLR source-asset checks retain actual CPU/software-GPU/registered simulation and zero warmed managed bytes; NativeAOT source registration and full live-script/duplication acceptance remain open.
+
+The [MainLoop callback audit](../components/main-loop.md#complete-frame-and-lifecycle-callback-audit) verifies initialization, fixed/idle deltas and stop results, failure recovery and terminal finalization with real selected CPU/software-GPU/registered worlds. Explicit library-host ownership and warmed zero managed allocation remain distinct from platform permissions and hardware performance.
+
+The [deferred call/setter contract](../components/scene-tree.md#complete-deferred-call-and-setter-contract) drains nested typed work at the current safe point before queued deletion. Selected physical frames retain exact tick counts and zero warmed managed allocation; platform and full-goal acceptance remain separate.

@@ -1,6 +1,50 @@
 # Authoritative physics network example
 
-Last updated: 2026-10-18
+Last updated: 2026-10-20
+
+## Crossed capsule correction and CPU wake preparation, 2026-10-20
+
+The current version-five application adds two capsule recipes to the preceding
+28-object final topology; 30 objects still fit the existing 32 slots. The pair
+uses a common pivot, relative sine/cosine .6/.8, a .41-radian outer rotation,
+.05 initial gap, CastShape CCD, disabled slot 0 and active slot 1. Masses 2/3 and
+explicit inertias 20/30 make the complete paired impulse and angular response
+checkable independently of solver implementation. Tick 1, tick 240 and subsequent
+multiples of 120, plus the final authority tick, reset and collide the pair.
+Each real authority/prediction/replay episode checks momentum, opposite rotation,
+separating velocity, energy and exact object/slot identity. Correction validates
+the imported complete contact state before replay; the final repeated authority
+snapshot guarantees observable imported collision state even with coalescing.
+Three startup controls disable either capsule or lock rotation and require failure;
+a separate two-world control requires an actual imported contact snapshot.
+
+A CPU owner profile exposed 856 warmed replay bytes in each client. Narrow
+measurement found replay preparation; three preserved traces show wake moving a
+joint into an unprepared graph color at ticks 627/630. The CPU adapter now prepares
+all joint graph colors when attaching a joint, using a power-of-two retained joint-ID
+budget. It adds no joint buffers to worlds with no joints and does not change
+constraint selection, numerical policy, identity or event delivery. This trades
+bounded cold storage across graph colors for zero growth during later wake. The
+existing larger dormant-island capacity limits remain separate requirements.
+The original failure and temporary allocation/stack diagnostics are preserved;
+the diagnostic source changes are reverted.
+
+A later isolated strict NativeAOT GPU-client attempt also exposed CCD exhaustion
+in a rotating separation ray after authority correction. A pre-step portable
+capture reduced that failure to one replayed tick, independently of the network.
+The [saturated contact block](gpu-contact-solver.md#saturated-angular-friction-2026-10-20)
+fixes the coupled normal/friction response while retaining the original CCD and
+solver budgets. The earlier simultaneous-attempt deadline and the distinct
+captured numerical failure remain unsuccessful receipts, not accepted profiles.
+
+Receipts live under `bin/physics-network-crossed/2026-10-20/`. CLR, strict NativeAOT
+and instrumented profiles cover CPU/GPU early clients, owner/separate numerics,
+late CPU admission after tick 310, and paced/ordinary impaired delivery at 900 ticks.
+Their reports retain individual full-step, replay, snapshot, history, queue,
+transfer and wait scopes. Software Vulkan supplies functional execution evidence;
+these runs do not establish hardware speed, native allocation, window FPS,
+another platform or owner acceptance. Physical API classifications are unchanged.
+
 
 ## Row-bounded contact scheduling regression, 2026-10-18
 
@@ -226,10 +270,10 @@ suite was not rerun for this consumer-only change.
 
 ## Compound slots and rotating ray under correction, 2026-10-15
 
-The current application retains the preceding 27 objects and adds ID 214, a second
+The earlier version-four application retained the preceding 27 objects and added ID 214, a second
 ray-only body at (1700,40) with free rotation, explicit inertia 2, initial rotation
 .3 radians, local angular damping 4 and CastShape CCD. The original locked ray is
-unchanged. The final manifest contains 28 objects in the same 32 slots and retains
+unchanged. That profile’s final manifest contains 28 objects in the same 32 slots and retains
 the same command/event history budgets. The application header becomes version
 four and rejects versions one through three; the runtime portable format and API
 are unchanged.

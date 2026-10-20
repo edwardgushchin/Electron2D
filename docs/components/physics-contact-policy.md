@@ -2,6 +2,42 @@
 
 Last updated: 2026-10-20
 
+## Crossed capsule response and portable contact state
+
+The public `--crossed-capsules` consumer covers 24 real dynamic pairs: all four
+scene/server body combinations, free/locked rotation, and Disabled, CastRay and
+CastShape policies. Both enabled capsules occupy logical slot 1 after disabled
+slot 0. Their relative rotation has sine .6 and cosine .8; the first touching core
+endpoints differ by `(sqrt(4 - .6²), .6)`. Disabled and CastRay start with .01 scene
+unit of overlap; CastShape starts with a .05 gap and crosses it during the tick.
+The latter two policies also exercise a translated, .41-radian outer frame.
+These overlap cases do not establish ray CCD coverage for arbitrary silhouettes.
+
+Masses 2/3 and explicit inertias 20/30 make the complete paired impulses independently
+checkable against actual linear and angular momentum changes. The test requires
+opposite off-centre rotation, zero rotation when locked, separating velocity and
+no kinetic energy creation. Contact positions may precede final pose integration;
+the moment tolerance includes `dt * max(initial speed, final speed) * |impulse|`.
+Exact peer RID, scene object/null association and both logical slots are retained.
+A separate scene control integrates its force once, with one world tick and one
+completion callback. Restoring the initial private checkpoint is silent.
+
+Every measured cycle also captures the solved world through stable network IDs,
+encodes and reads a portable snapshot, applies it to that same world, and rechecks
+the full paired impulses, angular state and unchanged observer/tick counters.
+This is local wire-state verification, not a new separate-process network test.
+The preserved pre-fix runtime reproduces zero impulses/rotation and approaching
+relative speed -10 in the first pair; current runtime performs the collision.
+
+The qualified Linux CLR and strict NativeAOT CPU/software-Vulkan/registered,
+serial/separate profiles each run 128 warm and 128 measured cycles per pair with
+exactly 0/0 owner/all-thread managed bytes: 36,864 warm and 36,864 measured cycles
+across twelve primary profiles. Existing capsule geometry and portable-contact
+regressions add twelve CLR profiles. Source/PDB and payload receipts live under
+`bin/physics-crossed-capsules/2026-10-20/`. Public API classifications are unchanged.
+Native allocation, real GPU timing, broader network coupling, other platforms
+and owner visual acceptance remain open.
+
 ## Directed sources and one-way targets
 
 A separation-ray source bypasses the other shape's one-way direction and depth

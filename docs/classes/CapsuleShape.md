@@ -1,8 +1,16 @@
 # CapsuleShape
 
+[Crossed capsule response](../components/physics-contact-policy.md#crossed-capsule-response-and-portable-contact-state) verifies complete paired impulses, off-centre rotation and silent portable contact state across scene/server bodies and selected numerical owners.
+
 [Coincident rounded-core contacts](../components/physics-contact-policy.md#coincident-rounded-cores) now use a perpendicular unit normal before CPU surface anchors are computed. Shared checks include either operand order, collapsed capsules, unequal masses and zero warmed allocations.
 
-Last updated: 2026-10-14
+Last updated: 2026-10-20
+
+[Long contour pair checks](../components/physics-queries.md#long-pairs-of-flat-and-rounded-contours)
+verify rotated capsule contacts and continuous flat-core movement through real
+scene/raw query consumers. CPU clipping retains a geometric closest-point contact
+when its clipped candidates would all remain separated. This does not close
+complete numerical-extension or hardware acceptance.
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 

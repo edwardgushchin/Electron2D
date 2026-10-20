@@ -30,27 +30,34 @@ public static partial class BackendChecks
             PhysicsServer.SpaceSetSolverIterations(world.Space, 16);
             PhysicsServer.SpaceSetContactMaxAllowedPenetration(world.Space, .3f);
             var rid = body.GetRID();
-            for (var i = 0; i < 128; i++) Frame();
-            Collect(); var own = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
-            for (var i = 0; i < 128; i++) Frame();
-            own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
-            var state = PhysicsServer.BodyGetDirectState(rid)!; var impulse = Vector2.Zero;
-            for (var i = 0; i < state.GetContactCount(); i++)
+            foreach (var fixture in new[]
             {
-                Check(state.GetContactCollider(i) == floor.GetRID() && ReferenceEquals(state.GetContactColliderObject(i), floor), "Rotating CCD contacts retain the actual plane identity");
-                impulse += state.GetContactImpulse(i);
-            }
-            var free = new Vector2(84.94213f, 46.233803f) * (1 - .3f / 60) + new Vector2(0, 980f / 60);
-            Check(own == 0 && all == 0 && body.GetRID() == rid && body.GetWorld() == world && state.GetContactCount() > 0 &&
-                body.Position.Y + 10 * MathF.Cos(body.Rotation) <= 100.31f && body.AngularVelocity > .1f &&
-                (body.LinearVelocity - free - impulse).Length() < .002f,
-                $"Oblique ray CCD retains complete motion, contact momentum and zero warmed allocations: {own}/{all} B");
-            Console.WriteLine($"Contact coupling {backend}, threaded={threaded}: 128 warm/128 reset full frames, 0/0 B, stable RID and physical impulse.");
-            void Frame()
+                (Position: new Vector2(1702.198f, 91.44969f), Rotation: .5388814f, Velocity: new Vector2(84.94213f, 46.233803f), Spin: 9.433882f),
+                (Position: new Vector2(1703.6022f, 92.384346f), Rotation: MathF.Atan2(.646874f, .7625969f), Velocity: new Vector2(84.334015f, 62.179607f), Spin: 9.846336f)
+            })
             {
-                body.Position = new(1702.198f, 91.44969f); body.Rotation = .5388814f;
-                body.LinearVelocity = new(84.94213f, 46.233803f); body.AngularVelocity = 9.433882f;
-                tree.PhysicsFrame(1d / 60);
+                for (var i = 0; i < 128; i++) Frame();
+                Collect(); var own = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+                for (var i = 0; i < 128; i++) Frame();
+                own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
+                using var state = PhysicsServer.BodyGetDirectState(rid)!; var impulse = Vector2.Zero;
+                for (var i = 0; i < state.GetContactCount(); i++)
+                {
+                    Check(state.GetContactCollider(i) == floor.GetRID() && ReferenceEquals(state.GetContactColliderObject(i), floor), "Rotating CCD contacts retain the actual plane identity");
+                    impulse += state.GetContactImpulse(i);
+                }
+                var free = fixture.Velocity * (1 - .3f / 60) + new Vector2(0, 980f / 60);
+                Check(own == 0 && all == 0 && body.GetRID() == rid && body.GetWorld() == world && state.GetContactCount() > 0 &&
+                    body.Position.Y + 10 * MathF.Cos(body.Rotation) <= 100.31f && body.AngularVelocity > .1f &&
+                    (body.LinearVelocity - free - impulse).Length() < .002f,
+                    $"Oblique ray CCD retains complete motion, contact momentum and zero warmed allocations: {own}/{all} B");
+                Console.WriteLine($"Contact coupling {backend}, threaded={threaded}, rotation={fixture.Rotation}: 128 warm/128 reset full frames, 0/0 B, stable RID and physical impulse.");
+                void Frame()
+                {
+                    body.Position = fixture.Position; body.Rotation = fixture.Rotation;
+                    body.LinearVelocity = fixture.Velocity; body.AngularVelocity = fixture.Spin;
+                    tree.PhysicsFrame(1d / 60);
+                }
             }
         }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }

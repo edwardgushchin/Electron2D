@@ -33,7 +33,7 @@ public sealed unsafe partial class RenderingDevice
             {
                 if (!members.TryGetValue((pointer[3], (uint)member), out var decorations) || !decorations.Any(d => d[3] == 11)) throw new ArgumentException("Every built-in block member needs its built-in identity.", nameof(code));
                 var type = shape[member + 2]; var inputPointer = types.FirstOrDefault(p => (p.Value[0] & 65535) == 32 && p.Value.Length == 4 && p.Value[2] == 1 && p.Value[3] == type).Key;
-                if (inputPointer == 0) { inputPointer = next++; definitions.Add([(4u << 16) | 32, inputPointer, 1, type]); }
+                if (inputPointer == 0) { inputPointer = next++; uint[] declaration = [(4u << 16) | 32, inputPointer, 1, type]; definitions.Add(declaration); types.Add(inputPointer, declaration); }
                 var variable = values[member] = next++; definitions.Add([(4u << 16) | 59, inputPointer, variable, 1]);
                 foreach (var decoration in decorations)
                 { var lifted = new uint[decoration.Length - 1]; lifted[0] = (uint)(lifted.Length << 16) | 71; lifted[1] = variable; decoration.AsSpan(3).CopyTo(lifted.AsSpan(2)); annotations.Add(lifted); }

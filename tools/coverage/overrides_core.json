@@ -2450,10 +2450,11 @@
     },
     {
       "godot": [
-        "Object::method:set_deferred(StringName:,Variant:)"
+        "Object::method:set_deferred(StringName:,Variant:)",
+        "Object::method:call_deferred(StringName:)"
       ],
-      "state": "Partial",
-      "reason": "ADRs 0001/0006: existing typed SceneTree.SetDeferred retains individual values in reusable Scene-owned slots, mixed Action FIFO/captured-batch order, atomic lifetime acceptance and error continuation. Warm typed setter and CPU/GPU deferred-event frames retain zero owner/all-thread bytes; execution/failure/discard release reference values. Dynamic property/name resolution remains excluded by the typed projection, and this does not establish arbitrary custom scheduler or full inherited/native/network/platform acceptance."
+      "state": "Implemented",
+      "reason": "ADRs 0001/0006: typed SceneTree Defer/SetDeferred drain mixed FIFO work through nested submissions to quiescence at the current safe point, using retained queues and typed slots without callback-stack recursion. Original errors, later work, independent captured values, reference release, closure/discard and owner guards execute through public CPU/software-GPU/registered serial/separate consumers at strict zero warmed owner/all-thread managed bytes. A 4096-entry chain verifies iterative completion; CLR/NativeAOT and root/related receipts live under bin/physics-deferred-contract/2026-10-20/. The pinned deferred call returns nil, so void loses no method result. Dynamic names are excluded by the accepted typed projection; hardware/native allocation/other-platform and class-wide inherited acceptance remain separate."
     },
     {
       "godot": [

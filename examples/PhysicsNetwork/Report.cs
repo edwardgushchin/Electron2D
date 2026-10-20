@@ -43,6 +43,8 @@ internal sealed class SessionReport
     public float MaxPinError { get; set; }
     public float MaxGrooveError { get; set; }
     public float MaxSpringLength { get; set; }
+    public int CrossedContacts { get; set; }
+    public int CrossedContactCorrections { get; set; }
     public int GeometrySteps { get; set; }
     public int GeometryCorrections { get; set; }
     public int GeometryKicks { get; set; }
@@ -184,6 +186,8 @@ internal sealed partial class NetworkSession
             MaxPinError = Simulation.MaxPinError,
             MaxGrooveError = Simulation.MaxGrooveError,
             MaxSpringLength = Simulation.MaxSpringLength,
+            CrossedContacts = Simulation.CrossedContacts,
+            CrossedContactCorrections = Simulation.CrossedContactCorrections,
             GeometrySteps = Simulation.GeometrySteps,
             GeometryCorrections = Simulation.GeometryCorrections,
             GeometryKicks = Simulation.GeometryKicks,

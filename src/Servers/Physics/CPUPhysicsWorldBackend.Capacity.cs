@@ -25,6 +25,16 @@ internal sealed partial class CPUPhysicsWorldBackend
         }
     }
 
+    internal void PrepareJointCapacity()
+    {
+        EnsureAccess();
+        var world = b2GetWorldFromId(WorldID);
+        var capacity = (int)System.Numerics.BitOperations.RoundUpToPowerOf2((uint)world.jointIdPool.nextIndex);
+        // Restored sleep islands can move any existing joint to a different graph color on wake.
+        foreach (ref var color in world.constraintGraph.colors.AsSpan())
+            Box2D.NET.B2Arrays.b2Array_Reserve(ref color.jointSims, capacity);
+    }
+
     internal override void PrepareSolverCapacity()
     {
         EnsureAccess();

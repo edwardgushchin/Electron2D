@@ -69,8 +69,8 @@ internal static class BoxContainerTests
     {
         using var tree = new SceneTree(new Node()); var first = 0; var second = 0;
         Action later = () => second++; Action early = () => { first++; tree.Defer(later); };
-        tree.Defer(early); tree.FlushDeferred(); Check(first == 1 && second == 0, "Captured batch excludes work scheduled by a callback.");
-        tree.FlushDeferred(); Check(second == 1, "Reentrant work executes in the next captured batch.");
+        tree.Defer(early); tree.FlushDeferred(); Check(first == 1 && second == 1, "The safe point drains nested work after the original FIFO.");
+        tree.FlushDeferred(); Check(second == 1, "A later empty flush cannot repeat nested work.");
         Task.Run(() => tree.Defer(later)).Wait(); tree.FlushDeferred(); Check(second == 2, "Cross-thread enqueue remains synchronized.");
         for (var pass = 0; pass < 64; pass++) { tree.Defer(early); tree.FlushDeferred(); tree.FlushDeferred(); }
         var before = GC.GetAllocatedBytesForCurrentThread();

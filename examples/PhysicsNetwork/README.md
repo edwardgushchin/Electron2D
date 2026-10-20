@@ -159,8 +159,19 @@ Checks require actual angular motion and restored moving angular state on each
 client. Both compound slots must independently produce contacts and positive
 impulses; restored contacts must include both indices and match the authored
 left-circle/right-box geometry. Startup controls disable each slot and lock the
-free ray, requiring the corresponding evidence to fail. Headers one through three
+free ray, requiring the corresponding evidence to fail. Headers one through four
 are rejected before message decoding.
+
+Two additional unequal-mass capsules collide off centre at tick 1, tick 240 and
+subsequent multiples of 120, plus the final authority tick. Their recipes use a
+shared pivot at (1800, 40), disabled slot 0 and active slot 1, a .05 initial gap,
+CastShape CCD, masses 2/3 and inertias 20/30. Every prepared collision checks full
+paired linear/angular impulses, opposite rotation, separating velocity and bounded
+energy. Clients check the same contact state immediately after authority correction,
+including remapped peer objects and logical slots. `CrossedContacts` counts locally
+solved episodes and `CrossedContactCorrections` counts imported episodes. The final
+manifest has 30 objects within the existing 32 slots. Application wire version five
+rejects the earlier recipe layouts before decoding.
 
 `NetworkWorld` owns the game scene and lifecycle recipes. `NetworkSession` owns
 bounded command/event histories and peer policy. `NetworkSession.State` applies

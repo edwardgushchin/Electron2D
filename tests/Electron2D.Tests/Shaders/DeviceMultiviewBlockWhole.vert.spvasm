@@ -1,0 +1,85 @@
+; SPIR-V
+; Version: 1.0
+; Generator: Khronos Glslang Reference Front End; 11
+; Bound: 48
+; Schema: 0
+               OpCapability Shader
+               OpCapability MultiView
+               OpExtension "SPV_KHR_multiview"
+          %1 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Vertex %main "main" %_ %view_index %gl_ViewIndex
+               OpSource GLSL 450
+               OpSourceExtension "GL_EXT_multiview"
+               OpName %main "main"
+               OpName %p "p"
+               OpName %gl_PerVertex "gl_PerVertex"
+               OpMemberName %gl_PerVertex 0 "gl_Position"
+               OpMemberName %gl_PerVertex 1 "gl_PointSize"
+               OpMemberName %gl_PerVertex 2 "gl_ClipDistance"
+               OpMemberName %gl_PerVertex 3 "gl_CullDistance"
+               OpName %_ ""
+               OpName %view_index "view_index"
+               OpName %gl_ViewIndex "gl_ViewIndex"
+               OpDecorate %gl_PerVertex Block
+               OpMemberDecorate %gl_PerVertex 0 BuiltIn Position
+               OpMemberDecorate %gl_PerVertex 1 BuiltIn PointSize
+               OpMemberDecorate %gl_PerVertex 2 BuiltIn ClipDistance
+               OpMemberDecorate %gl_PerVertex 3 BuiltIn CullDistance
+               OpDecorate %view_index Flat
+               OpDecorate %view_index Location 0
+               OpDecorate %ViewBlock Block
+               OpMemberDecorate %ViewBlock 0 BuiltIn ViewIndex
+               OpMemberDecorate %ViewBlock 1 BuiltIn VertexIndex
+       %void = OpTypeVoid
+          %3 = OpTypeFunction %void
+      %float = OpTypeFloat 32
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+        %int = OpTypeInt 32 1
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+    %float_2 = OpConstant %float 2
+    %float_1 = OpConstant %float 1
+    %v4float = OpTypeVector %float 4
+       %uint = OpTypeInt 32 0
+     %uint_1 = OpConstant %uint 1
+%_arr_float_uint_1 = OpTypeArray %float %uint_1
+%gl_PerVertex = OpTypeStruct %v4float %float %_arr_float_uint_1 %_arr_float_uint_1
+%_ptr_Output_gl_PerVertex = OpTypePointer Output %gl_PerVertex
+          %_ = OpVariable %_ptr_Output_gl_PerVertex Output
+      %int_0 = OpConstant %int 0
+ %float_0_25 = OpConstant %float 0.25
+%_ptr_Output_v4float = OpTypePointer Output %v4float
+%_ptr_Output_uint = OpTypePointer Output %uint
+ %view_index = OpVariable %_ptr_Output_uint Output
+%ViewBlock = OpTypeStruct %int %int
+%ViewBlockPtr = OpTypePointer Input %ViewBlock
+%gl_ViewIndex = OpVariable %ViewBlockPtr Input
+       %main = OpFunction %void None %3
+          %5 = OpLabel
+          %p = OpVariable %_ptr_Function_v2float Function
+         %WholeBlock = OpLoad %ViewBlock %gl_ViewIndex
+         %13 = OpCompositeExtract %int %WholeBlock 1
+         %15 = OpShiftLeftLogical %int %13 %int_1
+         %17 = OpBitwiseAnd %int %15 %int_2
+         %18 = OpConvertSToF %float %17
+         %19 = OpCompositeExtract %int %WholeBlock 1
+         %20 = OpBitwiseAnd %int %19 %int_2
+         %21 = OpConvertSToF %float %20
+         %22 = OpCompositeConstruct %v2float %18 %21
+         %24 = OpVectorTimesScalar %v2float %22 %float_2
+         %26 = OpCompositeConstruct %v2float %float_1 %float_1
+         %27 = OpFSub %v2float %24 %26
+               OpStore %p %27
+         %36 = OpLoad %v2float %p
+         %38 = OpCompositeExtract %float %36 0
+         %39 = OpCompositeExtract %float %36 1
+         %40 = OpCompositeConstruct %v4float %38 %39 %float_0_25 %float_1
+         %42 = OpAccessChain %_ptr_Output_v4float %_ %int_0
+               OpStore %42 %40
+         %46 = OpCompositeExtract %int %WholeBlock 0
+         %47 = OpBitcast %uint %46
+               OpStore %view_index %47
+               OpReturn
+               OpFunctionEnd
