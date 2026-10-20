@@ -122,7 +122,10 @@ public abstract partial class Shape : Resource
     internal ulong GeometryRevision => _revision;
 
     /// <summary>Returns the stable physics identity of this geometry.</summary>
-    /// <returns>A borrowed shape RID retained across edits until resource disposal; server-owned views share their owning RID.</returns>
+    /// <returns>A borrowed shape RID stable across edits while the resource is live; server-owned views share their owning RID.</returns>
+    /// <remarks>The identifier alone does not retain caller-owned geometry. Raw Body/Area slots and typed query
+    /// parameters retain their borrowed source while bound. Keep a resource reference when using an otherwise unbound RID.
+    /// Server-created geometry remains owned until its RID is freed.</remarks>
     /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
     public override RID GetRID()
     {

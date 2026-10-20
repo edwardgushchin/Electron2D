@@ -3,7 +3,18 @@ namespace Electron2D;
 internal sealed class PhysicsServerShape(RID rid, Shape geometry, bool ownsGeometry = true)
 {
     internal RID RID { get; } = rid;
-    internal Shape Geometry { get; set; } = geometry;
+    private Shape? _ownedGeometry = ownsGeometry ? geometry : null;
+    private readonly WeakReference<Shape>? _borrowedGeometry = ownsGeometry ? null : new(geometry);
+    internal Shape? GeometryOrNull => _ownedGeometry ?? (_borrowedGeometry?.TryGetTarget(out var value) == true ? value : null);
+    internal Shape Geometry
+    {
+        get => GeometryOrNull ?? throw new ArgumentException("The borrowed physics shape has been collected.");
+        set
+        {
+            if (!OwnsGeometry) throw new InvalidOperationException("Borrowed shape identity cannot replace its source.");
+            _ownedGeometry = value;
+        }
+    }
     internal bool OwnsGeometry { get; } = ownsGeometry;
     private int _dataUses;
     private static int _activeDataUses;
@@ -40,6 +51,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
         bool OneWay = false, float Margin = 0, Vector2 Direction = default)
     {
         internal object HistoryIdentity { get; init; } = new();
+        internal Shape? BorrowedResource { get; init; } = Shape.OwnsGeometry ? null : Shape.Geometry;
     }
 
     internal RID RID { get; } = rid;
@@ -155,7 +167,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
     internal Transform GetShapeTransform(int index) => Slot(index).LocalTransform;
     internal bool IsShapeDisabled(int index) => Slot(index).Disabled;
 
-    internal void SetShape(int index, PhysicsServerShape shape) => ReplaceSlot(index, Slot(index) with { Shape = shape });
+    internal void SetShape(int index, PhysicsServerShape shape) => ReplaceSlot(index, Slot(index) with { Shape = shape, BorrowedResource = shape.OwnsGeometry ? null : shape.Geometry });
     internal void SetShapeTransform(int index, Transform transform)
     {
         ValidateTransform(transform);

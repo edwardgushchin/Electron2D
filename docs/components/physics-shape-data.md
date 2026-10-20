@@ -1,6 +1,6 @@
 # Typed server shape data
 
-Last updated: 2026-10-16
+Last updated: 2026-10-20
 
 PhysicsServer.ShapeSetData accepts any live Shape whose immutable represented
 ShapeType matches the server-owned RID. A procedural subclass does not need a
@@ -125,3 +125,15 @@ three full intervals at strict 0/0 owner/all-thread managed bytes. Awake motion,
 RID and force-callback counts remain checked. Evidence is retained under
 bin/physics-shared-free/2026-10-16/. Native/driver budgets, foreign execution,
 network integration and hardware/window performance acceptance remain open.
+
+## Borrowed resource identity lifetime
+
+Shape.GetRID previously made every queried resource a permanent root through PhysicsServerShape.Geometry, even after all application references and consumers disappeared. A public consumer reproduces the leak on the prior runtime with forced collection. Registrations now distinguish strong server-owned geometry from weak caller-owned resources. Raw Body/Area slots hold a resource reference while bound, including disabled/detached slots. Replacement keeps the new source and rollback keeps the original; clear/remove release it. Typed query Shape properties retain their ordinary strong ownership. A bare RID has no such lease and expires when the unused resource is collected. Dead registrations are removed during the existing style of periodic cold registration sweeps.
+
+Owned server shapes remain strongly retained until explicit free or data replacement. Private scene views expose the owning RID, reject independent disposal, retire on replacement and disappear from dependent slots on free. Collection does not invalidate those owned registrations. No new public identity, reference-count API, GPU mirror, transfer or wait is introduced; the raw slot adds one managed reference. Warm reads reuse the existing RID and registry storage.
+
+The shared public ResourceRIDs consumer covers all nine geometry kinds, eight owned factories/view lifetimes, Body/Area source retention and last-owner release, query ownership, cold registration sweeps, virtual Resource dispatch across ordinary/array/device/drawable textures, mesh/instance, contour and material/shader roles, plus primary/variation/system/owned/linked font source identities. Custom geometry bindings remain detached; this fixture does not establish custom solver support. Lifecycle/GC checks are cold and separate from complete moving physical frame allocation checks. It distinguishes an empty base role, a stable borrowed identity, a forwarded identity and a server-owned identity. Native/platform/performance and whole-goal acceptance remain separate. Ignored evidence is retained under bin/physics-resource-rids/2026-10-20.
+
+All eighteen current profiles pass: public consumer and root managed hosts plus strict NativeAOT, each with CPU/software Vulkan/registered providers and owner/separate numerical lanes. Each profile runs 128 warm and 128 measured moving full frames at strict 0/0 owner/all-thread managed bytes; total measured frames are 2304. The expected displacement is (4, 1), allowing .003 units for float integration. RID/kind/slot and retirement assertions are exact. Seven related slot, shape-edit, text-source and material/shader managed/native-rendering regressions pass. PDB source checks bind all four payload families to the current authored sources; published binaries and driver map evidence remain archived. These focused results do not certify the whole suite or target hardware performance.
+
+Two fresh public network checks also pass on these runtime sources: a denied-GPU CPU authority with CPU clients on the owner lane, and a CPU authority with a software-GPU client and late CPU client on separate numerical lanes. Each executes 900 authority ticks with impaired transport and an 80 ms primary-client poll delay, retaining existing physical/lifecycle/replay/confirmation assertions and strict 0/0 warmed ordinary/replay managed bytes. The first GPU check, concurrent with compilation and other software rendering checks, hit its session deadline at authority tick 769. The unchanged-payload isolated retry passes in 82.916 seconds; the initial failure is retained and its timing cause remains undiagnosed. The CPU control passes in 32.759 seconds. These are regression timings, not device-performance measurements.

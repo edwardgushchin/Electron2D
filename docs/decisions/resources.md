@@ -1,6 +1,6 @@
 # Electron2D resources decisions
 
-Last updated: 2026-10-17
+Last updated: 2026-10-20
 
 This bounded log owns the complete architectural records for resources. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -9,7 +9,7 @@ Decisions in this log: [0013](#adr-0013), [0014](#adr-0014), [0039](#adr-0039).
 <a id="adr-0013"></a>
 ## ADR 0013: Managed typed Resource contract
 
-Last updated: 2026-10-17
+Last updated: 2026-10-20
 
 ### Status
 
@@ -72,6 +72,8 @@ Constructors and property codecs are explicitly typed. ResourceFileTypes registe
 An archive contains a resource identity table and scene node tables. Allocate every internal resource identity before applying references to preserve aliases and cycles. External references retain UID, typed class and fallback path; Ordinary Ignore/Replace applies only to the root while dependency cache decisions reuse, and Deep modes propagate. Decode/preparation validates bounds and schema before cache publication; failure attempts every owned resource cleanup without disposing borrowed external resources. PackedScene consumes its existing typed stored model, replacing captured factory delegates with registered stable IDs in files and rebuilding direct factories on load. File-backed instantiation preserves ordinary detached construction and rollback under ADR 0023.
 
 This decision defines the first persistent producer and extensions; current executable behavior and verification are documented with the implementation. File authoring requires save plus fresh-process load/run under ADR 0090. Native rendering, editor controls, inheritance authoring, persistent delegate endpoints and general dynamic values retain their separate dependencies/exclusions.
+
+ResourceSaver.SaveScene(Node, path, flags) is the complete live-scene authoring save projection. It preflights lifetime, owner/capture access and destination, rejects concurrent or recursive saving of the same root, then propagates parent-first editor pre-save notification 9001, uses the existing isolated RESET-aware PackForSave and ordinary registered Save, and updates the root's scene path only after a successful write. Once pre-save delivery begins, post-save notification 9002 is attempted on every exit, after temporary packed data is retired, so callbacks can restore temporary authoring state after failures. This exception-cleanup adaptation preserves original errors in order and combines independent operation/retirement/post-save errors. Invalid requests rejected before pre-save publish neither notification. Callback-authored changes remain application-owned; no implicit scene rollback or simulation runs. Ordinary resource Save and packing never publish these authoring notifications. The source authoring lifecycle is [EditorNode::_save_scene](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/editor/editor_node.cpp#L2283), distinct from a runtime resource write. Editor widgets, project tooling and native/rendered acceptance remain separate under ADR 0090.
 
 Theme archives add explicit typed dynamic schema recovery for colors, constants, fonts, font sizes, icons, styles and variation bases. Exact reserved shape fields preserve empty category groups and child order. Names and value roles must match the current Theme API; malformed or unknown fields reject before publication. No arbitrary resource member invocation is introduced.
 

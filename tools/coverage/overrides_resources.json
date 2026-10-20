@@ -81,12 +81,12 @@
     {
       "godot": "Resource::method:get_rid()",
       "electron2d": "method:Electron2D.Resource.GetRID()",
-      "reason": "ADR 0088: virtual C# dispatcher returns empty for managed base resources and stable actual physics identities for Shape; rendering family projections remain explicit."
+      "reason": "ADRs 0013/0088/0028/0046/0107: typed virtual GetRID returns the meaningful empty base role or actual physics, texture/array/device/drawable, mesh/instance, contour, material/shader and font-source identities. Atlas/source projections forward their owning identity. Public ResourceRIDs tests exercise current families, weak unused shape collection, raw Body/Area/query source leases, owned factory/view retirement, disposal and warmed physical frames; native rendering consumers retain their separate capability/platform evidence. Runtime IDs are never serialized. See physics-shape-data.md#borrowed-resource-identity-lifetime."
     },
     {
       "godot": "Resource::method:get_rid()",
       "electron2d": "method:Electron2D.Shape.GetRID()",
-      "reason": "ADR 0088: virtual C# dispatcher returns empty for managed base resources and stable actual physics identities for Shape; rendering family projections remain explicit."
+      "reason": "ADR 0088: virtual Resource dispatch returns the actual stable physics identity. Weak caller-owned registrations permit unused source collection; raw Body/Area/query consumers retain sources, and owned factory views share their owner RID through replacement/free. Public ResourceRIDs tests exercise all nine kinds and warmed full physical frames. See physics-shape-data.md#borrowed-resource-identity-lifetime."
     },
     {
       "godot": "Resource::method:_get_rid()",
@@ -96,7 +96,7 @@
     {
       "godot": "Resource::method:get_rid()",
       "electron2d": "method:Electron2D.Texture.GetRID()",
-      "reason": "ADR 0028: stable borrowed logical Texture identity before renderer startup, weak registration and resource disposal; typed CanvasItem RID drawing preserves virtual resource behavior. Server-created textures have separate active-renderer ownership; generic material/shader IDs remain pending."
+      "reason": "ADR 0028: stable borrowed logical Texture identity before renderer startup, weak registration and resource disposal; typed CanvasItem RID drawing preserves virtual resource behavior. Server-created textures have separate active-renderer ownership; current device/drawable/layered roles project their actual registrations. Public ResourceRIDs dispatch checks complement each native consumer capability gate."
     },
     {
       "godot": "Resource::method:get_rid()",
@@ -630,8 +630,8 @@
       "godot": [
         "Resource::method:get_rid()"
       ],
-      "state": "Partial",
-      "reason": "Base empty managed identity, stable Shape physics identities (ADR 0088) and weak resource-owned Texture rendering identities (ADR 0028) execute. Remaining material/shader RID getters enter the first actual server material/shader registration/lifetime slice. TextureRD/external/drawable/layered resource families retain their exact backend integration triggers."
+      "state": "Implemented",
+      "reason": "ADRs 0013/0088/0028/0046/0107: typed virtual GetRID returns the meaningful empty base role or actual physics, texture/array/device/drawable, mesh/instance, contour, material/shader and font-source identities. Atlas/source projections forward their owning identity. Public ResourceRIDs tests exercise current families, weak unused shape collection, raw Body/Area/query source leases, owned factory/view retirement, disposal and warmed physical frames; native rendering consumers retain their separate capability/platform evidence. Runtime IDs are never serialized. See physics-shape-data.md#borrowed-resource-identity-lifetime."
     },
     {
       "godot": [
@@ -1103,6 +1103,12 @@
       "electron2d": "method:Electron2D.PlaceholderTexture.RemapResourceReferences(System.Func<Electron2D.Resource, Electron2D.Resource>)",
       "reason": "ADR 0013/0014 typed lifetime and resource-reference remapping projection for opaque fields retained by a missing ordinary texture. It completes existing Resource duplication/file/local ownership and introduces no additional game-facing operation.",
       "adr": "ADRs 0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.ResourceSaver.SaveScene(Electron2D.Node,System.String,Electron2D.SaverFlags)",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0090 project the existing authoring-host scene save lifecycle into one typed reusable portable operation: live pre-save notification, RESET-aware PackForSave, registered resource write, origin commit and post-save cleanup. This is distinct from a plain resource Save; it adds no editor dependency, numerical simulator or general invocation system. Public file/fresh-process/error/ownership checks are described in resource-files.md#live-scene-authoring-save.",
+      "adr": "ADRs 0013/0090"
     }
   ]
 }

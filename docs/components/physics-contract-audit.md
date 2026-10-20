@@ -41,7 +41,7 @@ The axis-velocity checkpoint recorded 1266/1369 Implemented (92.4763%), with
 
 [Collider creation operation audit](physics-registered-adapter.md#collider-creation-operation-audit) completes detached Body/Area identity, deferred selected factories, permanent attachment claims and actual scene activation/error/retry behavior.
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 [Failed initial attachment state](physics-registered-adapter.md#authored-state-after-failed-initial-attachment) now retains public pose, motion and sleep instead of sampling incomplete selected state during cleanup. Ordinary retirement still preserves actual accepted impulses.
 
@@ -86,6 +86,10 @@ slot and bias audit test changes; those have separate compiled-source/profile
 receipts. Runtime sources remain unchanged through the current bias audit.
 This establishes the stated software-suite run, not native allocation, foreign
 platform, target GPU/window performance or complete-goal acceptance.
+
+## Report-only allocation preparation, 2026-10-20
+
+The frozen full software run for sources at 374f844b stopped after 863.823 seconds in PhysicsReportOnlyTests.Replay with 0/4656 owner/all-thread managed bytes. The unchanged isolated CPU profile passes at 0/0. Its preparation had a blocking second collection without a following finalizer drain, contrary to the existing maintenance contract. The controlled AllocationWarmupCheck deterministically rejects that exact collector for returning during its second finalizer pass. Report-only replay now uses its existing common Collect helper, and that helper drains after its final collection. The same controlled check executes before this family. Numerical code, measured operations/counts, zero-byte assertions and ordinary production GC are unchanged. The failed whole-suite result remains archived in bin/physics-inherited-full/2026-10-20/; the specific 4656-byte allocation stack was not captured, so the setup defect does not by itself prove that entire failure's cause.
 
 ## Material allocation measurement
 
@@ -1903,3 +1907,5 @@ Only these two rows change state. Named signal inspection/connection flags, broa
 Generation-qualified Node requests now preserve cancellation/reissue FIFO and the one-captured-deletion-batch contract under ADRs 0006/0011. Old entries cannot destroy a newer request. Prepared queue reuse removes recurring managed allocation from canceled deletion flushes; public physical consumers retain body/query/RID identity until the new safe point and verify exactly-once retirement after another full step. The shared queued-deletion fixture covers selected CPU/software-GPU/registered serial/separate policies and strict NativeAOT without backend dependencies in consumer code.
 
 The pinned Object.cancel_free declaration instead vetoes actual destruction during NOTIFICATION_PREDELETE. Existing Node.CancelFree is an independent queued-operation helper and is now a reviewed extra, not that counterpart. The missing pre-delete veto is explicitly Unimplemented; existing ValidateDisposal is an earlier precondition. Object.is_queued_for_deletion also requires SceneTree.queue_delete observation, including non-Node objects; the current Node-only property observes its cancellable request, so that row remains Partial. Neither gap is closed by the corrected queue implementation.
+
+[Borrowed resource identity lifetime](physics-shape-data.md#borrowed-resource-identity-lifetime) fixes unused shape retention and verifies current inherited GetRID roles through public consumers. Full remaining physics, native/platform and target-hardware performance acceptance stays open.

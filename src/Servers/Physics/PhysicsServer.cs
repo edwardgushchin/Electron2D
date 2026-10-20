@@ -27,6 +27,8 @@ public sealed partial class PhysicsServer : ElectronObject
     private readonly Dictionary<RID, PhysicsDirectSpaceState> _directStates = [];
     private readonly HashSet<RID> _ownedSpaces = [];
     private readonly Dictionary<RID, PhysicsServerShape> _serverShapes = [];
+    private readonly List<RID> _staleBorrowedShapes = [];
+    private int _borrowedShapeRegistrations;
     private readonly Dictionary<RID, PhysicsServerCollider> _serverColliders = [];
 
     /// <summary>Specifies a server-created body's solver motion policy.</summary>

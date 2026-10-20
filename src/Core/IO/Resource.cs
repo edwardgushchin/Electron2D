@@ -13,7 +13,7 @@ namespace Electron2D;
 public class Resource : ElectronObject
 {
     /// <summary>Returns a resource's typed backend identity, or empty when it has no registered backend role.</summary>
-    /// <returns>Empty for base managed resources; Shape overrides return stable physics shape identities.</returns>
+    /// <returns>Empty for base managed resources; concrete overrides return their physics, rendering or text-source identity.</returns>
     /// <remarks>Overrides project their concrete backend role and lifetime. Base resources have no registered backend identity.</remarks>
     /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
     public virtual RID GetRID() { ThrowIfDisposed(); return default; }

@@ -5984,6 +5984,18 @@
       "godot": "Node::method:duplicate(int:)",
       "electron2d": "method:Electron2D.Node.Duplicate(Electron2D.Node.DuplicateFlags)",
       "reason": "ADR 0004/0005/0010/0013/0023/0091: executing typed hierarchy duplication with complete flags, exact compiled factories or engine-base omission, actual linked-template overlays, groups and authored subscriptions. Typed snapshots preserve arrays, node remapping, borrowed external references and ordinary resources; shallow forced copies and source/ancestor ownership leases survive original disposal. Replaced inherited roles keep origin identity. Constructor/schema/reentry/topology failures clean acquired ownership. 125 production factory families and fresh-process authoring/headless/native verification remain distinct from independent package/NativeAOT/foreign/native-allocation/performance and owner acceptance."
+    },
+    {
+      "godot": "Node::constant:NOTIFICATION_EDITOR_PRE_SAVE",
+      "electron2d": "constant:Electron2D.Node.NotificationEditorPreSave()",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0090: ResourceSaver.SaveScene publishes the exact 9001/9002 authoring lifecycle through parent-first live subtree delivery, including internal unsaved receivers. RESET-aware capture, actual atomic file saving, origin commitment, same-root reentry/concurrency, preflight and combined operation/cleanup failures execute in public SaveScene tests with fresh-process physical reconstruction. Ordinary packing/resource saving publish neither notification; no editor UI or unified tooling acceptance is inferred. See resource-files.md#live-scene-authoring-save."
+    },
+    {
+      "godot": "Node::constant:NOTIFICATION_EDITOR_POST_SAVE",
+      "electron2d": "constant:Electron2D.Node.NotificationEditorPostSave()",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0090: ResourceSaver.SaveScene publishes the exact 9001/9002 authoring lifecycle through parent-first live subtree delivery, including internal unsaved receivers. RESET-aware capture, actual atomic file saving, origin commitment, same-root reentry/concurrency, preflight and combined operation/cleanup failures execute in public SaveScene tests with fresh-process physical reconstruction. Ordinary packing/resource saving publish neither notification; no editor UI or unified tooling acceptance is inferred. See resource-files.md#live-scene-authoring-save."
     }
   ],
   "extras": [

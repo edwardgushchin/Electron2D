@@ -127,6 +127,14 @@ public partial class Node : ElectronObject
     /// <summary>Identifies the notification sent when the effective process mode stops being disabled.</summary>
     public const int NotificationEnabled = 29;
 
+    /// <summary>Identifies the notification before an explicit live-scene authoring save captures this subtree.</summary>
+    /// <remarks>Published by ResourceSaver.SaveScene; ordinary packing and resource saving do not publish it.</remarks>
+    public const int NotificationEditorPreSave = 9001;
+
+    /// <summary>Identifies cleanup notification after an attempted live-scene authoring save.</summary>
+    /// <remarks>Published after pre-save delivery begins, including failed saves, so temporary authoring changes can be restored.</remarks>
+    public const int NotificationEditorPostSave = 9002;
+
     /// <summary>Identifies the notification sent when the pointer enters the containing window.</summary>
     public const int NotificationWmMouseEnter = 1002;
 

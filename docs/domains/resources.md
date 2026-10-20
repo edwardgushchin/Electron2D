@@ -1,6 +1,8 @@
 # Resources domain
 
-Last updated: 2026-10-18
+Last updated: 2026-10-20
+
+[Live-scene authoring saves](../components/resource-files.md#live-scene-authoring-save) now share pre/post notification, RESET-aware packing, atomic persistence and cleanup through ResourceSaver.SaveScene. The programmatic operation retains explicit owner/failure/fresh-process evidence and separate visual-editor/tooling gates.
 
 [Per-referrer resource IDs](../components/resources.md#per-referrer-path-ids)
 now provide exact shared path-pair authoring metadata without editor UI. Public

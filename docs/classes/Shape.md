@@ -2,7 +2,7 @@
 
 Cold world-query geometry now uses the [shared using-world borrow](../components/physics-queries.md#cold-query-geometry) before user suppliers run. Numerical writes, collider retirement/transfer and final world release reject; original supplier failures can retry. Existing pure input reads and nested query behavior are retained.
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 **Inherits:** [Resource](Resource.md) · **Inherited By:** [CircleShape](CircleShape.md), [CapsuleShape](CapsuleShape.md), [SegmentShape](SegmentShape.md), [SeparationRayShape](SeparationRayShape.md), [ConvexPolygonShape](ConvexPolygonShape.md), [ConcavePolygonShape](ConcavePolygonShape.md), [RectangleShape](RectangleShape.md), [WorldBoundaryShape](WorldBoundaryShape.md)
 
@@ -242,3 +242,5 @@ including numerical-lane reads, borrower write guards, supplier/disposal/observe
 lifecycle and identity-preserving live correction. Fresh serial/separate public
 profiles preserve exact zero managed allocation in complete measured intervals;
 full numerical-extension/native/platform/network/performance acceptance is separate.
+
+A borrowed GetRID value does not keep an otherwise unused resource alive. Raw Body/Area slots and typed shape query parameters retain their source while bound; clearing the last such owner permits collection. Owned server geometry retains its explicit RID lifetime. Stale borrowed identities reject through the server.

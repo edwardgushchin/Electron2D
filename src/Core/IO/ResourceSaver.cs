@@ -1,3 +1,5 @@
+using System.Runtime.ExceptionServices;
+
 namespace Electron2D;
 /// <summary>Saves typed resources with ordered registered formats and portable archive defaults.</summary>
 /// <remarks>Static operations use permanent retained state. Format registration borrows caller-owned savers.
@@ -8,6 +10,7 @@ public sealed class ResourceSaver : ElectronObject
     private readonly object _gate = new();
     private readonly List<ResourceFormatSaver> _savers = [new ResourceArchiveSaver(), new ScriptSourceSaver(), new ShaderIncludeSourceSaver()];
     private readonly HashSet<Resource> _saving = new(ReferenceEqualityComparer.Instance);
+    private readonly HashSet<Node> _savingScenes = new(ReferenceEqualityComparer.Instance);
     private ResourceSaver()
     { }
     /// <summary>Registers a borrowed saver without duplicating its identity.</summary><param name="formatSaver">Live extension.</param><param name="atFront">Whether it precedes existing formats.</param>
@@ -85,6 +88,53 @@ public sealed class ResourceSaver : ElectronObject
             lock (Runtime._gate) Runtime._saving.Remove(resource);
         }
     }
+    /// <summary>Captures and saves a live scene through the shared authoring lifecycle.</summary>
+    /// <param name="root">Live scene root; attached authoring requires its scene owner thread.</param>
+    /// <param name="path">Destination, or empty to use the root's current SceneFilePath.</param>
+    /// <param name="flags">Known resource persistence flags, forwarded to the registered saver.</param>
+    /// <remarks>Allocating authoring operation. Parent-first pre-save delivery precedes RESET-aware packing and
+    /// file saving. Once pre-save begins, post-save cleanup is attempted even after failure. Temporary packed data
+    /// retires before cleanup delivery. A successful write updates SceneFilePath before post-save; later observer
+    /// failure does not undo that write. Callback changes are application-owned. Ordinary Save/Pack do not publish
+    /// these notifications. Saving the same root cannot reenter or execute concurrently.</remarks>
+    /// <exception cref="ArgumentNullException">Root or path is null.</exception>
+    /// <exception cref="ArgumentException">No destination is supplied.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Flags contain unknown bits.</exception>
+    /// <exception cref="ObjectDisposedException">The root is disposed.</exception>
+    /// <exception cref="InvalidOperationException">Owner, capture or concurrent-save access is unavailable.</exception>
+    /// <exception cref="Exception">A callback, capture, saver or cleanup operation fails.</exception>
+    /// <exception cref="AggregateException">Independent operation or cleanup failures are combined in order.</exception>
+    public static void SaveScene(Node root, string path = "", SaverFlags flags = SaverFlags.None)
+    {
+        ArgumentNullException.ThrowIfNull(root); ObjectDisposedException.ThrowIf(root.IsDisposed, root);
+        ArgumentNullException.ThrowIfNull(path);
+        if ((flags & ~(SaverFlags)127) != 0) throw new ArgumentOutOfRangeException(nameof(flags));
+        root.Tree?.EnsureOwnerThread();
+        if (path.Length == 0) path = root.SceneFilePath;
+        ArgumentException.ThrowIfNullOrEmpty(path); path = ResourceUID.EnsurePath(path);
+        lock (Runtime._gate)
+            if (!Runtime._savingScenes.Add(root)) throw new InvalidOperationException("Scene saving cannot reenter or concurrently save the same root.");
+        PackedScene? scene = null; Exception? failure = null; var began = false;
+        try
+        {
+            var preflight = root.BeginSceneCapture(); Node.EndSceneCapture(preflight);
+            began = true;
+            root.PropagateNotification(Node.NotificationEditorPreSave);
+            scene = new PackedScene(); scene.PackForSave(root); Save(scene, path, flags);
+            root.SceneFilePath = ProjectSettings.LocalizePath(path);
+        }
+        catch (Exception error) { failure = error; }
+        finally
+        {
+            try { scene?.Dispose(); }
+            catch (Exception error) { failure = failure is null ? error : new AggregateException(failure, error); }
+            try { if (began) root.PropagateNotification(Node.NotificationEditorPostSave); }
+            catch (Exception error) { failure = failure is null ? error : new AggregateException(failure, error); }
+            lock (Runtime._gate) Runtime._savingScenes.Remove(root);
+        }
+        if (failure is not null) ExceptionDispatchInfo.Capture(failure).Throw();
+    }
+
     /// <summary>Reads a persisted UID or prepares a path UID when requested.</summary><param name="path">Resource path.</param><param name="generate">Whether an absent UID is generated and registered.</param><returns>UID or ResourceUID.InvalidID.</returns>
     public static long GetResourceIDForPath(string path, bool generate = false)
     {

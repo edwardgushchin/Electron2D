@@ -134,6 +134,7 @@ public static partial class BackendChecks
         private readonly PhysicsPointQueryParameters _query = new();
         private readonly PhysicsPointResult[] _hits = new PhysicsPointResult[1];
         private readonly SceneTree _tree;
+        internal Node Root => _tree.Root;
         private readonly Action<Vector2> _setter;
         private readonly Action<int> _nested;
         private readonly Action _after;
