@@ -39,7 +39,7 @@ internal static partial class CanvasHDRTests
         float[] source = [.0001f, .001f, .003f, .214f, 2.5f, -.1f];
         for (var i = 0; i < source.Length; ++i) image.SetPixel(i, 0, new(source[i], source[i], source[i], 1));
         using var texture = ImageTexture.CreateFromImage(image);
-        var root = new Window { Size = new(128, 64), ContentScaleSize = new(128, 64), ContentScaleMode = ContentScaleMode.Viewport, UseHDR2D = true };
+        var root = new Window { Size = new(128, 64), ContentScaleSize = new(128, 64), ContentScaleMode = ContentScaleMode.Viewport, UseHDR2D = true, UseDebanding = true };
         var painter = new Entity { TextureFilter = TextureFilter.Nearest }; painter.Draw += item => item.DrawTextureRect(texture, new(0, 0, 96, 32), false); root.AddChild(painter);
         var folder = Environment.GetEnvironmentVariable("ELECTRON2D_HDR_OUTPUT") ?? System.IO.Path.Combine(System.IO.Path.GetTempPath(), "electron-hdr-movie"); Directory.CreateDirectory(folder);
         using var writer = new HDRWriter(root, folder); MovieWriter.AddWriter(writer);

@@ -10,6 +10,12 @@ Last updated: 2026-10-20
 Public static declarations are in [`RenderingServer.API.cs`](../../src/Servers/Rendering/RenderingServer.API.cs).
 
 
+## ViewportSetUseDebanding
+
+`public static void ViewportSetUseDebanding(RID viewport, bool enabled)` selects HDR screen dithering for a live scene or caller-owned viewport. The identity must belong to the active rendering session. Undefined/stale identities throw ArgumentException; foreign-session, off-owner, unavailable-service and active-capture/submission mutations throw InvalidOperationException.
+
+The override preserves `Viewport.UseDebanding`; any valid scene assignment republishes authoring. It affects the next presentation without replacing native HDR storage. Only the root HDR viewport affects 2D screen output. Alpha, SDR/offscreen/linear images and movie capture retain their values. Compatibility rejects enabled debanding at target preparation. [HDR screen debanding](../components/hdr-canvas.md#screen-debanding) defines precision, defaults, persistence and verification.
+
 ## LCD and MSDF regions
 
 CanvasItemAddLCDTextureRectRegion(RID, Rect2, RID, Rect2, Color) and CanvasItemAddMSDFTextureRectRegion(RID, Rect2, RID, Rect2, Color? = null, int outlineSize = 0, float pixelRange = 1, float scale = 1) append executable retained glyph regions to live borrowed or caller-owned items. They share scene rendering and owner/lifetime guards; [the complete glyph contract](../components/canvas-rendering.md#lcd-and-msdf-texture-regions) records sampling, blending, material order and backend limits.

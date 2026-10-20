@@ -1,5 +1,7 @@
 [Polygon edge smoothing](../components/meshes.md#polygon-edge-smoothing) now executes shared-boundary and inverted-loop coverage geometry on both canvas backends, including skeletal pose replay.
 
+[HDR screen debanding](../components/hdr-canvas.md#screen-debanding) now connects stored viewport/root-project controls and renderer-session overrides to final GPU dithering before byte output. Linear/offscreen images and movie capture retain their precision; no production type is added.
+
 # Rendering domain
 
 [Layered device multiview](../components/local-compute.md#layered-multiview) executes ordered view-indexed draws into array color/depth targets, including per-view input passes and MSAA resolve, without changing extra layers.

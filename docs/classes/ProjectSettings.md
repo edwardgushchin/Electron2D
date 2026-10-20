@@ -17,6 +17,12 @@ MovieWriterMixRate is ProjectSetting<int> for editor/movie_writer/mix_rate (4800
 Public static declarations are in [`ProjectSettings.API.cs`](../../src/Core/Config/ProjectSettings.API.cs).
 
 
+## HDR screen debanding
+
+`public static ProjectSetting<bool> UseDebanding { get; }` names `rendering/anti_aliasing/quality/use_debanding`, default false. Engine startup reads the active feature override for an unassigned root Window. An explicit `Viewport.UseDebanding` assignment wins. Changes to the project setting affect the next startup; live changes use the viewport or RenderingServer method. Typed project files preserve base and feature values across processes.
+
+The GPU effect requires root HDR output to affect 2D pixels; offscreen/SDR images and movie capture retain their original values. Compatibility rejects enabled debanding explicitly. See [HDR screen debanding](../components/hdr-canvas.md#screen-debanding).
+
 ## Text LCD layout
 
 `ProjectSettings.LCDSubpixelLayout` is a built-in `ProjectSetting<FontLCDSubpixelLayout>` for `gui/theme/lcd_subpixel_layout`, default HorizontalRGB. None through VerticalBGR are selectable; Max and undefined values reject. The text owner captures the value before first native font use. Live assignments persist a restart-required preference. See [raster and consumer contract](../components/text.md#native-font-antialiasing-and-lcd-layout).

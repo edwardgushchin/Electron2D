@@ -165505,6 +165505,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.ViewportSetUseDebanding(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportSetUseDebanding",
+    "signature": "public static System.Void ViewportSetUseDebanding(Electron2D.RID viewport, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.ViewportSetUseHDR2D(Electron2D.RID,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -253337,6 +253361,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.UseDebanding()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "UseDebanding",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E UseDebanding { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.UseNearestMIPMapFilter()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -263352,6 +263389,19 @@
     "declaringType": "Electron2D.Viewport",
     "name": "TransparentBG",
     "signature": "public System.Boolean TransparentBG { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Viewport.UseDebanding()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "UseDebanding",
+    "signature": "public System.Boolean UseDebanding { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

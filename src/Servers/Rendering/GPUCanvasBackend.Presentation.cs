@@ -44,7 +44,7 @@ internal sealed unsafe partial class GPUCanvasBackend
             pass = BeginPass(command, presentation.Next.DangerousGetHandle(), SDL.GPULoadOp.Clear, Colors.Black);
             for (var i = 0; i < viewports.Length; i++)
                 if (PresentationRegion(viewports[i].Rect, presentation.Size, out _, out _))
-                    BindColorCopy(command, pass, _presentationPipeline, viewports[i].Target.Current.DangerousGetHandle(), new(0, 0, viewports[i].Target.HDR ? 1 : 0, 0), 0, i * 6);
+                    BindColorCopy(command, pass, _presentationPipeline, viewports[i].Target.Current.DangerousGetHandle(), new(0, 0, viewports[i].Target.HDR ? 1 : 0, viewports[i].Target.HDR && viewports[i].Debanding ? 1 : 0), 0, i * 6);
             SDL.EndGPURenderPass(pass); pass = 0;
             Check(SDL.WaitAndAcquireGPUSwapchainTexture(command, window, out var swapchain, out var width, out var height), "acquire swapchain texture");
             if (swapchain != 0)

@@ -1,5 +1,7 @@
 # Engine inventory
 
+[HDR screen debanding](components/hdr-canvas.md#screen-debanding) now connects stored viewport/root-project controls and renderer-session overrides to final GPU dithering before byte output. Linear/offscreen images and movie capture retain their precision; no production type is added.
+
 AndroidGameActivity/AndroidWindowHost now produce actual framework system back requests through DisplayServer.SystemBack.cs. The existing Node, Window and SceneTree types own notification 1007, GoBackRequested and QuitOnGoBack; no public platform adapter type is introduced. See [the connected runtime](components/window-runtime.md#system-back-navigation).
 
 [Last-recovery one-way pair exclusions](components/physics-registered-adapter.md#last-recovery-one-way-pair-exclusions) preserve the final recovery decision through sweeps and contact projection across all selected implementations. Query-local value/device storage adds no production type or public signature.

@@ -104,6 +104,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(RenderingFallback, isBasic: false);
         RegisterInternal(MSAA2D, isBasic: false);
         RegisterInternal(HDR2D, isBasic: false);
+        RegisterInternal(UseDebanding, isBasic: false);
         RegisterInternal(LCDSubpixelLayout, isBasic: false);
         _settings[LCDSubpixelLayout.Name].RestartIfChanged = true;
         RegisterInternal(NavigationMapAsyncIterations, isBasic: false);
@@ -1238,6 +1239,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, RenderingFallback) ||
         ReferenceEquals(setting, MSAA2D) ||
         ReferenceEquals(setting, HDR2D) ||
+        ReferenceEquals(setting, UseDebanding) ||
         ReferenceEquals(setting, LCDSubpixelLayout) ||
         ReferenceEquals(setting, WorkerPoolMaxThreads) ||
         ReferenceEquals(setting, WorkerPoolLowPriorityThreadRatio) ||

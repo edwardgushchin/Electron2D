@@ -1,14 +1,32 @@
 # Viewport
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 **Inherits:** [Node](Node.md)
 
 **Inherited By:** [Window](Window.md), [SubViewport](SubViewport.md)
 
-- **Source:** [Viewport.cs](../../src/Scene/Main/Viewport.cs), [Viewport.Targets.cs](../../src/Scene/Main/Viewport.Targets.cs), [Viewport.Drag.cs](../../src/Scene/Main/Viewport.Drag.cs), [Viewport.PhysicsInterpolation.cs](../../src/Scene/Main/Viewport.PhysicsInterpolation.cs), [Viewport.Audio.cs](../../src/Scene/Main/Viewport.Audio.cs), [Viewport.HDR.cs](../../src/Scene/Main/Viewport.HDR.cs)
+- **Source:** [Viewport.cs](../../src/Scene/Main/Viewport.cs), [Viewport.Targets.cs](../../src/Scene/Main/Viewport.Targets.cs), [Viewport.Drag.cs](../../src/Scene/Main/Viewport.Drag.cs), [Viewport.PhysicsInterpolation.cs](../../src/Scene/Main/Viewport.PhysicsInterpolation.cs), [Viewport.Audio.cs](../../src/Scene/Main/Viewport.Audio.cs), [Viewport.HDR.cs](../../src/Scene/Main/Viewport.HDR.cs), [Viewport.Debanding.cs](../../src/Scene/Main/Viewport.Debanding.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public abstract partial class Viewport : Node`
+
+## HDR screen debanding
+
+| Property | Default | Meaning |
+| --- | --- | --- |
+| `public bool UseDebanding { get; set; }` | `false` | Stable RGB dithering before root HDR output is quantized for the screen. |
+
+### UseDebanding
+
+An unassigned root reads [ProjectSettings.UseDebanding](ProjectSettings.md#hdr-screen-debanding) at startup. An explicit assignment wins; offscreen viewports retain independent stored authoring. Every assignment, including an equal value, replaces a renderer-session override. Owner/disposal and native-submission guards apply. No texture identity or format changes and no texture metadata notification occurs.
+
+The GPU effect adds zero-centered noise with a total range of one byte quantization step after the RGB output transfer. Alpha, linear viewport images, offscreen/SDR canvases and movie capture retain their pixels. Only the root HDR viewport affects 2D presentation. Compatibility rejects enabled debanding before drawing. See [the complete output contract](../components/hdr-canvas.md#screen-debanding).
+
+```csharp
+var window = new Window { UseHDR2D = true, UseDebanding = true };
+// Add scene children, then run the ordinary native host.
+Engine.Run(window);
+```
 
 ## Focused text replacement
 

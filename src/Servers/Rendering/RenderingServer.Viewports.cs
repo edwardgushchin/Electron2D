@@ -14,7 +14,7 @@ public sealed partial class RenderingServer
         internal TextureFilter? CanvasFilter;
         internal TextureRepeat? CanvasRepeat;
         internal Viewport.MSAA? MSAA;
-        internal bool? HDR;
+        internal bool? HDR, Debanding;
         internal int? Screen;
         internal Rect2 ScreenRect;
         internal ViewportUpdateMode? Update;

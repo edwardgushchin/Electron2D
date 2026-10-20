@@ -44,7 +44,7 @@ public sealed partial class RenderingServer
     private void AddPresentation(CanvasFrame frame, CanvasBackend backend, int windowID)
     {
         if (frame.Drawn && ScreenAttachment(frame.Viewport, out var rect, out var id) && id == windowID && backend.FindTarget(frame.Viewport) is { } target)
-            _presentations.Insert(0, new(target, rect == default ? new(Vector2.Zero, target.Size) : rect));
+            _presentations.Insert(0, new(target, rect == default ? new(Vector2.Zero, target.Size) : rect, ReferenceEquals(frame.Viewport, _window) && ViewportDebanding(frame.Viewport)));
     }
 
     private void PresentViewports()

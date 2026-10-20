@@ -10183,7 +10183,6 @@
         "Viewport::property:scaling_3d_scale",
         "Viewport::property:screen_space_aa",
         "Viewport::property:texture_mipmap_bias",
-        "Viewport::property:use_debanding",
         "Viewport::property:use_occlusion_culling",
         "Viewport::property:use_taa",
         "Viewport::property:use_xr",

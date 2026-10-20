@@ -4,6 +4,7 @@ namespace Electron2D;
 
 internal sealed unsafe partial class GPUCanvasBackend
 {
+    internal override void ValidateDebanding(bool enabled) { }
     private bool _currentHDR;
     private readonly Dictionary<Texture, (RenderHandle View, Vector2i Size, uint Levels)> _linearViews = [];
     private readonly Dictionary<Texture, nint> _linearSources = [];

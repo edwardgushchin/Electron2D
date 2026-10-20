@@ -372,6 +372,12 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <remarks>Offscreen viewports retain their authored selections. Enabled HDR requires GPU rendering and supported half-float color targets.</remarks>
     public static ProjectSetting<bool> HDR2D { get; } = new("rendering/viewport/hdr_2d", false);
 
+    /// <summary>Selects HDR root screen dithering at engine startup.</summary>
+    /// <value>rendering/anti_aliasing/quality/use_debanding; false initially.</value>
+    /// <remarks>An explicit root assignment wins. Only root HDR screen presentation uses this GPU effect;
+    /// offscreen and byte canvas pixels and movie capture retain their original values. Compatibility rejects enabled debanding.</remarks>
+    public static ProjectSetting<bool> UseDebanding { get; } = new("rendering/anti_aliasing/quality/use_debanding", false);
+
     /// <summary>Selects the LCD subpixel arrangement captured when the native text owner first starts.</summary>
     /// <value>gui/theme/lcd_subpixel_layout; HorizontalRGB initially. None through VerticalBGR are valid.</value>
     /// <remarks>Set before first native font use. Later assignments persist the next process's preference and require restart.

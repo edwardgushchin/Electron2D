@@ -105,6 +105,7 @@ public sealed partial class Engine
             window.OpenNative(movieDisableVSync);
             window.ApplyProjectMSAA();
             window.ApplyProjectHDR();
+            window.ApplyProjectDebanding();
             if (moviePath is not null)
             {
                 movie = new MovieRecording(window.TextureDimensions, movieFPS, moviePath);

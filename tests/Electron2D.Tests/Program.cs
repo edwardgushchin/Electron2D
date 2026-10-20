@@ -9,6 +9,9 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length == 2 && args[0] == "--debanding-storage") { CanvasDebandingTests.ReadStorage(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEBANDING") is { } debandingProfile) { if (debandingProfile == "managed") CanvasDebandingTests.Managed(); else CanvasDebandingTests.Native(debandingProfile); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_MASKS") is { } maskBackend) { RenderingRuntimeTests.VerifyCanvasMasks(maskBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PRIMITIVE_MESH") is { } primitiveProfile) { if (primitiveProfile == "managed") PrimitiveMeshTests.Managed(); else if (primitiveProfile == "child") PrimitiveMeshTests.Child(args[0]); else if (primitiveProfile == "runtime") RenderingRuntimeTests.Run(); else PrimitiveMeshTests.Native(primitiveProfile); return; }
 
@@ -1738,6 +1741,7 @@ AnimationNestedTrackTests.Run();
 AnimationAudioTrackTests.Run();
 SubViewportTests.Run();
 CanvasHDRTests.RunManaged();
+CanvasDebandingTests.Managed();
 CanvasCompositionTests.Run();
 SubViewportContainerTests.Run();
 LineEditTests.Run();

@@ -2700,12 +2700,12 @@
     {
       "godot": "RenderingServer::method:texture_proxy_create(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyCreate(Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "RenderingServer::method:texture_proxy_update(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyUpdate(Electron2D.RID,Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "FlowContainer::theme_item:h_separation",
@@ -5206,6 +5206,21 @@
       "godot": "RenderingServer::enum:SplashStretchMode",
       "electron2d": "T:Electron2D.RenderingServer.SplashStretchMode",
       "reason": "ADRs 0028/0095/0004: immediate main-client boot presentation uses copied image data, all six canonical stretch geometries, nearest/linear sampling and current native backends. It preserves viewport contents, scene clocks/counters, pending particle simulation and queued completed-frame callbacks, leaves normal rendering pending and releases temporary image/target storage on success or error. BootImageTests exercises native pixels on landscape/portrait/square clients, odd centering, crop/aspect, alpha/filtering, ownership/phase/invalid/empty guards, failure recovery and 32 prepared subsequent scene frames with zero managed owner bytes on software Linux Wayland/X11. Cold image upload allocates; native allocator, physical GPU, foreign platforms and full-suite acceptance remain unverified."
+    },
+    {
+      "godot": "Viewport::property:use_debanding",
+      "electron2d": "property:Electron2D.Viewport.UseDebanding()",
+      "reason": "ADRs 0028/0095: stored viewport/root-project configuration and live renderer overrides execute stable zero-centered RGB dithering after HDR-to-SDR transfer and before byte quantization. Only the root HDR canvas screen output changes; alpha, SDR/offscreen/linear viewport images and movie capture retain their semantics. Compatibility rejects enabled debanding explicitly. Fresh scene/project storage, real Linux software-GPU pixels, scaling/clipping, MSAA, identity/owner/capture guards and prepared zero-owner-allocation presentation are exercised; physical GPUs, other platforms and human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_set_use_debanding(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetUseDebanding(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0028/0095: stored viewport/root-project configuration and live renderer overrides execute stable zero-centered RGB dithering after HDR-to-SDR transfer and before byte quantization. Only the root HDR canvas screen output changes; alpha, SDR/offscreen/linear viewport images and movie capture retain their semantics. Compatibility rejects enabled debanding explicitly. Fresh scene/project storage, real Linux software-GPU pixels, scaling/clipping, MSAA, identity/owner/capture guards and prepared zero-owner-allocation presentation are exercised; physical GPUs, other platforms and human acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:rendering/anti_aliasing/quality/use_debanding",
+      "electron2d": "property:Electron2D.ProjectSettings.UseDebanding()",
+      "reason": "ADRs 0028/0095: stored viewport/root-project configuration and live renderer overrides execute stable zero-centered RGB dithering after HDR-to-SDR transfer and before byte quantization. Only the root HDR canvas screen output changes; alpha, SDR/offscreen/linear viewport images and movie capture retain their semantics. Compatibility rejects enabled debanding explicitly. Fresh scene/project storage, real Linux software-GPU pixels, scaling/clipping, MSAA, identity/owner/capture guards and prepared zero-owner-allocation presentation are exercised; physical GPUs, other platforms and human acceptance remain unverified."
     }
   ],
   "statusGroups": [
@@ -6365,7 +6380,7 @@
         "RenderingServer::method:texture_proxy_update(RID:,RID:)"
       ],
       "state": "Partial",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": [
@@ -7245,6 +7260,15 @@
       ],
       "state": "Excluded",
       "reason": "ADR 0004: pinned RenderingServer.xml at ed1daf0bf001b61586d9930840f2f1394092c079 declares set_boot_image deprecated=\"Use [method set_boot_image_with_stretch] instead.\". The current replacement executes; no deprecated public alias or implementation trigger."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "Viewport::property:use_debanding",
+        "RenderingServer::method:viewport_set_use_debanding(RID:,bool:)",
+        "ProjectSettings::property:rendering/anti_aliasing/quality/use_debanding"
+      ],
+      "reason": "ADRs 0028/0095: stored viewport/root-project configuration and live renderer overrides execute stable zero-centered RGB dithering after HDR-to-SDR transfer and before byte quantization. Only the root HDR canvas screen output changes; alpha, SDR/offscreen/linear viewport images and movie capture retain their semantics. Compatibility rejects enabled debanding explicitly. Fresh scene/project storage, real Linux software-GPU pixels, scaling/clipping, MSAA, identity/owner/capture guards and prepared zero-owner-allocation presentation are exercised; physical GPUs, other platforms and human acceptance remain unverified."
     }
   ],
   "extras": [
