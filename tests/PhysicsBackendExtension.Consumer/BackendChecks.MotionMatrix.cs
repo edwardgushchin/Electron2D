@@ -125,7 +125,7 @@ public static partial class BackendChecks
                         if (route != 2)
                         {
                             var low = result.GetCollisionSafeFraction(); var high = result.GetCollisionUnsafeFraction();
-                            valid &= low >= 0 && low <= high && high <= 1 && high - low <= 1f / 256 + .000002f && low <= fraction + .0002f && high >= fraction - .0002f;
+                            valid &= low >= 0 && low <= high && high <= 1 && high - low <= 3f / 512 + .000002f && low <= fraction + .0002f && high >= fraction - .0002f;
                         }
                     }
                     else valid &= travel.DistanceTo(query.Motion) < .001f && remainder == Vector2.Zero && (route == 2 ? sceneResult.GetColliderRID() : result.GetColliderRID()) == default;

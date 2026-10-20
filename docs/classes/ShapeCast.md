@@ -1,6 +1,8 @@
 # ShapeCast
 
-Last updated: 2026-10-18
+[Long circle sweeps and hollow query sources](../components/physics-queries.md#long-circle-sweeps-and-hollow-query-sources) preserve geometric hit truth, first entry and contact ownership across the exercised implementations.
+
+Last updated: 2026-10-20
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 

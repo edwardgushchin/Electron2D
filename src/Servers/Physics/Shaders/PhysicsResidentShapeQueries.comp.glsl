@@ -35,6 +35,7 @@ Shape activeShape;
 uvec4 activeKey;
 uint used=0u;
 float activeFraction=0;
+vec2 activeBracket=vec2(0);
 bool lessKey(uvec4 a,uvec4 b){return a.y<b.y||(a.y==b.y&&(a.x<b.x||(a.x==b.x&&(a.z<b.z||(a.z==b.z&&a.w<b.w)))));}
 void emitPoint(vec2 a,vec2 b,vec2 normal,uvec4 features)
 {
@@ -44,7 +45,7 @@ void emitPoint(vec2 a,vec2 b,vec2 normal,uvec4 features)
     {
         if(used!=0u)
         {
-            Hit prior=hits[offset];float value=mode==2u?-depth:activeFraction,old=mode==2u?-prior.contact.z:prior.contact.w;
+            Hit prior=hits[offset];float value=mode==2u?-depth:activeBracket.x,old=mode==2u?-prior.contact.z:prior.motion.z;
             if(value>old||(value==old&&!lessKey(activeKey,prior.identity)))return;
         }
     }
@@ -59,7 +60,7 @@ void emitPoint(vec2 a,vec2 b,vec2 normal,uvec4 features)
     vec2 relative=b-(bodyB.pose.xy-bodyA.pose.xy+rotate(bodyB.pose.zw,centers[activeShape.owner.x]));
     vec3 speed=bodyB.velocity.xyz+bodyB.surface.xyz;
     vec2 velocity=(activeShape.policy.w&2u)!=0u?vec2(0):speed.xy+speed.z*vec2(-relative.y,relative.x);
-    float safe=mode==3u?max(0,ceil(activeFraction*256)-1)/256:0,unsafe=mode==3u?min(1,safe+1.0/256):0;
+    float safe=mode==3u?activeBracket.x:0,unsafe=mode==3u?activeBracket.y:0;
     if(!finite2(pointA)||!finite2(pointB)||!finite2(normal)||!finite2(velocity)||!finite2(vec2(depth,activeFraction))){fail();return;}
     hits[offset+position]=Hit(activeKey,uvec4(activeShape.policy.x,activeShape.owner.xy,features.z),vec4(pointA,pointB),vec4(-normal,depth,activeFraction),vec4(velocity,safe,unsafe),uvec4(mappings[activeKey.w].canvas.zw,0,0));
     used=(mode==2u||mode==3u)?1u:min(used+1u,limit);
@@ -80,7 +81,7 @@ bool piecesContact(Hull a,Hull b,Geometry ga,Geometry gb,vec2 motion,bool emit,u
     if(!boundary&&ga.data.z==6u)return gb.data.z!=6u&&directedQuery(a,b,vec2(0),activeQuery.rotationMargin.z,ga.parameters.y!=0,false,motion,pieceA,pieceB,emit);
     if(!boundary&&gb.data.z==6u)return directedQuery(b,a,motion,0,gb.parameters.y!=0,true,vec2(0),pieceA,pieceB,emit);
     vec2 normal;float distance=queryDistance(a,b,vec2(0),vec2(0),normal),radii=a.radius+b.radius;
-    bool initial=distance-radii<=0.05;
+    bool initial=distance-radii<=tolerances.z;
     if(activeQuery.geometry.z==3u&&initial)return false;
     float fraction=0;
     if(!initial)
@@ -88,7 +89,7 @@ bool piecesContact(Hull a,Hull b,Geometry ga,Geometry gb,vec2 motion,bool emit,u
         if(motion==vec2(0)||!querySweep(a,b,motion,vec2(0),radii,0.00001,fraction,normal))return false;
         a.pose.xy+=min(1,fraction+1/length(motion))*motion;
     }
-    activeFraction=fraction;
+    activeFraction=fraction;activeBracket=querySweepBracket(fraction);
     if(emit)
     {
         if(activeQuery.geometry.z==0u||activeQuery.geometry.z==3u){contactLimit=3.402823466e38;emitPoint(vec2(0),vec2(0),vec2(0),uvec4(0,0,pieceA,pieceB));}
@@ -138,7 +139,7 @@ void main()
                     {
                         Hull a=hull(sa,ga,bodyA,pa),b=hull(sb,gb,bodyB,pb);if(ga.data.z!=6u)a.radius+=q.rotationMargin.z;
                         if(ga.data.z==6u||gb.data.z==6u)initialOverlap=piecesContact(a,b,ga,gb,vec2(0),false,pa,pb);
-                        else {vec2 normal;initialOverlap=queryDistance(a,b,vec2(0),vec2(0),normal)-a.radius-b.radius<=0.05;}
+                        else {vec2 normal;initialOverlap=queryDistance(a,b,vec2(0),vec2(0),normal)-a.radius-b.radius<=tolerances.z;}
                     }
                     if(!initialOverlap)for(uint pa=0u;pa<na;pa++)for(uint pb=0u;pb<nb;pb++)
                     {
@@ -147,9 +148,15 @@ void main()
                         if((ga.data.z==6u||gb.data.z==6u)&&q.geometry.z==3u)
                         {
                             if(piecesContact(a,b,ga,gb,vec2(0),false,pa,pb)||q.ray.zw==vec2(0)||!piecesContact(a,b,ga,gb,q.ray.zw,false,pa,pb))continue;
-                            float low=0,high=1;
-                            [[dont_unroll]] for(uint step=0u;step<8u;step++){float mid=(low+high)*0.5;if(piecesContact(a,b,ga,gb,mid*q.ray.zw,false,pa,pb))high=mid;else low=mid;}
-                            activeFraction=high;contactLimit=3.402823466e38;emitPoint(vec2(0),vec2(0),vec2(0),uvec4(0,0,pa,pb));
+                            float low=0,high=1,coefficient=0.5,arrival=directedArrival;
+                            [[dont_unroll]] for(uint step=0u;step<8u;step++)
+                            {
+                                float mid=low+(high-low)*coefficient;
+                                if(piecesContact(a,b,ga,gb,mid*q.ray.zw,false,pa,pb)){high=mid;coefficient=step==0u||low>0?0.5:0.25;}
+                                else{low=mid;coefficient=step==0u||high<1?0.5:0.75;}
+                            }
+                            if(ga.data.z==6u&&gb.data.z!=7u)high=clamp(arrival,low,high);
+                            activeBracket=vec2(low,high);activeFraction=high;contactLimit=3.402823466e38;emitPoint(vec2(0),vec2(0),vec2(0),uvec4(0,0,pa,pb));
                         }
                         else piecesContact(a,b,ga,gb,q.ray.zw,true,pa,pb);
                     }

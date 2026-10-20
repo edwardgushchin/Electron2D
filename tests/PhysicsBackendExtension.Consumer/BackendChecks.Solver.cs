@@ -105,8 +105,7 @@ public static partial class BackendChecks
                 var endpoint = Transform.Identity; endpoint.Origin = motion;
                 if (PartGap(query, endpoint, target, pose, out _, out _, out _) > 0) return false;
             }
-            if (query.Boundary || target.Boundary || query.Contour || target.Contour) return SweepParts(query, Transform.Identity, motion, target, pose, out fraction);
-            return Annulus.Sweep(query.Offset, motion, PartAt(target, pose), MathF.Max(0, target.Inner - query.Outer), target.Outer + query.Outer, out fraction);
+            return SweepParts(query, Transform.Identity, motion, target, pose, out fraction);
         }
         protected override List<PhysicsShapeResult> CollectShapeHits(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
@@ -174,7 +173,7 @@ public static partial class BackendChecks
                             if (!DirectedContact(query, Transform.Identity, motion, p, b.Pose, Vector2.Zero,
                                 out _, out firstPoint, out secondPoint, out _)) continue;
                         }
-                        else if (query.Boundary || p.Boundary || query.Contour || p.Contour)
+                        else if (query.Boundary || p.Boundary || query.Contour || p.Contour || query.Inner > 0 || p.Inner > 0)
                         {
                             var pose = Transform.Identity; pose.Origin = motion * (query.Boundary || p.Boundary ? 1 : f);
                             PartGap(query, pose, p, b.Pose, out _, out firstPoint, out secondPoint);
@@ -211,7 +210,7 @@ public static partial class BackendChecks
                     DirectedContact(query, Transform.Identity, QueryMotion(query, part, parameters.Motion), part, body.Pose, Vector2.Zero,
                         out var toward, out _, out _, out depth); normal = -toward;
                 }
-                else if (query.Boundary || part.Boundary || query.Contour || part.Contour)
+                else if (query.Boundary || part.Boundary || query.Contour || part.Contour || query.Inner > 0 || part.Inner > 0)
                 {
                     QuerySweep(query, parameters.Motion, part, body.Pose, out var fraction);
                     var pose = Transform.Identity; pose.Origin = QueryMotion(query, part, parameters.Motion) * (query.Boundary || part.Boundary ? 1 : fraction);

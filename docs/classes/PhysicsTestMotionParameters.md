@@ -1,5 +1,7 @@
 # PhysicsTestMotionParameters
 
+[Adaptive sweep refinement](../components/physics-queries.md#adaptive-sweep-refinement) preserves close and late impacts, geometric initial gaps and logical source ownership across selected implementations.
+
 Last updated: 2026-10-20
 
 **Inherits:** ElectronObject · **Source:** [PhysicsTestMotion.cs](../../src/Servers/Physics/PhysicsTestMotion.cs) · **Component:** [Physics server and direct queries](../components/physics-queries.md)

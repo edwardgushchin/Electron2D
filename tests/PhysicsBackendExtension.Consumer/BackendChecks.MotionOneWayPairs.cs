@@ -140,7 +140,7 @@ public static partial class BackendChecks
                         if (kind == 9)
                         {
                             var expectedFraction = 7.17368f / 20;
-                            if (route != 2) valid &= result.GetCollisionSafeFraction() <= expectedFraction + .0002f && result.GetCollisionUnsafeFraction() >= expectedFraction - .0002f && result.GetCollisionUnsafeFraction() - result.GetCollisionSafeFraction() <= 1f / 256 + .000002f;
+                            if (route != 2) valid &= result.GetCollisionSafeFraction() <= expectedFraction + .0002f && result.GetCollisionUnsafeFraction() >= expectedFraction - .0002f && result.GetCollisionUnsafeFraction() - result.GetCollisionSafeFraction() <= 3f / 512 + .000002f;
                             valid &= (travel + remainder).DistanceTo(query.Motion - axis * 15.62368f) < .003f;
                         }
                         else valid &= remainder == Vector2.Zero;

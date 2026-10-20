@@ -71,10 +71,13 @@ bool querySweep(Hull a,Hull b,vec2 motion,vec2 sweptB,float target,float toleran
     // Disk queries preserve geometric radii instead of a solver penetration target.
     if(!a.boundary&&!b.boundary&&a.count==1u&&b.count==1u&&sweptB==vec2(0)&&a.extension==vec2(0)&&b.extension==vec2(0)&&a.radius+b.radius>0)
     {
-        vec2 offset=vertex(a,0u)-vertex(b,0u);float radius=a.radius+b.radius,distance=dot2(offset,offset);
-        if(distance<=radius*radius){normal=normalized(-offset);return true;}
-        float size=dot2(motion,motion),projection=dot2(offset,motion),disc=projection*projection-size*(distance-radius*radius);
-        if(size==0||projection>=0||disc<0)return false;
+        vec2 offset=vertex(a,0u)-vertex(b,0u);float radius=a.radius+b.radius;
+        if(length(offset)<=radius){normal=normalized(-offset);return true;}
+        float size=length(motion);if(size==0)return false;
+        vec2 axis=motion/size;float projection=dot2(offset,axis),side=dot2(offset,vec2(-axis.y,axis.x));
+        // Resolve the small perpendicular clearance without subtracting large squared distances.
+        float disc=(radius-abs(side))*(radius+abs(side));
+        if(projection>=0||disc<0)return false;
         float at=(-projection-sqrt(disc))/size;if(at<0||at>1)return false;
         fraction=at;normal=normalized(-offset-at*motion);return true;
     }
@@ -86,7 +89,20 @@ bool querySweep(Hull a,Hull b,vec2 motion,vec2 sweptB,float target,float toleran
         if(gap<=tolerance){fraction=time;return true;}
         float closing=dot2(motion,normal);if(closing<=0)return false;
         float next=time+gap/closing;if(!finite2(vec2(next))){fail();return false;}if(next>1)return false;
-        if(next<=time){failQuery(8u);return false;}time=next;
+        if(next==time){fraction=time;return true;}
+        if(next<time){failQuery(8u);return false;}time=next;
     }
     failQuery(16u);return false;
+}
+
+vec2 querySweepBracket(float impact)
+{
+    float low=0,high=1,coefficient=0.5;
+    for(uint step=0u;step<8u;step++)
+    {
+        float middle=low+(high-low)*coefficient;
+        if(impact<=middle){high=middle;coefficient=step==0u||low>0?0.5:0.25;}
+        else{low=middle;coefficient=step==0u||high<1?0.5:0.75;}
+    }
+    return vec2(low,clamp(impact,low,high));
 }

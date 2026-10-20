@@ -699,7 +699,11 @@ namespace Box2D.NET
 
                 B2DistanceOutput distanceOutput = b2ShapeDistance(ref distanceInput, ref cache, null, 0);
 
-                if (distanceOutput.distance < target + tolerance)
+                float closingRate = -b2Dot(delta2, distanceOutput.normal);
+                // A geometric query can converge between adjacent representable time fractions.
+                bool atPrecisionLimit = geometricRadii && iteration > 0 && closingRate > 0.0f &&
+                    fraction + (distanceOutput.distance - target) / closingRate == fraction;
+                if (distanceOutput.distance < target + tolerance || atPrecisionLimit)
                 {
                     if (iteration == 0)
                     {

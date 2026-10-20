@@ -119,7 +119,7 @@ public static partial class BackendChecks
                 else
                 {
                     var fraction = (14 - right[a] - left[b] - margin) / 20;
-                    valid &= cast.SafeFraction >= 0 && cast.SafeFraction <= cast.UnsafeFraction && cast.UnsafeFraction <= 1 && cast.UnsafeFraction - cast.SafeFraction <= 1f / 256 + .000002f && cast.SafeFraction <= fraction + .0002f && cast.UnsafeFraction >= fraction - .0002f;
+                    valid &= cast.SafeFraction >= 0 && cast.SafeFraction <= cast.UnsafeFraction && cast.UnsafeFraction <= 1 && cast.UnsafeFraction - cast.SafeFraction <= 3f / 512 + .000002f && cast.SafeFraction <= fraction + .0002f && cast.UnsafeFraction >= fraction - .0002f;
                 }
                 var bodyHit = false;
                 if (!initial)

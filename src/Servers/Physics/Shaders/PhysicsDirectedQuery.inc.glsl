@@ -1,4 +1,5 @@
 // Shared directed contact against an ordinary or extruded convex region.
+float directedArrival=0;
 Hull pointHull(Hull templateHull,vec2 point)
 {
     templateHull.count=1u;templateHull.boundary=false;templateHull.radius=0;templateHull.midpoint=false;templateHull.pose=vec4(point,0,0);return templateHull;
@@ -6,7 +7,7 @@ Hull pointHull(Hull templateHull,vec2 point)
 bool directedQuery(Hull ray,Hull other,vec2 extrusion,float margin,bool slide,bool flip,vec2 extension,uint pieceA,uint pieceB,bool emit)
 {
     vec2 from=vertex(ray,0u),d=vertex(ray,1u)-from;if(d==vec2(0))return false;
-    vec2 axis=normalized(d);d+=axis*(margin+max(0,dot2(axis,extension)));
+    vec2 axis=normalized(d);float baseLength=length(d),advance=max(0,dot2(axis,extension));d+=axis*(margin+advance);
     vec2 normal;float fraction;
     if(extrusion==vec2(0)&&(other.count<=2u||other.radius==0))
     {
@@ -20,6 +21,7 @@ bool directedQuery(Hull ray,Hull other,vec2 extrusion,float margin,bool slide,bo
     }
     // queryDistance points toward the other core; reverse it to get its outward surface normal.
     if(dot2(normal,d)<0.0001)return false;
+    directedArrival=advance>0?clamp((fraction*length(d)-baseLength-margin)/advance,0,1):0;
     if(emit)
     {
         vec2 a=from+d;float depth=(1-fraction)*length(d);vec2 n=slide?normal:axis,b=a-depth*n;

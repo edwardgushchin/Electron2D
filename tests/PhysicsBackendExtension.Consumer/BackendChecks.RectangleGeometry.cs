@@ -228,6 +228,9 @@ public static partial class BackendChecks
         fraction = 0;
         if (first.Boundary || second.Boundary) return SweepBoundary(first, a, motion, second, b, out fraction);
         if (first.Directed || second.Directed) return SweepDirected(first, a, motion, second, b, out fraction);
+        if (!first.Contour && !second.Contour)
+            return Annulus.Sweep(PartAt(first, a), motion, PartAt(second, b),
+                MathF.Max(0, MathF.Max(first.Inner - second.Outer, second.Inner - first.Outer)), first.Outer + second.Outer, out fraction);
         if (CoreCount(first) == 0 || CoreCount(second) == 0) return false;
         var gap = PartGap(first, a, second, b, out _, out _, out _);
         if (gap <= 0) return true;

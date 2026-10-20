@@ -1,11 +1,13 @@
 # Physics backend selection and shared worlds
 
+[Long circle sweeps and hollow query sources](physics-queries.md#long-circle-sweeps-and-hollow-query-sources) preserve geometric hit truth, first entry and contact ownership across the exercised implementations.
+
 [Scene role recovery](physics-registered-adapter.md#failed-scene-role-publication) shares complete mode preparation across configured scene and direct server roles. The GPU collider's retained surface cache follows the resident store's actual fixed-to-dynamic consumption; unchanged and fixed-to-fixed mode calls keep the cache until explicit surface publication, with no device readback. Static/animatable geometry rebuilds preserve the active direct surface profile.
 
 
 [Polygon point containment](physics-point-containment.md) corrects CPU GJK false-inside observations across points, ray origins, Area audio and directed proxy regions. CPU/GPU tests use equal authored poses and independent geometric controls.
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 ## Resource retirement errors
 
@@ -1258,7 +1260,7 @@ The 2026-10-13 verification on the updated main also passes the complete indepen
 
 ## Compound geometric query verification
 
-Built-in shape casts now target geometric boundaries in CPU conservative advancement and independent resident GPU query/motion sweeps, rather than a penetration-reduced solver target. Disk queries and linear-disk CCD share the CPU analytic fraction kernel; other represented proxies use geometric distance with 1e-5 scene-unit convergence tolerance. The internal CPU cast explicitly selects this query policy while native solver callers retain their existing policy. Sharp zero-radius contact retains the preceding finite normal. CastMotion keeps eight refinements: analytic first touch must lie between safe/unsafe with maximum width 1/256. The rejected disk 10/12 case returned .87109375/.875; the rejected rectangle .4 case returned .421875/.42578125. Ten circle/segment query combinations against rectangle, capsule, segment, convex and concave targets now verify rounded and sharp boundaries; each runs 128 warm queries at strict 0/0 managed bytes. Bit equality across backends is not required.
+Built-in shape casts now target geometric boundaries in CPU conservative advancement and independent resident GPU query/motion sweeps, rather than a penetration-reduced solver target. Disk queries and linear-disk CCD share the CPU analytic fraction kernel; other represented proxies use geometric distance with 1e-5 scene-unit convergence tolerance. The internal CPU cast explicitly selects this query policy while native solver callers retain their existing policy. Sharp zero-radius contact retains the preceding finite normal. CastMotion keeps eight refinements: analytic first touch must lie between safe/unsafe with maximum adaptive width 3/512. The rejected disk 10/12 case returned .87109375/.875; the rejected rectangle .4 case returned .421875/.42578125. Ten circle/segment query combinations against rectangle, capsule, segment, convex and concave targets now verify rounded and sharp boundaries; each runs 128 warm queries at strict 0/0 managed bytes. Bit equality across backends is not required.
 
 See [the shared compound checks](physics-registered-adapter.md#compound-slot-numerics) for independent-provider and CPU/GPU response, identity, Area, CCD and zero warm allocation evidence.
 

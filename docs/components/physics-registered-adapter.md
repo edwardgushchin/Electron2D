@@ -1,5 +1,11 @@
 # Registered numerical solver adapter
 
+[Long circle sweeps and hollow query sources](physics-queries.md#long-circle-sweeps-and-hollow-query-sources) preserve geometric hit truth, first entry and contact ownership across the exercised implementations.
+
+[Motion source selection and contact velocity](physics-queries.md#motion-source-selection-and-contact-velocity) verifies the winning logical source, recovery-only selection and rotated mass-center velocity through scene/raw callers.
+
+[Adaptive sweep refinement](physics-queries.md#adaptive-sweep-refinement) preserves close and late impacts, geometric initial gaps and logical source ownership across selected implementations.
+
 [Directed source one-way policy](physics-contact-policy.md#directed-sources-and-one-way-targets) preserves ray contacts while ordinary siblings retain the target filter. Recovery, sweeps and final rest use represented source kind.
 
 Last updated: 2026-10-20
@@ -1535,7 +1541,7 @@ prevent an implementation from simply dropping special slots. Every positive
 witness checks exact collider/logical slot identity, an outward unit normal, zero
 stationary target velocity, analytical target-boundary membership and an impact
 fraction within the eight-refinement bracket. Boundary tolerance is .01 scene
-units for float composition; bracket slack is .0002 and maximum width 1/256 plus
+units for float composition; bracket slack is .0002 and maximum adaptive width 3/512 plus
 .000002. The .13-unit travel bound covers 30/256 = .1171875 units of refinement
 plus .01 boundary slack. Completed separated travel/remainder agrees within .001.
 
@@ -3154,7 +3160,7 @@ The public-only `--project-selection` consumer registers a fresh named numerical
 
 The public-only `--compound` fixture now retains every enabled circle/annulus slot, its local placement and original logical index; disabled slots do not renumber siblings. Common CPU/GPU/registered assertions exercise rotated scene shapes, empty gaps, disable/re-enable, ray/point/shape/contact/rest/cast and body-motion queries, scene/raw body and Area indices, automatic compound inertia, per-feature momentum/contact reporting, deepest same-peer caps and depth filtering, both CCD modes, Area effects and private restore. After 128 warmups, 128 full-frame/query/capture/restore cycles require 0/0 owner/all-thread managed bytes. The same-peer contact key includes both logical shape indices; private flat contact history preserves them. The numerical fixture remains bounded to circles/analytic annulus-circle pairs with uniform local scale; general polygon/capsule/compound-piece and coupled angular CCD acceptance remains open.
 
-Built-in shape casts now target geometric boundaries in CPU conservative advancement and independent resident GPU query/motion sweeps, rather than a penetration-reduced solver target. Disk queries and linear-disk CCD share the CPU analytic fraction kernel; other represented proxies use geometric distance with 1e-5 scene-unit convergence tolerance. The internal CPU cast explicitly selects this query policy while native solver callers retain their existing policy. Sharp zero-radius contact retains the preceding finite normal. CastMotion keeps eight refinements: analytic first touch must lie between safe/unsafe with maximum width 1/256. The rejected disk 10/12 case returned .87109375/.875; the rejected rectangle .4 case returned .421875/.42578125. Ten circle/segment query combinations against rectangle, capsule, segment, convex and concave targets now verify rounded and sharp boundaries; each runs 128 warm queries at strict 0/0 managed bytes. Bit equality across backends is not required.
+Built-in shape casts now target geometric boundaries in CPU conservative advancement and independent resident GPU query/motion sweeps, rather than a penetration-reduced solver target. Disk queries and linear-disk CCD share the CPU analytic fraction kernel; other represented proxies use geometric distance with 1e-5 scene-unit convergence tolerance. The internal CPU cast explicitly selects this query policy while native solver callers retain their existing policy. Sharp zero-radius contact retains the preceding finite normal. CastMotion keeps eight refinements: analytic first touch must lie between safe/unsafe with maximum adaptive width 3/512. The rejected disk 10/12 case returned .87109375/.875; the rejected rectangle .4 case returned .421875/.42578125. Ten circle/segment query combinations against rectangle, capsule, segment, convex and concave targets now verify rounded and sharp boundaries; each runs 128 warm queries at strict 0/0 managed bytes. Bit equality across backends is not required.
 
 The final 2026-10-13 verification on main at 55429120 plus this change passes all ten frozen profiles: registered, actual no-GPU CPU/registered, GPU, complete consumer, six native physics/renderer combinations, ordinary full suite and both separate-process network renderer paths. Source/build/runtime fingerprints remain unchanged through build and execution. Local evidence is retained in `bin/physics-compound/2026-10-13/final-geometric/` (outcomes, bindings, runtime manifest, allocation/native logs, pixels and network reports). Release/API/wiki, formatting and production identity checks pass separately. This is scoped query/compound acceptance; general independent polygon/piece numerics, foreign platforms and final massive-scene performance remain open.
 

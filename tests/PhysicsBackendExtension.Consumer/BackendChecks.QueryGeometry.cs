@@ -71,7 +71,7 @@ public static partial class BackendChecks
                         case 0: Check(selectedView.IntersectShape(query, hits) == 1 && hits[0].ColliderRID == target && hits[0].ShapeIndex == 0, "Span shape query retains exact logical identity"); break;
                         case 1: var array = selectedView.IntersectShape(query); Check(array.Length == 1 && array[0].ColliderRID == target, "Array shape query returns its real collider"); break;
                         // Eight binary refinements bracket the analytical circle contact at 0.2.
-                        case 2: var fractions = selectedView.CastMotion(query); if (fractions.SafeFraction > .200001f || fractions.UnsafeFraction < .199999f || fractions.UnsafeFraction - fractions.SafeFraction > 1f / 256 + .000001f) throw new InvalidOperationException($"Circle sweep route {route}: safe={fractions.SafeFraction}, unsafe={fractions.UnsafeFraction}"); break;
+                        case 2: var fractions = selectedView.CastMotion(query); if (fractions.SafeFraction > .200001f || fractions.UnsafeFraction < .199999f || fractions.UnsafeFraction - fractions.SafeFraction > 3f / 512 + .000001f) throw new InvalidOperationException($"Circle sweep route {route}: safe={fractions.SafeFraction}, unsafe={fractions.UnsafeFraction}"); break;
                         case 3: Check(selectedView.CollideShape(query, contacts) == 1, "Span query returns an actual contact pair"); break;
                         case 4: Check(selectedView.CollideShape(query).Length == 2, "Array query returns one actual contact pair"); break;
                         case 5: Check(selectedView.GetRestInfo(query)?.ColliderRID == target, "Rest query retains the actual collider"); break;

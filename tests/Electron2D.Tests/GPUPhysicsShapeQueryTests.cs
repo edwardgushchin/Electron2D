@@ -47,7 +47,7 @@ internal static class GPUPhysicsShapeQueryTests
                         var fractions = direct.CastMotion(parameters); count = Query(store, query with { Mode = Mode.Cast }, hits);
                         var safe = count == 0 ? 1 : hits[0].SafeFraction; var unsafeFraction = count == 0 ? 1 : hits[0].UnsafeFraction;
                         Check(MathF.Abs(safe - fractions.SafeFraction) < .025f && MathF.Abs(unsafeFraction - fractions.UnsafeFraction) < .025f, $"Cast {a}/{b}/{sample}: GPU={safe}/{unsafeFraction}, CPU={fractions}");
-                        if (count > 0) Check(safe >= 0 && unsafeFraction > safe && unsafeFraction - safe <= 1f / 256 + 1e-6f, "Eight-refinement bracket");
+                        if (count > 0) Check(safe >= 0 && unsafeFraction > safe && unsafeFraction - safe <= 3f / 512 + 1e-6f, "Eight-refinement bracket");
                         var contacts = direct.CollideShape(parameters); count = Query(store, query with { Mode = Mode.Contacts }, hits);
                         Check((count > 0) == (contacts.Length > 0), $"Contacts {a}/{b}/{sample}: GPU={count}, CPU={contacts.Length / 2}");
                         for (var i = 0; i < count; i++) Check(hits[i].QueryPoint.IsFinite() && hits[i].ColliderPoint.IsFinite() && MathF.Abs(hits[i].Normal.Length() - 1) < .001f, "Finite contact surface pair and unit normal");

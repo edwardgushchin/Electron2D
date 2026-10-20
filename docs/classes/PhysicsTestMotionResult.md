@@ -1,5 +1,9 @@
 # PhysicsTestMotionResult
 
+[Long circle sweeps and hollow query sources](../components/physics-queries.md#long-circle-sweeps-and-hollow-query-sources) preserve geometric hit truth, first entry and contact ownership across the exercised implementations.
+
+[Motion source selection and contact velocity](../components/physics-queries.md#motion-source-selection-and-contact-velocity) verifies the winning logical source, recovery-only selection and rotated mass-center velocity through scene/raw callers.
+
 Last updated: 2026-10-20
 
 [Retained slot history](../components/physics-snapshots.md#capture-after-topology-edits)
@@ -36,7 +40,7 @@ if (PhysicsServer.BodyTestMotion(bodyRID, parameters, result))
 | `public Vector2 GetColliderVelocity()` | Collider point velocity, scene units per second. |
 | `public float GetCollisionDepth()` | Contact penetration depth in scene units. |
 | `public Vector2 GetCollisionNormal()` / `GetCollisionPoint()` | Global outward normal and point on collider. |
-| `public float GetCollisionSafeFraction()` / `GetCollisionUnsafeFraction()` | First impact bracket from zero through one. |
+| `public float GetCollisionSafeFraction()` / `GetCollisionUnsafeFraction()` | First impact bracket from zero through one, with [adaptive endpoint refinement](../components/physics-queries.md#adaptive-sweep-refinement) and an accurate geometric unsafe sample where available. |
 | `public Vector2 GetTravel()` / `GetRemainder()` | Travel including recovery and untraveled requested motion. |
 
 ## Method descriptions

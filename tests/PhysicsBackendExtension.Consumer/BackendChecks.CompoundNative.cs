@@ -31,7 +31,7 @@ public static partial class BackendChecks
                         if (++frames < 2) return;
                         var cast = world.DirectSpaceState.CastMotion(query); var analytic = 11f / 18;
                         Check(cast.SafeFraction <= analytic + .00001f && cast.UnsafeFraction >= analytic - .00001f &&
-                            cast.UnsafeFraction - cast.SafeFraction <= 1f / 256 + .00001f,
+                            cast.UnsafeFraction - cast.SafeFraction <= 3f / 512 + .00001f,
                             "Native compound cast brackets geometric radii independently of rendering");
                         using var image = window.GetTexture().GetImage()!;
                         var scaleX = image.Width / (float)window.Size.X; var scaleY = image.Height / (float)window.Size.Y;

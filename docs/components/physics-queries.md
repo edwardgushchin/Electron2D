@@ -17,7 +17,7 @@ The [public-only query-geometry fixture](../../tests/PhysicsBackendExtension.Con
 exercises array/span shape overlap and contacts, motion fractions and rest queries
 through selected and caller-created views, both resource-pair operand orders and
 body-slot queries. Circle motion checks contain the analytical first-contact
-fraction 0.2 within a bracket no wider than 1/256, matching eight binary refinements
+fraction 0.2 within the adaptive eight-probe bracket no wider than 3/512
 (with 0.000001 float slack). Identity, errors and lifetime checks are exact.
 Warmed measurements include eleven query routes and a complete moving physics
 frame. Evidence and execution limits are recorded in
@@ -64,7 +64,7 @@ all four direct operations, including array/span overloads. Supplied-pose server
 body motion independently checks separated witnesses. Positive initial concave/
 boundary contacts prevent an implementation from dropping special resources.
 Identity and logical slots are exact; fraction slack is .0002 with an eight-step
-1/256 plus .000002 maximum bracket. Rest normals are unit within .001; circle
+3/512 plus .000002 maximum adaptive bracket. Rest normals are unit within .001; circle
 surface membership allows .02 scene units for float/native composition. Steady
 frames use span results and a real moving body; array-return allocation is cold.
 Evidence: bin/physics-special-space-motion/2026-10-20/.
@@ -277,7 +277,7 @@ The complete PhysicsMotionTests, PhysicsQueryTests and PhysicsShapeQueryTests no
 
 ## Compound geometric query verification
 
-Built-in shape casts now target geometric boundaries in CPU conservative advancement and independent resident GPU query/motion sweeps, rather than a penetration-reduced solver target. Disk queries and linear-disk CCD share the CPU analytic fraction kernel; other represented proxies use geometric distance with 1e-5 scene-unit convergence tolerance. The internal CPU cast explicitly selects this query policy while native solver callers retain their existing policy. Sharp zero-radius contact retains the preceding finite normal. CastMotion keeps eight refinements: analytic first touch must lie between safe/unsafe with maximum width 1/256. The rejected disk 10/12 case returned .87109375/.875; the rejected rectangle .4 case returned .421875/.42578125. Ten circle/segment query combinations against rectangle, capsule, segment, convex and concave targets now verify rounded and sharp boundaries; each runs 128 warm queries at strict 0/0 managed bytes. Bit equality across backends is not required.
+Built-in shape casts now target geometric boundaries in CPU conservative advancement and independent resident GPU query/motion sweeps, rather than a penetration-reduced solver target. Disk queries and linear-disk CCD share the CPU analytic fraction kernel; other represented proxies use geometric distance with 1e-5 scene-unit convergence tolerance. The internal CPU cast explicitly selects this query policy while native solver callers retain their existing policy. Sharp zero-radius contact retains the preceding finite normal. CastMotion keeps eight refinements: analytic first touch must lie between safe/unsafe with maximum adaptive width 3/512. The rejected disk 10/12 case returned .87109375/.875; the rejected rectangle .4 case returned .421875/.42578125. Ten circle/segment query combinations against rectangle, capsule, segment, convex and concave targets now verify rounded and sharp boundaries; each runs 128 warm queries at strict 0/0 managed bytes. Bit equality across backends is not required.
 
 See [the shared compound checks](physics-registered-adapter.md#compound-slot-numerics) for independent-provider and CPU/GPU response, identity, Area, CCD and zero warm allocation evidence.
 
@@ -441,3 +441,133 @@ live replacement checks retain logical indices and zero warmed frame allocations
 Contact geometry is sampled after the completed recovery at the unsafe motion pose, including the query margin. The deepest eligible final contact supplies point, normal, depth, logical identities and point velocity. When requested recovery is followed by an unobstructed departure with no final contact, the result clears collision data and retains full requested motion plus recovery. Safe travel and remainder still use the safe fraction. See [the public consumer and evidence](physics-registered-adapter.md#final-body-motion-contact-sampling).
 
 [Last-recovery one-way pair exclusions](physics-registered-adapter.md#last-recovery-one-way-pair-exclusions) retain up to 32 rejected source-resource/target-slot pairs for the remaining sweep and final sample. Accepted pieces prevent rejection of their logical pair; later queries start empty.
+
+## Adaptive sweep refinement
+
+Direct-space CastMotion and BodyTestMotion refine each candidate over its complete
+requested displacement. Eight probes start at the midpoint, accelerate toward zero
+after repeated hits or toward one after repeated misses, then bisect once both
+bounds are inside the interval. The general bound is 3/512 of the displacement;
+endpoint intervals narrow to 1/16384. Earlier uniform 1/256 statements did not
+describe this adaptive policy. Analytic ordinary and finite axial-ray arrival
+estimates remain inside the interval and supply a more accurate unsafe sample.
+This prevents final contact resampling from stepping beyond a thin target.
+
+A geometric cast also converges when its positive remaining time increment rounds
+back to the current float fraction. CPU and resident GPU queries preserve that
+finite first-touch estimate instead of exhausting an iteration budget or faulting.
+Solver CCD/contact padding is unchanged. Initial query overlap uses authored
+margin plus the existing .00001 scene-unit distance tolerance; a .01 positive gap
+must not be treated as overlap through the .05 solver contact slack.
+
+The public `--adaptive-motion` consumer checks ray/circle sources in both logical
+slot orders, with disabled slot zero and a second active source ten units behind.
+A .02-thick target is tested at .01, 100, 300 and 999.99 units of travel over a
+1000-unit request. It verifies actual hits, geometric arrival containment, tighter
+endpoint bounds, both source/target indices, normals, travel and scene ownership.
+Stationary IntersectShape, CollideShape and GetRestInfo controls reject the positive
+gap. Each measured bracket includes 512 fixed physics frames and 8192 public
+queries after 128 warm batches, requiring zero owner/all-thread managed bytes.
+The test uses margin .0001 and numeric fraction slack .000002 for float geometry;
+CPU/GPU/registered traversal identity and bit equality are not requirements.
+
+The final source-bound cohort passes 106 processes: 51 JIT, 51 strict NativeAOT
+and four root profiles. The twelve adaptive-motion profiles measure 6144 complete
+physics frames and 98304 public queries at strict 0/0 owner/all-thread managed
+bytes. Six DLL/PDB sets match 3488 authored C# inputs; 51 shader/recipe inputs and
+freshly compiled/validated motion and shape-query SPIR-V match four embedded
+payloads. Test runner payload hashes remain unchanged throughout each process.
+Evidence: `bin/physics-adaptive-motion/2026-10-20/validation.json`,
+`current-source-proof.json`, `shader-proof.json` and `adaptive-warm-proof.json`.
+
+The broader numerical extension, native allocation, hardware performance, other
+platforms and rendered-window acceptance remain separate open work.
+
+
+## Motion source selection and contact velocity
+
+Final body-motion contact sampling retains the logical source that won the new
+impact sweep. A deeper contact involving another source must not replace it.
+When only recovery produces a collision, every enabled logical source remains
+eligible for the deepest final sample. In particular, a concave source whose
+requested sweep is ignored against a finite target still participates in recovery.
+
+The public-only `--motion-selection` fixture places an ordinary disk and a hollow
+concave segment in both source-slot orders, after disabled slot zero. At the disk's
+first impact, the other source lies deep inside a separate circle. The result must
+retain the disk/floor pair; a zero-motion recovery control instead selects the
+concave source/circle pair. Scene TestMove also checks the actual local shape owner.
+
+The same cases use scene and raw peers in all four body modes, poses rotated by
+0/.37 radians, margins .02/.5 and a custom local mass center (2, -3). Collision-point
+velocity must equal linear velocity plus angular velocity crossed with the arm
+from the transformed mass center to the returned world contact. Static surface
+velocity and the zero-angular RigidLinear control use that same equation.
+
+Each measured profile warms 128 frames, then measures 128 full physics frames
+and 1024 public motion calls at strict zero owner/all-thread managed bytes.
+Registered profiles verify the actual numerical thread and measured step count.
+Logical source identity and scene ownership are exact; velocity permits .003 scene units per second and surface coordinates permit .003
+scene units, the normal dot must exceed .999, and safe
+travel permits .24 units for a 40-unit sweep (the adaptive 3/512 bound is .234375).
+These checks exercise the existing implementation; they do not add public API or
+close arbitrary custom-geometry, native/platform, network or hardware acceptance.
+
+The final cohort passes 64 processes: 30 JIT, 30 strict NativeAOT and four root
+profiles. Twelve source-selection profiles measure 1536 full frames and 12288
+motion calls at 0/0 managed bytes. Six DLL/PDB sets match 3489 authored C# inputs;
+51 shader/recipe inputs and fresh motion/shape SPIR-V match four embedded payloads.
+Evidence: `bin/physics-motion-selection/2026-10-20/validation.json`,
+`motion-selection-warm-proof.json`, `current-source-proof.json` and
+`shader-proof.json`. Production algorithms and API declaration states are unchanged.
+
+
+## Long circle sweeps and hollow query sources
+
+Resident GPU circle sweeps resolve motion-axis projection and perpendicular
+clearance, avoiding subtraction of large quadratic terms. Two unit circles with
+centers 9999 units apart and displacement 29997 must collide near fraction
+.33326665; the former float discriminant returned a miss. A separated lateral
+2.125 control over a 20000-unit sweep must remain a miss. The shared query kernel
+serves direct shape sweeps, body motion and directed point-to-circle tests without
+adding device buffers, transfers or waits.
+
+The independent numerical provider uses its existing double-precision circular
+root for body motion as well as direct queries. The admissible center-distance
+interval for round/hollow pairs is
+`[max(0, first.Inner - second.Outer, second.Inner - first.Outer), first.Outer + second.Outer]`.
+Both operands' holes participate. Previously a hollow query source could report a
+stationary collision with a circle freely inside its hole. Shared pair geometry
+now supplies the correct inner/outer contact surfaces and target rest normal.
+This extends the registered annulus/circle provider; opaque Custom geometry retains
+its existing built-in attachment rejection under ADR 0103.
+
+The public `--long-disk-motion` consumer covers builtin/procedural circle sources,
+multiple active source slots after a disabled gap, scene/raw peers and callers,
+both travel directions, two rigid poses, long offset hits, tangency and clear
+misses. A directed-ray control exercises point-to-circle entry. Each measured
+profile runs 128 complete frames and 640 public calls after 128 warm frames at
+strict 0/0 owner/all-thread managed bytes. Analytic fraction slack is .000002 and
+the adaptive bracket bound remains 3/512; surface coordinates allow .01 scene
+units for large-world float/solver conversion, unit normals .001 and outward dot
+above .995. A moving body and registered thread/step counters verify actual solves.
+
+The registered-only `--custom-motion` consumer reverses annulus/circle query and
+target roles, with both travel directions, empty-hole stationary/short controls,
+inner/outer entry and initial-overlap cast exclusion. Contact pairs retain each
+operand's actual surface, target RID/slot and outward normal. Raw/scene body motion
+retains its separate recovery contract. Each measured profile runs 128 complete
+frames and 821 calls at 0/0 managed bytes after 128 warm frames; surface slack is
+.0001, fraction slack .000002 and normal dot above .999.
+
+Wider opaque formats, coupled geometry, native allocations, network/platform,
+rendered-window and hardware performance acceptance remain open.
+
+The final cohort passes 112 processes: 54 JIT, 54 strict NativeAOT and four root
+profiles. Sixteen new profiles measure 2048 complete frames and 10964 public calls
+at 0/0 managed bytes. Six DLL/PDB sets match 3491 authored C# inputs; 51 shader/recipe
+inputs and fresh motion/shape SPIR-V match four embedded payloads. Before-fix GPU
+miss, registered advancement exhaustion and false hollow-source overlap are retained
+in `bin/physics-long-disk-motion/2026-10-20/regression-proof.json`.
+Final evidence: `validation.json`, `warm-proof.json`, `current-source-proof.json`
+and `shader-proof.json` in the same directory. API declaration states are unchanged.

@@ -34,7 +34,7 @@ public static partial class BackendChecks
         query.Transform = new(0, new Vector2(100, 40)); query.Motion = new(0, -12);
         var cast = world.DirectSpaceState.CastMotion(query);
         Check(cast.SafeFraction <= 10f / 12 + .00001f && cast.UnsafeFraction >= 10f / 12 - .00001f &&
-            cast.UnsafeFraction - cast.SafeFraction <= 1f / 256 + .00001f && MathF.Abs(cast.UnsafeFraction - 10f / 12) <= 1f / 256 + .00001f, $"Shape cast selects the nearest compound feature: {cast.SafeFraction}/{cast.UnsafeFraction}");
+            cast.UnsafeFraction - cast.SafeFraction <= 3f / 512 + .00001f && MathF.Abs(cast.UnsafeFraction - 10f / 12) <= 1f / 256 + .00001f, $"Shape cast selects the nearest compound feature: {cast.SafeFraction}/{cast.UnsafeFraction}");
         query.Motion = Vector2.Zero;
         if (backend is not null) GeneralCasts(world, root);
         CompoundResponse(world, tree, root, backend, solver);
