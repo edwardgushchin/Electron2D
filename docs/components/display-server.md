@@ -1,6 +1,6 @@
 # Display server component
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 ## Scope
 
@@ -144,3 +144,11 @@ The native role is fixed-size and borderless, cannot minimize/maximize/fullscree
 Transparent native PopupPanel/PopupMenu output executes through the compatibility backend. SDL 3.4.18's GPU API rejects transparent windows; GPU native menus require explicit `Transparent=false` before showing. The unsupported request releases its attempted native lifetime and preserves hidden state. Embedded transparent popups continue to execute on both renderers. Native titled-popup variants without the popup role, live embedding migration, foreign-platform acceptance and native system-menu service retain their exact coverage prerequisites.
 
 `NativePopupWindowTests` uses `ELECTRON2D_TEST_NATIVE_POPUPS=gpu` or `compatibility` with the Release runner. It exercises native nested parenting, IDs, outside dismissal, owner-safe rectangles, no-focus and exclusive policies, forced retirement, callback failure, real menu/option/panel/context output, and fresh-process public scene loading. Active focus/render and idle/render measurements cover 64 owner-thread intervals after 32 warmup intervals. SDL event construction, cold model edits/readback, native allocator counts, compositor screenshot acceptance, physical input and other platforms are outside the measured interval.
+
+## Native relationship control
+
+[WindowGetAttachedInstanceID, WindowSetTransient and WindowSetExclusive](../classes/DisplayServer.md#native-window-relationships) connect the public service to the existing per-window SDL parent and modal owner. They resolve live IDs on the opening thread, retain pending exclusive requests without a parent, reject cycles across ordinary and popup parent links, and restore parent/modality after native failure. Both failures remain visible if rollback also fails. A live popup's physical parent cannot be changed. Ordinary windows request native modality; fixed popup roles share the existing exclusive input and outside-dismissal path because SDL rejects changing their modal flag. The native parent graph suppresses parent scene input before WindowInput without rewriting stored Window.Exclusive. Committed text and nonempty IME composition follow the same gate; empty composition updates still clear stale state. Fullscreen and transient parenting are mutually exclusive.
+
+Runtime requests leave stored scene Window policies and ancestry intact. A subsequent scene relationship update reapplies those policies. Native parent retirement detaches surviving ordinary windows, including a main window made transient through the service; popup descendants keep their existing owned retirement. Native frame submission and retiring contexts reject mutation. The attached-instance query returns the actual scene InstanceID or zero for a lower-level host. Native IDs expire independently of that scene identity.
+
+`DisplayServerRelationsTests` exercises the three public methods through dummy/Wayland/X11 owner and lifetime checks, native parent/modal readback, pending exclusivity, cycle/fullscreen rejection, native rollback and combined observer/detachment failures. Its four Linux software renderer profiles verify real child pixels, runtime key/text/IME suppression, scene-policy restoration, native recreation and 64 prepared owner intervals at zero managed bytes. The native-window, popup and text-delivery regressions exercise the connected consumers. Popup lifecycle setup waits for Wayland's asynchronous keyboard-focus acknowledgement before nesting or closing a grab; a fixed number of rendered frames does not establish that acknowledgement. Native allocator counts, physical focus/input, foreign platforms and final owner acceptance remain separate.

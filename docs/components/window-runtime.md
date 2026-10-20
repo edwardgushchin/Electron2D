@@ -1,6 +1,6 @@
 # Window runtime component
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -147,3 +147,5 @@ The native role is fixed-size and borderless, cannot minimize/maximize/fullscree
 Transparent native PopupPanel/PopupMenu output executes through the compatibility backend. SDL 3.4.18's GPU API rejects transparent windows; GPU native menus require explicit `Transparent=false` before showing. The unsupported request releases its attempted native lifetime and preserves hidden state. Embedded transparent popups continue to execute on both renderers. Native titled-popup variants without the popup role, live embedding migration, foreign-platform acceptance and native system-menu service retain their exact coverage prerequisites.
 
 `NativePopupWindowTests` uses `ELECTRON2D_TEST_NATIVE_POPUPS=gpu` or `compatibility` with the Release runner. It exercises native nested parenting, IDs, outside dismissal, owner-safe rectangles, no-focus and exclusive policies, forced retirement, callback failure, real menu/option/panel/context output, and fresh-process public scene loading. Active focus/render and idle/render measurements cover 64 owner-thread intervals after 32 warmup intervals. SDL event construction, cold model edits/readback, native allocator counts, compositor screenshot acceptance, physical input and other platforms are outside the measured interval.
+
+The [public native relationship operations](../classes/DisplayServer.md#native-window-relationships) expose transient parenting, native modality and attached scene instance identity. They edit runtime native state without rewriting stored scene policies or scene ancestry; later scene relationship updates reapply those policies. Native parent retirement detaches surviving ordinary windows and retires owned popup descendants. Native and scene identities remain separate across hide/show recreation. Runtime exclusive native children suppress parent scene keys, committed text and nonempty IME composition; empty composition updates remain usable for cleanup. Fixed popup roles share the existing input policy because their SDL native modal flag cannot change.

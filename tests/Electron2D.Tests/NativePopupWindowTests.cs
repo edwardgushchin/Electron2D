@@ -16,7 +16,7 @@ internal static partial class NativePopupWindowTests
         var forcedCloseSignals = 0; nested.CloseRequested += () => forcedCloseSignals++;
         var firstOpening = true;
         popup.AboutToPopup += () => { if (firstOpening) { firstOpening = false; popup.Position = new(900, 900); } };
-        var frames = 0; var oldID = -1; var hides = 0; popup.PopupHide += () => hides++;
+        var focusWait = 0; var frames = 0; var oldID = -1; var hides = 0; popup.PopupHide += () => hides++;
         try
         {
             root.Ready += _ =>
@@ -24,6 +24,18 @@ internal static partial class NativePopupWindowTests
                 popup.PopupOnParent(new(12, 16, 96, 64));
                 RenderingServer.FramePostDraw += () =>
                 {
+                    // Wayland acknowledges popup grabs asynchronously; nest or close only after that setup completes.
+                    if (SDL.GetCurrentVideoDriver() == "wayland" && frames is 0 or 1)
+                    {
+                        var awaiting = frames == 0 ? popup : nested;
+                        Check(awaiting.Visible, "The compositor dismissed a popup before its setup completed.");
+                        if (SDL.GetKeyboardFocus() != Native(awaiting))
+                        {
+                            if (++focusWait > 240) throw new TimeoutException("The compositor did not grant popup keyboard focus.");
+                            return;
+                        }
+                    }
+                    focusWait = 0;
                     frames++;
                     if (frames == 1)
                     {
@@ -41,7 +53,7 @@ internal static partial class NativePopupWindowTests
                     }
                     else if (frames == 3)
                     {
-                        Check(!nested.Visible && nested.GetWindowID() == -1 && popup.Visible && forcedCloseSignals == 0, "Native popup-done force-hides its lifetime without a user close request.");
+                        Check(!nested.Visible && nested.GetWindowID() == -1 && popup.Visible && forcedCloseSignals == 0, $"Native popup-done force-hides its lifetime without a user close request: nested={nested.Visible}/{nested.GetWindowID()}, parent={popup.Visible}/{popup.GetWindowID()}, closeRequests={forcedCloseSignals}.");
                         popup.Hide(); Check(hides == 1, "PopupHide follows native retirement."); popup.PopupOnParent(new(12, 16, 96, 64));
                     }
                     else if (frames == 4)

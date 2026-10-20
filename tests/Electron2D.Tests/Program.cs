@@ -9,6 +9,7 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_RELATIONS") is { } windowRelations) { try { if (windowRelations == "display") DisplayServerRelationsTests.Display(); else DisplayServerRelationsTests.RunNative(windowRelations); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_POPUP_SCENE") is { } nativePopupScene) { try { NativePopupWindowTests.RunScene(nativePopupScene, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_POPUPS")!); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_POPUPS") is { } nativePopupBackend) { try { NativePopupWindowTests.Run(nativePopupBackend); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_TEXT") == "managed") { try { ViewportTextInputTests.RunManaged(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }

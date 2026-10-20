@@ -366,6 +366,8 @@ public sealed partial class DisplayServer
             if (mode != WindowMode.Windowed) throw new NotSupportedException("Native popup surfaces cannot change top-level presentation mode.");
             return;
         }
+        if (_transientDisplay is not null && mode is WindowMode.Fullscreen or WindowMode.ExclusiveFullscreen)
+            throw new InvalidOperationException("A transient window cannot enter fullscreen.");
         var window = GetWindow(windowId);
         var success = mode switch
         {

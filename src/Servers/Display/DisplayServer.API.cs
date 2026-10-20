@@ -457,7 +457,7 @@ public sealed partial class DisplayServer
     /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <remarks>On Wayland, exclusive fullscreen uses the compositor's ordinary fullscreen request and is observed as <see cref="WindowMode.Fullscreen"/> if accepted. Wayland has no reliable programmatic restoration from a minimized state; the minimized flag can remain set until the window regains focus. Elsewhere exclusive mode chooses the closest native mode to the current logical window size. Mode transitions may complete asynchronously; call <see cref="WindowGetMode"/> for the reported state.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="mode"/> is unknown.</exception>
-    /// <exception cref="InvalidOperationException">No suitable exclusive mode exists or the native window manager rejects a transition.</exception>
+    /// <exception cref="InvalidOperationException">A transient window requests fullscreen, no suitable exclusive mode exists, or the native window manager rejects a transition.</exception>
     /// <exception cref="AggregateException">A fullscreen transition and restoration of the previous mode both fail.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void WindowSetMode(WindowMode mode, int windowId = MainWindowId) => RequireService().WindowSetModeCore(mode, windowId);

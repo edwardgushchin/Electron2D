@@ -25,6 +25,7 @@ public sealed partial class SceneTree
 
     private static bool NativeInputBlockedByExclusive(Window source)
     {
+        if (source.NativeDisplay?.HasExclusiveNativeChild() == true) return true;
         var target = source.GetLastExclusiveWindow();
         while (target?.Embedder is { } host) target = host.GetWindow();
         return target is not null && !ReferenceEquals(target.NativeDisplay, source.NativeDisplay);
@@ -48,12 +49,12 @@ public sealed partial class SceneTree
         }
         if (input is InputEventMouseButton { Pressed: true } or InputEventScreenTouch { Pressed: true })
         {
-            if (popup.Exclusive) return sameRoot ? null : input;
+            if (popupDisplay.TransientExclusive) return sameRoot ? null : input;
             for (var i = _nativePopups.Count - 1; i >= 0; i--)
             {
                 var candidate = _nativePopups[i];
                 if (candidate.IsDisposed || !candidate.Visible) continue;
-                if (candidate == source || candidate.Exclusive) break;
+                if (candidate == source || (candidate.NativeDisplay?.TransientExclusive ?? candidate.Exclusive)) break;
                 candidate.RequestEmbeddedClose();
             }
             return sourceDisplay.IsNativePopup ? input : null;

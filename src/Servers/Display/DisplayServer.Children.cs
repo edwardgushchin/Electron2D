@@ -12,6 +12,7 @@ public sealed partial class DisplayServer
     private bool? _applicationFocused;
     private DisplayServer? _transientDisplay;
     private bool _nativeModal;
+    private bool _transientExclusive;
     internal int WindowID { get; }
     internal Window? SceneWindow;
     internal bool HasEventContext => (_rootDisplay ?? this)._eventInputWindow is not null;
@@ -20,11 +21,20 @@ public sealed partial class DisplayServer
     internal void SetTransientParent(DisplayServer? parent, bool modal)
     {
         EnsureOwner();
-        if (ReferenceEquals(parent, this)) throw new ArgumentException("A native window cannot parent itself.", nameof(parent));
+        if (parent is not null)
+        {
+            parent.EnsureOwner();
+            if ((SDL.GetWindowFlags(_window.DangerousGetHandle()) & SDL.WindowFlags.Fullscreen) != 0)
+                throw new InvalidOperationException("Leave fullscreen before assigning a transient parent.");
+            if (!ReferenceEquals(_rootDisplay ?? this, parent._rootDisplay ?? parent)) throw new ArgumentException("Native parents must belong to the same display session.", nameof(parent));
+            for (var ancestor = parent; ancestor is not null; ancestor = ancestor.NativePopupParent ?? ancestor._transientDisplay)
+                if (ReferenceEquals(ancestor, this)) throw new ArgumentException("Native transient parents cannot form a cycle.", nameof(parent));
+        }
+        var exclusive = modal;
         modal &= parent is not null;
-        if (ReferenceEquals(parent, _transientDisplay) && modal == _nativeModal) return;
+        if (ReferenceEquals(parent, _transientDisplay) && modal == _nativeModal) { _transientExclusive = exclusive; return; }
         var previous = _transientDisplay; var previousModal = _nativeModal;
-        try { ApplyTransientParent(parent, modal); }
+        try { ApplyTransientParent(parent, modal); _transientExclusive = exclusive; }
         catch (Exception error)
         {
             try { ApplyTransientParent(previous, previousModal); }
@@ -81,8 +91,15 @@ public sealed partial class DisplayServer
         {
             foreach (var child in (_rootDisplay ?? this)._childWindows.Values)
                 if (child.NativePopupParent is null && ReferenceEquals(child._transientDisplay, this)) child.SetTransientParent(null, false);
+            var root = _rootDisplay ?? this;
+            if (ReferenceEquals(root._transientDisplay, this)) root.SetTransientParent(null, false);
         }
-        catch { _retiringNativeWindow = false; throw; }
+        catch (Exception error)
+        {
+            _retiringNativeWindow = false;
+            if (failure is not null) throw new AggregateException(failure, error);
+            throw;
+        }
         return failure;
     }
 

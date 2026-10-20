@@ -446,6 +446,21 @@
       "godot": "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_FORCE_CLOSE",
       "electron2d": "event:Electron2D.Window.VisibilityChanged()",
       "reason": "ADRs 0038/0040/0095: real parent-relative native popup lifetimes, opening-order queries and global safe rectangles; control anchors use actual root-client areas. Native popup-done force-hides before Window.VisibilityChanged/PopupHide and does not emit a user CloseRequested. NativePopupWindowTests covers real GPU/compatibility output, nested retirement, outside/safe input, owner/ID guards and callback failure on Linux Wayland/X11 software backends. Wayland global safe areas reject explicitly; physical compositor and other-platform acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.DisplayServer.WindowGetAttachedInstanceID(System.Int32)",
+      "godot": "DisplayServer::method:window_get_attached_instance_id(int:)",
+      "reason": "ADRs 0038/0040/0095: public native relationship control uses existing per-window owners, actual SDL parent/modal requests and typed scene instance identities. Pending exclusivity, complete cycle checks, fullscreen restrictions, native rollback/dual failure, fixed-popup input and ordinary/popup retirement execute. Runtime edits preserve stored scene policies; existing independent ordinary-window lifetimes are retained. DisplayServerRelationsTests verifies dummy/native contracts and Linux Wayland/X11 software GPU/compatibility pixels, key/text/IME suppression and 64 prepared owner intervals. Native allocator, foreign-platform, physical focus and owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.DisplayServer.WindowSetExclusive(System.Int32,System.Boolean)",
+      "godot": "DisplayServer::method:window_set_exclusive(int:,bool:)",
+      "reason": "ADRs 0038/0040/0095: public native relationship control uses existing per-window owners, actual SDL parent/modal requests and typed scene instance identities. Pending exclusivity, complete cycle checks, fullscreen restrictions, native rollback/dual failure, fixed-popup input and ordinary/popup retirement execute. Runtime edits preserve stored scene policies; existing independent ordinary-window lifetimes are retained. DisplayServerRelationsTests verifies dummy/native contracts and Linux Wayland/X11 software GPU/compatibility pixels, key/text/IME suppression and 64 prepared owner intervals. Native allocator, foreign-platform, physical focus and owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.DisplayServer.WindowSetTransient(System.Int32,System.Int32)",
+      "godot": "DisplayServer::method:window_set_transient(int:,int:)",
+      "reason": "ADRs 0038/0040/0095: public native relationship control uses existing per-window owners, actual SDL parent/modal requests and typed scene instance identities. Pending exclusivity, complete cycle checks, fullscreen restrictions, native rollback/dual failure, fixed-popup input and ordinary/popup retirement execute. Runtime edits preserve stored scene policies; existing independent ordinary-window lifetimes are retained. DisplayServerRelationsTests verifies dummy/native contracts and Linux Wayland/X11 software GPU/compatibility pixels, key/text/IME suppression and 64 prepared owner intervals. Native allocator, foreign-platform, physical focus and owner acceptance remain separate."
     }
   ],
   "extras": [
@@ -1514,8 +1529,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "Independent native Window ownership, scene identity and native transient/modal operations now exist. Exact remaining work: typed public static DisplayServer projection for this operation, including invalid/retired IDs, root/child policy, runtime-versus-scene override ownership and callback/native-failure tests. The internal Window consumer does not supply the absent public service operation.",
+      "state": "Implemented",
+      "reason": "ADRs 0038/0040/0095: public native relationship control uses existing per-window owners, actual SDL parent/modal requests and typed scene instance identities. Pending exclusivity, complete cycle checks, fullscreen restrictions, native rollback/dual failure, fixed-popup input and ordinary/popup retirement execute. Runtime edits preserve stored scene policies; existing independent ordinary-window lifetimes are retained. DisplayServerRelationsTests verifies dummy/native contracts and Linux Wayland/X11 software GPU/compatibility pixels, key/text/IME suppression and 64 prepared owner intervals. Native allocator, foreign-platform, physical focus and owner acceptance remain separate.",
       "godot": [
         "DisplayServer::method:window_get_attached_instance_id(int:)",
         "DisplayServer::method:window_set_exclusive(int:,bool:)",

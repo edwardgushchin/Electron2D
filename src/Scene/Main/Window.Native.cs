@@ -11,7 +11,7 @@ public partial class Window
     /// <remarks>Native changes may be asynchronous or denied by the window manager. Wayland exclusive fullscreen
     /// becomes ordinary fullscreen; restoring from Wayland minimization is not guaranteed.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The mode is undefined.</exception>
-    /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
+    /// <exception cref="InvalidOperationException">The caller is not the owner, a transient window requests fullscreen, or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public WindowMode Mode
     {

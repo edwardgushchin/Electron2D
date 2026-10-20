@@ -1,6 +1,6 @@
 # DisplayServer
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -1399,3 +1399,17 @@ Requires a live ID. Runtime controls retain a parent-client safe area and resolv
 Requires a live ID and nonnegative size; missing/retired IDs or negative dimensions throw `ArgumentOutOfRangeException`. Presses in a nonempty safe rectangle pass to their owner without closing the popup. Wayland nonempty global requests throw `NotSupportedException`; empty areas remain valid. Controls use real parent-client anchors without exposing fictitious global positions. These three methods throw `InvalidOperationException` without a display or off-owner.
 
 Native popup-done retires its scene window before visibility observers and does not emit the ordinary close-request event. Native role, alpha, geometry and renderer limits are documented in [popup windows](../components/popup-windows.md#native-popup-presentation).
+
+## Native window relationships
+
+| Method | Behavior |
+| --- | --- |
+| `public static ulong WindowGetAttachedInstanceID(int windowID = MainWindowId)` | InstanceID of the attached scene Window, or zero for a lower-level host without a scene owner. |
+| `public static void WindowSetTransient(int windowID, int parentWindowID)` | Sets the actual native parent; `InvalidWindowId` clears it. |
+| `public static void WindowSetExclusive(int windowID, bool exclusive)` | Requests native modality or popup exclusive input; an unparented request applies when a parent is assigned. |
+
+These methods require the active display owner thread and live native IDs. Missing or retired IDs throw `ArgumentOutOfRangeException`; an inactive service or off-owner call throws `InvalidOperationException`. Attached scene identity survives native hide/show recreation, whose native ID changes. Embedded windows have no native display ID.
+
+Relationship setters affect runtime native state. They preserve stored `Window.Transient`, `Window.Exclusive` and scene ancestry; the next scene relationship update may reapply those policies. Repeated requests for the current state do not repeat native parent/modal requests. Self-parenting and longer cycles throw `ArgumentException` before publication. A live native popup has a fixed physical parent: a request to detach or reparent it throws `InvalidOperationException`. Popup exclusivity uses the existing input and outside-dismissal path under that fixed parent: SDL popup roles cannot change their native modal flag. Parent scene input is suppressed before WindowInput while an exclusive native child is visible; stored scene exclusivity can impose its own restrictions.
+
+Requests reject native frame submission and retiring windows. Native failure attempts to restore the previous parent and modality; failure of both the operation and rollback throws `AggregateException`, retaining both errors. A transient window cannot enter either fullscreen mode; leave fullscreen before assigning a transient parent. Native requests can complete asynchronously and the platform window manager controls actual focus and input. Retiring a parent detaches surviving ordinary windows, including the main window; owned popup descendants retire before their native parent under the existing [window lifetime contract](../components/window-runtime.md#independent-native-windows).

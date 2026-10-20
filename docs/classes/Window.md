@@ -1,6 +1,6 @@
 # Window
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 **Inherits:** [Viewport](Viewport.md)
 
@@ -26,7 +26,7 @@ detached windows return null. Nested offscreen viewports preserve the containing
 window through active viewport parents. See [active viewport ownership](../components/scene-hierarchy.md#active-viewport-ownership)
 for lifecycle, borrowed-reference and processing-scope rules.
 
-`SetIMEActive(true)` enables native committed-text and preedit events for this root window. During Engine.Run, Window forwards those already-committed DisplayServer updates into its SceneTree: the currently focused, visible and processing Control receives a whole committed string or typed preedit, while every live node receives `NotificationOsImeUpdate` for a composition change. A derived text control activates/deactivates native input with its focus lifecycle and manages its own caret and preedit state. This bridge does not fabricate `InputEventKey.Unicode` or support nested/cross-window text routing.
+`SetIMEActive(true)` enables native committed-text and preedit events for this root window. During Engine.Run, Window forwards those already-committed DisplayServer updates into its SceneTree: the currently focused, visible and processing Control receives a whole committed string or typed preedit, while every live node receives `NotificationOsImeUpdate` for a composition change. A derived text control activates/deactivates native input with its focus lifecycle and manages its own caret and preedit state. Each native window resolves its own focused or embedded text receiver. Exclusive native children suppress parent committed text and nonempty preedit; empty composition updates still clear stale state. This bridge does not fabricate `InputEventKey.Unicode`.
 
 ## Examples
 

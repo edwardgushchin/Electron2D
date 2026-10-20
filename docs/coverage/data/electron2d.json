@@ -92857,6 +92857,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.WindowGetAttachedInstanceID(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetAttachedInstanceID",
+    "signature": "public static System.UInt64 WindowGetAttachedInstanceID(System.Int32 windowID = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowID",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.WindowGetCurrentScreen(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
@@ -93195,6 +93214,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.WindowSetExclusive(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetExclusive",
+    "signature": "public static System.Void WindowSetExclusive(System.Int32 windowID, System.Boolean exclusive)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "exclusive",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.WindowSetFlag(Electron2D.WindowFlag,System.Boolean,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
@@ -93506,6 +93549,30 @@
         "name": "windowId",
         "type": "System.Int32",
         "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetTransient(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetTransient",
+    "signature": "public static System.Void WindowSetTransient(System.Int32 windowID, System.Int32 parentWindowID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "parentWindowID",
+        "type": "System.Int32",
+        "default": null
       }
     ],
     "returnType": "System.Void",

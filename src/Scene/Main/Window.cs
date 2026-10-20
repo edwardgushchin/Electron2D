@@ -477,8 +477,10 @@ public partial class Window : Viewport
                 try { handler(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Window signal callbacks failed.", errors);
     }
-    private void HandleTextInput(string text) => Tree?.DispatchCommittedText(Tree.GetEmbeddedTextWindow(this), text);
-    private void HandleTextEditing(string text, Vector2i selection) => Tree?.DispatchIMEComposition(Tree.GetEmbeddedTextWindow(this), text, selection);
+    private void HandleTextInput(string text)
+    { if (_display?.HasExclusiveNativeChild() != true) Tree?.DispatchCommittedText(Tree.GetEmbeddedTextWindow(this), text); }
+    private void HandleTextEditing(string text, Vector2i selection)
+    { if (text.Length == 0 || _display?.HasExclusiveNativeChild() != true) Tree?.DispatchIMEComposition(Tree.GetEmbeddedTextWindow(this), text, selection); }
     private void HandleFilesDropped(IReadOnlyList<string> paths) => BeginEventEmission(FilesDropped)?.Invoke(paths);
 
     private void CommitSize(Vector2i size)
