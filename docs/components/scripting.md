@@ -1,6 +1,6 @@
 # Compiled C# source assets
 
-Last updated: 2026-10-18
+Last updated: 2026-10-20
 
 [Script](../classes/Script.md) describes a compiled project Node or Resource and its source/type/schema association under [ADR 0091](../decisions/scripting.md#adr-0091). C# callbacks execute directly on the constructed project class. Source text and shared resource metadata remain separate from the state of a player or effect instance.
 
@@ -37,3 +37,41 @@ The source association uses the public [portable PDB format](https://github.com/
 Native Linux Wayland GPU and compatibility hosts execute the loaded compiled Node and Script-created effect. Actual cyan glyph pixels and lifecycle teardown pass; 64 prepared effect/render intervals measure zero managed bytes on both backends. Visually inspected `/tmp/e2d-script-gpu.png` and `/tmp/e2d-script-compat.png` share SHA-256 `ed365da186da51f7b124fde891fb541d51b467c905d7d071288dba1e07662cc1`. Native allocator counts, foreign source/symbol linkage, physical input and owner acceptance are unverified. Changed-source mismatch preserves cached compiled assets; a deliberately invalid independent C# project reports compiler failure without replacing loaded classes. Constructor-role mismatch cleanup and ready activation rollback are exercised.
 
 Source registration explicitly requires a file-backed assembly, matching portable PDB and complete untrimmed project declarations through RequiresAssemblyFiles and RequiresUnreferencedCode. It captures project method/event/literal-field metadata once after validating source association; queries return independent snapshots. This preserves private and inherited declarations and does not claim source registration for embedded NativeAOT assemblies. Static ResourceFileTypes scene factories remain independent of this source/PDB workflow.
+
+## Factory result ownership
+
+Both Script.New overloads require the returned object to be constructed during
+that synchronous invocation, matching the existing Resource duplication and
+scene-construction freshness boundary. A pre-existing result rejects before
+property/schema callbacks or cleanup, regardless of exact or incorrect CLR type.
+The shared registered file factory applies the same rule before its issued-object
+tracking or decode. This prevents a failed script constructor from disposing an
+active body, shape, material, world or borrowed effect, and prevents archive decode
+from acquiring a previously created resource. A rejected result does not poison
+later fresh construction.
+
+A newly returned invalid object remains the operation's cleanup target. If its
+validation and cleanup both fail, AggregateException retains both causes; a lone
+constructor/schema failure preserves the original exception. Valid constructors
+with arguments and registered Node/Resource factories retain their existing
+behavior. Construction and metadata validation are cold allocating work.
+
+The public API consumer PhysicsScriptFactoryTests exercises existing exact/wrong
+objects, registered/argument constructors, real RichTextLabel effect adoption,
+resource-file decode/retry and schema/cleanup failures. CPU without GPU,
+software-Vulkan GPU and registered worlds run owner/separate modes. After cold
+controls and 128 warmup frames, 128 measured complete physics/process/query frames
+require zero owner/all-thread managed bytes while the preserved compiled actor
+and physical body keep executing. Original ScriptTests additionally checks source,
+metadata, argument construction and fresh-process scene reconstruction.
+
+This positive source-asset construction profile requires the existing file-backed
+CLR assembly, matching portable PDB and untrimmed metadata contract. NativeAOT
+companion resource/scene checks exercise the ordinary registered file-factory
+boundary and unbound Script graphs; they do not establish NativeAOT source
+registration or positive Script.New construction. Live owner binding, Reload,
+full Node.Duplicate and final native/hardware/network acceptance remain open.
+
+The related World copy regression also asserts the current single-error retirement
+contract: an isolated selected Finish failure remains its original exception while
+the accepted new runtime stays committed. Paired failures retain aggregation.

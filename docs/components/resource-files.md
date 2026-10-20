@@ -1,6 +1,6 @@
 # Typed resource and scene files
 
-Last updated: 2026-10-17
+Last updated: 2026-10-20
 
 ## Executable mesh skin integration
 
@@ -163,3 +163,5 @@ Version 5 introduced linked scene headers; the current writer uses version 6 as 
 [Deferred scenes](deferred-scenes.md) adds a late path after the version-5 linked header and a second typed field table after ordinary node properties. Deferred roots and skipped inherited records use this self-describing table without running a node prototype. It retains ordered scalar payloads with explicit encoding endianness, resource edges, resource arrays and node paths. Ordinary nodes write an empty second table. Readers retain versions 1–5, including UID and class discovery. Deferred paths are lookup strings and are not eager dependencies or bundled templates.
 
 Internal leases retain pending file graphs across parent disposal and retain automatically loaded scene wrappers across instances, captures and exported SceneState views. Existing caller-owned cache entries stay borrowed; the weak cache does not own the template. File scene changes and reload use the same bounded lifetime transition.
+
+[Factory result ownership](scripting.md#factory-result-ownership) now rejects a pre-existing registered Node/Resource result before issued tracking or decoding. Borrowed targets remain live; fresh default construction and failure cleanup keep their existing contracts.

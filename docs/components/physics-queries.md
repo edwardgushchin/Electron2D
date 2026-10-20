@@ -597,3 +597,39 @@ poses under ADR 0069; their common guards execute before custom algorithms. Igno
 scale in the annulus resource algorithm therefore does not bypass a supported
 transform. Arbitrary custom numerical acceptance, native allocations, foreign
 platforms, target hardware advantage and real-window FPS remain open.
+
+## Long capsule and segment sweeps
+
+The independent public numerical provider now terminates conservative advancement
+when a positive time increment rounds back to the current float fraction. This
+matches the existing CPU/resident convergence rule in ADR 0063. Previously a
+long oblique rounded-contour sweep could repeat the same pose until its 256-step
+budget threw. The numerical target, distance tolerance and iteration budget are
+unchanged; this does not replace either production backend or add a CPU mirror.
+
+The public-only `--long-capsule-motion` profile exercises capsule/circle and
+segment/circle in both orders, four unit-basis poses, both travel signs, scene/raw
+targets and callers, disabled logical-slot gaps, side/cap impacts, lateral misses,
+short motion and targets behind the source. The 512 configurations use distances
+9999/30000 and motions up to 63000 scene units. An independent double-precision
+oracle intersects the exact float trajectory with the inflated segment strip and
+two endpoint disks; it does not call a selected solver or compare backend hashes.
+
+Every warmed/measured configuration runs direct CastMotion and IntersectShape,
+raw and scene BodyTestMotion, scene TestMove and an actual moving physics frame.
+Fractions use .000002 slack and the existing 3/512 adaptive bracket bound. Contact
+points allow .015 scene units (less than .05 solver slop) for far-coordinate float
+poses and transformed cap projection; unit-normal slack is .001 and outward dot
+must exceed .995 for rounded targets. Misses must clear old collider identities;
+hits retain exact RID and logical source/target slot. Each profile warms 512 and
+measures 512 frames / 2560 public calls at strict 0/0 owner/all-thread managed bytes.
+
+CPU/no-device, software-Vulkan GPU and registered owner/separate profiles execute
+in CLR and strict NativeAOT. The connected registered capsule, segment, convex,
+concave, motion-matrix, custom-sweep, hollow-pair, adaptive and oblique-circle CLR
+regressions retain their original assertions. Evidence is under
+`bin/physics-long-capsule/2026-10-20/`: `validation.json`, `warm-proof.json`,
+`current-source-proof.json` and the original `prepared-baseline-registered` RED.
+Runtime/public declarations and coverage states are unchanged. Arbitrary custom
+and complete numerical-extension acceptance, native memory, network, foreign
+platforms, rendered output and hardware performance remain open.

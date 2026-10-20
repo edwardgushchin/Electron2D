@@ -1,5 +1,7 @@
 # Physics domain
 
+[Long capsule and segment sweeps](../components/physics-queries.md#long-capsule-and-segment-sweeps) verify first-entry geometry and contact identities across scene/raw callers. The independent provider now completes at a converged float-time fraction instead of exhausting its contour-sweep budget.
+
 [Long circle sweeps and hollow query sources](../components/physics-queries.md#long-circle-sweeps-and-hollow-query-sources) preserve geometric hit truth, first entry and contact ownership across the exercised implementations.
 
 [Motion source selection and contact velocity](../components/physics-queries.md#motion-source-selection-and-contact-velocity) verifies the winning logical source, recovery-only selection and rotated mass-center velocity through scene/raw callers.
@@ -1685,3 +1687,5 @@ physics ledger remains 1279/1369 (93.43%), with 90 applicable declarations open.
 [Hollow pair contacts](../components/physics-custom-geometry.md#hollow-pair-contacts) now exercise the public-only annulus/annulus format through standalone/selected resource pairs and registered scene/raw queries and numerical response. Both surfaces/orders retain strict warmed zero managed allocation; built-in custom attachment, arbitrary algorithms and full native/network/hardware acceptance remain open.
 
 [Oblique long circle motion](../components/physics-queries.md#oblique-long-circle-motion) verifies the existing public cast/overlap and scene/raw body-motion paths across four unit-basis poses, both source/peer roles and signs. CPU/software-GPU/registered owner/separate CLR and NativeAOT profiles retain the existing tolerances and strict zero warmed managed allocation; wider acceptance remains open.
+
+[Factory result ownership](../components/scripting.md#factory-result-ownership) protects borrowed physical/script resources and live nodes from invalid Script.New and file-factory results. CLR source-asset checks retain actual CPU/software-GPU/registered simulation and zero warmed managed bytes; NativeAOT source registration and full live-script/duplication acceptance remain open.

@@ -1,6 +1,6 @@
 # Script
 
-Last updated: 2026-10-07
+Last updated: 2026-10-20
 
 **Inherits:** [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
@@ -63,3 +63,5 @@ Ordinary nested Resource copies retain this same Script instance for all deep mo
 [ScriptTests](../../tests/Electron2D.Tests/ScriptTests.cs) is the executable source/type/factory/storage scenario; [Scripting](../components/scripting.md) records native, allocation and platform limits.
 
 RegisterNode, RegisterResource and RegisterAbstract declare their file-backed assembly/PDB and untrimmed metadata prerequisites. Registration captures complete project methods, events and literal fields once; queries copy that retained metadata. Source association in embedded NativeAOT assemblies remains unavailable. Static scene factories do not require source registration.
+
+[Factory result ownership](../components/scripting.md#factory-result-ownership) protects borrowed physical/script resources and live nodes from invalid Script.New and file-factory results. CLR source-asset checks retain actual CPU/software-GPU/registered simulation and zero warmed managed bytes; NativeAOT source registration and full live-script/duplication acceptance remain open.

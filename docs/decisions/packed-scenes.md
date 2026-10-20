@@ -116,4 +116,3 @@ ResourceSaver/ResourceLoader persist the typed PackedScene model as version-6 ar
 The executable harness covers the current in-memory contract: empty and unsupported modes, capture selection/order, owner/path/group metadata, typed stored values, source disposal independence, repeated instances, local-resource aliasing/setup/ownership, live-state and path races, duplication, capture failure semantics, capture mutation rejection, factory closure/type/identity rejection, setup cleanup, detached-parent and active-tree escape rollback, and final snapshot survival. Repository verification also checks formatting, Release compilation, generated XML, documentation inventory, internal links, and the absence of prohibited production naming.
 
 It does not establish disk format compatibility, editor behavior, performance on very large loaded scenes, platform asset packaging, script state, visual output, or owner acceptance.
-

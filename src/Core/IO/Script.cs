@@ -40,16 +40,26 @@ public sealed partial class Script : Resource
     /// <summary>Loads the directly inherited registered script asset, when the project base class has one.</summary><returns>Borrowed cached base Script, or null for a native/unregistered base.</returns>
     public Script? GetBaseScript() { var type = CompiledType?.BaseType; var record = type == null ? null : FindType(type); return record == null ? null : ResourceLoader.Load<Script>(record.Path); }
     /// <summary>Creates a caller-owned instance through the registered exact factory.</summary><typeparam name="T">Expected compiled Node/Resource role.</typeparam><returns>The actual project class instance.</returns>
-    /// <exception cref="InvalidOperationException">No factory exists or the expected role is incompatible.</exception><exception cref="Exception">The project constructor/schema hook fails.</exception>
+    /// <remarks>The registered factory must construct its result during this call. Pre-existing objects are never acquired or cleaned up.</remarks>
+    /// <exception cref="InvalidOperationException">No factory exists, the expected role is incompatible or the result is invalid or pre-existing.</exception>
+    /// <exception cref="AggregateException">Both result validation and cleanup fail.</exception>
+    /// <exception cref="Exception">The project constructor/schema hook fails.</exception>
     public T New<T>() where T : ElectronObject => New<T>(null);
     /// <summary>Creates a typed instance using a direct C# constructor expression, including constructor arguments.</summary>
     /// <typeparam name="T">Expected project object role.</typeparam><param name="constructor">Typed constructor, or null for the registered factory.</param><returns>Caller-owned exact compiled instance.</returns>
-    /// <remarks>The constructor is an explicit cold operation. It does not introduce string invocation or a frame dispatcher.</remarks>
+    /// <remarks>The constructor is an explicit cold operation. It does not introduce string invocation or a frame dispatcher.
+    /// Construct the returned object during this invocation. Pre-existing results reject before metadata validation or ownership acquisition.
+    /// Failure cleanup attempts only a newly constructed result; cleanup errors are retained alongside the original validation error.</remarks>
+    /// <exception cref="InvalidOperationException">The class cannot instantiate the role, or the result is pre-existing, null, disposed, the wrong exact class or schema.</exception>
+    /// <exception cref="AggregateException">Both result validation and cleanup fail.</exception>
     public T New<T>(Func<T>? constructor) where T : ElectronObject
     {
         ScriptRegistration record; lock (_gate) { ThrowIfDisposed(); record = _registration ?? throw new InvalidOperationException("The script is unbound."); }
         if (!typeof(T).IsAssignableFrom(record.Type) || record.Type.IsAbstract || constructor == null && record.Factory == null) throw new InvalidOperationException("The script cannot construct the expected role.");
+        var lastIssuedID = ElectronObject.LastIssuedInstanceID;
         var instance = constructor != null ? constructor() : record.Factory!();
+        if (instance is not null && instance.InstanceID <= lastIssuedID)
+            throw new InvalidOperationException("A script factory returned a pre-existing instance.");
         try
         {
             if (instance == null || instance.IsDisposed || instance.GetType() != record.Type) throw new InvalidOperationException("Script factory must return a live exact class instance.");
@@ -57,7 +67,11 @@ public sealed partial class Script : Resource
             if (actual.Length != schema.Length || actual.Any(p => !schema.Any(s => s.Name == p.Name && s.OwnerType == p.OwnerType && s.ValueType == p.ValueType && s.IsStored == p.IsStored && s.IsReadOnly == p.IsReadOnly))) throw new InvalidOperationException("Constructed script property schema differs from registration.");
             return (T)instance;
         }
-        catch { instance?.Dispose(); throw; }
+        catch (Exception error)
+        {
+            try { instance?.Dispose(); } catch (Exception cleanup) { throw new AggregateException(error, cleanup); }
+            throw;
+        }
     }
     private static PropertyDescriptor[] Properties(ScriptRegistration record)
     {

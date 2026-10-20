@@ -128,7 +128,10 @@ public static partial class BackendChecks
             using var retiring = new World("WorldCopyBorrowed") { ResourceName = "retiring" };
             var oldSpace = retiring.Space; var oldSolver = borrowed()!; oldSolver.FailFinish = true;
             var retiredChanges = 0; retiring.Changed += _ => retiredChanges++;
-            Reject<AggregateException>(() => retiring.CopyFromResource(source));
+            Exception? retirementError = null;
+            try { retiring.CopyFromResource(source); } catch (Exception error) { retirementError = error; }
+            Check(retirementError is InvalidOperationException { Message: "Finish failure" },
+                "A lone selected retirement failure preserves its original exception without an aggregate wrapper");
             Check(oldSolver.Finished && oldSolver.IsDisposed && retiring.Space == source.Space &&
                 retiring.ResourceName == "source" && retiredChanges == 1,
                 "Retirement failure preserves the accepted new runtime and balances retained ownership");

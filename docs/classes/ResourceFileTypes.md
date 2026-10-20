@@ -1,6 +1,6 @@
 # ResourceFileTypes
 
-Last updated: 2026-10-18
+Last updated: 2026-10-20
 
 **Namespace:** `Electron2D`. **Declaration:** `public static class Electron2D.ResourceFileTypes`. **Source:** [ResourceFileTypes.cs](../../src/Core/IO/ResourceFileTypes.cs).
 
@@ -179,3 +179,5 @@ Exact archive factories now include VideoStreamTheora resources and VideoStreamP
 ## Sampled descriptor array integration
 
 Built-in resource-array codecs now include the abstract Texture and TextureLayered roles. Fixed sampled descriptor arrays therefore retain null entries, exact lengths and concrete image factories through the existing bounded archive/graph codec. No native identity or derived bytecode is stored. SamplerArrayTests checks default/override graph aliases and shader source payload preservation. See [the component contract](../components/shader-materials.md#fixed-sampled-descriptor-arrays).
+
+[Factory result ownership](../components/scripting.md#factory-result-ownership) protects borrowed physical/script resources and live nodes from invalid Script.New and file-factory results. CLR source-asset checks retain actual CPU/software-GPU/registered simulation and zero warmed managed bytes; NativeAOT source registration and full live-script/duplication acceptance remain open.
