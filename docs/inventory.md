@@ -1,5 +1,7 @@
 # Engine inventory
 
+[Last-recovery one-way pair exclusions](components/physics-registered-adapter.md#last-recovery-one-way-pair-exclusions) preserve the final recovery decision through sweeps and contact projection across all selected implementations. Query-local value/device storage adds no production type or public signature.
+
 [Final body-motion contact sampling](components/physics-registered-adapter.md#final-body-motion-contact-sampling) resamples margin-inclusive contact geometry after recovery and unsafe motion across CPU, resident GPU and the independent public provider. Completed departures clear obsolete contacts; no production type or public signature is added.
 
 [Coincident rounded-core response](components/physics-contact-policy.md#coincident-rounded-cores) now shares CPU circle/capsule/segment primitive manifolds between actual dynamics and query/body-motion projection. The query-only fallback is removed; public scene/raw checks retain logical slots, physical invariants and zero warmed allocation across independently selected implementations.

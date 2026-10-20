@@ -4515,3 +4515,56 @@ The full `_body_test_motion` row remains Partial: arbitrary coupled geometry and
 complete numerical-extension acceptance need a wider operation audit. Software
 Vulkan proves dispatch and numerical behavior; hardware, native-memory, visual,
 network, foreign-platform and performance acceptance remain open.
+
+## Last-recovery one-way pair exclusions
+
+Body-motion recovery now retains up to 32 rejected one-way pairs from its last
+attempt. A pair is rejected only when it produced an invalid direction/depth
+contact and no accepted contact across its represented pieces. Earlier attempts
+replace the set; a new query starts empty. Both the remaining sweep and the final
+contact sample honor the retained set, including when the last correction moves
+the source across a thin platform or into its accepted depth. This is query-local
+state and does not replace fixed-step one-way contact history.
+
+The source identity is the shape resource, while the target identity is the
+collider and its logical shape slot. Reusing one source resource across several
+slots therefore shares its rejection for that target slot; distinct equal
+resources remain independent. Native pieces of a single source/target slot are
+grouped before deciding rejection. An accepted edge keeps a concave logical pair
+eligible even when another edge rejects. The 32-entry limit remains observable:
+32 invalid platforms stay excluded, while a 33rd may remain eligible.
+
+CPU and the independent public provider use stack value storage without retaining
+resource objects. The resident kernel uses generation-qualified geometry and
+shape tokens in its device-only query tail; it does not upload a host blacklist
+or read back candidates. The tail now reserves 1024 bytes per request: 512 for
+recovery planes and 512 for rejected keys. Authored input, the 128-byte result and 4-byte count,
+status traffic and fence count remain unchanged. The required scratch grows by 512 bytes per request without adding a transfer
+or wait. The existing driver retains and rounds buffer capacity; this is not
+a native-allocator measurement.
+
+[The public-only fixture](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.MotionOneWayPairs.cs)
+(`--motion-oneway-pairs`) checks side/depth rejection after the fourth correction,
+last-pass and next-query reset, source-resource aliasing, accepted concave pieces,
+32/33 target slots, ordinary sweep misses and later wall impacts. Raw and scene
+bodies, scene TestMove and applied MoveAndCollide execute at two global poses,
+with exact RID/object/logical-slot identities and analytic contact geometry and
+surface velocity. Ten cases per pose/target-role combination retain all measured
+queries and a real moving physics frame. Each profile warms 128 and measures 128
+complete frames with strict owner/all-thread managed-byte counters.
+
+Immutable one-way policy replacement is checked cold. A diagnostic attributed all
+832 bytes in an earlier mixed authoring/frame bracket to those public policy
+setter calls; no engine-frame allocation allowance was added. Measured frames
+select preauthored policies, continue the 40-case sequence and retain live mask,
+pose and enabled-slot changes. Cold policy edits and applied movement still run.
+
+Baseline CPU/software-GPU/registered processes select the wrong platform at depth
+about 11.37632 instead of the wall at 2.37632. Final public JIT and strict NativeAOT CPU/software-GPU/registered owner/separate
+prepared-frame profiles pass with the retained rejection at 0/0 managed bytes.
+All 119 selected regression profiles pass (57 JIT, 57 NativeAOT and five root
+contracts), including the resident batch/geometry/filter/lifetime/velocity path.
+Source, process-driver and embedded-SPIR-V evidence is under
+`bin/physics-motion-oneway-pairs/2026-10-20/`. The full motion row stays Partial;
+complete custom/coupled numerical, hardware, native-memory, network, visual,
+foreign-platform and performance acceptance remain open.

@@ -421,3 +421,5 @@ private edge pieces. Shared public CPU/software-GPU/registered assertions cover
 logical slots, analytical boundaries, fractions and zero warmed full-frame bytes.
 
 [TestBodyMotion final contact sampling](../components/physics-registered-adapter.md#final-body-motion-contact-sampling) evaluates the recovered unsafe pose with the query margin and publishes its deepest eligible contact. A miss returns full requested motion plus recovery and clears contact fields. Independent public consumer verification does not close complete numerical-extension acceptance.
+
+[Last-recovery one-way pair exclusions](../components/physics-registered-adapter.md#last-recovery-one-way-pair-exclusions) retain rejected source-resource/target-slot pairs through the remaining sweep and final contact sample. The last recovery attempt replaces the set, accepted pieces keep their logical pair eligible, and the next query starts empty.

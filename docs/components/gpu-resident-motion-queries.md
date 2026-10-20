@@ -96,8 +96,8 @@ travel. These are scoped convergence tolerances, not bitwise parity promises.
 
 Each request uploads 80 bytes plus 8-byte shape/exception/joint-peer tokens and supplied
 exclusion keys. One result reserves 128 bytes plus a 4-byte count; the batch has an
-8-byte status exchange. Recovery reserves another 512 bytes per query in the GPU
-output buffer; this tail is never uploaded or read back. Inputs, outputs, scratch and transfers retain warmed
+8-byte status exchange. Recovery and rejected-pair keys reserve another 1024 bytes per query in the GPU
+output buffer (512 bytes each); this tail is never uploaded or read back. Inputs, outputs, scratch and transfers retain warmed
 capacity. The shared driver safely alternates ray, shape and body-motion strides;
 query-only tree preparation skips simulation pair enumeration. Changed world
 geometry/poses require tree work; unchanged worlds reuse it.
@@ -225,3 +225,7 @@ retains that complete measurement. Software execution is not hardware performanc
 ## Final contact after motion
 
 [Final body-motion contact sampling](physics-registered-adapter.md#final-body-motion-contact-sampling) replaces the earlier recovery snapshot and speculative ordinary impact pose with a current deepest contact. The final device scan supplies its point velocity and logical identity and uses the existing buffers and transfer count. Public-only software-Vulkan checks include every source family, an entry between ray refinement samples, a changed deepest collider after the last priority correction, zero/positive margins, scene/raw recipients and complete-frame zero managed allocation. Historical hardware timings above precede this kernel change; its target-device cost and FPS remain unmeasured while the power-cable check is pending.
+
+## Rejected pairs after recovery
+
+[Last-recovery one-way pair exclusions](physics-registered-adapter.md#last-recovery-one-way-pair-exclusions) keep up to 32 rejected source-geometry/target-slot keys across the sweep and final sample. All represented pieces contribute acceptance before a logical pair is rejected, and each recovery attempt replaces the set. Shared source resources share rejection; target slots and distinct equal resources remain separate. The additional device-only 512 bytes per query add no uploads, readbacks or fences. Public prepared-frame checks cover last-correction side/depth changes, aliasing, accepted concave edges and the 32/33-pair boundary. Historical hardware timings above precede this kernel; current target-device cost remains unmeasured.

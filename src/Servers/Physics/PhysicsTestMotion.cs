@@ -69,6 +69,7 @@ public sealed class PhysicsTestMotionParameters : ElectronObject
 
     /// <summary>Gets or sets whether recovery may report a contact remaining at the final tested pose.</summary>
     /// <value>False by default.</value>
+    /// <remarks>One-way pairs rejected on the last recovery pass remain excluded from the sweep and final contact sample.</remarks>
     public bool RecoveryAsCollision
     {
         get { ThrowIfDisposed(); return _recoveryAsCollision; }
