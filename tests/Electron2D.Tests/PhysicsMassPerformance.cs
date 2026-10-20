@@ -109,6 +109,7 @@ internal static class PhysicsMassPerformance
         internal double WallSeconds;
         internal string VSync = "none";
         internal string? CapturePath;
+        internal Vector2i ClientSize, RenderSize;
         internal Pile(PhysicsServer.Backend backend, int count, int warmup, int samples)
         {
             Backend = backend; Warmup = warmup; Samples = samples;
@@ -263,6 +264,8 @@ internal static class PhysicsMassPerformance
                 VSync,
                 RequestedVSync = rendered ? "Disabled" : null,
                 CapturePath,
+                ClientSize = rendered ? new[] { ClientSize.X, ClientSize.Y } : null,
+                RenderSize = rendered ? new[] { RenderSize.X, RenderSize.Y } : null,
                 Driver = _data.GPUStore?.Driver,
                 Device = _data.GPUStore?.DeviceName,
                 ContactColors = _data.GPUStore?.ContactColorCount,
@@ -311,7 +314,15 @@ internal static class PhysicsMassPerformance
         {
             ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
             Engine.MaxFPS = 0; Engine.PhysicsTicksPerSecond = 60; Engine.MaxPhysicsStepsPerFrame = 1;
-            using var window = new Window { Title = $"Electron2D · {pile.Backend} dense physics · {pile.Count}", Size = new(1152, 800), Unresizable = true };
+            using var window = new Window
+            {
+                Title = $"Electron2D · {pile.Backend} dense physics · {pile.Count}",
+                Size = new(1152, 800),
+                Unresizable = true,
+                ContentScaleSize = new(1152, 800),
+                ContentScaleMode = ContentScaleMode.Viewport,
+                ContentScaleAspect = ContentScaleAspect.Keep
+            };
             using var mesh = new ArrayMesh(); using var instances = new MultiMesh { UseColors = true };
             var vertices = new Vector2[9]; var indices = new int[24];
             for (var i = 0; i < 8; i++) { vertices[i + 1] = Vector2.FromAngle(i * Mathf.Tau / 8); indices[i * 3 + 1] = i + 1; indices[i * 3 + 2] = (i + 1) % 8 + 1; }
@@ -332,7 +343,8 @@ internal static class PhysicsMassPerformance
                 pile.MarkFrameCounters(false);
                 pile.Validate();
                 using var image = window.GetTexture().GetImage()!;
-                Check(image.Width == 1152 && image.Height == 800, "A real rendered texture exists");
+                pile.ClientSize = window.Size; pile.RenderSize = new(image.Width, image.Height);
+                Check(image.Width == 1152 && image.Height == 800, $"A real rendered texture exists: image {image.Width}x{image.Height}, window {window.Size}");
                 var colored = 0;
                 for (var y = 64; y < 760; y += 4) for (var x = 32; x < 1120; x += 4) if (image.GetPixel(x, y).R > .5f) colored++;
                 Check(colored > 100, "Actual particle pixels fill the captured scene");

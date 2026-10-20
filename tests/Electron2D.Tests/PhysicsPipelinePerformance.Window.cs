@@ -29,6 +29,9 @@ internal static partial class PhysicsPipelinePerformance
                 World = world,
                 Title = $"Electron2D · {world.RequestedPhysicsBackend} monitored scene · {count}",
                 Size = new(1152, 800),
+                ContentScaleSize = new(1152, 800),
+                ContentScaleMode = ContentScaleMode.Viewport,
+                ContentScaleAspect = ContentScaleAspect.Keep,
                 Unresizable = true
             };
             _current = new float[count * 12]; _previous = new float[count * 12];

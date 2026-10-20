@@ -1,6 +1,6 @@
 # Retained physics world and history storage
 
-Last updated: 2026-10-15
+Last updated: 2026-10-20
 
 [CPU contact-pair preparation](physics-scene-performance.md#cpu-contact-pair-capacity-2026-10-15)
 now adds 4,096 selected-graph bytes to the controlled 64-body world and each
@@ -176,7 +176,9 @@ local scene checkpoints. The static CPU world-slot pool is now measured below;
 other static/global roots and native/driver storage remain open.
 Process peaks, larger mixed geometry/CCD/sleep/Area loads, platform/AOT memory,
 full-step timing, real-window FPS and target-hardware GPU benefit remain separate
-acceptance work. Real RTX load remains deferred while its power cable is unverified.
+acceptance work. Real RTX load was deferred for these profiles. The later
+authorized [hardware baseline](physics-rtx-current.md) measures separate workloads
+and does not complete retained-memory acceptance.
 No applicable API row is promoted by these bounded memory measurements.
 
 ## Static CPU world pool

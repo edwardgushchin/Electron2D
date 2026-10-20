@@ -1,6 +1,13 @@
 # GPU physics implementation status
 
-Last updated: 2026-10-16
+Last updated: 2026-10-20
+
+The [2026-10-20 RTX baseline](physics-rtx-current.md) measures complete CPU/GPU
+paths on one frozen runtime: raw-server medians and actual windows improve,
+while monitored-scene publication/contact cost, teardown and native request
+traffic remain explicit optimization work. All accepted warmed physics intervals
+retain zero owner/all-thread managed bytes; this does not close the remaining
+contract or complete-scene performance gates.
 
 [Angular contact coupling](gpu-contact-solver.md#angular-normalfriction-coupling-2026-10-16) now computes friction from the normal impulse candidate in both resident iterative kernels. The rotating-ray regression preserves sixteen sweeps and the 128 CCD interval budget while checking real response, reports and warmed full frames.
 

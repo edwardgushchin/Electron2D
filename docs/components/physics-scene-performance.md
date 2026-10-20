@@ -1,6 +1,12 @@
 # Complete scene physics measurements
 
-Last updated: 2026-10-15
+Last updated: 2026-10-20
+
+The authorized [2026-10-20 RTX baseline](physics-rtx-current.md) adds physical
+GPU monitored-scene measurements and calibrated native request counts. At 16,384
+bodies, scene medians remain close and GPU tails are worse; the raw-server/window
+advantage does not establish complete-scene performance acceptance. Older trials
+below retain their measured revisions and contemporary execution limits.
 
 The [scoped allocator profile](#scoped-native-allocation-profiling-2026-10-14)
 adds all-thread libc request accounting to the complete monitored scene, with
@@ -29,8 +35,9 @@ CPU processes have no display and an unavailable GPU driver/ICD. GPU processes
 use offscreen Vulkan with an explicitly pinned lavapipe ICD and four driver workers.
 Process maps confirmed lavapipe only on GPU profiles, no NVIDIA driver on any
 profile, probe presence only on instrumented profiles, and exactly zero/one
-retained Electron2D solver thread according to the setting. The physical device
-is not exercised: its power-cable compatibility remains unverified after Xid 79.
+retained Electron2D solver thread according to the setting. Those profiles did
+not exercise the physical device while its power-cable compatibility was unverified
+after Xid 79; later authorized hardware measurements are recorded separately above.
 
 ### Complete frame costs
 
@@ -680,9 +687,10 @@ selection/count wait; neither optimization is implemented by this slice.
 These CPU runs explicitly denied graphics availability through the dummy video
 driver, invalid GPU driver/missing Vulkan files and absent display/session paths.
 The owner confirmed that the power cable involved in the latest device-loss
-investigation remains unchecked. Long mass GPU and native-window trials are
-deferred until its compatibility is verified; GPU performance acceptance stays
-open. No GPU load was added by this control.
+investigation remained unchecked. Long mass GPU and native-window trials were
+deferred at this checkpoint. The later authorized hardware baseline above retains
+its own workload and revision limits; GPU performance acceptance stays open.
+No GPU load was added by this CPU control.
 
 Main advanced to 49256885 during the serial trial. The saved runtime remained
 byte-identical across both processes; the observed C# fingerprint reconstructs
@@ -811,7 +819,8 @@ artifacts: `bin/physics-cpu-evolving/2026-10-15/` contains red/diagnostic logs,
 source/PDB manifests and final validation. Public API and coverage states are
 unchanged. Residual GPU native retention, unrestricted topology budgets,
 foreign-platform/hardware/window acceptance and the full physics objective remain
-open; RTX loading stays deferred while its power cable is unverified.
+open. RTX loading was deferred at that checkpoint; the later authorized hardware
+baseline above records the subsequently exercised physical workloads.
 
 The first before/after memory comparison used source-matched fixture builds with
 different revision metadata. The accepted comparison reruns one byte-identical

@@ -1,6 +1,6 @@
 # Native physics compiler and device phases
 
-Last updated: 2026-10-16
+Last updated: 2026-10-20
 
 ## Scope and executable path
 
@@ -258,4 +258,6 @@ reliability issue; avoiding attachment does not claim to fix it. Ordinary heap/
 retirement/network modes and their existing assertions remain required regressions.
 Residual native source-level ownership, larger/different workloads, NativeAOT/foreign
 memory, full physics/extension/inherited contracts and target GPU/window speed
-remain open. RTX loading stays deferred while its power cable is unverified.
+remain open. RTX loading was deferred for these phase profiles. The later
+authorized [hardware baseline](physics-rtx-current.md) records separate workloads
+and leaves native source-level ownership acceptance open.

@@ -1,6 +1,6 @@
 # Repeated physics world retirement
 
-Last updated: 2026-10-15
+Last updated: 2026-10-20
 
 [Native compiler/device controls](physics-native-phases.md) now separate format
 enumeration, reflection, device and pipeline lifetime from complete public worlds.
@@ -73,8 +73,10 @@ same-workload timing before claiming complete retention/performance acceptance.
 The one-arena control is diagnostic evidence, not the accepted application policy.
 Runs beyond 32 cycles, mixed scene/network retirement, registered backends, native ownership
 stacks, continuous peaks, NativeAOT/foreign memory and target-hardware/window
-acceptance remain open. Real RTX loading remains deferred while its cable is
-unverified. No public API row or overall physics acceptance is promoted.
+acceptance remain open. Real RTX loading was deferred for these profiles; the
+later authorized [hardware baseline](physics-rtx-current.md) records separate
+workloads and leaves retirement costs open. No public API row or overall physics
+acceptance is promoted.
 
 ## Observed retired-process bytes
 

@@ -325,6 +325,14 @@ The bridge rejects excessive island counts; full frames plus cached process/Perf
 reads remain allocation-free immediately after collection. Broader numerical,
 hardware, inherited and performance gates remain open.
 
+[The 2026-10-20 RTX baseline](../components/physics-rtx-current.md) measures
+complete CPU/GPU raw-server and monitored-scene paths plus actual window FPS.
+Warmed managed bytes remain zero, while native requests and scene publication/
+retirement costs remain explicit. The two window fixtures now fix internal render
+resolution independently of native client rounding. No declaration state changes:
+1303/1369 Implemented (95.18%), 66 open and 92 Excluded; complete performance and
+contract acceptance remain open.
+
 [Scoped native allocator profiling](../components/physics-scene-performance.md#scoped-native-allocation-profiling-2026-10-14)
 now records all-process-thread libc request traffic in full PhysicsFrame windows,
 with calibrated attachment and separate uninstrumented timing. Eight bounded
@@ -367,8 +375,9 @@ acceptance remain open.
 separate host publication costs without changing declarations or closing any
 physical contract row. Both complete 16,384-body CPU trials retain 0/0 warmed
 managed bytes and physical/publication gates. GPU subphase and current-revision
-mass/window verification await the confirmed power-cable check; final performance
-and inherited/provider acceptance remain open.
+mass/window verification were deferred at that checkpoint. The later authorized
+[RTX baseline](../components/physics-rtx-current.md) records separate measured
+revision/workload evidence; final performance and inherited/provider acceptance remain open.
 
 [Full monitored scene window measurements](../components/physics-scene-performance.md#full-monitored-scene-in-a-native-window)
 now use the same complete scene fixture with separate physics/frame costs, actual

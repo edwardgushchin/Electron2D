@@ -977,8 +977,9 @@ process retains 131,072 command-record and 36,864 event-record payload bytes,
 excluding array headers, packet slabs, other managed storage and native/device
 memory. No window was opened. Native allocation, cross-platform/owner acceptance,
 arbitrary game-state rollback, massive target-GPU advantage and real-window FPS
-remain open. Physical GPU load remains deferred until its power prerequisite is
-verified; software evidence does not close that gate.
+remain open. These network profiles use software GPU execution. The later
+authorized [RTX baseline](physics-rtx-current.md) measures separate physical
+workloads; it does not establish hardware network acceptance.
 
 Evidence: bin/physics-production-network/2026-10-14/validation.json and its
 retained reports/logs/manifests. The frozen source has 4,222 files, SHA-256

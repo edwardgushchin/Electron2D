@@ -1826,8 +1826,9 @@ inherited totals remain 288 / 118 / 17 / 45 / 23 in ledger order. The common sui
 is a regression gate for existing behavior, not completion of every ledger row.
 Arbitrary external algorithms, unclosed inherited/extension rows, wider coupled
 and network cases, complete memory budgets and native/device/platform/performance
-acceptance retain their named triggers. Physical GPU validation remains deferred
-while the power cable is unverified; these GPU checks use pinned software Vulkan.
+acceptance retain their named triggers. These GPU checks use pinned software
+Vulkan. Physical validation was deferred at that checkpoint; the later authorized
+[RTX baseline](physics-rtx-current.md) records its own revision and workload limits.
 
 ## Ordinary authority without phase pacing, 2026-10-16
 

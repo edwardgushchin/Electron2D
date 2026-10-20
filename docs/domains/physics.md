@@ -1,5 +1,12 @@
 # Physics domain
 
+[The 2026-10-20 RTX baseline](../components/physics-rtx-current.md) qualifies
+physical raw-server, monitored-scene and real-window measurements by their frozen
+revision. At 16,384 raw bodies GPU step medians improve about fourfold; the complete
+monitored scene retains a small median difference and worse GPU tails. Publication,
+retirement and native allocation work remain open. Physics declaration coverage
+stays 1303/1369 (95.18%), with 66 open declarations and 92 Excluded.
+
 [System back navigation](../components/window-runtime.md#system-back-navigation) now reaches inherited physical Node receivers through actual Android producers. Current inherited API coverage is 1303/1369 (95.18%), with 66 open declarations and separate hardware/performance acceptance. Earlier counts below record their checkpoints.
 
 [Networked crossed capsules and CPU wake preparation](../components/physics-network-example.md#crossed-capsule-correction-and-cpu-wake-preparation-2026-10-20) extend authoritative correction with complete angular/linear contact state and prepare joint storage before later replayed wake.
@@ -1185,7 +1192,8 @@ preparation. A same-build CPU contact-scheduling control retains all 16,384 bodi
 physical/publication gates and 0/0 warmed managed bytes; serial contact capture
 costs 53.2847 ms versus 17.7884 ms in the default parallel path. This diagnoses a
 host-stage cost without establishing a GPU improvement. GPU mass/window trials
-await power-cable verification; all broader acceptance requirements remain open.
+were deferred at that checkpoint. The later authorized [RTX baseline](../components/physics-rtx-current.md)
+records separate hardware measurements; all broader acceptance requirements remain open.
 
 [Common fixed-clock conformance](../components/engine-runtime.md#verification) now exercises real CPU motion/ticks through the ordinary Engine scheduler with graphics denied. Frequency, catch-up, jitter, scaling, live settings and frame-event order have explicit acceptance evidence and zero warmed active-frame managed bytes. These common clock rows no longer have a structural-only audit reason; the separate physics-thread setting, numerical GPU/provider and final performance requirements remain open.
 

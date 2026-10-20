@@ -1,6 +1,11 @@
 # Same-revision dense physics measurements
 
-Last updated: 2026-10-12
+Last updated: 2026-10-20
+
+The [2026-10-20 RTX baseline](physics-rtx-current.md) repeats complete raw-server
+and monitored-scene paths, real-window FPS and native allocation request traffic.
+Its pinned runtime and fixed internal render size qualify the new measurements;
+the older trials below retain their own revisions.
 
 The [16,384-body monitored scene refresh](physics-scene-performance.md#16384-body-refresh-at-f3983555-2026-10-12)
 uses an independent runtime copy at f3983555 for both headless and native-window

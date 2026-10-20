@@ -1,6 +1,6 @@
 # Physics pointer picking
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 [Viewport](../classes/Viewport.md#physics-picking) queues unhandled pointer events
 for [CollisionObject](../classes/CollisionObject.md#pointer-input) callbacks and
@@ -35,7 +35,9 @@ frame. Native checks execute both renderers with CPU/GPU/registered physics, rea
 SDL pointer events and target-pixel assertions; these use software Vulkan/Mesa.
 They establish exercised Linux rendering and input behavior, not target-GPU FPS
 or a controlled performance comparison. The earlier hardware cost table below is
-historical. The RTX power cable remains unchecked and hardware loads are excluded.
+historical. These picking profiles did not run physical GPU workloads. The later
+authorized [RTX baseline](physics-rtx-current.md) measures separate workloads and
+does not establish target-hardware picking acceptance.
 
 Evidence: `bin/physics-pickability-audit/2026-10-19/validation.json` and its pinned
 four-declaration/eight-source contract receipt. Only the two pickable implementation
