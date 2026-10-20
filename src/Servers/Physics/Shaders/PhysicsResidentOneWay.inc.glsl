@@ -19,8 +19,13 @@ uint previousOneWay(uvec4 pair,uvec2 pieces,uvec4 revisions)
     }
     fail();return 1u;
 }
+bool hasOneWay(Shape a,Shape b)
+{
+    return ((a.policy.w&4u)!=0u&&geometries[b.owner.z].data.z!=6u)
+        || ((b.policy.w&4u)!=0u&&geometries[a.owner.z].data.z!=6u);
+}
 bool facesOneWay(Shape a,Shape b,ResidentBody ba,ResidentBody bb,vec2 normal)
 {
-    return ((a.policy.w&4u)==0u||dot2(normal,rotate(ba.pose.zw,rotate(a.pose.zw,a.oneWay.xy))) < -1e-6)
-        && ((b.policy.w&4u)==0u||dot2(normal,rotate(bb.pose.zw,rotate(b.pose.zw,b.oneWay.xy))) > 1e-6);
+    return ((a.policy.w&4u)==0u||geometries[b.owner.z].data.z==6u||dot2(normal,rotate(ba.pose.zw,rotate(a.pose.zw,a.oneWay.xy))) < -1e-6)
+        && ((b.policy.w&4u)==0u||geometries[a.owner.z].data.z==6u||dot2(normal,rotate(bb.pose.zw,rotate(b.pose.zw,b.oneWay.xy))) > 1e-6);
 }

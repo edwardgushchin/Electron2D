@@ -1,5 +1,7 @@
 # Physics server and direct queries component
 
+[Directed source one-way policy](physics-contact-policy.md#directed-sources-and-one-way-targets) preserves ray contacts while ordinary siblings retain the target filter. Recovery, sweeps and final rest use represented source kind.
+
 ## Cold query geometry
 
 CPU/GPU shape-query preparation borrows the using world before evaluating a cold

@@ -1,5 +1,7 @@
 # SeparationRayShape
 
+[Directed source one-way policy](../components/physics-contact-policy.md#directed-sources-and-one-way-targets) preserves ray contacts while ordinary siblings retain the target filter. Recovery, sweeps and final rest use represented source kind.
+
 [Unrounded polygon origin containment](../components/physics-point-containment.md) now uses the same exact CPU edge test for directed query/proxy regions. An exterior start cannot be discarded through distance-convergence slack; genuinely contained logical slots still hide their partition seams.
 
 Last updated: 2026-10-20

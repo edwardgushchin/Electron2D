@@ -92,7 +92,7 @@ internal sealed partial class CPUPhysicsWorldBackend
                         ownTag.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon && candidate.Tag.Kind != PhysicsShapeGeometry.ShapeKind.WorldBoundary ? default : requested;
                     var other = b2MakeShapeDistanceProxy(b2GetShape(world, candidate.ShapeID));
                     var otherTransform = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
-                    if (!AcceptOneWayMotion(candidate, requested, otherTransform)) continue;
+                    if (!AcceptOneWayMotion(ownTag, candidate, requested, otherTransform)) continue;
                     if (ray is not null || candidate.Tag.SeparationRay is not null)
                     {
                         if (ownTag.Compound is not null && ownTag.CompoundPiece != 0 ||
@@ -121,7 +121,7 @@ internal sealed partial class CPUPhysicsWorldBackend
                         var point = rayContact.points[0];
                         var normal = -rayContact.normal;
                         var depth = MathF.Max(0, -point.separation);
-                        if (!AcceptOneWay(candidate, normal, depth, queryMargin)) continue;
+                        if (!AcceptOneWay(ownTag, candidate, normal, depth, queryMargin)) continue;
                         safe = lowRay;
                         unsafeFraction = highRay;
                         motionShape = ownTag.ShapeIndex;
@@ -135,7 +135,7 @@ internal sealed partial class CPUPhysicsWorldBackend
                         var normal = -stuck.normal;
                         if (stuck.pointCount != 0 &&
                             (depth > 0.1f * B2_LINEAR_SLOP || b2Dot(requested, normal) < -1e-6f) &&
-                            AcceptOneWay(candidate, normal, depth, queryMargin))
+                            AcceptOneWay(ownTag, candidate, normal, depth, queryMargin))
                         {
                             safe = unsafeFraction = 0;
                             motionShape = ownTag.ShapeIndex;
@@ -238,7 +238,7 @@ internal sealed partial class CPUPhysicsWorldBackend
                             var point = manifold.points[index]; var depth = -point.separation; var normal = -manifold.normal;
                             if (depth < 0) continue;
                             if (own.SeparationRay is null && candidate.Tag.SeparationRay is null && b2Dot(normal, incoming) > 0) normal = -normal;
-                            if (!AcceptOneWay(candidate, normal, depth, margin)) { invalid = true; continue; }
+                            if (!AcceptOneWay(own, candidate, normal, depth, margin)) { invalid = true; continue; }
                             accepted = true;
                             if (depth <= minDepth) continue;
                             if (recovering) RetainRecoveryPlane(planes, ref planeCount, new(normal.X, normal.Y, depth, candidate.Priority));
@@ -342,10 +342,10 @@ internal sealed partial class CPUPhysicsWorldBackend
         return proxy;
     }
 
-    private bool AcceptOneWay(in MotionCandidate candidate, in B2Vec2 normal,
+    private bool AcceptOneWay(PhysicsFixtureTag source, in MotionCandidate candidate, in B2Vec2 normal,
         float depth, float queryMargin)
     {
-        var data = candidate.Tag.OneWay;
+        var data = ContactOneWay(candidate.Tag, source);
         if (data is null) return true;
         var rotation = b2Body_GetRotation(b2Shape_GetBody(candidate.ShapeID));
         var pass = b2RotateVector(rotation, new(data.LocalDirection.X, data.LocalDirection.Y));
@@ -353,13 +353,13 @@ internal sealed partial class CPUPhysicsWorldBackend
         var allowance = MathF.Max(data.Margin * MetersPerUnit, queryMargin);
         if (b2Body_GetType(body) is B2BodyType.b2_kinematicBody or B2BodyType.b2_dynamicBody)
             allowance += Space.LastStep * MathF.Max(0, -b2Dot(b2Body_GetLinearVelocity(body), pass));
-        return b2Dot(normal, pass) < 0 && depth <= allowance;
+        return b2Dot(normal, pass) < 0 && depth <= allowance + .00001f * MetersPerUnit;
     }
 
-    private static bool AcceptOneWayMotion(in MotionCandidate candidate, in B2Vec2 motion,
+    private static bool AcceptOneWayMotion(PhysicsFixtureTag source, in MotionCandidate candidate, in B2Vec2 motion,
         in B2Transform otherTransform)
     {
-        var data = candidate.Tag.OneWay;
+        var data = ContactOneWay(candidate.Tag, source);
         if (data is null) return true;
         var pass = b2RotateVector(otherTransform.q, new(data.LocalDirection.X, data.LocalDirection.Y));
         return b2Dot(motion, pass) > 0;

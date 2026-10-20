@@ -1,5 +1,7 @@
 # Registered numerical solver adapter
 
+[Directed source one-way policy](physics-contact-policy.md#directed-sources-and-one-way-targets) preserves ray contacts while ordinary siblings retain the target filter. Recovery, sweeps and final rest use represented source kind.
+
 Last updated: 2026-10-20
 
 ## Complete lifecycle publication boundaries

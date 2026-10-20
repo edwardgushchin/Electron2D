@@ -2,6 +2,43 @@
 
 Last updated: 2026-10-20
 
+## Directed sources and one-way targets
+
+A separation-ray source bypasses the other shape's one-way direction and depth
+allowance. The rule is per represented source geometry, including an extension
+Shape supplying ray data. An ordinary sibling retains normal one-way filtering.
+A ray target's own authored one-way policy still applies to an ordinary source.
+CPU recovery, sweep, rest, pre-solve contacts and CCD use the same source-qualified
+policy. Resident motion, contact and CCD shaders apply it directly to retained
+geometry; this adds no host state mirror, transfer or wait. Inapplicable one-way
+policies do not create rejected dynamic episodes or recovery exclusions.
+
+The public `--directed-oneway` consumer extends the ordinary directed suite with
+zero-direction/zero-margin targets, mixed ray/circle sources, source disabling,
+disabled slot gaps, rotated extension-supplied ray geometry, raw/scene result
+identity and a ray target's own negative control. Built-in root dynamics also retains a ray target's own zero-direction filter across live policy edits and a two-sided positive control.
+The six dynamic target families,
+reverse rays, both slope modes, coupled mass/impulses, checkpoint replay and thin
+floor CastRay/CastShape CCD retain their existing physical assertions with the
+target policy enabled. The independently registered solver exercises the same
+ray dynamics and source-qualified motion queries; its authored dynamic one-way
+episode implementation is not established by these positive ray cases.
+
+The ordinary `--one-way-inputs` regression also verifies raw/manual/child
+slot policy, rotated front/back/zero directions and zero authored margin.
+CPU, resident GPU and registered depth comparisons use the existing .00001 scene-unit query-distance
+tolerance at its allowance boundary, since analytic cast roots and margin
+manifolds round independently. Accepted ordinary contacts must remain within
+allowance plus .00001; deep recovery and invalid directions remain rejected.
+This pre-existing boundary defect reproduced on the starting main assembly.
+
+The motion bracket tolerance is 1/256 plus .00005 in fraction, matching eight
+refinement iterations; shared raw/scene travel differs by less than .003 scene
+units. Existing directed impulse, velocity, slope and energy bounds are unchanged.
+Each measured bracket requires exactly zero owner/all-thread managed bytes over
+128 frames after 128 warmups. Software Vulkan execution cannot establish native
+allocation, hardware speed, another platform or owner visual acceptance.
+
 ## Coincident rounded cores
 
 CPU circle/circle and capsule/circle manifolds now select a unit normal before

@@ -20,8 +20,8 @@ internal sealed partial class CPUPhysicsWorldBackend
         var secondTag = b2Shape_GetUserData(second).GetRef<PhysicsFixtureTag>();
         if (firstTag is not null && secondTag is not null &&
             PhysicsServer.Service.BodiesExcepted(firstTag.ColliderRID, secondTag.ColliderRID)) return false;
-        var firstData = firstTag?.OneWay;
-        var secondData = secondTag?.OneWay;
+        var firstData = ContactOneWay(firstTag, secondTag);
+        var secondData = ContactOneWay(secondTag, firstTag);
         if (firstData is null && secondData is null) return true;
 
         lock (_oneWayPairs)
@@ -41,6 +41,9 @@ internal sealed partial class CPUPhysicsWorldBackend
             return allowed;
         }
     }
+
+    private static OneWayContactData? ContactOneWay(PhysicsFixtureTag? target, PhysicsFixtureTag? source) =>
+        source?.Kind == PhysicsShapeGeometry.ShapeKind.SeparationRay ? null : target?.OneWay;
 
     private static bool FacesContact(B2ShapeId shape, OneWayContactData data, B2Vec2 normal, bool firstSurface)
     {

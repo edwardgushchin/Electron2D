@@ -17,7 +17,7 @@ public static partial class BackendChecks
             for (var role = 0; role < 3; role++)
             {
                 using var scene = role == 0 ? null : new StaticBody { Rotation = .2f };
-                CollisionShape? child = null; uint owner = 0;
+                CollisionShape? child = null; uint owner = 0; var maximumAllowanceExcess = 0f;
                 var body = scene?.GetRID() ?? PhysicsServer.BodyCreate();
                 try
                 {
@@ -90,7 +90,7 @@ public static partial class BackendChecks
                             Set(true, 4, Vector2.Left);
                             for (var retry = 0; retry < 2; retry++)
                             {
-                                var errors = ReleaseErrors(() => Probe(Vector2.Right, true));
+                                var errors = ReleaseErrors(() => Probe(Vector2.Right, true, 4));
                                 Check(errors.Length == 1 && ReferenceEquals(errors[0], retry == 0 ? apply : restore), "Deferred scene one-way preparation retains each original failure");
                             }
                             Policy(true, 4, Vector2.Left);
@@ -119,19 +119,20 @@ public static partial class BackendChecks
                         Policy(true, 4, Vector2.Left);
                     }
                     Set(true, 2); Policy(true, 2, Vector2.Down);
-                    PhysicsServer.BodySetShapeDisabled(body, 1, true); Probe(Vector2.Down, false); PhysicsServer.BodySetShapeDisabled(body, 1, false); Policy(true, 2, Vector2.Down);
+                    PhysicsServer.BodySetShapeDisabled(body, 1, true); Probe(Vector2.Down, false, 2); PhysicsServer.BodySetShapeDisabled(body, 1, false); Policy(true, 2, Vector2.Down);
                     for (var i = 0; i < 128; i++) Frame();
                     Collect(); var own = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
                     for (var i = 0; i < 128; i++) Frame();
                     own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
                     Check(own == 0 && all == 0, $"One-way slot role={role}: {own}/{all} B");
-                    Console.WriteLine($"One-way slot {world.PhysicsBackendName}, role={role}: defaults, normalization, margin, guards, reclaim and retry; 128 full query/frames {own}/{all} B.");
+                    Console.WriteLine($"One-way slot {world.PhysicsBackendName}, role={role}: defaults, normalization, margin, guards, reclaim and retry; 128 full query/frames {own}/{all} B; max allowance rounding={maximumAllowanceExcess}.");
                     void Set(bool enable, float margin, Vector2? direction = null) => PhysicsServer.BodySetShapeAsOneWayCollision(body, 1, enable, margin, direction);
                     void Frame() { Set(true, 2); Policy(true, 2, Vector2.Down); tree.PhysicsFrame(1d / 60); }
                     void Policy(bool enabled, float margin, Vector2 direction)
                     {
                         var pass = (direction == Vector2.Zero ? Vector2.Down : direction).Rotated(.5f);
-                        Probe(pass, !enabled || direction != Vector2.Zero); Probe(-pass, !enabled);
+                        var allowance = enabled ? MathF.Max(margin, motion.Margin) : float.PositiveInfinity;
+                        Probe(pass, !enabled || direction != Vector2.Zero, allowance); Probe(-pass, !enabled, allowance);
                         Check(PhysicsServer.BodyGetShapeCount(body) == 3 && PhysicsServer.BodyGetShape(body, 1) == rectangle.GetRID(), "One-way edits preserve borrowed geometry and all logical indices");
                         if (solver is null) return;
                         foreach (var part in solver.Bodies[body].Parts.AsSpan(0, solver.Bodies[body].Shapes))
@@ -141,12 +142,17 @@ public static partial class BackendChecks
                                 ? part.OneWay is { } sibling && sibling.Margin == scene.GetShapeOwnerOneWayCollisionMargin(owner) && sibling.LocalDirection == scene.GetShapeOwnerOneWayCollisionDirection(owner)
                                 : part.OneWay is null, "A per-index policy leaves every sibling on its stored group policy");
                     }
-                    void Probe(Vector2 direction, bool expected)
+                    void Probe(Vector2 direction, bool expected, float allowance)
                     {
                         motion.From = new(0, -direction * 20); motion.Motion = direction * 40;
                         var hit = PhysicsServer.BodyTestMotion(mover, motion, result);
-                        Check(hit == expected && (!hit || result.GetColliderRID() == body && result.GetColliderShape() == 1 && result.GetCollisionLocalShape() == 0),
-                            "One-way side policy controls actual selected body motion and logical query identity");
+                        if (hit != expected || hit && (result.GetColliderRID() != body || result.GetColliderShape() != 1 || result.GetCollisionLocalShape() != 0))
+                            throw new InvalidOperationException($"One-way side policy role={role}, direction={direction}, expected={expected}, hit={hit}, local={result.GetCollisionLocalShape()}, target={result.GetColliderShape()}, travel={result.GetTravel()}, fractions={result.GetCollisionSafeFraction()}/{result.GetCollisionUnsafeFraction()}.");
+                        if (hit && float.IsFinite(allowance))
+                        {
+                            maximumAllowanceExcess = MathF.Max(maximumAllowanceExcess, result.GetCollisionDepth() - allowance);
+                            Check(result.GetCollisionDepth() <= allowance + .00001f, "A one-way contact stays inside its allowance plus distance rounding tolerance");
+                        }
                     }
                 }
                 finally { if (solver is not null) solver.ShapeHook = null; if (scene is null) PhysicsServer.FreeRID(body); else root.RemoveChild(scene); }

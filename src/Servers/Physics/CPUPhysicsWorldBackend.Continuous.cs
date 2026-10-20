@@ -149,7 +149,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         if (ta.SeparationRay is not null && tb.SeparationRay is not null ||
             ta.SeparationRay is { } rayA && b2LengthSquared(rayA.To - rayA.From) == 0 ||
             tb.SeparationRay is { } rayB && b2LengthSquared(rayB.To - rayB.From) == 0) return;
-        if ((ta.OneWay is not null || tb.OneWay is not null) && CurrentContinuousSide(a.ID, b.ID) == false) return;
+        if ((ContactOneWay(ta, tb) is not null || ContactOneWay(tb, ta) is not null) && CurrentContinuousSide(a.ID, b.ID) == false) return;
         var input = new B2TOIInput
         {
             proxyA = b2MakeShapeDistanceProxy(sa),
@@ -217,7 +217,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         }
         if (hit.fraction >= 1) return;
         if (CurrentContinuousSide(a.ID, b.ID) != true &&
-            (!ContinuousSide(ta.OneWay, xa.q, hit.normal, true) || !ContinuousSide(tb.OneWay, xb.q, hit.normal, false))) return;
+            (!ContinuousSide(ContactOneWay(ta, tb), xa.q, hit.normal, true) || !ContinuousSide(ContactOneWay(tb, ta), xb.q, hit.normal, false))) return;
         _continuousFraction = MathF.Min(_continuousFraction, hit.fraction);
     }
 

@@ -4,6 +4,7 @@ namespace Electron2D;
 /// <remarks>The caller owns this resource. Body motion and sensing use directed separation contacts.
 /// Ray and point queries cannot intersect it. Body constraints use directed contacts with ordinary
 /// material impulses, sleep and reporting. A contact search margin does not extend the physical ray.
+/// The ray bypasses another shape's one-way response; its own one-way setting still filters ordinary counterparts.
 /// The ray contributes no geometric mass or rotational inertia.</remarks>
 public sealed class SeparationRayShape : Shape
 {

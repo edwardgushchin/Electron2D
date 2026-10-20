@@ -8,7 +8,7 @@ internal sealed class SeparationRayDynamicsTests(bool gpu, PhysicsServer.Backend
     internal static void Run(PhysicsServer.Backend backend) => new SeparationRayDynamicsTests(false, backend).RunCore();
     private void RunCore()
     {
-        VerifyFamilies(gpu); VerifySlope(gpu); VerifyMaterials(gpu); VerifySleepAndAllocation(gpu); VerifySearchMargin(gpu); VerifyFilters(gpu); VerifyCoupled(gpu); VerifyCCD(gpu); VerifyScene(gpu);
+        VerifyFamilies(gpu); VerifySlope(gpu); VerifyMaterials(gpu); VerifySleepAndAllocation(gpu); VerifySearchMargin(gpu); VerifyFilters(gpu); VerifyCoupled(gpu); VerifyCCD(gpu); VerifyRayTargetPolicy(gpu); VerifyScene(gpu);
         Console.WriteLine($"Directed ray dynamics passed ({(gpu ? "CPU host/GPU stages" : backend.ToString())}): solver, materials, mass, reports, sleep and allocation.");
     }
     private sealed class World : IDisposable
@@ -171,12 +171,28 @@ internal sealed class SeparationRayDynamicsTests(bool gpu, PhysicsServer.Backend
             Check(MathF.Abs(PhysicsServer.BodyGetTransform(body).Origin.Y - 19.9f) < 1 && MathF.Abs(PhysicsServer.BodyGetLinearVelocity(body).Y) < 1, $"Continuous directed contact stops at its tip ({mode}): {PhysicsServer.BodyGetTransform(body).Origin}, {PhysicsServer.BodyGetLinearVelocity(body)}.");
             Console.WriteLine($"Ray CCD {mode}: {PhysicsServer.BodyGetTransform(body).Origin}, {PhysicsServer.BodyGetLinearVelocity(body)}");
         }
-        for (var reverse = 0; reverse < 2; reverse++)
+        for (var reverse = 0; reverse < 3; reverse++)
         {
             using var world = new World(gpu, backend); var body = world.Add(ray, new(0, 14), true); var target = world.Add(floor, new(0, 40));
-            PhysicsServer.BodySetShapeAsOneWayCollision(target, 0, true, 1, reverse == 0 ? Vector2.Down : Vector2.Up);
+            PhysicsServer.BodySetShapeAsOneWayCollision(target, 0, true, 1, reverse == 0 ? Vector2.Down : reverse == 1 ? Vector2.Up : Vector2.Zero);
             PhysicsServer.BodySetLinearVelocity(body, new(0, 60)); world.Step(40);
-            Check(reverse == 0 ? PhysicsServer.BodyGetTransform(body).Origin.Y < 21 : PhysicsServer.BodyGetTransform(body).Origin.Y > 50, "Directed manifold respects one-way contact policy.");
+            Check(PhysicsServer.BodyGetTransform(body).Origin.Y < 21, "A directed source bypasses every target one-way direction.");
+        }
+    }
+    private void VerifyRayTargetPolicy(bool gpu)
+    {
+        using var ray = new SeparationRayShape { Length = 5 }; using var circle = new CircleShape { Radius = 8 };
+        using var world = new World(gpu, backend); var target = world.Add(ray, default); var body = world.Add(circle, new(0, 10), true);
+        using var state = PhysicsServer.BodyGetDirectState(body)!;
+        for (var edit = 0; edit < 3; edit++)
+        {
+            var oneWay = edit != 1;
+            PhysicsServer.BodySetShapeAsOneWayCollision(target, 0, oneWay, 0, Vector2.Zero);
+            PhysicsServer.BodySetTransform(body, new(0, new Vector2(0, 10))); PhysicsServer.BodySetLinearVelocity(body, new(0, -20));
+            world.Step();
+            Check(oneWay ? state.GetContactCount() == 0 && MathF.Abs(state.LinearVelocity.Y + 20) < .001f :
+                state.GetContactCount() > 0 && state.LinearVelocity.Y > -1,
+                "A ray target's own one-way policy still filters an ordinary source after live edits.");
         }
     }
     private void VerifyScene(bool gpu)

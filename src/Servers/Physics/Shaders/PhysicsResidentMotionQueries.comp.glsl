@@ -99,11 +99,12 @@ Contact evaluate(Hull a,Hull b,Geometry ga,Geometry gb,vec2 extension,float marg
 vec2 passDirection(){return rotate(bodyB.pose.zw,rotate(shapeB.pose.zw,shapeB.oneWay.xy));}
 bool oneWayContact(Contact c)
 {
-    if((shapeB.policy.w&4u)==0u)return true;
+    if(geometries[shapeA.owner.z].data.z==6u||(shapeB.policy.w&4u)==0u)return true;
     vec2 direction=passDirection();
     float allowance=max(shapeB.oneWay.z,q.motionMargin.z);
     if(bodyB.flags.y!=0u)allowance+=q.motionMargin.w*max(0,-dot2(bodyB.velocity.xy+bodyB.surface.xy,direction));
-    return dot2(c.normal,direction)<0&&c.depth<=allowance;
+    // Cast roots and margin manifolds round independently at the allowance boundary.
+    return dot2(c.normal,direction)<0&&c.depth<=allowance+tolerances.z;
 }
 Result snapshot(Contact c)
 {
@@ -126,7 +127,7 @@ void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
 {
     bool ignored=ga.data.z==7u||(ga.data.z==5u&&gb.data.z!=7u);
     vec2 motion=ignored?vec2(0):q.motionMargin.xy;
-    if((shapeB.policy.w&4u)!=0u&&dot2(q.motionMargin.xy,passDirection())<=0)return;
+    if(ga.data.z!=6u&&(shapeB.policy.w&4u)!=0u&&dot2(q.motionMargin.xy,passDirection())<=0)return;
     bool directed=ga.data.z==6u||gb.data.z==6u;
     // Keep one geometry call site across phases to limit driver inlining and cold compilation.
     const uint initialPhase=0u,reachPhase=1u,bisectPhase=2u,rayImpactPhase=3u;

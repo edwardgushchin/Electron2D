@@ -46,7 +46,7 @@ public static partial class BackendChecks
                                     var gap = PartGap(a, pose, b, other.Pose, out var toward, out _, out var onOther);
                                     var away = -toward;
                                     if (gap > 0) continue;
-                                    if (!AcceptRecovery(b, other, away, -gap, queryMargin)) { invalid = true; continue; }
+                                    if (!AcceptRecovery(own, b, other, away, -gap, queryMargin)) { invalid = true; continue; }
                                     accepted = true;
                                     if (gap == 0) continue;
                                     RetainMotionPlane(planes, ref count, new(away.X, away.Y, -gap, other.Priority));
@@ -81,7 +81,7 @@ public static partial class BackendChecks
                         var own = local.Parts[i]; var a = own; var b = other.Parts[j];
                         if (a.Concave && b.Concave || RejectedMotionPair(rejected, rejectedCount, own, other, b)) continue;
                         var sweptMotion = a.Boundary || !b.Boundary && (a.Concave || b.Directed) ? Vector2.Zero : motion;
-                        if (b.OneWay is { } policy && motion.Dot(policy.LocalDirection.Rotated(other.Rotation)) <= 0) continue;
+                        if (!a.Directed && b.OneWay is { } policy && motion.Dot(policy.LocalDirection.Rotated(other.Rotation)) <= 0) continue;
                         if (a.Directed && !a.Slide && !collideSeparationRay) continue;
                         float low, f;
                         if (a.Directed || b.Directed)
@@ -108,7 +108,7 @@ public static partial class BackendChecks
                         var gap = PartGap(MotionRecoveryPart(own, b, queryMargin), restPose, b, other.Pose, out var toward, out _, out var onOther);
                         var away = -toward;
                         if (hit is not null && fraction > 0 && !own.Directed && !b.Directed && away.Dot(motion) > 0) away = -away;
-                        if (-gap <= deepestRest || !AcceptRecovery(b, other, away, -gap, queryMargin)) continue;
+                        if (-gap <= deepestRest || !AcceptRecovery(own, b, other, away, -gap, queryMargin)) continue;
                         deepestRest = -gap; rest = other; target = b; point = onOther; normal = away; depth = -gap;
                         source = own;
                     }
@@ -123,14 +123,14 @@ public static partial class BackendChecks
         }
         private static Part MotionRecoveryPart(in Part own, in Part target, float margin) =>
             own.Directed && target.Boundary ? own with { Inflation = own.Inflation + margin } : ExpandPart(own, margin);
-        private bool AcceptRecovery(in Part part, Body body, Vector2 normal, float depth, float margin)
+        private bool AcceptRecovery(in Part source, in Part part, Body body, Vector2 normal, float depth, float margin)
         {
-            if (part.OneWay is not { } policy) return true;
+            if (source.Directed || part.OneWay is not { } policy) return true;
             var pass = policy.LocalDirection.Rotated(body.Rotation);
             var allowance = MathF.Max(policy.Margin, margin);
             var velocity = body.Velocity + (body.Mode == PhysicsServer.BodyMode.Kinematic ? body.Surface : Vector2.Zero);
             if (body.Mode != PhysicsServer.BodyMode.Static) allowance += Delta * MathF.Max(0, -velocity.Dot(pass));
-            return normal.Dot(pass) < 0 && depth <= allowance;
+            return normal.Dot(pass) < 0 && depth <= allowance + .00001f;
         }
         private static void RetainMotionPlane(Span<System.Numerics.Vector4> planes, ref int count, System.Numerics.Vector4 plane)
         {

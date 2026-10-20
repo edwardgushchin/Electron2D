@@ -102,7 +102,7 @@ void main()
     if(bodyA.flags.x!=sa.owner.y||bodyB.flags.x!=sb.owner.y||bodyA.flags.w==0u||bodyB.flags.w==0u||ga.data.w!=sa.owner.w||gb.data.w!=sb.owner.w){fail();return;}
     if(ga.data.y==0u||gb.data.y==0u)return;
     sensor=((sa.policy.w|sb.policy.w)&2u)!=0u;contactLimit=sensor?tolerances.w:tolerances.x;
-    shapeA=sa;shapeB=sb;oneWay=!sensor&&((sa.policy.w|sb.policy.w)&4u)!=0u;
+    shapeA=sa;shapeB=sb;oneWay=!sensor&&hasOneWay(sa,sb);
     oneWayRevisions=uvec4(sa.revision.x,sb.revision.x,ga.revision,gb.revision);
     if((!sensor&&ga.data.z==5u&&gb.data.z==5u)||(ga.data.z==6u&&gb.data.z==6u))return;
     if(sensor&&(ga.data.z==6u||gb.data.z==6u))contactLimit=0;

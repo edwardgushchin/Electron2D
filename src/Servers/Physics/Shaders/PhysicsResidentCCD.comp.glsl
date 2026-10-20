@@ -139,7 +139,7 @@ float sweep(Shape sa,Geometry ga,Shape sb,Geometry gb,ResidentBody startA,Reside
     float wa=rayA?0:abs(va.z),wb=rayB?0:abs(vb.z);
     float bound=tolerances.w*(wa*radiusA+wb*radiusB);
     float time=0;
-    bool oneWay=((sa.policy.w|sb.policy.w)&4u)!=0u;
+    bool oneWay=hasOneWay(sa,sb);
     uint decision=oneWay?previousOneWay(activePair,uvec2(pieceA,pieceB),uvec4(sa.revision.x,sb.revision.x,ga.revision,gb.revision)):0u;
 
     for(uint iteration=0u;iteration<256u;iteration++)

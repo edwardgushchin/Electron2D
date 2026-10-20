@@ -1,5 +1,7 @@
 # Physics domain
 
+[Directed source one-way policy](../components/physics-contact-policy.md#directed-sources-and-one-way-targets) preserves ray contacts while ordinary siblings retain the target filter. Recovery, sweeps and final rest use represented source kind.
+
 [Coincident rounded cores](../components/physics-contact-policy.md#coincident-rounded-cores) now receive unit normals and surface anchors in shared CPU primitive code, reaching actual dynamics as well as queries/recovery. The bounded public consumer compares CPU/software-GPU/registered physical invariants and warm allocation. No declaration states change: 1279/1369 Implemented (93.43%), 90 open.
 
 [Complete reporting threshold operations](../components/physics-registered-adapter.md#complete-reporting-threshold-operations) reject numerical writes before selected status/scene participation/pending preparation while retaining configured reads and physical reporting semantics. Nine body roles, terminal recovery, immutable reports, exact bounds/history and strict zero warmed managed bytes pass 74/74 JIT/NativeAOT CPU/no-device, software-GPU, registered and root publication profiles. The current physics census is 1262/1369 Implemented (92.1841%), with 107 open declarations (76 Partial, 14 Unimplemented, 17 Blocked), 92 Excluded. Wider numerical/network/native/platform/hardware performance acceptance remains open; earlier counts describe checkpoints.

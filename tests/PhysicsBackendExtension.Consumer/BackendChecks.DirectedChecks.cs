@@ -2,7 +2,7 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunDirectedGeometry(PhysicsServer.Backend? backend = null, bool threaded = false, bool angularOnly = false)
+    public static void RunDirectedGeometry(PhysicsServer.Backend? backend = null, bool threaded = false, bool angularOnly = false, bool oneWay = false)
     {
         var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
@@ -10,14 +10,14 @@ public static partial class BackendChecks
         try
         {
             if (angularOnly) { AngularCCD(); return; }
-            Queries(); Motion(); Filters(); Mass(); Pairs();
+            Queries(); Motion(); if (oneWay) DirectedOneWaySources(Create, Warm); Filters(); Mass(); Pairs();
             for (var family = 0; family < 6; family++)
             {
                 foreach (var mode in new[] { CCDMode.Disabled, CCDMode.CastRay, CCDMode.CastShape }) Dynamics(family, mode, false);
                 Dynamics(family, CCDMode.CastShape, true);
             }
             Slope(false); Slope(true); Coupled(); Nonreciprocal(false); Nonreciprocal(true); Continuous(); AngularCCD(); Lifecycle(); Character(); Sleep();
-            Console.WriteLine($"Directed geometry {backend?.ToString() ?? "registered"}, threaded={threaded}: surface entry, six queries, mass, contacts, CCD and zero warm frames passed.");
+            Console.WriteLine($"Directed geometry {backend?.ToString() ?? "registered"}, threaded={threaded}, one-way={oneWay}: surface entry, six queries, mass, contacts, CCD and zero warm frames passed.");
         }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
         World Create() => backend is { } selected ? new World(selected) : new World("DirectedSolver");
@@ -74,14 +74,14 @@ public static partial class BackendChecks
         {
             using var world = Create(); using var root = new SubViewport { World = world }; using var ray = new SeparationRayShape { Length = 5 };
             using var floorShape = new RectangleShape { Size = new(200, 10) };
-            var floor = new StaticBody { Position = new(0, 25) }; floor.AddChild(new CollisionShape { Shape = floorShape }); root.AddChild(floor);
+            var floor = new StaticBody { Position = new(0, 25) }; floor.AddChild(new CollisionShape { Shape = floorShape, OneWayCollision = oneWay, OneWayCollisionMargin = 0, OneWayCollisionDirection = Vector2.Zero }); root.AddChild(floor);
             using var tree = new SceneTree(root); var body = PhysicsServer.BodyCreate();
             try
             {
                 PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Kinematic); PhysicsServer.BodyAddShape(body, ray.GetRID()); PhysicsServer.BodySetSpace(body, world.Space);
                 using var test = new PhysicsTestMotionParameters { Motion = new(0, 30), Margin = 0 }; using var result = new PhysicsTestMotionResult();
                 Check(!PhysicsServer.BodyTestMotion(body, test, result), "Non-sliding rays require explicit motion policy"); test.CollideSeparationRay = true;
-                Check(PhysicsServer.BodyTestMotion(body, test, result) && MathF.Abs(result.GetCollisionUnsafeFraction() - .5f) < 1f / 256 + .00005f, "Enabled ray motion brackets the authored endpoint");
+                Check(PhysicsServer.BodyTestMotion(body, test, result) && MathF.Abs(result.GetCollisionUnsafeFraction() - .5f) < 1f / 256 + .00005f, "Directed one-way source still brackets the authored endpoint");
                 ray.SlideOnSlope = true; test.CollideSeparationRay = false;
                 Check(PhysicsServer.BodyTestMotion(body, test, result), "Sliding ray participates without explicit flag");
                 ray.SlideOnSlope = false; ray.Length = 20; test.From = new(0, new Vector2(0, 5)); test.Motion = Vector2.Zero; test.RecoveryAsCollision = true;
@@ -133,7 +133,7 @@ public static partial class BackendChecks
             using var material = new PhysicsMaterial { Friction = .5f, Bounce = .25f };
             var top = family is 0 or 2 or 4 ? 10 : family == 1 ? 5 : 0;
             var target = new StaticBody { Position = new(0, 40 + top), PhysicsMaterialOverride = material, ConstantLinearVelocity = new(2, 0) };
-            target.AddChild(new CollisionShape { Shape = shape }); root.AddChild(target);
+            target.AddChild(new CollisionShape { Shape = shape, OneWayCollision = oneWay, OneWayCollisionMargin = 0, OneWayCollisionDirection = Vector2.Zero }); root.AddChild(target);
             var body = Dynamic(new(0, reverse ? 40 + 2 * top + 20 - .025f : 20 + .025f), ray);
             body.Rotation = reverse ? Mathf.Pi : 0; body.LinearVelocity = new(10, reverse ? -20 : 20); body.LockRotation = true; body.ContactMonitor = true;
             body.PhysicsMaterialOverride = material; body.ContinuousCD = mode; root.AddChild(body);
@@ -158,7 +158,7 @@ public static partial class BackendChecks
         void Slope(bool slide)
         {
             using var world = Create(); using var root = new SubViewport { World = world }; using var ray = new SeparationRayShape { Length = 20, SlideOnSlope = slide }; using var floorShape = new RectangleShape { Size = new(200, 10) };
-            var floor = new StaticBody { Position = new(0, 40), Rotation = .35f }; floor.AddChild(new CollisionShape { Shape = floorShape }); root.AddChild(floor);
+            var floor = new StaticBody { Position = new(0, 40), Rotation = .35f }; floor.AddChild(new CollisionShape { Shape = floorShape, OneWayCollision = oneWay, OneWayCollisionDirection = Vector2.Zero }); root.AddChild(floor);
             var body = Dynamic(new(0, 15), ray); body.LockRotation = true; body.LinearVelocity = new(0, 60); root.AddChild(body);
             using var tree = new SceneTree(root); using var state = PhysicsServer.BodyGetDirectState(body.GetRID())!; using var history = PhysicsServer.SpaceCreateCheckpoint(world.Space);
             Warm(Frame, $"slope {slide}");
@@ -172,7 +172,7 @@ public static partial class BackendChecks
         {
             using var world = Create(); using var root = new SubViewport { World = world }; using var ray = new SeparationRayShape(); using var box = new RectangleShape { Size = new(100, 10) };
             var a = Dynamic(new(0, 20.025f), ray); a.Mass = 2; a.LockRotation = true; a.LinearVelocity = new(0, 300); root.AddChild(a);
-            var b = Dynamic(new(0, 45), box); b.Name = "Target"; b.Mass = 3; b.LockRotation = true; root.AddChild(b);
+            var b = Dynamic(new(0, 45), box); b.Name = "Target"; b.Mass = 3; b.LockRotation = true; ((CollisionShape)b.GetChild(0)).OneWayCollision = oneWay; ((CollisionShape)b.GetChild(0)).OneWayCollisionDirection = Vector2.Zero; root.AddChild(b);
             using var tree = new SceneTree(root); using var sa = PhysicsServer.BodyGetDirectState(a.GetRID())!; using var sb = PhysicsServer.BodyGetDirectState(b.GetRID())!; using var history = PhysicsServer.SpaceCreateCheckpoint(world.Space);
             Warm(Frame, "coupled momentum/replay");
             void Frame()
@@ -215,7 +215,7 @@ public static partial class BackendChecks
             foreach (var mode in new[] { CCDMode.CastRay, CCDMode.CastShape })
             {
                 using var world = Create(); using var root = new SubViewport { World = world }; using var ray = new SeparationRayShape(); using var box = new RectangleShape { Size = new(200, .2f) };
-                var floor = new StaticBody { Position = new(0, 40) }; floor.AddChild(new CollisionShape { Shape = box }); root.AddChild(floor);
+                var floor = new StaticBody { Position = new(0, 40) }; floor.AddChild(new CollisionShape { Shape = box, OneWayCollision = oneWay, OneWayCollisionDirection = Vector2.Zero }); root.AddChild(floor);
                 var body = Dynamic(Vector2.Zero, ray); body.LockRotation = true; body.LinearVelocity = new(0, 6000); body.ContinuousCD = mode; root.AddChild(body);
                 using var tree = new SceneTree(root); tree.PhysicsFrame(1d / 60);
                 Check(MathF.Abs(body.Position.Y - 19.9f) < .501f && MathF.Abs(body.LinearVelocity.Y) < 1, "Directed CCD stops at the authored tip on a thin floor");
