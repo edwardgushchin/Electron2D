@@ -91,6 +91,31 @@ platform, target GPU/window performance or complete-goal acceptance.
 
 The frozen full software run for sources at 374f844b stopped after 863.823 seconds in PhysicsReportOnlyTests.Replay with 0/4656 owner/all-thread managed bytes. The unchanged isolated CPU profile passes at 0/0. Its preparation had a blocking second collection without a following finalizer drain, contrary to the existing maintenance contract. The controlled AllocationWarmupCheck deterministically rejects that exact collector for returning during its second finalizer pass. Report-only replay now uses its existing common Collect helper, and that helper drains after its final collection. The same controlled check executes before this family. Numerical code, measured operations/counts, zero-byte assertions and ordinary production GC are unchanged. The failed whole-suite result remains archived in bin/physics-inherited-full/2026-10-20/; the specific 4656-byte allocation stack was not captured, so the setup defect does not by itself prove that entire failure's cause.
 
+## Deferred scene-tile regression, 2026-10-20
+
+The frozen complete software run for sources at `63c1938b` passed the report-only
+allocation checks at 0/0 bytes, then stopped after 988.462 seconds in
+`TileSceneTests.Failures`. Its old recursion fixture assumed that an operation
+queued while flushing would wait for a second flush. ADR 0006 instead drains
+nested deferred work to quiescence and aggregates failures after later work and
+captured deletions. The unchanged isolated tile-scene profile reproduces the same
+failure. Both failed runs and their source/payload binding remain under
+`bin/physics-scene-save/2026-10-20/`; neither is a complete-suite pass.
+
+The fixture now requires the exact nested recursion error in the flush aggregate,
+no further scene generation, completion of later nested work and queued deletion,
+the direct-call error, and successful null-template repair without losing an
+unrelated scene. Production code and public API are unchanged. The complete
+tile-scene and deferred-tree contract profiles pass without a GPU device,
+including fresh-process file reconstruction. The initial 2408/880-input
+runtime/root PDB checks isolate this test change and the generated revision
+attribute. Concurrent local rendering integration advanced `main` to `7f81e949`;
+the earlier repeat was stopped explicitly, and both focused profiles pass again
+on fresh combined sources with 2411/888-input PDB checks. Evidence is retained in
+`bin/physics-deferred-tiles/2026-10-20/`. The complete software/offscreen repeat
+from that combined payload is running; hardware, native allocation, window
+performance and complete-goal acceptance remain open.
+
 ## Material allocation measurement
 
 Material allocation brackets now complete both collection/finalization passes

@@ -66,7 +66,18 @@ internal static partial class TileSceneTests
         try { Reject<AggregateException>(layer.UpdateInternals); Check(layer.GetChildCount() == 1 && previous.Parent == layer && !previous.IsQueuedForDeletion, "Ready failure cleans candidate and preserves previous instance"); }
         finally { FailingRoot.Fail = false; source.SetSceneTileScene(1, scene); tree.FlushDeferred(); }
         using var recursiveSource = new TileSetScenesCollectionSource(); recursiveSource.CreateSceneTile(null, 1); using var recursiveSet = new TileSet(); recursiveSet.AddSource(recursiveSource, 0); using var recursiveAuthored = new TileMapLayer { TileSet = recursiveSet }; recursiveAuthored.SetCell(default, 0, Vector2i.Zero, 1); using var recursive = Pack(recursiveAuthored); recursiveSource.SetSceneTileScene(1, recursive);
-        var top = new TileMapLayer { Name = "Recursive", TileSet = recursiveSet }; top.SetCell(default, 0, Vector2i.Zero, 1); root.AddChild(top); tree.FlushDeferred(); var nested = (TileMapLayer)top.GetChildren().Single(); Reject<InvalidOperationException>(nested.UpdateInternals); Check(nested.GetChildCount() == 0, "Recursive ancestor template rejects before spawning another generation");
+        var top = new TileMapLayer { Name = "Recursive", TileSet = recursiveSet }; top.SetCell(default, 0, Vector2i.Zero, 1); root.AddChild(top);
+        var tailCalls = 0; tree.Defer(() => tree.Defer(() => tailCalls++));
+        var retired = new Node { Name = "Retired" }; root.AddChild(retired); tree.QueueDelete(retired);
+        AggregateException? observed = null;
+        try { tree.FlushDeferred(); }
+        catch (AggregateException error) { observed = error; }
+        Check(observed?.InnerExceptions is [InvalidOperationException { Message: "A scene tile cannot recursively instantiate its own ancestor template." }], "A quiescent flush reports the nested template failure in its ordinary error aggregate");
+        var nested = (TileMapLayer)top.GetChildren().Single();
+        Check(nested.GetChildCount() == 0 && tailCalls == 1 && retired.IsDisposed, "Recursion stops before another generation while later work and captured deletion finish");
+        Reject<InvalidOperationException>(nested.UpdateInternals);
+        recursiveSource.SetSceneTileScene(1, null); tree.FlushDeferred();
+        Check(top.GetChildCount() == 0 && nested.IsDisposed && layer.GetChildCount() == 1, "A repaired template retires the nested scene and preserves unrelated instances");
     }
     private sealed class FailingRoot : Entity
     {
