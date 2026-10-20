@@ -90,7 +90,7 @@ internal static class PhysicsSnapshotTests
     }
     private static void Contacts(PhysicsServer.Backend from, PhysicsServer.Backend to)
     {
-        using var a = new Rig(from); a.Ground(oneWay: true); var body = a.Ball(2, new(0, 80)); var area = a.Sensor(); a.Step(90);
+        using var a = new Rig(from); var sourceGround = a.Ground(oneWay: true); var body = a.Ball(2, new(0, 80)); var area = a.Sensor(); a.Step(90);
         using var b = new Rig(to); var otherArea = b.Sensor(); var other = b.Ball(2, new(400, -50)); b.Ground(oneWay: true); b.Step(4);
         var view = PhysicsServer.BodyGetDirectState(body.GetRID())!; var otherView = PhysicsServer.BodyGetDirectState(other.GetRID())!;
         Check(view.GetContactCount() > 0 && area.OverlapsBody(body), "Source has real contacts and Area history");
@@ -118,6 +118,17 @@ internal static class PhysicsSnapshotTests
         }
         b.Step(); Check(enters == 0 && bodyEnters == 0, "Next tick does not repeat contact or overlap enters");
         other.GlobalPosition = new(400, -50); b.Step(2); Check(exits == 1, "A restored overlap exits once");
+        var snapshot = new PhysicsSnapshot();
+        foreach (var (collider, geometry) in new (PhysicsBody, Shape)[] { (sourceGround, a.Floor), (body, a.Circle) })
+        {
+            var count = view.GetContactCount(); Check(count > 0, "The slot replacement starts with a published contact");
+            PhysicsServer.BodyRemoveShape(collider.GetRID(), 0);
+            PhysicsServer.BodyAddShape(collider.GetRID(), geometry.GetRID());
+            Check(view.GetContactCount() == count, "Geometry edits retain the already published contact snapshot");
+            Reject<InvalidOperationException>(() => a.Map.Capture(snapshot));
+            a.Step(); a.Map.Capture(snapshot);
+            Check(view.GetContactCount() > 0, "The next tick publishes the replacement slot for capture");
+        }
         Console.WriteLine($"Portable contacts {from}->{to}: passed");
     }
     private static void Forces(PhysicsServer.Backend from, PhysicsServer.Backend to)

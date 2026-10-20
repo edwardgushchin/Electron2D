@@ -1079,7 +1079,13 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIALOG_CHILD") is { } di
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIALOG") == "1") { DialogTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIALOG_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_BODY_STATE") == "1") { PhysicsBodyStateTests.Run(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_PARALLEL") == "1") { PhysicsParallelTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_PARALLEL") is { } parallelPhysics)
+{
+    if (parallelPhysics is "gpu" or "gpu-threaded") PhysicsParallelTests.RunGPU(parallelPhysics == "gpu-threaded");
+    else if (parallelPhysics is "1" or "cpu") PhysicsParallelTests.Run();
+    else throw new ArgumentException("Use cpu or gpu for contact publication scheduling.");
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_THREAD") == "1") { PhysicsSeparateThreadTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_CLOCK") == "1") { VerifyEngine(); PhysicsClockTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDERING_DEVICE") == "1") { RenderingDeviceTests.Run(); return; }

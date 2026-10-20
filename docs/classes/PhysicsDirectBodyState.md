@@ -364,3 +364,10 @@ broader geometry/joint/network acceptance remain open.
 
 
 [Joint and contact support](../components/physics-joints.md#joint-and-contact-support-2026-10-14) verifies spring-loaded pin/groove constraints, real floor friction, contact identity/normal/surface-velocity/impulse, monitored checkpoint continuation and post-clear motion on CPU/GPU. Warm full frames allocate no managed bytes; broader numerical/native/foreign/network/performance acceptance remains open and declaration states are unchanged.
+
+Completed contact capture reads retained shape-slot lifetime tokens from a matching
+physical scene owner, with the server registry fallback for raw or missing owners.
+Observed object associations do not retarget that physical owner. Existing tokens
+remain immutable; removal/readdition cannot silently validate old history against
+a new slot. [CPU/GPU snapshot and worker checks](../components/physics-scene-performance.md#contact-publication-workers-2026-10-20)
+cover stale-token rejection, fresh publication, owner callbacks and warm allocation.

@@ -1,12 +1,12 @@
 # PhysicsTaskScheduler
 
-Last updated: 2026-10-06
+Last updated: 2026-10-20
 
 **Declaration:** `internal sealed class PhysicsTaskScheduler : IDisposable`
 
 **Source:** [PhysicsTaskScheduler.cs](../../src/Servers/Physics/PhysicsTaskScheduler.cs) · **Component:** [Scene physics bodies](../components/physics-bodies.md)
 
-World-owned adapter for backend enqueue/finish callbacks. PhysicsSpace creates it with up to four available processors and binds the backend world. A single-worker interval executes immediately and returns no task handle. The first parallel interval creates the retained worker threads, queues, wake events and 64 job handles. Each range runs once with a unique physical worker index; constraint tasks retain their own backend worker identity. Queue ranges respect the requested minimum size; uneven tails are distributed without gaps.
+World-owned adapter for backend enqueue/finish callbacks. The CPU backend creates it with up to four available processors and binds its numerical world. The GPU backend owns an unbound scheduler for decoding completed host contact reports; constructing or using it creates no CPU numerical world. A single-worker interval executes immediately and returns no task handle. The first parallel interval creates the retained worker threads, queues, wake events and 64 job handles. Each range runs once with a unique physical worker index; constraint tasks retain their own backend worker identity. Queue ranges respect the requested minimum size; uneven tails are distributed without gaps.
 
 Finish waits for every range and returns the job storage before reporting a captured worker failure. Constraint failures publish cancellation to the step context so other constraint workers can exit. This reports fatal backend faults; it does not promise that a partly solved world can resume. Dispose drains queued work, joins threads and releases wait primitives before the native world is destroyed. Game integration and events execute outside these workers.
 
@@ -17,3 +17,10 @@ Solver work stealing and cancellation now use a 64-bit publication token with a
 PhysicsParallelTests retains injected-worker failure/cancellation checks;
 PhysicsSolverIterationTests crosses 65,535 graph phases with multiple contact blocks.
 Stage descriptions are immutable and reused rather than allocated per sweep.
+
+RunRanges joins retained background ranges and an owner range before returning.
+Counts below 256 or a single selected lane execute on the owner. A failed owner
+range still waits for all workers; simultaneous failures aggregate both errors.
+Successful warmed dispatch allocates no managed memory. GPU worker capture ends
+before extension projection and user callbacks; disposal joins the threads before
+releasing the resident store. See [contact publication verification](../components/physics-scene-performance.md#contact-publication-workers-2026-10-20).

@@ -423,7 +423,14 @@ public class PhysicsDirectBodyState : ElectronObject
 
     internal void StoreContact(int slot, in Contact contact) => _contacts[slot] = contact with
     {
-        LocalSlotIdentity = contact.LocalSlotIdentity ?? PhysicsServer.Service.HistoryShapeIdentity(_runtime.RID, contact.LocalShape),
-        OtherSlotIdentity = contact.OtherSlotIdentity ?? PhysicsServer.Service.HistoryShapeIdentity(contact.Collider, contact.ColliderShape)
+        LocalSlotIdentity = contact.LocalSlotIdentity ?? ContactShapeIdentity(_boundBackend.SceneOwner, _runtime.RID, contact.LocalShape),
+        OtherSlotIdentity = contact.OtherSlotIdentity ?? ContactShapeIdentity(contact.SceneCollider, contact.Collider, contact.ColliderShape)
     };
+
+    private static object? ContactShapeIdentity(CollisionObject? scene, RID collider, int index)
+    {
+        if (scene is not null && scene.PhysicsRID == collider)
+            return (uint)index < (uint)scene.ShapeSlots.Count ? scene.ShapeSlots[index].HistoryIdentity : null;
+        return PhysicsServer.Service.HistoryShapeIdentity(collider, index);
+    }
 }

@@ -2,7 +2,7 @@
 
 [Body view acquisition](physics-registered-adapter.md#body-view-acquisition-after-mode-failure) completes pending mode preparation before resolved-field publication or selected factory invocation. Cached acquisition and caller-created construction share that boundary; repeated failure creates no view and advances no tick.
 
-Last updated: 2026-10-13
+Last updated: 2026-10-20
 
 ## Responsibility and types
 
@@ -32,13 +32,13 @@ Caller-created views are implemented. Registered factories and the typed operati
 
 ## Selected contact publication
 
-Factory-returned cached extensions now supply GetContactCountCore/GetContactCore to real scene contact monitoring and raw callback snapshots. Native CPU workers capture private input first; user contact hooks run on the world owner after solving/workers finish. The common step stages every projected value and commits the complete bounded snapshot before monitor events and callbacks. The existing uncached caller-created view still invokes its hooks through public reads.
+Factory-returned cached extensions now supply GetContactCountCore/GetContactCore to real scene contact monitoring and raw callback snapshots. Native CPU workers or GPU host-report workers capture private input first; user contact hooks run on the world owner after solving/workers finish. The common step stages every projected value and commits the complete bounded snapshot before monitor events and callbacks. The existing uncached caller-created view still invokes its hooks through public reads.
 
 Cached contact getters read immutable published values rather than reinvoking hooks. This prevents repeated transformations and later association resampling. Logical slots, weak collider identity, full-step impulse, geometry and velocities come from the validated hook result. Contact-limit assignment clears count immediately; common replay restores the same published values. Native input and projected output use distinct retained arrays. A bad count, thrown hook, default/wrong/stale body contact leaves the receiver's previous snapshot and monitor state intact. Other receivers and post-solver callbacks continue; the already committed tick stays committed and a user projection error does not poison the GPU world. Native solver/device failures retain their terminal policy.
 
 An engine-only qualified publication scope lets PhysicsBodyContact validate current same-world identities after solver completion while the interval remains borrowed. General physics queries, state mutation, ordinary query-result construction, hierarchy/binding changes and disposal still reject. This scope does not make cached views or worlds publicly retargetable.
 
-[Contact publication checks](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.ContactPublication.cs) cover doubled actual reported impulses without double application, scene monitor suppression/departure/reentry, raw callback delivery, immutable associations, invalid count/value/throw/stale attachment recovery and owner-thread hooks with real CPU worker capture. The fixture has 301 scene rigid bodies plus one raw body (and a static floor), 64 warmup/64 measured full 1/60-second frames plus cached contact reads, asserting zero owner/all-thread managed allocation on CPU/GPU. The existing ownership no-device child includes it. Dedicated cold probes are outside the measured hook path; their earlier capturing lambdas allocated 128 bytes per receiver/frame even with the probe disabled, and were moved to a separate probe method without changing the measured operation or budget.
+[Contact publication checks](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.ContactPublication.cs) cover doubled actual reported impulses without double application, scene monitor suppression/departure/reentry, raw callback delivery, immutable associations, invalid count/value/throw/stale attachment recovery and owner-thread hooks with real CPU and independent GPU host-report worker capture. The fixture prepares contact snapshots for 301 scene rigid bodies plus one raw body (and a static floor), 64 warmup/64 measured full 1/60-second frames plus cached contact reads, asserting zero owner/all-thread managed allocation on CPU/GPU. The existing ownership no-device child includes it. Dedicated cold probes are outside the measured hook path; their earlier capturing lambdas allocated 128 bytes per receiver/frame even with the probe disabled, and were moved to a separate probe method without changing the measured operation or budget.
 
 Public named server factories/full operation bridge and custom algorithms remain open under ADR 0103. These internal selected factory tests do not claim public third-party solver acceptance, native allocation, foreign-platform or final GPU/window performance acceptance.
 

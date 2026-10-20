@@ -1,5 +1,7 @@
 # Physics backend selection and shared worlds
 
+[Contact publication workers](physics-scene-performance.md#contact-publication-workers-2026-10-20) decode completed GPU reports with an unbound retained scheduler. No CPU numerical world or device work is added; extension hooks and gameplay callbacks follow the complete owner join.
+
 [Long circle sweeps and hollow query sources](physics-queries.md#long-circle-sweeps-and-hollow-query-sources) preserve geometric hit truth, first entry and contact ownership across the exercised implementations.
 
 [Scene role recovery](physics-registered-adapter.md#failed-scene-role-publication) shares complete mode preparation across configured scene and direct server roles. The GPU collider's retained surface cache follows the resident store's actual fixed-to-dynamic consumption; unchanged and fixed-to-fixed mode calls keep the cache until explicit surface publication, with no device readback. Static/animatable geometry rebuilds preserve the active direct surface profile.

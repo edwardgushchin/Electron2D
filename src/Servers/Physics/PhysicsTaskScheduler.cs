@@ -78,6 +78,25 @@ internal sealed class PhysicsTaskScheduler : IDisposable
         if (job.Failure is { } failure) throw new InvalidOperationException("Physics worker failed.", failure);
     }
 
+    internal void RunRanges(b2TaskCallback callback, int count, int workers, object context)
+    {
+        if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
+        if (workers < 1 || workers > WorkerCount) throw new ArgumentOutOfRangeException(nameof(workers));
+        if (workers == 1 || count < 256) { callback(0, count, 0, context); return; }
+        var end = (int)((long)count * (workers - 1) / workers);
+        var task = Enqueue(callback, end, end / (workers - 1), context, context);
+        Exception? failure = null;
+        try { callback(end, count, 0, context); }
+        catch (Exception error) { failure = error; }
+        try { if (task is not null) Finish(task, context); }
+        catch (Exception error)
+        {
+            if (failure is not null) throw new AggregateException("Owner and worker contact publication failed.", failure, error);
+            throw;
+        }
+        if (failure is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(failure).Throw();
+    }
+
     internal void Drain()
     {
         foreach (var job in _jobs)

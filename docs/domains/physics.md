@@ -1,5 +1,7 @@
 # Physics domain
 
+[Contact publication workers](../components/physics-scene-performance.md#contact-publication-workers-2026-10-20) reuse joined per-body ranges on the independent GPU host-report path, preserve physical slot lifetimes and keep callbacks on the owner. Declaration states remain 1303/1369 Implemented (95.18%), 66 open and 92 Excluded.
+
 [Contact-peer retirement](../components/physics-scene-performance.md#contact-peer-retirement-2026-10-20)
 now skips unrelated retained pair snapshots while preserving immediate object/
 shape exits after local and portable restoration. This changes internal cleanup

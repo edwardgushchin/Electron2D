@@ -165,3 +165,8 @@ logical slots, analytical boundaries, fractions and zero warmed full-frame bytes
 retains represented concave/boundary/ray precedence across all four direct shape
 operations, current initial contacts and finite boundary endpoints. CPU collinear
 circle/core contacts retain a unit normal and corresponding surface points.
+
+Contact publication now uses the shared PhysicsTaskScheduler.RunRanges owner/join
+boundary. All ranges finish before errors escape; simultaneous owner/worker
+failures preserve both exceptions. Numerical worker selection and callback order
+are unchanged. See [publication verification](../components/physics-scene-performance.md#contact-publication-workers-2026-10-20).

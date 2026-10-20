@@ -42,15 +42,8 @@ internal sealed partial class CPUPhysicsWorldBackend
     }
     internal override void CollectContacts(ref List<Exception>? errors)
     {
-        CaptureBodyMotions(); var world = b2GetWorldFromId(WorldID); var count = Space.Bodies.Count;
-        if (Space.ForceSerialContactPublication || world.workerCount == 1 || count < 256) PhysicsSpace.CollectBodyContactRange(0, count, 0, Space);
-        else
-        {
-            var end = count * (world.workerCount - 1) / world.workerCount;
-            var task = _tasks.Enqueue(CollectBodyContacts, end, end / (world.workerCount - 1), Space, Space);
-            try { PhysicsSpace.CollectBodyContactRange(end, count, 0, Space); }
-            finally { if (task is not null) _tasks.Finish(task, Space); }
-        }
+        CaptureBodyMotions(); var world = b2GetWorldFromId(WorldID);
+        _tasks.RunRanges(CollectBodyContacts, Space.Bodies.Count, Space.ForceSerialContactPublication ? 1 : world.workerCount, Space);
     }
     internal override void EndStep(Exception? failure) => PruneOneWayPairs();
 }

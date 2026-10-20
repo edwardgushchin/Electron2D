@@ -1,6 +1,6 @@
 # GPUPhysicsWorldBackend
 
-Last updated: 2026-10-15
+Last updated: 2026-10-20
 
 **Declaration:** `internal sealed partial class GPUPhysicsWorldBackend : PhysicsWorldBackend` · **Source:** [GPUPhysicsWorldBackend.cs](../../src/Servers/Physics/GPUPhysicsWorldBackend.cs) · **Component:** [Physics backends](../components/physics-backends.md)
 
@@ -12,9 +12,9 @@ collider's concrete type. Selected wrappers execute body operations while GPU
 queries, Areas, joints and replay retain actual storage ownership. See
 [GPU collider ownership](../components/physics-backends.md#gpu-collider-ownership).
 
-Owns one independent resident GPUPhysicsBodyStore, with no native CPU world or CPU workers. Creation applies existing sleep/contact/iteration/default-bias settings. The store keeps physical state and executes the resident pipeline. A failed constructor releases the created store before startup fallback can be considered.
+Owns one independent resident GPUPhysicsBodyStore, with no native CPU world or CPU numerical workers. A retained unbound PhysicsTaskScheduler collects per-body contact snapshots from completed host reports for at least 256 configured scene receivers; the owner participates and joins before extension hooks or gameplay callbacks. Creation applies existing sleep/contact/iteration/default-bias settings. The store keeps physical state and executes the resident pipeline. A failed constructor releases the created store before startup fallback can be considered.
 
-GPUStore is the owned resident implementation. Kind and Requested remain GPU for its lifetime. EnsureAccess rejects disposal or terminal store failure. Step uses the common space boundary and GPU-owned solve/publication/failure phases. Dispose releases the resident store once; CPU-only native facets and diagnostic stage controls reject.
+GPUStore is the owned resident implementation. Kind and Requested remain GPU for its lifetime. EnsureAccess rejects disposal or terminal store failure. Step uses the common space boundary and GPU-owned solve/publication/failure phases. Dispose joins/releases contact workers and attempts resident-store release, preserving cleanup errors; CPU-only native facets and diagnostic stage controls reject.
 
 All six direct-space operations project results from the existing resident PhysicsSpace GPU query driver and geometry leases. The implementation retains its point/shape/contact result lists; Dispose clears their object references before releasing the store. Public views validate access before dispatch, including terminal world failure and empty destination calls.
 
@@ -54,7 +54,7 @@ The space owner thread controls lifecycle and stepping. [PhysicsBackendOwnership
 
 ## Limits and decisions
 
-Startup fallback is handled only by the internal creation factory. A started GPU interval never selects or executes a CPU replacement. Shared registrations, authored metadata, readback consumers and event delivery remain in PhysicsSpace; public registered extensions are still absent. Native allocator and foreign-platform execution remain separate gates; recorded workload-specific GPU/window measurements do not establish general superiority. See [ADR 0054](../decisions/physics-backends.md#adr-0054) and [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+Startup fallback is handled only by the internal creation factory. A started GPU interval never selects or executes a CPU replacement. Shared registrations, authored metadata, readback consumers and event delivery remain in PhysicsSpace; public registered extensions retain operation-specific acceptance gates. Native allocator and foreign-platform execution remain separate gates; recorded workload-specific GPU/window measurements do not establish general superiority. See [ADR 0054](../decisions/physics-backends.md#adr-0054) and [ADR 0103](../decisions/physics-extensions.md#adr-0103).
 
 ## Area implementation ownership
 

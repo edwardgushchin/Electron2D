@@ -1945,3 +1945,14 @@ Generation-qualified Node requests now preserve cancellation/reissue FIFO and th
 The pinned Object.cancel_free declaration instead vetoes actual destruction during NOTIFICATION_PREDELETE. Existing Node.CancelFree is an independent queued-operation helper and is now a reviewed extra, not that counterpart. The missing pre-delete veto is explicitly Unimplemented; existing ValidateDisposal is an earlier precondition. Object.is_queued_for_deletion also requires SceneTree.queue_delete observation, including non-Node objects; the current Node-only property observes its cancellable request, so that row remains Partial. Neither gap is closed by the corrected queue implementation.
 
 [Borrowed resource identity lifetime](physics-shape-data.md#borrowed-resource-identity-lifetime) fixes unused shape retention and verifies current inherited GetRID roles through public consumers. Full remaining physics, native/platform and target-hardware performance acceptance stays open.
+
+## Contact publication worker refresh, 2026-10-20
+
+[Joined GPU host-report capture](physics-scene-performance.md#contact-publication-workers-2026-10-20)
+reuses retained per-body ranges without a CPU solver, additional readback or device
+commands. Matching physical scene owners supply immutable slot tokens; raw/server
+fallback and assigned/tile object identities retain their separate roles. CPU/no-device,
+physical GPU owner/separate, factory, portable CPU/GPU and registered history profiles
+pass with strict warm managed-zero gates and retired-slot rejection before another
+tick. Declaration states stay 1303/1369 Implemented (95.18%), 66 open and 92 Excluded;
+full numerical/network/native/platform and target performance acceptance remain open.

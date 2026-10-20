@@ -4,6 +4,7 @@ namespace Electron2D;
 internal sealed partial class GPUPhysicsWorldBackend : PhysicsWorldBackend
 {
     private bool _disposed;
+    private readonly PhysicsTaskScheduler _contactTasks = new(OperatingSystem.IsBrowser() ? 1 : Math.Min(4, Environment.ProcessorCount));
     internal override bool HasFailure => GPUStore.HasFailed;
     internal override PhysicsServer.Backend Kind => PhysicsServer.Backend.GPU;
     internal override GPUPhysicsBodyStore GPUStore { get; }
@@ -44,6 +45,9 @@ internal sealed partial class GPUPhysicsWorldBackend : PhysicsWorldBackend
         _exceptions.Clear(); _nextExceptions.Clear(); _exceptionPairs.Clear();
         _gpuAreaHits = []; _areaPointHits = []; _gpuAreaQuery[0] = default;
         _pointHits.Clear(); _shapeHits.Clear(); _contactPairs.Clear();
-        GPUStore.Dispose();
+        List<Exception>? errors = null;
+        PhysicsSpace.Cleanup(_contactTasks.Dispose, ref errors);
+        PhysicsSpace.Cleanup(GPUStore.Dispose, ref errors);
+        PhysicsSpace.FinishCleanup(errors);
     }
 }

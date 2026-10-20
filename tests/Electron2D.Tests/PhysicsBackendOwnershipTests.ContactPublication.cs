@@ -63,6 +63,7 @@ internal static partial class PhysicsBackendOwnershipTests
                 CollisionLayer = 0,
                 CollisionMask = 0,
                 CanSleep = false,
+                MaxContactsReported = 1,
                 LinearVelocity = new(1, 0)
             };
             body.AddChild(new CollisionShape { Shape = circle }); root.AddChild(body);

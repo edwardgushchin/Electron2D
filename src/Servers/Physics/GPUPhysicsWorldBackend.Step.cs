@@ -4,6 +4,7 @@ namespace Electron2D;
 
 internal sealed partial class GPUPhysicsWorldBackend
 {
+    private static readonly Box2D.NET.b2TaskCallback CollectBodyContacts = CollectBodyContactRange;
     private bool _callbacks, _captureActivity, _intervalEntered, _resultsReady;
     private long _intervalSubmissions;
     internal override bool ResultsReady => _resultsReady;
@@ -80,7 +81,8 @@ internal sealed partial class GPUPhysicsWorldBackend
         if (body is AnimatableBody animatable) animatable.SyncPose();
         else if (body is CharacterBody character) { character.CaptureSolverPose(); character.SetResolvedGravity(body.Runtime.Gravity); }
     }
-    internal override void CollectContacts(ref List<Exception>? errors) => CollectBodyContactRange(0, Space.Bodies.Count, 0, Space);
+    internal override void CollectContacts(ref List<Exception>? errors) => _contactTasks.RunRanges(CollectBodyContacts, Space.Bodies.Count,
+        Space.ForceSerialContactPublication || Space.ContactBodies.Count < 256 ? 1 : _contactTasks.WorkerCount, Space);
     internal override void EndStep(Exception? failure)
     {
         if (failure is not null && _intervalEntered && (GPUStore.HasFailed || GPUStore.SubmissionCount != _intervalSubmissions)) Space.FailGPUStep(failure);

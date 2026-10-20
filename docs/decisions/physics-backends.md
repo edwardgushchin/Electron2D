@@ -1,13 +1,13 @@
 # Physics world backend decisions
 
-Last updated: 2026-10-18
+Last updated: 2026-10-20
 
 [The decision index](index.md) routes body, shape, query and extension decisions.
 
 <a id="adr-0054"></a>
 ## ADR 0054: CPU compatibility and GPU physics worlds
 
-Last updated: 2026-10-18
+Last updated: 2026-10-20
 
 - Status: Accepted
 - Scope: Scene/server physics world backends, body integration and collision shapes
@@ -79,7 +79,7 @@ ADR 0012 selected vendored managed Box2D.NET for CPU physics. Scene/server bodie
 - A `SceneTree` retains the distinct runtime worlds selected by its viewports, plus a fallback world for a viewport-free scene. Each world lazily owns one selected physics space and one logical canvas; the tree steps each distinct selected runtime once. CPU spaces create a Box2D world; GPU spaces create the independent resident store and no Box2D world. Direct body entry creates a backend body; collision-shape children supply geometry. Shape changes, disables and collision-layer/mask edits synchronize before the next step. Tree exit and disposal release bodies, geometry and world, while borrowed Shape resources remain caller-owned. Failed geometry validation rejects before replacing existing geometry.
 - One scene unit is 0.01 Box2D meters. Default downward gravity is 980 scene units per second squared. Scene fixed physics callbacks run before a four-substep world step; body transforms and velocities synchronize back before timers, tweens and the physics-interpolation end snapshot. Geometry accepts translation and rotation with unit global scale and zero skew; unsupported scaled/skewed active physics transforms fail explicitly. This is an initial profile, not a claim that every inherited or own physics member is complete.
 - The initial public body profile includes circle/rectangle dimensions and bounds, managed shape copying, collision-shape assignment and enablement, 32 collision-layer/mask bits, dynamic/static contact response, mass, gravity scale, linear/angular velocity and damping, sleep, freeze, rotation lock, central force and impulse. Other applicable members retain operation-specific Partial, Unimplemented or Blocked coverage rows.
-- Large worlds with at least 256 awake backend bodies use up to four retained workers, bounded by available processors; smaller worlds and browser hosts use one. Worker tasks cover collision ranges, the existing colored constraint stages and independent per-body solved-contact snapshots without changing the four substeps or public callback lane. Threads and task storage belong to each world and are released on disposal. Contact workers read the finished solver and private receiver storage; the owner joins them and queues their changes in scene-body order before invoking user code. One-way pair state is synchronized internally; user integration/contact/area callbacks remain on the world owner. The backend uses eight-lane `Vector256<float>` arithmetic with .NET fallback and separate multiply/add operations. [The performance report](../components/box2d-performance.md) defines measured throughput and platform limits.
+- CPU worlds with at least 256 awake backend bodies use up to four retained workers, bounded by available processors; smaller worlds and browser hosts use one. CPU worker tasks cover collision ranges, the existing colored constraint stages and independent per-body solved-contact snapshots without changing the four substeps or public callback lane. GPU worlds with at least 256 configured scene contact receivers reuse the retained task scheduler for independent per-body decoding of already completed host reports; smaller receiver populations and browser hosts collect on the owner. This host publication creates no CPU solver world, issues no device commands and leaves all numerical work resident on GPU. Threads and task storage belong to each world and are released on disposal. Contact workers read the finished solver and private receiver storage; the owner joins them and queues their changes in scene-body order before invoking user code. One-way pair state is synchronized internally; user integration/contact/area callbacks remain on the world owner. The backend uses eight-lane `Vector256<float>` arithmetic with .NET fallback and separate multiply/add operations. [The performance report](../components/box2d-performance.md) defines measured throughput and platform limits.
 - Engine-owned warmed resting-contact, active-contact and moving-body fixed steps allocate zero managed bytes in the checked Linux/.NET 8 profile. The pinned Box2D.NET port needed per-world reuse of its step context and graph-color block array plus zero-overflow-contact fast exits; the applicable current-upstream buffer reuse is proposed in [ikpil/Box2D.NET#101](https://github.com/ikpil/Box2D.NET/pull/101). No allocation claim is made for unmeasured native/platform paths or user callbacks.
 
 ### Consequences

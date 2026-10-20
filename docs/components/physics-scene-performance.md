@@ -3,15 +3,151 @@
 Last updated: 2026-10-20
 
 The authorized [2026-10-20 RTX baseline](physics-rtx-current.md) adds physical
-GPU monitored-scene measurements and calibrated native request counts. At 16,384
-bodies, scene medians remain close and GPU tails are worse; the raw-server/window
-advantage does not establish complete-scene performance acceptance. Older trials
+GPU monitored-scene measurements and calibrated native request counts. Its 16,384-body scene medians were close with worse GPU tails. The later
+[contact publication refresh](#contact-publication-workers-2026-10-20) records a
+measured complete-scene improvement on its own frozen runtime; general acceptance
+retains the workload and verification limits below. Older trials
 below retain their measured revisions and contemporary execution limits.
 
 The [scoped allocator profile](#scoped-native-allocation-profiling-2026-10-14)
 adds all-thread libc request accounting to the complete monitored scene, with
 separate ordinary timing and software-driver limits. Older trials below keep
 their own revisions and workloads.
+
+## Contact publication workers, 2026-10-20
+
+Completed contact snapshots now sample logical-slot lifetimes directly from the
+retained physical scene owner when its RID matches the collider. Raw/server,
+missing or mismatched owners keep the registry route. Assigned observed objects
+and tile identities never replace the physical owner. Supplied slot identities
+remain intact, and removing/readding a shape cannot make old contacts alias the
+replacement slot.
+
+The independent GPU backend reuses the existing retained range scheduler to
+collect private per-body snapshots from completed host contact reports when at
+least 256 scene rigid receivers request contacts. Up to four lanes include the
+owner; browser/small-receiver paths remain serial. The scheduler is unbound to a
+CPU world: it performs no solving, new device commands or readbacks. Native input
+capture joins before extension projection, ordered monitor queues and gameplay
+callbacks on the owner. Every range joins before failure propagation, including
+simultaneous owner/worker errors; disposal joins/releases workers and attempts
+store cleanup even when another release fails. CPU contact capture uses the same
+range helper without changing its numerical worker selection.
+
+Eleven fresh-process profiles pass the corrected Release runtime: CPU/no-device
+parallel scheduling, GPU owner/separate-solver contact workers, CPU/GPU factory
+publication, complete scene suites, portable snapshots and public registered/GPU
+history consumers. The GPU worker fixture retains 288 bodies, actual contacts,
+owner integration/events and throwing off-owner equality/hash guards; 64 measured
+full frames require strict 0/0 owner/all-thread managed bytes in each solver lane.
+The unbound scheduler checks nondivisible coverage, retained-job reuse, complete
+joins and preservation of both owner/worker failures. The factory fixture prepares
+301 scene contact receivers plus one raw body. Portable tests remove/readd both
+observed and receiving slots without another tick: old public contacts remain,
+capture rejects their retired slot tokens, and the next solved publication is valid.
+
+The candidate is based on main
+`268c5fd4f1640acb64fab0bb4ef64dc53adf1627`. Runtime/test SHA-256 values are
+`f75e450976d78d3411f12c2861e21703f1b60cb0781195e4cdba335c208ba99c` /
+`a35ea14a1ed981f3956eee6acb29e779e0a67a9098be7947fecadb8b7dc8c283`.
+PDB checks match all 2416/907 evaluated authored compilation inputs, with a
+3684-file C#/project/build-file manifest. Target-added virtual generated sources are
+not independently established by that evaluated-input check. Local evidence is
+`bin/physics-contact-identity/2026-10-20/`, including the frozen `validated/`
+payload and individually labelled process receipts. Preliminary cohorts and the
+misrouted threaded selector attempt remain separate from accepted results.
+
+### Complete monitored-scene timing
+
+The corrected candidate runs both full paths sequentially in one fresh process
+per population, with the same 1600 warmup and 256 measured ticks, 144 Hz, four
+substeps, sixteen sweeps, eight-contact caps, all entry/exit handlers,
+interpolation and disabled sleeping. The numerical lane remains on the owner;
+contact publication follows each backend's default retained-worker policy.
+Explicit NVIDIA Vulkan, DOTNET_TieredCompilation=0 and ordinary timing without a
+native allocation interposer are fixed for both paths. These are paired shared-
+desktop observations, with independent physical bounds rather than required
+cross-backend bitwise identity.
+
+| Bodies | Backend | Complete step mean / p50 / p95 / p99 / max, ms | Managed owner / all threads |
+| ---: | --- | --- | --- |
+| 4096 | CPU | 21.5661 / 20.9443 / 24.5696 / 27.7653 / 33.4305 | 0 / 0 |
+| 4096 | GPU | 20.6468 / 19.7594 / 28.0171 / 30.7694 / 31.2853 | 0 / 0 |
+| 16384 | CPU | 105.3393 / 104.8078 / 111.7839 / 115.8859 / 134.3382 | 0 / 0 |
+| 16384 | GPU | 66.1662 / 62.9979 / 78.2122 / 96.6019 / 110.7503 | 0 / 0 |
+
+At 16,384 the GPU complete-step mean/median improve 1.59x/1.66x over CPU in
+this pair. GPU pose publication, contact capture/monitoring and event dispatch
+average 10.1353/8.4451/0.9959 ms. Upload/readback remain
+262424/11863168.625 bytes per tick; wait p50/p95/p99/max are
+17.1820/32.1018/46.7144/60.8398 ms. Thus the remaining bulk consumer read and
+wait cost is explicit, while all contact receivers remain configured.
+
+At 4096 the mean improvement is only about 1.04x and GPU p95/p99 remain worse.
+The earlier identity-only cohort (a distinct frozen runtime) recorded
+21.2887/22.5446 ms CPU/GPU means at 1600 warmup/128 samples; that insufficient
+result motivated retained GPU report decoding. It is separate from the final
+same-runtime comparisons and the serial-publication control.
+
+### Same-runtime serial contact control
+
+A separate 16,384-body GPU process keeps the identical frozen runtime, authored
+scene, numerical policy, 1600 warmup and 256 measured ticks, while the existing
+`ELECTRON2D_PHYSICS_PERFORMANCE_SERIAL_CONTACTS=1` diagnostic moves host contact
+collection onto the owner. Full-step mean/p50/p95/p99/max are
+136.9940/121.8921/264.1617/335.0413/444.2843 ms. Contact collection/monitoring
+averages 34.5881 ms versus 8.4451 ms with joined ranges. Pose/event publication
+and waits also vary substantially (18.4411/3.3627 ms and 36.2641 ms wait median),
+so the entire full-step difference is not an isolated causal estimate of this
+change. Shared-desktop scheduling remains a measurement limit.
+
+Both GPU trajectories satisfy the unchanged physical bounds, eight-contact caps,
+complete population, events and strict 0/0 owner/all-thread bytes. Final contact
+colors are nine with zero fallback in both runs; reported contacts are
+90921/91193. Different numeric/contact fingerprints are diagnostic observations,
+not a cross-run acceptance requirement. No stage control substitutes for the
+ordinary CPU/GPU comparison above. Evidence is `workers-16384-serial/` beside the
+paired `workers-16384/` receipts.
+
+### Native-window complete mass scene
+
+A fresh Wayland process repeats the unchanged 16,384-body scene on both selected
+backends with 1600 warmup and 128 measured full frames, actual native input/pump,
+all-body scene-pose publication, processing and GPU rendering. Every displayed
+instance is checked against its corresponding physical body, and both 1152x800
+captures were inspected. Tall-world fitting keeps the full physical population
+inside the viewport; no body count is substituted by a renderer-only effect.
+
+| Physics backend | Step mean / p50 / p95 / p99 / max, ms | Frame p50 / p95 / p99 / max, ms | Actual FPS | Render p50, ms |
+| --- | --- | --- | ---: | ---: |
+| CPU | 106.8463 / 106.2812 / 112.6608 / 118.0669 / 118.0918 | 174.7430 / 186.3136 / 193.0626 / 193.9768 | 5.6845 | 66.2298 |
+| GPU | 87.2839 / 88.9314 / 97.0179 / 103.4150 / 107.7675 | 154.0314 / 165.5621 / 173.8225 / 176.9419 | 6.5315 | 63.8054 |
+
+GPU physics is 1.22x faster by mean inside the window, while actual complete-frame
+FPS improves about 1.15x. Rendering/presentation limits that gain: both profiles
+request Disabled VSync but the native host reports Enabled. These observed FPS
+values retain that same compositor policy; they are not uncapped throughput.
+All physics and full-frame owner/all-thread managed counters remain zero,
+including pump, publication, process and render owner phases. GPU contact capture
+averages 8.6953 ms. Its upload/readback remain 262424/11863151.75 bytes per tick.
+Evidence and actual captures are in `workers-window-16384/`.
+
+Fifteen accepted corrected processes comprise eleven focused public/scheduling
+profiles and four benchmark profiles. Seven numerical reports contain 1536
+measured ticks, all with unchanged physical bounds and strict managed zero.
+Their before/after payload hashes match, actual GPU processes load NVIDIA without
+software Vulkan, NVML remains available and recorded kernel intervals have no
+Xid/fallen-off entries. This bounds these processes rather than certifying cable
+compatibility or general hardware stability. `validation.json` checks the exact
+accepted cohort and current source/build inputs; preliminary outputs and the
+misrouted selector are excluded. The user confirms that the power cable remains
+unchecked. Full current-suite/AOT, native allocator/retained-memory, foreign and
+remaining contract/network acceptance are separate open gates. No declaration
+state changes: 1303/1369 Implemented (95.18%), 66 open and 92 Excluded.
+
+Local runtime/test formatting, Release runtime build, compiled API/coverage and
+wiki tests, generation and generated-output check pass. Generated pages stay
+outside the engine commit.
 
 ## Contact-peer retirement, 2026-10-20
 
