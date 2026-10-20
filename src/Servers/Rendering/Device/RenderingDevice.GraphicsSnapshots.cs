@@ -17,7 +17,7 @@ public sealed unsafe partial class RenderingDevice
             {
                 if (binding.Type != UniformType.Image) continue;
                 if (!_sets.TryGetValue(binding.Set, out var set) || set.Shader != _graphicsPipeline!.Shader) throw new InvalidOperationException("Bind every graphics resource set first.");
-                var ids = set.Bindings[binding.Slot]; ValidateBinding(binding, ids); var entry = Get(ids[0]);
+                var ids = set.Bindings[binding.Slot]; ValidateBinding(binding, ids); var entry = Get(ids[ResourceID(binding)]);
                 if (ActiveAttachment(entry)) throw new InvalidOperationException("An active output cannot be read as storage.");
                 if (NeedsGraphicsSnapshot(entry) && !_graphicsSnapshots.Contains(entry)) _graphicsSnapshots.Add(entry);
             }

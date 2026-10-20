@@ -24,6 +24,17 @@ internal static class MaterialLightingProgram
     private sealed record Value(uint Variable, uint Type, uint[] Path);
     internal static uint Op(uint[] instruction) => instruction[0] & 65535;
     internal static uint[] Instruction(uint opcode, params uint[] operands) => [(uint)((operands.Length + 1) << 16) | opcode, .. operands];
+    internal static (uint Element, int Count, bool Dynamic) DescriptorShape(uint type, Dictionary<uint, uint[]> types, Dictionary<uint, uint> constants, bool symbolic = false)
+    {
+        if (Op(types[type]) == 32) type = types[type][3];
+        if (Op(types[type]) == 29) throw new NotSupportedException("Runtime descriptor arrays require variable descriptor-count integration.");
+        if (Op(types[type]) != 28) return (type, 1, false);
+        var array = types[type];
+        if (Op(types[array[2]]) is 28 or 29) throw new NotSupportedException("Nested descriptor arrays require their multidimensional resource contract.");
+        if (!constants.TryGetValue(array[3], out var count) && symbolic) return (array[2], 1, true);
+        if (!constants.ContainsKey(array[3]) || count is 0 or > 16) throw new NotSupportedException("Fixed descriptors require one through sixteen resolved elements within native stage capacity.");
+        return (array[2], (int)count, false);
+    }
     internal static int Category(uint opcode) => opcode switch { 17 => 0, 10 => 1, 11 => 2, 14 => 3, 15 => 4, 16 or 331 => 5, 2 or 3 or 4 or 7 => 6, 5 or 6 => 7, 330 => 8, 71 or 72 or 73 or 74 or 75 or 332 or 5632 or 5633 => 9, _ => 10 };
     private static bool UniqueType(uint opcode) => opcode is >= 19 and <= 27 or 32 or 33 or 11;
     private static string TypeKey(uint[] instruction) => instruction[0] + ":" + string.Join(',', instruction.AsSpan(2).ToArray());

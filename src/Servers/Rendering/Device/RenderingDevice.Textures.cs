@@ -4,9 +4,10 @@ namespace Electron2D;
 
 public sealed unsafe partial class RenderingDevice
 {
-    private void ValidateBinding(Binding binding, RID[] ids)
+    private void ValidateBinding(Binding binding, ReadOnlySpan<RID> resources)
     {
-        if (ids.Length != (binding.Type is UniformType.SamplerWithTexture or UniformType.SamplerWithTextureBuffer ? 2 : 1)) throw new ArgumentException("Incorrect descriptor resource count.", nameof(ids));
+        if (resources.Length != binding.Count * ResourceWidth(binding.Type)) throw new ArgumentException("Incorrect descriptor resource count.", nameof(resources));
+        var ids = resources.Slice(ResourceID(binding), ResourceWidth(binding.Type));
         if (binding.Type == UniformType.UniformBuffer) { if (Get(ids[0], Kind.Uniform).Size < binding.MinimumSize) throw new ArgumentException("The uniform buffer is shorter than its shader block.", nameof(ids)); return; }
         if (binding.Type == UniformType.StorageBuffer)
         {

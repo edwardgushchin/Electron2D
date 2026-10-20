@@ -6,10 +6,10 @@ namespace Electron2D;
 
 internal static partial class TexelBufferProgram
 {
-    internal readonly record struct Source(uint Set, int Binding, RenderingDevice.UniformType Type, uint Format, int PixelType);
+    internal readonly record struct Source(uint Set, int Binding, RenderingDevice.UniformType Type, uint Format, int PixelType, uint NativeSet, int NativeBinding, int Count, int Element, bool DynamicCount);
     private sealed record Buffer(uint ImageType, uint Variable, uint Selector, Source Source);
 
-    internal static (byte[] Code, Source[] Sources) Lower(byte[] code)
+    internal static (byte[] Code, Source[] Sources) Lower(byte[] code, bool symbolic = false)
     {
         var module = new Module(code);
         if (!module.Instructions.Any(i => Op(i) == 25 && i[3] == 5)) return (code, []);
@@ -32,12 +32,11 @@ internal static partial class TexelBufferProgram
             {
                 if (!types.TryGetValue(id, out var i)) return false;
                 var op = Op(i); if (op == 25) return i[3] == 5;
-                if (op is not (27 or 32)) return false;
+                if (op is not (27 or 28 or 29 or 32)) return false;
                 id = i[op == 32 ? 3 : 2];
             }
             throw new ArgumentException("The texel resource type graph is cyclic or exceeds its supported pointer depth.", nameof(code));
         }
-        if (source.Any(i => Op(i) is 28 or 29 && Opaque(i[2]))) throw new NotSupportedException("Texel descriptor arrays require their resource-array integration.");
         uint Image(uint id) { var i = types[id]; return Op(i) == 25 ? id : Image(i[Op(i) == 32 ? 3 : 2]); }
         var valueTypes = source.Where(i => i.Length > 2 && (Op(i) == 12 || Op(i) >= 41) && Category(Op(i)) != 9 && types.ContainsKey(i[1])).ToDictionary(i => i[2], i => i[1]);
         var constants = source.Where(i => Op(i) == 43 && i[1] == integer).GroupBy(i => i[3]).ToDictionary(g => g.Key, g => g.First()[2]);
@@ -45,7 +44,9 @@ internal static partial class TexelBufferProgram
         var nulls = new Dictionary<uint, uint>();
         uint Zero(uint type) { if (nulls.TryGetValue(type, out var id)) return id; id = next++; nulls.Add(type, id); declarations.Add(Instruction(46, type, id)); return id; }
         var locations = source.Where(i => Op(i) == 71 && i.Length == 4 && i[2] is 33 or 34).GroupBy(i => i[1]).ToDictionary(g => g.Key, g => g.ToDictionary(i => i[2], i => i[3]));
+        var lengths = source.Where(i => Op(i) == 43 && i.Length == 4).ToDictionary(i => i[2], i => i[3]);
         var resources = source.Where(i => Op(i) == 59 && i[3] == 0 && Opaque(i[1])).ToArray();
+        var occupied = locations.Values.Where(d => d.ContainsKey(34)).Select(d => d[34]).ToHashSet(); uint privateSet = 0; while (occupied.Contains(privateSet)) privateSet++;
         var ids = resources.Select(i => i[2]).ToHashSet(); var buffers = new List<Buffer>();
         var storage = module.Header[1] >= 0x10300 ? 12u : 2u;
         var array = next++; declarations.Add(Instruction(29, array, integer)); var block = next++; declarations.Add(Instruction(30, block, array)); var pointer = Type(32, storage, block); var wordPointer = Type(32, storage, integer);
@@ -55,14 +56,18 @@ internal static partial class TexelBufferProgram
             if (!locations.TryGetValue(resource[2], out var location) || !location.TryGetValue(34, out var set) || !location.TryGetValue(33, out var slot) || slot > int.MaxValue) throw new ArgumentException("A texel buffer needs a valid logical set and binding.", nameof(code));
             var image = types[Image(resource[1])]; var scalar = types[image[2]];
             if (scalar[2] != 32 || Op(scalar) is not (21 or 22) || image[4] is not (0 or 2) || image[5] != 0 || image[6] != 0 || image[7] is not (1 or 2)) throw new NotSupportedException("Texel buffers require ordinary 32-bit scalar image operations.");
-            var element = types[types[resource[1]][3]];
+            var shape = DescriptorShape(resource[1], types, lengths, symbolic); var element = types[shape.Element];
             var type = image[7] == 2 ? RenderingDevice.UniformType.ImageBuffer : Op(element) == 27 ? RenderingDevice.UniformType.SamplerWithTextureBuffer : RenderingDevice.UniformType.TextureBuffer;
-            var variable = next++; var selector = (uint)buffers.Count;
-            buffers.Add(new(image[1], variable, selector, new(set, (int)slot, type, image[7] == 2 ? image[8] : 0, Op(scalar) == 22 ? 0 : scalar[3] == 1 ? 1 : 2)));
-            declarations.Add(Instruction(43, integer, resource[2], selector)); declarations.Add(Instruction(59, pointer, variable, storage));
-            annotations.Add(Instruction(71, variable, 33, slot)); annotations.Add(Instruction(71, variable, 34, set));
-            foreach (var decoration in source.Where(i => Op(i) == 71 && i[1] == resource[2] && i[2] is 19 or 21 or 23)) annotations.Add(Instruction(71, [variable, .. decoration.AsSpan(2).ToArray()]));
-            if (type != RenderingDevice.UniformType.ImageBuffer || source.Any(i => Op(i) == 71 && i[1] == resource[2] && i[2] == 24)) annotations.Add(Instruction(71, variable, 24));
+            declarations.Add(Instruction(43, integer, resource[2], (uint)buffers.Count));
+            for (var index = 0; index < shape.Count; index++)
+            {
+                var variable = next++; var selector = (uint)buffers.Count;
+                buffers.Add(new(image[1], variable, selector, new(set, (int)slot, type, image[7] == 2 ? image[8] : 0, Op(scalar) == 22 ? 0 : scalar[3] == 1 ? 1 : 2, privateSet, (int)selector, shape.Count, index, shape.Dynamic)));
+                declarations.Add(Instruction(59, pointer, variable, storage));
+                annotations.Add(Instruction(71, variable, 33, selector)); annotations.Add(Instruction(71, variable, 34, privateSet));
+                foreach (var decoration in source.Where(i => Op(i) == 71 && i[1] == resource[2] && i[2] is 19 or 21 or 23)) annotations.Add(Instruction(71, [variable, .. decoration.AsSpan(2).ToArray()]));
+                if (type != RenderingDevice.UniformType.ImageBuffer || source.Any(i => Op(i) == 71 && i[1] == resource[2] && i[2] == 24)) annotations.Add(Instruction(71, variable, 24));
+            }
         }
         var functionAliases = new Dictionary<uint, uint>(); var signatures = new Dictionary<string, uint>();
         foreach (var function in source.Where(i => Op(i) == 33))
@@ -206,6 +211,14 @@ internal static partial class TexelBufferProgram
             }
             if (op == 54 && functionAliases.TryGetValue(i[4], out var alias)) i[4] = alias;
             if (op == 5 && functionAliases.TryGetValue(i[1], out var named)) i[1] = named;
+            if (op is 65 or 66 && Opaque(i[1]))
+            {
+                if (i.Length != 5) throw new NotSupportedException("Texel descriptor access requires one array index.");
+                var index = valueTypes[i[4]] == integer ? i[4] : Emit(output, 124, integer, i[4]);
+                var length = DescriptorShape(valueTypes[i[3]], types, lengths, symbolic).Count;
+                var selected = Emit(output, 128, integer, i[3], index); var valid = Emit(output, 176, boolean, index, Constant((uint)length));
+                output.Add(Instruction(169, integer, i[2], valid, selected, Constant(uint.MaxValue))); continue;
+            }
             if (op == 61 && Opaque(i[1]) || op is 86 or 100 && Opaque(i[1])) { output.Add(Instruction(83, integer, i[2], i[3])); continue; }
             var imageOperand = op == 99 ? 1 : 3;
             if (op is 95 or 98 or 99 or 104 && valueTypes.TryGetValue(i[imageOperand], out var imageValue) && Opaque(imageValue))
@@ -213,7 +226,14 @@ internal static partial class TexelBufferProgram
                 var function = Operation(op, Image(imageValue)); var coordinate = op == 104 ? Zero(signed) : i[imageOperand + 1];
                 if (op != 104 && valueTypes[coordinate] != signed) coordinate = Emit(output, 124, signed, coordinate);
                 var arguments = new List<uint> { i[imageOperand], coordinate };
-                if (op == 99) arguments.Add(valueTypes[i[3]] == vector ? i[3] : Emit(output, 124, vector, i[3]));
+                if (op == 99)
+                {
+                    var type = types[valueTypes[i[3]]]; var width = Op(type) == 23 ? (int)type[3] : 1;
+                    var rawType = width == 1 ? integer : Type(23, integer, (uint)width);
+                    var value = valueTypes[i[3]] == rawType ? i[3] : Emit(output, 124, rawType, i[3]);
+                    var lanes = Enumerable.Range(0, 4).Select(lane => lane >= width ? Constant(0) : width == 1 ? value : Emit(output, 81, integer, value, (uint)lane)).ToArray();
+                    arguments.Add(width == 4 ? value : Emit(output, 80, vector, lanes));
+                }
                 var resultType = op == 99 ? nothing : op == 104 ? integer : vector;
                 var result = Emit(output, 57, resultType, [function, .. arguments]);
                 if (op != 99) output.Add(Instruction(i[1] == resultType ? 83u : 124u, i[1], i[2], result));

@@ -251,7 +251,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (group.Any(p => p.binding.Type == UniformType.SamplerWithTextureBuffer) && group.All(p => p.binding.Type is UniformType.TextureBuffer or UniformType.SamplerWithTextureBuffer))
                 foreach (var item in group) layout[item.index] = item.binding with { Type = UniformType.SamplerWithTextureBuffer };
         foreach (var group in layout.GroupBy(b => (b.Set, b.Slot)))
-        { var first = group.First(); if (group.Any(b => b.Type != first.Type || b.Array != first.Array || b.ImageFormat != first.ImageFormat || b.PixelType != first.PixelType)) throw new ArgumentException("A shared descriptor has inconsistent stage types."); }
+        { var first = group.First(); if (group.Any(b => b.Type != first.Type || b.Array != first.Array || !b.DynamicCount && !first.DynamicCount && b.Count != first.Count || b.ImageFormat != first.ImageFormat || b.PixelType != first.PixelType)) throw new ArgumentException("A shared descriptor has inconsistent stage types."); }
         var interfaces = modules.Length == 2 ? ShaderCompiler.ValidateDeviceGraphics(modules[0], modules[1]) : default;
         var entry = new Entry { Kind = Kind.Shader, Stage = modules.Length == 1 ? ShaderStage.Compute : ShaderStage.Vertex, Layout = layout, Samplers = samplerLinks, Push = pushes.SelectMany(p => p).ToArray(), Name = name, Inputs = interfaces.Inputs ?? [], Outputs = interfaces.Outputs ?? [] };
         if (template) return entry;
@@ -291,20 +291,30 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     public bool ComputePipelineIsValid(RID pipeline) { Access(); return _entries.TryGetValue(pipeline, out var e) && e.Kind == Kind.Pipeline && _entries.ContainsKey(e.Shader); }
 
     /// <summary>Creates a copied set of validated buffer, image, sampler and framebuffer-input bindings.</summary>
-    /// <param name="uniforms">Shader-matching descriptions. Texture, Sampler, TextureBuffer and ImageBuffer each borrow one identity; combined sampled categories borrow sampler then image or formatted buffer.</param>
+    /// <param name="uniforms">Shader-matching descriptions. Fixed image, sampler, texel-buffer and framebuffer-input arrays use element order; combined categories repeat sampler then image or buffer per element. Ordinary uniform/storage buffers borrow one identity.</param>
     /// <param name="shader">The shader whose layout owns this set.</param>
     /// <param name="shaderSet">The shader descriptor-set number.</param>
-    /// <returns>A set identity borrowing its shader and buffers.</returns>
+    /// <returns>A set identity borrowing its shader and every described resource.</returns>
     public RID UniformSetCreate(ReadOnlySpan<RDUniform> uniforms, RID shader, uint shaderSet)
     {
         var program = Get(shader, Kind.Shader); var entry = new Entry { Kind = Kind.Set, Shader = shader, Set = shaderSet };
         foreach (var uniform in uniforms)
         {
             ArgumentNullException.ThrowIfNull(uniform); var ids = uniform.GetIDs();
-            if (uniform.Binding < 0 || ids.Length == 0) throw new ArgumentException("Each supported binding needs one buffer.", nameof(uniforms));
+            if (uniform.Binding < 0 || ids.Length == 0) throw new ArgumentException("Each supported binding needs resource identities.", nameof(uniforms));
             var descriptor = program.Layout.FirstOrDefault(b => b.Set == shaderSet && b.Slot == uniform.Binding);
             if (descriptor == default || descriptor.Type != uniform.UniformType) throw new ArgumentException("Descriptor does not match the shader.", nameof(uniforms));
-            foreach (var stageBinding in program.Layout) if (stageBinding.Set == shaderSet && stageBinding.Slot == uniform.Binding) ValidateBinding(stageBinding, ids);
+            foreach (var stageBinding in program.Layout)
+                if (stageBinding.Set == shaderSet && stageBinding.Slot == uniform.Binding)
+                {
+                    if (!stageBinding.DynamicCount) ValidateBinding(stageBinding, ids);
+                    else if (stageBinding.Element == 0)
+                    {
+                        var width = ResourceWidth(stageBinding.Type);
+                        if (ids.Length % width != 0 || ids.Length / width is 0 or > 16) throw new ArgumentException("The symbolic descriptor array has an invalid element count.", nameof(uniforms));
+                        for (var element = 0; element < ids.Length / width; element++) ValidateBinding(stageBinding with { Count = ids.Length / width, Element = element, DynamicCount = false }, ids);
+                    }
+                }
             if (!entry.Bindings.TryAdd(uniform.Binding, ids)) throw new ArgumentException("Duplicate descriptor binding.", nameof(uniforms));
         }
         if (program.Layout.Where(b => b.Set == shaderSet).Select(b => b.Slot).Distinct().Count() != entry.Bindings.Count) throw new ArgumentException("The uniform set is incomplete.", nameof(uniforms));
@@ -359,9 +369,9 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         {
             if (!_sets.TryGetValue(descriptor.Set, out var set) || set.Shader != Get(_pushPipeline).Shader) throw new InvalidOperationException("Bind each pipeline resource set first.");
             var ids = set.Bindings[descriptor.Slot];
-            ValidateBinding(descriptor, ids); if (descriptor.Native < 0) continue; var buffer = Get(ids[BufferID(descriptor.Type)]);
+            ValidateBinding(descriptor, ids); if (descriptor.Native < 0) continue; var buffer = Get(ids[ResourceID(descriptor, BufferID(descriptor.Type))]);
             if (descriptor.Type == UniformType.Image) { images[descriptor.Native] = new() { Texture = buffer.NativeHandle }; imageCount++; }
-            else if (descriptor.Type == UniformType.SamplerWithTexture) { samplers[descriptor.Native] = new() { Sampler = buffer.NativeHandle, Texture = Get(ids[1]).NativeHandle }; samplerCount++; }
+            else if (descriptor.Type == UniformType.SamplerWithTexture) { samplers[descriptor.Native] = new() { Sampler = buffer.NativeHandle, Texture = Get(ids[ResourceID(descriptor, 1)]).NativeHandle }; samplerCount++; }
             else if (StorageBinding(descriptor.Type)) { buffers[descriptor.Native] = new() { Buffer = buffer.Handle!.DangerousGetHandle() }; count++; }
             else fixed (byte* data = buffer.Data) SDL.PushGPUComputeUniformData(_command, (uint)descriptor.Native, (nint)data, buffer.Size);
         }

@@ -110,9 +110,9 @@ static byte[] CompileHLSL(string source, RenderingDevice.ShaderStage stage, stri
         if (!ShaderCross.Init()) throw new InvalidOperationException("Cannot initialize shadercross: " + SDL.GetError());
         try
         {
-            var code = deviceImport ? CompileDeviceHLSL(source, stage, includeDirectory) : ShaderSourceTypes.CompileHLSL(source, stage, includeDirectory);
+            var code = ShaderSourceTypes.CompileHLSL(source, stage, includeDirectory);
             // Scalar programs retain the established import payload; descriptor arrays preserve their source shape.
-            if (!deviceImport && !ShaderSourceTypes.HasDescriptorArrays(code)) code = CompileDeviceHLSL(source, stage, includeDirectory);
+            if (!ShaderSourceTypes.HasDescriptorArrays(code)) code = CompileDeviceHLSL(source, stage, includeDirectory);
             types = deviceImport ? null : ShaderSourceTypes.HLSL(source, stage == RenderingDevice.ShaderStage.Fragment, includeDirectory, code, particleImport);
             return code;
         }

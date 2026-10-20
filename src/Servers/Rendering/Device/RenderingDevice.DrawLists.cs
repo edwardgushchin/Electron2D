@@ -246,7 +246,7 @@ public sealed unsafe partial class RenderingDevice
         foreach (var descriptor in program.Layout)
         {
             if (!_sets.TryGetValue(descriptor.Set, out var set) || set.Shader != _graphicsPipeline!.Shader) throw new InvalidOperationException("Bind every graphics resource set first.");
-            var ids = set.Bindings[descriptor.Slot]; ValidateBinding(descriptor, ids); if (descriptor.Native < 0) continue; var resource = Get(ids[BufferID(descriptor.Type)]); var fragment = descriptor.Stage == ShaderStage.Fragment;
+            var ids = set.Bindings[descriptor.Slot]; ValidateBinding(descriptor, ids); if (descriptor.Native < 0) continue; var resource = Get(ids[ResourceID(descriptor, BufferID(descriptor.Type))]); var fragment = descriptor.Stage == ShaderStage.Fragment;
             if (descriptor.Type == UniformType.UniformBuffer)
             {
                 if (fragment) SDL.PushGPUFragmentUniformData(_command, (uint)descriptor.Native, resource.Data.AsSpan(), resource.Size);
@@ -254,7 +254,7 @@ public sealed unsafe partial class RenderingDevice
             }
             else if (descriptor.Type == UniformType.SamplerWithTexture)
             {
-                var image = Get(ids[1]); if (ActiveAttachment(image)) throw new InvalidOperationException("An active output attachment cannot be sampled during its render pass.");
+                var image = Get(ids[ResourceID(descriptor, 1)]); if (ActiveAttachment(image)) throw new InvalidOperationException("An active output attachment cannot be sampled during its render pass.");
                 var binding = samplerBinding; binding[0] = new() { Sampler = resource.NativeHandle, Texture = image.NativeHandle };
                 if (fragment) SDL.BindGPUFragmentSamplers(_drawPass, (uint)descriptor.Native, binding, 1); else SDL.BindGPUVertexSamplers(_drawPass, (uint)descriptor.Native, binding, 1);
             }

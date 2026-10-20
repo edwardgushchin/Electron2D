@@ -6,7 +6,7 @@ Last updated: 2026-10-20
 
 ## Description
 
-Descriptor-category values used by RDUniform. UniformBuffer, StorageBuffer, Image, SamplerWithTexture, Texture, Sampler and InputAttachment execute in their shader-stage roles. Separate Texture/Sampler bindings may use independent sets and reusable filters; see [sampled bindings](../components/local-compute.md#independent-sampled-resource-bindings). TextureBuffer and SamplerWithTextureBuffer execute indexed reads; ImageBuffer also executes compute writes and supported 32-bit atomics through [formatted buffers](../components/local-compute.md#formatted-texel-buffers). Numeric vocabulary alone does not establish an executing role.
+Descriptor-category values used by RDUniform. UniformBuffer, StorageBuffer, Image, SamplerWithTexture, Texture, Sampler and InputAttachment execute in their shader-stage roles. Separate Texture/Sampler bindings may use independent sets and reusable filters; see [sampled bindings](../components/local-compute.md#independent-sampled-resource-bindings). TextureBuffer and SamplerWithTextureBuffer execute indexed reads; ImageBuffer also executes compute writes and supported 32-bit atomics through [formatted buffers](../components/local-compute.md#formatted-texel-buffers). Fixed one-dimensional arrays execute for the eight image/sampler/texel/input categories with ordered IDs; combined categories repeat sampler/resource pairs. Ordinary uniform/storage buffers borrow one RID. See [device arrays](../components/local-compute.md#fixed-device-descriptor-arrays). Numeric vocabulary alone does not establish an executing role.
 
 ## API
 

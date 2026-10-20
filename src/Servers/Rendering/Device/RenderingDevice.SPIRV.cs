@@ -4,13 +4,16 @@ namespace Electron2D;
 
 public sealed unsafe partial class RenderingDevice
 {
-    private readonly record struct Binding(uint Set, int Slot, UniformType Type, int Native, bool Array = false, uint ImageFormat = 0, int PixelType = 0, ShaderStage Stage = ShaderStage.Compute, uint MinimumSize = 0, bool Depth = false, int Attachment = -1, bool Multisample = false);
+    private readonly record struct Binding(uint Set, int Slot, UniformType Type, int Native, bool Array = false, uint ImageFormat = 0, int PixelType = 0, ShaderStage Stage = ShaderStage.Compute, uint MinimumSize = 0, bool Depth = false, int Attachment = -1, bool Multisample = false, int Count = 1, int Element = 0, bool DynamicCount = false);
+    private static int ResourceWidth(UniformType type) => type is UniformType.SamplerWithTexture or UniformType.SamplerWithTextureBuffer ? 2 : 1;
+    private static int ResourceID(Binding binding, int lane = 0) => binding.Element * ResourceWidth(binding.Type) + lane;
     private static (byte[] Code, Binding[] Layout, PushStage[] Push) Remap(byte[] code, ShaderStage stage = ShaderStage.Compute) { var result = RemapCore(code, stage, false); return (result.Code, result.Layout, result.Push); }
     private static (byte[] Code, Binding[] Layout, PushStage[] Push, SamplerLink[] Samplers) RemapCore(byte[] code, ShaderStage stage, bool template)
     {
         if (code.Length < 20 || code.Length > 16 * 1024 * 1024 || code.Length % 4 != 0) throw new ArgumentException("A compute module must contain aligned SPIR-V words.", nameof(code));
-        var texelTranslation = TexelBufferProgram.Lower(code); code = texelTranslation.Code;
-        var samplerTranslation = CanvasSamplerArrays.LowerDevice(code); code = samplerTranslation.Code;
+        var imageArrays = DeviceImageArrays.Lower(code, template); code = imageArrays.Code;
+        var texelTranslation = TexelBufferProgram.Lower(code, template); code = texelTranslation.Code;
+        var samplerTranslation = CanvasSamplerArrays.LowerDevice(code, template); code = samplerTranslation.Code;
         var inputTranslation = LowerInputAttachments(code, stage); code = inputTranslation.Code;
         var readonlyTranslation = LowerReadOnlyImages(code, stage); code = readonlyTranslation.Code;
         (byte[] Code, uint Variable, uint Size) translated;
@@ -84,7 +87,7 @@ public sealed unsafe partial class RenderingDevice
                 if (!sets.TryGetValue(variable.ID, out var imageSet) || !slots.TryGetValue(variable.ID, out var imageBinding) || !pointers.TryGetValue(variable.Type, out var imageType)) throw new ArgumentException("An image has no descriptor layout.", nameof(code));
                 if (samplerTypes.Contains(imageType)) continue;
                 var combined = sampled.TryGetValue(imageType, out var underlying); if (combined) imageType = underlying;
-                if (!images.TryGetValue(imageType, out var image)) throw new NotSupportedException("Image descriptor arrays are not integrated.");
+                if (!images.TryGetValue(imageType, out var image)) throw new NotSupportedException("The image descriptor type has no scalar native adapter.");
                 if (!scalars.TryGetValue(image.Scalar, out var pixelType)) throw new NotSupportedException("Compute images require 32-bit float, signed or unsigned pixel scalars.");
                 if (readonlyTranslation.Images.TryGetValue(variable.ID, out var originalFormat))
                 {
@@ -147,8 +150,9 @@ public sealed unsafe partial class RenderingDevice
             var cleaned = new MaterialLightingProgram.Module(code); cleaned.Instructions.RemoveAll(i => MaterialLightingProgram.Op(i) == 0); code = cleaned.Write();
         }
         var restored = RestoreSamplerLayout(layout, samplerTranslation.Plan, stage);
-        var texelSources = texelTranslation.Sources.ToDictionary(s => (s.Set, s.Binding));
-        var finalLayout = restored.Layout.Select(b => texelSources.TryGetValue((b.Set, b.Slot), out var s) ? b with { Type = s.Type, ImageFormat = s.Format, PixelType = s.PixelType } : b).ToArray();
+        var texelSources = texelTranslation.Sources.ToDictionary(s => (s.NativeSet, s.NativeBinding));
+        var finalLayout = restored.Layout.Select(b => texelSources.TryGetValue((b.Set, b.Slot), out var s) ? b with { Set = s.Set, Slot = s.Binding, Type = s.Type, ImageFormat = s.Format, PixelType = s.PixelType, Count = s.Count, Element = s.Element, DynamicCount = s.DynamicCount } : b).ToArray();
+        finalLayout = finalLayout.Select(b => imageArrays.Sources.TryGetValue((b.Set, b.Slot), out var s) ? b with { Set = s.Set, Slot = s.Binding, Count = s.Count, Element = s.Element, DynamicCount = s.Dynamic } : b).ToArray();
         return (code, finalLayout, push is null ? [] : [push], restored.Links);
     }
 }

@@ -16,6 +16,8 @@ Readonly graphics storage images retain their Image role and current GPU content
 
 Independent Texture and Sampler sets execute native compute and graphics through reusable pair bindings, including plain/array and signed/unsigned images, comparison sampling, fetch/query, helpers and control flow. Combined declarations retain sampler-first IDs. See [independent sampled bindings](../components/local-compute.md#independent-sampled-resource-bindings) for validation timing, native capacity and verification.
 
+Fixed descriptor arrays execute across image, sampler, texel and input roles with ordered copied IDs and scalar native capacity; see [device arrays](../components/local-compute.md#fixed-device-descriptor-arrays).
+
 Formatted texel buffers execute indexed compute/graphics reads, compute stores and 32-bit integer atomics while preserving raw byte transfer/readback. Their factory counts elements; see [formatted texel buffers](../components/local-compute.md#formatted-texel-buffers).
 
 ## Example
@@ -303,7 +305,7 @@ public Electron2D.RID TextureBufferCreate(System.UInt32 sizeElements, Electron2D
 
 Creates a device-owned formatted GPU buffer. `sizeElements` is a positive element count; byte capacity is count times the format's encoded element size. Empty `data` clears every encoded byte; nonempty data must cover the exact complete capacity and is copied before returning. Unsupported compressed, depth, planar and wider-than-32-bit component encodings throw `NotSupportedException`; invalid size/format values throw `ArgumentOutOfRangeException`, and incomplete initial data throws `ArgumentException`. End any list before creation and use the owner thread.
 
-TextureBuffer and ImageBuffer borrow this RID. SamplerWithTextureBuffer borrows sampler first, then this buffer; indexed fetches ignore filtering. Compute stores and supported signed/unsigned R32 image atomics change the original encoded bytes. Ordinary update/copy/clear and synchronous/queued readback use byte offsets in that data, excluding private format metadata. FreeRID invalidates dependent sets and retires owned native storage; identities never cross devices. Graphics uses readonly declarations. See the component for native capacity, format conversion, allocation checks and remaining descriptor-array/precision gates.
+TextureBuffer and ImageBuffer borrow this RID. SamplerWithTextureBuffer borrows sampler first, then this buffer; indexed fetches ignore filtering. Compute stores and supported signed/unsigned R32 image atomics change the original encoded bytes. Ordinary update/copy/clear and synchronous/queued readback use byte offsets in that data, excluding private format metadata. FreeRID invalidates dependent sets and retires owned native storage; identities never cross devices. Graphics uses readonly declarations. See the component for native capacity, format conversion, allocation checks and remaining runtime/nested-descriptor and precision gates.
 
 <a id="member-8126118533ad"></a>
 ### StorageBufferCreate(System.UInt32, System.ReadOnlySpan<System.Byte>)

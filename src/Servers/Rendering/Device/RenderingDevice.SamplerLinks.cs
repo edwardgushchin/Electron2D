@@ -13,27 +13,28 @@ public sealed unsafe partial class RenderingDevice
         foreach (var binding in layout.Where(b => b.Set == plan.Set))
         {
             var pair = plan.Pairs[binding.Slot];
-            links.Add(new(binding with { Depth = plan.Comparisons.Contains((pair.Image, pair.Sampler)) }, plan.Sources[pair.Image], !pair.UsesSampler || pair.Sampler == 0 ? null : plan.Sources[pair.Sampler]));
+            links.Add(new(binding with { Depth = plan.Comparisons.Contains((pair.Image, pair.Sampler)) }, plan.Sources[pair.Image] with { Element = pair.ImageElement }, !pair.UsesSampler || pair.Sampler == 0 ? null : plan.Sources[pair.Sampler] with { Element = pair.SamplerElement }));
         }
         layout.RemoveAll(b => b.Set == plan.Set);
         foreach (var group in plan.Sources.GroupBy(p => p.Value))
         {
             var origin = group.Key; var image = group.FirstOrDefault(p => plan.Shapes.ContainsKey(p.Key)); var shape = plan.Shapes.GetValueOrDefault(image.Key);
             if (layout.Any(b => b.Set == origin.Set && b.Slot == origin.Binding)) throw new ArgumentException("Duplicate logical sampled resource binding.");
-            layout.Add(new(origin.Set, origin.Binding, origin.Type, -1, shape.Array, PixelType: shape.PixelType, Stage: stage, Depth: shape.Depth));
+            for (var element = 0; element < origin.Count; element++)
+                layout.Add(new(origin.Set, origin.Binding, origin.Type, -1, shape.Array, PixelType: shape.PixelType, Stage: stage, Depth: shape.Depth, Count: origin.Count, Element: element, DynamicCount: origin.Dynamic));
         }
         return (layout.ToArray(), links.ToArray());
     }
     private static void NormalizeSamplerSources(Binding[] layout, SamplerLink[] links)
     {
-        var requirements = new Dictionary<(uint Set, int Slot), bool>();
-        void Require(uint set, int slot, bool comparison)
+        var requirements = new Dictionary<(uint Set, int Slot, int Element), bool>();
+        void Require(uint set, int slot, int element, bool comparison)
         {
-            if (requirements.TryGetValue((set, slot), out var previous) && previous != comparison) throw new ArgumentException("A shared sampler has inconsistent comparison modes.");
-            requirements[(set, slot)] = comparison;
+            if (requirements.TryGetValue((set, slot, element), out var previous) && previous != comparison) throw new ArgumentException("A shared sampler has inconsistent comparison modes.");
+            requirements[(set, slot, element)] = comparison;
         }
-        foreach (var binding in layout) if (binding.Type == UniformType.SamplerWithTexture && binding.Native >= 0) Require(binding.Set, binding.Slot, binding.Depth);
-        foreach (var link in links) if (link.Sampler is { } source) Require(source.Set, source.Binding, link.Native.Depth);
+        foreach (var binding in layout) if (binding.Type == UniformType.SamplerWithTexture && binding.Native >= 0) Require(binding.Set, binding.Slot, binding.Element, binding.Depth);
+        foreach (var link in links) if (link.Sampler is { } source) Require(source.Set, source.Binding, source.Element, link.Native.Depth);
         foreach (var group in layout.GroupBy(b => (b.Set, b.Slot)))
         {
             if (!group.Any(b => b.Type == UniformType.SamplerWithTexture) || group.Any(b => b.Type is not (UniformType.Texture or UniformType.Sampler or UniformType.SamplerWithTexture))) continue;
@@ -64,12 +65,12 @@ public sealed unsafe partial class RenderingDevice
     }
     private SDL.GPUTextureSamplerBinding LinkedSampler(SamplerLink link, bool graphics)
     {
-        var imageIDs = LinkedSource(link.Image); var image = Get(imageIDs[link.Image.Type == UniformType.SamplerWithTexture ? 1 : 0], Kind.Texture);
+        var imageIDs = LinkedSource(link.Image); var image = Get(imageIDs[link.Image.Element * ResourceWidth(link.Image.Type) + (link.Image.Type == UniformType.SamplerWithTexture ? 1 : 0)], Kind.Texture);
         if (graphics && ActiveAttachment(image)) throw new InvalidOperationException("An active output attachment cannot be sampled during its render pass.");
         nint sampler;
         if (link.Sampler is { } source)
         {
-            var entry = Get(LinkedSource(source)[0], Kind.Sampler); sampler = entry.NativeHandle;
+            var entry = Get(LinkedSource(source)[source.Element * ResourceWidth(source.Type)], Kind.Sampler); sampler = entry.NativeHandle;
             if (entry.CompareSampling != link.Native.Depth || link.Native.Depth && !DepthFormat(image.Texture!.Format)) throw new ArgumentException("A comparison sampler requires a matching depth image and shader role.");
             if (link.Native.PixelType != 0 && entry.LinearSampling) throw new ArgumentException("Integer textures require nearest filtering without anisotropy.");
         }

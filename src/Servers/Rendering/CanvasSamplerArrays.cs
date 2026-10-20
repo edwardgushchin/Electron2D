@@ -208,7 +208,11 @@ internal static partial class CanvasSamplerArrays
             if (device is not null && op == 86)
             {
                 var multiplied = next++; output.Add(Instruction(132, integer, multiplied, instruction[3], Constant(device.Stride)));
-                output.Add(Instruction(128, integer, instruction[2], multiplied, instruction[4])); continue;
+                var combined = next++; output.Add(Instruction(128, integer, combined, multiplied, instruction[4]));
+                var imageValid = next++; output.Add(Instruction(176, boolean, imageValid, instruction[3], Constant(device.ImageCount)));
+                var samplerValid = next++; output.Add(Instruction(176, boolean, samplerValid, instruction[4], Constant(device.Stride - 1)));
+                var valid = next++; output.Add(Instruction(167, boolean, valid, imageValid, samplerValid));
+                output.Add(Instruction(169, integer, instruction[2], valid, combined, Constant(uint.MaxValue))); continue;
             }
             if (device is not null && op == 100) { output.Add(Instruction(134, integer, instruction[2], instruction[3], Constant(device.Stride))); continue; }
             if (op is 86 or 100) { output.Add(Instruction(83, integer, instruction[2], instruction[3])); continue; }
@@ -218,7 +222,20 @@ internal static partial class CanvasSamplerArrays
                 if (instruction.Length != 5) throw new NotSupportedException("Sampled descriptor access requires a one-dimensional array index.");
                 var index = instruction[4];
                 if (valueTypes[index] != integer) { var converted = next++; output.Add(Instruction(124, integer, converted, index)); index = converted; }
-                output.Add(Instruction(128, integer, instruction[2], instruction[3], index)); continue;
+                if (device is not null)
+                {
+                    var declaration = types[valueTypes[instruction[3]]]; if (Op(declaration) == 32) declaration = types[declaration[3]];
+                    if (Op(declaration) != 28) throw new NotSupportedException("Sampled descriptors require an array index at their declaring layer.");
+                    var origin = resources.FirstOrDefault(r => r[2] == instruction[3]);
+                    var count = origin is not null ? device.Sources[origin[2]].Count : DescriptorShape(valueTypes[instruction[3]], types, source.Where(i => Op(i) == 43 && i.Length == 4).ToDictionary(i => i[2], i => i[3]), symbolic: true).Count;
+                    var step = Op(types[Element(valueTypes[instruction[3]])]) == 27 ? device.Stride + 1 : 1;
+                    var offset = next++; output.Add(Instruction(132, integer, offset, index, Constant(step)));
+                    var added = next++; output.Add(Instruction(128, integer, added, instruction[3], offset));
+                    var valid = next++; output.Add(Instruction(176, boolean, valid, index, Constant((uint)count)));
+                    output.Add(Instruction(169, integer, instruction[2], valid, added, Constant(uint.MaxValue)));
+                }
+                else output.Add(Instruction(128, integer, instruction[2], instruction[3], index));
+                continue;
             }
             if (inFunction && instruction.Length > 2 && Opaque(instruction[1])) instruction[1] = integer;
             output.Add(instruction);

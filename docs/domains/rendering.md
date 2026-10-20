@@ -438,3 +438,5 @@ The text service exposes borrowed resource source caches and complete copied gly
 [Item scale oversampling](../components/scalable-svg.md#item-scale-oversampling) connects the stored CanvasItem policy, inherited by spatial/UI/physics descendants, to native font and SVG raster factors and shared last-owner cache retirement. Logical dimensions and explicit font/MSDF policies remain intact.
 
 [Formatted texel buffers](../components/local-compute.md#formatted-texel-buffers) execute typed indexed reads in compute and graphics, encoded compute stores and signed/unsigned R32 atomics. Raw buffer transfers preserve their data while private GPU format metadata drives conversion; their produced images feed retained canvas directly.
+
+Fixed device descriptor arrays now connect ordered RDUniform IDs to compute, graphics and framebuffer-input consumers through scalar native slots, retaining exact count/format/lifetime validation and specialized pipeline counts. See [the contract and verification limits](../components/local-compute.md#fixed-device-descriptor-arrays).

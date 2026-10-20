@@ -11,7 +11,7 @@ internal static partial class RenderingDeviceTexelTests
         using var source = new RDShaderSource { SourceCompute = Code(7) }; using var module = device.ShaderCompileSPIRVFromSource(source, false); Check(module.CompileErrorCompute == "", module.CompileErrorCompute); Export(module, "Capacity8");
         source.SourceCompute = Code(8); using var excessive = device.ShaderCompileSPIRVFromSource(source, false); Check(excessive.CompileErrorCompute.Contains("eight storage buffers", StringComparison.Ordinal), "Texel and ordinary resources share the actual eight-buffer native limit.");
         source.SourceCompute = "#version 450\nlayout(local_size_x=1)in;layout(set=0,binding=0)uniform samplerBuffer values[2];layout(set=0,binding=1,std430)buffer Output{vec4 result;};void main(){result=texelFetch(values[1],0);}";
-        using var arrays = device.ShaderCompileSPIRVFromSource(source, false); Check(arrays.CompileErrorCompute.Contains("resource-array integration", StringComparison.Ordinal), "Descriptor arrays report their exact remaining integration.");
+        using var arrays = device.ShaderCompileSPIRVFromSource(source, false); Check(arrays.CompileErrorCompute == "", arrays.CompileErrorCompute); Export(arrays, "DescriptorArray");
         if (Environment.GetEnvironmentVariable("ELECTRON2D_TEXEL_EXPORT_ONLY") == "1") return;
         var shader = device.ShaderCreateFromSPIRV(module); var pipeline = device.ComputePipelineCreate(shader);
         using var state = new RDSamplerState(); var sampler = device.SamplerCreate(state); var descriptions = new RDUniform[7];
