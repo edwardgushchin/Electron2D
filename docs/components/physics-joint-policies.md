@@ -1,6 +1,6 @@
 # Joint solver policies
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 Collision-policy publication now retains the latest requested flag and complete
 common pair contribution through selected errors. Equal setters and world
@@ -268,3 +268,74 @@ endpoint orders. CPU supplies the same analytic checks; serial/separate modes pa
 sampled frames for scene/raw pin/groove/spring and verifies continued constraints,
 private replay and strict zero warm managed allocation. These bounded circle fixtures
 retain broader numerical/graph/current GPU/native/network/performance limits.
+
+
+## Joint force after reversing CCD impact
+
+The public-only `--joint-impact-budget` consumer checks a capped pin or zero-length
+groove joining two free, unit-radius, mass-2 linear rigid bodies. One starts at
+3000 scene units/s and rebounds elastically from a static unit circle; the other
+starts at rest 1000 units away in Y and receives only the joint impulse. Both have
+zero gravity/damping/friction and no positional joint correction. The 0.02-second
+step uses MaxForce 0 or 50, so each body can receive at most 1 impulse unit, or
+.5 units/s total velocity variation. Rotation is locked to isolate that channel.
+
+A final velocity alone is insufficient: repeated opposite joint impulses can
+cancel while the contact solver retains the same rebound speed. For the free
+witness, starting at rest with displacement `x`, final velocity `v` and duration
+`dt`, total velocity variation must be at least `abs(2*x/dt-v)`. Each instantaneous
+impulse contributes its velocity change times a coefficient between -1 and 1 to
+that expression, independently of a solver's subdivision schedule. The test uses
+this necessary bound with .003 units/s float allowance. It also checks rebound
+speed within .03, transverse velocity/rotation within .001, complete contact
+identity/shape indices and full contact impulse against both bodies' momentum
+within .03 impulse units. Authored force remains exact, with one outer tick and
+state callback. Targets at signed X=8,23,38,53 place impacts in all four nominal
+quarters; disabled controls cross between discrete samples without contact.
+
+The 128 configurations combine both CCD modes, both body ownership choices,
+scene/raw pin and groove resources, both travel signs and all four impact phases.
+Force-zero and force-50 calls provide 256 continuous cases; there are another
+128 disabled controls and five private checkpoint replay cases (.001 position,
+.002 velocity, .01 full contact impulse). After 256 warmups, 256 complete moving
+frames, policy edits, state publication and assertions must allocate strict
+0/0 owner/all-thread managed bytes.
+
+The independent public provider previously retained a signed accumulated joint
+impulse across CCD passes. Reversing it made spent force available again. At
+configuration 64 its witness reached x=.0020019915 and final v=-.5, requiring
+.7001991 units/s against the .5 allowance. CPU passed the same test. The provider
+now resets iterative accumulators for each interval and retains spent magnitudes
+for the whole frame, independently for linear, angular and motor channels.
+Remaining caps clamp at zero. Iterations share a cap; a new CCD pass consumes its
+unspent remainder. Spring evaluation remains once per frame with its existing
+combined cap. Transient budget fields reset before each new full solve, including
+post-checkpoint replay; no public snapshot/schema changes are needed.
+
+This correction is confined to the independently implemented public consumer;
+the shipping CPU/GPU solvers and API are unchanged. The whole extension class
+remains Partial until its remaining numerical/inherited/platform requirements are
+accepted. Arbitrary joint/contact/CCD networks, native allocations, routed
+networking and final performance acceptance remain separate.
+
+
+The 2026-10-20 Linux/.NET 10 source-built verification passes 12 new impact
+profiles (CPU/registered/GPU, owner/separate and CLR/strict NativeAOT), plus
+12 CLR registered companions for joint response, continuous response, loaded
+joint/contact sleep, four/64-body closed graphs and portable joints in both
+thread modes. Each impact profile measures 256 moving complete frames at 0/0
+owner/all-thread managed bytes (3,072 measured frames total). Across both build
+variants, maximum rebound-speed error is .000244 units/s on CPU and zero at the
+printed six decimals on registered/GPU; maximum free-witness budget excess is
+zero and inferred net joint impulse is at most 1 on all three. Companions retain
+their own physical/replay and allocation assertions.
+
+GPU processes observe the selected NVIDIA RTX 3090 Ti hardware driver without a
+software Vulkan driver; CPU/provider profiles run with Vulkan unavailable and do
+not load NVIDIA. No new Xid is observed over the final profiles. Source proofs
+match the complete 2,422 runtime and 262 consumer PDB documents for both ordinary
+and AOT managed-input builds; strict NativeAOT has no trim/AOT warnings. Logs,
+recovered exact RED source inputs, payload hashes and validation are under
+`bin/physics-joint-impact-budget/2026-10-20/`. Functional elapsed times overlap
+compilation/quality work and are not performance measurements. The API census
+remains 1304/1369 Implemented (95.25%), 65 open, 92 Excluded.

@@ -6,7 +6,15 @@ public static partial class BackendChecks
     {
         private Vector2 _linear;
         private float _motor, _stop;
-        internal void BeginSolve() { _linear = default; _motor = _stop = 0; }
+        private double _spentLinear, _spentAngular, _spentMotor;
+        internal void BeginSolve() { _spentLinear = _spentAngular = _spentMotor = 0; }
+        internal void BeginInterval() { _linear = default; _motor = _stop = 0; }
+        internal void CompleteInterval()
+        {
+            _spentLinear += _linear.Length(); _spentAngular += Math.Abs(_motor) + Math.Abs(_stop); _spentMotor += Math.Abs(_motor);
+        }
+        private float RemainingForce(double spent, float dt) => Settings.MaxForce == float.MaxValue ? float.PositiveInfinity :
+            (float)Math.Max(0, (double)Settings.MaxForce * dt - spent);
         internal void Solve(float dt, bool firstIteration)
         {
             var a = solver.Bodies[_first]; var b = _second.IsValid() ? solver.Bodies[_second] : null;
@@ -51,13 +59,13 @@ public static partial class BackendChecks
                 var axial = -_linear.Y;
                 candidate = new(k11 > 0 ? _linear.X - (float)((rhs.X + k12 * axial) / k11) : 0, 0);
             }
-            var cap = Settings.MaxForce == float.MaxValue ? float.PositiveInfinity : Settings.MaxForce * dt;
+            var cap = RemainingForce(_spentLinear, dt);
             var next = Limit(candidate, cap); impulse = next - _linear; _linear = next;
             var linear = u * impulse.X + v * impulse.Y;
             Apply(a, -linear, -qaU * impulse.X - qaV * impulse.Y);
             Apply(b, linear, qbU * impulse.X + qbV * impulse.Y);
             if (Settings.Type == PhysicsServer.JointType.Pin && ia + ib > 0)
-                SolveAngular(a, b, frameB.Rotation - frameA.Rotation, ia + ib, bias, cap, dt);
+                SolveAngular(a, b, frameB.Rotation - frameA.Rotation, ia + ib, bias, RemainingForce(_spentAngular, dt), dt);
         }
         private void SolveAngular(Body a, Body? b, float angle, float inverse, float bias, float cap, float dt)
         {
@@ -65,7 +73,7 @@ public static partial class BackendChecks
             var above = Settings.PinLimitEnabled && angle > Settings.PinLimitUpper;
             if (Settings.PinMotorEnabled && !(below && Settings.PinMotorVelocity < 0 || above && Settings.PinMotorVelocity > 0))
             {
-                var motorCap = MathF.Min(cap - MathF.Abs(_stop), Settings.PinMotorMaxTorque * 10000 * dt);
+                var motorCap = MathF.Min(MathF.Max(0, cap - MathF.Abs(_stop)), (float)Math.Max(0, (double)Settings.PinMotorMaxTorque * 10000 * dt - _spentMotor));
                 var next = Math.Clamp(_motor + (Settings.PinMotorVelocity - (Spin(b) - Spin(a))) / inverse, -motorCap, motorCap);
                 Angular(a, b, next - _motor); _motor = next;
             }
@@ -73,7 +81,7 @@ public static partial class BackendChecks
             {
                 var error = angle - (below ? Settings.PinLimitLower : Settings.PinLimitUpper);
                 var target = -Math.Clamp(error * bias / dt, -Settings.MaxBias, Settings.MaxBias);
-                var stopCap = cap - MathF.Abs(_motor);
+                var stopCap = MathF.Max(0, cap - MathF.Abs(_motor));
                 var next = Math.Clamp(_stop + (target - (Spin(b) - Spin(a))) / inverse, below ? 0 : -stopCap, above ? 0 : stopCap);
                 Angular(a, b, next - _stop); _stop = next;
             }

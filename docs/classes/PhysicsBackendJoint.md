@@ -1,6 +1,6 @@
 # PhysicsBackendJoint
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 ## Lifecycle request ownership
 
@@ -85,3 +85,9 @@ The complete typed facade parameter/flag family projects retained common authori
 
 
 Connection clear and replacement also reject numerical borrowing during CreateJoint, Attach, live policy and Detach. The independent consumer checks pending endpoints, fresh attachment reentry, kind/role/geometry rejection, factory/null/reuse/attach/detach errors and explicit recovery for all three roles. Registered pin/groove numerical response remains open.
+
+
+The independent consumer's [reversing CCD impact budget](../components/physics-joint-policies.md#joint-force-after-reversing-ccd-impact)
+keeps spent frame allowances separate from iterative accumulators. Free-witness
+motion detects repeated opposite impulses that final rebound speed alone hides.
+This bounded verification does not close the complete extension contract.

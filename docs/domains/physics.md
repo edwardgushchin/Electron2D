@@ -1740,3 +1740,9 @@ The [distributed closed joint network](../components/physics-joints.md#distribut
 extends the four-body control to 64 bodies and 64 mixed constraints, with
 physical-invariant, checkpoint and encoded CPU-authoritative correction checks.
 It preserves the current API census and the wider completion gates.
+
+
+[Reversing joint CCD impacts](../components/physics-joint-policies.md#joint-force-after-reversing-ccd-impact)
+now retain consumed force in the independent public provider. A free witness checks
+its displacement/velocity reachability budget alongside the actual contact and
+full impulse on CPU/resident-GPU/registered worlds. The API census is unchanged.

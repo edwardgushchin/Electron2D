@@ -21,6 +21,7 @@ public static partial class BackendChecks
             if (begin) foreach (var joint in Joints.Values) joint.BeginSolve();
             try
             {
+                foreach (var joint in Joints.Values) joint.BeginInterval();
                 PrepareContacts(interval);
                 WarmContacts(interval);
                 if (_constraints.Count != 0 || Joints.Count != 0)
@@ -30,6 +31,7 @@ public static partial class BackendChecks
                         foreach (var joint in Joints.Values) joint.Solve(Delta, first && iteration == 0);
                         foreach (ref var contact in CollectionsMarshal.AsSpan(_constraints)) CorrectContact(contact);
                     }
+                foreach (var joint in Joints.Values) joint.CompleteInterval();
                 foreach (var contact in _constraints)
                 {
                     var a = contact.A; var b = contact.B; var own = a.Parts[contact.First]; var other = b.Parts[contact.Second];

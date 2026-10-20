@@ -4602,3 +4602,13 @@ identity/lifecycle checks. The four-body control remains in the same executable.
 This bounded isolated-joint profile does not close arbitrary coupled contacts,
 CCD, numerical-scale extremes or the complete extension class. Full inherited,
 network, native-memory, foreign-platform and performance acceptance remain open.
+
+
+## Reversing joint impact budget
+
+The independent provider retains spent impulse magnitudes across CCD passes,
+separately from each pass's iterative linear/angular/motor accumulators. Reversal
+cannot refund a consumed force allowance. The [public free-witness regression](physics-joint-policies.md#joint-force-after-reversing-ccd-impact)
+proves this through displacement, final velocity and complete contact impulse,
+with CPU/resident-GPU controls. No shipping solver or public API changed; the
+class and wider acceptance gates remain open.
