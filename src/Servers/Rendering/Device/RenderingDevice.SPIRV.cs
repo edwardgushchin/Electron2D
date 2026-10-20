@@ -32,6 +32,7 @@ public sealed unsafe partial class RenderingDevice
         var pointers = new Dictionary<uint, uint>(); var bufferBlocks = new HashSet<uint>();
         var variables = new List<(uint ID, uint Type, uint Storage)>();
         var images = new Dictionary<uint, (uint Scalar, uint Array, uint Sampled, uint Format, uint Depth, uint Multisample)>(); var scalars = new Dictionary<uint, int>(); var pairedSamplers = new HashSet<uint>(); var sampled = new Dictionary<uint, uint>(); var samplerTypes = new HashSet<uint>();
+        var atomicImages = new HashSet<uint>();
         var entry = false; var localSize = false;
         for (var i = 5; i < words.Length;)
         {
@@ -60,6 +61,7 @@ public sealed unsafe partial class RenderingDevice
                 case 30 when size >= 2: members.Add(words[i + 1], size - 2); break;
                 case 32 when size == 4: pointers.Add(words[i + 1], words[i + 3]); break;
                 case 59 when size >= 4: variables.Add((words[i + 2], words[i + 1], words[i + 3])); break;
+                case 60 when size == 6: atomicImages.Add(words[i + 3]); break;
                 case 71 when size >= 3:
                     if (words[i + 2] == 34 && size == 4) sets.Add(words[i + 1], i + 3);
                     else if (words[i + 2] == 33 && size == 4) slots.Add(words[i + 1], i + 3);
@@ -88,6 +90,7 @@ public sealed unsafe partial class RenderingDevice
                 if (samplerTypes.Contains(imageType)) continue;
                 var combined = sampled.TryGetValue(imageType, out var underlying); if (combined) imageType = underlying;
                 if (!images.TryGetValue(imageType, out var image)) throw new NotSupportedException("The image descriptor type has no scalar native adapter.");
+                if (atomicImages.Contains(variable.ID) && (!compute || image.Sampled != 2 || image.Format is not (24 or 33) || image.Array != 0)) throw new NotSupportedException("Image atomics require ordinary compute R32SINT or R32UINT storage images.");
                 if (!scalars.TryGetValue(image.Scalar, out var pixelType)) throw new NotSupportedException("Compute images require 32-bit float, signed or unsigned pixel scalars.");
                 if (readonlyTranslation.Images.TryGetValue(variable.ID, out var originalFormat))
                 {

@@ -196,3 +196,5 @@ Selects the exact allocation sample count.
 Initially RenderingDevice.TextureSamples.Samples1; copied and validated at allocation.
 
 Combining Sampling and Storage preserves a private readonly GPU snapshot for graphics-image consumers, while writes and public snapshots address the original allocation. The native sampling allocation carries no conflicting graphics-read flag; the [device coherence contract](../components/local-compute.md#readonly-graphics-image-coherence) describes copy and lifetime boundaries.
+
+Ordinary signed/unsigned R32 Image descriptors now execute compute atomics, including fixed arrays. StorageAtomic validates allocation capability, while Image binding independently requires Storage. See [integer image atomics](../components/local-compute.md#integer-image-atomics) for ordering, lifetime and native verification limits.

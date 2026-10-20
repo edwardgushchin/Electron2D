@@ -482,19 +482,19 @@ public sealed unsafe partial class RenderingDevice
         CanCopyTo = 256,
         /// <summary>Allows replacement of one complete layer mip chain.</summary>
         CanUpdate = 64,
-        /// <summary>Requires a color attachment; local graphics integration is not implemented.</summary>
+        /// <summary>Allows a color attachment in an executable framebuffer.</summary>
         ColorAttachment = 2,
         /// <summary>Allows explicit synchronous or queued CPU readback.</summary>
         CPURead = 32,
         /// <summary>Requires depth resolve attachment integration.</summary>
         DepthResolveAttachment = 4096,
-        /// <summary>Requires depth/stencil attachment and transfer integration.</summary>
+        /// <summary>Allows a depth/stencil attachment with supported native sampling.</summary>
         DepthStencilAttachment = 4,
-        /// <summary>Requires graphics subpass input integration.</summary>
+        /// <summary>Allows ordered single-sample or multisample framebuffer input reads.</summary>
         InputAttachment = 512,
         /// <summary>Allows shader sampling with a sampler.</summary>
         Sampling = 1,
-        /// <summary>Requires atomic image access not exposed by this backend profile.</summary>
+        /// <summary>Checks signed or unsigned R32 storage-image atomic capability; Image bindings also require Storage.</summary>
         StorageAtomic = 16,
         /// <summary>Allows read/write compute access where the format supports simultaneous access.</summary>
         Storage = 8,

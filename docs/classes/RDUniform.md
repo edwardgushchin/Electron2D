@@ -114,3 +114,5 @@ The image category initially; set a supported buffer category before creating a 
 [RenderingDeviceTests](../../tests/Electron2D.Tests/RenderingDeviceTests.cs) checks actual native computation, buffer/descriptor/barrier semantics, resource copying/storage and invalid lifetime/thread access. [Local compute](../components/local-compute.md) records the supported module/resource profile. Broader device graphics APIs, asynchronous texture transfer APIs and additional platforms are not established by this slice.
 
 Fixed arrays also cover formatted buffers and framebuffer inputs. Combined sampled buffers repeat sampler/buffer pairs. Ordinary uniform/storage buffers borrow one identity. Counts resolve with pipeline specialization; see [the descriptor-array contract](../components/local-compute.md#fixed-device-descriptor-arrays).
+
+Ordinary signed/unsigned R32 Image descriptors now execute compute atomics, including fixed arrays. StorageAtomic validates allocation capability, while Image binding independently requires Storage. See [integer image atomics](../components/local-compute.md#integer-image-atomics) for ordering, lifetime and native verification limits.

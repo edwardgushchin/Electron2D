@@ -119,7 +119,7 @@ public sealed unsafe partial class RenderingDevice
         var native = (SDL.GPUTextureUsageFlags)0;
         if ((usage & TextureUsageBits.Sampling) != 0) native |= SDL.GPUTextureUsageFlags.Sampler;
         if ((usage & TextureUsageBits.InputAttachment) != 0 && (usage & (TextureUsageBits.Sampling | TextureUsageBits.Storage)) == 0) native |= SDL.GPUTextureUsageFlags.GraphicsStorageRead;
-        if ((usage & TextureUsageBits.Storage) != 0) native |= ((usage & TextureUsageBits.Sampling) == 0 ? SDL.GPUTextureUsageFlags.GraphicsStorageRead : 0) | SDL.GPUTextureUsageFlags.ComputeStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageWrite | SDL.GPUTextureUsageFlags.ComputeStorageSimultaneousReadWrite;
+        if ((usage & (TextureUsageBits.Storage | TextureUsageBits.StorageAtomic)) != 0) native |= ((usage & TextureUsageBits.Sampling) == 0 ? SDL.GPUTextureUsageFlags.GraphicsStorageRead : 0) | SDL.GPUTextureUsageFlags.ComputeStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageWrite | SDL.GPUTextureUsageFlags.ComputeStorageSimultaneousReadWrite;
         if ((usage & TextureUsageBits.DepthStencilAttachment) != 0) native |= SDL.GPUTextureUsageFlags.DepthStencilTarget;
         if ((usage & TextureUsageBits.ColorAttachment) != 0) native |= SDL.GPUTextureUsageFlags.ColorTarget;
         if (native == 0) native = SDL.GPUTextureUsageFlags.Sampler;
@@ -128,11 +128,12 @@ public sealed unsafe partial class RenderingDevice
     /// <summary>Reports whether the selected format supports the requested two-dimensional texture usage.</summary>
     /// <param name="format">A concrete format to query.</param>
     /// <param name="usageFlags">Requested allocation and transfer roles.</param>
-    /// <returns>False for formats or roles unavailable on this backend.</returns>
+    /// <returns>False for formats or roles unavailable on this backend. StorageAtomic accepts native R32SINT/R32UINT read-modify-write images; raw depth resolve remains unavailable.</returns>
     public bool TextureIsFormatSupportedForUsage(DataFormat format, TextureUsageBits usageFlags)
     {
         Access(); RDTextureConfiguration.FormatValue(format); RDTextureConfiguration.Usage(usageFlags);
-        if ((usageFlags & (TextureUsageBits.StorageAtomic | TextureUsageBits.DepthResolveAttachment)) != 0) return false;
+        if ((usageFlags & TextureUsageBits.DepthResolveAttachment) != 0) return false;
+        if ((usageFlags & TextureUsageBits.StorageAtomic) != 0 && format is not (DataFormat.R32SINT or DataFormat.R32UINT)) return false;
         if (DepthFormat(format))
         {
             if ((usageFlags & TextureUsageBits.DepthStencilAttachment) == 0 || (usageFlags & ~(TextureUsageBits.DepthStencilAttachment | TextureUsageBits.Sampling)) != 0) return false;
@@ -147,6 +148,7 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="view">Initial view description; native format reinterpretation and swizzles require a view adapter.</param>
     /// <param name="data">One tightly packed color mip chain per layer, or empty for zero initialization. Depth/stencil images require empty data and initialize every layer/mip to depth zero and stencil zero. Multisample targets require empty data and initialize every sample through native clears.</param>
     /// <returns>A texture RID belonging to this device.</returns>
+    /// <remarks>StorageAtomic validates signed/unsigned R32 atomic format support. Image descriptors independently require Storage. Ordinary R32 Storage allocations also retain native simultaneous read-modify-write access.</remarks>
     /// <exception cref="NotSupportedException">The requested format, view or allocation role is not supported.</exception>
     public RID TextureCreate(RDTextureFormat format, RDTextureView view, ReadOnlySpan<byte[]> data = default)
     {
