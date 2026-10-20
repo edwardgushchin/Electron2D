@@ -328,7 +328,7 @@ Character ray floors, ray-specific body tests and direct/Area sensing execute in
 <a id="adr-0069"></a>
 ## ADR 0069: Standalone resource collision regions and boundary contacts
 
-Last updated: 2026-09-30
+Last updated: 2026-10-20
 
 - Status: Accepted
 - Scope: Shape.Collide, CollideWithMotion and the two contact-array variants
@@ -342,9 +342,10 @@ Direct-space queries execute against registered scene/server fixtures. Resource-
 
 - Expose all four typed Shape methods using explicit translated/rotated, unit-scale, zero-skew poses and global-axis displacements. Validate finite inputs, live resources and transformed geometry. Queries read caller-owned resources without creating RIDs or temporary worlds and do not mutate them or their scene borrowers. Concurrent resource mutation/disposal is outside the query contract.
 - Use original scene-unit dimensions for primitive support geometry, avoiding round-trip rounding at exact touching. Build each convex swept hull from its original and displaced vertices and retain the linked circle/capsule radius. Test edge and rounded-corner separating axes. Reuse the span hull builder behind Geometry.ConvexHull and double orientation intermediates. A full ConvexPolygonShape contour stays one collision region regardless of backend fixture partitioning; concave resources remain hollow segment collections with the accepted short-segment point fallback.
+- Correctness adaptation: when both unrounded convex cores are points or segments, also test their tangent and point-displacement axes. Disjoint collinear resources and independently swept intervals must not report intersection. The pinned [segment SAT](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/godot_physics_2d/godot_collision_solver_2d_sat.cpp#L386) checks cast axes when motion exists, but its static segment pair checks only edge normals and can return a false positive along a shared line. Preserve finite-region intersection instead of that static numerical defect. This covers zero-radius capsule rods/points and the accepted segment point fallback, retains exact touching, and does not change hollow/ray/boundary pair policy.
 - Return global boundary pairs in caller/other order, capped at sixteen. The difference from the first point to the second gives separation normal and depth. Retain deeper pairs when capacity is reached; exact edge touching may return true without a nonzero separating contact. Arrays are caller-owned; empty results share an empty array. Reuse private per-thread proxy and hull buffers after warmup; no user resource is retained by those buffers.
 - Preserve the pinned special pairs: two world boundaries do not collide; a boundary ignores its own motion and tests its counterpart at the motion endpoint, with precedence over ray policy. Two concave resources or two rays do not collide; concave motion is ignored in either operand. Ray pairs reject containment and use only the ray's own axial motion, ignoring counterpart motion. Reuse the directed native kernel for native-sized target hulls and clip the full convex boundary above that hull limit. Choose the nearest surface crossing across concave pieces.
-- Leave Shape.Draw Blocked by renderer RID drawing. World and shape correction now follow [ADR 0098](physics-contacts.md#adr-0098); standalone collision does not use solver policy. Ordinary directed body response is owned by ADR 0068.
+- Shape.Draw uses live rendering canvas-item RIDs under [ADR 0100](physics-debug.md#adr-0100), independently of resource collision. World and shape correction now follow [ADR 0098](physics-contacts.md#adr-0098); standalone collision does not use solver policy. Ordinary directed body response is owned by ADR 0068.
 
 ### Consequences and verification
 

@@ -304,6 +304,11 @@ internal static class PhysicsShapeCollision
     {
         away = Vector2.Down;
         depth = double.PositiveInfinity;
+        // Edge normals alone cannot separate disjoint collinear cores or distinct point cores.
+        if (radiusA == 0 && radiusB == 0 && a.Length <= 2 && b.Length <= 2 &&
+            (!TestAxis(a[^1] - a[0], a, radiusA, b, radiusB, ref away, ref depth) ||
+             !TestAxis(b[^1] - b[0], a, radiusA, b, radiusB, ref away, ref depth) ||
+             !TestAxis(b[0] - a[0], a, radiusA, b, radiusB, ref away, ref depth))) return false;
         // ponytail: Scan edge and rounded-corner axes directly; add a support-map distance accelerator if large contour profiling warrants it.
         for (var index = 0; index < a.Length; index++)
             if (!TestAxis((a[(index + 1) % a.Length] - a[index]).Orthogonal(), a, radiusA, b, radiusB, ref away, ref depth)) return false;

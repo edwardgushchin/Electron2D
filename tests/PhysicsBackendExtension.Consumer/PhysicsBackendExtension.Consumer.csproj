@@ -20,4 +20,5 @@
   <Import Project="../../tools/native-consumer.props" />
   <ItemGroup><Compile Include="../Electron2D.Tests/PhysicsActivityTests.cs" Link="PhysicsActivityTests.cs" /></ItemGroup>
   <ItemGroup><Compile Include="../Electron2D.Tests/CanvasOversamplingTests.cs" Link="CanvasOversamplingTests.cs" /><Content Include="../../editor/Assets/IBMPlexSans-Regular.ttf" Link="Assets/IBMPlexSans-Regular.ttf" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
+  <ItemGroup><Compile Include="../Electron2D.Tests/DegenerateShapeCollisionTests.cs" Link="DegenerateShapeCollisionTests.cs" /></ItemGroup>
 </Project>

@@ -7,6 +7,7 @@ public abstract partial class Shape
     /// <param name="withShape">The other live resource; it may be this instance.</param>
     /// <param name="shapeTransform">The other shape's finite translated/rotated unit-scale pose.</param>
     /// <returns>True when an applicable shape pair intersects, including exact touching.</returns>
+    /// <remarks>Zero-radius point and segment cores must also overlap along their lengths; sharing an infinite line is insufficient.</remarks>
     /// <exception cref="ArgumentNullException">The other resource is null.</exception>
     /// <exception cref="ObjectDisposedException">Either resource is disposed.</exception>
     /// <exception cref="ArgumentException">A pose is nonfinite, scaled or skewed.</exception>

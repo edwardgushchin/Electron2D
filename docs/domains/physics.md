@@ -1724,3 +1724,10 @@ The [MainLoop callback audit](../components/main-loop.md#complete-frame-and-life
 The [deferred call/setter contract](../components/scene-tree.md#complete-deferred-call-and-setter-contract) drains nested typed work at the current safe point before queued deletion. Selected physical frames retain exact tick counts and zero warmed managed allocation; platform and full-goal acceptance remain separate.
 
 [Borrowed resource identity lifetime](../components/physics-shape-data.md#borrowed-resource-identity-lifetime) fixes unused shape retention and verifies current inherited GetRID roles through public consumers. Full remaining physics, native/platform and target-hardware performance acceptance stays open.
+
+
+[Finite point/segment resource pairs](../components/physics-queries.md#finite-point-and-segment-resource-pairs)
+now reject collinear gaps for segment and zero-radius capsule cores, including
+independent swept regions and short-segment point fallbacks. The common resource
+kernel retains exact touching and special-pair rules. The static correctness
+adaptation is explicit in ADR 0069; numerical backends and API counts are unchanged.
