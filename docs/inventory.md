@@ -2022,3 +2022,6 @@ FontContourPoint, FontGlyphContours, FontSizeCacheInfo and TextServer.ContourPoi
 [Borrowed resource identity lifetime](components/physics-shape-data.md#borrowed-resource-identity-lifetime) now releases unused Shape sources after collection while actual raw Body/Area slots retain their resources. Owned views and the existing typed Resource.GetRID families retain their owning identities and disposal rules.
 
 [One-way impact admission](components/physics-queries.md#one-way-body-motion-entry) updates existing CPU motion, resident motion-kernel and public provider paths; it introduces no production type or public API.
+
+
+[Complete body motion operation](components/physics-motion-operation.md) records the selected CPU/resident-GPU/registered geometry, recovery, restored timing, result ownership and failure audit. Its operation row is Implemented; physics is 1304/1369 (95.25%) with 65 declarations open. Broader numerical and overall-goal gates remain open.

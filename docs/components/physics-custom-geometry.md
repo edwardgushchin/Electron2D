@@ -76,3 +76,13 @@ query/full-frame and dynamic/full-frame bracket measures 128 cycles at strict
 zero owner/all-thread managed bytes. This is bounded format/provider evidence;
 arbitrary algorithms, complete extension/network/platform acceptance and hardware
 performance remain open.
+
+
+[The complete body motion audit](physics-motion-operation.md) now includes initial
+inner-wall overlap in both annulus/circle and annulus/annulus body queries. Raw,
+scene-RID and TestMove routes check the independent .476544-unit four-pass
+correction within .0001 units. RecoveryAsCollision controls reporting while the
+correction remains identical, and misses clear collider identity. Both numerical
+thread policies and CLR/NativeAOT retain 128 measured moving frames at strict
+0/0 managed bytes; each custom-motion bracket now contains 971 public queries.
+This expands the public fixture; runtime geometry and architecture are unchanged.

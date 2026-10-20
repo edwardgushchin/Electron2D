@@ -1,6 +1,8 @@
+[The complete body motion operation](physics-motion-operation.md) now closes the last Partial server-extension operation row. Current physics census: 1304/1369 Implemented (95.25%), 65 open (51 Partial, 11 Blocked, 3 Unimplemented), 92 Excluded. Whole-backend and overall-goal acceptance remain open.
+
 # Physics contract and backend audit
 
-[System back navigation](window-runtime.md#system-back-navigation) closes inherited notification 1007 through the actual production Android host, typed Window signal and configured root quit policy. The current physics census is 1303/1369 Implemented (95.18%), with 66 open declarations (52 Partial, 11 Blocked, 3 Unimplemented), 92 Excluded. The final connected software/Android checks measure 4352 moving physics frames at strict 0/0 managed bytes; hardware/performance and complete-goal acceptance remain open.
+[System back navigation](window-runtime.md#system-back-navigation) closes inherited notification 1007 through the actual production Android host, typed Window signal and configured root quit policy. That system-back slice recorded 1303/1369 Implemented (95.18%), with 66 open declarations (52 Partial, 11 Blocked, 3 Unimplemented), 92 Excluded. The final connected software/Android checks measure 4352 moving physics frames at strict 0/0 managed bytes; hardware/performance and complete-goal acceptance remain open.
 
 The current declaration census and complete open-row list are generated in the
 [physics declaration audit](../coverage/physics-status.md). They count applicable

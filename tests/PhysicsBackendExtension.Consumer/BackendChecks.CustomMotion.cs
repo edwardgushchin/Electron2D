@@ -35,7 +35,7 @@ public static partial class BackendChecks
                 for (var i = 0; i < 128; i++) Frame(i);
                 own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
                 Check(solved - beforeSteps == 128 && own == 0 && all == 0, $"Custom motion steps={solved - beforeSteps}, allocated {own}/{all} B");
-                Console.WriteLine($"Custom motion hollowPeer={hollowPeer}/{threaded}: both hollow-source orders, empty hole, inner/outer entry, initial-overlap cast policy and surface contacts; 128 frames / 821 calls {own}/{all} B.");
+                Console.WriteLine($"Custom motion hollowPeer={hollowPeer}/{threaded}: both hollow-source orders, empty hole, inner/outer entry, initial-overlap recovery/flag control and surface contacts; 128 frames / 971 calls {own}/{all} B.");
                 void Frame(int configuration)
                 {
                     var phase = configuration % 5; var kind = configuration / 5 % 2; var sign = configuration / 10 % 2 == 0 ? 1 : -1;
@@ -61,16 +61,28 @@ public static partial class BackendChecks
                         var radial = (info.Point - targetCenter).Normalized(); var outward = kind == 1 && phase != 3 ? -radial : radial;
                         Check(info.Normal.Dot(outward) > .999f, "Hollow-source rest normal follows its actual target surface");
                     }
-                    if (phase != 4)
                     {
-                        motion.From = query.Transform; motion.Motion = query.Motion;
+                        motion.From = query.Transform; motion.Motion = query.Motion; motion.RecoveryAsCollision = phase == 4;
                         for (var route = 0; route < 3; route++)
                         {
-                            var hit = route == 2 ? scene[kind].TestMove(motion.From, motion.Motion, sceneResult, motion.Margin) : PhysicsServer.BodyTestMotion(route == 0 ? sources[kind] : scene[kind].GetRID(), motion, result);
+                            var hit = route == 2 ? scene[kind].TestMove(motion.From, motion.Motion, sceneResult, motion.Margin, motion.RecoveryAsCollision) : PhysicsServer.BodyTestMotion(route == 0 ? sources[kind] : scene[kind].GetRID(), motion, result);
                             Check(hit == expectedHit && (route == 2 ? sceneResult.GetColliderRID() : result.GetColliderRID()) == (expectedHit ? target : default), "Hollow-source body queries retain the same geometric truth");
                             if (!hit) continue;
                             Check(route == 2 ? ReferenceEquals(sceneResult.GetLocalShape(), primary[kind]) : result.GetCollisionLocalShape() == 1 && result.GetColliderShape() == 1 && MathF.Abs(result.GetCollisionUnsafeFraction() - expectedFraction) < .000002f,
                                 "Hollow-source body motion retains first entry and logical source ownership");
+                            if (phase == 4)
+                            {
+                                // Four 40% corrections of (.5 penetration + .05 margin - .0025 slack).
+                                var expectedTravel = new Vector2(-sign * .476544f, 0);
+                                var travel = route == 2 ? sceneResult.GetTravel() : result.GetTravel();
+                                Check(travel.DistanceTo(expectedTravel) < .0001f, "Hollow-source initial recovery follows the analytic inner-wall correction.");
+                                motion.RecoveryAsCollision = false;
+                                var withoutRecoveryHit = route == 2 ? scene[kind].TestMove(motion.From, motion.Motion, sceneResult, motion.Margin) : PhysicsServer.BodyTestMotion(route == 0 ? sources[kind] : scene[kind].GetRID(), motion, result);
+                                Check(!withoutRecoveryHit && (route == 2 ? sceneResult.GetColliderRID() : result.GetColliderRID()) == default &&
+                                    (route == 2 ? sceneResult.GetTravel() : result.GetTravel()).DistanceTo(travel) < .0001f,
+                                    "Disabling recovery collision retains correction while clearing the hollow-source contact.");
+                                motion.RecoveryAsCollision = true;
+                            }
                         }
                     }
                     var before = ticker.Position.X; tree.PhysicsFrame(.01); Check(MathF.Abs(ticker.Position.X - before - .01f) < .0001f, "Custom motion measures real selected physics steps");
