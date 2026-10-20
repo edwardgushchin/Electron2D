@@ -72,7 +72,7 @@ public abstract partial class CanvasItem
         private readonly CanvasItem _item;
         private readonly CanvasItem? _previous;
         private readonly bool _drawing;
-        internal ServerDrawingScope(CanvasItem item) { _item = item; _previous = _currentDrawingItem; _drawing = item._drawing; _currentDrawingItem = item; item._drawing = true; }
+        internal ServerDrawingScope(CanvasItem item) { item.SyncItemRasterScale(); _item = item; _previous = _currentDrawingItem; _drawing = item._drawing; _currentDrawingItem = item; item._drawing = true; }
         public void Dispose() { _item._drawing = _drawing; _currentDrawingItem = _previous; }
     }
     internal bool MayIgnoreClip

@@ -432,3 +432,5 @@ Ordinary desktop Window children now execute [independent native hosts](../compo
 ## Actual text source metadata
 
 The text service exposes borrowed resource source caches and complete copied glyph/run metadata through [TextGlyph](../classes/TextGlyph.md) and [the source contract](../components/text-server.md#resource-sources-glyph-snapshots-and-visual-runs). Custom canvas consumers can use actual font source/index/size/offset/advance without native pointers. Resource data edits, linked state, automatic fallback retirement and immutable recorded pixels retain their existing owners. External provider dispatch and platform/package/hardware/allocator/owner acceptance remain separate gates.
+
+[Item scale oversampling](../components/scalable-svg.md#item-scale-oversampling) connects the stored CanvasItem policy, inherited by spatial/UI/physics descendants, to native font and SVG raster factors and shared last-owner cache retirement. Logical dimensions and explicit font/MSDF policies remain intact.

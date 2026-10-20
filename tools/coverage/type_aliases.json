@@ -233,6 +233,7 @@
     "ParticleProcessMaterial.SubEmitterMode": "ParticleProcessMaterial.SubEmitterModeEnum",
     "GPUParticles2D.DrawOrder": "ParticlesDrawOrder",
     "GPUParticles2D.EmitFlags": "GPUParticles.EmitFlags",
-    "RenderingServer.ParticlesDrawOrder": "ParticlesDrawOrder"
+    "RenderingServer.ParticlesDrawOrder": "ParticlesDrawOrder",
+    "CanvasItem.OversamplingWithScale": "OversamplingWithScale"
   }
 }

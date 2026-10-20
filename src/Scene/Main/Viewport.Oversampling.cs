@@ -34,10 +34,10 @@ public abstract partial class Viewport
     internal int DPIScaleKey { get { SyncDPIScale(); return _dpiScaleKey; } }
     private void SyncDPIScale()
     {
-        var next = DPITexture.QuantizeScale(GetOversampling());
+        var next = CanvasRasterScale.Quantize(GetOversampling());
         if (next == _dpiScaleKey) return;
         var previous = _dpiScaleKey; _dpiScaleKey = next;
-        DPITexture.ChangeScaleReference(previous, next);
+        CanvasRasterScale.ChangeReference(previous, next);
     }
     private static readonly PropertyDescriptor[] OversamplingProperties = [
         new PropertyDescriptor<Viewport,bool>(nameof(Oversampling), v => v.Oversampling, (v,x) => v.Oversampling=x, _ => true, stored:true),

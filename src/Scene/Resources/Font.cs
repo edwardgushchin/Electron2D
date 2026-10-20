@@ -381,7 +381,7 @@ public abstract partial class Font : Resource
             using var read = BeginRead(); var source = FindSource((uint)character, true);
             if (source is null) { if (read.IsCurrent) return 0; continue; }
             var glyph = source.GetGlyphIndex((uint)character);
-            var image = source.GetGlyph(glyph, size, outline, Math.Max(0, oversampling), position, out var rasterPosition, canvas.CanvasViewport?.FontRasterScale ?? 1);
+            var image = source.GetGlyph(glyph, size, outline, Math.Max(0, oversampling), position, out var rasterPosition, canvas.FontRasterScale);
             var advance = source.GetGlyphAdvance(glyph, size); var modulate = !outlinePass && source.ModulateColorGlyphs;
             if (!read.IsCurrent) continue;
             TextLayout.DrawGlyph(canvas, image, rasterPosition, color, modulate);

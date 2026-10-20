@@ -73,11 +73,12 @@ internal sealed class FontCachePage(int width, int height, byte[] rgba, int[] of
     internal readonly int Width = width, Height = height;
     internal readonly bool Authored = authored;
     internal bool AllowPacking = !authored;
+    internal float RasterScale;
     internal readonly byte[] Pixels = rgba;
     internal int[] Offsets = offsets;
     private ImageTexture? _texture;
     internal ImageTexture? RealizedTexture => _texture;
-    internal FontCachePage Clone() => new(Width, Height, Pixels, (int[])Offsets.Clone(), Authored) { AllowPacking = AllowPacking };
+    internal FontCachePage Clone() => new(Width, Height, Pixels, (int[])Offsets.Clone(), Authored) { AllowPacking = AllowPacking, RasterScale = RasterScale };
     internal Image Image() => global::Electron2D.Image.CreateFromData(Width, Height, false, global::Electron2D.Image.Format.Rgba8, Pixels);
     internal ImageTexture Texture(bool mipmaps = false)
     {

@@ -7903,6 +7903,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.OversamplingWithScale",
+    "kind": "type",
+    "declaringType": "Electron2D.OversamplingWithScale",
+    "name": "OversamplingWithScale",
+    "signature": "public enum Electron2D.OversamplingWithScale",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PCKPacker",
     "kind": "type",
     "declaringType": "Electron2D.PCKPacker",
@@ -41201,6 +41219,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.OccluderCullMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.OversamplingWithScale.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.OversamplingWithScale",
+    "name": "Disabled",
+    "signature": "public const Electron2D.OversamplingWithScale Disabled = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OversamplingWithScale",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.OversamplingWithScale.Enabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.OversamplingWithScale",
+    "name": "Enabled",
+    "signature": "public const Electron2D.OversamplingWithScale Enabled = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OversamplingWithScale",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.OversamplingWithScale.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.OversamplingWithScale",
+    "name": "Max",
+    "signature": "public const Electron2D.OversamplingWithScale Max = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OversamplingWithScale",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.OversamplingWithScale.ParentNode()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.OversamplingWithScale",
+    "name": "ParentNode",
+    "signature": "public const Electron2D.OversamplingWithScale ParentNode = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OversamplingWithScale",
     "value": "0"
   },
   {
@@ -230622,6 +230692,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasItem.OversamplingWithScale()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "OversamplingWithScale",
+    "signature": "public Electron2D.OversamplingWithScale OversamplingWithScale { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OversamplingWithScale",
     "value": null
   },
   {

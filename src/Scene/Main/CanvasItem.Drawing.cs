@@ -282,6 +282,7 @@ public abstract partial class CanvasItem
     {
         ValidateNodeMutation();
         if (_drawing) throw new InvalidOperationException("Canvas recording cannot be re-entered.");
+        SyncItemRasterScale();
         PhysicsDebugDrawing.Refresh(this);
         if (this is NavigationAgentDebugCanvas navigationDebug) navigationDebug.Refresh();
         if (Interlocked.Exchange(ref _redrawPending, 0) == 0) return;
@@ -350,7 +351,7 @@ public abstract partial class CanvasItem
             }
             if (replay.Texture is DPITexture dpiTexture)
             {
-                var raster = dpiTexture.ForViewport(viewport); if (raster is null) continue;
+                var raster = dpiTexture.ForScale(ServerState is { Owned: true, TileOwner: null } ? viewport?.DPIScaleKey ?? 64 : ItemRasterScaleKey); if (raster is null) continue;
                 replay = replay with { Texture = raster };
             }
             if (replay.Particles is { } particles)

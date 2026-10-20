@@ -15,3 +15,6 @@ Owns immutable copied RGBA bytes, dimensions and copied shelf tuples, with a laz
 ## Authored and generated page ownership
 
 Font-cache version two stores explicit authored-page ownership and native packing permission; version one conservatively treats decoded pages as authored. Raster-policy publication discards generated records and unreferenced automatic pages while preserving authored images and glyph references. Native packing uses separate/reusable automatic slots for protected authored glyph content and continues to honor explicitly supplied free shelf metadata. MIP generation occurs when an owned texture is realized; immutable source pixels and retired recorded snapshots remain valid. FontRasterPolicyTests covers mixed-page switching, legacy decoding and corrupt ownership rejection.
+
+Generated native atlas pages carry one raster factor and pack only glyphs with that factor. Level retirement removes only matching generated pages; authored pages remain independent.
+Explicit authored packing pages still accept native glyphs at caller-supplied shelf positions. Their authored pixels and ownership survive automatic level retirement; only matching generated glyph records retire.

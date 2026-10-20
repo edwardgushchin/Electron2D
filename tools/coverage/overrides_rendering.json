@@ -2700,12 +2700,12 @@
     {
       "godot": "RenderingServer::method:texture_proxy_create(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyCreate(Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "RenderingServer::method:texture_proxy_update(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyUpdate(Electron2D.RID,Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "FlowContainer::theme_item:h_separation",
@@ -5121,6 +5121,36 @@
       "godot": "RenderingServer::method:material_get_param(RID:,StringName:)",
       "electron2d": "method:Electron2D.RenderingServer.MaterialGetMatrixParam(Electron2D.RID,System.String,System.Span<System.Single>)",
       "reason": "ADR 0028: copied column-major float spans project numeric mat3/mat4 material values and concatenated fixed arrays without scene-space transforms. Typed descriptors retain identity/revert, finite validation, graph/archive copies and width/length-aware row/column/stride migration across both authored stages. NumericMatrixTests covers resource and owned/borrowed RID access. Authored defaults, nonsquare/nested shapes, sampler configuration and foreign backend acceptance remain open; broad rows stay Partial. ADR 0028: copied column-major float spans project numeric mat3/mat4 material values and concatenated fixed arrays without scene-space transforms. Typed descriptors retain identity/revert, finite validation, graph/archive copies and width/length-aware row/column/stride migration across both authored stages. NumericMatrixTests covers resource and owned/borrowed RID access. Authored defaults, nonsquare/nested shapes, sampler configuration and foreign backend acceptance remain open; broad rows stay Partial."
+    },
+    {
+      "godot": "CanvasItem::enum:OversamplingWithScale",
+      "electron2d": "T:Electron2D.OversamplingWithScale",
+      "reason": "ADR 0046: stored ParentNode/Disabled/Enabled policy connects direct-parent and TopLevel/neutral boundaries, logical global scale, viewport multiplication, native font and SVG raster generation, shared last-owner cache retirement and retained invalidation. Explicit font factors and MSDF preserve their raster policies. CanvasOversamplingTests verifies actual pixels/cache factors, signed scale, reparenting, hidden restore, packed/file policy, ownership and warmed full frames on Linux software renderers. Foreign/hardware/native-allocation and whole-physics performance gates remain open."
+    },
+    {
+      "godot": "CanvasItem::property:oversampling_with_scale",
+      "electron2d": "property:Electron2D.CanvasItem.OversamplingWithScale()",
+      "reason": "ADR 0046: stored ParentNode/Disabled/Enabled policy connects direct-parent and TopLevel/neutral boundaries, logical global scale, viewport multiplication, native font and SVG raster generation, shared last-owner cache retirement and retained invalidation. Explicit font factors and MSDF preserve their raster policies. CanvasOversamplingTests verifies actual pixels/cache factors, signed scale, reparenting, hidden restore, packed/file policy, ownership and warmed full frames on Linux software renderers. Foreign/hardware/native-allocation and whole-physics performance gates remain open."
+    },
+    {
+      "godot": "CanvasItem::enum_value:OversamplingWithScale.OVERSAMPLING_WITH_SCALE_PARENT_NODE",
+      "electron2d": "enumValue:Electron2D.OversamplingWithScale.ParentNode()",
+      "reason": "ADR 0046: stored ParentNode/Disabled/Enabled policy connects direct-parent and TopLevel/neutral boundaries, logical global scale, viewport multiplication, native font and SVG raster generation, shared last-owner cache retirement and retained invalidation. Explicit font factors and MSDF preserve their raster policies. CanvasOversamplingTests verifies actual pixels/cache factors, signed scale, reparenting, hidden restore, packed/file policy, ownership and warmed full frames on Linux software renderers. Foreign/hardware/native-allocation and whole-physics performance gates remain open."
+    },
+    {
+      "godot": "CanvasItem::enum_value:OversamplingWithScale.OVERSAMPLING_WITH_SCALE_DISABLED",
+      "electron2d": "enumValue:Electron2D.OversamplingWithScale.Disabled()",
+      "reason": "ADR 0046: stored ParentNode/Disabled/Enabled policy connects direct-parent and TopLevel/neutral boundaries, logical global scale, viewport multiplication, native font and SVG raster generation, shared last-owner cache retirement and retained invalidation. Explicit font factors and MSDF preserve their raster policies. CanvasOversamplingTests verifies actual pixels/cache factors, signed scale, reparenting, hidden restore, packed/file policy, ownership and warmed full frames on Linux software renderers. Foreign/hardware/native-allocation and whole-physics performance gates remain open."
+    },
+    {
+      "godot": "CanvasItem::enum_value:OversamplingWithScale.OVERSAMPLING_WITH_SCALE_ENABLED",
+      "electron2d": "enumValue:Electron2D.OversamplingWithScale.Enabled()",
+      "reason": "ADR 0046: stored ParentNode/Disabled/Enabled policy connects direct-parent and TopLevel/neutral boundaries, logical global scale, viewport multiplication, native font and SVG raster generation, shared last-owner cache retirement and retained invalidation. Explicit font factors and MSDF preserve their raster policies. CanvasOversamplingTests verifies actual pixels/cache factors, signed scale, reparenting, hidden restore, packed/file policy, ownership and warmed full frames on Linux software renderers. Foreign/hardware/native-allocation and whole-physics performance gates remain open."
+    },
+    {
+      "godot": "CanvasItem::enum_value:OversamplingWithScale.OVERSAMPLING_WITH_SCALE_MAX",
+      "electron2d": "enumValue:Electron2D.OversamplingWithScale.Max()",
+      "reason": "ADR 0046: stored ParentNode/Disabled/Enabled policy connects direct-parent and TopLevel/neutral boundaries, logical global scale, viewport multiplication, native font and SVG raster generation, shared last-owner cache retirement and retained invalidation. Explicit font factors and MSDF preserve their raster policies. CanvasOversamplingTests verifies actual pixels/cache factors, signed scale, reparenting, hidden restore, packed/file policy, ownership and warmed full frames on Linux software renderers. Foreign/hardware/native-allocation and whole-physics performance gates remain open."
     }
   ],
   "statusGroups": [
@@ -5813,8 +5843,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "First Font/TextServer or DPITexture oversampling integration must implement scale inheritance, invalidation, resource reference accounting and raster output together; ordinary texture scaling is not oversampling.",
+      "state": "Implemented",
+      "reason": "ADR 0046: stored ParentNode/Disabled/Enabled policy connects direct-parent and TopLevel/neutral boundaries, logical global scale, viewport multiplication, native font and SVG raster generation, shared last-owner cache retirement and retained invalidation. Explicit font factors and MSDF preserve their raster policies. CanvasOversamplingTests verifies actual pixels/cache factors, signed scale, reparenting, hidden restore, packed/file policy, ownership and warmed full frames on Linux software renderers. Foreign/hardware/native-allocation and whole-physics performance gates remain open.",
       "godot": [
         "CanvasItem::enum:OversamplingWithScale",
         "CanvasItem::enum_value:OversamplingWithScale.OVERSAMPLING_WITH_SCALE_DISABLED",
@@ -6280,7 +6310,7 @@
         "RenderingServer::method:texture_proxy_update(RID:,RID:)"
       ],
       "state": "Partial",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": [

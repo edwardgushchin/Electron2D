@@ -2,12 +2,13 @@ using System.Text;
 
 namespace Electron2D;
 
-/// <summary>A scalable SVG texture with retained viewport raster variants.</summary>
+/// <summary>A scalable SVG texture with retained viewport and item-scale raster variants.</summary>
 /// <remarks>Authoring state is copied and synchronized. Rasterization uses the native SVG codec on first use.
-/// Scale variants are borrowed and retire on settings changes, last matching viewport release or disposal.
+/// Scale variants are borrowed and retire on settings changes, last matching viewport or item-scale release or disposal.
 /// Coordinate multi-call editing, drawing and resource disposal through the owning application.</remarks>
 public sealed partial class DPITexture : Texture
 {
+    private sealed record RasterVariant(ImageTexture Texture, CanvasRasterScale.ScaleLevel? Level);
     private readonly object _gate = new();
     private string _source = "";
     private string? _paintSource;
@@ -95,13 +96,12 @@ public sealed partial class DPITexture : Texture
         lock (_gate) { ThrowIfDisposed(); if (_sizeOverride == size) return; _sizeOverride = size; var logical = SizeLocked; foreach (var texture in _variants.Values) texture.Texture.SetSizeOverride(logical); }
         EmitChanged();
     }
-    /// <summary>Returns a borrowed rendering identity for the currently recording item's viewport scale.</summary>
+    /// <summary>Returns a borrowed rendering identity for the currently recording item's raster scale.</summary>
     /// <returns>The stable base identity outside drawing, otherwise the matching retained scale identity.</returns>
-    /// <remarks>Scaled identities retire on authoring changes or release of their last viewport scale.</remarks>
+    /// <remarks>Scaled identities retire on authoring changes or release of their last matching raster-scale owner.</remarks>
     public RID GetScaledRID()
     {
-        var viewport = CanvasItem.CurrentDrawingItem?.CanvasViewport;
-        var key = viewport?.DPIScaleKey ?? 64;
+        var key = CanvasItem.CurrentDrawingItem?.ItemRasterScaleKey ?? 64;
         return key == 64 ? GetRID() : GetVariant(key)?.GetRID() ?? GetRID();
     }
     /// <inheritdoc />
@@ -115,10 +115,10 @@ public sealed partial class DPITexture : Texture
     /// <inheritdoc />
     public override Image? GetImage() => GetVariant(64)?.GetImage();
     internal override TexturePixels? CapturePixels() => GetVariant(64)?.CapturePixels();
-    internal Texture? ForViewport(Viewport? viewport)
+    internal Texture? ForScale(int key)
     {
         lock (_gate) { ThrowIfDisposed(); if (_source.Length == 0) return null; }
-        var key = viewport?.DPIScaleKey ?? 64; return key == 64 ? this : GetVariant(key);
+        return key == 64 ? this : GetVariant(key);
     }
     private Vector2i SizeLocked => new(_sizeOverride.X == 0 ? _baseSize.X : _sizeOverride.X, _sizeOverride.Y == 0 ? _baseSize.Y : _sizeOverride.Y);
     private void Change<T>(ref T field, T value) where T : IEquatable<T>
@@ -143,7 +143,7 @@ public sealed partial class DPITexture : Texture
         lock (_gate)
         {
             ThrowIfDisposed(); if (_source.Length == 0) return null;
-            var level = CurrentLevel(key);
+            var level = CanvasRasterScale.CurrentLevel(key);
             if (_variants.TryGetValue(key, out var cached))
             {
                 if (ReferenceEquals(cached.Level, level)) return cached.Texture;
@@ -155,7 +155,7 @@ public sealed partial class DPITexture : Texture
             if (_fixAlphaBorder) image.FixAlphaEdges();
             if (_premultAlpha) image.PremultiplyAlpha();
             var texture = ImageTexture.CreateFromImage(image);
-            try { texture.SetSizeOverride(SizeLocked); if (level is not null) TrackScale(key, level, this); _variants.Add(key, new(texture, level)); return texture; }
+            try { texture.SetSizeOverride(SizeLocked); if (level is not null) CanvasRasterScale.TrackScale(key, level, this); _variants.Add(key, new(texture, level)); return texture; }
             catch { texture.Dispose(); throw; }
         }
     }
@@ -181,7 +181,7 @@ public sealed partial class DPITexture : Texture
         return source;
     }
     private void InvalidateLocked() { _paintSource = null; foreach (var texture in _variants.Values) texture.Texture.Dispose(); _variants.Clear(); }
-    private void RetireScale(int key, ScaleLevel level) { lock (_gate) { if (_variants.TryGetValue(key, out var variant) && ReferenceEquals(variant.Level, level)) { _variants.Remove(key); variant.Texture.Dispose(); } } }
+    internal void RetireScale(int key, CanvasRasterScale.ScaleLevel level) { lock (_gate) { if (_variants.TryGetValue(key, out var variant) && ReferenceEquals(variant.Level, level)) { _variants.Remove(key); variant.Texture.Dispose(); } } }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new DPITexture();
     /// <inheritdoc />
