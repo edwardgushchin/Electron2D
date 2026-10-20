@@ -136,6 +136,7 @@ public sealed partial class RenderingServer : ElectronObject
         internal readonly List<YSortEntry> YSort = [];
         internal readonly Resource?[] TextureScratch = new Resource?[32];
         internal int State;
+        internal long RenderObjects, RenderPrimitives, RenderDrawCalls;
         internal bool Wanted, Drawn, ClearEnabled, TextureRedrawVisited;
         internal Color Clear;
     }
@@ -224,6 +225,7 @@ public sealed partial class RenderingServer : ElectronObject
             PresentViewports();
             EndNativeFrames();
             _nativeFrameStarted = false;
+            PublishRenderInfo();
             _frameSubmitted = true;
             _submittedRevision = capturedRevision;
             _needsPresentation = !swapBuffers;
@@ -290,6 +292,7 @@ public sealed partial class RenderingServer : ElectronObject
         _submittingTextures = true;
         try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), frame.Clear, frame.ClearEnabled, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting); }
         finally { _submittingTextures = false; }
+        frame.RenderObjects = _backend.RenderObjects; frame.RenderPrimitives = _backend.RenderPrimitives; frame.RenderDrawCalls = _backend.RenderDrawCalls;
         ViewportSubmitted(frame.Viewport);
         frame.State = 2; frame.Drawn = true; _submittedFrames.Add(frame);
     }

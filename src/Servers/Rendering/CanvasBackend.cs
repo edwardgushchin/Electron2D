@@ -9,7 +9,7 @@ internal enum CanvasOperation { Draw, Copy, GroupBegin, GroupEnd, MaskBegin, Mas
 internal readonly record struct CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null,
     TextureFilter Filter = TextureFilter.Nearest,
     TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1,
-    BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool MIPMaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0, CanvasLightingItem? Lighting = null, CanvasItem? InstanceOwner = null, CanvasGlyph Glyph = default, Color GlyphModulation = default, bool LinearColors = false, Color? CanvasModulation = null, Rect2? VisibilityBounds = null, bool Procedural = false, Mesh.PrimitiveType Primitive = Mesh.PrimitiveType.Triangles, bool SnapGeneratedVertices = false, bool SnapNativeLines = false, MultiMeshGPUDraw GPU = default, ParticleGPUDraw? Particles = null, Texture? TextureSource = null)
+    BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool MIPMaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0, CanvasLightingItem? Lighting = null, CanvasItem? InstanceOwner = null, CanvasGlyph Glyph = default, Color GlyphModulation = default, bool LinearColors = false, Color? CanvasModulation = null, Rect2? VisibilityBounds = null, bool Procedural = false, Mesh.PrimitiveType Primitive = Mesh.PrimitiveType.Triangles, bool SnapGeneratedVertices = false, bool SnapNativeLines = false, MultiMeshGPUDraw GPU = default, ParticleGPUDraw? Particles = null, Texture? TextureSource = null, long ObjectCount = 1)
 {
     internal float RasterMargin => Primitive is Mesh.PrimitiveType.Lines or Mesh.PrimitiveType.LineStrip ? SnapNativeLines ? 1 : .5f : 0;
     internal byte[]? ShaderCode => Material?.Program.NativeCode;
@@ -17,7 +17,7 @@ internal readonly record struct CanvasBatch(int First, int Count, MaterialState?
 
 internal readonly record struct CanvasPresentation(CanvasRenderTarget Target, Rect2 Rect, bool Debanding = false);
 
-internal abstract class CanvasBackend : IDisposable
+internal abstract partial class CanvasBackend : IDisposable
 {
     private CanvasRenderTarget? _presentation;
     protected CanvasRenderTarget PreparePresentation() => PreparePresentation(GetPixelSize(), ref _presentation);

@@ -327,3 +327,5 @@ The [MainLoop callback audit](../components/main-loop.md#complete-frame-and-life
 The [deferred call/setter contract](../components/scene-tree.md#complete-deferred-call-and-setter-contract) drains nested typed work at the current safe point before queued deletion. Selected physical frames retain exact tick counts and zero warmed managed allocation; platform and full-goal acceptance remain separate.
 
 Factory construction provenance is shared by resource, script, file and scene creation through [ElectronObject](../classes/ElectronObject.md#factory-construction-provenance). It rejects unrelated concurrently created results while preserving nested, Task and engine worker construction; [ADR 0013](../decisions/resources.md#adr-0013) owns this boundary.
+
+[Completed canvas counters](../components/canvas-counters.md) now supply Performance RenderTotalObjectsInFrame/RenderTotalPrimitivesInFrame/RenderTotalDrawCallsInFrame from committed native rendering, independently of the Engine timing window.

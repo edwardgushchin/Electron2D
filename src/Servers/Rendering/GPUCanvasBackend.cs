@@ -171,6 +171,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
 
     internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true)
     {
+        ResetRenderInfo();
         _currentHDR = output.HDR; _linearSources.Clear();
         if (output.HDR) clear = LinearColor(clear);
         var samples = (SDL.GPUSampleCount)output.MSAA; var format = CanvasFormat(output.HDR);
@@ -379,6 +380,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 }
                 if (batch.Lighting is not null && batch.Material is not null && !batch.MaskShader && !batch.GroupShader) BindMaterialLighting(pass, batch);
                 BindGlyphTexture(pass, batch);
+                var drawCalls = 1L;
                 if (batch.GPU.State is not null && streamIndex >= 0)
                 {
                     if (batch.GPU.Indices is not null)
@@ -386,13 +388,17 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                         var indexBinding = new SDL.GPUBufferBinding { Buffer = _instanceIndices!.DangerousGetHandle() }; SDL.BindGPUIndexBuffer(pass, in indexBinding, SDL.GPUIndexElementSize.IndexElementSize32Bit);
                         var count = batch.GPU.LODs is { Length: > 0 } ? (uint)batch.GPU.Capacity : 1u;
                         if (_relaxedAndroidDevice && count > 1)
+                        {
+                            drawCalls = count;
                             for (uint i = 0; i < count; i++) { var instanceBinding = new SDL.GPUBufferBinding { Buffer = _instanceStreams[streamIndex].Instances!.DangerousGetHandle(), Offset = i * 64 }; SDL.BindGPUVertexBuffers(pass, 1, new ReadOnlySpan<SDL.GPUBufferBinding>(in instanceBinding), 1); SDL.DrawGPUIndexedPrimitivesIndirect(pass, _instanceStreams[streamIndex].Commands!.DangerousGetHandle(), i * 20, 1); }
+                        }
                         else SDL.DrawGPUIndexedPrimitivesIndirect(pass, _instanceStreams[streamIndex].Commands!.DangerousGetHandle(), 0, count);
                     }
                     else SDL.DrawGPUPrimitivesIndirect(pass, _instanceStreams[streamIndex].Commands!.DangerousGetHandle(), 0, 1);
                 }
                 else if (particleStream is not null) SDL.DrawGPUPrimitivesIndirect(pass, particleStream.Draws!.DangerousGetHandle(), 0, (uint)particleStream.Amount);
                 else SDL.DrawGPUPrimitives(pass, (uint)batch.Count, (uint)Math.Max(1, batch.InstanceCount), (uint)batch.First, 0);
+                RecordCanvasDraw(batch, drawCalls);
             }
             SDL.EndGPURenderPass(pass); pass = 0;
             var submitted = command; command = 0; Check(SDL.SubmitGPUCommandBuffer(submitted), "submit canvas frame");

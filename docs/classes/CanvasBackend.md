@@ -112,3 +112,5 @@ The [independent native window path](../components/window-runtime.md#independent
 [Loading-image presentation](../components/boot-images.md) reuses ordinary color targets and native presentation without mutating scene viewport targets. ReleaseTemporaryTexture removes a cold loading image from the native image cache immediately after submission, including failed attempts; no caller-owned image resource is disposed.
 
 The internal Draw processParticles argument defaults to true for ordinary submissions. Loading-image drawing explicitly disables scene particle preparation/dispatch/commit and does not begin or end a scene frame, preserving pending simulation and cache-retirement boundaries.
+
+Prepared scalar RenderObjects/RenderPrimitives/RenderDrawCalls reset per Draw and accumulate only issued canvas geometry. RecordCanvasDraw uses topology and requested instance/indirect budgets; internal helper passes are excluded. RenderingServer stages these values and publishes only after complete native frame commitment. See [canvas counters](../components/canvas-counters.md).

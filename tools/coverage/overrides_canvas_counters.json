@@ -1,0 +1,185 @@
+{
+  "mappings": [
+    {
+      "godot": "Performance::enum_value:Monitor.RENDER_TOTAL_DRAW_CALLS_IN_FRAME",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.RenderTotalDrawCallsInFrame()",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.RENDER_TOTAL_OBJECTS_IN_FRAME",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.RenderTotalObjectsInFrame()",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.RENDER_TOTAL_PRIMITIVES_IN_FRAME",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.RenderTotalPrimitivesInFrame()",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "RenderingServer::enum:RenderingInfo",
+      "electron2d": "T:Electron2D.RenderingServer.RenderingInfo",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "RenderingServer::enum:ViewportRenderInfo",
+      "electron2d": "T:Electron2D.ViewportRenderInfo",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "RenderingServer::enum:ViewportRenderInfoType",
+      "electron2d": "T:Electron2D.ViewportRenderInfoType",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "RenderingServer::enum_value:RenderingInfo.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME",
+      "electron2d": "enumValue:Electron2D.RenderingServer.RenderingInfo.TotalDrawCallsInFrame()",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "RenderingServer::enum_value:RenderingInfo.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME",
+      "electron2d": "enumValue:Electron2D.RenderingServer.RenderingInfo.TotalObjectsInFrame()",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "RenderingServer::enum_value:RenderingInfo.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME",
+      "electron2d": "enumValue:Electron2D.RenderingServer.RenderingInfo.TotalPrimitivesInFrame()",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportRenderInfo.VIEWPORT_RENDER_INFO_DRAW_CALLS_IN_FRAME",
+      "electron2d": "enumValue:Electron2D.ViewportRenderInfo.DrawCallsInFrame()",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportRenderInfo.VIEWPORT_RENDER_INFO_MAX",
+      "electron2d": "enumValue:Electron2D.ViewportRenderInfo.Max()",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportRenderInfo.VIEWPORT_RENDER_INFO_OBJECTS_IN_FRAME",
+      "electron2d": "enumValue:Electron2D.ViewportRenderInfo.ObjectsInFrame()",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportRenderInfo.VIEWPORT_RENDER_INFO_PRIMITIVES_IN_FRAME",
+      "electron2d": "enumValue:Electron2D.ViewportRenderInfo.PrimitivesInFrame()",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportRenderInfoType.VIEWPORT_RENDER_INFO_TYPE_CANVAS",
+      "electron2d": "enumValue:Electron2D.ViewportRenderInfoType.Canvas()",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportRenderInfoType.VIEWPORT_RENDER_INFO_TYPE_MAX",
+      "electron2d": "enumValue:Electron2D.ViewportRenderInfoType.Max()",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "RenderingServer::method:get_rendering_info(int:RenderingServer.RenderingInfo)",
+      "electron2d": "method:Electron2D.RenderingServer.GetRenderingInfo(Electron2D.RenderingServer.RenderingInfo)",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_get_render_info(RID:,int:RenderingServer.ViewportRenderInfoType,int:RenderingServer.ViewportRenderInfo)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportGetRenderInfo(Electron2D.RID,Electron2D.ViewportRenderInfoType,Electron2D.ViewportRenderInfo)",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "Viewport::enum:RenderInfo",
+      "electron2d": "T:Electron2D.ViewportRenderInfo",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "Viewport::enum:RenderInfoType",
+      "electron2d": "T:Electron2D.ViewportRenderInfoType",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "Viewport::enum_value:RenderInfo.RENDER_INFO_DRAW_CALLS_IN_FRAME",
+      "electron2d": "enumValue:Electron2D.ViewportRenderInfo.DrawCallsInFrame()",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "Viewport::enum_value:RenderInfo.RENDER_INFO_MAX",
+      "electron2d": "enumValue:Electron2D.ViewportRenderInfo.Max()",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "Viewport::enum_value:RenderInfo.RENDER_INFO_OBJECTS_IN_FRAME",
+      "electron2d": "enumValue:Electron2D.ViewportRenderInfo.ObjectsInFrame()",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "Viewport::enum_value:RenderInfo.RENDER_INFO_PRIMITIVES_IN_FRAME",
+      "electron2d": "enumValue:Electron2D.ViewportRenderInfo.PrimitivesInFrame()",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "Viewport::enum_value:RenderInfoType.RENDER_INFO_TYPE_CANVAS",
+      "electron2d": "enumValue:Electron2D.ViewportRenderInfoType.Canvas()",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "Viewport::enum_value:RenderInfoType.RENDER_INFO_TYPE_MAX",
+      "electron2d": "enumValue:Electron2D.ViewportRenderInfoType.Max()",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "Viewport::method:get_render_info(int:Viewport.RenderInfoType,int:Viewport.RenderInfo)",
+      "electron2d": "method:Electron2D.Viewport.GetRenderInfo(Electron2D.ViewportRenderInfoType,Electron2D.ViewportRenderInfo)",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    }
+  ],
+  "extras": [],
+  "statusGroups": [
+    {
+      "godot": [
+        "Performance::enum_value:Monitor.RENDER_TOTAL_DRAW_CALLS_IN_FRAME",
+        "Performance::enum_value:Monitor.RENDER_TOTAL_OBJECTS_IN_FRAME",
+        "Performance::enum_value:Monitor.RENDER_TOTAL_PRIMITIVES_IN_FRAME",
+        "RenderingServer::enum:ViewportRenderInfo",
+        "RenderingServer::enum:ViewportRenderInfoType",
+        "RenderingServer::enum_value:RenderingInfo.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME",
+        "RenderingServer::enum_value:RenderingInfo.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME",
+        "RenderingServer::enum_value:RenderingInfo.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME",
+        "RenderingServer::enum_value:ViewportRenderInfo.VIEWPORT_RENDER_INFO_DRAW_CALLS_IN_FRAME",
+        "RenderingServer::enum_value:ViewportRenderInfo.VIEWPORT_RENDER_INFO_MAX",
+        "RenderingServer::enum_value:ViewportRenderInfo.VIEWPORT_RENDER_INFO_OBJECTS_IN_FRAME",
+        "RenderingServer::enum_value:ViewportRenderInfo.VIEWPORT_RENDER_INFO_PRIMITIVES_IN_FRAME",
+        "RenderingServer::enum_value:ViewportRenderInfoType.VIEWPORT_RENDER_INFO_TYPE_CANVAS",
+        "RenderingServer::enum_value:ViewportRenderInfoType.VIEWPORT_RENDER_INFO_TYPE_MAX",
+        "RenderingServer::method:viewport_get_render_info(RID:,int:RenderingServer.ViewportRenderInfoType,int:RenderingServer.ViewportRenderInfo)",
+        "Viewport::enum:RenderInfo",
+        "Viewport::enum:RenderInfoType",
+        "Viewport::enum_value:RenderInfo.RENDER_INFO_DRAW_CALLS_IN_FRAME",
+        "Viewport::enum_value:RenderInfo.RENDER_INFO_MAX",
+        "Viewport::enum_value:RenderInfo.RENDER_INFO_OBJECTS_IN_FRAME",
+        "Viewport::enum_value:RenderInfo.RENDER_INFO_PRIMITIVES_IN_FRAME",
+        "Viewport::enum_value:RenderInfoType.RENDER_INFO_TYPE_CANVAS",
+        "Viewport::enum_value:RenderInfoType.RENDER_INFO_TYPE_MAX",
+        "Viewport::method:get_render_info(int:Viewport.RenderInfoType,int:Viewport.RenderInfo)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": [
+        "RenderingServer::enum_value:ViewportRenderInfoType.VIEWPORT_RENDER_INFO_TYPE_SHADOW",
+        "RenderingServer::enum_value:ViewportRenderInfoType.VIEWPORT_RENDER_INFO_TYPE_VISIBLE",
+        "Viewport::enum_value:RenderInfoType.RENDER_INFO_TYPE_SHADOW",
+        "Viewport::enum_value:RenderInfoType.RENDER_INFO_TYPE_VISIBLE"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004/0028: visible and shadow render-info domains are the 3D scene/shadow passes in the pinned renderer_viewport.cpp; all 2D geometry and its light composition enter the Canvas domain. No 3D pass selector or constant-return adapter is exposed; no implementation trigger."
+    },
+    {
+      "godot": [
+        "RenderingServer::enum:RenderingInfo",
+        "RenderingServer::method:get_rendering_info(int:RenderingServer.RenderingInfo)"
+      ],
+      "state": "Partial",
+      "reason": "Canvas submission totals now execute. Device texture/buffer/video-memory and pipeline compilation counters still need their actual backend allocation/compilation accounting producers; no constant-return members are exposed."
+    }
+  ]
+}

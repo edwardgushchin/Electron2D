@@ -11,6 +11,9 @@ Last updated: 2026-10-18
 | TimeProcess | 1 | Largest completed process-frame duration; owned Window presentation included |
 | TimePhysicsProcess | 2 | Largest individual fixed-step duration |
 | TimeNavigationProcess | 3 | Largest synchronization/avoidance duration within a fixed step |
+| RenderTotalObjectsInFrame | 11 | Completed renderer-frame logical canvas drawing records |
+| RenderTotalPrimitivesInFrame | 12 | Submitted topology/instance budgets |
+| RenderTotalDrawCallsInFrame | 13 | Native canvas geometry calls |
 | PhysicsActiveObjects | 17 | PhysicsServer.ProcessInfo.ActiveObjects |
 | PhysicsCollisionPairs | 18 | PhysicsServer.ProcessInfo.CollisionPairs |
 | PhysicsIslandCount | 19 | PhysicsServer.ProcessInfo.IslandCount |
@@ -20,3 +23,5 @@ identities; the gaps do not imply that other selectors work. Sample lifecycle an
 backend-specific workload semantics are defined in [Physics statistics](../components/physics-statistics.md).
 
 The three durations use seconds and publish maxima once per completed one-second Engine sampling window. Startup, headless/direct-host, error, rendering and thread boundaries are defined in [Frame timing monitors](../components/frame-monitors.md).
+
+The three canvas counts follow [completed canvas counters](../components/canvas-counters.md). They publish on completed native frames and return zero without an active renderer; they do not use the one-second timing window.

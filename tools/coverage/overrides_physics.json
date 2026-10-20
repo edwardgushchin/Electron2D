@@ -7369,9 +7369,6 @@
         "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_SURFACE",
         "Performance::enum_value:Monitor.RENDER_BUFFER_MEM_USED",
         "Performance::enum_value:Monitor.RENDER_TEXTURE_MEM_USED",
-        "Performance::enum_value:Monitor.RENDER_TOTAL_DRAW_CALLS_IN_FRAME",
-        "Performance::enum_value:Monitor.RENDER_TOTAL_OBJECTS_IN_FRAME",
-        "Performance::enum_value:Monitor.RENDER_TOTAL_PRIMITIVES_IN_FRAME",
         "Performance::enum_value:Monitor.RENDER_VIDEO_MEM_USED"
       ],
       "state": "Blocked",

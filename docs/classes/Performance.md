@@ -90,3 +90,7 @@ finally { Performance.RemoveCustomMonitor(count.ID); }
 ```
 
 Requires an application integer actorCount value. [CustomMonitorTests](../../tests/Electron2D.Tests/CustomMonitorTests.cs) and [runtime diagnostics](../components/runtime-diagnostics.md) record managed execution, zero warmed reads, lifetime/concurrency and native verification limits. Debugger charts and other built-in producers remain separate.
+
+## Completed canvas submission counters
+
+[Canvas counters](../components/canvas-counters.md) now publish successful per-viewport/global drawing records, topology/instance budgets and native geometry calls. Empty completed frames reset; skipped or failed frames retain prior values. GPU-authored activity uses explicit capacity/base-geometry budgets without readback. Owner/lifetime, backend granularity and exact verification limits are defined in that component.

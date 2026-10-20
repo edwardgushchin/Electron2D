@@ -1866,3 +1866,12 @@ Immediately presents a copied loading image over a finite background in the main
 The call is cold allocation/upload work. Temporary image storage retires before return; pending particle work and scene caches retain their ordinary frame boundary. Scene viewport contents, scene clear color, clocks/counters and queued frame callbacks remain intact. It emits no frame events, keeps ordinary scene work pending and is replaced by the next normal frame. [Loading-image behavior and verification](../components/boot-images.md) records exact geometry, failure/cleanup and backend limits.
 
 Native thin-stroke batch bounds include half-pixel coverage and an additional half pixel when deferred vertex snapping is active. Group fitting and texture-redraw visibility use that same margin, preserving zero-margin groups with horizontal or vertical lines. Fitted native-line bounds round outward to whole pixels so MSAA group composition does not attenuate a resolved edge a second time. See [stroke commands](../components/canvas-rendering.md#stroke-commands).
+
+## Completed canvas submission counters
+
+[Canvas counters](../components/canvas-counters.md) now publish successful per-viewport/global drawing records, topology/instance budgets and native geometry calls. Empty completed frames reset; skipped or failed frames retain prior values. GPU-authored activity uses explicit capacity/base-geometry budgets without readback. Owner/lifetime, backend granularity and exact verification limits are defined in that component.
+
+| Signature | Contract |
+| --- | --- |
+| `public static long GetRenderingInfo(RenderingInfo info)` | Allocation-free, any-thread aggregate observation; zero without a native session. |
+| `public static long ViewportGetRenderInfo(RID viewport, ViewportRenderInfoType type, ViewportRenderInfo info)` | Same per-viewport fields through a live scene or server-owned RID; native owner required. |

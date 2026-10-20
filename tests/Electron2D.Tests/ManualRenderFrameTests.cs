@@ -7,6 +7,7 @@ internal static class ManualRenderFrameTests
 {
     internal static void RunManaged()
     {
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_CANVAS_COUNTERS") == "1") { CanvasCounterTests.RunManaged(); return; }
         Check(!RenderingServer.IsAvailable, "Managed frame checks require no native renderer.");
         var count = Engine.GetFramesDrawn();
         Reject<InvalidOperationException>(() => RenderingServer.ForceDraw());
@@ -28,6 +29,7 @@ internal static class ManualRenderFrameTests
 
     internal static void RunNative()
     {
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_CANVAS_COUNTERS") == "1") { CanvasCounterTests.RunNative(); return; }
         var method = ProjectSettings.Get(ProjectSettings.RenderingMethod); var fallback = ProjectSettings.Get(ProjectSettings.RenderingFallback);
         try
         {

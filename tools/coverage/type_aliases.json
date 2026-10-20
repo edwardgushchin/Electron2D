@@ -234,6 +234,10 @@
     "GPUParticles2D.DrawOrder": "ParticlesDrawOrder",
     "GPUParticles2D.EmitFlags": "GPUParticles.EmitFlags",
     "RenderingServer.ParticlesDrawOrder": "ParticlesDrawOrder",
-    "CanvasItem.OversamplingWithScale": "OversamplingWithScale"
+    "CanvasItem.OversamplingWithScale": "OversamplingWithScale",
+    "Viewport.RenderInfo": "ViewportRenderInfo",
+    "Viewport.RenderInfoType": "ViewportRenderInfoType",
+    "RenderingServer.ViewportRenderInfo": "ViewportRenderInfo",
+    "RenderingServer.ViewportRenderInfoType": "ViewportRenderInfoType"
   }
 }

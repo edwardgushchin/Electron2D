@@ -4,6 +4,8 @@
 
 # Rendering domain
 
+[Completed canvas counters](../components/canvas-counters.md) connect actual GPU/Compatibility geometry submission to shared ViewportRenderInfo/ViewportRenderInfoType selectors, static RenderingServer queries and Performance. Failed/skipped frame boundaries and GPU-authored capacity budgets remain explicit.
+
 [Layered device multiview](../components/local-compute.md#layered-multiview) executes ordered view-indexed draws into array color/depth targets, including per-view input passes and MSAA resolve, without changing extra layers.
 
 [Mesh textures](../components/meshes.md#mesh-textures) connect real retained mesh geometry to Texture consumers and static texture draw identities, with borrowed source lifetime and typed graph/scene storage.

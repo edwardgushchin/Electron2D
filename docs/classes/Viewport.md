@@ -657,3 +657,9 @@ Native presentation retains a cold activation ordinal across sibling scene reord
 Automatic physics picking ignores a canvas whose determinant is zero/nonfinite or whose inverse query position is nonfinite. Other canvases continue; mouse hover exits through normal object/shape cleanup and returns under a stationary pointer when the map becomes usable. Small finite and reflected transforms remain valid. This changes neither authored matrix storage nor explicit AffineInverse failure semantics, ordinary direct physics queries or collider ownership. See [the component contract and regression scope](../components/physics-picking.md#collapsed-canvas-mappings).
 
 [GUI snapping verification](../components/canvas-rendering.md#gui-control-pixel-snapping) covers numeric/input/storage contracts and actual native pixels.
+
+## Completed canvas submission counters
+
+[Canvas counters](../components/canvas-counters.md) now publish successful per-viewport/global drawing records, topology/instance budgets and native geometry calls. Empty completed frames reset; skipped or failed frames retain prior values. GPU-authored activity uses explicit capacity/base-geometry budgets without readback. Owner/lifetime, backend granularity and exact verification limits are defined in that component.
+
+`public long GetRenderInfo(ViewportRenderInfoType type, ViewportRenderInfo info)` reads this viewport's last completed Canvas count; zero before the first completion. Attached access requires the scene owner; disposed and unsupported selectors reject. Detachment retains the completed values. The three independent observations are not an atomic snapshot.

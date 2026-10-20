@@ -123,6 +123,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
 
     internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true)
     {
+        ResetRenderInfo();
         foreach (var batch in batches)
             if (batch.Glyph.Mode != CanvasGlyphMode.None) throw new NotSupportedException("Glyph distance and component coverage require GPU rendering.");
             else if (batch.Lighting is not null)
@@ -253,13 +254,14 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                 }
                 if (batch.Primitive is Mesh.PrimitiveType.Lines or Mesh.PrimitiveType.LineStrip)
                 {
-                    DrawThinLines(renderer, texture, _vertices.AsSpan(batch.First, batch.Count), batch.Primitive, batch.SnapNativeLines);
+                    RecordCanvasDraw(batch, DrawThinLines(renderer, texture, _vertices.AsSpan(batch.First, batch.Count), batch.Primitive, batch.SnapNativeLines));
                     continue;
                 }
                 // SDL 3.4.16's software quad shortcut loses transposed/constant UVs. Separate triangles bypass it.
                 var step = Driver == "software" && texture != 0 ? 3 : batch.Count;
                 for (var first = batch.First; first < batch.First + batch.Count; first += step)
                     Check(SDL.RenderGeometry(renderer, texture, _vertices.AsSpan(first, step), step, 0, 0), "draw canvas geometry");
+                RecordCanvasDraw(batch, batch.Count / step);
             }
             output.Commit();
         }
@@ -270,8 +272,9 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         }
     }
 
-    private static void DrawThinLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, Mesh.PrimitiveType primitive, bool snap)
+    private static int DrawThinLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, Mesh.PrimitiveType primitive, bool snap)
     {
+        var calls = 0;
         Span<SDL.Vertex> quad = stackalloc SDL.Vertex[6];
         for (var i = 1; i < vertices.Length; i += primitive == Mesh.PrimitiveType.LineStrip ? 1 : 2)
         {
@@ -286,7 +289,9 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                 quad[j].Position = new() { X = position.X, Y = position.Y };
             }
             Check(SDL.RenderGeometry(renderer, texture, quad, quad.Length, 0, 0), "draw compatibility thin line");
+            calls++;
         }
+        return calls;
     }
 
     internal override void Present(ReadOnlySpan<CanvasPresentation> viewports)
