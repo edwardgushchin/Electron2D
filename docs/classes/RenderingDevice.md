@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-20
 
-**Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RenderingDevice`. **Source:** [RenderingDevice.cs](../../src/Servers/Rendering/Device/RenderingDevice.cs), [RenderingDevice.Readback.cs](../../src/Servers/Rendering/Device/RenderingDevice.Readback.cs), [RenderingDevice.TexelBuffers.cs](../../src/Servers/Rendering/Device/RenderingDevice.TexelBuffers.cs). **Component:** [Local compute](../components/local-compute.md).
+**Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RenderingDevice`. **Source:** [RenderingDevice.cs](../../src/Servers/Rendering/Device/RenderingDevice.cs), [RenderingDevice.Binary.cs](../../src/Servers/Rendering/Device/RenderingDevice.Binary.cs), [RenderingDevice.Readback.cs](../../src/Servers/Rendering/Device/RenderingDevice.Readback.cs), [RenderingDevice.TexelBuffers.cs](../../src/Servers/Rendering/Device/RenderingDevice.TexelBuffers.cs). **Component:** [Local compute](../components/local-compute.md).
 
 **Inherits:** [ElectronObject](ElectronObject.md).
 
@@ -19,6 +19,8 @@ Independent Texture and Sampler sets execute native compute and graphics through
 Fixed descriptor arrays execute across image, sampler, texel and input roles with ordered copied IDs and scalar native capacity; see [device arrays](../components/local-compute.md#fixed-device-descriptor-arrays).
 
 Formatted texel buffers execute indexed compute/graphics reads, compute stores and 32-bit integer atomics while preserving raw byte transfer/readback. Their factory counts elements; see [formatted texel buffers](../components/local-compute.md#formatted-texel-buffers).
+
+Shader binaries and reserved shader RIDs use the same validated runtime program path; see [container ownership and loading](../components/local-compute.md#shader-binaries-and-deferred-identities).
 
 ## Example
 
@@ -67,6 +69,9 @@ byte[] result = device.BufferGetData(buffer);
 | `protected override System.Void Dispose(System.Boolean disposing)` | Overrides the inherited typed lifetime, property-metadata or Resource-copy hook. |
 | `public System.Void FreeRID(Electron2D.RID rid)` | Frees a resource after completing pending work. |
 | `public System.String GetDeviceName()` | Returns the selected compute-device name. |
+| [`public System.Byte[] ShaderCompileBinaryFromSPIRV(Electron2D.RDShaderSPIRV spirvData, System.String name = "")`](#member-shader-binary-compile) | Validates and packages copied stages and a strict UTF-8 diagnostic name. |
+| [`public Electron2D.RID ShaderCreateFromBytecode(System.ReadOnlySpan<System.Byte> binaryData, Electron2D.RID placeholderRID = default)`](#member-shader-binary-load) | Loads a complete container and optionally initializes one reserved shader identity. |
+| [`public Electron2D.RID ShaderCreatePlaceholder()`](#member-shader-binary-placeholder) | Reserves an owned identity for later bytecode loading. |
 | `public Electron2D.RID ShaderCreateFromSPIRV(Electron2D.RDShaderSPIRV spirvData, System.String name = "")` | Validates and creates a compute shader or a paired graphics shader from compiled bytecode. |
 | `public Electron2D.RID TextureBufferCreate(System.UInt32 sizeElements, Electron2D.RenderingDevice.DataFormat format, System.ReadOnlySpan<System.Byte> data = default)` | Creates an owned formatted buffer; size counts elements and nonempty data covers its complete encoded byte capacity. |
 | `public Electron2D.RID StorageBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default, Electron2D.RenderingDevice.StorageBufferUsage usage = 0)` | Creates a zero-initialized read/write storage buffer with an optional indirect-command role. |
@@ -1305,3 +1310,20 @@ Color slots retain logical shader output indices and may contain leading, interm
 See [native verification](../components/local-compute.md#sparse-framebuffer-outputs) for pixels, state and allocation evidence.
 
 Ordinary signed/unsigned R32 Image descriptors now execute compute atomics, including fixed arrays. StorageAtomic validates allocation capability, while Image binding independently requires Storage. See [integer image atomics](../components/local-compute.md#integer-image-atomics) for ordering, lifetime and native verification limits.
+
+<a id="member-shader-binary-compile"></a>
+### ShaderCompileBinaryFromSPIRV
+
+Accepts the ordinary factory's successful compute or paired vertex/fragment descriptions and optional diagnostic name of at most 4096 strict UTF-8 bytes. Returns an independent versioned Electron2D container preserving original stage bytes, including symbolic specialization. Concrete native programs are validated and released; specialization-dependent checks occur when a pipeline is built. Invalid names, modules or compile diagnostics throw ArgumentException; unsupported native capabilities throw NotSupportedException. There is no source frontend invocation or driver pipeline-cache export. Save the returned bytes with ordinary file I/O and preserve original modules for format changes.
+
+<a id="member-shader-binary-load"></a>
+### ShaderCreateFromBytecode
+
+Accepts the complete binary span returned by ShaderCompileBinaryFromSPIRV, copies its stages and creates a normal shader program. Default placeholderRID allocates a new RID; an owned uninitialized placeholder is populated without changing its identity. Full parsing, checks and native creation precede publication; failure leaves a placeholder retryable. Invalid lengths, contents, checksum, UTF-8, reserved flags or RID ownership/kind throw ArgumentException; unsupported version/capability throws NotSupportedException. Live initialized shaders cannot be replaced. Caller mutation after return cannot change the shader. The runtime repeats module/reflection/lowering/native validation without a source compiler; specialization and borrowed set/pipeline lifetime match ShaderCreateFromSPIRV.
+
+<a id="member-shader-binary-placeholder"></a>
+### ShaderCreatePlaceholder
+
+Reserves a real owned uninitialized RID, usable only for later bytecode initialization or FreeRID. Pipeline/set factories and interface queries reject it until loading succeeds. FreeRID or device disposal releases an unused placeholder. All three operations require the owner thread and no active command list; disposed devices reject. They do not complete queued commands or invoke readback callbacks.
+
+For an executable storage/load and rendered consumer example, see [RenderingDeviceBinaryTests](../../tests/Electron2D.Tests/RenderingDeviceBinaryTests.cs) and [its graphics consumer](../../tests/Electron2D.Tests/RenderingDeviceBinaryTests.Graphics.cs).

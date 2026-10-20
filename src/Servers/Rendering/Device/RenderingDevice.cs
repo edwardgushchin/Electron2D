@@ -54,7 +54,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         /// <summary>A storage buffer with dynamic offset.</summary>
         StorageBufferDynamic = 11
     }
-    private enum Kind { Storage, Texel, Uniform, Shader, Pipeline, Set, Texture, Sampler, Vertex, Index, VertexArray, IndexArray, Framebuffer, GraphicsPipeline }
+    private enum Kind { Storage, Texel, Uniform, Shader, Pipeline, Set, Texture, Sampler, Vertex, Index, VertexArray, IndexArray, Framebuffer, GraphicsPipeline, ShaderPlaceholder }
     private sealed class Entry
     {
         internal Kind Kind;
@@ -229,13 +229,19 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <remarks>Specialization modules retain copied symbolic templates. Pipeline creation applies typed values before native/layout validation; ordinary shaders retain their validated native program.</remarks>
     public RID ShaderCreateFromSPIRV(RDShaderSPIRV spirvData, string name = "")
     {
-        IdleList(); ArgumentNullException.ThrowIfNull(spirvData); ArgumentNullException.ThrowIfNull(name);
+        IdleList(); var program = CaptureDeviceProgram(spirvData, name);
+        try { return Add(program); }
+        catch { ReleaseProgram(program); throw; }
+    }
+    private Entry CaptureDeviceProgram(RDShaderSPIRV spirvData, string name)
+    {
+        ArgumentNullException.ThrowIfNull(spirvData); ArgumentNullException.ThrowIfNull(name);
         var compute = spirvData.BytecodeCompute; var vertex = spirvData.BytecodeVertex; var fragment = spirvData.BytecodeFragment;
         if (compute.Length != 0 && (vertex.Length != 0 || fragment.Length != 0)) throw new ArgumentException("Compute and graphics modules cannot share a shader identity.", nameof(spirvData));
         if (compute.Length != 0 ? spirvData.CompileErrorCompute.Length != 0 : vertex.Length == 0 || fragment.Length == 0 || spirvData.CompileErrorVertex.Length != 0 || spirvData.CompileErrorFragment.Length != 0) throw new ArgumentException("Supply successful compute or paired graphics modules.", nameof(spirvData));
         byte[][] sources = compute.Length != 0 ? [compute] : [vertex, fragment];
         var symbolic = sources.Any(code => new SpecializationModule(code, [], []).HasSpecialization);
-        var program = CreateDeviceProgram(sources, name, [], symbolic); program.Sources = sources; return Add(program);
+        var program = CreateDeviceProgram(sources, name, [], symbolic); program.Sources = sources; return program;
     }
     private Entry CreateDeviceProgram(byte[][] sources, string name, Dictionary<uint, Specialization> constants, bool template = false, int[]? outputSlots = null, uint viewIndex = 0)
     {

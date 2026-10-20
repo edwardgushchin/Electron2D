@@ -16,6 +16,8 @@
 
 Last updated: 2026-10-20
 
+[Shader binaries and deferred identities](../components/local-compute.md#shader-binaries-and-deferred-identities) connect copied versioned stage containers and reserved RIDs to ordinary compute, graphics, specialization and retained canvas consumers.
+
 [Movie writing](../components/movie-writing.md) consumes completed root-viewport pixels through the actual renderer and fixes capture dimensions across later resizes. It does not create a headless renderer or claim readback/encoding is allocation-free.
 
 Private native runtime binaries come from versioned Linux/macOS packages in ordinary desktop builds; `Electron2DBuildNativeFromSource=true` rebuilds those libraries. Source builds separately prepare pinned host shader tools on first use and generate built-in shaders under `obj/`. [Shader delivery](../components/shader-materials.md#built-in-shader-delivery) keeps these tools out of game packages. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.

@@ -3613,6 +3613,24 @@
       "electron2d": "method:Electron2D.RenderingDevice.TextureBufferCreate(System.UInt32,Electron2D.RenderingDevice.DataFormat,System.ReadOnlySpan<System.Byte>)",
       "state": "Implemented",
       "reason": "ADR 0028: complete formatted buffer factory and consumers through private GPU storage metadata and embedded format functions. The pinned executing p_size_elements contract counts elements; complete initial encoded data is copied, or zero initialized. Public raw update/copy/clear and synchronous/queued reads exclude the private header. TextureBuffer, SamplerWithTextureBuffer and ImageBuffer execute typed fetch/read/query, compute stores and signed/unsigned R32 atomics; graphics-to-retained-canvas consumers and prepared zero-owner-managed-byte intervals execute in GLSL/HLSL on software Linux. Native format/precision/stage/capacity limits remain explicit; hardware, native allocator and foreign platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:shader_compile_binary_from_spirv(RDShaderSPIRV:,String:)",
+      "electron2d": "method:Electron2D.RenderingDevice.ShaderCompileBinaryFromSPIRV(Electron2D.RDShaderSPIRV,System.String)",
+      "state": "Partial",
+      "reason": "ADR 0028: versioned integrity-checked engine SPIR-V containers execute through the shared shader factory without a source frontend. Copied stages, strict bounded parsing, failed-placeholder retry, owned one-time RID initialization, GLSL/HLSL compute/paired graphics, specialization and retained canvas use ordinary lifetime and pipeline validation. This common-intermediate adaptation stores SPIR-V rather than exporting driver pipeline-cache objects. Geometry/tessellation stages and wider scalar/pointer capabilities still require the existing executing shader/native adapters; ray stages remain excluded. Software Linux/Vulkan verification does not establish foreign platforms, hardware or native allocator totals."
+    },
+    {
+      "godot": "RenderingDevice::method:shader_create_from_bytecode(PackedByteArray:,RID:)",
+      "electron2d": "method:Electron2D.RenderingDevice.ShaderCreateFromBytecode(System.ReadOnlySpan<System.Byte>,Electron2D.RID)",
+      "state": "Partial",
+      "reason": "ADR 0028: versioned integrity-checked engine SPIR-V containers execute through the shared shader factory without a source frontend. Copied stages, strict bounded parsing, failed-placeholder retry, owned one-time RID initialization, GLSL/HLSL compute/paired graphics, specialization and retained canvas use ordinary lifetime and pipeline validation. This common-intermediate adaptation stores SPIR-V rather than exporting driver pipeline-cache objects. Geometry/tessellation stages and wider scalar/pointer capabilities still require the existing executing shader/native adapters; ray stages remain excluded. Software Linux/Vulkan verification does not establish foreign platforms, hardware or native allocator totals."
+    },
+    {
+      "godot": "RenderingDevice::method:shader_create_placeholder()",
+      "electron2d": "method:Electron2D.RenderingDevice.ShaderCreatePlaceholder()",
+      "state": "Implemented",
+      "reason": "ADR 0028: a real owned uninitialized shader RID can be reserved, passed around, populated once after complete successful bytecode loading, or freed/disposed. Pipeline/set/interface consumers reject it while uninitialized. Failed parse/native validation leaves it retryable; foreign, freed, wrong-kind and already initialized identities reject. Owner/list and ordinary borrower lifetime guards execute in the connected binary program tests."
     }
   ],
   "extras": [
@@ -4996,6 +5014,13 @@
         "RenderingDevice::method:texture_buffer_create(int:,int:RenderingDevice.DataFormat,PackedByteArray:)"
       ],
       "reason": "ADR 0028: complete formatted buffer factory and consumers through private GPU storage metadata and embedded format functions. The pinned executing p_size_elements contract counts elements; complete initial encoded data is copied, or zero initialized. Public raw update/copy/clear and synchronous/queued reads exclude the private header. TextureBuffer, SamplerWithTextureBuffer and ImageBuffer execute typed fetch/read/query, compute stores and signed/unsigned R32 atomics; graphics-to-retained-canvas consumers and prepared zero-owner-managed-byte intervals execute in GLSL/HLSL on software Linux. Native format/precision/stage/capacity limits remain explicit; hardware, native allocator and foreign platforms remain unverified."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingDevice::method:shader_create_placeholder()"
+      ],
+      "reason": "ADR 0028: a real owned uninitialized shader RID can be reserved, passed around, populated once after complete successful bytecode loading, or freed/disposed. Pipeline/set/interface consumers reject it while uninitialized. Failed parse/native validation leaves it retryable; foreign, freed, wrong-kind and already initialized identities reject. Owner/list and ordinary borrower lifetime guards execute in the connected binary program tests."
     }
   ]
 }
