@@ -59,3 +59,5 @@ both directed-containment directions. See [body-motion verification](../componen
 [Final contact sampling](../components/physics-registered-adapter.md#final-body-motion-contact-sampling) includes the effective query margin and clears obsolete contacts after complete departure.
 
 [Last-recovery one-way pair exclusions](../components/physics-registered-adapter.md#last-recovery-one-way-pair-exclusions) retain rejected source-resource/target-slot pairs through the remaining sweep and final contact sample. The last recovery attempt replaces the set, accepted pieces keep their logical pair eligible, and the next query starts empty.
+
+[One-way motion entry](../components/physics-queries.md#one-way-body-motion-entry) selects new impacts from their actual contact side. Tangent/receding front-corner hits are distinct from releasing a receding initial overlap; invalid sides cannot hide a later obstacle. Recovery depth and separation-ray source policy retain their contracts.

@@ -1,6 +1,9 @@
 # Physics domain
 
-[The current full Linux suite](../components/physics-contract-audit.md#full-linux-suite-2026-10-20) now passes on the physical GPU after the supported native source build. This closes the ordinary-run verification gap for that cohort; focused/AOT/native/platform/network and remaining declaration gates stay separate.
+[One-way body-motion entry](../components/physics-queries.md#one-way-body-motion-entry) now distinguishes new front-corner contacts from initial-overlap departure across CPU, resident GPU and public providers. Existing declaration states and wider acceptance gates remain open.
+
+
+[The frozen full Linux suite receipt](../components/physics-contract-audit.md#full-linux-suite-2026-10-20) passes on its recorded physical-GPU cohort after the supported native source build. It qualifies that revision; focused/AOT/native/platform/network and remaining declaration gates stay separate.
 
 [Contact publication workers](../components/physics-scene-performance.md#contact-publication-workers-2026-10-20) reuse joined per-body ranges on the independent GPU host-report path, preserve physical slot lifetimes and keep callbacks on the owner. Declaration states remain 1303/1369 Implemented (95.18%), 66 open and 92 Excluded.
 

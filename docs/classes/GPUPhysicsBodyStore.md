@@ -430,3 +430,5 @@ internal RebindColliderSlot path lets its sole collider owner reuse a released
 wrapper, validating owner thread, live source and the same store. Every clear
 releases geometry; empty cached wrappers hold no Shape reference. See [sensor edit
 ownership and checks](../components/physics-queries.md#failed-raw-shape-edits-and-warmed-reuse).
+
+[One-way motion entry](../components/physics-queries.md#one-way-body-motion-entry) selects new impacts from their actual contact side. Tangent/receding front-corner hits are distinct from releasing a receding initial overlap; invalid sides cannot hide a later obstacle. Recovery depth and separation-ray source policy retain their contracts.

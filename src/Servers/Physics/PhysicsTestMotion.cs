@@ -27,6 +27,7 @@ public sealed class PhysicsTestMotionParameters : ElectronObject
     public PhysicsTestMotionParameters() { }
 
     /// <summary>Gets or sets the finite unit-scale global pose at which testing begins.</summary>
+    /// <remarks>One-way initial-overlap departure and new impact admission are distinct: new contacts use their actual surface side.</remarks>
     /// <value>Identity by default.</value>
     public Transform From
     {

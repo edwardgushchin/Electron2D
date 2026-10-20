@@ -81,7 +81,6 @@ public static partial class BackendChecks
                         var own = local.Parts[i]; var a = own; var b = other.Parts[j];
                         if (a.Concave && b.Concave || RejectedMotionPair(rejected, rejectedCount, own, other, b)) continue;
                         var sweptMotion = a.Boundary || !b.Boundary && (a.Concave || b.Directed) ? Vector2.Zero : motion;
-                        if (!a.Directed && b.OneWay is { } policy && motion.Dot(policy.LocalDirection.Rotated(other.Rotation)) <= 0) continue;
                         if (a.Directed && !a.Slide && !collideSeparationRay) continue;
                         float low, f;
                         if (a.Directed || b.Directed)
@@ -89,6 +88,14 @@ public static partial class BackendChecks
                         else { if (!SweepParts(a, start, sweptMotion, b, other.Pose, out f)) continue; low = f; }
                         if (f > fraction) continue;
                         var initial = PartGap(a, start, b, other.Pose, out var toward, out _, out _);
+                        if (!a.Directed && b.OneWay is { } policy)
+                        {
+                            var pass = policy.LocalDirection.Rotated(other.Rotation);
+                            if (initial <= 0 && motion.Dot(pass) < 0) continue;
+                            var impact = start; impact.Origin += sweptMotion * f;
+                            var gap = PartGap(MotionRecoveryPart(own, b, queryMargin), impact, b, other.Pose, out var approach, out _, out _);
+                            if (gap > 0 || (-approach).Dot(pass) >= 0) continue;
+                        }
                         if (initial <= 0 && -initial <= .05f && motion.Dot(-toward) >= -.000001f) continue;
                         fraction = f; safeFraction = low; hit = other; source = own; target = b;
                     }

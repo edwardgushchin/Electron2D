@@ -123,10 +123,10 @@ void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
 {
     bool ignored=ga.data.z==7u||(ga.data.z==5u&&gb.data.z!=7u);
     vec2 motion=ignored?vec2(0):q.motionMargin.xy;
-    if(ga.data.z!=6u&&(shapeB.policy.w&4u)!=0u&&dot2(q.motionMargin.xy,passDirection())<=0)return;
+    bool oneWay=ga.data.z!=6u&&(shapeB.policy.w&4u)!=0u;
     bool directed=ga.data.z==6u||gb.data.z==6u;
     // Keep one geometry call site across phases to limit driver inlining and cold compilation.
-    const uint initialPhase=0u,reachPhase=1u,bisectPhase=2u,rayImpactPhase=3u;
+    const uint initialPhase=0u,reachPhase=1u,bisectPhase=2u,impactPhase=3u;
     uint phase=initialPhase,refinements=0u;
     float low=0,high=0,margin=0,middle=0,coefficient=0.5;vec2 extension=vec2(0),normal=vec2(0);
     Hull probe=a;Contact initial,full;
@@ -137,6 +137,7 @@ void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
         if(phase==initialPhase)
         {
             initial=contact;
+            if(contact.valid&&oneWay&&dot2(q.motionMargin.xy,passDirection())<0)return;
             if(directed){extension=motion;phase=reachPhase;continue;}
             if(contact.valid)
             {
@@ -149,13 +150,14 @@ void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
             if(!querySweep(a,b,motion,vec2(0),a.radius+b.radius,0.00001,fraction,normal))return;
             vec2 bracket=querySweepBracket(fraction);low=bracket.x;high=bracket.y;
             if(low>=safe)return;
+            if(oneWay){probe.pose.xy+=high*motion;probe.radius+=q.motionMargin.z;phase=impactPhase;continue;}
             safe=low;unsafeFraction=high;
             motionShape=mapA.identity.z;blocked=true;return;
         }
-        if(phase==rayImpactPhase)
+        if(phase==impactPhase)
         {
-            if(!contact.valid)contact=full;
-            if(!oneWayContact(contact))return;
+            if(!contact.valid){if(!directed)return;contact=full;}
+            if(oneWay&&dot2(contact.normal,passDirection())>=0)return;
             safe=low;unsafeFraction=high;motionShape=mapA.identity.z;blocked=true;return;
         }
         if(phase==reachPhase)
@@ -177,7 +179,7 @@ void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
             float advance=dot2(normalized(vertex(a,1u)-vertex(a,0u)),motion);
             if(advance>0)high=clamp(1-full.depth/advance,low,high);
         }
-        probe.pose.xy+=high*motion;extension=vec2(0);margin=q.motionMargin.z;phase=rayImpactPhase;
+        probe.pose.xy+=high*motion;extension=vec2(0);margin=q.motionMargin.z;phase=impactPhase;
     }
 }
 vec4 queryBounds(Shape shape,Geometry g,bool recovering)

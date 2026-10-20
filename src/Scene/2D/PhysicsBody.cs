@@ -285,7 +285,9 @@ public abstract partial class PhysicsBody : CollisionObject
     /// <param name="recoveryAsCollision">Whether a contact remaining after recovery and tested motion can produce a collision result.</param>
     /// <returns>A caller-owned collision snapshot, or null when motion is unobstructed.</returns>
     /// <remarks>Selected motion results are validated before applying travel; rejected output leaves the scene pose unchanged.
-    /// One-way pairs rejected on the last recovery pass stay excluded through the sweep and final contact sample.</remarks>
+    /// One-way pairs rejected on the last recovery pass stay excluded through the sweep and final contact sample.
+    /// New one-way impacts use the actual contact side, including tangent or receding corner approaches;
+    /// receding initial overlaps may still leave the surface.</remarks>
     public KinematicCollision? MoveAndCollide(Vector2 motion, bool testOnly = false,
         float safeMargin = 0.08f, bool recoveryAsCollision = false)
     {
@@ -308,7 +310,9 @@ public abstract partial class PhysicsBody : CollisionObject
     /// <param name="recoveryAsCollision">Whether a contact remaining after recovery and tested motion counts as a collision.</param>
     /// <returns>Whether motion or requested recovery reaches a body contact.</returns>
     /// <remarks>Selected motion results are validated before replacing the caller's collision snapshot.
-    /// One-way pairs rejected on the last recovery pass stay excluded through the sweep and final contact sample.</remarks>
+    /// One-way pairs rejected on the last recovery pass stay excluded through the sweep and final contact sample.
+    /// New one-way impacts use the actual contact side, including tangent or receding corner approaches;
+    /// receding initial overlaps may still leave the surface.</remarks>
     public bool TestMove(Transform from, Vector2 motion, KinematicCollision? collision = null,
         float safeMargin = 0.08f, bool recoveryAsCollision = false)
     {

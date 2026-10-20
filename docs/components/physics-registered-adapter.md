@@ -4586,3 +4586,7 @@ foreign-platform and performance acceptance remain open.
 [Oblique long circle motion](physics-queries.md#oblique-long-circle-motion) verifies the existing public cast/overlap and scene/raw body-motion paths across four unit-basis poses, both source/peer roles and signs. CPU/software-GPU/registered owner/separate CLR and NativeAOT profiles retain the existing tolerances and strict zero warmed managed allocation; wider acceptance remains open.
 
 [Factory result ownership](scripting.md#factory-result-ownership) protects borrowed physical/script resources and live nodes from invalid Script.New and file-factory results. CLR source-asset checks retain actual CPU/software-GPU/registered simulation and zero warmed managed bytes; NativeAOT source registration and full live-script/duplication acceptance remain open.
+
+## One-way motion impact side
+
+The independent public provider distinguishes receding initial overlap from new impact admission and validates the prospective normal before choosing the first hit. It follows the same public ownership/result contract through [the shared one-way entry fixture](physics-queries.md#one-way-body-motion-entry), without depending on runtime or backend implementation types. Full custom-extension acceptance remains open.

@@ -92,7 +92,6 @@ internal sealed partial class CPUPhysicsWorldBackend
                         ownTag.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon && candidate.Tag.Kind != PhysicsShapeGeometry.ShapeKind.WorldBoundary ? default : requested;
                     var other = b2MakeShapeDistanceProxy(b2GetShape(world, candidate.ShapeID));
                     var otherTransform = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
-                    if (!AcceptOneWayMotion(ownTag, candidate, requested, otherTransform)) continue;
                     if (ray is not null || candidate.Tag.SeparationRay is not null)
                     {
                         if (ownTag.Compound is not null && ownTag.CompoundPiece != 0 ||
@@ -100,6 +99,7 @@ internal sealed partial class CPUPhysicsWorldBackend
                         var full = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, sweep, 0);
                         if (full.pointCount == 0) continue;
                         var initial = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, default, 0);
+                        if (initial.pointCount != 0 && !AcceptOneWayInitialMotion(ownTag, candidate, requested, otherTransform)) continue;
                         if (initial.pointCount != 0 && -initial.points[0].separation <= 0.1f * B2_LINEAR_SLOP &&
                             b2Dot(requested, -initial.normal) >= -1e-6f) continue;
                         var lowRay = 0f;
@@ -126,10 +126,7 @@ internal sealed partial class CPUPhysicsWorldBackend
                             rayImpact.points[pointIndex] += sweep * highRay;
                         var rayContact = MotionRayContact(rayImpact, ownTag, fromTransform, recovery + sweep * highRay, other, candidate.Tag, otherTransform, default, queryMargin);
                         if (rayContact.pointCount == 0) rayContact = full;
-                        var point = rayContact.points[0];
-                        var normal = -rayContact.normal;
-                        var depth = MathF.Max(0, -point.separation);
-                        if (!AcceptOneWay(ownTag, candidate, normal, depth, queryMargin)) continue;
+                        if (!AcceptOneWayImpact(ownTag, candidate, -rayContact.normal, otherTransform)) continue;
                         safe = lowRay;
                         unsafeFraction = highRay;
                         motionShape = ownTag.ShapeIndex;
@@ -138,6 +135,7 @@ internal sealed partial class CPUPhysicsWorldBackend
                     }
                     if (CPUPhysicsWorldBackend.Overlaps(query, other, otherTransform))
                     {
+                        if (!AcceptOneWayInitialMotion(ownTag, candidate, requested, otherTransform)) continue;
                         var stuck = MotionManifold(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform);
                         var depth = stuck.pointCount == 0 ? 0 : -stuck.points[0].separation;
                         var normal = -stuck.normal;
@@ -166,8 +164,18 @@ internal sealed partial class CPUPhysicsWorldBackend
                         { low = middle; coefficient = step == 0 || high < 1 ? .5f : .75f; }
                     }
                     if (low >= safe) continue;
+                    var impactFraction = Math.Clamp(cast.fraction, low, high);
+                    // A new impact is selected by its contact side, independently of the requested motion direction.
+                    if (ContactOneWay(candidate.Tag, ownTag) is not null)
+                    {
+                        var impact = query;
+                        for (var pointIndex = 0; pointIndex < impact.count; pointIndex++) impact.points[pointIndex] += sweep * impactFraction;
+                        impact.radius += queryMargin;
+                        var impactContact = MotionManifold(impact, ownTag, fromTransform, recovery + sweep * impactFraction, other, candidate.Tag, otherTransform);
+                        if (impactContact.pointCount == 0 || !AcceptOneWayImpact(ownTag, candidate, -impactContact.normal, otherTransform)) continue;
+                    }
                     safe = low;
-                    unsafeFraction = Math.Clamp(cast.fraction, low, high);
+                    unsafeFraction = impactFraction;
                     motionShape = ownTag.ShapeIndex;
                     hasMotionHit = true;
                 }
@@ -366,13 +374,22 @@ internal sealed partial class CPUPhysicsWorldBackend
         return b2Dot(normal, pass) < 0 && depth <= allowance + .00001f * MetersPerUnit;
     }
 
-    private static bool AcceptOneWayMotion(PhysicsFixtureTag source, in MotionCandidate candidate, in B2Vec2 motion,
+    private static bool AcceptOneWayImpact(PhysicsFixtureTag source, in MotionCandidate candidate, in B2Vec2 normal,
         in B2Transform otherTransform)
     {
         var data = ContactOneWay(candidate.Tag, source);
         if (data is null) return true;
         var pass = b2RotateVector(otherTransform.q, new(data.LocalDirection.X, data.LocalDirection.Y));
-        return b2Dot(motion, pass) > 0;
+        return b2Dot(normal, pass) < 0;
+    }
+
+    private static bool AcceptOneWayInitialMotion(PhysicsFixtureTag source, in MotionCandidate candidate, in B2Vec2 motion,
+        in B2Transform otherTransform)
+    {
+        var data = ContactOneWay(candidate.Tag, source);
+        if (data is null) return true;
+        var pass = b2RotateVector(otherTransform.q, new(data.LocalDirection.X, data.LocalDirection.Y));
+        return b2Dot(motion, pass) >= 0;
     }
 
 

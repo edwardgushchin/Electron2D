@@ -170,3 +170,5 @@ Contact publication now uses the shared PhysicsTaskScheduler.RunRanges owner/joi
 boundary. All ranges finish before errors escape; simultaneous owner/worker
 failures preserve both exceptions. Numerical worker selection and callback order
 are unchanged. See [publication verification](../components/physics-scene-performance.md#contact-publication-workers-2026-10-20).
+
+[One-way motion entry](../components/physics-queries.md#one-way-body-motion-entry) selects new impacts from their actual contact side. Tangent/receding front-corner hits are distinct from releasing a receding initial overlap; invalid sides cannot hide a later obstacle. Recovery depth and separation-ray source policy retain their contracts.
