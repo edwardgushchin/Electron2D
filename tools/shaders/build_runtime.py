@@ -80,7 +80,7 @@ def generate(output, source_root=ROOT):
                         os.replace(compiled, target)
                     current[name] = {'source': fingerprint, 'binary': hashlib.sha256(data).hexdigest()}
             if domain == 'Rendering':
-                for stem in ('GlyphDecode.frag', 'GlyphLCD.frag'):
+                for stem in ('GlyphDecode.frag', 'GlyphLCD.frag', 'TexelBuffer.comp'):
                     name = f'Rendering/{stem}.reloc'
                     binary = output / f'Rendering/{stem}.spv'
                     if not binary.exists(): continue

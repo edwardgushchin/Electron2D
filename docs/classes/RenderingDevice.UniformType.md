@@ -6,22 +6,22 @@ Last updated: 2026-10-20
 
 ## Description
 
-Descriptor-category values used by RDUniform. UniformBuffer, StorageBuffer, Image, SamplerWithTexture, Texture, Sampler and InputAttachment execute in their shader-stage roles. Separate Texture/Sampler bindings may use independent sets and reusable filters; see [sampled bindings](../components/local-compute.md#independent-sampled-resource-bindings). Image-buffer categories still require their typed texel-buffer adapter. Numeric vocabulary alone does not establish an executing role.
+Descriptor-category values used by RDUniform. UniformBuffer, StorageBuffer, Image, SamplerWithTexture, Texture, Sampler and InputAttachment execute in their shader-stage roles. Separate Texture/Sampler bindings may use independent sets and reusable filters; see [sampled bindings](../components/local-compute.md#independent-sampled-resource-bindings). TextureBuffer and SamplerWithTextureBuffer execute indexed reads; ImageBuffer also executes compute writes and supported 32-bit atomics through [formatted buffers](../components/local-compute.md#formatted-texel-buffers). Numeric vocabulary alone does not establish an executing role.
 
 ## API
 
 | Declaration | Contract |
 | --- | --- |
 | `public const Electron2D.RenderingDevice.UniformType Image = 3` | A writable image descriptor. |
-| `public const Electron2D.RenderingDevice.UniformType ImageBuffer = 6` | A writable image buffer descriptor. |
+| `public const Electron2D.RenderingDevice.UniformType ImageBuffer = 6` | One formatted image buffer for indexed reads, compute stores and supported 32-bit atomics. |
 | `public const Electron2D.RenderingDevice.UniformType InputAttachment = 9` | A framebuffer input attachment. |
 | `public const Electron2D.RenderingDevice.UniformType Sampler = 0` | A sampler descriptor. |
 | `public const Electron2D.RenderingDevice.UniformType SamplerWithTexture = 1` | A combined sampled texture descriptor. |
-| `public const Electron2D.RenderingDevice.UniformType SamplerWithTextureBuffer = 5` | A sampled texture buffer descriptor. |
+| `public const Electron2D.RenderingDevice.UniformType SamplerWithTextureBuffer = 5` | A sampler followed by one formatted indexed buffer; fetches do not apply filtering. |
 | `public const Electron2D.RenderingDevice.UniformType StorageBuffer = 8` | A read/write storage buffer. |
 | `public const Electron2D.RenderingDevice.UniformType StorageBufferDynamic = 11` | A storage buffer with dynamic offset. |
 | `public const Electron2D.RenderingDevice.UniformType Texture = 2` | A sampled texture descriptor. |
-| `public const Electron2D.RenderingDevice.UniformType TextureBuffer = 4` | A texture buffer descriptor. |
+| `public const Electron2D.RenderingDevice.UniformType TextureBuffer = 4` | One formatted buffer for indexed shader reads. |
 | `public const Electron2D.RenderingDevice.UniformType UniformBuffer = 7` | A constant uniform buffer. |
 | `public const Electron2D.RenderingDevice.UniformType UniformBufferDynamic = 10` | A uniform buffer with dynamic offset. |
 
@@ -43,7 +43,7 @@ A writable image descriptor.
 public const Electron2D.RenderingDevice.UniformType ImageBuffer = 6
 ```
 
-A writable image buffer descriptor.
+One formatted image buffer for indexed reads, compute stores and supported 32-bit atomics.
 
 <a id="member-6215fceea5e9"></a>
 ### InputAttachment
@@ -79,7 +79,7 @@ A combined sampled texture descriptor.
 public const Electron2D.RenderingDevice.UniformType SamplerWithTextureBuffer = 5
 ```
 
-A sampled texture buffer descriptor.
+A sampler followed by one formatted indexed buffer; fetches do not apply filtering.
 
 <a id="member-c7118daed1f4"></a>
 ### StorageBuffer
@@ -115,7 +115,7 @@ A sampled texture descriptor.
 public const Electron2D.RenderingDevice.UniformType TextureBuffer = 4
 ```
 
-A texture buffer descriptor.
+One formatted buffer for indexed shader reads.
 
 <a id="member-2461d0a521a0"></a>
 ### UniformBuffer

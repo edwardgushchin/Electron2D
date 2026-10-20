@@ -9,6 +9,7 @@ public sealed unsafe partial class RenderingDevice
     private static (byte[] Code, Binding[] Layout, PushStage[] Push, SamplerLink[] Samplers) RemapCore(byte[] code, ShaderStage stage, bool template)
     {
         if (code.Length < 20 || code.Length > 16 * 1024 * 1024 || code.Length % 4 != 0) throw new ArgumentException("A compute module must contain aligned SPIR-V words.", nameof(code));
+        var texelTranslation = TexelBufferProgram.Lower(code); code = texelTranslation.Code;
         var samplerTranslation = CanvasSamplerArrays.LowerDevice(code); code = samplerTranslation.Code;
         var inputTranslation = LowerInputAttachments(code, stage); code = inputTranslation.Code;
         var readonlyTranslation = LowerReadOnlyImages(code, stage); code = readonlyTranslation.Code;
@@ -141,7 +142,13 @@ public sealed unsafe partial class RenderingDevice
         if (!compute) foreach (var variable in variables.Where(v => v.Storage == 0))
                 if (sets.TryGetValue(variable.ID, out var si) && slots.TryGetValue(variable.ID, out var bi) && pointers.TryGetValue(variable.Type, out var ty) && images.TryGetValue(ty, out var image) && (image.Sampled == 2 || inputTranslation.Inputs.ContainsKey(variable.ID) || readonlyTranslation.Images.ContainsKey(variable.ID)))
                     words[bi] += (uint)textureSlot;
+        if (compute)
+        {
+            var cleaned = new MaterialLightingProgram.Module(code); cleaned.Instructions.RemoveAll(i => MaterialLightingProgram.Op(i) == 0); code = cleaned.Write();
+        }
         var restored = RestoreSamplerLayout(layout, samplerTranslation.Plan, stage);
-        return (code, restored.Layout, push is null ? [] : [push], restored.Links);
+        var texelSources = texelTranslation.Sources.ToDictionary(s => (s.Set, s.Binding));
+        var finalLayout = restored.Layout.Select(b => texelSources.TryGetValue((b.Set, b.Slot), out var s) ? b with { Type = s.Type, ImageFormat = s.Format, PixelType = s.PixelType } : b).ToArray();
+        return (code, finalLayout, push is null ? [] : [push], restored.Links);
     }
 }

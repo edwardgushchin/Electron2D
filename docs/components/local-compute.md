@@ -273,3 +273,35 @@ The stage supports sixteen actual native pairs across separate and combined inpu
 RenderingDeviceSamplerTests exercises both source languages with cross-set many-to-many sampling, nested runtime branches, float/signed/unsigned and image-array roles, samplerless fetch and sizes, changed sampler sets, direct/indirect dispatch, depth comparison mixed with fetch/query and sixteen-pair specialization. It checks copied descriptions, incompatible/foreign/retired resources and recovery after a failed recording. Graphics mixes combined vertex and separate fragment resources, changes bound images, renders two native layers and checks exact pixels. The retained canvas profiles consume those generated layers through ordinary GLSL/HLSL materials on software Wayland/X11. Prepared changing dispatch/draw/readback and complete canvas-frame intervals require zero owner-thread managed bytes. These local software checks do not establish native allocations, hardware performance, foreign-platform or owner acceptance.
 
 The native slot order follows [SDL shader bindings](https://wiki.libsdl.org/SDL3/SDL_CreateGPUShader). The adapter keeps the public independent resources while building scalar native pairs; it adds no public backend handles or runtime source compiler dependency.
+
+## Formatted texel buffers
+
+`RenderingDevice.TextureBufferCreate(uint sizeElements, DataFormat format, ReadOnlySpan<byte> data = default)` creates owned formatted GPU storage. The size counts elements. Its encoded byte capacity is count times element size; empty data initializes zeros, while nonempty data must cover the entire capacity. Format/count/overflow validation precedes allocation. The owner-thread, exclusive-list and local/retained-device lifetime contracts remain unchanged.
+
+| Descriptor | Borrowed identities | Executing role |
+| --- | --- | --- |
+| TextureBuffer | One formatted buffer | HLSL Buffer scalar/vector indexed reads and element-count queries. |
+| SamplerWithTextureBuffer | Sampler, then formatted buffer | GLSL samplerBuffer/isamplerBuffer/usamplerBuffer fetch/query; filtering does not apply to indexed fetches. |
+| ImageBuffer | One formatted buffer | GLSL imageBuffer or HLSL RWBuffer indexed reads, compute stores and supported signed/unsigned R32 image atomics. Graphics requires readonly declarations. |
+
+The shader scalar class must match. Sampled source format metadata does not force a storage encoding: one float-result pipeline can consume normalized, half/float, packed and sRGB buffers through different sets. A concrete writable image format must also match the buffer. Mixed combined/separate sampled-buffer declarations at the same logical location share a sampler-first set across graphics stages. Descriptions copy their ordered IDs; device/format/type/order mismatches reject, and retiring a sampler, buffer or shader invalidates dependent sets. Remaining descriptor arrays and dynamic-buffer roles stay explicit integration gaps.
+
+Uncompressed color encodings with at most 32 bits per component retain their raw byte layouts: normalized/scaled/integer/float values, RGB/BGR channel order, packed channels, unsigned mini-floats, shared-exponent lookup and sRGB decoding. Missing RGB channels read zero and missing alpha reads one. Stores clamp normalized/integer ranges and encode floating/packed components; native image-store parity covers rounding and integer saturation independently. Compressed/depth/planar and wider-precision formats require their own adapters and reject. Ordinary buffer update/copy/clear, synchronous reads and queued snapshots address only encoded data. They preserve format/count metadata, exact non-word capacities and original bytes; storage-to-storage copies remain on the GPU timeline.
+
+```csharp
+// The shader declares HLSL Buffer<float4> at set 3, binding 7.
+var texels = device.TextureBufferCreate(2,
+    RenderingDevice.DataFormat.R8G8B8A8UNORM,
+    [255, 0, 0, 255, 0, 255, 0, 255]);
+using var binding = new RDUniform
+{
+    Binding = 7,
+    UniformType = RenderingDevice.UniformType.TextureBuffer
+};
+binding.AddID(texels);
+var set = device.UniformSetCreate([binding], shader, 3);
+```
+
+[TexelBufferProgram](../../src/Servers/Rendering/TexelBufferProgram.cs) privately lowers buffer image operations to raw GPU storage. The native allocation retains a private header and the original encoded data; public byte offsets exclude that header. Build-time [format functions](../../src/Servers/Rendering/Shaders/TexelBuffer.comp.glsl) are embedded with exact relocation data and composed into derived modules without a game-time source compiler. Opaque selectors preserve helper/control flow and typed logical bindings. Fetch/read/query and compute writes use the same authoritative allocation; subword field stores use atomic masks to preserve neighboring packed elements. Signed/unsigned R32 atomics keep their operation semantics, coherent/volatile qualifiers and translated buffer-memory barriers. Original exported modules remain unchanged. Native storage capacity is shared with ordinary buffers: eight total per stage, including any output buffers, independently of sampler-slot capacity. Additional stages/precision/address capabilities retain their existing prerequisites.
+
+`RenderingDeviceTexelTests` checks 21 independent format vectors in each source language, actual compute and vertex/fragment pixels, mutable raw/queued transfers, copied descriptors, owner/foreign/stale errors, native image-store byte parity and signed/unsigned atomics. Repeated changing compute and graphics/upload/readback intervals run 32 prepared cycles with zero managed owner bytes. The GLSL/HLSL producer profiles render changing output directly through TextureRD into retained canvas, including session retirement; four software runs cover Wayland and X11. Capacity and specialization consumers retain the same public authoring path. These results do not establish hardware/foreign-platform behavior, very large allocations, native allocator totals or owner acceptance.

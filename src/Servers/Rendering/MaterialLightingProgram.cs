@@ -8,6 +8,12 @@ internal static class MaterialLightingProgram
     {
         internal readonly uint[] Header = MemoryMarshal.Cast<byte, uint>(bytes.AsSpan(0, 20)).ToArray();
         internal readonly List<uint[]> Instructions = Read(bytes);
+        internal byte[] Write()
+        {
+            var words = new uint[checked(5 + Instructions.Sum(i => i.Length))]; Header.CopyTo(words, 0); var position = 5;
+            foreach (var instruction in Instructions) { instruction.CopyTo(words, position); position += instruction.Length; }
+            return MemoryMarshal.AsBytes(words.AsSpan()).ToArray();
+        }
         internal static List<uint[]> Read(byte[] bytes)
         {
             var words = MemoryMarshal.Cast<byte, uint>(bytes); var result = new List<uint[]>();

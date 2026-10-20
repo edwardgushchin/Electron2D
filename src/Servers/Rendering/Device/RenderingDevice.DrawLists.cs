@@ -246,7 +246,7 @@ public sealed unsafe partial class RenderingDevice
         foreach (var descriptor in program.Layout)
         {
             if (!_sets.TryGetValue(descriptor.Set, out var set) || set.Shader != _graphicsPipeline!.Shader) throw new InvalidOperationException("Bind every graphics resource set first.");
-            var ids = set.Bindings[descriptor.Slot]; ValidateBinding(descriptor, ids); if (descriptor.Native < 0) continue; var resource = Get(ids[0]); var fragment = descriptor.Stage == ShaderStage.Fragment;
+            var ids = set.Bindings[descriptor.Slot]; ValidateBinding(descriptor, ids); if (descriptor.Native < 0) continue; var resource = Get(ids[BufferID(descriptor.Type)]); var fragment = descriptor.Stage == ShaderStage.Fragment;
             if (descriptor.Type == UniformType.UniformBuffer)
             {
                 if (fragment) SDL.PushGPUFragmentUniformData(_command, (uint)descriptor.Native, resource.Data.AsSpan(), resource.Size);

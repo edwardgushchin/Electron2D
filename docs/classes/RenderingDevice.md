@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-20
 
-**Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RenderingDevice`. **Source:** [RenderingDevice.cs](../../src/Servers/Rendering/Device/RenderingDevice.cs), [RenderingDevice.Readback.cs](../../src/Servers/Rendering/Device/RenderingDevice.Readback.cs). **Component:** [Local compute](../components/local-compute.md).
+**Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RenderingDevice`. **Source:** [RenderingDevice.cs](../../src/Servers/Rendering/Device/RenderingDevice.cs), [RenderingDevice.Readback.cs](../../src/Servers/Rendering/Device/RenderingDevice.Readback.cs), [RenderingDevice.TexelBuffers.cs](../../src/Servers/Rendering/Device/RenderingDevice.TexelBuffers.cs). **Component:** [Local compute](../components/local-compute.md).
 
 **Inherits:** [ElectronObject](ElectronObject.md).
 
@@ -15,6 +15,8 @@ Layered framebuffers execute ordered native passes for each view, with vertex/fr
 Readonly graphics storage images retain their Image role and current GPU contents across draws. Sampling/Storage combinations use a private GPU snapshot; see [image coherence](../components/local-compute.md#readonly-graphics-image-coherence).
 
 Independent Texture and Sampler sets execute native compute and graphics through reusable pair bindings, including plain/array and signed/unsigned images, comparison sampling, fetch/query, helpers and control flow. Combined declarations retain sampler-first IDs. See [independent sampled bindings](../components/local-compute.md#independent-sampled-resource-bindings) for validation timing, native capacity and verification.
+
+Formatted texel buffers execute indexed compute/graphics reads, compute stores and 32-bit integer atomics while preserving raw byte transfer/readback. Their factory counts elements; see [formatted texel buffers](../components/local-compute.md#formatted-texel-buffers).
 
 ## Example
 
@@ -64,6 +66,7 @@ byte[] result = device.BufferGetData(buffer);
 | `public System.Void FreeRID(Electron2D.RID rid)` | Frees a resource after completing pending work. |
 | `public System.String GetDeviceName()` | Returns the selected compute-device name. |
 | `public Electron2D.RID ShaderCreateFromSPIRV(Electron2D.RDShaderSPIRV spirvData, System.String name = "")` | Validates and creates a compute shader or a paired graphics shader from compiled bytecode. |
+| `public Electron2D.RID TextureBufferCreate(System.UInt32 sizeElements, Electron2D.RenderingDevice.DataFormat format, System.ReadOnlySpan<System.Byte> data = default)` | Creates an owned formatted buffer; size counts elements and nonempty data covers its complete encoded byte capacity. |
 | `public Electron2D.RID StorageBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default, Electron2D.RenderingDevice.StorageBufferUsage usage = 0)` | Creates a zero-initialized read/write storage buffer with an optional indirect-command role. |
 | `public System.Void Submit()` | Submits all recorded uploads and compute lists. |
 | `public System.Void Sync()` | Waits for submitted work, releases its fence and delivers completed readback callbacks. |
@@ -290,6 +293,17 @@ A shader identity owned by this device.
 `spirvData`: Copied modules with no compiler errors: either compute or both vertex and fragment.
 
 `name`: Optional diagnostic label.
+
+<a id="member-e4c6793fb7d5"></a>
+### TextureBufferCreate(System.UInt32, Electron2D.RenderingDevice.DataFormat, System.ReadOnlySpan<System.Byte>)
+
+```csharp
+public Electron2D.RID TextureBufferCreate(System.UInt32 sizeElements, Electron2D.RenderingDevice.DataFormat format, System.ReadOnlySpan<System.Byte> data = default)
+```
+
+Creates a device-owned formatted GPU buffer. `sizeElements` is a positive element count; byte capacity is count times the format's encoded element size. Empty `data` clears every encoded byte; nonempty data must cover the exact complete capacity and is copied before returning. Unsupported compressed, depth, planar and wider-than-32-bit component encodings throw `NotSupportedException`; invalid size/format values throw `ArgumentOutOfRangeException`, and incomplete initial data throws `ArgumentException`. End any list before creation and use the owner thread.
+
+TextureBuffer and ImageBuffer borrow this RID. SamplerWithTextureBuffer borrows sampler first, then this buffer; indexed fetches ignore filtering. Compute stores and supported signed/unsigned R32 image atomics change the original encoded bytes. Ordinary update/copy/clear and synchronous/queued readback use byte offsets in that data, excluding private format metadata. FreeRID invalidates dependent sets and retires owned native storage; identities never cross devices. Graphics uses readonly declarations. See the component for native capacity, format conversion, allocation checks and remaining descriptor-array/precision gates.
 
 <a id="member-8126118533ad"></a>
 ### StorageBufferCreate(System.UInt32, System.ReadOnlySpan<System.Byte>)

@@ -37,11 +37,11 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         Texture = 2,
         /// <summary>A writable image descriptor.</summary>
         Image = 3,
-        /// <summary>A texture buffer descriptor.</summary>
+        /// <summary>One formatted buffer for indexed shader reads.</summary>
         TextureBuffer = 4,
-        /// <summary>A sampled texture buffer descriptor.</summary>
+        /// <summary>A sampler followed by one formatted indexed buffer; texel fetches do not apply filtering.</summary>
         SamplerWithTextureBuffer = 5,
-        /// <summary>A writable image buffer descriptor.</summary>
+        /// <summary>One formatted image buffer for indexed reads, compute stores and supported 32-bit atomics.</summary>
         ImageBuffer = 6,
         /// <summary>A constant uniform buffer.</summary>
         UniformBuffer = 7,
@@ -54,7 +54,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         /// <summary>A storage buffer with dynamic offset.</summary>
         StorageBufferDynamic = 11
     }
-    private enum Kind { Storage, Uniform, Shader, Pipeline, Set, Texture, Sampler, Vertex, Index, VertexArray, IndexArray, Framebuffer, GraphicsPipeline }
+    private enum Kind { Storage, Texel, Uniform, Shader, Pipeline, Set, Texture, Sampler, Vertex, Index, VertexArray, IndexArray, Framebuffer, GraphicsPipeline }
     private sealed class Entry
     {
         internal Kind Kind;
@@ -67,7 +67,8 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal RenderHandle? Handle, Upload, Download, TextureScratch, InputShadow;
         internal bool ScratchColorTarget;
         internal byte[] Data = [];
-        internal uint Size;
+        internal uint Size, BufferOffset;
+        internal TexelLayout? Texel;
         internal StorageBufferUsage Usage;
         internal TextureInfo? Texture;
         internal bool CompareSampling, LinearSampling, GraphicsStorage, RestartIndices;
@@ -156,7 +157,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     }
 
     /// <summary>Updates a validated byte range of a buffer.</summary>
-    /// <param name="buffer">A live storage or uniform buffer.</param>
+    /// <param name="buffer">A live storage, uniform, vertex, index or formatted texel buffer.</param>
     /// <param name="offset">First byte to replace.</param>
     /// <param name="sizeBytes">Number of bytes copied from data.</param>
     /// <param name="data">At least sizeBytes source bytes; copied before returning.</param>
@@ -170,10 +171,11 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     }
     private static void Range(Entry entry, uint offset, uint size)
     {
-        if (entry.Kind is not (Kind.Storage or Kind.Uniform or Kind.Vertex or Kind.Index)) throw new ArgumentException("The RID is not a buffer.");
+        if (entry.Kind is not (Kind.Storage or Kind.Texel or Kind.Uniform or Kind.Vertex or Kind.Index)) throw new ArgumentException("The RID is not a buffer.");
         if (offset > entry.Size || size > entry.Size - offset) throw new ArgumentOutOfRangeException(nameof(offset));
     }
-    private void Upload(Entry entry, uint offset, ReadOnlySpan<byte> data)
+    private void Upload(Entry entry, uint offset, ReadOnlySpan<byte> data) => UploadRaw(entry, entry.BufferOffset + offset, data);
+    private void UploadRaw(Entry entry, uint offset, ReadOnlySpan<byte> data)
     {
         if (data.IsEmpty) return;
         var command = Commands();
@@ -211,7 +213,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         if (destination.IsEmpty) return;
         entry.Download ??= Transfer(entry.Size, SDL.GPUTransferBufferUsage.Download);
         var copy = SDL.BeginGPUCopyPass(Commands()); if (copy == 0) throw GPUPhysicsDevice.Failure("begin buffer read");
-        SDL.DownloadFromGPUBuffer(copy, new() { Buffer = entry.Handle!.DangerousGetHandle(), Offset = offsetBytes, Size = (uint)destination.Length }, new() { TransferBuffer = entry.Download.DangerousGetHandle() });
+        SDL.DownloadFromGPUBuffer(copy, new() { Buffer = entry.Handle!.DangerousGetHandle(), Offset = entry.BufferOffset + offsetBytes, Size = (uint)destination.Length }, new() { TransferBuffer = entry.Download.DangerousGetHandle() });
         SDL.EndGPUCopyPass(copy); SubmitRecorded(); CompleteSubmission();
         var pointer = SDL.MapGPUTransferBuffer(Device, entry.Download.DangerousGetHandle(), false);
         if (pointer == 0) throw GPUPhysicsDevice.Failure("map buffer read");
@@ -245,6 +247,9 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         var layout = layouts.SelectMany(l => l).ToArray();
         var samplerLinks = samplers.SelectMany(s => s).ToArray();
         NormalizeSamplerSources(layout, samplerLinks);
+        foreach (var group in layout.Select((binding, index) => (binding, index)).GroupBy(p => (p.binding.Set, p.binding.Slot)))
+            if (group.Any(p => p.binding.Type == UniformType.SamplerWithTextureBuffer) && group.All(p => p.binding.Type is UniformType.TextureBuffer or UniformType.SamplerWithTextureBuffer))
+                foreach (var item in group) layout[item.index] = item.binding with { Type = UniformType.SamplerWithTextureBuffer };
         foreach (var group in layout.GroupBy(b => (b.Set, b.Slot)))
         { var first = group.First(); if (group.Any(b => b.Type != first.Type || b.Array != first.Array || b.ImageFormat != first.ImageFormat || b.PixelType != first.PixelType)) throw new ArgumentException("A shared descriptor has inconsistent stage types."); }
         var interfaces = modules.Length == 2 ? ShaderCompiler.ValidateDeviceGraphics(modules[0], modules[1]) : default;
@@ -286,7 +291,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     public bool ComputePipelineIsValid(RID pipeline) { Access(); return _entries.TryGetValue(pipeline, out var e) && e.Kind == Kind.Pipeline && _entries.ContainsKey(e.Shader); }
 
     /// <summary>Creates a copied set of validated buffer, image, sampler and framebuffer-input bindings.</summary>
-    /// <param name="uniforms">Shader-matching descriptions. Texture and Sampler each borrow one identity; SamplerWithTexture borrows sampler then texture.</param>
+    /// <param name="uniforms">Shader-matching descriptions. Texture, Sampler, TextureBuffer and ImageBuffer each borrow one identity; combined sampled categories borrow sampler then image or formatted buffer.</param>
     /// <param name="shader">The shader whose layout owns this set.</param>
     /// <param name="shaderSet">The shader descriptor-set number.</param>
     /// <returns>A set identity borrowing its shader and buffers.</returns>
@@ -354,10 +359,10 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         {
             if (!_sets.TryGetValue(descriptor.Set, out var set) || set.Shader != Get(_pushPipeline).Shader) throw new InvalidOperationException("Bind each pipeline resource set first.");
             var ids = set.Bindings[descriptor.Slot];
-            ValidateBinding(descriptor, ids); if (descriptor.Native < 0) continue; var buffer = Get(ids[0]);
+            ValidateBinding(descriptor, ids); if (descriptor.Native < 0) continue; var buffer = Get(ids[BufferID(descriptor.Type)]);
             if (descriptor.Type == UniformType.Image) { images[descriptor.Native] = new() { Texture = buffer.NativeHandle }; imageCount++; }
             else if (descriptor.Type == UniformType.SamplerWithTexture) { samplers[descriptor.Native] = new() { Sampler = buffer.NativeHandle, Texture = Get(ids[1]).NativeHandle }; samplerCount++; }
-            else if (descriptor.Type == UniformType.StorageBuffer) { buffers[descriptor.Native] = new() { Buffer = buffer.Handle!.DangerousGetHandle() }; count++; }
+            else if (StorageBinding(descriptor.Type)) { buffers[descriptor.Native] = new() { Buffer = buffer.Handle!.DangerousGetHandle() }; count++; }
             else fixed (byte* data = buffer.Data) SDL.PushGPUComputeUniformData(_command, (uint)descriptor.Native, (nint)data, buffer.Size);
         }
         foreach (var link in _pipeline.Samplers) { samplers[link.Native.Native] = LinkedSampler(link, false); samplerCount++; }

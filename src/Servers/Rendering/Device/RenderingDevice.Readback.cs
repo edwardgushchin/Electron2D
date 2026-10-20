@@ -22,7 +22,7 @@ public sealed unsafe partial class RenderingDevice
     private bool _deliveringReadbacks, _accessingReadbackMemory;
 
     /// <summary>Queues a buffer snapshot and delivers an independent array when local work completes.</summary>
-    /// <param name="buffer">A live storage or uniform buffer on this device.</param>
+    /// <param name="buffer">A live ordinary or formatted texel buffer on this device.</param>
     /// <param name="callback">Receives the request-time bytes on the owner thread.</param>
     /// <param name="offsetBytes">First byte to read.</param>
     /// <param name="sizeBytes">Bytes to read, or zero for the remaining buffer.</param>
@@ -43,7 +43,7 @@ public sealed unsafe partial class RenderingDevice
     }
 
     /// <summary>Queues a buffer snapshot into caller-owned storage without allocating a result array.</summary>
-    /// <param name="buffer">A live storage or uniform buffer on this device.</param>
+    /// <param name="buffer">A live ordinary or formatted texel buffer on this device.</param>
     /// <param name="destination">Determines the byte count; keep it valid and do not access it until completion.</param>
     /// <param name="callback">Runs on the owner thread after destination is filled.</param>
     /// <param name="offsetBytes">First byte to read.</param>
@@ -63,7 +63,7 @@ public sealed unsafe partial class RenderingDevice
 
     private void QueueReadback(Entry entry, Memory<byte> destination, uint offset, Action<byte[]>? arrayCallback, byte[]? data, Action? callback, uint layer = 0)
     {
-        var download = entry.Kind is Kind.Storage or Kind.Vertex or Kind.Index or Kind.Texture && !destination.IsEmpty;
+        var download = entry.Kind is Kind.Storage or Kind.Texel or Kind.Vertex or Kind.Index or Kind.Texture && !destination.IsEmpty;
         var command = download ? Commands() : 0;
         var request = _idleReadbacks.TryPop(out var idle) ? idle : new Readback();
         try
@@ -82,7 +82,7 @@ public sealed unsafe partial class RenderingDevice
                 {
                     if (entry.Texture is { } texture)
                         for (var mip = 0; mip < texture.Mips; mip++) SDL.DownloadFromGPUTexture(pass, Region(entry, layer, mip), new() { TransferBuffer = request.Transfer.DangerousGetHandle(), Offset = texture.Offsets[mip] });
-                    else SDL.DownloadFromGPUBuffer(pass, new() { Buffer = entry.Handle!.DangerousGetHandle(), Offset = offset, Size = (uint)destination.Length }, new() { TransferBuffer = request.Transfer.DangerousGetHandle() });
+                    else SDL.DownloadFromGPUBuffer(pass, new() { Buffer = entry.Handle!.DangerousGetHandle(), Offset = entry.BufferOffset + offset, Size = (uint)destination.Length }, new() { TransferBuffer = request.Transfer.DangerousGetHandle() });
                 }
                 finally { SDL.EndGPUCopyPass(pass); }
             }

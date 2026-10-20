@@ -6,12 +6,19 @@ public sealed unsafe partial class RenderingDevice
 {
     private void ValidateBinding(Binding binding, RID[] ids)
     {
-        if (ids.Length != (binding.Type == UniformType.SamplerWithTexture ? 2 : 1)) throw new ArgumentException("Incorrect descriptor resource count.", nameof(ids));
+        if (ids.Length != (binding.Type is UniformType.SamplerWithTexture or UniformType.SamplerWithTextureBuffer ? 2 : 1)) throw new ArgumentException("Incorrect descriptor resource count.", nameof(ids));
         if (binding.Type == UniformType.UniformBuffer) { if (Get(ids[0], Kind.Uniform).Size < binding.MinimumSize) throw new ArgumentException("The uniform buffer is shorter than its shader block.", nameof(ids)); return; }
         if (binding.Type == UniformType.StorageBuffer)
         {
             var buffer = Get(ids[0]);
             if (buffer.Kind != Kind.Storage && !(buffer.Kind is Kind.Vertex or Kind.Index && buffer.GraphicsStorage)) throw new ArgumentException("A storage-capable buffer is required.", nameof(ids));
+            return;
+        }
+        if (TexelBinding(binding.Type))
+        {
+            if (binding.Type == UniformType.SamplerWithTextureBuffer) Get(ids[0], Kind.Sampler);
+            var texel = Get(ids[BufferID(binding.Type)], Kind.Texel).Texel!.Value;
+            if (texel.PixelType != binding.PixelType || binding.ImageFormat != 0 && StorageImageFormat(binding.ImageFormat) != texel.Format) throw new ArgumentException("The texel-buffer encoding does not match its shader declaration.", nameof(ids));
             return;
         }
         if (binding.Type == UniformType.Sampler) { Get(ids[0], Kind.Sampler); return; }

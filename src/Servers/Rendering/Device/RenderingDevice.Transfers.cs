@@ -13,8 +13,8 @@ public sealed unsafe partial class RenderingDevice
     }
 
     /// <summary>Copies a validated byte range between buffers on this device.</summary>
-    /// <param name="sourceBuffer">Live source storage or uniform buffer.</param>
-    /// <param name="destinationBuffer">Live destination storage or uniform buffer.</param>
+    /// <param name="sourceBuffer">Live source ordinary or formatted texel buffer.</param>
+    /// <param name="destinationBuffer">Live destination ordinary or formatted texel buffer.</param>
     /// <param name="sourceOffset">First source byte.</param>
     /// <param name="destinationOffset">First destination byte.</param>
     /// <param name="sizeBytes">Number of bytes to copy; zero performs no copy.</param>
@@ -38,13 +38,13 @@ public sealed unsafe partial class RenderingDevice
         }
         if (source.Kind == Kind.Uniform) { Upload(destination, destinationOffset, source.Data.AsSpan((int)sourceOffset, (int)sizeBytes)); return; }
         var pass = SDL.BeginGPUCopyPass(Commands()); if (pass == 0) throw GPUPhysicsDevice.Failure("begin buffer copy");
-        SDL.CopyGPUBufferToBuffer(pass, new() { Buffer = source.Handle!.DangerousGetHandle(), Offset = sourceOffset },
-            new() { Buffer = destination.Handle!.DangerousGetHandle(), Offset = destinationOffset }, sizeBytes, false);
+        SDL.CopyGPUBufferToBuffer(pass, new() { Buffer = source.Handle!.DangerousGetHandle(), Offset = source.BufferOffset + sourceOffset },
+            new() { Buffer = destination.Handle!.DangerousGetHandle(), Offset = destination.BufferOffset + destinationOffset }, sizeBytes, false);
         SDL.EndGPUCopyPass(pass);
     }
 
     /// <summary>Replaces a validated buffer range with zero bytes.</summary>
-    /// <param name="buffer">Live storage or uniform buffer.</param>
+    /// <param name="buffer">Live ordinary or formatted texel buffer.</param>
     /// <param name="offset">First byte to clear.</param>
     /// <param name="sizeBytes">Number of bytes, divisible by four; zero performs no clear.</param>
     /// <remarks>Storage clears are ordered with uploads, copies and dispatches. Uniform clears update host
@@ -64,7 +64,7 @@ public sealed unsafe partial class RenderingDevice
         try { new Span<byte>((void*)pointer, (int)sizeBytes).Clear(); }
         finally { SDL.UnmapGPUTransferBuffer(Device, entry.Upload.DangerousGetHandle()); }
         var pass = SDL.BeginGPUCopyPass(command); if (pass == 0) throw GPUPhysicsDevice.Failure("begin buffer clear");
-        SDL.UploadToGPUBuffer(pass, new() { TransferBuffer = entry.Upload.DangerousGetHandle() }, new() { Buffer = entry.Handle!.DangerousGetHandle(), Offset = offset, Size = sizeBytes }, false);
+        SDL.UploadToGPUBuffer(pass, new() { TransferBuffer = entry.Upload.DangerousGetHandle() }, new() { Buffer = entry.Handle!.DangerousGetHandle(), Offset = entry.BufferOffset + offset, Size = sizeBytes }, false);
         SDL.EndGPUCopyPass(pass);
     }
 

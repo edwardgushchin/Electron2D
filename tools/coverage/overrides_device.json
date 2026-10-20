@@ -46,7 +46,7 @@
       "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_IMAGE_BUFFER",
       "electron2d": "enumValue:Electron2D.RenderingDevice.UniformType.ImageBuffer()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+      "reason": "ADR 0028: complete formatted buffer factory and consumers through private GPU storage metadata and embedded format functions. The pinned executing p_size_elements contract counts elements; complete initial encoded data is copied, or zero initialized. Public raw update/copy/clear and synchronous/queued reads exclude the private header. TextureBuffer, SamplerWithTextureBuffer and ImageBuffer execute typed fetch/read/query, compute stores and signed/unsigned R32 atomics; graphics-to-retained-canvas consumers and prepared zero-owner-managed-byte intervals execute in GLSL/HLSL on software Linux. Native format/precision/stage/capacity limits remain explicit; hardware, native allocator and foreign platforms remain unverified."
     },
     {
       "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_INPUT_ATTACHMENT",
@@ -70,7 +70,7 @@
       "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_SAMPLER_WITH_TEXTURE_BUFFER",
       "electron2d": "enumValue:Electron2D.RenderingDevice.UniformType.SamplerWithTextureBuffer()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+      "reason": "ADR 0028: complete formatted buffer factory and consumers through private GPU storage metadata and embedded format functions. The pinned executing p_size_elements contract counts elements; complete initial encoded data is copied, or zero initialized. Public raw update/copy/clear and synchronous/queued reads exclude the private header. TextureBuffer, SamplerWithTextureBuffer and ImageBuffer execute typed fetch/read/query, compute stores and signed/unsigned R32 atomics; graphics-to-retained-canvas consumers and prepared zero-owner-managed-byte intervals execute in GLSL/HLSL on software Linux. Native format/precision/stage/capacity limits remain explicit; hardware, native allocator and foreign platforms remain unverified."
     },
     {
       "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_STORAGE_BUFFER",
@@ -94,7 +94,7 @@
       "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_TEXTURE_BUFFER",
       "electron2d": "enumValue:Electron2D.RenderingDevice.UniformType.TextureBuffer()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+      "reason": "ADR 0028: complete formatted buffer factory and consumers through private GPU storage metadata and embedded format functions. The pinned executing p_size_elements contract counts elements; complete initial encoded data is copied, or zero initialized. Public raw update/copy/clear and synchronous/queued reads exclude the private header. TextureBuffer, SamplerWithTextureBuffer and ImageBuffer execute typed fetch/read/query, compute stores and signed/unsigned R32 atomics; graphics-to-retained-canvas consumers and prepared zero-owner-managed-byte intervals execute in GLSL/HLSL on software Linux. Native format/precision/stage/capacity limits remain explicit; hardware, native allocator and foreign platforms remain unverified."
     },
     {
       "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_UNIFORM_BUFFER",
@@ -256,7 +256,7 @@
       "godot": "RenderingDevice::method:uniform_set_create(RDUniform[]:,RID:,int:)",
       "electron2d": "method:Electron2D.RenderingDevice.UniformSetCreate(System.ReadOnlySpan<Electron2D.RDUniform>,Electron2D.RID,System.UInt32)",
       "state": "Partial",
-      "reason": "ADR 0028: copied independent Texture and Sampler resources execute cross-set many-to-many compute/graphics bindings through existing opaque-handle lowering, reusable helpers, control flow and sixteen consumed native pairs. Combined and same-binding paired descriptions preserve sampler-first IDs, including mixed stages. Float/signed/unsigned and layered images, samplerless fetch/query, comparison/depth metadata, specialization, direct/indirect recording, lifetime/error recovery and prepared zero managed-owner-byte consumers execute on software Linux/Vulkan, including retained Wayland/X11 canvas. Device descriptor arrays, typed texel-buffer resources and remaining buffer/dynamic roles retain their owning native/typed adapters; this does not complete the whole uniform-set operation."
+      "reason": "ADR 0028: copied independent Texture and Sampler resources execute cross-set many-to-many compute/graphics bindings through existing opaque-handle lowering, reusable helpers, control flow and sixteen consumed native pairs. Combined and same-binding paired descriptions preserve sampler-first IDs, including mixed stages. Float/signed/unsigned and layered images, samplerless fetch/query, comparison/depth metadata, specialization, direct/indirect recording, lifetime/error recovery and prepared zero managed-owner-byte consumers execute on software Linux/Vulkan, including retained Wayland/X11 canvas. Formatted texel-buffer reads, compute stores/atomics and readonly graphics now execute through their typed buffer adapter. Device descriptor arrays and remaining buffer/dynamic roles retain their owning native/typed adapters; this does not complete the whole uniform-set operation."
     },
     {
       "godot": "RenderingDevice::method:uniform_set_is_valid(RID:)",
@@ -3607,6 +3607,12 @@
       "electron2d": "method:Electron2D.RenderingDevice.DrawListSwitchToNextPass()",
       "state": "Implemented",
       "reason": "ADR 0028: copied ordered framebuffer passes execute on SDL_GPU with native color/depth/resolve output, readonly fragment input loads, per-pass pipeline selection and preservation across inactive intermediate passes. GLSL/HLSL float and 2DMS input pixels, independent native resolve edge oracles, signed/unsigned exact bits, sparse input indices, logical sets, copied layout/state/lifetime errors, retained canvas output and 32 prepared zero-managed-owner-byte cycles are checked on Linux/Vulkan. Input+Sampling uses a retained private GPU snapshot; input-only images bind directly. Foreign platforms, native/driver allocation and throughput remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:texture_buffer_create(int:,int:RenderingDevice.DataFormat,PackedByteArray:)",
+      "electron2d": "method:Electron2D.RenderingDevice.TextureBufferCreate(System.UInt32,Electron2D.RenderingDevice.DataFormat,System.ReadOnlySpan<System.Byte>)",
+      "state": "Implemented",
+      "reason": "ADR 0028: complete formatted buffer factory and consumers through private GPU storage metadata and embedded format functions. The pinned executing p_size_elements contract counts elements; complete initial encoded data is copied, or zero initialized. Public raw update/copy/clear and synchronous/queued reads exclude the private header. TextureBuffer, SamplerWithTextureBuffer and ImageBuffer execute typed fetch/read/query, compute stores and signed/unsigned R32 atomics; graphics-to-retained-canvas consumers and prepared zero-owner-managed-byte intervals execute in GLSL/HLSL on software Linux. Native format/precision/stage/capacity limits remain explicit; hardware, native allocator and foreign platforms remain unverified."
     }
   ],
   "extras": [
@@ -3965,15 +3971,12 @@
       "godot": [
         "class:RDUniform",
         "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_IMAGE",
-        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_IMAGE_BUFFER",
         "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_INPUT_ATTACHMENT",
         "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_SAMPLER",
         "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_SAMPLER_WITH_TEXTURE",
-        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_SAMPLER_WITH_TEXTURE_BUFFER",
         "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_STORAGE_BUFFER",
         "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_STORAGE_BUFFER_DYNAMIC",
         "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_TEXTURE",
-        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_TEXTURE_BUFFER",
         "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_UNIFORM_BUFFER",
         "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_UNIFORM_BUFFER_DYNAMIC",
         "RDUniform::method:add_id(RID:)",
@@ -4975,7 +4978,7 @@
       "godot": [
         "RenderingDevice::method:uniform_set_create(RDUniform[]:,RID:,int:)"
       ],
-      "reason": "ADR 0028: copied independent Texture and Sampler resources execute cross-set many-to-many compute/graphics bindings through existing opaque-handle lowering, reusable helpers, control flow and sixteen consumed native pairs. Combined and same-binding paired descriptions preserve sampler-first IDs, including mixed stages. Float/signed/unsigned and layered images, samplerless fetch/query, comparison/depth metadata, specialization, direct/indirect recording, lifetime/error recovery and prepared zero managed-owner-byte consumers execute on software Linux/Vulkan, including retained Wayland/X11 canvas. Device descriptor arrays, typed texel-buffer resources and remaining buffer/dynamic roles retain their owning native/typed adapters; this does not complete the whole uniform-set operation."
+      "reason": "ADR 0028: copied independent Texture and Sampler resources execute cross-set many-to-many compute/graphics bindings through existing opaque-handle lowering, reusable helpers, control flow and sixteen consumed native pairs. Combined and same-binding paired descriptions preserve sampler-first IDs, including mixed stages. Float/signed/unsigned and layered images, samplerless fetch/query, comparison/depth metadata, specialization, direct/indirect recording, lifetime/error recovery and prepared zero managed-owner-byte consumers execute on software Linux/Vulkan, including retained Wayland/X11 canvas. Formatted texel-buffer reads, compute stores/atomics and readonly graphics now execute through their typed buffer adapter. Device descriptor arrays and remaining buffer/dynamic roles retain their owning native/typed adapters; this does not complete the whole uniform-set operation."
     },
     {
       "state": "Partial",
@@ -4983,6 +4986,16 @@
         "RenderingDevice::enum:UniformType"
       ],
       "reason": "ADR 0028: numeric descriptor categories retain their source identities. UniformBuffer, StorageBuffer, Image, InputAttachment, SamplerWithTexture, independent Texture and Sampler execute through current shader consumers. Separate roles preserve resource identity, helpers/control flow, native-pair capacity and current-set validation. Typed texel-buffer/image-buffer categories and remaining buffer-role integration retain exact native/storage prerequisites; category vocabulary does not implement those consumers."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_TEXTURE_BUFFER",
+        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_SAMPLER_WITH_TEXTURE_BUFFER",
+        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_IMAGE_BUFFER",
+        "RenderingDevice::method:texture_buffer_create(int:,int:RenderingDevice.DataFormat,PackedByteArray:)"
+      ],
+      "reason": "ADR 0028: complete formatted buffer factory and consumers through private GPU storage metadata and embedded format functions. The pinned executing p_size_elements contract counts elements; complete initial encoded data is copied, or zero initialized. Public raw update/copy/clear and synchronous/queued reads exclude the private header. TextureBuffer, SamplerWithTextureBuffer and ImageBuffer execute typed fetch/read/query, compute stores and signed/unsigned R32 atomics; graphics-to-retained-canvas consumers and prepared zero-owner-managed-byte intervals execute in GLSL/HLSL on software Linux. Native format/precision/stage/capacity limits remain explicit; hardware, native allocator and foreign platforms remain unverified."
     }
   ]
 }
