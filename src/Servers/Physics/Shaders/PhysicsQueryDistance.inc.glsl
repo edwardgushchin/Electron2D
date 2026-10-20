@@ -64,10 +64,33 @@ float queryDistance(Hull a,Hull b,vec2 sweepA,vec2 sweepB,out vec2 normal)
     }
     normal=normalized(v);return length(v);
 }
+// Exact time slabs retain zero-width intersections between translating flat cores.
+bool queryFlatSweep(Hull a,Hull b,vec2 motion,out float fraction,out vec2 normal)
+{
+    float low=0,high=1;normal=vec2(0);fraction=0;
+    vec2 offset=b.pose.xy-a.pose.xy;a.pose.xy=b.pose.xy=vec2(0);
+    uint ea=edges(a),eb=edges(b),extraA=a.count==2u?1u:0u,extraB=b.count==2u?1u:0u;
+    [[dont_unroll]] for(uint i=0u;i<ea+eb+extraA+extraB;i++)
+    {
+        vec2 axis=i<ea?edgeNormal(a,i):i<ea+eb?edgeNormal(b,i-ea):
+            i<ea+eb+extraA?normalized(vertex(a,1u)-vertex(a,0u)):normalized(vertex(b,1u)-vertex(b,0u));
+        if(axis==vec2(0))continue;
+        vec2 pa=project(a,axis),pb=project(b,axis);float speed=dot2(motion,axis);
+        float shift=dot2(offset,axis);
+        if(speed==0){if(pa.y<pb.x+shift||pb.y+shift<pa.x)return false;continue;}
+        float enter=(shift+pb.x-pa.y)/speed,leave=(shift+pb.y-pa.x)/speed;
+        if(speed<0){float swap=enter;enter=leave;leave=swap;}
+        if(enter>low){low=enter;normal=speed>0?axis:-axis;}
+        high=min(high,leave);if(low>high)return false;
+    }
+    fraction=low;return low<=1&&high>=0;
+}
 // Advances a translating convex core without sampling past a thin obstacle.
 bool querySweep(Hull a,Hull b,vec2 motion,vec2 sweptB,float target,float tolerance,out float fraction,out vec2 normal)
 {
     fraction=0;normal=vec2(0);float time=0;
+    if(!a.boundary&&!b.boundary&&target==0&&sweptB==vec2(0)&&a.extension==vec2(0)&&b.extension==vec2(0)&&
+        ((a.count>1u&&vertices[a.start+1u]!=vertices[a.start])||(b.count>1u&&vertices[b.start+1u]!=vertices[b.start])))return queryFlatSweep(a,b,motion,fraction,normal);
     // Disk queries preserve geometric radii instead of a solver penetration target.
     if(!a.boundary&&!b.boundary&&a.count==1u&&b.count==1u&&sweptB==vec2(0)&&a.extension==vec2(0)&&b.extension==vec2(0)&&a.radius+b.radius>0)
     {

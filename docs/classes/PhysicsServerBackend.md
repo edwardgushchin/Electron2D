@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-20
 
+[Long contour pair checks](../components/physics-queries.md#long-pairs-of-flat-and-rounded-contours)
+verify rotated capsule contacts and continuous flat-core movement through real
+scene/raw query consumers. CPU clipping retains a geometric closest-point contact
+when its clipped candidates would all remain separated. This does not close
+complete numerical-extension or hardware acceptance.
+
 Selected CompleteBody and EndStep failures latch the world as unusable and suppress
 body-state observers. Successful retirement after pre-Solve preparation failure
 permits a new interval; gameplay observer/flush/end-sync errors retain their

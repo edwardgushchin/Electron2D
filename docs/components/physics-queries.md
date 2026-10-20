@@ -633,3 +633,49 @@ regressions retain their original assertions. Evidence is under
 Runtime/public declarations and coverage states are unchanged. Arbitrary custom
 and complete numerical-extension acceptance, native memory, network, foreign
 platforms, rendered output and hardware performance remain open.
+
+## Long pairs of flat and rounded contours
+
+The public `--long-convex-motion` profile extends the prepared long-motion harness
+to all sixteen ordered capsule/segment/rectangle/triangle pairs. Three relative
+orientations, two outer poses, both travel signs, scene/raw targets and eight
+hit/miss configurations form 3072 distinct frames. Query margins cycle through
+0, .05 and .2; body recovery keeps .05. Each frame checks direct cast/overlap,
+raw and scene BodyTestMotion and scene TestMove, followed by a real selected step.
+
+An independent double-precision oracle builds the convex hull of all target-minus-
+source core vertices. It intersects the trajectory with that hull and its rounded
+edge regions. Cold controls separately establish planar entry, margin expansion,
+a finite segment miss, endpoint tangency and crossed-segment entry. The fraction,
+3/512 bracket, .015-unit surface and .001 unit-normal bounds retain their prior
+long-motion rationale. Exact RID/slot identity and stale-output clearing remain
+mandatory. This oracle does not invoke provider projection or backend kernels.
+
+CPU capsule clipping now falls back to the existing closest-point contact when
+both clipped points remain separated despite actual rounded-core overlap. This
+preserves speculative clipping outside overlap and retains a real surface contact
+inside it; the common primitive routine serves queries and numerical contacts.
+The previous rotated-capsule body sweep hit geometrically but lost its final
+contact because only separated clipped points were available.
+
+Resident queries use continuous time slabs for finite, unrounded convex cores.
+Normals and local projection ranges are evaluated before adding the relative
+center projection, avoiding cancellation from distant transformed endpoints.
+Line tangents also bound finite segment ends; isolated point cores keep their
+existing path. Rounded, boundary and extruded query families retain their own
+algorithms. The independent provider uses guarded double time slabs, with its
+existing radial path for collapsed points. Its numerical algorithm is separate
+from the oracle's explicitly constructed Minkowski hull.
+
+Body-motion contact sampling invokes the existing bounded ordinary manifold
+routine directly, preserving its SAT/contact-distance rejection and final depth
+filters. A second approximate distance query is unnecessary for that decision.
+No CPU mirror, device buffer, transfer, submission or wait is added.
+
+CPU/no-device, software-Vulkan GPU and registered owner/separate CLR/strict
+NativeAOT verification retain 3072 warm and 3072 measured frames / 15360 calls per
+new profile at 0/0 owner/all-thread managed bytes. The original 512-frame profile
+remains a separate regression. Numerical body/query/shape/contact/CCD checks
+retain their existing invariants; arbitrary custom/coupled geometry, native
+allocation, foreign platforms, rendered output and target-device performance
+remain open. Artifacts are in `bin/physics-long-convex/2026-10-20/`.

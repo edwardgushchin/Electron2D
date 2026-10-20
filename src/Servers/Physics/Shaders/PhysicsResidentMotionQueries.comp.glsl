@@ -89,11 +89,7 @@ Contact evaluate(Hull a,Hull b,Geometry ga,Geometry gb,vec2 extension,float marg
         directedQuery(flip?b:a,flip?a:b,vec2(0),flip?0:margin,
             (flip?gb.parameters.y:ga.parameters.y)!=0,flip,flip?vec2(0):extension,0u,0u,true);
     }
-    else
-    {
-        vec2 normal;
-        if(queryDistance(a,b,vec2(0),vec2(0),normal)-a.radius-b.radius<=0.05)ordinary(a,b,uvec2(0));
-    }
+    else ordinary(a,b,uvec2(0));
     return pairContact;
 }
 vec2 passDirection(){return rotate(bodyB.pose.zw,rotate(shapeB.pose.zw,shapeB.oneWay.xy));}

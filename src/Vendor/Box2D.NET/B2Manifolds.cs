@@ -448,7 +448,8 @@ namespace Box2D.NET
                     float sp = b2Dot(b2Sub(cp, p1), normalA);
                     float sq = b2Dot(b2Sub(cq, p1), normalA);
 
-                    if (sp <= distance + B2_LINEAR_SLOP || sq <= distance + B2_LINEAR_SLOP)
+                    if ((sp <= distance + B2_LINEAR_SLOP || sq <= distance + B2_LINEAR_SLOP) &&
+                        (distance >= radius || sp <= radius || sq <= radius))
                     {
                         ref B2ManifoldPoint mp0 = ref manifold.points[0];
                         mp0.anchorA = b2MulAdd(cp, 0.5f * (radiusA - radiusB - sp), normalA);
@@ -493,7 +494,8 @@ namespace Box2D.NET
                     float sp = b2Dot(b2Sub(cp, p2), normalB);
                     float sq = b2Dot(b2Sub(cq, p2), normalB);
 
-                    if (sp <= distance + B2_LINEAR_SLOP || sq <= distance + B2_LINEAR_SLOP)
+                    if ((sp <= distance + B2_LINEAR_SLOP || sq <= distance + B2_LINEAR_SLOP) &&
+                        (distance >= radius || sp <= radius || sq <= radius))
                     {
                         ref B2ManifoldPoint mp0 = ref manifold.points[0];
                         mp0.anchorA = b2MulAdd(cp, 0.5f * (radiusB - radiusA - sp), normalB);

@@ -4,6 +4,12 @@
 
 Last updated: 2026-10-14
 
+[Long contour pair checks](../components/physics-queries.md#long-pairs-of-flat-and-rounded-contours)
+verify rotated capsule contacts and continuous flat-core movement through real
+scene/raw query consumers. CPU clipping retains a geometric closest-point contact
+when its clipped candidates would all remain separated. This does not close
+complete numerical-extension or hardware acceptance.
+
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 
 - **Source:** [Shape.cs](../../src/Scene/Resources/Shape.cs)

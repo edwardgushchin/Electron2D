@@ -1,5 +1,7 @@
 # Registered numerical solver adapter
 
+[Long contour pairs](physics-queries.md#long-pairs-of-flat-and-rounded-contours) retain exact first-entry geometry across sixteen ordered finite pairs. Continuous flat-core intervals and geometric capsule contact fallback correct lost motion contacts; software and hardware acceptance remain distinct.
+
 [Long capsule and segment sweeps](physics-queries.md#long-capsule-and-segment-sweeps) verify first-entry geometry and contact identities across scene/raw callers. The independent provider now completes at a converged float-time fraction instead of exhausting its contour-sweep budget.
 
 [Long circle sweeps and hollow query sources](physics-queries.md#long-circle-sweeps-and-hollow-query-sources) preserve geometric hit truth, first entry and contact ownership across the exercised implementations.
