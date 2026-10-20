@@ -1003,6 +1003,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_SPANS_RENDER
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_SPANS") == "1") { TextServerSpanTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_UNICODE") == "1") { TextServerUnicodeTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_HEX") == "1") { TextHelperTests.Run(); TextServerHexCodeTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_HEX_RENDER") is { } hexBackend) { TextServerHexCodeRenderingTests.Run(hexBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_UNICODE_RENDER") is { } unicodeBackend) { TextServerUnicodeRenderingTests.Run(unicodeBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_WRAPPING_RENDER") is { } wrappingBackend) { TextServerWrappingRenderingTests.Run(wrappingBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_WRAPPING") == "1") { TextServerWrappingTests.Run(); return; }
@@ -1799,7 +1801,7 @@ TextServerTests.Run();
 TextServerEditingTests.Run();
 TextServerWrappingTests.Run();
 TextServerFormattingTests.Run();
-TextServerUnicodeTests.Run(); TextServerSpanTests.Run();
+TextServerUnicodeTests.Run(); TextServerSpanTests.Run(); TextServerHexCodeTests.Run();
 TextLineTests.Run();
 AStarGridTests.Run();
 RemoteTransformTests.Run();

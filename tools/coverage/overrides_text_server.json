@@ -484,6 +484,16 @@
       "godot": "TextServer::method:shaped_text_get_word_breaks(RID:,int:TextServer.GraphemeFlag,int:TextServer.GraphemeFlag)",
       "electron2d": "method:Electron2D.TextServer.ShapedTextGetWordBreaks(Electron2D.RID,Electron2D.TextGraphemeFlags,Electron2D.TextGraphemeFlags)",
       "reason": "ADR 0004/0046/0107: actual copied ordered Font/size/features replacement with unchanged source/language/exact metadata and slice-local text/object indexes. Successful authoring detaches substrings and publishes borrowed paragraph line consumers; invalid input preserves parent/publication. Current font-generation dependencies retire unused adapter leases while snapshots/duplicates retain theirs and caller fonts remain borrowed; replacing a retired old source recovers the buffer. Inline geometry has no font role. Logical complete-cluster word ranges consume the full typed TextGraphemeFlags family, custom/pinned punctuation, separate underscores, mandatory/soft breaks and actual run metadata. Coherent shaping prepares zero-advance word/Kashida opportunities independent of a prior fit; virtual delimiters are source points, correcting overlapping-record character losses. Shared rich flags preserve native joining and valid inline roles. Scalar/global ranges, both orientations, copied arrays, bounds/callback/owner/lifetime cases and warmed value/native-frame scopes are checked with real font/canvas/fresh-resource consumers; hardware/native-allocation/repackaged-asset/NativeAOT/foreign/performance and owner acceptance remain separate."
+    },
+    {
+      "godot": "TextServer::method:draw_hex_code_box(RID:,int:,Vector2:,int:,Color:)",
+      "electron2d": "method:Electron2D.TextServer.DrawHexCodeBox(Electron2D.CanvasItem,System.Int32,Electron2D.Vector2,System.Int32,Electron2D.Color)",
+      "reason": "ADR 0004/0046/0107: font-free public measurement and real recording CanvasItem drawing through the shared TextMissingGlyph rectangles. Valid Unicode scalar indexes select two/four/six digits; signed sizes round to a minimum-one pixel scale, one trailing advance unit remains unpainted, and the baseline offset truncates before preserving fractional position. Zero emits no geometry after canvas/position/color validation. Exact segment geometry, scalar/size boundaries, owner/disposal/errors and 64 warm public query/record cycles are checked; Wayland/X11 software GPU/compatibility parent and fresh-process readbacks cover initial/live segments, transforms, color, trailing pixels, clipping, zero and 64 active/idle frame scopes. Hardware, native allocator, foreign platform and owner acceptance remain separate."
+    },
+    {
+      "godot": "TextServer::method:get_hex_code_box_size(int:,int:)",
+      "electron2d": "method:Electron2D.TextServer.GetHexCodeBoxSize(System.Int32,System.Int32)",
+      "reason": "ADR 0004/0046/0107: font-free public measurement and real recording CanvasItem drawing through the shared TextMissingGlyph rectangles. Valid Unicode scalar indexes select two/four/six digits; signed sizes round to a minimum-one pixel scale, one trailing advance unit remains unpainted, and the baseline offset truncates before preserving fractional position. Zero emits no geometry after canvas/position/color validation. Exact segment geometry, scalar/size boundaries, owner/disposal/errors and 64 warm public query/record cycles are checked; Wayland/X11 software GPU/compatibility parent and fresh-process readbacks cover initial/live segments, transforms, color, trailing pixels, clipping, zero and 64 active/idle frame scopes. Hardware, native allocator, foreign platform and owner acceptance remain separate."
     }
   ],
   "extras": [
@@ -540,7 +550,9 @@
         "TextServer::enum_value:TextOverrunFlag.OVERRUN_TRIM",
         "TextServer::enum_value:TextOverrunFlag.OVERRUN_TRIM_WORD_ONLY",
         "TextServer::method:create_shaped_text(int:TextServer.Direction,int:TextServer.Orientation)",
+        "TextServer::method:draw_hex_code_box(RID:,int:,Vector2:,int:,Color:)",
         "TextServer::method:free_rid(RID:)",
+        "TextServer::method:get_hex_code_box_size(int:,int:)",
         "TextServer::method:get_name()",
         "TextServer::method:has(RID:)",
         "TextServer::method:is_locale_right_to_left(String:)",
@@ -768,7 +780,7 @@
         "TextServer::method:font_supported_variation_list(RID:)"
       ],
       "state": "Blocked",
-      "reason": "ADR 0046/0107: requires the low-level font-cache entry/instance identity producer and typed source/glyph/page ownership integrated with TextServer. FontFile indexed resource authoring and borrowed Font parameters already execute but do not supply these service-owned cache IDs. This member enters that font-cache ownership slice."
+      "reason": "ADR 0046/0107: requires a stable service-owned font RID owner and complete typed Font projection with executable source/config/cache authoring, query and drawing. Pinned linked variations share base source/configuration/cache but own spacing/baseline; linking a link targets the original base. FontFile edits replace FontData and cache list edits can shift indexes, so borrowed native pointers or cache indexes cannot be these identities. Integrate generation/read leases, base/link retirement and resource-family lifetime in that producer slice before the run/glyph/provider dependents; current native libraries and resource caches do not supply the service owner."
     },
     {
       "godot": [
@@ -788,9 +800,7 @@
         "TextServer::enum_value:Feature.FEATURE_UNICODE_SECURITY",
         "TextServer::enum_value:Feature.FEATURE_USE_SUPPORT_DATA",
         "TextServer::enum_value:Feature.FEATURE_VERTICAL_LAYOUT",
-        "TextServer::method:draw_hex_code_box(RID:,int:,Vector2:,int:,Color:)",
         "TextServer::method:get_features()",
-        "TextServer::method:get_hex_code_box_size(int:,int:)",
         "TextServer::method:has_feature(int:TextServer.Feature)"
       ],
       "state": "Unimplemented",

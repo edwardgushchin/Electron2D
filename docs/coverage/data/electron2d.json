@@ -187936,6 +187936,45 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServer.DrawHexCodeBox(Electron2D.CanvasItem,System.Int32,Electron2D.Vector2,System.Int32,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "DrawHexCodeBox",
+    "signature": "public System.Void DrawHexCodeBox(Electron2D.CanvasItem canvas, System.Int32 size, Electron2D.Vector2 position, System.Int32 index, Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvas",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServer.FreeRID(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.TextServer",
@@ -187952,6 +187991,30 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.GetHexCodeBoxSize(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "GetHexCodeBoxSize",
+    "signature": "public Electron2D.Vector2 GetHexCodeBoxSize(System.Int32 size, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {

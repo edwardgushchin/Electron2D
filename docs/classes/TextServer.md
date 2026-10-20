@@ -34,6 +34,8 @@ finally { text.FreeRID(buffer); }
 
 | Signature | Purpose |
 | --- | --- |
+| `public Electron2D.Vector2 GetHexCodeBoxSize(System.Int32 size, System.Int32 index)` | Measures the font-free hexadecimal replacement, including trailing advance. |
+| `public System.Void DrawHexCodeBox(Electron2D.CanvasItem canvas, System.Int32 size, Electron2D.Vector2 position, System.Int32 index, Electron2D.Color color)` | Draws hexadecimal frame/digits at a baseline in the current canvas recording. |
 | `public Electron2D.RID CreateShapedText(Electron2D.TextDirection direction = Auto, Electron2D.TextOrientation orientation = Horizontal)` | Creates an empty owned text buffer. |
 | `public System.Void FreeRID(Electron2D.RID rid)` | Releases an owned buffer, preserving borrowed text-object lifetimes. |
 | `public abstract System.String GetName()` | Returns the stable name of this text implementation. |
@@ -265,3 +267,5 @@ Transformations preserve embedded NUL and unpaired UTF-16. Positive character-wi
 Font sources require one to sixty-four live entries, a positive size and at most 4096 features. Null removes prior feature overrides. Invalid input does not detach a substring or publish a borrowed line; every successful update is authoring, including an equal setting. Replaced internal adapters retire only when their last source/snapshot/duplicate lease ends. Caller font resources stay borrowed. Explicit inline geometry remains independent of fonts. A replacement can recover a buffer whose previous caller font retired. A borrowed paragraph line publishes its own override, reaching the paragraph consumer until reflow retires the RID.
 
 Word delimiters exclude complete source clusters; virtual opportunities mark boundaries without consuming source characters. No delimiters returns the complete nonempty shaped range, while an empty/unshaped partial-cluster slice has no ranges. Custom punctuation replaces default punctuation; underscore has its own flag. Direction uses actual resolved run metadata; both orientations use scalar units. Undefined flag bits throw ArgumentOutOfRangeException. Queries prepare shape and return cold snapshots; prepared values remain reusable. See the [complete span/word contract](../components/text-server.md#span-font-replacement-and-shaped-word-ranges).
+
+GetHexCodeBoxSize/DrawHexCodeBox require no font. Their valid Unicode scalar selects two/four/six digits; every signed size rounds to a pixel scale of at least one. Zero keeps measured advance and emits no primitives after normal canvas, geometry and color validation. See [the measurement/drawing contract](../components/text-server.md#font-free-hexadecimal-replacement) for baseline, scale, trailing space, clipping, errors and verification.
