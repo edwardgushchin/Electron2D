@@ -149,6 +149,11 @@ Local runtime/test formatting, Release runtime build, compiled API/coverage and
 wiki tests, generation and generated-output check pass. Generated pages stay
 outside the engine commit.
 
+The later [full Linux runner refresh](physics-contract-audit.md#full-linux-suite-2026-10-20)
+passes at `4b6662ea` with matching source-built native assets. It adds ordinary
+full-suite evidence; it does not replace these frozen performance cohorts or
+close fresh NativeAOT/native-allocation/foreign/network requirements.
+
 ## Contact-peer retirement, 2026-10-20
 
 Profiling at `7c2197246316990813b5a3b0207df7888aaf1b8c` separates

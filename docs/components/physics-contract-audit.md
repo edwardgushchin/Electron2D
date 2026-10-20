@@ -1956,3 +1956,62 @@ physical GPU owner/separate, factory, portable CPU/GPU and registered history pr
 pass with strict warm managed-zero gates and retired-slot rejection before another
 tick. Declaration states stay 1303/1369 Implemented (95.18%), 66 open and 92 Excluded;
 full numerical/network/native/platform and target performance acceptance remain open.
+
+## Full Linux suite, 2026-10-20
+
+The ordinary complete Release test runner now exits zero at main
+`4b6662eadabdf19e8628d2982404541029f8f9e0`, after 715.0824 seconds. This is a
+fresh Linux x64/.NET 10.0.101 process on kernel 7.2.9-1-cachyos, the current
+Wayland desktop and physical RTX 3090 Ti/NVIDIA 615.71.09. It follows the contact
+publication change; it does not retrospectively change older cohort outcomes.
+
+The first ordinary package-restored build compiled without warnings but its
+runner exited 134 at NativeLibraryTests: Mesh was absent from the expected native
+runtime directory, and WebP was also absent on inspection. No physics test had
+started. The supported full source-build mode supplied the matching local native
+assets without changing runtime code or bypassing delivery validation. All seven
+text/audio/ENet/mesh/WebP/KTX/WebRTC asset copies match their locally built
+counterparts by SHA-256. This verifies the local source workflow, not a newly
+published platform package or ordinary package-only delivery.
+
+The exercised preparation and run are:
+
+```bash
+cmake --build obj/enet-native/linux-x64 --target Electron2DENetOracle -j 4
+dotnet build tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -p:Electron2DBuildNativeFromSource=true
+ELECTRON2D_ENET_ORACLE="$PWD/obj/enet-native/linux-x64/Electron2DENetOracle" SDL_GPU_DRIVER=vulkan VK_DRIVER_FILES=/usr/share/vulkan/icd.d/nvidia_icd.json VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json DOTNET_TieredCompilation=0 dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release --no-build -p:Electron2DBuildNativeFromSource=true
+```
+
+The run clears focused test selectors, LD_LIBRARY_PATH/LD_PRELOAD and software
+Vulkan overrides. It keeps the runner's ordinary suite and independent stock-ENet
+oracle. The immutable ENet/FastLZ source/license check also passes. Native assets
+retain runtimes/linux-x64/native with no root copies; the source build reports
+zero warnings/errors. The exercised suite includes real CPU/GPU world selection,
+viewport interpolation, body/contact/lifecycle, dense/transient CCD histories,
+queries, filters, fields, forces, joints and scene archives, alongside its other
+ordinary runtime checks. Its existing warm brackets keep their strict zero-byte
+assertions. Final output is Electron2D checks passed. This is the ordinary runner,
+not every separate focused, performance or external-consumer mode.
+
+The previous saved full-run exit 139 after CPU viewport interpolation does not
+recur in this cohort: both CPU and GPU nested-viewport interpolation and the
+remaining suite complete. Its old cause is not established by this successful run.
+GTK emits repeated gtk_disable_setlocale warnings during window reinitialization;
+they remain logged, without a confirmed causal failure. The process group loads
+NVIDIA and no software Vulkan. All 353 NVML observations succeed; the exact
+kernel interval contains no Xid/fallen-off entries. These observations do not
+certify cable compatibility or future hardware stability.
+
+Runtime/test DLL SHA-256 values are
+`3ddb2588770486e590c8241eb6921508d5dd480cc834d382ff5b3e3bf3214126` /
+`a6683c042cc73ef7270e5d60a3949171819e8089a6a2815d8344175df66183e0`.
+Before/after DLL/PDB/XML/native hashes and tracked C#/project/build inputs are
+unchanged. Portable PDB checks match all 2417 runtime and 908 test evaluated
+compilation inputs; target-added virtual generated sources retain their separate
+verification boundary. Local evidence is `bin/physics-full-validation/2026-10-20/`:
+`build.log`, the rejected `full/`, `source-build.log`, `source-native-cohort.json`,
+`source-full/runner.log` and `source-full/check.json`. This is runtime evidence,
+not a declaration-status transition: 1303/1369 Implemented (95.18%), 66 open and
+92 Excluded. Fresh NativeAOT, native allocator/retained-memory accounting, foreign
+hosts, complete focused/extension/network matrices and full-goal acceptance
+remain separate gates. No new performance advantage is inferred from this run.
