@@ -5,6 +5,7 @@ internal static class ShapeCollisionTests
     internal static void Run()
     {
         VerifyStaticAndContacts();
+        DegenerateShapeCollisionTests.Run();
         VerifyIndependentMotion();
         VerifyFamiliesAndContour();
         VerifyRays();

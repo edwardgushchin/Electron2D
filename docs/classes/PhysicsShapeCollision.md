@@ -1,6 +1,6 @@
 # PhysicsShapeCollision
 
-Last updated: 2026-10-11
+Last updated: 2026-10-20
 
 **Declaration:** `internal static class PhysicsShapeCollision`
 
@@ -9,7 +9,7 @@ Last updated: 2026-10-11
 
 Evaluate implements resource-only collision and paired boundary contacts, using
 shared geometry, transformed complete convex hulls, swept regions and directed-ray
-policy. Per-thread buffers retain peak capacity. FullMotionContact reuses that
+policy. Two unrounded point/segment hulls additionally test tangent and point-displacement axes, rejecting collinear gaps that edge normals cannot separate. This applies after independent swept-hull construction and preserves exact touching. Per-thread buffers retain peak capacity. FullMotionContact reuses that
 hull/SAT path for body-motion recovery and impact geometry whenever either body
 has a partitioned convex shape. FullMotionRegionContains rejects directed-ray
 origins inside a whole convex contour or its translation region before motion

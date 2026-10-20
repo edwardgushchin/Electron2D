@@ -689,3 +689,40 @@ The [public consumer](../../tests/PhysicsBackendExtension.Consumer/BackendChecks
 Prepared measurement runs 128 complete warm frames then 512 complete frames, each with an actual moving body and raw/scene queries. Cold applied movement may allocate its caller-owned snapshot; the prepared query/frame bracket requires zero owner/all-thread managed bytes. Complete numerical/custom/network/native/platform/performance acceptance remains separate.
 
 The 2026-10-20 Linux x64 cohort passes 36 managed profiles and six strict NativeAOT profiles, using CPU without an available GPU, physical RTX 3090 Ti and independent registered implementations in owner/separate numerical modes. The twelve new entry profiles each execute all 56 cold shape/pose cases and 512 prepared complete frames at 0/0 owner/all-thread managed bytes (6,144 measured frames). Regressions include last-recovery pair exclusions, final-rest sampling, all-family motion, directed one-way geometry, shared body/character/shape/joint/world checks and moving-platform recovery. Source/PDB checks match 2,419 runtime, 909 root-test and 260 public-consumer documents; payload/source hashes remain stable during every accepted profile. Receipts are in `bin/physics-oneway-entry/2026-10-20/validation.json`, `validated-cohort.json`, `validated-native-cohort.json` and `source-proof.json`, based on `cd2682eac89c16715563c80ad1a1d3dfedeb16f3` with this motion change. These are focused functional/allocation checks; the earlier full-run receipts keep their own frozen revisions, and no new network, mass-performance/window-FPS, native-allocation or foreign-platform acceptance is inferred.
+
+
+## Finite point and segment resource pairs
+
+Standalone Shape collision now rejects separated collinear segment/point cores,
+including zero-radius capsules, the accepted short-segment fallback and independently
+swept intervals. The common SAT path tests tangent and point-displacement axes when
+both unrounded hulls have at most two vertices. Polygon and rounded kernels, directed
+rays, boundary precedence and two-concave exclusion retain their existing paths.
+[ADR 0069](../decisions/physics.md#adr-0069) records the explicit static correctness
+adaptation from the pinned reference; this is a boolean geometry correction without
+new API or a numerical-step/backend architecture change.
+
+[DegenerateShapeCollisionTests](../../tests/Electron2D.Tests/DegenerateShapeCollisionTests.cs)
+uses an independent double orientation plus interval oracle over exact integer
+coordinates and four exact orthogonal bases. Segment, zero-radius capsule rod,
+short-segment point, zero-height capsule point and hollow edge pairs cover both
+orders, shared resources, separation, crossing, overlap and exact touching. Swept
+controls include independent interval gaps/touching and ignored terrain motion.
+All four public methods are exercised. Prepared boolean and empty-contact queries
+require zero owner/all-thread managed bytes; successful contact arrays retain
+caller-owned allocation. These resource operations require neither a world nor a
+graphics device and may execute on another thread while resources remain alive and
+unchanged. No physical-step, native allocation or platform/performance acceptance
+is inferred from this resource-only check.
+
+
+The public CLR consumer, root resource suite and strict NativeAOT consumer each
+pass 4,528 static/swept cases with 0/0 owner/all-thread managed bytes in the
+prepared boolean/empty-contact interval. The related selected-pair matrix also
+passes twelve CLR/NativeAOT CPU, registered and physical RTX GPU profiles,
+each serial/separate, retaining its 128 measured moving frames at 0/0 bytes.
+CPU profiles make Vulkan unavailable. The RTX profiles have NVIDIA driver
+mappings, successful telemetry and no new Xid/fallen-off event; this functional
+regression is separate from new mass-performance or hardware reliability acceptance.
+Evidence: bin/physics-degenerate-shapes/2026-10-20/validation.json.
+The declaration census remains 1303/1369 Implemented (95.18%), with 66 open.

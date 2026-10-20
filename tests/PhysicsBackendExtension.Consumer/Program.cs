@@ -1,4 +1,5 @@
-if (args.Contains("--save-scene-child")) BackendChecks.ReadSaveScene(args[Array.IndexOf(args, "--save-scene-child") + 1], args[0] == "gpu" ? Electron2D.PhysicsServer.Backend.GPU : args[0] == "cpu" ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("threaded"));
+if (args.Contains("--degenerate-shapes")) DegenerateShapeCollisionTests.Run();
+else if (args.Contains("--save-scene-child")) BackendChecks.ReadSaveScene(args[Array.IndexOf(args, "--save-scene-child") + 1], args[0] == "gpu" ? Electron2D.PhysicsServer.Backend.GPU : args[0] == "cpu" ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("threaded"));
 else if (args.Contains("--save-scene")) BackendChecks.RunSaveScene(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--resource-rids")) BackendChecks.RunResourceRIDs(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--canvas-oversampling")) CanvasOversamplingTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_OVERSAMPLING") ?? "gpu");
