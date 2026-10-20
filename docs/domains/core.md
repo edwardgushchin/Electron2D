@@ -323,3 +323,5 @@ The [Time service](../components/time-service.md) now supplies typed Gregorian c
 The [MainLoop callback audit](../components/main-loop.md#complete-frame-and-lifecycle-callback-audit) verifies initialization, fixed/idle deltas and stop results, failure recovery and terminal finalization with real selected CPU/software-GPU/registered worlds. Explicit library-host ownership and warmed zero managed allocation remain distinct from platform permissions and hardware performance.
 
 The [deferred call/setter contract](../components/scene-tree.md#complete-deferred-call-and-setter-contract) drains nested typed work at the current safe point before queued deletion. Selected physical frames retain exact tick counts and zero warmed managed allocation; platform and full-goal acceptance remain separate.
+
+Factory construction provenance is shared by resource, script, file and scene creation through [ElectronObject](../classes/ElectronObject.md#factory-construction-provenance). It rejects unrelated concurrently created results while preserving nested, Task and engine worker construction; [ADR 0013](../decisions/resources.md#adr-0013) owns this boundary.

@@ -2015,3 +2015,9 @@ not a declaration-status transition: 1303/1369 Implemented (95.18%), 66 open and
 92 Excluded. Fresh NativeAOT, native allocator/retained-memory accounting, foreign
 hosts, complete focused/extension/network matrices and full-goal acceptance
 remain separate gates. No new performance advantage is inferred from this run.
+
+## Concurrent inherited factory ownership
+
+The inherited resource/script/file/scene factory paths now validate construction provenance instead of a process-wide instance-number cutoff. The former cutoff accepted unrelated objects created concurrently and could copy into or dispose caller-owned state. [The public consumer](../../tests/PhysicsBackendExtension.Consumer/FactoryConstructionChecks.cs) checks rejection across the connected factory family, path-cache survival, cross-scope exchange, legitimate Task/nested/engine-worker creation, scene activation barriers and closed-context reference release. Resource duplication rows remain Partial pending their complete derived storage audit. This slice does not promote the full physics contract or its performance/platform acceptance.
+
+The exact managed/NativeAOT Linux checks, zero-byte frame brackets, source/PDB counts and verification limits are recorded in [the resource component](resources.md#concurrent-factory-ownership).

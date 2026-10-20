@@ -534,7 +534,7 @@ public class Resource : ElectronObject
     /// <remarks>
     /// The base implementation supports only an exact <see cref="Resource"/> instance. Every derived class must
     /// override this method, even when it adds no state, so duplication support is explicit.
-    /// Construct the target during this invocation. Returning an existing resource is rejected before copying
+    /// Construct the target within this invocation's execution context or engine worker tasks. Returning a borrowed resource is rejected before copying
     /// or taking ownership of it; a newly constructed invalid target is released during failure cleanup.
     /// </remarks>
     /// <exception cref="NotSupportedException">The runtime type derives from <see cref="Resource"/> and has not overridden this method.</exception>
@@ -1023,9 +1023,8 @@ public class Resource : ElectronObject
             if (_duplicates.TryGetValue(source, out var existing))
                 return existing;
 
-            var lastIssuedID = ElectronObject.LastIssuedInstanceID;
-            var target = source.CreateDuplicateInstance();
-            if (target is not null && target.InstanceID <= lastIssuedID)
+            var target = InvokeConstructionFactory(source.CreateDuplicateInstance, out var created);
+            if (target is not null && !created)
                 throw new InvalidOperationException("A resource duplication factory returned a pre-existing instance.");
             if (target is not null && !ReferenceEquals(source, target))
                 _created.Add(target);

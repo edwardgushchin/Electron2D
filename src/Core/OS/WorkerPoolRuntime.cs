@@ -14,6 +14,7 @@ internal sealed class WorkerPoolRuntime : IDisposable
         internal long ID, NextIndex;
         internal Action? Action;
         internal Action<int>? GroupAction;
+        internal ElectronObject.ConstructionScope? Construction;
         internal string Description = "";
         internal bool Group, HighPriority, Completed, ReleaseRequested;
         internal int Elements, Processed, Runners, Waiters, FailureIndex;
@@ -138,6 +139,7 @@ internal sealed class WorkerPoolRuntime : IDisposable
             if (_free.Count == 0) throw new InvalidOperationException("Worker pool pending capacity is exhausted. Wait for accepted jobs before submitting more.");
             var id = checked(_lastID + 1);
             var job = _free.Pop(); job.ID = id; job.Action = action; job.GroupAction = groupAction; job.Group = groupAction is not null;
+            job.Construction = ElectronObject.ConstructionContext;
             job.Description = description; job.HighPriority = high; job.Elements = elements; job.Runners = runners; job.Completed = runners == 0; job.FailureIndex = int.MaxValue; job.ReleaseRequested = false;
             _jobs.Add(id, job); _lastID = id;
             var queue = high ? _high : _low;
@@ -172,21 +174,30 @@ internal sealed class WorkerPoolRuntime : IDisposable
     }
     private void Execute(Worker worker, Job job)
     {
+        var construction = ElectronObject.ConstructionContext;
+        ElectronObject.ConstructionContext = job.Construction;
         var previous = worker.Current; worker.Current = job;
         worker.Active[worker.Depth++] = job;
-        if (job.Group)
+        try
         {
-            while (true)
+            if (job.Group)
             {
-                var index = Interlocked.Increment(ref job.NextIndex) - 1;
-                if (index >= job.Elements) break;
-                Invoke(job, (int)index);
-                lock (_gate) job.Processed++;
+                while (true)
+                {
+                    var index = Interlocked.Increment(ref job.NextIndex) - 1;
+                    if (index >= job.Elements) break;
+                    Invoke(job, (int)index);
+                    lock (_gate) job.Processed++;
+                }
             }
+            else Invoke(job, 0);
         }
-        else Invoke(job, 0);
-        worker.Current = previous;
-        worker.Active[--worker.Depth] = null;
+        finally
+        {
+            ElectronObject.ConstructionContext = construction;
+            worker.Current = previous;
+            worker.Active[--worker.Depth] = null;
+        }
         lock (_gate)
         {
             if (!job.HighPriority && --worker.LowDepth == 0) _activeLow--;
@@ -249,7 +260,7 @@ internal sealed class WorkerPoolRuntime : IDisposable
                 if (retire && job.Completed) job.ReleaseRequested = true;
                 if (--job.Waiters == 0 && job.Completed && job.ReleaseRequested)
                 {
-                    _jobs.Remove(id); job.Action = null; job.GroupAction = null; job.Description = ""; job.Failure = null;
+                    _jobs.Remove(id); job.Action = null; job.GroupAction = null; job.Construction = null; job.Description = ""; job.Failure = null;
                     job.NextIndex = 0; job.Processed = 0; _free.Push(job);
                 }
             }

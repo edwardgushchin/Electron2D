@@ -348,9 +348,8 @@ internal sealed class ResourceFileType(string id, Type type, Func<ElectronObject
     internal Type Type => type;
     internal ElectronObject Factory()
     {
-        var lastIssuedID = ElectronObject.LastIssuedInstanceID;
-        var value = create() ?? throw new InvalidOperationException("File factory returned null.");
-        if (value.InstanceID <= lastIssuedID) throw new InvalidOperationException("File factory returned a pre-existing instance.");
+        var value = ElectronObject.InvokeConstructionFactory(create, out var created) ?? throw new InvalidOperationException("File factory returned null.");
+        if (!created) throw new InvalidOperationException("File factory returned a pre-existing instance.");
         if (!_issued.TryAdd(value, new object())) throw new InvalidOperationException("File factory reused an issued object.");
         if (value.IsDisposed) throw new InvalidOperationException("File factory returned a disposed identity.");
         if (value is Node attached && (attached.Parent is not null || attached.Tree is not null || attached.Owner is not null)) throw new InvalidOperationException("File node factory returned a borrowed attached node.");

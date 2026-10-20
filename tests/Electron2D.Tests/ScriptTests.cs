@@ -5,7 +5,8 @@ internal static class ScriptTests
     private static bool _registered;
     internal static ScriptActor? ActorFactoryTarget;
     internal static ScriptPaintEffect? PaintFactoryTarget;
-    private static ScriptActor CreateActor() => ActorFactoryTarget ?? new();
+    internal static Func<ScriptActor>? ActorFactory;
+    private static ScriptActor CreateActor() => ActorFactory?.Invoke() ?? ActorFactoryTarget ?? new();
     private static ScriptPaintEffect CreatePaint() => PaintFactoryTarget ?? new();
     internal static void Register()
     {

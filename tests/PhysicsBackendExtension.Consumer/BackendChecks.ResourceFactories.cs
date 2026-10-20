@@ -13,6 +13,7 @@ public static partial class BackendChecks
         Reject(source, () => source.Duplicate(), existing);
         Check(existing.ResourceName == "existing" && changes == 0 && source.Copies == 0,
             "Rejected existing targets preserve stored state and subscribers before custom copying");
+        FactoryConstructionChecks.Run();
 
         using var nested = new FactoryResource { Children = [source] };
         Reject(nested, () => nested.DuplicateDeep(DeepDuplicateMode.All), existing);

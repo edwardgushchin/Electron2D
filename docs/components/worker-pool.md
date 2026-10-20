@@ -1,6 +1,6 @@
 # Worker execution component
 
-Last updated: 2026-10-16
+Last updated: 2026-10-20
 
 ## Scope and ownership
 
@@ -37,3 +37,5 @@ Internal loader waits select only the dependency group. Older root-task waits ve
 Validated pool creation captures engine thread initializers and starts every worker with suppressed caller context. Each worker prepares its engine-local state and signals readiness before accepting jobs. Construction holds the shared gate until all signals have arrived and every prepared worker has actually blocked on that gate, preparing runtime contention state before dispatch. Entering flags are published after readiness signalling; only then does the constructor observe WaitSleepJoin while it still owns the gate. This cold observation adds no polling to frame execution. An initializer failure returns on the constructor thread after all started workers join. Shutdown releases the retained readiness barrier after joining. Scene's assembly initializer registers only thread-local group preparation, preserving Core's dependency direction and lazy sampling of worker settings. Existing pools cannot gain late game/plugin initializers; no public registration API is added.
 
 The group-context control exposes the former 32-byte first touch on a newly selected worker even after many frames had warmed another worker. Startup preparation makes both distinct workers' first/repeated accesses zero. A forced-contention NativeAOT control also exposes the former 120-byte lazy gate event; prepared contention must use zero bytes. Blocking/failing startup tests, the worker pool suite and the [physical group attribution profile](node-groups.md#worker-context-preparation-and-allocation-attribution) verify readiness, cleanup and zero warmed execution. Hardware/native/foreign acceptance remains separate.
+
+The job retains only the internal [factory construction scope](../classes/ElectronObject.md#factory-construction-provenance), installs/restores it through dispatch and nested helping, and clears it on retirement. User ExecutionContext and SynchronizationContext remain uncaptured. A closed scope releases all object references and ceases to block scene activation.

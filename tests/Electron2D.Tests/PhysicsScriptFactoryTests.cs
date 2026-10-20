@@ -16,6 +16,26 @@ internal static class PhysicsScriptFactoryTests
             using var root = new SubViewport { World = world }; using var tree = new SceneTree(root);
             using var script = ResourceLoader.Load<Script>(ScriptActor.SourcePath, ResourceLoader.CacheMode.Ignore);
             using var paint = ResourceLoader.Load<Script>(ScriptPaintEffect.SourcePath, ResourceLoader.CacheMode.Ignore);
+            FactoryConstructionChecks.RejectIndependent(static () => new ScriptActor { Count = 29 }, factory =>
+            {
+                using var result = script.New(factory);
+            }, value => Check(value.Count == 29, "Independent constructor result retains its stored state"));
+            FactoryConstructionChecks.RejectIndependent(static () => new ScriptActor { Count = 31 }, factory =>
+            {
+                ScriptTests.ActorFactory = factory;
+                try { using var result = script.New<ScriptActor>(); }
+                finally { ScriptTests.ActorFactory = null; }
+            }, value => Check(value.Count == 31, "Independent registered-factory result retains its stored state"));
+            FactoryConstructionChecks.RejectIndependent(static () => new ScriptPaintEffect(), factory => { using var result = paint.New(factory); });
+            using (var fresh = script.New(static () => Task.Run(static () => new ScriptActor(11)).GetAwaiter().GetResult()))
+                Check(fresh.Count == 11, "Task construction retains the factory context");
+            using (var fresh = script.New(() =>
+            {
+                ScriptActor? result = null;
+                var task = WorkerThreadPool.AddTask(() => result = new ScriptActor(13));
+                WorkerThreadPool.WaitForTaskCompletion(task);
+                return result!;
+            })) Check(fresh.Count == 13, "Engine worker construction retains only the internal factory context");
             using var shape = new CircleShape { Radius = 2 }; using var material = new PhysicsMaterial { Friction = .4f };
             using var actor = new ScriptActor { Name = "BorrowedActor", Count = 17 };
             using var moving = new RigidBody

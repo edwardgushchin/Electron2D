@@ -54,6 +54,8 @@ The reference engine separates Script and CSharpScript resources and binds manag
 - This decision does not settle live GetScript/SetScript semantics, script-instance ownership/identity, replacement, callbacks or failure rollback. Their applicable reference obligations remain in coverage. Before implementing live attachment, define a typed instance/lifetime contract that preserves the required behavior, or obtain an explicit bounded ADR adaptation; do not expose inert setters, silently replace identity or mark these operations Excluded because Node subclassing exists.
 - Rebuild and restart is the initial project/scenario workflow. Hot reload and migration of live nodes, fields, subscriptions, pending work and compiled-type lifetimes require a separate executable contract and verification. No transparent assembly unloading or state preservation is claimed here.
 
+Script.New and registered file factories use the invocation construction provenance under [ADR 0013](resources.md#adr-0013), including ordinary execution-context flow and engine worker jobs. Unrelated concurrent results reject before schema callbacks, ownership or cleanup; newly owned invalid results retain the existing failure cleanup.
+
 ### Delivery and acceptance
 
 The first registration/persistence integration must create a user Node type, execute its real callbacks, retain its exact factory identity, save selected properties/references, load in a fresh process and run a scenario against the reconstructed state. It must reject unknown/incompatible identities and invalid stored values and verify construction/activation/disposal failure paths.

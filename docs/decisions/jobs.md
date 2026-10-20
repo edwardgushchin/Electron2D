@@ -1,6 +1,6 @@
 # Worker execution decisions
 
-Last updated: 2026-10-16
+Last updated: 2026-10-20
 
 <a id="adr-0104"></a>
 ## ADR 0104: Retained typed worker pool with explicit completion ownership
@@ -20,6 +20,8 @@ High-priority queues are serviced before ordinary queues, FIFO among eligible jo
 Waiting outside the pool blocks without executing callbacks on the waiting thread. A worker waiting for newer work helps eligible queued jobs, preserving caller context across nested dispatch. Waiting for an unfinished self/older task or group is rejected with InvalidOperationException to prevent stack/dependency cycles; completed older jobs remain waitable. Helping does not execute jobs at or below the current wait floor. Invalid IDs/kinds use ArgumentException; submission validation uses ordinary typed exceptions. A failed regular task rethrows its captured exception when waited. A failed group continues every index and rethrows the lowest-index failure after full completion. No cancellation or forced thread termination is exposed: callers implement cooperative cancellation in their own callback state and still wait for cleanup.
 
 Callbacks run on dedicated background .NET threads with no captured caller ExecutionContext or SynchronizationContext. Callback state, external resources and thread-affine objects remain caller-owned: submit immutable data or synchronized state, retain it until completion, and publish scene changes with SceneTree.Defer or the typed Node thread-safe/group-message family under ADR 0006. Node processing groups under ADR 0006 may submit retained group tasks and grant bounded processing-state access to their own nodes. Typed messages target the actual inherited processing group; backend/render/hierarchy ownership remains unchanged. Worker dispatch does not grant permission for off-owner scene/render operations. Threads live for the permanent service lifetime; the borrowed named service rejects caller disposal before changing state and cannot be removed from the built-in registry. Internal isolated pools drain accepted work and join workers on disposal; workers cannot dispose their own pool.
+
+Only the internal factory-construction scope is transferred with a job under [ADR 0013](resources.md#adr-0013). Dispatch installs that capability, restores the prior capability after nested helping or failure, and clears the retained reference at final retirement. This keeps legitimate worker-created factory results and the scene activation barrier without capturing user ambient state. Ordinary jobs with no scope retain zero warmed managed allocation.
 
 Browser profiles explicitly reject submissions until a threaded browser runtime with shared-memory/bootstrap guarantees is implemented. This does not exclude Web as a target under ADR 0021. Desktop/mobile .NET threading is the implementation foundation; only exercised profiles count as verified. The job pool supplies the scheduling prerequisite for threaded ResourceLoader, baking and other asynchronous consumers; their ownership, progress, cancellation and dependency-loading contracts remain separate implementation work under ADR 0013.
 

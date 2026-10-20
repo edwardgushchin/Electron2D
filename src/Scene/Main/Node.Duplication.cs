@@ -186,9 +186,8 @@ public partial class Node
             if (!script) while (type.Assembly != typeof(Node).Assembly) type = type.BaseType!;
             var expected = type;
             var factory = script || type == original.GetType() ? original.CaptureSceneInstanceFactory() : () => (Node)ResourceFileTypes.Get(expected).Factory();
-            var lastIssuedID = ElectronObject.LastIssuedInstanceID;
             var node = InvokeSceneInstanceFactory(factory) ?? throw new InvalidOperationException("A node duplication factory returned null.");
-            if (node.InstanceID <= lastIssuedID || _sources.Contains(node) || _created.Contains(node)) throw new InvalidOperationException("A node duplication factory reused a borrowed or issued node.");
+            if (_sources.Contains(node) || _created.Contains(node)) throw new InvalidOperationException("A node duplication factory reused a borrowed or issued node.");
             if (node.Parent is not null || node.Tree is not null || node.Owner is not null) throw new InvalidOperationException("A node duplication factory returned an attached node.");
             Own(node);
             if (node.GetType() != type || node.GetChildCount() != 0 || node.IsQueuedForDeletion || node.SceneFilePath.Length != 0)

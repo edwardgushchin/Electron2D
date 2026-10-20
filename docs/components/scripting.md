@@ -42,7 +42,7 @@ Source registration explicitly requires a file-backed assembly, matching portabl
 
 Both Script.New overloads require the returned object to be constructed during
 that synchronous invocation, matching the existing Resource duplication and
-scene-construction freshness boundary. A pre-existing result rejects before
+scene-construction freshness boundary. Construction must belong to that invocation, including ordinary Task flow or engine worker tasks; unrelated concurrent objects reject under [ADR 0013](../decisions/resources.md#adr-0013). A borrowed result rejects before
 property/schema callbacks or cleanup, regardless of exact or incorrect CLR type.
 The shared registered file factory applies the same rule before its issued-object
 tracking or decode. This prevents a failed script constructor from disposing an

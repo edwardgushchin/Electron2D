@@ -600,3 +600,7 @@ inherited API acceptance.
 Inherited object translation-domain access and plural lookup execute through [scored runtime lookup](../components/localization.md#scored-runtime-lookup). Catalog selection preserves live edits, callback errors and physical identities with strict zero warmed managed bytes. Singular translation now uses verified [Unicode pseudolocalization](../components/localization.md#unicode-pseudolocalization); the plural path intentionally bypasses those transforms.
 
 The [deferred call/setter contract](../components/scene-tree.md#complete-deferred-call-and-setter-contract) drains nested typed work at the current safe point before queued deletion. Selected physical frames retain exact tick counts and zero warmed managed allocation; platform and full-goal acceptance remain separate.
+
+## Factory construction provenance
+
+The protected constructor keeps the existing process-local identity and records this reference in active internal factory scopes. Resource copies, compiled scripts, file factories and scene factories validate against those scopes before acquiring their result. A later global instance number does not prove ownership. The internal nested ConstructionScope uses transient reference-identity sets; closing releases their contents even if an execution context escapes. Ordinary context flow and the engine worker pool carry this capability. Suppressed flow and unrelated threads cannot produce an accepted factory result. See [ADR 0013](../decisions/resources.md#adr-0013). This cold mechanism adds no retained field to each object.

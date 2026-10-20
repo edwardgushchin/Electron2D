@@ -65,3 +65,5 @@ Ordinary nested Resource copies retain this same Script instance for all deep mo
 RegisterNode, RegisterResource and RegisterAbstract declare their file-backed assembly/PDB and untrimmed metadata prerequisites. Registration captures complete project methods, events and literal fields once; queries copy that retained metadata. Source association in embedded NativeAOT assemblies remains unavailable. Static scene factories do not require source registration.
 
 [Factory result ownership](../components/scripting.md#factory-result-ownership) protects borrowed physical/script resources and live nodes from invalid Script.New and file-factory results. CLR source-asset checks retain actual CPU/software-GPU/registered simulation and zero warmed managed bytes; NativeAOT source registration and full live-script/duplication acceptance remain open.
+
+Factory results require [construction provenance](ElectronObject.md#factory-construction-provenance) in the current invocation. Unrelated concurrent construction cannot transfer caller ownership; nested factories, ordinary Task context flow and engine worker tasks remain supported.

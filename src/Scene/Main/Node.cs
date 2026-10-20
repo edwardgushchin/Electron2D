@@ -198,8 +198,6 @@ public partial class Node : ElectronObject
     /// <summary>Identifies that the application exited picture-in-picture mode.</summary>
     public const int NotificationApplicationPipModeExited = MainLoop.NotificationApplicationPipModeExited;
 
-    private static readonly AsyncLocal<int> SceneFactoryDepth = new();
-
     private readonly List<Node> _children = [];
 
     private readonly IReadOnlyList<Node> _childrenView;
@@ -2255,20 +2253,14 @@ public partial class Node : ElectronObject
     internal static Node InvokeSceneInstanceFactory(Func<Node> factory)
     {
         ArgumentNullException.ThrowIfNull(factory);
-        SceneFactoryDepth.Value++;
-        try
-        {
-            return factory();
-        }
-        finally
-        {
-            SceneFactoryDepth.Value--;
-        }
+        var node = InvokeConstructionFactory(factory, out var created, scene: true);
+        if (node is not null && !created) throw new InvalidOperationException("A scene factory returned a borrowed node.");
+        return node!;
     }
 
     internal static void EnsureSceneFactoryComplete()
     {
-        if (SceneFactoryDepth.Value != 0)
+        if (IsConstructingScene)
             throw new InvalidOperationException("A node factory cannot activate a SceneTree before returning its node.");
     }
 

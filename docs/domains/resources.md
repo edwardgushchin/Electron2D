@@ -302,3 +302,5 @@ The [KTX image slice](../components/image-ktx.md) adds flat KTX1/KTX2 file/buffe
 Prepared skeletal stacks now expose logical metadata to active processing groups and execute pose callbacks in their skeleton's current group. Binding/setup and resource configuration stay with the owner; callbacks release the stack metadata gate while topology/reentry guards remain active. See [grouped skeletal execution](../components/skeletal-animation.md#prepared-modifications-in-processing-groups).
 
 DrawableTexture archives and graph duplication preserve authored setup with independent cleared GPU storage; transient blit results are not serialized. BlitMaterial preserves blend mode, and Shader archives retain TextureBlit domain metadata. See [writable textures](../components/drawable-textures.md).
+
+Factory construction provenance is shared by resource, script, file and scene creation through [ElectronObject](../classes/ElectronObject.md#factory-construction-provenance). It rejects unrelated concurrently created results while preserving nested, Task and engine worker construction; [ADR 0013](../decisions/resources.md#adr-0013) owns this boundary.

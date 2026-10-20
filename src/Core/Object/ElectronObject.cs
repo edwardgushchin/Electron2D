@@ -29,7 +29,6 @@ public abstract partial class ElectronObject : IDisposable
     private const int PreDeleteCanceled = 4;
 
     private static long _lastInstanceId;
-    internal static ulong LastIssuedInstanceID => unchecked((ulong)Volatile.Read(ref _lastInstanceId));
     private static readonly IReadOnlyList<PropertyDescriptor> ObjectProperties = Array.AsReadOnly<PropertyDescriptor>(
     [
         new PropertyDescriptor<ElectronObject, ulong>(nameof(InstanceID), owner => owner.InstanceID),
