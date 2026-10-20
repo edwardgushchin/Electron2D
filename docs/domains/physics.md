@@ -1734,3 +1734,9 @@ adaptation is explicit in ADR 0069; numerical backends and API counts are unchan
 
 
 [Complete body motion operation](../components/physics-motion-operation.md) records the selected CPU/resident-GPU/registered geometry, recovery, restored timing, result ownership and failure audit. Its operation row is Implemented; physics is 1304/1369 (95.25%) with 65 declarations open. Broader numerical and overall-goal gates remain open.
+
+
+The [distributed closed joint network](../components/physics-joints.md#distributed-closed-joint-network)
+extends the four-body control to 64 bodies and 64 mixed constraints, with
+physical-invariant, checkpoint and encoded CPU-authoritative correction checks.
+It preserves the current API census and the wider completion gates.

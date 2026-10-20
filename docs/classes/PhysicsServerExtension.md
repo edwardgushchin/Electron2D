@@ -7,6 +7,11 @@ body-state observers. Successful retirement after pre-Solve preparation failure
 permits a new interval; gameplay observer/flush/end-sync errors retain their
 notification recovery policy. See [lifecycle publication boundaries](../components/physics-registered-adapter.md#complete-lifecycle-publication-boundaries).
 
+The [distributed closed joint network](../components/physics-joints.md#distributed-closed-joint-network)
+exercises the independent public provider with all three joint families and 128
+portable identities. Its bounded numerical/replay profile leaves the complete
+extension class Partial.
+
 ## Contact reporting policy guards
 
 Configured depth reads remain non-preparing during selected hooks and actual Solve.

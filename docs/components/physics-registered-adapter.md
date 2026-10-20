@@ -4590,3 +4590,15 @@ foreign-platform and performance acceptance remain open.
 ## One-way motion impact side
 
 The independent public provider distinguishes receding initial overlap from new impact admission and validates the prospective normal before choosing the first hit. It follows the same public ownership/result contract through [the shared one-way entry fixture](physics-queries.md#one-way-body-motion-entry), without depending on runtime or backend implementation types. Full custom-extension acceptance remains open.
+
+
+## Distributed closed joint network
+
+The [64-body closed network](physics-joints.md#distributed-closed-joint-network)
+uses the public-only independent provider together with CPU/resident-GPU controls.
+All three joint families carry distributed initial load, and all 64 body/joint
+pairs participate in local replay, encoded authoritative correction and exact
+identity/lifecycle checks. The four-body control remains in the same executable.
+This bounded isolated-joint profile does not close arbitrary coupled contacts,
+CCD, numerical-scale extremes or the complete extension class. Full inherited,
+network, native-memory, foreign-platform and performance acceptance remain open.

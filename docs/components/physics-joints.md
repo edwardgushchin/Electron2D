@@ -1,6 +1,6 @@
 # Physics joints component
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 ## Lifecycle request ownership
 
@@ -99,7 +99,7 @@ loop. Both scene-owned and raw joint resources execute the same mechanism on
 explicit CPU/GPU worlds without startup fallback. Gravity and external damping
 are zero; collision layers are zero to isolate joint response. An off-center
 20-unit impulse starts real translation and rotation. Disabling each constraint
-family changes the first physical response, preventing an inert row from passing.
+family changes the 32-frame physical response, preventing an inert row from passing.
 
 Every complete step checks finite derived state, both pin anchor gaps and groove
 line/range, total linear/angular momentum, center travel and bounded kinetic plus
@@ -189,3 +189,79 @@ final authoritative convergence. This is one bounded loaded graph; arbitrary/den
 coupling and complete hardware/platform/performance acceptance remain open.
 
 Scene departure follows the [shared node transition order](scene-hierarchy.md#entry-readiness-and-departure). Physical bindings remain live through OnExitTree/TreeExiting and retire in engine membership cleanup before NodeRemoved/TreeExited, including callback failures. The typed hook is inherited from Node; backend retirement cannot depend on a user calling its base implementation.
+
+
+## Distributed closed joint network
+
+`--coupled-joints --large-graph` extends the existing public-only consumer to one
+closed ring of 64 dynamic bodies and 64 joints: 22 pins, 21 finite grooves and
+21 off-center damped springs. Neighbor centers are 20 scene units apart, the
+circle radius is `10/sin(pi/64)`, and each edge connects the next body modulo 64.
+This is one connected mechanism. Half the bodies are scene-owned and half raw;
+both scene-owned and raw joint variants execute. Explicit CPU, independent
+resident GPU and independently registered implementations retain their selected
+identity without fallback, in owner and separate numerical thread modes.
+
+Each body has mass 2 and inertia 5. An initial impulse
+`(3*cos(5*theta), 2*sin(7*theta))`, with another `(20,8)` on body zero, acts at
+local offset `(2,3)`. Thus every part of the ring starts with numerical load.
+Gravity, external damping, sleep and collision masks are disabled to isolate the
+constraint network. Pins share edge midpoints; grooves span 8 units across the
+edge midpoint; spring anchors are one quarter edge length from their centers,
+with sampled relaxed length 10, stiffness 30 and axial damping 5. Disabling all
+joints of each family in a separate 32-frame control must change public velocity
+by more than `1e-5` summed squared scene velocity units.
+
+At 1/60 s each full step checks all anchor/finite-guide errors below .5 scene
+units, total linear momentum error below .03 impulse units, angular momentum
+error below 2 angular units and mass-center drift below .05 units. Initial
+momentum and angular momentum are derived from every authored impulse and lever,
+including spin. Kinetic energy plus every spring's potential energy must stay
+below 1.1 times the initial kinetic energy (about 833.2). The 20-unit spacing gives
+a 2.5-percent anchor envelope. A spring's effective inverse axial mass is at most
+`1 + 2*5*5/5 = 11`; four substeps give
+`h*sqrt(30*11) < .076`. The 10-percent energy allowance permits this finite-step
+oscillation and correction while rejecting unstable growth; damped trajectories
+need not conserve energy or match another solver bit for bit.
+
+The original four-body fixture remains a control. Both sizes exercise 32-frame
+local checkpoint replay with .005 scene position/velocity and .002 angular
+bounds, and 257 CPU-authoritative encoded snapshot corrections. The large map
+binds all 128 body/joint identities. Every correction preserves distinct local
+RIDs, exact sleep/mode/tick values, silent observer history and pose/motion within
+.002; incompatible joint policy rejects before any encoded state or event change.
+Each size and ownership variant measures 128 moving full frames and 128 complete
+capture/write/read/apply/two-world-step cycles after 128 warmups, with strict zero
+owner/all-thread managed allocation. Rendering and real socket transport have
+separate acceptance gates.
+
+
+The 2026-10-20 source-built Linux/.NET 10 run passes 24 fresh-process profiles:
+four/64 bodies, CPU/registered/GPU, owner/separate numerical mode and CLR/strict
+NativeAOT. Each profile runs both joint ownership variants. All 48 moving-frame
+and 48 complete-transport allocation brackets report 0/0 owner/all-thread bytes:
+6,144 measured local frames and 6,144 measured two-world correction cycles,
+18,432 measured physical frames in total. There are 72 discriminating disabled
+family controls. Maximum large-ring errors across both executable variants are:
+
+| Backend | Pin gap | Finite groove error | Linear momentum error | Angular momentum error | Peak kinetic plus elastic energy |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| CPU | .005012 | .002804 | .000317 | .019165 | 396.356232 |
+| Registered | .010444 | .053564 | .000313 | .029907 | 395.675018 |
+| GPU | .007190 | .036189 | .000317 | .125122 | 394.505493 |
+
+GPU processes load the NVIDIA hardware driver, observe the selected RTX 3090 Ti,
+and load no software Vulkan driver; CPU/provider processes load no NVIDIA driver
+with Vulkan unavailable. No new Xid is observed over these profiles. Portable
+PDB source sets/checksums match all 2,422 runtime and 261 consumer source documents
+for each build variant. Strict NativeAOT publishes without trim/AOT warnings.
+Evidence, per-process payload hashes, device observations and source proofs are
+under `bin/physics-joint-network/2026-10-20/`; the earlier single-impact preliminary
+cohort is superseded by the distributed-load final cohorts. Functional profiles
+overlap build/verification work, so their elapsed times are not performance data.
+
+The API census stays 1304/1369 Implemented (95.25%), with 65 open declarations and
+92 Excluded. Runtime/API behavior is unchanged. The bounded isolated network does
+not establish contact-rich/CCD networks, arbitrary scales, routed multiplayer,
+native allocation totals, other platforms, window FPS or final same-revision
+mass-performance acceptance; the complete extension class remains Partial.
