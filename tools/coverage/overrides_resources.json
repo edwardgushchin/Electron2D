@@ -1103,6 +1103,12 @@
       "electron2d": "method:Electron2D.PlaceholderTexture.RemapResourceReferences(System.Func<Electron2D.Resource, Electron2D.Resource>)",
       "reason": "ADR 0013/0014 typed lifetime and resource-reference remapping projection for opaque fields retained by a missing ordinary texture. It completes existing Resource duplication/file/local ownership and introduces no additional game-facing operation.",
       "adr": "ADRs 0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.ResourceSaver.SaveScene(Electron2D.Node,System.String,Electron2D.SaverFlags)",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0090 project the existing authoring-host scene save lifecycle into one typed reusable portable operation: live pre-save notification, RESET-aware PackForSave, registered resource write, origin commit and post-save cleanup. This is distinct from a plain resource Save; it adds no editor dependency, numerical simulator or general invocation system. Public file/fresh-process/error/ownership checks are described in resource-files.md#live-scene-authoring-save.",
+      "adr": "ADRs 0013/0090"
     }
   ]
 }

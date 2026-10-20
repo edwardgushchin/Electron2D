@@ -15818,6 +15818,32 @@
     "value": "22"
   },
   {
+    "id": "constant:Electron2D.Node.NotificationEditorPostSave()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Node",
+    "name": "NotificationEditorPostSave",
+    "signature": "public const System.Int32 NotificationEditorPostSave = 9002",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "9002"
+  },
+  {
+    "id": "constant:Electron2D.Node.NotificationEditorPreSave()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Node",
+    "name": "NotificationEditorPreSave",
+    "signature": "public const System.Int32 NotificationEditorPreSave = 9001",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "9001"
+  },
+  {
     "id": "constant:Electron2D.Node.NotificationEnabled()",
     "kind": "constant",
     "declaringType": "Electron2D.Node",
@@ -166468,6 +166494,35 @@
       {
         "name": "resource",
         "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "flags",
+        "type": "Electron2D.SaverFlags",
+        "default": "None"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceSaver.SaveScene(Electron2D.Node,System.String,Electron2D.SaverFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceSaver",
+    "name": "SaveScene",
+    "signature": "public static System.Void SaveScene(Electron2D.Node root, System.String path = \u0022\u0022, Electron2D.SaverFlags flags = None)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "root",
+        "type": "Electron2D.Node",
         "default": null
       },
       {

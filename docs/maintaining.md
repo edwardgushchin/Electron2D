@@ -111,7 +111,7 @@ For strict allocation brackets on runtimes affected by [dotnet/runtime#134724](h
 
 When explicitly forcing collection during allocation-test setup, drain finalizers
 after the last collection before beginning the warm or measured interval. A preceding
-drain cannot account for objects queued by a later collection. Ownership, registered consumer, physics-filter, CPU pool and TextLine
+drain cannot account for objects queued by a later collection. Ownership, registered consumer, physics-filter, report-only replay, CPU pool and TextLine
 helpers share AllocationWarmupCheck, whose controlled second finalizer
 pass detects premature return without changing allocation gates. This follows
 [GC.WaitForPendingFinalizers](https://learn.microsoft.com/en-us/dotnet/api/system.gc.waitforpendingfinalizers?view=net-10.0).

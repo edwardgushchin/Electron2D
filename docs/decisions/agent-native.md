@@ -34,6 +34,8 @@ The existing typed C# surface, scene lifecycle, documentation and executable che
 - Clients use a documented CLI and machine-readable request/result contracts. Provider-specific integrations may adapt those contracts; no particular agent, model provider, network service, SDK, daemon or connection protocol is required by this decision. Command spelling and transport versions are established by their first executable slices.
 - C# authoring and scenario programs use ordinary compiled .NET projects and typed APIs. [ADR 0091](scripting.md#adr-0091) selects C# as the only scripting language and one future concrete Script resource, preserving ordinary Node execution and explicit missing binding/authoring capabilities. This decision does not introduce an interpreter or universal runtime invocation system.
 
+The shared live-scene save operation is ResourceSaver.SaveScene under ADR 0013. It projects the authoring host's pre-save/capture/write/post-save lifecycle without requiring editor widgets or a runtime dependency on the editor assembly. Only this explicit authoring operation publishes Node's editor save notifications; ordinary Pack, PackForSave and resource Save retain their existing contracts. This reusable operation does not establish a unified project CLI, visual editor or complete agent workflow.
+
 #### Three distinct execution modes
 
 | Mode | Required services and behavior | Verification output |

@@ -9,6 +9,15 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Contains("--save-scene-child"))
+{
+    BackendChecks.ReadSaveScene(args[Array.IndexOf(args, "--save-scene-child") + 1], args[0] == "gpu" ? PhysicsServer.Backend.GPU : args[0] == "cpu" ? PhysicsServer.Backend.CPU : null, args.Contains("threaded")); return;
+}
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SAVE_SCENE") is { } saveSceneBackend)
+{
+    BackendChecks.RunSaveScene(saveSceneBackend == "cpu" ? PhysicsServer.Backend.CPU : saveSceneBackend == "gpu" ? PhysicsServer.Backend.GPU : null,
+        Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_THREAD") == "1"); return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_RIDS") is { } resourceRIDBackend)
 {
     BackendChecks.RunResourceRIDs(resourceRIDBackend == "cpu" ? PhysicsServer.Backend.CPU : resourceRIDBackend == "gpu" ? PhysicsServer.Backend.GPU : null,

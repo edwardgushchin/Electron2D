@@ -1,6 +1,6 @@
 # ResourceSaver
 
-Last updated: 2026-10-05
+Last updated: 2026-10-20
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.ResourceSaver`. **Source:** [ResourceSaver.cs](../../src/Core/IO/ResourceSaver.cs).
 
@@ -34,6 +34,7 @@ ResourceSaver.Save(scene, "user://level.e2dscene", SaverFlags.Compress);
 | `public static System.Int64 GetResourceIDForPath(System.String path, System.Boolean generate = false)` | Reads a persisted UID or prepares a path UID when requested. |
 | `public static System.Void RemoveResourceFormatSaver(Electron2D.ResourceFormatSaver formatSaver)` | Removes borrowed registration without disposing the saver. |
 | `public static System.Void Save(Electron2D.Resource resource, System.String path = "", Electron2D.SaverFlags flags = None)` | Saves a resource using the first successful recognized saver. |
+| `public static System.Void SaveScene(Electron2D.Node root, System.String path = "", Electron2D.SaverFlags flags = None)` | Performs live-scene authoring notifications, RESET-aware packing, saving and cleanup. |
 | `public static System.Void SetUID(System.String resource, System.Int64 uid)` | Changes a recognized persisted file UID. |
 | `protected override System.Void ValidateDisposal()` | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
 
@@ -120,3 +121,9 @@ Permanent service objects cannot be disposed or unregistered; format extensions 
 ResourceArchiveTests exercises registered public formats, graph/scene persistence, separate-process lifecycle, UID/dependency rewrite, cache replacement, font/theme/pixel/geometry consumers and rollback/lifetime edges on Linux x64. It does not establish editor, rendered archive scenes, foreign-host/AOT, all-resource payloads, unmeasured native allocations or human acceptance.
 
 ShaderInclude source (`.hlslinc`/`.glslinc`) participates in the existing ordered format and cache lifecycle. Source saves use atomic replacement; typed archives store Code. See [ShaderInclude](ShaderInclude.md) for byte limits and build-time dependency consumption.
+
+## Live-scene authoring
+
+`ResourceSaver.SaveScene(root, "user://level.e2dscene")` is the explicit authoring operation. It sends parent-first Node.NotificationEditorPreSave (9001), captures the owned scene using PackForSave, writes through the existing registered saver and updates the root SceneFilePath on successful write. Node.NotificationEditorPostSave (9002) is attempted once pre-save delivery has begun, even after callback/capture/write failure. Internal/unowned descendants receive notifications although owner filtering still decides what is persisted. Temporary packed data retires before post-save cleanup.
+
+Input, owner and capture-access rejection before pre-save sends no notifications. Same-root recursive/concurrent saves reject without a second lifecycle. Callback changes are application-owned; post-save callbacks can restore temporary state. A post-save or origin-observer error does not roll back an already committed file. Independent operation/retirement/cleanup exceptions retain their identity and order. Plain Save, Pack and PackForSave retain their existing notification-free behavior. See [the executable contract](../components/resource-files.md#live-scene-authoring-save).

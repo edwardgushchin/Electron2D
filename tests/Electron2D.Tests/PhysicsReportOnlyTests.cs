@@ -6,6 +6,7 @@ internal static class PhysicsReportOnlyTests
 {
     internal static void Run(PhysicsServer.Backend backend)
     {
+        AllocationWarmupCheck.Verify(Collect);
         using var shape = new CircleShape { Radius = 10 };
         foreach (var firstMode in new[] { Mode.Static, Mode.Kinematic })
             foreach (var secondMode in new[] { Mode.Static, Mode.Kinematic })
@@ -74,7 +75,7 @@ internal static class PhysicsReportOnlyTests
             Check(view.GetContactCount() == 1 && view.GetContactCollider(0) == b && view.GetContactImpulse(0) == Vector2.Zero,
                 "Replay immediately restores report-only contact identity and zero impulse");
             for (var i = 0; i < 64; i++) { point.Capture(); point.Restore(); }
-            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers(); GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
+            Collect();
             for (var i = 0; i < 64; i++) { point.Capture(); point.Restore(); _ = view.GetContactCount(); }
             var all = GC.GetTotalAllocatedBytes(true); var bytes = GC.GetAllocatedBytesForCurrentThread();
             for (var i = 0; i < 64; i++) { point.Capture(); point.Restore(); _ = view.GetContactCount(); }
@@ -239,6 +240,6 @@ internal static class PhysicsReportOnlyTests
         }
         finally { PhysicsServer.FreeRID(a); PhysicsServer.FreeRID(b); PhysicsServer.FreeRID(space); }
     }
-    private static void Collect() { GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers(); GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); }
+    private static void Collect() { GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers(); GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers(); }
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
 }

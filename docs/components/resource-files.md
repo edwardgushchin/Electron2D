@@ -2,6 +2,18 @@
 
 Last updated: 2026-10-20
 
+## Live-scene authoring save
+
+ResourceSaver.SaveScene is the shared live-scene save operation under ADRs 0013/0090. A nonempty explicit path or current root SceneFilePath selects the destination. Known SaverFlags, lifetime, scene-owner and capture access are validated before notification delivery. The retained saver prevents recursive/concurrent saving of the same root without holding its registry lock across callbacks.
+
+Parent-first NotificationEditorPreSave (9001) reaches the whole live subtree, including internal/unowned nodes. Callback-authored values then enter existing isolated RESET-aware PackForSave and ordinary registered file Save. Owner filtering still selects saved nodes. After a successful write, SceneFilePath commits before cleanup; observer failure cannot undo the saved bytes. Temporary packed data is retired before parent-first NotificationEditorPostSave (9002), which is attempted whenever pre-save delivery began, including failed preparation/write. Original operation/retirement/post-save errors are retained in order. Callback effects remain application-owned rather than being implicitly rolled back. Ordinary Pack/PackForSave/Save and fresh instantiation emit neither notification.
+
+```csharp
+ResourceSaver.SaveScene(sceneRoot, "user://level.e2dscene", SaverFlags.Compress);
+```
+
+The public SaveScene consumer exercises real file saving, exact notification order, temporary live physical geometry versus persisted pre-save state, parent/internal delivery, input/owner/preflight failures, same-root reentry and actual concurrent detached saving, failed capture/write, paired original errors, cleanup after commitment and default-path recovery. A separate process registers the same exact compiled factories, loads the file, checks owner filtering and performs a real selected-backend geometry query and physical step. Cold authoring is separate from complete moving-frame managed-allocation measurement. All eighteen final public/root managed and strict NativeAOT profiles pass across CPU/software Vulkan/registered worlds and owner/separate policies, including eighteen fresh reader processes. Each profile measures 128 moving complete physical frames after 128 warm frames at strict 0/0 owner/all-thread managed bytes; total measured frames are 2304, with displacement (4,1) allowed .003 units for float integration. Notification IDs/order, file state, original exceptions and resource identity assertions are exact. Six PDB/Compile cohorts bind the published payload to current sources. Editor UI, unified project tooling, rendered authoring, native allocation and foreign/hardware/performance acceptance remain separate. Ignored receipts are retained in bin/physics-scene-save/2026-10-20/.
+
 ## Executable mesh skin integration
 
 Exact ArrayMesh/ImmediateMesh registration uses bounded versioned geometry/skin/primary-and-secondary-UV bytes and typed Material arrays. Fresh .e2dscene processes preserve surface names, flags, skin weights and material aliases and execute the palette consumer. Malformed geometry fails before replacement.

@@ -87,6 +87,10 @@ receipts. Runtime sources remain unchanged through the current bias audit.
 This establishes the stated software-suite run, not native allocation, foreign
 platform, target GPU/window performance or complete-goal acceptance.
 
+## Report-only allocation preparation, 2026-10-20
+
+The frozen full software run for sources at 374f844b stopped after 863.823 seconds in PhysicsReportOnlyTests.Replay with 0/4656 owner/all-thread managed bytes. The unchanged isolated CPU profile passes at 0/0. Its preparation had a blocking second collection without a following finalizer drain, contrary to the existing maintenance contract. The controlled AllocationWarmupCheck deterministically rejects that exact collector for returning during its second finalizer pass. Report-only replay now uses its existing common Collect helper, and that helper drains after its final collection. The same controlled check executes before this family. Numerical code, measured operations/counts, zero-byte assertions and ordinary production GC are unchanged. The failed whole-suite result remains archived in bin/physics-inherited-full/2026-10-20/; the specific 4656-byte allocation stack was not captured, so the setup defect does not by itself prove that entire failure's cause.
+
 ## Material allocation measurement
 
 Material allocation brackets now complete both collection/finalization passes
