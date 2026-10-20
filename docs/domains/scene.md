@@ -1,3 +1,5 @@
+[Custom decoration input](../classes/Window.md#custom-decoration-input) connects stored Window rectangles to blocked-parent mouse reception across native and embedded modal children. Typed event lifetime, final viewport ownership and scene persistence share the existing scene pipeline.
+
 [Linked runtime scenes](../components/linked-scenes.md) now reconstruct actual templates with selected typed overrides, local ownership, inserted positions and original node identities. Version-5 files preserve external/bundled links; root inheritance and editor instantiation modes remain separate.
 
 # Scene domain

@@ -131,7 +131,7 @@ public sealed partial class SceneTree
         try
         {
             windowLocal = input.XformedBy(new Transform(0, -(Vector2)chosen.Position));
-            ReceiveWindowInput(chosen, windowLocal, ref errors);
+            if (!ReceiveWindowInput(chosen, windowLocal, ref errors)) return null;
             if (chosen.IsDisposed || !ReferenceEquals(chosen.Tree, this) || chosen.GUIDisableInput) return null;
             localized = chosen.MakeViewportInputLocal(windowLocal);
             result = RouteEmbeddedInput(chosen, localized, out target, ref errors);
@@ -148,10 +148,15 @@ public sealed partial class SceneTree
         if (viewport is Popup popup) try { popup.HandlePopupInput(input); } catch (Exception error) { CollectException(ref errors, error); }
         return !viewport.IsDisposed && ReferenceEquals(viewport.Tree, this) ? input : null;
     }
-    private void ReceiveWindowInput(Window window, InputEvent input, ref List<Exception>? errors)
+    private bool ReceiveWindowInput(Window window, InputEvent input, ref List<Exception>? errors)
     {
-        if (window.IsDisposed || !ReferenceEquals(window.Tree, this)) return;
+        if (window.IsDisposed || !ReferenceEquals(window.Tree, this)) return false;
+        var blocked = NativeInputBlockedByExclusive(window);
+        if (blocked || window.HasExclusiveInputChild)
+            try { window.EmitNonclientWindowInput(input); } catch (Exception error) { CollectException(ref errors, error); }
+        if (blocked || window.IsDisposed || !ReferenceEquals(window.Tree, this)) return false;
         try { window.EmitWindowInput(input); } catch (Exception error) { CollectException(ref errors, error); }
+        return true;
     }
     private void RefreshMenuBarHover(Control owner, Viewport host, Vector2 point)
     {

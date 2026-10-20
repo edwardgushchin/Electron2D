@@ -941,8 +941,8 @@ public sealed partial class SceneTree : MainLoop
         if (!executionOwned) BeginExecution();
         try
         {
-            if (fromWindow && viewport is Window origin && NativeInputBlockedByExclusive(origin)) return;
-            if (fromWindow && viewport is Window window) ReceiveWindowInput(window, inputEvent, ref errors);
+            if (fromWindow && viewport is Window window && !ReceiveWindowInput(window, inputEvent, ref errors))
+            { ThrowCollected("Window input callbacks failed.", errors); return; }
             if (fromWindow && !viewport.IsDisposed && ReferenceEquals(viewport.Tree, this) && viewport is Window nativeSource)
             {
                 nativeRouted = RouteNativePopupInput(nativeSource, inputEvent, out var nativeTarget);
@@ -995,6 +995,7 @@ public sealed partial class SceneTree : MainLoop
         try
         {
             _inputViewport = inputViewport;
+            if (inputViewport is Window { HasExclusiveInputChild: true }) return;
             CaptureInputNodes();
             if (!embedded && updateMouseHover && inputViewport is { } hoverViewport && @event is InputEventMouse hoverMouse)
                 UpdateGUIHover(hoverViewport, hoverMouse.Position, ref errors);

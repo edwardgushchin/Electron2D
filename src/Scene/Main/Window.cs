@@ -258,7 +258,7 @@ public partial class Window : Viewport
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(WindowProperties).Concat(ContentProperties).Concat(PopupProperties).Concat(ThemeProperties).Concat(ThemeOwner.Properties<Window>());
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(WindowProperties).Concat(InputProperties).Concat(ContentProperties).Concat(PopupProperties).Concat(ThemeProperties).Concat(ThemeOwner.Properties<Window>());
 
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Window)
@@ -278,6 +278,7 @@ public partial class Window : Viewport
             GoBackRequested = null;
             VisibilityChanged = null;
             WindowInput = null;
+            NonclientWindowInput = null;
             TitleChanged = null;
             FocusEntered = null;
             FocusExited = null;

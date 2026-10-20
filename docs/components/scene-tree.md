@@ -2,7 +2,7 @@
 
 `QuitOnGoBack` defaults to true independently of `AutoAcceptQuit`. Root system back notifications precede this policy, and public `Window.GoBackRequested` subscribers follow it. Blocking root signals suppresses both policy and signal; child-window requests do not quit. The [system back runtime](window-runtime.md#system-back-navigation) owns native production and verification.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 ## Selected authoring context
 
@@ -331,3 +331,5 @@ event, layout, theme, navigation and network consumers retain their own receipts
 under `bin/physics-deferred-contract/2026-10-20/`. CLR and strict NativeAOT evidence
 does not establish native allocations, hardware speed, foreign platforms or
 complete physics/network acceptance.
+
+[Custom decoration input](../classes/Window.md#custom-decoration-input) uses shared window reception before exclusive-child rejection. Embedded forwarding remains available; final blocked client callbacks cannot execute even through direct PushInput. The local handled flag clears before this blocked return, preserving the ordinary per-event transition.

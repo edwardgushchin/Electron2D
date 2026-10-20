@@ -26,6 +26,8 @@ internal static class WindowInputTests
     }
     internal static void RunManaged()
     {
+        if (WindowNonclientTests.Child()) return;
+        WindowNonclientTests.RunManaged();
         var log = new List<string>();
         using (var detached = new ProbeWindow(log))
         {
@@ -107,6 +109,7 @@ internal static class WindowInputTests
     }
     internal static void RunNative(bool fail)
     {
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_INPUT") is "nonclient-gpu" or "nonclient-compatibility" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_INPUT") is { } nonclient) { WindowNonclientTests.RunNative(nonclient[10..]); return; }
         var log = new List<string>(); var visibility = new List<string>(); var frames = 0;
         var root = new Window { Size = new(320, 240), GUIEmbedSubwindows = true, Title = "Window input checks" };
         var child = new ProbeWindow(visibility) { Size = new(80, 60), Position = new(40, 30), Borderless = true };

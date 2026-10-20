@@ -1,6 +1,6 @@
 # Window
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 **Inherits:** [Viewport](Viewport.md)
 
@@ -49,6 +49,7 @@ Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested cod
 
 | Member | Contract |
 | --- | --- |
+| [`public Rect2i NonclientArea { get; set; }`](#nonclientarea) | Stored custom-decoration mouse rectangle while normal input is blocked by an exclusive child. |
 | [`public Vector2i MaxSize { get; set; }`](#maxsize) | Gets or sets nonnegative maximum client dimensions; zero means no limit on that axis. |
 | [`public Vector2i MinSize { get; set; }`](#minsize) | Gets or sets nonnegative minimum client dimensions; zero means no limit on that axis. |
 | [`public Vector2i Position { get; set; }`](#position) | Gets or requests the client origin in native desktop or embedded-host coordinates. |
@@ -97,6 +98,7 @@ Window owns `Show()` and `Hide()`; both assign Visible and preserve native failu
 
 | Member | Contract |
 | --- | --- |
+| [`public event Action<InputEvent>? NonclientWindowInput`](#nonclientwindowinput) | Borrowed mouse reception for the enabled custom rectangle before blocked normal input. |
 | [`public event Action? VisibilityChanged`](#visibilitychanged) | Runs synchronously after the window visibility commits, before canvas propagation. |
 | [`public event Action? CloseRequested`](#closerequested) | Occurs when the system requests closure of this root window. |
 | [`public event Action? GoBackRequested`](#gobackrequested) | Android system back, after subtree notifications and root back policy. |
@@ -896,3 +898,34 @@ Transparent native PopupPanel/PopupMenu output executes through the compatibilit
 Window.Transparent configured before Engine.Run is passed into native main-window creation, sharing the existing child creation-time alpha policy. Compatibility preserves native alpha, including loading-image backgrounds. Strict GPU startup rejects because the current SDL GPU presentation API cannot present transparent windows; configured RenderingFallback can select Compatibility. Equal live assignments preserve the active flag; changing alpha after native creation rejects without changing authored state.
 
 BootImageTests verifies real main-window alpha pixels, the native transparency flag, strict GPU failure cleanup, permitted fallback and live-change rollback on software Linux Wayland/X11. This does not establish physical compositor appearance, native GPU alpha or other-platform support.
+
+## Custom decoration input
+
+<a id="nonclientarea"></a>
+### `public Rect2i NonclientArea { get; set; }`
+
+Defines a custom decoration input rectangle in window-client coordinates before the final viewport transform. The default is empty. The typed writable descriptor is stored in scene files and inherited by popup/dialog subclasses. Only strictly positive dimensions enable it. Integer hit testing truncates the mouse position toward zero, includes top/left and excludes bottom/right. Zero/negative rectangles retain their value and capture nothing. This rectangle does not draw a frame or change native hit-test regions.
+
+Reads require the attached owner thread and a live object. Writes also respect mutation/capture barriers. Disposal throws ObjectDisposedException; wrong-owner/capture mutations throw InvalidOperationException.
+
+<a id="nonclientwindowinput"></a>
+### `public event Action<InputEvent>? NonclientWindowInput`
+
+When a visible exclusive child blocks normal reception, a mouse event inside NonclientArea is delivered before ordinary WindowInput or native-parent rejection. Motion and button roles qualify, including internal mouse refreshes. Keys, touch and gestures do not. No signal is emitted without blocked ownership. Native blocked reception stops after this signal. An embedding host may continue WindowInput and route to embedded children; it cannot invoke its own blocked client callbacks. Direct PushInput emits neither of its own reception signals and retains exclusive-child ownership checks.
+
+The event is borrowed synchronously. Embedded delivery has removed the receiving window position; content scaling is still pending. Changing the event or modal state affects subsequent embedded dispatch. A native blocked event keeps its captured suppression even when its callback closes the child; later events can resume. Signal blocking suppresses the event. Pause and this receiving window's GUIDisableInput do not suppress reception that has reached the window; an input-disabled embedder does not forward events.
+
+Callback failures are collected and reported after permitted later routing. Retiring the receiving window skips stale callbacks and disposes only engine-owned transformed copies. Recursive injection and off-owner dispatch reject. Disposal clears subscribers.
+
+```csharp
+window.NonclientArea = new Rect2i(0, 0, 240, 24);
+window.NonclientWindowInput += input =>
+{
+    if (input is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left })
+        dialog.Hide();
+};
+```
+
+This focused snippet assumes an attached window, its visible exclusive dialog and application-drawn decoration.
+
+WindowNonclientTests checks ownership, edges, disabled rectangles, internal mouse versus nonmouse roles, ordering, borrowed lifetime, signal blocking, pause, callback failure/mutation/retirement, wrong owner, handled-state reset, derived popup/dialog storage and fresh-process archived execution. Actual native queue input changes completed framebuffer pixels beside embedded and independent modal children on software Vulkan/OpenGL Wayland and X11; failure paths retire both native windows and services. A prepared helper interval of 1024 hits plus 1024 misses uses zero owner-thread managed bytes. Whole-input allocation totals, native allocator, physical desktop input, other platforms and editor acceptance remain separate.

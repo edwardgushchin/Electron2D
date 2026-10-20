@@ -1,6 +1,6 @@
 # SceneTree
 
-Last updated: 2026-10-19
+Last updated: 2026-10-21
 
 **Inherits:** [MainLoop](MainLoop.md)
 
@@ -1142,3 +1142,5 @@ Native independent Window input uses its public lifetime ID to select the receiv
 Native popup lifetimes retain opening order separately from embedded windows. Positional routing uses the native root-client plane, preserves the original window identity and disposes temporary transformed events. Opening-control safe rectangles allow owner input; outside presses request dismissal, while exclusive children with a distinct native host suppress parent native reception and viewport dispatch. Embedded exclusive children continue through their shared native source and its embedded routing. Direct native popup events retain their native origin. Native retirement unregisters hidden/disposed lifetimes; embedded routing remains independent. See [popup windows](../components/popup-windows.md#native-popup-presentation) for backend limits.
 
 The [MainLoop callback audit](../components/main-loop.md#complete-frame-and-lifecycle-callback-audit) verifies initialization, fixed/idle deltas and stop results, failure recovery and terminal finalization with real selected CPU/software-GPU/registered worlds. Explicit library-host ownership and warmed zero managed allocation remain distinct from platform permissions and hardware performance.
+
+[Custom decoration input](../classes/Window.md#custom-decoration-input) uses shared window reception before exclusive-child rejection. Embedded forwarding remains available; final blocked client callbacks cannot execute even through direct PushInput. The local handled flag clears before this blocked return, preserving the ordinary per-event transition.

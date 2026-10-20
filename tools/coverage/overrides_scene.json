@@ -6031,6 +6031,16 @@
       "godot": "Polygon2D::property:antialiased",
       "electron2d": "property:Electron2D.Polygon.Antialiased()",
       "reason": "ADRs 0004/0028/0092: Polygon.Antialiased executes one-framebuffer-pixel boundary coverage on GPU and Compatibility after ordinary skinning/transforms/snapping. Copied referenced contour vertices preserve source weights; reverse triangle-edge cancellation excludes shared diagonals and inverted hole/outer loops exclude the numerical slit. Boundary UV/RGB and source alpha, original fill, typed property/file storage, owner/disposal guards and pooled retry remain intact. PolygonAntialiasTests verifies geometry/winding/reflection/concavity/inversion/unused vertices, native edge/texture/alpha/diagonal/pose/HDR/MSAA/snap/repeat pixels and prepared zero-managed-owner-byte active redraw. PremultAlpha fades all channels; multiply blending explicitly reject because they ignore coverage alpha. Joins are bounded to four pixels; authored vertex programs may alter width and fragments must preserve alpha. This is outward fringe coverage, not exact multisample area integration. Self-intersecting deformation, native allocator, physical GPU, foreign platforms and full-suite acceptance remain unverified."
+    },
+    {
+      "godot": "Window::property:nonclient_area",
+      "electron2d": "property:Electron2D.Window.NonclientArea()",
+      "reason": "ADR 0040: stored Rect2i custom decoration and typed NonclientWindowInput execute before exclusive-child normal-input rejection. Native source suppression and embedded forwarding preserve existing ownership; only mouse roles hit positive half-open integer client rectangles before final viewport transform. Internal events, signal blocking, callback mutation/failure, retirement, direct-input exclusion, handled-state reset, inherited dialogs and fresh archived execution are verified. Pinned viewport.cpp localizes embedded coordinates before window.cpp dispatch. Software Wayland/X11 GPU/Compatibility framebuffers and native failure cleanup remain separate from physical input, foreign platforms and native allocator acceptance."
+    },
+    {
+      "godot": "Window::signal:nonclient_window_input(InputEvent:)",
+      "electron2d": "event:Electron2D.Window.NonclientWindowInput()",
+      "reason": "ADR 0040: stored Rect2i custom decoration and typed NonclientWindowInput execute before exclusive-child normal-input rejection. Native source suppression and embedded forwarding preserve existing ownership; only mouse roles hit positive half-open integer client rectangles before final viewport transform. Internal events, signal blocking, callback mutation/failure, retirement, direct-input exclusion, handled-state reset, inherited dialogs and fresh archived execution are verified. Pinned viewport.cpp localizes embedded coordinates before window.cpp dispatch. Software Wayland/X11 GPU/Compatibility framebuffers and native failure cleanup remain separate from physical input, foreign platforms and native allocator acceptance."
     }
   ],
   "extras": [
@@ -10285,7 +10295,6 @@
         "Window::property:extend_to_title",
         "Window::property:mouse_passthrough",
         "Window::property:mouse_passthrough_polygon",
-        "Window::property:nonclient_area",
         "Window::property:sharp_corners"
       ]
     },
@@ -11852,13 +11861,6 @@
     },
     {
       "godot": [
-        "Window::signal:nonclient_window_input(InputEvent:)"
-      ],
-      "state": "Unimplemented",
-      "reason": "Exact prerequisite: executable Window.NonclientArea custom-decoration input ownership and native/embedded exclusive-child bypass routing. Ordinary WindowInput does not supply this separate path (ADR 0040)."
-    },
-    {
-      "godot": [
         "Node::method:is_displayed_folded()",
         "Node::method:set_display_folded(bool:)",
         "Node::method:is_editable_instance(Node:)",
@@ -12106,6 +12108,14 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0015/0016: typed owner-thread lifecycle and double-second callbacks retain one successful initialization, fixed-before-idle scaled scheduling, unchanged stop results, one terminal finalization, callback-failure recovery and disposal ownership. Public --loop-lifecycle drives real CPU/software-GPU/registered worlds in serial/separate modes through direct and Engine hosts; moving/querying warm frames require 0/0 owner/all-thread managed bytes. Root MainLoop/Engine and physics-clock checks cover defaults, Input cleanup, catch-up, time capture, reentry and terminal errors. NativeAOT is checked separately; OS permissions, hardware cadence and inherited Object behavior remain separate obligations."
+    },
+    {
+      "godot": [
+        "Window::property:nonclient_area",
+        "Window::signal:nonclient_window_input(InputEvent:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0040: stored Rect2i custom decoration and typed NonclientWindowInput execute before exclusive-child normal-input rejection. Native source suppression and embedded forwarding preserve existing ownership; only mouse roles hit positive half-open integer client rectangles before final viewport transform. Internal events, signal blocking, callback mutation/failure, retirement, direct-input exclusion, handled-state reset, inherited dialogs and fresh archived execution are verified. Pinned viewport.cpp localizes embedded coordinates before window.cpp dispatch. Software Wayland/X11 GPU/Compatibility framebuffers and native failure cleanup remain separate from physical input, foreign platforms and native allocator acceptance."
     }
   ]
 }

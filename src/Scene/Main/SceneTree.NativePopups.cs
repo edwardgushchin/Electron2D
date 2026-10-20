@@ -26,9 +26,11 @@ public sealed partial class SceneTree
     private static bool NativeInputBlockedByExclusive(Window source)
     {
         if (source.NativeDisplay?.HasExclusiveNativeChild() == true) return true;
+        Window? nativeSource = source;
+        while (nativeSource?.Embedder is { } sourceHost) nativeSource = sourceHost.GetWindow();
         var target = source.GetLastExclusiveWindow();
         while (target?.Embedder is { } host) target = host.GetWindow();
-        return target is not null && !ReferenceEquals(target.NativeDisplay, source.NativeDisplay);
+        return target is not null && !ReferenceEquals(target.NativeDisplay, nativeSource?.NativeDisplay);
     }
 
     private InputEvent? RouteNativePopupInput(Window source, InputEvent input, out Window target)

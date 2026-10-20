@@ -58859,6 +58859,19 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.Window.NonclientWindowInput()",
+    "kind": "event",
+    "declaringType": "Electron2D.Window",
+    "name": "NonclientWindowInput",
+    "signature": "public event System.Action\u003CElectron2D.InputEvent\u003E NonclientWindowInput",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.InputEvent\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.Window.ThemeChanged()",
     "kind": "event",
     "declaringType": "Electron2D.Window",
@@ -264678,6 +264691,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.WindowMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Window.NonclientArea()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "NonclientArea",
+    "signature": "public Electron2D.Rect2i NonclientArea { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2i",
     "value": null
   },
   {

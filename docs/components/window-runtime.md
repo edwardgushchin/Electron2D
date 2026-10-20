@@ -1,6 +1,6 @@
 # Window runtime component
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -115,10 +115,7 @@ forwarded nested popups do not close their ancestor popup. WindowInputTests chec
 these paths and reception edits before popup policy; ColorPickerTests checks text
 commit before acceptance and restoration on cancellation.
 
-The native decoration producer for TitlebarChanged, custom nonclient input ownership
-for NonclientWindowInput, and host go-back request/policy integration are distinct
-prerequisites. TitleChanged already covers text changes and does not establish a
-native decoration-change signal.
+The native decoration producer for TitlebarChanged remains a separate prerequisite. TitleChanged covers text changes; custom nonclient input and system back requests now have their own executing producers.
 
 ## Independent native windows
 
@@ -178,3 +175,7 @@ Use SDK 32 to exercise the legacy producer. The runner verifies the emulator ide
 Window.Transparent configured before Engine.Run is passed into native main-window creation, sharing the existing child creation-time alpha policy. Compatibility preserves native alpha, including loading-image backgrounds. Strict GPU startup rejects because the current SDL GPU presentation API cannot present transparent windows; configured RenderingFallback can select Compatibility. Equal live assignments preserve the active flag; changing alpha after native creation rejects without changing authored state.
 
 BootImageTests verifies real main-window alpha pixels, the native transparency flag, strict GPU failure cleanup, permitted fallback and live-change rollback on software Linux Wayland/X11. This does not establish physical compositor appearance, native GPU alpha or other-platform support.
+
+## Custom decoration input
+
+Window.NonclientArea and NonclientWindowInput preserve mouse reception while an exclusive child blocks ordinary input. The shared window-reception path runs this signal before native suppression or embedded WindowInput. The final blocked viewport cannot consume client input, including direct injection, and clears stale handled state. Stored rectangles, typed inheritance, synchronous borrowed events, failure continuation and retirement share ordinary Window/scene ownership. See [the complete contract and verification](../classes/Window.md#custom-decoration-input).

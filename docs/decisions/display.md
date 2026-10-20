@@ -1,6 +1,6 @@
 # Display decisions
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 
 Public process-wide service operations delegate statically to retained objects under [ADR 0095](singleton-services.md#adr-0095). Owning lifetime, threading and native resource contracts below continue to apply.
@@ -10,7 +10,7 @@ This bounded log owns native display connection, window, and event-pump decision
 <a id="adr-0040"></a>
 ## ADR 0040: One SDL display server and typed native window hosts
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 ### Status
 
@@ -24,6 +24,7 @@ Electron2D previously had no native display host. Engine accepted elapsed time f
 
 - `DisplayServer` is one process-owned, explicitly disposed `ElectronObject` in the runtime assembly. It owns SDL video and gamepad initialization, the high-density resizable main window and independently rendered desktop child windows, cursor and controller handles, and one native event pump. Public IDs use zero for the main window and increasing positive identities for child lifetimes; retired identities are never reused within the display session. Native SDL handles stay private.
 - Desktop Window children with PopupWMHint use real SDL parent-relative popup surfaces. The native parent outlives each popup; hidden/retired parents first retire their popup descendants and release presentation owners before SDL can recursively destroy them. Independent ordinary windows keep their existing lifetime. Native popup-done force-hides the affected scene window without a user close request; visibility and PopupHide observers run after native/render retirement, and failures are aggregated after required transitions.
+- Window.NonclientArea is a stored positive-area integer custom decoration rectangle. When exclusive-child ownership blocks normal input, mouse roles inside it emit NonclientWindowInput before native suppression or embedded WindowInput. Native suppression remains captured for that event; embedded callbacks may change subsequent routing. Coordinates are window-client before final viewport localization; the pinned embedded forwarder removes the window position before its window-input callback. Internal mouse events qualify, nonmouse roles do not. Direct PushInput bypasses its own reception signals and cannot consume a blocked client viewport. Signal blocking, owner/capture/disposal guards, callback failure continuation and engine-owned transformed-event cleanup remain shared contracts. This creates no native decoration or OS hit-test region.
 - Native popup input uses retained opening order, exclusive-parent suppression and native root-client coordinates. WindowGetActivePopup observes live popup policy; WindowGetPopupSafeRect/WindowSetPopupSafeRect use actual desktop coordinates and reject nonempty global areas on Wayland. Runtime control anchors and their safe areas use native parent-client coordinates without fabricating a desktop origin. Public Position/global Popup rectangles and display-centered placement retain the existing Wayland global-coordinate guard. Native centered geometry uses the full parent display; fitting uses its usable area.
 - Native popup roles are fixed-size/borderless and cannot use top-level modes or move independently to another display. NoFocus is available on these Wayland popup roles. Undecorated popup titles retain logical metadata. Native transparency is selected before window creation and executes through compatibility presentation, including main-window startup, loading images and alpha-preserving fitted margins. Engine-owned main-window creation carries the authored flag into native creation; permitted GPU fallback selects Compatibility, while strict GPU startup rejects and unwinds. Live native alpha changes remain unsupported. SDL 3.4.18 GPU presentation rejects transparent windows: explicitly opaque native popup consumers execute on GPU; native GPU alpha needs its own executing presentation producer. This does not change transparent embedded presentation on either renderer.
 - Scene Window children use the nearest embedding viewport unless ForceNative is set. A visible non-embedded child requires the active native scene host; mobile, TV and browser hosts retain embedded windows until their independent-surface adapters exist. Hiding or detaching a native child destroys its presentation surface and native identity, preserving its scene object, viewport RID and completed texture. Showing it allocates a new native identity. Child close requests do not imply application quit. Transparent GPU top levels, native popup variants without the popup role, and native decoration controls retain their own capability dependencies.
