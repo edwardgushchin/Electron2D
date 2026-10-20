@@ -1,3 +1,5 @@
+[Missing-node recovery](../classes/MissingNode.md) now executes tolerant class/linked-scene loading, bounded typed field editing, connection retention, duplication, resave and fresh-process restoration. Five dependency-blocked declarations become Implemented. Archive versions 3–7, owner/disposal/failure boundaries and actual software-rendered Wayland/X11 frames are verified separately from editor, hardware, foreign-platform and native allocator acceptance.
+
 [Complete body motion operation](../components/physics-motion-operation.md) now has selected numerical geometry, recovery/timing, exclusion, output and lifetime evidence across current CPU/registered/physical-GPU CLR/NativeAOT cohorts. One operation row becomes Implemented: physics 1304/1369 (95.25%), 65 open, 92 Excluded. The owning classes and full-goal gates remain open.
 
 [Polygon edge smoothing](../components/meshes.md#polygon-edge-smoothing) now closes Antialiased with actual framebuffer boundary geometry on both backends, preserved fill/UV/skin state and explicit custom-shader/topology limits. One missing declaration becomes Implemented; broader Polygon Partial rows retain their own boundaries.

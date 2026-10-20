@@ -12,12 +12,12 @@ internal sealed class MissingResourceData
     internal bool MissingPayload;
     internal bool Recording;
     internal static ResourceFieldRole Role(Type type) => typeof(Node).IsAssignableFrom(type) ? ResourceFieldRole.Node : typeof(Resource).IsAssignableFrom(type) ? ResourceFieldRole.Resource : typeof(Resource[]).IsAssignableFrom(type) ? ResourceFieldRole.ResourceArray : ResourceFieldRole.Scalar;
-    internal void Put(Field field)
+    internal void Put(Field field, bool allowSchemaChange = false)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(field.Name);
         if (field.Name.Length > 65536 || field.Schema.Length > 65536 || field.Bytes.Length > ResourceArchive.Limit || Fields.Count >= 65536 && !Fields.ContainsKey(field.Name)) throw new InvalidDataException("Missing resource field budget exceeded.");
         if (!Recording && !Fields.ContainsKey(field.Name)) throw new InvalidOperationException("Recording must be enabled before adding a field.");
-        if (Fields.TryGetValue(field.Name, out var old) && (old.Schema != field.Schema || old.Role != field.Role)) throw new InvalidOperationException("Recorded field schema cannot change.");
+        if (!allowSchemaChange && Fields.TryGetValue(field.Name, out var old) && (old.Schema != field.Schema || old.Role != field.Role)) throw new InvalidOperationException("Recorded field schema cannot change.");
         if (field.References.Length > 65536) throw new InvalidDataException("Recorded resource array budget exceeded.");
         if (ResourceFileTypes.FindValueType(field.Schema) is { } known)
         {

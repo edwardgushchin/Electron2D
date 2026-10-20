@@ -603,7 +603,9 @@ def main():
         assert rows and all(" | Implemented | " in row for row in rows), name
     assert "Rect2" in next(row for row in pages[CLASS_PAGES / "PlaceholderMesh.md"].splitlines() if row.startswith("| [`property"))
     missing_node_rows = [row for row in pages[CLASS_PAGES / "MissingNode.md"].splitlines() if row.startswith("| [`")]
-    assert len(missing_node_rows) == 5 and all(" | Blocked | " in row and "signal/endpoint" in row for row in missing_node_rows)
+    assert len(missing_node_rows) == 5 and all(" | Implemented | " in row and "version-7" in row for row in missing_node_rows)
+    missing_node_api = [item for item in engine if item["declaringType"] == "Electron2D.MissingNode"]
+    assert missing_node_api and not any(item["kind"] == "constructor" for item in missing_node_api)
     resource_rows = pages[CLASS_PAGES / "Resource.md"].splitlines()
     for name in ("method setup_local_to_scene()", "signal setup_local_to_scene_requested()"):
         row = next(row for row in resource_rows if row.startswith(f"| [`{name}"))

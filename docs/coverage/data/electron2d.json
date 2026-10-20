@@ -6995,6 +6995,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.MissingNode",
+    "kind": "type",
+    "declaringType": "Electron2D.MissingNode",
+    "name": "MissingNode",
+    "signature": "public sealed class Electron2D.MissingNode",
+    "visibility": "public",
+    "baseType": "Electron2D.Node",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.MissingResource",
     "kind": "type",
     "declaringType": "Electron2D.MissingResource",
@@ -123643,6 +123658,149 @@
       }
     ],
     "returnType": "Electron2D.MethodTweener\u003CTValue\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MissingNode.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.MissingNode",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MissingNode.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.MissingNode",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MissingNode.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.MissingNode",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MissingNode.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.MissingNode",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MissingNode.GetStoredPropertyNames()",
+    "kind": "method",
+    "declaringType": "Electron2D.MissingNode",
+    "name": "GetStoredPropertyNames",
+    "signature": "public System.String[] GetStoredPropertyNames()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MissingNode.GetStoredValue\u00601(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.MissingNode",
+    "name": "GetStoredValue",
+    "signature": "public TValue GetStoredValue\u003CTValue\u003E(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "TValue",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MissingNode.RecordSceneConnection\u00603(SceneConnectionBinding\u003CTPublisher, TSubscriber, TBindings\u003E,Electron2D.Node,TBindings)",
+    "kind": "method",
+    "declaringType": "Electron2D.MissingNode",
+    "name": "RecordSceneConnection",
+    "signature": "public System.IDisposable RecordSceneConnection\u003CTPublisher, TSubscriber, TBindings\u003E(SceneConnectionBinding\u003CTPublisher, TSubscriber, TBindings\u003E binding, Electron2D.Node subscriber, TBindings bindings)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "binding",
+        "type": "SceneConnectionBinding\u003CTPublisher, TSubscriber, TBindings\u003E",
+        "default": null
+      },
+      {
+        "name": "subscriber",
+        "type": "Electron2D.Node",
+        "default": null
+      },
+      {
+        "name": "bindings",
+        "type": "TBindings",
+        "default": null
+      }
+    ],
+    "returnType": "System.IDisposable",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MissingNode.SetStoredValue\u00601(System.String,TValue)",
+    "kind": "method",
+    "declaringType": "Electron2D.MissingNode",
+    "name": "SetStoredValue",
+    "signature": "public System.Void SetStoredValue\u003CTValue\u003E(System.String name, TValue value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "TValue",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -243993,6 +244151,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Mesh",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MissingNode.OriginalClass()",
+    "kind": "property",
+    "declaringType": "Electron2D.MissingNode",
+    "name": "OriginalClass",
+    "signature": "public System.String OriginalClass { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MissingNode.OriginalScene()",
+    "kind": "property",
+    "declaringType": "Electron2D.MissingNode",
+    "name": "OriginalScene",
+    "signature": "public System.String OriginalScene { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MissingNode.RecordingProperties()",
+    "kind": "property",
+    "declaringType": "Electron2D.MissingNode",
+    "name": "RecordingProperties",
+    "signature": "public System.Boolean RecordingProperties { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MissingNode.RecordingSignals()",
+    "kind": "property",
+    "declaringType": "Electron2D.MissingNode",
+    "name": "RecordingSignals",
+    "signature": "public System.Boolean RecordingSignals { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

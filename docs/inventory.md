@@ -1,5 +1,7 @@
 # Engine inventory
 
+[MissingNode](classes/MissingNode.md) now provides loader-created recovery of unavailable compiled node factories and linked scene files. Its bounded typed fields and retained connection records integrate with current archive, scene and duplication lifetimes. The internal UnresolvedSceneConnectionSchema metadata role and Node.RecordedConnectionLease are documented in [scene recovery internals](classes/UnresolvedSceneConnectionSchema.md).
+
 [Compiled project batch execution](components/project-batch.md) now joins project operations, detached authoring, headless stepping and actual native capture through public runtime APIs. The tooling SDK types [BatchHost](classes/BatchHost.md), [BatchScenario](classes/BatchScenario.md), [BatchContext](classes/BatchContext.md) and [BatchMode](classes/BatchMode.md) remain in a separate development-tool assembly; the runtime adds six typed host-input overloads without changing existing signatures.
 
 [HDR screen debanding](components/hdr-canvas.md#screen-debanding) now connects stored viewport/root-project controls and renderer-session overrides to final GPU dithering before byte output. Linear/offscreen images and movie capture retain their precision; no production type is added.

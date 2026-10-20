@@ -15,6 +15,8 @@ internal static class SceneConnectionTests
         EventConnection.Subscribe<Node>(h => publisher.Renamed += h, h => publisher.Renamed -= h, _ => subscriber.Position += new Vector2(shape.Radius, 0));
     internal static void Run()
     {
+        if (MissingNodeTests.Child()) return;
+        MissingNodeTests.Run();
         var binding = ResourceFileTypes.RegisterSceneConnection<Node, Sprite, Vector2>("tests.rename-position", nameof(Node.Renamed), "Move", Rename, unbinds: 1);
         var once = ResourceFileTypes.RegisterSceneConnection<Node, Sprite, Vector2>("tests.rename-once", nameof(Node.Renamed), "MoveOnce", RenameOnce, unbinds: 1, oneShot: true);
         Throws<InvalidOperationException>(() => ResourceFileTypes.RegisterSceneConnection<Node, Sprite, Vector2>("tests.rename-position", "Renamed", "Move", Rename));

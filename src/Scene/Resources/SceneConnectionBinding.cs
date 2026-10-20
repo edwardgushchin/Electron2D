@@ -36,6 +36,16 @@ internal abstract class SceneConnectionSchema(string id, string signal, string m
     internal abstract Type SubscriberType { get; }
     internal abstract PropertyDescriptor PayloadDescriptor { get; }
     internal abstract EventConnection Subscribe(Node publisher, Node subscriber, StoredPropertyValue bindings);
+    internal SceneConnectionRuntime Restore(Node publisher, Node subscriber, StoredPropertyValue bindings)
+    {
+        if (publisher is MissingNode || subscriber is MissingNode || this is UnresolvedSceneConnectionSchema)
+        {
+            if (publisher is MissingNode missing) missing.RememberSignal(Signal);
+            return publisher.RetainRestoredSceneConnection(this, subscriber, bindings);
+        }
+        var token = Subscribe(publisher, subscriber, bindings);
+        return publisher.CaptureSceneConnections().Single(c => ReferenceEquals(c.Token, token));
+    }
     protected void ValidateToken(EventConnection token)
     {
         if (!token.IsConnected || token.OneShot != oneShot || token.Deferred != deferred)
@@ -78,5 +88,15 @@ internal sealed class SceneConnectionSchema<TPublisher, TSubscriber, TBindings>(
 }
 
 internal sealed record SceneConnectionRuntime(SceneConnectionSchema Schema, Node Publisher, Node Subscriber,
-    StoredPropertyValue Bindings, EventConnection Token);
+    StoredPropertyValue Bindings, EventConnection? Token);
 internal sealed record SceneConnectionData(SceneConnectionSchema Schema, int PublisherIndex, int SubscriberIndex, StoredPropertyValue Bindings);
+
+internal sealed class UnresolvedSceneConnectionSchema(string id, string signal, string method, int unbinds, int flags)
+    : SceneConnectionSchema(id, signal, method, unbinds, (flags & 4) != 0, (flags & 1) != 0)
+{
+    internal override Type PublisherType => typeof(Node);
+    internal override Type SubscriberType => typeof(Node);
+    internal override PropertyDescriptor PayloadDescriptor => throw new InvalidOperationException("The original compiled connection schema is unavailable.");
+    internal override EventConnection Subscribe(Node publisher, Node subscriber, StoredPropertyValue bindings) =>
+        throw new InvalidOperationException("An unresolved authored connection cannot execute.");
+}

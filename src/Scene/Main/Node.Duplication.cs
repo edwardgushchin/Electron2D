@@ -104,16 +104,20 @@ public partial class Node
                     target._sceneFilePath = original._sceneFilePath;
                     target._editableInstance = original._editableInstance;
                     target._sceneInstanceLoadPlaceholder = original._sceneInstanceLoadPlaceholder;
+                    if (original is MissingNode oldMissing && target is MissingNode newMissing)
+                        newMissing.CopyRecoveryControls(oldMissing, Has(DuplicateFlags.InternalState));
                     if (original is InstancePlaceholder oldPlaceholder && target is InstancePlaceholder newPlaceholder)
                         newPlaceholder.InitializePending(oldPlaceholder.GetInstancePath(), oldPlaceholder.PendingFields.Copy(static r => r).Fields.Values);
                     if (Has(DuplicateFlags.Groups)) foreach (var group in original._groups) target.AddToGroup(group.Key, group.Value);
                     var properties = original.GetPropertyList().Where(property => !property.IsReadOnly &&
                         (property.IsStored || Has(DuplicateFlags.InternalState)) && property.Name != nameof(Name) &&
+                        !(original is MissingNode && MissingNode.IsRecoveryControl(property.Name)) &&
                         !(property.Name == nameof(TranslationDomain) && original.IsTranslationDomainInherited) &&
                         !(original is Window window && property.Name == nameof(Window.Position) && !window.HasAuthoredPosition) &&
                         !(original is FoldableContainer && property.Name.StartsWith("__TitleControl/", StringComparison.Ordinal)))
                         .Concat(original is FoldableContainer foldable ? foldable.CapturedTitleProperties(sourceRoot) : [])
                         .Select(property => new ScenePropertyData(property.Name, property.CaptureStoredValue(original))).ToArray();
+                    if (original is MissingNode missing) properties = missing.CaptureRecoveryProperties(properties);
                     _pairs.Add((original, target, properties, stripped));
                     for (var i = original.GetChildCount() - 1; i >= 0; i--) pending.Push((original.GetChild(i), target, i));
                 }
@@ -219,11 +223,11 @@ public partial class Node
                 foreach (var connection in pair.Source.CaptureSceneConnections())
                 {
                     var subscriber = _copies.GetValueOrDefault(connection.Subscriber) ?? connection.Subscriber;
-                    if (!connection.Schema.PublisherType.IsInstanceOfType(pair.Target) || !connection.Schema.SubscriberType.IsInstanceOfType(subscriber)) continue;
+                    if (pair.Target is not MissingNode && !connection.Schema.PublisherType.IsInstanceOfType(pair.Target) || subscriber is not MissingNode && !connection.Schema.SubscriberType.IsInstanceOfType(subscriber)) continue;
                     var existing = baseline[pair.Target].FirstOrDefault(candidate => !matched.Contains(candidate) &&
                         candidate.Schema == connection.Schema && candidate.Subscriber == subscriber && SameBindings(candidate.Bindings, connection.Bindings));
                     if (existing is not null) { matched.Add(existing); continue; }
-                    connection.Schema.Subscribe(pair.Target, subscriber, connection.Bindings);
+                    connection.Schema.Restore(pair.Target, subscriber, connection.Bindings);
                 }
         }
         private static bool SameBindings(StoredPropertyValue a, StoredPropertyValue b)

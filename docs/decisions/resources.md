@@ -1,6 +1,6 @@
 # Electron2D resources decisions
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 This bounded log owns the complete architectural records for resources. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -9,7 +9,7 @@ Decisions in this log: [0013](#adr-0013), [0014](#adr-0014), [0039](#adr-0039).
 <a id="adr-0013"></a>
 ## ADR 0013: Managed typed Resource contract
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 ### Status
 
@@ -97,11 +97,11 @@ The [threaded loading component](../components/threaded-resource-loading.md) rec
 
 MissingResource records named file fields through closed typed SetRecordedProperty/GetRecordedProperty operations and metadata-only descriptors. These are opaque asset data, never string dispatch into CLR members or an untyped value container. RecordingProperties defaults false: existing fields may be updated with their exact schema; recording must be enabled to add fields. OriginalClass controls the saved factory ID and is metadata, not a stored original field. Copies preserve raw scalar bytes/byte order and transform actual Resource references through the existing duplicate/local/file ownership session. Unknown scalar codecs remain bounded opaque bytes; later restoration validates the original registered descriptor and codec.
 
-New archives use version 5; its scene tables add linked template references and reused-node identities under ADR 0023. Resource definitions retain the version-4 layout. Version 3 added the compiled scene-connection table and typed payloads under ADRs 0010/0023; version-1/2 readers retain their original empty-connection behavior. Version 4 adds an ordinary Texture role with finite representable logical dimensions and an explicit missing-payload marker. Version-1/2/3 files retain their original role layouts. Each property carries scalar/resource/resource-array/node-reference role and its byte order. Resource definitions identify the generic, Mesh or ordinary Texture role; mesh metadata includes finite nonnegative Rect2 bounds, while texture metadata retains signed integer dimensions. Tolerant loading substitutes PlaceholderTexture for an absent ordinary texture factory or archive dependency. Its copied recorded fields preserve the original factory identity, opaque bytes and graph references for restoration when the registered factory becomes available. Layered textures and other exact roles retain their own substitutions. Opaque resource IDs are decoded to live references and re-encoded through the new table, preserving aliases/cycles even when saving a missing subresource as a new root. Known properties keep strict declared-schema and role validation. Legacy version-1 known graphs remain readable; legacy unknown fields cannot be safely relocated and reject. SetAbortOnMissingResources snapshots at synchronous graph entry or threaded request construction; true is the default. Missing external dependencies use the recorded role and exact original factory identity, and recovery never masks malformed files, codec failures or factory failures.
+New archives use version 7. Version 5 added linked template references, version 6 deferred fields, and version 7 self-describing compiled connection metadata under ADR 0023. Resource definitions retain the version-4 layout. Version 3 added the compiled scene-connection table and typed payloads under ADRs 0010/0023; version-1/2 readers retain their original empty-connection behavior. Version 4 adds an ordinary Texture role with finite representable logical dimensions and an explicit missing-payload marker. Version-1/2/3 files retain their original role layouts. Each property carries scalar/resource/resource-array/node-reference role and its byte order. Resource definitions identify the generic, Mesh or ordinary Texture role; mesh metadata includes finite nonnegative Rect2 bounds, while texture metadata retains signed integer dimensions. Tolerant loading substitutes PlaceholderTexture for an absent ordinary texture factory or archive dependency. Its copied recorded fields preserve the original factory identity, opaque bytes and graph references for restoration when the registered factory becomes available. Layered textures and other exact roles retain their own substitutions. Opaque resource IDs are decoded to live references and re-encoded through the new table, preserving aliases/cycles even when saving a missing subresource as a new root. Known properties keep strict declared-schema and role validation. Legacy version-1 known graphs remain readable; legacy unknown fields cannot be safely relocated and reject. SetAbortOnMissingResources snapshots at synchronous graph entry or threaded request construction; true is the default. Missing external dependencies use the recorded role and exact original factory identity, and recovery never masks malformed files, codec failures or factory failures.
 
 An absent external payload is distinct from an unknown factory with preserved fields. Version 4 retains this provenance across duplication, scene-local instances, bundled saves and reloading. A later available factory must not turn absent data into a successful empty concrete resource: tolerant loading retains the typed placeholder and strict loading rejects. Unbundled dependencies retain their original external path and may load the real asset when it becomes available. Explicitly authored PlaceholderTexture/Mesh resources have their ordinary strict-loadable metadata contract. Explicit OriginalClass assignment on MissingResource authors a new recorded-state binding and clears the missing-payload provenance; automatic persistence does not. An authored MissingResource with an empty original identity still persists its recorded fields under its own concrete type.
 
-MissingNode still requires the separate typed persistent signal/endpoint schema and safe missing-node reference projection. No recording-signals switch is implemented without that producer. Missing-resource recovery does not relax Node factory validation or automatically substitute a generic missing resource into an incompatible Material, Font, AudioStream, Shape or other concrete property.
+MissingNode now uses the typed persistent endpoint schemas and bounded field roles under ADR 0023. RecordingSignals gates new explicitly retained connection identities; unresolved records do not execute or create dynamic signals. Version-seven metadata permits fresh-process restoration when original compiled factories and adapters return. Missing-resource recovery does not relax Node factory validation or automatically substitute a generic missing resource into an incompatible Material, Font, AudioStream, Shape or other concrete property.
 
 ### Concrete curve resources
 
@@ -235,7 +235,7 @@ This revision changes architecture and documentation only; it does not establish
 <a id="adr-0039"></a>
 ## ADR 0039: Managed image buffers and codec boundaries
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 ### Status
 

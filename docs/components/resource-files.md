@@ -1,6 +1,6 @@
 # Typed resource and scene files
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 ## Live-scene authoring save
 
@@ -168,7 +168,7 @@ Mounted res:// resources now share [resource pack resolution](resource-packs.md)
 
 ## Version 5 linked scene records
 
-Version 5 introduced linked scene headers; the current writer uses version 6 as described below. Resource definitions retain version-4 role/provenance layout. Each scene node adds its PackedScene resource reference, source-root record index and original relative path after the sibling index; -1 denotes an absent reference/index. Ordinary versions 1–4 remain readable. The shared metadata reader validates the same header for class discovery and decoding; linked graphs validate before publication and construction. See [linked runtime scenes](linked-scenes.md#file-layout).
+Version 5 introduced linked scene headers; the current writer uses version 7 as described below. Resource definitions retain version-4 role/provenance layout. Each scene node adds its PackedScene resource reference, source-root record index and original relative path after the sibling index; -1 denotes an absent reference/index. Ordinary versions 1–4 remain readable. The shared metadata reader validates the same header for class discovery and decoding; linked graphs validate before publication and construction. See [linked runtime scenes](linked-scenes.md#file-layout).
 
 ## Version 6 deferred scene records
 
@@ -177,3 +177,11 @@ Version 5 introduced linked scene headers; the current writer uses version 6 as 
 Internal leases retain pending file graphs across parent disposal and retain automatically loaded scene wrappers across instances, captures and exported SceneState views. Existing caller-owned cache entries stay borrowed; the weak cache does not own the template. File scene changes and reload use the same bounded lifetime transition.
 
 [Factory result ownership](scripting.md#factory-result-ownership) now rejects a pre-existing registered Node/Resource result before issued tracking or decoding. Borrowed targets remain live; fresh default construction and failure cleanup keep their existing contracts.
+
+## Version 7 missing-node and connection recovery
+
+Version 7 keeps the version-6 node layout and resource definitions. Each authored connection stores its compiled schema ID, diagnostic event/handler labels, delivery flags, omitted-argument count, endpoint indices and exactly one self-describing `Bindings` field. That field uses the existing scalar/resource/resource-array role, byte-order and reference remapping rules. Legacy versions 1–6 retain their layouts. Unknown legacy connection adapters and role-free unknown version-1 fields fail explicitly rather than guessing a decoder.
+
+Tolerant loading can construct [MissingNode](../classes/MissingNode.md) for unavailable compiled node factories. Its original portable identity and fields survive a resave; a later process with the factory and adapter registrations reconstructs real typed behavior and connections. Known compatible Node state still applies. Unavailable fields and nonexecuting connection records remain bounded authoring data. Failed known factories, corrupt records and incompatible schemas remain failures. Existing fields can change schema; adding names requires RecordingProperties. Explicit compiled connection recording gates new labels through RecordingSignals. These operations never dispatch arbitrary members by string.
+
+Missing linked archives additionally produce OriginalScene and configuration warnings. Unavailable inherited records are skipped, ordinary outer-owned additions survive, and a resave flattens the absent instance to an ordinary Node, discarding unavailable overrides and incompatible connections. IgnoreDeep/ReplaceDeep honor the missing-file policy even while an older cached resource exists. This does not turn absent leaf codecs or third-party formats into a universal recovery backend.

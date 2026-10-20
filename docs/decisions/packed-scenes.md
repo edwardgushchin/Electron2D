@@ -1,13 +1,13 @@
 # Packed scenes and runtime hierarchy duplication
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 This bounded document owns ADR 0023. The [decision index](index.md) routes adjacent scene and resource contracts.
 
 <a id="adr-0023"></a>
 ## ADR 0023: Typed in-memory packed scenes
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 ### Status
 
@@ -83,11 +83,19 @@ The result is detached with fresh node identities and no Ready delivery; actual 
 
 The dependency is restricted to local-scene association, borrows the existing Core weak identity under [ADR 0050](core-object-runtime.md#adr-0050) and is cleared on resource disposal. Broad asset code should not add more Scene dependencies without a later ADR.
 
+#### Missing-node recovery
+
+Tolerant archive loading creates the non-publicly-constructible `MissingNode : Node` for an unavailable compiled node factory, retaining its original factory identity, typed bounded field records and authored connection records. Strict loading rejects instead. Ordinary inherited Node state still executes; unavailable compiled behavior does not. OriginalClass and OriginalScene are transient recovery identities. Saving an unavailable linked-scene placeholder discards the missing instance and unavailable inherited overrides, with configuration warnings; it does not pretend to recover that template.
+
+RecordingProperties gates creation of new archived field names; existing names remain editable through typed stored-value operations. RecordingSignals gates new diagnostic event identities in explicitly recorded compiled connection bindings. These are bounded archive authoring operations, never universal member invocation or dynamic event emission. A recorded connection to an unavailable endpoint has no executing subscription; ordinary typed subscriptions continue to use their actual EventConnection tokens. Endpoint disposal and duplicate/capture policies own both kinds of authored records.
+
+Archive version 7 makes connection labels, delivery policy and the single bound payload field self-describing, preserving reference roles, aliases, codecs and byte order. Unknown bindings can be retained only with recovered missing endpoints in tolerant mode. A later fresh process with the original factories and compiled connection registration restores real typed subscriptions. Versions 1–6 keep their layouts; absent legacy field roles or unknown legacy connection schemas cannot be inferred and fail explicitly. No assembly discovery or reflection loading is introduced.
+
 #### Events and absent domains
 
 Ordinary C# event subscribers and EventConnection tokens remain runtime objects. Authored SceneConnectionBinding subscriptions store only registered compiled schema IDs, selected endpoint indices and typed bound payloads under ADR 0010. They are restored before lifecycle notification; source delegates and Nodes are never serialized.
 
-ResourceSaver/ResourceLoader persist the typed PackedScene model as version-6 archives under ADR 0013, with version-1/2/3/4/5 layouts retained. Registered compiled factory IDs replace in-memory delegates in files; no assembly loading or script serialization occurs. File roots own decoded graphs and instances retain internal leases under ADR 0014, including replacement/disposal. Import remapping, inherited-root authoring, missing-node recovery and non-Disabled edit states remain absent. Deferred linked instances execute as specified above. Actual linked runtime subscenes execute as specified above. Programmatic descriptions, transient folding, explicit edited-scene membership and flattened editable-owner capture execute as described above. Generic, Mesh and ordinary Texture missing-resource recovery executes under ADR 0013, including version-4 missing-payload provenance; other exact asset substitutions retain their stated prerequisites. The unsupported `PackedSceneEditState` values fail explicitly.
+ResourceSaver/ResourceLoader persist the typed PackedScene model as version-7 archives under ADR 0013, with version-1/2/3/4/5/6 layouts retained. Registered compiled factory IDs replace in-memory delegates in files; no assembly loading or script serialization occurs. File roots own decoded graphs and instances retain internal leases under ADR 0014, including replacement/disposal. Import remapping, inherited-root authoring and non-Disabled edit states remain absent. Missing-node recovery executes as specified above. Deferred linked instances execute as specified above. Actual linked runtime subscenes execute as specified above. Programmatic descriptions, transient folding, explicit edited-scene membership and flattened editable-owner capture execute as described above. Generic, Mesh and ordinary Texture missing-resource recovery executes under ADR 0013, including version-4 missing-payload provenance; other exact asset substitutions retain their stated prerequisites. The unsupported `PackedSceneEditState` values fail explicitly.
 
 ### Consequences
 
@@ -115,4 +123,4 @@ ResourceSaver/ResourceLoader persist the typed PackedScene model as version-6 ar
 
 The executable harness covers the current in-memory contract: empty and unsupported modes, capture selection/order, owner/path/group metadata, typed stored values, source disposal independence, repeated instances, local-resource aliasing/setup/ownership, live-state and path races, duplication, capture failure semantics, capture mutation rejection, factory closure/type/identity rejection, setup cleanup, detached-parent and active-tree escape rollback, and final snapshot survival. Repository verification also checks formatting, Release compilation, generated XML, documentation inventory, internal links, and the absence of prohibited production naming.
 
-It does not establish disk format compatibility, editor behavior, performance on very large loaded scenes, platform asset packaging, script state, visual output, or owner acceptance.
+MissingNodeTests additionally checks role-aware unavailable factories, linked-scene loss warnings, typed field editing, recording gates, inactive connection metadata, duplication, fresh-process resave and restored compiled processing/connections. Independent versions 3–7 and malformed payloads cover the exercised binary layouts. Actual software-rendered Wayland/X11 GPU/compatibility frames verify healthy sibling output and ordinary cleanup beside recovered roles. These checks do not establish universal format compatibility, editor behavior, very large scene performance, platform asset packaging, script state, hardware/native allocator or owner acceptance.

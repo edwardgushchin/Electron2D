@@ -1,6 +1,6 @@
 # SceneState
 
-Last updated: 2026-10-17
+Last updated: 2026-10-21
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -79,7 +79,7 @@ Gets the inherited base scene state.
 
 Gets the number of persistent connections stored in this state.
 
-**Returns:** The active authored connection count captured by the current Pack operation.
+**Returns:** The persistent authored connection count, including nonexecuting records retained for unavailable endpoints.
 
 **Exceptions**
 
@@ -351,3 +351,5 @@ Exported SceneState views also retain their file-backed graph snapshot through a
 Authored typed scene connections use registered compiled `SceneConnectionBinding` factories, copied payloads and dual endpoint cleanup. PackedScene captures/rebinds these subscriptions, including file archives v3. SceneState queries expose paths, diagnostic labels, flags, unbind count and typed payload snapshots. See [packed scenes](../components/packed-scenes.md) for ownership and persistence limits.
 
 For linked roots and reused overrides, `GetNodeType()` returns an empty string. `GetNodeInstance()` borrows the actual template; `GetNodeIndex()` describes placement within an instance. See [linked scenes](../components/linked-scenes.md).
+
+Version-seven archives retain diagnostic connection labels and typed payload schemas even when a compiled endpoint is unavailable. Such records are inspectable and remain inactive until compatible compiled roles and adapters return. See [MissingNode](MissingNode.md).

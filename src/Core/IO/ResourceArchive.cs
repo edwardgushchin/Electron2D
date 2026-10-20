@@ -45,7 +45,7 @@ internal static partial class ResourceArchive
         if (uid == ResourceUID.InvalidID) uid = ResourceUID.CreateID();
         var file = new byte[checked(64 + encoded.Length)];
         "E2DASSET"u8.CopyTo(file);
-        BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(8), 6);
+        BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(8), 7);
         BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(12), (int)flags);
         BinaryPrimitives.WriteInt64LittleEndian(file.AsSpan(16), uid);
         BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(24), payload.Length);
@@ -62,7 +62,7 @@ internal static partial class ResourceArchive
         using var stream = ResourcePacks.OpenRead(path);
         Span<byte> header = stackalloc byte[24];
         if (stream.Read(header) != header.Length || !header[..8].SequenceEqual("E2DASSET"u8)) return ResourceUID.InvalidID;
-        if (BinaryPrimitives.ReadInt32LittleEndian(header[8..]) is not (1 or 2 or 3 or 4 or 5 or 6) || stream.Length < 64) throw new InvalidDataException("Unsupported resource UID header.");
+        if (BinaryPrimitives.ReadInt32LittleEndian(header[8..]) is not (1 or 2 or 3 or 4 or 5 or 6 or 7) || stream.Length < 64) throw new InvalidDataException("Unsupported resource UID header.");
         var id = BinaryPrimitives.ReadInt64LittleEndian(header[16..]);
         return id >= 0 ? id : throw new InvalidDataException("Invalid resource UID.");
     }
@@ -81,7 +81,7 @@ internal static partial class ResourceArchive
         var length = FileAccess.GetSize(path);
         if (length is < 64 or > Limit + 64) throw new InvalidDataException("Invalid resource file size.");
         var bytes = FileAccess.GetFileAsBytes(path);
-        if (!bytes.AsSpan(0, 8).SequenceEqual("E2DASSET"u8) || BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(8)) is not (1 or 2 or 3 or 4 or 5 or 6)) throw new InvalidDataException("Unsupported resource archive version.");
+        if (!bytes.AsSpan(0, 8).SequenceEqual("E2DASSET"u8) || BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(8)) is not (1 or 2 or 3 or 4 or 5 or 6 or 7)) throw new InvalidDataException("Unsupported resource archive version.");
         if (BinaryPrimitives.ReadInt64LittleEndian(bytes.AsSpan(16)) < 0) throw new InvalidDataException("Invalid archive UID.");
         return bytes;
     }
@@ -379,29 +379,35 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
             if (descriptor is null && owner is ResourcePreloader) descriptor = ResourcePreloader.StoredResource(property.Name, property.Value.ValueType);
             if (descriptor is null) throw new InvalidDataException("Stored schema has no matching descriptor.");
             if (descriptor.ValueType != property.Value.ValueType) throw new InvalidDataException("Stored property schema changed.");
+            var storedValue = property.Value is DeferredPropertyValue pending ? descriptor.ReadDeferredValue(pending.Field) : property.Value;
             ResourceArchiveStrings.Write(stream, property.Name);
             ResourceArchiveStrings.Write(stream, ResourceFileTypes.ValueID(property.Value.ValueType));
             stream.PutU8((byte)MissingResourceData.Role(property.Value.ValueType));
             stream.PutU8(BigEndian ? (byte)1 : (byte)0);
             using var value = NewStream();
-            descriptor.WriteFileValue(owner, property.Value, this, value);
+            descriptor.WriteFileValue(owner, storedValue, this, value);
             var data = value.DataArray;
             stream.Put32(data.Length);
             stream.PutData(data);
-            if (prepareSchema && property.Value is not StoredNodeReferenceValue && !typeof(Resource).IsAssignableFrom(property.Value.ValueType)) descriptor.RestoreStoredValue(owner, property.Value, static r => r);
+            if (prepareSchema && storedValue is not StoredNodeReferenceValue && !typeof(Resource).IsAssignableFrom(storedValue.ValueType)) descriptor.RestoreStoredValue(owner, storedValue, static r => r);
             descriptors = owner.GetPropertyList();
             if (owner is Node) Node.ValidateEditorPropertyNames(descriptors);
         }
     }
     private void WriteScene(StreamPeerBuffer stream, PackedSceneData data)
     {
+        data = PackedScene.PrepareMissingSceneSave(data);
+        if (data.Nodes.Length > 65536 || data.Connections.Length > 65536) throw new InvalidDataException("Scene node/connection count exceeds the archive budget.");
         stream.Put32(data.Nodes.Length);
         foreach (var node in data.Nodes)
         {
             // Skipped inherited records do not require the deferred scene's compiled factories.
-            var type = ResourceFileTypes.Get(node.DeferredProperties is not null && node.Factory.RuntimeType != typeof(InstancePlaceholder)
+            var recovering = node.Factory.RuntimeType == typeof(MissingNode);
+            var type = ResourceFileTypes.Get(recovering || node.DeferredProperties is not null && node.Factory.RuntimeType != typeof(InstancePlaceholder)
                 ? typeof(Node) : node.Factory.RuntimeType);
-            ResourceArchiveStrings.Write(stream, type.ID);
+            var typeID = recovering && node.Factory.OriginalScene.Length == 0 ? node.Factory.OriginalClass : type.ID;
+            if (string.IsNullOrWhiteSpace(typeID) || typeID.Length > 256 || typeID.Any(char.IsControl)) throw new InvalidDataException("A recovered class requires a valid original factory identity.");
+            ResourceArchiveStrings.Write(stream, typeID);
             ResourceArchiveStrings.Write(stream, node.Name);
             stream.Put32(node.ParentIndex);
             stream.Put32(node.OwnerIndex);
@@ -416,10 +422,18 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
                 if (node.Properties.Length != 0) throw new InvalidDataException("Deferred records use their self-describing fields.");
                 stream.Put32(0); WriteMissing(stream, node.DeferredProperties); continue;
             }
+            if (recovering && node.Factory.OriginalScene.Length == 0)
+            {
+                var fields = new MissingResourceData { Recording = true };
+                foreach (var property in node.Properties) fields.Put(property.Value.CaptureField(property.Name));
+                WriteMissing(stream, fields); stream.Put32(0); continue;
+            }
             var temporary = Node.InvokeSceneInstanceFactory(() => (Node)type.Factory());
             try
             {
-                WriteProperties(stream, temporary, node.Properties, true);
+                var properties = recovering ? node.Properties.Where(property => temporary.GetPropertyList().Any(descriptor =>
+                    descriptor.Name == property.Name && descriptor.IsStored && ResourceFileTypes.ValueID(descriptor.ValueType) == property.Value.CaptureField(property.Name).Schema)).ToArray() : node.Properties;
+                WriteProperties(stream, temporary, properties, true);
             }
             finally
             {
@@ -431,11 +445,11 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
         foreach (var connection in data.Connections)
         {
             ResourceArchiveStrings.Write(stream, connection.Schema.ID);
+            ResourceArchiveStrings.Write(stream, connection.Schema.Signal); ResourceArchiveStrings.Write(stream, connection.Schema.Method);
+            stream.Put32(connection.Schema.Flags); stream.Put32(connection.Schema.Unbinds);
             stream.Put32(connection.PublisherIndex); stream.Put32(connection.SubscriberIndex);
-            using var payload = NewStream();
-            connection.Schema.PayloadDescriptor.WriteFileValue(null!, connection.Bindings, this, payload);
-            var bytes = payload.DataArray;
-            stream.Put32(bytes.Length); stream.PutData(bytes);
+            var payload = new MissingResourceData { Recording = true }; payload.Put(connection.Bindings.CaptureField("Bindings"));
+            WriteMissing(stream, payload);
         }
     }
     internal void CommitPaths()
@@ -498,7 +512,7 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
                 var dependencyMode = mode is ResourceLoader.CacheMode.IgnoreDeep or ResourceLoader.CacheMode.ReplaceDeep ? mode : ResourceLoader.CacheMode.Reuse;
                 var stage = ResourceLoadGraph.Current;
                 var cachedDependency = stage is null ? Resource.GetRegisteredPath(target) : null;
-                if (!abortOnMissing && version >= 2 && Resource.GetRegisteredPath(target) is null && ResourceArchive.IsPath(target) && !FileAccess.FileExists(target))
+                if (!abortOnMissing && version >= 2 && (dependencyMode is ResourceLoader.CacheMode.IgnoreDeep or ResourceLoader.CacheMode.ReplaceDeep || Resource.GetRegisteredPath(target) is null) && ResourceArchive.IsPath(target) && !FileAccess.FileExists(target))
                 {
                     var missing = ResourceArchive.CreateMissing(d.Type.ID, d.Role, d.Bounds, missingPayload: true);
                     Owned.Add(missing);
@@ -659,10 +673,14 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
         var count = Count(stream);
         var nodes = new SceneNodeData[count];
         var linkedRoots = new bool[count];
-        var skipped = new bool[count];
+        var skipped = new bool[count]; var missingSkipped = new bool[count];
         for (var i = 0; i < count; i++)
         {
-            var type = ResourceFileTypes.Get(ResourceArchiveStrings.Read(stream));
+            var typeID = ResourceArchiveStrings.Read(stream);
+            if (string.IsNullOrWhiteSpace(typeID) || typeID.Length > 256 || typeID.Any(char.IsControl)) throw new InvalidDataException("Invalid node factory identity.");
+            var type = ResourceFileTypes.Find(typeID);
+            if (type is null && abortOnMissing) throw new InvalidDataException("Unknown node factory ID.");
+            type ??= new ResourceFileType(typeID, typeof(MissingNode), static () => new MissingNode());
             if (!typeof(Node).IsAssignableFrom(type.Type)) throw new InvalidDataException("Scene table includes a resource.");
             var name = ResourceArchiveStrings.Read(stream);
             if (!Node.IsValidStoredNodeName(name)) throw new InvalidDataException("Invalid scene node name.");
@@ -672,18 +690,31 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
             if (sibling < -1 || parent >= i || parent < -1 || owner >= count || owner < -1 || i == 0 && (parent != -1 || owner != -1) || i > 0 && (parent < 0 || owner < 0)) throw new InvalidDataException("Invalid scene topology.");
             var link = ResourceArchive.ReadSceneLink(stream, version, i, linkedRoots, _definitions.Length);
             var instance = Reference(link.Reference); var instanceRoot = link.Root; var instancePath = link.Path;
-            if (instance is not null && instance is not PackedScene) throw new InvalidDataException("A linked resource is not a packed scene.");
+            var missingScene = instance is MissingResource unavailable && unavailable.Data.OriginalClass == "PackedScene" ? instance.ResourcePath : "";
+            if (instance is not null && instance is not PackedScene)
+            {
+                if (missingScene.Length == 0 || abortOnMissing) throw new InvalidDataException("A linked resource is not a packed scene.");
+                type = new(typeID, typeof(MissingNode), static () => new MissingNode()); instance = null;
+            }
             if (link.Placeholder.Length != 0 && type.Type != typeof(InstancePlaceholder)) throw new InvalidDataException("A deferred record requires the placeholder node role.");
-            skipped[i] = parent >= 0 && skipped[parent] || instanceRoot >= 0 && (skipped[instanceRoot] || nodes[instanceRoot].InstancePlaceholder.Length != 0);
+            skipped[i] = parent >= 0 && skipped[parent] || instanceRoot >= 0 && (skipped[instanceRoot] || nodes[instanceRoot].InstancePlaceholder.Length != 0 || nodes[instanceRoot].Factory.OriginalScene.Length != 0);
+            missingSkipped[i] = parent >= 0 && missingSkipped[parent] || instanceRoot >= 0 &&
+                (missingSkipped[instanceRoot] || nodes[instanceRoot].Factory.OriginalScene.Length != 0);
             var groupCount = Count(stream);
             var groups = new string[groupCount];
             for (var g = 0; g < groupCount; g++) groups[g] = ResourceArchiveStrings.Read(stream);
             ScenePropertyData[] properties;
             MissingResourceData? deferred = null;
-            if (version >= 6 && (link.Placeholder.Length != 0 || skipped[i] || type.Type == typeof(InstancePlaceholder)))
+            if (version >= 6 && (link.Placeholder.Length != 0 || skipped[i] && !missingSkipped[i] || type.Type == typeof(InstancePlaceholder)))
             {
                 if (Count(stream) != 0) throw new InvalidDataException("Deferred records cannot contain eager property schemas.");
                 properties = []; deferred = new MissingResourceData(); ReadMissing(stream, deferred, allowNodes: true);
+            }
+            else if (type.Type == typeof(MissingNode) || skipped[i])
+            {
+                var fields = new MissingResourceData(); ReadMissing(stream, fields, allowNodes: true);
+                properties = fields.Fields.Values.Select(field => new ScenePropertyData(field.Name, new DeferredPropertyValue(field))).ToArray();
+                if (version >= 6 && Count(stream) != 0) throw new InvalidDataException("An ordinary recovered node cannot contain deferred fields.");
             }
             else
             {
@@ -693,7 +724,8 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
                 if (version >= 6 && Count(stream) != 0) throw new InvalidDataException("An ordinary node cannot contain deferred fields.");
             }
             var nodePath = i == 0 ? "." : parent == 0 ? name : nodes[parent].Path + "/" + name;
-            var factory = new SceneFactoryData(() => (Node)type.Factory(), type.Type, 0);
+            var factory = new SceneFactoryData(() => (Node)type.Factory(), type.Type, 0,
+                type.Type == typeof(MissingNode) && missingScene.Length == 0 ? typeID : "", missingScene);
             nodes[i] = new(factory, name, parent, owner, sibling, nodePath, parent < 0 ? "." : nodes[parent].Path, owner < 0 ? "" : owner == 0 ? "." : "", groups, properties, (PackedScene?)instance, link.Placeholder, instanceRoot, instancePath, deferred);
         }
         if (count == 0)
@@ -719,23 +751,46 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
             };
         }
 
+        var missingAbsent = PackedScene.MissingSceneAbsentNodes(new PackedSceneData(nodes));
         var connections = version >= 3 ? new SceneConnectionData[Count(stream)] : [];
         for (var i = 0; i < connections.Length; i++)
         {
-            var schema = ResourceFileTypes.SceneConnection(ResourceArchiveStrings.Read(stream));
+            var id = ResourceArchiveStrings.Read(stream);
+            var known = ResourceFileTypes.FindSceneConnection(id);
+            var signal = version >= 7 ? ResourceArchiveStrings.Read(stream) : known?.Signal ?? throw new InvalidDataException("An unknown legacy connection has no retained event schema.");
+            var method = version >= 7 ? ResourceArchiveStrings.Read(stream) : known!.Method;
+            var flags = version >= 7 ? stream.Get32() : known!.Flags; var unbinds = version >= 7 ? stream.Get32() : known!.Unbinds;
+            foreach (var label in new[] { id, signal, method })
+                if (string.IsNullOrWhiteSpace(label) || label.Length > 256 || label.Any(char.IsControl)) throw new InvalidDataException("Invalid retained connection identity.");
+            if ((flags & 2) == 0 || (flags & ~7) != 0 || unbinds < 0) throw new InvalidDataException("Invalid retained connection policy.");
             var publisher = stream.Get32(); var subscriber = stream.Get32();
-            if ((uint)publisher >= (uint)count || (uint)subscriber >= (uint)count ||
-                !schema.PublisherType.IsAssignableFrom(nodes[publisher].Factory.RuntimeType) ||
-                !schema.SubscriberType.IsAssignableFrom(nodes[subscriber].Factory.RuntimeType))
-                throw new InvalidDataException("Invalid connection endpoint.");
-            var payloadSize = Count(stream, ResourceArchive.Limit);
-            if (payloadSize > stream.GetAvailableBytes()) throw new InvalidDataException("Truncated connection payload.");
-            using var payload = new StreamPeerBuffer { BigEndian = bigEndian, DataArray = stream.GetData(payloadSize) };
-            var bindings = schema.PayloadDescriptor.ReadFileValue(this, payload);
-            if (payload.GetAvailableBytes() != 0) throw new InvalidDataException("Trailing connection payload.");
+            if ((uint)publisher >= (uint)count || (uint)subscriber >= (uint)count) throw new InvalidDataException("Invalid connection endpoint.");
+            var missingEndpoint = missingAbsent[publisher] || missingAbsent[subscriber] || nodes[publisher].Factory.RuntimeType == typeof(MissingNode) || nodes[subscriber].Factory.RuntimeType == typeof(MissingNode);
+            if (known is null && (abortOnMissing || !missingEndpoint)) throw new InvalidDataException("Scene connection binding is not registered.");
+            var schema = known ?? new UnresolvedSceneConnectionSchema(id, signal, method, unbinds, flags);
+            if (schema.Signal != signal || schema.Method != method || schema.Flags != flags || schema.Unbinds != unbinds ||
+                !missingAbsent[publisher] && nodes[publisher].Factory.RuntimeType != typeof(MissingNode) && !schema.PublisherType.IsAssignableFrom(nodes[publisher].Factory.RuntimeType) ||
+                !missingAbsent[subscriber] && nodes[subscriber].Factory.RuntimeType != typeof(MissingNode) && !schema.SubscriberType.IsAssignableFrom(nodes[subscriber].Factory.RuntimeType))
+                throw new InvalidDataException("Stored connection schema or endpoints changed.");
+            StoredPropertyValue bindings;
+            if (version >= 7)
+            {
+                var payload = new MissingResourceData(); ReadMissing(stream, payload);
+                if (payload.Fields.Count != 1 || !payload.Fields.TryGetValue("Bindings", out var field)) throw new InvalidDataException("Invalid retained connection payload.");
+                if (known is not null && field.Schema != ResourceFileTypes.ValueID(known.PayloadDescriptor.ValueType)) throw new InvalidDataException("Connection payload schema changed.");
+                bindings = new DeferredPropertyValue(field);
+            }
+            else
+            {
+                var payloadSize = Count(stream, ResourceArchive.Limit);
+                if (payloadSize > stream.GetAvailableBytes()) throw new InvalidDataException("Truncated connection payload.");
+                using var payload = new StreamPeerBuffer { BigEndian = bigEndian, DataArray = stream.GetData(payloadSize) };
+                bindings = schema.PayloadDescriptor.ReadFileValue(this, payload);
+                if (payload.GetAvailableBytes() != 0) throw new InvalidDataException("Trailing connection payload.");
+            }
             connections[i] = new(schema, publisher, subscriber, bindings);
         }
-        return new(nodes, connections);
+        return new(nodes, connections.Where(connection => !missingAbsent[connection.PublisherIndex] && !missingAbsent[connection.SubscriberIndex]).ToArray());
     }
     internal void RedirectRoot(Resource replacement)
     {

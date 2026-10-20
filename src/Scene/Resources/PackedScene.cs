@@ -158,7 +158,7 @@ public sealed partial class PackedScene : Resource
             foreach (var node in nodes) node.ValidateSceneInstance();
 
             foreach (var connection in data.Connections)
-                connection.Schema.Subscribe(nodes[connection.PublisherIndex], nodes[connection.SubscriberIndex],
+                connection.Schema.Restore(nodes[connection.PublisherIndex], nodes[connection.SubscriberIndex],
                     connection.Bindings.TransformResources(resources.Resolve));
             resources.AssignLocalScene(root);
             if (setupLocalResources) resources.SetupLocalResources();
@@ -396,8 +396,10 @@ public sealed partial class PackedScene : Resource
             if (instance is not null) ObjectDisposedException.ThrowIf(instance.IsDisposed, instance);
             var sibling = index > 0 && (instanceRoot >= 0 || parentIndex >= 0 && (nodes[parentIndex].Instance is not null || nodes[parentIndex].InstanceRootIndex >= 0) || node.Parent != root && node.Parent?.Owner != root) ? node.GetIndex() : -1;
 
+            if (node is MissingNode recoveredNode) properties = recoveredNode.CaptureRecoveryProperties(properties);
             nodes[index] = new SceneNodeData(
-                new SceneFactoryData(node.CaptureSceneInstanceFactory(), node.GetType(), node.InstanceID),
+                new SceneFactoryData(node.CaptureSceneInstanceFactory(), node.GetType(), node.InstanceID,
+                    node is MissingNode recovered ? recovered.OriginalClass : "", node is MissingNode recoveredScene ? recoveredScene.OriginalScene : ""),
                 node.Name,
                 parentIndex,
                 ownerIndex,
@@ -482,6 +484,18 @@ public sealed partial class PackedScene : Resource
         bool includeInternal = false, bool skipUnavailable = false,
         Func<Resource, Resource>? resolveResource = null, Func<Resource, Resource>? resolveForcedResource = null)
     {
+        if (node is MissingNode missing)
+        {
+            PropertyDescriptor? NativeDescriptor(ScenePropertyData property) => missing.BaseDescriptor(property.Name, includeInternal)
+                ?? Node.StoredEditorProperty(property.Name, property.Value.ValueType);
+            if (nodeReferences != true)
+                foreach (var property in properties)
+                    if (NativeDescriptor(property) is not { } native || ResourceFileTypes.ValueID(native.ValueType) != property.Value.CaptureField(property.Name).Schema)
+                        missing.RestoreRecordedField(property.Value.TransformResources(resolveResource ?? resources.Resolve).CaptureField(property.Name));
+            if (nodeReferences == true) missing.ResolveRecordedNodeReferences(externalReference);
+            properties = properties.Where(property => NativeDescriptor(property) is { } descriptor &&
+                ResourceFileTypes.ValueID(descriptor.ValueType) == property.Value.CaptureField(property.Name).Schema).ToArray();
+        }
         Node.ValidateEditorPropertyNames(node.GetPropertyList());
         var descriptors = node.GetPropertyList().ToDictionary(property => property.Name, StringComparer.Ordinal);
         foreach (var property in properties)

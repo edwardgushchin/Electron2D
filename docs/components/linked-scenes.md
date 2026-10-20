@@ -1,6 +1,6 @@
 # Linked packed scenes
 
-Last updated: 2026-10-17
+Last updated: 2026-10-21
 
 ## Scope and selection
 
@@ -43,3 +43,5 @@ Relative external references follow saved template files and normal deep-cache p
 ELECTRON2D_TEST_LINKED_SCENES=managed/gpu/compatibility selects the focused runner. Checks cover template identity/updates, implicit children, three levels, full typed overlays, placement/name swaps, local pixel and recorded-resource alias/cycle remapping, independent instances, inherited/additional bindings, deep graph copying, failure cleanup, external/relative/bundled fresh processes, versions 1–4 and corrupt-link cache rejection.
 
 Wayland GPU and Compatibility profiles load an archived scene, inspect actual blue/red pixels and a retained local RID, and exercise redraw plus inherited event delivery for 64 prepared active frames. Instantiation/capture are allocating cold operations; the frame check concerns owner-thread managed allocation. Physical GPUs, foreign platforms, native allocation totals, editor UI and owner acceptance remain separate gates. Current results are retained in the slice verification manifest.
+
+[MissingNode](../classes/MissingNode.md) retains unavailable compiled endpoints and connection metadata without invoking a callback. Version-seven files restore actual registered connections when both endpoint roles and adapter return. Missing linked templates produce a recovery node; saving that role discards the absent instance and its inherited overrides while retaining ordinary outer-owned additions.

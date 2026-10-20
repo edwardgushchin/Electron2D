@@ -549,6 +549,31 @@
       "godot": "Texture2D::method:create_placeholder()",
       "electron2d": "method:Electron2D.Texture.CreatePlaceholder()",
       "reason": "ADRs 0004/0013/0014/0028: ordinary texture metadata/factory and version-4 typed missing-texture recovery execute. Original opaque fields/references survive deep/local/fresh-process saves and recover their compiled factory; missing external payloads retain explicit provenance instead of becoming empty known resources. Names/local policy/IDs, external identity checks, cache class replacement and legacy known texture layouts remain validated. GPU/Compatibility missing/restored pixels and prepared active frames use the current Linux software profile; foreign/native-allocation/owner gates remain separate."
+    },
+    {
+      "godot": "class:MissingNode",
+      "electron2d": "T:Electron2D.MissingNode",
+      "reason": "ADRs 0001/0002/0013/0023: loader-created typed missing-node recovery, original class/scene producers, bounded editable archived fields, genuine new-name/event-record gates, nonexecuting retained connection metadata and version-7 fresh-process restoration of actual compiled behavior. Missing scene resaves discard unavailable inherited data with warnings; typed roles, owner lifetime, original delegate-free reconstruction and strict failures remain enforced. Linux managed/software-native evidence is separate from foreign-platform/editor acceptance."
+    },
+    {
+      "godot": "MissingNode::property:original_class",
+      "electron2d": "property:Electron2D.MissingNode.OriginalClass()",
+      "reason": "ADRs 0001/0002/0013/0023: loader-created typed missing-node recovery, original class/scene producers, bounded editable archived fields, genuine new-name/event-record gates, nonexecuting retained connection metadata and version-7 fresh-process restoration of actual compiled behavior. Missing scene resaves discard unavailable inherited data with warnings; typed roles, owner lifetime, original delegate-free reconstruction and strict failures remain enforced. Linux managed/software-native evidence is separate from foreign-platform/editor acceptance."
+    },
+    {
+      "godot": "MissingNode::property:original_scene",
+      "electron2d": "property:Electron2D.MissingNode.OriginalScene()",
+      "reason": "ADRs 0001/0002/0013/0023: loader-created typed missing-node recovery, original class/scene producers, bounded editable archived fields, genuine new-name/event-record gates, nonexecuting retained connection metadata and version-7 fresh-process restoration of actual compiled behavior. Missing scene resaves discard unavailable inherited data with warnings; typed roles, owner lifetime, original delegate-free reconstruction and strict failures remain enforced. Linux managed/software-native evidence is separate from foreign-platform/editor acceptance."
+    },
+    {
+      "godot": "MissingNode::property:recording_properties",
+      "electron2d": "property:Electron2D.MissingNode.RecordingProperties()",
+      "reason": "ADRs 0001/0002/0013/0023: loader-created typed missing-node recovery, original class/scene producers, bounded editable archived fields, genuine new-name/event-record gates, nonexecuting retained connection metadata and version-7 fresh-process restoration of actual compiled behavior. Missing scene resaves discard unavailable inherited data with warnings; typed roles, owner lifetime, original delegate-free reconstruction and strict failures remain enforced. Linux managed/software-native evidence is separate from foreign-platform/editor acceptance."
+    },
+    {
+      "godot": "MissingNode::property:recording_signals",
+      "electron2d": "property:Electron2D.MissingNode.RecordingSignals()",
+      "reason": "ADRs 0001/0002/0013/0023: loader-created typed missing-node recovery, original class/scene producers, bounded editable archived fields, genuine new-name/event-record gates, nonexecuting retained connection metadata and version-7 fresh-process restoration of actual compiled behavior. Missing scene resaves discard unavailable inherited data with warnings; typed roles, owner lifetime, original delegate-free reconstruction and strict failures remain enforced. Linux managed/software-native evidence is separate from foreign-platform/editor acceptance."
     }
   ],
   "statusGroups": [
@@ -726,17 +751,6 @@
     },
     {
       "godot": [
-        "class:MissingNode",
-        "MissingNode::property:original_class",
-        "MissingNode::property:original_scene",
-        "MissingNode::property:recording_properties",
-        "MissingNode::property:recording_signals"
-      ],
-      "state": "Blocked",
-      "reason": "Exact prerequisite: typed persistent scene signal/endpoint storage and binding, plus missing-node factory/reference projection. Version-2 resource field roles do not implement node signal recording or missing-node hierarchy restoration (ADRs 0013/0023). No inert recording switch."
-    },
-    {
-      "godot": [
         "Image::method:create(int:,int:,bool:,int:Image.Format)"
       ],
       "state": "Excluded",
@@ -809,6 +823,17 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0004/0013/0014/0028: ordinary texture metadata/factory and version-4 typed missing-texture recovery execute. Original opaque fields/references survive deep/local/fresh-process saves and recover their compiled factory; missing external payloads retain explicit provenance instead of becoming empty known resources. Names/local policy/IDs, external identity checks, cache class replacement and legacy known texture layouts remain validated. GPU/Compatibility missing/restored pixels and prepared active frames use the current Linux software profile; foreign/native-allocation/owner gates remain separate."
+    },
+    {
+      "godot": [
+        "class:MissingNode",
+        "MissingNode::property:original_class",
+        "MissingNode::property:original_scene",
+        "MissingNode::property:recording_properties",
+        "MissingNode::property:recording_signals"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0001/0002/0013/0023: loader-created typed missing-node recovery, original class/scene producers, bounded editable archived fields, genuine new-name/event-record gates, nonexecuting retained connection metadata and version-7 fresh-process restoration of actual compiled behavior. Missing scene resaves discard unavailable inherited data with warnings; typed roles, owner lifetime, original delegate-free reconstruction and strict failures remain enforced. Linux managed/software-native evidence is separate from foreign-platform/editor acceptance."
     }
   ],
   "extras": [
@@ -1109,6 +1134,46 @@
       "state": "Implemented",
       "reason": "ADRs 0013/0090 project the existing authoring-host scene save lifecycle into one typed reusable portable operation: live pre-save notification, RESET-aware PackForSave, registered resource write, origin commit and post-save cleanup. This is distinct from a plain resource Save; it adds no editor dependency, numerical simulator or general invocation system. Public file/fresh-process/error/ownership checks are described in resource-files.md#live-scene-authoring-save.",
       "adr": "ADRs 0013/0090"
+    },
+    {
+      "electron2d": "method:Electron2D.MissingNode.CreateSceneInstanceFactory()",
+      "reason": "ADRs 0002/0013/0023: typed C# projection for retained recovery fields, explicit compiled connection recording and ordinary Node lifetime/factory/property hooks. These are executable cold authoring operations documented in MissingNode.md, not additional reference declarations or dynamic dispatch.",
+      "adr": "ADRs 0002/0013/0023"
+    },
+    {
+      "electron2d": "method:Electron2D.MissingNode.Dispose(System.Boolean)",
+      "reason": "ADRs 0002/0013/0023: typed C# projection for retained recovery fields, explicit compiled connection recording and ordinary Node lifetime/factory/property hooks. These are executable cold authoring operations documented in MissingNode.md, not additional reference declarations or dynamic dispatch.",
+      "adr": "ADRs 0002/0013/0023"
+    },
+    {
+      "electron2d": "method:Electron2D.MissingNode.GetConfigurationWarnings()",
+      "reason": "ADRs 0002/0013/0023: typed C# projection for retained recovery fields, explicit compiled connection recording and ordinary Node lifetime/factory/property hooks. These are executable cold authoring operations documented in MissingNode.md, not additional reference declarations or dynamic dispatch.",
+      "adr": "ADRs 0002/0013/0023"
+    },
+    {
+      "electron2d": "method:Electron2D.MissingNode.GetPropertyDescriptors()",
+      "reason": "ADRs 0002/0013/0023: typed C# projection for retained recovery fields, explicit compiled connection recording and ordinary Node lifetime/factory/property hooks. These are executable cold authoring operations documented in MissingNode.md, not additional reference declarations or dynamic dispatch.",
+      "adr": "ADRs 0002/0013/0023"
+    },
+    {
+      "electron2d": "method:Electron2D.MissingNode.GetStoredPropertyNames()",
+      "reason": "ADRs 0002/0013/0023: typed C# projection for retained recovery fields, explicit compiled connection recording and ordinary Node lifetime/factory/property hooks. These are executable cold authoring operations documented in MissingNode.md, not additional reference declarations or dynamic dispatch.",
+      "adr": "ADRs 0002/0013/0023"
+    },
+    {
+      "electron2d": "method:Electron2D.MissingNode.GetStoredValue`1(System.String)",
+      "reason": "ADRs 0002/0013/0023: typed C# projection for retained recovery fields, explicit compiled connection recording and ordinary Node lifetime/factory/property hooks. These are executable cold authoring operations documented in MissingNode.md, not additional reference declarations or dynamic dispatch.",
+      "adr": "ADRs 0002/0013/0023"
+    },
+    {
+      "electron2d": "method:Electron2D.MissingNode.RecordSceneConnection`3(SceneConnectionBinding<TPublisher, TSubscriber, TBindings>,Electron2D.Node,TBindings)",
+      "reason": "ADRs 0002/0013/0023: typed C# projection for retained recovery fields, explicit compiled connection recording and ordinary Node lifetime/factory/property hooks. These are executable cold authoring operations documented in MissingNode.md, not additional reference declarations or dynamic dispatch.",
+      "adr": "ADRs 0002/0013/0023"
+    },
+    {
+      "electron2d": "method:Electron2D.MissingNode.SetStoredValue`1(System.String,TValue)",
+      "reason": "ADRs 0002/0013/0023: typed C# projection for retained recovery fields, explicit compiled connection recording and ordinary Node lifetime/factory/property hooks. These are executable cold authoring operations documented in MissingNode.md, not additional reference declarations or dynamic dispatch.",
+      "adr": "ADRs 0002/0013/0023"
     }
   ]
 }

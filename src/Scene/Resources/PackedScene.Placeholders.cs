@@ -30,7 +30,7 @@ public sealed partial class PackedScene
         {
             var node = data.Nodes[i];
             skipped[i] = node.ParentIndex >= 0 && skipped[node.ParentIndex] || node.InstanceRootIndex >= 0 &&
-                (skipped[node.InstanceRootIndex] || data.Nodes[node.InstanceRootIndex].InstancePlaceholder.Length != 0);
+                (skipped[node.InstanceRootIndex] || data.Nodes[node.InstanceRootIndex].InstancePlaceholder.Length != 0 || data.Nodes[node.InstanceRootIndex].Factory.OriginalScene.Length != 0);
         }
         return skipped;
     }

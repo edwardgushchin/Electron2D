@@ -1,6 +1,6 @@
 # ResourceLoader
 
-Last updated: 2026-10-16
+Last updated: 2026-10-21
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed partial class Electron2D.ResourceLoader`. **Source:** [ResourceLoader.cs](../../src/Core/IO/ResourceLoader.cs).
 
@@ -29,7 +29,7 @@ tree.ProcessFrame(0);
 
 | Complete C# signature | Contract |
 | --- | --- |
-| `public static System.Void SetAbortOnMissingResources(System.Boolean abort)` | Selects captured strict/tolerant version-4 generic/mesh/ordinary-texture missing-factory/dependency loading; true initially. |
+| `public static System.Void SetAbortOnMissingResources(System.Boolean abort)` | Selects captured strict/tolerant generic/mesh/ordinary-texture and version-7 node/connection missing-factory/dependency loading; true initially. |
 | `public static System.Void AddResourceFormatLoader(Electron2D.ResourceFormatLoader formatLoader, System.Boolean atFront = false)` | Registers a borrowed typed file loader without duplicating identity. |
 | `public static System.Boolean Exists<TResource>(System.String path)` | Reports whether a supported resource file exists or is already cached. |
 | `public static TResource GetCachedRef<TResource>(System.String path)` | Gets a live cached resource of the requested type, or null when absent. |

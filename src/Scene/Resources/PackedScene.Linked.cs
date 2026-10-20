@@ -133,8 +133,7 @@ public sealed partial class PackedScene
                 if (skipped[connection.PublisherIndex] || skipped[connection.SubscriberIndex])
                     throw new InvalidOperationException("An authored connection targets a node absent under a deferred instance.");
                 var publisher = nodes[connection.PublisherIndex];
-                var token = connection.Schema.Subscribe(publisher, nodes[connection.SubscriberIndex], connection.Bindings.TransformResources(resources.Resolve));
-                foreach (var runtime in publisher.CaptureSceneConnections()) if (ReferenceEquals(runtime.Token, token)) connections.Add(runtime);
+                connections.Add(connection.Schema.Restore(publisher, nodes[connection.SubscriberIndex], connection.Bindings.TransformResources(resources.Resolve)));
             }
             resources.AssignLocalScene(root);
             foreach (var (localRoot, scope) in scopes) scope.AssignLocalScene(localRoot);

@@ -42,7 +42,9 @@ public sealed class SceneState : ElectronObject
         return null;
     }
 
-    /// <summary>Gets the number of active authored connections captured in this state.</summary>
+    /// <summary>Gets the number of persistent authored connections, including inactive recovery records, captured in this state.</summary>
+    /// <returns>The current persistent connection-record count.</returns>
+    /// <exception cref="ObjectDisposedException">This state is disposed.</exception>
     public int GetConnectionCount() => Read(data => data.Connections.Length);
     /// <summary>Gets the publisher's path relative to the packed root.</summary>
     /// <param name="connectionIndex">The zero-based captured connection index.</param>
@@ -319,11 +321,13 @@ internal sealed record SceneNodeData(
 
 internal sealed record ScenePropertyData(string Name, StoredPropertyValue Value);
 
-internal sealed class SceneFactoryData(Func<Node> create, Type runtimeType, ulong sourceInstanceId)
+internal sealed class SceneFactoryData(Func<Node> create, Type runtimeType, ulong sourceInstanceId, string originalClass = "", string originalScene = "")
 {
     private readonly ConditionalWeakTable<Node, object> _issued = new();
 
     internal Type RuntimeType { get; } = runtimeType;
+    internal string OriginalClass { get; } = originalClass;
+    internal string OriginalScene { get; } = originalScene;
     internal ulong SourceInstanceID => sourceInstanceId;
 
     internal Node Create()
@@ -334,6 +338,7 @@ internal sealed class SceneFactoryData(Func<Node> create, Type runtimeType, ulon
         if (node.InstanceID == sourceInstanceId || !_issued.TryAdd(node, new object()))
             throw new InvalidOperationException("A scene instance factory returned a source or previously issued node.");
 
+        if (node is MissingNode missing) missing.SetRecoveryIdentity(OriginalClass, OriginalScene);
         return node;
     }
 }

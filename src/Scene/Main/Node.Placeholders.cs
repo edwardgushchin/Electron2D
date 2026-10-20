@@ -26,6 +26,7 @@ public partial class Node
 
     internal void EnsurePlaceholderAccess() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
     internal void EnsurePendingPropertyMutation() { EnsureMutable(); EnsureEditorAuthoringCommit(); }
+    internal void NotifyPendingPropertyChanged() => EmitEditorStateChanged();
     internal void CopySceneFileLeasesTo(Node target)
     {
         if (_sceneFileLeases is not null)

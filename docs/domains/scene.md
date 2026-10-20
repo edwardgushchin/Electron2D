@@ -2,11 +2,13 @@
 
 # Scene domain
 
+[Missing-node recovery](../classes/MissingNode.md) preserves unavailable compiled roles as bounded typed authoring data, with actual fresh-process restoration and separate missing-instance save consequences under ADR 0023.
+
 [System back navigation](../components/window-runtime.md#system-back-navigation) now connects the native Android host to containing-window notifications, a typed Window event and independent SceneTree root quit policy. Owner-thread delivery, nested-window boundaries, signal blocking and teardown remain scene contracts.
 
 [Process policy and physics pause](../components/scene-tree.md#process-policy-and-physics-pause) now preserve inherited eligibility notifications, root policy, nested failure handling and worker reads. Paused tree frames stop numerical integration while eligible callbacks continue; explicit owned spaces retain independent clocks. Public CPU/software-Vulkan/registered serial/separate managed and NativeAOT checks cover the slice. Full inherited physics, independent hardware GPU, networking and performance gates remain open.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 [Live-scene authoring saves](../components/resource-files.md#live-scene-authoring-save) now share pre/post notification, RESET-aware packing, atomic persistence and cleanup through ResourceSaver.SaveScene. The programmatic operation retains explicit owner/failure/fresh-process evidence and separate visual-editor/tooling gates.
 

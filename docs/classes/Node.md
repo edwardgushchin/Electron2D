@@ -1,6 +1,6 @@
 # Node
 
-Last updated: 2026-10-18
+Last updated: 2026-10-21
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -1984,3 +1984,5 @@ Particle source preparation also rejects scene mutation and disposal while borro
 NotificationEditorPreSave = 9001 and NotificationEditorPostSave = 9002 are published by the explicit [ResourceSaver.SaveScene](ResourceSaver.md#live-scene-authoring) operation. Delivery uses ordinary parent-first PropagateNotification, including internal/unowned descendants and physical nodes. The post notification restores temporary authored state after an attempted save, including failure; it is not proof that a write succeeded. Plain packing, resource Save and scene reconstruction do not publish these notifications. Owner/thread, lifecycle and propagation guards remain unchanged. No editor window or automatic gameplay save is introduced.
 
 Factory results require [construction provenance](ElectronObject.md#factory-construction-provenance) in the current invocation. Unrelated concurrent construction cannot transfer caller ownership; nested factories, ordinary Task context flow and engine worker tasks remain supported.
+
+MissingNode duplication preserves retained fields, recovery identity, remapped Node references and authored nonexecuting connections. Raw duplication without Signals omits these records; UseInstantiation still preserves connections supplied by the source template. InternalState controls the transient recording flags. See [MissingNode](MissingNode.md).

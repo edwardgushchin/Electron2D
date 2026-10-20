@@ -240,6 +240,7 @@ public sealed partial class ThemeDB
         ["MeshDataTool"] = ["MeshDataTool", "ElectronObject"],
         ["MeshInstance"] = ["MeshInstance", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["MeshTexture"] = ["MeshTexture", "Texture", "Resource", "ElectronObject"],
+        ["MissingNode"] = ["MissingNode", "Node", "ElectronObject"],
         ["MissingResource"] = ["MissingResource", "Resource", "ElectronObject"],
         ["MovieWriter"] = ["MovieWriter", "ElectronObject"],
         ["MultiMesh"] = ["MultiMesh", "Resource", "ElectronObject"],

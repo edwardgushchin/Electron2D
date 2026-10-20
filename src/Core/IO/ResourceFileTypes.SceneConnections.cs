@@ -36,9 +36,8 @@ public static partial class ResourceFileTypes
             if (!ResourceLoader.Runtime.FileTypes.SceneConnections.TryAdd(id, schema)) throw new InvalidOperationException("Connection ID already registered.");
         return new(schema);
     }
-    internal static SceneConnectionSchema SceneConnection(string id)
+    internal static SceneConnectionSchema? FindSceneConnection(string id)
     {
-        lock (Gate) return ResourceLoader.Runtime.FileTypes.SceneConnections.GetValueOrDefault(id)
-            ?? throw new InvalidDataException("Scene connection binding is not registered.");
+        lock (Gate) return ResourceLoader.Runtime.FileTypes.SceneConnections.GetValueOrDefault(id);
     }
 }

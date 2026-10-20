@@ -452,7 +452,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [MeshLibrary](classes/MeshLibrary.md) | Resource | Excluded | 25 |
 | [MeshTexture](classes/MeshTexture.md) | Texture2D | Implemented | 4 |
 | [MethodTweener](classes/MethodTweener.md) | Tweener | Implemented | 3 |
-| [MissingNode](classes/MissingNode.md) | Node | Blocked | 4 |
+| [MissingNode](classes/MissingNode.md) | Node | Implemented | 4 |
 | [MissingResource](classes/MissingResource.md) | Resource | Implemented | 2 |
 | [MobileVRInterface](classes/MobileVRInterface.md) | XRInterface | Excluded | 11 |
 | [ModifierBoneTarget3D](classes/ModifierBoneTarget3D.md) | SkeletonModifier3D | Excluded | 2 |

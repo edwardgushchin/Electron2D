@@ -1,5 +1,7 @@
 # SceneConnectionBinding<TPublisher, TSubscriber, TBindings>
 
+Last updated: 2026-10-21
+
 ## Authoring-event rollback
 
 A successful subscription requests the selected publisher's EditorStateChanged after retaining the typed connection. If that callback fails, the new record and token are removed without a second authoring event. Subscription and rollback errors are preserved together. Manual token disposal emits once; endpoint lifetime cleanup and consumed one-shot connections emit no disconnect event.
@@ -22,3 +24,5 @@ public sealed class SceneConnectionBinding<TPublisher, TSubscriber, TBindings>
 Bound resources follow the ordinary packed resource graph, including aliases, scene-local duplication and file ownership. Value payloads require the existing portable codecs; arbitrary Nodes and delegate payloads are rejected. Factory code uses typed event accessors and handles omitted arguments directly. Diagnostic labels and omitted argument count describe that adapter; delivery policy is checked against its returned EventConnection.
 
 See [packed scenes](../components/packed-scenes.md) for capture selection, reconstruction order, file limits and verification.
+
+A [MissingNode](MissingNode.md) can explicitly retain this definition and copied payload as a nonexecuting authoring record. Either endpoint disposal or its record lease removes it; a later file load with compatible compiled roles restores an ordinary subscription. Version-seven files preserve role-aware payload and diagnostic metadata; an unknown adapter with ordinary known endpoints remains an error.
