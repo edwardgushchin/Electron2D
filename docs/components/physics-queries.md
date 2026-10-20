@@ -571,3 +571,29 @@ miss, registered advancement exhaustion and false hollow-source overlap are reta
 in `bin/physics-long-disk-motion/2026-10-20/regression-proof.json`.
 Final evidence: `validation.json`, `warm-proof.json`, `current-source-proof.json`
 and `shader-proof.json` in the same directory. API declaration states are unchanged.
+
+## Oblique long circle motion
+
+The public-only `--oblique-disk-motion` profile extends `--long-disk-motion` to
+four unit-basis poses: identity, exact quarter-turn, and the two independent
+(.8,.6)/(.6,-.8) directions. Six samples, both signs, builtin/procedural compound
+sources and scene/raw peers form 192 configurations. All configurations execute
+once in each warmup and measured interval, with direct cast/overlap and raw/scene
+BodyTestMotion/TestMove routes, exact collider and disabled-slot identities,
+contact surface/normal checks and a real selected physics step in every frame.
+
+The analytical first entry uses the exact float input centers and displacement,
+with double dot/cross intermediates. Existing .000002 fraction, .01 surface and
+.001 unit-normal tolerances remain unchanged. Exact tangent controls retain
+axis-aligned integer coordinates; oblique near-tangent controls use lateral 1.9
+against combined radius 2, avoiding classification inside float-position rounding.
+No tolerance or production algorithm is changed. Registered, CPU and software-GPU
+owner/separate modes execute in CLR and strict NativeAOT; each measures 192 frames,
+960 calls and strict zero owner/all-thread managed bytes after 192 warmup frames.
+The original 128-frame long-motion profile remains a separate regression.
+
+Standalone and selected resource pairs accept only finite unit-scale, zero-skew
+poses under ADR 0069; their common guards execute before custom algorithms. Ignoring
+scale in the annulus resource algorithm therefore does not bypass a supported
+transform. Arbitrary custom numerical acceptance, native allocations, foreign
+platforms, target hardware advantage and real-window FPS remain open.
