@@ -91,6 +91,7 @@ internal static partial class RenderingRuntimeTests
         {
             camera.ForceUpdateScroll();
             var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.RenderLoopEnabled = false;
             RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
@@ -106,6 +107,8 @@ internal static partial class RenderingRuntimeTests
                 }
                 else window.Tree!.Quit();
             };
+            // Keep retained-command checks independent of asynchronous native configure redraws.
+            for (var i = 0; i < 2; i++) RenderingServer.ForceDraw();
         };
         Engine.Run(window); Released(window);
         Check(frames == 2 && mark.Draws == 1, "Repeated canvas uses retained drawing after camera motion.");

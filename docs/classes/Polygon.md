@@ -1,6 +1,6 @@
 # Polygon
 
-Last updated: 2026-10-07
+Last updated: 2026-10-20
 
 - Declaration: `public partial class Polygon : Entity`
 - Source: [Polygon.cs](../../src/Scene/2D/Polygon.cs), [skin](../../src/Scene/2D/Polygon.Skin.cs)
@@ -133,6 +133,7 @@ var shape = new Polygon
     Vertices = [new(0, 0), new(64, 0), new(64, 32), new(0, 32)],
     Color = Colors.Green,
 };
+shape.Antialiased = true;
 window.AddChild(shape);
 ```
 
@@ -151,19 +152,31 @@ window.AddChild(shape);
 | `Vector2 TextureOffset { get; set; }` | Zero | Translation in pixel-space texture coordinates. |
 | `float TextureRotation { get; set; }` | 0 | Clockwise texture-coordinate rotation in radians. |
 | `Vector2 TextureScale { get; set; }` | One | Per-axis texture-coordinate scale before rotation. |
+| `bool Antialiased { get; set; }` | False | One-framebuffer-pixel transparent boundary fringe. |
 | `bool InvertEnabled { get; set; }` | False | Fills outside the contour up to its padded bounds. |
 | `float InvertBorder { get; set; }` | 100 | Finite padding, in local units, around the contour bounds during inversion. |
+
+
+The `Antialiased` property is described [below](#antialiased).
 
 ## Drawing and errors
 
 At least three selected vertices are required. Positions are offset, then texture UVs are scaled, rotated, translated and divided by positive texture dimensions for normalized sampling. A complete `VertexColors` array replaces uniform `Color`; an incomplete one uses `Color` for every drawn vertex. `Polygons` references the complete vertex list, including internal vertices. Inversion excludes trailing internal vertices and appends a bridge around the expanded bounding rectangle. It ignores explicit index contours and uses the uniform color or UVs generated from its new positions when original per-vertex arrays no longer match. The existing canvas renderer triangulates every contour; self-intersections and non-inverted holes are unsupported. Invalid contour indices or untriangulable contours fail on redraw. Nonfinite input vectors/colors, negative internal counts and disposed textures are rejected when assigned. A nonpositive inversion border can make triangulation fail. A texture with zero or invalid dimensions fails on redraw. Inherited materials and backend capability errors follow CanvasItem.
 
-All thirteen properties participate in typed `PackedScene` capture. Vector, color and nested index arrays are copied at capture, state read and instantiation; borrowed texture resources follow the ordinary scene resource policy. Geometry and texture edits request redraw even when the node is hidden; the next visible frame records current values.
+All fourteen geometry properties participate in typed `PackedScene` capture. Vector, color and nested index arrays are copied at capture, state read and instantiation; borrowed texture resources follow the ordinary scene resource policy. Geometry and texture edits request redraw even when the node is hidden; the next visible frame records current values.
 
-## Missing capabilities
+## Antialiased
 
-The pinned source stores an antialias flag without reading it in its draw path; Electron2D does not expose an inert flag. Skeleton, bone paths and weights require the absent 2D skeleton and mesh-deformation path. Their exact triggers remain in [coverage](../coverage/classes/Polygon2D.md). Degenerate and self-intersecting inverted contours and cross-platform native rendering beyond the current Linux checks remain unverified.
+```csharp
+public bool Antialiased { get; set; }
+```
+
+False initially. True adds a one-framebuffer-pixel alpha fringe after ordinary skinning, transforms and vertex snapping. Interior fill remains unchanged. Shared edges in explicit contours cancel; reversed winding and reflected transforms preserve the outside. Inverted polygons smooth their inner hole and outer padded rectangle, excluding the numerical triangulation slit. Joins are limited to four framebuffer pixels. Texture coordinates and RGB extend from boundary vertices; texture and vertex alpha still multiply coverage.
+
+The typed property stores through scene capture and resource files, requests redraw, and rejects disposed/off-owner mutation. Both current canvas backends consume the same triangles. HDR/MSAA use their existing capability gates. Authored vertex shaders run after this geometry and may alter its width; custom fragments must retain color alpha for smoothing. PremultAlpha fades RGB together with alpha; multiply blending explicitly reject submission because they ignore coverage alpha. This is an outward coverage fringe, not exact multisample area integration. Self-intersecting/deformed crossing contours retain their unsupported topology boundary.
 
 ## Verification
 
 [PolygonTests](../../tests/Electron2D.Tests/PolygonTests.cs) checks geometry, attributes, copied arrays, inverted square and concave contours in both windings, scene storage and errors. [PolygonRenderingTests](../../tests/Electron2D.Tests/PolygonRenderingTests.cs) reads pixels for filled, indexed, textured and inverted shapes across color and inversion-border changes on Linux Wayland compatibility/GPU with HLSL/GLSL materials, and dummy/software compatibility. This is executable pixel evidence, not owner visual acceptance.
+
+[PolygonAntialiasTests](../../tests/Electron2D.Tests/PolygonAntialiasTests.cs) exercises boundary cancellation, inversion, transformed width, persistence, native coverage and prepared managed allocation. Physical GPU, native allocator, foreign platforms and human visual acceptance remain separate.

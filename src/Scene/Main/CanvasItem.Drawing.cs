@@ -390,7 +390,14 @@ public abstract partial class CanvasItem
             var glyph = replay.Glyph;
             var glyphModulation = glyph.Mode == CanvasGlyphMode.LCD ? replay.Color * color : default;
             var first = vertices.Count;
-            CanvasGeometry.Append(vertices, replay, transform * drawingTransform, color, viewport?.SnapVerticesToPixel == true, this, linear);
+            if (!capturedMaterial && replay.Polygon is { Antialiased: true })
+            {
+                var canvasMaterial = CanvasMaterial;
+                material = canvasMaterial?.RequireCanvasState();
+                blend = canvasMaterial?.GetCanvasBlendMode() ?? BlendMode.Mix;
+                capturedMaterial = true;
+            }
+            CanvasGeometry.Append(vertices, replay, transform * drawingTransform, color, viewport?.SnapVerticesToPixel == true, this, linear, blend);
             if (replay.ParticleCustom is { } particleCustom)
                 for (var vertex = first; vertex < vertices.Count; vertex++) vertices[vertex] = vertices[vertex] with { InstanceCustom = particleCustom };
             if (glyph.Mode != CanvasGlyphMode.None)

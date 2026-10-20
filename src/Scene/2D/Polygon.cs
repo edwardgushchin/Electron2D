@@ -17,6 +17,7 @@ public partial class Polygon : Entity
         new PropertyDescriptor<Polygon, Vector2>(nameof(TextureOffset), n => n.TextureOffset, (n, v) => n.TextureOffset = v, _ => Vector2.Zero, stored: true),
         new PropertyDescriptor<Polygon, float>(nameof(TextureRotation), n => n.TextureRotation, (n, v) => n.TextureRotation = v, _ => 0f, stored: true),
         new PropertyDescriptor<Polygon, Vector2>(nameof(TextureScale), n => n.TextureScale, (n, v) => n.TextureScale = v, _ => Vector2.One, stored: true),
+        new PropertyDescriptor<Polygon, bool>(nameof(Antialiased), n => n.Antialiased, (n, v) => n.Antialiased = v, _ => false, stored: true),
         new PropertyDescriptor<Polygon, bool>(nameof(InvertEnabled), n => n.InvertEnabled, (n, v) => n.InvertEnabled = v, _ => false, stored: true),
         new PropertyDescriptor<Polygon, float>(nameof(InvertBorder), n => n.InvertBorder, (n, v) => n.InvertBorder = v, _ => 100f, stored: true),
     ];
@@ -31,7 +32,7 @@ public partial class Polygon : Entity
     private Vector2 _offset, _textureOffset, _textureScale = Vector2.One;
     private float _textureRotation;
     private int _internalVertexCount;
-    private bool _invertEnabled;
+    private bool _invertEnabled, _antialiased;
     private float _invertBorder = 100f;
 
     /// <summary>Creates an empty white polygon.</summary>
@@ -168,6 +169,18 @@ public partial class Polygon : Entity
         set { EnsureMutable(); ValidateVector(value); _textureScale = value; InvalidateCanvas(); }
     }
 
+    /// <summary>Gets or sets a one-framebuffer-pixel transparent fringe along filled polygon boundaries.</summary>
+    /// <value>False initially.</value>
+    /// <remarks>Runs after skinning, transforms and pixel snapping on both canvas backends. Interior triangles and
+    /// shared contour edges retain their original fill. Texture coordinates and colors extend from each boundary;
+    /// authored vertex shaders may alter the final width, and custom fragments must preserve interpolated color alpha. Joins are bounded to four framebuffer pixels.
+    /// Rendering rejects multiply blending, which do not consume coverage alpha.</remarks>
+    public bool Antialiased
+    {
+        get { ThrowIfDisposed(); return _antialiased; }
+        set { EnsureMutable(); if (_antialiased == value) return; _antialiased = value; InvalidateCanvas(); }
+    }
+
     /// <summary>Gets or sets whether the filled region extends outside the vertex contour to its padded bounds.</summary>
     /// <value>False by default. Explicit Polygons are ignored while inversion is enabled.</value>
     public bool InvertEnabled
@@ -213,6 +226,18 @@ public partial class Polygon : Entity
             var transform = new Transform(_textureRotation, _textureOffset);
             for (var i = 0; i < length; i++) { var source = _uv.Length == length ? _uv[i] : points[i]; _drawUV[i] = (transform * (source * _textureScale)) / size; }
             uvs = _drawUV.AsSpan(0, length);
+        }
+        if (_antialiased)
+        {
+            if (!_invertEnabled && _polygons.Length != 0)
+            {
+                var found = false; foreach (var contour in _polygons) found |= contour.Length >= 3;
+                if (!found) return;
+            }
+            RecordPolygon(points, colors, uvs, _texture, primitive: false, _invertEnabled ? null : _polygons);
+            EnableLastPolygonAntialias(_invertEnabled ? _drawPoints.AsSpan(0, Math.Max(0, _vertices.Length - _internalVertexCount)) : default);
+            if (!_invertEnabled) AttachLastPolygonSkin(this, default);
+            return;
         }
         if (_invertEnabled || _polygons.Length == 0)
         {

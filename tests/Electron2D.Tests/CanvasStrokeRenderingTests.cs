@@ -38,6 +38,7 @@ internal static partial class RenderingRuntimeTests
         {
             var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
             var software = RenderingServer.GetCurrentRenderingDriverName() == "software";
+            RenderingServer.RenderLoopEnabled = false;
             RenderingServer.FramePostDraw += () =>
             {
                 using var image = server.Readback(); frames++;
@@ -66,6 +67,8 @@ internal static partial class RenderingRuntimeTests
                 if (frames == 2) node.QueueRedraw();
                 if (frames == 3) { Check(draws == 2, "Transform/modulation reuse stroke commands; redraw replaces copied colors."); window.Tree!.Quit(); }
             };
+            // Keep retained-command checks independent of asynchronous native configure redraws.
+            for (var i = 0; i < 3; i++) RenderingServer.ForceDraw();
         };
         Engine.Run(window); Released(window); Check(frames == 3, "Three stroke frames.");
         Console.WriteLine($"Canvas stroke native pixels passed: {backend}/{fixture ?? "default"}.");

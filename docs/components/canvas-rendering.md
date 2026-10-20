@@ -1,6 +1,6 @@
 # Canvas rendering
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -416,6 +416,8 @@ The full Wayland renderer regression passed after this change. The self-containe
 CanvasItem.DrawPolygon and DrawColoredPolygon record filled convex/concave contours; DrawPrimitive records one through four vertices. The retained [CanvasPolygon](../classes/CanvasPolygon.md) storage owns vertex attributes, triangle indices and triangulation scratch space; [Geometry](../classes/Geometry.md#triangulatepolygon) supplies the shared ear-clipping algorithm. CanvasItem reuses these buffers by command position across redraws and releases them on disposal. Unchanged replay never triangulates. Warmed redraw plus triangulation and replay also allocates zero managed bytes for unchanged capacities. Ear clipping has cubic worst-case time; no performance guarantee for large, constantly changing contours is claimed.
 
 The same material/texture/sampling batches carry polygon vertices on GPU and compatibility, including HLSL/GLSL and live source pixel replacement. Input arrays are copied; transforms/modulation remain live. Attribute validation and triangulation failure do not insert a partial command. Failed user drawing clears the whole recording for retry. Atlas mapping captures the immediate region and ultimate texture identity before recording, using the graph gate. Custom size callbacks finish before choosing a pool slot, preserving reentrant drawing and disposal guards. See the [public method contracts](../classes/CanvasItem.md#drawpolygon).
+
+[Polygon edge smoothing](meshes.md#polygon-edge-smoothing) adds retained shared-edge cancellation and separate inverted boundary loops. One-pixel framebuffer fringes follow skinning/transforms/snapping, preserve original fill and texture coordinates, and support alpha-aware blending, including premultiplied RGB fading. Multiply blending explicitly rejects because it ignores coverage alpha. Ordinary DrawPolygon/DrawPrimitive remain unchanged.
 
 ### Polygon source audit
 

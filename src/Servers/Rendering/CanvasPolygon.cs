@@ -1,26 +1,29 @@
 namespace Electron2D;
 
 // Retained command storage is reused across redraws; callers never own these arrays.
-internal sealed class CanvasPolygon
+internal sealed partial class CanvasPolygon
 {
     internal CanvasVertex[] Vertices = [];
     internal int[] Indices = [];
     internal int VertexCount;
     internal int IndexCount;
+    internal bool Antialiased => _antialiased;
     private int[] _remaining = [];
     private CanvasSkeletonSkin? _skin;
-    private bool _skinEnabled, _rawTriangles;
+    private bool _skinEnabled, _rawTriangles, _hasContourMapping;
     private MeshSurfaceData? _triangleData;
-    internal void SetSkin(Polygon owner, ReadOnlySpan<int> source) { (_skin ??= new()).Set(owner, source, VertexCount); _skinEnabled = true; }
+    internal void SetSkin(Polygon owner, ReadOnlySpan<int> source) { (_skin ??= new()).Set(owner, source.IsEmpty && _hasContourMapping ? _skinSource.AsSpan(0, VertexCount) : source, VertexCount); _skinEnabled = true; }
 
     internal Rect2 GetLocalBounds() { if (_rawTriangles) { var points = _triangleData!.Vertices; var area = new Rect2(points[0], Vector2.Zero); for (var i = 1; i < points.Length; i++) area = area.Expand(points[i]); return area; } var bounds = VertexCount == 0 ? default : new Rect2(Vertices[0].Position, Vector2.Zero); for (var i = 1; i < VertexCount; i++) bounds = bounds.Expand(Vertices[i].Position); return bounds; }
-    internal void Set(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, bool primitive)
+    internal void Set(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, bool primitive, int[][]? contours = null)
     {
+        _antialiased = _hasContourMapping = false;
         _skinEnabled = _rawTriangles = false;
         if (Vertices.Length < points.Length) Array.Resize(ref Vertices, points.Length);
         VertexCount = points.Length;
         for (var i = 0; i < points.Length; i++)
             Vertices[i] = new(points[i], colors.IsEmpty ? Colors.White : colors[i < colors.Length ? i : 0], i < uvs.Length ? uvs[i] : Vector2.Zero);
+        if (contours is { Length: > 0 }) { SetContours(points, contours); return; }
         IndexCount = primitive ? Math.Max(0, points.Length - 2) * 3 : checked((points.Length - 2) * 3);
         if (Indices.Length < IndexCount) Array.Resize(ref Indices, IndexCount);
         if (primitive)
@@ -34,6 +37,7 @@ internal sealed class CanvasPolygon
 
     internal void SetIndexedTriangles(ReadOnlySpan<int> indices, ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, ReadOnlySpan<int> bones, ReadOnlySpan<float> weights, int drawCount)
     {
+        _antialiased = _hasContourMapping = false;
         var data = _triangleData ??= new();
         data.Vertices = Resize(data.Vertices, points.Length); points.CopyTo(data.Vertices);
         data.Indices = Resize(data.Indices, indices.Length); indices.CopyTo(data.Indices);
@@ -47,6 +51,7 @@ internal sealed class CanvasPolygon
     private static T[] Resize<T>(T[] values, int length) { if (values.Length != length) Array.Resize(ref values, length); return values; }
     internal void SetTriangles(ReadOnlySpan<CanvasVertex> triangles)
     {
+        _antialiased = _hasContourMapping = false;
         _skinEnabled = _rawTriangles = false;
         if (Vertices.Length < triangles.Length) Array.Resize(ref Vertices, triangles.Length);
         if (Indices.Length < triangles.Length) Array.Resize(ref Indices, triangles.Length);
@@ -72,11 +77,12 @@ internal sealed class CanvasPolygon
         }
     }
 
-    internal void Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap, CanvasItem? skinOwner = null, bool linear = false)
+    internal void Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)
     {
         if (_rawTriangles) { CanvasMesh.AppendTriangleData(output, _triangleData!, IndexCount, transform, modulation, snap, skinOwner, linear); return; }
         if (linear) modulation = CanvasGeometry.LinearColor(modulation);
         var skinned = _skinEnabled && _skin?.Prepare(Vertices, VertexCount) == true;
+        if (_antialiased) { AppendAntialiased(output, transform, modulation, snap, linear, skinned, blend); return; }
         if (VertexCount >= 3)
         {
             for (var i = 0; i < IndexCount; i++) output.Add(TransformVertex(skinned ? Vertices[Indices[i]] with { Position = _skin!.Position(Indices[i]) } : Vertices[Indices[i]], transform, modulation, snap, linear));

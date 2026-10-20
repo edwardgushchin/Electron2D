@@ -69,7 +69,9 @@ public abstract partial class CanvasItem
 
     internal void AttachLastPolygonSkin(Polygon owner, ReadOnlySpan<int> source) => _polygons![_polygonCount - 1].SetSkin(owner, source);
 
-    private void RecordPolygon(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, Texture? texture, bool primitive)
+    internal void EnableLastPolygonAntialias(ReadOnlySpan<Vector2> invertedInner) => _polygons![_polygonCount - 1].EnableAntialias(invertedInner);
+
+    internal void RecordPolygon(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, Texture? texture, bool primitive, int[][]? contours = null)
     {
         EnsureDrawing();
         Rect2? uvMapping = null;
@@ -88,7 +90,7 @@ public abstract partial class CanvasItem
         _polygons ??= [];
         if (_polygonCount == _polygons.Count) _polygons.Add(new());
         var polygon = _polygons[_polygonCount];
-        polygon.Set(points, colors, uvs, primitive);
+        polygon.Set(points, colors, uvs, primitive, contours);
         if (uvMapping is { } mapping) polygon.RemapUV(mapping);
         (_canvasCommands ??= []).Add(new CanvasCommand(false, default, default, Colors.White, 0, false, Transform.Identity, texture, Polygon: polygon));
         _polygonCount++;

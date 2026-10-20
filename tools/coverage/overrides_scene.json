@@ -6026,6 +6026,11 @@
       "electron2d": "property:Electron2D.ProjectSettings.AutoAcceptQuit()",
       "state": "Implemented",
       "reason": "ADRs 0002/0008/0040: the production Android activity supplies real system back through API33+ OnBackInvokedCallback and legacy non-mouse BACK dispatch before SDL consumption. A retained display-owner batch delivers containing-window notification 1007, then root QuitOnGoBack policy, then public Window signal; nested windows stop propagation, signal blocking suppresses policy/event, and failures preserve later receivers/requests before host cleanup. Registered initial quit policies sample feature overrides before Ready. Four CPU/software-Vulkan owner/separate profiles and four native Linux renderer/backend profiles execute strict 0/0 complete moving frames. Android32/36 actual input and entered Java producer methods verify five native scenarios each using the same public-only consumer/APK; no physical-device, hardware GPU, gesture-UX or native allocator acceptance is inferred. Evidence: bin/physics-system-back/2026-10-20/validation.json."
+    },
+    {
+      "godot": "Polygon2D::property:antialiased",
+      "electron2d": "property:Electron2D.Polygon.Antialiased()",
+      "reason": "ADRs 0004/0028/0092: Polygon.Antialiased executes one-framebuffer-pixel boundary coverage on GPU and Compatibility after ordinary skinning/transforms/snapping. Copied referenced contour vertices preserve source weights; reverse triangle-edge cancellation excludes shared diagonals and inverted hole/outer loops exclude the numerical slit. Boundary UV/RGB and source alpha, original fill, typed property/file storage, owner/disposal guards and pooled retry remain intact. PolygonAntialiasTests verifies geometry/winding/reflection/concavity/inversion/unused vertices, native edge/texture/alpha/diagonal/pose/HDR/MSAA/snap/repeat pixels and prepared zero-managed-owner-byte active redraw. PremultAlpha fades all channels; multiply blending explicitly reject because they ignore coverage alpha. Joins are bounded to four pixels; authored vertex programs may alter width and fragments must preserve alpha. This is outward fringe coverage, not exact multisample area integration. Self-intersecting deformation, native allocator, physical GPU, foreign platforms and full-suite acceptance remain unverified."
     }
   ],
   "extras": [
@@ -10007,8 +10012,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "The pinned setter stores and queues redraw, but polygon_2d.cpp does not read the flag in its drawing path. Trigger: audit effective upstream edge behavior and implement executable edge antialiasing in the polygon renderer before exposing this property; no inert flag (ADRs 0004/0028).",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0028/0092: Polygon.Antialiased executes one-framebuffer-pixel boundary coverage on GPU and Compatibility after ordinary skinning/transforms/snapping. Copied referenced contour vertices preserve source weights; reverse triangle-edge cancellation excludes shared diagonals and inverted hole/outer loops exclude the numerical slit. Boundary UV/RGB and source alpha, original fill, typed property/file storage, owner/disposal guards and pooled retry remain intact. PolygonAntialiasTests verifies geometry/winding/reflection/concavity/inversion/unused vertices, native edge/texture/alpha/diagonal/pose/HDR/MSAA/snap/repeat pixels and prepared zero-managed-owner-byte active redraw. PremultAlpha fades all channels; multiply blending explicitly reject because they ignore coverage alpha. Joins are bounded to four pixels; authored vertex programs may alter width and fragments must preserve alpha. This is outward fringe coverage, not exact multisample area integration. Self-intersecting deformation, native allocator, physical GPU, foreign platforms and full-suite acceptance remain unverified.",
       "godot": [
         "Polygon2D::property:antialiased"
       ]

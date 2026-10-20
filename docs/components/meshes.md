@@ -1,6 +1,6 @@
 # Two-dimensional mesh surfaces
 
-Last updated: 2026-10-18
+Last updated: 2026-10-20
 
 ## Executable skeletal polygons
 
@@ -199,3 +199,9 @@ Virtual atlas identity callbacks are followed by a second geometry-lifetime chec
 The [pinned MeshTexture implementation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/resources/mesh_texture.cpp) and [class contract](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/MeshTexture.xml) supply the applicable drawing behavior. The stable logical drawing RID, typed finite validation, zero-axis division guard and Changed/lifetime integration follow the accepted Electron2D resource adaptation in ADR 0092.
 
 MeshTextureTests verifies ten fixed geometry cases, metadata/default values, copying, mixed cycles, callback/disposal failure paths and fresh-process resource archives. Scene-local instances preserve aliases and own their localized mesh/image graph. Four Linux Wayland profiles (GPU, Compatibility, GPU GLSL and GPU HLSL) each exercise nine direct cases, Sprite/TextureRect, borrowed and owned canvas RIDs, custom virtual texture callbacks, UVs and six mutation phases, plus 64 active and 64 idle complete intervals with zero managed bytes. Captures of the initial GPU/Compatibility scenes were inspected. Compatibility rejects programmable material drawing and releases the scene. These checks establish current software-native behavior; hardware throughput, native allocations, other platforms and owner acceptance remain unverified.
+
+## Polygon edge smoothing
+
+[Polygon.Antialiased](../classes/Polygon.md#antialiased) now generates actual boundary coverage triangles on GPU and Compatibility. Directed-edge cancellation removes internal contour diagonals; inversion uses hole and outer-rectangle loops. Fringe expansion runs after current skinning, transforms and snapping, preserving texture/color attributes and ordinary HDR/MSAA/material rules. The retained helper reuses topology and framebuffer scratch; cold inverted contour construction retains its existing allocation boundary. See the class for widths, custom-shader/topology limits and verification.
+
+This executable slice was selected over viewport FXAA/SMAA (12 declarations needing separate postprocess passes and SMAA lookup resources) and PrimitiveMesh (8 declarations needing a selected concrete 2D procedural generator; pinned concrete 3D primitives remain excluded). It closes the one absent Polygon property with visible output on both backends, rather than adding the pinned no-op switch.

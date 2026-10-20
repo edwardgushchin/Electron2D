@@ -250409,6 +250409,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Polygon.Antialiased()",
+    "kind": "property",
+    "declaringType": "Electron2D.Polygon",
+    "name": "Antialiased",
+    "signature": "public System.Boolean Antialiased { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Polygon.Color()",
     "kind": "property",
     "declaringType": "Electron2D.Polygon",

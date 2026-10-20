@@ -1,6 +1,6 @@
 # Typed two-dimensional mesh data
 
-Last updated: 2026-10-18
+Last updated: 2026-10-20
 
 <a id="adr-0092"></a>
 ## ADR 0092: Typed 2D mesh surfaces on the retained canvas
@@ -68,6 +68,10 @@ TwoBoneIK applies conservative scaled lengths and finite inner/outer/coincident 
 Jiggle and StackHolder retain the same typed resource/pose profile as SkeletonModificationJiggle and SkeletonModificationStackHolder. Jiggle configuration/default propagation and transient finite force/velocity history are distinct from scene Bone nodes. Reset seeds every valid origin including index zero; positive mass prevents undefined zero division. Current global defaults seed new slots. Collider mode uses the existing world-scoped body ray in Physics; Idle collider use rejects explicitly instead of an inert collision setting. The query protects a dynamic point, not the whole bone/mesh. Individual successful joint state commits remain observable after a later failure, while scene poses and prior requests retain the established transaction restoration.
 
 Held stacks borrow the same skeleton, keep independent strength and phase selection, and release weak incoming-holder leases only after their final holder disappears (with direct-root binding tracked separately). Copies always duplicate child graphs through the shared alias-preserving resource session. Setter/setup/execution cycle/depth guards and pre-transition active disposal/reset guards bound failure; assignment commits before setup and failed child setup invalidates the parent for retry. Explicit child execution starts a transaction for that child rather than entering unrelated root siblings. These refinements preserve actual applicable resource ownership and do not introduce a public generic solver/backend interface. Exact storage, native/headless checks and limits are documented in the component.
+
+### Polygon edge coverage
+
+Polygon.Antialiased is an executing boundary-geometry policy on both current canvas backends. Record its explicit contours together, cancel reverse shared triangle edges, and derive the inverted hole/outer loops without the numerical slit. After skinning, ordinary transforms and snapping, append a one-framebuffer-pixel outward alpha fringe with joins bounded to four pixels; retain boundary UV/RGB, original fill order and existing HDR/MSAA/material capability checks. PremultAlpha fades all channels; multiply blending do not consume coverage alpha and reject submission. Authored vertex programs may alter the final width, and fragment programs must retain interpolated alpha. This implements effective polygon edge smoothing despite the pinned stored-only flag, without promising exact multisample coverage or supported self-intersecting deformation. Retain pooled topology/framebuffer storage and the existing cold inverted-contour allocation boundary.
 
 ### Physics-driven scene bones
 

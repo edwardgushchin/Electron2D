@@ -1,3 +1,5 @@
+[Polygon edge smoothing](../components/meshes.md#polygon-edge-smoothing) now executes shared-boundary and inverted-loop coverage geometry on both canvas backends, including skeletal pose replay.
+
 # Rendering domain
 
 [Layered device multiview](../components/local-compute.md#layered-multiview) executes ordered view-indexed draws into array color/depth targets, including per-view input passes and MSAA resolve, without changing extra layers.

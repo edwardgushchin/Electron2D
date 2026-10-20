@@ -1,3 +1,5 @@
+[Polygon edge smoothing](../components/meshes.md#polygon-edge-smoothing) now closes Antialiased with actual framebuffer boundary geometry on both backends, preserved fill/UV/skin state and explicit custom-shader/topology limits. One missing declaration becomes Implemented; broader Polygon Partial rows retain their own boundaries.
+
 [Loading images](../components/boot-images.md) now execute immediate main-client presentation with six sizing modes, actual nearest/linear sampling, copied image ownership and preserved scene/callback state. Eight applicable rows become Implemented; the pinned deprecated set_boot_image predecessor becomes Excluded under ADR 0004. Cold upload, native allocation and platform verification limits remain explicit.
 
 [The full Linux verification refresh](../components/physics-contract-audit.md#full-linux-suite-2026-10-20) passes the ordinary Release runner on current CPU/physical GPU code with matching local source-built native assets. No declaration states change: physics 1303/1369 Implemented (95.18%), 66 open and 92 Excluded. This is separate from package-only delivery, NativeAOT and full-goal acceptance.

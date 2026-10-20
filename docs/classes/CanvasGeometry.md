@@ -1,6 +1,6 @@
 # CanvasGeometry
 
-Last updated: 2026-10-04
+Last updated: 2026-10-20
 
 - Declaration: `internal static class CanvasGeometry`
 - Source: [CanvasGeometry.cs](../../src/Servers/Rendering/CanvasGeometry.cs)
@@ -44,3 +44,5 @@ Appends geometry without clearing prior output. Applies color multiplication, lo
 CanvasPixelSnapTests checks the exact corners, diagonal/interior interpolation, summed area, clipped UV bounds, negative ties, lines/outlines/antialiasing, transpose/reflection and zero warmed allocations. Native checks belong to the canvas component.
 
 Offscreen canvases now use independently owned completed/write target pairs. Native caches span every selected target in one frame. Viewport textures use their native image and dimensions directly; GetImage readback remains an explicit cold operation. See [offscreen targets](../components/canvas-rendering.md#offscreen-canvas-targets).
+
+Polygon replay forwards the selected blend policy to its optional boundary producer. PremultAlpha fringe vertices fade RGBA together; source-alpha modes fade alpha while preserving RGB/UV. Multiply blending ignores coverage alpha and explicitly rejects antialiased polygon submission. Ordinary polygon/primitive/stroke replay is unchanged. See [boundary geometry](CanvasPolygon.md#polygon-boundary-coverage).

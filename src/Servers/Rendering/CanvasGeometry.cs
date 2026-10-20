@@ -27,11 +27,11 @@ internal static class CanvasGeometry
         return linear;
     }
 
-    internal static void Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false, CanvasItem? skinOwner = null, bool linear = false)
+    internal static void Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)
     {
         if (command.NinePatch is { } ninePatch) { ninePatch.Append(output, command, transform, modulation, snapVertices); return; }
         if (command.Stroke is { } stroke) { stroke.Append(output, transform, modulation, snapVertices); return; }
-        if (command.Polygon is { } polygon) { polygon.Append(output, transform, modulation, snapVertices, skinOwner, linear); return; }
+        if (command.Polygon is { } polygon) { polygon.Append(output, transform, modulation, snapVertices, skinOwner, linear, blend); return; }
         var color = command.Color * modulation;
         if (!color.IsFinite()) throw new InvalidOperationException("Canvas modulation overflowed finite colors.");
         if (command.Texture is not null) { AppendTexture(output, command, transform, color, snapVertices); return; }
