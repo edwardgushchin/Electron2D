@@ -58,6 +58,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(ApplicationName, isBasic: true);
         RegisterInternal(AutoAcceptQuit, isBasic: true);
         RegisterInternal(QuitOnGoBack, isBasic: true);
+        RegisterInternal(DeltaSmoothing, isBasic: false);
         RegisterInternal(LowProcessorMode, isBasic: false);
         RegisterInternal(LowProcessorModeSleepUsec, isBasic: false);
         RegisterInternal(ApplicationVersion, isBasic: true);
@@ -1208,6 +1209,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, ApplicationName) ||
         ReferenceEquals(setting, AutoAcceptQuit) ||
         ReferenceEquals(setting, QuitOnGoBack) ||
+        ReferenceEquals(setting, DeltaSmoothing) ||
         ReferenceEquals(setting, LowProcessorMode) ||
         ReferenceEquals(setting, LowProcessorModeSleepUsec) ||
         ReferenceEquals(setting, ApplicationVersion) ||

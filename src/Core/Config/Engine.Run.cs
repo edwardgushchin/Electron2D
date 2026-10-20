@@ -100,6 +100,7 @@ public sealed partial class Engine
             ThemeDB.LoadProjectTheme();
             AudioServer.LoadDefaultLayout();
             Input.IgnoreJoypadOnUnfocusedApplication = ProjectSettings.GetWithOverride(ProjectSettings.IgnoreJoypadOnUnfocusedApplication);
+            OS.DeltaSmoothing = ProjectSettings.GetWithOverride(ProjectSettings.DeltaSmoothing);
             OS.LowProcessorUsageMode = ProjectSettings.GetWithOverride(ProjectSettings.LowProcessorMode);
             OS.LowProcessorUsageModeSleepUsec = ProjectSettings.GetWithOverride(ProjectSettings.LowProcessorModeSleepUsec);
             window.OpenNative(movieDisableVSync);
@@ -128,7 +129,13 @@ public sealed partial class Engine
                 var now = Stopwatch.GetTimestamp();
                 var elapsed = movie is null ? Stopwatch.GetElapsedTime(lastFrame, now).TotalSeconds : 1d / movieFPS;
                 lastFrame = now;
-                if (AdvanceFrameCore(elapsed, out var renderStep, fixedFPS: movie is null ? 0 : movieFPS, deferFrameTiming: true))
+                var simulationElapsed = elapsed;
+                if (movie is null && elapsed <= 1d && OS.DeltaSmoothing && DisplayServer.WindowGetVSyncMode() == DisplayServer.VSyncMode.Enabled)
+                {
+                    var smoothed = _frameDeltaSmoother.Smooth((long)(elapsed * 1_000_000d), true, true, out var applied);
+                    if (applied) simulationElapsed = smoothed / 1_000_000d;
+                }
+                if (AdvanceFrameCore(simulationElapsed, out var renderStep, fixedFPS: movie is null ? 0 : movieFPS, deferFrameTiming: true, diagnosticElapsed: elapsed))
                 {
                     CompleteFrameTiming(elapsed);
                     break;

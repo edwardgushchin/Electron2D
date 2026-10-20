@@ -2,7 +2,7 @@
 
 The Android activity retains actual framework back callbacks and transfers accepted requests to the existing owner pump without invoking scene code from the UI thread. [System back navigation](window-runtime.md#system-back-navigation) uses the ordinary Engine.RunAsync result, failure and owned teardown paths. Callback unregistration and SDL onCreate/onDestroy dispatch belong to the same activity lifetime.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 [Frame timing monitors](frame-monitors.md) observe completed execution using monotonic timestamps. Duration maxima publish once per unscaled host-second window; native process timing ends after presentation and before movie encoding/frame waits. Successful attachment resets samples; failed frames retain completed diagnostics.
 
@@ -23,6 +23,7 @@ The accepted [agent-native contract](../decisions/agent-native.md#adr-0090) uses
 | Type | Role |
 | --- | --- |
 | [`Engine`](../classes/Engine.md) | Process-wide coordinator, scheduler, metrics owner, and registry |
+| [`FrameDeltaSmoother`](../classes/FrameDeltaSmoother.md) | Internal scalar host-cadence estimator and carried-period filter |
 | [`EngineVersionInfo`](../classes/EngineVersionInfo.md) | Immutable typed assembly-version descriptor |
 
 [`MainLoop`](../classes/MainLoop.md) is owned by the separate [Main loop](main-loop.md) component and attached non-destructively by this component.
@@ -102,3 +103,5 @@ The callback-first Run/RunAsync and explicit/configured recording overloads acce
 Manual Start/AdvanceFrame/Stop interference still rejects. Exceptions from host callbacks abort and attempt writer/scene/native cleanup; asynchronous and deferred Android lifetimes forward and release the same borrowed delegate. Existing overload and delegate shapes remain intact. The callback contributes to real-time elapsed input, while engine process/presentation timing remains scoped to its existing frame metrics.
 
 EngineBeforeFrameTests verifies all six new overloads on real local GPU/Compatibility hosts, original function-delegate bindings, first-frame state/delivery, quit-before-step, sync/async failure cleanup and per-run indices. Twenty-four warmup plus sixty-four full synchronous owner intervals execute with zero managed bytes. Movie readback and tool reporting remain cold work; native allocation totals, physical GPUs and foreign platforms are not inferred from that measurement.
+
+[Host delta smoothing](host-delta-smoothing.md) connects OS/project policy and effective native VSync to the ordinary owned clock before fixed-step synchronization. Manual and fixed movie input remain explicit; FPS, diagnostics and pacing use measured time.

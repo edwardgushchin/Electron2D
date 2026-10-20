@@ -1,0 +1,25 @@
+{
+  "mappings": [
+    {
+      "godot": "OS::property:delta_smoothing",
+      "electron2d": "property:Electron2D.OS.DeltaSmoothing()",
+      "reason": "ADR 0016/0019/0095: executable owned-window host delta filter, thread-safe static OS policy and stored typed project startup setting. Effective feature value is applied before readiness; measured classical VSync cadence feeds scalar consensus/measurement and carried-period quantization before ordinary jitter/catch-up. FPS/diagnostics/pacing retain raw elapsed; manual/batch input and fixed movies bypass. HostDeltaSmoothingTests covers settings persistence/features, policy/history/reset/edge cases, 32768 samples matching pinned executable C++ timer, prepared zero owner/all-thread scalar allocations and actual local software Wayland/X11 GPU/Compatibility pixels/callbacks/recording. Native fallback and hardware/foreign/editor limits are recorded in host-delta-smoothing.md."
+    },
+    {
+      "godot": "ProjectSettings::property:application/run/delta_smoothing",
+      "electron2d": "property:Electron2D.ProjectSettings.DeltaSmoothing()",
+      "reason": "ADR 0016/0019/0095: executable owned-window host delta filter, thread-safe static OS policy and stored typed project startup setting. Effective feature value is applied before readiness; measured classical VSync cadence feeds scalar consensus/measurement and carried-period quantization before ordinary jitter/catch-up. FPS/diagnostics/pacing retain raw elapsed; manual/batch input and fixed movies bypass. HostDeltaSmoothingTests covers settings persistence/features, policy/history/reset/edge cases, 32768 samples matching pinned executable C++ timer, prepared zero owner/all-thread scalar allocations and actual local software Wayland/X11 GPU/Compatibility pixels/callbacks/recording. Native fallback and hardware/foreign/editor limits are recorded in host-delta-smoothing.md."
+    }
+  ],
+  "extras": [],
+  "statusGroups": [
+    {
+      "godot": [
+        "OS::property:delta_smoothing",
+        "ProjectSettings::property:application/run/delta_smoothing"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0016/0019/0095: executable owned-window host delta filter, thread-safe static OS policy and stored typed project startup setting. Effective feature value is applied before readiness; measured classical VSync cadence feeds scalar consensus/measurement and carried-period quantization before ordinary jitter/catch-up. FPS/diagnostics/pacing retain raw elapsed; manual/batch input and fixed movies bypass. HostDeltaSmoothingTests covers settings persistence/features, policy/history/reset/edge cases, 32768 samples matching pinned executable C++ timer, prepared zero owner/all-thread scalar allocations and actual local software Wayland/X11 GPU/Compatibility pixels/callbacks/recording. Native fallback and hardware/foreign/editor limits are recorded in host-delta-smoothing.md."
+    }
+  ]
+}

@@ -6,6 +6,7 @@ internal static class FrameMonitorTests
 {
     internal static void Run()
     {
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HOST_DELTA") == "1") { HostDeltaSmoothingTests.RunManaged(); return; }
         FrameMonitorContract.Run();
         var service = Performance.Service;
         service.ResetFrameTiming();

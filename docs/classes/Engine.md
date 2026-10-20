@@ -586,3 +586,7 @@ int code = Engine.Run((root, nextFrame) =>
 ```
 
 The snippet requires a detached `window` and registered `move` action. [Project batch execution](../components/project-batch.md) supplies a complete compiled caller and structured process supervision. [EngineBeforeFrameTests](../../tests/Electron2D.Tests/EngineBeforeFrameTests.cs) checks all six overloads, readiness/order, input, failure/restart, skipped pending work and prepared owner allocation. Physical GPU, native allocator totals and other-platform acceptance remain separate.
+
+## Measured host-delta smoothing
+
+Ordinary owned Run/RunAsync sample the effective ProjectSettings.DeltaSmoothing into OS.DeltaSmoothing before scene readiness. The live thread-safe OS policy permits filtering only at stable effective classical VSync cadence, before jitter/catch-up and TimeScale. Each new loop resets confidence. Manual AdvanceFrame, explicit batch input and fixed movie cadence remain supplied input. FPS, frame-monitor sampling windows and pacing use raw measured elapsed time. See [the filter contract and executable evidence](../components/host-delta-smoothing.md).

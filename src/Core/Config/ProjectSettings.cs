@@ -162,6 +162,11 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <remarks>Feature overrides apply at tree construction; later setting edits affect subsequent trees.</remarks>
     public static ProjectSetting<bool> QuitOnGoBack { get; } = new("application/config/quit_on_go_back", true);
 
+    /// <summary>Defines whether each owned window session starts with measured frame-delta smoothing enabled.</summary>
+    /// <value>application/run/delta_smoothing; true initially.</value>
+    /// <remarks>Active feature overrides initialize OS.DeltaSmoothing before readiness. Later project edits apply to the next owned run.</remarks>
+    public static ProjectSetting<bool> DeltaSmoothing { get; } = new("application/run/delta_smoothing", true);
+
     /// <summary>Defines whether a window session starts with rendering-change-driven drawing.</summary>
     /// <value>application/run/low_processor_mode; false initially.</value>
     public static ProjectSetting<bool> LowProcessorMode { get; } = new("application/run/low_processor_mode", false);

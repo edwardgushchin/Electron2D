@@ -4,7 +4,7 @@
 
 The Android application host supplies [system back navigation](../components/window-runtime.md#system-back-navigation) through the ordinary Engine lifecycle. Its existing unavailable STDIN read contract now has an explicit Android console guard; size validation remains first.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 [Custom object iteration](../components/object-lifecycle.md#custom-typed-iteration) uses the ordinary typed C# enumerator protocol on concrete compiled subclasses. Independent cursor state, readonly value retrieval, early exit/error cleanup and caller-owned lifetime guards preserve the applicable capability without a universal enumerable ElectronObject or dynamic value system.
 
@@ -329,3 +329,5 @@ The [deferred call/setter contract](../components/scene-tree.md#complete-deferre
 Factory construction provenance is shared by resource, script, file and scene creation through [ElectronObject](../classes/ElectronObject.md#factory-construction-provenance). It rejects unrelated concurrently created results while preserving nested, Task and engine worker construction; [ADR 0013](../decisions/resources.md#adr-0013) owns this boundary.
 
 [Completed canvas counters](../components/canvas-counters.md) now supply Performance RenderTotalObjectsInFrame/RenderTotalPrimitivesInFrame/RenderTotalDrawCallsInFrame from committed native rendering, independently of the Engine timing window.
+
+[Host delta smoothing](../components/host-delta-smoothing.md) connects OS/project policy and effective native VSync to the ordinary owned clock before fixed-step synchronization. Manual and fixed movie input remain explicit; FPS, diagnostics and pacing use measured time.

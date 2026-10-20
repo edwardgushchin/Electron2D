@@ -245,7 +245,7 @@ Managed executable checks cover state transitions, ordering preconditions, callb
 <a id="adr-0016"></a>
 ## ADR 0016: Process-wide Engine runtime and host-driven scheduling
 
-Last updated: 2026-10-18
+Last updated: 2026-10-21
 
 ### Status
 
@@ -262,6 +262,8 @@ At this decision’s implementation point, Electron2D had no SDL host, renderer,
 `Engine` is a sealed `ElectronObject` singleton with process lifetime. Public operations delegate statically to that retained object under [ADR 0095](singleton-services.md#adr-0095); callers use `Engine.Run(window)` without a public `Instance` accessor. Disposal is rejected rather than leaving an unrecoverable disposed global. Its manual Start/AdvanceFrame/Stop path attaches one `MainLoop`, initializes a created loop, drives frames, and finalizes without taking final disposal ownership. Its normal Engine.Run(Window) path consumes the root, opens the native window through Window, creates and publishes SceneTree before ready, drives events and frames, and disposes the scene and native resources on exit or failure.
 
 For manual embedding, the host supplies finite non-negative unscaled elapsed seconds; Run measures these with Stopwatch. Engine uses a bounded, allocation-free fixed-step synchronizer with twelve frames of distribution history and configurable jitter tolerance. It caps long-stall catch-up, preserves the residual interpolation fraction, applies non-negative `TimeScale` to callback deltas rather than cadence, invokes fixed callbacks before process, and returns combined stop requests. Run uses an owner-thread monotonic clock, native event pump and interruptible frame wait; no background game thread, renderer, audio mixer or collision simulation is introduced.
+
+Ordinary owned Run/RunAsync now apply [host delta smoothing](../components/host-delta-smoothing.md) before the existing synchronizer. Each startup initializes the thread-safe static OS.DeltaSmoothing policy from the effective stored ProjectSettings.DeltaSmoothing Boolean, default true, before scene readiness. The scalar filter estimates stable classical effective VSync cadence, quantizes whole refresh periods with carried remainder and bypasses disabled/nonclassical/unstable/nonconverged input or resume intervals over one second. Bypass preserves history and original fractional seconds; successful attachment resets history. FPS, diagnostic windows and pacing use the raw measured clock. Explicit manual/batch input and fixed recording never enter the filter. This introduces no editor-hint stub or presentation guarantee.
 
 Under ADR 0090, callback-first `Action<Window, ulong>` overloads of Run, RunAsync, recording Run/RunAsync and configured RunMovie/RunMovieAsync provide the library host's input boundary. Existing entry points and delegate signatures remain intact. After complete scene readiness and native event pumping, the owner invokes the callback once before each pending process iteration, starting at index one for every run. It runs outside MainLoop callbacks, so public Input.ParseInputEvent can commit state and deliver before the first physics/process work. A quit request skips the pending step; exceptions use the same owned cleanup. The runtime retains control of timing, processing and presentation. Real-time elapsed input includes callback duration; fixed movie deltas do not. No implicit warmup step or game thread is added. Deferred Android startup retains the callback only until cancellation or final cleanup.
 

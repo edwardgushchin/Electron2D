@@ -68,6 +68,7 @@ public sealed partial class Engine : ElectronObject
     private readonly Dictionary<string, ElectronObject> _singletons = new(StringComparer.Ordinal);
     private readonly List<string> _singletonNames = [];
     private readonly FrameSynchronizer _frameSynchronizer = new();
+    private readonly FrameDeltaSmoother _frameDeltaSmoother = new();
 
     private double _timeScale = 1d;
     private int _runtimeState;
@@ -210,7 +211,7 @@ public sealed partial class Engine : ElectronObject
         return AdvanceFrameCore(elapsedSeconds, out _);
     }
 
-    private bool AdvanceFrameCore(double elapsedSeconds, out double renderStep, int fixedFPS = 0, bool deferFrameTiming = false)
+    private bool AdvanceFrameCore(double elapsedSeconds, out double renderStep, int fixedFPS = 0, bool deferFrameTiming = false, double? diagnosticElapsed = null)
     {
         if (!double.IsFinite(elapsedSeconds) || elapsedSeconds < 0d)
             throw new ArgumentOutOfRangeException(nameof(elapsedSeconds), elapsedSeconds, "Elapsed time must be finite and non-negative.");
@@ -290,10 +291,10 @@ public sealed partial class Engine : ElectronObject
                 stopRequested = true;
 
             Interlocked.Increment(ref _processFrames);
-            UpdateFramesPerSecond(elapsedSeconds);
+            UpdateFramesPerSecond(diagnosticElapsed ?? elapsedSeconds);
             ProjectSettings.FlushChanges();
             _pendingFrameTiming = (processStarted, physicsPeak, navigationPeak);
-            if (!deferFrameTiming) CompleteFrameTiming(elapsedSeconds);
+            if (!deferFrameTiming) CompleteFrameTiming(diagnosticElapsed ?? elapsedSeconds);
             return stopRequested;
         }
         catch (Exception error)
@@ -476,6 +477,7 @@ public sealed partial class Engine : ElectronObject
         Performance.Service.ResetFrameTiming();
         _pendingFrameTiming = default;
         _frameSynchronizer.Reset();
+        _frameDeltaSmoother.Reset();
         AtomicFloatingPoint.Write(ref _physicsInterpolationFraction, 0d);
         Volatile.Write(ref _inPhysicsFrame, 0);
         AtomicFloatingPoint.Write(ref _framesPerSecond, 0d);

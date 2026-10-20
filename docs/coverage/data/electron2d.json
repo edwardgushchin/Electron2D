@@ -246797,6 +246797,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.OS.DeltaSmoothing()",
+    "kind": "property",
+    "declaringType": "Electron2D.OS",
+    "name": "DeltaSmoothing",
+    "signature": "public static System.Boolean DeltaSmoothing { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.OS.LowProcessorUsageMode()",
     "kind": "property",
     "declaringType": "Electron2D.OS",
@@ -252358,6 +252371,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.DeltaSmoothing()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "DeltaSmoothing",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E DeltaSmoothing { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
     "value": null
   },
   {

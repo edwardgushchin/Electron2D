@@ -4,6 +4,7 @@ public sealed partial class OS
 {
     private static readonly PropertyDescriptor[] RenderingProperties =
     [
+        new PropertyDescriptor<OS, bool>(nameof(DeltaSmoothing), _ => DeltaSmoothing, (_, value) => DeltaSmoothing = value, _ => true),
         new PropertyDescriptor<OS, bool>(nameof(LowProcessorUsageMode), _ => LowProcessorUsageMode, (_, value) => LowProcessorUsageMode = value, _ => false),
         new PropertyDescriptor<OS, int>(nameof(LowProcessorUsageModeSleepUsec), _ => LowProcessorUsageModeSleepUsec, (_, value) => LowProcessorUsageModeSleepUsec = value, _ => 6900)
     ];

@@ -1,6 +1,6 @@
 # OS
 
-Last updated: 2026-10-18
+Last updated: 2026-10-21
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.OS`. **Inherits:** `ElectronObject`. **Inherited By:** —. **Source:** [source](../../src/Core/OS/OS.cs). **Component:** [File dialogs](../components/file-dialogs.md).
 
@@ -246,3 +246,13 @@ Process-wide, thread-safe policy. Engine.Run/RunAsync sample ProjectSettings.Low
 Nonnegative microsecond interval, initially 6900. Zero removes the extra wait; MaxFPS can still require waiting. A negative assignment throws ArgumentOutOfRangeException without changing the interval. The owned host continues pumping events during long waits. Manual AdvanceFrame and movie capture do not apply this delay; precision is host-dependent.
 
 See [change reporting, producer coverage and verification](../components/low-processor-rendering.md).
+
+## Frame-delta policy
+
+| Complete declaration | Contract |
+| --- | --- |
+| `public static bool DeltaSmoothing { get; set; }` | Thread-safe ordinary owned-loop filter policy, initially true; initialized from effective project configuration before every window startup. |
+
+### DeltaSmoothing
+
+Changes the next measured sample in Engine.Run/RunAsync. Stable effective classical VSync is required; bypass retains history and raw fractional elapsed input. New runs reset estimator state. This nonstored typed service property has true as its revert default. Manual/batch explicit elapsed and fixed movie clocks do not sample it. FPS/Performance diagnostics retain raw measured time. See [host delta smoothing](../components/host-delta-smoothing.md) for confidence, pause, rate-change and platform boundaries.

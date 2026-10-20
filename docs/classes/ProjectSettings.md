@@ -1630,3 +1630,13 @@ The nine pseudolocalization keys feed the verified [Unicode pseudolocalization](
 ## Initial window quit policies
 
 `public static ProjectSetting<bool> AutoAcceptQuit { get; }` and `public static ProjectSetting<bool> QuitOnGoBack { get; }` register independent basic boolean settings under `application/config/auto_accept_quit` and `application/config/quit_on_go_back`. Both default to true. Current feature overrides are sampled at SceneTree construction before scene Ready; edits affect subsequent trees. Live tree policies remain independently writable. Neither setting immediately closes a window. See [system back navigation](../components/window-runtime.md#system-back-navigation).
+
+## Frame-delta startup setting
+
+| Complete declaration | Key and default |
+| --- | --- |
+| `public static ProjectSetting<bool> DeltaSmoothing { get; }` | application/run/delta_smoothing; true. |
+
+### DeltaSmoothing
+
+Advanced stored Boolean registered in each project registry. Ordinary save/load/reset and feature overrides apply. Engine.Run/RunAsync sample its effective value into OS.DeltaSmoothing before readiness on every startup. Later project edits configure the next run; change the OS property for the current loop. Manual embedding does not reset OS policy from project configuration. See [host delta smoothing](../components/host-delta-smoothing.md).

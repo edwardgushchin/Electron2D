@@ -5,6 +5,7 @@ internal static class FrameMonitorRenderingTests
 {
     internal static void Run(string backend)
     {
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HOST_DELTA") == "1") { HostDeltaSmoothingTests.RunNative(backend); return; }
         var method = ProjectSettings.Get(ProjectSettings.RenderingMethod);
         var fallback = ProjectSettings.Get(ProjectSettings.RenderingFallback);
         var limit = Engine.MaxFPS;
