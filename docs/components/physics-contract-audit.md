@@ -1,5 +1,7 @@
 # Physics contract and backend audit
 
+[System back navigation](window-runtime.md#system-back-navigation) closes inherited notification 1007 through the actual production Android host, typed Window signal and configured root quit policy. The current physics census is 1303/1369 Implemented (95.18%), with 66 open declarations (52 Partial, 11 Blocked, 3 Unimplemented), 92 Excluded. The final connected software/Android checks measure 4352 moving physics frames at strict 0/0 managed bytes; hardware/performance and complete-goal acceptance remain open.
+
 The current declaration census and complete open-row list are generated in the
 [physics declaration audit](../coverage/physics-status.md). They count applicable
 declarations, including inherited rows, and do not establish complete numerical,
@@ -80,7 +82,7 @@ The complete ordinary suite for sources at `352d4499` passed in
 loaded private software Vulkan; no hardware-driver mappings were observed. The
 host uses SDL offscreen and no focused test selector. The strict report-only
 allocation gate and recursive scene-tile regression below both pass in this run.
-All 3626 recorded inputs still match the source tree, and the two runtime/root
+All 3626 recorded inputs matched that verified source checkpoint, and the two runtime/root
 PDB cohorts cover 2411/888 compilation inputs without missing or mismatched files.
 The root SHA-256 is
 `b8da6c01b65b8e1569b09c513ce457e393dfb10cd0306b6ee518a32fffbdd3eb`.
@@ -89,8 +91,7 @@ the process result; `full-suite-validation.json` in its parent binds the retaine
 payload, environment, logs and source proof. This establishes the stated
 software/offscreen ordinary-suite run. Native allocation, new NativeAOT or native
 window acceptance, foreign platforms, target-GPU advantage, real-window FPS and
-complete-goal acceptance remain separate. The 67 open physical declarations are
-unchanged.
+complete-goal acceptance remain separate. The 67 open physical declarations were unchanged by that report-only slice.
 
 The earlier checkpoint at `868302d3` passed in 1374.622614923006 seconds with 129
 observed processes under `bin/physics-one-way-inputs/2026-10-18/`; it predates the
@@ -1319,7 +1320,7 @@ Containing-window notifications now reach physical Node descendants in parent-fi
 order, stop before nested Window scopes and continue after callback failures.
 WindowNotificationTests exercises eight event kinds through embedded/public and SDL
 dummy routes plus 1024 zero-byte warmed operations. DPI/position platform limits and
-missing go-back/HDR sources remain open; see [window runtime](window-runtime.md#containing-window-notifications).
+the missing HDR source remain open; Android system back now has its [actual producer](window-runtime.md#system-back-navigation); see [window runtime](window-runtime.md#containing-window-notifications).
 
 
 Point-field reduction avoids float squared-distance underflow/overflow and

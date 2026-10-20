@@ -1,6 +1,7 @@
 #if ANDROID
 using Android.App;
 using Electron2D.Platform.Android;
+using System.Runtime.Versioning;
 
 namespace Electron2D;
 
@@ -66,15 +67,63 @@ internal static class AndroidWindowHost
     }
 }
 
-[Activity(Name = "org.electron2d.GameActivity")]
+[Activity(Name = "org.electron2d.GameActivity", EnableOnBackInvokedCallback = true)]
 internal sealed class AndroidGameActivity : SDLActivity
 {
+    private Android.Window.IOnBackInvokedCallback? _backCallback;
+
     protected override string[] GetLibraries() => ["SDL3"];
+
+    protected override void OnCreate(Android.OS.Bundle? savedInstanceState)
+    {
+        base.OnCreate(savedInstanceState);
+        if (OperatingSystem.IsAndroidVersionAtLeast(33))
+        {
+            _backCallback = new BackCallback(this);
+            OnBackInvokedDispatcher!.RegisterOnBackInvokedCallback(Android.Window.IOnBackInvokedDispatcher.PriorityDefault, _backCallback);
+        }
+    }
+
+    public override void OnBackPressed() => RequestGoBack();
+
+    public override bool DispatchKeyEvent(Android.Views.KeyEvent? e)
+    {
+        if (!OperatingSystem.IsAndroidVersionAtLeast(33) && e?.KeyCode == Android.Views.Keycode.Back &&
+            !e.IsFromSource(Android.Views.InputSourceType.Mouse))
+        {
+            // SDL consumes legacy navigation before Activity.OnBackPressed can observe it.
+            if (e.Action == Android.Views.KeyEventActions.Up && !e.IsCanceled) OnBackPressed();
+            return true;
+        }
+        return base.DispatchKeyEvent(e);
+    }
+
+    private void RequestGoBack()
+    {
+        if (!IsFinishing && !IsDestroyed && !DisplayServer.TryQueueSystemGoBack()) Finish();
+    }
+
+    [SupportedOSPlatform("android33.0")]
+    private sealed class BackCallback(AndroidGameActivity owner) : Java.Lang.Object, Android.Window.IOnBackInvokedCallback
+    {
+        public void OnBackInvoked() => owner.RequestGoBack();
+    }
 
     protected override void OnDestroy()
     {
-        AndroidWindowHost.CancelPending();
-        base.OnDestroy();
+        try
+        {
+            if (OperatingSystem.IsAndroidVersionAtLeast(33) && _backCallback is not null)
+            {
+                try { OnBackInvokedDispatcher!.UnregisterOnBackInvokedCallback(_backCallback); }
+                finally { _backCallback.Dispose(); _backCallback = null; }
+            }
+        }
+        finally
+        {
+            try { AndroidWindowHost.CancelPending(); }
+            finally { base.OnDestroy(); }
+        }
     }
 
     protected override void Main()

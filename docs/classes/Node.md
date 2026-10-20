@@ -1788,6 +1788,7 @@ delivery; manual DispatchNotification does not create a native event.
 | [`public const int NotificationWmWindowFocusIn`](#notificationwmwindowfocusin) | 1004 | Containing-window subtree, stopping before nested windows. |
 | [`public const int NotificationWmWindowFocusOut`](#notificationwmwindowfocusout) | 1005 | Containing-window subtree, stopping before nested windows. |
 | [`public const int NotificationWmCloseRequest`](#notificationwmcloserequest) | 1006 | Containing-window subtree, stopping before nested windows. |
+| [`public const int NotificationWmGoBackRequest`](#notificationwmgobackrequest) | 1007 | Android system back; containing-window subtree, stopping before nested windows. |
 | [`public const int NotificationWmSizeChanged`](#notificationwmsizechanged) | 1008 | Owning Window only. |
 | [`public const int NotificationWmDpiChange`](#notificationwmdpichange) | 1009 | Containing-window subtree, stopping before nested windows. |
 | [`public const int NotificationWmPositionChanged`](#notificationwmpositionchanged) | 1012 | Containing-window subtree, stopping before nested windows. |
@@ -1811,6 +1812,11 @@ delivery; manual DispatchNotification does not create a native event.
 ### NotificationWmCloseRequest
 
 `public const int NotificationWmCloseRequest = 1006`. Window closure is requested, before CloseRequested and the root quit decision. Embedded requests do not quit the host automatically.
+
+<a id="notificationwmgobackrequest"></a>
+### NotificationWmGoBackRequest
+
+`public const int NotificationWmGoBackRequest = 1007`. The Android host accepts a system back request. The display owner delivers parent-first notifications within the containing window, then evaluates the root `SceneTree.QuitOnGoBack` policy, then raises `Window.GoBackRequested`. A notification override can disable the policy for the current request. Nested windows own separate notification scopes. Calling `Notify(1007)` manually invokes only that node's notification; it does not synthesize a host event or quit.
 
 ### NotificationWmSizeChanged
 

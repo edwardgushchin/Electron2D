@@ -44,6 +44,7 @@ public sealed partial class OS
     /// The process handle is borrowed and is never closed by this service.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The requested count is invalid.</exception>
     /// <exception cref="IOException">The input handle is invalid or reading fails.</exception>
+    /// <exception cref="PlatformNotSupportedException">The host lacks a standard-handle adapter.</exception>
     public static byte[] ReadBufferFromSTDIN(int bufferSize = 1024)
     {
         ValidateInputSize(bufferSize, 1);
@@ -51,7 +52,7 @@ public sealed partial class OS
         {
             var type = GetSTDINType();
             if (type == StdHandleType.Invalid) throw new IOException("Standard input has no valid native handle.");
-            using var input = System.Console.OpenStandardInput();
+            using var input = OpenStandardInput();
             var buffer = new byte[bufferSize];
             var count = 0;
             do
@@ -74,13 +75,14 @@ public sealed partial class OS
     /// <exception cref="ArgumentOutOfRangeException">The capacity is below two or exceeds the managed array limit.</exception>
     /// <exception cref="System.Text.DecoderFallbackException">Consumed bytes are not complete valid UTF-8.</exception>
     /// <exception cref="IOException">The input handle is invalid or reading fails.</exception>
+    /// <exception cref="PlatformNotSupportedException">The host lacks a standard-handle adapter.</exception>
     public static string ReadStringFromSTDIN(int bufferSize = 1024)
     {
         ValidateInputSize(bufferSize, 2);
         lock (Service._standardInputGate)
         {
             if (GetSTDINType() == StdHandleType.Invalid) throw new IOException("Standard input has no valid native handle.");
-            using var input = System.Console.OpenStandardInput();
+            using var input = OpenStandardInput();
             var buffer = new byte[bufferSize - 1];
             var count = 0;
             while (count < buffer.Length)
@@ -92,6 +94,12 @@ public sealed partial class OS
             }
             return ProcessUTF8.GetString(buffer, 0, count).Replace("\r\n", "\n", StringComparison.Ordinal).TrimEnd('\n');
         }
+    }
+
+    private static Stream OpenStandardInput()
+    {
+        if (OperatingSystem.IsAndroid()) throw new PlatformNotSupportedException("This host has no standard-handle adapter.");
+        return System.Console.OpenStandardInput();
     }
 
     private static void ValidateInputSize(int bufferSize, int minimum)

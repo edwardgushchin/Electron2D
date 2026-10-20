@@ -98,6 +98,18 @@ public sealed partial class DisplayServer
         remove => RequireService().CloseRequestedCore -= value;
     }
 
+    /// <summary>Occurs when the Android application host receives a system back request.</summary>
+    /// <remarks>Accepted requests are delivered individually on the display owner after buffered native input
+    /// drains, including during ForceProcessAndDropEvents. Requests accepted after that batch is captured wait
+    /// for the next pump. Retirement discards pending requests; another display lifetime cannot receive them.
+    /// Callback failures are reported after the captured requests are attempted.</remarks>
+    /// <exception cref="InvalidOperationException">The native service is not active.</exception>
+    public static event Action? GoBackRequested
+    {
+        add => RequireService().GoBackRequestedCore += value;
+        remove => RequireService().GoBackRequestedCore -= value;
+    }
+
     /// <summary>Occurs when the pointer enters the main window.</summary>
     /// <remarks>Only effective pointer transitions for the main window notify, in native queue order during <see cref="ProcessEvents"/> or <see cref="ForceProcessAndDropEvents"/>. A failing handler does not prevent later queued events from being delivered.</remarks>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>

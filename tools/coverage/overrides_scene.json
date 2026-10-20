@@ -5996,6 +5996,36 @@
       "electron2d": "constant:Electron2D.Node.NotificationEditorPostSave()",
       "state": "Implemented",
       "reason": "ADRs 0013/0090: ResourceSaver.SaveScene publishes the exact 9001/9002 authoring lifecycle through parent-first live subtree delivery, including internal unsaved receivers. RESET-aware capture, actual atomic file saving, origin commitment, same-root reentry/concurrency, preflight and combined operation/cleanup failures execute in public SaveScene tests with fresh-process physical reconstruction. Ordinary packing/resource saving publish neither notification; no editor UI or unified tooling acceptance is inferred. See resource-files.md#live-scene-authoring-save."
+    },
+    {
+      "godot": "Node::constant:NOTIFICATION_WM_GO_BACK_REQUEST",
+      "electron2d": "constant:Electron2D.Node.NotificationWmGoBackRequest()",
+      "state": "Implemented",
+      "reason": "ADRs 0002/0008/0040: the production Android activity supplies real system back through API33+ OnBackInvokedCallback and legacy non-mouse BACK dispatch before SDL consumption. A retained display-owner batch delivers containing-window notification 1007, then root QuitOnGoBack policy, then public Window signal; nested windows stop propagation, signal blocking suppresses policy/event, and failures preserve later receivers/requests before host cleanup. Registered initial quit policies sample feature overrides before Ready. Four CPU/software-Vulkan owner/separate profiles and four native Linux renderer/backend profiles execute strict 0/0 complete moving frames. Android32/36 actual input and entered Java producer methods verify five native scenarios each using the same public-only consumer/APK; no physical-device, hardware GPU, gesture-UX or native allocator acceptance is inferred. Evidence: bin/physics-system-back/2026-10-20/validation.json."
+    },
+    {
+      "godot": "Window::signal:go_back_requested()",
+      "electron2d": "event:Electron2D.Window.GoBackRequested()",
+      "state": "Implemented",
+      "reason": "ADRs 0002/0008/0040: the production Android activity supplies real system back through API33+ OnBackInvokedCallback and legacy non-mouse BACK dispatch before SDL consumption. A retained display-owner batch delivers containing-window notification 1007, then root QuitOnGoBack policy, then public Window signal; nested windows stop propagation, signal blocking suppresses policy/event, and failures preserve later receivers/requests before host cleanup. Registered initial quit policies sample feature overrides before Ready. Four CPU/software-Vulkan owner/separate profiles and four native Linux renderer/backend profiles execute strict 0/0 complete moving frames. Android32/36 actual input and entered Java producer methods verify five native scenarios each using the same public-only consumer/APK; no physical-device, hardware GPU, gesture-UX or native allocator acceptance is inferred. Evidence: bin/physics-system-back/2026-10-20/validation.json."
+    },
+    {
+      "godot": "SceneTree::property:quit_on_go_back",
+      "electron2d": "property:Electron2D.SceneTree.QuitOnGoBack()",
+      "state": "Implemented",
+      "reason": "ADRs 0002/0008/0040: the production Android activity supplies real system back through API33+ OnBackInvokedCallback and legacy non-mouse BACK dispatch before SDL consumption. A retained display-owner batch delivers containing-window notification 1007, then root QuitOnGoBack policy, then public Window signal; nested windows stop propagation, signal blocking suppresses policy/event, and failures preserve later receivers/requests before host cleanup. Registered initial quit policies sample feature overrides before Ready. Four CPU/software-Vulkan owner/separate profiles and four native Linux renderer/backend profiles execute strict 0/0 complete moving frames. Android32/36 actual input and entered Java producer methods verify five native scenarios each using the same public-only consumer/APK; no physical-device, hardware GPU, gesture-UX or native allocator acceptance is inferred. Evidence: bin/physics-system-back/2026-10-20/validation.json."
+    },
+    {
+      "godot": "ProjectSettings::property:application/config/quit_on_go_back",
+      "electron2d": "property:Electron2D.ProjectSettings.QuitOnGoBack()",
+      "state": "Implemented",
+      "reason": "ADRs 0002/0008/0040: the production Android activity supplies real system back through API33+ OnBackInvokedCallback and legacy non-mouse BACK dispatch before SDL consumption. A retained display-owner batch delivers containing-window notification 1007, then root QuitOnGoBack policy, then public Window signal; nested windows stop propagation, signal blocking suppresses policy/event, and failures preserve later receivers/requests before host cleanup. Registered initial quit policies sample feature overrides before Ready. Four CPU/software-Vulkan owner/separate profiles and four native Linux renderer/backend profiles execute strict 0/0 complete moving frames. Android32/36 actual input and entered Java producer methods verify five native scenarios each using the same public-only consumer/APK; no physical-device, hardware GPU, gesture-UX or native allocator acceptance is inferred. Evidence: bin/physics-system-back/2026-10-20/validation.json."
+    },
+    {
+      "godot": "ProjectSettings::property:application/config/auto_accept_quit",
+      "electron2d": "property:Electron2D.ProjectSettings.AutoAcceptQuit()",
+      "state": "Implemented",
+      "reason": "ADRs 0002/0008/0040: the production Android activity supplies real system back through API33+ OnBackInvokedCallback and legacy non-mouse BACK dispatch before SDL consumption. A retained display-owner batch delivers containing-window notification 1007, then root QuitOnGoBack policy, then public Window signal; nested windows stop propagation, signal blocking suppresses policy/event, and failures preserve later receivers/requests before host cleanup. Registered initial quit policies sample feature overrides before Ready. Four CPU/software-Vulkan owner/separate profiles and four native Linux renderer/backend profiles execute strict 0/0 complete moving frames. Android32/36 actual input and entered Java producer methods verify five native scenarios each using the same public-only consumer/APK; no physical-device, hardware GPU, gesture-UX or native allocator acceptance is inferred. Evidence: bin/physics-system-back/2026-10-20/validation.json."
     }
   ],
   "extras": [
@@ -8531,13 +8561,6 @@
     },
     {
       "godot": [
-        "Node::constant:NOTIFICATION_WM_GO_BACK_REQUEST"
-      ],
-      "state": "Unimplemented",
-      "reason": "Exact prerequisite: a typed native/system go-back event source and Window signal/notification propagation through the owner event pump. No inert identity is exposed before that bridge."
-    },
-    {
-      "godot": [
         "Node::constant:NOTIFICATION_WM_OUTPUT_MAX_LINEAR_VALUE_CHANGED"
       ],
       "state": "Unimplemented",
@@ -10245,7 +10268,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "Defaults true. Root close delivers CloseRequested first, then quits only if AutoAcceptQuit remains enabled and no explicit quit was requested; a handler can override the policy or exit code. WindowRuntimeTests exercises this on SDL dummy and native Wayland (ADRs 0004 and 0008).",
+      "reason": "Defaults true. Root close delivers CloseRequested first, then quits only if AutoAcceptQuit remains enabled and no explicit quit was requested; a handler can override the policy or exit code. WindowRuntimeTests exercises this on SDL dummy and native Wayland (ADRs 0004 and 0008). Initial ProjectSettings.AutoAcceptQuit and its independent back-policy sibling now sample feature overrides before scene Ready; WindowGoBackTests verifies current-tree retention and subsequent-tree updates.",
       "godot": [
         "SceneTree::property:auto_accept_quit"
       ]
@@ -11793,13 +11816,6 @@
       ],
       "state": "Unimplemented",
       "reason": "Exact prerequisite: executable Window.NonclientArea custom-decoration input ownership and native/embedded exclusive-child bypass routing. Ordinary WindowInput does not supply this separate path (ADR 0040)."
-    },
-    {
-      "godot": [
-        "Window::signal:go_back_requested()"
-      ],
-      "state": "Unimplemented",
-      "reason": "Exact prerequisite: typed host go-back request producer and containing-window notification routing, followed by SceneTree.QuitOnGoBack policy. Generic key delivery does not imply native system-back requests (ADR 0040)."
     },
     {
       "godot": [

@@ -99,6 +99,7 @@ Window owns `Show()` and `Hide()`; both assign Visible and preserve native failu
 | --- | --- |
 | [`public event Action? VisibilityChanged`](#visibilitychanged) | Runs synchronously after the window visibility commits, before canvas propagation. |
 | [`public event Action? CloseRequested`](#closerequested) | Occurs when the system requests closure of this root window. |
+| [`public event Action? GoBackRequested`](#gobackrequested) | Android system back, after subtree notifications and root back policy. |
 | [`public event Action? FocusEntered`](#focusentered) | Occurs when the window gains native keyboard focus. |
 | [`public event Action? FocusExited`](#focusexited) | Occurs when the window loses native keyboard focus, before pressed input is released. |
 | [`public event Action? TitleChanged`](#titlechanged) | Occurs after Title commits a different value. |
@@ -520,6 +521,21 @@ Delivered on the owner thread after a committed visibility change and before can
 Occurs when the system requests closure of this root window.
 
 Handlers may disable SceneTree.AutoAcceptQuit to keep running, or call SceneTree.Quit with an exit code. The default quit decision follows the signal. Handler failures terminate Engine.Run with cleanup.
+
+<a id="gobackrequested"></a>
+### `public event Action? GoBackRequested`
+
+The Android host requests backward navigation. Delivery runs on the scene owner after containing-window `Node.NotificationWmGoBackRequest` propagation, stopping before nested windows. The root evaluates `SceneTree.QuitOnGoBack` before public subscribers; disable it in a notification override to cancel this request. A subscriber may call `Tree.Quit(37)` to choose its exit code. Child requests do not quit the tree. Blocking this window's signals preserves notifications while suppressing both the root policy and this event. Callback failures preserve remaining receivers/subscribers and aggregate after delivery; Engine retires the host on failure. Disposal clears subscribers.
+
+```csharp
+// Inside a Window subclass; cancel before the root policy executes.
+protected override void OnNotification(int what)
+{
+    base.OnNotification(what);
+    if (what == NotificationWmGoBackRequest)
+        Tree!.QuitOnGoBack = false;
+}
+```
 
 <a id="focusentered"></a>
 ### `public event Action? FocusEntered`

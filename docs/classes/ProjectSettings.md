@@ -1,6 +1,6 @@
 # ProjectSettings
 
-Last updated: 2026-10-18
+Last updated: 2026-10-20
 
 MovieWriterMixRate is ProjectSetting<int> for editor/movie_writer/mix_rate (48000 Hz, 1000..200000); MovieWriterSpeakerMode is ProjectSetting<AudioServer.SpeakerMode> for editor/movie_writer/speaker_mode (Stereo). MovieWriterVideoQuality is ProjectSetting<float> for editor/movie_writer/video_quality (0.75, finite 0..1); MovieWriterAudioBitDepth is ProjectSetting<int> for editor/movie_writer/audio_bit_depth (16, accepts 16 or 32). These are registered nonbasic settings, support feature overrides and are sampled by the built-in recording handler. See [movie writing](../components/movie-writing.md).
 
@@ -80,6 +80,8 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<int> MovieWriterOGVKeyframeInterval { get; }`](#moviewriterogvkeyframeinterval) | Maximum keyframe spacing, 64 initially; 1..1024 frames. |
 | [`public static ProjectSetting<Color> DebugPathsColor { get; }`](#diagnostics-debugpathscolor) | Defines the color of path curves and tangent markers when scene path diagnostics are enabled. |
 | [`public static ProjectSetting<string> ApplicationName { get; }`](#p-electron2d-projectsettings-applicationname) | Defines the human-readable application name. |
+| [`public static ProjectSetting<bool> AutoAcceptQuit { get; }`](#autoacceptquit) | application/config/auto_accept_quit; true. |
+| [`public static ProjectSetting<bool> QuitOnGoBack { get; }`](#quitongoback) | application/config/quit_on_go_back; true. |
 | [`public static ProjectSetting<string> ApplicationVersion { get; }`](#p-electron2d-projectsettings-applicationversion) | Defines the application version string. |
 | [`public static ProjectSetting<int> PhysicsTicksPerSecond { get; }`](#p-electron2d-projectsettings-physicstickspersecond) | Defines the fixed-step callback frequency used by [`Engine`](Engine.md). |
 | [`public static ProjectSetting<string> Physics2DEngine { get; }`](#physics2dengine) | Captured implicit scene-world implementation name; default DEFAULT. |
@@ -1616,3 +1618,9 @@ All three definitions are nonbasic typed settings with restart-if-changed metada
 These settings drive [agent path drawing](NavigationAgent.md#path-diagnostics), independently of global map diagnostics and SceneTree.DebugNavigationHint. Custom agent style selection retains its own line/point rules. Fresh-process tests load saved base values and feature overrides into real retained drawing. Source: [ProjectSettings.NavigationDebug.cs](../../src/Core/Config/ProjectSettings.NavigationDebug.cs).
 
 The nine pseudolocalization keys feed the verified [Unicode pseudolocalization](../components/localization.md#unicode-pseudolocalization) policy: startup samples enablement and eight transforms; explicit reload preserves the runtime switch and publishes one notification after applying the transforms. Cached outputs are valid only for their actual transform values.
+
+<a id="autoacceptquit"></a>
+<a id="quitongoback"></a>
+## Initial window quit policies
+
+`public static ProjectSetting<bool> AutoAcceptQuit { get; }` and `public static ProjectSetting<bool> QuitOnGoBack { get; }` register independent basic boolean settings under `application/config/auto_accept_quit` and `application/config/quit_on_go_back`. Both default to true. Current feature overrides are sampled at SceneTree construction before scene Ready; edits affect subsequent trees. Live tree policies remain independently writable. Neither setting immediately closes a window. See [system back navigation](../components/window-runtime.md#system-back-navigation).

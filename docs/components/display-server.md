@@ -1,5 +1,7 @@
 # Display server component
 
+The production Android host's [system back producer](window-runtime.md#system-back-navigation) posts to the active display's retained owner queue. `DisplayServer.GoBackRequested` delivers after buffered native input, before frame callbacks, including in `ForceProcessAndDropEvents`. Request capture, callback failure and retirement follow [ADR 0040](../decisions/display.md#adr-0040).
+
 Last updated: 2026-10-20
 
 ## Scope

@@ -153,6 +153,15 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<string> ApplicationName { get; } =
         new("application/config/name", string.Empty);
 
+    /// <summary>Defines the initial SceneTree policy for root window close requests.</summary>
+    /// <value>application/config/auto_accept_quit; true initially. Sampled before scene activation.</value>
+    public static ProjectSetting<bool> AutoAcceptQuit { get; } = new("application/config/auto_accept_quit", true);
+
+    /// <summary>Defines the initial SceneTree policy for Android system back requests.</summary>
+    /// <value>application/config/quit_on_go_back; true initially, independently of AutoAcceptQuit.</value>
+    /// <remarks>Feature overrides apply at tree construction; later setting edits affect subsequent trees.</remarks>
+    public static ProjectSetting<bool> QuitOnGoBack { get; } = new("application/config/quit_on_go_back", true);
+
     /// <summary>Defines whether a window session starts with rendering-change-driven drawing.</summary>
     /// <value>application/run/low_processor_mode; false initially.</value>
     public static ProjectSetting<bool> LowProcessorMode { get; } = new("application/run/low_processor_mode", false);

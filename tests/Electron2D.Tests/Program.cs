@@ -9,6 +9,16 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_BACK") is { } systemBackBackend)
+{
+    var selected = systemBackBackend.EndsWith("gpu", StringComparison.Ordinal) ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;
+    var separate = Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_THREAD") == "1";
+    if (systemBackBackend.StartsWith("native-", StringComparison.Ordinal))
+        WindowGoBackTests.RunNative(selected, Environment.GetEnvironmentVariable("ELECTRON2D_SYSTEM_BACK_RENDERER") ?? "compatibility", separate);
+    else WindowGoBackTests.Run(selected, separate);
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_ATOMICS") is { } imageAtomicProfile) { if (imageAtomicProfile == "1") RenderingDeviceImageAtomicTests.Run(); else RenderingDeviceImageAtomicTests.Canvas(imageAtomicProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_ARRAYS") is { } descriptorProfile) { if (descriptorProfile == "1") RenderingDeviceDescriptorArrayTests.Run(); else RenderingDeviceDescriptorArrayTests.Canvas(descriptorProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXEL_BUFFERS") is { } texelProfile) { if (texelProfile == "1") RenderingDeviceTexelTests.Run(); else RenderingDeviceTexelTests.Canvas(texelProfile); return; }
@@ -1914,6 +1924,7 @@ LocalizationProjectSettingsTests.Run();
 ProjectLayoutDirectionTests.Run();
 WindowContentScaleTests.Run();
 WindowInputTests.RunManaged();
+WindowGoBackTests.Run(PhysicsServer.Backend.CPU); WindowGoBackTests.Run(PhysicsServer.Backend.GPU);
 KeyCodeNamesTests.Run();
 ProjectShaderGlobalsTests.RunManaged();
 VerifyMathF();

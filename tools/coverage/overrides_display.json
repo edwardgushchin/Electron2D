@@ -461,6 +461,12 @@
       "electron2d": "method:Electron2D.DisplayServer.WindowSetTransient(System.Int32,System.Int32)",
       "godot": "DisplayServer::method:window_set_transient(int:,int:)",
       "reason": "ADRs 0038/0040/0095: public native relationship control uses existing per-window owners, actual SDL parent/modal requests and typed scene instance identities. Pending exclusivity, complete cycle checks, fullscreen restrictions, native rollback/dual failure, fixed-popup input and ordinary/popup retirement execute. Runtime edits preserve stored scene policies; existing independent ordinary-window lifetimes are retained. DisplayServerRelationsTests verifies dummy/native contracts and Linux Wayland/X11 software GPU/compatibility pixels, key/text/IME suppression and 64 prepared owner intervals. Native allocator, foreign-platform, physical focus and owner acceptance remain separate."
+    },
+    {
+      "godot": "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_GO_BACK_REQUEST",
+      "electron2d": "event:Electron2D.DisplayServer.GoBackRequested()",
+      "state": "Implemented",
+      "reason": "ADRs 0002/0008/0040: the production Android activity supplies real system back through API33+ OnBackInvokedCallback and legacy non-mouse BACK dispatch before SDL consumption. A retained display-owner batch delivers containing-window notification 1007, then root QuitOnGoBack policy, then public Window signal; nested windows stop propagation, signal blocking suppresses policy/event, and failures preserve later receivers/requests before host cleanup. Registered initial quit policies sample feature overrides before Ready. Four CPU/software-Vulkan owner/separate profiles and four native Linux renderer/backend profiles execute strict 0/0 complete moving frames. Android32/36 actual input and entered Java producer methods verify five native scenarios each using the same public-only consumer/APK; no physical-device, hardware GPU, gesture-UX or native allocator acceptance is inferred. Evidence: bin/physics-system-back/2026-10-20/validation.json."
     }
   ],
   "extras": [
@@ -1227,7 +1233,7 @@
     },
     {
       "state": "Blocked",
-      "reason": "Typed C# lifecycle events replace the numeric WindowEvent vocabulary. Native popup FORCE_CLOSE now executes through forced Window visibility retirement; the aggregate still waits for Android GO_BACK_REQUEST, HDR OUTPUT_MAX_LINEAR_VALUE_CHANGED and native title-bar TITLEBAR_CHANGE producers under ADR 0040.",
+      "reason": "Typed C# lifecycle events replace the numeric WindowEvent vocabulary. Android system back and native popup FORCE_CLOSE execute through their actual host producers. The aggregate still waits for HDR OUTPUT_MAX_LINEAR_VALUE_CHANGED and native title-bar TITLEBAR_CHANGE producers under ADR 0040.",
       "godot": [
         "DisplayServer::enum:WindowEvent"
       ]
@@ -1248,13 +1254,6 @@
       "reason": "Typed WindowDpiChanged follows SDL window content-scale changes on the main window in ProcessEvents, matching the pinned Wayland scale-change trigger despite the DPI name. A user-driven 1.25-to-1-to-1.25 move produced two native events. Exact ordering relative to the event-time client rectangle and first rendered buffer still requires the renderer vertical slice (ADR 0044).",
       "godot": [
         "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_DPI_CHANGE"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "The first Android application-host slice must integrate native back navigation and verify main-window callback order.",
-      "godot": [
-        "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_GO_BACK_REQUEST"
       ]
     },
     {

@@ -56,6 +56,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(WebPCompressionMethod, isBasic: false);
         RegisterInternal(WebPLosslessCompressionFactor, isBasic: false);
         RegisterInternal(ApplicationName, isBasic: true);
+        RegisterInternal(AutoAcceptQuit, isBasic: true);
+        RegisterInternal(QuitOnGoBack, isBasic: true);
         RegisterInternal(LowProcessorMode, isBasic: false);
         RegisterInternal(LowProcessorModeSleepUsec, isBasic: false);
         RegisterInternal(ApplicationVersion, isBasic: true);
@@ -1203,6 +1205,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, MovieWriterOGVEncodingSpeed) ||
         ReferenceEquals(setting, MovieWriterOGVKeyframeInterval) ||
         ReferenceEquals(setting, ApplicationName) ||
+        ReferenceEquals(setting, AutoAcceptQuit) ||
+        ReferenceEquals(setting, QuitOnGoBack) ||
         ReferenceEquals(setting, LowProcessorMode) ||
         ReferenceEquals(setting, LowProcessorModeSleepUsec) ||
         ReferenceEquals(setting, ApplicationVersion) ||

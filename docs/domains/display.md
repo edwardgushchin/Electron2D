@@ -1,5 +1,7 @@
 # Display domain
 
+[Android system back](../components/window-runtime.md#system-back-navigation) uses actual framework callbacks and a retained display-owner request batch, including drop-input pumps and lifetime/error handling.
+
 Last updated: 2026-10-20
 
 Native driver identity is retained per opened display context for capability queries; device-dependent availability remains live. The [physics window allocation check](../components/physics-window-allocations.md) covers its passive-pointer hot path.

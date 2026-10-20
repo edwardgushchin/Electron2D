@@ -1,6 +1,8 @@
 # Scene tree component
 
-Last updated: 2026-10-18
+`QuitOnGoBack` defaults to true independently of `AutoAcceptQuit`. Root system back notifications precede this policy, and public `Window.GoBackRequested` subscribers follow it. Blocking root signals suppresses both policy and signal; child-window requests do not quit. The [system back runtime](window-runtime.md#system-back-navigation) owns native production and verification.
+
+Last updated: 2026-10-20
 
 ## Selected authoring context
 

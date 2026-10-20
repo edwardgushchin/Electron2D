@@ -175,6 +175,7 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | [`public static event Action? QuitRequested`](#event-quitrequested) | Occurs when the operating system requests that the application quit. |
 | [`public static event Action? SystemThemeChanged`](#event-systemthemechanged) | Occurs when SDL reports a native system-theme change. |
 | [`public static event Action? CloseRequested`](#event-closerequested) | Occurs when the main window receives a close request. |
+| [`public static event Action? GoBackRequested`](#event-gobackrequested) | Android system back delivered on the display owner. |
 | [`public static event Action? WindowMouseEntered`](#event-windowmouseentered) | Occurs when the pointer enters the main window. |
 | [`public static event Action? WindowMouseExited`](#event-windowmouseexited) | Occurs when the pointer leaves the main window. |
 | [`public static event Action? WindowDpiChanged`](#event-windowdpichanged) | Occurs when the main window's native display content scale changes. |
@@ -1058,6 +1059,13 @@ Occurs when the main window receives a close request.
 **Remarks:** Delivery is synchronous on the opening thread during `ProcessEvents` or `ForceProcessAndDropEvents`, in native queue order. Events from other native windows are ignored. The server does not close automatically. A failing handler does not stop later events; its failure is included in the pump's `AggregateException`. A real Wayland compositor close request was delivered while the native window remained alive.
 
 **Source:** `src/Servers/Display/DisplayServer.Events.cs`.
+
+<a id="event-gobackrequested"></a>
+#### `public static event Action? GoBackRequested`
+
+An Android application-host system back request. `ProcessEvents` and `ForceProcessAndDropEvents` capture the pending request count after native input and buffered input drain, then deliver each request on the opening thread. Requests accepted during delivery wait for the next pump. Callback failures aggregate after the captured batch; requests do not replay. Signal blocking suppresses the event. Retiring the display discards pending requests and late callbacks cannot target a later lifetime. Subscription requires an active native service, otherwise `InvalidOperationException`.
+
+**Source:** `src/Servers/Display/DisplayServer.SystemBack.cs`, `DisplayServer.API.cs`.
 
 <a id="event-windowmouseentered"></a>
 #### `public static event Action? WindowMouseEntered`

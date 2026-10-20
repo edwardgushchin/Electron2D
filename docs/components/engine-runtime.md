@@ -1,6 +1,8 @@
 # Engine runtime component
 
-Last updated: 2026-10-19
+The Android activity retains actual framework back callbacks and transfers accepted requests to the existing owner pump without invoking scene code from the UI thread. [System back navigation](window-runtime.md#system-back-navigation) uses the ordinary Engine.RunAsync result, failure and owned teardown paths. Callback unregistration and SDL onCreate/onDestroy dispatch belong to the same activity lifetime.
+
+Last updated: 2026-10-20
 
 [Frame timing monitors](frame-monitors.md) observe completed execution using monotonic timestamps. Duration maxima publish once per unscaled host-second window; native process timing ends after presentation and before movie encoding/frame waits. Successful attachment resets samples; failed frames retain completed diagnostics.
 

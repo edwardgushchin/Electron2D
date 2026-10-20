@@ -1,6 +1,6 @@
 # Process standard handles and input
 
-Last updated: 2026-10-13
+Last updated: 2026-10-20
 
 ## Executable scope
 
@@ -22,6 +22,8 @@ EOF yields an empty array/string. Empty text can also represent an empty line; t
 These operations block and allocate. Pipe producers must eventually supply the requested count or close their writer; text producers must send LF, reach the byte limit or close. Applications that need responsive rendering run reads on a worker and own cancellation/EOF/shutdown policy. No nonblocking or cancellation option is added to this API family.
 
 ## Verification
+
+Both blocking reads explicitly reject Android before opening a managed console handle, preserving size validation first. The Android system-back consumer checks both PlatformNotSupportedException outcomes and invalid-size ArgumentOutOfRangeException outcomes; this guard also permits compiling the production Android target with platform-analyzer warnings treated as errors.
 
 [OSStandardInputTests](../../tests/Electron2D.Tests/OSStandardInputTests.cs) launches actual child applications and verifies native pipe/file/terminal/null/closed-handle types, exact binary data, delayed fragmented pipe filling, empty/partial EOF, bounded text, CRLF, raw/text alternation, malformed/split UTF-8 consumption, validation before consumption and an existing OS.ExecuteWithPipe request/response. The Linux [fixture](../../tests/Electron2D.Tests/Fixtures/StandardInputHost.py) supplies real file and pseudoterminal descriptors; it does not alter the user's terminal. All temporary files/processes are owned by the tests. Other platforms, physical interactive-console acceptance and throughput remain separate gates.
 

@@ -76,6 +76,7 @@ tree.ProcessFrame(1.0 / 60.0);
 | [`public bool DebugPathsHint { get; set; }`](#diagnostics-debugpathshint) | Gets or sets whether paths draw their curves and tangent direction markers. |
 | [`public Node? EditedSceneRoot { get; set; }`](#diagnostics-editedsceneroot) | Gets or selects the root of the scene selected for configuration warnings and control authoring previews. |
 | [`public bool AutoAcceptQuit { get; set; }`](#p-electron2d-scenetree-autoacceptquit) | True by default. |
+| [`public bool QuitOnGoBack { get; set; }`](#quitongoback) | True by default; independent Android back policy. |
 | [`public Node Root { get; }`](#p-electron2d-scenetree-root) | Gets the root node owned by this tree. |
 | [`public Node? CurrentScene { get; set; }`](#p-electron2d-scenetree-currentscene) | Gets or selects an existing direct scene child of the root. |
 | [`public int NodeCount { get; }`](#p-electron2d-scenetree-nodecount) | Gets the number of nodes currently inside this tree. |
@@ -157,6 +158,11 @@ a terminal disposed tree.
 
 ## Property Descriptions
 
+<a id="quitongoback"></a>
+### `public bool QuitOnGoBack { get; set; }`
+
+Initially sampled from `ProjectSettings.QuitOnGoBack` with active feature overrides, true by default independently of `AutoAcceptQuit`. Later registry edits affect subsequent trees. An accepted root system back request propagates containing-window notifications, evaluates this policy and then emits public `GoBackRequested` subscribers. A notification can disable it for the current request. If enabled, the tree requests exit zero unless quit was already requested; a later subscriber can select its own exit code. Blocking root signals also suppresses this policy. Child windows never implicitly quit the containing tree. The typed descriptor exposes the same value. Reads/writes require the scene owner and a live tree, otherwise `InvalidOperationException`/`ObjectDisposedException`. The Android OS producer and owner-pump lifecycle are described in [window runtime](../components/window-runtime.md#system-back-navigation).
+
 <a id="p-electron2d-scenetree-currentscene"></a>
 ### `public Node? CurrentScene { get; set; }`
 
@@ -196,7 +202,7 @@ InvalidOperationException: The caller is not the scene owner thread.
 
 ### `public bool AutoAcceptQuit { get; set; }`
 
-True by default. The root Window raises CloseRequested, then requests quit if this property remains true and quit is not already requested. A handler may disable it or request its own exit code. Read/write requires the owner thread and a live tree; closed trees throw ObjectDisposedException.
+Initially sampled from `ProjectSettings.AutoAcceptQuit` with active feature overrides, true by default. Later registry edits affect subsequent trees. The root Window raises CloseRequested, then requests quit if this property remains true and quit is not already requested. A handler may disable it or request its own exit code. Read/write requires the owner thread and a live tree; closed trees throw ObjectDisposedException.
 
 <a id="p-electron2d-scenetree-root"></a>
 ### `public Node Root { get; }`

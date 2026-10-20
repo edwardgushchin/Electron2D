@@ -1,5 +1,7 @@
 # Engine inventory
 
+AndroidGameActivity/AndroidWindowHost now produce actual framework system back requests through DisplayServer.SystemBack.cs. The existing Node, Window and SceneTree types own notification 1007, GoBackRequested and QuitOnGoBack; no public platform adapter type is introduced. See [the connected runtime](components/window-runtime.md#system-back-navigation).
+
 [Last-recovery one-way pair exclusions](components/physics-registered-adapter.md#last-recovery-one-way-pair-exclusions) preserve the final recovery decision through sweeps and contact projection across all selected implementations. Query-local value/device storage adds no production type or public signature.
 
 [Final body-motion contact sampling](components/physics-registered-adapter.md#final-body-motion-contact-sampling) resamples margin-inclusive contact geometry after recovery and unsafe motion across CPU, resident GPU and the independent public provider. Completed departures clear obsolete contacts; no production type or public signature is added.

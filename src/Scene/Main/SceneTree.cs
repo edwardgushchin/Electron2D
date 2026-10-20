@@ -28,6 +28,7 @@ public sealed partial class SceneTree : MainLoop
         new PropertyDescriptor<SceneTree, bool>(nameof(DebugPathsHint), tree => tree.DebugPathsHint, (tree, value) => tree.DebugPathsHint = value, _ => false),
         new PropertyDescriptor<SceneTree, bool>(nameof(MultiplayerPoll), tree => tree.MultiplayerPoll, (tree, value) => tree.MultiplayerPoll = value, _ => true),
         new PropertyDescriptor<SceneTree, bool>(nameof(AutoAcceptQuit), tree => tree.AutoAcceptQuit, (tree, value) => tree.AutoAcceptQuit = value, _ => true),
+        new PropertyDescriptor<SceneTree, bool>(nameof(QuitOnGoBack), tree => tree.QuitOnGoBack, (tree, value) => tree.QuitOnGoBack = value, _ => true),
         new PropertyDescriptor<SceneTree, bool>(nameof(HasDeferredWork), tree => tree.HasDeferredWork),
         new PropertyDescriptor<SceneTree, ulong>(nameof(ProcessFrameCount), tree => tree.ProcessFrameCount),
         new PropertyDescriptor<SceneTree, ulong>(nameof(PhysicsFrameCount), tree => tree.PhysicsFrameCount),
@@ -83,6 +84,7 @@ public sealed partial class SceneTree : MainLoop
     internal readonly bool ForceRTLLayout = ProjectSettings.GetWithOverride(ProjectSettings.ForceRightToLeftLayoutDirection);
     internal readonly Color DebugPathsColor = ProjectSettings.GetWithOverride(ProjectSettings.DebugPathsColor);
     private bool _autoAcceptQuit = true;
+    private bool _quitOnGoBack = true;
     private int _quitRequested;
     private int _exitCode;
     private int _activeExecution;
@@ -137,6 +139,8 @@ public sealed partial class SceneTree : MainLoop
 
         try
         {
+            _autoAcceptQuit = ProjectSettings.GetWithOverride(ProjectSettings.AutoAcceptQuit);
+            _quitOnGoBack = ProjectSettings.GetWithOverride(ProjectSettings.QuitOnGoBack);
             root.InitializeRootAutoTranslateMode(ProjectSettings.GetWithOverride(ProjectSettings.RootNodeAutoTranslate));
             if (root is Viewport audioRoot) { audioRoot.AudioListenerEnable2D = true; audioRoot.InitializePhysicsPicking(); }
             _physicsInterpolation = ProjectSettings.GetWithOverride(ProjectSettings.PhysicsInterpolation);
@@ -531,13 +535,27 @@ public sealed partial class SceneTree : MainLoop
     public void PhysicsFrame(double delta) => _ = PhysicsProcess(delta);
 
     /// <summary>Gets or sets whether a root window close request automatically requests quit after its signal.</summary>
-    /// <value>True by default.</value>
+    /// <value>Initially sampled from ProjectSettings.AutoAcceptQuit, true by default.</value>
     /// <exception cref="InvalidOperationException">The caller is not the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tree is finalized or disposed.</exception>
     public bool AutoAcceptQuit
     {
         get { EnsureOwnerThread(); EnsureAcceptingWork(); return _autoAcceptQuit; }
         set { EnsureOwnerThread(); EnsureAcceptingWork(); _autoAcceptQuit = value; }
+    }
+
+    /// <summary>Gets or sets whether the root window's system back signal requests application quit.</summary>
+    /// <value>Initially sampled from ProjectSettings.QuitOnGoBack, true by default, independently of AutoAcceptQuit.</value>
+    /// <remarks>The policy is evaluated after containing-window notifications and before public GoBackRequested
+    /// subscribers. A notification handler can disable it; a later signal handler can request its own exit code.
+    /// Blocking the root window's signals suppresses this policy as well as its signal subscribers.
+    /// Requests for child windows do not quit this tree.</remarks>
+    /// <exception cref="InvalidOperationException">The caller is not the owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The tree is finalized or disposed.</exception>
+    public bool QuitOnGoBack
+    {
+        get { EnsureOwnerThread(); EnsureAcceptingWork(); return _quitOnGoBack; }
+        set { EnsureOwnerThread(); EnsureAcceptingWork(); _quitOnGoBack = value; }
     }
 
     /// <summary>Requests termination after the current callback or frame, with the supplied exit code.</summary>
@@ -563,6 +581,20 @@ public sealed partial class SceneTree : MainLoop
         {
             EnsureAcceptingWorkUnderLock();
             if (_autoAcceptQuit && _quitRequested == 0)
+            {
+                Volatile.Write(ref _exitCode, 0);
+                Volatile.Write(ref _quitRequested, 1);
+            }
+        }
+    }
+
+    internal void AcceptWindowGoBack()
+    {
+        EnsureOwnerThread();
+        lock (_workGate)
+        {
+            EnsureAcceptingWorkUnderLock();
+            if (_quitOnGoBack && _quitRequested == 0)
             {
                 Volatile.Write(ref _exitCode, 0);
                 Volatile.Write(ref _quitRequested, 1);

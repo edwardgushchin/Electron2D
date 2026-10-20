@@ -212,6 +212,13 @@ public partial class Window : Viewport
     /// The root default quit decision follows delivery even on failure; a child request does not imply application quit. Handler failures terminate Engine.Run with cleanup.</remarks>
     public event Action? CloseRequested;
 
+    /// <summary>Occurs when the Android system requests back navigation for this window.</summary>
+    /// <remarks>Containing-window notifications run first, stopping at nested windows. For the root window,
+    /// SceneTree.QuitOnGoBack is evaluated next, before public subscribers. Notifications and later subscribers
+    /// are attempted despite earlier callback errors. Blocking this window's signals suppresses subscribers and
+    /// automatic quit, while notifications still run. Manual node notification does not emit this event.</remarks>
+    public event Action? GoBackRequested;
+
     /// <summary>Occurs after Title commits a different value.</summary>
     public event Action? TitleChanged;
 
@@ -268,6 +275,7 @@ public partial class Window : Viewport
             _themeOwner?.Dispose(); ThemeChanged = null;
             AboutToPopup = null;
             CloseRequested = null;
+            GoBackRequested = null;
             VisibilityChanged = null;
             WindowInput = null;
             TitleChanged = null;
@@ -319,6 +327,7 @@ public partial class Window : Viewport
         _size = display.WindowGetSizeCore(); _contentLayoutValid = false;
         display.CloseRequestedCore += HandleClose;
         display.QuitRequestedCore += HandleClose;
+        display.GoBackRequestedCore += HandleGoBack;
         display.WindowRectChangedCore += HandleRect;
         display.WindowFocusChangedCore += HandleFocus;
         display.WindowMouseEnteredCore += HandleMouseEntered;
@@ -372,6 +381,7 @@ public partial class Window : Viewport
         finally { _renderer = null; display.ReleaseRenderingWindow(); }
         display.CloseRequestedCore -= HandleClose;
         display.QuitRequestedCore -= HandleClose;
+        display.GoBackRequestedCore -= HandleGoBack;
         display.WindowRectChangedCore -= HandleRect;
         display.WindowFocusChangedCore -= HandleFocus;
         display.WindowMouseEnteredCore -= HandleMouseEntered;
@@ -395,6 +405,8 @@ public partial class Window : Viewport
         ThrowIfDisposed();
         return _display ?? throw new InvalidOperationException("The window is not active.");
     }
+
+    private void HandleGoBack() => EmitWindowEvent(NotificationWmGoBackRequest);
 
     private void HandleClose()
     {
@@ -458,11 +470,15 @@ public partial class Window : Viewport
         List<Exception>? errors = null;
         if (what == NotificationWmWindowFocusOut) try { Tree?.CancelEmbeddedDecorationTree(this); } catch (Exception error) { CollectException(ref errors, error); }
         try { PropagateWindowNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+        if (what == NotificationWmGoBackRequest)
+            try { if (!IsBlockingSignals() && Parent is null) Tree?.AcceptWindowGoBack(); }
+            catch (Exception error) { CollectException(ref errors, error); }
         var handlers = what switch
         {
             NotificationWmWindowFocusIn => FocusEntered,
             NotificationWmWindowFocusOut => FocusExited,
             NotificationWmCloseRequest => CloseRequested,
+            NotificationWmGoBackRequest => GoBackRequested,
             NotificationWmDpiChange => DpiChanged,
             _ => null
         };

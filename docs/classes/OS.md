@@ -138,6 +138,8 @@ GetEnvironment, HasEnvironment, SetEnvironment and UnsetEnvironment manage proce
 
 ## Standard handles and input
 
+On Android, both reads throw `PlatformNotSupportedException` after size validation and before attempting a managed console handle. Invalid buffer sizes retain `ArgumentOutOfRangeException`.
+
 GetSTDINType, GetSTDOUTType and GetSTDERRType return the nested StdHandleType enum. ReadBufferFromSTDIN reads actual owned bytes, filling pipe/file requests or returning a terminal line/prefix. ReadStringFromSTDIN reads a bounded UTF-8 line, normalizes CRLF and removes trailing LF without taking the next line. These cold blocking operations borrow the process handle and reject invalid sizes/handles or invalid UTF-8 explicitly. See [complete semantics, native adapters and child-process checks](../components/standard-input.md).
 
 ## Restart on normal process exit

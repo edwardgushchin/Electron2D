@@ -142,6 +142,7 @@ public sealed partial class DisplayServer
             }
             try
             {
+                DrainSystemGoBack(ref failures);
                 SampleGamepadMotion(dropInput);
             }
             catch (Exception exception)

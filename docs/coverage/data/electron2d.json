@@ -16169,6 +16169,19 @@
     "value": "1009"
   },
   {
+    "id": "constant:Electron2D.Node.NotificationWmGoBackRequest()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Node",
+    "name": "NotificationWmGoBackRequest",
+    "signature": "public const System.Int32 NotificationWmGoBackRequest = 1007",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "1007"
+  },
+  {
     "id": "constant:Electron2D.Node.NotificationWmMouseEnter()",
     "kind": "constant",
     "declaringType": "Electron2D.Node",
@@ -55886,6 +55899,19 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.DisplayServer.GoBackRequested()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "GoBackRequested",
+    "signature": "public static event System.Action GoBackRequested",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.DisplayServer.QuitRequested()",
     "kind": "event",
     "declaringType": "Electron2D.DisplayServer",
@@ -58647,6 +58673,19 @@
     "declaringType": "Electron2D.Window",
     "name": "FocusExited",
     "signature": "public event System.Action FocusExited",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Window.GoBackRequested()",
+    "kind": "event",
+    "declaringType": "Electron2D.Window",
+    "name": "GoBackRequested",
+    "signature": "public event System.Action GoBackRequested",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -250760,6 +250799,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.AutoAcceptQuit()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "AutoAcceptQuit",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E AutoAcceptQuit { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.ButtonShortcutFeedbackHighlightTime()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -252447,6 +252499,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.QuitOnGoBack()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "QuitOnGoBack",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E QuitOnGoBack { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
     "value": null
   },
   {
@@ -255809,6 +255874,19 @@
     "declaringType": "Electron2D.SceneTree",
     "name": "PhysicsInterpolation",
     "signature": "public System.Boolean PhysicsInterpolation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneTree.QuitOnGoBack()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneTree",
+    "name": "QuitOnGoBack",
+    "signature": "public System.Boolean QuitOnGoBack { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

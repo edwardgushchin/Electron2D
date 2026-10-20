@@ -150,6 +150,9 @@ public partial class Node : ElectronObject
     /// <summary>Identifies the notification sent when closure of the containing window is requested.</summary>
     public const int NotificationWmCloseRequest = 1006;
 
+    /// <summary>Identifies the containing-window notification for an Android system back request.</summary>
+    public const int NotificationWmGoBackRequest = 1007;
+
     /// <summary>Identifies the notification sent when this window updates its content size.</summary>
     public const int NotificationWmSizeChanged = 1008;
 
