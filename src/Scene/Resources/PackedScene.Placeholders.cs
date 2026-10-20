@@ -17,7 +17,7 @@ public sealed partial class PackedScene
             }
             else pending.Add(field);
         }
-        RestoreProperties(placeholder, record with { Properties = direct.ToArray() }, resources);
+        RestoreProperties(placeholder, direct.ToArray(), resources);
         var path = record.InstancePlaceholder.Length == 0 ? placeholder.GetInstancePath() : record.InstancePlaceholder;
         placeholder.InitializePending(path, pending);
         if (path.Length != 0) placeholder.SetSceneInstanceLoadPlaceholder(true);
@@ -45,7 +45,7 @@ public sealed partial class PackedScene
         {
             var record = new SceneNodeData(new SceneFactoryData(static () => new Node(), instance.GetType(), 0), instance.Name,
                 -1, -1, -1, ".", ".", "", [], fields.Select(field => new ScenePropertyData(field.Name, new DeferredPropertyValue(field))).ToArray(), null, "");
-            RestoreProperties(instance, record, resources, nodeReferences: null, localRoot: instance, externalReference: placeholder.GetNodeOrNull);
+            RestoreProperties(instance, record.Properties, resources, nodeReferences: null, localRoot: instance, externalReference: placeholder.GetNodeOrNull);
             foreach (var node in nodes) node.ValidateSceneInstance();
             resources.AssignLocalScene(instance); resources.SetupLocalResources();
             instance.AppendSceneResources(resources.ReleaseCreated()); topology.Validate();

@@ -207,6 +207,7 @@ public partial class Node : ElectronObject
     private bool _uniqueNameInOwner;
 
     private List<Resource>? _ownedSceneResources;
+    private ResourceFileOwnership? _sharedSceneResourceOwnership;
 
     // Low bits hold publication/queued/claimed and closure; higher bits distinguish canceled generations.
     private long _queuedForDeletion;
@@ -1809,10 +1810,10 @@ public partial class Node : ElectronObject
         }
     }
 
-    /// <summary>Creates a reusable factory for packed-scene instances of this exact runtime node type.</summary>
+    /// <summary>Creates a reusable factory for packed scenes and duplicates of this exact runtime node type.</summary>
     /// <returns>A non-null factory that creates a fresh node of the exact same runtime type.</returns>
     /// <remarks>
-    /// The base implementation supports only an exact <see cref="Node"/>. Derived node types that can be packed must
+    /// The base implementation supports only an exact <see cref="Node"/>. Derived node types that support packing or duplication must
     /// return a static, non-capturing factory that remains valid after the source node is disposed and creates a live,
     /// detached, parentless, childless, unowned, and non-queued instance. Stored writable property descriptors restore
     /// the instance state.
@@ -1821,7 +1822,7 @@ public partial class Node : ElectronObject
     protected virtual Func<Node> CreateSceneInstanceFactory()
     {
         if (GetType() != typeof(Node))
-            throw new NotSupportedException($"{GetType().Name} must override {nameof(CreateSceneInstanceFactory)} to support packed scenes.");
+            throw new NotSupportedException($"{GetType().Name} must override {nameof(CreateSceneInstanceFactory)} to support packed scenes and node duplication.");
 
         return CreateDefaultSceneNode;
     }
@@ -2069,6 +2070,11 @@ public partial class Node : ElectronObject
             _groups.Clear();
             SetSceneOwner(null);
 
+            if (_sharedSceneResourceOwnership is not null)
+            {
+                try { _sharedSceneResourceOwnership.ReleaseOwner(); } catch (Exception error) { CollectException(ref errors, error); }
+                _sharedSceneResourceOwnership = null; _ownedSceneResources = null;
+            }
             if (_ownedSceneResources is not null)
             {
                 foreach (var resource in _ownedSceneResources)
@@ -2181,7 +2187,9 @@ public partial class Node : ElectronObject
         EnsureMutable(); var resources = new List<Resource>(); var pending = new Stack<Node>(); pending.Push(this);
         while (pending.TryPop(out var node))
         {
-            node.EnsureMutable(); if (node._ownedSceneResources is { } owned) resources.AddRange(owned); node._ownedSceneResources = null;
+            node.EnsureMutable();
+            if (node._sharedSceneResourceOwnership is { } shared) { shared.TransferResources(); shared.ReleaseOwner(); node._sharedSceneResourceOwnership = null; }
+            if (node._ownedSceneResources is { } owned) resources.AddRange(owned); node._ownedSceneResources = null;
             for (var i = 0; i < node.GetChildCount(includeInternal: true); i++) pending.Push(node.GetChild(i, includeInternal: true));
         }
         return resources.ToArray();
@@ -2203,6 +2211,7 @@ public partial class Node : ElectronObject
         }
 
         _ownedSceneResources = owned;
+        if (owned.Count != 0) _sharedSceneResourceOwnership = new ResourceFileOwnership(owned.ToArray());
     }
 
     internal void SetSceneFilePath(string path)

@@ -128,11 +128,27 @@ public partial class Node
                 }
                 catch (Exception error) { CollectException(ref errors, error); }
             }
+            for (var ancestor = parent; ancestor is not null; ancestor = ancestor.Parent)
+                if (ancestor.SceneInstancePaths is { } paths && paths.Remove(InstanceID, out var path)) paths[node.InstanceID] = path;
+            if (SceneInstancePaths is { } origins)
+            {
+                node.SceneInstancePaths = new(origins); node.SceneInstancePaths.Remove(InstanceID); node.SceneInstancePaths[node.InstanceID] = ".";
+            }
+            if (SpawnSceneIdentity is not null) node.SpawnSceneIdentity = SpawnSceneIdentity;
+            if (SceneInstanceConnections is not null) node.SceneInstanceConnections = SceneInstanceConnections;
             node._sceneFilePath = _sceneFilePath;
             if (_sceneFileLeases is { } leases) { (node._sceneFileLeases ??= []).AddRange(leases); _sceneFileLeases = null; }
             if (_ownedSceneResources is { Count: > 0 } resources)
             {
                 foreach (var resource in resources) resource.ReassignLocalScene(this, node);
+                if (_sharedSceneResourceOwnership is { } shared)
+                {
+                    if (node._sharedSceneResourceOwnership is { } targetShared)
+                        node._sharedSceneResourceOwnership = new ResourceFileOwnership([], [targetShared, shared]);
+                    else node._sharedSceneResourceOwnership = new ResourceFileOwnership(node._ownedSceneResources?.ToArray() ?? [], [shared]);
+                    _sharedSceneResourceOwnership = null;
+                }
+                else node._sharedSceneResourceOwnership?.AppendResources(resources);
                 node._ownedSceneResources ??= [];
                 node._ownedSceneResources.AddRange(resources);
                 _ownedSceneResources = null;

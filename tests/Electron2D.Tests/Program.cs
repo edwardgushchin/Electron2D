@@ -454,6 +454,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_CONTEXT_NATIVE") == 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_CONTEXT") == "1") { GUITranslationContextTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_POINTER_NATIVE") == "1") { ControlPointerTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_POINTER") == "1") { ControlPointerTests.Run(); return; }
+if (args.Length == 3 && args[0] == "--node-duplication") { NodeDuplicationTests.Child(args[1], args[2]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_DUPLICATION") == "managed") { NodeDuplicationTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_DUPLICATION") is { } duplicationBackend) { NodeDuplicationTests.Render(duplicationBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_LOCAL_SCENES") == "1") { VerifyResources(); VerifyPackedScenes(); NodeReplacementTests.Run(); SubtreeResourceAuthoringTests.Run(); Console.WriteLine("Resource/local scene base, packed graph, root replacement and isolated authoring passed."); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_BASE") == "1") { VerifyResources(); Console.WriteLine("Resource base: copying/reset/errors, path/scene identity, graph duplication and lifetime passed."); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_DIRECTORY_CHILD") is { Length: > 0 } resourceDirectory) { ResourceDirectoryTests.RunChild(resourceDirectory); return; }
@@ -1573,6 +1576,7 @@ SceneChangeTests.Run();
 NodeTreeDiagnosticsTests.Run();
 NodeUniqueNameTests.Run();
 NodeReplacementTests.Run();
+NodeDuplicationTests.Run();
 PhysicsProjectSelectionTests.Run(true);
 BackendChecks.RunCompound(PhysicsServer.Backend.CPU);
 BackendChecks.RunCompound(PhysicsServer.Backend.GPU);

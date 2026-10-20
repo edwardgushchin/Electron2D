@@ -99,9 +99,9 @@ public sealed partial class PackedScene
                 {
                     var localRoot = stored.Instance is not null ? node : node.Owner ?? nodes[stored.InstanceRootIndex];
                     if (!scopes.TryGetValue(localRoot, out scope)) scopes.Add(localRoot, scope = CreateSceneDuplicationScope(isolateAllResources: !setupLocalResources));
-                    RestoreProperties(node, stored, scope, localRoot: localRoot);
+                    RestoreProperties(node, stored.Properties, scope, localRoot: localRoot);
                 }
-                else RestoreProperties(node, stored, scope);
+                else RestoreProperties(node, stored.Properties, scope);
                 foreach (var group in stored.Groups) node.AddToGroup(group, persistent: true);
                 if (stored.ParentIndex >= 0)
                 {
@@ -124,7 +124,7 @@ public sealed partial class PackedScene
                 var owner = data.Nodes[i].OwnerIndex >= 0 ? nodes[data.Nodes[i].OwnerIndex] : null;
                 topology.SetOwner(nodes[i], owner); nodes[i].Owner = owner;
             }
-            for (var i = 0; i < nodes.Length; i++) if (!skipped[i]) RestoreProperties(nodes[i], data.Nodes[i], resources, nodeReferences: true);
+            for (var i = 0; i < nodes.Length; i++) if (!skipped[i]) RestoreProperties(nodes[i], data.Nodes[i].Properties, resources, nodeReferences: true);
             var root = nodes[0];
             if (!IsBuiltInPath(path)) root.SetSceneFilePath(path);
             foreach (var node in created) node.ValidateSceneInstance();

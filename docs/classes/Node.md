@@ -16,6 +16,21 @@ Authoring guards inspect affected scene colliders and their actual physical atta
 
 `GetSceneInstanceLoadPlaceholder()` and `SetSceneInstanceLoadPlaceholder(bool)` control future capture of an actual nonroot scene instance with a scene file path. The setter changes authoring state; it does not replace the live node. [Deferred scenes](../components/deferred-scenes.md) restores a transform-free InstancePlaceholder and later explicitly materializes its sibling through the existing scene/resource lifecycle.
 
+## Hierarchy duplication
+
+`Node Duplicate(Node.DuplicateFlags flags = Node.DuplicateFlags.Default)` returns a fresh detached hierarchy. It copies ordinary descendants regardless of Owner and reuses the existing typed properties, static factories, file ownership and linked scenes. Ready runs only on later activation. See [the full duplication contract](../components/node-duplication.md).
+
+| Flag | Value | Behavior |
+| --- | ---: | --- |
+| Signals | 1 | Registered authored typed subscriptions, with mapped internal and borrowed external receivers. |
+| Groups | 2 | Runtime and persistent groups. |
+| Scripts | 4 | Exact compiled types through scene factories; omission uses engine bases for freshly constructed nodes. |
+| UseInstantiation | 8 | Starts from the actual linked/saved template and overlays source state/additions. |
+| InternalState | 16 | Includes writable nonstored typed properties. |
+| Default | 15 | Signals, Groups, Scripts and UseInstantiation. |
+
+Zero selects no optional flags. Internal children originate in constructors/templates. Arrays copy, ordinary resources share, always-duplicate properties receive shallow copies, and copied node references remap after construction. Resource/file leases preserve a duplicate after source-scene disposal. Raw copies have no authoring owners; linked children retain template ownership. Inherited template groups/types/subscriptions may already exist when a copy flag is disabled. Invalid flags/factories/schemas, disposed inputs and off-owner access fail explicitly; callback failure cleans acquired ownership.
+
 ## Retained canvas presentation
 
 Changing PhysicsInterpolationMode republishes the effective source policy for affected borrowed canvas items and resets their retained histories. Explicit renderer state remains session-local; a node reset updates its own source/retained presentation endpoints and propagated descendants. See [contract and native verification](../components/canvas-rendering.md#retained-canvas-item-interpolation).
@@ -54,7 +69,7 @@ The neutral base of every object in a scene tree. Owns ordered children, paths, 
 
 `UniqueNameInOwner` allows an owned node to be resolved through `%Name` from its owner or another node with that same owner. The first node to claim a name keeps it; a later conflicting claim is cleared. Owner and name changes update the claim, and packed scenes restore it after ownership is assigned. `GetPathTo(node, useUniquePath: true)` uses the eligible unique node on the destination side first, or a unique node on the source side when no destination shortcut exists.
 
-`ReplaceBy` swaps a node with a detached replacement at the same sibling index, then moves its children. The old node stays alive and detached. Ownership failures are collected with transfer errors after every saved owner is attempted. Group copying is optional; owned descendants and scene-local resources follow the replacement.
+`ReplaceBy` swaps a node with a detached replacement at the same sibling index, then moves its children. The old node stays alive and detached. Linked scene-origin identities follow replaced nodes, so later renames, copies and packed overrides refer to the replacement. Ownership failures are collected with transfer errors after every saved owner is attempted. Group copying is optional; owned descendants and scene-local resources follow the replacement.
 
 Physics interpolation keeps logical transforms current while the renderer presents a pose between the two latest physics ticks. A node inherits the nearest ancestor's policy; a root defaults On and Control defaults Off. The tree-wide setting and current renderer decide whether presentation interpolation is active.
 

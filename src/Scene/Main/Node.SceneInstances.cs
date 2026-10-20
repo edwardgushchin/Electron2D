@@ -13,6 +13,8 @@ public partial class Node
     {
         EnsureMutable();
         if (resources.Count == 0) return;
+        if (_sharedSceneResourceOwnership is null) _sharedSceneResourceOwnership = new ResourceFileOwnership([.. _ownedSceneResources ?? [], .. resources]);
+        else _sharedSceneResourceOwnership.AppendResources(resources);
         (_ownedSceneResources ??= []).AddRange(resources);
     }
 }

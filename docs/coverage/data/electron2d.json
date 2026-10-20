@@ -7591,6 +7591,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Node.DuplicateFlags",
+    "kind": "type",
+    "declaringType": "Electron2D.Node.DuplicateFlags",
+    "name": "DuplicateFlags",
+    "signature": "public enum Electron2D.Node.DuplicateFlags",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Node.InternalMode",
     "kind": "type",
     "declaringType": "Electron2D.Node.InternalMode",
@@ -40664,6 +40682,84 @@
     "parameters": [],
     "returnType": "Electron2D.NavigationServer.ProcessInfo",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Node.DuplicateFlags.Default()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Node.DuplicateFlags",
+    "name": "Default",
+    "signature": "public const Electron2D.Node.DuplicateFlags Default = 15",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node.DuplicateFlags",
+    "value": "15"
+  },
+  {
+    "id": "enumValue:Electron2D.Node.DuplicateFlags.Groups()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Node.DuplicateFlags",
+    "name": "Groups",
+    "signature": "public const Electron2D.Node.DuplicateFlags Groups = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node.DuplicateFlags",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Node.DuplicateFlags.InternalState()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Node.DuplicateFlags",
+    "name": "InternalState",
+    "signature": "public const Electron2D.Node.DuplicateFlags InternalState = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node.DuplicateFlags",
+    "value": "16"
+  },
+  {
+    "id": "enumValue:Electron2D.Node.DuplicateFlags.Scripts()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Node.DuplicateFlags",
+    "name": "Scripts",
+    "signature": "public const Electron2D.Node.DuplicateFlags Scripts = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node.DuplicateFlags",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.Node.DuplicateFlags.Signals()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Node.DuplicateFlags",
+    "name": "Signals",
+    "signature": "public const Electron2D.Node.DuplicateFlags Signals = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node.DuplicateFlags",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Node.DuplicateFlags.UseInstantiation()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Node.DuplicateFlags",
+    "name": "UseInstantiation",
+    "signature": "public const Electron2D.Node.DuplicateFlags UseInstantiation = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node.DuplicateFlags",
+    "value": "8"
   },
   {
     "id": "enumValue:Electron2D.Node.InternalMode.Back()",
@@ -130314,6 +130410,25 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.Duplicate(Electron2D.Node.DuplicateFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "Duplicate",
+    "signature": "public Electron2D.Node Duplicate(Electron2D.Node.DuplicateFlags flags = Default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "flags",
+        "type": "Electron2D.Node.DuplicateFlags",
+        "default": "Default"
+      }
+    ],
+    "returnType": "Electron2D.Node",
     "value": null
   },
   {

@@ -64,7 +64,7 @@ The Script resource enters a real code-as-asset consumer: source/compiled-type a
 
 The compiled-source asset slice now provides a concrete Script resource, explicit project Node/Resource registrations, portable-PDB source association, typed metadata/defaults/factories, `.cs` loading/atomic saving and archive identity. It creates actual user classes through existing file factories and ordinary callbacks; RichTextLabel consumes compiled effect resources. Checks and platform limits are recorded in [the scripting component](../components/scripting.md).
 
-Live GetScript/SetScript binding/replacement, implementation Reload and keep-state migration remain unimplemented obligations. RPC metadata requires the scene multiplayer/RPC contract. Deprecated instance_has is excluded with its pinned replacement evidence under ADR 0004. No alternate CSharpScript production type or per-frame wrapper is introduced.
+Node.Duplicate projects its Scripts flag through fresh exact compiled-type construction and, for linked template overlays, detached role replacement under ADR 0023. Omitting the flag selects the nearest engine base through its registered concrete factory for freshly created nodes; a linked template keeps its own compiled types. This never mutates CLR identity or implements live script binding. Live GetScript/SetScript binding/replacement, implementation Reload and keep-state migration remain unimplemented obligations. RPC metadata requires the scene multiplayer/RPC contract. Deprecated instance_has is excluded with its pinned replacement evidence under ADR 0004. No alternate CSharpScript production type or per-frame wrapper is introduced.
 
 ### Consequences
 

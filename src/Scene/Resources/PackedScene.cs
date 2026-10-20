@@ -132,7 +132,7 @@ public sealed partial class PackedScene : Resource
                 ValidateFactoryResult(stored, node);
 
                 node.RestoreSceneName(stored.Name);
-                RestoreProperties(node, stored, resources);
+                RestoreProperties(node, stored.Properties, resources);
 
                 foreach (var group in stored.Groups)
                     node.AddToGroup(group, persistent: true);
@@ -149,7 +149,7 @@ public sealed partial class PackedScene : Resource
             }
 
             for (var index = 0; index < data.Nodes.Length; index++)
-                RestoreProperties(nodes[index], data.Nodes[index], resources, nodeReferences: true);
+                RestoreProperties(nodes[index], data.Nodes[index].Properties, resources, nodeReferences: true);
 
             var root = nodes[0];
             if (!IsBuiltInPath(resourcePath))
@@ -474,15 +474,17 @@ public sealed partial class PackedScene : Resource
         }
     }
 
-    private static void RestoreProperties(
+    internal static void RestoreProperties(
         Node node,
-        SceneNodeData stored,
+        ScenePropertyData[] properties,
         Resource.SceneDuplicationScope resources,
-        bool? nodeReferences = false, Node? localRoot = null, Func<string, Node?>? externalReference = null)
+        bool? nodeReferences = false, Node? localRoot = null, Func<string, Node?>? externalReference = null,
+        bool includeInternal = false, bool skipUnavailable = false,
+        Func<Resource, Resource>? resolveResource = null, Func<Resource, Resource>? resolveForcedResource = null)
     {
         Node.ValidateEditorPropertyNames(node.GetPropertyList());
         var descriptors = node.GetPropertyList().ToDictionary(property => property.Name, StringComparer.Ordinal);
-        foreach (var property in stored.Properties)
+        foreach (var property in properties)
         {
             if (nodeReferences is { } referenceFilter &&
                 (property.Value is StoredNodeReferenceValue || property.Value is DeferredPropertyValue { Field.Role: ResourceFieldRole.Node }) != referenceFilter) continue;
@@ -500,11 +502,12 @@ public sealed partial class PackedScene : Resource
             if (descriptor is null && node is ResourcePreloader) descriptor = ResourcePreloader.StoredResource(property.Name, property.Value.ValueType);
             if (node is ShaderGlobalsOverride && descriptor?.IsStored != true) descriptor = ShaderGlobalParameters.StoredSceneParameter(node, property.Name, property.Value.ValueType) ?? descriptor;
             descriptor ??= Node.StoredEditorProperty(property.Name, property.Value.ValueType);
-            if (descriptor is null || !descriptor.IsStored ||
+            if (skipUnavailable && (descriptor is null || descriptor.IsReadOnly || descriptor.ValueType != property.Value.ValueType)) continue;
+            if (descriptor is null || descriptor.IsReadOnly || !descriptor.IsStored && !includeInternal ||
                 property.Value is not DeferredPropertyValue && descriptor.ValueType != property.Value.ValueType)
             {
                 throw new InvalidOperationException(
-                    $"Stored property '{property.Name}' is not available with the captured schema on {stored.Factory.RuntimeType.Name}.");
+                    $"Stored property '{property.Name}' is not available with the captured schema on {node.ClassName}.");
             }
 
             var value = property.Value is DeferredPropertyValue deferred ? descriptor.ReadDeferredValue(deferred.Field) : property.Value;
@@ -512,7 +515,7 @@ public sealed partial class PackedScene : Resource
                 resources.PrepareFallbacks(value, descriptor.CaptureStoredValue(node), localRoot);
             if (value is StoredNodeReferenceValue reference && externalReference is not null)
                 descriptor.RestoreNodeReference(node, reference, path => node.GetNodeOrNull(path) ?? externalReference(path));
-            else descriptor.RestoreStoredValue(node, value, descriptor.AlwaysDuplicateResource ? resources.ResolveForced : resources.Resolve);
+            else descriptor.RestoreStoredValue(node, value, descriptor.AlwaysDuplicateResource ? resolveForcedResource ?? resources.ResolveForced : resolveResource ?? resources.Resolve);
         }
     }
 
