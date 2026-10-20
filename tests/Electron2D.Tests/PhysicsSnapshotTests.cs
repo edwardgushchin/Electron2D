@@ -104,8 +104,17 @@ internal static class PhysicsSnapshotTests
         Check(otherView.GetContactCollider(0) != view.GetContactCollider(0), "Contact RIDs remapped into the target world");
         using (var fresh = new Rig(to))
         {
-            fresh.Ground(oneWay: true); var newborn = fresh.Ball(2, new(400, -50)); fresh.Sensor(); Transfer(a, fresh);
+            var ground = fresh.Ground(oneWay: true); var newborn = fresh.Ball(2, new(400, -50)); var sensor = fresh.Sensor(); Transfer(a, fresh);
             Check(PhysicsServer.BodyGetDirectState(newborn.GetRID())!.GetContactCount() == view.GetContactCount(), "A new client exposes imported contacts before its first tick");
+            var departures = 0; var overlapDepartures = 0;
+            newborn.BodyExited += peer => { Check(ReferenceEquals(peer, ground), "Imported contact departure retains local peer identity"); departures++; };
+            sensor.BodyExited += peer => { if (ReferenceEquals(peer, ground)) overlapDepartures++; };
+            using (ground)
+            {
+                fresh.Root.RemoveChild(ground);
+                Check(departures == 1 && overlapDepartures == 1 && newborn.GetCollidingBodies().Length == 0 && !sensor.OverlapsBody(ground),
+                    "Imported body and Area histories retire their peer before the client's first tick");
+            }
         }
         b.Step(); Check(enters == 0 && bodyEnters == 0, "Next tick does not repeat contact or overlap enters");
         other.GlobalPosition = new(400, -50); b.Step(2); Check(exits == 1, "A restored overlap exits once");

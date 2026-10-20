@@ -23,7 +23,7 @@ internal sealed partial class PhysicsReplayEntry
             PhysicsSnapshotReader.Require(PortableShapesExist(other, local, remote));
             var pair = new PhysicsShapePair(other.Backend.RID, other.Backend.ObjectIdentity, area, remote, local)
             { InTree = inTree, LocalSlotIdentity = _shapes[local].Identity, OtherSlotIdentity = other._shapes[remote].Identity };
-            PhysicsSnapshotReader.Require(pairs.Current.Add(pair));
+            PhysicsSnapshotReader.Require(pairs.RestorePair(pair));
         }
     }
     private void WriteContacts(ref PhysicsSnapshotWriter writer, PhysicsSnapshotMap map, ReadOnlySpan<PhysicsDirectBodyState.Contact> contacts)

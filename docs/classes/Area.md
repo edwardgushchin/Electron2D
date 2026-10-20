@@ -1,6 +1,6 @@
 # Area
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 ## Finite hierarchy-global poses
 
@@ -60,6 +60,12 @@ PhysicsServer AreaGetSpace/AreaSetSpace operate on this node's actual attachment
 ## Description
 
 A nonresponding 2D sensor region. Direct [CollisionShape](CollisionShape.md) children supply borrowed circle, capsule, segment, convex polygon, concave segment collection or rectangle geometry. A child's one-way setting is retained for scene state but cannot filter this area's sensor overlaps. After each nonzero fixed physics step, the area records overlapping `PhysicsBody` and other `Area` nodes; moving a node or editing a filter does not immediately change the snapshot. Events are delivered after body synchronization and before physics timers and tweens. The area's `CollisionMask` tests the other object's `CollisionLayer`; the other object's mask can be zero. Other areas also need `Monitorable=true` to be reported. The area can monitor even when its own `Monitorable` is false. Independently, gravity and damping fields affect overlapping RigidBody dynamics, while gravity also feeds CharacterBody's inherited `GetGravity()` query before the solver step. A shaped area can also reroute a spatial audio source whose `AreaMask` intersects its collision layer; monitoring flags do not gate that point query.
+
+Restored portable overlap histories preserve immediate peer retirement before
+the receiving world's first physics tick. Unrelated collider retirement leaves
+other cached overlaps intact. The shared pair tracker retains prepared RID
+membership alongside each snapshot; see [contact-peer retirement](../components/physics-scene-performance.md#contact-peer-retirement-2026-10-20).
+
 
 ## Example
 

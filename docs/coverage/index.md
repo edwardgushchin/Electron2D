@@ -325,6 +325,13 @@ The bridge rejects excessive island counts; full frames plus cached process/Perf
 reads remain allocation-free immediately after collection. Broader numerical,
 hardware, inherited and performance gates remain open.
 
+[Contact-peer retirement](../components/physics-scene-performance.md#contact-peer-retirement-2026-10-20)
+retains prepared peer RID membership through commit, clear, local copying and
+portable import. Unrelated body removal skips monitor recounts; actual departure
+keeps object/shape event order and restoration behavior. CPU/GPU public checks
+and cross-backend snapshots preserve declaration states: physics 1303/1369
+Implemented (95.18%), 66 open and 92 Excluded.
+
 [The 2026-10-20 RTX baseline](../components/physics-rtx-current.md) measures
 complete CPU/GPU raw-server and monitored-scene paths plus actual window FPS.
 Warmed managed bytes remain zero, while native requests and scene publication/

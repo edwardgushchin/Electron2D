@@ -158,6 +158,8 @@ public partial class RigidBody
         _pairChanges.Clear();
     }
 
+    internal bool HasContactRID(RID other) => _shapePairs.ContainsRID(other);
+
     internal void ForgetContact(RID other, List<PhysicsSpace.ContactEvent> events)
     {
         _pairChanges.Clear(); _shapePairs.Forget(other, _pairChanges);

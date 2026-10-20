@@ -7,7 +7,7 @@
 
 [Failed direct-mode publication](physics-registered-adapter.md#failed-body-mode-publication) retains authored mode/motion and retries complete numerical preparation before body access, space queries or steps. Detachment preserves that authored state, and scene role takeover prepares the prior direct profile before changing descriptors.
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 Scene persistent force/torque setters now reject terminal-world access before
 retained mutation, including zero/equal assignments. Configured scene reads remain
@@ -16,6 +16,19 @@ The [complete force operation audit](physics-registered-adapter.md#complete-forc
 executes all thirteen operations, five scene siblings and raw bodies, actual
 role/mass/rotated-center response, lifetime and failure guards on both built-in
 backends and a registered implementation in both numerical thread modes.
+
+
+## Contact-peer retirement
+
+The shared body/Area pair tracker retains the set of peer RIDs represented by
+its committed snapshot. Collider removal skips unrelated rigid observers before
+creating cleanup callbacks; the tracker skips unrelated pair recounting. Actual
+departures retain object-before-shape order, identities, all cleanup attempts and
+failure delivery. Pair commit, clear, local history copying and portable import
+maintain the same prepared membership. Public CPU/GPU contact and shape-event
+checks plus cross-backend portable snapshots verify immediate retirement after
+restoration. [Measurements and limits](physics-scene-performance.md#contact-peer-retirement-2026-10-20)
+remain separate from overall performance acceptance.
 
 
 ## Integration callback lifetime

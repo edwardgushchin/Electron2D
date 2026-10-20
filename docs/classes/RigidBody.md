@@ -222,6 +222,11 @@ The optional borrowed [PhysicsMaterial](PhysicsMaterial.md) sets friction, bounc
 <a id="getcollidingbodies"></a>
 ### Contact monitoring and queries
 
+Retiring an unrelated collider preserves this body's retained contact pairs.
+Local checkpoint restoration and imported portable snapshots preserve immediate
+peer departure: one object exit precedes the retained shape exits, including
+before another physics tick. See [contact-peer retirement](../components/physics-scene-performance.md#contact-peer-retirement-2026-10-20).
+
 `MaxContactsReported=0` is the default and reports no points. Values through 4095 select the deepest current contact points; strictly deeper candidates replace the first shallowest slot, while equal depths retain existing slots. Assigning a limit clears the old point count. `GetContactCount()` reads that last fixed-step count even when `ContactMonitor=false`; `GetCollidingBodies()` and body entry/exit events additionally require monitoring. Body results deduplicate multiple contacting shape pairs. Enabling monitoring while already touching reports a new entry on the next step; disabling it clears the object snapshot immediately without synthesizing exits. A cap outside zero through 4095 rejects before mutation. Attached queries and setters require the scene owner thread. The current typed body array covers `PhysicsBody` scene nodes; tile-map virtual collision bodies remain a Partial coverage gap.
 
 <a id="bodyentered"></a>

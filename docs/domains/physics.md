@@ -1,5 +1,11 @@
 # Physics domain
 
+[Contact-peer retirement](../components/physics-scene-performance.md#contact-peer-retirement-2026-10-20)
+now skips unrelated retained pair snapshots while preserving immediate object/
+shape exits after local and portable restoration. This changes internal cleanup
+cost rather than declaration states: 1303/1369 Implemented (95.18%), 66 open and
+92 Excluded. Complete physics/performance acceptance remains open.
+
 [The 2026-10-20 RTX baseline](../components/physics-rtx-current.md) qualifies
 physical raw-server, monitored-scene and real-window measurements by their frozen
 revision. At 16,384 raw bodies GPU step medians improve about fourfold; the complete

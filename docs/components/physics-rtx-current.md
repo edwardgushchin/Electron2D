@@ -67,6 +67,11 @@ At 16384 bodies the GPU uploads/reads 262,424/11,863,152.875 bytes per tick, wit
 
 CPU/GPU setup costs are 4474.6882/3936.264 ms; retirement costs are 58377.2532/51144.2927 ms. The expensive scene teardown remains unresolved. It is outside warmed tick timing and is not hidden as solver cost.
 
+The later [contact-peer retirement slice](physics-scene-performance.md#contact-peer-retirement-2026-10-20)
+records a controlled cleanup improvement and a fresh full-scene pair. The values
+above remain the original frozen baseline; the follow-up retains its own source
+binding and leaves the remaining lifecycle and full-step performance costs open.
+
 ## Native allocation request traffic
 
 The calibrated Linux/glibc probe runs separate instrumented 1536-body scenes, 512 warmup and 128 measured frames. Calibration checks 4 allocations/131 requested bytes/3 frees plus worker/nested/stopped/failure/zero-size-reallocation behavior. Both managed counters remain zero. These instrumented timings and different warmup are not used to estimate overhead against ordinary timing trials.

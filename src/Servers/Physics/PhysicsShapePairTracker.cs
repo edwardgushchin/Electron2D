@@ -22,12 +22,14 @@ internal sealed class PhysicsShapePairTracker
 {
     private HashSet<PhysicsShapePair> _current = [];
     private HashSet<PhysicsShapePair> _next = [];
+    private readonly HashSet<RID> _colliders = [];
     private readonly Dictionary<(ulong, bool), int> _counts = [];
     private readonly List<PhysicsShapePair> _removed = [];
 
     internal void Prepare(int capacity)
     {
         _current.EnsureCapacity(capacity); _next.EnsureCapacity(capacity);
+        _colliders.EnsureCapacity(capacity);
         _counts.EnsureCapacity(checked(capacity * 2)); _removed.EnsureCapacity(capacity);
     }
 
@@ -39,6 +41,12 @@ internal sealed class PhysicsShapePairTracker
     });
     internal bool Contains(PhysicsShapePair pair) => _current.TryGetValue(pair, out var current) && current.InTree == pair.InTree;
     internal HashSet<PhysicsShapePair> Current => _current;
+    internal bool ContainsRID(RID rid) => _colliders.Contains(rid);
+    internal bool RestorePair(PhysicsShapePair pair)
+    {
+        if (!_current.Add(pair)) return false;
+        _colliders.Add(pair.RID); return true;
+    }
 
     internal T[] Objects<T>(bool area) where T : Node
     {
@@ -79,8 +87,10 @@ internal sealed class PhysicsShapePairTracker
         CountObjects();
         foreach (var pair in _current)
             if (!_next.Contains(pair)) RemoveEvents(pair, changes);
+        _colliders.Clear();
         foreach (var pair in _next)
         {
+            _colliders.Add(pair.RID);
             if (_current.Contains(pair)) continue;
             if (pair.InTree && pair.InstanceID != 0)
             {
@@ -95,6 +105,7 @@ internal sealed class PhysicsShapePairTracker
 
     internal void Forget(RID rid, List<PhysicsShapePairChange> changes)
     {
+        if (!_colliders.Remove(rid)) return;
         _removed.Clear(); CountObjects();
         foreach (var pair in _current) if (pair.RID == rid) _removed.Add(pair);
         // Object departure precedes its retained shape exits.
@@ -128,8 +139,8 @@ internal sealed class PhysicsShapePairTracker
     internal void CopyTo(PhysicsShapePairTracker destination)
     {
         destination.Clear(); destination.Prepare(_current.Count);
-        foreach (var pair in _current) destination._current.Add(pair);
+        foreach (var pair in _current) destination.RestorePair(pair);
     }
 
-    internal void Clear() { _current.Clear(); _next.Clear(); _counts.Clear(); _removed.Clear(); }
+    internal void Clear() { _current.Clear(); _next.Clear(); _colliders.Clear(); _counts.Clear(); _removed.Clear(); }
 }

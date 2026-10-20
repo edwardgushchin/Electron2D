@@ -13,6 +13,65 @@ adds all-thread libc request accounting to the complete monitored scene, with
 separate ordinary timing and software-driver limits. Older trials below keep
 their own revisions and workloads.
 
+## Contact-peer retirement, 2026-10-20
+
+Profiling at `7c2197246316990813b5a3b0207df7888aaf1b8c` separates
+SceneTree exit from subsequent detached Node disposal. A populated 4096-body CPU
+scene (1600 warmup, 64 measured ticks, unchanged complete monitored workload)
+spends 2420.5449 ms exiting, including 2267.3683 ms in 8,386,560 contact-observer
+visits; body detach work accounts for 54.3200 ms. Detached Node disposal takes
+349.2871 ms; total cleanup is 2821.0762 ms. A separate stage-only repetition
+records 2409.5340/345.4996 ms and 2802.6365 ms total. These are temporary
+diagnostic stopwatches; the instrumentation is absent from the accepted runtime.
+
+Even the lifecycle-only 16,384-body CPU control, which executes no physical tick,
+takes 10614.8562 ms to exit and 5979.9623 ms for Node disposal, with 16650.0524 ms
+total cleanup. It is a lifecycle observation, not warmed-step acceptance.
+
+The shared pair tracker now retains prepared peer RID membership beside its
+committed shape pairs. Collider removal skips unrelated rigid observers before
+creating cleanup delegates, and Forget avoids recounting unrelated snapshots.
+Commit/clear, private history copies and portable imports maintain membership;
+actual departures keep all retained identities, object-before-shape exits and
+error cleanup. No simulation stage, body, contact cap, sleeping policy or
+observer is removed. The set stores RIDs rather than object ownership and adds
+prepared managed storage; this is not a claim of zero cold allocation.
+
+Public CPU/no-device and physical GPU scene suites cover body lifetime, monitoring,
+multiple shapes, callback failure and strict warmed owner/all-thread zero bytes.
+New checks restore a local checkpoint, retire an unrelated body, then retire a
+two-shape peer without another tick. Portable CPU/GPU combinations import fresh
+body/Area histories and retire the peer before the receiving world's first tick.
+Object-binding suites retain scene/server identity and reentry coverage. Source/PDB
+proofs bind both diagnostic cohorts and the corrected candidate independently.
+
+### Corrected runtime measurements
+
+The corrected candidate is based on `7c2197246316990813b5a3b0207df7888aaf1b8c`, with the four internal retirement/index files changed. Its runtime/test DLL SHA-256 values are `e233fbdd1d4cde4d33c407ee7e26117625801a3764a238c50ce3b73dade387c5` / `e1703afa105784fcf283efa5400875c2da0ab4cf32ec7355e3b7a59159db5fcd`. Source/PDB checks match 2415 runtime and 903 test inputs. The two temporary diagnostic cohorts independently match that base plus their recorded stopwatch edits.
+
+The corrected populated 4096-body CPU trial retains the same 1600 warmup/64 samples, materials, complete physical population and event/contact behavior. Cleanup is 788.5327 ms versus 2802.6365 and 2821.0762 ms in the two diagnostic trials (about 3.55–3.58x lower cost). State, contact and event fingerprints, contact count, escape and penetration are identical in all three CPU trials. These same-backend fingerprints are supplemental diagnostics rather than a cross-backend equality requirement. The corrected lifecycle-only 16,384 CPU control takes 10383.7931 ms total, versus 16650.0524 ms.
+
+The following physical RTX pairs use the unchanged full monitored scene, serial numerical lane, 1600 warm ticks, 512/256 samples, four substeps, sixteen iterations, eight-contact caps, interpolation and disabled sleeping. Both implementations run sequentially in one fresh process per population. DOTNET_TieredCompilation=0 and the explicit NVIDIA Vulkan ICD are retained; these are shared-desktop paired observations, not isolated repeated statistical trials.
+
+| Bodies | Backend | Complete step mean / p50 / p95 / p99 / max, ms | Setup / cleanup, ms | Managed owner / all threads |
+| ---: | --- | --- | --- | --- |
+| 1536 | CPU | 7.4615 / 7.3131 / 8.3861 / 9.1725 / 11.0128 | 271.2322 / 204.3081 | 0 / 0 |
+| 1536 | GPU | 11.6364 / 11.3999 / 13.4025 / 14.3558 / 16.5689 | 356.7891 / 145.5579 | 0 / 0 |
+| 16384 | CPU | 108.7516 / 107.8508 / 115.4045 / 121.5971 / 128.9341 | 4380.7470 / 11298.2551 | 0 / 0 |
+| 16384 | GPU | 108.2808 / 107.9845 / 121.2957 / 148.2945 / 186.9513 | 3600.9296 / 15160.9088 | 0 / 0 |
+
+At 16,384 the new CPU/GPU medians are 107.8508/107.9845 ms; GPU tails remain worse. This does not establish a monitored-scene GPU advantage. GPU pose/motion/field publication and contact capture/monitoring cost 10.0040/35.0129 ms, with 11863145.5625 readback bytes per tick and a 36.9779 ms wait median. These full-step costs remain separate optimization work.
+
+The earlier [RTX baseline](physics-rtx-current.md) recorded 58377.2532/51144.2927 ms CPU/GPU retirement at its frozen runtime; the new 11298.2551/15160.9088 ms values are a later refresh. The controlled 4096-body diagnostic/candidate comparison above establishes the scoped change separately. Retirement still takes seconds at the larger population, including the detached Node stage; complete lifecycle performance remains open.
+
+A separate 128-body native-window pair (512 warmup/128 samples) passes both physical backends, actual 1152x800 captures and strict 0/0 physics/frame managed bytes. It checks native integration and is not a target-mass FPS result. Fourteen accepted processes comprise three diagnostic, six public functional and five corrected benchmark profiles; nine numerical reports contain 1984 measured ticks. The two lifecycle-only profiles execute no tick and do not contribute to that count. All sampled GPU processes retain NVIDIA maps without software Vulkan, NVML remains available and their kernel intervals contain no Xid/fallen-off entries. This bounds the observation rather than certifying general hardware health.
+
+Local evidence is `bin/physics-retirement-cost/2026-10-20/`: build/source/PDB
+proofs, process-map and GPU/kernel receipts, ordinary reports and diagnostic logs.
+Declaration states remain 1303/1369 Implemented (95.18%), 66 open and 92 Excluded.
+Full contract, native allocator/retained-memory, foreign/AOT and current full-suite
+acceptance retain their separate prerequisites.
+
 ## Scoped native allocation profiling, 2026-10-14
 
 Schema 5 adds an optional calibrated Linux/glibc interposer and an explicit

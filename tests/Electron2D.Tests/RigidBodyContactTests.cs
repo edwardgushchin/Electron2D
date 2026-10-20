@@ -44,6 +44,25 @@ internal sealed class RigidBodyContactTests(PhysicsServer.Backend backend)
         left.Disabled = false;
         for (var frame = 0; frame < 4; frame++) tree.PhysicsFrame(1d / 60);
         Check(enters == 2, "Restoring one shape reports one new body-level entry.");
+
+        right.Disabled = false; tree.PhysicsFrame(1d / 60);
+        using var unrelated = new StaticBody { Name = "Unrelated", Position = new(400, 100) };
+        unrelated.AddChild(new CollisionShape { Shape = circle }); root.AddChild(unrelated);
+        using var checkpoint = PhysicsServer.SpaceCreateCheckpoint(selectedWorld.Space);
+        body.GlobalPosition = new(400, -100); tree.PhysicsFrame(1d / 60);
+        Check(exits == 2, "Moving away clears the retained contact before restoration.");
+        checkpoint.Restore();
+        unrelated.Dispose();
+        Check(exits == 2 && body.GetCollidingBodies().SequenceEqual([floor]),
+            "An unrelated collider retirement preserves contacts restored without a tick.");
+        var shapeExits = 0;
+        body.BodyShapeExited += (_, other, _, _) => { Check(ReferenceEquals(other, floor), "Restored departure retains the peer identity."); shapeExits++; };
+        using (floor)
+        {
+            root.RemoveChild(floor);
+            Check(exits == 3 && shapeExits == 2 && body.GetCollidingBodies().Length == 0,
+                "Retiring a restored peer emits one object exit and both shape exits without another tick.");
+        }
     }
 
     private void VerifyContactSnapshotsAndSleep()

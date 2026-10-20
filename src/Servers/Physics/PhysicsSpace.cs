@@ -393,7 +393,8 @@ internal sealed partial class PhysicsSpace : IDisposable
         else Cleanup(() => body.DetachBackend(captureMotion: false), ref errors);
         Cleanup(() => { if (!HasBackendFailure) PhysicsServer.Service.NotifyJointBodySpaceChanged(body.PhysicsRID); }, ref errors);
         if (body is RigidBody removed) Cleanup(removed.ClearContactState, ref errors);
-        foreach (var rigid in _contactBodies) Cleanup(() => rigid.ForgetContact(body.PhysicsRID, _contactEvents), ref errors);
+        foreach (var rigid in _contactBodies)
+            if (rigid.HasContactRID(body.PhysicsRID)) Cleanup(() => rigid.ForgetContact(body.PhysicsRID, _contactEvents), ref errors);
         foreach (var area in _areas) Cleanup(() => area.Forget(body, _overlapEvents), ref errors);
         Cleanup(() => ForgetAreaMonitors(body.PhysicsRID), ref errors);
         Cleanup(_backend.FlushQueryEvents, ref errors);
@@ -473,7 +474,8 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (collider.IsArea) _serverAreaCount--;
         List<Exception>? errors = null;
         if (!collider.IsArea) foreach (var runtime in _jointRuntimes) Cleanup(() => runtime.BodyLeaving(collider.RID), ref errors);
-        foreach (var rigid in _contactBodies) Cleanup(() => rigid.ForgetContact(collider.RID, _contactEvents), ref errors);
+        foreach (var rigid in _contactBodies)
+            if (rigid.HasContactRID(collider.RID)) Cleanup(() => rigid.ForgetContact(collider.RID, _contactEvents), ref errors);
         foreach (var area in _areas) Cleanup(() => area.ForgetRID(collider.RID, _overlapEvents), ref errors);
         Cleanup(() => ForgetAreaMonitors(collider.RID), ref errors);
         if (captureMotion) Cleanup(collider.DetachBackend, ref errors);
