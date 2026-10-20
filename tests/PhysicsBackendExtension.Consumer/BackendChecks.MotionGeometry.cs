@@ -68,15 +68,25 @@ public static partial class BackendChecks
             }
             if (hit is null && (!recoveryAsCollision || recovered is null)) { result.SetMotion(recovery + motion); return false; }
             var travel = recovery + motion * safeFraction;
-            if (hit is not null)
+            var restPose = from; restPose.Origin += recovery + motion * fraction;
+            Body? rest = null; var deepestRest = MathF.Min(motion.Length(), queryMargin * .05f);
+            foreach (var other in Bodies.Values)
             {
-                var pose = from; pose.Origin += recovery + motion * fraction;
-                depth = MathF.Max(0, -PartGap(MotionRecoveryPart(source, target, queryMargin), pose, target, hit.Pose, out var toward, out _, out point));
-                normal = -toward; best = hit;
-                // Exact zero-area contact has two sides; retain the incoming side of a new ordinary impact.
-                if (fraction > 0 && !source.Directed && !target.Directed && normal.Dot(motion) > 0) normal = -normal;
+                if (!EligibleOther(other)) continue;
+                for (var i = 0; i < local.Shapes; i++) for (var j = 0; j < other.Shapes; j++)
+                    {
+                        var own = local.Parts[i]; var b = other.Parts[j];
+                        if (hit is not null && own.Index != source.Index || own.Concave && b.Concave) continue;
+                        var gap = PartGap(MotionRecoveryPart(own, b, queryMargin), restPose, b, other.Pose, out var toward, out _, out var onOther);
+                        var away = -toward;
+                        if (hit is not null && fraction > 0 && !own.Directed && !b.Directed && away.Dot(motion) > 0) away = -away;
+                        if (-gap <= deepestRest || !AcceptRecovery(b, other, away, -gap, queryMargin)) continue;
+                        deepestRest = -gap; rest = other; target = b; point = onOther; normal = away; depth = -gap;
+                        source = own;
+                    }
             }
-            result.SetCollision(body, source.Index, best!.RID, target.Index, point, normal, depth, best.PointVelocity(point),
+            if (rest is null) { result.SetMotion(recovery + motion); return false; }
+            result.SetCollision(body, source.Index, rest.RID, target.Index, point, normal, depth, rest.PointVelocity(point),
                 travel, motion * (1 - safeFraction), safeFraction, fraction);
             MotionResultHook?.Invoke(body, result); return true;
             bool EligibleOther(Body other) => other.RID != body && Eligible(other, local.Mask, true, false, []) &&

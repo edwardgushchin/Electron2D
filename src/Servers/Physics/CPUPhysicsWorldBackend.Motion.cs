@@ -32,7 +32,6 @@ internal sealed partial class CPUPhysicsWorldBackend
         var requested = PhysicsShapeBackend.ToBackend(motion);
         var fromTransform = new B2Transform(PhysicsShapeBackend.ToBackend(from.Origin), PhysicsShapeBackend.RotationToBackend(from.Rotation));
         var recovery = new B2Vec2(0, 0);
-        var recoveryHit = default(MotionContact);
         var hasRecoveryHit = false;
         var world = b2GetWorldFromId(WorldID);
         var queryMargin = MathF.Max(margin * MetersPerUnit, 0.0001f * MetersPerUnit);
@@ -40,49 +39,8 @@ internal sealed partial class CPUPhysicsWorldBackend
 
         for (var attempt = 0; attempt < 4; attempt++)
         {
-            var bestDepth = 0f;
-            var bestContact = default(MotionContact);
-            var planeCount = 0;
-            for (var ownIndex = 0; ownIndex < ownShapes.Count; ownIndex++)
-            {
-                var ownID = ownShapes[ownIndex];
-                var ownTag = b2Shape_GetUserData(ownID).GetRef<PhysicsFixtureTag>();
-                if (ownTag is null || ownTag.Compound is not null && ownTag.CompoundPiece != 0) continue;
-                var ray = ownTag.SeparationRay;
-                var query = ray is { } data ? PhysicsSeparationRay.WorldProxy(data, fromTransform, recovery) :
-                    WorldProxy(b2MakeShapeDistanceProxy(b2GetShape(world, ownID)), fromTransform, recovery);
-                if (ray is null) query.radius += queryMargin;
-                foreach (var candidate in _motionCandidates)
-                {
-                    if (ownTag.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon && candidate.Tag.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon) continue;
-                    if (candidate.Tag.Compound is not null && candidate.Tag.CompoundPiece != 0) continue;
-                    var other = b2MakeShapeDistanceProxy(b2GetShape(world, candidate.ShapeID));
-                    var otherTransform = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
-                    B2Manifold manifold;
-                    if (ray is not null || candidate.Tag.SeparationRay is not null)
-                        manifold = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, default, queryMargin);
-                    else
-                    {
-                        if (ownTag.Compound is null && candidate.Tag.Compound is null && !CPUPhysicsWorldBackend.Overlaps(query, other, otherTransform)) continue;
-                        manifold = MotionManifold(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform);
-                    }
-                    if (manifold.pointCount == 0) continue;
-                    for (var index = 0; index < manifold.pointCount; index++)
-                    {
-                        var point = manifold.points[index];
-                        var depth = -point.separation;
-                        var normal = -manifold.normal;
-                        if (depth <= 0 || !AcceptOneWay(candidate, normal, depth, queryMargin)) continue;
-                        RetainRecoveryPlane(recoveryPlanes, ref planeCount, new(normal.X, normal.Y, depth, candidate.Priority));
-                        if (depth <= bestDepth) continue;
-                        bestDepth = depth;
-                        var colliderPoint = point.point + manifold.normal * (point.separation * 0.5f);
-                        bestContact = new(candidate, ownTag.ShapeIndex, colliderPoint, normal, depth);
-                    }
-                }
-            }
-            if (bestDepth <= 0) break;
-            recoveryHit = bestContact;
+            if (FindMotionContact(ownShapes, fromTransform, recovery, queryMargin,
+                recoveryPlanes, out var planeCount) is null) break;
             hasRecoveryHit = true;
             double totalPriority = 0;
             for (var i = 0; i < planeCount; i++) totalPriority += recoveryPlanes[i].W;
@@ -100,7 +58,7 @@ internal sealed partial class CPUPhysicsWorldBackend
 
         var safe = 1f;
         var unsafeFraction = 1f;
-        var motionHit = default(MotionContact);
+        var motionShape = -1;
         var hasMotionHit = false;
         if (requested.X != 0 || requested.Y != 0)
         {
@@ -152,8 +110,7 @@ internal sealed partial class CPUPhysicsWorldBackend
                         if (!AcceptOneWay(candidate, normal, depth, queryMargin)) continue;
                         safe = lowRay;
                         unsafeFraction = highRay;
-                        motionHit = new(candidate, ownTag.ShapeIndex,
-                            point.point + rayContact.normal * (point.separation * 0.5f), normal, depth);
+                        motionShape = ownTag.ShapeIndex;
                         hasMotionHit = true;
                         continue;
                     }
@@ -167,9 +124,7 @@ internal sealed partial class CPUPhysicsWorldBackend
                             AcceptOneWay(candidate, normal, depth, queryMargin))
                         {
                             safe = unsafeFraction = 0;
-                            motionHit = new(candidate, ownTag.ShapeIndex,
-                                stuck.points[0].point + stuck.normal * (stuck.points[0].separation * 0.5f),
-                                normal, MathF.Max(0, depth));
+                            motionShape = ownTag.ShapeIndex;
                             hasMotionHit = true;
                         }
                         continue;
@@ -188,34 +143,24 @@ internal sealed partial class CPUPhysicsWorldBackend
                     }
                     if (low >= safe) continue;
                     safe = low;
-                    unsafeFraction = high;
-                    var impact = WorldProxy(b2MakeShapeDistanceProxy(b2GetShape(world, ownID)), fromTransform,
-                        recovery + sweep * MathF.Min(1f, high + 2f * B2_LINEAR_SLOP / b2Length(sweep)));
-                    var manifold = MotionManifold(impact, ownTag, fromTransform,
-                        recovery + sweep * MathF.Min(1f, high + 2f * B2_LINEAR_SLOP / b2Length(sweep)), other, candidate.Tag, otherTransform);
-                    if (manifold.pointCount != 0)
-                    {
-                        var point = manifold.points[0];
-                        motionHit = new(candidate, ownTag.ShapeIndex,
-                            point.point + manifold.normal * (point.separation * 0.5f),
-                            -manifold.normal, MathF.Max(0, -point.separation));
-                    }
-                    else motionHit = new(candidate, ownTag.ShapeIndex, cast.point, cast.normal, 0);
-                    // A speculative pose may cross a zero-width edge; keep the cast's incoming side.
-                    if (b2Dot(motionHit.Normal, requested) > 0) motionHit = motionHit with { Normal = cast.normal };
+                    unsafeFraction = Math.Clamp(cast.fraction, low, high);
+                    motionShape = ownTag.ShapeIndex;
                     hasMotionHit = true;
                 }
             }
         }
 
-        var contact = hasMotionHit ? motionHit : recoveryHit;
-        var collided = hasMotionHit || recoveryAsCollision && hasRecoveryHit;
+        MotionContact? finalContact = null;
+        if (hasMotionHit || recoveryAsCollision && hasRecoveryHit)
+            finalContact = FindMotionContact(ownShapes, fromTransform, recovery + requested * unsafeFraction,
+                queryMargin, default, out _, hasMotionHit ? motionShape : -1,
+                MathF.Min(b2Length(requested), queryMargin * 0.05f), hasMotionHit && unsafeFraction > 0 ? requested : default);
+        if (finalContact is not { } contact)
+            return new(ownerRID, default, 0, 0, 0, default, default, 0, default,
+                ToScene(recovery + requested), default, 1, 1, false);
+
         var travel = ToScene(recovery + requested * safe);
         var remainder = motion * (1f - safe);
-        if (!collided)
-            return new(ownerRID, default, 0, 0, 0, default, default, 0, default,
-                travel, remainder, safe, unsafeFraction, false);
-
         var rid = contact.Candidate.Tag.ColliderRID;
         var identity = contact.Candidate.Tag.ObjectIdentity;
         var candidateBody = b2Shape_GetBody(contact.Candidate.ShapeID);
@@ -224,6 +169,48 @@ internal sealed partial class CPUPhysicsWorldBackend
             contact.Candidate.Tag.ShapeIndex, ToScene(contact.Point),
             new(contact.Normal.X, contact.Normal.Y), contact.Depth * UnitsPerMeter,
             ToScene(velocity), travel, remainder, safe, unsafeFraction, true, identity);
+    }
+
+    private MotionContact? FindMotionContact(IReadOnlyList<B2ShapeId> ownShapes, B2Transform from, B2Vec2 offset,
+        float margin, Span<System.Numerics.Vector4> planes, out int planeCount, int localShape = -1, float minDepth = 0, B2Vec2 incoming = default)
+    {
+        planeCount = 0; MotionContact? best = null; var bestDepth = minDepth;
+        var world = b2GetWorldFromId(WorldID);
+        for (var ownIndex = 0; ownIndex < ownShapes.Count; ownIndex++)
+        {
+            var ownID = ownShapes[ownIndex]; var own = b2Shape_GetUserData(ownID).GetRef<PhysicsFixtureTag>();
+            if (own is null || own.Compound is not null && own.CompoundPiece != 0 ||
+                localShape >= 0 && own.ShapeIndex != localShape) continue;
+            var query = own.SeparationRay is { } ray ? PhysicsSeparationRay.WorldProxy(ray, from, offset) :
+                WorldProxy(b2MakeShapeDistanceProxy(b2GetShape(world, ownID)), from, offset);
+            if (own.SeparationRay is null) query.radius += margin;
+            foreach (var candidate in _motionCandidates)
+            {
+                if (own.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon && candidate.Tag.Kind == PhysicsShapeGeometry.ShapeKind.ConcavePolygon ||
+                    candidate.Tag.Compound is not null && candidate.Tag.CompoundPiece != 0) continue;
+                var other = b2MakeShapeDistanceProxy(b2GetShape(world, candidate.ShapeID));
+                var pose = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
+                B2Manifold manifold;
+                if (own.SeparationRay is not null || candidate.Tag.SeparationRay is not null)
+                    manifold = MotionRayContact(query, own, from, offset, other, candidate.Tag, pose, default, margin);
+                else
+                {
+                    if (own.Compound is null && candidate.Tag.Compound is null && !Overlaps(query, other, pose)) continue;
+                    manifold = MotionManifold(query, own, from, offset, other, candidate.Tag, pose);
+                }
+                for (var index = 0; index < manifold.pointCount; index++)
+                {
+                    var point = manifold.points[index]; var depth = -point.separation; var normal = -manifold.normal;
+                    if (own.SeparationRay is null && candidate.Tag.SeparationRay is null && b2Dot(normal, incoming) > 0) normal = -normal;
+                    if (depth <= minDepth || !AcceptOneWay(candidate, normal, depth, margin)) continue;
+                    if (!planes.IsEmpty) RetainRecoveryPlane(planes, ref planeCount, new(normal.X, normal.Y, depth, candidate.Priority));
+                    if (depth <= bestDepth) continue;
+                    bestDepth = depth;
+                    best = new(candidate, own.ShapeIndex, point.point + manifold.normal * (point.separation * 0.5f), normal, depth);
+                }
+            }
+        }
+        return best;
     }
 
     private static B2Manifold MotionRayContact(in B2ShapeProxy query, PhysicsFixtureTag own, B2Transform from, B2Vec2 recovery,

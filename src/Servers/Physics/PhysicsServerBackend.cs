@@ -325,6 +325,8 @@ public abstract class PhysicsServerBackend : ElectronObject
     protected internal abstract bool BodyCollideShape(RID body, int index, RID shape, Transform pose, Vector2 motion, Span<Vector2> contacts, out int count);
     /// <summary>Supplies the selected implementation operation: test body motion.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.
+    /// Sample the deepest eligible contact at the recovered pose plus unsafe motion, including the query margin.
+    /// A requested recovery reports a collision only while a final contact remains; a miss retains full motion plus recovery.
     /// Collision output must retain the requested moving body's identity. The engine validates that identity
     /// before replacing caller output; a result constructed for another live body is rejected.
     /// The supplied result is borrowed library storage usable only on this hook's owning thread; do not retain or dispose it.

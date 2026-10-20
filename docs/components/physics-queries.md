@@ -433,3 +433,7 @@ simulation and hardware performance acceptance remain separate.
 now retain canonical geometry kind across private CPU pieces, resident GPU geometry
 and independent provider parts. All-family public motion, recovery/residual and
 live replacement checks retain logical indices and zero warmed frame allocations.
+
+## Final body-motion contact sampling
+
+Contact geometry is sampled after the completed recovery at the unsafe motion pose, including the query margin. The deepest eligible final contact supplies point, normal, depth, logical identities and point velocity. When requested recovery is followed by an unobstructed departure with no final contact, the result clears collision data and retains full requested motion plus recovery. Safe travel and remainder still use the safe fraction. See [the public consumer and evidence](physics-registered-adapter.md#final-body-motion-contact-sampling).

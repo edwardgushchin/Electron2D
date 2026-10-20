@@ -419,3 +419,5 @@ Initial recovery/residual stopping still executes; ignored special displacement
 cannot manufacture a new sweep, and two concave resources cannot contact through
 private edge pieces. Shared public CPU/software-GPU/registered assertions cover
 logical slots, analytical boundaries, fractions and zero warmed full-frame bytes.
+
+[TestBodyMotion final contact sampling](../components/physics-registered-adapter.md#final-body-motion-contact-sampling) evaluates the recovered unsafe pose with the query margin and publishes its deepest eligible contact. A miss returns full requested motion plus recovery and clears contact fields. Independent public consumer verification does not close complete numerical-extension acceptance.

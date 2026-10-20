@@ -1,6 +1,6 @@
 # PhysicsBody
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 ## Collision exception publication
 
@@ -117,7 +117,7 @@ The first profile accepts unit global scale and zero skew; a transformed active 
 <a id="motion"></a>
 ### `MoveAndCollide` and `TestMove`
 
-Both methods use finite global scene-unit motion and a finite nonnegative recovery margin. They prepare pending body/shape/filter edits before scanning other bodies in the same physics space; Areas are sensors and do not block. The moving body's mask against candidate layers, the body's own RID and one-way pass-through direction are respected. Initial penetration is moved out before the sweep; `recoveryAsCollision=true` also reports that depenetration. Remaining overlap after recovery attempts stops motion at a zero safe fraction rather than allowing tunneling. Eight sweep refinements bracket the first new impact. Compound fixtures retain their direct owner indices. `TestMove` uses its supplied finite unit-scale global pose, leaves the body unchanged and fills `collision` on a completed hit or miss. A detached `TestMove` returns false; an attached `MoveAndCollide` is required and throws if no registered space exists. `MoveAndCollide(testOnly:true)` returns a collision without changing pose. On a regular call it applies travel, including recovery; a miss returns null. Callers own returned [KinematicCollision](KinematicCollision.md) objects.
+Both methods use finite global scene-unit motion and a finite nonnegative recovery margin. They prepare pending body/shape/filter edits before scanning other bodies in the same physics space; Areas are sensors and do not block. The moving body's mask against candidate layers, the body's own RID and one-way pass-through direction are respected. Initial penetration is moved out before the sweep; `recoveryAsCollision=true` may report a contact remaining at the final tested pose. Remaining overlap after recovery attempts stops motion at a zero safe fraction rather than allowing tunneling. Eight sweep refinements bracket the first new impact. Compound fixtures retain their direct owner indices. `TestMove` uses its supplied finite unit-scale global pose, leaves the body unchanged and fills `collision` on a completed hit or miss. A detached `TestMove` returns false; an attached `MoveAndCollide` is required and throws if no registered space exists. `MoveAndCollide(testOnly:true)` returns a collision without changing pose. On a regular call it applies travel, including recovery; a miss returns null. Callers own returned [KinematicCollision](KinematicCollision.md) objects.
 
 [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) covers scene and server colliders, contact owners/angle, test-only and actual travel, alternate starting pose, masks, disabled fixtures, one-way approach and margin, deep overlap, owner-thread rejection and 64 warmed unchanged `TestMove` calls with zero managed allocation on Linux/.NET 8. [Input picking](../components/physics-picking.md) now executes on both public backends; the derived CharacterBody's separation-ray floor behavior remains a distinct [coverage gap](../coverage/classes/CharacterBody2D.md). Native allocation, other platforms and owner acceptance remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
 
@@ -225,3 +225,5 @@ verifies the retained Body/Area input, inherited defaults, actual selected query
 numerical lanes, owner/disposal guards and callback edits. Changed-policy moving
 frames preserve exact transitions and zero managed allocation; native rendering
 and wider numerical/platform/performance acceptance keep their separate scopes.
+
+[Final body-motion contact sampling](../components/physics-registered-adapter.md#final-body-motion-contact-sampling) resamples completed recovery and unsafe motion. Contact geometry is sampled after the completed recovery at the unsafe motion pose, including the query margin. The deepest eligible final contact supplies point, normal, depth, logical identities and point velocity. When requested recovery is followed by an unobstructed departure with no final contact, the result clears collision data and retains full requested motion plus recovery. Safe travel and remainder still use the safe fraction.

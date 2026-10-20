@@ -1,6 +1,6 @@
 # PhysicsTestMotionResult
 
-Last updated: 2026-10-14
+Last updated: 2026-10-20
 
 [Retained slot history](../components/physics-snapshots.md#capture-after-topology-edits)
 keeps sampled public values while rejecting portable capture of retired/reindexed
@@ -82,3 +82,5 @@ The complete PhysicsMotionTests, PhysicsQueryTests and PhysicsShapeQueryTests no
 
 
 [Borrowed motion output](../components/physics-registered-adapter.md#borrowed-motion-output-2026-10-14) preserves selected scratch lifetime and owner scope while retaining caller-owned snapshots, error continuation and retirement failures. The inherited disposal preflight is a reviewed C# adaptation; full numerical/foreign/hardware acceptance stays open.
+
+[Final body-motion contact sampling](../components/physics-registered-adapter.md#final-body-motion-contact-sampling) resamples completed recovery and unsafe motion. Contact geometry is sampled after the completed recovery at the unsafe motion pose, including the query margin. The deepest eligible final contact supplies point, normal, depth, logical identities and point velocity. When requested recovery is followed by an unobstructed departure with no final contact, the result clears collision data and retains full requested motion plus recovery. Safe travel and remainder still use the safe fraction.

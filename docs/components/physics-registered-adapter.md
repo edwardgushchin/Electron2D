@@ -4464,3 +4464,54 @@ ordinary edits and 160 registered failures retain logical slots and observer his
 real one-sided contact and zero-allocation moving frames add executable behavior.
 Complete numerical geometry/extension/network/platform/performance acceptance remains
 open. The prepared getter family keeps its existing implementation status.
+
+## Final body-motion contact sampling
+
+CPU and resident GPU body motion now reuse recovery geometry to resample the final
+contact at `from + recovery + motion * unsafeFraction`. The independent public
+provider evaluates the same pose through its own numerical parts. A new impact
+restricts the final scan to its logical source slot; recovery-only results scan
+all eligible source slots. The deepest final candidate supplies the collider,
+shape indices, point, outward normal, margin-inclusive depth and point velocity.
+The depth threshold is `min(motion.Length(), effectiveMargin * 0.05)`.
+Ordinary casts retain the actual root within the eight-refinement bracket so a
+zero-width edge remains represented at the final sample. Incoming-side normals
+remain stable at that root. Directed rays retain their existing sweep bracket.
+Resident motion probes reject negative-depth speculative manifolds before
+bracketing entry. Otherwise a nearby separated ray/plane probe can be accepted
+before actual overlap and leave the final sample empty at zero query margin.
+The special-family matrix reproduced four such failures; the final fixture also
+places ray entry between refinement samples.
+
+The earlier CPU/GPU path sampled ordinary impacts one scene unit beyond its
+unsafe bracket. Recovery-only output retained geometry from before the final
+correction, and a later complete departure could publish that obsolete contact.
+The corrected path clears a result when the final sample has no eligible contact,
+returns full requested motion plus recovery and resets both fractions to one.
+Safe hit travel and remainder continue to use the safe fraction. Existing residual
+physical overlap may still stop motion at zero; this slice does not change that rule.
+
+[The public-only fixture](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.MotionRest.cs)
+(`--motion-rest`) exercises all eight source families, two global poses, two
+margins, raw and scene targets, a disabled logical slot before the active slot,
+raw/scene-RID BodyTestMotion, TestMove and applied MoveAndCollide. Analytic planes
+and a circle target check final depth, contact position/normal, exact logical and
+object identities, linear/angular surface velocity and unchanged query receiver
+poses. Unequal perpendicular priorities switch the deepest collider on the last
+recovery pass; the final output must select the new winner. A positive-margin
+full departure clears the preceding contact. Each selected implementation warms
+128 and measures 128 complete moving frames with strict owner/all-thread managed
+allocation counters, rather than measuring query calls alone.
+
+Evidence is under `bin/physics-motion-rest/2026-10-20/`. Baseline
+`before-rest-{cpu,gpu,registered}` profiles are RED for stale recovery/departure;
+the ordinary speculative-depth regression is also RED on both built-ins, with
+the independent provider as its positive control. Final public JIT and strict NativeAOT CPU/software-GPU/registered owner/separate
+profiles pass all eight families at 0/0 warmed bytes. The full selected regression
+set has 106 passing profiles (51 JIT, 51 NativeAOT and four root query contracts);
+`validation.json`, `current-source-proof.json` and `shader-proof.json` retain the
+process, source and embedded-program evidence.
+The full `_body_test_motion` row remains Partial: arbitrary coupled geometry and
+complete numerical-extension acceptance need a wider operation audit. Software
+Vulkan proves dispatch and numerical behavior; hardware, native-memory, visual,
+network, foreign-platform and performance acceptance remain open.

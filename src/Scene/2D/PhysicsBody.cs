@@ -282,7 +282,7 @@ public abstract partial class PhysicsBody : CollisionObject
     /// <param name="motion">Finite global displacement in scene units.</param>
     /// <param name="testOnly">When true, report without changing the scene pose.</param>
     /// <param name="safeMargin">Nonnegative contact recovery margin in scene units.</param>
-    /// <param name="recoveryAsCollision">Whether initial depenetration can produce a collision result.</param>
+    /// <param name="recoveryAsCollision">Whether a contact remaining after recovery and tested motion can produce a collision result.</param>
     /// <returns>A caller-owned collision snapshot, or null when motion is unobstructed.</returns>
     /// <remarks>Selected motion results are validated before applying travel; rejected output leaves the scene pose unchanged.</remarks>
     public KinematicCollision? MoveAndCollide(Vector2 motion, bool testOnly = false,
@@ -304,7 +304,7 @@ public abstract partial class PhysicsBody : CollisionObject
     /// <param name="motion">Finite global displacement in scene units.</param>
     /// <param name="collision">Optional caller-owned result updated on a completed test.</param>
     /// <param name="safeMargin">Nonnegative contact recovery margin in scene units.</param>
-    /// <param name="recoveryAsCollision">Whether initial depenetration counts as a collision.</param>
+    /// <param name="recoveryAsCollision">Whether a contact remaining after recovery and tested motion counts as a collision.</param>
     /// <returns>Whether motion or requested recovery reaches a body contact.</returns>
     /// <remarks>Selected motion results are validated before replacing the caller's collision snapshot.</remarks>
     public bool TestMove(Transform from, Vector2 motion, KinematicCollision? collision = null,

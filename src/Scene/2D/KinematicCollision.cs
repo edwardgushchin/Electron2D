@@ -61,7 +61,7 @@ public sealed class KinematicCollision : ElectronObject
     /// <returns>Zero before collision.</returns>
     public Vector2 GetColliderVelocity() { ThrowIfDisposed(); return _data.ColliderVelocity; }
 
-    /// <summary>Returns collision overlap along the contact normal in scene units.</summary>
+    /// <summary>Returns margin-inclusive overlap at the recovered unsafe pose in scene units.</summary>
     /// <returns>Zero before collision.</returns>
     public float GetDepth() { ThrowIfDisposed(); return _data.Depth; }
 
@@ -69,7 +69,7 @@ public sealed class KinematicCollision : ElectronObject
     /// <returns>Zero before collision.</returns>
     public Vector2 GetNormal() { ThrowIfDisposed(); return _data.Normal; }
 
-    /// <summary>Returns the global contact point on the collider.</summary>
+    /// <summary>Returns the global collider point sampled at the recovered unsafe pose.</summary>
     /// <returns>Zero before collision.</returns>
     public Vector2 GetPosition() { ThrowIfDisposed(); return _data.Point; }
 

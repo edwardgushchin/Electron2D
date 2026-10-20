@@ -68,9 +68,10 @@ Mapping mapA,mapB;
 uint indexA,indexB;
 float safe=1,unsafeFraction=1;
 vec2 recovery=vec2(0);
-Result recoveryResult,motionResult;
-bool recovered=false,blocked=false;
-Contact evaluate(Hull a,Hull b,Geometry ga,Geometry gb,vec2 extension,float margin,bool requireOverlap)
+Result restResult;
+uint motionShape=0u;
+bool recovered=false,blocked=false,rested=false;
+Contact evaluate(Hull a,Hull b,Geometry ga,Geometry gb,vec2 extension,float margin)
 {
     pairContact=Contact(vec2(0),vec2(0),0,false);pairSecond=pairContact;contactLimit=2;
     bool boundary=a.boundary||b.boundary;
@@ -91,7 +92,7 @@ Contact evaluate(Hull a,Hull b,Geometry ga,Geometry gb,vec2 extension,float marg
     else
     {
         vec2 normal;
-        if(!requireOverlap||queryDistance(a,b,vec2(0),vec2(0),normal)-a.radius-b.radius<=0.05)ordinary(a,b,uvec2(0));
+        if(queryDistance(a,b,vec2(0),vec2(0),normal)-a.radius-b.radius<=0.05)ordinary(a,b,uvec2(0));
     }
     return pairContact;
 }
@@ -126,15 +127,16 @@ void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
     bool ignored=ga.data.z==7u||(ga.data.z==5u&&gb.data.z!=7u);
     vec2 motion=ignored?vec2(0):q.motionMargin.xy;
     if((shapeB.policy.w&4u)!=0u&&dot2(q.motionMargin.xy,passDirection())<=0)return;
-    bool directed=ga.data.z==6u||gb.data.z==6u,requireOverlap=true;
+    bool directed=ga.data.z==6u||gb.data.z==6u;
     // Keep one geometry call site across phases to limit driver inlining and cold compilation.
-    const uint initialPhase=0u,reachPhase=1u,bisectPhase=2u,rayImpactPhase=3u,shapeImpactPhase=4u;
+    const uint initialPhase=0u,reachPhase=1u,bisectPhase=2u,rayImpactPhase=3u;
     uint phase=initialPhase,refinements=0u;
     float low=0,high=0,margin=0,middle=0;vec2 extension=vec2(0),normal=vec2(0);
     Hull probe=a;Contact initial,full;
     [[dont_unroll]] for(;;)
     {
-        Contact contact=evaluate(probe,b,ga,gb,extension,margin,requireOverlap);
+        Contact contact=evaluate(probe,b,ga,gb,extension,margin);
+        contact.valid=contact.valid&&contact.depth>=0;
         if(phase==initialPhase)
         {
             initial=contact;
@@ -142,33 +144,22 @@ void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
             if(contact.valid)
             {
                 if((contact.depth>0.05||dot2(q.motionMargin.xy,contact.normal)<-0.0001)&&oneWayContact(contact))
-                {safe=unsafeFraction=0;motionResult=snapshot(contact);blocked=true;}
+                {safe=unsafeFraction=0;motionShape=mapA.identity.z;blocked=true;}
                 return;
             }
             if(safe==0||ignored)return;
             float fraction;
             if(!querySweep(a,b,motion*safe,vec2(0),a.radius+b.radius,0.00001,fraction,normal))return;
-            low=max(0,ceil(fraction*256)-1)/256*safe;high=min(safe,low+safe/256);
+            low=max(0,ceil(fraction*256)-1)/256*safe;high=clamp(fraction*safe,low,safe);
             if(low>=safe)return;
             safe=low;unsafeFraction=high;
-            probe.pose.xy+=min(1,high+1/length(motion))*motion;
-            requireOverlap=false;phase=shapeImpactPhase;continue;
-        }
-        if(phase==shapeImpactPhase)
-        {
-            if(!contact.valid)
-            {
-                uint unused;vec2 toward=querySupportVertex(probe,normal),point=support(b,-normal,toward,unused)-b.radius*normal;
-                contact=Contact(point,-normal,0,true);
-            }
-            if(dot2(contact.normal,motion)>0)contact.normal=-normal;
-            motionResult=snapshot(contact);blocked=true;return;
+            motionShape=mapA.identity.z;blocked=true;return;
         }
         if(phase==rayImpactPhase)
         {
             if(!contact.valid)contact=full;
             if(!oneWayContact(contact))return;
-            safe=low;unsafeFraction=high;motionResult=snapshot(contact);blocked=true;return;
+            safe=low;unsafeFraction=high;motionShape=mapA.identity.z;blocked=true;return;
         }
         if(phase==reachPhase)
         {
@@ -203,10 +194,12 @@ vec4 queryBounds(Shape shape,Geometry g,bool recovering)
     }
     bounds+=bodyA.pose.xyxy;if(!finiteField(bounds))fail();return bounds;
 }
-void scan(bool recovering)
+void scan(uint phase)
 {
+    bool recovering=phase==0u,resting=phase==2u;
     recoveryCount=0u;
-    float bestDepth=0;Result best;
+    float bestDepth=resting?min(length(q.motionMargin.xy),q.motionMargin.z*0.05):0;Result best;
+    bool found=false;
     for(uint own=0u;own<q.body.w;own++)
     {
         uvec2 token=payload[q.body.z+own];indexA=token.x;if(indexA>=shapeCount){fail();return;}
@@ -214,8 +207,9 @@ void scan(bool recovering)
         if(shapeA.policy.x!=token.y||shapeA.owner.xy!=q.body.xy||mapA.identity.w!=token.y){fail();return;}
         if((shapeA.policy.w&2u)!=0u)continue;
         Geometry ga=geometries[shapeA.owner.z];if(ga.data.w!=shapeA.owner.w){fail();return;}if(ga.data.y==0u)continue;
-        if(!recovering&&ga.data.z==6u&&ga.parameters.y==0&&(q.policy.z&2u)==0u)continue;
-        vec4 bounds=queryBounds(shapeA,ga,recovering);int at=1;
+        if(!recovering&&!resting&&ga.data.z==6u&&ga.parameters.y==0&&(q.policy.z&2u)==0u)continue;
+        if(resting&&blocked&&mapA.identity.z!=motionShape)continue;
+        vec4 bounds=queryBounds(shapeA,ga,recovering||resting);int at=1;
         while(at!=0)
         {
             Node node=nodes[at];
@@ -234,14 +228,15 @@ void scan(bool recovering)
                         for(uint pa=0u;pa<na;pa++)for(uint pb=0u;pb<nb;pb++)
                         {
                             Hull a=hull(shapeA,ga,bodyA,pa),b=hull(shapeB,gb,bodyB,pb);
-                            if(recovering)
+                            if(recovering||resting)
                             {
                                 if(ga.data.z!=6u)a.radius+=q.motionMargin.z;
-                                Contact contact=evaluate(a,b,ga,gb,vec2(0),q.motionMargin.z,true);
-                                if(contact.valid)retainRecovery(contact);
-                                if(pairSecond.valid)retainRecovery(pairSecond);
+                                Contact contact=evaluate(a,b,ga,gb,vec2(0),q.motionMargin.z);
+                                if(resting&&blocked&&unsafeFraction>0&&ga.data.z!=6u&&gb.data.z!=6u&&dot2(contact.normal,q.motionMargin.xy)>0)contact.normal=-contact.normal;
+                                if(recovering&&contact.valid)retainRecovery(contact);
+                                if(recovering&&pairSecond.valid)retainRecovery(pairSecond);
                                 if(contact.valid&&contact.depth>bestDepth&&oneWayContact(contact))
-                                {bestDepth=contact.depth;best=snapshot(contact);}
+                                {bestDepth=contact.depth;if(resting)best=snapshot(contact);found=true;}
                             }
                             else movingPair(a,b,ga,gb);
                         }
@@ -251,9 +246,10 @@ void scan(bool recovering)
             while(at>1&&(at&1)!=0)at/=2;at=at==1?0:at+1;
         }
     }
+    if(resting){rested=found;if(found)restResult=best;return;}
     if(recovering&&bestDepth>0)
     {
-        recovered=true;recoveryResult=best;
+        recovered=true;
         float maximum=0,scaledTotal=0;
         [[dont_unroll]] for(uint j=0u;j<recoveryCount;j++)maximum=max(maximum,outputData[scratchStart+j].w);
         if(maximum==0)return;
@@ -278,11 +274,13 @@ void main()
     bodyA.pose=q.pose;
     [[dont_unroll]] for(uint attempt=0u;attempt<4u;attempt++)
     {
-        vec2 before=recovery;scan(true);if(before==recovery)break;bodyA.pose.xy=q.pose.xy+recovery;
+        vec2 before=recovery;scan(0u);if(before==recovery)break;bodyA.pose.xy=q.pose.xy+recovery;
     }
-    if(q.motionMargin.xy!=vec2(0))scan(false);
+    if(q.motionMargin.xy!=vec2(0))scan(1u);
     Result result=Result(uvec4(0),uvec4(0),uvec4(0),uvec4(0),vec4(0),vec4(0),vec4(0),vec4(0));
-    if(blocked)result=motionResult;else if(recovered&&(q.policy.z&1u)!=0u)result=recoveryResult;
+    if(blocked||(recovered&&(q.policy.z&1u)!=0u))
+    {bodyA.pose.xy=q.pose.xy+recovery+unsafeFraction*q.motionMargin.xy;scan(2u);}
+    if(rested)result=restResult;else safe=unsafeFraction=1;
     result.travelRemainder=vec4(recovery+safe*q.motionMargin.xy,(1-safe)*q.motionMargin.xy);
     result.fractions=vec4(safe,unsafeFraction,recovery);
     if(!finiteField(result.travelRemainder)||!finiteField(result.pointNormal)||!finiteField(result.velocityDepth)||!finiteField(result.fractions)){fail();return;}

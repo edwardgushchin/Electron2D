@@ -28,9 +28,13 @@ describes metadata, numerical limits and verification. Ordinary shapes expand by
 their positive axis. A zero margin retains the existing 0.0001-scene-unit minimum.
 A recovered pose then tests the requested translation. Residual penetration above
 0.05 scene units or inward motion stops at fraction zero. Ordinary conservative
-advancement uses the existing CPU skin and 1/256 motion bracket; a one-unit
-post-impact advance obtains contact geometry. A miss still returns recovery plus
-requested travel, and clears collision identity/contact fields.
+advancement retains the actual root inside the 1/256 motion bracket. A final
+scan samples the deepest eligible margin-inclusive contact after all recovery
+corrections at the unsafe motion pose. New impacts retain their logical source
+slot; recovery-only scans consider all source slots. Directed entry probes reject
+negative-depth speculative manifolds before the eight refinements. A miss still
+returns recovery plus requested travel and clears collision identity/contact
+fields, including after a complete departure from the original overlap.
 
 Moving-mask/target-layer filtering, both directions of explicit body exceptions, caller collider and
 object exclusion spans, sensor rejection and one-way direction/margin rules apply.
@@ -217,3 +221,7 @@ checks all 64 ordered families, scene/raw/TestMove paths, live replacement and
 Use ELECTRON2D_TEST_GPU_MOTION_QUERIES=functional for resident batch/geometry/
 filter/lifetime/velocity checks without the separate massive measurement; value 1
 retains that complete measurement. Software execution is not hardware performance.
+
+## Final contact after motion
+
+[Final body-motion contact sampling](physics-registered-adapter.md#final-body-motion-contact-sampling) replaces the earlier recovery snapshot and speculative ordinary impact pose with a current deepest contact. The final device scan supplies its point velocity and logical identity and uses the existing buffers and transfer count. Public-only software-Vulkan checks include every source family, an entry between ray refinement samples, a changed deepest collider after the last priority correction, zero/positive margins, scene/raw recipients and complete-frame zero managed allocation. Historical hardware timings above precede this kernel change; its target-device cost and FPS remain unmeasured while the power-cable check is pending.

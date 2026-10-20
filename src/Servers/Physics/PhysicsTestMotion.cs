@@ -67,7 +67,7 @@ public sealed class PhysicsTestMotionParameters : ElectronObject
         }
     }
 
-    /// <summary>Gets or sets whether initial depenetration itself counts as a collision.</summary>
+    /// <summary>Gets or sets whether recovery may report a contact remaining at the final tested pose.</summary>
     /// <value>False by default.</value>
     public bool RecoveryAsCollision
     {
@@ -230,7 +230,7 @@ public sealed class PhysicsTestMotionResult : ElectronObject
     /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>
     public Vector2 GetColliderVelocity() { return Data.ColliderVelocity; }
 
-    /// <summary>Returns penetration depth along the contact normal in scene units.</summary>
+    /// <summary>Returns margin-inclusive penetration depth at the recovered unsafe pose in scene units.</summary>
     /// <returns>Zero when no collision occurred.</returns>
     /// <exception cref="InvalidOperationException">Borrowed implementation output is used outside its owning active hook.</exception>
     /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>
@@ -248,7 +248,7 @@ public sealed class PhysicsTestMotionResult : ElectronObject
     /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>
     public Vector2 GetCollisionNormal() { return Data.Normal; }
 
-    /// <summary>Returns the global point on the collider at contact.</summary>
+    /// <summary>Returns the global collider point sampled at the recovered unsafe pose.</summary>
     /// <returns>Zero when no collision occurred.</returns>
     /// <exception cref="InvalidOperationException">Borrowed implementation output is used outside its owning active hook.</exception>
     /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>

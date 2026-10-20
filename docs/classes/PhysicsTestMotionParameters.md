@@ -1,6 +1,6 @@
 # PhysicsTestMotionParameters
 
-Last updated: 2026-10-09
+Last updated: 2026-10-20
 
 **Inherits:** ElectronObject · **Source:** [PhysicsTestMotion.cs](../../src/Servers/Physics/PhysicsTestMotion.cs) · **Component:** [Physics server and direct queries](../components/physics-queries.md)
 
@@ -30,13 +30,13 @@ bool blocked = PhysicsServer.BodyTestMotion(bodyRID, parameters);
 | `public Vector2 Motion { get; set; }` | zero | Finite global displacement with finite length. |
 | `public float Margin { get; set; }` | 0.08 | Finite nonnegative recovery margin in scene units. |
 | `public bool CollideSeparationRay { get; set; }` | false | Include non-sliding rays in the motion phase. |
-| `public bool RecoveryAsCollision { get; set; }` | false | Report initial depenetration as a contact. |
+| `public bool RecoveryAsCollision { get; set; }` | false | Report a contact remaining at the final recovered and tested pose. |
 | `public RID[] ExcludeBodies { get; set; }` | empty | Copied body RID exclusions. |
 | `public ulong[] ExcludeObjects { get; set; }` | empty | Copied managed instance-ID exclusions. |
 
 ## Property descriptions
 
-`From`, `Motion` and `Margin` validate before mutation. The active physics profile rejects scaled or skewed body poses under [ADR 0054](../decisions/physics-backends.md#adr-0054). `Motion` is displacement, not velocity. `RecoveryAsCollision=false` still moves a simulated test pose out of initial penetration, but reports only a collision caused by requested motion; true can report the recovery contact. `ExcludeBodies` applies to both scene and server body RIDs. `ExcludeObjects` uses unsigned managed `InstanceID` values and cannot name a server-only body. Null exclusion arrays reject. A disposed parameter object rejects access.
+`From`, `Motion` and `Margin` validate before mutation. The active physics profile rejects scaled or skewed body poses under [ADR 0054](../decisions/physics-backends.md#adr-0054). `Motion` is displacement, not velocity. `RecoveryAsCollision=false` still moves a simulated test pose out of initial penetration, but reports only a collision caused by requested motion; true can report a recovery contact only if an eligible contact remains after the tested motion. `ExcludeBodies` applies to both scene and server body RIDs. `ExcludeObjects` uses unsigned managed `InstanceID` values and cannot name a server-only body. Null exclusion arrays reject. A disposed parameter object rejects access.
 
 `CollideSeparationRay=false` ignores non-sliding rays during motion; SlideOnSlope rays still participate. Recovery always includes both, independently of this flag. CharacterBody floor snap explicitly includes non-sliding rays. [SeparationRayShapeTests](../../tests/Electron2D.Tests/SeparationRayShapeTests.cs) checks both flag values, slope policy, recovery and snap under [ADR 0068](../decisions/physics.md#adr-0068).
 
@@ -53,3 +53,5 @@ origins inside the complete contour or its swept region before selecting pieces.
 The fixture tag borrows the contour weakly; shared resource collision scratch stays
 allocation-free after warmup. PhysicsMotionTests covers both polygon roles and
 both directed-containment directions. See [body-motion verification](../components/gpu-resident-motion-queries.md).
+
+[Final contact sampling](../components/physics-registered-adapter.md#final-body-motion-contact-sampling) includes the effective query margin and clears obsolete contacts after complete departure.
