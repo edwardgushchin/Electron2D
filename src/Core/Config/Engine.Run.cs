@@ -20,23 +20,23 @@ public sealed partial class Engine
         set { ArgumentOutOfRangeException.ThrowIfNegative(value); Volatile.Write(ref _maxFps, value); }
     }
 
-    internal int RunCore(Window window)
+    internal int RunCore(Window window, Action<Window, ulong>? beforeFrame = null)
     {
         if (OperatingSystem.IsBrowser() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS())
             throw new NotSupportedException("This platform requires Engine.RunAsync so its application event loop remains available.");
-        return RunWindowCore(window, asynchronous: false).GetAwaiter().GetResult();
+        return RunWindowCore(window, asynchronous: false, beforeFrame: beforeFrame).GetAwaiter().GetResult();
     }
 
-    internal Task<int> RunAsyncCore(Window window)
+    internal Task<int> RunAsyncCore(Window window, Action<Window, ulong>? beforeFrame = null)
     {
         ValidateRunWindow(window);
 #if ANDROID
         if (OperatingSystem.IsAndroid())
-            return AndroidWindowHost.RunAsync(window);
+            return AndroidWindowHost.RunAsync(window, beforeFrame: beforeFrame);
 #endif
         if (!OperatingSystem.IsBrowser() && SynchronizationContext.Current is null)
             throw new InvalidOperationException("RunAsync requires an application synchronization context on the native main thread.");
-        return RunWindowCore(window, asynchronous: true);
+        return RunWindowCore(window, asynchronous: true, beforeFrame: beforeFrame);
     }
 
     private static void ValidateRunWindow(Window window)
@@ -57,8 +57,8 @@ public sealed partial class Engine
         Volatile.Write(ref _applicationRun, 1);
     }
 
-    internal int RunReservedWindowCore(Window window, string? moviePath = null, int movieFPS = 60, bool movieDisableVSync = false) =>
-        RunWindowCore(window, asynchronous: false, reserved: true, moviePath: moviePath, movieFPS: movieFPS, movieDisableVSync: movieDisableVSync).GetAwaiter().GetResult();
+    internal int RunReservedWindowCore(Window window, string? moviePath = null, int movieFPS = 60, bool movieDisableVSync = false, Action<Window, ulong>? beforeFrame = null) =>
+        RunWindowCore(window, asynchronous: false, reserved: true, moviePath: moviePath, movieFPS: movieFPS, movieDisableVSync: movieDisableVSync, beforeFrame: beforeFrame).GetAwaiter().GetResult();
 
     internal void CancelReservedWindowCore(Window window)
     {
@@ -78,7 +78,7 @@ public sealed partial class Engine
         Volatile.Write(ref _runtimeState, RuntimeIdle);
     }
 
-    private async Task<int> RunWindowCore(Window window, bool asynchronous, bool reserved = false, string? moviePath = null, int movieFPS = 60, bool movieDisableVSync = false)
+    private async Task<int> RunWindowCore(Window window, bool asynchronous, bool reserved = false, string? moviePath = null, int movieFPS = 60, bool movieDisableVSync = false, Action<Window, ulong>? beforeFrame = null)
     {
         if (!reserved)
         {
@@ -117,11 +117,14 @@ public sealed partial class Engine
             Volatile.Write(ref _runtimeState, RuntimeRunning);
             using var frameTimer = asynchronous ? new PeriodicTimer(TimeSpan.FromMilliseconds(1)) : null;
             var lastFrame = Stopwatch.GetTimestamp();
+            ulong nextFrame = 0;
             while (!tree.QuitRequested)
             {
                 window.PumpEvents();
                 if (tree.QuitRequested)
                     break;
+                beforeFrame?.Invoke(window, checked(++nextFrame));
+                if (tree.QuitRequested) break;
                 var now = Stopwatch.GetTimestamp();
                 var elapsed = movie is null ? Stopwatch.GetElapsedTime(lastFrame, now).TotalSeconds : 1d / movieFPS;
                 lastFrame = now;

@@ -13,9 +13,10 @@ internal static class AndroidWindowHost
     private static bool _started;
     private static string? _moviePath;
     private static int _movieFPS;
+    private static Action<Window, ulong>? _beforeFrame;
     private static bool _movieDisableVSync;
 
-    internal static Task<int> RunAsync(Window window, string? moviePath = null, int movieFPS = 60, bool movieDisableVSync = false)
+    internal static Task<int> RunAsync(Window window, string? moviePath = null, int movieFPS = 60, bool movieDisableVSync = false, Action<Window, ulong>? beforeFrame = null)
     {
         lock (Gate)
         {
@@ -23,7 +24,7 @@ internal static class AndroidWindowHost
                 throw new InvalidOperationException("An Android window lifecycle is already pending or active.");
             var completion = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
             Engine.Service.ReserveWindowRun();
-            _window = window; _moviePath = moviePath; _movieFPS = movieFPS; _movieDisableVSync = movieDisableVSync;
+            _window = window; _moviePath = moviePath; _movieFPS = movieFPS; _movieDisableVSync = movieDisableVSync; _beforeFrame = beforeFrame;
             _completion = completion;
             return _completion.Task;
         }
@@ -40,7 +41,7 @@ internal static class AndroidWindowHost
             completion = _completion!;
             _window = null;
             _completion = null;
-            _moviePath = null; _movieFPS = 0; _movieDisableVSync = false;
+            _moviePath = null; _movieFPS = 0; _movieDisableVSync = false; _beforeFrame = null;
         }
         try { Engine.Service.CancelReservedWindowCore(window); completion.TrySetCanceled(); }
         catch (Exception error) { completion.TrySetException(error); }
@@ -59,9 +60,9 @@ internal static class AndroidWindowHost
         }
         var code = 0;
         Exception? failure = null;
-        try { code = Engine.Service.RunReservedWindowCore(window, _moviePath, _movieFPS, _movieDisableVSync); }
+        try { code = Engine.Service.RunReservedWindowCore(window, _moviePath, _movieFPS, _movieDisableVSync, _beforeFrame); }
         catch (Exception error) { failure = error; }
-        finally { lock (Gate) { _window = null; _completion = null; _started = false; _moviePath = null; _movieFPS = 0; _movieDisableVSync = false; } }
+        finally { lock (Gate) { _window = null; _completion = null; _started = false; _moviePath = null; _movieFPS = 0; _movieDisableVSync = false; _beforeFrame = null; } }
         if (failure is null) completion.TrySetResult(code);
         else completion.TrySetException(failure);
     }

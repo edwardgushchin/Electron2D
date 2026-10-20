@@ -96405,6 +96405,64 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Engine.Run(System.Action\u003CElectron2D.Window, System.UInt64\u003E,Electron2D.Window)",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "Run",
+    "signature": "public static System.Int32 Run(System.Action\u003CElectron2D.Window, System.UInt64\u003E beforeFrame, Electron2D.Window window)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "beforeFrame",
+        "type": "System.Action\u003CElectron2D.Window, System.UInt64\u003E",
+        "default": null
+      },
+      {
+        "name": "window",
+        "type": "Electron2D.Window",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Engine.Run(System.Action\u003CElectron2D.Window, System.UInt64\u003E,Electron2D.Window,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "Run",
+    "signature": "public static System.Int32 Run(System.Action\u003CElectron2D.Window, System.UInt64\u003E beforeFrame, Electron2D.Window window, System.String moviePath, System.Int32 fps = 60)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "beforeFrame",
+        "type": "System.Action\u003CElectron2D.Window, System.UInt64\u003E",
+        "default": null
+      },
+      {
+        "name": "window",
+        "type": "Electron2D.Window",
+        "default": null
+      },
+      {
+        "name": "moviePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fps",
+        "type": "System.Int32",
+        "default": "60"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Engine.RunAsync(Electron2D.Window)",
     "kind": "method",
     "declaringType": "Electron2D.Engine",
@@ -96453,6 +96511,64 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Engine.RunAsync(System.Action\u003CElectron2D.Window, System.UInt64\u003E,Electron2D.Window)",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "RunAsync",
+    "signature": "public static System.Threading.Tasks.Task\u003CSystem.Int32\u003E RunAsync(System.Action\u003CElectron2D.Window, System.UInt64\u003E beforeFrame, Electron2D.Window window)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "beforeFrame",
+        "type": "System.Action\u003CElectron2D.Window, System.UInt64\u003E",
+        "default": null
+      },
+      {
+        "name": "window",
+        "type": "Electron2D.Window",
+        "default": null
+      }
+    ],
+    "returnType": "System.Threading.Tasks.Task\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Engine.RunAsync(System.Action\u003CElectron2D.Window, System.UInt64\u003E,Electron2D.Window,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "RunAsync",
+    "signature": "public static System.Threading.Tasks.Task\u003CSystem.Int32\u003E RunAsync(System.Action\u003CElectron2D.Window, System.UInt64\u003E beforeFrame, Electron2D.Window window, System.String moviePath, System.Int32 fps = 60)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "beforeFrame",
+        "type": "System.Action\u003CElectron2D.Window, System.UInt64\u003E",
+        "default": null
+      },
+      {
+        "name": "window",
+        "type": "Electron2D.Window",
+        "default": null
+      },
+      {
+        "name": "moviePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fps",
+        "type": "System.Int32",
+        "default": "60"
+      }
+    ],
+    "returnType": "System.Threading.Tasks.Task\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Engine.RunMovie(Electron2D.Window)",
     "kind": "method",
     "declaringType": "Electron2D.Engine",
@@ -96472,6 +96588,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Engine.RunMovie(System.Action\u003CElectron2D.Window, System.UInt64\u003E,Electron2D.Window)",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "RunMovie",
+    "signature": "public static System.Int32 RunMovie(System.Action\u003CElectron2D.Window, System.UInt64\u003E beforeFrame, Electron2D.Window window)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "beforeFrame",
+        "type": "System.Action\u003CElectron2D.Window, System.UInt64\u003E",
+        "default": null
+      },
+      {
+        "name": "window",
+        "type": "Electron2D.Window",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Engine.RunMovieAsync(Electron2D.Window)",
     "kind": "method",
     "declaringType": "Electron2D.Engine",
@@ -96481,6 +96621,30 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [
+      {
+        "name": "window",
+        "type": "Electron2D.Window",
+        "default": null
+      }
+    ],
+    "returnType": "System.Threading.Tasks.Task\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Engine.RunMovieAsync(System.Action\u003CElectron2D.Window, System.UInt64\u003E,Electron2D.Window)",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "RunMovieAsync",
+    "signature": "public static System.Threading.Tasks.Task\u003CSystem.Int32\u003E RunMovieAsync(System.Action\u003CElectron2D.Window, System.UInt64\u003E beforeFrame, Electron2D.Window window)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "beforeFrame",
+        "type": "System.Action\u003CElectron2D.Window, System.UInt64\u003E",
+        "default": null
+      },
       {
         "name": "window",
         "type": "Electron2D.Window",

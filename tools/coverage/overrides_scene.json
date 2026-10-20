@@ -8508,6 +8508,42 @@
       "state": "Implemented",
       "adr": "adr-0014",
       "reason": "Inherited deterministic cleanup projection releases internally retained auto-loaded scene templates without a public reference-counting API."
+    },
+    {
+      "electron2d": "method:Electron2D.Engine.Run(System.Action<Electron2D.Window, System.UInt64>,Electron2D.Window)",
+      "state": "Implemented",
+      "reason": "ADR 0016 / ADR 0090: explicit library-host input boundary over the ordinary owned native lifecycle; runs after readiness and event pumping before the first and every pending scheduler iteration, preserving fixed recording cadence, cleanup and original entry points. Linux software GPU/Compatibility checks cover all six overloads and zero warmed owner-thread bytes; other-platform/native-allocation acceptance remains separate.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0016"
+    },
+    {
+      "electron2d": "method:Electron2D.Engine.Run(System.Action<Electron2D.Window, System.UInt64>,Electron2D.Window,System.String,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0016 / ADR 0090: explicit library-host input boundary over the ordinary owned native lifecycle; runs after readiness and event pumping before the first and every pending scheduler iteration, preserving fixed recording cadence, cleanup and original entry points. Linux software GPU/Compatibility checks cover all six overloads and zero warmed owner-thread bytes; other-platform/native-allocation acceptance remains separate.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0016"
+    },
+    {
+      "electron2d": "method:Electron2D.Engine.RunAsync(System.Action<Electron2D.Window, System.UInt64>,Electron2D.Window)",
+      "state": "Implemented",
+      "reason": "ADR 0016 / ADR 0090: explicit library-host input boundary over the ordinary owned native lifecycle; runs after readiness and event pumping before the first and every pending scheduler iteration, preserving fixed recording cadence, cleanup and original entry points. Linux software GPU/Compatibility checks cover all six overloads and zero warmed owner-thread bytes; other-platform/native-allocation acceptance remains separate.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0016"
+    },
+    {
+      "electron2d": "method:Electron2D.Engine.RunAsync(System.Action<Electron2D.Window, System.UInt64>,Electron2D.Window,System.String,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0016 / ADR 0090: explicit library-host input boundary over the ordinary owned native lifecycle; runs after readiness and event pumping before the first and every pending scheduler iteration, preserving fixed recording cadence, cleanup and original entry points. Linux software GPU/Compatibility checks cover all six overloads and zero warmed owner-thread bytes; other-platform/native-allocation acceptance remains separate.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0016"
+    },
+    {
+      "electron2d": "method:Electron2D.Engine.RunMovie(System.Action<Electron2D.Window, System.UInt64>,Electron2D.Window)",
+      "state": "Implemented",
+      "reason": "ADR 0016 / ADR 0090: explicit library-host input boundary over the ordinary owned native lifecycle; runs after readiness and event pumping before the first and every pending scheduler iteration, preserving fixed recording cadence, cleanup and original entry points. Linux software GPU/Compatibility checks cover all six overloads and zero warmed owner-thread bytes; other-platform/native-allocation acceptance remains separate.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0016"
+    },
+    {
+      "electron2d": "method:Electron2D.Engine.RunMovieAsync(System.Action<Electron2D.Window, System.UInt64>,Electron2D.Window)",
+      "state": "Implemented",
+      "reason": "ADR 0016 / ADR 0090: explicit library-host input boundary over the ordinary owned native lifecycle; runs after readiness and event pumping before the first and every pending scheduler iteration, preserving fixed recording cadence, cleanup and original entry points. Linux software GPU/Compatibility checks cover all six overloads and zero warmed owner-thread bytes; other-platform/native-allocation acceptance remains separate.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0016"
     }
   ],
   "statusGroups": [

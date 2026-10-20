@@ -95,6 +95,7 @@ internal static class MovieWriterTests
     }
     internal static void Portable()
     {
+        EngineBeforeFrameTests.Managed();
         using var window = new Window();
         Reject<ArgumentException>(() => Engine.Run(window, "")); Reject<ArgumentOutOfRangeException>(() => Engine.Run(window, "x.png", 0));
         Check(!window.IsDisposed && Engine.GetWriteMoviePath() == "", "Invalid arguments do not consume root.");
@@ -149,6 +150,7 @@ internal static class MovieWriterTests
             ProjectSettings.Set(ProjectSettings.RenderingMethod, backend[4..]); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
             AVIMovieWriterTests.Native(folder); return;
         }
+        EngineBeforeFrameTests.Native(backend);
         ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         using var source = Source(); using var writer = new Writer { CheckGuards = true }; MovieWriter.AddWriter(writer);
         foreach (var mode in Enum.GetValues<AudioServer.SpeakerMode>())

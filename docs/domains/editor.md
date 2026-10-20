@@ -1,6 +1,6 @@
 # Editor domain
 
-Last updated: 2026-10-05
+Last updated: 2026-10-20
 
 The editor is a separate desktop executable at [Electron2D.Editor.csproj](../../editor/Electron2D.Editor.csproj). It consumes the public runtime API and owns no runtime backend. The first slice is a persistent branded startup window, titled `Electron2D`, with a 1152×800 client area.
 
@@ -8,6 +8,9 @@ The editor is a separate desktop executable at [Electron2D.Editor.csproj](../../
 | --- | --- | --- |
 | [Editor startup](../components/editor-startup.md) | Internal [EditorScene](../classes/EditorScene.md), public Window, TextureRect, Label, FontFile, ResourceLoader and Engine.Run | Centered shaded character, live font-rendered title and descriptor, native resize/close and VS Code F5 configuration |
 
-The runtime never references this assembly. Desktop targets follow [ADR 0021](../decisions/product.md#adr-0021); the current executable gate is Linux/Wayland. [ADR 0027](../decisions/product.md#adr-0027) owns the source/assembly boundary. [ADR 0090](../decisions/agent-native.md#adr-0090) still governs future shared authoring operations.
+The runtime never references this assembly. Desktop targets follow [ADR 0021](../decisions/product.md#adr-0021); the current executable gate is Linux/Wayland. [ADR 0027](../decisions/product.md#adr-0027) owns the source/assembly boundary. [ADR 0090](../decisions/agent-native.md#adr-0090) governs shared authoring operations.
 
 There is no project manager, scene inspector, authoring operation, CLI or rendered-batch command in this slice. The startup screen stays visible until the window closes. Packaging and other desktop platforms require their own checks; this screen does not complete the editor or agent-native workflow.
+
+
+The separate [compiled project batch tool](../components/project-batch.md) now provides the common CLI operation boundary: create/open/build, typed detached scene save/load, headless execution and actual native capture with bounded jobs and structured diagnostics. Its [BatchHost](../classes/BatchHost.md), [BatchScenario](../classes/BatchScenario.md), [BatchContext](../classes/BatchContext.md) and [BatchMode](../classes/BatchMode.md) belong to the tooling assembly and consume public runtime APIs. The visual startup screen still exposes no project workflow; installed SDK packaging, import/export and editor/plugin API families remain separate prerequisites.

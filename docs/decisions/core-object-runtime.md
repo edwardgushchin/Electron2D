@@ -1,6 +1,6 @@
 # Electron2D core object and runtime decisions
 
-Last updated: 2026-10-18
+Last updated: 2026-10-20
 
 Recording Run/RunAsync overloads and GetWriteMoviePath follow [ADR 0109](movie-writing.md#adr-0109): the existing scheduler accepts explicit fixed cadence without realtime jitter/catch-up dropping, and the same lifecycle owns real rendered capture plus synchronous audio. Ordinary and manual frame scheduling retain their contracts.
 
@@ -262,6 +262,8 @@ At this decision’s implementation point, Electron2D had no SDL host, renderer,
 `Engine` is a sealed `ElectronObject` singleton with process lifetime. Public operations delegate statically to that retained object under [ADR 0095](singleton-services.md#adr-0095); callers use `Engine.Run(window)` without a public `Instance` accessor. Disposal is rejected rather than leaving an unrecoverable disposed global. Its manual Start/AdvanceFrame/Stop path attaches one `MainLoop`, initializes a created loop, drives frames, and finalizes without taking final disposal ownership. Its normal Engine.Run(Window) path consumes the root, opens the native window through Window, creates and publishes SceneTree before ready, drives events and frames, and disposes the scene and native resources on exit or failure.
 
 For manual embedding, the host supplies finite non-negative unscaled elapsed seconds; Run measures these with Stopwatch. Engine uses a bounded, allocation-free fixed-step synchronizer with twelve frames of distribution history and configurable jitter tolerance. It caps long-stall catch-up, preserves the residual interpolation fraction, applies non-negative `TimeScale` to callback deltas rather than cadence, invokes fixed callbacks before process, and returns combined stop requests. Run uses an owner-thread monotonic clock, native event pump and interruptible frame wait; no background game thread, renderer, audio mixer or collision simulation is introduced.
+
+Under ADR 0090, callback-first `Action<Window, ulong>` overloads of Run, RunAsync, recording Run/RunAsync and configured RunMovie/RunMovieAsync provide the library host's input boundary. Existing entry points and delegate signatures remain intact. After complete scene readiness and native event pumping, the owner invokes the callback once before each pending process iteration, starting at index one for every run. It runs outside MainLoop callbacks, so public Input.ParseInputEvent can commit state and deliver before the first physics/process work. A quit request skips the pending step; exceptions use the same owned cleanup. The runtime retains control of timing, processing and presentation. Real-time elapsed input includes callback duration; fixed movie deltas do not. No implicit warmup step or game thread is added. Deferred Android startup retains the callback only until cancellation or final cleanup.
 
 Runtime lifecycle is one atomic owner-thread state machine. Callback exceptions restore the running state; initialization and finalization failures detach the terminal loop. Process/physics counters are process-lifetime totals and define exactly whether attempted or completed callbacks count, while FPS/interpolation state is re-baselined for each successfully attached loop. Tick-frequency changes re-baseline timing rather than mixing histories based on different step sizes.
 

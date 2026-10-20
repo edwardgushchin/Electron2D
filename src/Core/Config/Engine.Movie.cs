@@ -35,11 +35,12 @@ public sealed partial class Engine
     /// <exception cref="ArgumentOutOfRangeException">FPS is not positive.</exception>
     /// <exception cref="NotSupportedException">No writer accepts the path, or the platform needs RunAsync.</exception>
     /// <exception cref="Exception">A lifecycle, writer, rendering or audio operation fails.</exception>
-    public static int Run(Window window, string moviePath, int fps = 60)
+    public static int Run(Window window, string moviePath, int fps = 60) => RunRecordingCore(window, moviePath, fps, null);
+    private static int RunRecordingCore(Window window, string moviePath, int fps, Action<Window, ulong>? beforeFrame)
     {
         ValidateMovieArguments(moviePath, fps);
         if (OperatingSystem.IsBrowser() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS()) throw new NotSupportedException("This platform requires RunAsync.");
-        return Service.RunWindowCore(window, asynchronous: false, moviePath: moviePath, movieFPS: fps, movieDisableVSync: ProjectSettings.GetWithOverride(ProjectSettings.MovieWriterDisableVSync)).GetAwaiter().GetResult();
+        return Service.RunWindowCore(window, asynchronous: false, moviePath: moviePath, movieFPS: fps, movieDisableVSync: ProjectSettings.GetWithOverride(ProjectSettings.MovieWriterDisableVSync), beforeFrame: beforeFrame).GetAwaiter().GetResult();
     }
     /// <summary>Records a root Window while yielding to its application synchronization context.</summary>
     /// <param name="window">A detached root owned after startup reservation.</param>
@@ -50,14 +51,15 @@ public sealed partial class Engine
     /// <exception cref="ArgumentOutOfRangeException">FPS is not positive.</exception>
     /// <exception cref="InvalidOperationException">No application synchronization context retains the native main thread.</exception>
     /// <exception cref="Exception">A lifecycle, writer, rendering or audio operation fails.</exception>
-    public static Task<int> RunAsync(Window window, string moviePath, int fps = 60)
+    public static Task<int> RunAsync(Window window, string moviePath, int fps = 60) => RunRecordingAsyncCore(window, moviePath, fps, null);
+    private static Task<int> RunRecordingAsyncCore(Window window, string moviePath, int fps, Action<Window, ulong>? beforeFrame)
     {
         ValidateMovieArguments(moviePath, fps); ValidateRunWindow(window);
 #if ANDROID
-        if (OperatingSystem.IsAndroid()) return AndroidWindowHost.RunAsync(window, moviePath, fps, ProjectSettings.GetWithOverride(ProjectSettings.MovieWriterDisableVSync));
+        if (OperatingSystem.IsAndroid()) return AndroidWindowHost.RunAsync(window, moviePath, fps, ProjectSettings.GetWithOverride(ProjectSettings.MovieWriterDisableVSync), beforeFrame);
 #endif
         if (!OperatingSystem.IsBrowser() && SynchronizationContext.Current is null) throw new InvalidOperationException("RunAsync requires an application synchronization context.");
-        return Service.RunWindowCore(window, asynchronous: true, moviePath: moviePath, movieFPS: fps, movieDisableVSync: ProjectSettings.GetWithOverride(ProjectSettings.MovieWriterDisableVSync));
+        return Service.RunWindowCore(window, asynchronous: true, moviePath: moviePath, movieFPS: fps, movieDisableVSync: ProjectSettings.GetWithOverride(ProjectSettings.MovieWriterDisableVSync), beforeFrame: beforeFrame);
     }
     /// <summary>Returns the requested output path during a movie Window lifecycle.</summary>
     /// <returns>The unchanged path, or an empty string outside recording startup/teardown.</returns>

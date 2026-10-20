@@ -1,6 +1,6 @@
 # Movie writing
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 Owns non-real-time rendered recording through [MovieWriter](../classes/MovieWriter.md), [MovieRecording](../classes/MovieRecording.md) and internal [PNGMovieWriter](../classes/PNGMovieWriter.md)/[AVIMovieWriter](../classes/AVIMovieWriter.md)/[OGVMovieWriter](../classes/OGVMovieWriter.md). [ADR 0109](../decisions/movie-writing.md#adr-0109) owns the typed protocol and host adaptations.
 
@@ -67,3 +67,7 @@ MovieWriterDisableVSync defaults to false. Every movie entry point samples it be
 The project-profile slice passes source GPU/Compatibility and public-package NativeAOT portable/GPU/Compatibility checks, including fresh-process project load/capture; a self-contained JIT GPU consumer also passes. The managed candidate is 0.1.0-movie.20261015.6 over the unchanged native candidate 0.1.0-movie.20261015.4. The current Wayland GPU host falls back to Enabled for a Disabled request; Compatibility applies Disabled. Tests compare startup with the supported result of the same public presentation request. The initial test's unconditional Disabled expectation was corrected to preserve that native fallback contract. Independent decoding verifies exact frame/sample counts for all emitted profile codecs. Android propagation is implemented but profile execution on Android and other foreign hosts is unverified.
 
 AVI framing verification uses a portable fixed-byte odd/even chunk vector to establish zero padding, unpadded lengths and the next chunk boundary independently of renderer/JPEG output. Native recording continues to verify actual payload padding whenever present, full index extents and quality-dependent file size. A main verification run produced only even JPEG lengths (1206/3018 bytes), exposing the former test's unsupported assumption that a renderer fixture must generate at least one odd-length payload. The [native JPEG quality contract](https://wiki.libsdl.org/SDL3_image/IMG_SaveJPG_IO) permits three quality bands, so different requested qualities can also share quantization tables. This is a test correction; the RIFF writer's encoding behavior is unchanged.
+
+## Input-driven recording scenarios
+
+Callback-first recording Run/RunAsync and configured RunMovie/RunMovieAsync overloads use the same path/FPS selection and writer lifecycle. A non-null `Action<Window, ulong>` executes after readiness and native pumping, before the first and every later scheduler step. Injected Input.ParseInputEvent state and delivery therefore precede physics/process and the resulting completed frame. The one-based process index resets per run; quit skips pending work and callback exceptions attempt ordinary writer/scene/native cleanup. The original window-first signatures and delegates remain available. The [compiled batch runner](project-batch.md) uses this boundary with public MovieWriter PNG capture and explicit completed-step reporting.

@@ -269,6 +269,8 @@ native/device, platform and hardware/performance acceptance remain open.
 
 [Movie writing](../components/movie-writing.md) connects typed writer hooks, fixed-cadence Engine capture, a synchronous no-device FAudio graph and PNG/WAV plus indexed AVI/MJPEG/PCM16/32 output. AVI quality/depth and OGV quality/speed/keyframe settings drive executable encoders; OGV uses a pinned native Theora/Vorbis/Ogg closure. Configured movie startup now consumes file/FPS feature overrides through RunMovie/RunMovieAsync; explicit recording arguments retain precedence and a per-recording presentation request applies before renderer creation.
 
+The [compiled project batch runner](../components/project-batch.md) now creates/opens local source-SDK projects, builds compiled scenarios, authors detached archives, runs ordinary headless simulation and captures actual native output with version-one reports and bounded process jobs. Six reviewed callback-first Engine host overloads commit input before the first native scheduler step while retaining all existing entry points. The tooling assembly stays outside the runtime declaration census; no absent editor API row is promoted by this workflow. Installed SDK/editor integration and platform acceptance remain separate.
+
 [Compound slots and free ray network state](../components/physics-network-example.md#compound-slots-and-rotating-ray-under-correction-2026-10-15)
 now require positive per-slot impulse/restoration evidence, geometric contact-index
 association and actual ray angular motion/correction, retaining the preceding

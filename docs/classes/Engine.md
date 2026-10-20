@@ -1,6 +1,6 @@
 # Engine
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 [Frame timing monitors](../components/frame-monitors.md) expose actual completed-window process, fixed-step and navigation wall time through Performance. Start resets their current-run samples; Stop retains completed observations. Owned Window presentation contributes to process timing; manual AdvanceFrame adds no implicit rendering.
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-19
 
 **Inherited By:** —
 
-- **Source:** [`src/Core/Config/Engine.cs`](../../src/Core/Config/Engine.cs), [`Engine.Run.cs`](../../src/Core/Config/Engine.Run.cs)
+- **Source:** [`src/Core/Config/Engine.cs`](../../src/Core/Config/Engine.cs), [`Engine.Run.cs`](../../src/Core/Config/Engine.Run.cs), [`Engine.Batch.cs`](../../src/Core/Config/Engine.Batch.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public sealed partial class Engine : ElectronObject`
 
@@ -72,6 +72,12 @@ int exitCode = Engine.Run(window);
 | [`public static Task<int> RunMovieAsync(Window window)`](#runmovieasync) | Records the project profile on its yielding application owner. |
 | [`public static int Run(Window window, string moviePath, int fps = 60)`](#m-electron2d-engine-run-electron2d-window-system-string-system-int32) | Records fixed-duration real frames and synchronous audio. |
 | [`public static Task<int> RunAsync(Window window, string moviePath, int fps = 60)`](#m-electron2d-engine-runasync-electron2d-window-system-string-system-int32) | Records while yielding on the application owner context. |
+| `public static int Run(Action<Window, ulong> beforeFrame, Window window)` | [Host input before each scheduler step](#host-input-boundary). |
+| `public static Task<int> RunAsync(Action<Window, ulong> beforeFrame, Window window)` | Same boundary on the asynchronous application owner. |
+| `public static int Run(Action<Window, ulong> beforeFrame, Window window, string moviePath, int fps = 60)` | Host input before each fixed recording step. |
+| `public static Task<int> RunAsync(Action<Window, ulong> beforeFrame, Window window, string moviePath, int fps = 60)` | Asynchronous recording with the same input boundary. |
+| `public static int RunMovie(Action<Window, ulong> beforeFrame, Window window)` | Configured recording with the host boundary. |
+| `public static Task<int> RunMovieAsync(Action<Window, ulong> beforeFrame, Window window)` | Configured asynchronous recording with the host boundary. |
 | [`public static string GetWriteMoviePath()`](#m-electron2d-engine-getwritemoviepath) | Requested movie path during startup/hooks/teardown, otherwise empty. |
 | [`public static void Start(MainLoop mainLoop)`](#m-electron2d-engine-start-electron2d-mainloop) | Attaches and, when necessary, initializes one application loop. |
 | [`public static bool AdvanceFrame(double elapsedSeconds)`](#m-electron2d-engine-advanceframe-system-double) | Advances fixed-step callbacks followed by one process callback. |
@@ -562,3 +568,21 @@ Registered `shader_globals/name` definitions use [GlobalShaderParameterSettings<
 [Low-processor rendering](../components/low-processor-rendering.md) adds typed startup settings and live OS policy to Run/RunAsync. Unchanged output can skip submission while process/physics/input continue. The configured nonnegative microsecond wait combines with MaxFPS and remains responsive to events/quit; manual AdvanceFrame and movie capture do not apply that additional wait.
 
 Time now supplies a permanent process service identity. Register/Unregister preserve its lifetime, and NavigationServer is also protected by the permanent-service guard. Elapsed Time ticks survive Engine loop stop/start independently of TimeScale. See [Time](Time.md).
+
+## Host input boundary
+
+The six callback-first overloads preserve the existing window-first overloads and their delegate shapes. `beforeFrame` is non-null and borrowed for the run. It receives the actual root and one-based pending process-frame index, reset to one for each run. The callback runs on the ordinary owner thread, after all Ready callbacks and native pumping, outside MainLoop callbacks and before physics/process. It may commit and deliver input through Input.ParseInputEvent before the first step. A quit request skips the pending step; a throwing callback follows normal owned cleanup. Manual lifecycle reentry rejects. No warmup processing, extra clock or hidden game thread is introduced.
+
+Window, movie path, FPS, asynchronous synchronization and owned resource preconditions remain those of the matching existing overload. Null callback fails before ownership. Real-time elapsed input includes callback duration; recording retains its exact fixed process delta. The deferred Android host retains and clears the delegate across its existing pending/start/cancel/cleanup transitions. Additional-platform execution remains separately unverified.
+
+```csharp
+using var press = new InputEventAction { Action = "move", Pressed = true };
+// Register the action, attach scene children and a movie writer first.
+int code = Engine.Run((root, nextFrame) =>
+{
+    if (nextFrame == 1) Input.ParseInputEvent(press);
+    if (nextFrame == 61) root.Tree!.Quit();
+}, window, "capture.png", 60);
+```
+
+The snippet requires a detached `window` and registered `move` action. [Project batch execution](../components/project-batch.md) supplies a complete compiled caller and structured process supervision. [EngineBeforeFrameTests](../../tests/Electron2D.Tests/EngineBeforeFrameTests.cs) checks all six overloads, readiness/order, input, failure/restart, skipped pending work and prepared owner allocation. Physical GPU, native allocator totals and other-platform acceptance remain separate.
