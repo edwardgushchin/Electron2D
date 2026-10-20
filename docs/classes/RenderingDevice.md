@@ -14,6 +14,8 @@ Layered framebuffers execute ordered native passes for each view, with vertex/fr
 
 Readonly graphics storage images retain their Image role and current GPU contents across draws. Sampling/Storage combinations use a private GPU snapshot; see [image coherence](../components/local-compute.md#readonly-graphics-image-coherence).
 
+Independent Texture and Sampler sets execute native compute and graphics through reusable pair bindings, including plain/array and signed/unsigned images, comparison sampling, fetch/query, helpers and control flow. Combined declarations retain sampler-first IDs. See [independent sampled bindings](../components/local-compute.md#independent-sampled-resource-bindings) for validation timing, native capacity and verification.
+
 ## Example
 
 The snippet assumes the shown shader bindings and caller-provided compiled bytecode/buffer identities. The complete executable consumer is [WaterSimulation.GPU.cs](../../examples/WaterPlayground/WaterSimulation.GPU.cs).

@@ -12,7 +12,7 @@ public sealed class RDUniform : ElectronObject
     /// <value>A nonnegative shader binding, initially zero.</value>
     public int Binding { get { ThrowIfDisposed(); return _binding; } set { ThrowIfDisposed(); ArgumentOutOfRangeException.ThrowIfNegative(value); _binding = value; } }
     /// <summary>Gets or sets the resource category.</summary>
-    /// <value>The image category initially; set a supported buffer category before creating a compute uniform set.</value>
+    /// <value>Image initially. Texture and Sampler each borrow one identity; SamplerWithTexture borrows sampler then texture. The shader validates executing roles.</value>
     public RenderingDevice.UniformType UniformType { get { ThrowIfDisposed(); return _type; } set { ThrowIfDisposed(); if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value)); _type = value; } }
     /// <summary>Appends a borrowed resource identity.</summary>
     /// <param name="id">The resource, validated against the owning device when the set is created.</param>

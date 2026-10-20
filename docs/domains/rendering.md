@@ -432,3 +432,5 @@ Ordinary desktop Window children now execute [independent native hosts](../compo
 ## Actual text source metadata
 
 The text service exposes borrowed resource source caches and complete copied glyph/run metadata through [TextGlyph](../classes/TextGlyph.md) and [the source contract](../components/text-server.md#resource-sources-glyph-snapshots-and-visual-runs). Custom canvas consumers can use actual font source/index/size/offset/advance without native pointers. Resource data edits, linked state, automatic fallback retirement and immutable recorded pixels retain their existing owners. External provider dispatch and platform/package/hardware/allocator/owner acceptance remain separate gates.
+
+[Independent device sampled bindings](../components/local-compute.md#independent-sampled-resource-bindings) connect reusable Texture/Sampler resources across logical sets and shader stages, including real compute, layered graphics and retained canvas consumers.

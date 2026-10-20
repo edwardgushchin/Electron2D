@@ -5,10 +5,11 @@ namespace Electron2D;
 public sealed unsafe partial class RenderingDevice
 {
     private readonly record struct Binding(uint Set, int Slot, UniformType Type, int Native, bool Array = false, uint ImageFormat = 0, int PixelType = 0, ShaderStage Stage = ShaderStage.Compute, uint MinimumSize = 0, bool Depth = false, int Attachment = -1, bool Multisample = false);
-    private static (byte[] Code, Binding[] Layout, PushStage[] Push) Remap(byte[] code, ShaderStage stage = ShaderStage.Compute) => RemapCore(code, stage, false);
-    private static (byte[] Code, Binding[] Layout, PushStage[] Push) RemapCore(byte[] code, ShaderStage stage, bool template)
+    private static (byte[] Code, Binding[] Layout, PushStage[] Push) Remap(byte[] code, ShaderStage stage = ShaderStage.Compute) { var result = RemapCore(code, stage, false); return (result.Code, result.Layout, result.Push); }
+    private static (byte[] Code, Binding[] Layout, PushStage[] Push, SamplerLink[] Samplers) RemapCore(byte[] code, ShaderStage stage, bool template)
     {
         if (code.Length < 20 || code.Length > 16 * 1024 * 1024 || code.Length % 4 != 0) throw new ArgumentException("A compute module must contain aligned SPIR-V words.", nameof(code));
+        var samplerTranslation = CanvasSamplerArrays.LowerDevice(code); code = samplerTranslation.Code;
         var inputTranslation = LowerInputAttachments(code, stage); code = inputTranslation.Code;
         var readonlyTranslation = LowerReadOnlyImages(code, stage); code = readonlyTranslation.Code;
         (byte[] Code, uint Variable, uint Size) translated;
@@ -48,7 +49,7 @@ public sealed unsafe partial class RenderingDevice
                     if (words[i + 2] == 32) scalars.Add(words[i + 1], 0);
                     break;
                 case 25 when size is 9 or 10:
-                    if (words[i + 3] != 1 || words[i + 4] > 1 || words[i + 5] > 1 || words[i + 6] > 1 || words[i + 7] is not (1 or 2)) throw new NotSupportedException("Device images must be non-multisampled two-dimensional textures.");
+                    if (words[i + 3] != 1 || words[i + 4] > 2 || words[i + 5] > 1 || words[i + 6] > 1 || words[i + 7] is not (1 or 2)) throw new NotSupportedException("Device images must be non-multisampled two-dimensional textures.");
                     images.Add(words[i + 1], (words[i + 2], words[i + 5], words[i + 7], words[i + 8], words[i + 4], words[i + 6])); break;
                 case 26 when size == 2: samplerTypes.Add(words[i + 1]); break;
                 case 27 when size == 3: sampled.Add(words[i + 1], words[i + 2]); break;
@@ -140,6 +141,7 @@ public sealed unsafe partial class RenderingDevice
         if (!compute) foreach (var variable in variables.Where(v => v.Storage == 0))
                 if (sets.TryGetValue(variable.ID, out var si) && slots.TryGetValue(variable.ID, out var bi) && pointers.TryGetValue(variable.Type, out var ty) && images.TryGetValue(ty, out var image) && (image.Sampled == 2 || inputTranslation.Inputs.ContainsKey(variable.ID) || readonlyTranslation.Images.ContainsKey(variable.ID)))
                     words[bi] += (uint)textureSlot;
-        return (code, layout.ToArray(), push is null ? [] : [push]);
+        var restored = RestoreSamplerLayout(layout, samplerTranslation.Plan, stage);
+        return (code, restored.Layout, push is null ? [] : [push], restored.Links);
     }
 }

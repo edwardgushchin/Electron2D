@@ -7,11 +7,11 @@ namespace Electron2D;
 // SDL exposes scalar descriptor slots; opaque values become slot indices only in the derived native module.
 internal static partial class CanvasSamplerArrays
 {
-    private sealed record Slot(uint Type, uint Variable, int Index);
+    private sealed record Slot(uint Type, uint Variable, int Index, uint Selector, uint ImageSelector);
 
-    internal static byte[] Lower(byte[] code, ShaderTexture[] textures, bool needsSampler = false)
+    internal static byte[] Lower(byte[] code, ShaderTexture[] textures, bool needsSampler = false, DevicePlan? device = null)
     {
-        if (!needsSampler && !textures.Any(t => t.ArrayLength != 0)) return code;
+        if (device is null && !needsSampler && !textures.Any(t => t.ArrayLength != 0)) return code;
         var module = new Module(code);
         var source = module.Instructions;
         var types = source.Where(i => Op(i) is >= 19 and <= 39).ToDictionary(i => i[1]);
@@ -24,10 +24,10 @@ internal static partial class CanvasSamplerArrays
             var instruction = Instruction(op, [next++, .. operands]); types.Add(instruction[1], instruction); declarations.Add(instruction); return instruction[1];
         }
         var integer = Type(21, 32, 0); var boolean = Type(20);
-        // Function signatures may precede the original uint declaration.
+        // Rewritten signatures and interleaved constants need uint before every global declaration.
         var integerDeclaration = types[integer]; source.Remove(integerDeclaration); declarations.Remove(integerDeclaration);
-        source.Insert(source.FindIndex(i => Op(i) is >= 19 and <= 39), integerDeclaration);
-        bool Opaque(uint type) => types.TryGetValue(type, out var i) && (Op(i) is 25 or 26 or 27 || Op(i) == 28 && Opaque(i[2]) || Op(i) == 32 && i[2] == 0 && Opaque(i[3]));
+        source.Insert(source.FindIndex(i => Category(Op(i)) == 10), integerDeclaration);
+        bool Opaque(uint type) => types.TryGetValue(type, out var i) && (Op(i) is 26 or 27 || Op(i) == 25 && (device is null || i[7] == 1) || Op(i) == 28 && Opaque(i[2]) || Op(i) == 32 && i[2] == 0 && Opaque(i[3]));
         uint Element(uint type)
         {
             var i = types[type]; return Op(i) == 32 ? Element(i[3]) : Op(i) == 28 ? Element(i[2]) : type;
@@ -57,7 +57,7 @@ internal static partial class CanvasSamplerArrays
                 }
         var resources = source.Where(i => Op(i) == 59 && i[3] == 0 && Opaque(i[1])).ToArray();
         var resourceIDs = resources.Select(i => i[2]).ToHashSet();
-        ValidatePairs(source, resourceIDs, decorations, Opaque);
+        if (device is null) ValidatePairs(source, resourceIDs, decorations, Opaque);
         var slots = new List<Slot>(); var samplers = new Dictionary<int, uint>(); var interfaces = new List<uint>();
         void Name(uint variable, string value)
         {
@@ -65,26 +65,42 @@ internal static partial class CanvasSamplerArrays
             annotations.Add(Instruction(5, [variable, .. MemoryMarshal.Cast<byte, uint>(bytes).ToArray()]));
         }
         var names = source.Where(i => Op(i) == 5).ToDictionary(i => i[1], i => Encoding.UTF8.GetString(MemoryMarshal.AsBytes(i.AsSpan(2))).TrimEnd('\0'));
-        foreach (var resource in resources)
+        if (device is not null)
         {
-            var element = Element(resource[1]);
-            var binding = decorations.TryGetValue(resource[2], out var d) && d.TryGetValue(33, out var b) ? b : uint.MaxValue;
-            var first = Array.FindIndex(textures, t => t.Binding == binding);
-            declarations.Add(Instruction(43, integer, resource[2], (uint)Math.Max(0, first)));
-            if (first < 0 || Op(types[element]) == 26 || names.GetValueOrDefault(resource[2]) != textures[first].Name) continue;
-            for (var index = first; index < textures.Length && textures[index].Binding == binding; index++)
+            foreach (var resource in resources) declarations.Add(Instruction(43, integer, resource[2], device.Values[resource[2]]));
+            for (var index = 0; index < device.Pairs.Length; index++)
             {
+                var pair = device.Pairs[index]; var resource = resources.Single(r => r[2] == pair.Image); var element = Element(resource[1]);
                 var variable = next++; declarations.Add(Instruction(59, Type(32, 0, element), variable, 0)); interfaces.Add(variable);
-                annotations.Add(Instruction(71, variable, 33, (uint)index));
-                annotations.Add(Instruction(71, variable, 34, d![34])); Name(variable, $"EDSampler{index}_{element}");
-                slots.Add(new(element, variable, index));
+                annotations.Add(Instruction(71, variable, 33, (uint)index)); annotations.Add(Instruction(71, variable, 34, device.Set));
+                slots.Add(new(element, variable, index, pair.ImageIndex * device.Stride + pair.SamplerIndex, pair.ImageIndex));
                 if (Op(types[element]) == 25)
                 {
                     var sampler = next++; declarations.Add(Instruction(59, Type(32, 0, Type(26)), sampler, 0)); interfaces.Add(sampler); samplers.Add(index, sampler);
-                    annotations.Add(Instruction(71, sampler, 33, (uint)index)); annotations.Add(Instruction(71, sampler, 34, d[34])); Name(sampler, $"EDState{index}");
+                    annotations.Add(Instruction(71, sampler, 33, (uint)index)); annotations.Add(Instruction(71, sampler, 34, device.Set));
                 }
             }
         }
+        else foreach (var resource in resources)
+            {
+                var element = Element(resource[1]);
+                var binding = decorations.TryGetValue(resource[2], out var d) && d.TryGetValue(33, out var b) ? b : uint.MaxValue;
+                var first = Array.FindIndex(textures, t => t.Binding == binding);
+                declarations.Add(Instruction(43, integer, resource[2], (uint)Math.Max(0, first)));
+                if (first < 0 || Op(types[element]) == 26 || names.GetValueOrDefault(resource[2]) != textures[first].Name) continue;
+                for (var index = first; index < textures.Length && textures[index].Binding == binding; index++)
+                {
+                    var variable = next++; declarations.Add(Instruction(59, Type(32, 0, element), variable, 0)); interfaces.Add(variable);
+                    annotations.Add(Instruction(71, variable, 33, (uint)index));
+                    annotations.Add(Instruction(71, variable, 34, d![34])); Name(variable, $"EDSampler{index}_{element}");
+                    slots.Add(new(element, variable, index, (uint)index, (uint)index));
+                    if (Op(types[element]) == 25)
+                    {
+                        var sampler = next++; declarations.Add(Instruction(59, Type(32, 0, Type(26)), sampler, 0)); interfaces.Add(sampler); samplers.Add(index, sampler);
+                        annotations.Add(Instruction(71, sampler, 33, (uint)index)); annotations.Add(Instruction(71, sampler, 34, d[34])); Name(sampler, $"EDState{index}");
+                    }
+                }
+            }
         var functionAliases = new Dictionary<uint, uint>(); var signatures = new Dictionary<string, uint>(StringComparer.Ordinal);
         foreach (var function in source.Where(i => Op(i) == 33))
         {
@@ -117,9 +133,10 @@ internal static partial class CanvasSamplerArrays
         void Sample(uint[] instruction, List<uint[]> body)
         {
             var op = Op(instruction); var resourceType = Element(valueTypes[instruction[3]]);
-            var choices = slots.Where(s => Image(s.Type) == Image(resourceType)).ToArray();
+            uint Selector(Slot slot) => device is not null && Op(types[resourceType]) == 25 ? slot.ImageSelector : slot.Selector;
+            var choices = slots.Where(s => Image(s.Type) == Image(resourceType)).GroupBy(Selector).Select(g => g.First()).ToArray();
             if (choices.Length == 0) { body.Add(Instruction(83, instruction[1], instruction[2], Zero(instruction[1]))); return; }
-            var mask = op is 87 or 88 or 91 or 92 or 95 ? 5 : op == 96 ? 6 : int.MaxValue;
+            var mask = op is 87 or 88 or 91 or 92 or 95 ? 5 : op is 89 or 90 or 93 or 94 or 96 or 97 ? 6 : int.MaxValue;
             var operands = Enumerable.Range(4, instruction.Length - 4).Where(i => i != mask && !constants.Contains(instruction[i])).ToArray();
             var parameterTypes = operands.Select(i => valueTypes[instruction[i]]).ToArray();
             var key = op + ":" + instruction[1] + ":" + resourceType + ":" + string.Join(',', Enumerable.Range(4, instruction.Length - 4).Select(i => operands.Contains(i) ? $"p{valueTypes[instruction[i]]}" : $"c{instruction[i]}"));
@@ -138,12 +155,12 @@ internal static partial class CanvasSamplerArrays
                 }
                 uint result;
                 // Eager implicit sampling preserves quad derivatives even for a nonuniform selected descriptor.
-                if (op is 87 or 91 or 96 or 105)
+                if (op is 87 or 89 or 91 or 93 or 96 or 97 or 105)
                 {
                     result = Zero(instruction[1]);
                     foreach (var slot in choices)
                     {
-                        var sample = Invoke(slot); var condition = next++; helper.Add(Instruction(170, boolean, condition, selector, Constant((uint)slot.Index)));
+                        var sample = Invoke(slot); var condition = next++; helper.Add(Instruction(170, boolean, condition, selector, Constant(Selector(slot))));
                         if (Op(types[instruction[1]]) == 23)
                         {
                             var width = types[instruction[1]][3]; var splat = next++;
@@ -155,7 +172,7 @@ internal static partial class CanvasSamplerArrays
                 else
                 {
                     var merge = next++; var fallback = next++; var labels = choices.Select(_ => next++).ToArray();
-                    helper.Add(Instruction(247, merge, 0)); helper.Add(Instruction(251, [selector, fallback, .. choices.SelectMany((slot, i) => new uint[] { (uint)slot.Index, labels[i] }).ToArray()]));
+                    helper.Add(Instruction(247, merge, 0)); helper.Add(Instruction(251, [selector, fallback, .. choices.SelectMany((slot, i) => new uint[] { Selector(slot), labels[i] }).ToArray()]));
                     var incoming = new List<uint>();
                     for (var i = 0; i < choices.Length; i++)
                     {
@@ -187,7 +204,13 @@ internal static partial class CanvasSamplerArrays
                 instruction = Instruction(15, [.. instruction.AsSpan(1, end - 1).ToArray(), .. io]);
             }
             if (op == 54 && functionAliases.TryGetValue(instruction[4], out var signature)) instruction[4] = signature;
-            if (op is >= 87 and <= 97 or >= 101 and <= 107) { Sample(instruction, output); continue; }
+            if (op is >= 87 and <= 97 or >= 101 and <= 107 && valueTypes.TryGetValue(instruction[3], out var resourceType) && Opaque(resourceType)) { Sample(instruction, output); continue; }
+            if (device is not null && op == 86)
+            {
+                var multiplied = next++; output.Add(Instruction(132, integer, multiplied, instruction[3], Constant(device.Stride)));
+                output.Add(Instruction(128, integer, instruction[2], multiplied, instruction[4])); continue;
+            }
+            if (device is not null && op == 100) { output.Add(Instruction(134, integer, instruction[2], instruction[3], Constant(device.Stride))); continue; }
             if (op is 86 or 100) { output.Add(Instruction(83, integer, instruction[2], instruction[3])); continue; }
             if (op == 61 && Opaque(instruction[1])) { output.Add(Instruction(83, integer, instruction[2], instruction[3])); continue; }
             if (op is 65 or 66 && Opaque(instruction[1]))

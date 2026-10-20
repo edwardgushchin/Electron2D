@@ -1,12 +1,12 @@
 # RenderingDevice.UniformType
 
-Last updated: 2026-10-09
+Last updated: 2026-10-20
 
 **Namespace:** `Electron2D`. **Declaration:** `public enum Electron2D.RenderingDevice.UniformType`. **Source:** [RenderingDevice.cs](../../src/Servers/Rendering/Device/RenderingDevice.cs). **Component:** [Local compute](../components/local-compute.md).
 
 ## Description
 
-Descriptor-category values used by RDUniform. Numeric identities are retained; local compute accepts UniformBuffer and StorageBuffer bindings and explicitly rejects other categories.
+Descriptor-category values used by RDUniform. UniformBuffer, StorageBuffer, Image, SamplerWithTexture, Texture, Sampler and InputAttachment execute in their shader-stage roles. Separate Texture/Sampler bindings may use independent sets and reusable filters; see [sampled bindings](../components/local-compute.md#independent-sampled-resource-bindings). Image-buffer categories still require their typed texel-buffer adapter. Numeric vocabulary alone does not establish an executing role.
 
 ## API
 

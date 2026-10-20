@@ -14,8 +14,10 @@ public sealed unsafe partial class RenderingDevice
             if (buffer.Kind != Kind.Storage && !(buffer.Kind is Kind.Vertex or Kind.Index && buffer.GraphicsStorage)) throw new ArgumentException("A storage-capable buffer is required.", nameof(ids));
             return;
         }
+        if (binding.Type == UniformType.Sampler) { Get(ids[0], Kind.Sampler); return; }
         var texture = Get(ids[binding.Type == UniformType.SamplerWithTexture ? 1 : 0], Kind.Texture).Texture!;
         if (PixelType(texture.Format) != binding.PixelType) throw new ArgumentException("The shader pixel scalar type does not match the texture format.", nameof(ids));
+        if (binding.Depth && !DepthFormat(texture.Format)) throw new ArgumentException("The shader requires a depth image.", nameof(ids));
         if (binding.Type == UniformType.InputAttachment)
         {
             if ((texture.Usage & TextureUsageBits.InputAttachment) == 0 || texture.Mips != 1 || (texture.Samples != TextureSamples.Samples1) != binding.Multisample) throw new ArgumentException("The texture lacks the required ordinary input attachment/sample role.", nameof(ids));
@@ -23,11 +25,12 @@ public sealed unsafe partial class RenderingDevice
         }
         if ((texture.Type == TextureType.TextureArray) != binding.Array) throw new ArgumentException("The texture array role does not match the shader.", nameof(ids));
         if (texture.Samples != TextureSamples.Samples1) throw new NotSupportedException("Multisample shader images require their sample-load descriptor adapter.");
+        if (binding.Type == UniformType.Texture) { if ((texture.Usage & TextureUsageBits.Sampling) == 0 || binding.Depth && !DepthFormat(texture.Format)) throw new ArgumentException("The image lacks its required sampling/depth role.", nameof(ids)); return; }
         if (binding.Type == UniformType.SamplerWithTexture)
         {
             var sampler = Get(ids[0], Kind.Sampler); if ((texture.Usage & TextureUsageBits.Sampling) == 0) throw new ArgumentException("Texture lacks the sampling role.", nameof(ids));
-            if (sampler.CompareSampling != binding.Depth || binding.Depth && !DepthFormat(texture.Format)) throw new ArgumentException("Comparison samplers require a depth image and a depth-comparison shader descriptor.", nameof(ids));
-            if (binding.PixelType != 0 && sampler.LinearSampling) throw new ArgumentException("Integer textures require nearest filtering without anisotropy.", nameof(ids));
+            if (binding.Native >= 0 && (sampler.CompareSampling != binding.Depth || binding.Depth && !DepthFormat(texture.Format))) throw new ArgumentException("Comparison samplers require a depth image and a depth-comparison shader descriptor.", nameof(ids));
+            if (binding.Native >= 0 && binding.PixelType != 0 && sampler.LinearSampling) throw new ArgumentException("Integer textures require nearest filtering without anisotropy.", nameof(ids));
         }
         else
         {

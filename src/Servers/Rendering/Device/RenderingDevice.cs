@@ -10,7 +10,8 @@ namespace Electron2D;
 /// TextureGetRDTexture exports renderer uploads and completed viewport images with borrowed allocation lifetimes;
 /// native writes leave authored CPU snapshots unchanged. FreeRID releases these wrappers without freeing their sources.
 /// The device executes compute and color/depth graphics pipelines with exact multisample state and color resolve, with sampled images, storage resources, borrowed vertex/index arrays and framebuffer attachments.
-/// Framebuffer view counts select ordered layer draws with private per-view shader indices and preserved draw state.</remarks>
+/// Framebuffer view counts select ordered layer draws with private per-view shader indices and preserved draw state.
+/// Independent Texture and Sampler descriptors may occupy different logical sets; recording resolves their validated native pairs.</remarks>
 public sealed unsafe partial class RenderingDevice : ElectronObject
 {
     /// <summary>Identifies executable shader stages.</summary>
@@ -82,6 +83,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal RenderHandle? FragmentHandle;
         internal uint Set;
         internal Binding[] Layout = [];
+        internal SamplerLink[] Samplers = [];
         internal PushStage[] Push = [];
         internal byte[][] Sources = [];
         internal Entry? Variant;
@@ -237,15 +239,18 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     {
         var used = new HashSet<uint>(); var modules = sources.Select(code => template ? code.ToArray() : new SpecializationModule(code, constants, used).Freeze()).ToArray();
         if (!template && constants.Keys.Any(id => !used.Contains(id))) throw new ArgumentException("A specialization identifier is not declared by this shader.", nameof(constants));
-        var layouts = new Binding[modules.Length][]; var pushes = new PushStage[modules.Length][];
+        var layouts = new Binding[modules.Length][]; var pushes = new PushStage[modules.Length][]; var samplers = new SamplerLink[modules.Length][];
         for (var i = 0; i < modules.Length; i++)
-        { var stage = modules.Length == 1 ? ShaderStage.Compute : i == 0 ? ShaderStage.Vertex : ShaderStage.Fragment; (modules[i], layouts[i], pushes[i]) = RemapCore(LowerViewIndex(modules[i], viewIndex, stage), stage, template); }
+        { var stage = modules.Length == 1 ? ShaderStage.Compute : i == 0 ? ShaderStage.Vertex : ShaderStage.Fragment; (modules[i], layouts[i], pushes[i], samplers[i]) = RemapCore(LowerViewIndex(modules[i], viewIndex, stage), stage, template); }
         var layout = layouts.SelectMany(l => l).ToArray();
+        var samplerLinks = samplers.SelectMany(s => s).ToArray();
+        NormalizeSamplerSources(layout, samplerLinks);
         foreach (var group in layout.GroupBy(b => (b.Set, b.Slot)))
-        { var first = group.First(); if (group.Any(b => b.Type != first.Type || b.Array != first.Array || b.ImageFormat != first.ImageFormat || b.PixelType != first.PixelType || b.Depth != first.Depth)) throw new ArgumentException("A shared descriptor has inconsistent stage types."); }
+        { var first = group.First(); if (group.Any(b => b.Type != first.Type || b.Array != first.Array || b.ImageFormat != first.ImageFormat || b.PixelType != first.PixelType)) throw new ArgumentException("A shared descriptor has inconsistent stage types."); }
         var interfaces = modules.Length == 2 ? ShaderCompiler.ValidateDeviceGraphics(modules[0], modules[1]) : default;
-        var entry = new Entry { Kind = Kind.Shader, Stage = modules.Length == 1 ? ShaderStage.Compute : ShaderStage.Vertex, Layout = layout, Push = pushes.SelectMany(p => p).ToArray(), Name = name, Inputs = interfaces.Inputs ?? [], Outputs = interfaces.Outputs ?? [] };
+        var entry = new Entry { Kind = Kind.Shader, Stage = modules.Length == 1 ? ShaderStage.Compute : ShaderStage.Vertex, Layout = layout, Samplers = samplerLinks, Push = pushes.SelectMany(p => p).ToArray(), Name = name, Inputs = interfaces.Inputs ?? [], Outputs = interfaces.Outputs ?? [] };
         if (template) return entry;
+        if (entry.Samplers.Any(s => s.Sampler is null)) PrepareFetchSampler();
         if (outputSlots is not null) modules[1] = RemapFragmentOutputs(modules[1], outputSlots, entry.Outputs);
         try
         {
@@ -280,8 +285,8 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <returns>True for a live executable pipeline of this device.</returns>
     public bool ComputePipelineIsValid(RID pipeline) { Access(); return _entries.TryGetValue(pipeline, out var e) && e.Kind == Kind.Pipeline && _entries.ContainsKey(e.Shader); }
 
-    /// <summary>Creates a copied set of validated buffer, sampled-image and writable-image bindings.</summary>
-    /// <param name="uniforms">Descriptors with one buffer identity per binding.</param>
+    /// <summary>Creates a copied set of validated buffer, image, sampler and framebuffer-input bindings.</summary>
+    /// <param name="uniforms">Shader-matching descriptions. Texture and Sampler each borrow one identity; SamplerWithTexture borrows sampler then texture.</param>
     /// <param name="shader">The shader whose layout owns this set.</param>
     /// <param name="shaderSet">The shader descriptor-set number.</param>
     /// <returns>A set identity borrowing its shader and buffers.</returns>
@@ -349,12 +354,13 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         {
             if (!_sets.TryGetValue(descriptor.Set, out var set) || set.Shader != Get(_pushPipeline).Shader) throw new InvalidOperationException("Bind each pipeline resource set first.");
             var ids = set.Bindings[descriptor.Slot];
-            ValidateBinding(descriptor, ids); var buffer = Get(ids[0]);
+            ValidateBinding(descriptor, ids); if (descriptor.Native < 0) continue; var buffer = Get(ids[0]);
             if (descriptor.Type == UniformType.Image) { images[descriptor.Native] = new() { Texture = buffer.NativeHandle }; imageCount++; }
             else if (descriptor.Type == UniformType.SamplerWithTexture) { samplers[descriptor.Native] = new() { Sampler = buffer.NativeHandle, Texture = Get(ids[1]).NativeHandle }; samplerCount++; }
             else if (descriptor.Type == UniformType.StorageBuffer) { buffers[descriptor.Native] = new() { Buffer = buffer.Handle!.DangerousGetHandle() }; count++; }
             else fixed (byte* data = buffer.Data) SDL.PushGPUComputeUniformData(_command, (uint)descriptor.Native, (nint)data, buffer.Size);
         }
+        foreach (var link in _pipeline.Samplers) { samplers[link.Native.Native] = LinkedSampler(link, false); samplerCount++; }
         PushUniforms(_pipeline);
         var pass = SDL.BeginGPUComputePass(_command, (nint)images, (uint)imageCount, (nint)buffers, (uint)count);
         if (pass == 0) throw GPUPhysicsDevice.Failure("begin compute dispatch for " + _pipeline.Name);
@@ -435,7 +441,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
             CancelRendererUploads(); ReleaseDrawablePipelines();
             foreach (var e in _entries.Values) { e.Borrowed?.Dispose(); ReleaseViews(e); ReleaseProgram(e.Variant); e.Handle?.Dispose(); e.FragmentHandle?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); e.InputShadow?.Dispose(); }
-            _entries.Clear(); _graphicsSnapshots.Clear(); _graphicsSnapshotCount = 0; _rendererTextures.Clear(); _sourceCache.Clear(); _sourceCacheBytes = 0; _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _activeList = 0; CancelReadbacks(); _context.Dispose();
+            _entries.Clear(); _graphicsSnapshots.Clear(); _graphicsSnapshotCount = 0; _rendererTextures.Clear(); _sourceCache.Clear(); _sourceCacheBytes = 0; _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _activeList = 0; CancelReadbacks(); _fetchSampler?.Dispose(); _fetchSampler = null; _context.Dispose();
         }
         base.Dispose(disposing);
     }
