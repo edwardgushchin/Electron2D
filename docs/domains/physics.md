@@ -1681,3 +1681,5 @@ including stationary ray counterparts and finite boundary endpoints. The full
 physics ledger remains 1279/1369 (93.43%), with 90 applicable declarations open.
 
 [Last-recovery one-way pair exclusions](../components/physics-registered-adapter.md#last-recovery-one-way-pair-exclusions) retain rejected source-resource/target-slot pairs through the remaining sweep and final contact sample. The last recovery attempt replaces the set, accepted pieces keep their logical pair eligible, and the next query starts empty. CPU, resident GPU and the independent public provider execute this query policy; fixed-step contact episodes keep their separate history.
+
+[Hollow pair contacts](../components/physics-custom-geometry.md#hollow-pair-contacts) now exercise the public-only annulus/annulus format through standalone/selected resource pairs and registered scene/raw queries and numerical response. Both surfaces/orders retain strict warmed zero managed allocation; built-in custom attachment, arbitrary algorithms and full native/network/hardware acceptance remain open.

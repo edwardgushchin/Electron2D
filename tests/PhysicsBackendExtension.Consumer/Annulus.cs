@@ -59,12 +59,11 @@ internal static class Annulus
         if (second.Type is PhysicsServer.ShapeType.Rectangle or PhysicsServer.ShapeType.Capsule or PhysicsServer.ShapeType.Segment or PhysicsServer.ShapeType.ConvexPolygon)
             return BackendChecks.CollideContourGeometry(first, firstPose, firstMotion, second, secondPose, secondMotion, contacts, out count);
         var a = Dimensions(first); var b = Dimensions(second);
-        if (b.Inner != 0) throw new NotSupportedException("The fixture exercises annulus/circle pairs.");
         count = 0;
         var a0 = firstPose.Origin; var a1 = a0 + firstMotion;
         var b0 = secondPose.Origin; var b1 = b0 + secondMotion;
         Closest(a0, a1, b0, b1, out var nearA, out var nearB);
-        var outer = (double)a.Outer + b.Outer; var hole = Math.Max(0, (double)a.Inner - b.Outer);
+        var outer = (double)a.Outer + b.Outer; var hole = Math.Max(0, Math.Max((double)a.Inner - b.Outer, (double)b.Inner - a.Outer));
         var far = Math.Max(Math.Max(Distance(a0, b0), Distance(a0, b1)), Math.Max(Distance(a1, b0), Distance(a1, b1)));
         if (Distance(nearA, nearB) > outer * outer || far < hole * hole) return false;
         if (contacts.Length < 2) return true;
@@ -76,7 +75,7 @@ internal static class Annulus
         {
             var normal = direction.LengthSquared() == 0 ? Vector2.Right : direction.Normalized();
             Outer(normal); Outer(-normal);
-            Inner(normal); Inner(-normal);
+            Inner(normal, false); Inner(-normal, false); Inner(normal, true); Inner(-normal, true);
         }
         contacts[0] = firstPoint; contacts[1] = secondPoint; count = 1; return true;
 
@@ -95,12 +94,13 @@ internal static class Annulus
                 right0 - normal * b.Outer, right1 - normal * b.Outer, out var left, out var right);
             Candidate(left, right, normal, false);
         }
-        void Inner(Vector2 normal)
+        void Inner(Vector2 normal, bool reverse)
         {
-            if (!HoleSupport(a0, a1, a.Inner, normal, out var left)) return;
-            Support(b0, b1, normal, out var right0, out var right1);
-            var right = Nearest(left, right0 + normal * b.Outer, right1 + normal * b.Outer);
-            Candidate(left, right, normal, true);
+            if (!HoleSupport(reverse ? b0 : a0, reverse ? b1 : a1, reverse ? b.Inner : a.Inner, normal, out var left)) return;
+            Support(reverse ? a0 : b0, reverse ? a1 : b1, normal, out var right0, out var right1);
+            var radius = reverse ? a.Outer : b.Outer;
+            var right = Nearest(left, right0 + normal * radius, right1 + normal * radius);
+            if (reverse) Candidate(right, left, -normal, true); else Candidate(left, right, normal, true);
         }
     }
     private static double Distance(Vector2 a, Vector2 b)

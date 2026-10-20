@@ -1,6 +1,6 @@
 # ShapeGeometry
 
-Last updated: 2026-10-16
+Last updated: 2026-10-20
 
 **Declaration:** `public sealed class ShapeGeometry` · **Component:** [Collision shapes](../components/physics-shapes.md)
 
@@ -74,3 +74,5 @@ acceptance remains open.
 payload for all nine represented kinds, including procedural resources without a
 duplicate factory. Ordinary concrete wrappers remain the public copied-data result;
 unsupported Custom activation still requires an appropriate selected implementation.
+
+[Hollow pair contacts](../components/physics-custom-geometry.md#hollow-pair-contacts) now exercise the public-only annulus/annulus format through standalone/selected resource pairs and registered scene/raw queries and numerical response. Both surfaces/orders retain strict warmed zero managed allocation; built-in custom attachment, arbitrary algorithms and full native/network/hardware acceptance remain open.

@@ -4576,3 +4576,5 @@ Source, process-driver and embedded-SPIR-V evidence is under
 `bin/physics-motion-oneway-pairs/2026-10-20/`. The full motion row stays Partial;
 complete custom/coupled numerical, hardware, native-memory, network, visual,
 foreign-platform and performance acceptance remain open.
+
+[Hollow pair contacts](physics-custom-geometry.md#hollow-pair-contacts) now exercise the public-only annulus/annulus format through standalone/selected resource pairs and registered scene/raw queries and numerical response. Both surfaces/orders retain strict warmed zero managed allocation; built-in custom attachment, arbitrary algorithms and full native/network/hardware acceptance remain open.

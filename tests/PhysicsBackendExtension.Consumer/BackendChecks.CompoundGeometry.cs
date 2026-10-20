@@ -85,12 +85,11 @@ public static partial class BackendChecks
         }
         private static bool PartContact(Body a, in Part first, Body b, in Part second, out Vector2 normal, out float depth, out Vector2 point)
         {
-            if (first.Boundary || second.Boundary || first.Contour || second.Contour)
+            if (first.Boundary || second.Boundary || first.Contour || second.Contour || first.Inner > 0 && second.Inner > 0)
             {
                 var gap = PartGap(first, new(a.Rotation, a.Position), second, new(b.Rotation, b.Position), out normal, out var firstPoint, out var secondPoint);
                 depth = MathF.Max(0, -gap); point = (firstPoint + secondPoint) / 2; return gap <= 0;
             }
-            if (first.Inner > 0 && second.Inner > 0) throw new NotSupportedException("The fixture exercises custom annulus/circle contacts.");
             if (second.Inner > 0)
             {
                 var hit = Annulus.Contact(b.PartCenter(second), second.Inner, second.Outer, a.PartCenter(first), first.Outer, out normal, out depth, out point);

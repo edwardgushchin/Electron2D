@@ -66,7 +66,7 @@ public static partial class BackendChecks
                             if (depth > 0 && ContactActive(a, b))
                             {
                                 var half = normal * (depth * .5f); var midpoint = point;
-                                if (!own.Boundary && !other.Boundary && !own.Contour && !other.Contour)
+                                if (!own.Boundary && !other.Boundary && !own.Contour && !other.Contour && !(own.Inner > 0 && other.Inner > 0))
                                     midpoint += other.Inner > 0 ? half : -half;
                                 AddDebugPoint(midpoint - half); AddDebugPoint(midpoint + half);
                             }

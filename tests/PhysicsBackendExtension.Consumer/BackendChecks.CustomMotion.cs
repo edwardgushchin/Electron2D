@@ -2,7 +2,7 @@ using Electron2D;
 
 public static partial class BackendChecks
 {
-    public static void RunCustomMotion(bool threaded = false)
+    public static void RunCustomMotion(bool threaded = false, bool hollowPeer = false)
     {
         var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread); var owner = Thread.CurrentThread; var solved = 0;
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
@@ -11,7 +11,7 @@ public static partial class BackendChecks
         try
         {
             using var world = new World("CustomMotion"); using var root = new SubViewport { World = world }; using var tree = new SceneTree(root);
-            using var ring = new CustomShape(Annulus.Create(5, 10)); using var disk = new CircleShape { Radius = 1 }; using var gap = new CircleShape { Radius = .01f };
+            using var ring = new CustomShape(Annulus.Create(5, 10)); using Shape disk = hollowPeer ? new CustomShape(Annulus.Create(.25f, 1)) : new CircleShape { Radius = 1 }; using var gap = new CircleShape { Radius = .01f };
             Shape[] shapes = [ring, disk]; var targets = new RID[2]; var sources = new RID[2]; var scene = new StaticBody[2]; var primary = new CollisionShape[2];
             using var ticker = new RigidBody { Position = new(100, -300), CollisionLayer = 0, CollisionMask = 0, GravityScale = 0, CanSleep = false, LinearVelocity = Vector2.Right, LinearDampMode = RigidBody.DampMode.Replace, LinearDamp = 0 };
             ticker.AddChild(new CollisionShape { Shape = disk }); root.AddChild(ticker);
@@ -35,7 +35,7 @@ public static partial class BackendChecks
                 for (var i = 0; i < 128; i++) Frame(i);
                 own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
                 Check(solved - beforeSteps == 128 && own == 0 && all == 0, $"Custom motion steps={solved - beforeSteps}, allocated {own}/{all} B");
-                Console.WriteLine($"Custom motion/{threaded}: both hollow-source orders, empty hole, inner/outer entry, initial-overlap cast policy and surface contacts; 128 frames / 821 calls {own}/{all} B.");
+                Console.WriteLine($"Custom motion hollowPeer={hollowPeer}/{threaded}: both hollow-source orders, empty hole, inner/outer entry, initial-overlap cast policy and surface contacts; 128 frames / 821 calls {own}/{all} B.");
                 void Frame(int configuration)
                 {
                     var phase = configuration % 5; var kind = configuration / 5 % 2; var sign = configuration / 10 % 2 == 0 ? 1 : -1;
