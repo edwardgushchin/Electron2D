@@ -193,13 +193,13 @@ public static partial class BackendChecks
         var ca = PartAt(first, a); var cb = PartAt(second, b); var delta = cb - ca;
         var distance = delta.Length(); normal = distance > 0 ? delta / distance : Vector2.Right;
         var outer = distance - first.Outer - second.Outer;
-        var inner = MathF.Max(first.Inner - second.Outer, second.Inner - first.Outer) - distance;
-        if (inner > outer)
+        var firstHole = first.Inner > 0 && first.Inner >= second.Outer ? first.Inner - second.Outer - distance : float.NegativeInfinity;
+        var secondHole = second.Inner > 0 && second.Inner >= first.Outer ? second.Inner - first.Outer - distance : float.NegativeInfinity;
+        if (MathF.Max(firstHole, secondHole) > outer)
         {
-            normal = -normal;
-            pointA = ca + normal * (first.Inner > 0 ? -first.Inner : first.Outer);
-            pointB = cb - normal * (second.Inner > 0 ? -second.Inner : second.Outer);
-            return inner;
+            pointA = ca + normal * (firstHole >= secondHole ? first.Inner : -first.Outer);
+            pointB = cb + normal * (firstHole >= secondHole ? second.Outer : -second.Inner);
+            normal = -normal; return MathF.Max(firstHole, secondHole);
         }
         pointA = ca + normal * first.Outer; pointB = cb - normal * second.Outer; return outer;
     }

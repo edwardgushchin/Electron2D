@@ -1,6 +1,6 @@
 # CustomShape
 
-Last updated: 2026-10-16
+Last updated: 2026-10-20
 
 [Curved custom verification](../components/physics-registered-adapter.md#curved-custom-contacts)
 now exercises the independent annulus's inner/outer CCD arcs, motor/counterpart
@@ -31,3 +31,5 @@ Procedural Custom ShapeGeometry also participates in [server data import/export]
 Copies retain the immutable canonical payload in a concrete CustomShape; no
 procedural duplicate factory or backend handle is required. Built-in numerical
 activation continues to reject unsupported custom algorithms before mutation.
+
+[Hollow pair contacts](../components/physics-custom-geometry.md#hollow-pair-contacts) now exercise the public-only annulus/annulus format through standalone/selected resource pairs and registered scene/raw queries and numerical response. Both surfaces/orders retain strict warmed zero managed allocation; built-in custom attachment, arbitrary algorithms and full native/network/hardware acceptance remain open.

@@ -1,6 +1,6 @@
 # Custom collision geometry
 
-Last updated: 2026-10-14
+Last updated: 2026-10-20
 
 `ShapeGeometry.Custom` describes a caller-defined collision format with copied canonical bytes, finite local bounds, exact unit-density mass/central inertia/center, copied diagnostic line pairs and a typed standalone collision algorithm. `CustomShape` retains that immutable value, emits revision changes on replacement and preserves its RID. `PhysicsServer.CustomShapeCreate` requires initialized data; ShapeGetData returns an independent wrapper, while ShapeSetData replaces the server-owned wrapper and rebuilds users.
 
@@ -12,7 +12,7 @@ Mass authoring combines exact custom density samples with built-in filled geomet
 
 Portable authoring compatibility hashes format, canonical bytes, bounds, mass and diagnostic geometry. It never serializes callbacks or solver handles. Incompatible shape edits reject before correction mutation; private checkpoints reject changed resource identities/revisions. The portable format and all existing built-in hashes remain unchanged when there is no custom geometry.
 
-The separate public-only backend consumer exercises an analytic annulus with a real empty hole: standalone and selected point/ray/shape/motion queries, inner-wall momentum/contact data, Area observations, server mutation, exact mass, local/portable restore, error guards and warmed full frames. The bounded fixture supports annulus/circle numerical contacts; it is not a production generic solver. Diagnostic windows use both renderers and check actual pixels independently of physics. Missing file codecs/editor authoring for arbitrary custom formats, complete extension-operation acceptance, native/foreign platforms and final GPU performance remain open.
+The separate public-only backend consumer exercises an analytic annulus with a real empty hole: standalone and selected point/ray/shape/motion queries, inner-wall momentum/contact data, Area observations, server mutation, exact mass, local/portable restore, error guards and warmed full frames. The bounded fixture supports annulus/circle and annulus/annulus numerical contacts; it is not a production generic solver. Diagnostic windows use both renderers and check actual pixels independently of physics. Missing file codecs/editor authoring for arbitrary custom formats, complete extension-operation acceptance, native/foreign platforms and final GPU performance remain open.
 
 Built-in authoring preflight borrows the world against numerical writes as well as lifetime changes while invoking a procedural geometry supplier. Common scene/raw Body/Area input preparation acquires the same protection before reading cold geometry, including a registered implementation whose selected rebuild hook has not started. See [geometry input borrowing](physics-backends.md#geometry-input-borrowing). Its hook cannot release the body being validated, and the supplier failure leaves the current body/checkpoint intact. Detached transfer preflight also borrows the collider identity, so supplier callbacks cannot release or recursively transfer it. Disposed disabled resources keep their existing nonparticipating semantics.
 
@@ -39,7 +39,7 @@ motion, retained/closed holes, outer/inner touching and misses), 512 cases seede
 at zero owner/all-thread managed bytes. Boundary checks allow .0001 scene units
 for float projection; truth in the twelve cases is exact. This fixes the consumer's
 synchronized-relative-path mismatch without changing the production API or solver.
-Arbitrary custom geometry, annulus/annulus contacts, complete numerical-extension
+Arbitrary custom geometry, complete numerical-extension
 and final performance/native/platform acceptance remain open.
 
 
@@ -48,3 +48,31 @@ now protects both resources through standalone and selected callbacks, including
 inherited copying/reset and owned RID replacement/retirement. Nested reads and
 error cleanup retain their existing contract; full numerical/foreign/hardware
 acceptance remains open.
+
+## Hollow pair contacts
+
+The public-only `--hollow-pairs` profile extends the same canonical annulus format
+to two hollow operands. Independently swept resource truth uses the center-distance
+range between the two segments, with upper bound `outerA+outerB` and lower bound
+`max(0, innerA-outerB, innerB-outerA)`. Contact candidates include either retained
+inner lens and both outer capsule boundaries. Registered, CPU and GPU spaces
+exercise resource dispatch; built-in numerical attachment still rejects this
+opaque format.
+
+Registered shape overlap, cast, contact and rest queries select the active inner
+or outer constraint and return points on the owning surfaces. A hole can resolve
+penetration only when the other outer disk fits inside it; coincident equal rings
+therefore use outer surfaces. Body motion retains disabled slot indices and the
+existing initial-overlap cast policy. Numerical contacts use the same geometry
+for impulses, penetration correction, contact anchors and debug pairs.
+
+Twelve exact independent-region cases and 512 cases seeded 59173 check both
+argument orders, center-distance truth and both boundary owners. Surface distances
+allow .0001 scene units for float projection; identity/counts remain exact.
+Registered serial and separate numerical modes also exercise both query-source
+roles, both approach directions, inner/outer response, signed contact impulses
+and logical scene/raw slot ownership. After 128 warmup cycles, each resource,
+query/full-frame and dynamic/full-frame bracket measures 128 cycles at strict
+zero owner/all-thread managed bytes. This is bounded format/provider evidence;
+arbitrary algorithms, complete extension/network/platform acceptance and hardware
+performance remain open.

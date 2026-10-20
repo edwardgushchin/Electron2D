@@ -1,6 +1,6 @@
 # PhysicsServerExtension
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 Selected CompleteBody and EndStep failures latch the world as unusable and suppress
 body-state observers. Successful retirement after pre-Solve preparation failure
@@ -291,3 +291,5 @@ live error, nine body owners/four direct modes, publication recovery and 1536 co
 warmed frames at 0/0 owner/all-thread managed bytes pass in the 58-profile
 JIT/NativeAOT CPU/software-GPU/registered cohort. This closes the extension axis
 operation; broader numerical, networking and hardware acceptance remain open.
+
+[Hollow pair contacts](../components/physics-custom-geometry.md#hollow-pair-contacts) now exercise the public-only annulus/annulus format through standalone/selected resource pairs and registered scene/raw queries and numerical response. Both surfaces/orders retain strict warmed zero managed allocation; built-in custom attachment, arbitrary algorithms and full native/network/hardware acceptance remain open.

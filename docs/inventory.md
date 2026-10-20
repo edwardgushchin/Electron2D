@@ -2005,3 +2005,5 @@ Viewport.GUISnapControlsToPixels executes through [Viewport.Rendering.cs](../src
 TextServer wrapping and owned substrings use the existing TextLine/TextLayout types; their private source-version leases and logical glyph caches are documented in [the component](components/text-server.md#line-wrapping-and-owned-substrings). No additional public result type is introduced.
 
 FontContourPoint, FontGlyphContours, FontSizeCacheInfo and TextServer.ContourPointTag are the typed copied results of [owned font-cache operations](components/text-server.md#owned-font-sources-and-caches); their source is src/Servers/Text/FontGlyphContours.cs. They expose no native ownership.
+
+[Hollow pair contacts](components/physics-custom-geometry.md#hollow-pair-contacts) now exercise the public-only annulus/annulus format through standalone/selected resource pairs and registered scene/raw queries and numerical response. Both surfaces/orders retain strict warmed zero managed allocation; built-in custom attachment, arbitrary algorithms and full native/network/hardware acceptance remain open.
