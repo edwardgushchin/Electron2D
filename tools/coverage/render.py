@@ -700,7 +700,7 @@ def render():
             updated = "2026-10-18"
         if name.startswith("WebRTC") or name == "WebSocketPeer":
             updated = "2026-10-19"
-        if name in {"PhysicsDirectSpaceState2D", "PhysicsServer2D", "PhysicsServer2DExtension"}:
+        if name in {"PhysicsDirectSpaceState2D", "PhysicsServer2D", "PhysicsServer2DExtension", "RenderingDevice", "RDAttachmentFormat", "RDTextureFormat"}:
             updated = "2026-10-20"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":

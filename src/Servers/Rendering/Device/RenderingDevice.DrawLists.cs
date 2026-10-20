@@ -10,6 +10,9 @@ public sealed unsafe partial class RenderingDevice
     private IndexArray? _drawIndices;
     private Rect2 _drawRegion;
     private uint _drawSubpass;
+    private int _drawView;
+    private Rect2 _drawScissor;
+    private Color _drawBlend;
     private DrawFlags _drawFlags;
     private FramebufferPassLayout DrawPassLayout => FramebufferFormat(_drawTarget!.Format, _drawSubpass);
     private void DrawList(long id) { Access(); if (_drawPass == 0 || id != _activeList) throw new ArgumentException("The draw list is not active.", nameof(id)); }
@@ -55,8 +58,8 @@ public sealed unsafe partial class RenderingDevice
             colorIndex++;
         }
         ClearFramebufferAttachments(target, drawFlags, clearColorValues, clearDepthValue, (byte)clearStencilValue);
-        _drawTarget = target; _drawRegion = actual; _drawFlags = drawFlags; _drawSubpass = 0;
-        Array.Clear(target.Touched);
+        _drawTarget = target; _drawRegion = actual; _drawFlags = drawFlags; _drawSubpass = 0; _drawView = 0;
+        Array.Clear(target.Touched); Array.Clear(target.Visited);
         try
         {
             BeginDrawPass();
@@ -66,6 +69,7 @@ public sealed unsafe partial class RenderingDevice
     }
     private bool KeepAttachment(int attachment)
     {
+        if (_graphicsSnapshotCount != 0 || FramebufferLayouts(_drawTarget!.Format).ViewCount > 1) return true;
         var passes = FramebufferLayouts(_drawTarget!.Format).Passes;
         if (_drawSubpass + 1 >= passes.Length) return true;
         var next = passes[_drawSubpass + 1];
@@ -93,7 +97,7 @@ public sealed unsafe partial class RenderingDevice
             var image = Get(target.Textures[i], Kind.Texture);
             if ((layout.Usage[i] & TextureUsageBits.ColorAttachment) != 0)
             {
-                if (slot < 8 && (((uint)flags >> slot) & 1) != 0) ClearMultisample(image, values[slot]);
+                if (slot < 8 && (((uint)flags >> slot) & 1) != 0) for (uint view = 0; view < FramebufferLayouts(target.Format).ViewCount; view++) ClearMultisample(image, values[slot], view);
                 slot++;
             }
             else if (DepthFormat(image.Texture!.Format) && (flags & (DrawFlags.ClearDepth | DrawFlags.ClearStencil)) != 0)
@@ -108,11 +112,11 @@ public sealed unsafe partial class RenderingDevice
                     StoreOp = SDL.GPUStoreOp.Store,
                     StencilStoreOp = SDL.GPUStoreOp.Store
                 };
-                var pass = SDL.BeginGPURenderPass(Commands(), 0, 0, (nint)(&depth)); if (pass == 0) throw GPUPhysicsDevice.Failure("clear framebuffer depth/stencil"); SDL.EndGPURenderPass(pass);
+                for (var view = 0; view < FramebufferLayouts(target.Format).ViewCount; view++) { depth.Layer = (byte)view; var pass = SDL.BeginGPURenderPass(Commands(), 0, 0, (nint)(&depth)); if (pass == 0) throw GPUPhysicsDevice.Failure("clear framebuffer depth/stencil"); SDL.EndGPURenderPass(pass); }
             }
         }
     }
-    private void BeginDrawPass()
+    private void BeginDrawPass(bool resetBindings = true)
     {
         var target = _drawTarget!; var layout = DrawPassLayout; var depthIndex = layout.DepthIndex;
         CaptureInputAttachments(layout);
@@ -123,7 +127,9 @@ public sealed unsafe partial class RenderingDevice
             colors[native] = new()
             {
                 Texture = Get(target.Textures[index], Kind.Texture).NativeHandle,
-                LoadOp = !target.Touched[index] && AttachmentIgnored(index) ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load,
+                LayerOrDepthPlane = (uint)_drawView,
+                ResolveLayer = (uint)_drawView,
+                LoadOp = !target.Touched[_drawView * target.Textures.Length + index] && AttachmentIgnored(index) ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load,
                 StoreOp = layout.Resolves[i] >= 0 ? (keep ? SDL.GPUStoreOp.ResolveAndStore : SDL.GPUStoreOp.Resolve) : (keep ? SDL.GPUStoreOp.Store : SDL.GPUStoreOp.DontCare),
                 ResolveTexture = layout.Resolves[i] >= 0 ? Get(target.Textures[layout.Resolves[i]], Kind.Texture).NativeHandle : 0
             };
@@ -132,20 +138,22 @@ public sealed unsafe partial class RenderingDevice
         if (depthIndex >= 0)
         {
             var keep = KeepAttachment(depthIndex);
-            depth.Texture = Get(target.Textures[depthIndex], Kind.Texture).NativeHandle;
-            depth.LoadOp = !target.Touched[depthIndex] && (_drawFlags & DrawFlags.IgnoreDepth) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load;
-            depth.StencilLoadOp = !target.Touched[depthIndex] && (_drawFlags & DrawFlags.IgnoreStencil) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load;
+            depth.Texture = Get(target.Textures[depthIndex], Kind.Texture).NativeHandle; depth.Layer = (byte)_drawView;
+            depth.LoadOp = !target.Touched[_drawView * target.Textures.Length + depthIndex] && (_drawFlags & DrawFlags.IgnoreDepth) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load;
+            depth.StencilLoadOp = !target.Touched[_drawView * target.Textures.Length + depthIndex] && (_drawFlags & DrawFlags.IgnoreStencil) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load;
             depth.StoreOp = keep ? SDL.GPUStoreOp.Store : SDL.GPUStoreOp.DontCare; depth.StencilStoreOp = depth.StoreOp;
         }
         var pass = SDL.BeginGPURenderPass(Commands(), (nint)colors, (uint)layout.ColorSlots.Length, depthIndex >= 0 ? (nint)(&depth) : 0);
         if (pass == 0) throw GPUPhysicsDevice.Failure("begin device graphics pass");
-        _drawPass = pass; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear(); ResetPush();
-        foreach (var index in layout.Colors) if (index >= 0) target.Touched[index] = true;
-        if (depthIndex >= 0) target.Touched[depthIndex] = true;
-        foreach (var index in layout.Resolves) if (index >= 0) target.Touched[index] = true;
-        foreach (var index in layout.Inputs) if (index >= 0) target.Touched[index] = true;
+        _drawPass = pass; target.Visited[_drawView] = true;
+        if (resetBindings) { _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear(); ResetPush(); }
+        foreach (var index in layout.Colors) if (index >= 0) target.Touched[_drawView * target.Textures.Length + index] = true;
+        if (depthIndex >= 0) target.Touched[_drawView * target.Textures.Length + depthIndex] = true;
+        foreach (var index in layout.Resolves) if (index >= 0) target.Touched[_drawView * target.Textures.Length + index] = true;
+        foreach (var index in layout.Inputs) if (index >= 0) target.Touched[_drawView * target.Textures.Length + index] = true;
         var actual = _drawRegion;
-        SDL.SetGPUViewport(pass, new() { X = actual.Position.X, Y = actual.Position.Y, W = actual.Size.X, H = actual.Size.Y, MinDepth = 0, MaxDepth = 1 }); SetScissor(actual);
+        SDL.SetGPUViewport(pass, new() { X = actual.Position.X, Y = actual.Position.Y, W = actual.Size.X, H = actual.Size.Y, MinDepth = 0, MaxDepth = 1 });
+        if (resetBindings) SetScissor(actual); else { SetScissor(_drawScissor); if (_graphicsPipeline is not null) BindGraphicsState(); }
     }
     /// <summary>Advances the active framebuffer to its next ordered pass and resets draw bindings.</summary>
     /// <returns>The retained active draw-list identity.</returns>
@@ -154,7 +162,7 @@ public sealed unsafe partial class RenderingDevice
     {
         Access(); if (_drawPass == 0) throw new InvalidOperationException("No draw list is active.");
         if (_drawSubpass + 1 >= FramebufferLayouts(_drawTarget!.Format).Passes.Length) throw new InvalidOperationException("The final framebuffer pass is already active.");
-        SDL.EndGPURenderPass(_drawPass); _drawPass = 0; _drawSubpass++;
+        FinishDrawViews(); SDL.EndGPURenderPass(_drawPass); _drawPass = 0; _drawSubpass++; _drawView = 0; Array.Clear(_drawTarget!.Visited);
         try { BeginDrawPass(); }
         catch { _activeList = 0; _drawTarget = null; _graphicsPipeline = null; _sets.Clear(); ResetPush(); throw; }
         return _activeList;
@@ -168,10 +176,10 @@ public sealed unsafe partial class RenderingDevice
     public void DrawListBindRenderPipeline(long drawList, RID renderPipeline)
     {
         DrawList(drawList); var entry = Get(renderPipeline, Kind.GraphicsPipeline); Get(entry.Shader, Kind.Shader);
-        if (!SameRasterLayout(FramebufferFormat(entry.Graphics!.FramebufferFormat, entry.Graphics.ForRenderPass), DrawPassLayout)) throw new ArgumentException("The pipeline framebuffer layout does not match.", nameof(renderPipeline));
+        if (FramebufferLayouts(entry.Graphics!.FramebufferFormat).ViewCount != FramebufferLayouts(_drawTarget!.Format).ViewCount || !SameRasterLayout(FramebufferFormat(entry.Graphics.FramebufferFormat, entry.Graphics.ForRenderPass), DrawPassLayout)) throw new ArgumentException("The pipeline framebuffer layout does not match.", nameof(renderPipeline));
         ValidateInputLayout(PipelineProgram(entry), DrawPassLayout);
         if (entry.Graphics.ForRenderPass != _drawSubpass) throw new ArgumentException("The pipeline was created for a different framebuffer pass.", nameof(renderPipeline));
-        _graphicsPipeline = entry; SelectPushPipeline(renderPipeline); SDL.BindGPUGraphicsPipeline(_drawPass, entry.Handle!.DangerousGetHandle()); SetBlendConstants(entry.Graphics.Constant); SDL.SetGPUStencilReference(_drawPass, entry.Graphics.StencilReference);
+        _graphicsPipeline = entry; SelectPushPipeline(renderPipeline); _drawBlend = entry.Graphics.Constant; BindGraphicsState();
     }
     /// <summary>Binds a live borrowed vertex array for subsequent draws.</summary>
     /// <param name="drawList">The active draw-list identity.</param>
@@ -206,9 +214,10 @@ public sealed unsafe partial class RenderingDevice
     /// <exception cref="InvalidOperationException">The creating thread, selected pipeline or resource dependencies are invalid.</exception>
     public void DrawListSetBlendConstants(long drawList, Color color)
     { DrawList(drawList); FiniteColor(color); if (_graphicsPipeline is null || (_graphicsPipeline.Graphics!.Dynamic & PipelineDynamicStateFlags.BlendConstants) == 0) throw new InvalidOperationException("Bind a pipeline with dynamic blend constants first."); SetBlendConstants(color); }
-    private void SetBlendConstants(Color color) { SDL.SetGPUBlendConstants(_drawPass, new() { R = color.R, G = color.G, B = color.B, A = color.A }); }
+    private void SetBlendConstants(Color color) { _drawBlend = color; SDL.SetGPUBlendConstants(_drawPass, new() { R = color.R, G = color.G, B = color.B, A = color.A }); }
     private void SetScissor(Rect2 rect)
     {
+        _drawScissor = rect;
         var left = (int)MathF.Floor(rect.Position.X); var top = (int)MathF.Floor(rect.Position.Y);
         SDL.SetGPUScissor(_drawPass, new() { X = left, Y = top, W = (int)MathF.Ceiling(rect.End.X) - left, H = (int)MathF.Ceiling(rect.End.Y) - top });
     }
@@ -251,7 +260,7 @@ public sealed unsafe partial class RenderingDevice
             }
             else
             {
-                var binding = storageBinding; binding[0] = resource.NativeHandle;
+                var binding = storageBinding; binding[0] = NeedsGraphicsSnapshot(resource) ? resource.InputShadow!.DangerousGetHandle() : resource.NativeHandle;
                 if (descriptor.Type == UniformType.InputAttachment)
                 { binding[0] = InputAttachment(descriptor, resource); SDL.BindGPUFragmentStorageTextures(_drawPass, (uint)descriptor.Native, binding, 1); }
                 else if (descriptor.Type == UniformType.Image)
@@ -275,9 +284,10 @@ public sealed unsafe partial class RenderingDevice
         DrawList(drawList); if (instances == 0) throw new ArgumentOutOfRangeException(nameof(instances));
         if (_graphicsPipeline is null) throw new InvalidOperationException("Bind a graphics pipeline first.");
         var count = PrepareDraw(useIndices, instances, proceduralVertexCount);
-        if (useIndices) SDL.DrawGPUIndexedPrimitives(_drawPass, count, instances, 0, 0, 0); else SDL.DrawGPUPrimitives(_drawPass, count, instances, 0, 0);
+        for (var view = 0; view < FramebufferLayouts(_drawTarget!.Format).ViewCount; view++)
+        { if (_drawView != view) { SelectDrawView(view); PrepareDraw(useIndices, instances, proceduralVertexCount, false); } if (useIndices) SDL.DrawGPUIndexedPrimitives(_drawPass, count, instances, 0, 0, 0); else SDL.DrawGPUPrimitives(_drawPass, count, instances, 0, 0); }
     }
-    private uint PrepareDraw(bool useIndices, uint instances, uint proceduralVertexCount)
+    private uint PrepareDraw(bool useIndices, uint instances, uint proceduralVertexCount, bool captureImages = true)
     {
         Get(_graphicsPipeline!.Shader, Kind.Shader);
         uint count;
@@ -305,6 +315,7 @@ public sealed unsafe partial class RenderingDevice
             if (indices.RestartIndices && primitive is not (RenderPrimitive.LineStrips or RenderPrimitive.TriangleStripsWithRestartIndex) || !indices.RestartIndices && primitive == RenderPrimitive.TriangleStripsWithRestartIndex) throw new ArgumentException("Index restart role and strip topology must match.");
             SDL.BindGPUIndexBuffer(_drawPass, new() { Buffer = indices.Handle!.DangerousGetHandle(), Offset = _drawIndices.Offset }, indices.IndexFormat == IndexBufferFormat.UInt16 ? SDL.GPUIndexElementSize.IndexElementSize16Bit : SDL.GPUIndexElementSize.IndexElementSize32Bit);
         }
+        if (captureImages && CaptureGraphicsImages()) return PrepareDraw(useIndices, instances, proceduralVertexCount, false);
         BindDrawResources();
         return count;
     }
@@ -328,10 +339,14 @@ public sealed unsafe partial class RenderingDevice
         if (_graphicsPipeline is null) throw new InvalidOperationException("Bind a graphics pipeline first.");
         PrepareDraw(useIndices, 1, _graphicsPipeline.Graphics!.VertexFormat == -1 ? 1u : 0u);
         if (drawCount == 0) return;
-        if (step == commandSize)
-        { if (useIndices) SDL.DrawGPUIndexedPrimitivesIndirect(_drawPass, entry.Handle!.DangerousGetHandle(), offset, drawCount); else SDL.DrawGPUPrimitivesIndirect(_drawPass, entry.Handle!.DangerousGetHandle(), offset, drawCount); }
-        else for (uint i = 0; i < drawCount; i++)
-            { if (useIndices) SDL.DrawGPUIndexedPrimitivesIndirect(_drawPass, entry.Handle!.DangerousGetHandle(), offset + i * step, 1); else SDL.DrawGPUPrimitivesIndirect(_drawPass, entry.Handle!.DangerousGetHandle(), offset + i * step, 1); }
+        for (var view = 0; view < FramebufferLayouts(_drawTarget!.Format).ViewCount; view++)
+        {
+            if (_drawView != view) { SelectDrawView(view); PrepareDraw(useIndices, 1, _graphicsPipeline.Graphics!.VertexFormat == -1 ? 1u : 0u, false); }
+            if (step == commandSize)
+            { if (useIndices) SDL.DrawGPUIndexedPrimitivesIndirect(_drawPass, entry.Handle!.DangerousGetHandle(), offset, drawCount); else SDL.DrawGPUPrimitivesIndirect(_drawPass, entry.Handle!.DangerousGetHandle(), offset, drawCount); }
+            else for (uint i = 0; i < drawCount; i++)
+                { if (useIndices) SDL.DrawGPUIndexedPrimitivesIndirect(_drawPass, entry.Handle!.DangerousGetHandle(), offset + i * step, 1); else SDL.DrawGPUPrimitivesIndirect(_drawPass, entry.Handle!.DangerousGetHandle(), offset + i * step, 1); }
+        }
     }
     /// <summary>Binds copied buffer identities and offsets directly for a vertex layout.</summary>
     /// <param name="drawList">The active draw list.</param>
@@ -355,6 +370,6 @@ public sealed unsafe partial class RenderingDevice
     /// <summary>Ends the active draw list, preserving its results for subsequent device work.</summary>
     public void DrawListEnd()
     {
-        DrawList(_activeList); while (_drawSubpass + 1 < FramebufferLayouts(_drawTarget!.Format).Passes.Length) DrawListSwitchToNextPass(); SDL.EndGPURenderPass(_drawPass); _drawPass = 0; _activeList = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear(); ResetPush();
+        DrawList(_activeList); while (_drawSubpass + 1 < FramebufferLayouts(_drawTarget!.Format).Passes.Length) DrawListSwitchToNextPass(); FinishDrawViews(); SDL.EndGPURenderPass(_drawPass); _drawPass = 0; _activeList = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear(); ResetPush();
     }
 }

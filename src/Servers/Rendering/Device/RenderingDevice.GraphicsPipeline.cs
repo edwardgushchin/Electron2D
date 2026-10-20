@@ -106,8 +106,23 @@ public sealed unsafe partial class RenderingDevice
                     MultisampleState = new() { SampleCount = (SDL.GPUSampleCount)samples, EnableAlphaToCoverage = multisampleState?.EnableAlphaToCoverage ?? false },
                     TargetInfo = new() { ColorTargetDescriptions = (nint)colors, NumColorTargets = (uint)target.ColorSlots.Length, HasDepthStencilTarget = target.DepthIndex >= 0, DepthStencilFormat = target.DepthIndex >= 0 ? NativeFormat(target.Formats[target.DepthIndex]) : SDL.GPUTextureFormat.Invalid }
                 };
-                var handle = new RenderHandle(SDL.CreateGPUGraphicsPipeline(Device, in info), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
-                return Add(new Entry { Kind = Kind.GraphicsPipeline, Shader = shader, Handle = handle, Variant = variant, Graphics = new(framebufferFormat, vertexFormat, primitive, colorBlendState.BlendConstant, dynamicStateFlags, stencilReference, forRenderPass) });
+                var entry = new Entry { Kind = Kind.GraphicsPipeline, Shader = shader, Variant = variant, Graphics = new(framebufferFormat, vertexFormat, primitive, colorBlendState.BlendConstant, dynamicStateFlags, stencilReference, forRenderPass) };
+                var views = FramebufferLayouts(framebufferFormat).ViewCount;
+                entry.ViewPipelines = new RenderHandle[views - 1]; entry.ViewPrograms = new Entry[views - 1];
+                try
+                {
+                    entry.Handle = new(SDL.CreateGPUGraphicsPipeline(Device, in info), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
+                    for (var view = 1; view < views; view++)
+                    {
+                        var source = Get(shader, Kind.Shader);
+                        var viewProgram = CreateDeviceProgram(source.Sources, source.Name, CaptureSpecialization(specializationConstants), outputSlots: target.ColorSlots, viewIndex: (uint)view);
+                        entry.ViewPrograms[view - 1] = viewProgram;
+                        info.VertexShader = viewProgram.Handle!.DangerousGetHandle(); info.FragmentShader = viewProgram.FragmentHandle!.DangerousGetHandle();
+                        entry.ViewPipelines[view - 1] = new(SDL.CreateGPUGraphicsPipeline(Device, in info), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
+                    }
+                    return Add(entry);
+                }
+                catch { foreach (var handle in entry.ViewPipelines) handle?.Dispose(); foreach (var viewProgram in entry.ViewPrograms) ReleaseProgram(viewProgram); entry.Handle?.Dispose(); throw; }
             }
         }
         catch { ReleaseProgram(variant); throw; }

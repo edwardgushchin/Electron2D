@@ -7,7 +7,7 @@ public sealed unsafe partial class RenderingDevice
     private void PrepareInputShadow(Entry entry)
     {
         var info = entry.Texture!;
-        if ((info.Usage & (TextureUsageBits.InputAttachment | TextureUsageBits.Sampling)) != (TextureUsageBits.InputAttachment | TextureUsageBits.Sampling)) return;
+        if (!NeedsGraphicsSnapshot(entry) && ((info.Usage & TextureUsageBits.InputAttachment) == 0 || info.Type != TextureType.TextureArray && (info.Usage & TextureUsageBits.Sampling) == 0)) return;
         entry.InputShadow = new(SDL.CreateGPUTexture(Device, new()
         {
             Type = SDL.GPUTextureType.TextureType2D,
@@ -28,7 +28,7 @@ public sealed unsafe partial class RenderingDevice
             var entry = Get(_drawTarget!.Textures[index], Kind.Texture);
             if (entry.InputShadow is null) continue;
             var copy = SDL.BeginGPUCopyPass(Commands()); if (copy == 0) throw GPUPhysicsDevice.Failure("snapshot framebuffer input");
-            SDL.CopyGPUTextureToTexture(copy, new() { Texture = entry.NativeHandle }, new() { Texture = entry.InputShadow.DangerousGetHandle() }, entry.Texture!.Width, entry.Texture.Height, 1, false);
+            SDL.CopyGPUTextureToTexture(copy, new() { Texture = entry.NativeHandle, Layer = (uint)_drawView }, new() { Texture = entry.InputShadow.DangerousGetHandle() }, entry.Texture!.Width, entry.Texture.Height, 1, false);
             SDL.EndGPUCopyPass(copy);
         }
     }

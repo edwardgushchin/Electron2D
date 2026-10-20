@@ -1,5 +1,7 @@
 # Rendering domain
 
+[Layered device multiview](../components/local-compute.md#layered-multiview) executes ordered view-indexed draws into array color/depth targets, including per-view input passes and MSAA resolve, without changing extra layers.
+
 [Mesh textures](../components/meshes.md#mesh-textures) connect real retained mesh geometry to Texture consumers and static texture draw identities, with borrowed source lifetime and typed graph/scene storage.
 
 [Particle shaders](../components/particle-shaders.md) now execute a validated HLSL/GLSL compute profile through public RenderingDevice, with typed material/archive state and portable bounded-subemission includes. [Retained GPU particles](../components/gpu-particles.md) now execute server-owned simulation, mesh canvas output, trails and subemitters. [ParticleProcessMaterial](../classes/ParticleProcessMaterial.md) now authors the native built-in process. [GPUParticles](../classes/GPUParticles.md) now executes scene emission and CPU conversion.

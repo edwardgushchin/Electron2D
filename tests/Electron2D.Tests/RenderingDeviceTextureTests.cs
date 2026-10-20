@@ -104,12 +104,14 @@ internal static class RenderingDeviceTextureTests
         }
         using var state = new RDSamplerState();
         Check(Sample(state, .75f, .25f, 0, 0)[0] == 1, "Nearest selects an individual pixel.");
-        state.MinFilter = state.MagFilter = RenderingDevice.SamplerFilter.Linear; Check(Math.Abs(Sample(state, .5f, .5f, 0, 0)[0] - .5f) < .0001f, "Linear filtering interpolates neighboring pixels.");
+        // Native filtering may round the result to the eight-bit source precision.
+        const float filteredTolerance = .5f / 255 + .000001f;
+        state.MinFilter = state.MagFilter = RenderingDevice.SamplerFilter.Linear; Check(Math.Abs(Sample(state, .5f, .5f, 0, 0)[0] - .5f) <= filteredTolerance, "Linear filtering interpolates neighboring pixels within source precision.");
         state.MinFilter = state.MagFilter = RenderingDevice.SamplerFilter.Nearest; state.RepeatU = RenderingDevice.SamplerRepeatMode.Repeat; Check(Sample(state, 1.25f, .25f, 0, 0)[0] == 0, "Repeat wraps out-of-range coordinates.");
         state.RepeatU = RenderingDevice.SamplerRepeatMode.MirroredRepeat; Check(Sample(state, 1.25f, .25f, 0, 0)[0] == 1, "Mirror repeat reverses alternating intervals.");
         state.RepeatU = RenderingDevice.SamplerRepeatMode.ClampToEdge; Check(Sample(state, 1.25f, .25f, 0, 0)[0] == 1, "Clamp selects the edge pixel.");
         Check(Sample(state, .25f, .25f, 1, 0)[2] == 1, "Array sampling selects the requested layer.");
-        state.MIPFilter = RenderingDevice.SamplerFilter.Linear; var mixed = Sample(state, .75f, .25f, 0, .5f); Check(Math.Abs(mixed[0] - .5f) < .0001f && Math.Abs(mixed[1] - .5f) < .0001f, "Mip filtering interpolates two mip levels.");
+        state.MIPFilter = RenderingDevice.SamplerFilter.Linear; var mixed = Sample(state, .75f, .25f, 0, .5f); Check(Math.Abs(mixed[0] - .5f) <= filteredTolerance && Math.Abs(mixed[1] - .5f) <= filteredTolerance, "Mip filtering interpolates two mip levels.");
         state.MinLOD = state.MaxLOD = 1; Check(Sample(state, .75f, .25f, 0, 0)[1] == 1, "The minimum LOD clamps to the smaller mip.");
         state.MinLOD = state.MaxLOD = 0; Check(Sample(state, .75f, .25f, 0, 1)[0] == 1, "The maximum LOD clamps to the larger mip.");
         using var wrong = new RDTextureFormat { Format = RenderingDevice.DataFormat.R8G8B8A8UINT, UsageBits = RenderingDevice.TextureUsageBits.Sampling }; var integer = device.TextureCreate(wrong, view); var samplerRID = device.SamplerCreate(state);

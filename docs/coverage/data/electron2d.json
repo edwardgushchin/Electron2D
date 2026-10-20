@@ -156467,11 +156467,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RenderingDevice.FramebufferCreate(System.ReadOnlySpan\u003CElectron2D.RID\u003E,System.Int32)",
+    "id": "method:Electron2D.RenderingDevice.FramebufferCreate(System.ReadOnlySpan\u003CElectron2D.RID\u003E,System.Int32,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
     "name": "FramebufferCreate",
-    "signature": "public Electron2D.RID FramebufferCreate(System.ReadOnlySpan\u003CElectron2D.RID\u003E textures, System.Int32 validateWithFormat = -1)",
+    "signature": "public Electron2D.RID FramebufferCreate(System.ReadOnlySpan\u003CElectron2D.RID\u003E textures, System.Int32 validateWithFormat = -1, System.Int32 viewCount = 1)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -156485,17 +156485,22 @@
         "name": "validateWithFormat",
         "type": "System.Int32",
         "default": "-1"
+      },
+      {
+        "name": "viewCount",
+        "type": "System.Int32",
+        "default": "1"
       }
     ],
     "returnType": "Electron2D.RID",
     "value": null
   },
   {
-    "id": "method:Electron2D.RenderingDevice.FramebufferCreateMultipass(System.ReadOnlySpan\u003CElectron2D.RID\u003E,System.ReadOnlySpan\u003CElectron2D.RDFramebufferPass\u003E,System.Int32)",
+    "id": "method:Electron2D.RenderingDevice.FramebufferCreateMultipass(System.ReadOnlySpan\u003CElectron2D.RID\u003E,System.ReadOnlySpan\u003CElectron2D.RDFramebufferPass\u003E,System.Int32,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
     "name": "FramebufferCreateMultipass",
-    "signature": "public Electron2D.RID FramebufferCreateMultipass(System.ReadOnlySpan\u003CElectron2D.RID\u003E textures, System.ReadOnlySpan\u003CElectron2D.RDFramebufferPass\u003E passes, System.Int32 validateWithFormat = -1)",
+    "signature": "public Electron2D.RID FramebufferCreateMultipass(System.ReadOnlySpan\u003CElectron2D.RID\u003E textures, System.ReadOnlySpan\u003CElectron2D.RDFramebufferPass\u003E passes, System.Int32 validateWithFormat = -1, System.Int32 viewCount = 1)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -156514,17 +156519,22 @@
         "name": "validateWithFormat",
         "type": "System.Int32",
         "default": "-1"
+      },
+      {
+        "name": "viewCount",
+        "type": "System.Int32",
+        "default": "1"
       }
     ],
     "returnType": "Electron2D.RID",
     "value": null
   },
   {
-    "id": "method:Electron2D.RenderingDevice.FramebufferFormatCreate(System.ReadOnlySpan\u003CElectron2D.RDAttachmentFormat\u003E)",
+    "id": "method:Electron2D.RenderingDevice.FramebufferFormatCreate(System.ReadOnlySpan\u003CElectron2D.RDAttachmentFormat\u003E,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
     "name": "FramebufferFormatCreate",
-    "signature": "public System.Int32 FramebufferFormatCreate(System.ReadOnlySpan\u003CElectron2D.RDAttachmentFormat\u003E attachments)",
+    "signature": "public System.Int32 FramebufferFormatCreate(System.ReadOnlySpan\u003CElectron2D.RDAttachmentFormat\u003E attachments, System.Int32 viewCount = 1)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -156533,17 +156543,22 @@
         "name": "attachments",
         "type": "System.ReadOnlySpan\u003CElectron2D.RDAttachmentFormat\u003E",
         "default": null
+      },
+      {
+        "name": "viewCount",
+        "type": "System.Int32",
+        "default": "1"
       }
     ],
     "returnType": "System.Int32",
     "value": null
   },
   {
-    "id": "method:Electron2D.RenderingDevice.FramebufferFormatCreateMultipass(System.ReadOnlySpan\u003CElectron2D.RDAttachmentFormat\u003E,System.ReadOnlySpan\u003CElectron2D.RDFramebufferPass\u003E)",
+    "id": "method:Electron2D.RenderingDevice.FramebufferFormatCreateMultipass(System.ReadOnlySpan\u003CElectron2D.RDAttachmentFormat\u003E,System.ReadOnlySpan\u003CElectron2D.RDFramebufferPass\u003E,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
     "name": "FramebufferFormatCreateMultipass",
-    "signature": "public System.Int32 FramebufferFormatCreateMultipass(System.ReadOnlySpan\u003CElectron2D.RDAttachmentFormat\u003E attachments, System.ReadOnlySpan\u003CElectron2D.RDFramebufferPass\u003E passes)",
+    "signature": "public System.Int32 FramebufferFormatCreateMultipass(System.ReadOnlySpan\u003CElectron2D.RDAttachmentFormat\u003E attachments, System.ReadOnlySpan\u003CElectron2D.RDFramebufferPass\u003E passes, System.Int32 viewCount = 1)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -156557,6 +156572,11 @@
         "name": "passes",
         "type": "System.ReadOnlySpan\u003CElectron2D.RDFramebufferPass\u003E",
         "default": null
+      },
+      {
+        "name": "viewCount",
+        "type": "System.Int32",
+        "default": "1"
       }
     ],
     "returnType": "System.Int32",

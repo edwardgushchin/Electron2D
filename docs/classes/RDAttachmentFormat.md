@@ -1,6 +1,6 @@
 # RDAttachmentFormat
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDAttachmentFormat`. **Source:** [RDAttachmentFormat.cs](../../src/Servers/Rendering/Device/RDAttachmentFormat.cs). **Component:** [Local device](../components/local-compute.md).
 
@@ -89,3 +89,5 @@ Initially 0; validated and copied by its device consumer.
 ## Lifetime and verification
 
 Device-owned resources remain on their creating thread. Descriptions are caller-owned and copied at creation; inherited disposal guards apply. Invalid configurations, foreign/freed RIDs and list-state errors reject explicitly. Native creation failures propagate. RenderingDeviceGraphicsTests checks Linux/Vulkan pixels, resource storage, lifetime and prepared owner-thread allocation boundaries. Other platforms and native/driver allocations remain unverified. See [ADR 0028](../decisions/rendering.md#adr-0028) and [coverage](../coverage/classes/RDAttachmentFormat.md) for absent roles.
+
+The three typed values are copied into single/multipass and layered framebuffer formats. Later edits or disposal of this description do not change those formats. The framebuffer factory owns the view count separately; see [layered multiview](../components/local-compute.md#layered-multiview).

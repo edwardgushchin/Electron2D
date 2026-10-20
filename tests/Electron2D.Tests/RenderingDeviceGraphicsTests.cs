@@ -26,12 +26,19 @@ internal static class RenderingDeviceGraphicsTests
     }
     internal static void Export(RDShaderSPIRV module, string language)
     {
-        var directory = Environment.GetEnvironmentVariable("ELECTRON2D_DEVICE_GRAPHICS_OUTPUT") ?? Environment.GetEnvironmentVariable("ELECTRON2D_DEVICE_DEPTH_OUTPUT") ?? Environment.GetEnvironmentVariable("ELECTRON2D_DEVICE_MSAA_OUTPUT"); if (directory is null) return; Directory.CreateDirectory(directory);
+        var directory = Environment.GetEnvironmentVariable("ELECTRON2D_DEVICE_GRAPHICS_OUTPUT") ?? Environment.GetEnvironmentVariable("ELECTRON2D_DEVICE_DEPTH_OUTPUT") ?? Environment.GetEnvironmentVariable("ELECTRON2D_DEVICE_MSAA_OUTPUT"); if (directory is not null) Directory.CreateDirectory(directory);
         var remap = typeof(RenderingDevice).GetMethod("Remap", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
         foreach (var stage in new[] { RenderingDevice.ShaderStage.Vertex, RenderingDevice.ShaderStage.Fragment })
         {
             var result = remap.Invoke(null, [module.GetStageBytecode(stage), stage])!; var bytes = (byte[])result.GetType().GetField("Item1")!.GetValue(result)!;
-            File.WriteAllBytes(System.IO.Path.Combine(directory, language + "." + stage + ".spv"), bytes);
+            var words = MemoryMarshal.Cast<byte, uint>(bytes.AsSpan()); var types = new HashSet<string>();
+            for (var at = 5; at < words.Length;)
+            {
+                var count = (int)(words[at] >> 16); var op = words[at] & 65535;
+                if (op is 25 or 27 or 32) Check(types.Add(op + ":" + string.Join(',', words.Slice(at + 2, count - 2).ToArray())), "Private image conversion preserves unique native type declarations.");
+                at += count;
+            }
+            if (directory is not null) File.WriteAllBytes(System.IO.Path.Combine(directory, language + "." + stage + ".spv"), bytes);
         }
     }
     private static void Draw(RenderingDevice device, string language)
@@ -99,6 +106,10 @@ internal static class RenderingDeviceGraphicsTests
         device.DrawListEnd();
         Render();
         Check(bytes[(8 * 16 + 4) * 4] == 255 && bytes[(8 * 16 + 12) * 4] == 255 && bytes[0] == 0, "Indexed instanced quads execute and copied state remains unchanged.");
+        device.TextureClear(texture, new(.5f, .75f, 1, 1), 0, 1, 0, 1); Render();
+        var at = (8 * 16 + 4) * 4;
+        Check(Math.Abs(bytes[at] - (language == "DeviceGLSL" ? 64 : 128)) <= 1 && Math.Abs(bytes[at + 1] - (language == "DeviceGLSL" ? 143 : 191)) <= 1 && bytes[at + 2] == 255, "Sampling and readonly storage consume the same current GPU source bytes.");
+        device.TextureClear(texture, Colors.White, 0, 1, 0, 1); Render();
         for (var n = 0; n < 16; n++) Render();
         var before = GC.GetAllocatedBytesForCurrentThread(); for (var n = 0; n < 32; n++) Render();
         Check(GC.GetAllocatedBytesForCurrentThread() == before, "Prepared draw and span readback allocate zero owner-thread managed bytes.");

@@ -138,7 +138,7 @@ public sealed unsafe partial class RenderingDevice
         {
             if (DepthFormat(info.Format)) throw new NotSupportedException("Clear depth/stencil through a draw pass.");
             if (PixelType(info.Format) == 0) FiniteColor(color);
-            ClearMultisample(entry, color); return;
+            for (var layer = baseLayer; layer < baseLayer + layerCount; layer++) ClearMultisample(entry, color, layer); return;
         }
         var scratch = PrepareTextureScratch(entry, true); var command = Commands();
         for (var mip = baseMipmap; mip < baseMipmap + mipmapCount; mip++)

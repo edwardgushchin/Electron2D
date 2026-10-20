@@ -95,5 +95,5 @@ public sealed partial class RenderingDevice
         return output.ToString();
     }
     internal static void ValidateSourceModule(byte[] code, ShaderStage stage)
-    { var module = new SpecializationModule(code, [], []); RemapCore(code.ToArray(), stage, module.HasSpecialization); }
+    { var module = new SpecializationModule(code, [], []); RemapCore(LowerViewIndex(code.ToArray(), 0, stage), stage, module.HasSpecialization); }
 }

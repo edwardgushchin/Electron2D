@@ -16,12 +16,12 @@ public sealed unsafe partial class RenderingDevice
         }
         var texture = Get(ids[binding.Type == UniformType.SamplerWithTexture ? 1 : 0], Kind.Texture).Texture!;
         if (PixelType(texture.Format) != binding.PixelType) throw new ArgumentException("The shader pixel scalar type does not match the texture format.", nameof(ids));
-        if ((texture.Type == TextureType.TextureArray) != binding.Array) throw new ArgumentException("The texture array role does not match the shader.", nameof(ids));
         if (binding.Type == UniformType.InputAttachment)
         {
-            if ((texture.Usage & TextureUsageBits.InputAttachment) == 0 || texture.Type != TextureType.Texture || texture.Mips != 1 || (texture.Samples != TextureSamples.Samples1) != binding.Multisample) throw new ArgumentException("The texture lacks the required ordinary input attachment/sample role.", nameof(ids));
+            if ((texture.Usage & TextureUsageBits.InputAttachment) == 0 || texture.Mips != 1 || (texture.Samples != TextureSamples.Samples1) != binding.Multisample) throw new ArgumentException("The texture lacks the required ordinary input attachment/sample role.", nameof(ids));
             return;
         }
+        if ((texture.Type == TextureType.TextureArray) != binding.Array) throw new ArgumentException("The texture array role does not match the shader.", nameof(ids));
         if (texture.Samples != TextureSamples.Samples1) throw new NotSupportedException("Multisample shader images require their sample-load descriptor adapter.");
         if (binding.Type == UniformType.SamplerWithTexture)
         {
@@ -107,8 +107,8 @@ public sealed unsafe partial class RenderingDevice
     {
         var native = (SDL.GPUTextureUsageFlags)0;
         if ((usage & TextureUsageBits.Sampling) != 0) native |= SDL.GPUTextureUsageFlags.Sampler;
-        if ((usage & TextureUsageBits.InputAttachment) != 0 && (usage & TextureUsageBits.Sampling) == 0) native |= SDL.GPUTextureUsageFlags.GraphicsStorageRead;
-        if ((usage & TextureUsageBits.Storage) != 0) native |= SDL.GPUTextureUsageFlags.GraphicsStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageWrite | SDL.GPUTextureUsageFlags.ComputeStorageSimultaneousReadWrite;
+        if ((usage & TextureUsageBits.InputAttachment) != 0 && (usage & (TextureUsageBits.Sampling | TextureUsageBits.Storage)) == 0) native |= SDL.GPUTextureUsageFlags.GraphicsStorageRead;
+        if ((usage & TextureUsageBits.Storage) != 0) native |= ((usage & TextureUsageBits.Sampling) == 0 ? SDL.GPUTextureUsageFlags.GraphicsStorageRead : 0) | SDL.GPUTextureUsageFlags.ComputeStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageWrite | SDL.GPUTextureUsageFlags.ComputeStorageSimultaneousReadWrite;
         if ((usage & TextureUsageBits.DepthStencilAttachment) != 0) native |= SDL.GPUTextureUsageFlags.DepthStencilTarget;
         if ((usage & TextureUsageBits.ColorAttachment) != 0) native |= SDL.GPUTextureUsageFlags.ColorTarget;
         if (native == 0) native = SDL.GPUTextureUsageFlags.Sampler;
@@ -151,31 +151,32 @@ public sealed unsafe partial class RenderingDevice
             shareable.Any(f => f != pixelFormat)) throw new NotSupportedException("Alternate native formats and channel views require texture-view integration.");
         if (!TextureIsFormatSupportedForUsage(pixelFormat, format.Samples != TextureSamples.Samples1 ? usage & ~(TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo) : usage)) throw new NotSupportedException("The device does not support this texture format/usage.");
         var samples = format.Samples; var resolve = format.IsResolveBuffer;
-        if ((usage & TextureUsageBits.InputAttachment) != 0 && (kind != TextureType.Texture || layers != 1 || mips != 1)) throw new ArgumentException("Input attachments require ordinary single-mip textures.", nameof(format));
+        if ((usage & TextureUsageBits.InputAttachment) != 0 && (mips != 1)) throw new ArgumentException("Input attachments require single-mip textures.", nameof(format));
+        if (DepthFormat(pixelFormat) && layers > 256) throw new NotSupportedException("Depth initialization requires native eight-bit layer selection.");
         var nativeSamples = ExactSamples(pixelFormat, samples);
-        if (resolve && (samples != TextureSamples.Samples1 || DepthFormat(pixelFormat) || kind != TextureType.Texture || layers != 1 || mips != 1 || (usage & TextureUsageBits.ColorAttachment) == 0)) throw new ArgumentException("Resolve destinations require ordinary single-sample color targets.", nameof(format));
+        if (resolve && (samples != TextureSamples.Samples1 || DepthFormat(pixelFormat) || mips != 1 || (usage & TextureUsageBits.ColorAttachment) == 0)) throw new ArgumentException("Resolve destinations require single-sample color targets.", nameof(format));
         if (samples != TextureSamples.Samples1)
         {
             var targetRole = DepthFormat(pixelFormat) ? TextureUsageBits.DepthStencilAttachment : TextureUsageBits.ColorAttachment;
             var allowedUsage = targetRole | (DepthFormat(pixelFormat) ? 0 : TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.InputAttachment);
-            if (kind != TextureType.Texture || layers != 1 || mips != 1 || !data.IsEmpty || (usage & targetRole) == 0 || (usage & ~allowedUsage) != 0) throw new NotSupportedException("Multisample images require empty ordinary single-mip render targets; sampling, storage and raw transfers require separate adapters.");
+            if (mips != 1 || !data.IsEmpty || (usage & targetRole) == 0 || (usage & ~allowedUsage) != 0) throw new NotSupportedException("Multisample images require empty single-mip render targets; sampling, storage and raw transfers require separate adapters.");
             var multi = new Entry { Kind = Kind.Texture, Texture = new(pixelFormat, kind, width, height, layers, mips, usage, [], [], [], 0, 0, shareable, samples) };
             try
             {
-                multi.Handle = new(SDL.CreateGPUTexture(Device, new() { Type = SDL.GPUTextureType.TextureType2D, Format = NativeFormat(pixelFormat), Width = width, Height = height, LayerCountOrDepth = 1, NumLevels = 1, SampleCount = nativeSamples, Usage = NativeUsage(usage) }), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
-                if (DepthFormat(pixelFormat)) InitializeDepth(multi); else ClearMultisample(multi, default);
+                multi.Handle = new(SDL.CreateGPUTexture(Device, new() { Type = kind == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray, Format = NativeFormat(pixelFormat), Width = width, Height = height, LayerCountOrDepth = layers, NumLevels = 1, SampleCount = nativeSamples, Usage = NativeUsage(usage & ~(kind == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0)) }), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
+                if (DepthFormat(pixelFormat)) InitializeDepth(multi); else for (uint layer = 0; layer < layers; layer++) ClearMultisample(multi, default, layer);
+                PrepareInputShadow(multi);
                 return Add(multi);
             }
-            catch { multi.Handle?.Dispose(); throw; }
+            catch { multi.InputShadow?.Dispose(); multi.Handle?.Dispose(); throw; }
         }
         if (DepthFormat(pixelFormat))
         {
             if (!data.IsEmpty) throw new NotSupportedException("Raw depth/stencil uploads require a native aspect-transfer adapter.");
-            if (layers > 256) throw new NotSupportedException("Depth initialization requires native eight-bit layer selection.");
             var depthEntry = new Entry { Kind = Kind.Texture, Texture = new(pixelFormat, kind, width, height, layers, mips, usage, [], [], [], 0, 0, shareable) };
             try
             {
-                depthEntry.Handle = new(SDL.CreateGPUTexture(Device, new() { Type = kind == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray, Format = NativeFormat(pixelFormat), Width = width, Height = height, LayerCountOrDepth = layers, NumLevels = mips, SampleCount = SDL.GPUSampleCount.SampleCount1, Usage = NativeUsage(usage) }), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
+                depthEntry.Handle = new(SDL.CreateGPUTexture(Device, new() { Type = kind == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray, Format = NativeFormat(pixelFormat), Width = width, Height = height, LayerCountOrDepth = layers, NumLevels = mips, SampleCount = SDL.GPUSampleCount.SampleCount1, Usage = NativeUsage(usage & ~(kind == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0)) }), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
                 InitializeDepth(depthEntry); return Add(depthEntry);
             }
             catch { depthEntry.Handle?.Dispose(); throw; }
@@ -195,7 +196,7 @@ public sealed unsafe partial class RenderingDevice
         var entry = new Entry { Kind = Kind.Texture, Texture = info, Size = total };
         try
         {
-            entry.Handle = new(SDL.CreateGPUTexture(Device, new() { Type = kind == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray, Format = native, Width = width, Height = height, LayerCountOrDepth = layers, NumLevels = mips, SampleCount = SDL.GPUSampleCount.SampleCount1, Usage = NativeUsage(usage) }), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
+            entry.Handle = new(SDL.CreateGPUTexture(Device, new() { Type = kind == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray, Format = native, Width = width, Height = height, LayerCountOrDepth = layers, NumLevels = mips, SampleCount = SDL.GPUSampleCount.SampleCount1, Usage = NativeUsage(usage & ~(kind == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0)) }), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
             PrepareInputShadow(entry);
             entry.Upload = Transfer(transferSize, SDL.GPUTransferBufferUsage.Upload);
             var zero = data.IsEmpty ? new byte[total] : null;

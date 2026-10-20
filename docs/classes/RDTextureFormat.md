@@ -1,6 +1,6 @@
 # RDTextureFormat
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDTextureFormat`. **Source:** [RDTextureFormat.cs](../../src/Servers/Rendering/Device/RDTextureFormat.cs). **Component:** [Local compute](../components/local-compute.md).
 
@@ -8,9 +8,9 @@ Last updated: 2026-10-19
 
 ## Description
 
-A caller-owned allocation description copied during TextureCreate. Width and Height are texels; ArrayLayers counts independently sampled 2D images; MIPMaps includes the base level. Values are validated on assignment and again as a complete allocation. One ordinary image has one layer. Data is one tightly packed encoded mip chain per layer, or omitted for zero encoded bytes. Native alignment remains internal. The format vocabulary is queried against the current device; unsupported allocations throw before returning an identity. Alternate shareable formats require a native view adapter and are rejected explicitly. ColorAttachment allocations now feed executable device color passes and retained canvas consumers. Depth/stencil and exact multisample render targets execute. Samples defaults to Samples1; IsResolveBuffer defaults to false and marks a single-sample color resolve destination. Multisample images require empty ordinary single-layer/single-mip target allocations; resolve before sampling or readback. Discardable lifetime hints retain their last-use prerequisite.
+A caller-owned allocation description copied during TextureCreate. Width and Height are texels; ArrayLayers counts independently sampled 2D images; MIPMaps includes the base level. Values are validated on assignment and again as a complete allocation. One ordinary image has one layer. Data is one tightly packed encoded mip chain per layer, or omitted for zero encoded bytes. Native alignment remains internal. The format vocabulary is queried against the current device; unsupported allocations throw before returning an identity. Alternate shareable formats require a native view adapter and are rejected explicitly. ColorAttachment allocations now feed executable device color passes and retained canvas consumers. Depth/stencil and exact multisample render targets execute. Samples defaults to Samples1; IsResolveBuffer defaults to false and marks a single-sample color resolve destination. Multisample images require empty single-mip target allocations, including arrays; resolve before sampling or readback. Discardable lifetime hints retain their last-use prerequisite.
 
-InputAttachment supports ordinary single-layer/single-mip color images, including exact multisample targets. Combining it with Sampling retains a private readonly GPU snapshot for the input pass; see [ordered framebuffer inputs](../components/local-compute.md#ordered-framebuffer-passes-and-inputs). Depth/stencil input aspects retain their separate native prerequisite.
+InputAttachment supports single-mip color images and arrays, including exact multisample targets. An input array or combining it with Sampling retains a private readonly single-layer GPU snapshot for the input pass; see [ordered framebuffer inputs](../components/local-compute.md#ordered-framebuffer-passes-and-inputs). Depth/stencil input aspects retain their separate native prerequisite.
 
 ## Example
 
@@ -42,7 +42,7 @@ var texture = device.TextureCreate(format, view);
 | `public Electron2D.RenderingDevice.TextureType TextureType { get; set; }` | Gets or sets ordinary-image or independently sampled array storage. |
 | `public Electron2D.RenderingDevice.TextureUsageBits UsageBits { get; set; }` | Gets or sets required allocation, sampling and transfer roles. |
 | `public System.UInt32 Width { get; set; }` | Gets or sets the base mip width in texels. |
-| [`public System.Boolean IsResolveBuffer { get; set; }`](#member-17c8de36cbaa) | Marks an ordinary single-sample color image as a resolve destination. |
+| [`public System.Boolean IsResolveBuffer { get; set; }`](#member-17c8de36cbaa) | Marks a single-sample color image or array as a resolve destination. |
 | [`public Electron2D.RenderingDevice.TextureSamples Samples { get; set; }`](#member-d37fe0333034) | Selects the exact allocation sample count. |
 
 ## Member descriptions
@@ -179,7 +179,7 @@ Depth/stencil formats accept only DepthStencilAttachment and optional Sampling u
 public System.Boolean IsResolveBuffer { get; set; }
 ```
 
-Marks an ordinary single-sample color image as a resolve destination.
+Marks a single-sample color image or array as a resolve destination.
 
 Initially false; copied and validated at allocation.
 
@@ -194,3 +194,5 @@ public Electron2D.RenderingDevice.TextureSamples Samples { get; set; }
 Selects the exact allocation sample count.
 
 Initially RenderingDevice.TextureSamples.Samples1; copied and validated at allocation.
+
+Combining Sampling and Storage preserves a private readonly GPU snapshot for graphics-image consumers, while writes and public snapshots address the original allocation. The native sampling allocation carries no conflicting graphics-read flag; the [device coherence contract](../components/local-compute.md#readonly-graphics-image-coherence) describes copy and lifetime boundaries.

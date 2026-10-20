@@ -9,7 +9,8 @@ namespace Electron2D;
 /// flushes before canvas submission and completes queued reads before FramePostDraw. Buffer reads synchronize pending work. Resource identities never cross devices.
 /// TextureGetRDTexture exports renderer uploads and completed viewport images with borrowed allocation lifetimes;
 /// native writes leave authored CPU snapshots unchanged. FreeRID releases these wrappers without freeing their sources.
-/// The device executes compute and color/depth graphics pipelines with exact multisample state and color resolve, with sampled images, storage resources, borrowed vertex/index arrays and framebuffer attachments.</remarks>
+/// The device executes compute and color/depth graphics pipelines with exact multisample state and color resolve, with sampled images, storage resources, borrowed vertex/index arrays and framebuffer attachments.
+/// Framebuffer view counts select ordered layer draws with private per-view shader indices and preserved draw state.</remarks>
 public sealed unsafe partial class RenderingDevice : ElectronObject
 {
     /// <summary>Identifies executable shader stages.</summary>
@@ -84,6 +85,8 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal PushStage[] Push = [];
         internal byte[][] Sources = [];
         internal Entry? Variant;
+        internal RenderHandle[] ViewPipelines = [];
+        internal Entry[] ViewPrograms = [];
         internal Dictionary<int, RID[]> Bindings = [];
     }
     private readonly GPUPhysicsDevice _context = new();
@@ -100,7 +103,14 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     private void Access(bool canvasMetadata = false) { ThrowIfDisposed(); if (!canvasMetadata) _serverOwner?.EnsureDeviceAccess(); if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("A rendering device belongs to its creating thread."); if (_accessingReadbackMemory) throw new InvalidOperationException("A readback memory accessor cannot reenter its device."); }
     private Entry Get(RID rid) { Access(); if (!_entries.TryGetValue(rid, out var entry) || !entry.Alive) throw new ArgumentException("The RID is not a live resource of this device.", nameof(rid)); PrepareRendererTexture(entry); entry.MeshOwner?.Prepare(entry.MeshCommand); if (!entry.Alive) throw new ArgumentException("The retained storage expired during preparation.", nameof(rid)); return entry; }
     private Entry Get(RID rid, Kind kind) { var entry = Get(rid); return entry.Kind == kind ? entry : throw new ArgumentException("The RID has the wrong resource kind.", nameof(rid)); }
-    private RID Add(Entry entry) { var rid = RID.Allocate(); _entries.Add(rid, entry); return rid; }
+    private RID Add(Entry entry)
+    {
+        var rid = RID.Allocate();
+        try { if (NeedsGraphicsSnapshot(entry) && entry.InputShadow is null) PrepareInputShadow(entry); _entries.Add(rid, entry); }
+        catch { entry.InputShadow?.Dispose(); entry.Borrowed?.Dispose(); throw; }
+        if (NeedsGraphicsSnapshot(entry)) _graphicsSnapshotCount++;
+        return rid;
+    }
     private void IdleList(bool canvasMetadata = false) { Access(canvasMetadata); if (_activeList != 0) throw new InvalidOperationException("End the active command list first."); }
     private void List(long id) { Access(); if (_drawPass != 0 || _activeList == 0 || id != _activeList) throw new ArgumentException("The compute list is not active.", nameof(id)); }
     private nint Commands()
@@ -223,13 +233,13 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         var symbolic = sources.Any(code => new SpecializationModule(code, [], []).HasSpecialization);
         var program = CreateDeviceProgram(sources, name, [], symbolic); program.Sources = sources; return Add(program);
     }
-    private Entry CreateDeviceProgram(byte[][] sources, string name, Dictionary<uint, Specialization> constants, bool template = false, int[]? outputSlots = null)
+    private Entry CreateDeviceProgram(byte[][] sources, string name, Dictionary<uint, Specialization> constants, bool template = false, int[]? outputSlots = null, uint viewIndex = 0)
     {
         var used = new HashSet<uint>(); var modules = sources.Select(code => template ? code.ToArray() : new SpecializationModule(code, constants, used).Freeze()).ToArray();
         if (!template && constants.Keys.Any(id => !used.Contains(id))) throw new ArgumentException("A specialization identifier is not declared by this shader.", nameof(constants));
         var layouts = new Binding[modules.Length][]; var pushes = new PushStage[modules.Length][];
         for (var i = 0; i < modules.Length; i++)
-        { var stage = modules.Length == 1 ? ShaderStage.Compute : i == 0 ? ShaderStage.Vertex : ShaderStage.Fragment; (modules[i], layouts[i], pushes[i]) = RemapCore(modules[i], stage, template); }
+        { var stage = modules.Length == 1 ? ShaderStage.Compute : i == 0 ? ShaderStage.Vertex : ShaderStage.Fragment; (modules[i], layouts[i], pushes[i]) = RemapCore(LowerViewIndex(modules[i], viewIndex, stage), stage, template); }
         var layout = layouts.SelectMany(l => l).ToArray();
         foreach (var group in layout.GroupBy(b => (b.Set, b.Slot)))
         { var first = group.First(); if (group.Any(b => b.Type != first.Type || b.Array != first.Array || b.ImageFormat != first.ImageFormat || b.PixelType != first.PixelType || b.Depth != first.Depth)) throw new ArgumentException("A shared descriptor has inconsistent stage types."); }
@@ -409,7 +419,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         IdleList(); if (!_entries.TryGetValue(rid, out var entry)) throw new ArgumentException("The resource identity is not owned by this device.", nameof(rid)); if (entry.MeshOwner is not null && entry.Alive) throw new InvalidOperationException("The instance resource owns this retained buffer lifetime."); CompleteSubmission();
         if (_command != 0 || _recordedReadbacks.Count != 0) { SubmitRecorded(); CompleteSubmission(); }
         RenderingServer.NotifyRenderMutation();
-        _entries.Remove(rid); if (entry.Borrowed is { } borrow && _rendererTextures.GetValueOrDefault(borrow.Source) == rid) _rendererTextures.Remove(borrow.Source); entry.Borrowed?.Dispose(); ReleaseProgram(entry.Variant); entry.Handle?.Dispose(); entry.FragmentHandle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose(); entry.InputShadow?.Dispose();
+        _entries.Remove(rid); if (NeedsGraphicsSnapshot(entry)) _graphicsSnapshotCount--; if (entry.Borrowed is { } borrow && _rendererTextures.GetValueOrDefault(borrow.Source) == rid) _rendererTextures.Remove(borrow.Source); entry.Borrowed?.Dispose(); ReleaseViews(entry); ReleaseProgram(entry.Variant); entry.Handle?.Dispose(); entry.FragmentHandle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose(); entry.InputShadow?.Dispose();
         DeliverReadbacks();
     }
     /// <inheritdoc />
@@ -424,8 +434,8 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (_command != 0) { SDL.CancelGPUCommandBuffer(_command); _command = 0; }
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
             CancelRendererUploads(); ReleaseDrawablePipelines();
-            foreach (var e in _entries.Values) { e.Borrowed?.Dispose(); ReleaseProgram(e.Variant); e.Handle?.Dispose(); e.FragmentHandle?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); e.InputShadow?.Dispose(); }
-            _entries.Clear(); _rendererTextures.Clear(); _sourceCache.Clear(); _sourceCacheBytes = 0; _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _activeList = 0; CancelReadbacks(); _context.Dispose();
+            foreach (var e in _entries.Values) { e.Borrowed?.Dispose(); ReleaseViews(e); ReleaseProgram(e.Variant); e.Handle?.Dispose(); e.FragmentHandle?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); e.InputShadow?.Dispose(); }
+            _entries.Clear(); _graphicsSnapshots.Clear(); _graphicsSnapshotCount = 0; _rendererTextures.Clear(); _sourceCache.Clear(); _sourceCacheBytes = 0; _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _activeList = 0; CancelReadbacks(); _context.Dispose();
         }
         base.Dispose(disposing);
     }

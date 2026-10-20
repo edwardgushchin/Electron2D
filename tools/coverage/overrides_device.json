@@ -16,7 +16,7 @@
       "godot": "class:RenderingDevice",
       "electron2d": "T:Electron2D.RenderingDevice",
       "state": "Partial",
-      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Native views/transient last-use, multiview/sparse color outputs, raw depth/sample transfer and shader/dynamic-state adapters remain independently accounted for. ADR 0028: executable copied push bytes for compute/vertex/fragment on the shared device timeline. Original 32-bit scalar/vector, compact array, row/column-major matrix and nested-struct layouts lower to a hidden std140 raw-word uniform block; public sets retain their logical bindings. Exact reflected byte count, portable 128-byte bound, per-pipeline/list initialization and recorded snapshots execute. GLSL/HLSL native results, 128-byte/three-uniform capacity, retained canvas and 32 warmed owner-thread zero-managed-byte cycles per compute/graphics language pass on Linux/Vulkan; foreign targets and native allocations remain unverified. ADR 0028: typed copied Boolean/Int32/UInt32/Single specialization values freeze scalar defaults and dependent integer/logical/vector/composite expressions before native pipeline creation. Compute workgroup dimensions and uniform/push array layouts use specialized values. Shader identities remain borrowed; native variants are owned and released by pipelines. Unassigned descriptions, unknown/duplicate/negative identifiers, scalar type mismatch, malformed/cyclic/undefined expressions and exceeding native limits reject. Linux/Vulkan compute values, paired graphics pixels, retained canvas and 32 warmed zero-owner-thread-managed-byte cycles execute; foreign targets and native allocations remain unverified. Wider scalar precision requires the accepted native shader precision adapter. Ordered framebuffer passes, readonly single/multisample input attachments, preservation and per-pass pipeline selection now execute with native pixels and prepared zero-managed-owner-byte checks; see the member rows for remaining boundaries."
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Native views/transient last-use, raw depth/sample transfer and shader/dynamic-state adapters remain independently accounted for. ADR 0028: executable copied push bytes for compute/vertex/fragment on the shared device timeline. Original 32-bit scalar/vector, compact array, row/column-major matrix and nested-struct layouts lower to a hidden std140 raw-word uniform block; public sets retain their logical bindings. Exact reflected byte count, portable 128-byte bound, per-pipeline/list initialization and recorded snapshots execute. GLSL/HLSL native results, 128-byte/three-uniform capacity, retained canvas and 32 warmed owner-thread zero-managed-byte cycles per compute/graphics language pass on Linux/Vulkan; foreign targets and native allocations remain unverified. ADR 0028: typed copied Boolean/Int32/UInt32/Single specialization values freeze scalar defaults and dependent integer/logical/vector/composite expressions before native pipeline creation. Compute workgroup dimensions and uniform/push array layouts use specialized values. Shader identities remain borrowed; native variants are owned and released by pipelines. Unassigned descriptions, unknown/duplicate/negative identifiers, scalar type mismatch, malformed/cyclic/undefined expressions and exceeding native limits reject. Linux/Vulkan compute values, paired graphics pixels, retained canvas and 32 warmed zero-owner-thread-managed-byte cycles execute; foreign targets and native allocations remain unverified. Wider scalar precision requires the accepted native shader precision adapter. Ordered framebuffer passes, readonly single/multisample input attachments, preservation and per-pass pipeline selection now execute with native pixels and prepared zero-managed-owner-byte checks; see the member rows for remaining boundaries."
     },
     {
       "godot": "RenderingDevice::enum:ShaderStage",
@@ -2211,8 +2211,8 @@
     {
       "godot": "class:RDAttachmentFormat",
       "electron2d": "T:Electron2D.RDAttachmentFormat",
-      "state": "Partial",
-      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Native views/transient last-use, subpasses/multiview, raw depth/sample transfer and shader/dynamic-state adapters remain independently accounted for."
+      "state": "Implemented",
+      "reason": "ADR 0028: the complete owning three-field attachment description retains format 36, sample 0 and usage 0 defaults, copies typed format/sample/usage into single/multipass and layered framebuffer formats, and remains independent of later authoring edits/disposal. All three applicable fields execute through native color/depth/MSAA/input/resolve consumers. Pinned RDAttachmentFormat.xml owner and members have no deprecated metadata. Native view slicing and transient image policy are other resource roles, not missing fields of this description."
     },
     {
       "godot": "RDAttachmentFormat::property:format",
@@ -2948,15 +2948,15 @@
     },
     {
       "godot": "RenderingDevice::method:framebuffer_create(RID[]:,int:,int:)",
-      "electron2d": "method:Electron2D.RenderingDevice.FramebufferCreate(System.ReadOnlySpan<Electron2D.RID>,System.Int32)",
-      "state": "Partial",
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Multiview requires layered attachment views and native view-index rendering; view_count is not an inert argument."
+      "electron2d": "method:Electron2D.RenderingDevice.FramebufferCreate(System.ReadOnlySpan<Electron2D.RID>,System.Int32,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: complete viewCount family executes copied single/multipass formats and ordered native 2D image-layer rendering, with exact vertex/fragment view indices in private GLSL/HLSL shader copies. Direct/indirect commands, changing scissor/blend/push state, depth, input-only/sampled array inputs, exact MSAA inputs and automatic/standalone layer resolves preserve per-view contents and leave extra layers untouched. Native software-Vulkan pixels, invalid/layout/lifetime guards and 32 prepared zero-managed-owner-byte active cycles execute. This is sequential layer execution, not simultaneous hardware multiview; target hardware, foreign platforms, native/driver allocations and throughput remain unverified."
     },
     {
       "godot": "RenderingDevice::method:framebuffer_format_create(RDAttachmentFormat[]:,int:)",
-      "electron2d": "method:Electron2D.RenderingDevice.FramebufferFormatCreate(System.ReadOnlySpan<Electron2D.RDAttachmentFormat>)",
-      "state": "Partial",
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Color/depth/stencil/MSAA and sparse color layouts execute; multiview requires layered attachment views and native view-index integration."
+      "electron2d": "method:Electron2D.RenderingDevice.FramebufferFormatCreate(System.ReadOnlySpan<Electron2D.RDAttachmentFormat>,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: complete viewCount family executes copied single/multipass formats and ordered native 2D image-layer rendering, with exact vertex/fragment view indices in private GLSL/HLSL shader copies. Direct/indirect commands, changing scissor/blend/push state, depth, input-only/sampled array inputs, exact MSAA inputs and automatic/standalone layer resolves preserve per-view contents and leave extra layers untouched. Native software-Vulkan pixels, invalid/layout/lifetime guards and 32 prepared zero-managed-owner-byte active cycles execute. This is sequential layer execution, not simultaneous hardware multiview; target hardware, foreign platforms, native/driver allocations and throughput remain unverified."
     },
     {
       "godot": "RenderingDevice::method:framebuffer_format_get_texture_samples(int:,int:)",
@@ -3411,15 +3411,15 @@
     },
     {
       "godot": "RenderingDevice::method:framebuffer_create_multipass(RID[]:,RDFramebufferPass[]:,int:,int:)",
-      "electron2d": "method:Electron2D.RenderingDevice.FramebufferCreateMultipass(System.ReadOnlySpan<Electron2D.RID>,System.ReadOnlySpan<Electron2D.RDFramebufferPass>,System.Int32)",
-      "state": "Partial",
-      "reason": "ADR 0028: copied ordered framebuffer passes execute on SDL_GPU with native color/depth/resolve output, readonly fragment input loads, per-pass pipeline selection and preservation across inactive intermediate passes. GLSL/HLSL float and 2DMS input pixels, independent native resolve edge oracles, signed/unsigned exact bits, sparse input indices, logical sets, copied layout/state/lifetime errors, retained canvas output and 32 prepared zero-managed-owner-byte cycles are checked on Linux/Vulkan. Input+Sampling uses a retained private GPU snapshot; input-only images bind directly. Foreign platforms, native/driver allocation and throughput remain unverified. Sparse logical color slots execute through native output remapping; nonunit view counts still require the native multiview adapter."
+      "electron2d": "method:Electron2D.RenderingDevice.FramebufferCreateMultipass(System.ReadOnlySpan<Electron2D.RID>,System.ReadOnlySpan<Electron2D.RDFramebufferPass>,System.Int32,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: complete viewCount family executes copied single/multipass formats and ordered native 2D image-layer rendering, with exact vertex/fragment view indices in private GLSL/HLSL shader copies. Direct/indirect commands, changing scissor/blend/push state, depth, input-only/sampled array inputs, exact MSAA inputs and automatic/standalone layer resolves preserve per-view contents and leave extra layers untouched. Native software-Vulkan pixels, invalid/layout/lifetime guards and 32 prepared zero-managed-owner-byte active cycles execute. This is sequential layer execution, not simultaneous hardware multiview; target hardware, foreign platforms, native/driver allocations and throughput remain unverified."
     },
     {
       "godot": "RenderingDevice::method:framebuffer_format_create_multipass(RDAttachmentFormat[]:,RDFramebufferPass[]:,int:)",
-      "electron2d": "method:Electron2D.RenderingDevice.FramebufferFormatCreateMultipass(System.ReadOnlySpan<Electron2D.RDAttachmentFormat>,System.ReadOnlySpan<Electron2D.RDFramebufferPass>)",
-      "state": "Partial",
-      "reason": "ADR 0028: copied ordered framebuffer passes execute on SDL_GPU with native color/depth/resolve output, readonly fragment input loads, per-pass pipeline selection and preservation across inactive intermediate passes. GLSL/HLSL float and 2DMS input pixels, independent native resolve edge oracles, signed/unsigned exact bits, sparse input indices, logical sets, copied layout/state/lifetime errors, retained canvas output and 32 prepared zero-managed-owner-byte cycles are checked on Linux/Vulkan. Input+Sampling uses a retained private GPU snapshot; input-only images bind directly. Foreign platforms, native/driver allocation and throughput remain unverified. Sparse logical color slots execute through native output remapping; nonunit view counts still require the native multiview adapter."
+      "electron2d": "method:Electron2D.RenderingDevice.FramebufferFormatCreateMultipass(System.ReadOnlySpan<Electron2D.RDAttachmentFormat>,System.ReadOnlySpan<Electron2D.RDFramebufferPass>,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: complete viewCount family executes copied single/multipass formats and ordered native 2D image-layer rendering, with exact vertex/fragment view indices in private GLSL/HLSL shader copies. Direct/indirect commands, changing scissor/blend/push state, depth, input-only/sampled array inputs, exact MSAA inputs and automatic/standalone layer resolves preserve per-view contents and leave extra layers untouched. Native software-Vulkan pixels, invalid/layout/lifetime guards and 32 prepared zero-managed-owner-byte active cycles execute. This is sequential layer execution, not simultaneous hardware multiview; target hardware, foreign platforms, native/driver allocations and throughput remain unverified."
     },
     {
       "godot": "RenderingDevice::method:texture_resolve_multisample(RID:,RID:)",
@@ -4782,12 +4782,12 @@
       "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Numeric vocabulary is retained; unavailable backend sample counts reject rather than downgrade."
     },
     {
-      "state": "Partial",
+      "state": "Implemented",
       "godot": [
         "RenderingDevice::method:framebuffer_create_multipass(RID[]:,RDFramebufferPass[]:,int:,int:)",
         "RenderingDevice::method:framebuffer_format_create_multipass(RDAttachmentFormat[]:,RDFramebufferPass[]:,int:)"
       ],
-      "reason": "ADR 0028: copied ordered framebuffer passes execute on SDL_GPU with native color/depth/resolve output, readonly fragment input loads, per-pass pipeline selection and preservation across inactive intermediate passes. GLSL/HLSL float and 2DMS input pixels, independent native resolve edge oracles, signed/unsigned exact bits, sparse input indices, logical sets, copied layout/state/lifetime errors, retained canvas output and 32 prepared zero-managed-owner-byte cycles are checked on Linux/Vulkan. Input+Sampling uses a retained private GPU snapshot; input-only images bind directly. Foreign platforms, native/driver allocation and throughput remain unverified. Sparse logical color slots execute through native output remapping; nonunit view counts still require the native multiview adapter."
+      "reason": "ADR 0028: complete viewCount family executes copied single/multipass formats and ordered native 2D image-layer rendering, with exact vertex/fragment view indices in private GLSL/HLSL shader copies. Direct/indirect commands, changing scissor/blend/push state, depth, input-only/sampled array inputs, exact MSAA inputs and automatic/standalone layer resolves preserve per-view contents and leave extra layers untouched. Native software-Vulkan pixels, invalid/layout/lifetime guards and 32 prepared zero-managed-owner-byte active cycles execute. This is sequential layer execution, not simultaneous hardware multiview; target hardware, foreign platforms, native/driver allocations and throughput remain unverified."
     },
     {
       "state": "Implemented",
@@ -4804,19 +4804,19 @@
       "reason": "ADR 0028: copied framebuffer color slots retain AttachmentUnused holes in logical shader output order. Pipelines require the exact active shader output mask and matching scalar formats; native target/blend arrays and private SPIR-V output locations compact active slots, including grouped location decorations and specialization. Original modules remain unchanged. Leading/middle/trailing holes, float/signed/unsigned pixels, eight-slot boundaries, ignored unused/trailing blend entries, copied metadata, MSAA resolve/input/preservation, depth-only passes, owner/lifetime errors and retained canvas execute in RenderingDeviceSparseTests. GLSL/HLSL prepared active/unchanged draw/readback intervals require zero managed owner bytes. Foreign platforms, native/driver allocation and throughput remain unverified."
     },
     {
-      "state": "Partial",
+      "state": "Implemented",
       "godot": [
         "RenderingDevice::method:framebuffer_create(RID[]:,int:,int:)",
         "RenderingDevice::method:framebuffer_format_create(RDAttachmentFormat[]:,int:)"
       ],
-      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Multiview remains a native view/array attachment adapter."
+      "reason": "ADR 0028: complete viewCount family executes copied single/multipass formats and ordered native 2D image-layer rendering, with exact vertex/fragment view indices in private GLSL/HLSL shader copies. Direct/indirect commands, changing scissor/blend/push state, depth, input-only/sampled array inputs, exact MSAA inputs and automatic/standalone layer resolves preserve per-view contents and leave extra layers untouched. Native software-Vulkan pixels, invalid/layout/lifetime guards and 32 prepared zero-managed-owner-byte active cycles execute. This is sequential layer execution, not simultaneous hardware multiview; target hardware, foreign platforms, native/driver allocations and throughput remain unverified."
     },
     {
       "state": "Implemented",
       "godot": [
         "RenderingDevice::method:framebuffer_format_get_texture_samples(int:,int:)"
       ],
-      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. The current native pass is zero; other pass indices reject until subpass integration."
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. The requested ordered pass selects its copied raster sample count, including layered formats; out-of-range pass indices reject."
     },
     {
       "state": "Partial",
@@ -4877,10 +4877,9 @@
     {
       "state": "Partial",
       "godot": [
-        "class:RDAttachmentFormat",
         "class:RDTextureFormat"
       ],
-      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Native views/transient last-use, subpasses/multiview, raw depth/sample transfer and shader/dynamic-state adapters remain independently accounted for."
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Native views/transient last-use, raw depth/sample transfer and shader/dynamic-state adapters remain independently accounted for."
     },
     {
       "state": "Implemented",
@@ -4892,7 +4891,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Native views/transient last-use, multiview/sparse color outputs, raw depth/sample transfer and shader/dynamic-state adapters remain independently accounted for. ADR 0028: executable copied push bytes for compute/vertex/fragment on the shared device timeline. Original 32-bit scalar/vector, compact array, row/column-major matrix and nested-struct layouts lower to a hidden std140 raw-word uniform block; public sets retain their logical bindings. Exact reflected byte count, portable 128-byte bound, per-pipeline/list initialization and recorded snapshots execute. GLSL/HLSL native results, 128-byte/three-uniform capacity, retained canvas and 32 warmed owner-thread zero-managed-byte cycles per compute/graphics language pass on Linux/Vulkan; foreign targets and native allocations remain unverified. ADR 0028: typed copied Boolean/Int32/UInt32/Single specialization values freeze scalar defaults and dependent integer/logical/vector/composite expressions before native pipeline creation. Compute workgroup dimensions and uniform/push array layouts use specialized values. Shader identities remain borrowed; native variants are owned and released by pipelines. Unassigned descriptions, unknown/duplicate/negative identifiers, scalar type mismatch, malformed/cyclic/undefined expressions and exceeding native limits reject. Linux/Vulkan compute values, paired graphics pixels, retained canvas and 32 warmed zero-owner-thread-managed-byte cycles execute; foreign targets and native allocations remain unverified. Wider scalar precision requires the accepted native shader precision adapter. Ordered framebuffer passes, readonly single/multisample input attachments, preservation and per-pass pipeline selection now execute with native pixels and prepared zero-managed-owner-byte checks; see the member rows for remaining boundaries.",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Native views/transient last-use, raw depth/sample transfer and shader/dynamic-state adapters remain independently accounted for. ADR 0028: executable copied push bytes for compute/vertex/fragment on the shared device timeline. Original 32-bit scalar/vector, compact array, row/column-major matrix and nested-struct layouts lower to a hidden std140 raw-word uniform block; public sets retain their logical bindings. Exact reflected byte count, portable 128-byte bound, per-pipeline/list initialization and recorded snapshots execute. GLSL/HLSL native results, 128-byte/three-uniform capacity, retained canvas and 32 warmed owner-thread zero-managed-byte cycles per compute/graphics language pass on Linux/Vulkan; foreign targets and native allocations remain unverified. ADR 0028: typed copied Boolean/Int32/UInt32/Single specialization values freeze scalar defaults and dependent integer/logical/vector/composite expressions before native pipeline creation. Compute workgroup dimensions and uniform/push array layouts use specialized values. Shader identities remain borrowed; native variants are owned and released by pipelines. Unassigned descriptions, unknown/duplicate/negative identifiers, scalar type mismatch, malformed/cyclic/undefined expressions and exceeding native limits reject. Linux/Vulkan compute values, paired graphics pixels, retained canvas and 32 warmed zero-owner-thread-managed-byte cycles execute; foreign targets and native allocations remain unverified. Wider scalar precision requires the accepted native shader precision adapter. Ordered framebuffer passes, readonly single/multisample input attachments, preservation and per-pass pipeline selection now execute with native pixels and prepared zero-managed-owner-byte checks; see the member rows for remaining boundaries.",
       "godot": [
         "class:RenderingDevice"
       ]
@@ -4965,6 +4964,13 @@
         "RDShaderFile::method:get_version_list()",
         "RDShaderFile::method:set_bytecode(RDShaderSPIRV:,StringName:)"
       ]
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:RDAttachmentFormat"
+      ],
+      "reason": "ADR 0028: the complete owning three-field attachment description retains format 36, sample 0 and usage 0 defaults, copies typed format/sample/usage into single/multipass and layered framebuffer formats, and remains independent of later authoring edits/disposal. All three applicable fields execute through native color/depth/MSAA/input/resolve consumers. Pinned RDAttachmentFormat.xml owner and members have no deprecated metadata. Native view slicing and transient image policy are other resource roles, not missing fields of this description."
     }
   ]
 }

@@ -669,7 +669,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Quaternion](classes/Quaternion.md) | — | Excluded | 43 |
 | [RDAccelerationStructureGeometry](classes/RDAccelerationStructureGeometry.md) | RefCounted | Excluded | 9 |
 | [RDAccelerationStructureInstance](classes/RDAccelerationStructureInstance.md) | RefCounted | Excluded | 6 |
-| [RDAttachmentFormat](classes/RDAttachmentFormat.md) | RefCounted | Partial | 3 |
+| [RDAttachmentFormat](classes/RDAttachmentFormat.md) | RefCounted | Implemented | 3 |
 | [RDFramebufferPass](classes/RDFramebufferPass.md) | RefCounted | Implemented | 6 |
 | [RDHitGroup](classes/RDHitGroup.md) | RefCounted | Excluded | 3 |
 | [RDPipelineColorBlendState](classes/RDPipelineColorBlendState.md) | RefCounted | Partial | 4 |

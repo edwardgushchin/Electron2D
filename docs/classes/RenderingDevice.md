@@ -1,6 +1,6 @@
 # RenderingDevice
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RenderingDevice`. **Source:** [RenderingDevice.cs](../../src/Servers/Rendering/Device/RenderingDevice.cs), [RenderingDevice.Readback.cs](../../src/Servers/Rendering/Device/RenderingDevice.Readback.cs). **Component:** [Local compute](../components/local-compute.md).
 
@@ -9,6 +9,10 @@ Last updated: 2026-10-19
 ## Description
 
 An owner-thread graphics and compute device created locally by RenderingServer.CreateLocalRenderingDevice or retained by the active GPU renderer through RenderingServer.GetRenderingDevice. The retained renderer device flushes after canvas authoring and before drawing, and completes queued reads before FramePostDraw; Submit, Sync and public disposal are local-only. Renderer-owned image RIDs bind directly to TextureRD/TextureArrayRD canvas resources. RenderingServer.TextureGetRDTexture exports actual renderer-managed ordinary uploads, independent arrays and completed viewport images to the retained device without CPU copying. Compatible authored updates keep the RID; replacing allocation, disposing the source, rebinding the viewport or retiring its target expires it. A viewport RID resolves the completed ping-pong image when each command is recorded. FreeRID releases only the borrowed wrapper; queued native operations retain the old allocation through completion. Device writes change GPU storage, while authored CPU snapshots remain unchanged; the next authored update overwrites device changes. Sampling, raw update/copy/read and supported storage roles reflect actual native allocation flags. Prepare changed uploads before starting a draw list. Empty storage, unrendered targets and the compatibility renderer return an empty RID. Distinct sRGB views still require native format-view ownership. It supports native compute independently of the canvas rendering method. Each device owns its buffer/image/sampler/shader/pipeline/set RIDs (renderer exports own only wrappers); cross-device and freed identities reject. An active list is exclusive. End lists before submission, reads, frees or disposal; Submit starts recorded work, Sync waits, and BufferGetData synchronizes pending writes before returning. Disposal cancels unsubmitted commands and waits for submitted work. Buffer range/type, descriptor layout and thread/lifetime errors throw typed exceptions.
+
+Layered framebuffers execute ordered native passes for each view, with vertex/fragment view indices, copied draw state, per-layer depth/resolve/input operations and untouched extra layers. See [layered multiview](../components/local-compute.md#layered-multiview) for ownership and verification limits.
+
+Readonly graphics storage images retain their Image role and current GPU contents across draws. Sampling/Storage combinations use a private GPU snapshot; see [image coherence](../components/local-compute.md#readonly-graphics-image-coherence).
 
 ## Example
 
@@ -653,11 +657,11 @@ The [graphics component contract](../components/local-compute.md#color-graphics-
 | [`public System.Int64 DrawListSwitchToNextPass()`](#member-switch-next-pass) | Advances the active framebuffer to its next ordered pass and resets draw bindings. |
 | `public System.Void DrawListEnd()` | Ends the active draw list, preserving its results for subsequent device work. |
 | `public System.Void DrawListSetBlendConstants(System.Int64 drawList, Electron2D.Color color)` | Sets the finite blend constant for subsequent draws. |
-| [`public Electron2D.RID FramebufferCreate(System.ReadOnlySpan<Electron2D.RID> textures, System.Int32 validateWithFormat = -1)`](#member-a56b363d17da) | Creates a framebuffer borrowing device-owned color and depth/stencil images. |
-| [`public Electron2D.RID FramebufferCreateMultipass(System.ReadOnlySpan<Electron2D.RID> textures, System.ReadOnlySpan<Electron2D.RDFramebufferPass> passes, System.Int32 validateWithFormat = -1)`](#member-f3473b24f0ad) | Creates a framebuffer borrowing the images selected by ordered copied passes. |
-| [`public System.Int32 FramebufferFormatCreateMultipass(System.ReadOnlySpan<Electron2D.RDAttachmentFormat> attachments, System.ReadOnlySpan<Electron2D.RDFramebufferPass> passes)`](#member-8fd3a4578edd) | Creates a copied explicit pass layout, including per-color resolve destinations. |
+| [`public Electron2D.RID FramebufferCreate(System.ReadOnlySpan<Electron2D.RID> textures, System.Int32 validateWithFormat = -1, System.Int32 viewCount = 1)`](#member-b1f57fe724ef) | Creates a framebuffer borrowing device-owned color and depth/stencil images. |
+| [`public Electron2D.RID FramebufferCreateMultipass(System.ReadOnlySpan<Electron2D.RID> textures, System.ReadOnlySpan<Electron2D.RDFramebufferPass> passes, System.Int32 validateWithFormat = -1, System.Int32 viewCount = 1)`](#member-69eb0fea8573) | Creates a framebuffer borrowing the images selected by ordered copied passes. |
+| [`public System.Int32 FramebufferFormatCreateMultipass(System.ReadOnlySpan<Electron2D.RDAttachmentFormat> attachments, System.ReadOnlySpan<Electron2D.RDFramebufferPass> passes, System.Int32 viewCount = 1)`](#member-4b3991d9d1c4) | Creates a copied explicit pass layout, including per-color resolve destinations. |
 | [`public System.Void TextureResolveMultisample(Electron2D.RID fromTexture, Electron2D.RID toTexture)`](#member-9949b16cc93d) | Resolves a complete multisample color image into its marked single-sample destination on the GPU timeline. |
-| [`public System.Int32 FramebufferFormatCreate(System.ReadOnlySpan<Electron2D.RDAttachmentFormat> attachments)`](#member-d154729327fd) | Creates a copied single-pass color and depth/stencil attachment layout. |
+| [`public System.Int32 FramebufferFormatCreate(System.ReadOnlySpan<Electron2D.RDAttachmentFormat> attachments, System.Int32 viewCount = 1)`](#member-8709272c4e6f) | Creates a copied single-pass color and depth/stencil attachment layout. |
 | [`public Electron2D.RenderingDevice.TextureSamples FramebufferFormatGetTextureSamples(System.Int32 framebufferFormat, System.UInt32 renderPass = 0)`](#member-4807409af35f) | Reports the exact raster sample count of a framebuffer pass. |
 | `public System.Int32 FramebufferGetFormat(Electron2D.RID framebuffer)` | Reads the framebuffer's matching layout identity. |
 | `public System.Boolean FramebufferIsValid(Electron2D.RID framebuffer)` | Reports whether a framebuffer and all its borrowed attachments remain alive. |
@@ -895,11 +899,11 @@ Sets the finite blend constant for subsequent draws.
 `System.InvalidOperationException`: The creating thread, selected pipeline or resource dependencies are invalid.
 
 
-<a id="member-a56b363d17da"></a>
-### FramebufferCreate(System.ReadOnlySpan<Electron2D.RID>, System.Int32)
+<a id="member-b1f57fe724ef"></a>
+### FramebufferCreate(System.ReadOnlySpan<Electron2D.RID>, System.Int32, System.Int32)
 
 ```csharp
-public Electron2D.RID FramebufferCreate(System.ReadOnlySpan<Electron2D.RID> textures, System.Int32 validateWithFormat = -1)
+public Electron2D.RID FramebufferCreate(System.ReadOnlySpan<Electron2D.RID> textures, System.Int32 validateWithFormat = -1, System.Int32 viewCount = 1)
 ```
 
 Creates a framebuffer borrowing device-owned color and depth/stencil images.
@@ -908,13 +912,14 @@ A framebuffer invalidated when any borrowed image is freed.
 
 | Parameter | Contract |
 | --- | --- |
-| `textures` | Distinct ordinary single-layer, single-mip images with matching dimensions. |
+| `textures` | Distinct single-mip images with matching dimensions and enough layers for every view. |
 | `validateWithFormat` | An existing matching layout including resolve roles, or -1 for an implicit render-only pass. |
-<a id="member-d154729327fd"></a>
-### FramebufferFormatCreate(System.ReadOnlySpan<Electron2D.RDAttachmentFormat>)
+| `viewCount` | One through 256 ordered views, each targeting its corresponding attachment layer; an explicit format must agree. |
+<a id="member-8709272c4e6f"></a>
+### FramebufferFormatCreate(System.ReadOnlySpan<Electron2D.RDAttachmentFormat>, System.Int32)
 
 ```csharp
-public System.Int32 FramebufferFormatCreate(System.ReadOnlySpan<Electron2D.RDAttachmentFormat> attachments)
+public System.Int32 FramebufferFormatCreate(System.ReadOnlySpan<Electron2D.RDAttachmentFormat> attachments, System.Int32 viewCount = 1)
 ```
 
 Creates a copied single-pass color and depth/stencil attachment layout.
@@ -924,6 +929,7 @@ A device-local framebuffer format identifier.
 | Parameter | Contract |
 | --- | --- |
 | `attachments` | Up to eight render color targets and one depth/stencil target with the same exact sample count. |
+| `viewCount` | One through 256 ordered views, each targeting its corresponding attachment layer; an explicit format must agree. |
 
 - `T:System.NotSupportedException`: A format or exact sample count is unavailable.
 <a id="member-4807409af35f"></a>
@@ -1120,11 +1126,11 @@ A device-local format identifier.
 
 `System.NotSupportedException`: An encoding is not supported.
 
-<a id="member-f3473b24f0ad"></a>
-### FramebufferCreateMultipass(System.ReadOnlySpan<Electron2D.RID>, System.ReadOnlySpan<Electron2D.RDFramebufferPass>, System.Int32)
+<a id="member-69eb0fea8573"></a>
+### FramebufferCreateMultipass(System.ReadOnlySpan<Electron2D.RID>, System.ReadOnlySpan<Electron2D.RDFramebufferPass>, System.Int32, System.Int32)
 
 ```csharp
-public Electron2D.RID FramebufferCreateMultipass(System.ReadOnlySpan<Electron2D.RID> textures, System.ReadOnlySpan<Electron2D.RDFramebufferPass> passes, System.Int32 validateWithFormat = -1)
+public Electron2D.RID FramebufferCreateMultipass(System.ReadOnlySpan<Electron2D.RID> textures, System.ReadOnlySpan<Electron2D.RDFramebufferPass> passes, System.Int32 validateWithFormat = -1, System.Int32 viewCount = 1)
 ```
 
 Creates a framebuffer borrowing the images selected by ordered copied passes.
@@ -1133,19 +1139,20 @@ A framebuffer borrowing all images used by its ordered passes.
 
 | Parameter | Contract |
 | --- | --- |
-| `textures` | Ordinary render, marked resolve and input images in caller-defined attachment order. |
+| `textures` | Render, marked resolve and input images in caller-defined attachment order. |
 | `passes` | One or more ordered color/depth/resolve/input/preservation passes. |
 | `validateWithFormat` | An existing matching layout, or -1 to create its copied format. |
+| `viewCount` | One through 256 ordered views, each targeting its corresponding attachment layer; an explicit format must agree. |
 
 - `T:System.ArgumentException`: Images, sample counts, roles or requested layout disagree.
 - `T:System.NotSupportedException`: An attachment role requires its native adapter.
 
 
-<a id="member-8fd3a4578edd"></a>
-### FramebufferFormatCreateMultipass(System.ReadOnlySpan<Electron2D.RDAttachmentFormat>, System.ReadOnlySpan<Electron2D.RDFramebufferPass>)
+<a id="member-4b3991d9d1c4"></a>
+### FramebufferFormatCreateMultipass(System.ReadOnlySpan<Electron2D.RDAttachmentFormat>, System.ReadOnlySpan<Electron2D.RDFramebufferPass>, System.Int32)
 
 ```csharp
-public System.Int32 FramebufferFormatCreateMultipass(System.ReadOnlySpan<Electron2D.RDAttachmentFormat> attachments, System.ReadOnlySpan<Electron2D.RDFramebufferPass> passes)
+public System.Int32 FramebufferFormatCreateMultipass(System.ReadOnlySpan<Electron2D.RDAttachmentFormat> attachments, System.ReadOnlySpan<Electron2D.RDFramebufferPass> passes, System.Int32 viewCount = 1)
 ```
 
 Creates a copied explicit pass layout, including per-color resolve destinations.
@@ -1156,6 +1163,7 @@ A device-local layout retaining copied indices and formats.
 | --- | --- |
 | `attachments` | Render and resolve attachment formats in caller-defined order. |
 | `passes` | One or more ordered copied executable passes. |
+| `viewCount` | One through 256 ordered views, each targeting its corresponding attachment layer; an explicit format must agree. |
 
 - `T:System.ArgumentException`: Indices, formats, roles or sample counts disagree.
 - `T:System.NotSupportedException`: An exact sample count or attachment role is unavailable.

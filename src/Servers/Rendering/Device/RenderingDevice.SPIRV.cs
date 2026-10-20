@@ -10,6 +10,7 @@ public sealed unsafe partial class RenderingDevice
     {
         if (code.Length < 20 || code.Length > 16 * 1024 * 1024 || code.Length % 4 != 0) throw new ArgumentException("A compute module must contain aligned SPIR-V words.", nameof(code));
         var inputTranslation = LowerInputAttachments(code, stage); code = inputTranslation.Code;
+        var readonlyTranslation = LowerReadOnlyImages(code, stage); code = readonlyTranslation.Code;
         (byte[] Code, uint Variable, uint Size) translated;
         try { translated = template ? (code, 0u, 0u) : new PushLowering(code).Translate(); }
         catch (OverflowException error) { throw new ArgumentException("The push layout exceeds module bounds.", nameof(code), error); }
@@ -83,6 +84,12 @@ public sealed unsafe partial class RenderingDevice
                 var combined = sampled.TryGetValue(imageType, out var underlying); if (combined) imageType = underlying;
                 if (!images.TryGetValue(imageType, out var image)) throw new NotSupportedException("Image descriptor arrays are not integrated.");
                 if (!scalars.TryGetValue(image.Scalar, out var pixelType)) throw new NotSupportedException("Compute images require 32-bit float, signed or unsigned pixel scalars.");
+                if (readonlyTranslation.Images.TryGetValue(variable.ID, out var originalFormat))
+                {
+                    var imageOrigin = logical[variable.ID]; if (imageSlot >= 8) throw new NotSupportedException("Graphics images exceed native storage texture capacity.");
+                    layout.Add(new(imageOrigin.Set, imageOrigin.Slot, UniformType.Image, imageSlot, ImageFormat: originalFormat, PixelType: pixelType, Stage: stage));
+                    words[imageSet] = nativeSet; words[imageBinding] = (uint)imageSlot++; continue;
+                }
                 if (inputTranslation.Inputs.TryGetValue(variable.ID, out var input))
                 {
                     if (imageSlot >= 8) throw new NotSupportedException("Input and readonly image descriptors exceed the eight native storage texture slots.");
@@ -131,7 +138,7 @@ public sealed unsafe partial class RenderingDevice
         foreach (var variable in variables.Where(v => v.Storage is 2 or 12))
             if (sets.TryGetValue(variable.ID, out var si) && slots.TryGetValue(variable.ID, out var bi) && (compute ? words[si] == 1 : words[si] == nativeSet)) words[bi] += (uint)(compute ? imageSlot : imageSlot + textureSlot);
         if (!compute) foreach (var variable in variables.Where(v => v.Storage == 0))
-                if (sets.TryGetValue(variable.ID, out var si) && slots.TryGetValue(variable.ID, out var bi) && pointers.TryGetValue(variable.Type, out var ty) && images.TryGetValue(ty, out var image) && (image.Sampled == 2 || inputTranslation.Inputs.ContainsKey(variable.ID)))
+                if (sets.TryGetValue(variable.ID, out var si) && slots.TryGetValue(variable.ID, out var bi) && pointers.TryGetValue(variable.Type, out var ty) && images.TryGetValue(ty, out var image) && (image.Sampled == 2 || inputTranslation.Inputs.ContainsKey(variable.ID) || readonlyTranslation.Images.ContainsKey(variable.ID)))
                     words[bi] += (uint)textureSlot;
         return (code, layout.ToArray(), push is null ? [] : [push]);
     }
