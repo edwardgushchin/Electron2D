@@ -1,3 +1,5 @@
+[Complete body motion operation](../components/physics-motion-operation.md) now has selected numerical geometry, recovery/timing, exclusion, output and lifetime evidence across current CPU/registered/physical-GPU CLR/NativeAOT cohorts. One operation row becomes Implemented: physics 1304/1369 (95.25%), 65 open, 92 Excluded. The owning classes and full-goal gates remain open.
+
 [Polygon edge smoothing](../components/meshes.md#polygon-edge-smoothing) now closes Antialiased with actual framebuffer boundary geometry on both backends, preserved fill/UV/skin state and explicit custom-shader/topology limits. One missing declaration becomes Implemented; broader Polygon Partial rows retain their own boundaries.
 
 [Loading images](../components/boot-images.md) now execute immediate main-client presentation with six sizing modes, actual nearest/linear sampling, copied image ownership and preserved scene/callback state. Eight applicable rows become Implemented; the pinned deprecated set_boot_image predecessor becomes Excluded under ADR 0004. Cold upload, native allocation and platform verification limits remain explicit.

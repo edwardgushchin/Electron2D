@@ -434,3 +434,6 @@ raw/scene motion and direct query consumers. Full numerical-extension acceptance
 remains open.
 
 [Last-recovery one-way pair exclusions](../components/physics-registered-adapter.md#last-recovery-one-way-pair-exclusions) retain rejected source-resource/target-slot pairs through the remaining sweep and final contact sample. The last recovery attempt replaces the set, accepted pieces keep their logical pair eligible, and the next query starts empty.
+
+
+[Complete body motion operation](../components/physics-motion-operation.md) records the actual selected query, geometry, recovery, timing, result/lifetime and failure contract. The operation row is Implemented; broader numerical family and overall-goal acceptance remain separate.

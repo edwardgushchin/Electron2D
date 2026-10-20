@@ -1731,3 +1731,6 @@ now reject collinear gaps for segment and zero-radius capsule cores, including
 independent swept regions and short-segment point fallbacks. The common resource
 kernel retains exact touching and special-pair rules. The static correctness
 adaptation is explicit in ADR 0069; numerical backends and API counts are unchanged.
+
+
+[Complete body motion operation](../components/physics-motion-operation.md) records the selected CPU/resident-GPU/registered geometry, recovery, restored timing, result ownership and failure audit. Its operation row is Implemented; physics is 1304/1369 (95.25%) with 65 declarations open. Broader numerical and overall-goal gates remain open.
