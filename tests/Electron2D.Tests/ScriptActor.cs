@@ -11,6 +11,7 @@ internal sealed class ScriptActor : ScriptBaseActor
     public event Action<int>? Pulse;
     internal int ReadyCalls, Frames;
     internal bool FailReady;
+    internal Exception? PropertyFailure, CleanupFailure;
     public ScriptActor() { ProcessEnabled = true; }
     public ScriptActor(int count) : this() { Count = count; }
     public void Ping() => Pulse?.Invoke(Count);
@@ -18,6 +19,15 @@ internal sealed class ScriptActor : ScriptBaseActor
     protected override void OnProcess(double delta) { Frames++; }
     private static Node CreateActor() => new ScriptActor();
     protected override Func<Node> CreateSceneInstanceFactory() => CreateActor;
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat([CountProperty, PeerProperty]);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
+    {
+        if (PropertyFailure is { } error) throw error;
+        return base.GetPropertyDescriptors().Concat([CountProperty, PeerProperty]);
+    }
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        if (CleanupFailure is { } error) throw error;
+    }
     internal static new string Source([System.Runtime.CompilerServices.CallerFilePath] string path = "") => path;
 }

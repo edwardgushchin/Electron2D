@@ -240,8 +240,12 @@ public static partial class ResourceFileTypes
     private static FontFile CreateFontFileResource() => new();
     private static SystemFont CreateSystemFontResource() => new();
     /// <summary>Registers a compiled node factory used by file-backed PackedScene.</summary><typeparam name="TNode">Exact concrete node type.</typeparam><param name="id">Stable portable schema ID.</param><param name="factory">Static exact-type constructor.</param>
+    /// <remarks>Each factory invocation must construct its returned object. Pre-existing results reject before acquisition,
+    /// default-state checks or decoding; rejected borrowed objects are never disposed by the loader.</remarks>
     public static void RegisterNode<TNode>(string id, Func<TNode> factory) where TNode : Node => Register(id, factory);
     /// <summary>Registers a compiled resource factory with storage-enabled typed properties.</summary><typeparam name="TResource">Exact concrete resource type.</typeparam><param name="id">Stable portable schema ID.</param><param name="factory">Static exact-type constructor.</param>
+    /// <remarks>Each factory invocation must construct its returned object. Pre-existing results reject before acquisition,
+    /// default-state checks or decoding; rejected borrowed objects are never disposed by the loader.</remarks>
     public static void RegisterResource<TResource>(string id, Func<TResource> factory) where TResource : Resource
     {
         Register(id, factory);
@@ -344,7 +348,9 @@ internal sealed class ResourceFileType(string id, Type type, Func<ElectronObject
     internal Type Type => type;
     internal ElectronObject Factory()
     {
+        var lastIssuedID = ElectronObject.LastIssuedInstanceID;
         var value = create() ?? throw new InvalidOperationException("File factory returned null.");
+        if (value.InstanceID <= lastIssuedID) throw new InvalidOperationException("File factory returned a pre-existing instance.");
         if (!_issued.TryAdd(value, new object())) throw new InvalidOperationException("File factory reused an issued object.");
         if (value.IsDisposed) throw new InvalidOperationException("File factory returned a disposed identity.");
         if (value is Node attached && (attached.Parent is not null || attached.Tree is not null || attached.Owner is not null)) throw new InvalidOperationException("File node factory returned a borrowed attached node.");

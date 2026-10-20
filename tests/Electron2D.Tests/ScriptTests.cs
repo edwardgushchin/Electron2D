@@ -3,8 +3,10 @@ using Path = System.IO.Path;
 internal static class ScriptTests
 {
     private static bool _registered;
-    private static ScriptActor CreateActor() => new();
-    private static ScriptPaintEffect CreatePaint() => new();
+    internal static ScriptActor? ActorFactoryTarget;
+    internal static ScriptPaintEffect? PaintFactoryTarget;
+    private static ScriptActor CreateActor() => ActorFactoryTarget ?? new();
+    private static ScriptPaintEffect CreatePaint() => PaintFactoryTarget ?? new();
     internal static void Register()
     {
         if (_registered) return;
