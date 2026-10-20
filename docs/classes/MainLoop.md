@@ -1,6 +1,6 @@
 # MainLoop
 
-Last updated: 2026-09-30
+Last updated: 2026-10-20
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -379,7 +379,7 @@ The constructing thread is the owner. Initialization, both frame lanes, permissi
 
 `tests/Electron2D.Tests/Program.cs` verifies one-shot initialization/finalization, both callback lanes and stop results, delta validation, re-entry rejection, callback failure recovery, initialization/finalization failure states, automatic disposal finalization, disposal before/after failed initialization, owner-thread enforcement, pre-mutation wrong-thread/nested-frame input rejection, typed permission delivery and validation, notification IDs and dispatch, `Node` aliases, `SceneTree` inheritance/propagation/input delivery/explicit finalization, original-delta delivery at zero time scale, independent Input transition clearing, and zero steady-state allocation for warmed `SceneTree` frame paths.
 
-The class itself has no timing source or scheduler. [`Engine`](Engine.md) now provides host-driven fixed-step scheduling and time scaling, but there is still no SDL event pump, native permission request API, automatic clock, frame pacing/waiting, exit-code owner, crash handler, input-focus state update, renderer, or collision-physics integration. MainLoop does not claim real-time or platform behavior by itself.
+The [complete callback audit](../components/main-loop.md#complete-frame-and-lifecycle-callback-audit) verifies direct and Engine-driven hooks with actual selected CPU/software-GPU/registered simulation and zero warmed owner/all-thread managed bytes. The class itself owns no clock or scheduler. Engine.Run(Window) supplies the ordinary native clock, input/event pump, rendering, pacing and exit-code ownership, while SceneTree supplies scene and physics execution. Native permission requests, operating-system crash handling, hardware cadence and other-platform acceptance retain their separate prerequisites.
 
 ## Related decision
 

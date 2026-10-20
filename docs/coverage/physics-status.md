@@ -78,14 +78,14 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | Declaring type | Base | Implemented | Partial | Blocked | Unimplemented | Excluded |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [CanvasItem](classes/CanvasItem.md) | [Node](classes/Node.md) | 92 | 17 | 6 | 0 | 0 |
-| [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 12 | 6 | 0 | 0 | 0 |
+| [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 16 | 2 | 0 | 0 | 0 |
 | [Node](classes/Node.md) | [Object](classes/Object.md) | 192 | 11 | 6 | 4 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
 | [Object](classes/Object.md) | — | 34 | 7 | 2 | 2 | 29 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 22 | 5 | 0 | 0 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 384 | 47 | 17 | 6 | 37 |
+| **Total** | | 388 | 43 | 17 | 6 | 37 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -115,10 +115,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`CanvasItem::method:draw_texture_rect_region(Texture2D:,Rect2:,Rect2:,Color:,bool:,bool:)`](classes/CanvasItem.md) | Partial | Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Canvas sampling inheritance, GPU mipmaps and anisotropy are verified by CanvasSamplingRenderingTests; further texture kinds and full canvas integration remain pending under ADR 0028. |
 | [`CanvasItem::property:oversampling_with_scale`](classes/CanvasItem.md) | Blocked | First Font/TextServer or DPITexture oversampling integration must implement scale inheritance, invalidation, resource reference accounting and raster output together; ordinary texture scaling is not oversampling. |
 | [`class:MainLoop`](classes/MainLoop.md) | Partial | Typed C# type exists; inheritance, signatures and behavior require row-level audit. |
-| [`MainLoop::method:_finalize()`](classes/MainLoop.md) | Partial | Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit.; Host-driven MainLoop override; ADRs 0015/0016. |
-| [`MainLoop::method:_initialize()`](classes/MainLoop.md) | Partial | Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit. |
-| [`MainLoop::method:_physics_process(float:)`](classes/MainLoop.md) | Partial | Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit.; Host-driven MainLoop override; ADRs 0015/0016. |
-| [`MainLoop::method:_process(float:)`](classes/MainLoop.md) | Partial | Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit.; Host-driven MainLoop override; ADRs 0015/0016. |
 | [`MainLoop::signal:on_request_permissions_result(String:,bool:)`](classes/MainLoop.md) | Partial | Typed C# event for the permission-result signal; native host permission-request integration remains absent under ADR 0015 and ADR 0021.; Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit. |
 | [`class:Node`](classes/Node.md) | Partial | Typed C# type exists; inheritance, signatures and behavior require row-level audit. |
 | [`Node::constant:NOTIFICATION_ACCESSIBILITY_INVALIDATE`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |

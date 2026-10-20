@@ -12028,6 +12028,16 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0004/0005/0010/0013/0023/0091: executing typed hierarchy duplication with complete flags, exact compiled factories or engine-base omission, actual linked-template overlays, groups and authored subscriptions. Typed snapshots preserve arrays, node remapping, borrowed external references and ordinary resources; shallow forced copies and source/ancestor ownership leases survive original disposal. Replaced inherited roles keep origin identity. Constructor/schema/reentry/topology failures clean acquired ownership. 125 production factory families and fresh-process authoring/headless/native verification remain distinct from independent package/NativeAOT/foreign/native-allocation/performance and owner acceptance."
+    },
+    {
+      "godot": [
+        "MainLoop::method:_initialize()",
+        "MainLoop::method:_physics_process(float:)",
+        "MainLoop::method:_process(float:)",
+        "MainLoop::method:_finalize()"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0015/0016: typed owner-thread lifecycle and double-second callbacks retain one successful initialization, fixed-before-idle scaled scheduling, unchanged stop results, one terminal finalization, callback-failure recovery and disposal ownership. Public --loop-lifecycle drives real CPU/software-GPU/registered worlds in serial/separate modes through direct and Engine hosts; moving/querying warm frames require 0/0 owner/all-thread managed bytes. Root MainLoop/Engine and physics-clock checks cover defaults, Input cleanup, catch-up, time capture, reentry and terminal errors. NativeAOT is checked separately; OS permissions, hardware cadence and inherited Object behavior remain separate obligations."
     }
   ]
 }

@@ -317,3 +317,5 @@ Registered `shader_globals/name` definitions use [GlobalShaderParameterSettings<
 [Public property-list notifications](../components/object-lifecycle.md#public-property-list-notification) now expose the existing typed metadata publisher to ordinary external callers on every object role. Caller-thread delivery, blocking, deferred connections and lifetime retain their existing contract; physical authoring permissions are unchanged.
 
 The [Time service](../components/time-service.md) now supplies typed Gregorian calendar values, signed Unix/string conversions, UTC/local system samples, timezone metadata and monotonic elapsed ticks. Static calls address one permanent registry identity and do not depend on a native session or game scheduling.
+
+The [MainLoop callback audit](../components/main-loop.md#complete-frame-and-lifecycle-callback-audit) verifies initialization, fixed/idle deltas and stop results, failure recovery and terminal finalization with real selected CPU/software-GPU/registered worlds. Explicit library-host ownership and warmed zero managed allocation remain distinct from platform permissions and hardware performance.

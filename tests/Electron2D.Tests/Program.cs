@@ -9,6 +9,7 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOOP_LIFECYCLE") == "1") { VerifyEngine(); VerifyMainLoop(); VerifyInput(); Console.WriteLine("Main loop, Engine lifecycle and Input lanes passed."); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_RELATIONS") is { } windowRelations) { try { if (windowRelations == "display") DisplayServerRelationsTests.Display(); else DisplayServerRelationsTests.RunNative(windowRelations); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_POPUP_SCENE") is { } nativePopupScene) { try { NativePopupWindowTests.RunScene(nativePopupScene, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_POPUPS")!); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_POPUPS") is { } nativePopupBackend) { try { NativePopupWindowTests.Run(nativePopupBackend); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
@@ -8976,7 +8977,7 @@ static void VerifyEngine()
             ReferenceEquals(Engine.GetSingleton<InputMap>(nameof(InputMap)), InputMap.Service) &&
             ReferenceEquals(Engine.GetSingleton<AudioServer>(nameof(AudioServer)), AudioServer.Service) &&
             ReferenceEquals(Engine.GetSingleton<OS>(nameof(OS)), OS.Service) &&
-            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(NavigationServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance)]),
+            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(NavigationServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance)]),
         "All built-in process services must be present in the global singleton registry.");
     Expect<InvalidOperationException>(() => Engine.UnregisterSingleton(nameof(Engine)),
         "The built-in Engine registry entry must not be removable.");
@@ -9029,7 +9030,7 @@ static void VerifyEngine()
                 ReferenceEquals(Engine.GetSingleton("tests.primary"), registered) &&
                 ReferenceEquals(Engine.GetSingleton<TestObject>("tests.primary"), registered) &&
                 ReferenceEquals(Engine.GetSingleton<OS>(nameof(OS)), OS.Service) &&
-            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(NavigationServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance), "tests.primary"]),
+            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(NavigationServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance), "tests.primary"]),
             "Engine singleton lookup must preserve identity, type, and registration order.");
         Expect<InvalidOperationException>(() => Engine.RegisterSingleton("tests.primary", registered),
             "Engine singleton names must be unique.");
@@ -9062,7 +9063,7 @@ static void VerifyEngine()
         instance.Dispose();
     });
     Require(ReferenceEquals(Engine.GetSingleton<OS>(nameof(OS)), OS.Service) &&
-            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(NavigationServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance)]),
+            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(NavigationServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance)]),
         "Concurrent singleton removal must preserve only the built-in registry entries.");
 
     Engine.PhysicsTicksPerSecond = 10;
