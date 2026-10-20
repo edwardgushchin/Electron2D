@@ -5161,6 +5161,11 @@
       "godot": "RenderingServer::method:is_on_render_thread()",
       "electron2d": "method:Electron2D.RenderingServer.IsOnRenderThread()",
       "reason": "ADRs 0028/0095/0004: a typed Action bridge targets the exact active scene/native owner on both canvas backends. Workers enqueue under a short session lock; owner calls drain the prior FIFO snapshot then invoke inline, with nested calls, bounded later arrivals, all-selected error continuation and native frame/sync commitment before propagation. Disabled and low-processor render attempts drain; accepted requests cancel at retirement and never transfer sessions. Concurrent producer order, captures, errors, actual GLSL/HLSL native arithmetic/readback and canvas pixels, and 32 prepared zero-managed-owner/producer-byte cycles execute on software Linux Wayland/X11. Hardware, foreign platforms and native allocator totals remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:texture_set_force_redraw_if_visible(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.TextureSetForceRedrawIfVisible(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0028/0016/0095: a weak session-owned image/proxy policy consumes the submitted visible canvas graph on both backends, including alias chains, current animation sources, channels, SVG raster origins, shader ordinary/layered/fixed-array bindings and viewport dependencies. Hidden, clipped, offscreen, disabled and unused bindings settle to idle; destination identity survives replacement, consumed-source policy does not transfer, and borrowed resources remain collectable. MeshTexture uses its sampled BaseTexture image identity. TextureRedrawTests verifies public ownership/owner/session boundaries, native pixels/cadence, retained mesh/multimesh alias identity, failure retry and 32 prepared active/idle zero-managed-owner-byte intervals on software Linux Wayland/X11. Visibility is conservative for authored/generated vertices and instances without explicit bounds, bound shader branches and pixel occlusion; native allocator, hardware, full-suite and foreign-platform acceptance remain unverified."
     }
   ],
   "statusGroups": [
@@ -6334,8 +6339,8 @@
       "godot": [
         "RenderingServer::method:texture_set_force_redraw_if_visible(RID:,bool:)"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: selective-frame/damage submission scheduler that consumes visibility-driven texture invalidation; enters that first scheduler slice under ADR 0028. Current Engine.Run submits every enabled visible root frame, so storing this flag alone would be inert."
+      "state": "Implemented",
+      "reason": "ADRs 0028/0016/0095: a weak session-owned image/proxy policy consumes the submitted visible canvas graph on both backends, including alias chains, current animation sources, channels, SVG raster origins, shader ordinary/layered/fixed-array bindings and viewport dependencies. Hidden, clipped, offscreen, disabled and unused bindings settle to idle; destination identity survives replacement, consumed-source policy does not transfer, and borrowed resources remain collectable. MeshTexture uses its sampled BaseTexture image identity. TextureRedrawTests verifies public ownership/owner/session boundaries, native pixels/cadence, retained mesh/multimesh alias identity, failure retry and 32 prepared active/idle zero-managed-owner-byte intervals on software Linux Wayland/X11. Visibility is conservative for authored/generated vertices and instances without explicit bounds, bound shader branches and pixel occlusion; native allocator, hardware, full-suite and foreign-platform acceptance remain unverified."
     },
     {
       "godot": [

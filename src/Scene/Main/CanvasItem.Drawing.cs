@@ -357,20 +357,20 @@ public abstract partial class CanvasItem
             if (replay.Particles is { } particles)
             {
                 if (!capturedMaterial) { var current = CanvasMaterial; material = current?.RequireCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
-                particles.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, commandClip, viewport?.SnapVerticesToPixel == true, linear, this);
+                particles.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, commandClip, viewport?.SnapVerticesToPixel == true, linear, this, command.Texture);
                 continue;
             }
             if (replay.MultiMesh is { } instances)
             {
                 if (!capturedMaterial) { var current = CanvasMaterial; material = current?.RequireCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
                 var fraction = IsPhysicsInterpolatedAndEnabled() ? (float)Engine.PhysicsInterpolationFraction : 1f;
-                instances.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, commandClip, viewport?.SnapVerticesToPixel == true, fraction, outputSize, this, linear);
+                instances.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, commandClip, viewport?.SnapVerticesToPixel == true, fraction, outputSize, this, linear, command.Texture);
                 continue;
             }
             if (replay.Mesh is { } mesh)
             {
                 if (!capturedMaterial) { var current = CanvasMaterial; material = current?.RequireCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
-                mesh.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, commandClip, viewport?.SnapVerticesToPixel == true, skinOwner: this, linear: linear);
+                mesh.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, commandClip, viewport?.SnapVerticesToPixel == true, skinOwner: this, linear: linear, textureSource: command.Texture);
                 continue;
             }
             if (replay.ParticleCustom is { } custom)
@@ -410,11 +410,11 @@ public abstract partial class CanvasItem
                 capturedMaterial = true;
             }
             var repeat = command.Tile ? TextureRepeat.Enabled : inheritedRepeat;
-            if (batches.Count != 0 && batches[^1] is var last && !last.Procedural && last.VisibilityBounds is null && last.Operation == CanvasOperation.Draw && last.InstanceCount == 0 && last.Material == material && last.InstanceOwner == (material?.Program.HasInstanceUniforms == true ? this : null) && last.Texture == replay.Texture &&
+            if (batches.Count != 0 && batches[^1] is var last && !last.Procedural && last.VisibilityBounds is null && last.Operation == CanvasOperation.Draw && last.InstanceCount == 0 && last.Material == material && last.InstanceOwner == (material?.Program.HasInstanceUniforms == true ? this : null) && last.Texture == replay.Texture && last.TextureSource == command.Texture &&
                 last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == commandClip && last.Glyph == glyph && last.GlyphModulation == glyphModulation && last.LinearColors == linearColors)
 
                 batches[^1] = last with { Count = last.Count + count };
-            else batches.Add(new(first, count, material, replay.Texture, filter, repeat, anisotropy, blend, commandClip, InstanceOwner: material?.Program.HasInstanceUniforms == true ? this : null, Glyph: glyph, GlyphModulation: glyphModulation, LinearColors: linearColors));
+            else batches.Add(new(first, count, material, replay.Texture, filter, repeat, anisotropy, blend, commandClip, InstanceOwner: material?.Program.HasInstanceUniforms == true ? this : null, Glyph: glyph, GlyphModulation: glyphModulation, LinearColors: linearColors, TextureSource: command.Texture));
         }
 
     }

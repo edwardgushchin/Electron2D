@@ -46,7 +46,9 @@ internal static class RenderingTextureRegistry
         return rid;
     }
 
-    internal static Resource ResolveResource(RID rid)
+    internal static Resource ResolveResource(RID rid) => TryResolveResource(rid) ?? throw new ArgumentException("The RID does not identify a live rendering texture.", nameof(rid));
+
+    internal static Resource? TryResolveResource(RID rid)
     {
         lock (Gate)
         {
@@ -54,7 +56,7 @@ internal static class RenderingTextureRegistry
             if (Entries.TryGetValue(rid, out var entry) && entry.Borrowed.TryGetTarget(out texture) && !texture.IsDisposed)
                 return texture;
             if (texture is null || texture.IsDisposalCommitted) Entries.Remove(rid);
-            throw new ArgumentException("The RID does not identify a live rendering texture.", nameof(rid));
+            return null;
         }
     }
 

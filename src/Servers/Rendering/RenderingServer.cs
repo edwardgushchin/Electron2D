@@ -136,7 +136,7 @@ public sealed partial class RenderingServer : ElectronObject
         internal readonly List<YSortEntry> YSort = [];
         internal readonly Resource?[] TextureScratch = new Resource?[32];
         internal int State;
-        internal bool Wanted, Drawn, ClearEnabled;
+        internal bool Wanted, Drawn, ClearEnabled, TextureRedrawVisited;
         internal Color Clear;
     }
     private Viewport _viewport;
@@ -157,7 +157,7 @@ public sealed partial class RenderingServer : ElectronObject
     private void CaptureViewport(Viewport viewport)
     {
         if (!_canvasFrames.TryGetValue(viewport, out var frame)) _canvasFrames.Add(viewport, frame = new(viewport));
-        viewport.RenderingOwner = this; frame.State = 0; frame.Wanted = frame.Drawn = false; _activeFrames.Add(frame);
+        viewport.RenderingOwner = this; frame.State = 0; frame.Wanted = frame.Drawn = frame.TextureRedrawVisited = false; _activeFrames.Add(frame);
         var size = TargetSize(viewport);
         if (ViewportActive(viewport) && (size.X > 1 && size.Y > 1 || ReferenceEquals(viewport, _window) && size.X > 0 && size.Y > 0))
         {
@@ -220,6 +220,7 @@ public sealed partial class RenderingServer : ElectronObject
                 finally { _submittingTextures = false; }
             }
             ReplayNativeFrames();
+            _continuousCanvas |= HasVisibleTextureRedraw();
             PresentViewports();
             EndNativeFrames();
             _nativeFrameStarted = false;
@@ -236,6 +237,7 @@ public sealed partial class RenderingServer : ElectronObject
         }
         catch (Exception error)
         {
+            if (!_frameSubmitted) MarkChanged();
             if (_nativeFrameStarted) foreach (var surface in _nativeWindows.Values) surface.NeedsSeed = true;
             AddCanvasVisibilityError(ref frameError, error);
         }
@@ -624,7 +626,7 @@ public sealed partial class RenderingServer : ElectronObject
             }
             finally
             {
-                FramePreDrawCore = FramePostDrawCore = null; _queuedFrameCallbacks.Clear(); _completedFrameCallbacks.Clear(); foreach (var viewport in _canvasFrames.Keys) viewport.RenderingOwner = null; _canvasFrames.Clear(); _activeFrames.Clear();
+                _forcedTextureRedraw?.Clear(); _forcedTextureRedraw = null; FramePreDrawCore = FramePostDrawCore = null; _queuedFrameCallbacks.Clear(); _completedFrameCallbacks.Clear(); foreach (var viewport in _canvasFrames.Keys) viewport.RenderingOwner = null; _canvasFrames.Clear(); _activeFrames.Clear();
                 _nodes.Clear(); _vertices.Clear(); _instances.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
                 _contactCanvases.Clear();
                 _sceneCanvasItems.Clear(); _sceneViewports.Clear(); _capturedTree = null;

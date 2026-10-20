@@ -10,7 +10,7 @@ internal sealed class CanvasMultiMesh(MultiMesh resource)
     internal Rect2 Bounds() => resource.GetAABB();
     internal void ResetInterpolation(MultiMesh? alreadyReset) { if (!ReferenceEquals(resource, alreadyReset) && resource is { IsDisposed: false }) resource.ResetInstancesPhysicsInterpolation(); }
     internal void Append(List<CanvasVertex> vertices, List<CanvasBatch> batches, Texture? texture, Transform transform, Color color,
-        MaterialState? material, BlendMode blend, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, bool snap, float fraction, Vector2i? outputSize, CanvasItem? skinOwner = null, bool linear = false)
+        MaterialState? material, BlendMode blend, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, bool snap, float fraction, Vector2i? outputSize, CanvasItem? skinOwner = null, bool linear = false, Texture? textureSource = null)
     {
         lock (resource.Gate)
         {
@@ -29,7 +29,7 @@ internal sealed class CanvasMultiMesh(MultiMesh resource)
             if (!skinned && clip is { } scissor && !bounds.Intersects(new Rect2(scissor.Position, scissor.Size), includeBorders: true)) return;
             if (!skinned && outputSize is { } size && !bounds.Intersects(new Rect2(Vector2.Zero, size), includeBorders: true)) return;
             _mesh ??= new(mesh, Transform.Identity, Colors.White); _mesh.Set(mesh, Transform.Identity, Colors.White);
-            _mesh.Append(vertices, batches, texture, transform, color, material, blend, filter, repeat, anisotropy, clip, snap, resource, fraction, skinOwner, linear);
+            _mesh.Append(vertices, batches, texture, transform, color, material, blend, filter, repeat, anisotropy, clip, snap, resource, fraction, skinOwner, linear, textureSource);
             ObjectDisposedException.ThrowIf(resource.IsDisposed, resource);
             if (resource.ChangeRevision != revision) throw new InvalidOperationException("Mesh callbacks changed instance storage during replay.");
         }

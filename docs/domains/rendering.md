@@ -446,3 +446,5 @@ The text service exposes borrowed resource source caches and complete copied gly
 Fixed device descriptor arrays now connect ordered RDUniform IDs to compute, graphics and framebuffer-input consumers through scalar native slots, retaining exact count/format/lifetime validation and specialized pipeline counts. See [the contract and verification limits](../components/local-compute.md#fixed-device-descriptor-arrays).
 
 Ordinary signed/unsigned R32 GPU images now execute integer atomics through scalar/fixed-array Image bindings. Actual concurrent kernels, explicit memory semantics, capability checks and GPU-to-canvas consumers are documented in [local compute](../components/local-compute.md#integer-image-atomics).
+
+[Visible texture policies](../components/low-processor-rendering.md#visible-texture-policies) now keep low-processor output active for submitted image bindings, preserving weak session ownership and logical aliases across native replay. Hidden/unused output returns to idle, and failed pre-submission frames retain their retry obligation.

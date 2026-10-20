@@ -1,6 +1,6 @@
 # AnimatedTexture
 
-Last updated: 2026-10-18
+Last updated: 2026-10-20
 
 - Declaration: `public sealed class AnimatedTexture : Texture`
 - Source: [AnimatedTexture.cs](../../src/Scene/Resources/AnimatedTexture.cs)
@@ -95,3 +95,5 @@ Playback begins on the first renderer frame, which establishes the clock origin;
 [AnimatedTextureTests](../../tests/Electron2D.Tests/AnimatedTextureTests.cs) verifies defaults, frame data, playback policies, mixed-size crop and source resizing, invalid inputs, graph copies, scene ownership and disposal. [AnimatedTextureRenderingTests](../../tests/Electron2D.Tests/AnimatedTextureRenderingTests.cs) verifies timed and cropped pixels, pause, reverse playback, callback reentry/failure and host cleanup on Linux Wayland GPU/compatibility and dummy/software. Other platforms, visual owner acceptance and import/editor workflows are unverified. Shared Texture/Resource gaps remain on their own coverage pages. See [ADRs 0013](../decisions/resources.md#adr-0013) and [0028](../decisions/rendering.md#adr-0028).
 
 RenderingServer.HasChanged observes an active frame deadline without advancing this resource or publishing Changed. Ordinary render attempts advance its wall clock before deciding whether to skip static output. Paused, zero-speed, single-frame and all-zero-duration loop states do not independently keep drawing. See [low-processor rendering](../components/low-processor-rendering.md).
+
+Visible-image scheduling observes only the selected frame source, including paused playback. RenderingServer.TextureSetForceRedrawIfVisible on that source can keep submitted output active independently of animation deadlines; unused frame slots do not request frames. See [visible texture policies](../components/low-processor-rendering.md#visible-texture-policies).

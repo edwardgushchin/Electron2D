@@ -5,7 +5,7 @@ internal sealed class CanvasParticles(RenderingParticleState source)
     private readonly List<CanvasMesh> _meshes = [];
     internal Rect2 Bounds() => source.Released ? default : source.CustomAABB;
     internal void Append(List<CanvasVertex> vertices, List<CanvasBatch> batches, Texture? texture, Transform transform, Color color,
-        MaterialState? material, BlendMode blend, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, bool snap, bool linear, CanvasItem owner)
+        MaterialState? material, BlendMode blend, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, bool snap, bool linear, CanvasItem owner, Texture? textureSource = null)
     {
         if (source.Released || source.Amount == 0) return;
         source.Owner.RequestParticleCanvas(source); var revision = source.Revision; source.Owner.BeginParticleScenePreparation(); source.Preparing = true;
@@ -21,7 +21,7 @@ internal sealed class CanvasParticles(RenderingParticleState source)
             {
                 var mesh = source.DrawPasses[pass]; if (mesh is null) continue; ObjectDisposedException.ThrowIf(mesh.IsDisposed, mesh);
                 _meshes[pass] ??= new(mesh, Transform.Identity, Colors.White); _meshes[pass].Set(mesh, Transform.Identity, Colors.White);
-                _meshes[pass].AppendParticles(vertices, batches, source, texture, canvas, visibility, color, material, blend, filter, repeat, anisotropy, clip, snap, linear, sheet, owner);
+                _meshes[pass].AppendParticles(vertices, batches, source, texture, canvas, visibility, color, material, blend, filter, repeat, anisotropy, clip, snap, linear, sheet, owner, textureSource);
                 if (source.Released || source.Revision != revision) throw new InvalidOperationException("Mesh callbacks changed particle geometry ownership.");
             }
         }

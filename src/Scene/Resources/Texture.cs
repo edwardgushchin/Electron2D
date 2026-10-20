@@ -26,7 +26,8 @@ public abstract class Texture : Resource
     /// <summary>Returns the stable rendering identity of this texture resource.</summary>
     /// <returns>A borrowed RID retained until resource disposal, independent of the active rendering window.</returns>
     /// <remarks>The identity retains this resource's virtual drawing behavior. It does not transfer ownership;
-    /// RenderingServer.FreeRID and server texture mutation reject it. Uninitialized resources still have a valid identity.
+    /// RenderingServer.FreeRID and storage mutation reject it; session sampling/scheduling policies can borrow it.
+    /// Uninitialized resources still have a valid identity.
     /// Concrete views may instead forward their current source identity.</remarks>
     /// <exception cref="ObjectDisposedException">The texture is disposed.</exception>
     public override RID GetRID()
