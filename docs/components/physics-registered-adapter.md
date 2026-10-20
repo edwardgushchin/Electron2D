@@ -4578,3 +4578,5 @@ complete custom/coupled numerical, hardware, native-memory, network, visual,
 foreign-platform and performance acceptance remain open.
 
 [Hollow pair contacts](physics-custom-geometry.md#hollow-pair-contacts) now exercise the public-only annulus/annulus format through standalone/selected resource pairs and registered scene/raw queries and numerical response. Both surfaces/orders retain strict warmed zero managed allocation; built-in custom attachment, arbitrary algorithms and full native/network/hardware acceptance remain open.
+
+[Oblique long circle motion](physics-queries.md#oblique-long-circle-motion) verifies the existing public cast/overlap and scene/raw body-motion paths across four unit-basis poses, both source/peer roles and signs. CPU/software-GPU/registered owner/separate CLR and NativeAOT profiles retain the existing tolerances and strict zero warmed managed allocation; wider acceptance remains open.

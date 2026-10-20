@@ -1,11 +1,15 @@
 # Physics contract and backend audit
 
-The latest axis velocity slice records **1266/1369 Implemented (92.4763%)**,
-with **103 open** declarations (72 Partial, 14 Unimplemented, 17 Blocked) and 92
-Excluded. Scene/server projection preserves current impulse motion and inactive
-future configuration through 58 verified processes; earlier counts below describe
-their respective checkpoints.
-See [complete axis velocity](physics-registered-adapter.md#complete-axis-velocity-operation).
+The current declaration census and complete open-row list are generated in the
+[physics declaration audit](../coverage/physics-status.md). They count applicable
+declarations, including inherited rows, and do not establish complete numerical,
+native, network or hardware readiness. The earlier paragraphs below record their
+respective verified checkpoints.
+
+[Oblique long circle motion](physics-queries.md#oblique-long-circle-motion) adds
+arbitrary-angle scene/raw query and motion evidence without promoting a row.
+The axis-velocity checkpoint recorded 1266/1369 Implemented (92.4763%), with
+103 open declarations; see [complete axis velocity](physics-registered-adapter.md#complete-axis-velocity-operation).
 
 [Complete reporting threshold operations](physics-registered-adapter.md#complete-reporting-threshold-operations) reject numerical writes before selected status/scene participation/pending preparation while retaining configured reads and physical reporting semantics. Nine body roles, terminal recovery, immutable reports, exact bounds/history and strict zero warmed managed bytes pass 74/74 JIT/NativeAOT CPU/no-device, software-GPU, registered and root publication profiles. That slice recorded 1262/1369 Implemented (92.1841%), with 107 open declarations (76 Partial, 14 Unimplemented, 17 Blocked), 92 Excluded. Wider numerical/network/native/platform/hardware performance acceptance remains open; earlier counts describe checkpoints.
 

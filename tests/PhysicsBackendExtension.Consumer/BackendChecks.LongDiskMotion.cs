@@ -7,7 +7,7 @@ public static partial class BackendChecks
         private readonly ShapeGeometry _geometry = ShapeGeometry.Circle(1);
         protected override ShapeGeometry GetGeometryCore() => _geometry;
     }
-    public static void RunLongDiskMotion(PhysicsServer.Backend? backend = null, bool threaded = false)
+    public static void RunLongDiskMotion(PhysicsServer.Backend? backend = null, bool threaded = false, bool oblique = false)
     {
         var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread); var owner = Thread.CurrentThread; var solved = 0;
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
@@ -46,26 +46,34 @@ public static partial class BackendChecks
                 var rayCast = world.DirectSpaceState.CastMotion(shapeQuery); var rayEntry = 9997f / 29997;
                 Check(rayCast.SafeFraction <= rayEntry + .000002f && rayCast.UnsafeFraction >= rayEntry - .000002f && rayCast.UnsafeFraction < 1,
                     "Long directed point-to-disk sweeps preserve the same first entry");
-                for (var i = 0; i < 128; i++) Frame(i); Collect();
+                var frames = oblique ? 192 : 128;
+                for (var i = 0; i < frames; i++) Frame(i); Collect();
                 var beforeSteps = solved; var own = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
-                for (var i = 0; i < 128; i++) Frame(i);
+                for (var i = 0; i < frames; i++) Frame(i);
                 own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
-                Check(backend is not null || solved - beforeSteps == 128, "Long disk motion executes each registered frame");
+                Check(backend is not null || solved - beforeSteps == frames, "Long disk motion executes each registered frame");
                 Check(own == 0 && all == 0, $"Long disk motion allocated {own}/{all} B");
-                Console.WriteLine($"Long disk motion {world.PhysicsBackendName}/{threaded}: builtin/procedural compound sources, scene/raw peers, long/oblique/tangent/miss controls; 128 frames / 640 calls {own}/{all} B.");
+                Console.WriteLine($"Long disk motion {world.PhysicsBackendName}/{threaded}: builtin/procedural compound sources, scene/raw peers, long/oblique/tangent/miss controls; {frames} frames / {frames * 5} calls {own}/{all} B.");
                 void Frame(int configuration)
                 {
                     var sample = configuration % 6; var kind = configuration / 6 % 2; var role = configuration / 12 % 2;
-                    var outer = configuration / 24 % 2 == 0 ? Transform.Identity : new Transform(Vector2.Down, Vector2.Left, new(70, -30));
-                    var sign = configuration / 48 % 2 == 0 ? 1 : -1;
+                    var orientation = configuration / 24 % (oblique ? 4 : 2);
+                    var outer = orientation == 0 ? Transform.Identity : orientation == 1 ? new Transform(Vector2.Down, Vector2.Left, new(70, -30)) :
+                        orientation == 2 ? new Transform(new(.8f, .6f), new(-.6f, .8f), new(70, -30)) : new Transform(new(.6f, -.8f), new(.8f, .6f), new(-50, 80));
+                    var sign = configuration / (oblique ? 96 : 48) % 2 == 0 ? 1 : -1;
                     var distance = sample == 0 ? 9999f : sample is 1 or 2 ? 30000 : sample == 3 ? 12345 : 10000;
                     var length = sample == 0 ? 29997f : sample == 1 ? 41100 : sample == 2 ? 65100 : sample == 3 ? 24566.55f : 20000;
-                    var lateral = sample == 1 ? .7f : sample == 2 ? 1.5f : sample == 3 ? -.7f : sample == 4 ? 2.125f : sample == 5 ? 2 : 0;
-                    var expectedHit = sample != 4; var expected = expectedHit ? (float)((distance - Math.Sqrt(4 - (double)lateral * lateral)) / length) : 1;
+                    var lateral = sample == 1 ? .7f : sample == 2 ? 1.5f : sample == 3 ? -.7f : sample == 4 ? 2.125f : sample == 5 ? orientation >= 2 ? 1.9f : 2 : 0;
+                    var expectedHit = sample != 4;
                     var target = peers[role]; var targetCenter = outer * new Vector2(sign * distance, lateral);
                     for (var i = 0; i < 2; i++) PhysicsServer.BodySetCollisionLayer(peers[i], i == role ? 1u : 0u);
                     PhysicsServer.BodySetTransform(target, new(0, targetCenter));
                     shapeQuery.Shape = sources[kind]; shapeQuery.Transform = outer; shapeQuery.Motion = outer.BasisXform(new(sign * length, 0));
+                    var dx = (double)targetCenter.X - outer.Origin.X; var dy = (double)targetCenter.Y - outer.Origin.Y;
+                    var mx = (double)shapeQuery.Motion.X; var my = (double)shapeQuery.Motion.Y; var speed = Math.Sqrt(mx * mx + my * my);
+                    var projection = (dx * mx + dy * my) / speed; var side = Math.Abs((dx * my - dy * mx) / speed);
+                    var expected = expectedHit ? (float)((projection - Math.Sqrt((2 - side) * (2 + side))) / speed) : 1;
+                    Check(!expectedHit || float.IsFinite(expected), "The exact float input geometry retains analytic circle entry");
                     var cast = world.DirectSpaceState.CastMotion(shapeQuery); Bracket(cast.SafeFraction, cast.UnsafeFraction);
                     var count = world.DirectSpaceState.IntersectShape(shapeQuery, hits);
                     Check(count == (expectedHit ? 1 : 0) && (!expectedHit || hits[0].ColliderRID == target && hits[0].ShapeIndex == 1), "Long disk overlap sweep retains actual hit truth and target identity");
@@ -86,7 +94,7 @@ public static partial class BackendChecks
                     void Bracket(float low, float high)
                     {
                         if (expectedHit ? low < 0 || low > expected + .000002f || high < expected - .000002f || high > 1 || low > high || high - low > 3f / 512 + .000002f : low != 1 || high != 1)
-                            throw new InvalidOperationException($"Long disk cast sample={sample}, kind={kind}, role={role}, sign={sign}: {low}/{high}, expected={expected}.");
+                            throw new InvalidOperationException($"Long disk cast sample={sample}, kind={kind}, role={role}, orientation={orientation}, sign={sign}: {low}/{high}, expected={expected}.");
                     }
                 }
             }

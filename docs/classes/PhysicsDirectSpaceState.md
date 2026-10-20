@@ -120,3 +120,5 @@ view lifetime retain their companion checks.
 retains represented concave/boundary/ray precedence across all four direct shape
 operations, current initial contacts and finite boundary endpoints. CPU collinear
 circle/core contacts retain a unit normal and corresponding surface points.
+
+[Oblique long circle motion](../components/physics-queries.md#oblique-long-circle-motion) verifies the existing public cast/overlap and scene/raw body-motion paths across four unit-basis poses, both source/peer roles and signs. CPU/software-GPU/registered owner/separate CLR and NativeAOT profiles retain the existing tolerances and strict zero warmed managed allocation; wider acceptance remains open.
