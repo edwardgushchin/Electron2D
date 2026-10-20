@@ -1960,7 +1960,7 @@ full numerical/network/native/platform and target performance acceptance remain 
 ## Full Linux suite, 2026-10-20
 
 The ordinary complete Release test runner now exits zero at main
-`4b6662eadabdf19e8628d2982404541029f8f9e0`, after 715.0824 seconds. This is a
+`f56c93e77d347cdbc931c20d4c87dc5bdba1c57a`, after 715.0824 seconds. This is a
 fresh Linux x64/.NET 10.0.101 process on kernel 7.2.9-1-cachyos, the current
 Wayland desktop and physical RTX 3090 Ti/NVIDIA 615.71.09. It follows the contact
 publication change; it does not retrospectively change older cohort outcomes.

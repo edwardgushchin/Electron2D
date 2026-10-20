@@ -150,7 +150,7 @@ wiki tests, generation and generated-output check pass. Generated pages stay
 outside the engine commit.
 
 The later [full Linux runner refresh](physics-contract-audit.md#full-linux-suite-2026-10-20)
-passes at `4b6662ea` with matching source-built native assets. It adds ordinary
+passes at `f56c93e7` with matching source-built native assets. It adds ordinary
 full-suite evidence; it does not replace these frozen performance cohorts or
 close fresh NativeAOT/native-allocation/foreign/network requirements.
 
