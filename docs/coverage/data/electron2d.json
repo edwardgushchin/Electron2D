@@ -253271,6 +253271,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.LineBreakingStrictness()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "LineBreakingStrictness",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E LineBreakingStrictness { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.LocaleFallback()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",

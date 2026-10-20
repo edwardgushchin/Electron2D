@@ -458,3 +458,5 @@ Ordinary signed/unsigned R32 GPU images now execute integer atomics through scal
 [Loading-image presentation](../components/boot-images.md) executes immediate native-client output during readiness/loading through RenderingServer.SetBootImageWithStretch, with six sizing modes and preserved scene viewport/callback state.
 
 GPU thin canvas strokes retain native line-list/line-strip topology, including debug-draw consumers. Compatibility preserves its triangle footprint; point/two-vertex DrawPrimitive remains a separate coverage limit. See [stroke commands](../components/canvas-rendering.md#stroke-commands) for the independent pixel oracle, snapping policy and exact verification boundary.
+
+[Project line-breaking strictness](../components/line-breaking-strictness.md) now selects native locale line rules for all shared text layouts and retained buffers. Its first nonempty-analysis snapshot, explicit language options and restart boundary are documented with executable consumers.

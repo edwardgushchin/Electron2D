@@ -1,6 +1,6 @@
 # ProjectSettings
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 MovieWriterMixRate is ProjectSetting<int> for editor/movie_writer/mix_rate (48000 Hz, 1000..200000); MovieWriterSpeakerMode is ProjectSetting<AudioServer.SpeakerMode> for editor/movie_writer/speaker_mode (Stereo). MovieWriterVideoQuality is ProjectSetting<float> for editor/movie_writer/video_quality (0.75, finite 0..1); MovieWriterAudioBitDepth is ProjectSetting<int> for editor/movie_writer/audio_bit_depth (16, accepts 16 or 32). These are registered nonbasic settings, support feature overrides and are sampled by the built-in recording handler. See [movie writing](../components/movie-writing.md).
 
@@ -1640,3 +1640,13 @@ The nine pseudolocalization keys feed the verified [Unicode pseudolocalization](
 ### DeltaSmoothing
 
 Advanced stored Boolean registered in each project registry. Ordinary save/load/reset and feature overrides apply. Engine.Run/RunAsync sample its effective value into OS.DeltaSmoothing before readiness on every startup. Later project edits configure the next run; change the OS property for the current loop. Manual embedding does not reset OS policy from project configuration. See [host delta smoothing](../components/host-delta-smoothing.md).
+
+## Native line-breaking startup setting
+
+| Complete declaration | Key and default |
+| --- | --- |
+| `public static ProjectSetting<int> LineBreakingStrictness { get; }` | internationalization/locale/line_breaking_strictness; 0 Auto, 1 Loose, 2 Normal, 3 Strict. |
+
+### LineBreakingStrictness
+
+Advanced stored definition, registered with restart-required metadata in every independent project registry. Invalid values reject before base/feature mutation; ordinary persistence and reset apply. The process registry's effective feature value is captured on the first nonempty native line-boundary request. Later changes require process restart. Supplied option-bearing language tags retain their native options instead of receiving the default. Auto forwards the locale unchanged. [The executing text component](../components/line-breaking-strictness.md) records source lifetime, native cache, consumers, tests and platform limits.

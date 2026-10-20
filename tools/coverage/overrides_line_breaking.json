@@ -1,0 +1,19 @@
+{
+  "mappings": [
+    {
+      "godot": "ProjectSettings::property:internationalization/locale/line_breaking_strictness",
+      "electron2d": "property:Electron2D.ProjectSettings.LineBreakingStrictness()",
+      "reason": "ADR 0046/0019: stored typed startup strictness selects real private ICU line rules across common Font layouts, retained TextServer/TextParagraph and scene Label consumers. Effective features are captured at first nonempty line analysis; explicit locale options override the default, Auto preserves native locale tailoring, and later edits require restart. Bounded requested-locale caching preserves warm allocation behavior. LineBreakingStrictnessTests checks fresh-process modes/features, persistence/validation, independent native oracle vectors, 1024 zero-owner/all-thread boundary calls, actual local software Wayland/X11 GPU/Compatibility CJK pixels and prepared native owner allocation. Hardware/foreign/editor/native allocation acceptance remains separate."
+    }
+  ],
+  "extras": [],
+  "statusGroups": [
+    {
+      "godot": [
+        "ProjectSettings::property:internationalization/locale/line_breaking_strictness"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0046/0019: stored typed startup strictness selects real private ICU line rules across common Font layouts, retained TextServer/TextParagraph and scene Label consumers. Effective features are captured at first nonempty line analysis; explicit locale options override the default, Auto preserves native locale tailoring, and later edits require restart. Bounded requested-locale caching preserves warm allocation behavior. LineBreakingStrictnessTests checks fresh-process modes/features, persistence/validation, independent native oracle vectors, 1024 zero-owner/all-thread boundary calls, actual local software Wayland/X11 GPU/Compatibility CJK pixels and prepared native owner allocation. Hardware/foreign/editor/native allocation acceptance remains separate."
+    }
+  ]
+}

@@ -130,6 +130,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(DebugCollisionDrawOutlines, isBasic: false);
         RegisterInternal(DebugCollisionContactColor, isBasic: false);
         RegisterInternal(DebugCollisionMaxContacts, isBasic: false);
+        RegisterInternal(LineBreakingStrictness, isBasic: false);
+        _settings[LineBreakingStrictness.Name].RestartIfChanged = true;
         RegisterInternal(LocaleTest, isBasic: false);
         RegisterInternal(LocaleFallback, isBasic: false);
         RegisterInternal(RootNodeAutoTranslate, isBasic: false);
@@ -1260,6 +1262,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, DebugCollisionDrawOutlines) ||
         ReferenceEquals(setting, DebugCollisionContactColor) ||
         ReferenceEquals(setting, DebugCollisionMaxContacts) ||
+        ReferenceEquals(setting, LineBreakingStrictness) ||
         ReferenceEquals(setting, LocaleTest) ||
         ReferenceEquals(setting, LocaleFallback) ||
         ReferenceEquals(setting, RootNodeAutoTranslate) ||

@@ -1,6 +1,6 @@
 # NativeTextBreak
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 **Declaration:** `internal static unsafe partial class NativeTextBreak` · **Source:** [NativeTextBreak.cs](../../src/Servers/Text/NativeTextBreak.cs) · **Component:** [Text](../components/text.md)
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-20
 
 Loads the private ICU 78.3 / Unicode 17 boundary library and its embedded, pinned data. It owns a process-lifetime, 16-byte-aligned immutable data block, one root-locale word iterator and a bounded cache of 64 line iterators keyed by locale. Evicting a line iterator closes its native handle. A shared lock serializes mutable cursors; no iterator or native pointer escapes into the public API.
 
-`Fill` accepts a complete UTF-16 string, a language, the scalar-to-UTF-16 offset table and reusable output spans. Line breaking uses the supplied locale or the tool-locale fallback. Default line strictness is automatic; an explicit locale keyword such as `ja@lb=strict` is retained. Word segmentation uses the root locale and includes script dictionaries. Native positions must coincide with scalar boundaries before they are written into the caller's arrays. Word status distinguishes lexical ends from punctuation/space-only segments.
+`Fill` accepts a complete UTF-16 string, a language, the scalar-to-UTF-16 offset table and reusable output spans. Line breaking uses the supplied locale or the tool-locale fallback. The effective ProjectSettings.LineBreakingStrictness is captured at the first nonempty line analysis. Auto forwards the native locale; Loose/Normal/Strict add their option only when the language has no explicit `@` options. Later edits require process restart. Options are constructed only on cache misses; empty analysis and unrelated Unicode helpers do not capture policy. See [the complete startup and option contract](../components/line-breaking-strictness.md). Word segmentation uses the root locale and includes script dictionaries. Native positions must coincide with scalar boundaries before they are written into the caller's arrays. Word status distinguishes lexical ends from punctuation/space-only segments.
 
 Each call pins the string only while setting and reading the iterators. Both iterators are reset to empty text in `finally` before unpinning, so cached cursors cannot retain a moving managed string. Warm cache hits and caller-supplied spans allocate no managed buffers. Initial data loading, iterator construction and cache misses can allocate. This is a private process service, not a renderer, font RID service or public resource.
 

@@ -447,6 +447,14 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<Color> DebugPathsColor { get; } =
         new("debug/shapes/paths/geometry_color", new Color(0.1f, 1f, 0.7f, 0.4f), value => value.IsFinite());
 
+    /// <summary>Defines the default native line-breaking strictness for text without explicit locale options.</summary>
+    /// <value>internationalization/locale/line_breaking_strictness; 0 Auto, 1 Loose, 2 Normal or 3 Strict. Default 0.</value>
+    /// <remarks>The effective feature override is captured at the first nonempty native line-boundary request.
+    /// Later edits require process restart. A language tag containing explicit locale options retains those options
+    /// instead of receiving this default. Auto delegates tailoring to the native locale rules.</remarks>
+    public static ProjectSetting<int> LineBreakingStrictness { get; } =
+        new("internationalization/locale/line_breaking_strictness", 0, value => value is >= 0 and <= 3);
+
     /// <summary>Defines an optional locale used instead of the process UI culture when an application loop starts.</summary>
     /// <value>The permanent typed project setting, empty by default.</value>
     public static ProjectSetting<string> LocaleTest { get; } =

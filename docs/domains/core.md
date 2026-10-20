@@ -331,3 +331,5 @@ Factory construction provenance is shared by resource, script, file and scene cr
 [Completed canvas counters](../components/canvas-counters.md) now supply Performance RenderTotalObjectsInFrame/RenderTotalPrimitivesInFrame/RenderTotalDrawCallsInFrame from committed native rendering, independently of the Engine timing window.
 
 [Host delta smoothing](../components/host-delta-smoothing.md) connects OS/project policy and effective native VSync to the ordinary owned clock before fixed-step synchronization. Manual and fixed movie input remain explicit; FPS, diagnostics and pacing use measured time.
+
+[Project line-breaking strictness](../components/line-breaking-strictness.md) now selects native locale line rules for all shared text layouts and retained buffers. Its first nonempty-analysis snapshot, explicit language options and restart boundary are documented with executable consumers.

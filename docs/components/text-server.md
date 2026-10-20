@@ -1,6 +1,6 @@
 # Low-level shaped text buffers
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 TextServerManager is a permanent static discovery service registered with Engine. Its primary TextServer is a retained implementation object over the existing FreeType/HarfBuzz/TextLayout foundation. Discovery does not initialize native fonts. Interface objects cannot be disposed; GetInterfaces returns an independent ordered array, and each element supplies its name. Provider replacement, extension dispatch and registration events require their own complete implementation slice.
 
@@ -175,3 +175,5 @@ The private process-owned checker shares the immutable ICU database and serializ
 GetSupportData returns independent exact copies of the embedded 4,811,936-byte TextBreak78.dat database (ICU 78.3 / Unicode 17). GetSupportDataFilename/Info identify this export; SaveSupportData uses FileAccess, writes and flushes the full database, truncates old destinations, and returns false on file access errors. LoadSupportData initializes this embedded profile and returns true when initialization succeeds, regardless of the external filename; later calls have no effect. It never replaces a database borrowed by existing iterators/checkers. IsLocaleUsingSupportData detects my/zh/ja/ko/km/lo/th with case-sensitive language matching and underscore or hyphen separators.
 
 TextServerSecurityTests exercises exact data/hash copies and exports, file failures, skeleton order/canonical/multicharacter cases, malformed/NUL/supplementary input, independent syntax/security results, concurrency, limits and 128 warm zero-managed-byte cycles. Source-built Linux x64 execution and package contract checks do not establish independently repackaged, NativeAOT, foreign-platform, native allocator, hardware or owner acceptance.
+
+[Project line-breaking strictness](line-breaking-strictness.md) now selects native locale line rules for all shared text layouts and retained buffers. Its first nonempty-analysis snapshot, explicit language options and restart boundary are documented with executable consumers.

@@ -15,6 +15,7 @@ internal static unsafe partial class NativeTextBreak
     private static nint _data, _word;
     private static bool _initialized;
     private static ulong _access;
+    private static int _lineBreakingStrictness = -1;
 
     internal static void Fill(string text, string language, ReadOnlySpan<int> scalarUTF16Offsets,
         Span<bool> lineBreaks, Span<bool> wordBoundaries, Span<bool> wordEnds)
@@ -81,11 +82,19 @@ internal static unsafe partial class NativeTextBreak
     }
     private static nint GetLine(string locale)
     {
+        if (_lineBreakingStrictness < 0) _lineBreakingStrictness = ProjectSettings.GetWithOverride(ProjectSettings.LineBreakingStrictness);
         if (Lines.TryGetValue(locale, out var entry))
         {
             Lines[locale] = (entry.Handle, ++_access); return entry.Handle;
         }
-        var iterator = Open(2, locale);
+        var configuredLocale = locale.Contains('@') ? locale : _lineBreakingStrictness switch
+        {
+            1 => locale + "@lb=loose",
+            2 => locale + "@lb=normal",
+            3 => locale + "@lb=strict",
+            _ => locale
+        };
+        var iterator = Open(2, configuredLocale);
         try
         {
             if (Lines.Count == LineCapacity)

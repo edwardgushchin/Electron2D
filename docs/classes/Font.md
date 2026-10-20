@@ -1,6 +1,6 @@
 # Font
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 **Inherits:** [Resource](Resource.md) · **Source:** [Font.cs](../../src/Scene/Resources/Font.cs) · **Component:** [Text](../components/text.md)
 
@@ -481,3 +481,5 @@ Name strings are captured lazily on the serialized text owner. Each metadata cap
 ## Source cache identities
 
 `public override RID GetRID()` returns the borrowed primary source cache, or an empty RID without a primary source. `public RID[] GetRIDs()` copies primary and explicit fallbacks in traversal order, preserving repeated entries. Automatic fallback sources are reported by shaped glyphs/runs after realization. TextServer reads, edits and draws these actual caches; its FreeRID cannot release resource ownership. Cache removal, full reset, file import and disposal retire identities; FontFile data/configuration replacement preserves them. See [resource glyph metadata](../components/text-server.md#resource-sources-glyph-snapshots-and-visual-runs) for projections, linked variants and lifetime boundaries.
+
+[Project line-breaking strictness](../components/line-breaking-strictness.md) now selects native locale line rules for all shared text layouts and retained buffers. Its first nonempty-analysis snapshot, explicit language options and restart boundary are documented with executable consumers.
