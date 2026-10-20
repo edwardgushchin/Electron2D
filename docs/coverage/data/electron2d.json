@@ -192006,6 +192006,45 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServer.GetSupportData()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "GetSupportData",
+    "signature": "public System.Byte[] GetSupportData()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.GetSupportDataFilename()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "GetSupportDataFilename",
+    "signature": "public System.String GetSupportDataFilename()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.GetSupportDataInfo()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "GetSupportDataInfo",
+    "signature": "public System.String GetSupportDataInfo()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServer.Has(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.TextServer",
@@ -192025,11 +192064,54 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServer.IsConfusable(System.String,System.ReadOnlySpan\u003CSystem.String\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "IsConfusable",
+    "signature": "public System.Int32 IsConfusable(System.String text, System.ReadOnlySpan\u003CSystem.String\u003E dictionary)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "dictionary",
+        "type": "System.ReadOnlySpan\u003CSystem.String\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServer.IsLocaleRightToLeft(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.TextServer",
     "name": "IsLocaleRightToLeft",
     "signature": "public System.Boolean IsLocaleRightToLeft(System.String locale)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.IsLocaleUsingSupportData(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "IsLocaleUsingSupportData",
+    "signature": "public System.Boolean IsLocaleUsingSupportData(System.String locale)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -192082,6 +192164,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServer.LoadSupportData(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "LoadSupportData",
+    "signature": "public System.Boolean LoadSupportData(System.String filename)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "filename",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServer.NameToTag(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.TextServer",
@@ -192098,6 +192199,25 @@
       }
     ],
     "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.SaveSupportData(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "SaveSupportData",
+    "signature": "public System.Boolean SaveSupportData(System.String filename)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "filename",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -194092,6 +194212,25 @@
       }
     ],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.SpoofCheck(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "SpoofCheck",
+    "signature": "public System.Boolean SpoofCheck(System.String text)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

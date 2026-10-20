@@ -49,7 +49,7 @@ The reusable [native workflow](../.github/workflows/native.yml) builds Linux x64
 
 Each RID contributes exactly these files:
 
-- `runtimes/<RID>/native/libElectron2DTextBreak.so`: private ICU boundary ABI.
+- `runtimes/<RID>/native/libElectron2DTextBreak.so`: private ICU boundary, Unicode utility/security and font MSDF ABI.
 - `runtimes/<RID>/native/libFAudio.so.0`: FAudio with the engine-owned output bridge.
 - `runtimes/<RID>/native/libElectron2DENet.so`: private ENet/socket/codec bridge.
 - `runtimes/<RID>/native/libElectron2DMesh.so`: private attribute-aware mesh simplification bridge.
@@ -149,3 +149,5 @@ Video playback extends Electron2DOGV to exactly nine bridge exports: the existin
 Flat KTX/Basis decoding adds `Electron2DKTX` to all eighteen producer profiles, using the platform shared-library name or a single merged static archive. Source fingerprints include its codec pin, generated validation correction and Zstandard namespace. Validators require exactly five private exports (KTX create, legacy Basis create, shared level copy/destroy and block decode); older assets require rebuilding. They forbid a global KTX/Basis/Zstandard dependency. The [KTX component](components/image-ktx.md) records codec, source and execution limits. Updated foreign bundles and public package publication remain separate gates.
 
 The ETC/EAC/ASTC slice verifies the five-export KTX asset with independent native/shared/static sanitizer checks, all thirteen public block roles in fresh source/project/NuGet consumers, and a separate NativeAOT consumer. The managed self-contained Linux publish passes 72 ELF and 92 exact notice comparisons. The AOT publish separately executes and retains all 92 exact notice bytes; the managed-host audit is not its format. Six unchanged private libraries are reused from the verified base cohort; the changed KTX asset is rebuilt. Foreign-host execution and public package publication remain separate.
+
+The text security producer adds e2d_spoof_open/close/skeleton/check to the private text ABI (nineteen exports). It links the existing unchanged ICU spoof/script-set closure and uses the already embedded confusables.cfu data. Rebuild target-native assets from these sources before using TextServer.IsConfusable/SpoofCheck; older fifteen-export packages cannot satisfy this ABI. Current Linux x64 source-native execution, hidden-symbol/dependency audit and eighteen package contract tests pass. Those checks do not establish independently repackaged NuGet, NativeAOT or foreign-platform execution. Database export/initialization belongs to the immutable embedded-data profile described in the [text-server contract](components/text-server.md#unicode-security-and-embedded-support-data).

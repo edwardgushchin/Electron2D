@@ -432,3 +432,18 @@ FontGetResource accepts actual Font.GetRID/GetRIDs and automatic fallback identi
 | `TextObjectKey? ShapedGetRunObject(RID shaped, int index)` | Borrowed inline token, null for ordinary text. |
 
 Run getters reject absent indices. Adjacent visual leaders join only when their span/source/size/direction agree. Substrings retain original span/global coordinates through their source lease; paragraph line views use their current raw/display workspace. Scalar/value run queries reuse storage. Arrays and copied run strings may allocate. TextGlyph source identities stay borrowed and may retire after a query.
+
+## Unicode security and support database
+
+See [Unicode security and support data](../components/text-server.md#unicode-security-and-embedded-support-data) for script policy, limits, ownership and verification.
+
+| Signature | Contract |
+| --- | --- |
+| `int IsConfusable(string text, ReadOnlySpan<string> dictionary)` | First equal case-sensitive Unicode skeleton index, or -1. |
+| `bool SpoofCheck(string text)` | True when Unicode security checks flag the text. |
+| `byte[] GetSupportData()` | Independent exact copy of the embedded database. |
+| `string GetSupportDataFilename()` | TextBreak78.dat export name. |
+| `string GetSupportDataInfo()` | ICU/Unicode versions and database roles. |
+| `bool LoadSupportData(string filename)` | Initializes the immutable embedded database; external path is unused in this profile. |
+| `bool SaveSupportData(string filename)` | Writes and flushes exact database bytes; file access failure returns false. |
+| `bool IsLocaleUsingSupportData(string locale)` | Whether word/line breaking uses dictionary support for this locale. |

@@ -209,7 +209,11 @@
     "common/uvectr32.cpp",
     "common/uvectr64.cpp",
     "common/wintz.cpp",
-    "stubdata/stubdata.cpp"
+    "stubdata/stubdata.cpp",
+    "i18n/scriptset.cpp",
+    "i18n/ucln_in.cpp",
+    "i18n/uspoof.cpp",
+    "i18n/uspoof_impl.cpp"
   ],
   "hostToolSources": [
     "tools/icupkg/icupkg.cpp",
@@ -222,11 +226,7 @@
     "tools/toolutil/filetools.cpp",
     "tools/toolutil/uoptions.cpp",
     "tools/toolutil/uparse.cpp",
-    "tools/toolutil/unewdata.cpp",
-    "i18n/scriptset.cpp",
-    "i18n/ucln_in.cpp",
-    "i18n/uspoof.cpp",
-    "i18n/uspoof_impl.cpp"
+    "tools/toolutil/unewdata.cpp"
   ],
   "files": [
     {

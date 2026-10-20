@@ -13,3 +13,7 @@ _e2d_break_status
 _e2d_break_close
 _e2d_font_msdf_generate
 _e2d_font_msdf_free
+_e2d_spoof_open
+_e2d_spoof_close
+_e2d_spoof_skeleton
+_e2d_spoof_check

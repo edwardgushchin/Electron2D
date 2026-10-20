@@ -1234,6 +1234,46 @@
       "godot": "TextServer::method:shaped_text_sort_logical(RID:)",
       "electron2d": "method:Electron2D.TextServer.ShapedTextSortLogical(Electron2D.RID)",
       "reason": "ADR 0004/0046/0107: complete weak resource-source cache RIDs and typed full visual/logical glyph/run producer over the actual FontFile/SystemFont/FontVariation/automatic fallback owners. Preserves copied eleven-field metadata, cluster counts/joining/repeats, global scalar/original span coordinates, inclusive run leader ranges, language/object identity, actual source/size/direction, independent display ellipsis and source-linked lifetime. Raw edits reach actual consumers; borrowed projection disposal/duplicate, cache retirement, callback failure, coherent reads and warmed scalar queries are checked. Native rendered, target package/platform, native allocator and owner gates remain independently reported."
+    },
+    {
+      "godot": "TextServer::method:get_support_data()",
+      "electron2d": "method:Electron2D.TextServer.GetSupportData()",
+      "reason": "ADR 0004/0046/0107: executable Unicode 17 UTS 39 confusable skeleton first-match and moderately restrictive recommended/inclusion spoof checks over the shared immutable private ICU owner. Explicit lengths preserve NUL and malformed UTF-16, correcting pinned zero termination. Copied ordered dictionary validates entirely before a match; combined input/output budgets and 1,048,576-entry limit bound cold work. Existing embedded static-data profile provides exact copied database bytes, flushed FileAccess exports/error results, actual native initialization independent of external filename, and dictionary locale detection with managed hyphen separators. Four private ABI exports reuse unchanged pinned spoof/script-set sources and already packaged confusables.cfu; target-native assets must be rebuilt. Focused Linux source-native boundary/concurrency/export/zero-managed-byte checks and native ABI/package/Unicode regressions remain distinct from independent repackaging, NativeAOT, foreign-platform, native allocator/performance, hardware and owner acceptance."
+    },
+    {
+      "godot": "TextServer::method:get_support_data_filename()",
+      "electron2d": "method:Electron2D.TextServer.GetSupportDataFilename()",
+      "reason": "ADR 0004/0046/0107: executable Unicode 17 UTS 39 confusable skeleton first-match and moderately restrictive recommended/inclusion spoof checks over the shared immutable private ICU owner. Explicit lengths preserve NUL and malformed UTF-16, correcting pinned zero termination. Copied ordered dictionary validates entirely before a match; combined input/output budgets and 1,048,576-entry limit bound cold work. Existing embedded static-data profile provides exact copied database bytes, flushed FileAccess exports/error results, actual native initialization independent of external filename, and dictionary locale detection with managed hyphen separators. Four private ABI exports reuse unchanged pinned spoof/script-set sources and already packaged confusables.cfu; target-native assets must be rebuilt. Focused Linux source-native boundary/concurrency/export/zero-managed-byte checks and native ABI/package/Unicode regressions remain distinct from independent repackaging, NativeAOT, foreign-platform, native allocator/performance, hardware and owner acceptance."
+    },
+    {
+      "godot": "TextServer::method:get_support_data_info()",
+      "electron2d": "method:Electron2D.TextServer.GetSupportDataInfo()",
+      "reason": "ADR 0004/0046/0107: executable Unicode 17 UTS 39 confusable skeleton first-match and moderately restrictive recommended/inclusion spoof checks over the shared immutable private ICU owner. Explicit lengths preserve NUL and malformed UTF-16, correcting pinned zero termination. Copied ordered dictionary validates entirely before a match; combined input/output budgets and 1,048,576-entry limit bound cold work. Existing embedded static-data profile provides exact copied database bytes, flushed FileAccess exports/error results, actual native initialization independent of external filename, and dictionary locale detection with managed hyphen separators. Four private ABI exports reuse unchanged pinned spoof/script-set sources and already packaged confusables.cfu; target-native assets must be rebuilt. Focused Linux source-native boundary/concurrency/export/zero-managed-byte checks and native ABI/package/Unicode regressions remain distinct from independent repackaging, NativeAOT, foreign-platform, native allocator/performance, hardware and owner acceptance."
+    },
+    {
+      "godot": "TextServer::method:is_confusable(String:,PackedStringArray:)",
+      "electron2d": "method:Electron2D.TextServer.IsConfusable(System.String,System.ReadOnlySpan<System.String>)",
+      "reason": "ADR 0004/0046/0107: executable Unicode 17 UTS 39 confusable skeleton first-match and moderately restrictive recommended/inclusion spoof checks over the shared immutable private ICU owner. Explicit lengths preserve NUL and malformed UTF-16, correcting pinned zero termination. Copied ordered dictionary validates entirely before a match; combined input/output budgets and 1,048,576-entry limit bound cold work. Existing embedded static-data profile provides exact copied database bytes, flushed FileAccess exports/error results, actual native initialization independent of external filename, and dictionary locale detection with managed hyphen separators. Four private ABI exports reuse unchanged pinned spoof/script-set sources and already packaged confusables.cfu; target-native assets must be rebuilt. Focused Linux source-native boundary/concurrency/export/zero-managed-byte checks and native ABI/package/Unicode regressions remain distinct from independent repackaging, NativeAOT, foreign-platform, native allocator/performance, hardware and owner acceptance."
+    },
+    {
+      "godot": "TextServer::method:is_locale_using_support_data(String:)",
+      "electron2d": "method:Electron2D.TextServer.IsLocaleUsingSupportData(System.String)",
+      "reason": "ADR 0004/0046/0107: executable Unicode 17 UTS 39 confusable skeleton first-match and moderately restrictive recommended/inclusion spoof checks over the shared immutable private ICU owner. Explicit lengths preserve NUL and malformed UTF-16, correcting pinned zero termination. Copied ordered dictionary validates entirely before a match; combined input/output budgets and 1,048,576-entry limit bound cold work. Existing embedded static-data profile provides exact copied database bytes, flushed FileAccess exports/error results, actual native initialization independent of external filename, and dictionary locale detection with managed hyphen separators. Four private ABI exports reuse unchanged pinned spoof/script-set sources and already packaged confusables.cfu; target-native assets must be rebuilt. Focused Linux source-native boundary/concurrency/export/zero-managed-byte checks and native ABI/package/Unicode regressions remain distinct from independent repackaging, NativeAOT, foreign-platform, native allocator/performance, hardware and owner acceptance."
+    },
+    {
+      "godot": "TextServer::method:load_support_data(String:)",
+      "electron2d": "method:Electron2D.TextServer.LoadSupportData(System.String)",
+      "reason": "ADR 0004/0046/0107: executable Unicode 17 UTS 39 confusable skeleton first-match and moderately restrictive recommended/inclusion spoof checks over the shared immutable private ICU owner. Explicit lengths preserve NUL and malformed UTF-16, correcting pinned zero termination. Copied ordered dictionary validates entirely before a match; combined input/output budgets and 1,048,576-entry limit bound cold work. Existing embedded static-data profile provides exact copied database bytes, flushed FileAccess exports/error results, actual native initialization independent of external filename, and dictionary locale detection with managed hyphen separators. Four private ABI exports reuse unchanged pinned spoof/script-set sources and already packaged confusables.cfu; target-native assets must be rebuilt. Focused Linux source-native boundary/concurrency/export/zero-managed-byte checks and native ABI/package/Unicode regressions remain distinct from independent repackaging, NativeAOT, foreign-platform, native allocator/performance, hardware and owner acceptance."
+    },
+    {
+      "godot": "TextServer::method:save_support_data(String:)",
+      "electron2d": "method:Electron2D.TextServer.SaveSupportData(System.String)",
+      "reason": "ADR 0004/0046/0107: executable Unicode 17 UTS 39 confusable skeleton first-match and moderately restrictive recommended/inclusion spoof checks over the shared immutable private ICU owner. Explicit lengths preserve NUL and malformed UTF-16, correcting pinned zero termination. Copied ordered dictionary validates entirely before a match; combined input/output budgets and 1,048,576-entry limit bound cold work. Existing embedded static-data profile provides exact copied database bytes, flushed FileAccess exports/error results, actual native initialization independent of external filename, and dictionary locale detection with managed hyphen separators. Four private ABI exports reuse unchanged pinned spoof/script-set sources and already packaged confusables.cfu; target-native assets must be rebuilt. Focused Linux source-native boundary/concurrency/export/zero-managed-byte checks and native ABI/package/Unicode regressions remain distinct from independent repackaging, NativeAOT, foreign-platform, native allocator/performance, hardware and owner acceptance."
+    },
+    {
+      "godot": "TextServer::method:spoof_check(String:)",
+      "electron2d": "method:Electron2D.TextServer.SpoofCheck(System.String)",
+      "reason": "ADR 0004/0046/0107: executable Unicode 17 UTS 39 confusable skeleton first-match and moderately restrictive recommended/inclusion spoof checks over the shared immutable private ICU owner. Explicit lengths preserve NUL and malformed UTF-16, correcting pinned zero termination. Copied ordered dictionary validates entirely before a match; combined input/output budgets and 1,048,576-entry limit bound cold work. Existing embedded static-data profile provides exact copied database bytes, flushed FileAccess exports/error results, actual native initialization independent of external filename, and dictionary locale detection with managed hyphen separators. Four private ABI exports reuse unchanged pinned spoof/script-set sources and already packaged confusables.cfu; target-native assets must be rebuilt. Focused Linux source-native boundary/concurrency/export/zero-managed-byte checks and native ABI/package/Unicode regressions remain distinct from independent repackaging, NativeAOT, foreign-platform, native allocator/performance, hardware and owner acceptance."
     }
   ],
   "extras": [
@@ -1794,20 +1834,6 @@
     },
     {
       "godot": [
-        "TextServer::method:get_support_data()",
-        "TextServer::method:get_support_data_filename()",
-        "TextServer::method:get_support_data_info()",
-        "TextServer::method:is_confusable(String:,PackedStringArray:)",
-        "TextServer::method:is_locale_using_support_data(String:)",
-        "TextServer::method:load_support_data(String:)",
-        "TextServer::method:save_support_data(String:)",
-        "TextServer::method:spoof_check(String:)"
-      ],
-      "state": "Blocked",
-      "reason": "ADR 0046/0107: requires the private native supplemental-data or UTS 39 spoof/confusable data producer, target package/ABI and real load/query execution. Existing ICU break dictionaries do not supply that separate data service. This member enters that producer integration slice."
-    },
-    {
-      "godot": [
         "TextServer::method:parse_number(String:,String:)",
         "TextServerExtension::method:_parse_number(String:,String:)"
       ],
@@ -2107,6 +2133,20 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0004/0046/0107: complete weak resource-source cache RIDs and typed full visual/logical glyph/run producer over the actual FontFile/SystemFont/FontVariation/automatic fallback owners. Preserves copied eleven-field metadata, cluster counts/joining/repeats, global scalar/original span coordinates, inclusive run leader ranges, language/object identity, actual source/size/direction, independent display ellipsis and source-linked lifetime. Raw edits reach actual consumers; borrowed projection disposal/duplicate, cache retirement, callback failure, coherent reads and warmed scalar queries are checked. Native rendered, target package/platform, native allocator and owner gates remain independently reported."
+    },
+    {
+      "godot": [
+        "TextServer::method:get_support_data()",
+        "TextServer::method:get_support_data_filename()",
+        "TextServer::method:get_support_data_info()",
+        "TextServer::method:is_confusable(String:,PackedStringArray:)",
+        "TextServer::method:is_locale_using_support_data(String:)",
+        "TextServer::method:load_support_data(String:)",
+        "TextServer::method:save_support_data(String:)",
+        "TextServer::method:spoof_check(String:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0004/0046/0107: executable Unicode 17 UTS 39 confusable skeleton first-match and moderately restrictive recommended/inclusion spoof checks over the shared immutable private ICU owner. Explicit lengths preserve NUL and malformed UTF-16, correcting pinned zero termination. Copied ordered dictionary validates entirely before a match; combined input/output budgets and 1,048,576-entry limit bound cold work. Existing embedded static-data profile provides exact copied database bytes, flushed FileAccess exports/error results, actual native initialization independent of external filename, and dictionary locale detection with managed hyphen separators. Four private ABI exports reuse unchanged pinned spoof/script-set sources and already packaged confusables.cfu; target-native assets must be rebuilt. Focused Linux source-native boundary/concurrency/export/zero-managed-byte checks and native ABI/package/Unicode regressions remain distinct from independent repackaging, NativeAOT, foreign-platform, native allocator/performance, hardware and owner acceptance."
     }
   ]
 }

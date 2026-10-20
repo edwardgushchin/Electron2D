@@ -15,5 +15,9 @@
         e2d_break_close;
         e2d_font_msdf_generate;
         e2d_font_msdf_free;
+        e2d_spoof_open;
+        e2d_spoof_close;
+        e2d_spoof_skeleton;
+        e2d_spoof_check;
     local: *;
 };
