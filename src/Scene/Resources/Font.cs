@@ -15,6 +15,7 @@ public abstract partial class Font : Resource
     internal virtual Font? BaseDependency => null;
     internal virtual NativeFontFeature[]? GetShapingFeatures(FontData source) => null;
     internal virtual int GetShapingSpacing(FontData? source, TextSpacingType spacing) => GetSpacing(spacing);
+    internal virtual float GetShapingBaselineOffset(FontData? source, int size) => 0;
     internal virtual (float Ascent, float Descent) GetShapingMetrics(FontData? source, int size) => (GetAscent(size), GetDescent(size));
     internal virtual float GetShapingUnderline(FontData? source, int size, bool thickness) => thickness ? GetUnderlineThickness(size) : GetUnderlinePosition(size);
     internal Font?[] LocalFallbacks => _fallbacks;
@@ -37,7 +38,7 @@ public abstract partial class Font : Resource
         nameof(Fallbacks), font => font.Fallbacks, (font, value) => font.Fallbacks = value, _ => [], stored: true);
 
     /// <summary>Initializes empty fallback lists and caches for sixty-four lines and sixteen paragraphs.</summary>
-    protected Font() { _fallbackChanged = FallbackChanged; _fallbackDisposed = FallbackDisposed; }
+    protected Font() { _fallbackChanged = FallbackChanged; _fallbackDisposed = FallbackDisposed; RegisterLiveFont(); }
 
     /// <summary>Gets or sets the ordered borrowed fallback fonts, retaining null slots and repeated identities.</summary>
     /// <value>An independent array snapshot; initially empty. Every successful assignment emits Changed.</value>

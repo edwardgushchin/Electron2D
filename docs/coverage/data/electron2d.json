@@ -4598,6 +4598,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.FontContourPoint",
+    "kind": "type",
+    "declaringType": "Electron2D.FontContourPoint",
+    "name": "FontContourPoint",
+    "signature": "public struct Electron2D.FontContourPoint",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [
+      "System.IEquatable\u003CElectron2D.FontContourPoint\u003E"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.FontFeatureInfo",
     "kind": "type",
     "declaringType": "Electron2D.FontFeatureInfo",
@@ -4622,6 +4637,21 @@
     "baseType": "Electron2D.Font",
     "interfaces": [
       "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.FontGlyphContours",
+    "kind": "type",
+    "declaringType": "Electron2D.FontGlyphContours",
+    "name": "FontGlyphContours",
+    "signature": "public struct Electron2D.FontGlyphContours",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [
+      "System.IEquatable\u003CElectron2D.FontGlyphContours\u003E"
     ],
     "parameters": null,
     "returnType": null,
@@ -4658,6 +4688,21 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.FontSizeCacheInfo",
+    "kind": "type",
+    "declaringType": "Electron2D.FontSizeCacheInfo",
+    "name": "FontSizeCacheInfo",
+    "signature": "public struct Electron2D.FontSizeCacheInfo",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [
+      "System.IEquatable\u003CElectron2D.FontSizeCacheInfo\u003E"
     ],
     "parameters": null,
     "returnType": null,
@@ -12538,6 +12583,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.TextServer.ContourPointTag",
+    "kind": "type",
+    "declaringType": "Electron2D.TextServer.ContourPointTag",
+    "name": "ContourPointTag",
+    "signature": "public enum Electron2D.TextServer.ContourPointTag",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TextServerManager",
     "kind": "type",
     "declaringType": "Electron2D.TextServerManager",
@@ -18971,6 +19034,30 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.FontContourPoint..ctor(Electron2D.Vector2,Electron2D.TextServer.ContourPointTag)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.FontContourPoint",
+    "name": ".ctor",
+    "signature": "public FontContourPoint(Electron2D.Vector2 Position, Electron2D.TextServer.ContourPointTag Tag)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "Position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "Tag",
+        "type": "Electron2D.TextServer.ContourPointTag",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.FontFeatureInfo..ctor(System.String,System.Boolean,System.Boolean)",
     "kind": "constructor",
     "declaringType": "Electron2D.FontFeatureInfo",
@@ -19009,6 +19096,74 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.FontGlyphContours..ctor(Electron2D.FontContourPoint[],System.Int32[],System.Boolean)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.FontGlyphContours",
+    "name": ".ctor",
+    "signature": "public FontGlyphContours(Electron2D.FontContourPoint[] Points, System.Int32[] Contours, System.Boolean Orientation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "Points",
+        "type": "Electron2D.FontContourPoint[]",
+        "default": null
+      },
+      {
+        "name": "Contours",
+        "type": "System.Int32[]",
+        "default": null
+      },
+      {
+        "name": "Orientation",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.FontSizeCacheInfo..ctor(Electron2D.Vector2i,System.Int32,System.Int32,System.Int64,System.Single[])",
+    "kind": "constructor",
+    "declaringType": "Electron2D.FontSizeCacheInfo",
+    "name": ".ctor",
+    "signature": "public FontSizeCacheInfo(Electron2D.Vector2i SizePixels, System.Int32 Glyphs, System.Int32 Textures, System.Int64 TextureBytes, System.Single[] RasterScales)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "SizePixels",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "Glyphs",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "Textures",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "TextureBytes",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "RasterScales",
+        "type": "System.Single[]",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -50552,6 +50707,45 @@
     "parameters": [],
     "returnType": "Electron2D.TextOverrunFlags",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.TextServer.ContourPointTag.OffConic()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextServer.ContourPointTag",
+    "name": "OffConic",
+    "signature": "public const Electron2D.TextServer.ContourPointTag OffConic = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextServer.ContourPointTag",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.TextServer.ContourPointTag.OffCubic()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextServer.ContourPointTag",
+    "name": "OffCubic",
+    "signature": "public const Electron2D.TextServer.ContourPointTag OffCubic = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextServer.ContourPointTag",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.TextServer.ContourPointTag.On()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextServer.ContourPointTag",
+    "name": "On",
+    "signature": "public const Electron2D.TextServer.ContourPointTag On = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextServer.ContourPointTag",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.TextSpacingType.Bottom()",
@@ -99644,6 +99838,94 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.FontContourPoint.Deconstruct(ref Electron2D.Vector2,ref Electron2D.TextServer.ContourPointTag)",
+    "kind": "method",
+    "declaringType": "Electron2D.FontContourPoint",
+    "name": "Deconstruct",
+    "signature": "public System.Void Deconstruct(out Electron2D.Vector2 Position, out Electron2D.TextServer.ContourPointTag Tag)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "Position",
+        "type": "ref Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "Tag",
+        "type": "ref Electron2D.TextServer.ContourPointTag",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontContourPoint.Equals(Electron2D.FontContourPoint)",
+    "kind": "method",
+    "declaringType": "Electron2D.FontContourPoint",
+    "name": "Equals",
+    "signature": "public virtual System.Boolean Equals(Electron2D.FontContourPoint other)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "other",
+        "type": "Electron2D.FontContourPoint",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontContourPoint.Equals(System.Object)",
+    "kind": "method",
+    "declaringType": "Electron2D.FontContourPoint",
+    "name": "Equals",
+    "signature": "public override System.Boolean Equals(System.Object obj)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "obj",
+        "type": "System.Object",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontContourPoint.GetHashCode()",
+    "kind": "method",
+    "declaringType": "Electron2D.FontContourPoint",
+    "name": "GetHashCode",
+    "signature": "public override System.Int32 GetHashCode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontContourPoint.ToString()",
+    "kind": "method",
+    "declaringType": "Electron2D.FontContourPoint",
+    "name": "ToString",
+    "signature": "public override System.String ToString()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.FontFeatureInfo.Deconstruct(ref System.String,ref System.Boolean,ref System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.FontFeatureInfo",
@@ -101529,6 +101811,202 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontGlyphContours.Deconstruct(ref Electron2D.FontContourPoint[],ref System.Int32[],ref System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.FontGlyphContours",
+    "name": "Deconstruct",
+    "signature": "public System.Void Deconstruct(out Electron2D.FontContourPoint[] Points, out System.Int32[] Contours, out System.Boolean Orientation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "Points",
+        "type": "ref Electron2D.FontContourPoint[]",
+        "default": null
+      },
+      {
+        "name": "Contours",
+        "type": "ref System.Int32[]",
+        "default": null
+      },
+      {
+        "name": "Orientation",
+        "type": "ref System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontGlyphContours.Equals(Electron2D.FontGlyphContours)",
+    "kind": "method",
+    "declaringType": "Electron2D.FontGlyphContours",
+    "name": "Equals",
+    "signature": "public virtual System.Boolean Equals(Electron2D.FontGlyphContours other)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "other",
+        "type": "Electron2D.FontGlyphContours",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontGlyphContours.Equals(System.Object)",
+    "kind": "method",
+    "declaringType": "Electron2D.FontGlyphContours",
+    "name": "Equals",
+    "signature": "public override System.Boolean Equals(System.Object obj)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "obj",
+        "type": "System.Object",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontGlyphContours.GetHashCode()",
+    "kind": "method",
+    "declaringType": "Electron2D.FontGlyphContours",
+    "name": "GetHashCode",
+    "signature": "public override System.Int32 GetHashCode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontGlyphContours.ToString()",
+    "kind": "method",
+    "declaringType": "Electron2D.FontGlyphContours",
+    "name": "ToString",
+    "signature": "public override System.String ToString()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontSizeCacheInfo.Deconstruct(ref Electron2D.Vector2i,ref System.Int32,ref System.Int32,ref System.Int64,ref System.Single[])",
+    "kind": "method",
+    "declaringType": "Electron2D.FontSizeCacheInfo",
+    "name": "Deconstruct",
+    "signature": "public System.Void Deconstruct(out Electron2D.Vector2i SizePixels, out System.Int32 Glyphs, out System.Int32 Textures, out System.Int64 TextureBytes, out System.Single[] RasterScales)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "SizePixels",
+        "type": "ref Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "Glyphs",
+        "type": "ref System.Int32",
+        "default": null
+      },
+      {
+        "name": "Textures",
+        "type": "ref System.Int32",
+        "default": null
+      },
+      {
+        "name": "TextureBytes",
+        "type": "ref System.Int64",
+        "default": null
+      },
+      {
+        "name": "RasterScales",
+        "type": "ref System.Single[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontSizeCacheInfo.Equals(Electron2D.FontSizeCacheInfo)",
+    "kind": "method",
+    "declaringType": "Electron2D.FontSizeCacheInfo",
+    "name": "Equals",
+    "signature": "public virtual System.Boolean Equals(Electron2D.FontSizeCacheInfo other)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "other",
+        "type": "Electron2D.FontSizeCacheInfo",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontSizeCacheInfo.Equals(System.Object)",
+    "kind": "method",
+    "declaringType": "Electron2D.FontSizeCacheInfo",
+    "name": "Equals",
+    "signature": "public override System.Boolean Equals(System.Object obj)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "obj",
+        "type": "System.Object",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontSizeCacheInfo.GetHashCode()",
+    "kind": "method",
+    "declaringType": "Electron2D.FontSizeCacheInfo",
+    "name": "GetHashCode",
+    "signature": "public override System.Int32 GetHashCode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FontSizeCacheInfo.ToString()",
+    "kind": "method",
+    "declaringType": "Electron2D.FontSizeCacheInfo",
+    "name": "ToString",
+    "signature": "public override System.String ToString()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -187912,6 +188390,38 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServer.CreateFont()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "CreateFont",
+    "signature": "public Electron2D.RID CreateFont()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.CreateFontLinkedVariation(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "CreateFontLinkedVariation",
+    "signature": "public Electron2D.RID CreateFontLinkedVariation(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServer.CreateShapedText(Electron2D.TextDirection,Electron2D.TextOrientation)",
     "kind": "method",
     "declaringType": "Electron2D.TextServer",
@@ -187972,6 +188482,3161 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontClearGlyphs(Electron2D.RID,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontClearGlyphs",
+    "signature": "public System.Void FontClearGlyphs(Electron2D.RID fontRID, Electron2D.Vector2i size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontClearKerningMap(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontClearKerningMap",
+    "signature": "public System.Void FontClearKerningMap(Electron2D.RID fontRID, System.Int32 size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontClearSizeCache(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontClearSizeCache",
+    "signature": "public System.Void FontClearSizeCache(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontClearSystemFallbackCache()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontClearSystemFallbackCache",
+    "signature": "public System.Void FontClearSystemFallbackCache()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontClearTextures(Electron2D.RID,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontClearTextures",
+    "signature": "public System.Void FontClearTextures(Electron2D.RID fontRID, Electron2D.Vector2i size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontDrawGlyph(Electron2D.RID,Electron2D.CanvasItem,System.Int32,Electron2D.Vector2,System.Int32,System.Nullable\u003CElectron2D.Color\u003E,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontDrawGlyph",
+    "signature": "public System.Void FontDrawGlyph(Electron2D.RID fontRID, Electron2D.CanvasItem canvas, System.Int32 size, Electron2D.Vector2 position, System.Int32 index, System.Nullable\u003CElectron2D.Color\u003E color = null, System.Single oversampling = 0f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "canvas",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "oversampling",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontDrawGlyphOutline(Electron2D.RID,Electron2D.CanvasItem,System.Int32,System.Int32,Electron2D.Vector2,System.Int32,System.Nullable\u003CElectron2D.Color\u003E,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontDrawGlyphOutline",
+    "signature": "public System.Void FontDrawGlyphOutline(Electron2D.RID fontRID, Electron2D.CanvasItem canvas, System.Int32 size, System.Int32 outlineSize, Electron2D.Vector2 position, System.Int32 index, System.Nullable\u003CElectron2D.Color\u003E color = null, System.Single oversampling = 0f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "canvas",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "outlineSize",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "oversampling",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetAntialiasing(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetAntialiasing",
+    "signature": "public Electron2D.FontAntialiasing FontGetAntialiasing(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.FontAntialiasing",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetAscent(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetAscent",
+    "signature": "public System.Single FontGetAscent(Electron2D.RID fontRID, System.Int32 size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetBaselineOffset(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetBaselineOffset",
+    "signature": "public System.Single FontGetBaselineOffset(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetCharFromGlyphIndex(Electron2D.RID,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetCharFromGlyphIndex",
+    "signature": "public System.Int32 FontGetCharFromGlyphIndex(Electron2D.RID fontRID, System.Int32 size, System.Int32 glyphIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "glyphIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetDescent(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetDescent",
+    "signature": "public System.Single FontGetDescent(Electron2D.RID fontRID, System.Int32 size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetDisableEmbeddedBitmaps(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetDisableEmbeddedBitmaps",
+    "signature": "public System.Boolean FontGetDisableEmbeddedBitmaps(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetEmbolden(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetEmbolden",
+    "signature": "public System.Single FontGetEmbolden(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetFaceCount(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetFaceCount",
+    "signature": "public System.Int32 FontGetFaceCount(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetFaceIndex(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetFaceIndex",
+    "signature": "public System.Int32 FontGetFaceIndex(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetFixedSize(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetFixedSize",
+    "signature": "public System.Int32 FontGetFixedSize(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetFixedSizeScaleMode(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetFixedSizeScaleMode",
+    "signature": "public Electron2D.FixedSizeScaleMode FontGetFixedSizeScaleMode(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.FixedSizeScaleMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetGenerateMIPMaps(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetGenerateMIPMaps",
+    "signature": "public System.Boolean FontGetGenerateMIPMaps(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetGlyphAdvance(Electron2D.RID,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetGlyphAdvance",
+    "signature": "public Electron2D.Vector2 FontGetGlyphAdvance(Electron2D.RID fontRID, System.Int32 size, System.Int32 glyph)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetGlyphContours(Electron2D.RID,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetGlyphContours",
+    "signature": "public Electron2D.FontGlyphContours FontGetGlyphContours(Electron2D.RID fontRID, System.Int32 size, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.FontGlyphContours",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetGlyphIndex(Electron2D.RID,System.Int32,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetGlyphIndex",
+    "signature": "public System.Int32 FontGetGlyphIndex(Electron2D.RID fontRID, System.Int32 size, System.Int32 character, System.Int32 variationSelector)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "character",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "variationSelector",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetGlyphList(Electron2D.RID,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetGlyphList",
+    "signature": "public System.Int32[] FontGetGlyphList(Electron2D.RID fontRID, Electron2D.Vector2i size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetGlyphOffset(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetGlyphOffset",
+    "signature": "public Electron2D.Vector2 FontGetGlyphOffset(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetGlyphSize(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetGlyphSize",
+    "signature": "public Electron2D.Vector2 FontGetGlyphSize(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetGlyphTextureIndex(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetGlyphTextureIndex",
+    "signature": "public System.Int32 FontGetGlyphTextureIndex(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetGlyphTextureRID(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetGlyphTextureRID",
+    "signature": "public Electron2D.RID FontGetGlyphTextureRID(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetGlyphTextureSize(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetGlyphTextureSize",
+    "signature": "public Electron2D.Vector2 FontGetGlyphTextureSize(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetGlyphUVRect(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetGlyphUVRect",
+    "signature": "public Electron2D.Rect2 FontGetGlyphUVRect(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetHinting(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetHinting",
+    "signature": "public Electron2D.FontHinting FontGetHinting(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.FontHinting",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetKeepRoundingRemainders(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetKeepRoundingRemainders",
+    "signature": "public System.Boolean FontGetKeepRoundingRemainders(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetKerning(Electron2D.RID,System.Int32,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetKerning",
+    "signature": "public Electron2D.Vector2 FontGetKerning(Electron2D.RID fontRID, System.Int32 size, Electron2D.Vector2i glyphPair)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "glyphPair",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetKerningList(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetKerningList",
+    "signature": "public Electron2D.Vector2i[] FontGetKerningList(Electron2D.RID fontRID, System.Int32 size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetLanguageSupportOverride(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetLanguageSupportOverride",
+    "signature": "public System.Boolean FontGetLanguageSupportOverride(Electron2D.RID fontRID, System.String language)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetLanguageSupportOverrides(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetLanguageSupportOverrides",
+    "signature": "public System.String[] FontGetLanguageSupportOverrides(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetMSDFPixelRange(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetMSDFPixelRange",
+    "signature": "public System.Int32 FontGetMSDFPixelRange(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetMSDFSize(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetMSDFSize",
+    "signature": "public System.Int32 FontGetMSDFSize(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetName(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetName",
+    "signature": "public System.String FontGetName(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetOTNameStrings(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetOTNameStrings",
+    "signature": "public System.Collections.Generic.Dictionary\u003CSystem.String, System.Collections.Generic.Dictionary\u003CSystem.String, System.String\u003E\u003E FontGetOTNameStrings(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Collections.Generic.Dictionary\u003CSystem.String, System.Collections.Generic.Dictionary\u003CSystem.String, System.String\u003E\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetOpenTypeFeatureOverrides(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetOpenTypeFeatureOverrides",
+    "signature": "public System.Collections.Generic.Dictionary\u003CSystem.String, System.Int32\u003E FontGetOpenTypeFeatureOverrides(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Collections.Generic.Dictionary\u003CSystem.String, System.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetOversampling(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetOversampling",
+    "signature": "public System.Single FontGetOversampling(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetPaletteColors(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetPaletteColors",
+    "signature": "public Electron2D.Color[] FontGetPaletteColors(Electron2D.RID fontRID, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetPaletteCount(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetPaletteCount",
+    "signature": "public System.Int32 FontGetPaletteCount(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetPaletteCustomColors(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetPaletteCustomColors",
+    "signature": "public Electron2D.Color[] FontGetPaletteCustomColors(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetPaletteName(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetPaletteName",
+    "signature": "public System.String FontGetPaletteName(Electron2D.RID fontRID, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetResource(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetResource",
+    "signature": "public Electron2D.Font FontGetResource(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Font",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetScale(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetScale",
+    "signature": "public System.Single FontGetScale(Electron2D.RID fontRID, System.Int32 size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetScriptSupportOverride(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetScriptSupportOverride",
+    "signature": "public System.Boolean FontGetScriptSupportOverride(Electron2D.RID fontRID, System.String script)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "script",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetScriptSupportOverrides(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetScriptSupportOverrides",
+    "signature": "public System.String[] FontGetScriptSupportOverrides(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetSizeCacheInfo(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetSizeCacheInfo",
+    "signature": "public Electron2D.FontSizeCacheInfo[] FontGetSizeCacheInfo(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.FontSizeCacheInfo[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetSizeCacheList(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetSizeCacheList",
+    "signature": "public Electron2D.Vector2i[] FontGetSizeCacheList(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetSpacing(Electron2D.RID,Electron2D.TextSpacingType)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetSpacing",
+    "signature": "public System.Int32 FontGetSpacing(Electron2D.RID fontRID, Electron2D.TextSpacingType spacing)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "spacing",
+        "type": "Electron2D.TextSpacingType",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetStretch(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetStretch",
+    "signature": "public System.Int32 FontGetStretch(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetStyle(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetStyle",
+    "signature": "public Electron2D.FontStyle FontGetStyle(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.FontStyle",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetStyleName(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetStyleName",
+    "signature": "public System.String FontGetStyleName(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetSubpixelPositioning(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetSubpixelPositioning",
+    "signature": "public Electron2D.FontSubpixelPositioning FontGetSubpixelPositioning(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.FontSubpixelPositioning",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetSupportedChars(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetSupportedChars",
+    "signature": "public System.String FontGetSupportedChars(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetSupportedGlyphs(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetSupportedGlyphs",
+    "signature": "public System.Int32[] FontGetSupportedGlyphs(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetTextureCount(Electron2D.RID,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetTextureCount",
+    "signature": "public System.Int32 FontGetTextureCount(Electron2D.RID fontRID, Electron2D.Vector2i size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetTextureImage(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetTextureImage",
+    "signature": "public Electron2D.Image FontGetTextureImage(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 textureIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "textureIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetTextureOffsets(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetTextureOffsets",
+    "signature": "public System.Int32[] FontGetTextureOffsets(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 textureIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "textureIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetTransform(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetTransform",
+    "signature": "public Electron2D.Transform FontGetTransform(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetUnderlinePosition(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetUnderlinePosition",
+    "signature": "public System.Single FontGetUnderlinePosition(Electron2D.RID fontRID, System.Int32 size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetUnderlineThickness(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetUnderlineThickness",
+    "signature": "public System.Single FontGetUnderlineThickness(Electron2D.RID fontRID, System.Int32 size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetUsedPalette(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetUsedPalette",
+    "signature": "public System.Int32 FontGetUsedPalette(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetVariationCoordinates(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetVariationCoordinates",
+    "signature": "public System.Collections.Generic.Dictionary\u003CSystem.UInt32, System.Single\u003E FontGetVariationCoordinates(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Collections.Generic.Dictionary\u003CSystem.UInt32, System.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontGetWeight(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontGetWeight",
+    "signature": "public System.Int32 FontGetWeight(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontHasChar(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontHasChar",
+    "signature": "public System.Boolean FontHasChar(Electron2D.RID fontRID, System.Int32 character)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "character",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontIsAllowSystemFallback(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontIsAllowSystemFallback",
+    "signature": "public System.Boolean FontIsAllowSystemFallback(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontIsForceAutohinter(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontIsForceAutohinter",
+    "signature": "public System.Boolean FontIsForceAutohinter(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontIsLanguageSupported(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontIsLanguageSupported",
+    "signature": "public System.Boolean FontIsLanguageSupported(Electron2D.RID fontRID, System.String language)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontIsModulateColorGlyphs(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontIsModulateColorGlyphs",
+    "signature": "public System.Boolean FontIsModulateColorGlyphs(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontIsMultichannelSignedDistanceField(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontIsMultichannelSignedDistanceField",
+    "signature": "public System.Boolean FontIsMultichannelSignedDistanceField(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontIsScriptSupported(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontIsScriptSupported",
+    "signature": "public System.Boolean FontIsScriptSupported(Electron2D.RID fontRID, System.String script)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "script",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontRemoveGlyph(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontRemoveGlyph",
+    "signature": "public System.Void FontRemoveGlyph(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontRemoveKerning(Electron2D.RID,System.Int32,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontRemoveKerning",
+    "signature": "public System.Void FontRemoveKerning(Electron2D.RID fontRID, System.Int32 size, Electron2D.Vector2i glyphPair)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "glyphPair",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontRemoveLanguageSupportOverride(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontRemoveLanguageSupportOverride",
+    "signature": "public System.Void FontRemoveLanguageSupportOverride(Electron2D.RID fontRID, System.String language)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontRemoveScriptSupportOverride(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontRemoveScriptSupportOverride",
+    "signature": "public System.Void FontRemoveScriptSupportOverride(Electron2D.RID fontRID, System.String script)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "script",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontRemoveSizeCache(Electron2D.RID,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontRemoveSizeCache",
+    "signature": "public System.Void FontRemoveSizeCache(Electron2D.RID fontRID, Electron2D.Vector2i size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontRemoveTexture(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontRemoveTexture",
+    "signature": "public System.Void FontRemoveTexture(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 textureIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "textureIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontRenderGlyph(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontRenderGlyph",
+    "signature": "public System.Void FontRenderGlyph(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontRenderRange(Electron2D.RID,Electron2D.Vector2i,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontRenderRange",
+    "signature": "public System.Void FontRenderRange(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 start, System.Int32 end)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "start",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "end",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetAllowSystemFallback(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetAllowSystemFallback",
+    "signature": "public System.Void FontSetAllowSystemFallback(Electron2D.RID fontRID, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetAntialiasing(Electron2D.RID,Electron2D.FontAntialiasing)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetAntialiasing",
+    "signature": "public System.Void FontSetAntialiasing(Electron2D.RID fontRID, Electron2D.FontAntialiasing value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.FontAntialiasing",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetAscent(Electron2D.RID,System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetAscent",
+    "signature": "public System.Void FontSetAscent(Electron2D.RID fontRID, System.Int32 size, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetBaselineOffset(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetBaselineOffset",
+    "signature": "public System.Void FontSetBaselineOffset(Electron2D.RID fontRID, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetData(Electron2D.RID,System.Byte[])",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetData",
+    "signature": "public System.Void FontSetData(Electron2D.RID fontRID, System.Byte[] data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "data",
+        "type": "System.Byte[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetDescent(Electron2D.RID,System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetDescent",
+    "signature": "public System.Void FontSetDescent(Electron2D.RID fontRID, System.Int32 size, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetDisableEmbeddedBitmaps(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetDisableEmbeddedBitmaps",
+    "signature": "public System.Void FontSetDisableEmbeddedBitmaps(Electron2D.RID fontRID, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetEmbolden(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetEmbolden",
+    "signature": "public System.Void FontSetEmbolden(Electron2D.RID fontRID, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetFaceIndex(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetFaceIndex",
+    "signature": "public System.Void FontSetFaceIndex(Electron2D.RID fontRID, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetFixedSize(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetFixedSize",
+    "signature": "public System.Void FontSetFixedSize(Electron2D.RID fontRID, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetFixedSizeScaleMode(Electron2D.RID,Electron2D.FixedSizeScaleMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetFixedSizeScaleMode",
+    "signature": "public System.Void FontSetFixedSizeScaleMode(Electron2D.RID fontRID, Electron2D.FixedSizeScaleMode value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.FixedSizeScaleMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetForceAutohinter(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetForceAutohinter",
+    "signature": "public System.Void FontSetForceAutohinter(Electron2D.RID fontRID, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetGenerateMIPMaps(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetGenerateMIPMaps",
+    "signature": "public System.Void FontSetGenerateMIPMaps(Electron2D.RID fontRID, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetGlyphAdvance(Electron2D.RID,System.Int32,System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetGlyphAdvance",
+    "signature": "public System.Void FontSetGlyphAdvance(Electron2D.RID fontRID, System.Int32 size, System.Int32 glyph, Electron2D.Vector2 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetGlyphOffset(Electron2D.RID,Electron2D.Vector2i,System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetGlyphOffset",
+    "signature": "public System.Void FontSetGlyphOffset(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph, Electron2D.Vector2 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetGlyphSize(Electron2D.RID,Electron2D.Vector2i,System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetGlyphSize",
+    "signature": "public System.Void FontSetGlyphSize(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph, Electron2D.Vector2 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetGlyphTextureIndex(Electron2D.RID,Electron2D.Vector2i,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetGlyphTextureIndex",
+    "signature": "public System.Void FontSetGlyphTextureIndex(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph, System.Int32 textureIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "textureIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetGlyphUVRect(Electron2D.RID,Electron2D.Vector2i,System.Int32,Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetGlyphUVRect",
+    "signature": "public System.Void FontSetGlyphUVRect(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph, Electron2D.Rect2 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetHinting(Electron2D.RID,Electron2D.FontHinting)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetHinting",
+    "signature": "public System.Void FontSetHinting(Electron2D.RID fontRID, Electron2D.FontHinting value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.FontHinting",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetKeepRoundingRemainders(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetKeepRoundingRemainders",
+    "signature": "public System.Void FontSetKeepRoundingRemainders(Electron2D.RID fontRID, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetKerning(Electron2D.RID,System.Int32,Electron2D.Vector2i,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetKerning",
+    "signature": "public System.Void FontSetKerning(Electron2D.RID fontRID, System.Int32 size, Electron2D.Vector2i glyphPair, Electron2D.Vector2 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "glyphPair",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetLanguageSupportOverride(Electron2D.RID,System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetLanguageSupportOverride",
+    "signature": "public System.Void FontSetLanguageSupportOverride(Electron2D.RID fontRID, System.String language, System.Boolean supported)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "supported",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetMSDFPixelRange(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetMSDFPixelRange",
+    "signature": "public System.Void FontSetMSDFPixelRange(Electron2D.RID fontRID, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetMSDFSize(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetMSDFSize",
+    "signature": "public System.Void FontSetMSDFSize(Electron2D.RID fontRID, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetModulateColorGlyphs(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetModulateColorGlyphs",
+    "signature": "public System.Void FontSetModulateColorGlyphs(Electron2D.RID fontRID, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetMultichannelSignedDistanceField(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetMultichannelSignedDistanceField",
+    "signature": "public System.Void FontSetMultichannelSignedDistanceField(Electron2D.RID fontRID, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetName(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetName",
+    "signature": "public System.Void FontSetName(Electron2D.RID fontRID, System.String value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetOpenTypeFeatureOverrides(Electron2D.RID,System.Collections.Generic.Dictionary\u003CSystem.String, System.Int32\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetOpenTypeFeatureOverrides",
+    "signature": "public System.Void FontSetOpenTypeFeatureOverrides(Electron2D.RID fontRID, System.Collections.Generic.Dictionary\u003CSystem.String, System.Int32\u003E value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Collections.Generic.Dictionary\u003CSystem.String, System.Int32\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetOversampling(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetOversampling",
+    "signature": "public System.Void FontSetOversampling(Electron2D.RID fontRID, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetPaletteCustomColors(Electron2D.RID,Electron2D.Color[])",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetPaletteCustomColors",
+    "signature": "public System.Void FontSetPaletteCustomColors(Electron2D.RID fontRID, Electron2D.Color[] value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Color[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetScale(Electron2D.RID,System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetScale",
+    "signature": "public System.Void FontSetScale(Electron2D.RID fontRID, System.Int32 size, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetScriptSupportOverride(Electron2D.RID,System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetScriptSupportOverride",
+    "signature": "public System.Void FontSetScriptSupportOverride(Electron2D.RID fontRID, System.String script, System.Boolean supported)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "script",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "supported",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetSpacing(Electron2D.RID,Electron2D.TextSpacingType,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetSpacing",
+    "signature": "public System.Void FontSetSpacing(Electron2D.RID fontRID, Electron2D.TextSpacingType spacing, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "spacing",
+        "type": "Electron2D.TextSpacingType",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetStretch(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetStretch",
+    "signature": "public System.Void FontSetStretch(Electron2D.RID fontRID, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetStyle(Electron2D.RID,Electron2D.FontStyle)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetStyle",
+    "signature": "public System.Void FontSetStyle(Electron2D.RID fontRID, Electron2D.FontStyle value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.FontStyle",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetStyleName(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetStyleName",
+    "signature": "public System.Void FontSetStyleName(Electron2D.RID fontRID, System.String value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetSubpixelPositioning(Electron2D.RID,Electron2D.FontSubpixelPositioning)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetSubpixelPositioning",
+    "signature": "public System.Void FontSetSubpixelPositioning(Electron2D.RID fontRID, Electron2D.FontSubpixelPositioning value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.FontSubpixelPositioning",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetTextureImage(Electron2D.RID,Electron2D.Vector2i,System.Int32,Electron2D.Image)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetTextureImage",
+    "signature": "public System.Void FontSetTextureImage(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 textureIndex, Electron2D.Image image)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "textureIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "image",
+        "type": "Electron2D.Image",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetTextureOffsets(Electron2D.RID,Electron2D.Vector2i,System.Int32,System.Int32[])",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetTextureOffsets",
+    "signature": "public System.Void FontSetTextureOffsets(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 textureIndex, System.Int32[] offsets)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "textureIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "offsets",
+        "type": "System.Int32[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetTransform(Electron2D.RID,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetTransform",
+    "signature": "public System.Void FontSetTransform(Electron2D.RID fontRID, Electron2D.Transform value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Transform",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetUnderlinePosition(Electron2D.RID,System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetUnderlinePosition",
+    "signature": "public System.Void FontSetUnderlinePosition(Electron2D.RID fontRID, System.Int32 size, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetUnderlineThickness(Electron2D.RID,System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetUnderlineThickness",
+    "signature": "public System.Void FontSetUnderlineThickness(Electron2D.RID fontRID, System.Int32 size, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetUsedPalette(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetUsedPalette",
+    "signature": "public System.Void FontSetUsedPalette(Electron2D.RID fontRID, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetVariationCoordinates(Electron2D.RID,System.Collections.Generic.Dictionary\u003CSystem.UInt32, System.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetVariationCoordinates",
+    "signature": "public System.Void FontSetVariationCoordinates(Electron2D.RID fontRID, System.Collections.Generic.Dictionary\u003CSystem.UInt32, System.Single\u003E value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Collections.Generic.Dictionary\u003CSystem.UInt32, System.Single\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSetWeight(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSetWeight",
+    "signature": "public System.Void FontSetWeight(Electron2D.RID fontRID, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSupportedFeatureList(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSupportedFeatureList",
+    "signature": "public System.Collections.Generic.Dictionary\u003CSystem.UInt32, Electron2D.FontFeatureInfo\u003E FontSupportedFeatureList(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Collections.Generic.Dictionary\u003CSystem.UInt32, Electron2D.FontFeatureInfo\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServer.FontSupportedVariationList(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServer",
+    "name": "FontSupportedVariationList",
+    "signature": "public System.Collections.Generic.Dictionary\u003CSystem.UInt32, Electron2D.FontVariationAxis\u003E FontSupportedVariationList(Electron2D.RID fontRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Collections.Generic.Dictionary\u003CSystem.UInt32, Electron2D.FontVariationAxis\u003E",
     "value": null
   },
   {
@@ -215468,6 +219133,54 @@
     "value": null
   },
   {
+    "id": "operator:Electron2D.FontContourPoint.op_Equality(Electron2D.FontContourPoint,Electron2D.FontContourPoint)",
+    "kind": "operator",
+    "declaringType": "Electron2D.FontContourPoint",
+    "name": "op_Equality",
+    "signature": "public static System.Boolean op_Equality(Electron2D.FontContourPoint left, Electron2D.FontContourPoint right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.FontContourPoint",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.FontContourPoint",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.FontContourPoint.op_Inequality(Electron2D.FontContourPoint,Electron2D.FontContourPoint)",
+    "kind": "operator",
+    "declaringType": "Electron2D.FontContourPoint",
+    "name": "op_Inequality",
+    "signature": "public static System.Boolean op_Inequality(Electron2D.FontContourPoint left, Electron2D.FontContourPoint right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.FontContourPoint",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.FontContourPoint",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "operator:Electron2D.FontFeatureInfo.op_Equality(Electron2D.FontFeatureInfo,Electron2D.FontFeatureInfo)",
     "kind": "operator",
     "declaringType": "Electron2D.FontFeatureInfo",
@@ -215509,6 +219222,102 @@
       {
         "name": "right",
         "type": "Electron2D.FontFeatureInfo",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.FontGlyphContours.op_Equality(Electron2D.FontGlyphContours,Electron2D.FontGlyphContours)",
+    "kind": "operator",
+    "declaringType": "Electron2D.FontGlyphContours",
+    "name": "op_Equality",
+    "signature": "public static System.Boolean op_Equality(Electron2D.FontGlyphContours left, Electron2D.FontGlyphContours right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.FontGlyphContours",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.FontGlyphContours",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.FontGlyphContours.op_Inequality(Electron2D.FontGlyphContours,Electron2D.FontGlyphContours)",
+    "kind": "operator",
+    "declaringType": "Electron2D.FontGlyphContours",
+    "name": "op_Inequality",
+    "signature": "public static System.Boolean op_Inequality(Electron2D.FontGlyphContours left, Electron2D.FontGlyphContours right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.FontGlyphContours",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.FontGlyphContours",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.FontSizeCacheInfo.op_Equality(Electron2D.FontSizeCacheInfo,Electron2D.FontSizeCacheInfo)",
+    "kind": "operator",
+    "declaringType": "Electron2D.FontSizeCacheInfo",
+    "name": "op_Equality",
+    "signature": "public static System.Boolean op_Equality(Electron2D.FontSizeCacheInfo left, Electron2D.FontSizeCacheInfo right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.FontSizeCacheInfo",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.FontSizeCacheInfo",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.FontSizeCacheInfo.op_Inequality(Electron2D.FontSizeCacheInfo,Electron2D.FontSizeCacheInfo)",
+    "kind": "operator",
+    "declaringType": "Electron2D.FontSizeCacheInfo",
+    "name": "op_Inequality",
+    "signature": "public static System.Boolean op_Inequality(Electron2D.FontSizeCacheInfo left, Electron2D.FontSizeCacheInfo right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.FontSizeCacheInfo",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.FontSizeCacheInfo",
         "default": null
       }
     ],
@@ -232594,6 +236403,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.FontContourPoint.Position()",
+    "kind": "property",
+    "declaringType": "Electron2D.FontContourPoint",
+    "name": "Position",
+    "signature": "public Electron2D.Vector2 Position { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FontContourPoint.Tag()",
+    "kind": "property",
+    "declaringType": "Electron2D.FontContourPoint",
+    "name": "Tag",
+    "signature": "public Electron2D.TextServer.ContourPointTag Tag { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextServer.ContourPointTag",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.FontFeatureInfo.Hidden()",
     "kind": "property",
     "declaringType": "Electron2D.FontFeatureInfo",
@@ -232916,6 +236751,110 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.FontSubpixelPositioning",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FontGlyphContours.Contours()",
+    "kind": "property",
+    "declaringType": "Electron2D.FontGlyphContours",
+    "name": "Contours",
+    "signature": "public System.Int32[] Contours { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FontGlyphContours.Orientation()",
+    "kind": "property",
+    "declaringType": "Electron2D.FontGlyphContours",
+    "name": "Orientation",
+    "signature": "public System.Boolean Orientation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FontGlyphContours.Points()",
+    "kind": "property",
+    "declaringType": "Electron2D.FontGlyphContours",
+    "name": "Points",
+    "signature": "public Electron2D.FontContourPoint[] Points { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FontContourPoint[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FontSizeCacheInfo.Glyphs()",
+    "kind": "property",
+    "declaringType": "Electron2D.FontSizeCacheInfo",
+    "name": "Glyphs",
+    "signature": "public System.Int32 Glyphs { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FontSizeCacheInfo.RasterScales()",
+    "kind": "property",
+    "declaringType": "Electron2D.FontSizeCacheInfo",
+    "name": "RasterScales",
+    "signature": "public System.Single[] RasterScales { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FontSizeCacheInfo.SizePixels()",
+    "kind": "property",
+    "declaringType": "Electron2D.FontSizeCacheInfo",
+    "name": "SizePixels",
+    "signature": "public Electron2D.Vector2i SizePixels { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FontSizeCacheInfo.TextureBytes()",
+    "kind": "property",
+    "declaringType": "Electron2D.FontSizeCacheInfo",
+    "name": "TextureBytes",
+    "signature": "public System.Int64 TextureBytes { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FontSizeCacheInfo.Textures()",
+    "kind": "property",
+    "declaringType": "Electron2D.FontSizeCacheInfo",
+    "name": "Textures",
+    "signature": "public System.Int32 Textures { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {

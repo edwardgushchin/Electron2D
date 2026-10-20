@@ -1004,6 +1004,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_SPANS") == "
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_UNICODE") == "1") { TextServerUnicodeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_HEX") == "1") { TextHelperTests.Run(); TextServerHexCodeTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_FONTS") == "1") { TextServerFontTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_FONT_RENDER") is { } fontOwnerBackend) { TextServerFontRenderingTests.Run(fontOwnerBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_HEX_RENDER") is { } hexBackend) { TextServerHexCodeRenderingTests.Run(hexBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_UNICODE_RENDER") is { } unicodeBackend) { TextServerUnicodeRenderingTests.Run(unicodeBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_SERVER_WRAPPING_RENDER") is { } wrappingBackend) { TextServerWrappingRenderingTests.Run(wrappingBackend); return; }
@@ -1801,7 +1803,7 @@ TextServerTests.Run();
 TextServerEditingTests.Run();
 TextServerWrappingTests.Run();
 TextServerFormattingTests.Run();
-TextServerUnicodeTests.Run(); TextServerSpanTests.Run(); TextServerHexCodeTests.Run();
+TextServerUnicodeTests.Run(); TextServerSpanTests.Run(); TextServerHexCodeTests.Run(); TextServerFontTests.Run();
 TextLineTests.Run();
 AStarGridTests.Run();
 RemoteTransformTests.Run();

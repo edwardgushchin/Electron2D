@@ -494,6 +494,676 @@
       "godot": "TextServer::method:get_hex_code_box_size(int:,int:)",
       "electron2d": "method:Electron2D.TextServer.GetHexCodeBoxSize(System.Int32,System.Int32)",
       "reason": "ADR 0004/0046/0107: font-free public measurement and real recording CanvasItem drawing through the shared TextMissingGlyph rectangles. Valid Unicode scalar indexes select two/four/six digits; signed sizes round to a minimum-one pixel scale, one trailing advance unit remains unpainted, and the baseline offset truncates before preserving fractional position. Zero emits no geometry after canvas/position/color validation. Exact segment geometry, scalar/size boundaries, owner/disposal/errors and 64 warm public query/record cycles are checked; Wayland/X11 software GPU/compatibility parent and fresh-process readbacks cover initial/live segments, transforms, color, trailing pixels, clipping, zero and 64 active/idle frame scopes. Hardware, native allocator, foreign platform and owner acceptance remain separate."
+    },
+    {
+      "godot": "TextServer::enum:ContourPointTag",
+      "electron2d": "T:Electron2D.TextServer.ContourPointTag",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::enum_value:ContourPointTag.CONTOUR_CURVE_TAG_OFF_CONIC",
+      "electron2d": "enumValue:Electron2D.TextServer.ContourPointTag.OffConic()",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::enum_value:ContourPointTag.CONTOUR_CURVE_TAG_OFF_CUBIC",
+      "electron2d": "enumValue:Electron2D.TextServer.ContourPointTag.OffCubic()",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::enum_value:ContourPointTag.CONTOUR_CURVE_TAG_ON",
+      "electron2d": "enumValue:Electron2D.TextServer.ContourPointTag.On()",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:create_font()",
+      "electron2d": "method:Electron2D.TextServer.CreateFont()",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:create_font_linked_variation(RID:)",
+      "electron2d": "method:Electron2D.TextServer.CreateFontLinkedVariation(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_clear_glyphs(RID:,Vector2i:)",
+      "electron2d": "method:Electron2D.TextServer.FontClearGlyphs(Electron2D.RID,Electron2D.Vector2i)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_clear_kerning_map(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontClearKerningMap(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_clear_size_cache(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontClearSizeCache(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_clear_system_fallback_cache()",
+      "electron2d": "method:Electron2D.TextServer.FontClearSystemFallbackCache()",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_clear_textures(RID:,Vector2i:)",
+      "electron2d": "method:Electron2D.TextServer.FontClearTextures(Electron2D.RID,Electron2D.Vector2i)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_draw_glyph(RID:,RID:,int:,Vector2:,int:,Color:,float:)",
+      "electron2d": "method:Electron2D.TextServer.FontDrawGlyph(Electron2D.RID,Electron2D.CanvasItem,System.Int32,Electron2D.Vector2,System.Int32,System.Nullable<Electron2D.Color>,System.Single)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_draw_glyph_outline(RID:,RID:,int:,int:,Vector2:,int:,Color:,float:)",
+      "electron2d": "method:Electron2D.TextServer.FontDrawGlyphOutline(Electron2D.RID,Electron2D.CanvasItem,System.Int32,System.Int32,Electron2D.Vector2,System.Int32,System.Nullable<Electron2D.Color>,System.Single)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_antialiasing(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetAntialiasing(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_ascent(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetAscent(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_baseline_offset(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetBaselineOffset(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_char_from_glyph_index(RID:,int:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetCharFromGlyphIndex(Electron2D.RID,System.Int32,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_descent(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetDescent(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_disable_embedded_bitmaps(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetDisableEmbeddedBitmaps(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_embolden(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetEmbolden(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_face_count(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetFaceCount(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_face_index(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetFaceIndex(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_fixed_size(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetFixedSize(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_fixed_size_scale_mode(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetFixedSizeScaleMode(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_generate_mipmaps(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetGenerateMIPMaps(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_glyph_advance(RID:,int:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetGlyphAdvance(Electron2D.RID,System.Int32,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_glyph_contours(RID:,int:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetGlyphContours(Electron2D.RID,System.Int32,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_glyph_index(RID:,int:,int:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetGlyphIndex(Electron2D.RID,System.Int32,System.Int32,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_glyph_list(RID:,Vector2i:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetGlyphList(Electron2D.RID,Electron2D.Vector2i)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_glyph_offset(RID:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetGlyphOffset(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_glyph_size(RID:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetGlyphSize(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_glyph_texture_idx(RID:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetGlyphTextureIndex(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_glyph_texture_rid(RID:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetGlyphTextureRID(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_glyph_texture_size(RID:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetGlyphTextureSize(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_glyph_uv_rect(RID:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetGlyphUVRect(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_hinting(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetHinting(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_keep_rounding_remainders(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetKeepRoundingRemainders(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_kerning(RID:,int:,Vector2i:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetKerning(Electron2D.RID,System.Int32,Electron2D.Vector2i)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_kerning_list(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetKerningList(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_language_support_override(RID:,String:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetLanguageSupportOverride(Electron2D.RID,System.String)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_language_support_overrides(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetLanguageSupportOverrides(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_msdf_pixel_range(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetMSDFPixelRange(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_msdf_size(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetMSDFSize(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_name(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetName(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_opentype_feature_overrides(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetOpenTypeFeatureOverrides(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_ot_name_strings(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetOTNameStrings(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_oversampling(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetOversampling(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_palette_colors(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetPaletteColors(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_palette_count(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetPaletteCount(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_palette_custom_colors(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetPaletteCustomColors(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_palette_name(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetPaletteName(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_scale(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetScale(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_script_support_override(RID:,String:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetScriptSupportOverride(Electron2D.RID,System.String)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_script_support_overrides(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetScriptSupportOverrides(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_size_cache_info(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetSizeCacheInfo(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_size_cache_list(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetSizeCacheList(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_spacing(RID:,int:TextServer.SpacingType)",
+      "electron2d": "method:Electron2D.TextServer.FontGetSpacing(Electron2D.RID,Electron2D.TextSpacingType)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_stretch(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetStretch(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_style(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetStyle(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_style_name(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetStyleName(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_subpixel_positioning(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetSubpixelPositioning(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_supported_chars(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetSupportedChars(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_supported_glyphs(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetSupportedGlyphs(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_texture_count(RID:,Vector2i:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetTextureCount(Electron2D.RID,Electron2D.Vector2i)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_texture_image(RID:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetTextureImage(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_texture_offsets(RID:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetTextureOffsets(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_transform(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetTransform(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_underline_position(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetUnderlinePosition(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_underline_thickness(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetUnderlineThickness(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_used_palette(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetUsedPalette(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_variation_coordinates(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetVariationCoordinates(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_get_weight(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontGetWeight(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_has_char(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontHasChar(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_is_allow_system_fallback(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontIsAllowSystemFallback(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_is_force_autohinter(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontIsForceAutohinter(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_is_language_supported(RID:,String:)",
+      "electron2d": "method:Electron2D.TextServer.FontIsLanguageSupported(Electron2D.RID,System.String)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_is_modulate_color_glyphs(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontIsModulateColorGlyphs(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_is_multichannel_signed_distance_field(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontIsMultichannelSignedDistanceField(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_is_script_supported(RID:,String:)",
+      "electron2d": "method:Electron2D.TextServer.FontIsScriptSupported(Electron2D.RID,System.String)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_remove_glyph(RID:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontRemoveGlyph(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_remove_kerning(RID:,int:,Vector2i:)",
+      "electron2d": "method:Electron2D.TextServer.FontRemoveKerning(Electron2D.RID,System.Int32,Electron2D.Vector2i)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_remove_language_support_override(RID:,String:)",
+      "electron2d": "method:Electron2D.TextServer.FontRemoveLanguageSupportOverride(Electron2D.RID,System.String)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_remove_script_support_override(RID:,String:)",
+      "electron2d": "method:Electron2D.TextServer.FontRemoveScriptSupportOverride(Electron2D.RID,System.String)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_remove_size_cache(RID:,Vector2i:)",
+      "electron2d": "method:Electron2D.TextServer.FontRemoveSizeCache(Electron2D.RID,Electron2D.Vector2i)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_remove_texture(RID:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontRemoveTexture(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_render_glyph(RID:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontRenderGlyph(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_render_range(RID:,Vector2i:,int:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontRenderRange(Electron2D.RID,Electron2D.Vector2i,System.Int32,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_allow_system_fallback(RID:,bool:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetAllowSystemFallback(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_antialiasing(RID:,int:TextServer.FontAntialiasing)",
+      "electron2d": "method:Electron2D.TextServer.FontSetAntialiasing(Electron2D.RID,Electron2D.FontAntialiasing)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_ascent(RID:,int:,float:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetAscent(Electron2D.RID,System.Int32,System.Single)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_baseline_offset(RID:,float:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetBaselineOffset(Electron2D.RID,System.Single)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_data(RID:,PackedByteArray:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetData(Electron2D.RID,System.Byte[])",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_descent(RID:,int:,float:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetDescent(Electron2D.RID,System.Int32,System.Single)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_disable_embedded_bitmaps(RID:,bool:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetDisableEmbeddedBitmaps(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_embolden(RID:,float:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetEmbolden(Electron2D.RID,System.Single)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_face_index(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetFaceIndex(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_fixed_size(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetFixedSize(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_fixed_size_scale_mode(RID:,int:TextServer.FixedSizeScaleMode)",
+      "electron2d": "method:Electron2D.TextServer.FontSetFixedSizeScaleMode(Electron2D.RID,Electron2D.FixedSizeScaleMode)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_force_autohinter(RID:,bool:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetForceAutohinter(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_generate_mipmaps(RID:,bool:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetGenerateMIPMaps(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_glyph_advance(RID:,int:,int:,Vector2:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetGlyphAdvance(Electron2D.RID,System.Int32,System.Int32,Electron2D.Vector2)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_glyph_offset(RID:,Vector2i:,int:,Vector2:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetGlyphOffset(Electron2D.RID,Electron2D.Vector2i,System.Int32,Electron2D.Vector2)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_glyph_size(RID:,Vector2i:,int:,Vector2:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetGlyphSize(Electron2D.RID,Electron2D.Vector2i,System.Int32,Electron2D.Vector2)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_glyph_texture_idx(RID:,Vector2i:,int:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetGlyphTextureIndex(Electron2D.RID,Electron2D.Vector2i,System.Int32,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_glyph_uv_rect(RID:,Vector2i:,int:,Rect2:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetGlyphUVRect(Electron2D.RID,Electron2D.Vector2i,System.Int32,Electron2D.Rect2)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_hinting(RID:,int:TextServer.Hinting)",
+      "electron2d": "method:Electron2D.TextServer.FontSetHinting(Electron2D.RID,Electron2D.FontHinting)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_keep_rounding_remainders(RID:,bool:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetKeepRoundingRemainders(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_kerning(RID:,int:,Vector2i:,Vector2:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetKerning(Electron2D.RID,System.Int32,Electron2D.Vector2i,Electron2D.Vector2)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_language_support_override(RID:,String:,bool:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetLanguageSupportOverride(Electron2D.RID,System.String,System.Boolean)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_modulate_color_glyphs(RID:,bool:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetModulateColorGlyphs(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_msdf_pixel_range(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetMSDFPixelRange(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_msdf_size(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetMSDFSize(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_multichannel_signed_distance_field(RID:,bool:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetMultichannelSignedDistanceField(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_name(RID:,String:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetName(Electron2D.RID,System.String)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_opentype_feature_overrides(RID:,Dictionary:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetOpenTypeFeatureOverrides(Electron2D.RID,System.Collections.Generic.Dictionary<System.String, System.Int32>)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_oversampling(RID:,float:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetOversampling(Electron2D.RID,System.Single)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_palette_custom_colors(RID:,PackedColorArray:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetPaletteCustomColors(Electron2D.RID,Electron2D.Color[])",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_scale(RID:,int:,float:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetScale(Electron2D.RID,System.Int32,System.Single)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_script_support_override(RID:,String:,bool:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetScriptSupportOverride(Electron2D.RID,System.String,System.Boolean)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_spacing(RID:,int:TextServer.SpacingType,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetSpacing(Electron2D.RID,Electron2D.TextSpacingType,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_stretch(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetStretch(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_style(RID:,int:TextServer.FontStyle)",
+      "electron2d": "method:Electron2D.TextServer.FontSetStyle(Electron2D.RID,Electron2D.FontStyle)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_style_name(RID:,String:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetStyleName(Electron2D.RID,System.String)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_subpixel_positioning(RID:,int:TextServer.SubpixelPositioning)",
+      "electron2d": "method:Electron2D.TextServer.FontSetSubpixelPositioning(Electron2D.RID,Electron2D.FontSubpixelPositioning)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_texture_image(RID:,Vector2i:,int:,Image:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetTextureImage(Electron2D.RID,Electron2D.Vector2i,System.Int32,Electron2D.Image)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_texture_offsets(RID:,Vector2i:,int:,PackedInt32Array:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetTextureOffsets(Electron2D.RID,Electron2D.Vector2i,System.Int32,System.Int32[])",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_transform(RID:,Transform2D:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetTransform(Electron2D.RID,Electron2D.Transform)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_underline_position(RID:,int:,float:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetUnderlinePosition(Electron2D.RID,System.Int32,System.Single)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_underline_thickness(RID:,int:,float:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetUnderlineThickness(Electron2D.RID,System.Int32,System.Single)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_used_palette(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetUsedPalette(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_variation_coordinates(RID:,Dictionary:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetVariationCoordinates(Electron2D.RID,System.Collections.Generic.Dictionary<System.UInt32, System.Single>)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_set_weight(RID:,int:)",
+      "electron2d": "method:Electron2D.TextServer.FontSetWeight(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_supported_feature_list(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontSupportedFeatureList(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
+    },
+    {
+      "godot": "TextServer::method:font_supported_variation_list(RID:)",
+      "electron2d": "method:Electron2D.TextServer.FontSupportedVariationList(Electron2D.RID)",
+      "reason": "ADR 0004/0046/0107: executable stable service-owned font sources and caches backed by private FontFile/FT/HB owners. Linked identities share source/config/cache with independent spacing/baseline; typed live Font projections consume real shaping/drawing, source replacement preserves instance preferences and retirement is explicit. Native contours retain typed points/control tags/end indexes/orientation; size snapshots expose actual nominal atlas storage/raster factors. Generated phases/oversampling, authored bitmap/glyph/page/kerning, scalable fixed-size and MSDF scale, collection/variation/palette/support/feature operations execute. Coherent read leases, callbacks/disposal/veto, source rollback and real canvas/fresh-process consumers are checked with scoped Linux software evidence; ordinary-resource glyph identity, external providers and package/hardware/native allocator/foreign/NativeAOT/performance/owner gates remain separate."
     }
   ],
   "extras": [
@@ -528,6 +1198,158 @@
     {
       "electron2d": "property:Electron2D.TextCaretInfo.TrailingRect()",
       "reason": "ADR 0107/0004: immutable typed projection of the existing shaped_text_get_carets dictionary and its leading_rect/leading_direction/trailing_rect/trailing_direction fields. This result carries existing caret geometry; it adds no independent capability."
+    },
+    {
+      "electron2d": "T:Electron2D.FontContourPoint",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "T:Electron2D.FontGlyphContours",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "T:Electron2D.FontSizeCacheInfo",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.FontContourPoint..ctor(Electron2D.Vector2,Electron2D.TextServer.ContourPointTag)",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.FontGlyphContours..ctor(Electron2D.FontContourPoint[],System.Int32[],System.Boolean)",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.FontSizeCacheInfo..ctor(Electron2D.Vector2i,System.Int32,System.Int32,System.Int64,System.Single[])",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FontContourPoint.Deconstruct(ref Electron2D.Vector2,ref Electron2D.TextServer.ContourPointTag)",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FontContourPoint.Equals(Electron2D.FontContourPoint)",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FontContourPoint.Equals(System.Object)",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FontContourPoint.GetHashCode()",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FontContourPoint.ToString()",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FontGlyphContours.Deconstruct(ref Electron2D.FontContourPoint[],ref System.Int32[],ref System.Boolean)",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FontGlyphContours.Equals(Electron2D.FontGlyphContours)",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FontGlyphContours.Equals(System.Object)",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FontGlyphContours.GetHashCode()",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FontGlyphContours.ToString()",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FontSizeCacheInfo.Deconstruct(ref Electron2D.Vector2i,ref System.Int32,ref System.Int32,ref System.Int64,ref System.Single[])",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FontSizeCacheInfo.Equals(Electron2D.FontSizeCacheInfo)",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FontSizeCacheInfo.Equals(System.Object)",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FontSizeCacheInfo.GetHashCode()",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.FontSizeCacheInfo.ToString()",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "operator:Electron2D.FontContourPoint.op_Equality(Electron2D.FontContourPoint,Electron2D.FontContourPoint)",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "operator:Electron2D.FontContourPoint.op_Inequality(Electron2D.FontContourPoint,Electron2D.FontContourPoint)",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "operator:Electron2D.FontGlyphContours.op_Equality(Electron2D.FontGlyphContours,Electron2D.FontGlyphContours)",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "operator:Electron2D.FontGlyphContours.op_Inequality(Electron2D.FontGlyphContours,Electron2D.FontGlyphContours)",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "operator:Electron2D.FontSizeCacheInfo.op_Equality(Electron2D.FontSizeCacheInfo,Electron2D.FontSizeCacheInfo)",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "operator:Electron2D.FontSizeCacheInfo.op_Inequality(Electron2D.FontSizeCacheInfo,Electron2D.FontSizeCacheInfo)",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "property:Electron2D.FontContourPoint.Position()",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "property:Electron2D.FontContourPoint.Tag()",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "property:Electron2D.FontGlyphContours.Contours()",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "property:Electron2D.FontGlyphContours.Orientation()",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "property:Electron2D.FontGlyphContours.Points()",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "property:Electron2D.FontSizeCacheInfo.Glyphs()",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "property:Electron2D.FontSizeCacheInfo.RasterScales()",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "property:Electron2D.FontSizeCacheInfo.SizePixels()",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "property:Electron2D.FontSizeCacheInfo.TextureBytes()",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "property:Electron2D.FontSizeCacheInfo.Textures()",
+      "reason": "ADR 0004/0046/0107: typed copied projection of existing font glyph-contour or size-cache dictionary fields, including points/tags, contour ends, orientation, nominal size, atlas counters/byte estimate and all realized raster factors. Record value construction/equality/deconstruction add no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServer.FontGetResource(Electron2D.RID)",
+      "reason": "ADR 0004/0107: borrowed live runtime Font projection of an owned font RID for the existing complete typed Font-list authoring/drawing consumers. It preserves service identity/lifetime; duplicates own independent source snapshots and persistent assets use FontFile."
     }
   ],
   "statusGroups": [
@@ -541,7 +1363,11 @@
     },
     {
       "godot": [
+        "TextServer::enum:ContourPointTag",
         "TextServer::enum:TextOverrunFlag",
+        "TextServer::enum_value:ContourPointTag.CONTOUR_CURVE_TAG_OFF_CONIC",
+        "TextServer::enum_value:ContourPointTag.CONTOUR_CURVE_TAG_OFF_CUBIC",
+        "TextServer::enum_value:ContourPointTag.CONTOUR_CURVE_TAG_ON",
         "TextServer::enum_value:TextOverrunFlag.OVERRUN_ADD_ELLIPSIS",
         "TextServer::enum_value:TextOverrunFlag.OVERRUN_ENFORCE_ELLIPSIS",
         "TextServer::enum_value:TextOverrunFlag.OVERRUN_JUSTIFICATION_AWARE",
@@ -549,107 +1375,10 @@
         "TextServer::enum_value:TextOverrunFlag.OVERRUN_SHORT_STRING_ELLIPSIS",
         "TextServer::enum_value:TextOverrunFlag.OVERRUN_TRIM",
         "TextServer::enum_value:TextOverrunFlag.OVERRUN_TRIM_WORD_ONLY",
-        "TextServer::method:create_shaped_text(int:TextServer.Direction,int:TextServer.Orientation)",
-        "TextServer::method:draw_hex_code_box(RID:,int:,Vector2:,int:,Color:)",
-        "TextServer::method:free_rid(RID:)",
-        "TextServer::method:get_hex_code_box_size(int:,int:)",
-        "TextServer::method:get_name()",
-        "TextServer::method:has(RID:)",
-        "TextServer::method:is_locale_right_to_left(String:)",
-        "TextServer::method:is_valid_identifier(String:)",
-        "TextServer::method:is_valid_letter(int:)",
-        "TextServer::method:name_to_tag(String:)",
-        "TextServer::method:shaped_get_span_count(RID:)",
-        "TextServer::method:shaped_get_span_embedded_object(RID:,int:)",
-        "TextServer::method:shaped_get_span_meta(RID:,int:)",
-        "TextServer::method:shaped_get_span_object(RID:,int:)",
-        "TextServer::method:shaped_get_span_text(RID:,int:)",
-        "TextServer::method:shaped_get_text(RID:)",
-        "TextServer::method:shaped_set_span_update_font(RID:,int:,RID[]:,int:,Dictionary:)",
-        "TextServer::method:shaped_text_add_object(RID:,Variant:,Vector2:,int:InlineAlignment,int:,float:)",
-        "TextServer::method:shaped_text_add_string(RID:,String:,RID[]:,int:,Dictionary:,String:,Variant:)",
-        "TextServer::method:shaped_text_clear(RID:)",
-        "TextServer::method:shaped_text_closest_character_pos(RID:,int:)",
-        "TextServer::method:shaped_text_draw(RID:,RID:,Vector2:,float:,float:,Color:,float:)",
-        "TextServer::method:shaped_text_draw_outline(RID:,RID:,Vector2:,float:,float:,int:,Color:,float:)",
-        "TextServer::method:shaped_text_duplicate(RID:)",
-        "TextServer::method:shaped_text_fit_to_width(RID:,float:,int:TextServer.JustificationFlag)",
-        "TextServer::method:shaped_text_get_ascent(RID:)",
-        "TextServer::method:shaped_text_get_carets(RID:,int:)",
-        "TextServer::method:shaped_text_get_character_breaks(RID:)",
-        "TextServer::method:shaped_text_get_custom_ellipsis(RID:)",
-        "TextServer::method:shaped_text_get_custom_punctuation(RID:)",
-        "TextServer::method:shaped_text_get_descent(RID:)",
-        "TextServer::method:shaped_text_get_direction(RID:)",
-        "TextServer::method:shaped_text_get_dominant_direction_in_range(RID:,int:,int:)",
-        "TextServer::method:shaped_text_get_ellipsis_pos(RID:)",
-        "TextServer::method:shaped_text_get_glyph_count(RID:)",
-        "TextServer::method:shaped_text_get_grapheme_bounds(RID:,int:)",
-        "TextServer::method:shaped_text_get_inferred_direction(RID:)",
-        "TextServer::method:shaped_text_get_line_breaks(RID:,float:,int:,int:TextServer.LineBreakFlag)",
-        "TextServer::method:shaped_text_get_line_breaks_adv(RID:,PackedFloat32Array:,int:,bool:,int:TextServer.LineBreakFlag)",
-        "TextServer::method:shaped_text_get_object_range(RID:,Variant:)",
-        "TextServer::method:shaped_text_get_object_rect(RID:,Variant:)",
-        "TextServer::method:shaped_text_get_objects(RID:)",
-        "TextServer::method:shaped_text_get_orientation(RID:)",
-        "TextServer::method:shaped_text_get_parent(RID:)",
-        "TextServer::method:shaped_text_get_preserve_control(RID:)",
-        "TextServer::method:shaped_text_get_preserve_invalid(RID:)",
-        "TextServer::method:shaped_text_get_range(RID:)",
-        "TextServer::method:shaped_text_get_selection(RID:,int:,int:)",
-        "TextServer::method:shaped_text_get_size(RID:)",
-        "TextServer::method:shaped_text_get_spacing(RID:,int:TextServer.SpacingType)",
-        "TextServer::method:shaped_text_get_trim_pos(RID:)",
-        "TextServer::method:shaped_text_get_underline_position(RID:)",
-        "TextServer::method:shaped_text_get_underline_thickness(RID:)",
-        "TextServer::method:shaped_text_get_width(RID:)",
-        "TextServer::method:shaped_text_get_word_breaks(RID:,int:TextServer.GraphemeFlag,int:TextServer.GraphemeFlag)",
-        "TextServer::method:shaped_text_has_object(RID:,Variant:)",
-        "TextServer::method:shaped_text_has_visible_chars(RID:)",
-        "TextServer::method:shaped_text_hit_test_grapheme(RID:,float:)",
-        "TextServer::method:shaped_text_hit_test_position(RID:,float:)",
-        "TextServer::method:shaped_text_is_ready(RID:)",
-        "TextServer::method:shaped_text_next_character_pos(RID:,int:)",
-        "TextServer::method:shaped_text_next_grapheme_pos(RID:,int:)",
-        "TextServer::method:shaped_text_overrun_trim_to_width(RID:,float:,int:TextServer.TextOverrunFlag)",
-        "TextServer::method:shaped_text_prev_character_pos(RID:,int:)",
-        "TextServer::method:shaped_text_prev_grapheme_pos(RID:,int:)",
-        "TextServer::method:shaped_text_resize_object(RID:,Variant:,Vector2:,int:InlineAlignment,float:)",
-        "TextServer::method:shaped_text_set_bidi_override(RID:,Array:)",
-        "TextServer::method:shaped_text_set_custom_ellipsis(RID:,int:)",
-        "TextServer::method:shaped_text_set_custom_punctuation(RID:,String:)",
-        "TextServer::method:shaped_text_set_direction(RID:,int:TextServer.Direction)",
-        "TextServer::method:shaped_text_set_orientation(RID:,int:TextServer.Orientation)",
-        "TextServer::method:shaped_text_set_preserve_control(RID:,bool:)",
-        "TextServer::method:shaped_text_set_preserve_invalid(RID:,bool:)",
-        "TextServer::method:shaped_text_set_spacing(RID:,int:TextServer.SpacingType,int:)",
-        "TextServer::method:shaped_text_shape(RID:)",
-        "TextServer::method:shaped_text_substr(RID:,int:,int:)",
-        "TextServer::method:shaped_text_tab_align(RID:,PackedFloat32Array:)",
-        "TextServer::method:string_get_character_breaks(String:,String:)",
-        "TextServer::method:string_get_word_breaks(String:,String:,int:)",
-        "TextServer::method:string_to_lower(String:,String:)",
-        "TextServer::method:string_to_title(String:,String:)",
-        "TextServer::method:string_to_upper(String:,String:)",
-        "TextServer::method:strip_diacritics(String:)",
-        "TextServer::method:tag_to_name(int:)",
-        "TextServerManager::method:find_interface(String:)",
-        "TextServerManager::method:get_interface(int:)",
-        "TextServerManager::method:get_interface_count()",
-        "TextServerManager::method:get_interfaces()",
-        "TextServerManager::method:get_primary_interface()"
-      ],
-      "state": "Implemented",
-      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0095: real shared FreeType/HarfBuzz shaped-buffer ownership, typed copied font sources/features and exact metadata, scalar/inline authoring, fractional metrics, native baseline/outline/clipping and both axes. Owned IDs retire through FreeRID; borrowed text-object IDs share the original owner and paragraph line edits detach atomically until reflow. Prepared queries/drawing retain generation/reentry/thread/lifetime gates. Native/platform, allocator and owner verification remain independently reported."
-    },
-    {
-      "godot": [
-        "TextServer::enum:ContourPointTag",
-        "TextServer::enum_value:ContourPointTag.CONTOUR_CURVE_TAG_OFF_CONIC",
-        "TextServer::enum_value:ContourPointTag.CONTOUR_CURVE_TAG_OFF_CUBIC",
-        "TextServer::enum_value:ContourPointTag.CONTOUR_CURVE_TAG_ON",
         "TextServer::method:create_font()",
         "TextServer::method:create_font_linked_variation(RID:)",
+        "TextServer::method:create_shaped_text(int:TextServer.Direction,int:TextServer.Orientation)",
+        "TextServer::method:draw_hex_code_box(RID:,int:,Vector2:,int:,Color:)",
         "TextServer::method:font_clear_glyphs(RID:,Vector2i:)",
         "TextServer::method:font_clear_kerning_map(RID:,int:)",
         "TextServer::method:font_clear_size_cache(RID:)",
@@ -777,10 +1506,97 @@
         "TextServer::method:font_set_variation_coordinates(RID:,Dictionary:)",
         "TextServer::method:font_set_weight(RID:,int:)",
         "TextServer::method:font_supported_feature_list(RID:)",
-        "TextServer::method:font_supported_variation_list(RID:)"
+        "TextServer::method:font_supported_variation_list(RID:)",
+        "TextServer::method:free_rid(RID:)",
+        "TextServer::method:get_hex_code_box_size(int:,int:)",
+        "TextServer::method:get_name()",
+        "TextServer::method:has(RID:)",
+        "TextServer::method:is_locale_right_to_left(String:)",
+        "TextServer::method:is_valid_identifier(String:)",
+        "TextServer::method:is_valid_letter(int:)",
+        "TextServer::method:name_to_tag(String:)",
+        "TextServer::method:shaped_get_span_count(RID:)",
+        "TextServer::method:shaped_get_span_embedded_object(RID:,int:)",
+        "TextServer::method:shaped_get_span_meta(RID:,int:)",
+        "TextServer::method:shaped_get_span_object(RID:,int:)",
+        "TextServer::method:shaped_get_span_text(RID:,int:)",
+        "TextServer::method:shaped_get_text(RID:)",
+        "TextServer::method:shaped_set_span_update_font(RID:,int:,RID[]:,int:,Dictionary:)",
+        "TextServer::method:shaped_text_add_object(RID:,Variant:,Vector2:,int:InlineAlignment,int:,float:)",
+        "TextServer::method:shaped_text_add_string(RID:,String:,RID[]:,int:,Dictionary:,String:,Variant:)",
+        "TextServer::method:shaped_text_clear(RID:)",
+        "TextServer::method:shaped_text_closest_character_pos(RID:,int:)",
+        "TextServer::method:shaped_text_draw(RID:,RID:,Vector2:,float:,float:,Color:,float:)",
+        "TextServer::method:shaped_text_draw_outline(RID:,RID:,Vector2:,float:,float:,int:,Color:,float:)",
+        "TextServer::method:shaped_text_duplicate(RID:)",
+        "TextServer::method:shaped_text_fit_to_width(RID:,float:,int:TextServer.JustificationFlag)",
+        "TextServer::method:shaped_text_get_ascent(RID:)",
+        "TextServer::method:shaped_text_get_carets(RID:,int:)",
+        "TextServer::method:shaped_text_get_character_breaks(RID:)",
+        "TextServer::method:shaped_text_get_custom_ellipsis(RID:)",
+        "TextServer::method:shaped_text_get_custom_punctuation(RID:)",
+        "TextServer::method:shaped_text_get_descent(RID:)",
+        "TextServer::method:shaped_text_get_direction(RID:)",
+        "TextServer::method:shaped_text_get_dominant_direction_in_range(RID:,int:,int:)",
+        "TextServer::method:shaped_text_get_ellipsis_pos(RID:)",
+        "TextServer::method:shaped_text_get_glyph_count(RID:)",
+        "TextServer::method:shaped_text_get_grapheme_bounds(RID:,int:)",
+        "TextServer::method:shaped_text_get_inferred_direction(RID:)",
+        "TextServer::method:shaped_text_get_line_breaks(RID:,float:,int:,int:TextServer.LineBreakFlag)",
+        "TextServer::method:shaped_text_get_line_breaks_adv(RID:,PackedFloat32Array:,int:,bool:,int:TextServer.LineBreakFlag)",
+        "TextServer::method:shaped_text_get_object_range(RID:,Variant:)",
+        "TextServer::method:shaped_text_get_object_rect(RID:,Variant:)",
+        "TextServer::method:shaped_text_get_objects(RID:)",
+        "TextServer::method:shaped_text_get_orientation(RID:)",
+        "TextServer::method:shaped_text_get_parent(RID:)",
+        "TextServer::method:shaped_text_get_preserve_control(RID:)",
+        "TextServer::method:shaped_text_get_preserve_invalid(RID:)",
+        "TextServer::method:shaped_text_get_range(RID:)",
+        "TextServer::method:shaped_text_get_selection(RID:,int:,int:)",
+        "TextServer::method:shaped_text_get_size(RID:)",
+        "TextServer::method:shaped_text_get_spacing(RID:,int:TextServer.SpacingType)",
+        "TextServer::method:shaped_text_get_trim_pos(RID:)",
+        "TextServer::method:shaped_text_get_underline_position(RID:)",
+        "TextServer::method:shaped_text_get_underline_thickness(RID:)",
+        "TextServer::method:shaped_text_get_width(RID:)",
+        "TextServer::method:shaped_text_get_word_breaks(RID:,int:TextServer.GraphemeFlag,int:TextServer.GraphemeFlag)",
+        "TextServer::method:shaped_text_has_object(RID:,Variant:)",
+        "TextServer::method:shaped_text_has_visible_chars(RID:)",
+        "TextServer::method:shaped_text_hit_test_grapheme(RID:,float:)",
+        "TextServer::method:shaped_text_hit_test_position(RID:,float:)",
+        "TextServer::method:shaped_text_is_ready(RID:)",
+        "TextServer::method:shaped_text_next_character_pos(RID:,int:)",
+        "TextServer::method:shaped_text_next_grapheme_pos(RID:,int:)",
+        "TextServer::method:shaped_text_overrun_trim_to_width(RID:,float:,int:TextServer.TextOverrunFlag)",
+        "TextServer::method:shaped_text_prev_character_pos(RID:,int:)",
+        "TextServer::method:shaped_text_prev_grapheme_pos(RID:,int:)",
+        "TextServer::method:shaped_text_resize_object(RID:,Variant:,Vector2:,int:InlineAlignment,float:)",
+        "TextServer::method:shaped_text_set_bidi_override(RID:,Array:)",
+        "TextServer::method:shaped_text_set_custom_ellipsis(RID:,int:)",
+        "TextServer::method:shaped_text_set_custom_punctuation(RID:,String:)",
+        "TextServer::method:shaped_text_set_direction(RID:,int:TextServer.Direction)",
+        "TextServer::method:shaped_text_set_orientation(RID:,int:TextServer.Orientation)",
+        "TextServer::method:shaped_text_set_preserve_control(RID:,bool:)",
+        "TextServer::method:shaped_text_set_preserve_invalid(RID:,bool:)",
+        "TextServer::method:shaped_text_set_spacing(RID:,int:TextServer.SpacingType,int:)",
+        "TextServer::method:shaped_text_shape(RID:)",
+        "TextServer::method:shaped_text_substr(RID:,int:,int:)",
+        "TextServer::method:shaped_text_tab_align(RID:,PackedFloat32Array:)",
+        "TextServer::method:string_get_character_breaks(String:,String:)",
+        "TextServer::method:string_get_word_breaks(String:,String:,int:)",
+        "TextServer::method:string_to_lower(String:,String:)",
+        "TextServer::method:string_to_title(String:,String:)",
+        "TextServer::method:string_to_upper(String:,String:)",
+        "TextServer::method:strip_diacritics(String:)",
+        "TextServer::method:tag_to_name(int:)",
+        "TextServerManager::method:find_interface(String:)",
+        "TextServerManager::method:get_interface(int:)",
+        "TextServerManager::method:get_interface_count()",
+        "TextServerManager::method:get_interfaces()",
+        "TextServerManager::method:get_primary_interface()"
       ],
-      "state": "Blocked",
-      "reason": "ADR 0046/0107: requires a stable service-owned font RID owner and complete typed Font projection with executable source/config/cache authoring, query and drawing. Pinned linked variations share base source/configuration/cache but own spacing/baseline; linking a link targets the original base. FontFile edits replace FontData and cache list edits can shift indexes, so borrowed native pointers or cache indexes cannot be these identities. Integrate generation/read leases, base/link retirement and resource-family lifetime in that producer slice before the run/glyph/provider dependents; current native libraries and resource caches do not supply the service owner."
+      "state": "Implemented",
+      "reason": "ADR 0107 with 0001/0003/0004/0005/0014/0046/0095: real shared FreeType/HarfBuzz shaped-buffer ownership, typed copied font sources/features and exact metadata, scalar/inline authoring, fractional metrics, native baseline/outline/clipping and both axes. Owned IDs retire through FreeRID; borrowed text-object IDs share the original owner and paragraph line edits detach atomically until reflow. Prepared queries/drawing retain generation/reentry/thread/lifetime gates. Native/platform, allocator and owner verification remain independently reported."
     },
     {
       "godot": [
@@ -870,7 +1686,7 @@
         "TextServer::method:shaped_text_sort_logical(RID:)"
       ],
       "state": "Blocked",
-      "reason": "ADR 0107/0046: requires a complete typed visual/logical run/glyph snapshot producer, including exact borrowed fallback/native font-source identity and its generation lifetime. Current internal FontData is not a public font handle. Integrate this member with that font-source/glyph snapshot slice; primitive buffer glyph counts already execute."
+      "reason": "ADR 0046/0107: built-in service-owned font/cache identities now execute. Requires the complete ordinary FontFile/SystemFont/FontVariation and automatic-fallback source identity register, generation lifetime and typed visual/logical run/glyph snapshots. Current FontData remains internal; integrate source projection and complete copied glyph metadata/ordering together in that first snapshot producer slice."
     },
     {
       "godot": [
@@ -1136,7 +1952,7 @@
         "TextServerExtension::method:_unreference_oversampling_level(float:)"
       ],
       "state": "Blocked",
-      "reason": "ADR 0046/0107: requires the complete external TextServerExtension instance/virtual dispatch and font-cache ownership family, including callback errors, provider retirement and registration/replacement integration. The retained built-in TextServer shaped-buffer producer does not expose this separate constructible implementation/extension contract. This member enters that extension/provider slice; no zero-result dummy or inert virtual mirror is added."
+      "reason": "ADR 0046/0107: built-in buffers and service-owned fonts/caches now execute. Requires constructible external TextServerExtension virtual/callback dispatch for the complete family, provider-owned source/cache lifetimes, callback errors/reentry, retirement and public provider registration/replacement integration. This member enters that external implementation/dispatch slice."
     }
   ]
 }

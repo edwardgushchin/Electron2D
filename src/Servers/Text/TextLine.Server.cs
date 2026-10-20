@@ -189,6 +189,11 @@ internal sealed class TextBufferFont : Font
         if (source is not null) foreach (var font in _fonts) if (font.GetSources().Contains(source)) return font.GetSpacing(spacing);
         return _fonts[0].GetSpacing(spacing);
     }
+    internal override float GetShapingBaselineOffset(FontData? source, int size)
+    {
+        if (source is not null) foreach (var font in _fonts) if (font.GetSources().Contains(source)) return font.GetShapingBaselineOffset(source, size);
+        return _fonts[0].GetShapingBaselineOffset(source, size);
+    }
     private (float Ascent, float Descent, float Position, float Thickness) SourceMetrics(FontData? selected, int size)
     {
         var sources = GetSources(); var last = selected is null ? sources.Count - 1 : sources.IndexOf(selected);

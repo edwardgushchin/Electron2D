@@ -449,8 +449,14 @@ internal sealed partial class TextLayout
                     var extraSpacing = spaceSpacing != 0 ? spaceSpacing : runStyle.Font.GetShapingSpacing(run.Face, TextSpacingType.Glyph) + (float)_options.BufferGlyphSpacing;
                     if (shapedIndex < lastAdvance) advance += extraSpacing;
                 }
+                var offset = shaped.GlyphIndex == 0 ? Vector2.Zero : new Vector2(shaped.XOffset / 64f, -shaped.YOffset / 64f);
+                if (shaped.GlyphIndex != 0)
+                {
+                    var baseline = runStyle.Font.GetShapingBaselineOffset(run.Face, runStyle.Size);
+                    offset += Key.Orientation == TextOrientation.Horizontal ? new Vector2(0, baseline) : new Vector2(baseline, 0);
+                }
                 _lineGlyphs.Add(new(run.Face, shaped.GlyphIndex, cluster, clusterEnd, advance,
-                    shaped.GlyphIndex == 0 ? Vector2.Zero : new(shaped.XOffset / 64f, -shaped.YOffset / 64f), shaped.Flags, space, false, rtl, Size: runStyle.Size));
+                    offset, shaped.Flags, space, false, rtl, Size: runStyle.Size));
             }
         }
         LayoutAdvance();

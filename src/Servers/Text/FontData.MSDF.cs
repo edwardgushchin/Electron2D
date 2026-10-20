@@ -4,7 +4,7 @@ internal sealed partial class FontData
 {
     internal Vector2i CacheSize(Vector2i requested)
     {
-        if (!MultichannelSignedDistanceField) return requested;
+        if (!MultichannelSignedDistanceField) return Authored is { FixedSize: > 0 } cache ? new(cache.FixedSize, requested.Y) : requested;
         CheckMSDFConfiguration(); return new(MSDFSize, 0);
     }
     internal float MSDFScale(int size) => MultichannelSignedDistanceField ? size / (float)MSDFSize : 1;
@@ -21,7 +21,7 @@ internal sealed partial class FontData
         var key = (glyph, MSDFSize, 0, 1f, Hinting, 0);
         if (!_glyphs.TryGetValue(key, out var source))
         {
-            _glyph = glyph; _size = MSDFSize; _outline = 0; _oversampling = 1; _phase = 0; Run(Operation.Glyph);
+            _glyph = _cacheGlyph = glyph; _size = MSDFSize; _outline = 0; _oversampling = 1; _phase = 0; Run(Operation.Glyph);
             source = _glyphResult; _glyphs.Add(key, source);
         }
         var scale = size / (float)MSDFSize;

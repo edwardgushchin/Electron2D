@@ -9,7 +9,7 @@ internal readonly record struct FontGlyph(Texture? Texture, Vector2 Offset, Vect
 // Immutable source bytes and portable glyph textures; mutable native state is confined to FontThread.
 internal sealed partial class FontData : IDisposable
 {
-    private enum Operation { Create, Dispose, Metrics, Index, Advance, Shape, Glyph, Characters, Kerning, Names }
+    private enum Operation { Create, Dispose, Metrics, Index, Advance, Shape, Glyph, Characters, Kerning, Names, Contours }
     private readonly object _gate = new();
     private byte[] _bytes = [];
     private byte[] _auxiliaryMetrics = [];
@@ -152,6 +152,7 @@ internal sealed partial class FontData : IDisposable
         {
             Check(); if (!HasData) return 0;
             if (SelectAuthored(fontSize)?.Advances.TryGetValue(glyph, out var authoredAdvance) == true) return (vertical ? authoredAdvance.Y : authoredAdvance.X) * BitmapScale(fontSize);
+            glyph &= 0xFFFFFF;
             var key = (glyph, fontSize, vertical); if (_advances.TryGetValue(key, out var advance)) return advance;
             _glyph = glyph; _size = fontSize; _vertical = vertical; Run(Operation.Advance); _advances.Add(key, _advanceResult); return _advanceResult;
         }
@@ -186,9 +187,11 @@ internal sealed partial class FontData : IDisposable
         lock (_gate)
         {
             Check();
-            if (MultichannelSignedDistanceField) { rasterPosition = position; return GetMSDFGlyph(glyph, fontSize, outline); }
+            glyph &= ~0x07000000u;
+            if (MultichannelSignedDistanceField) { rasterPosition = position; return GetMSDFGlyph(glyph & 0xFFFFFF, fontSize, outline); }
             if (TryAuthoredGlyph(glyph, fontSize, outline, out var authoredGlyph)) { rasterPosition = position; return authoredGlyph; }
             if (_bytes.Length == 0) { rasterPosition = position; return default; }
+            var fixedScale = FixedNativeScale(fontSize); fontSize = FixedNativeSize(fontSize); var cacheGlyph = glyph;
             var requested = oversampling > 0 ? oversampling : Oversampling > 0 ? Oversampling : automaticOversampling;
             var factor = (int)(Math.Clamp(requested, .1f, 100f) * 64) / 64f;
             var border = Math.Max(0, outline);
@@ -204,12 +207,16 @@ internal sealed partial class FontData : IDisposable
                 _ => 1
             };
             var x = (double)position.X + (divisions == 1 ? 0 : .5 / divisions);
-            var phase = (int)(Math.Floor(divisions * x) - divisions * Math.Floor(x)) * (64 / divisions);
+            var phase = divisions == 1 ? 0 : glyph > 0xFFFFFF ? (int)((glyph >> 27) & 3) * (64 / divisions) : (int)(Math.Floor(divisions * x) - divisions * Math.Floor(x)) * (64 / divisions);
+            glyph &= 0xFFFFFF;
+            if (cacheGlyph <= 0xFFFFFF) cacheGlyph = glyph | ((uint)(phase / (64 / divisions)) << 27);
             rasterPosition = factor == 1 ? new((float)Math.Floor(x), MathF.Floor(position.Y)) : new((float)x, position.Y);
             if (!HasData) return default;
-            var key = (glyph, fontSize, border, factor, Hinting, phase); if (_glyphs.TryGetValue(key, out var result)) return result;
+            var key = (glyph, fontSize, border, factor, Hinting, phase);
+            if (_glyphs.TryGetValue(key, out var result)) { PublishRasterRecord(cacheGlyph, fontSize, border, result); return result with { Offset = result.Offset * fixedScale, Size = result.Size * fixedScale }; }
+            _cacheGlyph = cacheGlyph;
             _glyph = glyph; _size = fontSize; _outline = border; _oversampling = factor; _phase = phase; Run(Operation.Glyph);
-            _glyphs.Add(key, _glyphResult); return _glyphResult;
+            _glyphs.Add(key, _glyphResult); return _glyphResult with { Offset = _glyphResult.Offset * fixedScale, Size = _glyphResult.Size * fixedScale };
         }
     }
     private static void ValidateSize(int size) { if (size <= 0) throw new ArgumentOutOfRangeException(nameof(size)); }
@@ -247,19 +254,26 @@ internal sealed partial class FontData : IDisposable
                 break;
             case Operation.Dispose: ReleaseNative(); break;
             case Operation.Metrics:
-                _precision!.SetSize(_size); _metricsResult = new(_precision.Ascent, _precision.Descent, _precision.Height, _precision.UnderlinePosition, _precision.UnderlineThickness); break;
+                _precision!.SetSize(FixedNativeSize(_size)); var metricScale = FixedNativeScale(_size);
+                _metricsResult = new(_precision.Ascent * metricScale, _precision.Descent * metricScale, _precision.Height * metricScale, _precision.UnderlinePosition * metricScale, _precision.UnderlineThickness * metricScale); break;
             case Operation.Index: _indexResult = _precision!.GetGlyphIndex(_scalar, _selector); break;
             case Operation.Advance:
-                _precision!.SetSize(_size); _advanceResult = _precision.GetGlyphAdvance(_glyph, _vertical) / (_vertical ? -64f : 64f);
-                if (!_vertical) _advanceResult += (_bytes.Length > 0 ? _instance?.Embolden ?? 0 : 0) * _size / 64f; break;
-            case Operation.Kerning: _precision!.SetSize(_size); _kerningResult = _precision.GetKerning((uint)_pair.X, (uint)_pair.Y); break;
+                _precision!.SetSize(FixedNativeSize(_size)); _advanceResult = _precision.GetGlyphAdvance(_glyph, _vertical) / (_vertical ? -64f : 64f) * FixedNativeScale(_size);
+                if (!_vertical) _advanceResult += (_bytes.Length > 0 ? _instance?.Embolden ?? 0 : 0) * FixedNativeSize(_size) * FixedNativeScale(_size) / 64f; break;
+            case Operation.Kerning: _precision!.SetSize(FixedNativeSize(_size)); _kerningResult = _precision.GetKerning((uint)_pair.X, (uint)_pair.Y) * FixedNativeScale(_size); break;
             case Operation.Characters: _characters = _precision!.GetSupportedChars(); break;
+            case Operation.Contours:
+                _precision!.SetSize(MultichannelSignedDistanceField ? MSDFSize : FixedNativeSize(_size)); _contourResult = _precision.GetGlyphContours(_glyph, ForceAutohinter);
+                var contourScale = MultichannelSignedDistanceField ? MSDFScale(_size) : FixedNativeScale(_size);
+                if (contourScale != 1) for (var i = 0; i < _contourResult.Points.Length; i++) _contourResult.Points[i] = _contourResult.Points[i] with { Position = _contourResult.Points[i].Position * contourScale };
+                break;
             case Operation.Shape:
-                _precision!.SetSize(_size);
+                _precision!.SetSize(FixedNativeSize(_size)); var shapeScale = FixedNativeScale(_size);
                 var shaped = _precision.Shape(_scalars.AsSpan(0, _textLength), _offset, _count, _direction, _script, _language, _features);
                 _shapeOutput!.EnsureCapacity(shaped.Length);
                 var horizontal = _direction is NativeTextDirection.LTR or NativeTextDirection.RTL;
-                var subpixel = horizontal && (SubpixelPositioning is FontSubpixelPositioning.Half or FontSubpixelPositioning.Quarter || SubpixelPositioning == FontSubpixelPositioning.Auto && _size <= (int)FontSubpixelPositioning.HalfMaxSize);
+                var advanceSize = Authored is { FixedSize: > 0 } fixedCache ? fixedCache.FixedSize : _size;
+                var subpixel = horizontal && (MultichannelSignedDistanceField || Authored is { FixedSize: > 0, ScaleMode: not FixedSizeScaleMode.Disable } || SubpixelPositioning is FontSubpixelPositioning.Half or FontSubpixelPositioning.Quarter || SubpixelPositioning == FontSubpixelPositioning.Auto && advanceSize <= (int)FontSubpixelPositioning.HalfMaxSize);
                 double remainder = 0;
                 foreach (var glyph in shaped)
                 {
@@ -268,10 +282,11 @@ internal sealed partial class FontData : IDisposable
                     if (glyph.GlyphIndex == 0) { _shapeOutput.Add(glyph); continue; }
                     var x = subpixel ? glyph.XOffset : Round26(glyph.XOffset / 64d + (horizontal ? remainder : 0));
                     var y = Round26(glyph.YOffset / 64d + (horizontal ? 0 : remainder));
-                    var advance = (horizontal ? glyph.XAdvance : glyph.YAdvance) / 64d + (horizontal ? (_bytes.Length > 0 ? _instance?.Embolden ?? 0 : 0) * _size / 64d : 0);
+                    x = checked((int)Math.Round(x * shapeScale)); y = checked((int)Math.Round(y * shapeScale));
+                    var advance = (horizontal ? glyph.XAdvance : glyph.YAdvance) / 64d * shapeScale + (horizontal ? (_bytes.Length > 0 ? _instance?.Embolden ?? 0 : 0) * FixedNativeSize(_size) * shapeScale / 64d : 0);
                     if (SelectAuthored(_size) is { } cache)
                     {
-                        if (_bytes.Length > 0 && cache.Advances.TryGetValue(glyph.GlyphIndex, out var authoredAdvance)) advance = horizontal ? authoredAdvance.X : -authoredAdvance.Y;
+                        if (_bytes.Length > 0 && cache.Advances.TryGetValue(glyph.GlyphIndex, out var authoredAdvance)) advance = (horizontal ? authoredAdvance.X : -authoredAdvance.Y) * BitmapScale(_size);
                         if (_shapeOutput.Count > 0 && cache.Kerning.TryGetValue(new((int)_shapeOutput[^1].GlyphIndex, (int)glyph.GlyphIndex), out var kerning))
                         {
                             var previous = _shapeOutput[^1]; var delta = checked((int)Math.Round((horizontal ? kerning.X : -kerning.Y) * BitmapScale(_size) * 64));
@@ -280,7 +295,7 @@ internal sealed partial class FontData : IDisposable
                     }
                     var adjusted = subpixel ? checked((int)Math.Round(advance * 64)) : Round26(remainder + advance);
                     if (!subpixel && KeepRoundingRemainders) remainder += advance - adjusted / 64d;
-                    var baseline = _instance?.BaselineOffset ?? 0; var shift = checked((int)Math.Round(baseline * _precision.Height * 64d));
+                    var baseline = _instance?.BaselineOffset ?? 0; var shift = checked((int)Math.Round(baseline * _precision.Height * shapeScale * 64d));
                     _shapeOutput.Add(glyph with { XOffset = x + (horizontal ? 0 : shift), YOffset = y - (horizontal ? shift : 0), XAdvance = horizontal ? adjusted : glyph.XAdvance, YAdvance = horizontal ? glyph.YAdvance : adjusted });
                 }
                 break;
@@ -294,7 +309,7 @@ internal sealed partial class FontData : IDisposable
             ? _precision.RasterizeMSDF(_glyph, Hinting, MSDFPixelRange, ForceAutohinter)
             : _precision.Rasterize(_glyph, Hinting, _phase, checked((int)(_outline * _oversampling) * 16), DisableEmbeddedBitmaps, ForceAutohinter, Antialiasing, FontThread.LCDLayout);
         if (raster.Width == 0 || raster.Height == 0) return default;
-        if (Authored != null && _oversampling == 1 && _phase == 0) return CacheRaster(_glyph, new(_size, _outline), raster) with { MSDFPixelRange = MultichannelSignedDistanceField ? MSDFPixelRange : 0 };
+        if (Authored != null) return CacheRaster(_cacheGlyph, new(_size, _outline), raster) with { MSDFPixelRange = MultichannelSignedDistanceField ? MSDFPixelRange : 0 };
         using var image = Image.CreateFromData(raster.Width, raster.Height, false, Image.Format.Rgba8, raster.Pixels);
         if (GenerateMIPMaps) image.GenerateMIPMaps();
         var texture = ImageTexture.CreateFromImage(image); texture.RetainRendererCache = true;

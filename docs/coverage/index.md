@@ -1,3 +1,5 @@
+[Owned text font caches](../components/text-server.md#owned-font-sources-and-caches) implement 134 font-source/cache and contour declarations through stable owned identities, shared linked backends and existing typed consumers. Scoped Linux software rendering, native contour/palette/variation/bitmap consumers and source/lifetime checks remain distinct from resource glyph identity, external providers and final platform/package/hardware/allocator/owner gates.
+
 [Coincident rounded-core response](../components/physics-contact-policy.md#coincident-rounded-cores) repairs native CPU dynamics without adding declarations or changing states. Shared public physical-invariant and warmed allocation checks retain 1279/1369 Implemented (93.43%), with 90 open applicable declarations; final native/network/target-device/performance gates remain separate.
 
 [Complete selected pair operations](../components/physics-shape-pairs.md#complete-selected-pair-operations)

@@ -2,7 +2,7 @@ namespace Electron2D;
 
 internal sealed partial class FontData
 {
-    private FontCacheSize? SelectAuthored(int size, int outline = 0) => MultichannelSignedDistanceField ? Authored?.Sizes.GetValueOrDefault(CacheSize(new(size, outline))) : _bytes.Length > 0 ? Authored?.Sizes.GetValueOrDefault(new(size, outline)) : Authored?.Select(size, outline);
+    private FontCacheSize? SelectAuthored(int size, int outline = 0) => Authored?.Sizes.GetValueOrDefault(CacheSize(new(size, outline)));
     internal Vector2 GetKerning(Vector2i pair, int size)
     {
         ValidateSize(size);
@@ -14,7 +14,10 @@ internal sealed partial class FontData
         }
     }
     internal FontCache? Authored { get; set; }
-    private float BitmapScale(int size) => MultichannelSignedDistanceField ? MSDFScale(size) : _bytes.Length == 0 && Authored is { FixedSize: > 0 } cache ? cache.Factor(size) : 1;
+    private float BitmapScale(int size) => MultichannelSignedDistanceField ? MSDFScale(size) : Authored is { FixedSize: > 0 } cache ? cache.Factor(size) : 1;
+    internal float MetadataScale(int size) => BitmapScale(size);
+    private int FixedNativeSize(int size) => !MultichannelSignedDistanceField && _bytes.Length > 0 && Authored is { FixedSize: > 0 } cache ? cache.FixedSize : size;
+    private float FixedNativeScale(int size) => !MultichannelSignedDistanceField && _bytes.Length > 0 && Authored is { FixedSize: > 0 } cache ? cache.Factor(size) : 1;
     private FontMetrics AuthoredMetrics(int size, FontMetrics metrics)
     {
         if (SelectAuthored(size) is not { } cache) return metrics;
@@ -61,7 +64,7 @@ internal sealed partial class FontData
             foreach (var cachedKey in _glyphs.Keys)
                 if (ReferenceEquals(_glyphs[cachedKey].Texture, previousTexture)) _glyphs[cachedKey] = _glyphs[cachedKey] with { Texture = texture };
         previous.Retire(); size.Pages[index] = replacement;
-        var offset = new Vector2(raster.Left, -raster.Top); var dimensions = new Vector2(raster.Width, raster.Height);
+        var offset = new Vector2(raster.Left, -raster.Top) / _oversampling; var dimensions = new Vector2(raster.Width, raster.Height) / _oversampling;
         var region = new Rect2(position.X + 1, position.Y + 1, raster.Width, raster.Height);
         size.Glyphs[glyph] = new(offset, dimensions, region, index, raster.Colored, false);
         return new(texture, offset, dimensions, raster.Colored, region, raster.LCD);

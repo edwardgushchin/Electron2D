@@ -194,6 +194,8 @@ The direct bridge is the sole native font/shaping/raster foundation. It removes 
 - Introduce SkiaSharp or another complete 2D renderer for text: rejected because Electron2D already owns its canvas and texture lifecycle.
 - Rasterize glyphs without HarfBuzz shaping or implement Unicode paragraph rules heuristically: rejected because it cannot satisfy the multilingual text contract.
 
+The TextServer font-cache producer shares FontFile realization through stable owned identities and borrowed runtime Font views under ADR 0107. Atlas storage includes fractional phases and explicit oversampling variants. Fixed-size policies apply coherently to scalable native shaping, metrics, raster geometry and copied outlines as well as authored bitmap data. Cache size/geometry queries use the selected source size and requested scale. Selected face changes refresh intrinsic metadata; ordinary same-face edits preserve descriptive overrides.
+
 <a id="adr-0078"></a>
 ## ADR 0078: Retained screen visibility and processing enablers
 
@@ -213,6 +215,7 @@ Last updated: 2026-10-13
 - ShowRect is editor-only magenta gizmo drawing in the pinned source. Keep that member Blocked until the first self-hosted editor canvas gizmo drawing slice and add/test its flag and fill there. Do not ship an inert bool. Public independent offscreen viewport rendering remains subject to its existing lifecycle gate; this slice integrates the current root-window renderer and CanvasLayer groups on both backends.
 
 Raw retained canvas items also accept typed visibility callbacks through RenderingServer.CanvasItemSetVisibilityNotifier. The local area extends command/custom bounds; parent visibility, alpha, cull layers and clipping still apply. Samples are OR-combined across every submitted viewport, then committed once after successful backend frame completion. A global submitted frame with no participating viewport exits previously visible raw notifiers. This differs from the scene-node last-sample policy only at its explicitly retained hidden/stopped viewport boundary. Disable, free, scene-node disposal and renderer teardown clear callbacks silently. Replacing callback/area preserves current screen state but invalidates stale queued delivery. Commit every state before callbacks, attempt later transitions after failures and never replay committed transitions. Callback mutation/free is allowed after submission, while nested rendering remains rejected.
+
 
 ### Verification
 

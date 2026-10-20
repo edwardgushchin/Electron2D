@@ -4435,7 +4435,7 @@
     },
     {
       "state": "Blocked",
-      "reason": "Requires a public TextServer font RID ownership/query service. Current FontData faces and renderer glyph textures are intentionally internal resources under ADR0046; no fake or borrowed native RID is exposed.",
+      "reason": "ADR 0046/0107: TextServer-created stable font/cache identities and borrowed typed runtime projections now execute. Requires complete weak ordinary FontFile/SystemFont/FontVariation and automatic fallback source registration/query identities with generation and retirement integration. No borrowed native pointer or shifting cache index is exposed. This member enters that ordinary-resource source identity and glyph-snapshot producer slice.",
       "godot": [
         "Font::method:get_rids()"
       ]

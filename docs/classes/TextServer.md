@@ -269,3 +269,143 @@ Font sources require one to sixty-four live entries, a positive size and at most
 Word delimiters exclude complete source clusters; virtual opportunities mark boundaries without consuming source characters. No delimiters returns the complete nonempty shaped range, while an empty/unshaped partial-cluster slice has no ranges. Custom punctuation replaces default punctuation; underscore has its own flag. Direction uses actual resolved run metadata; both orientations use scalar units. Undefined flag bits throw ArgumentOutOfRangeException. Queries prepare shape and return cold snapshots; prepared values remain reusable. See the [complete span/word contract](../components/text-server.md#span-font-replacement-and-shaped-word-ranges).
 
 GetHexCodeBoxSize/DrawHexCodeBox require no font. Their valid Unicode scalar selects two/four/six digits; every signed size rounds to a pixel scale of at least one. Zero keeps measured advance and emits no primitives after normal canvas, geometry and color validation. See [the measurement/drawing contract](../components/text-server.md#font-free-hexadecimal-replacement) for baseline, scale, trailing space, clipping, errors and verification.
+
+## Owned font sources
+
+CreateFont/CreateFontLinkedVariation return stable owned font RIDs. FontGetResource supplies a borrowed runtime Font for the existing typed consumers; FreeRID or projection disposal retires that entry. Links share source/config/cache and retain separate spacing/baseline. The complete FontGet/Set/Render/Draw/Remove/Clear family, real texture identities, typed FontSizeCacheInfo and native FontGlyphContours are specified in [the font-cache contract](../components/text-server.md#owned-font-sources-and-caches). Runtime views are reconstructed from persistent FontFile assets. Ordinary-resource source RIDs, complete glyph/run snapshots and external providers retain separate prerequisites.
+
+## Font-cache method reference
+
+| Signature | Purpose |
+| --- | --- |
+| `public Electron2D.RID CreateFont()` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.RID CreateFontLinkedVariation(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontClearGlyphs(Electron2D.RID fontRID, Electron2D.Vector2i size)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontClearKerningMap(Electron2D.RID fontRID, System.Int32 size)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontClearSizeCache(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontClearSystemFallbackCache()` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontClearTextures(Electron2D.RID fontRID, Electron2D.Vector2i size)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontDrawGlyph(Electron2D.RID fontRID, Electron2D.CanvasItem canvas, System.Int32 size, Electron2D.Vector2 position, System.Int32 index, System.Nullable<Electron2D.Color> color = null, System.Single oversampling = 0f)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontDrawGlyphOutline(Electron2D.RID fontRID, Electron2D.CanvasItem canvas, System.Int32 size, System.Int32 outlineSize, Electron2D.Vector2 position, System.Int32 index, System.Nullable<Electron2D.Color> color = null, System.Single oversampling = 0f)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.FontAntialiasing FontGetAntialiasing(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Single FontGetAscent(Electron2D.RID fontRID, System.Int32 size)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Single FontGetBaselineOffset(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Int32 FontGetCharFromGlyphIndex(Electron2D.RID fontRID, System.Int32 size, System.Int32 glyphIndex)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Single FontGetDescent(Electron2D.RID fontRID, System.Int32 size)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Boolean FontGetDisableEmbeddedBitmaps(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Single FontGetEmbolden(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Int32 FontGetFaceCount(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Int32 FontGetFaceIndex(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Int32 FontGetFixedSize(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.FixedSizeScaleMode FontGetFixedSizeScaleMode(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Boolean FontGetGenerateMIPMaps(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.Vector2 FontGetGlyphAdvance(Electron2D.RID fontRID, System.Int32 size, System.Int32 glyph)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.FontGlyphContours FontGetGlyphContours(Electron2D.RID fontRID, System.Int32 size, System.Int32 index)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Int32 FontGetGlyphIndex(Electron2D.RID fontRID, System.Int32 size, System.Int32 character, System.Int32 variationSelector)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Int32[] FontGetGlyphList(Electron2D.RID fontRID, Electron2D.Vector2i size)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.Vector2 FontGetGlyphOffset(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.Vector2 FontGetGlyphSize(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Int32 FontGetGlyphTextureIndex(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.RID FontGetGlyphTextureRID(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.Vector2 FontGetGlyphTextureSize(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.Rect2 FontGetGlyphUVRect(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.FontHinting FontGetHinting(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Boolean FontGetKeepRoundingRemainders(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.Vector2 FontGetKerning(Electron2D.RID fontRID, System.Int32 size, Electron2D.Vector2i glyphPair)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.Vector2i[] FontGetKerningList(Electron2D.RID fontRID, System.Int32 size)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Boolean FontGetLanguageSupportOverride(Electron2D.RID fontRID, System.String language)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.String[] FontGetLanguageSupportOverrides(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Int32 FontGetMSDFPixelRange(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Int32 FontGetMSDFSize(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.String FontGetName(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.Dictionary<System.String, System.String>> FontGetOTNameStrings(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Collections.Generic.Dictionary<System.String, System.Int32> FontGetOpenTypeFeatureOverrides(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Single FontGetOversampling(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.Color[] FontGetPaletteColors(Electron2D.RID fontRID, System.Int32 index)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Int32 FontGetPaletteCount(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.Color[] FontGetPaletteCustomColors(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.String FontGetPaletteName(Electron2D.RID fontRID, System.Int32 index)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.Font FontGetResource(Electron2D.RID fontRID)` | Returns the borrowed typed runtime font. |
+| `public System.Single FontGetScale(Electron2D.RID fontRID, System.Int32 size)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Boolean FontGetScriptSupportOverride(Electron2D.RID fontRID, System.String script)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.String[] FontGetScriptSupportOverrides(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.FontSizeCacheInfo[] FontGetSizeCacheInfo(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.Vector2i[] FontGetSizeCacheList(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Int32 FontGetSpacing(Electron2D.RID fontRID, Electron2D.TextSpacingType spacing)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Int32 FontGetStretch(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.FontStyle FontGetStyle(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.String FontGetStyleName(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.FontSubpixelPositioning FontGetSubpixelPositioning(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.String FontGetSupportedChars(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Int32[] FontGetSupportedGlyphs(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Int32 FontGetTextureCount(Electron2D.RID fontRID, Electron2D.Vector2i size)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.Image FontGetTextureImage(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 textureIndex)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Int32[] FontGetTextureOffsets(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 textureIndex)` | Executes the shared source/cache operation; see the owning contract. |
+| `public Electron2D.Transform FontGetTransform(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Single FontGetUnderlinePosition(Electron2D.RID fontRID, System.Int32 size)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Single FontGetUnderlineThickness(Electron2D.RID fontRID, System.Int32 size)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Int32 FontGetUsedPalette(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Collections.Generic.Dictionary<System.UInt32, System.Single> FontGetVariationCoordinates(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Int32 FontGetWeight(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Boolean FontHasChar(Electron2D.RID fontRID, System.Int32 character)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Boolean FontIsAllowSystemFallback(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Boolean FontIsForceAutohinter(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Boolean FontIsLanguageSupported(Electron2D.RID fontRID, System.String language)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Boolean FontIsModulateColorGlyphs(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Boolean FontIsMultichannelSignedDistanceField(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Boolean FontIsScriptSupported(Electron2D.RID fontRID, System.String script)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontRemoveGlyph(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontRemoveKerning(Electron2D.RID fontRID, System.Int32 size, Electron2D.Vector2i glyphPair)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontRemoveLanguageSupportOverride(Electron2D.RID fontRID, System.String language)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontRemoveScriptSupportOverride(Electron2D.RID fontRID, System.String script)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontRemoveSizeCache(Electron2D.RID fontRID, Electron2D.Vector2i size)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontRemoveTexture(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 textureIndex)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontRenderGlyph(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 index)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontRenderRange(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 start, System.Int32 end)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetAllowSystemFallback(Electron2D.RID fontRID, System.Boolean value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetAntialiasing(Electron2D.RID fontRID, Electron2D.FontAntialiasing value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetAscent(Electron2D.RID fontRID, System.Int32 size, System.Single value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetBaselineOffset(Electron2D.RID fontRID, System.Single value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetData(Electron2D.RID fontRID, System.Byte[] data)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetDescent(Electron2D.RID fontRID, System.Int32 size, System.Single value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetDisableEmbeddedBitmaps(Electron2D.RID fontRID, System.Boolean value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetEmbolden(Electron2D.RID fontRID, System.Single value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetFaceIndex(Electron2D.RID fontRID, System.Int32 value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetFixedSize(Electron2D.RID fontRID, System.Int32 value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetFixedSizeScaleMode(Electron2D.RID fontRID, Electron2D.FixedSizeScaleMode value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetForceAutohinter(Electron2D.RID fontRID, System.Boolean value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetGenerateMIPMaps(Electron2D.RID fontRID, System.Boolean value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetGlyphAdvance(Electron2D.RID fontRID, System.Int32 size, System.Int32 glyph, Electron2D.Vector2 value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetGlyphOffset(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph, Electron2D.Vector2 value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetGlyphSize(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph, Electron2D.Vector2 value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetGlyphTextureIndex(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph, System.Int32 textureIndex)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetGlyphUVRect(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph, Electron2D.Rect2 value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetHinting(Electron2D.RID fontRID, Electron2D.FontHinting value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetKeepRoundingRemainders(Electron2D.RID fontRID, System.Boolean value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetKerning(Electron2D.RID fontRID, System.Int32 size, Electron2D.Vector2i glyphPair, Electron2D.Vector2 value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetLanguageSupportOverride(Electron2D.RID fontRID, System.String language, System.Boolean supported)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetMSDFPixelRange(Electron2D.RID fontRID, System.Int32 value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetMSDFSize(Electron2D.RID fontRID, System.Int32 value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetModulateColorGlyphs(Electron2D.RID fontRID, System.Boolean value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetMultichannelSignedDistanceField(Electron2D.RID fontRID, System.Boolean value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetName(Electron2D.RID fontRID, System.String value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetOpenTypeFeatureOverrides(Electron2D.RID fontRID, System.Collections.Generic.Dictionary<System.String, System.Int32> value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetOversampling(Electron2D.RID fontRID, System.Single value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetPaletteCustomColors(Electron2D.RID fontRID, Electron2D.Color[] value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetScale(Electron2D.RID fontRID, System.Int32 size, System.Single value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetScriptSupportOverride(Electron2D.RID fontRID, System.String script, System.Boolean supported)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetSpacing(Electron2D.RID fontRID, Electron2D.TextSpacingType spacing, System.Int32 value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetStretch(Electron2D.RID fontRID, System.Int32 value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetStyle(Electron2D.RID fontRID, Electron2D.FontStyle value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetStyleName(Electron2D.RID fontRID, System.String value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetSubpixelPositioning(Electron2D.RID fontRID, Electron2D.FontSubpixelPositioning value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetTextureImage(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 textureIndex, Electron2D.Image image)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetTextureOffsets(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 textureIndex, System.Int32[] offsets)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetTransform(Electron2D.RID fontRID, Electron2D.Transform value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetUnderlinePosition(Electron2D.RID fontRID, System.Int32 size, System.Single value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetUnderlineThickness(Electron2D.RID fontRID, System.Int32 size, System.Single value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetUsedPalette(Electron2D.RID fontRID, System.Int32 value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetVariationCoordinates(Electron2D.RID fontRID, System.Collections.Generic.Dictionary<System.UInt32, System.Single> value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Void FontSetWeight(Electron2D.RID fontRID, System.Int32 value)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Collections.Generic.Dictionary<System.UInt32, Electron2D.FontFeatureInfo> FontSupportedFeatureList(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |
+| `public System.Collections.Generic.Dictionary<System.UInt32, Electron2D.FontVariationAxis> FontSupportedVariationList(Electron2D.RID fontRID)` | Executes the shared source/cache operation; see the owning contract. |

@@ -1,8 +1,9 @@
 namespace Electron2D;
 
-/// <summary>Provides retained shaped-text buffers, font-free hexadecimal replacements and stateless Unicode, locale and OpenType-name utilities.</summary>
+/// <summary>Owns font sources and caches, retained shaped-text buffers and shared text utilities.</summary>
 /// <remarks>Obtain the retained interface from TextServerManager. Each buffer belongs to its creating thread.
-/// Caller fonts, inline keys and metadata remain borrowed; only buffers returned by this interface may be freed through FreeRID.</remarks>
+/// Created fonts and buffers are retained until FreeRID; font projections are borrowed live views.
+/// Caller fonts, text-object buffers, inline keys and metadata remain borrowed.</remarks>
 public abstract partial class TextServer : ElectronObject
 {
     private readonly object _buffersGate = new();
@@ -25,12 +26,13 @@ public abstract partial class TextServer : ElectronObject
         try { var rid = line.GetRID(); lock (_buffersGate) _owned.Add(rid, line); return rid; }
         catch { line.Dispose(); throw; }
     }
-    /// <summary>Reports whether an identity resolves to a live shaped buffer on this interface.</summary><param name="rid">Buffer identity.</param><returns>False for empty, retired or foreign identities.</returns>
-    public bool Has(RID rid) => TextBuffers.TryResolve(rid, out _);
-    /// <summary>Releases an owned buffer, preserving borrowed text-object lifetimes.</summary><param name="rid">Identity returned by buffer creation, duplication or substring operations.</param>
+    /// <summary>Reports whether an identity resolves to a live font entry or shaped buffer.</summary><param name="rid">Font or buffer identity.</param><returns>False for empty, retired or foreign identities. A surviving link remains present after its source retires.</returns>
+    public bool Has(RID rid) => HasFont(rid) || TextBuffers.TryResolve(rid, out _);
+    /// <summary>Releases an owned font or buffer, preserving borrowed text-object lifetimes.</summary><param name="rid">Identity returned by this interface's creation, duplication or substring operations.</param>
     /// <exception cref="InvalidOperationException">The identity is borrowed, unknown, off-owner or active.</exception>
     public void FreeRID(RID rid)
     {
+        if (FreeFont(rid)) return;
         lock (_buffersGate)
         {
             if (!_owned.TryGetValue(rid, out var line)) throw new InvalidOperationException("Only buffers owned by this interface can be freed here.");
