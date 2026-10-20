@@ -379,7 +379,7 @@ public sealed partial class PhysicsServer
         {
             if (_ownedSpaces.Contains(rid)) space = _sceneSpaces[rid];
             else if (_serverColliders.TryGetValue(rid, out collider)) { }
-            else if (_serverShapes.TryGetValue(rid, out shape)) { }
+            else if (_serverShapes.TryGetValue(rid, out shape) && shape.GeometryOrNull is not null) { }
             else if (_jointRuntimes.TryGetValue(rid, out joint))
             {
                 if (joint.Scene is not null) throw new InvalidOperationException("The joint RID is owned by its scene node.");
@@ -495,7 +495,7 @@ public sealed partial class PhysicsServer
     {
         ThrowIfDisposed();
         lock (_registryGate)
-            return _serverShapes.TryGetValue(rid, out var shape) && !shape.Geometry.IsDisposed ? shape :
+            return _serverShapes.TryGetValue(rid, out var shape) && shape.GeometryOrNull is { IsDisposed: false } ? shape :
                 throw new ArgumentException("The RID is not a live server shape.", nameof(rid));
     }
 
@@ -514,7 +514,18 @@ public sealed partial class PhysicsServer
     internal RID RegisterBorrowedShape(Shape geometry)
     {
         var rid = RID.Allocate();
-        lock (_registryGate) _serverShapes.Add(rid, new(rid, geometry, ownsGeometry: false));
+        lock (_registryGate)
+        {
+            if (++_borrowedShapeRegistrations == 256)
+            {
+                _borrowedShapeRegistrations = 0;
+                foreach (var pair in _serverShapes)
+                    if (!pair.Value.OwnsGeometry && pair.Value.GeometryOrNull is null) _staleBorrowedShapes.Add(pair.Key);
+                foreach (var stale in _staleBorrowedShapes) _serverShapes.Remove(stale);
+                _staleBorrowedShapes.Clear();
+            }
+            _serverShapes.Add(rid, new(rid, geometry, ownsGeometry: false));
+        }
         return rid;
     }
 

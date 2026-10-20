@@ -9,6 +9,11 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_RIDS") is { } resourceRIDBackend)
+{
+    BackendChecks.RunResourceRIDs(resourceRIDBackend == "cpu" ? PhysicsServer.Backend.CPU : resourceRIDBackend == "gpu" ? PhysicsServer.Backend.GPU : null,
+        Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_THREAD") == "1"); return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_OVERSAMPLING") is { } canvasOversampling) { CanvasOversamplingTests.Run(canvasOversampling); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEFERRED_RELATED") == "1") { BoxContainerTests.Run(); GridContainerTests.Run(); FlowContainerTests.Run(); LayoutContainersTests.Run(); PanelContainerTests.Run(); ThemeResourceTests.Run(); NavigationBakingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEFERRED_CONTRACT") == "1") { VerifySceneTree(); VerifySceneTreeGroupsEventsAndTimers(); VerifySceneTreeFailureSafety(); VerifyEventConnections(); Console.WriteLine("Deferred tree and typed setter regressions passed."); return; }

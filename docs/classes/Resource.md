@@ -1,6 +1,6 @@
 # Resource
 
-Last updated: 2026-10-18
+Last updated: 2026-10-20
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -571,3 +571,9 @@ The current resource-identity cohort passes eight managed profiles and six stric
 Inherited [ordinary event blocking](../classes/ElectronObject.md#ordinary-event-delivery) suppresses new event emissions at the publisher, preserving subscriptions and already accepted deferred work. Notifications, virtual callbacks, committed physical state and resource revisions continue; Disposed cleanup remains independent.
 
 Meaningful EmitChanged revisions conservatively invalidate an active renderer even when signals are blocked or a copy batch defers publication. Off-owner resource publication remains queued/observed through existing scene ownership. Ordinary Image snapshots are copied data; retained texture producers publish their own resource changes. See [rendering change producers](../components/low-processor-rendering.md).
+
+## Backend identities
+
+GetRID is the typed virtual dispatcher for the current backend role. The managed base, CPU Image and PhysicsMaterial return empty. Concrete shapes, textures/arrays, meshes/instances, occluder contours, materials/shaders and font sources resolve their existing owning registrations. AtlasTexture forwards its backing source, and font projections preserve their source/service identities. Runtime identities are not stored resource properties. Rendering ownership, server-created lifetimes, source retirement and capability requirements remain those of each concrete resource.
+
+The resource identifier alone does not transfer ownership. In particular, unused caller-owned shape registrations are weak; actual Body/Area/query consumers retain their source. See [borrowed identity checks](../components/physics-shape-data.md#borrowed-resource-identity-lifetime).

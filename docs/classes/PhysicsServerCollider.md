@@ -1,6 +1,6 @@
 # PhysicsServerCollider
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 ## Failed initial attachment
 
@@ -112,3 +112,5 @@ numerical edits now mark shared filter preparation pending. The next query or
 active step repairs existing metadata from retained values without rebuilding
 logical slots. [Shared scene/raw checks](../components/physics-filters.md#failed-updates-and-effective-sensing)
 cover failed layers/masks and stable identity/history.
+
+Raw logical slots keep a managed reference to borrowed Shape resources while bound, including disabled/detached slots. Replacing a slot changes that reference without changing its history identity; rollback restores the previous lease. Clear/remove release their sources. See [resource identity lifetime](../components/physics-shape-data.md#borrowed-resource-identity-lifetime).

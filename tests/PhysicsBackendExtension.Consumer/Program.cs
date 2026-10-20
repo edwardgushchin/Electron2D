@@ -1,4 +1,5 @@
-if (args.Contains("--canvas-oversampling")) CanvasOversamplingTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_OVERSAMPLING") ?? "gpu");
+if (args.Contains("--resource-rids")) BackendChecks.RunResourceRIDs(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Contains("--canvas-oversampling")) CanvasOversamplingTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_OVERSAMPLING") ?? "gpu");
 else if (args.Contains("--deferred-contract")) BackendChecks.RunDeferredContract(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--loop-lifecycle")) BackendChecks.RunLoopLifecycle(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--long-convex-motion")) BackendChecks.RunLongCapsuleMotion(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"), convexPairs: true);

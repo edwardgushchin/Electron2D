@@ -1699,3 +1699,5 @@ physics ledger remains 1279/1369 (93.43%), with 90 applicable declarations open.
 The [MainLoop callback audit](../components/main-loop.md#complete-frame-and-lifecycle-callback-audit) verifies initialization, fixed/idle deltas and stop results, failure recovery and terminal finalization with real selected CPU/software-GPU/registered worlds. Explicit library-host ownership and warmed zero managed allocation remain distinct from platform permissions and hardware performance.
 
 The [deferred call/setter contract](../components/scene-tree.md#complete-deferred-call-and-setter-contract) drains nested typed work at the current safe point before queued deletion. Selected physical frames retain exact tick counts and zero warmed managed allocation; platform and full-goal acceptance remain separate.
+
+[Borrowed resource identity lifetime](../components/physics-shape-data.md#borrowed-resource-identity-lifetime) fixes unused shape retention and verifies current inherited GetRID roles through public consumers. Full remaining physics, native/platform and target-hardware performance acceptance stays open.

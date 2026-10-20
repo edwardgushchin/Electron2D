@@ -1,6 +1,6 @@
 # PhysicsServerShape
 
-Last updated: 2026-09-30
+Last updated: 2026-10-20
 
 **Declaration:** `internal sealed class PhysicsServerShape` · **Inherits:** System.Object
 
@@ -8,7 +8,7 @@ Last updated: 2026-09-30
 
 ## Description and runtime flow
 
-RID entry for owned or borrowed Shape geometry. Owned copies bind their resource-query identity to this same RID; ShapeSetData swaps the copy and retires the held old view. Free removes current users before releasing geometry. Managed resource entries retain resource-owned lifetime.
+RID entry for owned or borrowed Shape geometry. Owned copies bind their resource-query identity to this same RID; ShapeSetData swaps the copy and retires the held old view. Free removes current users before releasing geometry. Borrowed entries hold weak resource references; raw Body/Area slots retain the resource while bound. Dead unused registrations are swept on cold registration. Owned entries keep strong geometry ownership and their existing replace/free lifetime.
 
 Consumer examples and complete public operations are on [PhysicsServer](PhysicsServer.md#shape-slots). Scene group and raw body/Area slots share native geometry, queries, one-way pre-solve/motion, and mass calculation. Shared shape mutation/free checks all related active worlds before changes. Structural work may allocate; indexed reads and unchanged settings reuse state.
 
@@ -18,7 +18,8 @@ Consumer examples and complete public operations are on [PhysicsServer](PhysicsS
 | --- | --- |
 | `PhysicsServerShape(RID rid, Shape geometry, bool ownsGeometry = true)` | Wrap owned/borrowed geometry under one stable identity. |
 | `RID RID { get; }` | Registry identity. |
-| `Shape Geometry { get; set; }` | Current geometry copy/reference; owned replacement retires the old view. |
+| `Shape Geometry { get; set; }` | Current strong owned copy or live weak borrowed source; only owned entries can replace geometry. |
+| `Shape? GeometryOrNull` | Liveness lookup without retaining an unused borrowed resource. |
 | `bool OwnsGeometry { get; }` | RID owns the copy, or managed resource owns its borrowed registration. |
 
 ## Lifetime and verification

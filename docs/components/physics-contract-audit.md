@@ -41,7 +41,7 @@ The axis-velocity checkpoint recorded 1266/1369 Implemented (92.4763%), with
 
 [Collider creation operation audit](physics-registered-adapter.md#collider-creation-operation-audit) completes detached Body/Area identity, deferred selected factories, permanent attachment claims and actual scene activation/error/retry behavior.
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 [Failed initial attachment state](physics-registered-adapter.md#authored-state-after-failed-initial-attachment) now retains public pose, motion and sleep instead of sampling incomplete selected state during cleanup. Ordinary retirement still preserves actual accepted impulses.
 
@@ -1903,3 +1903,5 @@ Only these two rows change state. Named signal inspection/connection flags, broa
 Generation-qualified Node requests now preserve cancellation/reissue FIFO and the one-captured-deletion-batch contract under ADRs 0006/0011. Old entries cannot destroy a newer request. Prepared queue reuse removes recurring managed allocation from canceled deletion flushes; public physical consumers retain body/query/RID identity until the new safe point and verify exactly-once retirement after another full step. The shared queued-deletion fixture covers selected CPU/software-GPU/registered serial/separate policies and strict NativeAOT without backend dependencies in consumer code.
 
 The pinned Object.cancel_free declaration instead vetoes actual destruction during NOTIFICATION_PREDELETE. Existing Node.CancelFree is an independent queued-operation helper and is now a reviewed extra, not that counterpart. The missing pre-delete veto is explicitly Unimplemented; existing ValidateDisposal is an earlier precondition. Object.is_queued_for_deletion also requires SceneTree.queue_delete observation, including non-Node objects; the current Node-only property observes its cancellable request, so that row remains Partial. Neither gap is closed by the corrected queue implementation.
+
+[Borrowed resource identity lifetime](physics-shape-data.md#borrowed-resource-identity-lifetime) fixes unused shape retention and verifies current inherited GetRID roles through public consumers. Full remaining physics, native/platform and target-hardware performance acceptance stays open.
