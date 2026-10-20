@@ -520,3 +520,54 @@ motion calls at 0/0 managed bytes. Six DLL/PDB sets match 3489 authored C# input
 Evidence: `bin/physics-motion-selection/2026-10-20/validation.json`,
 `motion-selection-warm-proof.json`, `current-source-proof.json` and
 `shader-proof.json`. Production algorithms and API declaration states are unchanged.
+
+
+## Long circle sweeps and hollow query sources
+
+Resident GPU circle sweeps resolve motion-axis projection and perpendicular
+clearance, avoiding subtraction of large quadratic terms. Two unit circles with
+centers 9999 units apart and displacement 29997 must collide near fraction
+.33326665; the former float discriminant returned a miss. A separated lateral
+2.125 control over a 20000-unit sweep must remain a miss. The shared query kernel
+serves direct shape sweeps, body motion and directed point-to-circle tests without
+adding device buffers, transfers or waits.
+
+The independent numerical provider uses its existing double-precision circular
+root for body motion as well as direct queries. The admissible center-distance
+interval for round/hollow pairs is
+`[max(0, first.Inner - second.Outer, second.Inner - first.Outer), first.Outer + second.Outer]`.
+Both operands' holes participate. Previously a hollow query source could report a
+stationary collision with a circle freely inside its hole. Shared pair geometry
+now supplies the correct inner/outer contact surfaces and target rest normal.
+This extends the registered annulus/circle provider; opaque Custom geometry retains
+its existing built-in attachment rejection under ADR 0103.
+
+The public `--long-disk-motion` consumer covers builtin/procedural circle sources,
+multiple active source slots after a disabled gap, scene/raw peers and callers,
+both travel directions, two rigid poses, long offset hits, tangency and clear
+misses. A directed-ray control exercises point-to-circle entry. Each measured
+profile runs 128 complete frames and 640 public calls after 128 warm frames at
+strict 0/0 owner/all-thread managed bytes. Analytic fraction slack is .000002 and
+the adaptive bracket bound remains 3/512; surface coordinates allow .01 scene
+units for large-world float/solver conversion, unit normals .001 and outward dot
+above .995. A moving body and registered thread/step counters verify actual solves.
+
+The registered-only `--custom-motion` consumer reverses annulus/circle query and
+target roles, with both travel directions, empty-hole stationary/short controls,
+inner/outer entry and initial-overlap cast exclusion. Contact pairs retain each
+operand's actual surface, target RID/slot and outward normal. Raw/scene body motion
+retains its separate recovery contract. Each measured profile runs 128 complete
+frames and 821 calls at 0/0 managed bytes after 128 warm frames; surface slack is
+.0001, fraction slack .000002 and normal dot above .999.
+
+Wider opaque formats, coupled geometry, native allocations, network/platform,
+rendered-window and hardware performance acceptance remain open.
+
+The final cohort passes 112 processes: 54 JIT, 54 strict NativeAOT and four root
+profiles. Sixteen new profiles measure 2048 complete frames and 10964 public calls
+at 0/0 managed bytes. Six DLL/PDB sets match 3491 authored C# inputs; 51 shader/recipe
+inputs and fresh motion/shape SPIR-V match four embedded payloads. Before-fix GPU
+miss, registered advancement exhaustion and false hollow-source overlap are retained
+in `bin/physics-long-disk-motion/2026-10-20/regression-proof.json`.
+Final evidence: `validation.json`, `warm-proof.json`, `current-source-proof.json`
+and `shader-proof.json` in the same directory. API declaration states are unchanged.

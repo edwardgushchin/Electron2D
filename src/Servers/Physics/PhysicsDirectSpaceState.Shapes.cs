@@ -99,7 +99,7 @@ public partial class PhysicsDirectSpaceState
     /// <summary>Finds safe and unsafe fractions of a shape's requested global motion.</summary>
     /// <param name="parameters">A live query shape, pose, motion, margin and filters.</param>
     /// <returns>(1, 1) when no new collision occurs; initial overlaps are ignored across every piece of each logical collider shape.</returns>
-    /// <remarks>Built-in shape sweeps bracket geometric boundaries; the safe/unsafe interval uses eight adaptive refinements, with closer refinement near either endpoint and a more accurate first-touch sample where available. Initial overlap uses the authored margin and geometric distance tolerance, independently of solver contact padding. Displacement follows the resource-family rules of PhysicsShapeQueryParameters.Motion.</remarks>
+    /// <remarks>Built-in shape sweeps bracket geometric boundaries; the safe/unsafe interval uses eight adaptive refinements, with closer refinement near either endpoint and a more accurate first-touch sample where available. Circle sweeps retain geometric entry over displacements much larger than their radius. Initial overlap uses the authored margin and geometric distance tolerance, independently of solver contact padding. Displacement follows the resource-family rules of PhysicsShapeQueryParameters.Motion.</remarks>
     public (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters parameters)
     {
         var backend = PrepareQuery(parameters);

@@ -1,5 +1,7 @@
 # PhysicsDirectSpaceState
 
+[Long circle sweeps and hollow query sources](../components/physics-queries.md#long-circle-sweeps-and-hollow-query-sources) preserve geometric hit truth, first entry and contact ownership across the exercised implementations.
+
 [Adaptive sweep refinement](../components/physics-queries.md#adaptive-sweep-refinement) preserves close and late impacts, geometric initial gaps and logical source ownership across selected implementations.
 
 [Unrounded polygon containment](../components/physics-point-containment.md) now excludes an exterior CPU point through fixture half-planes and applies the same decision to ordinary/directed ray origins. Logical seams, inside-start policy, filters and result identity retain their existing contract; float boundary rounding remains bounded separately.
