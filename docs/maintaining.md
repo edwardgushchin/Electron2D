@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -201,3 +201,5 @@ recovery, publish and Clean. Exercise actual imported programs under software
 Wayland/X11 and HDR/MSAA in CLR and strict full-trim NativeAOT; measure prepared
 64 active/64 idle complete frames separately from cold author/import work. Keep
 unsupported graph producers and editor/domain prerequisites exact in coverage.
+
+Point-containment allocation investigations use ELECTRON2D_TEST_POINT_CONTAINMENT=cpu|gpu or the public consumer --point-containment [--gpu]. Failure output includes exact owner/all-thread bytes, all case parameters and GC deltas. Optional ELECTRON2D_POINT_ALLOCATION_TRACE loads a separately calibrated Linux CoreCLR begin/end profiler with the matching CORECLR_ENABLE_PROFILING/CORECLR_PROFILER/CORECLR_PROFILER_PATH and fresh E2D_ALLOCATION_TRACE prefix. Do not combine it with E2D_TRACE_STATE. Validate positive/empty controls and native boundaries before interpreting measured object events; retain other-thread control allocations and original failed gates. See [the measurement protocol](components/physics-allocation-measurement.md#in-fixture-point-query-tracing-2026-10-21).

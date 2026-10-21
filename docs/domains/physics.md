@@ -1,5 +1,7 @@
 # Physics domain
 
+[Tagged point-query diagnostics](../components/physics-allocation-measurement.md#tagged-aggregate-timer-worker-allocation-2026-10-21) preserve exact failed counters and calibrated object stacks. The new aggregate 0/32-byte failure has a matching-size timer-worker thread-static event; timer scheduling ownership and older failures remain open. Ordinary CLR/NativeAOT focused controls pass 80 case intervals at zero bytes. Declaration coverage stays 1306/1369 (95.40%), with 63 open rows; no aggregate or full-goal gate is promoted.
+
 [Cold body-view preparation](../components/physics-backends.md#cold-body-view-preparation) avoids duplicate pre-step body preparation for current cached views while retaining owner preparation before cold factories and every normal pre-solve body pass. Declaration coverage stays 1306/1369 (95.40%), with 63 open rows; no additional API declaration is promoted.
 
 [Inherited draw callback](../components/canvas-rendering.md#draw-callback-recording) now has public native lifecycle, pixel and strict zero-allocation render evidence across CPU/GPU physics, both renderers and owner/separate numerical threads in CLR and NativeAOT. Its one declaration becomes Implemented: **1306/1369 (95.40%)**, with **63 open** (49 Partial, 11 Blocked, 3 Unimplemented) and 92 Excluded. Physical-step allocation, whole-backend numerical/network, native allocator, foreign-platform and mass-performance gates remain open. Earlier counts below describe their checkpoints.
