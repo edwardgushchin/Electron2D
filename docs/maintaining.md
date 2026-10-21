@@ -208,3 +208,5 @@ round-even ties and valid inverse/log domains. Add fourth-component witnesses
 before claiming complete vec4 behavior: an RGB output alone discards W. Preserve
 Operator/OpType/Function properties across source, callers, stored descriptors,
 compiled API/coverage and docs; reject enum sentinels without mutation.
+
+Point-containment allocation investigations use ELECTRON2D_TEST_POINT_CONTAINMENT=cpu|gpu or the public consumer --point-containment [--gpu]. Failure output includes exact owner/all-thread bytes, all case parameters and GC deltas. Optional ELECTRON2D_POINT_ALLOCATION_TRACE loads a separately calibrated Linux CoreCLR begin/end profiler with the matching CORECLR_ENABLE_PROFILING/CORECLR_PROFILER/CORECLR_PROFILER_PATH and fresh E2D_ALLOCATION_TRACE prefix. Do not combine it with E2D_TRACE_STATE. Validate positive/empty controls and native boundaries before interpreting measured object events; retain other-thread control allocations and original failed gates. See [the measurement protocol](components/physics-allocation-measurement.md#in-fixture-point-query-tracing-2026-10-21).

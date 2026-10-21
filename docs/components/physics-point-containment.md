@@ -1,5 +1,7 @@
 # Polygon point containment and ray origins
 
+The fixture now prints exact allocation deltas and case/GC context on failure, with optional [in-fixture calibrated trace windows](physics-allocation-measurement.md#in-fixture-point-query-tracing-2026-10-21). A new aggregate diagnostic retains a strict 0/32-byte failure and one matching-size [BCL timer-worker allocation](physics-allocation-measurement.md#tagged-aggregate-timer-worker-allocation-2026-10-21), with no physical code in its stack. Timer scheduling ownership remains unknown. Ordinary CLR/NativeAOT focused controls pass 80 case intervals at 0/0; the zero-byte requirement and geometric assertions are unchanged, and earlier failed aggregate intervals remain open.
+
 The latest ordinary aggregate run fails the strict warmed-allocation assertion after 299.359 seconds on a GPU raw static case; the original counter deltas were not printed. A fixed paired instrumented control passes all 32 cases on both baseline and candidate, with no body views or measured object events, but does not explain that aggregate failure. See [the retained failure and measurement controls](physics-allocation-measurement.md#aggregate-point-query-failure-2026-10-21). Whole-suite allocation acceptance remains open.
 
 Last updated: 2026-10-21
