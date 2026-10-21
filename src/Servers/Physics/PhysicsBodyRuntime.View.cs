@@ -7,11 +7,24 @@ internal sealed partial class PhysicsBodyRuntime
     private PhysicsColliderBackend? _viewBackend;
     private bool _creatingView;
 
+    [System.Diagnostics.CodeAnalysis.MemberNotNullWhen(true, nameof(View))]
+    private bool HasCurrentView(PhysicsSpace space, PhysicsColliderBackend backend) =>
+        View is { IsDisposed: false } && _viewSpace == space && _viewAttachment == backend.AttachmentVersion;
+
+    internal void PrepareView(PhysicsSpace space)
+    {
+        var backend = Backend;
+        if (backend.Space == space && HasCurrentView(space, backend)) return;
+        var owners = Owners;
+        if (owners.Scene is { } scene) scene.PrepareBackend(); else owners.Server!.PrepareBackend();
+        GetView(space);
+    }
+
     internal PhysicsDirectBodyState GetView(PhysicsSpace space)
     {
         var backend = Backend;
         if (backend.Space != space) throw new InvalidOperationException("The body is not attached to this physics world.");
-        if (View is null || View.IsDisposed || _viewSpace != space || _viewAttachment != backend.AttachmentVersion)
+        if (!HasCurrentView(space, backend))
         {
             if (_creatingView) throw new InvalidOperationException("A body-state factory cannot recursively acquire its own view.");
             space.BeginExtensionCallback(); BeginExtension(); _creatingView = true;

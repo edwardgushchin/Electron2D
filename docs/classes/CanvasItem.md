@@ -6,7 +6,7 @@ Last updated: 2026-10-21
 
 **Inherited By:** [Entity](Entity.md), [Control](Control.md)
 
-- **Source:** [CanvasItem.cs](../../src/Scene/Main/CanvasItem.cs), [CanvasItem.PhysicsInterpolation.cs](../../src/Scene/Main/CanvasItem.PhysicsInterpolation.cs), [CanvasItem.World.cs](../../src/Scene/Main/CanvasItem.World.cs)
+- **Source:** [CanvasItem.cs](../../src/Scene/Main/CanvasItem.cs), [CanvasItem.Drawing.cs](../../src/Scene/Main/CanvasItem.Drawing.cs), [CanvasItem.PhysicsInterpolation.cs](../../src/Scene/Main/CanvasItem.PhysicsInterpolation.cs), [CanvasItem.World.cs](../../src/Scene/Main/CanvasItem.World.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public abstract partial class CanvasItem : Node`
 
@@ -26,6 +26,8 @@ Internal GetInterpolatedGlobalVisualTransform composes the existing per-item phy
 ## Description
 
 The abstract canvas base. Owns visibility, Z/Y order, behind-parent drawing, modulation, materials, retained drawing and transform queries/notifications. Entity supplies a concrete spatial placement model; Control supplies a rectangular layout model in the separate UI branch. A direct CanvasItem subclass can provide its own model through GetTransform and notify changes with NotifyLocalTransformChanged. Only direct canvas parents contribute transforms, modulation and materials; a neutral Node breaks those chains. TopLevel preserves the local transform while ending transform/material/modulation/Z inheritance. Visibility follows direct canvas parents, including TopLevel items, and the containing window.
+
+`OnDraw` records after `NotificationDraw` and synchronous `Draw` handlers into their shared, initially empty command list. Repeated requests coalesce, including requests inside recording; retained frames reuse the list. Failed stages discard partial commands and leave a retry, and showing or reattaching requests fresh recording. Deferred handlers cannot draw. The [callback contract and public native checks](../components/canvas-rendering.md#draw-callback-recording) cover moving physical receivers, scope/thread guards, visibility, failure recovery and retirement independently of the remaining drawing-method gaps.
 
 The renderer normally uses the same local transform as public logical queries. Control can add a visual-only offset matrix through an internal render-transform hook; `GetGlobalTransform` and GUI hit testing continue to use its logical `GetTransform`. When physics interpolation is active, the renderer instead blends each eligible local visual transform between fixed ticks using `Engine.PhysicsInterpolationFraction`. Logical queries and input retain the latest transform; the presentation matrix reaches descendants and Y-sorted traversal. First attachment, reset, detach and process-time edits discard stale history.
 

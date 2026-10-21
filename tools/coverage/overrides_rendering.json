@@ -243,7 +243,7 @@
     {
       "godot": "CanvasItem::method:_draw()",
       "electron2d": "method:Electron2D.CanvasItem.OnDraw()",
-      "reason": "CanvasItem.OnDraw is the protected C# virtual callback for retained drawing, inherited by Entity and Sprite. It records commands during owner-thread canvas preparation and redraw requests are coalesced. Native frame and callback-failure checks cover the initial rectangle/line/texture profile. CanvasLifecycleTests verifies the preceding NotificationDraw/Draw stages and recording failure cleanup. Clipping and further drawing commands remain pending (ADRs 0023/0028)."
+      "reason": "Protected virtual OnDraw records after NotificationDraw and synchronous Draw handlers into one initially empty retained list. Owner-only scope, coalesced/in-scope requests, retained replay, blocked/deferred signals, hidden/show/detach/reentry, all three failure/discard/retry stages and queued physical receiver retirement execute in public CanvasDrawCallbackTests. Sixteen Linux NVIDIA CLR/strict NativeAOT CPU/GPU physics x GPU/compatibility renderer x owner/separate-thread profiles verify actual movement, RID/collider queries and native pixels, plus 64 active/64 retained render intervals per profile at zero owner/all-thread managed bytes. ADRs 0008/0023/0028 apply. Drawing-method gaps, native/driver allocations, physical-step/performance, foreign-platform and owner acceptance retain separate gates."
     },
     {
       "godot": "RenderingServer::method:get_current_rendering_method()",
@@ -5493,8 +5493,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "CanvasItem.OnDraw is the protected C# virtual callback for retained drawing, inherited by Entity and Sprite. It records commands during owner-thread canvas preparation and redraw requests are coalesced. Native frame and callback-failure checks cover the initial rectangle/line/texture profile. CanvasLifecycleTests verifies the preceding NotificationDraw/Draw stages and recording failure cleanup. Clipping and further drawing commands remain pending (ADRs 0023/0028).",
+      "state": "Implemented",
+      "reason": "Protected virtual OnDraw records after NotificationDraw and synchronous Draw handlers into one initially empty retained list. Owner-only scope, coalesced/in-scope requests, retained replay, blocked/deferred signals, hidden/show/detach/reentry, all three failure/discard/retry stages and queued physical receiver retirement execute in public CanvasDrawCallbackTests. Sixteen Linux NVIDIA CLR/strict NativeAOT CPU/GPU physics x GPU/compatibility renderer x owner/separate-thread profiles verify actual movement, RID/collider queries and native pixels, plus 64 active/64 retained render intervals per profile at zero owner/all-thread managed bytes. ADRs 0008/0023/0028 apply. Drawing-method gaps, native/driver allocations, physical-step/performance, foreign-platform and owner acceptance retain separate gates.",
       "godot": [
         "CanvasItem::method:_draw()"
       ]

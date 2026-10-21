@@ -29,14 +29,10 @@ internal sealed partial class PhysicsSpace
         // Factories can invoke guarded public hooks, so create views before solver and worker borrowing.
         foreach (var body in _bodies)
             if (body is RigidBody || RequiresBodySnapshot(body.Runtime, body))
-            {
-                body.PrepareBackend(); body.Runtime.GetView(this);
-            }
+                body.Runtime.PrepareView(this);
         foreach (var body in _serverColliders)
             if (!body.IsArea && RequiresBodySnapshot(body.Runtime, null))
-            {
-                body.PrepareBackend(); body.Runtime.GetView(this);
-            }
+                body.Runtime.PrepareView(this);
     }
 
     internal static bool RequiresBodySnapshot(PhysicsBodyRuntime runtime, PhysicsBody? scene) =>

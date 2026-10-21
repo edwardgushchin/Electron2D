@@ -92,10 +92,12 @@ public static partial class BackendChecks
             using var point = new PhysicsPointQueryParameters(); var hits = new PhysicsPointResult[4];
             Collect(); _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < 64; i++) Cycle();
+            var creations = solver.BodyViewCreations;
             var own = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < 128; i++) Cycle();
             own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
             Check(own == 0 && all == 0, $"Factory views allocated {own}/{all} owner/all-thread B");
+            Check(solver.BodyViewCreations == creations, "Warm frame preparation retains the current scene/raw views");
             FactoryFailures();
             Console.WriteLine($"Public factory views: 128 active measured scene/raw frames with contacts/callbacks/point queries, owner/all={own}/{all} B.");
             void Cycle()
@@ -137,6 +139,18 @@ public static partial class BackendChecks
                 Check(PhysicsServer.SpaceGetTick(world.Space) == before, "Pre-solve factory failure publishes no new tick");
                 solver.BodyViewFactory = goodBody; rawView = (OwnedState)PhysicsServer.BodyGetDirectState(raw)!;
                 Reset(); tree.PhysicsFrame(1d / 120);
+                Reset(); sceneView.Dispose(); scene.Position = new(12, 0); rawView.Transform = new(0, new(15, 0));
+                var factories = solver.BodyViewCreations;
+                solver.BodyViewFactory = id =>
+                {
+                    Check(id == scene.GetRID() && solver.Bodies[id].Position == new Vector2(12, 0),
+                        "Cold frame view factories observe the latest prepared scene pose");
+                    return sceneView = new OwnedState(solver, id);
+                };
+                tree.PhysicsFrame(1d / 120);
+                Check(solver.BodyViewCreations == factories + 1 && ReferenceEquals(sceneView, PhysicsServer.BodyGetDirectState(scene.GetRID())),
+                    "Cold frame preparation creates one replacement view before callbacks");
+                solver.BodyViewFactory = goodBody; Reset(); tree.PhysicsFrame(1d / 120);
             }
             void Reset()
             {

@@ -275,7 +275,11 @@ public abstract partial class CanvasItem
 
     /// <summary>Records this node's retained canvas commands before its first visible frame and after QueueRedraw.</summary>
     /// <remarks>Runs on the scene owner thread during rendering. Geometry, texture and drawing-transform calls
-    /// are valid during NotificationDraw, synchronous Draw handlers and this callback. The command list is cleared before entry. Transform and interval state start fresh on each replay.</remarks>
+    /// are valid during NotificationDraw, synchronous Draw handlers and this callback, in that order.
+    /// Recording starts with an empty command list shared by all three stages. Repeated redraw requests coalesce;
+    /// an in-scope request belongs to the current recording. A failed stage discards partial commands and retains
+    /// a pending retry. Hidden items do not record; showing or reattaching requests a fresh recording.
+    /// Transform and interval state start fresh on each replay.</remarks>
     protected virtual void OnDraw() { }
 
     internal void PrepareCanvas()

@@ -9,7 +9,13 @@
 
 [Polygon point containment](physics-point-containment.md) corrects CPU GJK false-inside observations across points, ray origins, Area audio and directed proxy regions. CPU/GPU tests use equal authored poses and independent geometric controls.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
+
+## Cold body-view preparation
+
+The pre-step view pass reuses an existing, undisposed view only for its recorded world and attachment generation. It prepares the scene/raw body before invoking a missing or replacement view's selected factory, outside numerical/worker borrowing. The ordinary body-preparation pass still runs for every body before solving, including owners with cached views. Warm view reuse therefore avoids a duplicate preparation; it does not omit pending pose, mass, mode, geometry or contact-policy work. Public direct-state acquisition keeps its existing preparation boundary.
+
+The public `--factory-views` consumer checks unchanged factory counts through 128 warm scene/raw frames, disposal/recreation, selected factory errors without tick advancement and healthy retry. A cold scene factory observes the newly authored pose in the selected implementation before integration callbacks receive its replacement view. Owner and separate numerical-thread variants exercise the same owner-side preparation. The same view/attachment predicate is used by ordinary cached acquisition; view disposal still releases no body or world. See [the same-scene comparison and aggregate verification limits](gpu-resident-reports.md#cold-view-pre-step-comparison-2026-10-21).
 
 ## Resource retirement errors
 
