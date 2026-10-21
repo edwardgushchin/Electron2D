@@ -17,6 +17,10 @@ The pre-step view pass reuses an existing, undisposed view only for its recorded
 
 The public `--factory-views` consumer checks unchanged factory counts through 128 warm scene/raw frames, disposal/recreation, selected factory errors without tick advancement and healthy retry. A cold scene factory observes the newly authored pose in the selected implementation before integration callbacks receive its replacement view. Owner and separate numerical-thread variants exercise the same owner-side preparation. The same view/attachment predicate is used by ordinary cached acquisition; view disposal still releases no body or world. See [the same-scene comparison and aggregate verification limits](gpu-resident-reports.md#cold-view-pre-step-comparison-2026-10-21).
 
+## Scene transform publication gate
+
+Scene poses publish through CanvasItem's existing reentrant identity/cache object gate. [The connected comparison](gpu-resident-reports.md#scene-transform-publication-gate-2026-10-21) rejects a typed-gate replacement after source-bound full-step measurements, while retaining the trial's CLR/NativeAOT CPU/GPU/registered checks and cold memory cost. Numerical state, backend selection, thread borrows and observer ordering keep their existing implementations. No declaration or wider performance gate is promoted.
+
 ## Resource retirement errors
 
 The selected implementation and outer space cleanup share the common error

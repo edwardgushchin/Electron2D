@@ -1,7 +1,9 @@
 namespace Electron2D;
 
 /// <summary>Provides shared canvas drawing, visibility, materials and transform queries.</summary>
-/// <remarks>Only direct canvas children inherit canvas state. Derived types define their own local transform model.</remarks>
+/// <remarks>Only direct canvas children inherit canvas state. Derived types define their own local transform model.
+/// Transform-cache publication and canvas identity use one reentrant gate per item.
+/// Virtual transform getters and transform notifications execute outside that gate.</remarks>
 public abstract partial class CanvasItem : Node
 {
     /// <summary>Initializes a detached canvas item with visibility enabled, white modulation and no material.</summary>
