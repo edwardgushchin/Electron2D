@@ -192,6 +192,31 @@ Two headless 900-tick impaired-delivery checks pass on the same current payload,
 
 The owner attempt overlapped the ordinary suite and timed out after 143.049 seconds at authority tick 408. It is a failed receipt. The same binary/inputs pass separately in 37.685 seconds; the separate-thread profile passes in 37.534 seconds after the ordinary process exits. These are functional process checks, not controlled timing comparisons. Reports/logs, hardware maps and immutable payload/source hashes are retained under `integrated-network-owner-isolated/` and `integrated-network-threaded/`; the failed overlap is retained under `integrated-network-owner/`. Broad platform, owner and complete-suite acceptance remain open.
 
+## Cold-view pre-step comparison (2026-10-21)
+
+The [cold-only view pass](physics-backends.md#cold-body-view-preparation) removes duplicate owner preparation for a current cached direct-body view. Cold factories still observe their prepared owner, and the normal pass still prepares every body before solving. No numerical feature, solver work or public signature is removed.
+
+The full `PhysicsPipelinePerformance` scene is unchanged: 16,384 awake rigid circles, four walls, 144 Hz fixed ticks, four substeps, sixteen solver sweeps, eight reported contacts, entry/exit handlers and interpolation. Each frozen CLR payload runs CPU then GPU with 1600 warmup and 256 measured ticks. This is the complete manually driven SceneTree physical path without presentation, on Linux/NVIDIA RTX 3090 Ti; it does not measure window FPS. DOTNET_TieredCompilation is zero, with ordinary GC and strict owner/all-thread allocation counters.
+
+| Payload / backend | Complete step mean / p50 / p95 / p99, ms | Initial preparation mean, ms | Managed owner / all threads, B |
+| --- | --- | ---: | ---: |
+| baseline / CPU | 107.9377 / 107.3403 / 116.4111 / 119.5939 | 6.8891 | 0 / 0 |
+| baseline / GPU | 64.3592 / 61.2803 / 76.8683 / 79.1472 | 3.2740 | 0 / 0 |
+| candidate / CPU | 102.6460 / 102.0244 / 107.9041 / 110.6472 | 4.2838 | 0 / 0 |
+| candidate / GPU | 64.9453 / 62.8860 / 78.0618 / 81.9921 | 2.4878 | 0 / 0 |
+
+CPU mean complete-step time falls 4.90% in this ordered desktop trial. The initial preparation phase falls from 6.8891 to 4.2838 ms on CPU and 3.2740 to 2.4878 ms on GPU. That phase includes view acquisition and ordinary body/Area/joint preparation; it is not an isolated method timer. GPU complete-step mean instead rises from 64.3592 to 64.9453 ms, so this change establishes no whole-GPU speedup. The candidate's CPU/GPU mean comparison still shows a 1.581x GPU advantage on this specific scene. A single ordered trial does not establish repeatable latency changes or their full cause.
+
+All four physical and strict zero-managed-allocation gates pass. CPU final penetration/escape are .297867/.299927 scene units on both payloads; GPU candidate penetration/escape are .083925/.024048, within the unchanged configured bound. All bodies remain active and scene/direct-state poses, velocities, contact identities/caps and bounded energy are checked. Candidate GPU upload/readback is 196888/8744572.5 bytes per tick. Numerical solving and completion/publication remain the larger GPU phases; the initial-preparation saving does not replace that optimization work.
+
+The baseline authored inputs match `cd659def25e19ff08eabc991f3086d0289ddf352`; the candidate changes only two runtime files and the public factory-view test among 4130 captured authored inputs. Portable-PDB proofs match 2453 runtime, 942 root and 267 consumer source documents. Baseline runtime SHA-256 `afe1b06110bdb3cc89b87de13fbb1f41f3cc902f10f5117a98be09bc9674b685`; candidate runtime `0fba20830018e52bb8086d58fca6a423ae6726cb3c2a706f1f8e4df3e82f3d66`; candidate root `610d60189c57667d490b73947a72caa90d43f9c3d51541a951e01fa13f765c0e`. Evidence is local ignored `bin/physics-publication-profile/2026-10-21/`, including baseline/candidate reports, cohort telemetry/maps/kernel receipts, `source-binding.json` and frozen payloads.
+
+Six focused CLR and twelve strict NativeAOT profiles pass, covering factory/view lifetimes, mode preparation and CPU/GPU native drawing. Release, compiled coverage, format and wiki checks pass. The ordinary aggregate runner nevertheless exits -6 after 299.359 seconds at the strict allocation assertion in PhysicsPointContainmentTests. The preceding output identifies GPU/raw/clockwise=true/offset=false/separate=false; the original assertion records no numeric counter deltas. Payloads and sources are unchanged and no new Xid is observed. This is a failed whole-suite gate, not a completed regression.
+
+A fixed instrumented baseline/candidate control runs all 32 CPU/GPU point-query cases once per payload with the calibrated object profiler. Each body has no direct-state view before and after measurement; static receivers with no callbacks/contact demand do not enter the changed view-preparation path. Both controls report 0/0 bytes over 2048 measured frames, no object events in the 32 marked measurement windows, and 128 positive controls at 64 counter bytes/raw object size 61. No recursive profiler events are recorded. These fresh controls do not attribute or fix the original aggregate failure. Original evidence is `full-root/`; paired diagnostic evidence is `point-controls.json`, the probe source, marked traces and decoded events under the same artifact root.
+
+No declaration is promoted: physics coverage remains 1306/1369 (95.40%), with 63 open rows. Historical unattributed allocation failures, coupled/network and foreign-platform acceptance, native/driver allocator totals and complete target-scene performance remain separate gates. The RTX 3090 Ti/Cougar GX-800 power cable is still user-confirmed unchecked; successful monitored trials do not resolve that hardware uncertainty.
+
 ## Verification
 
 The dedicated entry point is `ELECTRON2D_TEST_GPU_REPORTS=1`; it runs

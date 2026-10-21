@@ -1,6 +1,8 @@
 # Polygon point containment and ray origins
 
-Last updated: 2026-10-15
+The latest ordinary aggregate run fails the strict warmed-allocation assertion after 299.359 seconds on a GPU raw static case; the original counter deltas were not printed. A fixed paired instrumented control passes all 32 cases on both baseline and candidate, with no body views or measured object events, but does not explain that aggregate failure. See [the retained failure and measurement controls](physics-allocation-measurement.md#aggregate-point-query-failure-2026-10-21). Whole-suite allocation acceptance remains open.
+
+Last updated: 2026-10-21
 
 ## Corrected behavior
 

@@ -86,3 +86,11 @@ the repository root. The original 24624-byte intervals and the older separate
 64-byte factory interval remain open without their own causal evidence. NativeAOT
 measurement calibration, other runtimes/platforms, mass GPU performance and real
 window FPS are outside this result.
+
+## Aggregate point-query failure (2026-10-21)
+
+The cold-view preparation candidate's ordinary aggregate runner exits -6 after 299.359 seconds in PhysicsPointContainmentTests, on the inferred GPU/raw/clockwise=true/offset=false/separate=false case. The original assertion preserves no numerical owner/all-thread deltas. No payload/source changes or new Xid are recorded. Its cause remains unattributed.
+
+A fixed paired control copies the public query fixture into a diagnostic test assembly, marks each exact measurement interval through the calibrated profiler's shared state, and checks that static receiver body views remain absent. Both baseline and candidate execute all 32 cases once. Each has 2048 measured frames at 0/0 counter bytes and zero measured object events; all 128 positive controls produce 64 counter bytes and raw ObjectAllocated size 61, with valid stacks and no recursive events. Profiler startup, cold authoring, case transitions and positive controls are outside the query measurements. These instrumented isolated successes do not establish aggregate acceptance or retrospectively explain the failed interval. No threshold, GC/finalizer policy or physical workload is weakened.
+
+Evidence: local ignored `bin/physics-publication-profile/2026-10-21/full-root/check.json`, `point-controls.json`, `point-probe/`, `point-{baseline,candidate}.trace.*` and their decoded JSON. The next allocation investigation needs original-interval counter values and paired object events; new uninstrumented green retries would not close this failure.

@@ -1,5 +1,7 @@
 # Physics domain
 
+[Cold body-view preparation](../components/physics-backends.md#cold-body-view-preparation) avoids duplicate pre-step body preparation for current cached views while retaining owner preparation before cold factories and every normal pre-solve body pass. Declaration coverage stays 1306/1369 (95.40%), with 63 open rows; no additional API declaration is promoted.
+
 [Inherited draw callback](../components/canvas-rendering.md#draw-callback-recording) now has public native lifecycle, pixel and strict zero-allocation render evidence across CPU/GPU physics, both renderers and owner/separate numerical threads in CLR and NativeAOT. Its one declaration becomes Implemented: **1306/1369 (95.40%)**, with **63 open** (49 Partial, 11 Blocked, 3 Unimplemented) and 92 Excluded. Physical-step allocation, whole-backend numerical/network, native allocator, foreign-platform and mass-performance gates remain open. Earlier counts below describe their checkpoints.
 
 [Explicit sleep capacity](../components/physics-sleep.md#explicit-sleep-with-automatic-sleep-disabled) includes CanSleep=false non-static CPU bodies before the first manual sleep. Shared scene/raw queries, history and allocation checks preserve the existing manual-event policy. Declaration coverage remains 1305/1369 (95.33%), with 64 open rows.

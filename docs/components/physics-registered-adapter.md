@@ -12,7 +12,7 @@
 
 [Directed source one-way policy](physics-contact-policy.md#directed-sources-and-one-way-targets) preserves ray contacts while ordinary siblings retain the target filter. Recovery, sweeps and final rest use represented source kind.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 ## Complete lifecycle publication boundaries
 
@@ -2662,6 +2662,8 @@ Vulkan cohort does not establish hardware GPU speed, native allocation budgets,
 foreign-platform or complete numerical-extension/network acceptance.
 
 ## Factory-selected direct views
+
+The pre-step pass now prepares an owner only when its view needs creation or replacement; undisposed same-world/same-attachment views reuse the cache. The normal pre-solve pass still prepares all scene/raw bodies. `--factory-views` additionally checks stable factory counts over warm frames and that a cold replacement scene factory observes the latest prepared pose before callbacks. Public direct-state acquisition, retry and attachment retirement retain their existing boundaries. See [the shared preparation flow](physics-backends.md#cold-body-view-preparation).
 
 The registered backend's existing CreateDirectBodyState and CreateDirectSpaceState
 hooks now have a public-only executable fixture. The common engine caches one live

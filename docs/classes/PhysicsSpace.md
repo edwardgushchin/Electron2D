@@ -4,6 +4,8 @@ Cold world-query geometry now uses the [shared using-world borrow](../components
 
 Last updated: 2026-10-21
 
+The [pre-step body-view pass](../components/physics-backends.md#cold-body-view-preparation) prepares an owner before a missing or replacement view factory. Current generation-qualified views reuse their cache; the ordinary body-preparation pass still finishes every owner's pending work before solving. Factory errors remain pre-solve failures without tick advancement.
+
 ## Resource retirement errors
 
 Caller-owned retirement attempts every required cleanup stage before propagating

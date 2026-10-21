@@ -1,6 +1,6 @@
 # PhysicsBodyRuntime
 
-Last updated: 2026-10-19
+Last updated: 2026-10-21
 
 ## Contact reporting policy guards
 
@@ -18,6 +18,8 @@ for actual verification and remaining limits.
 [Mass profile publication recovery](../components/physics-registered-adapter.md#mass-profile-publication-recovery) preserves preceding authoring after selected mass/inertia/center/reset errors and prepares it before numerical use. Cached views, space/force/checkpoint/portable boundaries, attachment retirement, in-flight rejection and post-commit notification behavior execute across all scene/raw roles. Public JIT/strict NativeAOT CPU/software-GPU/registered full-frame checks retain strict zero managed allocation; wider native/platform/network/performance gates remain open.
 
 ## Prepared body view acquisition
+
+The pre-step pass creates only missing, disposed or attachment-stale body views. A current cached view needs no duplicate owner preparation there; the ordinary pre-solve pass still prepares all bodies. Cold factories continue to see their prepared owner before numerical borrowing, and public direct-state acquisition keeps its existing boundary. See [cold body-view preparation](../components/physics-backends.md#cold-body-view-preparation).
 
 Body view acquisition now finishes pending direct-mode preparation before reading resolved fields, selecting a cached view or invoking its selected factory. The same boundary serves caller-created body-state extensions. A repeated preparation error creates no view, publishes no fields and does not advance the tick. Successful recovery preserves cached identity or creates one generation-qualified view; stale attachments remain rejected. See [the preparation contract](../components/physics-registered-adapter.md#body-view-acquisition-after-mode-failure).
 
