@@ -1,6 +1,6 @@
 # PhysicsSolverThread
 
-Last updated: 2026-10-13
+Last updated: 2026-10-21
 
 **Declaration:** `internal sealed class PhysicsSolverThread : IDisposable`
 
@@ -25,5 +25,10 @@ or device retirement run on this worker. A blocked provider blocks its synchrono
 caller just as an owner-thread solve would; there is no implicit abort or replay.
 Warmed dispatch reuses all state and events. PhysicsSeparateThreadTests and the
 public-only consumer verify real CPU/provider work, owner callbacks, failures,
-retirement and zero owner/all-thread managed bytes. GPU/native/foreign execution
-and scheduling performance remain separate gates under ADRs 0054/0103.
+retirement and zero owner/all-thread managed bytes. The current
+[setting contract cohort](../components/physics-thread.md#complete-setting-contract-2026-10-21)
+adds independent NVIDIA GPU, denied-GPU startup fallback, both captured policies
+and strict NativeAOT execution. Retained-thread inspection is a scheduling/lifetime
+diagnostic, while public physical state and callbacks establish completed behavior.
+Native allocator totals, foreign execution, full-suite allocation attribution and
+scheduling performance remain separate gates under ADRs 0054/0103.

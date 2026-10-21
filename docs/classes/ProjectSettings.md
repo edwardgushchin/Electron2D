@@ -1529,7 +1529,7 @@ Defines `physics/2d/allow_cpu_fallback`, default false. Implicit worlds capture 
 <a id="physics2drunonseparatethread"></a>
 ### `public static ProjectSetting<bool> Physics2DRunOnSeparateThread { get; }`
 
-Defines `physics/2d/run_on_separate_thread`, default false. New World runtimes capture feature overrides before lazy startup; raw spaces capture them at creation. True selects one retained numerical thread with a join before owner publication. Queries, authoring, factories, lifecycle and gameplay callbacks retain their owner. Hosts without this thread capability reject true. CPU and independent-provider checks execute; GPU/native and performance acceptance remain open in the [thread contract](../components/physics-thread.md).
+Defines `physics/2d/run_on_separate_thread`, default false. New World runtimes capture feature overrides before lazy startup; raw spaces capture them at creation. True selects one retained numerical thread with a join before owner publication. Queries, authoring, factories, lifecycle and gameplay callbacks retain their owner. Hosts without this thread capability reject true. The [complete setting contract](../components/physics-thread.md#complete-setting-contract-2026-10-21) verifies both policies/features, aliases, independent NVIDIA GPU, strict denied-GPU/observable CPU fallback, public-provider dispatch, failures, joined retirement and zero warmed managed bytes in current CLR/strict NativeAOT profiles. Full numerical, native allocation, foreign and performance acceptance remain separate.
 
 
 Built-in MSAA and LCD subpixel settings retain compiled JSON metadata for hosts

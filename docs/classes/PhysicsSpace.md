@@ -2,7 +2,7 @@
 
 Cold world-query geometry now uses the [shared using-world borrow](../components/physics-queries.md#cold-query-geometry) before user suppliers run. Numerical writes, collider retirement/transfer and final world release reject; original supplier failures can retry. Existing pure input reads and nested query behavior are retained.
 
-Last updated: 2026-10-19
+Last updated: 2026-10-21
 
 ## Resource retirement errors
 
@@ -344,7 +344,7 @@ Membership removal now attempts every dependent joint, state capture, numerical 
 
 The public GPU adapter retains one rebindable query-geometry lease. Alternating live resources reuses its wrapper and retires the previous reference; past resources are not accumulated. ConvexPolygonShapeTests exercises 128 warmed overlap/contact/rest/motion cycles between shared and standalone geometry on CPU/GPU with zero owner/all-thread bytes, preserving current contour results and initial-overlap fractions. GPUPhysicsShapeQueryTests checks successful replacement, null/disposed/thread rejection with preserved previous geometry, and retired lease failure. Geometry uploads and query waits retain their existing separate costs.
 
-A captured [separate numerical lane](../components/physics-thread.md) now dispatches only Solve after owner preparation and joins before all observations/callbacks. Its private exact-thread borrow authorizes prepared readonly inputs, while public queries, authoring and lifetime remain owner-bound. Disposal joins the retained lane before attachments; CPU/provider checks pass and GPU/native acceptance remains open.
+A captured [separate numerical lane](../components/physics-thread.md) dispatches only Solve after owner preparation and joins before all observations/callbacks. Its private exact-thread borrow authorizes prepared readonly inputs, while public queries, authoring and lifetime remain owner-bound. Disposal joins the retained lane before attachments. The current CPU/independent-GPU/public-provider CLR and strict NativeAOT cohort verifies captured true/false/feature policies, aliases, startup fallback, real motion and owner callbacks, failure/no-replay, joined retirement and zero warmed owner/all-thread managed bytes. Complete numerical, native allocation, foreign-platform and performance acceptance remain separate.
 
 ## Authored sensor pose publication (2026-10-14)
 

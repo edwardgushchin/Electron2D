@@ -1114,6 +1114,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_PARALLEL") is { 
     return;
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_THREAD") == "1") { PhysicsSeparateThreadTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_THREAD") == "gpu") { PhysicsSeparateThreadTests.RunGPU(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_THREAD") == "unavailable") { PhysicsSeparateThreadTests.RunUnavailableGPU(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_CLOCK") == "1") { VerifyEngine(); PhysicsClockTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDERING_DEVICE") == "1") { RenderingDeviceTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_MOTION_SCENES") == "1") { PhysicsGPUSpaceTests.RunMotionScenes(); return; }

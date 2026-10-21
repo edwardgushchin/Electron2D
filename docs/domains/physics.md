@@ -2,6 +2,14 @@
 
 Last updated: 2026-10-21
 
+[The complete numerical-thread setting contract](../components/physics-thread.md#complete-setting-contract-2026-10-21)
+now verifies captured true/false/feature policies, aliases, independent NVIDIA GPU,
+CPU startup fallback, owner callbacks, terminal errors and joined retirement in
+current CLR/strict NativeAOT profiles. One setting row becomes Implemented:
+1305/1369 physical declarations (95.33%), 64 open and 92 Excluded. Full numerical,
+native allocator, foreign-platform, window/FPS and mass-performance acceptance
+remain open; earlier counts below describe checkpoints.
+
 [Initial-world preparation](../components/physics-network-example.md#initial-world-preparation-2026-10-21)
 now completes before the example opens ENet, restores physical tick zero and
 accounts for its cold frame/time/managed allocation separately. Six fresh

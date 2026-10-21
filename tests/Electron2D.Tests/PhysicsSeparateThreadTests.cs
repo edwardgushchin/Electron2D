@@ -2,7 +2,7 @@ using Box2D.NET;
 using Electron2D;
 using static Box2D.NET.B2Worlds;
 
-internal static class PhysicsSeparateThreadTests
+internal static partial class PhysicsSeparateThreadTests
 {
     internal static void Run()
     {
@@ -94,17 +94,6 @@ internal static class PhysicsSeparateThreadTests
         finally { PhysicsServer.FreeRID(moving); PhysicsServer.FreeRID(serial); }
     }
 
-    private sealed class ProbeBody(int owner) : RigidBody
-    {
-        internal int Callbacks;
-        protected override void IntegrateForces(PhysicsDirectBodyState state)
-        {
-            Check(Environment.CurrentManagedThreadId == owner && state.Transform.Origin == Position,
-                "Game integration uses completed publication on its original owner.");
-            Callbacks++;
-        }
-    }
-
     private static void VerifyFailedInterval(bool separate)
     {
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, separate);
@@ -160,5 +149,4 @@ internal static class PhysicsSeparateThreadTests
         }
         Check(worker is not null && !worker.IsAlive, "Feature-captured raw space retires its worker.");
     }
-    private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
 }

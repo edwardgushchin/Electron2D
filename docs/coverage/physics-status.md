@@ -151,20 +151,19 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [Engine](classes/Engine.md) | [Object](classes/Object.md) | 7 | 0 | 0 | 0 | 0 |
 | [Performance](classes/Performance.md) | [Object](classes/Object.md) | 3 | 1 | 0 | 0 | 0 |
-| [ProjectSettings](classes/ProjectSettings.md) | [Object](classes/Object.md) | 23 | 1 | 0 | 0 | 0 |
+| [ProjectSettings](classes/ProjectSettings.md) | [Object](classes/Object.md) | 24 | 0 | 0 | 0 | 0 |
 | [SceneTree](classes/SceneTree.md) | [MainLoop](classes/MainLoop.md) | 3 | 0 | 0 | 0 | 0 |
 | [TileData](classes/TileData.md) | [Object](classes/Object.md) | 14 | 0 | 0 | 0 | 0 |
 | [TileMapLayer](classes/TileMapLayer.md) | [Node2D](classes/Node2D.md) | 10 | 0 | 0 | 0 | 0 |
 | [TileSet](classes/TileSet.md) | [Resource](classes/Resource.md) | 12 | 0 | 0 | 0 | 0 |
 | [Viewport](classes/Viewport.md) | [Node](classes/Node.md) | 4 | 0 | 0 | 0 | 0 |
-| **Total** | | 76 | 2 | 0 | 0 | 0 |
+| **Total** | | 77 | 1 | 0 | 0 | 0 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
 | Declaration | State | Missing behavior / evidence |
 | --- | --- | --- |
 | [`Performance::method:get_monitor(int:Performance.Monitor)`](classes/Performance.md) | Partial | Live weak object/cache/Engine-tree populations, completed Engine timing windows, three physical producers and the complete typed custom-monitor lifecycle execute. Other built-in selectors retain their exact instrumentation, counter or native diagnostic prerequisite. The frame-monitor component defines clock, publication, headless/direct-host and presentation boundaries; native allocation totals, hardware/device timing and foreign acceptance remain separate. |
-| [`ProjectSettings::property:physics/2d/run_on_separate_thread`](classes/ProjectSettings.md) | Partial | ADRs 0054/0103: captured feature-aware false-default policy now dispatches complete selected Solve on a retained numerical lane with owner preparation/publication barriers, exact readonly input borrowing and joined error/lifetime cleanup. CPU and independent public-only provider checks execute real motion, callback identity, failure/no-replay, retirement and strict 0/0 warmed full frames. GPU store borrowing now executes continuous numerical tests on software Vulkan; hardware GPU/native/threaded-browser and scheduling/performance acceptance remain open. No serial fallback or inert stored switch closes these gates. The impaired three-process CPU network scenario now executes serial/separate numerical profiles through ticks 360/600, observing actual CPU lane identity, authority correction/replay, lifecycle/sleep and exact-once confirmed effects with strict 0/0 warm owner/all-thread bytes. Current mixed-backend/native and final performance gates remain open. Warm classification requires 128 completed steps per process as well as tick 300; cold replay stays in its total counter. Explicit admission after tick 310 exercises the boundary without suppressing positive warm samples. Serial and separate numerical profiles now execute the same six shared CCD/boundary/directed-ray CPU/GPU suites via the early continuous selector, using CPU-only llvmpipe Vulkan. All 128-sample warm brackets require 0/0 owner/all-thread bytes; process maps exclude NVIDIA and observe the retained thread only with separate policy. Software execution does not establish hardware performance, native allocation, foreign-platform or complete numerical-extension acceptance. Cold numerical pipelines now prepare on the world owner before borrowing, including late feature edits and retryable pre-entry compilation failure. Managed and strict NativeAOT executable checks require all observed creation on owner and 0/0 warmed bytes. Repeated retirement reduces large software allocator growth; residual native retention and full hardware/performance acceptance remain open. Evidence: bin/physics-owner-pipelines/2026-10-15/. CPU contact-pair hashing now prepares its existing contact budget before numerical entry; the 64/256-body evolving full-scene CPU profiles retain the original 128 warm/128 measured steps at 0/0 owner/all-thread bytes in both scheduling modes. Matched storage measurements and larger-topology limits remain explicit. Evidence: bin/physics-cpu-evolving/2026-10-15/. |
 
 
 The [networked coupled support profile](../components/physics-network-example.md#coupled-support-across-network-correction-2026-10-15)

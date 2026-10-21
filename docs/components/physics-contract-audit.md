@@ -1,4 +1,4 @@
-[The complete body motion operation](physics-motion-operation.md) now closes the last Partial server-extension operation row. Current physics census: 1304/1369 Implemented (95.25%), 65 open (51 Partial, 11 Blocked, 3 Unimplemented), 92 Excluded. Whole-backend and overall-goal acceptance remain open.
+[The complete numerical-thread setting contract](physics-thread.md#complete-setting-contract-2026-10-21) now verifies captured owner/separate policies on CPU, independent NVIDIA GPU and a public provider in CLR/strict NativeAOT, including unavailable-GPU fallback, failures, retirement and strict zero warmed managed bytes. Current physics census: 1305/1369 Implemented (95.33%), 64 open (50 Partial, 11 Blocked, 3 Unimplemented), 92 Excluded. Whole-backend and full-goal acceptance remain open. The body-motion extension operation was completed in the preceding checkpoint.
 
 # Physics contract and backend audit
 
@@ -52,7 +52,7 @@ The axis-velocity checkpoint recorded 1266/1369 Implemented (92.4763%), with
 
 [Collider creation operation audit](physics-registered-adapter.md#collider-creation-operation-audit) completes detached Body/Area identity, deferred selected factories, permanent attachment claims and actual scene activation/error/retry behavior.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 [Failed initial attachment state](physics-registered-adapter.md#authored-state-after-failed-initial-attachment) now retains public pose, motion and sleep instead of sampling incomplete selected state during cleanup. Ordinary retirement still preserves actual accepted impulses.
 
@@ -526,11 +526,11 @@ The fixture follow-up on main at 5543c830 routes embedded palette clicks through
 ## Current requirement audit
 
 The complete generated ledger remains the per-declaration list. Current own
-physics families contain 723 Implemented, 114 Partial and 55 Excluded rows,
+physics families contain 828 Implemented, 9 Partial and 55 Excluded rows,
 with no own Blocked or Unimplemented rows. The 491 shared inherited declarations
-contain 376 Implemented, 47 Partial, 17 Blocked, 14 Unimplemented and 37 Excluded
-rows. The 78 selected cross-domain consumer declarations contain 76 Implemented
-and two Partial rows. These are declaration counts, including class and enum rows,
+contain 400 Implemented, 40 Partial, 11 Blocked, 3 Unimplemented and 37 Excluded
+rows. The 78 selected cross-domain consumer declarations contain 77 Implemented
+and one Partial row. These are declaration counts, including class and enum rows,
 not a claim that all numerical behaviors pass. The exact inherited names and
 prerequisites remain in the ledger rather than disappearing from this audit.
 
