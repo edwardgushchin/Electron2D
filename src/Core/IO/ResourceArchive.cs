@@ -120,10 +120,10 @@ internal static partial class ResourceArchive
         bigEndian = (flags & SaverFlags.SaveBigEndian) != 0;
         return payload;
     }
-    internal static ResourceArchiveRead Decode(string path, ResourceLoader.CacheMode mode)
+    internal static ResourceArchiveRead Decode(string path, ResourceLoader.CacheMode mode, string? originalPath = null)
     {
         var payload = ReadPayload(path, out var bigEndian, out var version);
-        var context = new ResourceArchiveRead(path, mode, bigEndian, version, ResourceLoader.AbortOnMissingResources);
+        var context = new ResourceArchiveRead(path, mode, bigEndian, version, ResourceLoader.AbortOnMissingResources, originalPath);
         try
         {
             context.Decode(payload);
@@ -167,11 +167,14 @@ internal static partial class ResourceArchive
         {
             var target = d.Path;
             var uid = d.UID;
-            if (target.Length != 0 && renames.TryGetValue(target, out var replacement))
+            var relative = target.Length != 0 && !target.Contains("://", StringComparison.Ordinal) && !System.IO.Path.IsPathRooted(target);
+            var full = target.Length == 0 ? target : uid >= 0 && ResourceUID.HasID(uid) ? ResourceUID.GetIDPath(uid) : ResolveDependencyPath(path, target);
+            if (target.Length != 0 && (renames.TryGetValue(full, out var replacement) || renames.TryGetValue(target, out replacement)))
             {
                 ArgumentException.ThrowIfNullOrEmpty(replacement);
-                target = replacement;
-                uid = ResourceSaver.GetResourceIDForPath(target);
+                full = ResolveDependencyPath(path, replacement);
+                uid = ResourceSaver.GetResourceIDForPath(full);
+                target = relative ? System.IO.Path.GetRelativePath(System.IO.Path.GetDirectoryName(Absolute(path))!, Absolute(full)).Replace('\\', '/') : full;
             }
             ResourceArchiveStrings.Write(output, d.Type.ID);
             if (version >= 2) WriteRole(output, d, version);
@@ -227,6 +230,7 @@ internal static partial class ResourceArchive
             stream.Seek(checked(stream.GetPosition() + size));
             if (dependency.Length != 0)
             {
+                dependency = ResolveDependencyPath(path, dependency);
                 var token = uid < 0 ? dependency + (addTypes ? "::" + type : "") : ResourceUID.IDToText(uid) + "::" + (addTypes ? type : "") + "::" + dependency;
                 dependencies.Add(token);
             }
@@ -234,6 +238,7 @@ internal static partial class ResourceArchive
         if (stream.GetAvailableBytes() != 0) throw new InvalidDataException("Trailing metadata bytes.");
         return dependencies.ToArray();
     }
+    internal static string ResolveDependencyPath(string source, string target) => !target.Contains("://", StringComparison.Ordinal) && !System.IO.Path.IsPathRooted(target) ? ResourcePacks.CombineRelative(source, target) : target;
 
 }
 internal sealed record ArchiveDefinition(ResourceFileType Type, string Name, bool Local, string SceneID, string Path, long UID, byte[] Payload, ResourceArchiveRole Role = ResourceArchiveRole.Resource, Rect2 Bounds = default, bool MissingPayload = false);
@@ -466,7 +471,7 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
     }
 
 }
-internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.CacheMode mode, bool bigEndian, int version, bool abortOnMissing) : IDisposable
+internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.CacheMode mode, bool bigEndian, int version, bool abortOnMissing, string? originalPath = null) : IDisposable
 {
     internal readonly List<Resource> Owned = [];
     private Resource?[] _resources = [];
@@ -508,7 +513,7 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
             if (d.Path.Length != 0)
             {
                 var target = d.UID >= 0 && ResourceUID.HasID(d.UID) ? ResourceUID.GetIDPath(d.UID) : d.Path;
-                if (!target.Contains("://", StringComparison.Ordinal) && !System.IO.Path.IsPathRooted(target)) target = ResourcePacks.CombineRelative(path, target);
+                target = ResourceArchive.ResolveDependencyPath(path, target);
                 var dependencyMode = mode is ResourceLoader.CacheMode.IgnoreDeep or ResourceLoader.CacheMode.ReplaceDeep ? mode : ResourceLoader.CacheMode.Reuse;
                 var stage = ResourceLoadGraph.Current;
                 var cachedDependency = stage is null ? Resource.GetRegisteredPath(target) : null;
@@ -550,7 +555,7 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
             resource.ResourceName = d.Name;
             resource.ResourceLocalToScene = d.Local;
             resource.ResourceSceneUniqueID = d.SceneID;
-            if (i > 0) resource.SetPathCache(path + "::" + (d.SceneID.Length == 0 ? i.ToString(System.Globalization.CultureInfo.InvariantCulture) : d.SceneID));
+            if (i > 0) resource.SetPathCache((originalPath ?? path) + "::" + (d.SceneID.Length == 0 ? i.ToString(System.Globalization.CultureInfo.InvariantCulture) : d.SceneID));
             using var value = Stream(d.Payload);
             if (MissingResourceData.For(resource) is { } opaque && (resource is MissingResource && version >= 2 || opaque.OriginalClass.Length != 0))
             {

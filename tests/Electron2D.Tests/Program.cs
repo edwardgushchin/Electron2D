@@ -9,6 +9,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_LOCALES") == "1") { ResourceLocaleChecks.Run(args); return; }
+
 if (args.Length == 2 && args[0] == "--regex-oracle") { RegExPCRETests.Oracle(args[1]); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_REGEX") == "1") { RegExTests.Run(); return; }

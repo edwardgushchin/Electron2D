@@ -1,6 +1,6 @@
 # ResourceLoadGraph
 
-Last updated: 2026-10-12
+Last updated: 2026-10-21
 
 Internal staged graph implementation in [ResourceLoadGraph.cs](../../src/Core/IO/ResourceLoadGraph.cs), compiled into Electron2D.dll. No public constructor/backend surface is exported. [Threaded resource loading](../components/threaded-resource-loading.md) owns its actual verification and limits.
 
@@ -11,3 +11,7 @@ Preparation returns independent data and captured contexts. Planning chooses cur
 Records, parser buffers, closures and preparation may allocate outside the hot interval. Terminal status polling reuses retained request state and is separately checked. Foreign/native allocation and target acceptance are not inferred from this managed implementation.
 
 Version-2 role-aware missing-resource storage, snapshot policy and reference relocation are described in [missing resource recovery](../components/resource-files.md#missing-resource-recovery). Known version-1 schemas remain readable; unknown legacy identities do not become safe placeholders.
+
+## Localized graph preparation
+
+A graph captures the immutable resource map and global culture name. Entries retain logical paths/cache keys and record whether they are mapped; decoding uses the selected physical file. Internal paths and source UID remain logical, while relative external dependencies resolve beside the selected archive. Stale mapped preparation is rejected before cache/UID publication; unrelated settings versions preserve the map identity when records are unchanged. Final/borrowed mapped results enter ResourceLoader's weak association table. Reentrant locale changes during publication trigger a current refresh. Independent IgnoreDeep preparation supplies in-place live refresh without borrowing the target graph. ResourceLocales.Consumer exercises archived bundled resources, original/variant UID separation, physical/original format hooks, culture/configuration changes while pending and deterministic cleanup.

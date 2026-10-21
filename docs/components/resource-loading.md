@@ -1,6 +1,6 @@
 # Resource loading component
 
-Last updated: 2026-10-13
+Last updated: 2026-10-21
 
 ## Scope and owned types
 
@@ -73,3 +73,7 @@ The [EXR I/O slice](../components/image-exr.md) supplies precision-preserving HD
 
 
 Mounted res:// resources now share [resource pack resolution](resource-packs.md). PCK/ZIP overlays, synthetic directories, read-only packed metadata, relative scene dependencies and bitmap-font pages use the mounted bytes. Ordinary absolute paths and user:// retain physical access. Cached resources keep their normal cache-mode policy.
+
+## Localized resource files
+
+Ordered locale candidates now select supported backing files before decode while retaining logical cache/path/UID identity. Live resources reload before translation notification, including associated Ignore instances; missing variants fall back and malformed data leaves previous payloads intact. Threaded requests capture the same immutable plan and reject stale mapped work before publication. See [localized resources](localized-resources.md).

@@ -34,10 +34,12 @@ public static partial class TranslationServer
 
     /// <summary>Gets or sets the culture used for subsequent translation lookups.</summary>
     /// <value>The process-wide lookup culture, initialized from <see cref="CultureInfo.CurrentUICulture"/> and sampled again at Engine startup unless a project test locale is configured.</value>
-    /// <remarks>A different culture name synchronously notifies <see cref="Engine.MainLoop"/> after commitment and
-    /// release of the setter's catalog lock. Equal-name assignment retains the supplied managed culture without
-    /// another notification. An active SceneTree requires owner-thread delivery; independent library trees are
-    /// notified explicitly. Notification failure does not roll back the culture.</remarks>
+    /// <remarks>A different culture name reloads associated localized resources, then synchronously notifies
+    /// <see cref="Engine.MainLoop"/> after commitment and release of the setter's catalog lock. Equal-name assignment
+    /// retains the supplied managed culture without another reload or notification. Configured file reloads allocate
+    /// and may block. An active SceneTree requires its owner; independent library trees are notified explicitly.
+    /// Resource errors are collected after later resources are attempted and application notification still runs.
+    /// A failure does not roll back the committed culture or completed resource copies.</remarks>
     /// <exception cref="ArgumentNullException">The assigned value is <see langword="null"/>.</exception>
     /// <exception cref="Exception">The active application loop rejects notification or an observer fails after commitment.</exception>
     public static CultureInfo Culture
@@ -282,9 +284,10 @@ public static partial class TranslationServer
 
     /// <summary>Gets or sets pseudolocalization for the main domain.</summary>
     /// <value>The main domain's runtime transformation switch.</value>
-    /// <remarks>Every assignment, including an equal value, synchronously notifies the attached application loop
-    /// after commitment. Active scene delivery requires its owner thread.</remarks>
-    /// <exception cref="Exception">Application notification fails after the switch is committed.</exception>
+    /// <remarks>Every assignment, including an equal value, reloads associated localized resources and synchronously
+    /// notifies the attached application loop after commitment. File reloads allocate and may block. Active scene
+    /// delivery requires its owner thread.</remarks>
+    /// <exception cref="Exception">Resource refresh or application notification fails after the switch is committed.</exception>
     public static bool PseudolocalizationEnabled
     {
         get => GetOrAddDomain(string.Empty).PseudolocalizationEnabled;
@@ -299,7 +302,8 @@ public static partial class TranslationServer
     /// <summary>Reloads the main domain's pseudolocalization transforms from active project settings.</summary>
     /// <remarks>The runtime enablement switch is unchanged; the project switch is sampled when an Engine run starts.
     /// After applying every option, the attached application loop receives a synchronous translation notification.
-    /// Active scene delivery requires its owner thread. Asset remaps are not reloaded.</remarks>
+    /// Associated localized resources reload before that notification. Active scene delivery requires its owner
+    /// thread. Configured file reloads allocate and may block; errors preserve completed changes.</remarks>
     /// <exception cref="Exception">Option preparation or application notification fails; committed options remain visible.</exception>
     public static void ReloadPseudolocalization()
     {
@@ -307,7 +311,16 @@ public static partial class TranslationServer
         NotifyTranslationChanged();
     }
 
-    private static void NotifyTranslationChanged() => Engine.MainLoop?.Notify(MainLoop.NotificationTranslationChanged);
+    private static void NotifyTranslationChanged()
+    {
+        var loop = Engine.MainLoop;
+        if (loop is SceneTree { IsOwnerThread: false }) { loop.Notify(MainLoop.NotificationTranslationChanged); return; }
+        Exception? failure = null;
+        try { ResourceLoader.ReloadTranslationRemaps(); } catch (Exception error) { failure = error; }
+        try { Engine.MainLoop?.Notify(MainLoop.NotificationTranslationChanged); }
+        catch (Exception error) { if (failure is not null) throw new AggregateException(failure, error); throw; }
+        if (failure is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(failure).Throw();
+    }
 
     private static void ApplyProjectPseudolocalization()
     {

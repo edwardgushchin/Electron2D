@@ -1,6 +1,6 @@
 # Localization domain
 
-Last updated: 2026-10-18
+Last updated: 2026-10-21
 
 ## Responsibility
 
@@ -14,7 +14,7 @@ Its production source lives under `src/Core/String/`, matching its low-level eng
 | --- | --- | --- |
 | [Translation](../components/localization.md) | Thread-safe direct and resource-backed translation registration and resolution | Implemented for in-memory lookup; locale-rule and asset gaps remain |
 
-Production types are [`TranslationServer`](../classes/TranslationServer.md), [`TranslationDomain`](../classes/TranslationDomain.md), [`Translation`](../classes/Translation.md), and [`OptimizedTranslation`](../classes/OptimizedTranslation.md). `ElectronObject` delegates `Tr` and `TrN` to this domain when per-object translation is enabled. Scene-owned [`Node`](../classes/Node.md) adds inherited domains and automatic translation policy. [`Control`](../classes/Control.md) consults the selected culture and registered catalog for locale-derived rectangle direction; application culture and pseudolocalization changes now refresh the active MainLoop synchronously after state commits. Exact runtime locale/catalog negotiation and asset remaps remain gaps.
+Production types are [`TranslationServer`](../classes/TranslationServer.md), [`TranslationDomain`](../classes/TranslationDomain.md), [`Translation`](../classes/Translation.md), and [`OptimizedTranslation`](../classes/OptimizedTranslation.md). `ElectronObject` delegates `Tr` and `TrN` to this domain when per-object translation is enabled. Scene-owned [`Node`](../classes/Node.md) adds inherited domains and automatic translation policy. [`Control`](../classes/Control.md) consults the selected culture and registered catalog for locale-derived rectangle direction; application culture and pseudolocalization changes now refresh the active MainLoop synchronously after state commits. ResourceLoader now selects and refreshes typed localized files before the application notification. Runtime CultureInfo assignment is the accepted locale boundary; exact string-alias conversion in startup settings remains a separate gap.
 
 ## Public surface
 
@@ -24,8 +24,8 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 
 - Localization depends on the Core Resource and typed ProjectSettings contracts and the .NET Base Class Library.
 - Core references Localization through the static `TranslationServer` API.
-- Localization does not depend on Scene, SDL3-CS, rendering, or assets.
-- Future asset loading may populate catalogs but must not move resolution into the asset domain.
+- Localization orchestrates ResourceLoader remap refresh and current-MainLoop delivery after culture/options commit; SceneTree owner validation precedes file mutation. It does not decode files or call renderer/SDL backends.
+- Asset loading populates catalogs and resources; message resolution and locale scoring remain in Localization.
 
 ## Invariants
 
@@ -73,4 +73,4 @@ Application notification ownership, reentry, failure handling and measured publi
 
 Default-aware catalog lookup, weak identity preparation, live resource callbacks and the current query API are verified through [scored runtime lookup](../components/localization.md#scored-runtime-lookup). The physical cohort retains strict zero managed allocation on CPU, software Vulkan and registered backends.
 
-[Unicode pseudolocalization](../components/localization.md#unicode-pseudolocalization) now supplies code-point masking/expansion, exact protected pairs and BIDI boundaries, with weak prepared outputs and tested retirement. Inherited singular lookup and nine project keys have executable evidence; asset remaps and broader locale acquisition retain separate dependencies.
+[Unicode pseudolocalization](../components/localization.md#unicode-pseudolocalization) now supplies code-point masking/expansion, exact protected pairs and BIDI boundaries, with weak prepared outputs and tested retirement. Inherited singular lookup and nine project keys have executable evidence; [localized resources](../components/localized-resources.md) now execute on the current loaders, while broader locale acquisition retains separate dependencies.

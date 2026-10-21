@@ -1,6 +1,6 @@
 # Resources domain
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 [Live-scene authoring saves](../components/resource-files.md#live-scene-authoring-save) now share pre/post notification, RESET-aware packing, atomic persistence and cleanup through ResourceSaver.SaveScene. The programmatic operation retains explicit owner/failure/fresh-process evidence and separate visual-editor/tooling gates.
 
@@ -304,3 +304,7 @@ Prepared skeletal stacks now expose logical metadata to active processing groups
 DrawableTexture archives and graph duplication preserve authored setup with independent cleared GPU storage; transient blit results are not serialized. BlitMaterial preserves blend mode, and Shader archives retain TextureBlit domain metadata. See [writable textures](../components/drawable-textures.md).
 
 Factory construction provenance is shared by resource, script, file and scene creation through [ElectronObject](../classes/ElectronObject.md#factory-construction-provenance). It rejects unrelated concurrently created results while preserving nested, Task and engine worker construction; [ADR 0013](../decisions/resources.md#adr-0013) owns this boundary.
+
+## Localized resource files
+
+ResourceLoader owns localized file selection and weak live-resource refresh, using the locale score supplied by Localization. Logical cache/path/UID identity survives physical file changes. The existing graph/cache/format pipeline handles archives, images, fonts, WAV, shader includes and mounted ZIP input; relative dependencies and stale threaded publication are exercised. Refresh is explicit cold work before application translation notification. See [localized resources](../components/localized-resources.md).

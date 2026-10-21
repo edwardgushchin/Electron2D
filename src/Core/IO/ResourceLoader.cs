@@ -6,7 +6,9 @@ namespace Electron2D;
 /// The returned resource belongs to the caller and is cached weakly while it remains live. Synchronous load
 /// operations serialize cache decisions. Explicit threaded requests prepare independent graphs on workers and
 /// publish cache identities/callbacks on their scene owner or consuming standalone caller. File roots retain newly
-/// decoded dependency graph leases; the weak cache owns no resources.</remarks>
+/// decoded dependency graph leases; the weak cache owns no resources. LocaleResourceRemaps choose backing files
+/// while preserving logical cache paths. Culture changes and pseudolocalization refreshes reload associated live
+/// resources before scene translation notifications; those configured reloads perform cold file I/O.</remarks>
 public sealed partial class ResourceLoader : ElectronObject
 {
     /// <summary>Controls how a load uses or refreshes the path cache.</summary>
@@ -51,23 +53,23 @@ public sealed partial class ResourceLoader : ElectronObject
     /// <summary>Removes loader registration without disposing its object.</summary><param name="formatLoader">Extension identity.</param>
     public static void RemoveResourceFormatLoader(ResourceFormatLoader formatLoader) { ArgumentNullException.ThrowIfNull(formatLoader); lock (LoadGate) FileLoaders.RemoveAll(item => ReferenceEquals(item, formatLoader)); }
     private static ResourceFormatLoader[] LoaderSnapshot() { if (ResourceLoadGraph.Current is { } stage) return stage.Formats; lock (LoadGate) return FileLoaders.Where(l => !l.IsDisposed).ToArray(); }
-    /// <summary>Returns external dependency tokens from a recognized format.</summary><param name="path">Source file.</param><param name="addTypes">Whether to append stable type IDs.</param><returns>Copied ordered dependencies.</returns>
-    public static string[] GetDependencies(string path, bool addTypes = false) { path = ResourceUID.EnsurePath(path); foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path)) return loader.GetDependencies(path, addTypes); return IsBitmapFont(path) ? FontFile.BitmapDependencies(path, addTypes) : []; }
+    /// <summary>Returns external dependency tokens from the currently selected resource file.</summary><param name="path">Logical source file, including a configured locale source.</param><param name="addTypes">Whether to append stable type IDs.</param><returns>Copied ordered dependencies; archive relative fallback paths resolve beside the selected physical file.</returns>
+    public static string[] GetDependencies(string path, bool addTypes = false) { path = ResourceUID.EnsurePath(path); path = LocaleMap().Resolve(path, TranslationServer.Culture.Name); foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path)) return loader.GetDependencies(path, addTypes); return IsBitmapFont(path) ? FontFile.BitmapDependencies(path, addTypes) : []; }
     /// <summary>Reports the UID stored by a recognized file format.</summary><param name="path">Source file.</param><returns>UID or InvalidID.</returns>
     public static long GetResourceUID(string path) { path = ResourceUID.EnsurePath(path); foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path)) return loader.GetResourceUID(path); return ResourceUID.InvalidID; }
 
-    /// <summary>Rewrites recognized external dependency paths without instantiating resource objects.</summary><param name="path">Source archive or plugin file.</param><param name="renames">Old-to-new path map.</param>
-    public static void RenameDependencies(string path, IReadOnlyDictionary<string, string> renames) { path = ResourceUID.EnsurePath(path); foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path)) { loader.RenameDependencies(path, renames); return; } throw new NotSupportedException("No loader recognizes dependency rewrite."); }
+    /// <summary>Rewrites recognized external dependency paths without instantiating resource objects.</summary><param name="path">Logical archive or plugin file; locale selection chooses the physical file to edit.</param><param name="renames">Old-to-new file paths. Archives accept resolved paths and stored relative tokens, resolve replacements beside the physical archive and retain relative storage.</param>
+    public static void RenameDependencies(string path, IReadOnlyDictionary<string, string> renames) { path = ResourceUID.EnsurePath(path); path = LocaleMap().Resolve(path, TranslationServer.Culture.Name); foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path)) { loader.RenameDependencies(path, renames); return; } throw new NotSupportedException("No loader recognizes dependency rewrite."); }
     /// <summary>Returns compiled types used by a recognized resource file.</summary><param name="path">Source file.</param><returns>Copied type census; empty when unrecognized.</returns>
     public static Type[] GetClassesUsed(string path) { path = ResourceUID.EnsurePath(path); foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path)) return loader.GetClassesUsed(path); return []; }
     /// <summary>Loads a supported typed resource from an operating-system, res:// or user:// path.</summary>
     /// <typeparam name="TResource">Registered archive/plugin resource, ImageTexture, FontFile, implemented AudioStream, VideoStreamTheora, ShaderInclude, X509Certificate, CryptoKey, or an assignable resource base type.</typeparam>
-    /// <param name="path">File path; the exact path string is the cache key.</param>
+    /// <param name="path">Logical file path; after UID resolution its exact string remains the cache key even when locale selection chooses another file.</param>
     /// <param name="cacheMode">Whether to reuse, ignore or refresh an existing live instance.</param>
     /// <returns>A caller-owned live resource. Reuse and Replace can return the same cached instance.</returns>
     /// <exception cref="ArgumentException">The path or cache mode is invalid.</exception>
     /// <exception cref="NotSupportedException">The resource type or file extension is unsupported.</exception>
-    /// <exception cref="InvalidOperationException">Reuse finds a different resource type at the path.</exception>
+    /// <exception cref="InvalidOperationException">Reuse finds a different resource type, or locale/remap configuration changes during mapped graph preparation.</exception>
     /// <exception cref="IOException">The file cannot be read.</exception>
     /// <exception cref="FormatException">Encoded audio is malformed or outside its verified channel profile.</exception>
     /// <exception cref="InvalidDataException">The encoded resource is malformed or exceeds supported limits.</exception>
@@ -80,8 +82,8 @@ public sealed partial class ResourceLoader : ElectronObject
         return LoadImmediate(path, cacheMode, requestedType);
     }
 
-    internal static Resource LoadImmediate(string path, CacheMode cacheMode, Type requestedType, bool isolated = false, CacheMode? hookMode = null)
-        => LoadImmediateTracked(path, cacheMode, requestedType, out _, isolated, hookMode);
+    internal static Resource LoadImmediate(string path, CacheMode cacheMode, Type requestedType, bool isolated = false, CacheMode? hookMode = null, string? originalPath = null)
+        => LoadImmediateTracked(path, cacheMode, requestedType, out _, isolated, hookMode, originalPath);
 
     internal static PackedScene LoadSceneTemplate(string path, out IDisposable? retention, CacheMode cacheMode = CacheMode.Reuse)
     {
@@ -100,12 +102,13 @@ public sealed partial class ResourceLoader : ElectronObject
         }
     }
 
-    private static Resource LoadImmediateTracked(string path, CacheMode cacheMode, Type requestedType, out bool owned, bool isolated = false, CacheMode? hookMode = null)
+    private static Resource LoadImmediateTracked(string path, CacheMode cacheMode, Type requestedType, out bool owned, bool isolated = false, CacheMode? hookMode = null, string? originalPath = null)
     {
         owned = false;
         CheckFilePath(path);
         if ((uint)cacheMode > 4) throw new ArgumentOutOfRangeException(nameof(cacheMode));
         path = ResourceUID.EnsurePath(path);
+        if (!isolated && LocaleMap().Contains(path)) return LoadLocalized(path, cacheMode, requestedType, out owned);
         foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path, requestedType))
             {
                 if (loader is ResourceArchiveLoader) return LoadFileResourceTracked(path, cacheMode, out owned, requestedType);
@@ -118,7 +121,7 @@ public sealed partial class ResourceLoader : ElectronObject
                     if (_fileLoads.Count >= 64 || !_fileLoads.Add(fileKey)) throw new InvalidDataException("File format dependency cycle or depth budget exceeded.");
                     try
                     {
-                        var loaded = loader.Load(path, path, isolated && ResourceLoadGraph.Current!.UseSubThreads, hookMode ?? cacheMode) ?? throw new InvalidDataException("Format loader returned null.");
+                        var loaded = loader.Load(path, originalPath ?? path, isolated && ResourceLoadGraph.Current!.UseSubThreads, hookMode ?? cacheMode) ?? throw new InvalidDataException("Format loader returned null.");
                         if (isolated && loaded.FilePathRegistered) throw new InvalidDataException("A staged format hook must return independent resource state.");
                         if (ReferenceEquals(loaded, cached)) { if (requestedType.IsInstanceOfType(loaded) && !loaded.IsDisposed) return loaded; throw new InvalidDataException("Format loader returned an invalid cached resource."); }
                         try
@@ -252,6 +255,7 @@ public sealed partial class ResourceLoader : ElectronObject
         CheckFilePath(path);
         path = ResourceUID.EnsurePath(path);
         if (Resource.GetRegisteredPath(path) is TResource) return true;
+        path = LocaleMap().Resolve(path, TranslationServer.Culture.Name);
         foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path, typeof(TResource)) && loader.Exists(path)) { var type = loader.GetResourceType(path); return type is not null && typeof(TResource).IsAssignableFrom(type); }
         return Resource.GetRegisteredPath(path) is TResource ||
 

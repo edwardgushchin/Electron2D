@@ -26,7 +26,7 @@ internal static class ResourceLoaderTests
               (int)ResourceLoader.CacheMode.ReplaceDeep == 4,
             "All cache-mode identities retain pinned numeric values.");
         var extensions = ResourceLoader.GetRecognizedExtensionsForType<Texture>();
-        Check(extensions.SequenceEqual(["png", "jpg", "jpeg", "webp", "bmp", "tga", "svg", "dds", "exr", "e2dres"]),
+        Check(extensions.SequenceEqual(["png", "jpg", "jpeg", "webp", "bmp", "tga", "svg", "dds", "exr", "ktx", "ktx2", "e2dres", "ctex"]),
             "Extension discovery reports every integrated image decoder: " + string.Join(",", extensions));
         extensions[0] = "changed";
         Check(ResourceLoader.GetRecognizedExtensionsForType<ImageTexture>()[0] == "png",

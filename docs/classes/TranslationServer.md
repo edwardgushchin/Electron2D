@@ -1,6 +1,6 @@
 # TranslationServer
 
-Last updated: 2026-10-18
+Last updated: 2026-10-21
 
 **Inherits:** —
 
@@ -67,7 +67,7 @@ string text = TranslationServer.Translate("ui", "menu.play");
 
 Gets or sets the culture used for subsequent translation lookups.
 
-**Value:** The process-wide lookup culture, initialized from `Globalization.CultureInfo.CurrentUICulture`. Each Engine start samples the active [`ProjectSettings.LocaleTest`](ProjectSettings.md#localetest) override; an empty setting samples the current managed UI culture. Assigning this property changes subsequent lookups immediately. A different culture name synchronously notifies the attached `Engine.MainLoop` after the setter lock is released. Equal-name assignment retains the supplied managed object without another notification. Scene delivery requires its owner thread; a notification error leaves the culture committed. Independent library trees use explicit notification.
+**Value:** The process-wide lookup culture, initialized from `Globalization.CultureInfo.CurrentUICulture`. Each Engine start samples the active [`ProjectSettings.LocaleTest`](ProjectSettings.md#localetest) override; an empty setting samples the current managed UI culture. Assigning this property changes subsequent lookups immediately. A different culture name reloads associated localized resources and then synchronously notifies the attached `Engine.MainLoop` after the setter lock is released. File refresh is cold, blocking and allocation-capable; catalog fallback and domain overrides do not select localized files. Equal-name assignment retains the supplied managed object without another notification. Scene delivery requires its owner thread; a notification error leaves the culture committed. Independent library trees use explicit notification.
 
 **Exceptions**
 
@@ -196,7 +196,7 @@ Removes all direct singular/plural registrations and resource registrations with
 <a id="reloadpseudolocalization"></a>
 ### `public static void ReloadPseudolocalization()`
 
-Reads the eight active transform settings from [`ProjectSettings`](ProjectSettings.md) and updates the main domain. It leaves the runtime `PseudolocalizationEnabled` switch unchanged. `Engine.Run` loads the project switch and these options before native scene activation; `Engine.Start` publishes the caller-supplied MainLoop before loading them and notifying it; an already constructed scene may have delivered ready callbacks earlier. Explicit reload sends a synchronous translation notification to the attached application loop after applying every option. Project startup prepares culture, fallback and options before one notification. Active SceneTree delivery requires its owner thread; notification failure does not roll back committed options. Asset remaps are not reloaded.
+Reads the eight active transform settings from [`ProjectSettings`](ProjectSettings.md) and updates the main domain. It leaves the runtime `PseudolocalizationEnabled` switch unchanged. `Engine.Run` loads the project switch and these options before native scene activation; `Engine.Start` publishes the caller-supplied MainLoop before loading them and notifying it; an already constructed scene may have delivered ready callbacks earlier. Explicit reload sends a synchronous translation notification to the attached application loop after applying every option. Project startup prepares culture, fallback and options before one notification. Active SceneTree delivery requires its owner thread; notification failure does not roll back committed options. Associated localized resources reload before loop notification. Reload errors aggregate after attempting other live resources; notification is still attempted. Neither errors nor reentrant callbacks roll back committed culture/options or completed resource copies. See [localized resources](../components/localized-resources.md).
 
 ## State and key rules
 
@@ -217,13 +217,13 @@ One process-wide lock protects direct catalogs, the domain registry, and `Cultur
 
 ## Dependencies and interactions
 
-`ElectronObject.Tr()` and `TrN()` use the object's `TranslationDomain` and `CanTranslateMessages` before calling this server. The server depends only on .NET globalization, collections, and threading primitives.
+`ElectronObject.Tr()` and `TrN()` use the object's `TranslationDomain` and `CanTranslateMessages` before calling this server. The server uses .NET globalization/collections/threading, typed ProjectSettings and Resource catalogs. Its change orchestration calls ResourceLoader for localized file refresh and Engine.MainLoop for synchronous notification after releasing the catalog lock; file decoding remains in the resource domain.
 
 ## Verification and limitations
 
 Tests verify parent-culture fallback, missing-message fallback, domain selection, caller-defined plural behavior, resource edits, duplication, removal, disposal, per-object disabling, domain lifecycle and pseudolocalization. `LocalizationProjectSettingsTests` checks typed startup settings, managed locale scoring, regional catalog selection, project fallback for singular/plural lookup, and runtime transform reload. `WindowRuntimeTests` checks startup sampling with SDL dummy.
 
-ResourceLoader imports the supported catalogs, and the fixed locale catalog supplies default-aware scores and integer plural rules. Singular pseudolocalization now has exact code-point/placeholder/BIDI/padding checks and weak prepared outputs. Asset remaps, automatic operating-system locale acquisition after startup, decimal CLDR categories, message parameter formatting and per-thread server culture remain separate; full text shaping belongs to the text domain.
+ResourceLoader imports the supported catalogs, and the fixed locale catalog supplies default-aware scores and integer plural rules. Singular pseudolocalization now has exact code-point/placeholder/BIDI/padding checks and weak prepared outputs. Automatic operating-system locale acquisition after startup, decimal CLDR categories, message parameter formatting and per-thread server culture remain separate; full text shaping belongs to the text domain.
 
 FormatNumber, ParseNumber and GetPercentSign now execute generated-numeric localization through nine immutable rune/exponent/percent systems and 92 exact locale identities. Managed hyphen spelling is normalized to underscore. Unknown identifiers preserve text/default percent, while empty locale arguments fail validation. This does not implement CLDR negotiation, broad locale aliases or global locale-change notification. See [numeric input](../components/numeric-input.md) for the exercised workflow and limits.
 
@@ -252,3 +252,7 @@ Catalog operations reject null text. Standardization preserves catalog casing an
 Runtime lookup ranks catalog candidates against the original selected locale before trying the project fallback. Selected/parent direct entries compete with that same score and win ties; an explicit invariant direct entry remains the lowest-priority universal fallback. GetToolLocale uses this default-aware score as well. CompareLocales weakly retains immutable parsed identities for live input string objects, preserving the fixed parser without retaining retired keys or caching mutable messages. See [scored runtime lookup](../components/localization.md#scored-runtime-lookup) for physical, callback, lifetime, allocation and actual glyph verification.
 
 Main-domain Pseudolocalize shares [Unicode pseudolocalization](../components/localization.md#unicode-pseudolocalization) with ordinary singular lookup. It transforms even when server pseudolocalization is disabled; the runtime switch controls only automatic application to resolved singular text. Plural text remains unchanged by this policy. Prepare each actual resolved input identity and transform policy before a hot interval.
+
+## Localized file refresh ordering
+
+`Culture` changes, every `PseudolocalizationEnabled` assignment and `ReloadPseudolocalization` refresh associated resources before notifying the application loop. Equal-name Culture assignment only retains the supplied object identity. Project startup prepares locale, fallback and transform options before the same refresh/notification path. Active SceneTree delivery requires its owner; rejection precedes file mutation. The main catalog lock is released before I/O or callbacks. Nested changes settle on the latest culture/map with 32-depth/pass guards. No file work is required on the prepared empty-map path; resource refresh may allocate, block and aggregate errors. The public ResourceLocales.Consumer checks saved-project startup, data-before-notification and four software-rendered window/backend profiles.

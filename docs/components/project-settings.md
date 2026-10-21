@@ -1,6 +1,6 @@
 # Project settings component
 
-Last updated: 2026-10-17
+Last updated: 2026-10-21
 
 ## Scope
 
@@ -20,7 +20,7 @@ This Core component provides the process-wide typed settings registry, isolated 
 | [`ProjectSettings`](../classes/ProjectSettings.md) | Registry, metadata, override, persistence, event, and virtual-path owner |
 | [`ProjectSettingsRegistry`](../classes/ProjectSettingsRegistry.md) | Independent disposable registry and shared state implementation |
 
-The input action records are defined by the [Input runtime](input-runtime.md); this component registers six typed defaults and provides the internal typed group snapshot used by explicit `InputMap` reload. Two locale and nine pseudolocalization settings have executable consumers in [Localization](localization.md). Both types are implemented in [`src/Core/Config/ProjectSettings.cs`](../../src/Core/Config/ProjectSettings.cs).
+The input action records are defined by the [Input runtime](input-runtime.md); this component registers six typed defaults and provides the internal typed group snapshot used by explicit `InputMap` reload. Two locale-selection settings, one localized-resource map and nine pseudolocalization settings have executable consumers in [Localization](localization.md). Both types are implemented in [`src/Core/Config/ProjectSettings.cs`](../../src/Core/Config/ProjectSettings.cs).
 
 `DefaultScrollDeadzone` registers `gui/common/default_scroll_deadzone` as a signed integer defaulting to zero. Each new [ScrollContainer](../classes/ScrollContainer.md) samples its active feature override once during construction; an existing container keeps its own writable `ScrollDeadzone` value.
 
@@ -61,7 +61,7 @@ The root renderer samples `RenderingMethod`, `RenderingFallback` and `DefaultCle
 
 ## Current implementation status
 
-Implemented and covered by the executable harness. The process singleton is registered in Engine; Engine timing properties read active project-setting overrides and write their typed base definitions. Two locale and nine pseudolocalization settings are sampled at Engine startup and their eight transform options can be reapplied by TranslationServer during a run; the enabled switch remains a runtime choice until the next startup. Built-in features include build configuration, managed runtime, current OS when recognized, and process architecture. Custom features are runtime-managed.
+Implemented and covered by the executable harness. The process singleton is registered in Engine; Engine timing properties read active project-setting overrides and write their typed base definitions. Two locale-selection settings, one localized-resource map and nine pseudolocalization settings are sampled at Engine startup and their eight transform options can be reapplied by TranslationServer during a run; the enabled switch remains a runtime choice until the next startup. Built-in features include build configuration, managed runtime, current OS when recognized, and process architecture. Custom features are runtime-managed.
 
 The typed `physics/common/physics_interpolation` setting defaults false and initializes each new SceneTree. An active tree retains its own flag when the setting changes; callers can set `SceneTree.PhysicsInterpolation` immediately. Its renderer integration affects displayed 2D transforms and camera scroll without changing logical values.
 
@@ -70,7 +70,7 @@ Four typed `physics/2d/default_*` settings supply the new physics world's gravit
 ## Exclusions and deferred integration
 
 - Global script-class discovery requires a scripting domain.
-- Resource pack loading, exported archive mounts, and non-directory `res://` require file-access/resource-pack domains.
+- Resource pack loading and ZIP-backed `res://` use the existing file-access/resource-pack layer; locale selection shares that input route. Import/editor metadata remains separate.
 - Editor-specific hints, override layers, hidden-prefix UI, and settings dialogs require an editor.
 - Rendering registers backend selection, startup fallback, clear color and the implemented canvas mip/anisotropy defaults with its executable canvas integration. Four 2D physics world defaults are implemented; remaining settings enter with their owning input, audio, networking, physics or other domain capabilities. Three-dimensional settings will never be added.
 - Symbolic-link resolution and hostile-filesystem confinement are outside the current lexical resolver contract.
@@ -105,3 +105,7 @@ The permanent `ProjectSettings.RootNodeLayoutDirection` integer selector accepts
 The built-in `ProjectSettings.WebPCompressionMethod` and `WebPLosslessCompressionFactor` definitions default to 2 and 25, with ranges 0–6 and finite 0–100. Every independent registry registers them too. They control executable cold image saving and support ordinary typed persistence and feature overrides. See [WebP saving](../components/image-webp.md).
 
 Registered `shader_globals/name` definitions use [GlobalShaderParameterSettings<T>](../classes/GlobalShaderParameterSettings.Generic.md) with exact numeric carriers, copied matrices or image-path strings. Rendering-session preparation samples active features before scene Ready and owns loaded images through shutdown; later setting edits apply to the next session. Headless configuration authoring remains independent of a renderer. See [project global behavior](global-shader-parameters.md#project-authored-globals).
+
+## Localized resource files
+
+The permanent LocaleResourceRemaps definition stores up to 4096 immutable source/locale/target records in a copied array. Feature overrides and project persistence use compiled JSON metadata, including strict NativeAOT. Edits affect subsequent loads and translation refresh; they do not perform file I/O in settings setters. See [localized resources](localized-resources.md).

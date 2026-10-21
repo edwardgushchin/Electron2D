@@ -1,6 +1,6 @@
 # ConfigFile
 
-Last updated: 2026-10-17
+Last updated: 2026-10-21
 
 The built-in JSON context includes AudioServer.SpeakerMode for typed movie project settings, including reflection-disabled NativeAOT storage. This adds metadata for the existing enum and does not introduce untyped configuration values.
 
@@ -527,3 +527,7 @@ There is no comment preservation, direct virtual path resolution, asynchronous o
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
 
 Built-in JSON metadata also covers the supported closed GlobalShaderParameterSettings<T> project models, including numeric carriers, float matrices and image-path strings, without runtime reflection in NativeAOT. See [the typed schema](GlobalShaderParameterSettings.Generic.md).
+
+## Localized-resource configuration schema
+
+The built-in compiled JSON metadata includes `ResourceLocaleRemap[]`, allowing project settings to persist immutable source/locale/target records under trimming and NativeAOT. Constructor validation also applies during deserialization; invalid records fail preparation before typed setting publication. See [localized resources](../components/localized-resources.md).

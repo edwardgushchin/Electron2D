@@ -10800,6 +10800,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ResourceLocaleRemap",
+    "kind": "type",
+    "declaringType": "Electron2D.ResourceLocaleRemap",
+    "name": "ResourceLocaleRemap",
+    "signature": "public sealed class Electron2D.ResourceLocaleRemap",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ResourcePreloader",
     "kind": "type",
     "declaringType": "Electron2D.ResourcePreloader",
@@ -23479,6 +23492,35 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ResourceLocaleRemap..ctor(System.String,System.String,System.String)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ResourceLocaleRemap",
+    "name": ".ctor",
+    "signature": "public ResourceLocaleRemap(System.String sourcePath, System.String locale, System.String localizedPath)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourcePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "localizedPath",
+        "type": "System.String",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -253335,6 +253377,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.LocaleResourceRemaps()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "LocaleResourceRemaps",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.ResourceLocaleRemap[]\u003E LocaleResourceRemaps { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.ResourceLocaleRemap[]\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.LocaleTest()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -256434,6 +256489,45 @@
     "declaringType": "Electron2D.Resource",
     "name": "ResourceSceneUniqueID",
     "signature": "public System.String ResourceSceneUniqueID { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ResourceLocaleRemap.Locale()",
+    "kind": "property",
+    "declaringType": "Electron2D.ResourceLocaleRemap",
+    "name": "Locale",
+    "signature": "public System.String Locale { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ResourceLocaleRemap.LocalizedPath()",
+    "kind": "property",
+    "declaringType": "Electron2D.ResourceLocaleRemap",
+    "name": "LocalizedPath",
+    "signature": "public System.String LocalizedPath { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ResourceLocaleRemap.SourcePath()",
+    "kind": "property",
+    "declaringType": "Electron2D.ResourceLocaleRemap",
+    "name": "SourcePath",
+    "signature": "public System.String SourcePath { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

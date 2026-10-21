@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-internal sealed class ResourceLoadGraph(ResourceFormatLoader[] formats, bool useSubThreads, CancellationToken cancellation, bool abortOnMissingResources)
+internal sealed class ResourceLoadGraph(ResourceFormatLoader[] formats, bool useSubThreads, CancellationToken cancellation, bool abortOnMissingResources, ResourceLocaleMap? localization = null, string? locale = null)
 {
     internal sealed class Entry(string path, ResourceLoader.CacheMode mode)
     {
@@ -11,7 +11,7 @@ internal sealed class ResourceLoadGraph(ResourceFormatLoader[] formats, bool use
         internal Resource? Prepared, Final;
         internal ResourceArchiveRead? Archive;
         internal ResourceFileOwnership? Ownership;
-        internal bool Borrowed, Planned, Publish, Released, Transferred;
+        internal bool Borrowed, Planned, Publish, Released, Transferred, Localized;
         internal long UID = ResourceUID.InvalidID;
     }
     [ThreadStatic] private static ResourceLoadGraph? _current;
@@ -24,6 +24,14 @@ internal sealed class ResourceLoadGraph(ResourceFormatLoader[] formats, bool use
     private readonly Dictionary<Resource, Resource> _remap = new(ReferenceEqualityComparer.Instance);
     private int _completed;
     private Entry? _root;
+    private readonly ResourceLocaleMap _localization = localization ?? ResourceLoader.LocaleMap();
+    private readonly string _locale = locale ?? TranslationServer.Culture.Name;
+    internal bool LocaleIsCurrent => ReferenceEquals(_localization, ResourceLoader.LocaleMap()) && _locale == TranslationServer.Culture.Name;
+    private bool UsesLocalizedFiles()
+    {
+        var current = ResourceLoader.LocaleMap();
+        return _entries.Any(entry => entry.Localized || current.Contains(entry.Path));
+    }
     internal static ResourceLoadGraph? Current => _current;
     internal bool AbortOnMissingResources { get; } = abortOnMissingResources;
     internal ResourceFormatLoader[] Formats { get; } = formats;
@@ -70,19 +78,22 @@ internal sealed class ResourceLoadGraph(ResourceFormatLoader[] formats, bool use
         {
             if (entry.Prepared is null)
             {
+                entry.Localized = _localization.Contains(path);
+                var sourcePath = _localization.Resolve(path, _locale);
                 if (depth > 64) throw new InvalidDataException("Resource file dependency depth exceeds 64.");
                 using var scope = new Scope(this, entry, depth);
                 var cached = mode == ResourceLoader.CacheMode.Reuse ? Resource.GetRegisteredPath(path) : null;
                 if (cached is not null) { entry.Prepared = cached; entry.Borrowed = true; }
                 else
                 {
-                    var loader = Formats.FirstOrDefault(item => !item.IsDisposed && item.RecognizePath(path, type));
+                    var loader = Formats.FirstOrDefault(item => !item.IsDisposed && item.RecognizePath(sourcePath, type));
                     if (loader is ResourceArchiveLoader)
                     {
-                        entry.Archive = ResourceArchive.Decode(path, mode); entry.Prepared = entry.Archive.Root;
-                        entry.UID = ResourceArchive.ReadUID(path);
+                        entry.Archive = ResourceArchive.Decode(sourcePath, mode, path); entry.Prepared = entry.Archive.Root;
+                        if (sourcePath == path) entry.UID = ResourceArchive.ReadUID(path);
                     }
-                    else entry.Prepared = ResourceLoader.LoadImmediate(path, ResourceLoader.CacheMode.IgnoreDeep, type, isolated: true, hookMode: mode);
+                    else entry.Prepared = ResourceLoader.LoadImmediate(sourcePath, ResourceLoader.CacheMode.IgnoreDeep, type, isolated: true, hookMode: mode, originalPath: path);
+                    if (entry.Localized) entry.UID = ResourceLoader.LocalizedSourceUID(path);
                     if (entry.Prepared.FilePathRegistered) { entry.Borrowed = true; throw new InvalidDataException("A format loader must prepare independent resource state without publishing cache identities."); }
                 }
                 if (entry.Prepared.IsDisposed || !type.IsInstanceOfType(entry.Prepared)) throw new InvalidDataException("Prepared resource does not match its requested type.");
@@ -120,10 +131,17 @@ internal sealed class ResourceLoadGraph(ResourceFormatLoader[] formats, bool use
     internal Resource Commit()
     {
         cancellation.ThrowIfCancellationRequested();
+        if (UsesLocalizedFiles() && !LocaleIsCurrent) throw new InvalidOperationException("Locale or remap configuration changed while the resource graph was being prepared; request it again.");
         Plan(_root!);
         Publish(_root!);
         var result = _root!.Final!; _root.Transferred = true;
-        try { DisposeUnused(); } catch { _root.Transferred = false; throw; }
+        try
+        {
+            DisposeUnused();
+            if (UsesLocalizedFiles() && !LocaleIsCurrent) ResourceLoader.ReloadTranslationRemaps();
+            ObjectDisposedException.ThrowIf(result.IsDisposed, result);
+        }
+        catch { _root.Transferred = false; throw; }
         return result;
     }
     private void Plan(Entry entry)
@@ -146,7 +164,11 @@ internal sealed class ResourceLoadGraph(ResourceFormatLoader[] formats, bool use
     private Resource Redirect(Resource resource) => _remap.TryGetValue(resource, out var final) ? final : resource;
     private void Publish(Entry entry)
     {
-        if (!entry.Publish || entry.Released) return;
+        if (!entry.Publish || entry.Released)
+        {
+            if (entry.Localized && entry.Final is { } resource) ResourceLoader.TrackLocalizedResource(resource, entry.Path);
+            return;
+        }
         foreach (var child in entry.Dependencies) Publish(child);
         var source = entry.Prepared!;
         if (entry.Archive is { } archive) archive.RedirectResources(Redirect); else source.RemapPreparedReferences(Redirect);
@@ -173,6 +195,7 @@ internal sealed class ResourceLoadGraph(ResourceFormatLoader[] formats, bool use
             entry.Released = true;
         }
         if (entry.UID != ResourceUID.InvalidID) ResourceUID.SetID(entry.UID, entry.Path);
+        if (entry.Localized) ResourceLoader.TrackLocalizedResource(entry.Final!, entry.Path);
     }
     internal void DisposeUnused()
     {

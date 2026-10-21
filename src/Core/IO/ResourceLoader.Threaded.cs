@@ -25,6 +25,8 @@ public sealed partial class ResourceLoader
         internal readonly bool AbortOnMissing = ResourceLoader.AbortOnMissingResources;
         internal readonly CancellationToken Cancellation;
         internal readonly SceneTree? Tree;
+        internal readonly ResourceLocaleMap Localization;
+        internal readonly string Locale;
         internal readonly Action Publish;
         internal ResourceLoadGraph? Graph;
         internal Resource? Result;
@@ -34,9 +36,10 @@ public sealed partial class ResourceLoader
         internal float Progress;
         internal bool Prepared, Retired, Publishing;
         internal ThreadLoadStatus Status = ThreadLoadStatus.InProgress;
-        internal ThreadRequest(string path, Type type, CacheMode mode, bool parallel, CancellationToken cancellation, SceneTree? tree)
+        internal ThreadRequest(string path, Type type, CacheMode mode, bool parallel, CancellationToken cancellation, SceneTree? tree, ResourceLocaleMap localization, string locale)
         {
             Path = path; Type = type; Mode = mode; Parallel = parallel; Cancellation = cancellation; Tree = tree; Publish = () => PublishRequest(this, false);
+            Localization = localization; Locale = locale;
         }
     }
     private readonly object _threadGate = new();
@@ -51,7 +54,10 @@ public sealed partial class ResourceLoader
     /// <param name="publicationTree">Optional owner tree; defaults to the active engine scene tree.</param>
     /// <remarks>Every accepted request requires a matching get, including failures. Duplicate identical requests
     /// share preparation; conflicting options reject. Format hooks/factories must be thread-safe and prepare
-    /// independent data. Existing cache objects and change callbacks are updated on the publication owner.</remarks>
+    /// independent data. Existing cache objects and change callbacks are updated on the publication owner.
+    /// Requests capture the effective locale and remap definition. A graph using a remap rejects an
+    /// obsolete snapshot before publication; collect its failure and request it again. Published resources remain
+    /// live and follow later translation refreshes. A duplicate request cannot change a pending mapped cohort.</remarks>
     /// <exception cref="ArgumentException">Path or cache mode is invalid.</exception>
     /// <exception cref="InvalidOperationException">Options conflict with a pending request, or request capacity is exhausted.</exception>
     /// <exception cref="OperationCanceledException">Cancellation was requested before submission.</exception>
@@ -61,15 +67,17 @@ public sealed partial class ResourceLoader
         CheckFilePath(path); if ((uint)cacheMode > 4) throw new ArgumentOutOfRangeException(nameof(cacheMode)); cancellationToken.ThrowIfCancellationRequested();
         path = ResourceUID.EnsurePath(path); publicationTree ??= Engine.MainLoop as SceneTree;
         if (publicationTree is not null) { ObjectDisposedException.ThrowIf(publicationTree.IsDisposed, publicationTree); }
+        var localization = LocaleMap(); var locale = TranslationServer.Culture.Name;
         lock (Runtime._threadGate)
         {
             if (Runtime._threadRequests.TryGetValue(path, out var existing))
             {
                 if (existing.Type != typeof(TResource) || existing.Mode != cacheMode || existing.Parallel != useSubThreads || existing.AbortOnMissing != ResourceLoader.AbortOnMissingResources || existing.Cancellation != cancellationToken || !ReferenceEquals(existing.Tree, publicationTree)) throw new InvalidOperationException("A pending resource request has different options.");
+                if ((!existing.Localization.IsEmpty || !localization.IsEmpty) && (!ReferenceEquals(existing.Localization, localization) || existing.Locale != locale)) throw new InvalidOperationException("A pending resource request has a different locale snapshot.");
                 existing.Consumers = checked(existing.Consumers + 1); return;
             }
             if (Runtime._threadRequests.Count >= 128) throw new InvalidOperationException("At most 128 resource requests may retain uncollected results.");
-            var request = new ThreadRequest(path, typeof(TResource), cacheMode, useSubThreads, cancellationToken, publicationTree);
+            var request = new ThreadRequest(path, typeof(TResource), cacheMode, useSubThreads, cancellationToken, publicationTree, localization, locale);
             Runtime._threadRequests.Add(path, request);
             try { request.TaskID = WorkerThreadPool.AddTask(() => PrepareRequest(request), description: "resource load"); }
             catch { Runtime._threadRequests.Remove(path); throw; }
@@ -80,7 +88,7 @@ public sealed partial class ResourceLoader
         ResourceLoadGraph? graph = null;
         try
         {
-            graph = new(LoaderSnapshot(), request.Parallel, request.Cancellation, request.AbortOnMissing);
+            graph = new(LoaderSnapshot(), request.Parallel, request.Cancellation, request.AbortOnMissing, request.Localization, request.Locale);
             lock (Runtime._threadGate) request.Graph = graph;
             graph.Prepare(request.Path, request.Mode, request.Type);
         }

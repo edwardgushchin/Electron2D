@@ -137,7 +137,7 @@ internal static partial class ResourceArchiveTests
         };
         ResourceSaver.Save(root, rootPath, SaverFlags.RelativePaths);
         var tokens = ResourceLoader.GetDependencies(rootPath, true);
-        Check(tokens.Length == 1 && tokens[0].Contains("::tests.Data::dependency.e2dres"), "Typed UID dependency/fallback token.");
+        Check(tokens.Length == 1 && tokens[0].Contains("::tests.Data::" + dependencyPath), "Typed UID dependency token resolves its relative fallback beside the archive.");
         using var loaded = ResourceLoader.Load<Data>(rootPath, ResourceLoader.CacheMode.Ignore);
         Check(ReferenceEquals(loaded.Next, dependency), "Ordinary Ignore reuses external dependency.");
         using var deep = ResourceLoader.Load<Data>(rootPath, ResourceLoader.CacheMode.IgnoreDeep);

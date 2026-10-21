@@ -114,6 +114,7 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<bool> UseNearestMIPMapFilter { get; }`](#usenearestmipmapfilter) | Selects canvas mip interpolation at GPU startup; false by default. |
 | [`public static ProjectSetting<int> AnisotropicFilteringLevel { get; }`](#anisotropicfilteringlevel) | Initializes new viewports; exponent 0..4, default 2. |
 | [`public static ProjectSetting<Color> DefaultClearColor { get; }`](#p-electron2d-projectsettings-defaultclearcolor) | Defines the initial root-framebuffer clear color. |
+| [`public static ProjectSetting<ResourceLocaleRemap[]> LocaleResourceRemaps { get; }`](#localeresourceremaps) | Ordered localized file candidates; copied empty array by default. |
 | [`public static ProjectSetting<string> LocaleTest { get; }`](#localetest) | Optional startup locale override; empty by default. |
 | [`public static ProjectSetting<string> LocaleFallback { get; }`](#localefallback) | Fallback catalog locale; `en` by default. |
 | [`public static ProjectSetting<bool> RootNodeAutoTranslate { get; }`](#rootnodeautotranslate) | Initial scene-root automatic translation; true by default. |
@@ -327,6 +328,11 @@ Defines `rendering/textures/default_filters/anisotropic_filtering_level`, defaul
 ### `public static ProjectSetting<Color> DefaultClearColor { get; }`
 
 Defines `rendering/environment/defaults/default_clear_color`, default `(0.3, 0.3, 0.3, 1)`. Every channel must be finite; invalid writes fail before mutation. The renderer reads the active feature override during startup. Use RenderingServer.SetDefaultClearColor to change the active renderer's color; it does not change this stored setting. Normalized framebuffer output clamps channels to `[0, 1]`.
+
+<a id="localeresourceremaps"></a>
+### `public static ProjectSetting<ResourceLocaleRemap[]> LocaleResourceRemaps { get; }`
+
+Permanent `internationalization/locale/translation_remaps` definition; default empty array. At most 4096 nonnull immutable [`ResourceLocaleRemap`](ResourceLocaleRemap.md) records. Set/Get copy the array. Feature overrides, project save/load and compiled JSON metadata preserve the typed records. Edits affect subsequent loads; refresh live associations by changing Culture or calling ReloadPseudolocalization on the scene owner. See [selection, identity, failures and threading](../components/localized-resources.md). File refresh allocates and may block.
 
 <a id="localetest"></a>
 ### `public static ProjectSetting<string> LocaleTest { get; }`

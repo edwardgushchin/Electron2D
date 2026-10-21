@@ -77,6 +77,7 @@ public sealed partial class ConfigFile
     [JsonSerializable(typeof(char))]
     [JsonSerializable(typeof(string))]
     [JsonSerializable(typeof(string[]))]
+    [JsonSerializable(typeof(ResourceLocaleRemap[]))]
     [JsonSerializable(typeof(int[]))]
     [JsonSerializable(typeof(List<int>))]
     [JsonSerializable(typeof(Dictionary<string, int>))]

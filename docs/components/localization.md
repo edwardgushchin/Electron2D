@@ -1,6 +1,6 @@
 # Translation component
 
-Last updated: 2026-10-18
+Last updated: 2026-10-21
 
 ## Scope
 
@@ -39,7 +39,7 @@ The current resource query is FindTranslations. Both deprecated single-catalog g
 <a id="application-translation-notifications"></a>
 ## Application translation notifications
 
-Changing `TranslationServer.Culture` to a different culture name commits that culture and then synchronously sends `NotificationTranslationChanged` through the current `Engine.MainLoop`. Equal-name assignment retains the caller's managed CultureInfo object without another notification. Server `PseudolocalizationEnabled` assignments notify even when equal. Explicit `ReloadPseudolocalization` prepares all eight options before notifying, preserving runtime enablement; startup prepares culture, fallback and options before one notification to an already attached loop. Direct catalog edits and domain-local policy retain their explicit refresh contract. Asset remaps remain absent.
+Changing `TranslationServer.Culture` to a different culture name commits that culture and then reloads associated localized resources through ResourceLoader before synchronously sending `NotificationTranslationChanged` through the current `Engine.MainLoop`. Equal-name assignment retains the caller's managed CultureInfo object without another notification. Server `PseudolocalizationEnabled` assignments notify even when equal. Explicit `ReloadPseudolocalization` prepares all eight options before notifying, preserving runtime enablement; startup prepares culture, fallback and options before one notification to an already attached loop. Direct catalog edits and domain-local policy retain their explicit refresh contract. Ordered typed [localized resource remaps](localized-resources.md) preserve logical resource identity and refresh before application notification; file refresh is cold and may block or fail after culture commitment.
 
 SceneTree uses its existing depth-first hierarchy snapshot and revalidates live membership before every callback, including paused/disabled nodes. Notification errors are aggregated after later nodes run, without rolling back the committed language. Independent library trees are refreshed explicitly. Scene delivery requires its owner thread: a foreign Culture setter can commit global state before delivery rejects, so callers use the ordinary scene scheduler for owner notification. The setter releases its own catalog lock before callbacks; the separate direct-plural-selector locked contract remains unchanged.
 
@@ -65,7 +65,7 @@ Direct registration, domain registry changes, clearing, and culture changes use 
 
 ## Exclusions
 
-The component imports bounded UTF-8 PO/MO catalogs and supplies prepared integer plural rules. It does not format parameters, select culture from the operating system after startup or reload asset remaps. Local node domain/mode changes and application culture/pseudolocalization operations notify their affected consumers as described above. Optimized catalogs do not implement the source engine's serialized Smaz format or restrict `Generate` to an editor build in the shared assembly.
+The component imports bounded UTF-8 PO/MO catalogs and supplies prepared integer plural rules. It does not format parameters, select culture from the operating system after startup or provide per-thread server cultures. ResourceLoader owns asset remap file work. Local node domain/mode changes and application culture/pseudolocalization operations notify their affected consumers as described above. Optimized catalogs do not implement the source engine's serialized Smaz format or restrict `Generate` to an editor build in the shared assembly.
 
 ## Verification
 

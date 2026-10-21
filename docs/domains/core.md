@@ -335,3 +335,7 @@ Factory construction provenance is shared by resource, script, file and scene cr
 [Project line-breaking strictness](../components/line-breaking-strictness.md) now selects native locale line rules for all shared text layouts and retained buffers. Its first nonempty-analysis snapshot, explicit language options and restart boundary are documented with executable consumers.
 
 [File save and swap](../components/file-save-and-swap.md) adds opt-in streaming write-only saves with close-time replacement, physical staging metadata and producer failure cancellation through the retained static OS service.
+
+## Localized resource files
+
+The typed project schema includes ordered LocaleResourceRemaps with compiled JSON persistence. Localization commits Culture/options, then ResourceLoader refreshes associated live file resources before current-MainLoop notification. This is cold allocation-capable file work; a prepared empty map preserves zero owner-managed bytes. String-alias normalization in startup locale settings remains distinct from typed CultureInfo assignment. See [localized resources](../components/localized-resources.md).

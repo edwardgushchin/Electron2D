@@ -1,0 +1,1 @@
+ResourceLocaleChecks.Run(args);

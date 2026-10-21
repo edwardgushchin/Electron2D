@@ -1,6 +1,6 @@
 # Threaded resource loading
 
-Last updated: 2026-10-10
+Last updated: 2026-10-21
 
 ## Executable scope
 
@@ -25,3 +25,7 @@ ThreadedResourceLoaderTests covers blocking get, duplicate/concurrent collectors
 [AsyncGallery](../../examples/AsyncGallery/README.md) is built as a separate public-only consumer. A first process saves image files and a PackedScene; fresh native test processes load that authored scene. Each Linux Wayland GPU/compatibility run renders 30 frames while both real image hooks are blocked, then releases I/O, instantiates on owner and verifies red/blue pixels and cleanup at frame 40. This proves the exercised programmatic authoring/loading/rendering route, not general editor/tool acceptance.
 
 Native/OS allocation totals, foreign target execution, AOT, threaded browser bootstrap and human acceptance remain unverified. Runtime cold setup/loading may allocate; only the named warmed polling operation has a zero-byte claim. Further resource import/pack/text/schema/editor APIs remain their own coverage obligations.
+
+## Localized resource files
+
+Requests capture the map and global Culture name at acceptance. Incompatible duplicate mapped cohorts are rejected. A culture or relevant map change before publication fails collection before cache/UID mutation and disposes prepared work; retry uses the current cohort. Unrelated setting edits do not stale an unchanged map. Published results remain weakly associated and update in place during later refresh. Reentrant locale changes during publication settle on the latest state. Both synchronous and threaded graphs retain logical root/internal paths while resolving relative dependencies beside the selected physical archive. See [localized resources](localized-resources.md).

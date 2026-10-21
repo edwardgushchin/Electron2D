@@ -133,6 +133,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(LineBreakingStrictness, isBasic: false);
         _settings[LineBreakingStrictness.Name].RestartIfChanged = true;
         RegisterInternal(LocaleTest, isBasic: false);
+        RegisterInternal(LocaleResourceRemaps, isBasic: false);
         RegisterInternal(LocaleFallback, isBasic: false);
         RegisterInternal(RootNodeAutoTranslate, isBasic: false);
         RegisterInternal(RootNodeLayoutDirection, isBasic: false);
@@ -1264,6 +1265,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, DebugCollisionMaxContacts) ||
         ReferenceEquals(setting, LineBreakingStrictness) ||
         ReferenceEquals(setting, LocaleTest) ||
+        ReferenceEquals(setting, LocaleResourceRemaps) ||
         ReferenceEquals(setting, LocaleFallback) ||
         ReferenceEquals(setting, RootNodeAutoTranslate) ||
         ReferenceEquals(setting, RootNodeLayoutDirection) ||
