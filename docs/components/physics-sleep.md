@@ -250,3 +250,49 @@ bounded workloads do not certify arbitrary graph mutations, native allocation,
 retained-impulse convergence, complete numerical/network/platform acceptance or
 hardware performance. The separate full-suite 64-byte allocation and massive GPU
 Xid/device-loss gates remain open. Declaration coverage is unchanged.
+
+
+## Kinematic dormant capacity
+
+CPU dormant capacity includes every sleep-enabled non-static body. Kinematic
+islands also enter the native dormant sets; counting only dynamic bodies left
+mixed scene roles with too few pooled arrays. Repeated filter-wake/sleep cycles
+then allocated 256 owner/all-thread bytes in PhysicsFilterTests. The calibrated
+object trace places 32-byte array creation in CPUPhysicsSleepStorage.Buffers.Ensure
+under the actual sleep path. Attachment, motion-mode changes and enabling sleep
+now prepare the complete eligible population; static and sleep-disabled bodies
+still do not consume that population budget.
+
+A separate first-wake trace identifies the 48-byte shared native body state in its
+lazy type initializer. CPU-world creation now completes that initializer before
+simulation. Numerical sleep equations, body roles and ownership remain unchanged.
+
+PhysicsDormantCapacityTests adds 17 kinematic bodies through direct attachment,
+Static-to-Kinematic mode changes and CanSleep enabling after active preparation.
+A long quiet-time policy prevents hidden sleep during 128 authored-motion/query
+warm frames. The first short-policy sleep and 64 actual filter-wake/sleep/query
+cycles each require strict zero owner/all-thread managed bytes and preserve body
+identities and query geometry. The final fixture fails at 9160/9160 bytes on the
+previous runtime; the intermediate candidate exposes the separate 48-byte wake.
+The corrected CPU owner/separate profiles pass through the public-only consumer
+in CLR and strict NativeAOT with the same assertions and unavailable GPU drivers.
+These CPU storage checks do not impose native solver-set representation on GPU.
+The existing shared PhysicsFilterTests passes on CPU and independent GPU.
+
+Local receipts, calibrated traces and frozen payloads are under
+`bin/physics-full-integration/2026-10-21/`. The historical off-owner 64-byte
+script-factory failure retains its separate unproven cause. Full-goal, wider
+numerical/network/native/platform and performance acceptance remain open.
+
+
+The uninstrumented full root suite on the corrected frozen source cohort passes
+in 611.154 seconds, including the CPU mixed-role filter interval and all six
+CPU/GPU/registered owner/separate script-factory intervals at 0/0 bytes. A separate
+final filter selector also exercises both CPU and GPU. The 900-tick owner/separate
+network checks each run an unavailable-GPU CPU authority, an independent GPU client
+and a late unavailable-GPU CPU client. All three processes converge to 30 actors;
+late clients enter at ticks 342/341. Positive warmed forward/replay samples retain
+zero owner/all-thread managed bytes. These are functional regressions on this
+cohort, not a causal resolution of the historical 64-byte interval or a renewed
+mass-performance/FPS measurement. Final integrity checks use
+`bin/physics-full-integration/2026-10-21/validate.py` and `validation.json`.

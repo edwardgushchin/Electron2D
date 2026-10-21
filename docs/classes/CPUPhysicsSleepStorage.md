@@ -4,8 +4,8 @@ Last updated: 2026-10-21
 
 **Declaration:** `internal sealed class CPUPhysicsSleepStorage` · **Source:** [CPUPhysicsSleepStorage.cs](../../src/Servers/Physics/CPUPhysicsSleepStorage.cs) · **Component:** [World sleep](../components/physics-sleep.md#pooled-dormant-island-storage)
 
-The CPU world owns this optional storage after a dynamic body first becomes sleep
-eligible. Separate body/contact/joint/island pools prepare power-of-two reference
+The CPU world owns this optional storage after a non-static body first becomes sleep
+eligible. Kinematic islands use the same pool budget and cold preparation hooks. Separate body/contact/joint/island pools prepare power-of-two reference
 arrays for possible island partitions, with four record objects per budget unit.
 A rounded partition uses fewer than two record slots per live unit; preparing a
 restored partition while preserving the current one can temporarily require four.

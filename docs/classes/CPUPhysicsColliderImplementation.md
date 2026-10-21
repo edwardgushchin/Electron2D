@@ -1,6 +1,6 @@
 # CPUPhysicsColliderImplementation
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 **Declaration:** `internal sealed partial class CPUPhysicsColliderImplementation : PhysicsColliderImplementation` · **Source:** [CPUPhysicsColliderImplementation.cs](../../src/Servers/Physics/CPUPhysicsColliderImplementation.cs) · **Component:** [Physics backends](../components/physics-backends.md#runtime-flow-and-ownership)
 
@@ -11,6 +11,10 @@ from all scene/server bodies and Areas. Disabled/disposed slots retain their
 logical indices without producing fixtures. Complete source preflight occurs
 before mutation; this owner retains concrete geometry validation and storage.
 See [shared inputs](../components/physics-backends.md#shared-collider-shape-inputs).
+
+Sleep-capable non-static attachment, motion-mode changes and CanSleep writes
+prepare dormant capacity before numerical use, including kinematic bodies.
+See [the first-sleep and wake checks](../components/physics-sleep.md#kinematic-dormant-capacity).
 
 The CPU creator retains this concrete attachment in its private collider table.
 Native body/shape IDs are absent from common scene/server identities. Selected

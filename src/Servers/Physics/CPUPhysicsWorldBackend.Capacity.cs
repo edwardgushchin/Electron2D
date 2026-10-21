@@ -48,7 +48,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         var sleeping = 0;
         if (_maySleep)
             foreach (var body in world.bodies.data.AsSpan(0, world.bodies.count))
-                if (body.id >= 0 && body.type == B2BodyType.b2_dynamicBody && body.enableSleep) sleeping++;
+                if (body.id >= 0 && body.type != B2BodyType.b2_staticBody && body.enableSleep) sleeping++;
         var sleepCapacity = sleeping == 0 ? 0 : (int)System.Numerics.BitOperations.RoundUpToPowerOf2((uint)sleeping);
         if (capacity <= _preparedBodyCapacity && sleepCapacity <= _preparedSleepCapacity && contacts <= _preparedContactCapacity) return;
         _preparedBodyCapacity = Math.Max(_preparedBodyCapacity, capacity);
@@ -56,7 +56,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         _preparedContactCapacity = Math.Max(_preparedContactCapacity, contacts);
         capacity = _preparedBodyCapacity; sleepCapacity = _preparedSleepCapacity; contacts = _preparedContactCapacity;
         ReserveBodyMotionCapacity(capacity);
-        // Dormant island storage follows bodies that can sleep; active stress particles need no dormant copies.
+        // Kinematic islands also sleep; reserve only eligible bodies, leaving active stress particles uncopied.
         Box2D.NET.B2Arrays.b2Array_Reserve(ref world.solverSets, sleepCapacity + 3);
         Box2D.NET.B2Arrays.b2Array_Reserve(ref world.solverSetIdPool.freeArray, sleepCapacity + 3);
         while (world.solverSets.count < sleepCapacity + 3)

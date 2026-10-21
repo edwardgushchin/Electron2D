@@ -8,6 +8,8 @@ internal static class PhysicsDormantCapacityTests
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
         try
         {
+            if (backend == PhysicsServer.Backend.CPU)
+                for (var transition = 0; transition < 3; transition++) KinematicStorage(transition);
             using (var warm = new Rig(backend, 2)) { warm.Sleep(); warm.Wake(); }
             foreach (var count in new[] { 16, 17, 33, 65 })
             {
@@ -32,6 +34,67 @@ internal static class PhysicsDormantCapacityTests
             using (var rig = new Rig(backend, 128, contacts: true, pins: false)) rig.VerifyPartitionRestore();
         }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
+    }
+
+    private static void KinematicStorage(int transition)
+    {
+        using var shape = new CircleShape { Radius = 1 };
+        var space = PhysicsServer.SpaceCreate(PhysicsServer.Backend.CPU); var bodies = new RID[17];
+        try
+        {
+            PhysicsServer.SpaceSetBodyTimeToSleep(space, 300);
+            for (var i = 0; i < bodies.Length; i++)
+            {
+                var body = bodies[i] = PhysicsServer.BodyCreate();
+                PhysicsServer.BodySetMode(body, transition == 1 ? PhysicsServer.BodyMode.Static : PhysicsServer.BodyMode.Kinematic);
+                PhysicsServer.BodySetCanSleep(body, transition != 2);
+                PhysicsServer.BodySetCollisionMask(body, 0); PhysicsServer.BodySetTransform(body, new(0, new(i * 10, 0)));
+                PhysicsServer.BodyAddShape(body, shape.GetRID()); PhysicsServer.BodySetSpace(body, space);
+                if (transition == 1) PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Kinematic);
+            }
+            PhysicsServer.SpaceSetActive(space, true);
+            using var query = new PhysicsPointQueryParameters(); var hits = new PhysicsPointResult[1]; var direct = PhysicsServer.SpaceGetDirectState(space);
+            for (var frame = 1; frame <= 128; frame++)
+            {
+                for (var i = 0; i < bodies.Length; i++) PhysicsServer.BodySetTransform(bodies[i], new(0, new(i * 10 + frame * .6f, 0)));
+                PhysicsServer.SpaceStep(space, .01); Verify();
+            }
+            for (var i = 0; i < bodies.Length; i++)
+                Check(!PhysicsServer.BodyGetSleeping(bodies[i]) && PhysicsServer.BodyGetTransform(bodies[i]).Origin.DistanceTo(new(i * 10 + 76.8f, 0)) < .002f,
+                    "The warmup advances actual kinematic motion before the first sleep");
+            foreach (var body in bodies)
+            {
+                if (transition == 2) PhysicsServer.BodySetCanSleep(body, true);
+                PhysicsServer.BodySetLinearVelocity(body, Vector2.Zero);
+            }
+            PhysicsServer.SpaceSetBodyTimeToSleep(space, .05f);
+            GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers();
+            var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+            Sleep();
+            owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+            Check(owner == 0 && all == 0, $"First kinematic sleep allocated {owner}/{all} bytes for transition {transition}");
+            foreach (var body in bodies) Check(PhysicsServer.BodyGetSleeping(body), "Prepared kinematic bodies actually enter dormant islands");
+            var cycleOwner = GC.GetAllocatedBytesForCurrentThread(); var cycleAll = GC.GetTotalAllocatedBytes(true);
+            for (var cycle = 0; cycle < 64; cycle++)
+            {
+                foreach (var body in bodies) { PhysicsServer.BodySetCollisionMask(body, 0); Check(!PhysicsServer.BodyGetSleeping(body), "Filter writes wake a dormant kinematic body"); }
+                Sleep(); Verify();
+                foreach (var body in bodies) Check(PhysicsServer.BodyGetSleeping(body), "Every filter cycle returns the kinematic bodies to sleep");
+            }
+            cycleOwner = GC.GetAllocatedBytesForCurrentThread() - cycleOwner; cycleAll = GC.GetTotalAllocatedBytes(true) - cycleAll;
+            Check(cycleOwner == 0 && cycleAll == 0, $"Kinematic sleep/wake allocated {cycleOwner}/{cycleAll} bytes for transition {transition}");
+            Console.WriteLine($"Kinematic dormant transition {transition}: 17 bodies, first sleep {owner}/{all} B; 64 filter-wake/sleep/query cycles {cycleOwner}/{cycleAll} B.");
+            void Sleep() { for (var frame = 0; frame < 16; frame++) PhysicsServer.SpaceStep(space, .01); }
+            void Verify()
+            {
+                foreach (var body in bodies)
+                {
+                    query.Position = PhysicsServer.BodyGetTransform(body).Origin;
+                    Check(direct.IntersectPoint(query, hits) == 1 && hits[0].ColliderRID == body, "Kinematic motion and dormancy preserve query geometry and body identity");
+                }
+            }
+        }
+        finally { foreach (var body in bodies) if (body.IsValid()) PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(space); }
     }
 
     private sealed class Rig : IDisposable

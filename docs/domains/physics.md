@@ -1,5 +1,7 @@
 # Physics domain
 
+[Kinematic dormant capacity](../components/physics-sleep.md#kinematic-dormant-capacity) prepares the CPU first-sleep and first-wake paths across attachment, mode changes and CanSleep. Public CLR/NativeAOT owner/separate checks retain strict zero managed bytes; declaration coverage remains 1305/1369 (95.33%), with 64 open rows.
+
 [Inherited point/line drawing](../components/canvas-rendering.md#native-point-and-line-primitives) now reaches native GPU topology through both scene and server producers, including a moving physical receiver. The SDL_Renderer coverage gap remains open; declaration counts stay 1305/1369 (95.33%).
 
 Last updated: 2026-10-21

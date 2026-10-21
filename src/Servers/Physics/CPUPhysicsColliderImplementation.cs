@@ -32,14 +32,14 @@ internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBa
         _world = B2Worlds.b2GetWorldFromId(space.WorldID);
         _body = b2GetBodyFullId(_world, BodyID);
         _savedPose = b2GetBodyTransformQuick(_world, _body);
-        if (definition.type == B2BodyType.b2_dynamicBody && definition.enableSleep) PrepareSleepCapacity();
+        if (definition.type != B2BodyType.b2_staticBody && definition.enableSleep) PrepareSleepCapacity();
     }
 
     internal override bool HasMotionMode(PhysicsServer.BodyMode mode) => b2Body_GetType(BodyID) == BodyType(mode);
     internal override void SetMotionMode(PhysicsServer.BodyMode mode)
     {
         b2Body_SetType(BodyID, BodyType(mode));
-        if (BodyType(mode) == B2BodyType.b2_dynamicBody && _body!.enableSleep) PrepareSleepCapacity();
+        if (BodyType(mode) != B2BodyType.b2_staticBody && _body!.enableSleep) PrepareSleepCapacity();
     }
     private CPUPhysicsWorldBackend WorldOwner => worldOwner;
     private void PrepareSleepCapacity() => WorldOwner.PrepareSleepCapacity();

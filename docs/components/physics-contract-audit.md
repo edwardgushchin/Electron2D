@@ -4,6 +4,8 @@
 
 # Physics contract and backend audit
 
+[Kinematic dormant capacity](physics-sleep.md#kinematic-dormant-capacity) corrects repeated CPU sleep-array allocations and a cold shared-state allocation on first wake. Public CLR/NativeAOT owner/separate tests verify the bounded first-sleep/wake contract; the historical off-owner script-factory failure and complete-goal acceptance remain separate. No declaration is promoted.
+
 [Current-group kinematic synchronization](physics-bodies.md#kinematic-synchronization-from-processing-groups) permits AnimatableBody.SyncToPhysics alongside its already executable worker poses. The bounded pending/idle/zero-step, selected contact/query, lifetime/capture/failure and allocation checks add behavior evidence without closing other inherited or native/performance gates. Counts remain 1305/1369 Implemented (95.33%), 64 open, 92 Excluded.
 
 [Script-factory allocation diagnostics](gpu-resident-reports.md#script-factory-allocation-investigation)

@@ -4,6 +4,7 @@ using static Box2D.NET.B2Worlds;
 namespace Electron2D;
 
 /// <summary>Owns the CPU world, retained native collider attachments, policies, field/Area geometry, capacity, statistics, workers and optional diagnostic GPU stages.</summary>
+/// <remarks>Prepares shared body state at creation and dormant storage for sleep-capable dynamic and kinematic bodies.</remarks>
 internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
 {
     private readonly B2WorldId _worldID;
@@ -22,6 +23,8 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
         _tasks = new(OperatingSystem.IsBrowser() ? 1 : Math.Min(4, Environment.ProcessorCount));
         try
         {
+            // The first dormant-island wake must not initialize shared body state inside a warmed step.
+            System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(B2Bodies).TypeHandle);
             var definition = B2Types.b2DefaultWorldDef();
             definition.gravity = PhysicsShapeBackend.ToBackend(space.DefaultGravity);
             definition.restitutionThreshold = 0;
