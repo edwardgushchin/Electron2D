@@ -1,6 +1,6 @@
 # Resident GPU joints
 
-Last updated: 2026-10-14
+Last updated: 2026-10-21
 
 [Public CPU/GPU joint conformance](physics-joint-policies.md#public-cpu-gpu-conformance)
 now exercises scene/server pin, groove and spring behavior through explicitly
@@ -54,8 +54,12 @@ Pin contributes two bilateral anchor rows, optional lower/upper angular rows and
 bounded motor row. Groove contributes a perpendicular row and two axial endpoint
 rows; zero and negative intervals are valid, and relative rotation stays free.
 A rotating guide uses the derivative of its rotating axis, including the first
-body's anchor-to-anchor lever arm. The same projected-Jacobi update and body gather
-iterate joint and contact rows together. Pin/guide static anchors remain fixed;
+body's anchor-to-anchor lever arm. Full projected-Jacobi batches gather joint and
+contact rows together. After sequential contact colors, the joint-only update uses
+the joint incidence degree rather than including completed contact rows; see
+[mixed support convergence](physics-joints.md#active-joint-batch-convergence).
+The bounded retained-list traversal adds no host projection or device buffer.
+Pin/guide static anchors remain fixed;
 virtual static-surface velocity belongs to contacts and does not drive these rows.
 
 The solver reserves five 64-byte coefficient / 32-byte impulse rows per retained

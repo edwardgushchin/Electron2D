@@ -1,6 +1,6 @@
 # Physics joints component
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 ## Lifecycle request ownership
 
@@ -265,3 +265,72 @@ The API census stays 1304/1369 Implemented (95.25%), with 65 open declarations a
 not establish contact-rich/CCD networks, arbitrary scales, routed multiplayer,
 native allocation totals, other platforms, window FPS or final same-revision
 mass-performance acceptance; the complete extension class remains Partial.
+
+## Mixed compound support
+
+The public-only `--joint-contacts` entry now retains its circle/rectangle control
+and adds mixed capsule/convex compound bodies on a two-segment concave floor.
+Each dynamic body has a disabled leading slot, two active slots, and an offset
+second shape. Scene and raw bodies reverse capsule/polygon order. Both active
+local slots must publish floor contacts, preserving floor slot 1 and ignoring
+disabled slot 0. Point queries at the offset shape center require its actual
+body RID and logical slot 2. Sixteen report slots prevent truncating the combined
+manifolds; the full summed impulse remains subject to the existing force balance.
+
+Every scene/raw receiver and scene/raw joint-owner combination runs the original
+pin/groove/spring load, stationary floor with virtual surface velocity, normal and
+tangential impulse bounds, monitored checkpoint continuation and motion after
+clearing all three joints. The same mixed bodies also run automatic coupled sleep,
+equal/changed spring policy, moved-anchor wake, and both CastRay/CastShape impacts
+after private restoration of the sleeping island. No numerical tolerance, mass,
+gravity, damping, warmup or zero-byte assertion is reduced.
+
+The first mixed CPU/GPU attempts rejected an overly strict new normal assertion.
+CPU diagnostics show a unit horizontal normal at a compound polygon corner with
+exactly zero impulse. Such additional segment-endpoint contacts carry no support;
+they remain in the published snapshot. Every contact must have a finite unit
+normal, while every nonzero support impulse retains the upward-normal assertion.
+The original circle control still requires every normal to point upward. No
+runtime or report filtering changes are made for this fixture correction.
+
+Each complete profile has eight 128-frame support brackets and sixteen
+128-frame restored CCD brackets: 3,072 measured complete frames, with matching
+warmup and strict 0/0 owner/all-thread managed bytes. Missing-floor and
+missing-elastic controls run for both geometry families. These bounded composed
+checks do not establish arbitrary geometry/coupling, real network transport,
+native allocator totals, foreign platforms, window FPS or performance advantage.
+The earlier unattributed full-suite 64-byte failure remains open separately.
+
+### Active joint-batch convergence
+
+The composed GPU case exposed a real convergence defect after the normal-assertion
+correction. At frame 403, previously quiet load/peer bodies acquired horizontal
+velocities .466555/1.4772923 while the physical floor and all constraints remained
+present. An isolated copy reproduces the failure at the default 16 solver sweeps;
+64 sweeps are a successful diagnostic control, not the production correction.
+
+Contact colors apply their rows sequentially, then joint rows update together.
+The latter still divided its correction by a degree containing those already
+completed contact rows. Changing contact features therefore under-relaxed joints
+according to unrelated row population. The update now counts only the joint
+prefix of each retained incidence list for a joint-only batch. Traversal validates
+indices/membership and is bounded by the existing list count. Full Jacobi batches
+retain their full degree. No extra sweeps, buffers, host state mirror or readback
+are added. The isolated case now passes at the unchanged 16 sweeps.
+
+The final source-built cohort passes all twelve JIT/strict NativeAOT profiles:
+CPU with unavailable GPU, NVIDIA resident GPU, and the independent registered
+implementation, each on owner/separate numerical hosts. They retain 36,864
+measured complete frames and 48 negative controls in total, with strict 0/0
+owner/all-thread managed bytes. The paired public five-suite CPU/GPU joint
+contract and resident joint policy/store suite also pass, including 4,096-pin
+limited/unlimited checks. PDB proofs match 2,432 runtime, 924 root-test and 262
+public-consumer authored sources; AOT has its separately matched build cohort.
+
+Receipts, unchanged payload hashes, NVIDIA/no-software mappings, telemetry,
+source proofs, failed candidates and the default-16/diagnostic-64 controls remain
+under `bin/physics-mixed-support/2026-10-21/`. Its `validate.py` checks all fourteen
+final receipts and the retained failing/converged controls. Builds and functional
+profiles overlap, so elapsed times are not performance comparisons. Per-row
+incidence counting and dense-joint latency remain unmeasured costs; native/foreign,
+network, full-suite allocation and whole-goal acceptance remain open.

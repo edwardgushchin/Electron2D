@@ -9,49 +9,52 @@ public static partial class BackendChecks
         try
         {
             if (backend is null) PhysicsServerManager.RegisterServer("JointContacts", static () => new Solver());
-            using (var absentFloor = new JointContactRig(backend, false, false))
+            foreach (var mixedGeometry in new[] { false, true })
             {
-                absentFloor.DisableFloor(); for (var i = 0; i < 300; i++) absentFloor.Step();
-                Reject<InvalidOperationException>(absentFloor.Verify);
-            }
-            using (var absentElastic = new JointContactRig(backend, false, false))
-            {
-                PhysicsServer.DampedSpringJointSetStiffness(absentElastic.Joints[2], 0);
-                for (var i = 0; i < 300; i++) absentElastic.Step();
-                Reject<InvalidOperationException>(absentElastic.Verify);
-            }
-            Console.WriteLine($"Joint/contact {backend?.ToString() ?? "registered"}: absent-floor and absent-elastic negative controls rejected.");
-            foreach (var scenePeer in new[] { false, true })
-                foreach (var sceneJoints in new[] { false, true })
+                using (var absentFloor = new JointContactRig(backend, false, false, mixedGeometry))
                 {
-                    using var rig = new JointContactRig(backend, scenePeer, sceneJoints);
-                    for (var i = 0; i < 300; i++) rig.Step();
-                    rig.Verify(); Check(!scenePeer || rig.Entries == 1, "Real scene floor contact starts exactly one monitored episode");
-                    for (var i = 0; i < 128; i++) { rig.Step(); rig.Verify(); }
-                    Collect(); var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
-                    for (var i = 0; i < 128; i++) { rig.Step(); rig.Verify(); }
-                    owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
-                    Check(owner == 0 && all == 0, $"Joint/contact full frames allocate {owner}/{all} B");
-                    using (var checkpoint = PhysicsServer.SpaceCreateCheckpoint(rig.World.Space))
-                    {
-                        var entries = rig.Entries;
-                        for (var i = 0; i < 32; i++) { rig.Step(); rig.Verify(); }
-                        var pose = PhysicsServer.BodyGetTransform(rig.Peer); var velocity = PhysicsServer.BodyGetLinearVelocity(rig.Peer);
-                        checkpoint.Restore();
-                        for (var i = 0; i < 32; i++) { rig.Step(); rig.Verify(); }
-                        Check(PhysicsServer.BodyGetTransform(rig.Peer).Origin.DistanceTo(pose.Origin) < .005f &&
-                            PhysicsServer.BodyGetLinearVelocity(rig.Peer).DistanceTo(velocity) < .005f && rig.Entries == entries,
-                            "Joint/contact checkpoint replay preserves solved support and existing contact episodes");
-                    }
-                    foreach (var joint in rig.Joints) PhysicsServer.JointClear(joint);
-                    PhysicsServer.BodySetLinearVelocity(rig.Peer, new(30, 0));
-                    for (var i = 0; i < 60; i++) rig.Step();
-                    Check(PhysicsServer.BodyGetTransform(rig.Peer).Origin.X > 20 && rig.HasFloorContact(),
-                        "Cleared joint rows release motion while physical floor contact continues");
-                    Console.WriteLine($"Joint/contact {backend?.ToString() ?? "registered"}, peerScene={scenePeer}, jointsScene={sceneJoints}, threaded={threaded}: support/friction impulse errors {rig.MaxNormalError:F6}/{rig.MaxFrictionError:F6}, replay/release, 128 complete measured frames {owner}/{all} B.");
-                    using var continuous = new JointContactRig(backend, scenePeer, sceneJoints);
-                    continuous.VerifyContinuousSleep();
+                    absentFloor.DisableFloor(); for (var i = 0; i < 300; i++) absentFloor.Step();
+                    Reject<InvalidOperationException>(absentFloor.Verify);
                 }
+                using (var absentElastic = new JointContactRig(backend, false, false, mixedGeometry))
+                {
+                    PhysicsServer.DampedSpringJointSetStiffness(absentElastic.Joints[2], 0);
+                    for (var i = 0; i < 300; i++) absentElastic.Step();
+                    Reject<InvalidOperationException>(absentElastic.Verify);
+                }
+                Console.WriteLine($"Joint/contact {backend?.ToString() ?? "registered"}, mixed={mixedGeometry}: absent-floor and absent-elastic negative controls rejected.");
+                foreach (var scenePeer in new[] { false, true })
+                    foreach (var sceneJoints in new[] { false, true })
+                    {
+                        using var rig = new JointContactRig(backend, scenePeer, sceneJoints, mixedGeometry);
+                        for (var i = 0; i < 300; i++) rig.Step();
+                        rig.Verify(); Check(!scenePeer || rig.Entries == 1, "Real scene floor contact starts exactly one monitored episode");
+                        for (var i = 0; i < 128; i++) { rig.Step(); rig.Verify(); }
+                        Collect(); var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+                        for (var i = 0; i < 128; i++) { rig.Step(); rig.Verify(); }
+                        owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+                        Check(owner == 0 && all == 0, $"Joint/contact full frames allocate {owner}/{all} B");
+                        using (var checkpoint = PhysicsServer.SpaceCreateCheckpoint(rig.World.Space))
+                        {
+                            var entries = rig.Entries;
+                            for (var i = 0; i < 32; i++) { rig.Step(); rig.Verify(); }
+                            var pose = PhysicsServer.BodyGetTransform(rig.Peer); var velocity = PhysicsServer.BodyGetLinearVelocity(rig.Peer);
+                            checkpoint.Restore();
+                            for (var i = 0; i < 32; i++) { rig.Step(); rig.Verify(); }
+                            Check(PhysicsServer.BodyGetTransform(rig.Peer).Origin.DistanceTo(pose.Origin) < .005f &&
+                                PhysicsServer.BodyGetLinearVelocity(rig.Peer).DistanceTo(velocity) < .005f && rig.Entries == entries,
+                                "Joint/contact checkpoint replay preserves solved support and existing contact episodes");
+                        }
+                        foreach (var joint in rig.Joints) PhysicsServer.JointClear(joint);
+                        PhysicsServer.BodySetLinearVelocity(rig.Peer, new(30, 0));
+                        for (var i = 0; i < 60; i++) rig.Step();
+                        Check(PhysicsServer.BodyGetTransform(rig.Peer).Origin.X > 20 && rig.HasFloorContact(),
+                            "Cleared joint rows release motion while physical floor contact continues");
+                        Console.WriteLine($"Joint/contact {backend?.ToString() ?? "registered"}, mixed={mixedGeometry}, peerScene={scenePeer}, jointsScene={sceneJoints}, threaded={threaded}: support/friction impulse errors {rig.MaxNormalError:F6}/{rig.MaxFrictionError:F6}, zero-impulse side contacts {rig.SideContacts}, replay/release, 128 complete measured frames {owner}/{all} B.");
+                        using var continuous = new JointContactRig(backend, scenePeer, sceneJoints, mixedGeometry);
+                        continuous.VerifyContinuousSleep();
+                    }
+            }
         }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
     }
@@ -65,27 +68,35 @@ public static partial class BackendChecks
         private readonly CircleShape _circle = new() { Radius = 2 };
         private readonly RectangleShape _rectangle = new() { Size = new(200, 2) };
         private readonly PhysicsMaterial _material = new() { Friction = .6f };
+        private readonly CapsuleShape _capsule = new() { Radius = 1, Height = 4 };
+        private readonly ConvexPolygonShape _polygon = new() { Points = [new(-2, -2), new(2, -2), new(2, 2), new(-2, 2)] };
+        private readonly ConcavePolygonShape _segments = new() { Segments = [new(-100, -1), new(0, -1), new(0, -1), new(100, -1)] };
+        private readonly PhysicsPointQueryParameters _query = new();
+        private readonly PhysicsPointResult[] _hits = new PhysicsPointResult[4];
         private readonly StaticBody _floor;
         private readonly RID _raw;
         private readonly bool _sceneJoints;
+        private readonly bool _mixedGeometry;
         private readonly PhysicsDirectBodyState _state;
         internal int Entries;
+        internal int SideContacts;
         internal float MaxNormalError, MaxFrictionError;
         private float _momentumBefore, _loadSpeedBefore;
 
-        internal JointContactRig(PhysicsServer.Backend? backend, bool scenePeer, bool sceneJoints)
+        internal JointContactRig(PhysicsServer.Backend? backend, bool scenePeer, bool sceneJoints, bool mixedGeometry = false)
         {
-            _sceneJoints = sceneJoints; World = backend is { } selected ? new(selected) : new("JointContacts");
+            _sceneJoints = sceneJoints; _mixedGeometry = mixedGeometry; World = backend is { } selected ? new(selected) : new("JointContacts");
             var root = new SubViewport { World = World }; var anchor = new StaticBody { Name = "Anchor" }; root.AddChild(anchor);
             _floor = new StaticBody { Name = "Floor", Position = new(0, 30), ConstantLinearVelocity = new(30, 0), PhysicsMaterialOverride = _material };
-            _floor.AddChild(new CollisionShape { Shape = _rectangle }); root.AddChild(_floor);
+            if (mixedGeometry) _floor.AddChild(new CollisionShape { Shape = _circle, Position = new(50, 0), Disabled = true });
+            _floor.AddChild(new CollisionShape { Shape = mixedGeometry ? _segments : _rectangle }); root.AddChild(_floor);
             var scene = new RigidBody
             {
                 Name = "Scene",
                 Position = new(0, scenePeer ? 14 : 10),
                 LockRotation = true,
                 CanSleep = false,
-                MaxContactsReported = 4,
+                MaxContactsReported = mixedGeometry ? 16 : 4,
                 ContactMonitor = true,
                 PhysicsMaterialOverride = _material,
                 LinearDamp = 0,
@@ -94,7 +105,14 @@ public static partial class BackendChecks
                 AngularDampMode = RigidBody.DampMode.Replace
             };
             scene.BodyEntered += body => { Check(ReferenceEquals(body, _floor), "Contact monitor samples the real floor owner"); Entries++; };
-            scene.AddChild(new CollisionShape { Shape = _circle }); root.AddChild(scene);
+            if (mixedGeometry)
+            {
+                scene.AddChild(new CollisionShape { Shape = _circle, Position = new(50, 0), Disabled = true });
+                scene.AddChild(new CollisionShape { Shape = _capsule });
+                scene.AddChild(new CollisionShape { Shape = _polygon, Position = new(3, 0) });
+            }
+            else scene.AddChild(new CollisionShape { Shape = _circle });
+            root.AddChild(scene);
             if (sceneJoints)
             {
                 Joint[] nodes = [new PinJoint(), new GrooveJoint(), new DampedSpringJoint()];
@@ -104,7 +122,14 @@ public static partial class BackendChecks
             PhysicsServer.AreaSetGravity(World.Space, 980); PhysicsServer.AreaSetLinearDamp(World.Space, 0); PhysicsServer.AreaSetAngularDamp(World.Space, 0);
             PhysicsServer.SpaceSetContactMaxAllowedPenetration(World.Space, .01f);
             _raw = PhysicsServer.BodyCreate(); PhysicsServer.BodySetMode(_raw, PhysicsServer.BodyMode.RigidLinear);
-            PhysicsServer.BodyAddShape(_raw, _circle.GetRID()); PhysicsServer.BodySetCanSleep(_raw, false); PhysicsServer.BodySetMaxContactsReported(_raw, 4);
+            if (mixedGeometry)
+            {
+                PhysicsServer.BodyAddShape(_raw, _circle.GetRID(), new(0, new Vector2(50, 0)), disabled: true);
+                PhysicsServer.BodyAddShape(_raw, _polygon.GetRID());
+                PhysicsServer.BodyAddShape(_raw, _capsule.GetRID(), new(0, new Vector2(3, 0)));
+            }
+            else PhysicsServer.BodyAddShape(_raw, _circle.GetRID());
+            PhysicsServer.BodySetCanSleep(_raw, false); PhysicsServer.BodySetMaxContactsReported(_raw, mixedGeometry ? 16 : 4);
             PhysicsServer.BodySetFriction(_raw, .6f); PhysicsServer.BodySetLinearDampMode(_raw, RigidBody.DampMode.Replace); PhysicsServer.BodySetLinearDamp(_raw, 0);
             PhysicsServer.BodySetTransform(_raw, new(0, new Vector2(0, scenePeer ? 10 : 14))); PhysicsServer.BodySetSpace(_raw, World.Space);
             Load = scenePeer ? _raw : scene.GetRID(); Peer = scenePeer ? scene.GetRID() : _raw;
@@ -196,15 +221,30 @@ public static partial class BackendChecks
             Check(PhysicsServer.BodyGetLinearVelocity(Load).Length() < .1f && PhysicsServer.BodyGetLinearVelocity(Peer).Length() < .1f &&
                 _floor.Position == new Vector2(0, 30), "Constrained support settles while virtual surface motion leaves the floor pose fixed");
             var impulse = Vector2.Zero; var count = _state.GetContactCount();
+            var slots = 0;
             Check(count > 0, "Actual floor contact is reported");
             for (var i = 0; i < count; i++)
             {
                 Check(_state.GetContactCollider(i) == _floor.GetRID() && _state.GetContactColliderID(i) == _floor.InstanceID &&
-                    ReferenceEquals(_state.GetContactColliderObject<StaticBody>(i), _floor) && _state.GetContactColliderShape(i) == 0 && _state.GetContactLocalShape(i) == 0,
+                    ReferenceEquals(_state.GetContactColliderObject<StaticBody>(i), _floor) && _state.GetContactColliderShape(i) == (_mixedGeometry ? 1 : 0) &&
+                    (_mixedGeometry ? _state.GetContactLocalShape(i) is 1 or 2 : _state.GetContactLocalShape(i) == 0),
                     "Complete contact identity retains real scene floor and logical slots");
-                Check(_state.GetContactLocalNormal(i).DistanceTo(Vector2.Up) < .001f, "Contact reports the support normal for the constrained body");
+                var normal = _state.GetContactLocalNormal(i); var contactImpulse = _state.GetContactImpulse(i);
+                Check(normal.IsFinite() && MathF.Abs(normal.LengthSquared() - 1) < .001f, "Every reported contact retains a finite unit normal");
+                if (normal.DistanceTo(Vector2.Up) >= .001f)
+                {
+                    if (!_mixedGeometry || contactImpulse != Vector2.Zero)
+                        throw new InvalidOperationException($"Support normal={normal}, point={_state.GetContactLocalPosition(i)}, impulse={contactImpulse}, local={_state.GetContactLocalShape(i)}, remote={_state.GetContactColliderShape(i)}, peer={peer}");
+                    SideContacts++;
+                }
                 Check(_state.GetContactColliderVelocityAtPosition(i).DistanceTo(new(30, 0)) < .001f, "Contact data observes the stationary floor's virtual surface velocity");
-                impulse += _state.GetContactImpulse(i);
+                impulse += contactImpulse;
+                slots |= 1 << _state.GetContactLocalShape(i);
+            }
+            if (_mixedGeometry)
+            {
+                Check(slots == 6, "Both active compound slots publish floor support without the disabled slot");
+                VerifyShape(Load); VerifyShape(Peer);
             }
             var elastic = 20 * (50 - load.Y);
             var momentumChange = PhysicsServer.BodyGetLinearVelocity(Load).Y + PhysicsServer.BodyGetLinearVelocity(Peer).Y - _momentumBefore;
@@ -216,10 +256,18 @@ public static partial class BackendChecks
                 throw new InvalidOperationException($"Coupled support impulse={impulse}, expectedNormal={expected}, dampingBound={dampingLossBound}, errors={normalError}/{frictionError}, load={load}, peer={peer}");
             MaxNormalError = MathF.Max(MaxNormalError, normalError); MaxFrictionError = MathF.Max(MaxFrictionError, frictionError);
         }
+        private void VerifyShape(RID body)
+        {
+            _query.Position = PhysicsServer.BodyGetTransform(body).Origin + new Vector2(3, 0);
+            var count = World.DirectSpaceState.IntersectPoint(_query, _hits);
+            Check(count == 1 && _hits[0].ColliderRID == body && _hits[0].ShapeIndex == 2,
+                "The actual compound geometry retains its transformed logical query slot");
+        }
         public void Dispose()
         {
             if (!_sceneJoints) foreach (var joint in Joints) PhysicsServer.FreeRID(joint);
             PhysicsServer.FreeRID(_raw); Tree.Dispose(); World.Dispose(); _circle.Dispose(); _rectangle.Dispose(); _material.Dispose();
+            _capsule.Dispose(); _polygon.Dispose(); _segments.Dispose(); _query.Dispose();
         }
     }
 }

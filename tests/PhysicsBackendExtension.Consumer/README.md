@@ -189,15 +189,24 @@ correction all use public API. The independent local-frame and full transport/fr
 real multi-process networking and hardware GPU performance are separate gates.
 
 
-`--joint-contacts` selects CPU by default; add `--gpu` and `--threaded` as needed.
+`--joint-contacts` selects CPU by default; add `--gpu`, `--registered` and
+`--threaded` as needed.
 A pin/groove/spring mechanism rests on a real frictional floor with virtual surface
 motion. Scene/raw receivers and joint owners verify full normal/tangent contact
 impulses, object/slot/velocity data, monitored checkpoint continuation and motion
 after clearing constraints. Missing-floor and missing-elastic controls reject;
 128 complete measured contact frames require zero owner/all-thread managed bytes.
 Finite-step damping bounds follow the accepted spring law, preserving nonzero
-damping on both backends. Hardware/native/foreign and larger workload gates remain
+damping on the selected implementations. Hardware/native/foreign and larger workload gates remain
 separate.
+
+The same entry also runs mixed capsule/convex compound bodies on a two-segment
+concave floor. Disabled leading slots retain their logical indices; both active
+slots must report support, and point queries resolve the transformed second slot.
+The original support/impulse, friction, replay, sleep and both CCD impact families
+run for every scene/raw receiver and joint-owner combination. Finite unit normals
+are required throughout; a zero-impulse side contact from a segment endpoint is
+kept without pretending that it carries floor support.
 
 `--statistics`, optionally `--cpu` or `--gpu` and `--threaded`, verifies completed
 active-body/candidate/island publication through real compound support, sensors,

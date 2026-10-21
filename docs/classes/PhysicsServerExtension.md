@@ -1,6 +1,6 @@
 # PhysicsServerExtension
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 Selected CompleteBody and EndStep failures latch the world as unusable and suppress
 body-state observers. Successful retirement after pre-Solve preparation failure
@@ -303,3 +303,9 @@ operation; broader numerical, networking and hardware acceptance remain open.
 
 
 [Complete body motion operation](../components/physics-motion-operation.md) records the actual selected query, geometry, recovery, timing, result/lifetime and failure contract. The operation row is Implemented; broader numerical family and overall-goal acceptance remain separate.
+
+[Mixed compound support](../components/physics-joints.md#mixed-compound-support) exercises
+registered capsule/convex bodies, segmented floor contacts, all three joint roles,
+logical query slots, sleeping-island restoration and both continuous modes. The
+shared strict allocation and physical invariants remain; complete numerical,
+network/native/platform/performance acceptance stays open.

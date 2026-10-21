@@ -1,5 +1,11 @@
 # Physics domain
 
+[Mixed compound support](../components/physics-joints.md#mixed-compound-support)
+extends the shared scene/raw joint-contact scenario to capsule/convex compound
+bodies, disabled and offset slots, a segmented concave floor, exact query/contact
+identities, coupled sleep and both restored CCD impact modes. Declaration states
+and complete-goal acceptance remain open.
+
 [Script-factory allocation diagnostics](../components/gpu-resident-reports.md#script-factory-allocation-investigation)
 add calibrated object/stack recording and three successful full frozen-checkpoint
 suites. The prior 0/64-byte failure remains unattributed; these diagnostic retries
