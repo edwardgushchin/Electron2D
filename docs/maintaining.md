@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -116,6 +116,13 @@ helpers share AllocationWarmupCheck, whose controlled second finalizer
 pass detects premature return without changing allocation gates. This follows
 [GC.WaitForPendingFinalizers](https://learn.microsoft.com/en-us/dotnet/api/system.gc.waitforpendingfinalizers?view=net-10.0).
 Production hosts retain their ordinary GC policy under ADR 0014.
+
+Cold synchronous registry-lock probes use bounded Task.Wait rather than Task.WaitAsync.
+Keep the timeout assertion and worker result/identity check. Task.WaitAsync schedules
+a BCL timer even when its awaited worker soon completes; later timer-worker startup
+can overlap another fixture's strict all-thread measurement. The paired construction
+and deadline controls are recorded in [allocation measurement](components/physics-allocation-measurement.md#bounded-registry-probe-waits-2026-10-22).
+This is fixture isolation, not an allowance for bytes in a measured interval.
 
 For fixed locale-table or selector changes, run `python3 -B tools/localization/generate.py PINNED_LOCALES_H --check` and `python3 -B tools/localization/check.py PINNED_LOCALES_H --runner RELEASE_TEST_DLL`. The oracle additionally requires the matching pinned `translation_server.cpp` alongside the table; both input hashes are enforced. It compiles the original locale constructor over a bounded standard-library shim and evaluates plural expressions directly in C++, independently of generated C# selectors. Include source data/algorithm notices under the existing ReferenceData license. Native language-menu tests exercise GPU and compatibility, while foreign globalization and general catalog-import gates remain separate.
 

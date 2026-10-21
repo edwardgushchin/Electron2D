@@ -1,6 +1,6 @@
 # Physics allocation measurement
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 ## Scope and ownership
 
@@ -118,3 +118,16 @@ All 345 entered native brackets balance before the abort: two transition warmups
 The frozen runtime PDB binds 2453 authored sources to f0d684b829ff14dc754beb61a8ebdf4125e4ad34; root/consumer PDBs bind the changed fixture separately. Main acquired independent rendering changes while the aggregate process ran: its source receipt records ten changed IO/rendering/tool files, subsequently committed in 3bfe58e46 and 34149e8a4. They did not change the frozen CLR payload. The strict NativeAOT publication instead binds 2475 runtime and 267 consumer documents after that integration, retains its IL/PDB/compiler response file with --warnaserror, and is a separate evidence cohort.
 
 Ordinary unprofiled controls pass once each: CLR CPU+NVIDIA GPU (32 cases, 7.155 seconds), NativeAOT CPU+NVIDIA GPU (32 cases, 27.963 seconds), and NativeAOT CPU with unavailable GPU/dummy display (16 cases, .109 seconds). All 80 case intervals report owner/all=0/0 and GC=0/0/0. Explicit tracing rejects NativeAOT and shared-state overrides before query authoring. These focused passes preserve the failed aggregate gate. They do not attribute the older untraced 299.359-second failure, the original 24624-byte intervals or the separate 64-byte factory interval, and do not establish native allocator, foreign-platform, mass-performance or real-window acceptance.
+
+
+## Bounded registry probe waits (2026-10-22)
+
+Three cold factory probes used Task.WaitAsync solely to bound a synchronous registry-lock check. A calibrated CoreCLR allocation trace now observes each probe creating a 96-byte TimerQueueTimer through Task.CancellationPromise. The stacks identify PhysicsBackendOwnershipTests.Initialization and the public RunSpaceCreation/RunColliderCreation consumers. These are fixture timers; they are not evidence of a numerical-step allocation.
+
+The probes now use Task.Wait with the same five-second deadline, assert completion, and retain their result/identity checks. They still run the actual registry operation on a worker and fail if the factory holds the registry lock. No runtime implementation, physical operation count, GC/finalizer preparation or allocation threshold changes.
+
+The three original/corrected diagnostic pairs use the identical frozen runtime DLL. Each original probe creates one timer; every corrected probe creates none. A separate physics-free held-worker control expires both forms of a 25 ms deadline and then verifies the exact eventual result. Its asynchronous form creates one timer; the blocking form creates none. The profiler retains the existing native query-window markers and object-stack capture. These controls establish the timer's construction origin and remove an unnecessary scheduling source; they do not by themselves link a particular later TimerQueue.FireNextTimers allocation to that timer or retrospectively explain older aggregate failures.
+
+Twenty-four public CLR/strict NativeAOT profiles pass on CPU without an available GPU, NVIDIA GPU and the independent registered implementation, each on owner/separate numerical lanes. Space creation retains 640 measured complete frames per profile; collider creation retains 128, totalling 9,216 frames at strict 0/0 owner/all-thread managed bytes. The full targeted ownership suite also passes CPU/GPU. The updated profiler passes 128 positive and 32 empty controls plus sixteen strict query cases (1,024 full frames), with 177 balanced native windows and no query allocation events. Together with the six paired diagnostic processes, 33 focused processes pass. Their source/PDB and stable-payload checks are recorded in focused-validation.json; these results do not establish aggregate acceptance.
+
+The paired runtime is from 3fe45c21. Independent integer-graph rendering work entered main during the investigation; integrated CLR and NativeAOT checks bind the later source cohort separately. Evidence, compiler/source checksums, process maps and the aggregate diagnostic's actual status are retained under ignored bin/physics-timer-origin/2026-10-22/. A live or successful focused process is not aggregate acceptance. Physics coverage remains 1306/1369 (95.40%), with 63 open declarations. Historical 32/64/24624-byte aggregate failures and complete native/platform/network/performance gates remain open until their own evidence resolves them.

@@ -18,7 +18,9 @@ public static partial class BackendChecks
         {
             if (!registeredOutsideLock)
             {
-                Task.Run(() => PhysicsServerManager.RegisterServer("SpaceCreationWorker", () => new Solver())).WaitAsync(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
+                var registration = Task.Run(() => PhysicsServerManager.RegisterServer("SpaceCreationWorker", () => new Solver()));
+                Check(registration.Wait(TimeSpan.FromSeconds(5)), "Worker registration finishes before the registry deadlock deadline");
+                registration.GetAwaiter().GetResult();
                 registeredOutsideLock = true;
             }
             var created = new Solver(); providers.Add(created);

@@ -140,7 +140,9 @@ public static partial class BackendChecks
             Reject<InvalidOperationException>(() => Bind(target, default)); probeCalls++;
             if (!checkedLock)
             {
-                Task.Run(() => { var detached = PhysicsServer.BodyCreate(); PhysicsServer.FreeRID(detached); }).WaitAsync(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult(); checkedLock = true;
+                var creation = Task.Run(() => { var detached = PhysicsServer.BodyCreate(); PhysicsServer.FreeRID(detached); });
+                Check(creation.Wait(TimeSpan.FromSeconds(5)), "Worker collider creation finishes before the registry deadlock deadline");
+                creation.GetAwaiter().GetResult(); checkedLock = true;
             }
         }
         void StableQueries()

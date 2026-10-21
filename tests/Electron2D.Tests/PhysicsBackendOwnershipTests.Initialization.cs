@@ -15,7 +15,9 @@ internal static partial class PhysicsBackendOwnershipTests
             var space = PhysicsServer.Service.CreateRegisteredSpace(backend, false, owned: true, factory: source =>
             {
                 Check(ReferenceEquals(source, PhysicsServer.Service.GetSceneSpace(source.RID)), "Factory receives a registered immutable space RID");
-                Check(ReferenceEquals(source, Task.Run(() => PhysicsServer.Service.GetSceneSpace(source.RID)).WaitAsync(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult()),
+                var lookup = Task.Run(() => PhysicsServer.Service.GetSceneSpace(source.RID));
+                Check(lookup.Wait(TimeSpan.FromSeconds(5)), "Factory registry lookup finishes before the deadlock deadline");
+                Check(ReferenceEquals(source, lookup.GetAwaiter().GetResult()),
                     "Factory runs outside the registry lock");
                 Reject<InvalidOperationException>(() => PhysicsServer.SpaceGetBackend(source.RID));
                 Reject<InvalidOperationException>(() => PhysicsServer.FreeRID(source.RID));

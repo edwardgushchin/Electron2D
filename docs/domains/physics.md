@@ -1,5 +1,7 @@
 # Physics domain
 
+[Registry probe measurement isolation](../components/physics-allocation-measurement.md#bounded-registry-probe-waits-2026-10-22) preserves five-second worker deadlines without creating timers in three cold checks. Production physics and zero-byte gates are unchanged; aggregate allocation attribution remains separate.
+
 [Physical event membership](../components/event-connections.md#current-prepared-publisher-membership) observes disposal and current handler storage across all 18 prepared body/Area/pointer accessors without numerical queries. The inherited general connection-query row remains Partial for opaque publisher identities; declaration counts do not change.
 
 [GPU state/contact completion](../components/gpu-resident-reports.md#shared-completion-for-body-state-and-contacts)

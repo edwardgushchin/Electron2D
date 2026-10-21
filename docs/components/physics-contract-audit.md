@@ -1,3 +1,5 @@
+[Synchronous registry probe deadlines](physics-allocation-measurement.md#bounded-registry-probe-waits-2026-10-22) now avoid three fixture-created BCL timers while preserving actual worker operations, timeouts and strict zero-byte assertions. Their construction origins have paired evidence; historical aggregate allocation failures remain open. No physics declaration is promoted.
+
 [The scene publication gate comparison](gpu-resident-reports.md#scene-transform-publication-gate-2026-10-21) rejects a typed-lock replacement: full-step CPU and both paired/standalone GPU means increase while cold per-node memory grows. Sixty functional trial profiles and the failed optimization remain evidence; production retains the existing gate. Standalone GPU timing variation keeps broader performance acceptance open. Physics API coverage stays 1306/1369 (95.40%), with 63 open rows.
 
 [Tagged point-query diagnostics](physics-allocation-measurement.md#tagged-aggregate-timer-worker-allocation-2026-10-21) retain a new aggregate 0/32-byte strict failure alongside a matching-size BCL timer-worker thread-static allocation. Timer scheduling ownership and the older untraced failures remain open. Eighty ordinary CLR/NativeAOT focused case intervals pass at 0/0; they do not establish aggregate acceptance. Physics API coverage stays 1306/1369 (95.40%), with 63 open rows.
@@ -70,7 +72,7 @@ The axis-velocity checkpoint recorded 1266/1369 Implemented (92.4763%), with
 
 [Collider creation operation audit](physics-registered-adapter.md#collider-creation-operation-audit) completes detached Body/Area identity, deferred selected factories, permanent attachment claims and actual scene activation/error/retry behavior.
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 [Failed initial attachment state](physics-registered-adapter.md#authored-state-after-failed-initial-attachment) now retains public pose, motion and sleep instead of sampling incomplete selected state during cleanup. Ordinary retirement still preserves actual accepted impulses.
 
