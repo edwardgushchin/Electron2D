@@ -72,6 +72,7 @@ public sealed partial class RenderingServer
 
     private void BeginNativeFrames()
     {
+        _renderingDevice?.AdvanceDrawableSamplerEpoch();
         foreach (var surface in _nativeWindows.Values)
             if (surface.Presentation is null)
             {

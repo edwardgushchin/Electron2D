@@ -20,8 +20,8 @@ namespace Electron2D;
 /// per-item fields. CanvasItem and RenderingServer instance access is independent of shared material values.
 /// Instance arrays, matrices and renderer-owned fields are rejected; supported declaration defaults are zero.
 /// Material uniforms use validated std140 buffers at descriptor
-/// set three and sampled 2D or image-array textures at set two. Named textures use linear/base-level/clamp sampling, independently
-/// of canvas properties. The paired-stage API adds vertex Frame at set one/binding zero, material blocks at set one/bindings one through three and sampled textures at set zero. Shared names use one typed parameter namespace across stages. Sampler configuration and nested uniform structs remain pending. Blit fragments use the explicit TextureBlit domain and have their own source/output interface.
+/// set three and sampled 2D or image-array textures at set two. Named textures default to linear/base-level/clamp sampling, independently
+/// of canvas properties; SetTextureSamplerState supplies copied explicit sampling for any reflected image. The paired-stage API adds vertex Frame at set one/binding zero, material blocks at set one/bindings one through three and sampled textures at set zero. Shared names use one typed parameter namespace across stages. Nested uniform structs remain pending. Blit fragments use the explicit TextureBlit domain and have their own source/output interface.
 /// Particles selects a 64-thread compute stage with fixed particle storage at set one, ParticleFrame at set two/binding zero,
 /// three further typed uniform blocks and up to sixteen sampled bindings at set zero. The portable particle includes define
 /// its state and optional bounded subemission ABI. Export its Compute stage to RenderingDevice for explicit execution;
@@ -85,6 +85,7 @@ public sealed partial class Shader : Resource
         lock (_codeGate)
         {
             ThrowIfDisposed(); var previous = _program; _program = program;
+            PruneSamplerStates(previous, program);
             foreach (var entry in _defaultTextures)
             {
                 var old = previous.Textures.FirstOrDefault(t => t.Name == entry.Key.Name && t.Element == entry.Key.Index);
@@ -216,7 +217,8 @@ public sealed partial class Shader : Resource
 
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
-        [new PropertyDescriptor<Shader, byte[]>("SPIRV", shader => shader.GetStoredSPIRV(), (shader, code) => shader.SetStoredSPIRV(code), stored: true)])
+        [new PropertyDescriptor<Shader, byte[]>("SPIRV", shader => shader.GetStoredSPIRV(), (shader, code) => shader.SetStoredSPIRV(code), stored: true),
+         new PropertyDescriptor<Shader, byte[]>("SamplerSettings", shader => shader.GetStoredSamplerStates(), (shader, data) => shader.SetStoredSamplerStates(data), stored: true)])
         .Concat(GetProgram().Textures.Where(texture => texture.IsMaterialTexture && texture.Element == 0).Select(texture => texture.DescribeDefault()));
 
     /// <inheritdoc />
@@ -228,13 +230,15 @@ public sealed partial class Shader : Resource
     {
         ShaderProgram program;
         KeyValuePair<(string Name, int Index), Resource>[] defaults;
-        lock (_codeGate) { program = GetProgram(); defaults = _defaultTextures.ToArray(); }
+        KeyValuePair<(string Name, int Index), SamplerConfiguration>[] samplers;
+        lock (_codeGate) { program = GetProgram(); defaults = _defaultTextures.ToArray(); samplers = _samplerStates.ToArray(); }
         if (deep)
             for (var i = 0; i < defaults.Length; i++) defaults[i] = new(defaults[i].Key, duplicateSubresource(defaults[i].Value)!);
         var copy = (Shader)target;
         lock (copy._codeGate)
         {
             copy._program = program; copy._defaultTextures.Clear();
+            copy._samplerStates.Clear(); foreach (var pair in samplers) copy._samplerStates.Add(pair.Key, pair.Value);
             foreach (var pair in defaults) copy._defaultTextures.Add(pair.Key, pair.Value);
         }
     }

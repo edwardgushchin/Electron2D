@@ -10,6 +10,7 @@ internal static partial class ParticleServerTests
         using var contour = new OccluderPolygon { Polygon = [new(10, 10), new(26, 10), new(26, 26), new(10, 26)] }; var occluder = new LightOccluder { Occluder = contour }; root.AddChild(occluder);
         using var mesh = Quad(); using var source = typeof(ParticleServerTests).Assembly.GetManifestResourceStream("TestShaders.ParticleSDF.comp.spv")!;
         using var bytes = new MemoryStream(); source.CopyTo(bytes); using var shader = Shader.CreateFromSPIRV(bytes.ToArray(), Shader.Mode.Particles); using var material = new ShaderMaterial { Shader = shader };
+        using var sampling = new RDSamplerState { MinFilter = RenderingDevice.SamplerFilter.Linear, MagFilter = RenderingDevice.SamplerFilter.Linear, MaxLOD = 0 }; shader.SetTextureSamplerState("SDF_TEXTURE", sampling);
         RID particles = default, item = default; var frame = 0;
         root.Ready += _ =>
         {

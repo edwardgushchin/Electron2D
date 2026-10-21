@@ -318,10 +318,8 @@ public sealed unsafe partial class RenderingDevice
     public RID SamplerCreate(RDSamplerState state)
     {
         IdleList(); ArgumentNullException.ThrowIfNull(state);
-        static SDL.GPUSamplerAddressMode Address(SamplerRepeatMode mode) => mode switch { SamplerRepeatMode.Repeat => SDL.GPUSamplerAddressMode.Repeat, SamplerRepeatMode.MirroredRepeat => SDL.GPUSamplerAddressMode.MirroredRepeat, SamplerRepeatMode.ClampToEdge => SDL.GPUSamplerAddressMode.ClampToEdge, _ => throw new NotSupportedException("The native sampler has no border/mirror-clamp mode.") };
-        if (state.MinLOD < 0 || state.MaxLOD < state.MinLOD) throw new ArgumentException("Invalid sampler LOD interval.", nameof(state));
-        if (state.LODBias != 0 && SDL.GetGPUDeviceDriver(Device) == "metal") throw new NotSupportedException("This backend requires shader-applied LOD bias.");
-        var info = new SDL.GPUSamplerCreateInfo { MinFilter = (SDL.GPUFilter)state.MinFilter, MagFilter = (SDL.GPUFilter)state.MagFilter, MipmapMode = (SDL.GPUSamplerMipmapMode)state.MIPFilter, AddressModeU = Address(state.RepeatU), AddressModeV = Address(state.RepeatV), AddressModeW = SDL.GPUSamplerAddressMode.ClampToEdge, MipLodBias = state.LODBias, MaxAnisotropy = state.AnisotropyMax, EnableAnisotropy = state.UseAnisotropy, MinLod = state.MinLOD, MaxLod = state.MaxLOD, EnableCompare = state.EnableCompare, CompareOp = Compare(state.CompareOp) };
-        return Add(new Entry { Kind = Kind.Sampler, CompareSampling = state.EnableCompare, LinearSampling = state.MinFilter == SamplerFilter.Linear || state.MagFilter == SamplerFilter.Linear || state.MIPFilter == SamplerFilter.Linear || state.UseAnisotropy, Handle = new(SDL.CreateGPUSampler(Device, info), h => SDL.ReleaseGPUSampler(Device, h), _context.Handle) });
+        var configuration = SamplerConfiguration.Capture(state);
+        var info = configuration.Native((SDL.GetGPUDeviceDriver(Device) ?? throw GPUPhysicsDevice.Failure("query GPU sampler driver")));
+        return Add(new Entry { Kind = Kind.Sampler, CompareSampling = configuration.EnableCompare, LinearSampling = configuration.Linear, Handle = new(SDL.CreateGPUSampler(Device, info), h => SDL.ReleaseGPUSampler(Device, h), _context.Handle) });
     }
 }

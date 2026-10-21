@@ -6,6 +6,8 @@ public sealed unsafe partial class RenderingDevice
 {
     private readonly Dictionary<(byte[] Code, DataFormat Format, int Count, BlitBlendMode Blend), RenderHandle> _drawablePipelines = [];
     private RenderHandle? _drawableLinearSampler, _drawableNearestSampler;
+    private ShaderSamplerCache? _drawableShaderSamplers;
+    internal void AdvanceDrawableSamplerEpoch() => _drawableShaderSamplers?.AdvanceEpoch();
 
     internal void GenerateDrawableMIPMaps(RID texture)
     {
@@ -16,6 +18,7 @@ public sealed unsafe partial class RenderingDevice
     internal void BlitDrawable(ReadOnlySpan<RID> targets, Rect2i rect, ReadOnlySpan<RID> samples, Color color, int mip, MaterialState? material, BlitBlendMode blend, float time)
     {
         IdleList();
+        material?.CaptureSamplerStates();
         var first = Get(targets[0], Kind.Texture); var info = first.Texture!;
         var width = Math.Max(1u, info.Width >> mip); var height = Math.Max(1u, info.Height >> mip);
         var colors = stackalloc SDL.GPUColorTargetInfo[4];
@@ -31,7 +34,12 @@ public sealed unsafe partial class RenderingDevice
             if (PixelType(sample.Texture!.Format) != (descriptor?.PixelType ?? 0) || (sample.Texture.Type == TextureType.TextureArray) != (descriptor?.IsArray ?? false))
                 throw new ArgumentException("A blit image does not match its sampled scalar type or shape.");
             var integer = PixelType(sample.Texture.Format) != 0;
-            bindings[i] = new() { Texture = sample.NativeHandle, Sampler = DrawableSampler(integer) };
+            bindings[i] = new()
+            {
+                Texture = sample.NativeHandle,
+                Sampler = material?.Samplers[i] is { } configuration
+                ? (_drawableShaderSamplers ??= new(_context.Handle, (SDL.GetGPUDeviceDriver(Device) ?? throw GPUPhysicsDevice.Failure("query GPU sampler driver")))).Get(configuration) : DrawableSampler(integer)
+            };
         }
         if (rect.Size.X == 0 || rect.Size.Y == 0) return;
         var fragment = material?.Program.NativeCode ?? BuiltInShaders.DrawableFragment(targets.Length);
@@ -114,5 +122,6 @@ public sealed unsafe partial class RenderingDevice
     {
         foreach (var pipeline in _drawablePipelines.Values) pipeline.Dispose(); _drawablePipelines.Clear();
         _drawableLinearSampler?.Dispose(); _drawableNearestSampler?.Dispose();
+        _drawableShaderSamplers?.Dispose();
     }
 }

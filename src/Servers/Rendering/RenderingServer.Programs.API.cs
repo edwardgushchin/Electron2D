@@ -78,6 +78,27 @@ public sealed partial class RenderingServer
     /// <exception cref="InvalidOperationException">The service is unavailable or owner/submission/lifetime rules reject the operation.</exception>
     public static RID ShaderGetDefaultTextureParameter(RID shader, string name, int index = 0) => RequireService().ShaderGetDefaultTextureParameterCore(shader, name, index);
 
+    /// <summary>Copies explicit sampled-image filtering/addressing into an owned shader.</summary>
+    /// <param name="shader">A live shader identity owned by this service.</param>
+    /// <param name="name">The exact reflected sampled binding name.</param>
+    /// <param name="state">Caller-owned configuration to copy, or null to restore the ordinary policy.</param>
+    /// <param name="index">The descriptor-array element, zero for a single image.</param>
+    /// <remarks>Uses Shader.SetTextureSamplerState validation, persistence and compatible-reload semantics.
+    /// Borrowed shader identities remain readable but cannot be changed through this service operation.</remarks>
+    /// <exception cref="ArgumentException">The identity, binding, index or configuration is invalid.</exception>
+    /// <exception cref="InvalidOperationException">The service is unavailable or ownership/submission rules reject mutation.</exception>
+    /// <exception cref="NotSupportedException">The configuration requires another sampler/image capability.</exception>
+    /// <exception cref="ObjectDisposedException">A supplied configuration is disposed.</exception>
+    public static void ShaderSetTextureSamplerState(RID shader, string name, RDSamplerState? state, int index = 0) => RequireService().ShaderSetTextureSamplerStateCore(shader, name, state, index);
+
+    /// <summary>Copies the explicit sampler state of a live owned or borrowed shader.</summary>
+    /// <param name="shader">A live owned or borrowed shader identity.</param><param name="name">The exact reflected binding name.</param>
+    /// <param name="index">The descriptor-array element, zero for a single image.</param>
+    /// <returns>A caller-owned disposable state, or null for the ordinary binding policy.</returns>
+    /// <exception cref="ArgumentException">The identity, binding or index is invalid.</exception>
+    /// <exception cref="InvalidOperationException">The service is unavailable or the caller is not its owner.</exception>
+    public static RDSamplerState? ShaderGetTextureSamplerState(RID shader, string name, int index = 0) => RequireService().ShaderGetTextureSamplerStateCore(shader, name, index);
+
     /// <summary>Selects a borrowed live program for an owned material; empty restores ordinary canvas drawing.</summary>
     /// <param name="material">Live material identity; mutations require ownership and a programmable material.</param>
     /// <param name="shader">Live owned/borrowed shader identity as allowed by the operation; mutations require caller ownership.</param>

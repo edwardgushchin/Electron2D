@@ -418,6 +418,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
                 throw GPUPhysicsDevice.Failure("submit compute commands");
             }
         }
+        if (_serverOwner is null) _drawableShaderSamplers?.AdvanceEpoch();
         CommitRendererUploads();
         while (_recordedReadbacks.TryDequeue(out var request)) _submittedReadbacks.Enqueue(request);
     }

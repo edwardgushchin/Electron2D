@@ -20,6 +20,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     private readonly HashSet<MaterialState> _usedMaterials = [];
     private readonly Resource?[] _textureScratch = new Resource?[32];
     private readonly Dictionary<(TextureFilter, TextureRepeat, int, bool), RenderHandle> _samplers = [];
+    private ShaderSamplerCache? _shaderSamplers;
     private readonly bool _nearestMipmaps = ProjectSettings.GetWithOverride(ProjectSettings.UseNearestMIPMapFilter);
     private ImageTexture? _whiteTexture;
     private readonly RenderHandle?[,] _clearPipelines = new RenderHandle?[2, 4];
@@ -347,9 +348,13 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 {
                     var samplers = _textureBindings[textured];
                     for (var i = 0; i < samplers.Length; i++)
+                    {
+                        var configured = textured.Samplers[i].HasValue ? samplers[i].Sampler : 0;
                         if (textured.Program.Textures[i].IsSDFTexture) samplers[i] = new() { Texture = _sdfTarget!.DangerousGetHandle(), Sampler = Sampler(TextureFilter.Linear, TextureRepeat.Disabled) };
                         else if (textured.Program.Textures[i].IsScreenTexture) samplers[i] = new() { Texture = output.BackBuffer!.DangerousGetHandle(), Sampler = Sampler(TextureFilter.LinearWithMipmaps, TextureRepeat.Disabled) };
                         else if (textured.Program.Textures[i].IsCanvasTexture) samplers[i] = CanvasBinding(batch);
+                        if (configured != 0) samplers[i].Sampler = configured;
+                    }
                     if (VertexCode(batch) is not null)
                     {
                         var indices = textured.Program.VertexTextureIndices;
@@ -541,8 +546,10 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             material.CopyTextures(_textureScratch);
             for (var i = 0; i < bindings.Length; i++)
             {
-                if (material.Program.Textures[i].IsEngineTexture) continue;
-                bindings[i] = new SDL.GPUTextureSamplerBinding { Texture = _textureScratch[i] is TextureLayered array ? PrepareLayeredTexture(array) : PrepareTexture((Texture)_textureScratch[i]!), Sampler = Sampler(material.Program.Textures[i].PixelType == 0 ? TextureFilter.Linear : TextureFilter.Nearest, TextureRepeat.Disabled, integer: material.Program.Textures[i].PixelType != 0) };
+                var configured = material.Samplers[i] is { } configuration
+                    ? (_shaderSamplers ??= new(_device, Driver, !_relaxedAndroidDevice)).Get(configuration) : 0;
+                if (material.Program.Textures[i].IsEngineTexture) { bindings[i] = new() { Sampler = configured }; continue; }
+                bindings[i] = new SDL.GPUTextureSamplerBinding { Texture = _textureScratch[i] is TextureLayered array ? PrepareLayeredTexture(array) : PrepareTexture((Texture)_textureScratch[i]!), Sampler = configured != 0 ? configured : Sampler(material.Program.Textures[i].PixelType == 0 ? TextureFilter.Linear : TextureFilter.Nearest, TextureRepeat.Disabled, integer: material.Program.Textures[i].PixelType != 0) };
             }
         }
         finally { Array.Clear(_textureScratch); }
@@ -563,7 +570,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     internal override void ReleaseTemporaryTexture(Texture texture)
     { _usedTextures.Remove(texture); if (_textures.Remove(texture, out var value)) value.Dispose(); }
 
-    internal override void BeginFrame() { BeginParticleFrame(); (_usedPrograms, _previousPrograms) = (_previousPrograms, _usedPrograms); _usedLinearViews.Clear(); _usedGlyphPrograms.Clear(); _usedLitPrograms.Clear(); _usedPrograms.Clear(); _usedPrograms.Add((_defaultFragment, null, BlendMode.Mix, false, SDL.GPUSampleCount.SampleCount1, false, SDL.GPUTextureFormat.R8G8B8A8Unorm, Mesh.PrimitiveType.Triangles)); _usedTextures.Clear(); _usedLayeredTextures.Clear(); _usedMaterials.Clear(); }
+    internal override void BeginFrame() { _shaderSamplers?.AdvanceEpoch(); BeginParticleFrame(); (_usedPrograms, _previousPrograms) = (_previousPrograms, _usedPrograms); _usedLinearViews.Clear(); _usedGlyphPrograms.Clear(); _usedLitPrograms.Clear(); _usedPrograms.Clear(); _usedPrograms.Add((_defaultFragment, null, BlendMode.Mix, false, SDL.GPUSampleCount.SampleCount1, false, SDL.GPUTextureFormat.R8G8B8A8Unorm, Mesh.PrimitiveType.Triangles)); _usedTextures.Clear(); _usedLayeredTextures.Clear(); _usedMaterials.Clear(); }
     internal override void EndFrame()
     {
         RetireParticleVertices(); RetireParticlePrograms();
@@ -672,6 +679,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         foreach (var texture in _layeredTextures.Values) texture.Dispose();
         _layeredTextures.Clear(); _usedLayeredTextures.Clear();
         _textures.Clear(); _usedTextures.Clear(); _textureBindings.Clear(); _usedMaterials.Clear();
+        _shaderSamplers?.Dispose();
         foreach (var sampler in _samplers.Values) sampler.Dispose();
         _samplers.Clear(); DisposeColorViews(); _whiteTexture?.Dispose(); _lightAtlas?.Dispose();
         foreach (var pipeline in _lightMaskPipelines) pipeline?.Dispose();

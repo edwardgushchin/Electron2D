@@ -153,7 +153,7 @@ internal sealed unsafe partial class GPUCanvasBackend
                     if (process.Textures.Length != 0)
                     {
                         var samplers = _textureBindings[process];
-                        for (var i = 0; i < samplers.Length; i++) if (process.Program.Textures[i].IsSDFTexture) samplers[i] = new() { Texture = _sdfTarget!.DangerousGetHandle(), Sampler = Sampler(TextureFilter.Linear, TextureRepeat.Disabled) };
+                        for (var i = 0; i < samplers.Length; i++) if (process.Program.Textures[i].IsSDFTexture) samplers[i] = new() { Texture = _sdfTarget!.DangerousGetHandle(), Sampler = process.Samplers[i].HasValue ? samplers[i].Sampler : Sampler(TextureFilter.Linear, TextureRepeat.Disabled) };
                         fixed (SDL.GPUTextureSamplerBinding* pointer = samplers) SDL.BindGPUComputeSamplers(pass, 0, (nint)pointer, (uint)samplers.Length);
                     }
                     SDL.DispatchGPUCompute(pass, groups.Width, groups.Height, 1); SDL.EndGPUComputePass(pass);

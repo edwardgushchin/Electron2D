@@ -25,6 +25,10 @@ public sealed partial class RenderingServer
     internal IReadOnlyList<PropertyDescriptor> GetShaderParameterListCore(RID rid) { EnsureOwner(); return RenderingProgramRegistry<Shader>.Resolve(rid).GetShaderUniformList(); }
     internal void ShaderSetDefaultTextureParameterCore(RID rid, string name, RID texture, int index) { EnsureTextureChange(); var shader = RenderingProgramRegistry<Shader>.Owned(rid, this); shader.SetDefaultSampledResource(name, texture.IsValid() ? RenderingTextureRegistry.ResolveResource(texture) : null, index); }
     internal RID ShaderGetDefaultTextureParameterCore(RID rid, string name, int index) { EnsureOwner(); return RenderingProgramRegistry<Shader>.Resolve(rid).GetDefaultSampledResource(name, index)?.GetRID() ?? default; }
+    internal void ShaderSetTextureSamplerStateCore(RID rid, string name, RDSamplerState? state, int index)
+    { EnsureTextureChange(); RenderingProgramRegistry<Shader>.Owned(rid, this).SetTextureSamplerState(name, state, index); }
+    internal RDSamplerState? ShaderGetTextureSamplerStateCore(RID rid, string name, int index)
+    { EnsureOwner(); return RenderingProgramRegistry<Shader>.Resolve(rid).GetTextureSamplerState(name, index); }
     private ShaderMaterial MutableProgramMaterial(RID rid) { EnsureTextureChange(); return RenderingProgramRegistry<Material>.Owned(rid, this) as ShaderMaterial ?? throw new ArgumentException("Material is not programmable.", nameof(rid)); }
     private ShaderMaterial ReadProgramMaterial(RID rid) { EnsureOwner(); return RenderingProgramRegistry<Material>.Resolve(rid) as ShaderMaterial ?? throw new ArgumentException("Material is not programmable.", nameof(rid)); }
     internal void MaterialSetShaderCore(RID rid, RID shader) { var material = MutableProgramMaterial(rid); material.Shader = shader.IsValid() ? RenderingProgramRegistry<Shader>.Resolve(shader) : null; }

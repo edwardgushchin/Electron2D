@@ -1,6 +1,6 @@
 # Shader
 
-Last updated: 2026-10-18
+Last updated: 2026-10-21
 
 - Declaration: `public sealed class Shader : Resource`
 - Source: [Shader.cs](../../src/Scene/Resources/Shader.cs)
@@ -223,3 +223,30 @@ Shader.Mode.TextureBlit and the explicit-domain CreateFromSPIRV/SetSPIRV overloa
 ## Particle compute profile
 
 The [particle shader contract](../components/particle-shaders.md) adds compiled HLSL/GLSL compute modules, typed material parameters, portable state/frame/subemission includes and explicit RenderingDevice execution. Process programs preserve their domain through duplication and file graphs and reject canvas/blit submission. Retained emission, particle nodes and canvas output remain separate dependencies.
+
+## Texture sampler state
+
+Source: [Shader.Samplers.cs](../../src/Scene/Resources/Shader.Samplers.cs). See [the complete sampler contract and executable checks](../components/shader-materials.md#explicit-image-sampler-state).
+
+| Method | Contract |
+| --- | --- |
+| `public void SetTextureSamplerState(string name, RDSamplerState? state, int index = 0)` | Copies state for an exact reflected image name and descriptor-array element; null restores the ordinary binding policy. |
+| `public RDSamplerState? GetTextureSamplerState(string name, int index = 0)` | Returns an independent caller-owned disposable copy, or null for the ordinary policy. |
+
+### SetTextureSamplerState
+
+`name` includes engine-owned and GLOBAL_ image names; `index` is zero for scalar bindings. No renderer is required. The shader copies all settings; subsequent input mutation/disposal has no effect. All materials sharing this shader receive the same sampler settings on subsequent preparation. Comparison, unsupported addressing and linear/effective-anisotropic integer sampling reject before publication. Unknown/blank names, invalid array elements, invalid LOD intervals and disposed objects reject. Metal bias and unavailable native anisotropy can fail at renderer preparation. Input configuration must not be mutated concurrently. Success emits Changed after committing; observer failures do not roll back.
+
+### GetTextureSamplerState
+
+Name/index validation matches the setter. The query allocates a new independent RDSamplerState for an explicit setting; dispose the returned object. Editing it does not edit the shader. Disposed shaders reject. Duplication, versioned storage and compatible program replacement preserve copied settings; a removed/differently typed binding retires them. A built-in Shader is stored using an eight-byte versioned identity; public GetSPIRV still exports its fragment module, and current legacy raw built-in archives remain readable.
+
+Partial authoring snippet for an already loaded `shader` with a reflected `pixels` image:
+
+```csharp
+using var state = new RDSamplerState { RepeatU = RenderingDevice.SamplerRepeatMode.Repeat,
+    MinFilter = RenderingDevice.SamplerFilter.Linear, MagFilter = RenderingDevice.SamplerFilter.Linear };
+shader.SetTextureSamplerState("pixels", state);
+using var copied = shader.GetTextureSamplerState("pixels");
+shader.SetTextureSamplerState("pixels", null);
+```

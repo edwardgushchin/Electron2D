@@ -114,7 +114,7 @@ AnimatedTexture is a node-independent Texture that selects borrowed frame source
 - Uses Resources for copied image snapshots and typed materials; consumers borrow these resources.
 - GPU is primary; compatibility is explicit startup fallback and rejects shaders.
 - Frame submission and native resource lifetimes belong to the scene owner thread.
-- HLSL and GLSL share the SPIR-V interface. Import/build compiles source; runtime consumes bytecode. Named material samplers have linear/base-level/clamp defaults independently of canvas policies; configurable named sampler state remains pending.
+- HLSL and GLSL share the SPIR-V interface. Import/build compiles source; runtime consumes bytecode. Named material samplers have linear/base-level/clamp defaults independently of canvas policies; Shader.SetTextureSamplerState supplies explicit copied filtering, addressing and mip/LOD state for each reflected image element.
 - Invalid resources or unsupported backend features fail explicitly. SDL types and owned graphics handles remain internal; DisplayServer may expose documented borrowed OS/context identities.
 
 ## Verification and limits
@@ -464,3 +464,5 @@ GPU thin canvas strokes retain native line-list/line-strip topology, including d
 ## Host platform integration
 
 RenderingServer.HasOSFeature reads each active backend’s immutable native ordinary-image compression snapshot. GPU startup captures complete BC family support using its already selected device, compatibility exposes no native compressed-upload family, and OS.HasFeature observes session publication/retirement. See [host platform queries](../components/host-platform.md).
+
+[Explicit image sampler state](../components/shader-materials.md#explicit-image-sampler-state) connects typed RDSamplerState authoring to canvas, particles and writable-image blits, including engine-owned, global, layered and indexed sampled roles. Shader archives, compatible reload and caller-owned RenderingServer mutation preserve the same copied contract. Shared sampler preparation retains the managed zero-allocation boundary; backend-specific unsupported modes fail explicitly.

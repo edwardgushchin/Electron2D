@@ -1879,3 +1879,12 @@ Native thin-stroke batch bounds include half-pixel coverage and an additional ha
 ## Native OS feature query
 
 `public static bool HasOSFeature(string feature)` reads the active backend's immutable native ordinary-image upload snapshot. Null throws ArgumentNullException; an absent service throws InvalidOperationException. Unknown names return false. Supported native family tags are s3tc, rgtc and bptc when every required format can be sampled natively. CPU decoding and unrelated device-only format support do not imply this upload capability. Queries can run across threads, allocate no prepared managed data and never create another device. OS.HasFeature observes this same snapshot, returning false outside an active session. See [host platform queries](../components/host-platform.md).
+
+## Shader sampler metadata
+
+| Method | Contract |
+| --- | --- |
+| `public static void ShaderSetTextureSamplerState(RID shader, string name, RDSamplerState? state, int index = 0)` | Copies a sampler setting onto a live caller-owned shader identity; null restores the ordinary policy. |
+| `public static RDSamplerState? ShaderGetTextureSamplerState(RID shader, string name, int index = 0)` | Reads owned or borrowed shader metadata as an independent caller-owned disposable copy, or null. |
+
+Both operations require the live server owner thread. Invalid/stale/wrong-kind identities reject; borrowed mutation throws InvalidOperationException. Name, descriptor element, copied input ownership, validation, Changed publication and backend limits follow [Shader's complete method contract](Shader.md#texture-sampler-state). No sampler RID is borrowed or exposed; configuring metadata precedes native renderer preparation. See [the executable consumer](../../tests/ShaderSamplers.Consumer/ShaderSamplers.Consumer.csproj).

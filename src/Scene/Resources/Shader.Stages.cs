@@ -64,6 +64,11 @@ public sealed partial class Shader
     private byte[] GetStoredSPIRV()
     {
         var program = GetProgram();
+        if (ReferenceEquals(program, ShaderProgram.Default))
+        {
+            var marker = new byte[8]; BinaryPrimitives.WriteUInt32LittleEndian(marker, 0x44534845);
+            BinaryPrimitives.WriteUInt32LittleEndian(marker.AsSpan(4), 1); return marker;
+        }
         if (program.Mode is Mode.TextureBlit or Mode.Particles)
         {
             var payload = new byte[8 + program.Code.Length];
@@ -83,6 +88,13 @@ public sealed partial class Shader
     private void SetStoredSPIRV(byte[] data)
     {
         ArgumentNullException.ThrowIfNull(data);
+        if (data.Length >= 4 && BinaryPrimitives.ReadUInt32LittleEndian(data) == 0x44534845)
+        {
+            if (data.Length != 8 || BinaryPrimitives.ReadUInt32LittleEndian(data.AsSpan(4)) != 1) throw new InvalidDataException("Invalid built-in shader identity.");
+            PublishProgram(ShaderProgram.Default); return;
+        }
+        // Older archives stored the current built-in module despite its private varying interface.
+        if (data.AsSpan().SequenceEqual(ShaderProgram.Default.Code)) { PublishProgram(ShaderProgram.Default); return; }
         if (data.Length >= 4 && BinaryPrimitives.ReadUInt32LittleEndian(data) is 0x42534845 or 0x50534845)
         {
             if (data.Length < 28 || BinaryPrimitives.ReadUInt32LittleEndian(data.AsSpan(4)) != 1) throw new InvalidDataException("Unsupported stored shader domain header.");

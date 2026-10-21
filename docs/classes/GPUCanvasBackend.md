@@ -132,3 +132,5 @@ The [independent native window path](../components/window-runtime.md#independent
 ## Host platform integration
 
 Startup captures support for every format in each ordinary native BC upload family after the selected device exists. HasOSFeature reads immutable s3tc/rgtc/bptc bits; it never creates a device, retains no resource beyond the existing backend and allocates no prepared managed state. Shutdown retires the published service snapshot.
+
+A private ShaderSamplerCache prepares explicit per-image state before render/compute passes. Ordinary, global and layered images use the selected handle; TEXTURE/SCREEN_TEXTURE/SDF_TEXTURE preserve it while the renderer replaces the image. Canvas and particle execution share the configuration. BeginFrame advances cache retirement even after an earlier failed frame; teardown disposes retained samplers. See [explicit image sampler state](../components/shader-materials.md#explicit-image-sampler-state).

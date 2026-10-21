@@ -300,6 +300,7 @@ internal sealed class MaterialState
     internal readonly ShaderProgram Program;
     internal readonly byte[][] Buffers;
     internal readonly Resource?[] Textures;
+    internal readonly SamplerConfiguration?[] Samplers;
     internal readonly Shader? Shader;
     internal long ParticleConfigurationVersion;
     internal MaterialState? ParticleMotion;
@@ -311,6 +312,7 @@ internal sealed class MaterialState
         Shader = shader;
         Buffers = program.BufferSizes.Select(size => new byte[size]).ToArray();
         Textures = new Resource?[program.Textures.Length];
+        Samplers = new SamplerConfiguration?[program.Textures.Length];
         Span<float> identity = stackalloc float[16];
         foreach (var uniform in program.Uniforms.Values)
         {
@@ -344,6 +346,7 @@ internal sealed class MaterialState
         lock (_gate)
         {
             RenderingServer.ActiveGlobalParameters?.Validate(Program);
+            CaptureSamplerStates();
             for (var i = 0; i < Textures.Length; i++)
             {
                 target[i] = Program.Textures[i].IsEngineTexture ? null : Program.Textures[i].IsGlobal ? (RenderingServer.ActiveGlobalParameters ?? throw new InvalidOperationException("Global images require an active renderer.")).Resolve(Program.Textures[i]) : Textures[i] ?? Shader?.DefaultTexture(Program.Textures[i].Name, Program.Textures[i].Element)
@@ -351,6 +354,11 @@ internal sealed class MaterialState
                 Program.Textures[i].Validate(target[i]);
             }
         }
+    }
+
+    internal void CaptureSamplerStates()
+    {
+        if (Shader is null) Array.Clear(Samplers); else Shader.CopySamplerStates(Program, Samplers);
     }
 
     internal void SynchronizeSharedUniforms(byte[]?[]? instanceBuffers = null)

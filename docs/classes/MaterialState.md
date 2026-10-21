@@ -1,6 +1,6 @@
 # MaterialState
 
-Last updated: 2026-10-19
+Last updated: 2026-10-21
 
 - Declaration: `internal sealed class MaterialState`
 - Source: [Material.cs](../../src/Scene/Resources/Material.cs)
@@ -99,3 +99,5 @@ Textures holds one borrowed override per physical descriptor element. Migration 
 ## Particle integration
 
 The retained particle compute path pushes typed user/global/TIME/SDF uniforms to compute slots one through three while the renderer owns frame slot zero. Canvas fragment/vertex pushing keeps its existing separate stage mapping. See [GPU particles](../components/gpu-particles.md).
+
+SamplerConfiguration?[] Samplers aligns with the immutable program image slots. CaptureSamplerStates refreshes copied Shader metadata during image preparation, preserving an old material program only for currently compatible image types. It allocates no new per-frame table. Drawable blits capture the same metadata before submission. See [explicit image sampler state](../components/shader-materials.md#explicit-image-sampler-state).

@@ -1,0 +1,37 @@
+#version 450
+layout(location=0) in vec4 color; layout(location=1) in vec2 uv; layout(location=0) out vec4 result;
+layout(set=2,binding=0) uniform sampler2D f0;
+layout(set=2,binding=1) uniform sampler2D f1;
+layout(set=2,binding=2) uniform sampler2D f2;
+layout(set=2,binding=3) uniform sampler2D f3;
+layout(set=2,binding=4) uniform sampler2D f4;
+layout(set=2,binding=5) uniform sampler2D f5;
+layout(set=2,binding=6) uniform sampler2D f6;
+layout(set=2,binding=7) uniform sampler2D f7;
+layout(set=2,binding=8) uniform sampler2D f8;
+layout(set=2,binding=9) uniform sampler2D f9;
+layout(set=2,binding=10) uniform sampler2D f10;
+layout(set=2,binding=11) uniform sampler2D f11;
+layout(set=2,binding=12) uniform sampler2D f12;
+layout(set=2,binding=13) uniform sampler2D f13;
+layout(set=2,binding=14) uniform sampler2D f14;
+layout(set=2,binding=15) uniform sampler2D f15;
+void main(){ vec4 sampled = vec4(0);
+sampled += textureLod(f0,vec2(.25),0);
+sampled += textureLod(f1,vec2(.25),0);
+sampled += textureLod(f2,vec2(.25),0);
+sampled += textureLod(f3,vec2(.25),0);
+sampled += textureLod(f4,vec2(.25),0);
+sampled += textureLod(f5,vec2(.25),0);
+sampled += textureLod(f6,vec2(.25),0);
+sampled += textureLod(f7,vec2(.25),0);
+sampled += textureLod(f8,vec2(.25),0);
+sampled += textureLod(f9,vec2(.25),0);
+sampled += textureLod(f10,vec2(.25),0);
+sampled += textureLod(f11,vec2(.25),0);
+sampled += textureLod(f12,vec2(.25),0);
+sampled += textureLod(f13,vec2(.25),0);
+sampled += textureLod(f14,vec2(.25),0);
+sampled += textureLod(f15,vec2(.25),0);
+result=color*sampled/16;
+}

@@ -165089,6 +165089,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.ShaderGetTextureSamplerState(Electron2D.RID,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ShaderGetTextureSamplerState",
+    "signature": "public static Electron2D.RDSamplerState ShaderGetTextureSamplerState(Electron2D.RID shader, System.String name, System.Int32 index = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shader",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.RDSamplerState",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.ShaderSetDefaultTextureParameter(Electron2D.RID,System.String,Electron2D.RID,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -165194,6 +165223,40 @@
         "name": "fragmentBytecode",
         "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
         "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ShaderSetTextureSamplerState(Electron2D.RID,System.String,Electron2D.RDSamplerState,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ShaderSetTextureSamplerState",
+    "signature": "public static System.Void ShaderSetTextureSamplerState(Electron2D.RID shader, System.String name, Electron2D.RDSamplerState state, System.Int32 index = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shader",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "state",
+        "type": "Electron2D.RDSamplerState",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": "0"
       }
     ],
     "returnType": "System.Void",
@@ -174045,6 +174108,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Shader.GetTextureSamplerState(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Shader",
+    "name": "GetTextureSamplerState",
+    "signature": "public Electron2D.RDSamplerState GetTextureSamplerState(System.String name, System.Int32 index = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.RDSamplerState",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Shader.RemapResourceReferences(System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.Shader",
@@ -174183,6 +174270,35 @@
         "name": "fragmentBytecode",
         "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
         "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Shader.SetTextureSamplerState(System.String,Electron2D.RDSamplerState,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Shader",
+    "name": "SetTextureSamplerState",
+    "signature": "public System.Void SetTextureSamplerState(System.String name, Electron2D.RDSamplerState state, System.Int32 index = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "state",
+        "type": "Electron2D.RDSamplerState",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": "0"
       }
     ],
     "returnType": "System.Void",

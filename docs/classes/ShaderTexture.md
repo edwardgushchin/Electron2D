@@ -1,6 +1,6 @@
 # ShaderTexture
 
-Last updated: 2026-10-18
+Last updated: 2026-10-21
 
 - Declaration: `internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = false, int PixelType = 0, int ArrayLength = 0, int Element = 0)`
 - Source: [ShaderProgram.cs](../../src/Servers/Rendering/ShaderProgram.cs)
@@ -49,3 +49,5 @@ IsArray selects a TextureLayered descriptor and array-specific accessors. Requir
 ## Descriptor shape
 
 Count is max(1, ArrayLength). IsArray denotes layered image storage; ArrayLength independently denotes a fixed array of sampled descriptors. RequireBindingArray rejects scalar/array accessor mixing; SameType compares sampled shape, scalar role and full descriptor length. Describe and DescribeDefault use Texture?[] or TextureLayered?[] for logical arrays; only Element zero publishes a property. The renderer binds each physical element separately. See [fixed descriptor arrays](../components/shader-materials.md#fixed-sampled-descriptor-arrays).
+
+Sampler metadata migration uses SameType with the same full name, element, scalar/shape and descriptor-array contract as image/default migration. Every reflected physical slot, including reserved renderer-owned inputs, can have copied sampler configuration. See [explicit image sampler state](../components/shader-materials.md#explicit-image-sampler-state).

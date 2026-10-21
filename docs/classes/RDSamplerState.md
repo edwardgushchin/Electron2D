@@ -1,6 +1,6 @@
 # RDSamplerState
 
-Last updated: 2026-10-12
+Last updated: 2026-10-21
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDSamplerState`. **Component:** [Local device](../components/local-compute.md#depthstencil-graphics-and-sampling). **Source:** [RDSamplerState.cs](../../src/Servers/Rendering/Device/RDSamplerState.cs).
 
@@ -8,9 +8,9 @@ Last updated: 2026-10-12
 
 ## Description
 
-Describes filtering, normalized-coordinate addressing and mip selection for a device-owned sampler.
+Describes filtering, normalized-coordinate addressing and mip selection for device-owned samplers and copied shader bindings.
 
-The current profile supports repeat, mirrored repeat and clamp-to-edge. Other addressing modes fail during creation. Integer image sampling requires nearest filters without anisotropy. Nonzero LOD bias fails on a backend that cannot apply it.
+The current profile supports repeat, mirrored repeat and clamp-to-edge. Other addressing modes fail during creation. Integer image sampling requires nearest filters without effective anisotropy; a maximum of one disables anisotropy. Nonzero LOD bias fails on a backend that cannot apply it.
 
 ## Example
 
@@ -66,7 +66,7 @@ public System.Single AnisotropyMax { get; set; }
 
 Gets or sets the anisotropic filtering limit from one through sixteen.
 
-Initially 1; copied when the device creates its resource.
+Initially 1; copied when a device sampler or shader binding is configured.
 
 <a id="member-d2dcf21fc847"></a>
 ### CompareOp
@@ -99,7 +99,7 @@ public System.Single LODBias { get; set; }
 
 Gets or sets the bias added to the implicit mip selection.
 
-Initially 0; copied when the device creates its resource.
+Initially 0; copied when a device sampler or shader binding is configured.
 
 <a id="member-116efb58d0d5"></a>
 ### MagFilter
@@ -110,7 +110,7 @@ public Electron2D.RenderingDevice.SamplerFilter MagFilter { get; set; }
 
 Gets or sets the within-mip filter used for magnification.
 
-Initially RenderingDevice.SamplerFilter.Nearest; copied when the device creates its resource.
+Initially RenderingDevice.SamplerFilter.Nearest; copied when a device sampler or shader binding is configured.
 
 <a id="member-2bfe2e10cd15"></a>
 ### MaxLOD
@@ -121,7 +121,7 @@ public System.Single MaxLOD { get; set; }
 
 Gets or sets the maximum mip level used for sampling.
 
-Initially 1e20f; copied when the device creates its resource.
+Initially 1e20f; copied when a device sampler or shader binding is configured.
 
 <a id="member-642eaeb354fb"></a>
 ### MinFilter
@@ -132,7 +132,7 @@ public Electron2D.RenderingDevice.SamplerFilter MinFilter { get; set; }
 
 Gets or sets the within-mip filter used for minification.
 
-Initially RenderingDevice.SamplerFilter.Nearest; copied when the device creates its resource.
+Initially RenderingDevice.SamplerFilter.Nearest; copied when a device sampler or shader binding is configured.
 
 <a id="member-a252f84f2d08"></a>
 ### MinLOD
@@ -143,7 +143,7 @@ public System.Single MinLOD { get; set; }
 
 Gets or sets the minimum mip level, with zero identifying the base level.
 
-Initially 0; copied when the device creates its resource.
+Initially 0; copied when a device sampler or shader binding is configured.
 
 <a id="member-a549b7947f32"></a>
 ### MIPFilter
@@ -154,7 +154,7 @@ public Electron2D.RenderingDevice.SamplerFilter MIPFilter { get; set; }
 
 Gets or sets how adjacent mip levels are selected or blended.
 
-Initially RenderingDevice.SamplerFilter.Nearest; copied when the device creates its resource.
+Initially RenderingDevice.SamplerFilter.Nearest; copied when a device sampler or shader binding is configured.
 
 <a id="member-8e24410bc722"></a>
 ### RepeatU
@@ -165,7 +165,7 @@ public Electron2D.RenderingDevice.SamplerRepeatMode RepeatU { get; set; }
 
 Gets or sets horizontal normalized-coordinate addressing.
 
-Initially RenderingDevice.SamplerRepeatMode.ClampToEdge; copied when the device creates its resource.
+Initially RenderingDevice.SamplerRepeatMode.ClampToEdge; copied when a device sampler or shader binding is configured.
 
 <a id="member-3c8621061881"></a>
 ### RepeatV
@@ -176,7 +176,7 @@ public Electron2D.RenderingDevice.SamplerRepeatMode RepeatV { get; set; }
 
 Gets or sets vertical normalized-coordinate addressing.
 
-Initially RenderingDevice.SamplerRepeatMode.ClampToEdge; copied when the device creates its resource.
+Initially RenderingDevice.SamplerRepeatMode.ClampToEdge; copied when a device sampler or shader binding is configured.
 
 <a id="member-685ce1197486"></a>
 ### UseAnisotropy
@@ -187,8 +187,10 @@ public System.Boolean UseAnisotropy { get; set; }
 
 Gets or sets whether the sampler uses anisotropic filtering.
 
-Initially false; copied when the device creates its resource.
+Initially false; copied when a device sampler or shader binding is configured.
 
 ## Lifecycle, errors and verification
 
 Copied descriptions borrow no native state and can be disposed after creation. Device RIDs remain owner-thread resources. Unknown enum selectors and nonfinite bias/clear values reject. References must fit eight bits for visible stencil faces; both visible faces require equal effective masks/reference. Depth-bounds and raw aspect-transfer adapters remain explicit prerequisites in coverage. [RenderingDeviceDepthTests](../../tests/Electron2D.Tests/RenderingDeviceDepthTests.cs) verifies native pixels and warmed managed allocation on Linux/Vulkan; foreign platforms and native allocations remain unverified. See [ADR 0028](../decisions/rendering.md#adr-0028).
+
+[Shader.SetTextureSamplerState](Shader.md#texture-sampler-state) copies this configuration without borrowing the object. Its getter returns a fresh disposable copy. High-level shader images reject enabled comparison; device depth images retain comparison support. Setting UseAnisotropy with AnisotropyMax equal to one disables the native anisotropy flag and remains legal for nearest integer sampling and relaxed devices. [SamplerConfigurationTests](../../tests/Electron2D.Tests/SamplerConfigurationTests.cs) checks this exact projection and backend guards; [the public consumer](../../tests/ShaderSamplers.Consumer/ShaderSamplers.Consumer.csproj) checks persistence and real sampled pixels.

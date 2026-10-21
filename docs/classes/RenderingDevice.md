@@ -1,6 +1,6 @@
 # RenderingDevice
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RenderingDevice`. **Source:** [RenderingDevice.cs](../../src/Servers/Rendering/Device/RenderingDevice.cs), [RenderingDevice.Binary.cs](../../src/Servers/Rendering/Device/RenderingDevice.Binary.cs), [RenderingDevice.Readback.cs](../../src/Servers/Rendering/Device/RenderingDevice.Readback.cs), [RenderingDevice.TexelBuffers.cs](../../src/Servers/Rendering/Device/RenderingDevice.TexelBuffers.cs). **Component:** [Local compute](../components/local-compute.md).
 
@@ -1327,3 +1327,5 @@ Accepts the complete binary span returned by ShaderCompileBinaryFromSPIRV, copie
 Reserves a real owned uninitialized RID, usable only for later bytecode initialization or FreeRID. Pipeline/set factories and interface queries reject it until loading succeeds. FreeRID or device disposal releases an unused placeholder. All three operations require the owner thread and no active command list; disposed devices reject. They do not complete queued commands or invoke readback callbacks.
 
 For an executable storage/load and rendered consumer example, see [RenderingDeviceBinaryTests](../../tests/Electron2D.Tests/RenderingDeviceBinaryTests.cs) and [its graphics consumer](../../tests/Electron2D.Tests/RenderingDeviceBinaryTests.Graphics.cs).
+
+Local device samplers and high-level drawable Shader image bindings share SamplerConfiguration validation. SamplerCreate still creates an independently owned RID/native resource. High-level drawable bindings use a private value cache; renderer-owned devices advance at root frame preparation, local devices after submission. Effective anisotropy is disabled at a maximum of one. See [explicit image sampler state](../components/shader-materials.md#explicit-image-sampler-state).

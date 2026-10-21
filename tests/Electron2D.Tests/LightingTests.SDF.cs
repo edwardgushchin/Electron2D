@@ -2,8 +2,9 @@ using Electron2D;
 
 internal static partial class LightingTests
 {
-    private static void NativeSDF()
+    internal static void NativeSDF()
     {
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         using var input = typeof(LightingTests).Assembly.GetManifestResourceStream("TestShaders.SDFProbe.spv")!;
         using var memory = new MemoryStream(); input.CopyTo(memory); using var shader = Shader.CreateFromSPIRV(memory.ToArray());
         using var material = new ShaderMaterial { Shader = shader };
@@ -28,7 +29,7 @@ internal static partial class LightingTests
                 Check(tileInside.R > .9f == (frames == 2), $"Tile SDF policy and enablement at frame {frames}: {tileInside}");
                 if (frames == 1) { Check(MathF.Abs(inside.G - 7.5f / 16) < .015f, "Signed distance preserves pixel units"); var outside = pixels.GetPixel(34, 18); Check(outside.R < .1f && MathF.Abs(outside.G - 8.5f / 16) < .015f, "Outside distance"); }
             }
-            if (frames == 1) { occluder.SDFCollision = false; set.SetOcclusionLayerSDFCollision(0, true); }
+            if (frames == 1) { using var sampling = new RDSamplerState { MinFilter = RenderingDevice.SamplerFilter.Linear, MagFilter = RenderingDevice.SamplerFilter.Linear, MaxLOD = 0 }; shader.SetTextureSamplerState("SDF_TEXTURE", sampling); occluder.SDFCollision = false; set.SetOcclusionLayerSDFCollision(0, true); }
             if (frames == 2) tile.OcclusionEnabled = false;
             if (frames == 3) { occluder.SDFCollision = true; contour.Closed = false; }
             if (frames == 4) { contour.Closed = true; occluder.Hide(); }

@@ -308,3 +308,5 @@ Factory construction provenance is shared by resource, script, file and scene cr
 ## Localized resource files
 
 ResourceLoader owns localized file selection and weak live-resource refresh, using the locale score supplied by Localization. Logical cache/path/UID identity survives physical file changes. The existing graph/cache/format pipeline handles archives, images, fonts, WAV, shader includes and mounted ZIP input; relative dependencies and stale threaded publication are exercised. Refresh is explicit cold work before application translation notification. See [localized resources](../components/localized-resources.md).
+
+Shader resource storage now includes a bounded typed sampler-state table. [Sampler metadata](../components/shader-materials.md#explicit-image-sampler-state) copies with the resource, survives compatible program replacement and real fresh-process file loading, and rejects malformed tables before publication. The built-in Shader persists by a versioned identity rather than its renderer-private module interface.
