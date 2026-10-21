@@ -5,7 +5,7 @@ namespace Electron2D;
 public sealed class VisualShaderNodeVectorOp : VisualShaderNodeVectorBase
 {
     /// <summary>The binary vector operation.</summary>
-    public enum Operator
+    public enum OperatorEnum
     {
         /// <summary>Adds the inputs.</summary>
         Add = 0,
@@ -34,34 +34,34 @@ public sealed class VisualShaderNodeVectorOp : VisualShaderNodeVectorBase
         /// <summary>The nonselectable operation-count sentinel.</summary>
         EnumSize = 12,
     }
-    private Operator _operation;
+    private OperatorEnum _operation;
     /// <summary>Creates an addition operation with two zero Vector3 defaults.</summary>
     public VisualShaderNodeVectorOp() { InitializeDefault(0, Vector3.Zero); InitializeDefault(1, Vector3.Zero); }
     /// <summary>Gets or selects the binary vector operation.</summary>
     /// <value>Add initially.</value>
     /// <exception cref="ArgumentOutOfRangeException">The operation is undefined.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
-    public Operator Operation
+    public OperatorEnum Operator
     {
         get { ThrowIfDisposed(); return _operation; }
-        set { ThrowIfDisposed(); if (!Enum.IsDefined(value) || value == Operator.EnumSize) throw new ArgumentOutOfRangeException(nameof(value)); if (value == Operator.Cross && OperationType != OpType.Vector3) throw new NotSupportedException("A cross product requires three components."); if (_operation == value) return; _operation = value; EmitChanged(); }
+        set { ThrowIfDisposed(); if (!Enum.IsDefined(value) || value == OperatorEnum.EnumSize) throw new ArgumentOutOfRangeException(nameof(value)); if (value == OperatorEnum.Cross && OpType != OpTypeEnum.Vector3) throw new NotSupportedException("A cross product requires three components."); if (_operation == value) return; _operation = value; EmitChanged(); }
     }
     internal override PortType[] Inputs => [VectorKind, VectorKind];
     internal override PortType[] Outputs => [VectorKind];
     internal override string Expression(int output, IReadOnlyList<string> inputs) => _operation switch
     {
-        Operator.Add => $"({inputs[0]} + {inputs[1]})",
-        Operator.Subtract => $"({inputs[0]} - {inputs[1]})",
-        Operator.Multiply => $"({inputs[0]} * {inputs[1]})",
-        Operator.Divide => $"({inputs[0]} / {inputs[1]})",
-        Operator.Modulo => $"mod({inputs[0]}, {inputs[1]})",
-        Operator.Power => $"pow({inputs[0]}, {inputs[1]})",
-        Operator.Max => $"max({inputs[0]}, {inputs[1]})",
-        Operator.Min => $"min({inputs[0]}, {inputs[1]})",
-        Operator.Cross => $"cross({inputs[0]}, {inputs[1]})",
-        Operator.Reflect => $"reflect({inputs[0]}, {inputs[1]})",
-        Operator.Atan2 => $"atan({inputs[0]}, {inputs[1]})",
-        Operator.Step => $"step({inputs[0]}, {inputs[1]})",
+        OperatorEnum.Add => $"({inputs[0]} + {inputs[1]})",
+        OperatorEnum.Subtract => $"({inputs[0]} - {inputs[1]})",
+        OperatorEnum.Multiply => $"({inputs[0]} * {inputs[1]})",
+        OperatorEnum.Divide => $"({inputs[0]} / {inputs[1]})",
+        OperatorEnum.Modulo => $"mod({inputs[0]}, {inputs[1]})",
+        OperatorEnum.Power => $"pow({inputs[0]}, {inputs[1]})",
+        OperatorEnum.Max => $"max({inputs[0]}, {inputs[1]})",
+        OperatorEnum.Min => $"min({inputs[0]}, {inputs[1]})",
+        OperatorEnum.Cross => $"cross({inputs[0]}, {inputs[1]})",
+        OperatorEnum.Reflect => $"reflect({inputs[0]}, {inputs[1]})",
+        OperatorEnum.Atan2 => $"atan({inputs[0]}, {inputs[1]})",
+        OperatorEnum.Step => $"step({inputs[0]}, {inputs[1]})",
         _ => throw new InvalidOperationException("Invalid scalar operation.")
     };
     internal override void CopyDefinitionTo(VisualShaderNode target) { base.CopyDefinitionTo(target); ((VisualShaderNodeVectorOp)target)._operation = _operation; }
@@ -69,5 +69,5 @@ public sealed class VisualShaderNodeVectorOp : VisualShaderNodeVectorBase
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeVectorOp();
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
-        [new PropertyDescriptor<VisualShaderNodeVectorOp, Operator>(nameof(Operation), n => n.Operation, (n, v) => n.Operation = v, stored: true)]);
+        [new PropertyDescriptor<VisualShaderNodeVectorOp, OperatorEnum>(nameof(Operator), n => n.Operator, (n, v) => n.Operator = v, stored: true)]);
 }

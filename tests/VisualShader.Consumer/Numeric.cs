@@ -10,7 +10,7 @@ internal static partial class GraphChecks
         for (var operation = 0; operation < FloatOperations.Length; operation++)
         {
             using var graph = new VisualShader();
-            using var node = new VisualShaderNodeFloatOp { Operation = (VisualShaderNodeFloatOp.Operator)operation };
+            using var node = new VisualShaderNodeFloatOp { Operator = (VisualShaderNodeFloatOp.OperatorEnum)operation };
             node.SetInputPortDefaultValue(0, .5f); node.SetInputPortDefaultValue(1, .25f);
             graph.AddNode(VisualShader.Type.Fragment, node, default, 2); graph.ConnectNodes(VisualShader.Type.Fragment, 2, 0, 0, 0);
             ResourceSaver.Save(graph, IOPath.Combine(folder, "float-" + FloatOperations[operation] + ".e2dres"), SaverFlags.BundleResources);
@@ -20,7 +20,7 @@ internal static partial class GraphChecks
             {
                 if (operation == 8 && width != 3) continue;
                 using var graph = new VisualShader();
-                using var node = new VisualShaderNodeVectorOp { OperationType = (VisualShaderNodeVectorBase.OpType)(width - 2), Operation = (VisualShaderNodeVectorOp.Operator)operation };
+                using var node = new VisualShaderNodeVectorOp { OpType = (VisualShaderNodeVectorBase.OpTypeEnum)(width - 2), Operator = (VisualShaderNodeVectorOp.OperatorEnum)operation };
                 if (width == 2) { node.SetInputPortDefaultValue(0, new Vector2(.5f, .25f)); node.SetInputPortDefaultValue(1, new Vector2(.25f, .5f)); }
                 if (width == 3) { node.SetInputPortDefaultValue(0, new Vector3(.5f, .25f, .75f)); node.SetInputPortDefaultValue(1, new Vector3(.25f, .5f, .125f)); }
                 if (width == 4) { node.SetInputPortDefaultValue(0, new Vector4(.5f, .25f, .75f, .125f)); node.SetInputPortDefaultValue(1, new Vector4(.25f, .5f, .125f, .75f)); }
@@ -39,7 +39,7 @@ internal static partial class GraphChecks
             foreach (var constant in constants)
             {
                 using var graph = new VisualShader(); graph.AddNode(VisualShader.Type.Fragment, constant, default, 2);
-                using var divide = new VisualShaderNodeFloatOp { Operation = VisualShaderNodeFloatOp.Operator.Divide };
+                using var divide = new VisualShaderNodeFloatOp { Operator = VisualShaderNodeFloatOp.OperatorEnum.Divide };
                 if (constant is VisualShaderNodeUIntConstant)
                 {
                     divide.SetInputPortDefaultValue(1, (float)uint.MaxValue);
@@ -54,7 +54,7 @@ internal static partial class GraphChecks
         finally { foreach (var constant in constants) constant.Dispose(); }
         using (var graph = new VisualShader())
         using (var position = new VisualShaderNodeInput { InputName = "vertex" })
-        using (var offset = new VisualShaderNodeVectorOp { OperationType = VisualShaderNodeVectorBase.OpType.Vector2 })
+        using (var offset = new VisualShaderNodeVectorOp { OpType = VisualShaderNodeVectorBase.OpTypeEnum.Vector2 })
         using (var color = new VisualShaderNodeColorConstant { Constant = new(.25f, .5f, .75f, 1) })
         {
             offset.SetInputPortDefaultValue(1, new Vector2(4, 0));

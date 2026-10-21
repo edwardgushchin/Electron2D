@@ -10,7 +10,7 @@ public abstract class Electron2D.VisualShaderNode
 
 Inherits: [Resource](Resource.md).
 
-Inherited by: [VisualShaderNodeConstant](VisualShaderNodeConstant.md), [VisualShaderNodeFloatOp](VisualShaderNodeFloatOp.md), [VisualShaderNodeInput](VisualShaderNodeInput.md), [VisualShaderNodeOutput](VisualShaderNodeOutput.md), [VisualShaderNodeVectorBase](VisualShaderNodeVectorBase.md).
+Inherited by: [VisualShaderNodeFloatFunc](VisualShaderNodeFloatFunc.md), [VisualShaderNodeConstant](VisualShaderNodeConstant.md), [VisualShaderNodeFloatOp](VisualShaderNodeFloatOp.md), [VisualShaderNodeInput](VisualShaderNodeInput.md), [VisualShaderNodeOutput](VisualShaderNodeOutput.md), [VisualShaderNodeVectorBase](VisualShaderNodeVectorBase.md).
 
 ## Description
 

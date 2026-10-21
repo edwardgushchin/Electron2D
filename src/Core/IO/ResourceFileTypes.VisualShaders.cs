@@ -9,6 +9,8 @@ public static partial class ResourceFileTypes
         RegisterResource("VisualShaderNodeInput", CreateVisualShaderNodeInputFileResource);
         RegisterResource("VisualShaderNodeFloatOp", CreateVisualShaderNodeFloatOpFileResource);
         RegisterResource("VisualShaderNodeVectorOp", CreateVisualShaderNodeVectorOpFileResource);
+        RegisterResource("VisualShaderNodeFloatFunc", CreateVisualShaderNodeFloatFuncFileResource);
+        RegisterResource("VisualShaderNodeVectorFunc", CreateVisualShaderNodeVectorFuncFileResource);
         RegisterResource("VisualShaderNodeFloatConstant", CreateVisualShaderNodeFloatConstantFileResource);
         RegisterResource("VisualShaderNodeIntConstant", CreateVisualShaderNodeIntConstantFileResource);
         RegisterResource("VisualShaderNodeUIntConstant", CreateVisualShaderNodeUIntConstantFileResource);
@@ -19,6 +21,8 @@ public static partial class ResourceFileTypes
         RegisterResource("VisualShaderNodeColorConstant", CreateVisualShaderNodeColorConstantFileResource);
     }
     private static VisualShaderNodeVectorOp CreateVisualShaderNodeVectorOpFileResource() => new();
+    private static VisualShaderNodeFloatFunc CreateVisualShaderNodeFloatFuncFileResource() => new();
+    private static VisualShaderNodeVectorFunc CreateVisualShaderNodeVectorFuncFileResource() => new();
     private static VisualShader CreateVisualShaderFileResource() => new();
     private static VisualShaderNodeOutput CreateVisualShaderNodeOutputFileResource() => new();
     private static VisualShaderNodeInput CreateVisualShaderNodeInputFileResource() => new();

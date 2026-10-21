@@ -5,7 +5,7 @@ namespace Electron2D;
 public abstract class VisualShaderNodeVectorBase : VisualShaderNode
 {
     /// <summary>The number of numeric components processed by a vector operation.</summary>
-    public enum OpType
+    public enum OpTypeEnum
     {
         /// <summary>Two numeric components.</summary>
         Vector2 = 0,
@@ -16,7 +16,7 @@ public abstract class VisualShaderNodeVectorBase : VisualShaderNode
         /// <summary>The nonselectable component-count sentinel.</summary>
         Max = 3,
     }
-    private OpType _operationType = OpType.Vector3;
+    private OpTypeEnum _operationType = OpTypeEnum.Vector3;
     /// <summary>Initializes a three-component numeric operation.</summary>
     protected VisualShaderNodeVectorBase() { }
     /// <summary>Gets or selects the component count, converting existing input defaults.</summary>
@@ -26,24 +26,24 @@ public abstract class VisualShaderNodeVectorBase : VisualShaderNode
     /// <exception cref="ArgumentOutOfRangeException">The component-count selection is undefined.</exception>
     /// <exception cref="NotSupportedException">The selected cross-product width is not three.</exception>
     /// <exception cref="ObjectDisposedException">The operation is disposed.</exception>
-    public OpType OperationType
+    public OpTypeEnum OpType
     {
         get { ThrowIfDisposed(); return _operationType; }
         set
         {
-            ThrowIfDisposed(); if (!Enum.IsDefined(value) || value == OpType.Max) throw new ArgumentOutOfRangeException(nameof(value));
-            if (this is VisualShaderNodeVectorOp { Operation: VisualShaderNodeVectorOp.Operator.Cross } && value != OpType.Vector3)
+            ThrowIfDisposed(); if (!Enum.IsDefined(value) || value == OpTypeEnum.Max) throw new ArgumentOutOfRangeException(nameof(value));
+            if (this is VisualShaderNodeVectorOp { Operator: VisualShaderNodeVectorOp.OperatorEnum.Cross } && value != OpTypeEnum.Vector3)
                 throw new NotSupportedException("A vector cross product requires three numeric components.");
             if (_operationType == value) return;
-            var type = value switch { OpType.Vector2 => PortType.Vector2, OpType.Vector3 => PortType.Vector3, _ => PortType.Vector4 };
+            var type = value switch { OpTypeEnum.Vector2 => PortType.Vector2, OpTypeEnum.Vector3 => PortType.Vector3, _ => PortType.Vector4 };
             ChangeDefaultWidth(type); _operationType = value; EmitChanged();
         }
     }
     internal PortType VectorKind => _operationType switch
-    { OpType.Vector2 => PortType.Vector2, OpType.Vector3 => PortType.Vector3, _ => PortType.Vector4 };
+    { OpTypeEnum.Vector2 => PortType.Vector2, OpTypeEnum.Vector3 => PortType.Vector3, _ => PortType.Vector4 };
     internal override void CopyDefinitionTo(VisualShaderNode target) => ((VisualShaderNodeVectorBase)target)._operationType = _operationType;
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
-        new PropertyDescriptor[] { new PropertyDescriptor<VisualShaderNodeVectorBase, OpType>(nameof(OperationType), n => n.OperationType,
-            (n, v) => n.OperationType = v, stored: true) }.Concat(base.GetPropertyDescriptors());
+        new PropertyDescriptor[] { new PropertyDescriptor<VisualShaderNodeVectorBase, OpTypeEnum>(nameof(OpType), n => n.OpType,
+            (n, v) => n.OpType = v, stored: true) }.Concat(base.GetPropertyDescriptors());
 }

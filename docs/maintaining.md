@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -201,3 +201,10 @@ recovery, publish and Clean. Exercise actual imported programs under software
 Wayland/X11 and HDR/MSAA in CLR and strict full-trim NativeAOT; measure prepared
 64 active/64 idle complete frames separately from cold author/import work. Keep
 unsupported graph producers and editor/domain prerequisites exact in coverage.
+
+For unary graph functions, cover every scalar selector and every vector selector
+at widths two/three/four. Use independent arithmetic oracles, signed/HDR results,
+round-even ties and valid inverse/log domains. Add fourth-component witnesses
+before claiming complete vec4 behavior: an RGB output alone discards W. Preserve
+Operator/OpType/Function properties across source, callers, stored descriptors,
+compiled API/coverage and docs; reject enum sentinels without mutation.

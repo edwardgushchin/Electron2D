@@ -953,7 +953,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeExpression](classes/VisualShaderNodeExpression.md) | VisualShaderNodeGroupBase | Blocked | 1 |
 | [VisualShaderNodeFaceForward](classes/VisualShaderNodeFaceForward.md) | VisualShaderNodeVectorBase | Unimplemented | 0 |
 | [VisualShaderNodeFloatConstant](classes/VisualShaderNodeFloatConstant.md) | VisualShaderNodeConstant | Implemented | 1 |
-| [VisualShaderNodeFloatFunc](classes/VisualShaderNodeFloatFunc.md) | VisualShaderNode | Unimplemented | 35 |
+| [VisualShaderNodeFloatFunc](classes/VisualShaderNodeFloatFunc.md) | VisualShaderNode | Implemented | 35 |
 | [VisualShaderNodeFloatOp](classes/VisualShaderNodeFloatOp.md) | VisualShaderNode | Implemented | 13 |
 | [VisualShaderNodeFloatParameter](classes/VisualShaderNodeFloatParameter.md) | VisualShaderNodeParameter | Blocked | 11 |
 | [VisualShaderNodeFrame](classes/VisualShaderNodeFrame.md) | VisualShaderNodeResizableBase | Blocked | 7 |
@@ -1035,7 +1035,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeVectorCompose](classes/VisualShaderNodeVectorCompose.md) | VisualShaderNodeVectorBase | Unimplemented | 0 |
 | [VisualShaderNodeVectorDecompose](classes/VisualShaderNodeVectorDecompose.md) | VisualShaderNodeVectorBase | Unimplemented | 0 |
 | [VisualShaderNodeVectorDistance](classes/VisualShaderNodeVectorDistance.md) | VisualShaderNodeVectorBase | Unimplemented | 0 |
-| [VisualShaderNodeVectorFunc](classes/VisualShaderNodeVectorFunc.md) | VisualShaderNodeVectorBase | Unimplemented | 36 |
+| [VisualShaderNodeVectorFunc](classes/VisualShaderNodeVectorFunc.md) | VisualShaderNodeVectorBase | Implemented | 36 |
 | [VisualShaderNodeVectorLen](classes/VisualShaderNodeVectorLen.md) | VisualShaderNodeVectorBase | Unimplemented | 0 |
 | [VisualShaderNodeVectorOp](classes/VisualShaderNodeVectorOp.md) | VisualShaderNodeVectorBase | Implemented | 15 |
 | [VisualShaderNodeVectorRefract](classes/VisualShaderNodeVectorRefract.md) | VisualShaderNodeVectorBase | Unimplemented | 0 |

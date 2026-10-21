@@ -204,7 +204,17 @@ def main():
     assert " | Excluded | " in offset and 'This property does nothing and always equals to zero.' in offset
     assert "ed1daf0bf001b61586d9930840f2f1394092c079" in offset
     assert " | Implemented | " in pages[CLASS_PAGES / "VisualShaderNodeFloatOp.md"]
-    assert " | Unimplemented | " in pages[CLASS_PAGES / "VisualShaderNodeFloatFunc.md"]
+    for name, count in [("VisualShaderNodeFloatFunc", 36), ("VisualShaderNodeVectorFunc", 37)]:
+        rows = [row for row in pages[CLASS_PAGES / (name + ".md")].splitlines() if row.startswith("| [`")]
+        assert len(rows) == count and all(" | Implemented | " in row for row in rows)
+        assert "FunctionEnum" in pages[CLASS_PAGES / (name + ".md")]
+    assert "OperatorEnum" in pages[CLASS_PAGES / "VisualShaderNodeFloatOp.md"]
+    assert "OpTypeEnum" in pages[CLASS_PAGES / "VisualShaderNodeVectorBase.md"]
+    engine_ids = {item["id"] for item in json.loads((DATA / "electron2d.json").read_text())}
+    assert not engine_ids.intersection({
+        "T:Electron2D.VisualShaderNodeFloatOp.Operator", "T:Electron2D.VisualShaderNodeVectorOp.Operator",
+        "T:Electron2D.VisualShaderNodeVectorBase.OpType", "property:Electron2D.VisualShaderNodeFloatOp.Operation()",
+        "property:Electron2D.VisualShaderNodeVectorOp.Operation()", "property:Electron2D.VisualShaderNodeVectorBase.OperationType()"})
     assert " | Blocked | " in pages[CLASS_PAGES / "VisualShaderNodeParameter.md"]
     assert " | Excluded | " in pages[CLASS_PAGES / "VisualShaderNodeTransformOp.md"]
 

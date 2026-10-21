@@ -25,6 +25,7 @@ internal static partial class GraphChecks
     { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }
     internal static void CPU()
     {
+        UnaryCPU();
         using var graph = new VisualShader();
         using var scalar = new VisualShaderNodeFloatConstant { Constant = .375f };
         using var operation = new VisualShaderNodeFloatOp();
@@ -32,7 +33,7 @@ internal static partial class GraphChecks
         scalar.Constant = MathF.BitIncrement(.375f);
         Check(scalar.Constant == .375f && scalarChanges == 0, "Approximately equal constants preserve the stored value and suppress change events.");
         var operationChanges = 0; operation.Changed += _ => operationChanges++;
-        operation.Operation = VisualShaderNodeFloatOp.Operator.Add;
+        operation.Operator = VisualShaderNodeFloatOp.OperatorEnum.Add;
         Check(operationChanges == 0, "An unchanged arithmetic selection emits no change event.");
         var storedConnections = (PropertyDescriptor<VisualShader, int[]>)graph.GetPropertyList().Single(p => p.Name == "GraphConnections");
         Reject<InvalidDataException>(() => storedConnections.SetValue(graph, new int[(4096 * 8 + 1) * 5]));
@@ -74,11 +75,11 @@ internal static partial class GraphChecks
         Check(vec4.Constant == new Vector4(0, 0, 0, 1), "Four-component defaults retain their numeric homogeneous component.");
         using var vectorOperation = new VisualShaderNodeVectorOp();
         vectorOperation.SetInputPortDefaultValue(0, new Vector3(.125f, .25f, .5f));
-        vectorOperation.OperationType = VisualShaderNodeVectorBase.OpType.Vector4;
+        vectorOperation.OpType = VisualShaderNodeVectorBase.OpTypeEnum.Vector4;
         Check(vectorOperation.GetInputPortDefaultValue<Vector4>(0) == new Vector4(.125f, .25f, .5f, .5f), "Changing vector width repeats the previous last component.");
-        vectorOperation.ClearDefaultInputValues(); vectorOperation.OperationType = VisualShaderNodeVectorBase.OpType.Vector2;
+        vectorOperation.ClearDefaultInputValues(); vectorOperation.OpType = VisualShaderNodeVectorBase.OpTypeEnum.Vector2;
         Check(vectorOperation.GetInputPortDefaultValue<Vector2>(0) == Vector2.Zero, "A width change recreates a missing default.");
-        Reject<NotSupportedException>(() => vectorOperation.Operation = VisualShaderNodeVectorOp.Operator.Cross);
+        Reject<NotSupportedException>(() => vectorOperation.Operator = VisualShaderNodeVectorOp.OperatorEnum.Cross);
         using var shallow = (VisualShader)graph.Duplicate();
         using var deep = (VisualShader)graph.Duplicate(true);
         Check(ReferenceEquals(shallow.GetNode(VisualShader.Type.Fragment, 2), scalar), "Shallow graph borrows operation resources.");
@@ -121,6 +122,7 @@ internal static partial class GraphChecks
     internal static void Author(string folder)
     {
         Directory.CreateDirectory(folder);
+        AuthorFunctions(folder);
         using (var graph = new VisualShader())
         using (var color = new VisualShaderNodeColorConstant { Constant = new(.25f, .5f, .75f, 1) })
         using (var alpha = new VisualShaderNodeFloatConstant { Constant = 1 })

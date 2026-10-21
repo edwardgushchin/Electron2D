@@ -202,67 +202,67 @@
     },
     {
       "godot": "VisualShaderNodeFloatOp::enum:Operator",
-      "electron2d": "T:Electron2D.VisualShaderNodeFloatOp.Operator",
+      "electron2d": "T:Electron2D.VisualShaderNodeFloatOp.OperatorEnum",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeFloatOp::enum_value:Operator.OP_ADD",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.Operator.Add()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.OperatorEnum.Add()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeFloatOp::enum_value:Operator.OP_ATAN2",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.Operator.Atan2()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.OperatorEnum.Atan2()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeFloatOp::enum_value:Operator.OP_DIV",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.Operator.Divide()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.OperatorEnum.Divide()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeFloatOp::enum_value:Operator.OP_ENUM_SIZE",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.Operator.EnumSize()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.OperatorEnum.EnumSize()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeFloatOp::enum_value:Operator.OP_MAX",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.Operator.Max()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.OperatorEnum.Max()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeFloatOp::enum_value:Operator.OP_MIN",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.Operator.Min()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.OperatorEnum.Min()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeFloatOp::enum_value:Operator.OP_MOD",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.Operator.Modulo()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.OperatorEnum.Modulo()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeFloatOp::enum_value:Operator.OP_MUL",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.Operator.Multiply()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.OperatorEnum.Multiply()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeFloatOp::enum_value:Operator.OP_POW",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.Operator.Power()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.OperatorEnum.Power()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeFloatOp::enum_value:Operator.OP_STEP",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.Operator.Step()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.OperatorEnum.Step()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeFloatOp::enum_value:Operator.OP_SUB",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.Operator.Subtract()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatOp.OperatorEnum.Subtract()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeFloatOp::property:operator",
-      "electron2d": "property:Electron2D.VisualShaderNodeFloatOp.Operation()",
+      "electron2d": "property:Electron2D.VisualShaderNodeFloatOp.Operator()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
@@ -307,108 +307,473 @@
     },
     {
       "godot": "VisualShaderNodeVectorBase::enum:OpType",
-      "electron2d": "T:Electron2D.VisualShaderNodeVectorBase.OpType",
+      "electron2d": "T:Electron2D.VisualShaderNodeVectorBase.OpTypeEnum",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorBase::enum_value:OpType.OP_TYPE_MAX",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorBase.OpType.Max()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorBase.OpTypeEnum.Max()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorBase::enum_value:OpType.OP_TYPE_VECTOR_2D",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorBase.OpType.Vector2()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorBase.OpTypeEnum.Vector2()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorBase::enum_value:OpType.OP_TYPE_VECTOR_3D",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorBase.OpType.Vector3()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorBase.OpTypeEnum.Vector3()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorBase::enum_value:OpType.OP_TYPE_VECTOR_4D",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorBase.OpType.Vector4()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorBase.OpTypeEnum.Vector4()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorBase::property:op_type",
-      "electron2d": "property:Electron2D.VisualShaderNodeVectorBase.OperationType()",
+      "electron2d": "property:Electron2D.VisualShaderNodeVectorBase.OpType()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorOp::enum:Operator",
-      "electron2d": "T:Electron2D.VisualShaderNodeVectorOp.Operator",
+      "electron2d": "T:Electron2D.VisualShaderNodeVectorOp.OperatorEnum",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorOp::enum_value:Operator.OP_ADD",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.Operator.Add()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.OperatorEnum.Add()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorOp::enum_value:Operator.OP_ATAN2",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.Operator.Atan2()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.OperatorEnum.Atan2()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorOp::enum_value:Operator.OP_CROSS",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.Operator.Cross()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.OperatorEnum.Cross()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorOp::enum_value:Operator.OP_DIV",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.Operator.Divide()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.OperatorEnum.Divide()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorOp::enum_value:Operator.OP_ENUM_SIZE",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.Operator.EnumSize()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.OperatorEnum.EnumSize()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorOp::enum_value:Operator.OP_MAX",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.Operator.Max()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.OperatorEnum.Max()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorOp::enum_value:Operator.OP_MIN",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.Operator.Min()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.OperatorEnum.Min()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorOp::enum_value:Operator.OP_MOD",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.Operator.Modulo()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.OperatorEnum.Modulo()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorOp::enum_value:Operator.OP_MUL",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.Operator.Multiply()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.OperatorEnum.Multiply()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorOp::enum_value:Operator.OP_POW",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.Operator.Power()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.OperatorEnum.Power()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorOp::enum_value:Operator.OP_REFLECT",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.Operator.Reflect()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.OperatorEnum.Reflect()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorOp::enum_value:Operator.OP_STEP",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.Operator.Step()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.OperatorEnum.Step()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorOp::enum_value:Operator.OP_SUB",
-      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.Operator.Subtract()",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorOp.OperatorEnum.Subtract()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
       "godot": "VisualShaderNodeVectorOp::property:operator",
-      "electron2d": "property:Electron2D.VisualShaderNodeVectorOp.Operation()",
+      "electron2d": "property:Electron2D.VisualShaderNodeVectorOp.Operator()",
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
+    },
+    {
+      "godot": "class:VisualShaderNodeFloatFunc",
+      "electron2d": "T:Electron2D.VisualShaderNodeFloatFunc",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum:Function",
+      "electron2d": "T:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ABS",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Abs()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ACOS",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Acos()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ACOSH",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Acosh()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ASIN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Asin()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ASINH",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Asinh()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ATAN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Atan()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ATANH",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Atanh()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_CEIL",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Ceil()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_COS",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Cos()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_COSH",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Cosh()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_DEGREES",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Degrees()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_EXP",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Exp()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_EXP2",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Exp2()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_FLOOR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Floor()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_FRACT",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Fract()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_INVERSE_SQRT",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.InverseSqrt()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_LOG",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Log()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_LOG2",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Log2()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Max()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_NEGATE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Negate()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ONEMINUS",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.OneMinus()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_RADIANS",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Radians()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_RECIPROCAL",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Reciprocal()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ROUND",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Round()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ROUNDEVEN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.RoundEven()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_SATURATE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Saturate()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_SIGN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Sign()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_SIN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Sin()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_SINH",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Sinh()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_SQRT",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Sqrt()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_TAN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Tan()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_TANH",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Tanh()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_TRUNC",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Trunc()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeFloatFunc::property:function",
+      "electron2d": "property:Electron2D.VisualShaderNodeFloatFunc.Function()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "class:VisualShaderNodeVectorFunc",
+      "electron2d": "T:Electron2D.VisualShaderNodeVectorFunc",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum:Function",
+      "electron2d": "T:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ABS",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Abs()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ACOS",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Acos()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ACOSH",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Acosh()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ASIN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Asin()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ASINH",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Asinh()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ATAN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Atan()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ATANH",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Atanh()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_CEIL",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Ceil()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_COS",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Cos()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_COSH",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Cosh()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_DEGREES",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Degrees()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_EXP",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Exp()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_EXP2",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Exp2()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_FLOOR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Floor()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_FRACT",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Fract()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_INVERSE_SQRT",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.InverseSqrt()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_LOG",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Log()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_LOG2",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Log2()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Max()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_NEGATE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Negate()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_NORMALIZE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Normalize()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ONEMINUS",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.OneMinus()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_RADIANS",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Radians()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_RECIPROCAL",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Reciprocal()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ROUND",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Round()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ROUNDEVEN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.RoundEven()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_SATURATE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Saturate()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_SIGN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Sign()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_SIN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Sin()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_SINH",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Sinh()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_SQRT",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Sqrt()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_TAN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Tan()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_TANH",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Tanh()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_TRUNC",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeVectorFunc.FunctionEnum.Trunc()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "VisualShaderNodeVectorFunc::property:function",
+      "electron2d": "property:Electron2D.VisualShaderNodeVectorFunc.Function()",
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
     }
   ],
   "statusGroups": [
@@ -626,6 +991,85 @@
         "VisualShaderNode::enum:PortType"
       ],
       "reason": "ADR 0028: numeric canvas graph stages and port roles execute. Separate particle/light/blit graph translators and matrix/sampled-image port integration retain their explicit missing roles; no inert selector values are exposed."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:VisualShaderNodeFloatFunc",
+        "VisualShaderNodeFloatFunc::enum:Function",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ABS",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ACOS",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ACOSH",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ASIN",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ASINH",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ATAN",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ATANH",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_CEIL",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_COS",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_COSH",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_DEGREES",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_EXP",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_EXP2",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_FLOOR",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_FRACT",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_INVERSE_SQRT",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_LOG",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_LOG2",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_MAX",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_NEGATE",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ONEMINUS",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_RADIANS",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_RECIPROCAL",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ROUND",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_ROUNDEVEN",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_SATURATE",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_SIGN",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_SIN",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_SINH",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_SQRT",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_TAN",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_TANH",
+        "VisualShaderNodeFloatFunc::enum_value:Function.FUNC_TRUNC",
+        "VisualShaderNodeFloatFunc::property:function",
+        "class:VisualShaderNodeVectorFunc",
+        "VisualShaderNodeVectorFunc::enum:Function",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ABS",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ACOS",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ACOSH",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ASIN",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ASINH",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ATAN",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ATANH",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_CEIL",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_COS",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_COSH",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_DEGREES",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_EXP",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_EXP2",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_FLOOR",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_FRACT",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_INVERSE_SQRT",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_LOG",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_LOG2",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_MAX",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_NEGATE",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_NORMALIZE",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ONEMINUS",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_RADIANS",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_RECIPROCAL",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ROUND",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_ROUNDEVEN",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_SATURATE",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_SIGN",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_SIN",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_SINH",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_SQRT",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_TAN",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_TANH",
+        "VisualShaderNodeVectorFunc::enum_value:Function.FUNC_TRUNC",
+        "VisualShaderNodeVectorFunc::property:function"
+      ],
+      "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
     }
   ],
   "extras": [
@@ -900,6 +1344,30 @@
     {
       "electron2d": "property:Electron2D.VisualShaderPortDefault<T>.Value()",
       "reason": "ADRs 0001/0028: immutable generic numeric port/default pair replacing the graph-local heterogeneous index/value array. The base exposes only index/type metadata; values remain typed, finite and copied, not a universal engine Variant."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeFloatFunc..ctor()",
+      "reason": "ADRs 0001/0013/0028: concrete resource construction, typed duplication and stored Function descriptors for the executable unary graph definition; base resource lifetime/default methods retain their existing contracts."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeFloatFunc.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: concrete resource construction, typed duplication and stored Function descriptors for the executable unary graph definition; base resource lifetime/default methods retain their existing contracts."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeFloatFunc.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: concrete resource construction, typed duplication and stored Function descriptors for the executable unary graph definition; base resource lifetime/default methods retain their existing contracts."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeVectorFunc..ctor()",
+      "reason": "ADRs 0001/0013/0028: concrete resource construction, typed duplication and stored Function descriptors for the executable unary graph definition; base resource lifetime/default methods retain their existing contracts."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeVectorFunc.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: concrete resource construction, typed duplication and stored Function descriptors for the executable unary graph definition; base resource lifetime/default methods retain their existing contracts."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeVectorFunc.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: concrete resource construction, typed duplication and stored Function descriptors for the executable unary graph definition; base resource lifetime/default methods retain their existing contracts."
     }
   ]
 }

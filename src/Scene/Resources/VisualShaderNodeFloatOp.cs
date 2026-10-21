@@ -5,7 +5,7 @@ namespace Electron2D;
 public sealed class VisualShaderNodeFloatOp : VisualShaderNode
 {
     /// <summary>The binary scalar operation.</summary>
-    public enum Operator
+    public enum OperatorEnum
     {
         /// <summary>Adds the inputs.</summary>
         Add = 0,
@@ -30,32 +30,32 @@ public sealed class VisualShaderNodeFloatOp : VisualShaderNode
         /// <summary>The nonselectable operation-count sentinel.</summary>
         EnumSize = 10,
     }
-    private Operator _operation;
+    private OperatorEnum _operation;
     /// <summary>Creates an addition operation with two zero defaults.</summary>
     public VisualShaderNodeFloatOp() { InitializeDefault(0, 0f); InitializeDefault(1, 0f); }
     /// <summary>Gets or selects the binary scalar operation.</summary>
     /// <value>Add initially.</value>
     /// <exception cref="ArgumentOutOfRangeException">The operation is undefined.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
-    public Operator Operation
+    public OperatorEnum Operator
     {
         get { ThrowIfDisposed(); return _operation; }
-        set { ThrowIfDisposed(); if (!Enum.IsDefined(value) || value == Operator.EnumSize) throw new ArgumentOutOfRangeException(nameof(value)); if (_operation == value) return; _operation = value; EmitChanged(); }
+        set { ThrowIfDisposed(); if (!Enum.IsDefined(value) || value == OperatorEnum.EnumSize) throw new ArgumentOutOfRangeException(nameof(value)); if (_operation == value) return; _operation = value; EmitChanged(); }
     }
     internal override PortType[] Inputs => [PortType.Scalar, PortType.Scalar];
     internal override PortType[] Outputs => [PortType.Scalar];
     internal override string Expression(int output, IReadOnlyList<string> inputs) => _operation switch
     {
-        Operator.Add => $"({inputs[0]} + {inputs[1]})",
-        Operator.Subtract => $"({inputs[0]} - {inputs[1]})",
-        Operator.Multiply => $"({inputs[0]} * {inputs[1]})",
-        Operator.Divide => $"({inputs[0]} / {inputs[1]})",
-        Operator.Modulo => $"mod({inputs[0]}, {inputs[1]})",
-        Operator.Power => $"pow({inputs[0]}, {inputs[1]})",
-        Operator.Max => $"max({inputs[0]}, {inputs[1]})",
-        Operator.Min => $"min({inputs[0]}, {inputs[1]})",
-        Operator.Atan2 => $"atan({inputs[0]}, {inputs[1]})",
-        Operator.Step => $"step({inputs[0]}, {inputs[1]})",
+        OperatorEnum.Add => $"({inputs[0]} + {inputs[1]})",
+        OperatorEnum.Subtract => $"({inputs[0]} - {inputs[1]})",
+        OperatorEnum.Multiply => $"({inputs[0]} * {inputs[1]})",
+        OperatorEnum.Divide => $"({inputs[0]} / {inputs[1]})",
+        OperatorEnum.Modulo => $"mod({inputs[0]}, {inputs[1]})",
+        OperatorEnum.Power => $"pow({inputs[0]}, {inputs[1]})",
+        OperatorEnum.Max => $"max({inputs[0]}, {inputs[1]})",
+        OperatorEnum.Min => $"min({inputs[0]}, {inputs[1]})",
+        OperatorEnum.Atan2 => $"atan({inputs[0]}, {inputs[1]})",
+        OperatorEnum.Step => $"step({inputs[0]}, {inputs[1]})",
         _ => throw new InvalidOperationException("Invalid scalar operation.")
     };
     internal override void CopyDefinitionTo(VisualShaderNode target) => ((VisualShaderNodeFloatOp)target)._operation = _operation;
@@ -63,5 +63,5 @@ public sealed class VisualShaderNodeFloatOp : VisualShaderNode
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeFloatOp();
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
-        [new PropertyDescriptor<VisualShaderNodeFloatOp, Operator>(nameof(Operation), n => n.Operation, (n, v) => n.Operation = v, stored: true)]);
+        [new PropertyDescriptor<VisualShaderNodeFloatOp, OperatorEnum>(nameof(Operator), n => n.Operator, (n, v) => n.Operator = v, stored: true)]);
 }

@@ -12,7 +12,7 @@ source compiler.
 
 The current definition family is VisualShaderNode, VisualShaderNodeConstant,
 Float/Int/UInt/Boolean/Vec2/Vec3/Vec4/Color constant nodes, FloatOp, VectorBase,
-VectorOp, Input and Output. VisualShaderConnection copies one directed edge.
+VectorOp, FloatFunc, VectorFunc, Input and Output. VisualShaderConnection copies one directed edge.
 VisualShaderPortDefault and its generic entry expose heterogeneous numeric
 input defaults without an untyped public value accessor. Three/four-component
 vectors are numeric shader data, not spatial scene types.
@@ -124,6 +124,45 @@ deep copies use the usual resource policy. Owned factory replacements copy
 independently with their internal aliases preserved. Stored default/node/edge
 tables validate bounds, duplicates, shapes and completion before publication.
 
+## Unary numeric functions and selectors
+
+VisualShaderNodeFloatFunc supplies 32 scalar functions. VisualShaderNodeVectorFunc
+supplies those numeric roles plus normalization, at two/three/four components.
+The scalar/vector FunctionEnum domains retain their distinct numeric identities;
+select them through the owning Function property. Numeric casts do not translate
+between these selector domains. Max is nonselectable; unknown/sentinel requests
+fail before changing state or emitting Changed. Unchanged selections emit nothing.
+
+Both families supply trigonometric/inverse/hyperbolic functions, natural/base-two
+exponentials and logarithms, square root/inverse square root, abs/sign/negate,
+reciprocal/one-minus, degree/radian conversion, floor/ceil/round/round-even/trunc,
+fraction and saturation. Vector functions apply component-wise except Normalize,
+which uses every selected component in its length, including W at width four.
+Round uses the shader backend's nearest-integer tie direction; RoundEven has ties
+to even. Zero normalization, zero reciprocal, invalid logarithm/square-root/inverse
+function domains and overflow retain native shader behavior. They are not converted
+into authoring exceptions or fabricated zero results. Authored inputs remain finite.
+
+The existing Operator properties use owner-specific OperatorEnum types; vector
+width is selected by OpType with VisualShaderNodeVectorBase.OpTypeEnum. This
+preserves owning property names under ADR 0051. Stored selector fields use those
+same Operator, OpType and Function names. The former selector/type spellings are
+removed without aliases; resources using the previous selector schema require
+reauthoring/reimport. Ordinary archive format versions are unchanged.
+
+```csharp
+using var sine = new VisualShaderNodeVectorFunc
+{
+    OpType = VisualShaderNodeVectorBase.OpTypeEnum.Vector2,
+    Function = VisualShaderNodeVectorFunc.FunctionEnum.Sin
+};
+sine.SetInputPortDefaultValue(0, new Vector2(.25f, .75f));
+```
+
+Add this definition to a graph, connect its output and use the same source-save,
+offline import and compiled material path shown above. Duplication and fresh
+archives retain Function, OpType, exact defaults and explicit default absence.
+
 ## Canvas boundary
 
 Vertex inputs follow the existing supplied framebuffer-pixel canvas ABI.
@@ -152,9 +191,10 @@ Sky/volumetric scene domains and deprecated inert graph offset are excluded.
 The public `tests/VisualShader.Consumer` covers ownership, aliases, factory
 replacement, invalid requests, snapshots, default presence/conversion, change
 semantics, shallow/deep/copy operations, and fresh resource archives, including
-compressed big-endian data. Fifty-seven imported graph programs exercise eight
-constant types, ten scalar operations, vector operations at all supported widths,
-UVs, and real vertex geometry movement. Software Vulkan Wayland/X11 and HDR/MSAA
+compressed big-endian data. Two hundred twenty-seven imported programs exercise the 57 foundation programs
+and 170 unary-function programs: every scalar/vector function, all vector widths,
+negative/clamped/round-even cases, both canvas stages, and a normalization witness
+for every vec4 function that makes its fourth component observable in RGB. Software Vulkan Wayland/X11 and HDR/MSAA
 readback is checked in CLR and strict full-trim NativeAOT. Normalized byte targets
 clamp output; HDR half-float readback retains signed/out-of-unit arithmetic.
 Each native profile measures 64 active and 64 idle complete frames at zero

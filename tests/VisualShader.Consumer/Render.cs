@@ -8,7 +8,8 @@ internal static partial class GraphChecks
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu");
         ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         if (args.Contains("msaa")) ProjectSettings.Set(ProjectSettings.MSAA2D, Viewport.MSAA.Samples4X);
-        using var window = new Window { Size = new(288, 224), Title = "Imported visual shader graphs", UseHDR2D = args.Contains("hdr") };
+        var rows = (Directory.GetFiles(folder, "*.e2dres").Length + 9) / 10;
+        using var window = new Window { Size = new(288, Math.Max(224, rows * 24 + 24)), Title = "Imported visual shader graphs", UseHDR2D = args.Contains("hdr") };
         window.AddChild(new GraphScene(folder)); Engine.Run(window);
         Check(window.IsDisposed && !RenderingServer.IsAvailable, "Graph render host retires its resources.");
     }
@@ -92,7 +93,7 @@ internal static partial class GraphChecks
             base.Dispose(disposing);
         }
     }
-    private static Color Expected(string name) => name switch
+    private static Color Expected(string name) => name.StartsWith("unary-", StringComparison.Ordinal) ? UnaryExpected(name) : name switch
     {
         "color" or "vertex-shift" => new(.25f, .5f, .75f, 1),
         "cleared" => Colors.Black,
