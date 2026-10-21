@@ -329,6 +329,8 @@ single samples. The enabled-sleep control is 32841032 versus 32840808 bytes. The
 are allocated bytes over creation and retirement, not retained heap, native-memory
 usage, a statistically established timing regression or mass-world performance.
 
+[Allocation measurement calibration](physics-allocation-measurement.md) now records independent counter/object-event controls and GC-induced framework finalizer activity. It does not attribute or close the original intervals below.
+
 A CPU candidate and the first CLR GPU consumer run each reported 24624/24624
 bytes during the measured wake/query/restore interval. Plain repeats of the same
 payloads pass, as do the profiler run and two public diagnostic probes with

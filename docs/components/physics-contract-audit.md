@@ -1,5 +1,7 @@
 [The complete numerical-thread setting contract](physics-thread.md#complete-setting-contract-2026-10-21) now verifies captured owner/separate policies on CPU, independent NVIDIA GPU and a public provider in CLR/strict NativeAOT, including unavailable-GPU fallback, failures, retirement and strict zero warmed managed bytes. Current physics census: 1305/1369 Implemented (95.33%), 64 open (50 Partial, 11 Blocked, 3 Unimplemented), 92 Excluded. Whole-backend and full-goal acceptance remain open. The body-motion extension operation was completed in the preceding checkpoint.
 
+[Allocation measurement calibration](physics-allocation-measurement.md) demonstrates counter growth without object events in a physics-free CoreCLR control and distinguishes GC finalizer allocations in injected CPU/GPU diagnostics. Existing strict gates and unattributed failures remain; no declaration is promoted.
+
 [Explicit sleep capacity](physics-sleep.md#explicit-sleep-with-automatic-sleep-disabled) includes CanSleep=false non-static CPU bodies before the first manual sleep. Shared scene/raw queries, history and allocation checks preserve the existing manual-event policy. Declaration coverage remains 1305/1369 (95.33%), with 64 open rows.
 
 [Native inherited point/line drawing](canvas-rendering.md#native-point-and-line-primitives) closes the GPU triangle-footprint gap for DrawPrimitive and its public server producer. Compatibility native subpixel coverage remains Partial; no physical declaration is promoted by this bounded integration.
