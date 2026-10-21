@@ -603,7 +603,9 @@ public partial class Node : ElectronObject
     /// <remarks>Entry assigns this association before callbacks. Departure retains it through NodeRemoved and
     /// ChildExitingTree, then clears the whole departing subtree before TreeExited. Stored observation remains
     /// available after disposal; coordinate it with topology mutation.</remarks>
-    public SceneTree? Tree { get; private set; }
+    public SceneTree? Tree { get => Volatile.Read(ref _tree); private set => Volatile.Write(ref _tree, value); }
+
+    private SceneTree? _tree;
     internal ulong TreeAttachmentVersion { get; private set; }
 
     /// <summary>Gets whether this node currently belongs to a scene tree.</summary>

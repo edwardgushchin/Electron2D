@@ -1,6 +1,8 @@
 # Runtime diagnostics
 
-Last updated: 2026-10-18
+[Object lifetime monitors](object-lifetime-monitors.md) add live object, cached-resource, attached-node and orphan-node populations without owning targets, forcing collection or opening a native device.
+
+Last updated: 2026-10-21
 
 [Frame timing monitors](frame-monitors.md) add four actual Engine producers: FPS and per-window peak process, physics-step and navigation durations. They retain independent cached reads and explicit reset, error, presentation and direct-host boundaries.
 

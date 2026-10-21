@@ -25,6 +25,17 @@ public class Resource : ElectronObject
 
     private static readonly object PathCacheGate = new();
     private static readonly Dictionary<string, WeakReference<Resource>> PathCache = new(StringComparer.Ordinal);
+
+    internal static int CountCachedResources()
+    {
+        lock (PathCacheGate)
+        {
+            var count = 0;
+            foreach (var entry in PathCache)
+                if (entry.Value.TryGetTarget(out var resource) && !resource.IsDisposalCommitted) count++;
+            return count;
+        }
+    }
     private static readonly Dictionary<(string Referrer, string Resource), string> PathIDs = new();
 
     /// <summary>Returns the authoring ID for this resource's current path in a referring file.</summary>

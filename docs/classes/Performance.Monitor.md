@@ -1,6 +1,8 @@
 # Performance.Monitor
 
-Last updated: 2026-10-18
+[Object lifetime monitors](../components/object-lifetime-monitors.md) add live object, cached-resource, attached-node and orphan-node populations without owning targets, forcing collection or opening a native device.
+
+Last updated: 2026-10-21
 
 **Declaration:** `public enum Performance.Monitor` ·
 **Source:** [Performance.cs](../../src/Core/Config/Performance.cs).
@@ -11,6 +13,10 @@ Last updated: 2026-10-18
 | TimeProcess | 1 | Largest completed process-frame duration; owned Window presentation included |
 | TimePhysicsProcess | 2 | Largest individual fixed-step duration |
 | TimeNavigationProcess | 3 | Largest synchronization/avoidance duration within a fixed step |
+| ObjectCount | 7 | Reachable engine objects before committed disposal |
+| ObjectResourceCount | 8 | Live owners registered in the resource path cache |
+| ObjectNodeCount | 9 | Live nodes inside the attached Engine SceneTree |
+| ObjectOrphanNodeCount | 10 | Live nodes outside that attached tree, in both build configurations |
 | RenderTotalObjectsInFrame | 11 | Completed renderer-frame logical canvas drawing records |
 | RenderTotalPrimitivesInFrame | 12 | Submitted topology/instance budgets |
 | RenderTotalDrawCallsInFrame | 13 | Native canvas geometry calls |

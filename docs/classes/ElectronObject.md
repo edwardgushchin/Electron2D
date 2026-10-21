@@ -1,6 +1,6 @@
 # ElectronObject
 
-Last updated: 2026-10-18
+Last updated: 2026-10-21
 
 **Inherits:** —
 
@@ -68,7 +68,7 @@ Console.WriteLine(value.InstanceID);
 
 | Member | Description |
 | --- | --- |
-| [`protected ElectronObject()`](#m-electron2d-electronobject-ctor) | Initializes a new ElectronObject instance. |
+| [`protected ElectronObject()`](#m-electron2d-electronobject-ctor) | Initializes an independent process identity, shared weak diagnostic registration and invocation-local factory provenance. |
 
 ## Properties
 
@@ -149,7 +149,7 @@ sealed class Meter : ElectronObject
 <a id="m-electron2d-electronobject-ctor"></a>
 ### `protected ElectronObject()`
 
-Initializes a new ElectronObject instance.
+Initializes an independent process identity, shared weak diagnostic registration and invocation-local factory provenance.
 
 ## Property Descriptions
 
@@ -585,7 +585,7 @@ The public-only disposal-veto consumer checks automatic/manual/foreign/late wind
 [`tests/Electron2D.Tests/Program.cs`](../../tests/Electron2D.Tests/Program.cs) verifies identity, diagnostics, notification dispatch, pre-delete state access on the disposing thread, concurrent idempotent disposal, property-list and script-change event delivery, duplicate subscription/removal, typed event connections, typed property behavior, translation delegation, and invalid access after disposal.
 
 
-Internal BorrowIdentity lazily caches one weak reference per used object. Borrowers copy its immutable instance ID and weak reference without rooting the target; disposal makes resolution null immediately. [ObjectIdentity](ObjectIdentity.md) introduces no public registry or finalizer.
+Construction registers one shared weak identity for [object lifetime monitors](../components/object-lifetime-monitors.md); internal BorrowIdentity reuses it. Borrowers copy its immutable instance ID and weak reference without rooting the target; disposal makes resolution null immediately. [ObjectIdentity](ObjectIdentity.md) introduces no public registry or finalizer.
 
 ObjectIdentityTests and the existing instance/lifetime checks exercise concurrent
 nonzero identity, diagnostic override dispatch, cleanup errors, registered script

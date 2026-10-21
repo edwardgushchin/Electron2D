@@ -7268,7 +7268,7 @@
         "class:Performance"
       ],
       "state": "Partial",
-      "reason": "Completed Engine timing windows, three physical producers and the complete typed custom-monitor lifecycle execute. Other built-in selectors retain their exact instrumentation, counter or native diagnostic prerequisite. The frame-monitor component defines clock, publication, headless/direct-host and presentation boundaries; native allocation totals, hardware/device timing and foreign acceptance remain separate."
+      "reason": "Live weak object/cache/Engine-tree populations, completed Engine timing windows, three physical producers and the complete typed custom-monitor lifecycle execute. Other built-in selectors retain their exact instrumentation, counter or native diagnostic prerequisite. The frame-monitor component defines clock, publication, headless/direct-host and presentation boundaries; native allocation totals, hardware/device timing and foreign acceptance remain separate."
     },
     {
       "godot": [
@@ -7299,14 +7299,10 @@
       "godot": [
         "Performance::enum_value:Monitor.MEMORY_MESSAGE_BUFFER_MAX",
         "Performance::enum_value:Monitor.MEMORY_STATIC",
-        "Performance::enum_value:Monitor.MEMORY_STATIC_MAX",
-        "Performance::enum_value:Monitor.OBJECT_COUNT",
-        "Performance::enum_value:Monitor.OBJECT_NODE_COUNT",
-        "Performance::enum_value:Monitor.OBJECT_ORPHAN_NODE_COUNT",
-        "Performance::enum_value:Monitor.OBJECT_RESOURCE_COUNT"
+        "Performance::enum_value:Monitor.MEMORY_STATIC_MAX"
       ],
       "state": "Unimplemented",
-      "reason": "Trigger: implement managed/native allocation and live object/node/resource accounting with explicit sample lifetime; integrate these producers as a complete diagnostic family, without constant-return counters."
+      "reason": "Trigger: actual coherent managed/native current and peak allocation producers plus deferred-message buffer capacity instrumentation, with explicit sample lifetime. Live object/cache/node populations now execute separately; managed GC heap size or process RSS alone does not establish these byte-count semantics. No constant-return counters."
     },
     {
       "godot": [

@@ -1,5 +1,7 @@
 # Core domain
 
+[Object lifetime monitors](../components/object-lifetime-monitors.md) add live object, cached-resource, attached-node and orphan-node populations without owning targets, forcing collection or opening a native device.
+
 [Compiled project batch execution](../components/project-batch.md) now joins project operations, detached authoring, headless stepping and actual native capture through public runtime APIs. Four documented tooling SDK types remain in a separate development-tool assembly; the runtime adds six typed host-input overloads without changing existing signatures.
 
 The Android application host supplies [system back navigation](../components/window-runtime.md#system-back-navigation) through the ordinary Engine lifecycle. Its existing unavailable STDIN read contract now has an explicit Android console guard; size validation remains first.

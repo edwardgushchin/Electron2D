@@ -1,5 +1,7 @@
 # Node
 
+[Object lifetime monitors](../components/object-lifetime-monitors.md) read volatile tree membership without acquiring scene ownership. Attached-node counts select Engine.MainLoop; independent trees remain outside that count.
+
 Last updated: 2026-10-21
 
 **Inherits:** [ElectronObject](ElectronObject.md)

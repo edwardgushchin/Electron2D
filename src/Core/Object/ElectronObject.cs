@@ -54,18 +54,12 @@ public abstract partial class ElectronObject : IDisposable
     private int _queuedDeletions;
     private int _canTranslateMessages = 1;
     private string _translationDomain = string.Empty;
-    private WeakReference<ElectronObject>? _identityReference;
+    private readonly WeakReference<ElectronObject> _identityReference;
 
     internal ObjectIdentity BorrowIdentity()
     {
         ThrowIfDisposed();
-        var reference = Volatile.Read(ref _identityReference);
-        if (reference is null)
-        {
-            reference = new(this);
-            reference = Interlocked.CompareExchange(ref _identityReference, reference, null) ?? reference;
-        }
-        return new(InstanceID, reference);
+        return new(InstanceID, _identityReference);
     }
 
     /// <summary>Gets this object's process-local instance identifier.</summary>

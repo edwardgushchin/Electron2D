@@ -42159,6 +42159,58 @@
     "value": "2"
   },
   {
+    "id": "enumValue:Electron2D.Performance.Monitor.ObjectCount()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.Monitor",
+    "name": "ObjectCount",
+    "signature": "public const Electron2D.Performance.Monitor ObjectCount = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.Monitor",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.Performance.Monitor.ObjectNodeCount()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.Monitor",
+    "name": "ObjectNodeCount",
+    "signature": "public const Electron2D.Performance.Monitor ObjectNodeCount = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.Monitor",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.Performance.Monitor.ObjectOrphanNodeCount()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.Monitor",
+    "name": "ObjectOrphanNodeCount",
+    "signature": "public const Electron2D.Performance.Monitor ObjectOrphanNodeCount = 10",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.Monitor",
+    "value": "10"
+  },
+  {
+    "id": "enumValue:Electron2D.Performance.Monitor.ObjectResourceCount()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.Monitor",
+    "name": "ObjectResourceCount",
+    "signature": "public const Electron2D.Performance.Monitor ObjectResourceCount = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.Monitor",
+    "value": "8"
+  },
+  {
     "id": "enumValue:Electron2D.Performance.Monitor.PhysicsActiveObjects()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Performance.Monitor",

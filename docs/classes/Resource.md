@@ -1,6 +1,8 @@
 # Resource
 
-Last updated: 2026-10-20
+[Performance.ObjectResourceCount](Performance.Monitor.md) counts current live registered path owners, excluding uncached resources and unregistered aliases.
+
+Last updated: 2026-10-21
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 

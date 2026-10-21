@@ -9,6 +9,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OBJECT_CENSUS") == "1") { ObjectCensusChecks.Run(args); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HOST_PLATFORM") == "1") { HostPlatformTests.Run(); HostPlatformChecks.Run(args); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_LOCALES") == "1") { ResourceLocaleChecks.Run(args); return; }

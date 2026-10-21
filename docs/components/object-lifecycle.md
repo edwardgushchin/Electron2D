@@ -1,6 +1,8 @@
 # Object lifecycle component
 
-Last updated: 2026-10-18
+Last updated: 2026-10-21
+
+[Object lifetime monitors](object-lifetime-monitors.md) share the base construction identity without owning objects or changing disposal/factory provenance.
 
 ## Scope
 

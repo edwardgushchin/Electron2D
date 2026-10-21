@@ -1,0 +1,1 @@
+ObjectCensusChecks.Run(args);

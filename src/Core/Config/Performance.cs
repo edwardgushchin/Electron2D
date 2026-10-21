@@ -18,6 +18,14 @@ public sealed partial class Performance : ElectronObject
         TimePhysicsProcess = 2,
         /// <summary>Largest navigation synchronization and avoidance duration within one physics step in the last sampling window, in seconds.</summary>
         TimeNavigationProcess = 3,
+        /// <summary>Weakly reachable engine objects whose disposal has not committed.</summary>
+        ObjectCount = 7,
+        /// <summary>Live resources registered in the process-wide path cache; uncached resources are excluded.</summary>
+        ObjectResourceCount = 8,
+        /// <summary>Live nodes inside the currently attached Engine SceneTree, including its root.</summary>
+        ObjectNodeCount = 9,
+        /// <summary>Live nodes outside the attached Engine SceneTree, including nodes of independent trees.</summary>
+        ObjectOrphanNodeCount = 10,
         /// <summary>Submitted logical canvas drawing records in the last completed renderer frame.</summary>
         RenderTotalObjectsInFrame = 11,
         /// <summary>Submitted canvas primitive/instance budgets in that frame.</summary>
@@ -34,8 +42,13 @@ public sealed partial class Performance : ElectronObject
 
     /// <summary>Reads the latest published value of a runtime monitor.</summary>
     /// <param name="monitor">An implemented monitor selector.</param>
-    /// <returns>A frame rate, duration in seconds, canvas submission count or physical count selected by the monitor.</returns>
+    /// <returns>A current object population, frame rate, duration in seconds, canvas submission count or physical count selected by the monitor.</returns>
     /// <remarks>Safe on any thread. Does not synchronize a device, invoke callbacks or allocate.
+    /// Object selectors scan weak registrations or the path cache on demand, without forcing collection or taking
+    /// scene ownership. They include queued and cancellation-pending objects until disposal commits; unreachable
+    /// undisposed objects disappear after collection. Orphan counts remain available in Release builds. Concurrent
+    /// construction, collection and membership changes can affect a scan; several reads are not one atomic census.
+    /// Construction allocates the weak identity and amortized registry storage. No device is opened to count objects.
     /// Timing durations publish maxima once per completed unscaled Engine host-second window. Successful
     /// attachment resets samples; stop and failed frames retain completed values. Owned Window presentation
     /// contributes to process timing, while independent direct hosts do not publish Engine timing windows.
@@ -51,6 +64,8 @@ public sealed partial class Performance : ElectronObject
         Monitor.TimeProcess => AtomicFloatingPoint.Read(ref _processTime),
         Monitor.TimePhysicsProcess => AtomicFloatingPoint.Read(ref _physicsTime),
         Monitor.TimeNavigationProcess => AtomicFloatingPoint.Read(ref _navigationTime),
+        Monitor.ObjectCount or Monitor.ObjectNodeCount or Monitor.ObjectOrphanNodeCount => ObjectCensus.Count(monitor),
+        Monitor.ObjectResourceCount => Resource.CountCachedResources(),
         Monitor.RenderTotalObjectsInFrame => RenderingServer.GetRenderingInfo(RenderingServer.RenderingInfo.TotalObjectsInFrame),
         Monitor.RenderTotalPrimitivesInFrame => RenderingServer.GetRenderingInfo(RenderingServer.RenderingInfo.TotalPrimitivesInFrame),
         Monitor.RenderTotalDrawCallsInFrame => RenderingServer.GetRenderingInfo(RenderingServer.RenderingInfo.TotalDrawCallsInFrame),
