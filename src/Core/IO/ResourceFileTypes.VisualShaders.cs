@@ -27,6 +27,10 @@ public static partial class ResourceFileTypes
         RegisterResource("VisualShaderNodeUIntOp", CreateVisualShaderNodeUIntOpFileResource);
         RegisterResource("VisualShaderNodeIntFunc", CreateVisualShaderNodeIntFuncFileResource);
         RegisterResource("VisualShaderNodeUIntFunc", CreateVisualShaderNodeUIntFuncFileResource);
+        RegisterResource("VisualShaderNodeCompare", CreateVisualShaderNodeCompareFileResource);
+        RegisterResource("VisualShaderNodeSwitch", CreateVisualShaderNodeSwitchFileResource);
+        RegisterResource("VisualShaderNodeIf", CreateVisualShaderNodeIfFileResource);
+        RegisterResource("VisualShaderNodeIs", CreateVisualShaderNodeIsFileResource);
         RegisterResource("VisualShaderNodeFloatConstant", CreateVisualShaderNodeFloatConstantFileResource);
         RegisterResource("VisualShaderNodeIntConstant", CreateVisualShaderNodeIntConstantFileResource);
         RegisterResource("VisualShaderNodeUIntConstant", CreateVisualShaderNodeUIntConstantFileResource);
@@ -59,6 +63,10 @@ public static partial class ResourceFileTypes
     private static VisualShaderNodeUIntOp CreateVisualShaderNodeUIntOpFileResource() => new();
     private static VisualShaderNodeIntFunc CreateVisualShaderNodeIntFuncFileResource() => new();
     private static VisualShaderNodeUIntFunc CreateVisualShaderNodeUIntFuncFileResource() => new();
+    private static VisualShaderNodeCompare CreateVisualShaderNodeCompareFileResource() => new();
+    private static VisualShaderNodeSwitch CreateVisualShaderNodeSwitchFileResource() => new();
+    private static VisualShaderNodeIf CreateVisualShaderNodeIfFileResource() => new();
+    private static VisualShaderNodeIs CreateVisualShaderNodeIsFileResource() => new();
     private static VisualShaderNodeFloatConstant CreateVisualShaderNodeFloatConstantFileResource() => new();
     private static VisualShaderNodeIntConstant CreateVisualShaderNodeIntConstantFileResource() => new();
     private static VisualShaderNodeUIntConstant CreateVisualShaderNodeUIntConstantFileResource() => new();

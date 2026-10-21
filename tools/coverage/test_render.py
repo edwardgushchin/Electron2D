@@ -783,6 +783,16 @@ def main():
     for name in ('texture_proxy_create(', 'texture_proxy_update('):
         row, = [line for line in rendering_rows if line.startswith(f'| [`method {name}')]
         assert ' | Partial | ' in row and 'RenderingTextureProxyTests' in row and 'actual methods' in row, row
+    for name, count in [("VisualShaderNodeCompare", 26), ("VisualShaderNodeSwitch", 12), ("VisualShaderNodeIf", 1), ("VisualShaderNodeIs", 6)]:
+        rows = [line for line in pages[CLASS_PAGES / (name + ".md")].splitlines() if line.startswith("| [`")]
+        blocked_count = 1 if name in ("VisualShaderNodeCompare", "VisualShaderNodeSwitch") else 0
+        assert len(rows) == count and sum(" | Implemented | " in row for row in rows) == count - blocked_count
+        assert sum(" | Blocked | " in row for row in rows) == blocked_count
+        if blocked_count: assert "VisualShaderValueType" in pages[CLASS_PAGES / (name + ".md")]
+    base_rows = pages[CLASS_PAGES / "VisualShaderNode.md"].splitlines()
+    assert " | Blocked | " in next(row for row in base_rows if "PORT_TYPE_TRANSFORM [" in row)
+    assert " | Blocked | " in next(row for row in base_rows if "PORT_TYPE_SAMPLER [" in row)
+    assert not any(t["id"] in ("T:Electron2D.VisualShaderNodeCompare.ComparisonType", "T:Electron2D.VisualShaderNodeSwitch.OpTypeEnum") for t in engine)
     canvas_rows = pages[CLASS_PAGES / "CanvasItem.md"].splitlines()
     for name in ('draw_texture(', 'draw_texture_rect(', 'draw_texture_rect_region('):
         row, = [line for line in canvas_rows if line.startswith(f'| [`method {name}')]

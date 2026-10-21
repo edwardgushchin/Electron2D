@@ -3,7 +3,7 @@ using IOPath = System.IO.Path;
 
 internal static partial class GraphChecks
 {
-    private const int GraphColumns = 20;
+    private const int GraphColumns = 40;
     internal static void Render(string folder, string[] args)
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu");
@@ -37,6 +37,7 @@ internal static partial class GraphChecks
                 var name = IOPath.GetFileNameWithoutExtension(file);
                 var shader = Own(ResourceLoader.Load<VisualShader>(file, ResourceLoader.CacheMode.IgnoreDeep));
                 if (name.StartsWith("integer-", StringComparison.Ordinal)) VerifyIntegerArchive(name, shader);
+                if (name.StartsWith("condition-", StringComparison.Ordinal)) VerifyConditionArchive(name, shader);
                 if (name.StartsWith("range-", StringComparison.Ordinal)) VerifyRangeArchive(name, shader);
                 var material = Own(new ShaderMaterial { Shader = shader });
                 var position = new Vector2(8 + _cases.Count % GraphColumns * 24, 8 + _cases.Count / GraphColumns * 24);
@@ -63,7 +64,8 @@ internal static partial class GraphChecks
                     if (!GetWindow()!.UseHDR2D)
                         expected = new(Math.Clamp(expected.R, 0, 1), Math.Clamp(expected.G, 0, 1), Math.Clamp(expected.B, 0, 1), expected.A);
                     var actual = pixels.GetPixel((int)item.Position.X + 8, (int)item.Position.Y + 8);
-                    var tolerance = item.Name.StartsWith("integer-", StringComparison.Ordinal) ? .001f : .016f;
+                    var integerBytes = item.Name.StartsWith("integer-", StringComparison.Ordinal) || item.Name.StartsWith("condition-s-1-", StringComparison.Ordinal) || item.Name.StartsWith("condition-s-2-", StringComparison.Ordinal);
+                    var tolerance = integerBytes ? .001f : item.Name.StartsWith("condition-", StringComparison.Ordinal) ? .0021f : .016f;
                     Check(MathF.Abs(actual.R - expected.R) < tolerance && MathF.Abs(actual.G - expected.G) < tolerance && MathF.Abs(actual.B - expected.B) < tolerance,
                         $"Graph {item.Name}: actual {actual}, expected {expected}.");
                     if (item.Name == "vertex-shift")
@@ -71,6 +73,13 @@ internal static partial class GraphChecks
                         var left = pixels.GetPixel((int)item.Position.X + 1, (int)item.Position.Y + 8);
                         var right = pixels.GetPixel((int)item.Position.X + 18, (int)item.Position.Y + 8);
                         Check(left.R < .01f && right.B > .7f, "Authored vertex arithmetic moves the submitted geometry.");
+                    }
+                    if (item.Name == "condition-procedural")
+                    {
+                        var left = pixels.GetPixel((int)item.Position.X + 2, (int)item.Position.Y + 8);
+                        var right = pixels.GetPixel((int)item.Position.X + 13, (int)item.Position.Y + 8);
+                        Check(left.R < .0021f && left.G < .0021f && left.B < .0021f && MathF.Abs(right.R - .25f) < .0021f && MathF.Abs(right.G - .5f) < .0021f && MathF.Abs(right.B - .75f) < .0021f,
+                            "UV-driven comparison selects different branch colors across the same submitted quad.");
                     }
                 }
                 Console.WriteLine($"{_cases.Count} imported graph programs produced their expected framebuffer pixels.");
@@ -97,7 +106,7 @@ internal static partial class GraphChecks
             base.Dispose(disposing);
         }
     }
-    private static Color Expected(string name) => name.StartsWith("integer-", StringComparison.Ordinal) ? IntegerExpected(name) : name.StartsWith("range-", StringComparison.Ordinal) ? RangeExpected(name) : name.StartsWith("flow-", StringComparison.Ordinal) ? DataflowExpected(name) : name.StartsWith("unary-", StringComparison.Ordinal) ? UnaryExpected(name) : name switch
+    private static Color Expected(string name) => name.StartsWith("condition-", StringComparison.Ordinal) ? ConditionExpected(name) : name.StartsWith("integer-", StringComparison.Ordinal) ? IntegerExpected(name) : name.StartsWith("range-", StringComparison.Ordinal) ? RangeExpected(name) : name.StartsWith("flow-", StringComparison.Ordinal) ? DataflowExpected(name) : name.StartsWith("unary-", StringComparison.Ordinal) ? UnaryExpected(name) : name switch
     {
         "color" or "vertex-shift" => new(.25f, .5f, .75f, 1),
         "cleared" => Colors.Black,

@@ -1,6 +1,6 @@
 # VisualShaderNode
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 Source: [VisualShaderNode.cs](../../src/Scene/Resources/VisualShaderNode.cs).
 
@@ -10,7 +10,7 @@ public abstract class Electron2D.VisualShaderNode
 
 Inherits: [Resource](Resource.md).
 
-Inherited by: [VisualShaderNodeClamp](VisualShaderNodeClamp.md), [VisualShaderNodeConstant](VisualShaderNodeConstant.md), [VisualShaderNodeDotProduct](VisualShaderNodeDotProduct.md), [VisualShaderNodeFloatFunc](VisualShaderNodeFloatFunc.md), [VisualShaderNodeFloatOp](VisualShaderNodeFloatOp.md), [VisualShaderNodeInput](VisualShaderNodeInput.md), [VisualShaderNodeIntFunc](VisualShaderNodeIntFunc.md), [VisualShaderNodeIntOp](VisualShaderNodeIntOp.md), [VisualShaderNodeMix](VisualShaderNodeMix.md), [VisualShaderNodeMultiplyAdd](VisualShaderNodeMultiplyAdd.md), [VisualShaderNodeOutput](VisualShaderNodeOutput.md), [VisualShaderNodeRemap](VisualShaderNodeRemap.md), [VisualShaderNodeSmoothStep](VisualShaderNodeSmoothStep.md), [VisualShaderNodeStep](VisualShaderNodeStep.md), [VisualShaderNodeUIntFunc](VisualShaderNodeUIntFunc.md), [VisualShaderNodeUIntOp](VisualShaderNodeUIntOp.md), [VisualShaderNodeVectorBase](VisualShaderNodeVectorBase.md).
+Inherited by: [VisualShaderNodeClamp](VisualShaderNodeClamp.md), [VisualShaderNodeCompare](VisualShaderNodeCompare.md), [VisualShaderNodeConstant](VisualShaderNodeConstant.md), [VisualShaderNodeDotProduct](VisualShaderNodeDotProduct.md), [VisualShaderNodeFloatFunc](VisualShaderNodeFloatFunc.md), [VisualShaderNodeFloatOp](VisualShaderNodeFloatOp.md), [VisualShaderNodeIf](VisualShaderNodeIf.md), [VisualShaderNodeInput](VisualShaderNodeInput.md), [VisualShaderNodeIntFunc](VisualShaderNodeIntFunc.md), [VisualShaderNodeIntOp](VisualShaderNodeIntOp.md), [VisualShaderNodeIs](VisualShaderNodeIs.md), [VisualShaderNodeMix](VisualShaderNodeMix.md), [VisualShaderNodeMultiplyAdd](VisualShaderNodeMultiplyAdd.md), [VisualShaderNodeOutput](VisualShaderNodeOutput.md), [VisualShaderNodeRemap](VisualShaderNodeRemap.md), [VisualShaderNodeSmoothStep](VisualShaderNodeSmoothStep.md), [VisualShaderNodeStep](VisualShaderNodeStep.md), [VisualShaderNodeSwitch](VisualShaderNodeSwitch.md), [VisualShaderNodeUIntFunc](VisualShaderNodeUIntFunc.md), [VisualShaderNodeUIntOp](VisualShaderNodeUIntOp.md), [VisualShaderNodeVectorBase](VisualShaderNodeVectorBase.md).
 
 ## Description
 
@@ -220,9 +220,9 @@ Exceptions:
 
 ## Lifecycle and verification
 
-Definitions are cold, single-threaded Resource authoring objects. Graph additions borrow them; ordinary disposal guards apply. Defaults, selectors and width survive duplication and typed archives. Editing requires reimport before rendering changes.
+Definitions are cold, single-threaded Resource authoring objects. Graphs borrow them. Selectors, typed defaults and default absence survive copies and archives. Changes require reimport before rendering.
 
-The public VisualShader.Consumer covers typed requests, mixed/dormant defaults, copy/archives, multi-output graphs and real software-rendered pixels. See [the component contract](../components/visual-shaders.md) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
+The public VisualShader.Consumer covers typed requests, dormant tolerance, condition presence, transactional operand conversion, copy/archives and real software-rendered pixels. See [the component contract](../components/visual-shaders.md#comparisons-and-conditional-results) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
 
 ## Decisions
 

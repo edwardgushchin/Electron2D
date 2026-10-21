@@ -1344,6 +1344,221 @@
       "godot": "VisualShaderNodeUIntFunc::property:function",
       "electron2d": "property:Electron2D.VisualShaderNodeUIntFunc.Function()",
       "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "class:VisualShaderNodeCompare",
+      "electron2d": "T:Electron2D.VisualShaderNodeCompare",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum:ComparisonType",
+      "electron2d": "T:Electron2D.VisualShaderValueType",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum:Condition",
+      "electron2d": "T:Electron2D.VisualShaderNodeCompare.ConditionEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum:Function",
+      "electron2d": "T:Electron2D.VisualShaderNodeCompare.FunctionEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_BOOLEAN",
+      "electron2d": "enumValue:Electron2D.VisualShaderValueType.Boolean()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderValueType.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderValueType.Float()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_SCALAR_INT",
+      "electron2d": "enumValue:Electron2D.VisualShaderValueType.Int()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_SCALAR_UINT",
+      "electron2d": "enumValue:Electron2D.VisualShaderValueType.UInt()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_VECTOR_2D",
+      "electron2d": "enumValue:Electron2D.VisualShaderValueType.Vector2()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_VECTOR_3D",
+      "electron2d": "enumValue:Electron2D.VisualShaderValueType.Vector3()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_VECTOR_4D",
+      "electron2d": "enumValue:Electron2D.VisualShaderValueType.Vector4()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:Condition.COND_ALL",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeCompare.ConditionEnum.All()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:Condition.COND_ANY",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeCompare.ConditionEnum.Any()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:Condition.COND_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeCompare.ConditionEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:Function.FUNC_EQUAL",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeCompare.FunctionEnum.Equal()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:Function.FUNC_GREATER_THAN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeCompare.FunctionEnum.GreaterThan()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:Function.FUNC_GREATER_THAN_EQUAL",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeCompare.FunctionEnum.GreaterThanEqual()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:Function.FUNC_LESS_THAN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeCompare.FunctionEnum.LessThan()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:Function.FUNC_LESS_THAN_EQUAL",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeCompare.FunctionEnum.LessThanEqual()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:Function.FUNC_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeCompare.FunctionEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:Function.FUNC_NOT_EQUAL",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeCompare.FunctionEnum.NotEqual()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::property:condition",
+      "electron2d": "property:Electron2D.VisualShaderNodeCompare.Condition()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::property:function",
+      "electron2d": "property:Electron2D.VisualShaderNodeCompare.Function()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::property:type",
+      "electron2d": "property:Electron2D.VisualShaderNodeCompare.Type()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "class:VisualShaderNodeSwitch",
+      "electron2d": "T:Electron2D.VisualShaderNodeSwitch",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeSwitch::enum:OpType",
+      "electron2d": "T:Electron2D.VisualShaderValueType",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_BOOLEAN",
+      "electron2d": "enumValue:Electron2D.VisualShaderValueType.Boolean()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_FLOAT",
+      "electron2d": "enumValue:Electron2D.VisualShaderValueType.Float()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_INT",
+      "electron2d": "enumValue:Electron2D.VisualShaderValueType.Int()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderValueType.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_UINT",
+      "electron2d": "enumValue:Electron2D.VisualShaderValueType.UInt()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_VECTOR_2D",
+      "electron2d": "enumValue:Electron2D.VisualShaderValueType.Vector2()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_VECTOR_3D",
+      "electron2d": "enumValue:Electron2D.VisualShaderValueType.Vector3()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_VECTOR_4D",
+      "electron2d": "enumValue:Electron2D.VisualShaderValueType.Vector4()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeSwitch::property:op_type",
+      "electron2d": "property:Electron2D.VisualShaderNodeSwitch.OpType()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "class:VisualShaderNodeIf",
+      "electron2d": "T:Electron2D.VisualShaderNodeIf",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "class:VisualShaderNodeIs",
+      "electron2d": "T:Electron2D.VisualShaderNodeIs",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeIs::enum:Function",
+      "electron2d": "T:Electron2D.VisualShaderNodeIs.FunctionEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeIs::enum_value:Function.FUNC_IS_INF",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeIs.FunctionEnum.IsInf()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeIs::enum_value:Function.FUNC_IS_NAN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeIs.FunctionEnum.IsNaN()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeIs::enum_value:Function.FUNC_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeIs.FunctionEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "VisualShaderNodeIs::property:function",
+      "electron2d": "property:Electron2D.VisualShaderNodeIs.Function()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
     }
   ],
   "statusGroups": [
@@ -1517,14 +1732,6 @@
         "class:VisualShaderNode"
       ],
       "reason": "Numeric typed defaults execute and persist; sampler/matrix graph-port operands and editor frame/preview consumers require their respective integrations."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "VisualShaderNode::enum_value:PortType.PORT_TYPE_SAMPLER",
-        "VisualShaderNode::enum_value:PortType.PORT_TYPE_TRANSFORM"
-      ],
-      "reason": "Trigger: typed graph matrix or sampled-image operand/default/expression support and its executing node importer; current numeric roles are implemented under ADR 0028."
     },
     {
       "state": "Blocked",
@@ -1772,6 +1979,71 @@
         "VisualShaderNodeUIntFunc::property:function"
       ],
       "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:VisualShaderNodeCompare",
+        "VisualShaderNodeCompare::enum:ComparisonType",
+        "VisualShaderNodeCompare::enum:Condition",
+        "VisualShaderNodeCompare::enum:Function",
+        "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_BOOLEAN",
+        "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_MAX",
+        "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_SCALAR",
+        "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_SCALAR_INT",
+        "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_SCALAR_UINT",
+        "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_VECTOR_2D",
+        "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_VECTOR_3D",
+        "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_VECTOR_4D",
+        "VisualShaderNodeCompare::enum_value:Condition.COND_ALL",
+        "VisualShaderNodeCompare::enum_value:Condition.COND_ANY",
+        "VisualShaderNodeCompare::enum_value:Condition.COND_MAX",
+        "VisualShaderNodeCompare::enum_value:Function.FUNC_EQUAL",
+        "VisualShaderNodeCompare::enum_value:Function.FUNC_GREATER_THAN",
+        "VisualShaderNodeCompare::enum_value:Function.FUNC_GREATER_THAN_EQUAL",
+        "VisualShaderNodeCompare::enum_value:Function.FUNC_LESS_THAN",
+        "VisualShaderNodeCompare::enum_value:Function.FUNC_LESS_THAN_EQUAL",
+        "VisualShaderNodeCompare::enum_value:Function.FUNC_MAX",
+        "VisualShaderNodeCompare::enum_value:Function.FUNC_NOT_EQUAL",
+        "VisualShaderNodeCompare::property:condition",
+        "VisualShaderNodeCompare::property:function",
+        "VisualShaderNodeCompare::property:type",
+        "class:VisualShaderNodeSwitch",
+        "VisualShaderNodeSwitch::enum:OpType",
+        "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_BOOLEAN",
+        "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_FLOAT",
+        "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_INT",
+        "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_MAX",
+        "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_UINT",
+        "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_VECTOR_2D",
+        "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_VECTOR_3D",
+        "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_VECTOR_4D",
+        "VisualShaderNodeSwitch::property:op_type",
+        "class:VisualShaderNodeIf",
+        "class:VisualShaderNodeIs",
+        "VisualShaderNodeIs::enum:Function",
+        "VisualShaderNodeIs::enum_value:Function.FUNC_IS_INF",
+        "VisualShaderNodeIs::enum_value:Function.FUNC_IS_NAN",
+        "VisualShaderNodeIs::enum_value:Function.FUNC_MAX",
+        "VisualShaderNodeIs::property:function"
+      ],
+      "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_TRANSFORM",
+        "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_TRANSFORM",
+        "VisualShaderNode::enum_value:PortType.PORT_TYPE_TRANSFORM"
+      ],
+      "reason": "Trigger: typed matrix graph values/default snapshots and persistence, matrix connection/source conversions and an executing matrix producer/consumer integration. ADR 0028 admits ordinary numeric matrix data independently of excluded Transform3D scene types. Raw material matrices already execute; their graph operand/default contract is not implemented. Do not expose an inert selector."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "VisualShaderNode::enum_value:PortType.PORT_TYPE_SAMPLER"
+      ],
+      "reason": "Trigger: typed sampled-image graph operands/defaults/expressions and an executing sampled-image node importer with material/image ownership, over the existing texture reflection backend under ADR 0028."
     }
   ],
   "extras": [
@@ -2238,6 +2510,50 @@
     {
       "electron2d": "method:Electron2D.VisualShaderNodeUIntFunc.GetPropertyDescriptors()",
       "reason": "ADRs 0001/0013/0028: explicit compiled integer graph Resource constructor, duplicate-instance factory and stored operation selector over existing typed default/archive semantics."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeCompare..ctor()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled graph Resource construction, duplicate factory and typed stored selector projection over the existing default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeCompare.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled graph Resource construction, duplicate factory and typed stored selector projection over the existing default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeCompare.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled graph Resource construction, duplicate factory and typed stored selector projection over the existing default/archive contract."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeSwitch..ctor()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled graph Resource construction, duplicate factory and typed stored selector projection over the existing default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeSwitch.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled graph Resource construction, duplicate factory and typed stored selector projection over the existing default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeSwitch.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled graph Resource construction, duplicate factory and typed stored selector projection over the existing default/archive contract."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeIf..ctor()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled graph Resource construction, duplicate factory and typed stored selector projection over the existing default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeIf.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled graph Resource construction, duplicate factory and typed stored selector projection over the existing default/archive contract."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeIs..ctor()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled graph Resource construction, duplicate factory and typed stored selector projection over the existing default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeIs.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled graph Resource construction, duplicate factory and typed stored selector projection over the existing default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeIs.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled graph Resource construction, duplicate factory and typed stored selector projection over the existing default/archive contract."
     }
   ]
 }

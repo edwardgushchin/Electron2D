@@ -140,14 +140,15 @@ public abstract class VisualShaderNode : Resource
         }
         _defaults.Clear(); foreach (var pair in values) _defaults.Add(pair.Key, pair.Value);
     }
-    internal void ChangeDefaultTypes(object[] fallbacks)
+    internal void ChangeDefaultTypes(object[] fallbacks, int firstPort = 0)
     {
-        var values = new Dictionary<int, VisualShaderPortDefault>();
-        for (var port = 0; port < fallbacks.Length; port++)
+        var values = new Dictionary<int, VisualShaderPortDefault>(_defaults);
+        for (var index = 0; index < fallbacks.Length; index++)
         {
+            var port = firstPort + index;
             var value = _defaults.TryGetValue(port, out var previous)
-                ? VisualShaderValues.ConvertDefaultValue(fallbacks[port], previous.BoxedValue) : fallbacks[port];
-            values.Add(port, VisualShaderValues.Entry(port, value));
+                ? VisualShaderValues.ConvertDefaultValue(fallbacks[index], previous.BoxedValue) : fallbacks[index];
+            values[port] = VisualShaderValues.Entry(port, value);
         }
         _defaults.Clear(); foreach (var pair in values) _defaults.Add(pair.Key, pair.Value);
     }

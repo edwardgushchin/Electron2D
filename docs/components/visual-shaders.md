@@ -1,6 +1,6 @@
 # Visual shader graphs
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 ## Scope and owned types
 
@@ -326,6 +326,86 @@ use a tighter 0.001 readback tolerance, sufficient to detect one-byte difference
 on normalized and half-float targets. The wider fixture grid accommodates these
 programs without changing their local geometry or UV coordinates.
 
+## Comparisons and conditional results
+
+VisualShaderNodeCompare and VisualShaderNodeSwitch share VisualShaderValueType:
+Float, Int, UInt, Vector2, Vector3, Vector4 and Boolean. This selector excludes
+sampled images; VisualShaderNode.PortType remains the broader port contract with
+a separate pending sampled-image role. Max=8 is a nonselectable logical bound;
+value seven is not exposed until the separate typed matrix graph value/default,
+persistence and conversion contract executes. Raw material matrix arrays already
+execute under ADR 0028; they do not supply graph operands or scene transforms.
+
+Compare initially tests two zero floats for equality with an explicit 0.00001
+absolute tolerance. Float Equal uses abs(a-b) < tolerance, and NotEqual negates
+that test. The tolerance input is active only for these two functions; its typed
+stored default and absence survive all other function/type selections and fresh
+archives. Integer comparisons retain all bits. Vector equality/ordering tests
+components exactly and reduces them with Condition All or Any. Boolean Equal
+and NotEqual compare directly; its four ordering functions produce false.
+
+Changing Type converts only the two operands and recreates missing operands.
+A failed integer conversion changes no field or default. A missing Vector4
+operand uses (0,0,0,1); expansion of a present vector repeats its last component.
+Function and Condition retain their values independently of the selected type.
+Invalid selectors leave the complete definition unchanged. Repeated selection
+is quiet, and Changed observers execute after the new state commits.
+
+Switch inputs are condition, true value and false value. Its initial defaults
+are false, 1.0 and 0.0. Changing OpType converts/recreates only the value inputs;
+the condition retains both its Boolean value and its explicit presence/absence.
+Boolean value conversions use true/false fallbacks. Floating/vector selection
+uses native mix(falseValue, trueValue, float(condition)); integer/Boolean
+selection uses the exact selected operand. Native nonfinite interpolation
+behavior is retained, so this is not a promise to suppress a nonfinite unused
+floating operand.
+
+```csharp
+using var compare = new VisualShaderNodeCompare
+{
+    Function = VisualShaderNodeCompare.FunctionEnum.GreaterThan
+};
+compare.SetInputPortDefaultValue(0, .75f);
+compare.SetInputPortDefaultValue(1, .5f);
+using var select = new VisualShaderNodeSwitch
+{
+    OpType = VisualShaderValueType.Vector3
+};
+select.SetInputPortDefaultValue(1, new Vector3(.25f, .5f, .75f));
+select.SetInputPortDefaultValue(2, Vector3.Zero);
+using var graph = new VisualShader();
+graph.AddNode(VisualShader.Type.Fragment, compare, Vector2.Zero, 2);
+graph.AddNode(VisualShader.Type.Fragment, select, Vector2.Zero, 3);
+graph.ConnectNodes(VisualShader.Type.Fragment, 2, 0, 3, 0);
+graph.ConnectNodes(VisualShader.Type.Fragment, 3, 0, VisualShader.NodeIDOutput, 0);
+```
+
+Ordinary source save/import makes this a native material program. The executing
+fixture also supplies UV.x to the comparison, so its branch changes across the
+quad without a per-frame CLR graph evaluator.
+
+VisualShaderNodeIf has six inputs: a, b, tolerance, equal, greater and lesser.
+The first three are floats and the results are Vector3. Its explicit defaults
+are zero except for tolerance 0.00001. It selects equal when abs(a-b) < tolerance,
+otherwise lesser when a < b, otherwise greater. At equal inputs and a zero or
+negative tolerance it therefore selects greater. Removed defaults retain the
+ordinary zero fallback instead of recreating constructor values.
+
+VisualShaderNodeIs classifies a floating result with IsInf (initial) or IsNaN
+and produces a Boolean scalar. Authored defaults remain finite. The software
+fixtures also classify native overflow and positive/negative/zero divided by
+zero in both stages. These tests describe the observed software backend; the
+producer arithmetic's native domain rules are not promoted to portable
+cross-backend guarantees.
+
+The 581 new programs cover every applicable comparison function/type/reduction,
+all Switch types and both choices, every If branch and strict-tolerance boundary,
+initial/removed defaults, both canvas stages and UV-driven composition. Integer
+selection uses the existing full-byte readback; Vector4 has explicit W witnesses.
+Ordinary condition colors allow 0.0021 readback error for half a UNORM8 step; byte-encoded integer colors retain the stricter 0.001 bound. Fresh archives verify selectors, dormant tolerance and exact typed operands. A
+stored edge into a subsequently hidden tolerance port is rejected on load/import,
+and failed import preserves the existing target artifact.
+
 ## Canvas boundary
 
 Vertex inputs follow the existing supplied framebuffer-pixel canvas ABI.
@@ -354,8 +434,8 @@ Sky/volumetric scene domains and deprecated inert graph offset are excluded.
 The public `tests/VisualShader.Consumer` covers ownership, aliases, factory
 replacement, invalid requests, snapshots, default presence/conversion, change
 semantics, shallow/deep/copy operations, and fresh resource archives, including
-compressed big-endian data. Six hundred sixty-four rendered imported programs include the 57 foundation programs,
-170 unary-function programs, 41 vector-dataflow programs, 138 range/mask programs and 258 integer programs.
+compressed big-endian data. One thousand two hundred forty-five rendered imported programs include the 57 foundation programs,
+170 unary-function programs, 41 vector-dataflow programs, 138 range/mask programs, 258 integer programs and 581 comparison/conditional programs.
 The separate zero-width Remap boundary and ten integer boundary programs verify import and fresh load without portable undefined-domain pixel assertions. Unary coverage includes every scalar/vector function, all vector widths,
 negative/clamped/round-even cases, both canvas stages, and a normalization witness
 for every vec4 function that makes its fourth component observable in RGB. Dataflow

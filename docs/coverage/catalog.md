@@ -939,7 +939,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeColorOp](classes/VisualShaderNodeColorOp.md) | VisualShaderNode | Unimplemented | 12 |
 | [VisualShaderNodeColorParameter](classes/VisualShaderNodeColorParameter.md) | VisualShaderNodeParameter | Blocked | 2 |
 | [VisualShaderNodeComment](classes/VisualShaderNodeComment.md) | VisualShaderNodeFrame | Blocked | 1 |
-| [VisualShaderNodeCompare](classes/VisualShaderNodeCompare.md) | VisualShaderNode | Unimplemented | 25 |
+| [VisualShaderNodeCompare](classes/VisualShaderNodeCompare.md) | VisualShaderNode | Implemented | 25 |
 | [VisualShaderNodeConstant](classes/VisualShaderNodeConstant.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeCubemap](classes/VisualShaderNodeCubemap.md) | VisualShaderNode | Excluded | 12 |
 | [VisualShaderNodeCubemapParameter](classes/VisualShaderNodeCubemapParameter.md) | VisualShaderNodeTextureParameter | Excluded | 0 |
@@ -960,13 +960,13 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeFresnel](classes/VisualShaderNodeFresnel.md) | VisualShaderNode | Unimplemented | 0 |
 | [VisualShaderNodeGlobalExpression](classes/VisualShaderNodeGlobalExpression.md) | VisualShaderNodeExpression | Blocked | 0 |
 | [VisualShaderNodeGroupBase](classes/VisualShaderNodeGroupBase.md) | VisualShaderNodeResizableBase | Blocked | 21 |
-| [VisualShaderNodeIf](classes/VisualShaderNodeIf.md) | VisualShaderNode | Unimplemented | 0 |
+| [VisualShaderNodeIf](classes/VisualShaderNodeIf.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeInput](classes/VisualShaderNodeInput.md) | VisualShaderNode | Partial | 3 |
 | [VisualShaderNodeIntConstant](classes/VisualShaderNodeIntConstant.md) | VisualShaderNodeConstant | Implemented | 1 |
 | [VisualShaderNodeIntFunc](classes/VisualShaderNodeIntFunc.md) | VisualShaderNode | Implemented | 7 |
 | [VisualShaderNodeIntOp](classes/VisualShaderNodeIntOp.md) | VisualShaderNode | Implemented | 15 |
 | [VisualShaderNodeIntParameter](classes/VisualShaderNodeIntParameter.md) | VisualShaderNodeParameter | Blocked | 13 |
-| [VisualShaderNodeIs](classes/VisualShaderNodeIs.md) | VisualShaderNode | Unimplemented | 5 |
+| [VisualShaderNodeIs](classes/VisualShaderNodeIs.md) | VisualShaderNode | Implemented | 5 |
 | [VisualShaderNodeLinearSceneDepth](classes/VisualShaderNodeLinearSceneDepth.md) | VisualShaderNode | Excluded | 0 |
 | [VisualShaderNodeMix](classes/VisualShaderNodeMix.md) | VisualShaderNode | Implemented | 10 |
 | [VisualShaderNodeMultiplyAdd](classes/VisualShaderNodeMultiplyAdd.md) | VisualShaderNode | Implemented | 7 |
@@ -998,7 +998,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeScreenUVToSDF](classes/VisualShaderNodeScreenUVToSDF.md) | VisualShaderNode | Blocked | 0 |
 | [VisualShaderNodeSmoothStep](classes/VisualShaderNodeSmoothStep.md) | VisualShaderNode | Implemented | 10 |
 | [VisualShaderNodeStep](classes/VisualShaderNodeStep.md) | VisualShaderNode | Implemented | 10 |
-| [VisualShaderNodeSwitch](classes/VisualShaderNodeSwitch.md) | VisualShaderNode | Unimplemented | 11 |
+| [VisualShaderNodeSwitch](classes/VisualShaderNodeSwitch.md) | VisualShaderNode | Implemented | 11 |
 | [VisualShaderNodeTexture](classes/VisualShaderNodeTexture.md) | VisualShaderNode | Blocked | 18 |
 | [VisualShaderNodeTexture2DArray](classes/VisualShaderNodeTexture2DArray.md) | VisualShaderNodeSample3D | Excluded | 1 |
 | [VisualShaderNodeTexture2DArrayParameter](classes/VisualShaderNodeTexture2DArrayParameter.md) | VisualShaderNodeTextureParameter | Blocked | 0 |
