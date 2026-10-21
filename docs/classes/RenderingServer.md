@@ -1888,3 +1888,5 @@ Native thin-stroke batch bounds include half-pixel coverage and an additional ha
 | `public static RDSamplerState? ShaderGetTextureSamplerState(RID shader, string name, int index = 0)` | Reads owned or borrowed shader metadata as an independent caller-owned disposable copy, or null. |
 
 Both operations require the live server owner thread. Invalid/stale/wrong-kind identities reject; borrowed mutation throws InvalidOperationException. Name, descriptor element, copied input ownership, validation, Changed publication and backend limits follow [Shader's complete method contract](Shader.md#texture-sampler-state). No sampler RID is borrowed or exposed; configuring metadata precedes native renderer preparation. See [the executable consumer](../../tests/ShaderSamplers.Consumer/ShaderSamplers.Consumer.csproj).
+
+CanvasItemAddPrimitive shares the [native point/line kernel](../components/canvas-rendering.md#native-point-and-line-primitives) with scene drawing, including copied endpoint attributes and snapping. Public server producers participate in the same native pixel and lifetime checks; compatibility native subpixel parity remains incomplete.

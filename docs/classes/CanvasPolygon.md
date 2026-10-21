@@ -23,7 +23,7 @@ Internal retained vertex/index storage owned by CanvasItem. It is not a public r
 | `void Set(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, bool primitive, int[][]? contours = null)` | Copies validated attributes; triangulates a contour through shared Geometry logic or creates fixed triangle/quad indices. |
 | `void SetTriangles(ReadOnlySpan<CanvasVertex> triangles)` | Copies validated triangle vertices from internal scene drawing and writes sequential indices without contour triangulation. |
 | `void RemapUV(Rect2 mapping)` | Applies normalized atlas origin/scale to stored UVs, rejecting nonfinite output. |
-| `void Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap)` | Appends transformed/modulated triangles, or one-pixel point/line geometry. |
+| `(int Count, Mesh.PrimitiveType Primitive) Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)` | Appends transformed/modulated geometry and returns the native point/line prefix count/topology; filled triangles return the default prefix. |
 
 ## Runtime behavior
 
@@ -31,7 +31,7 @@ Set is called only after CanvasItem validates counts, values, resource lifetime 
 
 Line uses SetTriangles through the internal CanvasItem triangle recorder. It preserves each vertex's color and UV and bypasses contour triangulation, then follows the same retained command, atlas remap, transform and backend batch path.
 
-RemapUV runs before the command is committed. Append rejects transformed positions or modulated colors that overflow. Point/line endpoints transform before expansion so their width stays one framebuffer pixel; coincident two-point lines produce nothing. Filled geometry retains its stored triangulation while positions and colors transform every submission. Vertex snapping does not modify the recorded local values.
+RemapUV runs before the command is committed. Append rejects transformed positions or modulated colors that overflow. Point/line endpoints transform and snap before native batch submission; coincident transformed two-point lines produce nothing. GPU rendering uses point/line rasterization. Compatibility expands those already transformed endpoints into its existing one-pixel triangle footprints. Filled geometry retains its stored triangulation while positions and colors transform every submission. Vertex snapping does not modify the recorded local values.
 
 Recording failure may leave scratch contents changed, but no command references that uncommitted pool slot. Existing recorded commands have distinct pool entries. An uncaught drawing callback failure clears all commands; retry starts at slot zero. Growth can allocate, while fixed-capacity redraw, triangulation and replay do not.
 

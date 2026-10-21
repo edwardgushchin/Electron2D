@@ -1,5 +1,7 @@
 [Polygon edge smoothing](../components/meshes.md#polygon-edge-smoothing) now executes shared-boundary and inverted-loop coverage geometry on both canvas backends, including skeletal pose replay.
 
+[Point/line primitives](../components/canvas-rendering.md#native-point-and-line-primitives) now use native GPU topology and initialized point-size output while preserving compatibility footprints and its explicit subpixel limit.
+
 [HDR screen debanding](../components/hdr-canvas.md#screen-debanding) now connects stored viewport/root-project controls and renderer-session overrides to final GPU dithering before byte output. Linear/offscreen images and movie capture retain their precision; no production type is added.
 
 # Rendering domain

@@ -31,7 +31,7 @@ internal static class CanvasGeometry
     {
         if (command.NinePatch is { } ninePatch) { ninePatch.Append(output, command, transform, modulation, snapVertices); return default; }
         if (command.Stroke is { } stroke) return (stroke.Append(output, transform, modulation, snapVertices), stroke.Primitive);
-        if (command.Polygon is { } polygon) { polygon.Append(output, transform, modulation, snapVertices, skinOwner, linear, blend); return default; }
+        if (command.Polygon is { } polygon) return polygon.Append(output, transform, modulation, snapVertices, skinOwner, linear, blend);
         var color = command.Color * modulation;
         if (!color.IsFinite()) throw new InvalidOperationException("Canvas modulation overflowed finite colors.");
         if (command.Texture is not null) { AppendTexture(output, command, transform, color, snapVertices); return default; }

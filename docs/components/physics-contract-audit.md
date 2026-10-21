@@ -1,5 +1,7 @@
 [The complete numerical-thread setting contract](physics-thread.md#complete-setting-contract-2026-10-21) now verifies captured owner/separate policies on CPU, independent NVIDIA GPU and a public provider in CLR/strict NativeAOT, including unavailable-GPU fallback, failures, retirement and strict zero warmed managed bytes. Current physics census: 1305/1369 Implemented (95.33%), 64 open (50 Partial, 11 Blocked, 3 Unimplemented), 92 Excluded. Whole-backend and full-goal acceptance remain open. The body-motion extension operation was completed in the preceding checkpoint.
 
+[Native inherited point/line drawing](canvas-rendering.md#native-point-and-line-primitives) closes the GPU triangle-footprint gap for DrawPrimitive and its public server producer. Compatibility native subpixel coverage remains Partial; no physical declaration is promoted by this bounded integration.
+
 # Physics contract and backend audit
 
 [Current-group kinematic synchronization](physics-bodies.md#kinematic-synchronization-from-processing-groups) permits AnimatableBody.SyncToPhysics alongside its already executable worker poses. The bounded pending/idle/zero-step, selected contact/query, lifetime/capture/failure and allocation checks add behavior evidence without closing other inherited or native/performance gates. Counts remain 1305/1369 Implemented (95.33%), 64 open, 92 Excluded.

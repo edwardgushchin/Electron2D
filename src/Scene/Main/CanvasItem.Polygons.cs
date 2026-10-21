@@ -38,7 +38,9 @@ public abstract partial class CanvasItem
     /// <param name="uvs">Finite normalized vertex UVs. Missing entries are zero; extra entries are ignored.</param>
     /// <param name="texture">An optional borrowed live texture; atlas primitives sample the underlying full image.</param>
     /// <remarks>Copies supplied data. Points and lines remain one framebuffer pixel wide under scaling and have no
-    /// antialias fringe. A coincident two-point line draws nothing. Primitive UVs do not remap atlas regions.</remarks>
+    /// antialias fringe. GPU rendering retains native point/line topology; compatibility rendering uses triangle
+    /// footprints with backend-specific subpixel coverage. A coincident two-point line draws nothing. Primitive UVs
+    /// do not remap atlas regions.</remarks>
     /// <exception cref="ArgumentException">Used data is nonfinite or the vertex count is outside one through four.</exception>
     /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The item or texture is disposed.</exception>

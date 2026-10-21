@@ -77,27 +77,24 @@ internal sealed partial class CanvasPolygon
         }
     }
 
-    internal void Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)
+    internal (int Count, Mesh.PrimitiveType Primitive) Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)
     {
-        if (_rawTriangles) { CanvasMesh.AppendTriangleData(output, _triangleData!, IndexCount, transform, modulation, snap, skinOwner, linear); return; }
+        if (_rawTriangles) { CanvasMesh.AppendTriangleData(output, _triangleData!, IndexCount, transform, modulation, snap, skinOwner, linear); return default; }
         if (linear) modulation = CanvasGeometry.LinearColor(modulation);
         var skinned = _skinEnabled && _skin?.Prepare(Vertices, VertexCount) == true;
-        if (_antialiased) { AppendAntialiased(output, transform, modulation, snap, linear, skinned, blend); return; }
+        if (_antialiased) { AppendAntialiased(output, transform, modulation, snap, linear, skinned, blend); return default; }
         if (VertexCount >= 3)
         {
             for (var i = 0; i < IndexCount; i++) output.Add(TransformVertex(skinned ? Vertices[Indices[i]] with { Position = _skin!.Position(Indices[i]) } : Vertices[Indices[i]], transform, modulation, snap, linear));
-            return;
+            return default;
         }
         var a = TransformVertex(Vertices[0], transform, modulation, snap, linear);
         var b = VertexCount == 1 ? a : TransformVertex(Vertices[1], transform, modulation, snap, linear);
-        if (VertexCount == 2 && a.Position == b.Position) return;
-        var dx = (double)b.Position.X - a.Position.X; var dy = (double)b.Position.Y - a.Position.Y;
-        var length = Math.Sqrt(dx * dx + dy * dy);
-        var normal = VertexCount == 1 ? new Vector2(0.5f, 0) : new Vector2((float)(dy / length * 0.5), (float)(-dx / length * 0.5));
-        if (VertexCount == 1) { a = a with { Position = a.Position - new Vector2(0, 0.5f) }; b = b with { Position = b.Position + new Vector2(0, 0.5f) }; }
-        var q0 = a with { Position = a.Position + normal }; var q1 = b with { Position = b.Position + normal };
-        var q2 = b with { Position = b.Position - normal }; var q3 = a with { Position = a.Position - normal };
-        output.Add(q0); output.Add(q1); output.Add(q2); output.Add(q0); output.Add(q2); output.Add(q3);
+        if (VertexCount == 2 && a.Position == b.Position) return default;
+        output.Add(a);
+        if (VertexCount == 1) return (1, Mesh.PrimitiveType.Points);
+        output.Add(b);
+        return (2, Mesh.PrimitiveType.Lines);
     }
 
     private static CanvasVertex TransformVertex(CanvasVertex vertex, Transform transform, Color modulation, bool snap, bool linear)
