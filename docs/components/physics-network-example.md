@@ -2,6 +2,92 @@
 
 Last updated: 2026-10-21
 
+## Hardware network regression after joint cache damping, 2026-10-21
+
+The [joint cache damping](physics-joint-policies.md#retained-hard-row-guesses)
+checkpoint receives a fresh separate-process network check on the physical
+RTX 3090 Ti. Every main attempt retains 900 authority ticks, late CPU admission
+after tick 310, a 250-ms early-client poll delay, 30 actors in 32 slots and the
+original application deadlines. Numbered inputs, impaired delivery, exact confirmed
+event suffixes, lifecycle/ownership changes, natural and restored sleep/wake,
+contact-supported joints, geometry and crossed capsule response remain in the
+parent acceptance check. Final actor identity, pose, linear/angular velocity and
+sleep converge to authority within the existing .002 numerical tolerance.
+
+| Frozen payload and delivery | CPU owner / separate | GPU owner / separate |
+| --- | --- | --- |
+| Public managed, phase-paced, `2f320a0a` | Pass / Pass | Pass / Pass |
+| Strict NativeAOT, phase-paced, `2f320a0a` | Pass / Pass | **Fail** / Pass |
+| Instrumented managed, ordinary, integrated `826221f8` | Pass / Pass | Pass / Pass |
+
+Eleven of twelve main attempts pass, completing 33 simulation participants; 48
+processes including check parents are observed. Only GPU early clients load the
+physical NVIDIA driver; no software Vulkan is observed. Every CPU participant
+proves rejected GPU startup and has no window/rendering service. All four native
+attempts run without CoreCLR. The seven successful frozen public profiles measure
+7162 warm step and 58379 warm replay intervals; the four integrated ordinary
+profiles measure 4425 and 6236. Each interval retains strict zero owner/all-thread
+managed bytes. Cold work, protocol/history allocations and native/driver memory
+are separate costs.
+
+The first native GPU owner attempt fails in 143.596 seconds. Its logs retain an
+authority deadline at tick 378 with missing-input waits and child disconnects;
+there are no accepted participant reports or costs. A separate NativeAOT input-trace
+copy also fails in 141.622 seconds. The GPU client's last periodic trace is tick 13,
+confirmed tick 0, with valid local commands for ticks 1–3; the server has received
+no valid player command at tick 0. No later GPU periodic trace appears before its
+disconnect. Server progress after that peer times out is a downstream observation;
+the later owner handoff is not established as the initial cause.
+
+An additional phase-trace copy and two controls of the original native payload
+(read-only process sampling, then a debugger attachment) pass. These observations
+do not replace either failure. The debugger captures a successful replay through
+SDL Vulkan compute descriptor binding and the resident solver; it does not capture
+the failed state or establish a driver, GPU, transport or solver root cause. No
+application assertion, deadline, prediction bound or numerical budget is relaxed,
+and no runtime fix is claimed. The intermittent native GPU owner gate stays open;
+the next causal diagnostic must capture the stalled client itself.
+
+The integrated ordinary GPU clients retain the following store costs at report
+capture. Frame scope includes whole tree physics, callbacks and synchronization;
+total scope also includes preparation, corrections and the explicit remainder.
+
+| Numerical lane | Predicted / replayed frames | Frame / total submissions | Frame / total readback bytes | Frame / total accumulated waits, ms |
+| --- | ---: | ---: | ---: | ---: |
+| Owner | 35 / 429 | 18254 / 23120 | 2313280 / 2603312 | 3428.1614 / 3714.6289 |
+| Separate | 30 / 360 | 15284 / 19184 | 1917408 / 2159168 | 4103.7894 / 4475.5410 |
+
+All twelve participant cost files reconcile exact counts, byte/submission totals
+and floating wait/wall sums against their reports. Region samples retain the first
+4096 intervals; sample/unsampled counts disclose bounded retention, with no truncated
+GPU frame samples here. Sampled distributions include cold work and observer cost.
+Each GPU remainder is three submissions, 208 upload bytes and 88 readback bytes.
+CPU participants retain zero GPU counters and verify the actual numerical lane.
+The sampler self-check also passes. Reports preserve wire bytes, queue peaks,
+step/correction percentiles and command/event payload capacities of 262144/36864
+bytes per participant; capacities exclude array headers and full retained graphs.
+Different delivery/coalescing produces different solved work, so these observations
+do not establish matched CPU/GPU throughput or a GPU speed advantage.
+
+Portable-PDB checks bind the public managed and pre-AOT inputs to 2436 runtime and
+14 example source documents at `2f320a0a`. The rebuilt integrated probe matches all
+2440 runtime and 17 linked consumer documents at `826221f8`. An independent resource
+commit lands during the failed frozen attempt; its changed source paths are recorded,
+while the executed payload hashes remain unchanged. The frozen public results do
+not qualify the whole later main. Evidence lives under
+`bin/physics-network-joint-regression/2026-10-21/`: `validation.json` (SHA-256
+`838d52e416d69a613e922c8b31019fd3c7d8a597df2952080ac1a9a07d055d7f`),
+`cost-analysis.json`, `payloads.json`, the three source-proof files and individual
+attempt logs. Diagnostic copies and their receipts are retained separately from
+the twelve main attempts.
+
+No new Xid is observed during these bounded checks. The previously unverified GPU
+power cable remains unverified by the owner, so the long mass-load hardware gate
+stays closed. Real-window FPS, native/foreign allocator ownership, other platforms,
+the intermittent allocation diagnostic and complete-goal acceptance remain open.
+No declaration state changes: physics remains 1304/1369 Implemented (95.25%), with
+65 open declarations and 92 Excluded.
+
 ## Crossed capsule correction and CPU wake preparation, 2026-10-20
 
 The current version-five application adds two capsule recipes to the preceding
@@ -26,8 +112,9 @@ budget. It adds no joint buffers to worlds with no joints and does not change
 constraint selection, numerical policy, identity or event delivery. This trades
 bounded cold storage across graph colors for zero growth during later wake. The
 [pooled dormant storage](physics-sleep.md#pooled-dormant-island-storage) now removes
-fixed per-island record limits; the global dense-contact budget and broader
-acceptance remain separate requirements.
+fixed per-island record limits; [observed contact peaks](physics-sleep.md#observed-dense-contact-capacity)
+also expand the initial body-based graph budget. Broader numerical, native,
+platform, network and performance acceptance remain separate requirements.
 The original failure and temporary allocation/stack diagnostics are preserved;
 the diagnostic source changes are reverted.
 

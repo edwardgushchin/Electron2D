@@ -1,5 +1,10 @@
 # Physics domain
 
+[The hardware network regression](../components/physics-network-example.md#hardware-network-regression-after-joint-cache-damping-2026-10-21)
+passes eleven of twelve main attempts after joint cache damping. The intermittent
+NativeAOT GPU owner stall remains open despite successful diagnostic controls;
+declaration coverage and complete-goal acceptance are unchanged.
+
 [Passive joint-chain checks](../components/physics-joint-policies.md#retained-hard-row-guesses)
 expose energy feedback hidden by momentum-only checks. CPU hard-row cache damping
 preserves the complete solve; declaration coverage and full-goal gates remain open.

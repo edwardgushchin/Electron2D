@@ -135,10 +135,10 @@ support impulse against both bodies' weight and spring load. Numbered kicks from
 tick 240 every 120 ticks must wake both bodies from natural sleep. Both clients
 must restore actual floor contacts and sleeping state from server corrections.
 Startup negative controls remove the floor or spring load and require rejection.
-The final topology now contains 28 objects within 32 prepared slots. Command history
-uses 262144 bytes per process, excluding array headers. The example's application
-wire is version 4 and rejects previous recipe/slot layouts; the engine portable
-snapshot format is unchanged.
+The complete current topology contains 30 actors within 32 prepared slots. Command
+history uses 262144 bytes per process, excluding array headers. The application's
+wire is version five and rejects previous recipe/slot layouts; the engine portable
+snapshot format has its separate versioning.
 
 The additional geometry island includes an infinite boundary, a two-segment concave
 ledge, a rotated capsule, an asymmetric convex polygon, a directed separation ray
@@ -206,10 +206,15 @@ smoothing counts, separately from physics/replay metrics.
 
 ## NativeAOT on Linux
 
+The [current hardware verification](../../docs/components/physics-network-example.md#hardware-network-regression-after-joint-cache-damping-2026-10-21)
+retains an intermittent NativeAOT GPU owner stall as an open failure. Successful
+controls do not close that gate; CPU native and the separate numerical GPU profile
+have their own passing receipts.
+
 Publish the complete native output directory and run its executable directly:
 
 ```sh
-dotnet publish examples/PhysicsNetwork/PhysicsNetwork.csproj -c Release -r linux-x64 -p:PublishAot=true -p:ILLinkTreatWarningsAsErrors=true -p:IlcTreatWarningsAsErrors=true -o bin/physics-network-native
+dotnet publish examples/PhysicsNetwork/PhysicsNetwork.csproj -c Release -r linux-x64 -p:PublishAot=true -p:ILLinkTreatWarningsAsErrors=true -p:IlcTreatWarningsAsErrors=true -p:Electron2DBuildNativeFromSource=true -o bin/physics-network-native
 bin/physics-network-native/PhysicsNetwork --check --client-backend cpu --ticks 900 --late-join-tick 310 --output bin/physics-network-native-check
 ```
 
