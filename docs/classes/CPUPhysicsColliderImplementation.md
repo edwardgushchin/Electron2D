@@ -12,8 +12,9 @@ logical indices without producing fixtures. Complete source preflight occurs
 before mutation; this owner retains concrete geometry validation and storage.
 See [shared inputs](../components/physics-backends.md#shared-collider-shape-inputs).
 
-Sleep-capable non-static attachment, motion-mode changes and CanSleep writes
-prepare dormant capacity before numerical use, including kinematic bodies.
+Non-static attachment and motion-mode changes prepare dormant capacity before
+numerical use, including CanSleep=false bodies and kinematic bodies. Enabling
+CanSleep retains its preparation hook.
 See [the first-sleep and wake checks](../components/physics-sleep.md#kinematic-dormant-capacity).
 
 The CPU creator retains this concrete attachment in its private collider table.

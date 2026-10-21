@@ -265,15 +265,21 @@ internal static partial class PhysicsBackendOwnershipTests
             Reject<ArgumentOutOfRangeException>(() => PhysicsServer.SpaceSetContactDefaultBias(first, float.NaN));
             Reject<ArgumentOutOfRangeException>(() => PhysicsServer.SpaceSetSolverIterations(first, 0));
             Check(space.ContactSettings == before && space.SolverIterations == 7, "Invalid policy leaves authored and solver settings unchanged");
-            PhysicsServer.BodySetGravityScale(body, 0); PhysicsServer.BodySetCanSleep(body, false); PhysicsServer.BodySetSpace(body, first);
+            if (owner is CPUPhysicsWorldBackend staticCPU)
+            {
+                PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static); PhysicsServer.BodySetSpace(body, first);
+                Check(!staticCPU.MaySleep, "Static-only worlds do not activate dormant simulation storage");
+            }
+            PhysicsServer.BodySetGravityScale(body, 0); PhysicsServer.BodySetCanSleep(body, false);
+            PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Rigid); PhysicsServer.BodySetSpace(body, first);
             PhysicsServer.SpaceSetActive(first, true); PhysicsServer.SpaceStep(first, 1d / 60);
             Check(owner.ReadStatistics() == space.PublishedStatistics && space.PublishedStatistics.Active == 1,
                 "The completed process snapshot comes from the selected solver");
             if (owner is CPUPhysicsWorldBackend cpu)
             {
-                Check(!cpu.MaySleep, "All no-sleep dynamic bodies skip dormant-body scanning");
+                Check(cpu.MaySleep, "A live dynamic transition prepares explicit sleep while automatic sleep is disabled");
                 PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static); PhysicsServer.BodySetCanSleep(body, true);
-                Check(!cpu.MaySleep, "Static sleep policy does not activate dormant simulation storage");
+                Check(cpu.MaySleep, "A later static role retains conservative prepared capacity");
                 PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Rigid);
                 Check(cpu.MaySleep, "A live switch to a sleep-capable dynamic role prepares dormant capacity");
                 PhysicsServer.BodySetCanSleep(body, false); PhysicsServer.SpaceStep(first, 1d / 60);

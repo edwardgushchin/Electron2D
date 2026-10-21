@@ -254,14 +254,14 @@ Xid/device-loss gates remain open. Declaration coverage is unchanged.
 
 ## Kinematic dormant capacity
 
-CPU dormant capacity includes every sleep-enabled non-static body. Kinematic
+The initial correction included every sleep-enabled non-static body. Kinematic
 islands also enter the native dormant sets; counting only dynamic bodies left
 mixed scene roles with too few pooled arrays. Repeated filter-wake/sleep cycles
 then allocated 256 owner/all-thread bytes in PhysicsFilterTests. The calibrated
 object trace places 32-byte array creation in CPUPhysicsSleepStorage.Buffers.Ensure
 under the actual sleep path. Attachment, motion-mode changes and enabling sleep
-now prepare the complete eligible population; static and sleep-disabled bodies
-still do not consume that population budget.
+prepared that eligible population. The explicit-sleep correction below extends
+the budget to non-static bodies with automatic sleep disabled.
 
 A separate first-wake trace identifies the 48-byte shared native body state in its
 lazy type initializer. CPU-world creation now completes that initializer before
@@ -296,3 +296,73 @@ zero owner/all-thread managed bytes. These are functional regressions on this
 cohort, not a causal resolution of the historical 64-byte interval or a renewed
 mass-performance/FPS measurement. Final integrity checks use
 `bin/physics-full-integration/2026-10-21/validate.py` and `validation.json`.
+
+
+## Explicit sleep with automatic sleep disabled
+
+CanSleep=false disables automatic sleep without removing the explicit dynamic
+sleep command. CPU attachment and changes to a non-static motion role now prepare
+the full non-static population regardless of that flag. Static bodies remain
+outside this budget. Kinematic bodies retain their existing automatic sleep
+capacity; manual Sleeping assignments still apply only to dynamic roles.
+
+On the preceding runtime, 17 attached CanSleep=false rigid bodies warm for 128
+steps and then allocate 9160/9160 owner/all-thread bytes on their first explicit
+sleep command plus complete step. Their observed sleep state is otherwise correct.
+The correction moves this dormant preparation to attachment/mode authoring. It
+changes no sleep equations, public declarations, object identity or event policy.
+
+The shared public-only PhysicsDormantCapacityTests adds isolated Rigid and
+RigidLinear bodies and a pin/contact graph with positive solved pairs. Each case
+measures its first explicit sleep and 64 actual wake/step/sleep/step/query/restore
+cycles while CanSleep stays false. Retained point queries check the same RIDs at
+current poses. A separate 17-body scene writes Sleeping inside the fixed-frame
+callback and measures the whole first frame and 64 subsequent cycles, including
+an unchanged sleeping frame. Scene/server state agrees, and manual assignments
+produce zero automatic SleepingStateChanged events as required by RigidBody.
+
+Cold allocation is a deliberate cost. A separate public CPU probe creates and
+retires 1024 bodies after a two-body warmup. With CanSleep=false, total managed
+allocations rise from 24554720 to 32840808 bytes (8286088 additional bytes, about
+7.90 MiB); elapsed creation/retirement time is 23.4547 versus 26.5541 ms in these
+single samples. The enabled-sleep control is 32841032 versus 32840808 bytes. These
+are allocated bytes over creation and retirement, not retained heap, native-memory
+usage, a statistically established timing regression or mass-world performance.
+
+A CPU candidate and the first CLR GPU consumer run each reported 24624/24624
+bytes during the measured wake/query/restore interval. Plain repeats of the same
+payloads pass, as do the profiler run and two public diagnostic probes with
+per-phase counters. The CPU object trace contains no Restore allocation. No
+causal resolution is claimed: the strict zero-byte assertion remains, and this
+intermittent interval stays open independently of the first-sleep storage fix.
+
+The first full suite stopped on an older internal assertion that CanSleep=false
+worlds must not activate dormant storage. PhysicsBackendOwnershipTests now checks
+that static-only worlds avoid it, Static-to-Rigid with CanSleep=false prepares it,
+and later static roles retain conservative capacity. No numerical/event assertion
+is relaxed. Receipts and payloads are under
+`bin/physics-explicit-sleep/2026-10-21/`.
+
+The public-only consumer `--dormant-capacity` passes the final assertions on CPU
+and independent NVIDIA GPU in CLR and strict NativeAOT, with owner and separate
+numerical-thread settings: eight profiles. All three raw cases report first
+command/step 0/0 bytes and 64 wake/sleep/query/restore cycles 0/0 bytes; each scene
+profile reports first full frame 0/0 bytes, 64 cycles 0/0 bytes and zero manual
+state-change events. CPU processes load no graphics driver; native processes load
+no CoreCLR. The two passing CLR GPU profiles are exact uninstrumented repeats of
+the payload whose initial owner run failed; they do not establish a cause or
+remove that open intermittent interval. Source/PDB and native-input hashes bind
+the evidence to the authored source.
+
+These are bounded functional/allocation checks. They do not close full-goal,
+large-world GPU speedup, native allocator totals, real-window FPS, cross-platform
+or owner acceptance. The reported power cable is still unverified.
+
+The corrected full root suite passes in 597.215 seconds. It retains
+all six script-factory owner/separate profiles at 0/0 bytes, 16 dense-contact and
+32 transient-CCD cross-backend cases, CPU scene-filter checks, and the final
+separate CPU numerical-thread checks. The final integrity audit checks 11 passing
+profiles, 3639 unique authored source hashes, native inputs and unchanged payloads
+through `bin/physics-explicit-sleep/2026-10-21/validate.py`. This is a functional
+regression result; no new mass-performance, FPS or multi-process network result
+is inferred from it.
