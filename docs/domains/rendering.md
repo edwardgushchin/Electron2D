@@ -24,6 +24,8 @@
 
 Last updated: 2026-10-21
 
+[Numeric ranges and masks](../components/visual-shaders.md#numeric-ranges-and-masks) now execute typed clamps, interpolation, thresholds, fused multiply/add and interval remapping through existing graph archives, imports and materials. Shared scalar-control layouts preserve port roles and transactional default conversion.
+
 [Render-thread callbacks](../components/render-thread-callbacks.md) connect worker requests to the exact native owner, existing device/canvas operations, disabled/idle render attempts and explicit synchronization, with bounded snapshot ordering and session cancellation.
 
 [Shader binaries and deferred identities](../components/local-compute.md#shader-binaries-and-deferred-identities) connect copied versioned stage containers and reserved RIDs to ordinary compute, graphics, specialization and retained canvas consumers.

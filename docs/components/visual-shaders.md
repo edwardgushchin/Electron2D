@@ -208,6 +208,60 @@ routing an authored W value to fragment alpha or another scalar operation;
 geometry expressions execute in either canvas stage. The public fixtures include
 UV-driven radial distance, separate alpha blending and a vertex UV transform.
 
+## Numeric ranges and masks
+
+Six definitions execute through the same numeric ports and offline compiler:
+
+| Definition | Input order | Initial scalar defaults | Operation |
+| --- | --- | --- | --- |
+| VisualShaderNodeClamp | value, minimum, maximum | 0, 0, 1 | Inclusive component clamp; float, signed/unsigned integer and vector roles |
+| VisualShaderNodeMix | a, b, weight | 0, 1, 0.5 | Linear interpolation, including extrapolation |
+| VisualShaderNodeStep | edge, value | 0, 0 | Zero below the edge; one at or above it |
+| VisualShaderNodeSmoothStep | lower edge, upper edge, value | 0, 1, 0.5 | Clamped cubic interpolation between ordered edges |
+| VisualShaderNodeMultiplyAdd | a, b, c | 0, 1, 0 | Native shader fma(a, b, c) |
+| VisualShaderNodeRemap | value, input minimum, input maximum, output minimum, output maximum | absent, 0, 1, 0, 1 | Unclamped affine interval conversion |
+
+Mix, Step, SmoothStep and Remap share VisualShaderNumericOpType under ADR 0051.
+Scalar and vector widths two through four select all-component controls. The
+Vector2Scalar/Vector3Scalar/Vector4Scalar layouts keep data vector-valued while
+broadcasting scalar controls: Mix weight, Step edge, both SmoothStep edges and
+all four Remap bounds. Clamp.OpTypeEnum and MultiplyAdd.OpTypeEnum retain their
+distinct valid type sets. All count sentinels reject without mutation.
+
+A changed selector converts every existing default and recreates absent entries
+before one Changed emission; an unchanged selector does nothing. Scalars broadcast,
+vector narrowing retains leading components and expansion repeats the last
+component. Integer conversion truncates toward zero, preserves exact integer to
+integer values, and rejects nonrepresentable results atomically. Observer errors
+occur after the coherent new layout commits. Copies, stored descriptors and fresh
+archives preserve the selector and concrete port types.
+
+Missing defaults recreated by Clamp, Mix, Step and SmoothStep are zero, except
+four-component roles use (0,0,0,1). MultiplyAdd recreates zero/one/zero with genuine
+zero vectors. Remap recreates zero/zero/one/zero/one, using the homogeneous W for
+its four-component zero fallbacks. Removing an entry without changing the selector
+leaves it absent; the compiler uses the existing zero-valued port fallback.
+
+```csharp
+using var blend = new VisualShaderNodeMix
+{
+    OpType = VisualShaderNumericOpType.Vector3Scalar
+};
+blend.SetInputPortDefaultValue(0, new Vector3(.125f, .25f, .5f));
+blend.SetInputPortDefaultValue(1, new Vector3(.875f, .75f, .5f));
+blend.SetInputPortDefaultValue(2, .375f);
+```
+
+Graphs may derive the weight from UV distance and SmoothStep or use these numeric
+operations in the vertex stage. Native fma precision remains a backend arithmetic
+contract; the software fixture includes an amplified fused-rounding witness.
+Remap permits reversed input/output ranges and extrapolation. Clamp bounds must
+be ordered and SmoothStep requires increasing edges for its defined result.
+Zero-width remap division and invalid native arithmetic domains retain native
+nonfinite/undefined behavior; the importer does not replace them with finite
+values. The zero-width boundary is verified through import and fresh loading,
+without asserting a portable framebuffer value.
+
 ## Canvas boundary
 
 Vertex inputs follow the existing supplied framebuffer-pixel canvas ABI.
@@ -236,12 +290,16 @@ Sky/volumetric scene domains and deprecated inert graph offset are excluded.
 The public `tests/VisualShader.Consumer` covers ownership, aliases, factory
 replacement, invalid requests, snapshots, default presence/conversion, change
 semantics, shallow/deep/copy operations, and fresh resource archives, including
-compressed big-endian data. Two hundred sixty-eight imported programs include the 57 foundation programs,
-170 unary-function programs and 41 vector-dataflow programs. Unary coverage includes every scalar/vector function, all vector widths,
+compressed big-endian data. Four hundred six rendered imported programs include the 57 foundation programs,
+170 unary-function programs, 41 vector-dataflow programs and 138 range/mask programs.
+The 139th new program separately verifies zero-width Remap import and fresh load. Unary coverage includes every scalar/vector function, all vector widths,
 negative/clamped/round-even cases, both canvas stages, and a normalization witness
 for every vec4 function that makes its fourth component observable in RGB. Dataflow
 covers all widths/components, dormant defaults, scalar eta, reflection boundaries,
-fan-out, direct alpha and UV-driven vertex/fragment geometry. Software Vulkan Wayland/X11 and HDR/MSAA
+fan-out, direct alpha and UV-driven vertex/fragment geometry. Range checks cover all
+38 selectable layouts and every pair of layout transitions, exact integer conversion
+and transactional overflow, all operation families in both stages, mixed controls,
+W witnesses, initial defaults and UV-derived masks. Software Vulkan Wayland/X11 and HDR/MSAA
 readback is checked in CLR and strict full-trim NativeAOT. Normalized byte targets
 clamp output; HDR half-float readback retains signed/out-of-unit arithmetic.
 Each native profile measures 64 active and 64 idle complete frames at zero

@@ -115,7 +115,7 @@ public abstract class VisualShaderNode : Resource
         ThrowIfDisposed(); _defaults.Clear(); foreach (var pair in replacement) _defaults.Add(pair.Key, pair.Value); EmitChanged();
     }
 
-    /// <summary>Removes one explicit input default, restoring the operation's initial value.</summary>
+    /// <summary>Removes one explicit input default so compilation uses the port's zero-valued fallback.</summary>
     /// <param name="port">The input index, including a reserved composition component.</param>
     /// <exception cref="ArgumentOutOfRangeException">The input is neither active nor a reserved composition component.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
@@ -137,6 +137,17 @@ public abstract class VisualShaderNode : Resource
             var fallback = type == PortType.Vector4 ? (object)new Vector4(0, 0, 0, 1) : VisualShaderValues.Zero(type);
             var value = _defaults.TryGetValue(port, out var previous) ? VisualShaderValues.ConvertDefaultValue(fallback, previous.BoxedValue) : fallback;
             values[port] = VisualShaderValues.Entry(port, value);
+        }
+        _defaults.Clear(); foreach (var pair in values) _defaults.Add(pair.Key, pair.Value);
+    }
+    internal void ChangeDefaultTypes(object[] fallbacks)
+    {
+        var values = new Dictionary<int, VisualShaderPortDefault>();
+        for (var port = 0; port < fallbacks.Length; port++)
+        {
+            var value = _defaults.TryGetValue(port, out var previous)
+                ? VisualShaderValues.ConvertDefaultValue(fallbacks[port], previous.BoxedValue) : fallbacks[port];
+            values.Add(port, VisualShaderValues.Entry(port, value));
         }
         _defaults.Clear(); foreach (var pair in values) _defaults.Add(pair.Key, pair.Value);
     }

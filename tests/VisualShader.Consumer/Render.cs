@@ -35,6 +35,7 @@ internal static partial class GraphChecks
             {
                 var name = IOPath.GetFileNameWithoutExtension(file);
                 var shader = Own(ResourceLoader.Load<VisualShader>(file, ResourceLoader.CacheMode.IgnoreDeep));
+                if (name.StartsWith("range-", StringComparison.Ordinal)) VerifyRangeArchive(name, shader);
                 var material = Own(new ShaderMaterial { Shader = shader });
                 var position = new Vector2(8 + _cases.Count % 10 * 24, 8 + _cases.Count / 10 * 24);
                 var painter = new GraphPainter(texture) { Position = position, Material = material };
@@ -93,7 +94,7 @@ internal static partial class GraphChecks
             base.Dispose(disposing);
         }
     }
-    private static Color Expected(string name) => name.StartsWith("flow-", StringComparison.Ordinal) ? DataflowExpected(name) : name.StartsWith("unary-", StringComparison.Ordinal) ? UnaryExpected(name) : name switch
+    private static Color Expected(string name) => name.StartsWith("range-", StringComparison.Ordinal) ? RangeExpected(name) : name.StartsWith("flow-", StringComparison.Ordinal) ? DataflowExpected(name) : name.StartsWith("unary-", StringComparison.Ordinal) ? UnaryExpected(name) : name switch
     {
         "color" or "vertex-shift" => new(.25f, .5f, .75f, 1),
         "cleared" => Colors.Black,

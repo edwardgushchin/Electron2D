@@ -804,6 +804,316 @@
       "godot": "class:VisualShaderNodeVectorRefract",
       "electron2d": "T:Electron2D.VisualShaderNodeVectorRefract",
       "reason": "ADRs 0001/0013/0028: executable numeric vector dataflow uses the existing typed graph, resource archive, offline compiler and retained material. Compose/decompose preserve component order and dormant scalar defaults; fixed-three-component dot and width-selected length/distance/refraction retain their port semantics. Refraction keeps scalar eta distinct across width changes. Actual graph consumers cover all widths, multi-output fan-out, alpha, vertex/fragment paths and valid/error boundaries."
+    },
+    {
+      "godot": "class:VisualShaderNodeClamp",
+      "electron2d": "T:Electron2D.VisualShaderNodeClamp",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeClamp::enum:OpType",
+      "electron2d": "T:Electron2D.VisualShaderNodeClamp.OpTypeEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeClamp::enum_value:OpType.OP_TYPE_FLOAT",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeClamp.OpTypeEnum.Float()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeClamp::enum_value:OpType.OP_TYPE_INT",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeClamp.OpTypeEnum.Int()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeClamp::enum_value:OpType.OP_TYPE_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeClamp.OpTypeEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeClamp::enum_value:OpType.OP_TYPE_UINT",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeClamp.OpTypeEnum.UInt()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeClamp::enum_value:OpType.OP_TYPE_VECTOR_2D",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeClamp.OpTypeEnum.Vector2()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeClamp::enum_value:OpType.OP_TYPE_VECTOR_3D",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeClamp.OpTypeEnum.Vector3()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeClamp::enum_value:OpType.OP_TYPE_VECTOR_4D",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeClamp.OpTypeEnum.Vector4()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeClamp::property:op_type",
+      "electron2d": "property:Electron2D.VisualShaderNodeClamp.OpType()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "class:VisualShaderNodeMix",
+      "electron2d": "T:Electron2D.VisualShaderNodeMix",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeMix::enum:OpType",
+      "electron2d": "T:Electron2D.VisualShaderNumericOpType",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeMix::enum_value:OpType.OP_TYPE_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeMix::enum_value:OpType.OP_TYPE_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeMix::enum_value:OpType.OP_TYPE_VECTOR_2D",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector2()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeMix::enum_value:OpType.OP_TYPE_VECTOR_2D_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector2Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeMix::enum_value:OpType.OP_TYPE_VECTOR_3D",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector3()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeMix::enum_value:OpType.OP_TYPE_VECTOR_3D_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector3Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeMix::enum_value:OpType.OP_TYPE_VECTOR_4D",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector4()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeMix::enum_value:OpType.OP_TYPE_VECTOR_4D_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector4Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeMix::property:op_type",
+      "electron2d": "property:Electron2D.VisualShaderNodeMix.OpType()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "class:VisualShaderNodeStep",
+      "electron2d": "T:Electron2D.VisualShaderNodeStep",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeStep::enum:OpType",
+      "electron2d": "T:Electron2D.VisualShaderNumericOpType",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeStep::enum_value:OpType.OP_TYPE_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeStep::enum_value:OpType.OP_TYPE_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeStep::enum_value:OpType.OP_TYPE_VECTOR_2D",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector2()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeStep::enum_value:OpType.OP_TYPE_VECTOR_2D_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector2Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeStep::enum_value:OpType.OP_TYPE_VECTOR_3D",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector3()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeStep::enum_value:OpType.OP_TYPE_VECTOR_3D_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector3Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeStep::enum_value:OpType.OP_TYPE_VECTOR_4D",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector4()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeStep::enum_value:OpType.OP_TYPE_VECTOR_4D_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector4Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeStep::property:op_type",
+      "electron2d": "property:Electron2D.VisualShaderNodeStep.OpType()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "class:VisualShaderNodeSmoothStep",
+      "electron2d": "T:Electron2D.VisualShaderNodeSmoothStep",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeSmoothStep::enum:OpType",
+      "electron2d": "T:Electron2D.VisualShaderNumericOpType",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeSmoothStep::enum_value:OpType.OP_TYPE_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeSmoothStep::enum_value:OpType.OP_TYPE_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeSmoothStep::enum_value:OpType.OP_TYPE_VECTOR_2D",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector2()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeSmoothStep::enum_value:OpType.OP_TYPE_VECTOR_2D_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector2Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeSmoothStep::enum_value:OpType.OP_TYPE_VECTOR_3D",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector3()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeSmoothStep::enum_value:OpType.OP_TYPE_VECTOR_3D_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector3Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeSmoothStep::enum_value:OpType.OP_TYPE_VECTOR_4D",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector4()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeSmoothStep::enum_value:OpType.OP_TYPE_VECTOR_4D_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector4Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeSmoothStep::property:op_type",
+      "electron2d": "property:Electron2D.VisualShaderNodeSmoothStep.OpType()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "class:VisualShaderNodeMultiplyAdd",
+      "electron2d": "T:Electron2D.VisualShaderNodeMultiplyAdd",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeMultiplyAdd::enum:OpType",
+      "electron2d": "T:Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeMultiplyAdd::enum_value:OpType.OP_TYPE_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeMultiplyAdd::enum_value:OpType.OP_TYPE_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum.Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeMultiplyAdd::enum_value:OpType.OP_TYPE_VECTOR_2D",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum.Vector2()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeMultiplyAdd::enum_value:OpType.OP_TYPE_VECTOR_3D",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum.Vector3()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeMultiplyAdd::enum_value:OpType.OP_TYPE_VECTOR_4D",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum.Vector4()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeMultiplyAdd::property:op_type",
+      "electron2d": "property:Electron2D.VisualShaderNodeMultiplyAdd.OpType()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "class:VisualShaderNodeRemap",
+      "electron2d": "T:Electron2D.VisualShaderNodeRemap",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeRemap::enum:OpType",
+      "electron2d": "T:Electron2D.VisualShaderNumericOpType",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeRemap::enum_value:OpType.OP_TYPE_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeRemap::enum_value:OpType.OP_TYPE_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeRemap::enum_value:OpType.OP_TYPE_VECTOR_2D",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector2()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeRemap::enum_value:OpType.OP_TYPE_VECTOR_2D_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector2Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeRemap::enum_value:OpType.OP_TYPE_VECTOR_3D",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector3()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeRemap::enum_value:OpType.OP_TYPE_VECTOR_3D_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector3Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeRemap::enum_value:OpType.OP_TYPE_VECTOR_4D",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector4()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeRemap::enum_value:OpType.OP_TYPE_VECTOR_4D_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNumericOpType.Vector4Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "VisualShaderNodeRemap::property:op_type",
+      "electron2d": "property:Electron2D.VisualShaderNodeRemap.OpType()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
     }
   ],
   "statusGroups": [
@@ -1112,6 +1422,74 @@
         "class:VisualShaderNodeVectorRefract"
       ],
       "reason": "ADRs 0001/0013/0028: executable numeric vector dataflow uses the existing typed graph, resource archive, offline compiler and retained material. Compose/decompose preserve component order and dormant scalar defaults; fixed-three-component dot and width-selected length/distance/refraction retain their port semantics. Refraction keeps scalar eta distinct across width changes. Actual graph consumers cover all widths, multi-output fan-out, alpha, vertex/fragment paths and valid/error boundaries."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:VisualShaderNodeClamp",
+        "VisualShaderNodeClamp::enum:OpType",
+        "VisualShaderNodeClamp::enum_value:OpType.OP_TYPE_FLOAT",
+        "VisualShaderNodeClamp::enum_value:OpType.OP_TYPE_INT",
+        "VisualShaderNodeClamp::enum_value:OpType.OP_TYPE_MAX",
+        "VisualShaderNodeClamp::enum_value:OpType.OP_TYPE_UINT",
+        "VisualShaderNodeClamp::enum_value:OpType.OP_TYPE_VECTOR_2D",
+        "VisualShaderNodeClamp::enum_value:OpType.OP_TYPE_VECTOR_3D",
+        "VisualShaderNodeClamp::enum_value:OpType.OP_TYPE_VECTOR_4D",
+        "VisualShaderNodeClamp::property:op_type",
+        "class:VisualShaderNodeMix",
+        "VisualShaderNodeMix::enum:OpType",
+        "VisualShaderNodeMix::enum_value:OpType.OP_TYPE_MAX",
+        "VisualShaderNodeMix::enum_value:OpType.OP_TYPE_SCALAR",
+        "VisualShaderNodeMix::enum_value:OpType.OP_TYPE_VECTOR_2D",
+        "VisualShaderNodeMix::enum_value:OpType.OP_TYPE_VECTOR_2D_SCALAR",
+        "VisualShaderNodeMix::enum_value:OpType.OP_TYPE_VECTOR_3D",
+        "VisualShaderNodeMix::enum_value:OpType.OP_TYPE_VECTOR_3D_SCALAR",
+        "VisualShaderNodeMix::enum_value:OpType.OP_TYPE_VECTOR_4D",
+        "VisualShaderNodeMix::enum_value:OpType.OP_TYPE_VECTOR_4D_SCALAR",
+        "VisualShaderNodeMix::property:op_type",
+        "class:VisualShaderNodeStep",
+        "VisualShaderNodeStep::enum:OpType",
+        "VisualShaderNodeStep::enum_value:OpType.OP_TYPE_MAX",
+        "VisualShaderNodeStep::enum_value:OpType.OP_TYPE_SCALAR",
+        "VisualShaderNodeStep::enum_value:OpType.OP_TYPE_VECTOR_2D",
+        "VisualShaderNodeStep::enum_value:OpType.OP_TYPE_VECTOR_2D_SCALAR",
+        "VisualShaderNodeStep::enum_value:OpType.OP_TYPE_VECTOR_3D",
+        "VisualShaderNodeStep::enum_value:OpType.OP_TYPE_VECTOR_3D_SCALAR",
+        "VisualShaderNodeStep::enum_value:OpType.OP_TYPE_VECTOR_4D",
+        "VisualShaderNodeStep::enum_value:OpType.OP_TYPE_VECTOR_4D_SCALAR",
+        "VisualShaderNodeStep::property:op_type",
+        "class:VisualShaderNodeSmoothStep",
+        "VisualShaderNodeSmoothStep::enum:OpType",
+        "VisualShaderNodeSmoothStep::enum_value:OpType.OP_TYPE_MAX",
+        "VisualShaderNodeSmoothStep::enum_value:OpType.OP_TYPE_SCALAR",
+        "VisualShaderNodeSmoothStep::enum_value:OpType.OP_TYPE_VECTOR_2D",
+        "VisualShaderNodeSmoothStep::enum_value:OpType.OP_TYPE_VECTOR_2D_SCALAR",
+        "VisualShaderNodeSmoothStep::enum_value:OpType.OP_TYPE_VECTOR_3D",
+        "VisualShaderNodeSmoothStep::enum_value:OpType.OP_TYPE_VECTOR_3D_SCALAR",
+        "VisualShaderNodeSmoothStep::enum_value:OpType.OP_TYPE_VECTOR_4D",
+        "VisualShaderNodeSmoothStep::enum_value:OpType.OP_TYPE_VECTOR_4D_SCALAR",
+        "VisualShaderNodeSmoothStep::property:op_type",
+        "class:VisualShaderNodeMultiplyAdd",
+        "VisualShaderNodeMultiplyAdd::enum:OpType",
+        "VisualShaderNodeMultiplyAdd::enum_value:OpType.OP_TYPE_MAX",
+        "VisualShaderNodeMultiplyAdd::enum_value:OpType.OP_TYPE_SCALAR",
+        "VisualShaderNodeMultiplyAdd::enum_value:OpType.OP_TYPE_VECTOR_2D",
+        "VisualShaderNodeMultiplyAdd::enum_value:OpType.OP_TYPE_VECTOR_3D",
+        "VisualShaderNodeMultiplyAdd::enum_value:OpType.OP_TYPE_VECTOR_4D",
+        "VisualShaderNodeMultiplyAdd::property:op_type",
+        "class:VisualShaderNodeRemap",
+        "VisualShaderNodeRemap::enum:OpType",
+        "VisualShaderNodeRemap::enum_value:OpType.OP_TYPE_MAX",
+        "VisualShaderNodeRemap::enum_value:OpType.OP_TYPE_SCALAR",
+        "VisualShaderNodeRemap::enum_value:OpType.OP_TYPE_VECTOR_2D",
+        "VisualShaderNodeRemap::enum_value:OpType.OP_TYPE_VECTOR_2D_SCALAR",
+        "VisualShaderNodeRemap::enum_value:OpType.OP_TYPE_VECTOR_3D",
+        "VisualShaderNodeRemap::enum_value:OpType.OP_TYPE_VECTOR_3D_SCALAR",
+        "VisualShaderNodeRemap::enum_value:OpType.OP_TYPE_VECTOR_4D",
+        "VisualShaderNodeRemap::enum_value:OpType.OP_TYPE_VECTOR_4D_SCALAR",
+        "VisualShaderNodeRemap::property:op_type"
+      ],
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
     }
   ],
   "extras": [
@@ -1458,6 +1836,78 @@
     {
       "electron2d": "method:Electron2D.VisualShaderNodeVectorRefract.CreateDuplicateInstance()",
       "reason": "ADRs 0001/0013/0028: concrete graph resource construction and typed duplicate-instance factory; state is copied through existing default/width contracts."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeClamp..ctor()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeClamp.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeClamp.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeMix..ctor()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeMix.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeMix.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeStep..ctor()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeStep.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeStep.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeSmoothStep..ctor()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeSmoothStep.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeSmoothStep.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeMultiplyAdd..ctor()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeMultiplyAdd.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeMultiplyAdd.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeRemap..ctor()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeRemap.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeRemap.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
     }
   ]
 }

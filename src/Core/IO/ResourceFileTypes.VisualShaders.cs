@@ -17,6 +17,12 @@ public static partial class ResourceFileTypes
         RegisterResource("VisualShaderNodeVectorDistance", CreateVisualShaderNodeVectorDistanceFileResource);
         RegisterResource("VisualShaderNodeVectorLen", CreateVisualShaderNodeVectorLenFileResource);
         RegisterResource("VisualShaderNodeVectorRefract", CreateVisualShaderNodeVectorRefractFileResource);
+        RegisterResource("VisualShaderNodeClamp", CreateVisualShaderNodeClampFileResource);
+        RegisterResource("VisualShaderNodeMix", CreateVisualShaderNodeMixFileResource);
+        RegisterResource("VisualShaderNodeStep", CreateVisualShaderNodeStepFileResource);
+        RegisterResource("VisualShaderNodeSmoothStep", CreateVisualShaderNodeSmoothStepFileResource);
+        RegisterResource("VisualShaderNodeMultiplyAdd", CreateVisualShaderNodeMultiplyAddFileResource);
+        RegisterResource("VisualShaderNodeRemap", CreateVisualShaderNodeRemapFileResource);
         RegisterResource("VisualShaderNodeFloatConstant", CreateVisualShaderNodeFloatConstantFileResource);
         RegisterResource("VisualShaderNodeIntConstant", CreateVisualShaderNodeIntConstantFileResource);
         RegisterResource("VisualShaderNodeUIntConstant", CreateVisualShaderNodeUIntConstantFileResource);
@@ -39,6 +45,12 @@ public static partial class ResourceFileTypes
     private static VisualShaderNodeOutput CreateVisualShaderNodeOutputFileResource() => new();
     private static VisualShaderNodeInput CreateVisualShaderNodeInputFileResource() => new();
     private static VisualShaderNodeFloatOp CreateVisualShaderNodeFloatOpFileResource() => new();
+    private static VisualShaderNodeClamp CreateVisualShaderNodeClampFileResource() => new();
+    private static VisualShaderNodeMix CreateVisualShaderNodeMixFileResource() => new();
+    private static VisualShaderNodeStep CreateVisualShaderNodeStepFileResource() => new();
+    private static VisualShaderNodeSmoothStep CreateVisualShaderNodeSmoothStepFileResource() => new();
+    private static VisualShaderNodeMultiplyAdd CreateVisualShaderNodeMultiplyAddFileResource() => new();
+    private static VisualShaderNodeRemap CreateVisualShaderNodeRemapFileResource() => new();
     private static VisualShaderNodeFloatConstant CreateVisualShaderNodeFloatConstantFileResource() => new();
     private static VisualShaderNodeIntConstant CreateVisualShaderNodeIntConstantFileResource() => new();
     private static VisualShaderNodeUIntConstant CreateVisualShaderNodeUIntConstantFileResource() => new();

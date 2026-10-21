@@ -212,6 +212,12 @@ def main():
                  "VisualShaderNodeVectorDistance", "VisualShaderNodeVectorLen", "VisualShaderNodeVectorRefract"):
         rows = [row for row in pages[CLASS_PAGES / (name + ".md")].splitlines() if row.startswith("| [`")]
         assert len(rows) == 1 and " | Implemented | " in rows[0]
+    for name, count in [("VisualShaderNodeClamp", 10), ("VisualShaderNodeMultiplyAdd", 8),
+                        ("VisualShaderNodeMix", 11), ("VisualShaderNodeStep", 11),
+                        ("VisualShaderNodeSmoothStep", 11), ("VisualShaderNodeRemap", 11)]:
+        rows = [row for row in pages[CLASS_PAGES / (name + ".md")].splitlines() if row.startswith("| [`")]
+        assert len(rows) == count and all(" | Implemented | " in row for row in rows)
+        assert ("OpTypeEnum" if name in ("VisualShaderNodeClamp", "VisualShaderNodeMultiplyAdd") else "VisualShaderNumericOpType") in pages[CLASS_PAGES / (name + ".md")]
     assert "OperatorEnum" in pages[CLASS_PAGES / "VisualShaderNodeFloatOp.md"]
     assert "OpTypeEnum" in pages[CLASS_PAGES / "VisualShaderNodeVectorBase.md"]
     engine_ids = {item["id"] for item in json.loads((DATA / "electron2d.json").read_text())}

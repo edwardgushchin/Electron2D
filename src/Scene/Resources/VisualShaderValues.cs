@@ -77,6 +77,8 @@ internal static class VisualShaderValues
     {
         if (previous is bool || fallback is bool) return fallback;
         if (previous.GetType() == fallback.GetType()) return previous;
+        if (fallback is int && previous is uint unsigned) return checked((int)unsigned);
+        if (fallback is uint && previous is int signed) return checked((uint)signed);
         var v = previous switch
         {
             float f => new Vector4(f, f, f, f),
@@ -101,6 +103,15 @@ internal static class VisualShaderValues
         };
         return result;
     }
+    internal static P RangeKind(VisualShaderNumericOpType type) => type switch
+    {
+        VisualShaderNumericOpType.Scalar => P.Scalar,
+        VisualShaderNumericOpType.Vector2 or VisualShaderNumericOpType.Vector2Scalar => P.Vector2,
+        VisualShaderNumericOpType.Vector3 or VisualShaderNumericOpType.Vector3Scalar => P.Vector3,
+        _ => P.Vector4
+    };
+    internal static bool HasScalarControls(VisualShaderNumericOpType type) => type is
+        VisualShaderNumericOpType.Vector2Scalar or VisualShaderNumericOpType.Vector3Scalar or VisualShaderNumericOpType.Vector4Scalar;
     internal static string Name(P kind) => kind switch
     { P.Scalar => "float", P.ScalarInt => "int", P.ScalarUInt => "uint", P.Boolean => "bool", P.Vector2 => "vec2", P.Vector3 => "vec3", P.Vector4 => "vec4", _ => throw new ArgumentOutOfRangeException(nameof(kind)) };
     private static string Float(float value)

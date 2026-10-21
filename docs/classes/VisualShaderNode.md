@@ -10,7 +10,7 @@ public abstract class Electron2D.VisualShaderNode
 
 Inherits: [Resource](Resource.md).
 
-Inherited by: [VisualShaderNodeConstant](VisualShaderNodeConstant.md), [VisualShaderNodeDotProduct](VisualShaderNodeDotProduct.md), [VisualShaderNodeFloatFunc](VisualShaderNodeFloatFunc.md), [VisualShaderNodeFloatOp](VisualShaderNodeFloatOp.md), [VisualShaderNodeInput](VisualShaderNodeInput.md), [VisualShaderNodeOutput](VisualShaderNodeOutput.md), [VisualShaderNodeVectorBase](VisualShaderNodeVectorBase.md).
+Inherited by: [VisualShaderNodeClamp](VisualShaderNodeClamp.md), [VisualShaderNodeConstant](VisualShaderNodeConstant.md), [VisualShaderNodeDotProduct](VisualShaderNodeDotProduct.md), [VisualShaderNodeFloatFunc](VisualShaderNodeFloatFunc.md), [VisualShaderNodeFloatOp](VisualShaderNodeFloatOp.md), [VisualShaderNodeInput](VisualShaderNodeInput.md), [VisualShaderNodeMix](VisualShaderNodeMix.md), [VisualShaderNodeMultiplyAdd](VisualShaderNodeMultiplyAdd.md), [VisualShaderNodeOutput](VisualShaderNodeOutput.md), [VisualShaderNodeRemap](VisualShaderNodeRemap.md), [VisualShaderNodeSmoothStep](VisualShaderNodeSmoothStep.md), [VisualShaderNodeStep](VisualShaderNodeStep.md), [VisualShaderNodeVectorBase](VisualShaderNodeVectorBase.md).
 
 ## Description
 
@@ -29,7 +29,7 @@ Nodes are borrowed by graphs. Authoring is cold, single-threaded work. Edits emi
 | [`public System.Collections.Generic.IReadOnlyList<Electron2D.VisualShaderPortDefault> GetDefaultInputValues()`](#member-714d2adc90b7) | Returns immutable typed copies of all explicitly authored input defaults. |
 | [`public Nullable<T> GetInputPortDefaultValue<T>(System.Int32 port)`](#member-d281ffbdd704) | Reads a copied authored input default. |
 | [`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`](#member-ee30536b1566) | Uses the inherited Resource construction or stored-property contract. |
-| [`public System.Void RemoveInputPortDefaultValue(System.Int32 port)`](#member-2e3abedf6c5c) | Removes one explicit input default, restoring the operation's initial value. |
+| [`public System.Void RemoveInputPortDefaultValue(System.Int32 port)`](#member-2e3abedf6c5c) | Removes one explicit input default so compilation uses the port's zero-valued fallback. |
 | [`public System.Void SetDefaultInputValues(System.Collections.Generic.IReadOnlyList<Electron2D.VisualShaderPortDefault> values)`](#member-bae84faeacfa) | Atomically replaces the complete explicit input-default table. |
 | [`public System.Void SetInputPortDefaultValue<T>(System.Int32 port, T value)`](#member-ee57fa5c0933) | Copies a typed default into an input port. |
 | [`public System.Void SetInputPortDefaultValue<T, TPrevious>(System.Int32 port, T value, TPrevious previousValue)`](#member-32ed460be1b5) | Converts a previous numeric default to a newly selected port value type. |
@@ -137,7 +137,7 @@ protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDes
 public System.Void RemoveInputPortDefaultValue(System.Int32 port)
 ```
 
-Removes one explicit input default, restoring the operation's initial value.
+Removes one explicit input default so compilation uses the port's zero-valued fallback.
 
 Parameters:
 
