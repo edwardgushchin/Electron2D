@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Stores ordered typed handlers with leased snapshots and prepared mutation capacity.</summary>
-internal sealed class EventHandlers<T> where T : Delegate
+internal sealed class EventHandlers<T> : EventConnection.IPublisher where T : Delegate
 {
     private readonly object _gate = new();
     private readonly List<Buffer> _buffers = new();
@@ -28,6 +28,9 @@ internal sealed class EventHandlers<T> where T : Delegate
 
     private void Add(T value)
     {
+        // Register before storage locking: queries take the token lock before the publisher lock.
+        foreach (var callback in Delegate.EnumerateInvocationList(value))
+            if (callback.Target is EventConnection connection) connection.ObservePublisher(this, callback);
         lock (_gate)
         {
             var added = 0;
@@ -39,6 +42,15 @@ internal sealed class EventHandlers<T> where T : Delegate
             foreach (var buffer in _buffers)
                 if (!ReferenceEquals(buffer, target) && buffer.Readers == 0 && buffer.Items.Length >= needed) return;
             _buffers.Add(new Buffer(Capacity(needed)));
+        }
+    }
+
+    bool EventConnection.IPublisher.Contains(Delegate wrapper)
+    {
+        lock (_gate)
+        {
+            for (var i = 0; i < _current.Count; i++) if (_current.Items[i].Equals(wrapper)) return true;
+            return false;
         }
     }
 

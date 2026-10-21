@@ -1,6 +1,6 @@
 # Typed event connections component
 
-Last updated: 2026-10-18
+Last updated: 2026-10-22
 
 ## Scope
 
@@ -62,6 +62,18 @@ The exact SceneTree.Defer scheduler and SceneTree.SetDeferred now use a Scene-ow
 Prepared standard-scene delivery and typed setters have zero invocation allocation, including prepared one-shot first delivery. First type/capacity growth, subscription and allocations performed by handlers/accessors remain separate; native multicast removal with multiple listeners can allocate. Arbitrary custom schedulers preserve their independent captured Actions and may allocate. Deferred delivery never extends a borrowed input event lifetime.
 
 EventConnectionPhysicsTests verifies mixed typed/untyped FIFO order, nested same-flush work, failures followed by later work, closed-scheduler subscription/emission policy, 256 concurrent producers, reference release on execution/failure/finalization/activation rollback, and 640 first one-shot callbacks for immediate and scene-deferred profiles with singleton accessors. Selected CPU/GPU full frames retain 128 callbacks per immediate and deferred arity plus body/shape transitions at strict zero owner/all-thread bytes. Real picking and legacy custom-scheduler/concurrency/error checks remain included. Software Vulkan is functional evidence; hardware/native/foreign/network/performance acceptance stays open.
+
+## Current prepared publisher membership
+
+Prepared `EventHandlers<T>` stores register a token's exact owned emission wrapper before mutating their lists. `EventConnection.IsConnected` combines the active lifecycle with current membership in any observed store. Duplicate entries survive individual removals; the last removal/clear is observable. Re-adding an active wrapper restores membership. A delegate targeting the token's unrelated Dispose method is not an observation of that token's subscription.
+
+Registration takes the token lock before storage mutation; queries take token then publisher locks. No path takes those locks in the opposite order. Queries invoke no user code and allocate no managed memory after preparation. Dispose and one-shot acceptance release wrapper and publisher references. Already captured immutable emissions and accepted deferred work retain their existing delivery; removing/clearing a publisher does not act as token disposal. One-shot pending/completed and explicitly disposed tokens cannot be revived.
+
+Only prepared stores can expose these observations. Arbitrary opaque field-like accessors retain the logical query when no store is observed; the helper cannot infer their independent attachment state or mixed opaque attachments. This is no dynamic signal registry or arbitrary publisher/handler query. The inherited mapping remains Partial until the other applicable publisher identities have actual support.
+
+`EventConnectionMembershipTests` covers duplicate/fan-out removal, clear/re-add, captured and deferred delivery, consumed tokens, unrelated method targets, concurrent source mutation/query, retained-token reference release and 1,024 strict zero-byte warm queries. The public consumer `--event-membership [--cpu|--gpu] [--threaded]` checks all 18 prepared physical accessors and pointer ownership on StaticBody, AnimatableBody, CharacterBody, RigidBody, PhysicalBone and Area. Actual Area/body/shape contacts run for 256 warmup and 128 measured complete frames, including membership reads before/after each frame; callbacks remain on the owner and every measured profile requires 0/0 owner/all-thread managed bytes. A throwing TreeExiting callback still retires publisher membership while accepted deferred work remains deliverable. Omitting backend flags selects the independent registered provider.
+
+The regression is RED on the frozen preceding runtime, both for direct prepared-store removal and the public disposed pointer publisher. Artifacts, compiled-source hashes, process maps and actual outcomes are retained under `bin/event-membership/2026-10-21/`. Native allocator, real-window/hardware throughput and complete physics/network/platform acceptance remain separate.
 
 ## Prepared physical event delivery
 
