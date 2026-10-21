@@ -13,6 +13,23 @@ layout(std430,set=1,binding=1) buffer Status { uvec2 status; };
 layout(std140,set=2,binding=0) uniform Settings { uvec4 control; vec4 time; vec4 policy; uvec4 history; vec4 correctionPolicy; };
 const uint none=0xffffffffu;
 void fail(){atomicOr(status.x,1u);}
+uint activeDegree(uint body,bool dynamicResponse)
+{
+    if(!dynamicResponse)return 0u;
+    uvec2 list=heads[body];
+    if((history.w&2u)==0u)return list.y;
+    // Joint rows precede contacts; already completed colored rows are outside this Jacobi batch.
+    uint at=list.x,count=0u;
+    for(uint visited=0u;visited<list.y&&at!=none;visited++)
+    {
+        uint index=at>>1;if(index<history.z)return count;
+        if(index>=control.w){fail();return list.y;}
+        Constraint row=constraints[index];bool second=(at&1u)!=0u;
+        if((second?row.bodies.y:row.bodies.x)!=body){fail();return list.y;}
+        count++;at=second?row.bodies.w:row.bodies.z;
+    }
+    if(at!=none)fail();return count;
+}
 void main()
 {
     uint i=gl_GlobalInvocationID.x;if(i>=control.y)return;
@@ -39,7 +56,7 @@ void main()
         vec2 ma=responds(c,false)?inverseMass(a):vec2(0),mb=responds(c,true)?inverseMass(b):vec2(0);
         vec2 candidate=contactImpulse(c,p.physical.xy,vec2(vn,vt),ma,mb);pn=candidate.x;pt=candidate.y;
     }
-    uint degree=max(responds(c,false)&&inverseMass(a).x>0?heads[c.bodies.x].y:0u,responds(c,true)&&inverseMass(b).x>0?heads[c.bodies.y].y:0u);
+    uint degree=max(activeDegree(c.bodies.x,responds(c,false)&&inverseMass(a).x>0),activeDegree(c.bodies.y,responds(c,true)&&inverseMass(b).x>0));
     // shortcut: degree-damped Jacobi handles joints and color overflow; improve its convergence for high-degree stacks.
     float weight=1.0/float(max(degree,1u));
     vec2 delta=weight*(vec2(pn,pt)-p.physical.xy);

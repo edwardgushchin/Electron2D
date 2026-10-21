@@ -1,5 +1,10 @@
 # GPUPhysicsBodyStore
 
+[Active joint-batch convergence](../components/physics-joints.md#active-joint-batch-convergence)
+uses the actual joint incidence degree after colored contacts complete, preserving
+configured sweep counts and the full-degree fallback without host projection or
+new device storage. The mixed compound contact/sleep/CCD fixture covers this path.
+
 [Saturated angular friction](../components/gpu-contact-solver.md#saturated-angular-friction-2026-10-20) now solves coupled normal/tangent contact impulses on device, including a preserved authoritative-replay case that exhausted the unchanged CCD interval budget.
 
 [Buffer memory observations](../components/gpu-memory.md) are implemented in [GPUPhysicsBodyStore.Memory.cs](../../src/Servers/Physics/GPUPhysicsBodyStore.Memory.cs). They track all requested storage/transfer resources, growth overlap and checkpoint copies through native release, without a simulation mirror or extra GPU work. Complete driver/native and managed memory remains outside this counter.
