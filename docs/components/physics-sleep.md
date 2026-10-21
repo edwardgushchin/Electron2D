@@ -202,8 +202,49 @@ fixture retains its original step count, pose/momentum bounds and allocation
 assertions.
 
 Receipts, source proofs, exact allocation stacks and failed controls are under
-`bin/physics-dormant/2026-10-21/`. The global four-contacts-per-prepared-body graph
-budget remains; denser unseen graphs retain correct growth and can allocate.
+`bin/physics-dormant/2026-10-21/`. [Observed dense graph preparation](#observed-dense-contact-capacity)
+now grows beyond the former four-contacts-per-prepared-body budget.
 Full numerical, allocation/native/platform/network and hardware performance
 acceptance remain open, including the separate 64-byte full-suite failure and
 the 65,536-body GPU device-loss/Xid gate.
+
+
+## Observed dense contact capacity
+
+The initial CPU reservation remains four contacts per rounded body-capacity slot.
+Before each numerical interval, the owner compares the native contact identity
+high-water mark with the prepared contact capacity. A new peak grows that capacity
+to the next power of two, including the pair hash table, live contact records,
+solver-set arrays, task bitsets, overflow graph, solver scratch and dormant record
+pool. Joint preparation retains the same contact budget; full-interval impulse
+buffers allow two manifold points per prepared contact. This is capacity state,
+so checkpoint restore does not rewind the observed peak. Existing contact keys,
+shape slots, sleep clocks, numerical equations and report caps are unchanged.
+
+`PhysicsDenseContactCapacityTests` uses only public API and is linked into the
+external consumer as `--dense-capacity`. Two compound bodies with 16, 17 or 32
+coincident circle/floor slots produce exactly 256, 289 or 1024 real contact pairs.
+Every wake checks unique local/collider slots, floor RID, unit support normals,
+the full gravity-balancing impulse sum, and direct-view identity. Natural sleep
+checks resting pose and velocity. Each topology measures 128 complete natural
+sleep/wake cycles and 128 wake/private-checkpoint-restore cycles after 128 warm
+cycles for each operation, with strict zero owner/all-thread managed bytes.
+
+On the original runtime, the identical final consumer fails its first 256-contact
+natural-sleep case at 4,984,032/4,984,032 bytes on the owner lane and
+0/4,984,032 bytes with a separate numerical lane. The corrected CPU owner/separate
+profiles pass every topology and both operations at 0/0 bytes. All eight public
+CPU/GPU owner/separate JIT/strict NativeAOT profiles pass. CPU discovery is disabled;
+GPU process mappings confirm NVIDIA and exclude a software driver. The root CPU
+entry and four adjacent kernel-checkpoint, dormant owner/separate and dense
+portable-contact profiles also pass (13 successful profiles plus two expected
+baseline failures). PDB proofs match all 2436 runtime, 929 root-test and 264
+consumer authored sources, with a separately matched AOT input cohort. Frozen
+payloads, source proofs and process receipts are under
+`bin/physics-dense-capacity/2026-10-21/`.
+
+A newly observed topology may allocate while reaching its first peak. These
+bounded workloads do not certify arbitrary graph mutations, native allocation,
+retained-impulse convergence, complete numerical/network/platform acceptance or
+hardware performance. The separate full-suite 64-byte allocation and massive GPU
+Xid/device-loss gates remain open. Declaration coverage is unchanged.

@@ -1,5 +1,11 @@
 # Physics domain
 
+[Observed dense contact capacity](../components/physics-sleep.md#observed-dense-contact-capacity)
+lets CPU active/dormant graph storage grow beyond its initial body-based budget.
+Public compound sleep/wake and checkpoint checks retain every contact identity and
+physical impulse at zero warmed managed bytes. Declaration coverage and broader
+acceptance gates remain unchanged.
+
 [Mixed compound support](../components/physics-joints.md#mixed-compound-support)
 extends the shared scene/raw joint-contact scenario to capsule/convex compound
 bodies, disabled and offset slots, a segmented concave floor, exact query/contact
@@ -178,7 +184,7 @@ first interval. Complete retained-memory budgets remain open.
 
 [Resident GPU buffer accounting](../components/gpu-memory.md) now distinguishes storage, transfer and transient growth capacity, including replay copies and failed preparation. Full CPU/managed/native/driver memory budgets remain open.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 [Complete space activation operations](../components/physics-registered-adapter.md#complete-space-activation-operations)
 now have a shared public-only CPU, software-GPU and registered contract. Actual

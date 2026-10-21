@@ -6,7 +6,7 @@ namespace Electron2D;
 
 internal sealed partial class CPUPhysicsWorldBackend
 {
-    private int _preparedBodyCapacity, _preparedSleepCapacity;
+    private int _preparedBodyCapacity, _preparedSleepCapacity, _preparedContactCapacity;
     private CPUPhysicsSleepStorage? _sleepStorage;
     // Keep this conservative flag across private restores and retired attachments.
     private bool _maySleep;
@@ -34,7 +34,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         // Restored sleep islands can move any existing joint to a different graph color on wake.
         foreach (ref var color in world.constraintGraph.colors.AsSpan())
             Box2D.NET.B2Arrays.b2Array_Reserve(ref color.jointSims, capacity);
-        _sleepStorage?.Reserve(_preparedSleepCapacity, checked(_preparedBodyCapacity * 4), capacity);
+        _sleepStorage?.Reserve(_preparedSleepCapacity, _preparedContactCapacity, capacity);
     }
 
     internal override void PrepareSolverCapacity()
@@ -43,16 +43,18 @@ internal sealed partial class CPUPhysicsWorldBackend
         var world = b2GetWorldFromId(WorldID);
         var count = world.bodyIdPool.nextIndex;
         var capacity = (int)System.Numerics.BitOperations.RoundUpToPowerOf2((uint)Math.Max(8, count));
-        if (capacity <= _preparedBodyCapacity && (!_maySleep || count <= _preparedSleepCapacity)) return;
+        var contacts = (int)System.Numerics.BitOperations.RoundUpToPowerOf2((uint)Math.Max(checked(capacity * 4), world.contactIdPool.nextIndex));
+        if (capacity <= _preparedBodyCapacity && contacts <= _preparedContactCapacity && (!_maySleep || count <= _preparedSleepCapacity)) return;
         var sleeping = 0;
         if (_maySleep)
             foreach (var body in world.bodies.data.AsSpan(0, world.bodies.count))
                 if (body.id >= 0 && body.type == B2BodyType.b2_dynamicBody && body.enableSleep) sleeping++;
         var sleepCapacity = sleeping == 0 ? 0 : (int)System.Numerics.BitOperations.RoundUpToPowerOf2((uint)sleeping);
-        if (capacity <= _preparedBodyCapacity && sleepCapacity <= _preparedSleepCapacity) return;
+        if (capacity <= _preparedBodyCapacity && sleepCapacity <= _preparedSleepCapacity && contacts <= _preparedContactCapacity) return;
         _preparedBodyCapacity = Math.Max(_preparedBodyCapacity, capacity);
         _preparedSleepCapacity = Math.Max(_preparedSleepCapacity, sleepCapacity);
-        capacity = _preparedBodyCapacity; sleepCapacity = _preparedSleepCapacity;
+        _preparedContactCapacity = Math.Max(_preparedContactCapacity, contacts);
+        capacity = _preparedBodyCapacity; sleepCapacity = _preparedSleepCapacity; contacts = _preparedContactCapacity;
         ReserveBodyMotionCapacity(capacity);
         // Dormant island storage follows bodies that can sleep; active stress particles need no dormant copies.
         Box2D.NET.B2Arrays.b2Array_Reserve(ref world.solverSets, sleepCapacity + 3);
@@ -67,8 +69,6 @@ internal sealed partial class CPUPhysicsWorldBackend
         var awake = world.solverSets.data[(int)B2SolverSetType.b2_awakeSet];
         Box2D.NET.B2Arrays.b2Array_Reserve(ref awake.bodyStates, capacity);
         Box2D.NET.B2Arrays.b2Array_Reserve(ref world.bodyMoveEvents, capacity);
-        // shortcut: Four contacts per body are prepared; use observed demand for denser warm workloads.
-        var contacts = checked(capacity * 4);
         if (sleepCapacity > 0)
         {
             // Splitting can first run when sleep is enabled after an active warmup.
@@ -112,7 +112,7 @@ internal sealed partial class CPUPhysicsWorldBackend
             if (index != Box2D.NET.B2ConstraintGraphs.B2_OVERFLOW_INDEX && color.bodySet.blockCount < (capacity + 63) / 64)
                 Box2D.NET.B2BitSets.b2GrowBitSet(ref color.bodySet, (capacity + 63) / 64);
         }
-        if (capacity >= 256) PrepareArenaCapacity(world, capacity, contacts);
+        if (capacity >= 256 || contacts > checked(capacity * 4)) PrepareArenaCapacity(world, capacity, contacts);
     }
 
     private static void PrepareArenaCapacity(B2World world, int bodies, int contacts)

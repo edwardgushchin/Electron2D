@@ -938,8 +938,9 @@ capacity. It now grows the broad-phase pair hash table in that same owner phase,
 with two slots per budgeted contact because insertion grows at half occupancy.
 Existing keys are rehashed and preserved. It does not create or remove contacts,
 change numerical algorithms, select another backend or extend warmup. Tables
-reuse ordinary native-world lifetime/checkpoint paths. Larger topologies beyond
-that budget can still grow cold capacity; this is not an all-pairs reservation
+reuse ordinary native-world lifetime/checkpoint paths. [Observed dense contact peaks](physics-sleep.md#observed-dense-contact-capacity)
+now grow this retained budget before the next interval. Previously unseen
+topologies can still grow cold capacity; this is not an all-pairs reservation
 or a guarantee for arbitrary authored topology changes.
 
 ### Existing full-scene regression

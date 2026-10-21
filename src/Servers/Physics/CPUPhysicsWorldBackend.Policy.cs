@@ -55,6 +55,7 @@ internal sealed partial class CPUPhysicsWorldBackend
     internal override void PrepareInterval()
     {
         EnsureAccess(); var world = b2GetWorldFromId(WorldID);
+        if (world.contactIdPool.nextIndex > _preparedContactCapacity) PrepareSolverCapacity();
         world.workerCount = (_stageGPU is null || world.solveConstraints is not null) &&
             world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodySims.count >= 256 ? _tasks.WorkerCount : 1;
     }

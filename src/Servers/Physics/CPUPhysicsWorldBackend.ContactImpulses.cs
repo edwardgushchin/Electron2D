@@ -72,8 +72,8 @@ internal sealed partial class CPUPhysicsWorldBackend
                 if (body.Scene is not RigidBody && body.Runtime.ContactLimit > 0) { _aggregateContactImpulses = true; break; }
         if (!_aggregateContactImpulses) return;
         var count = Math.Max(PreparedBodyCapacity, b2GetWorldFromId(WorldID).bodies.count);
-        // Two manifold points for each contact in the prepared four-contacts-per-body budget.
-        var points = checked(count * 8);
+        // A prepared contact can contribute two manifold points to the full interval report.
+        var points = checked(_preparedContactCapacity * 2);
         _frameContacts.EnsureCapacity(points); _frameContactIndices.EnsureCapacity(points);
         if (_frameContactHeads.Length < count)
         {
