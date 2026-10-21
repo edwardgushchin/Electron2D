@@ -275,16 +275,17 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         if (delta > 0) { _reportCount = 0; _reportReady = false; }
     }
 
-    internal void Read(ReadOnlySpan<BodyHandle> bodies, Span<Snapshot> results)
+    internal void Read(ReadOnlySpan<BodyHandle> bodies, Span<Snapshot> results, ContactRead reports = default)
     {
         EnsureAccess();
         if (results.Length < bodies.Length) throw new ArgumentException("The state destination is too small.", nameof(results));
         foreach (var body in bodies) Validate(body);
-        if (bodies.IsEmpty) return;
+        if (bodies.IsEmpty) { ReadContactReports(reports); return; }
+        var reportCount = PrepareContactRead(reports);
         PrepareMasses();
         // A caller may request one body more than once; scratch capacity follows request count.
         Reserve(Math.Max(_highWater, bodies.Length));
-        Submit(0, default, bodies, results);
+        Submit(0, default, bodies, results, reports: reports, reportCount: reportCount);
     }
 
     internal void ReadPoses(ReadOnlySpan<BodyHandle> bodies, Span<Float4> results)
@@ -410,7 +411,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         finally { bodies?.Dispose(); centers?.Dispose(); transientForces?.Dispose(); targets?.Dispose(); resolvedFields?.Dispose(); commands?.Dispose(); requests?.Dispose(); results?.Dispose(); status?.Dispose(); upload?.Dispose(); download?.Dispose(); }
     }
 
-    private void Submit(float delta, Vector2 gravity, ReadOnlySpan<BodyHandle> requests, Span<Snapshot> results, uint motionStage = 1, bool positionCorrections = false, float? sleepDelta = null, float? dampingDelta = null, bool beginTick = false, bool endTick = false, bool resolvedFields = false, Span<Float4> poses = default, Span<uint> activity = default)
+    private void Submit(float delta, Vector2 gravity, ReadOnlySpan<BodyHandle> requests, Span<Snapshot> results, uint motionStage = 1, bool positionCorrections = false, float? sleepDelta = null, float? dampingDelta = null, bool beginTick = false, bool endTick = false, bool resolvedFields = false, Span<Float4> poses = default, Span<uint> activity = default, ContactRead reports = default, int reportCount = 0)
     {
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw GPUPhysicsDevice.Failure("acquire resident body commands");
@@ -450,6 +451,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             if (outputBytes > 0) SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _results!.DangerousGetHandle(), Size = outputBytes },
                 new() { TransferBuffer = _download.DangerousGetHandle(), Offset = headerBytes });
             SDL.EndGPUCopyPass(copy);
+            RecordContactRead(command, reports, reportCount);
             // A submitted interval may have mutated device state. Any later error invalidates the store.
             _failed = true;
             Finish(ref command);
@@ -480,6 +482,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
                 }
             }
             finally { SDL.UnmapGPUTransferBuffer(Device, _download.DangerousGetHandle()); }
+            AcceptContactRead(reports, reportCount);
             var spatialEdit = delta > 0;
             for (var i = 0; i < _pendingCount && !spatialEdit; i++) spatialEdit = (_pending[i].Mask & ~CollisionPriorityEdit) != 0;
             if (spatialEdit) _bodyVersion++;

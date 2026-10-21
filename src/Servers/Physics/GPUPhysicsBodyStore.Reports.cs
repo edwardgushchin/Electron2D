@@ -125,10 +125,37 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         _reportOpen = false; _reportReady = true; _publishedReportBodies = _highWater; ReportPublicationCount++;
     }
 
+    /// <summary>Caller spans for one synchronous report read, optionally sharing a state-publication submission.</summary>
+    internal readonly ref struct ContactRead(ReadOnlySpan<BodyHandle> bodies, ReadOnlySpan<int> limits, Span<int> counts, Span<ContactReport> results)
+    {
+        internal readonly ReadOnlySpan<BodyHandle> Bodies = bodies;
+        internal readonly ReadOnlySpan<int> Limits = limits;
+        internal readonly Span<int> Counts = counts;
+        internal readonly Span<ContactReport> Results = results;
+    }
+
     /// <summary>Reads capped snapshots for requested bodies; each result segment has its requested limit, with counts identifying valid entries.</summary>
-    internal void ReadContactReports(ReadOnlySpan<BodyHandle> bodies, ReadOnlySpan<int> limits, Span<int> counts, Span<ContactReport> results)
+    internal void ReadContactReports(ReadOnlySpan<BodyHandle> bodies, ReadOnlySpan<int> limits, Span<int> counts, Span<ContactReport> results) =>
+        ReadContactReports(new(bodies, limits, counts, results));
+
+    internal void ReadContactReports(ContactRead read)
+    {
+        var resultCount = PrepareContactRead(read);
+        if (resultCount == 0) { AcceptContactRead(read, 0); return; }
+        var command = SDL.AcquireGPUCommandBuffer(Device);
+        if (command == 0) throw GPUPhysicsDevice.Failure("acquire selected contact reports");
+        try
+        {
+            RecordContactRead(command, read, resultCount); _failed = true; Finish(ref command);
+            AcceptContactRead(read, resultCount); _failed = false;
+        }
+        finally { if (command != 0) SDL.CancelGPUCommandBuffer(command); }
+    }
+
+    private int PrepareContactRead(ContactRead read)
     {
         EnsureAccess();
+        var bodies = read.Bodies; var limits = read.Limits; var counts = read.Counts; var results = read.Results;
         if (limits.Length != bodies.Length || counts.Length < bodies.Length) throw new ArgumentException("Contact request/count lengths differ.");
         var total = 0;
         for (var i = 0; i < bodies.Length; i++)
@@ -138,7 +165,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             total = checked(total + limits[i]);
         }
         if (results.Length < total) throw new ArgumentException("The contact report destination is too small.", nameof(results));
-        if (!_captureReports || !_reportReady || _reportCount == 0 || total == 0) { counts[..bodies.Length].Clear(); return; }
+        if (!_captureReports || !_reportReady || _reportCount == 0 || total == 0) return 0;
         if (_reportRequestEpochs.Length < _highWater)
         {
             Array.Resize(ref _reportRequestEpochs, _slots.Length); Array.Resize(ref _reportRequestMultiplicities, _slots.Length);
@@ -158,59 +185,67 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         var requestBytes = checked(bodies.Length * sizeof(ReportRequest)); var countBytes = checked(bodies.Length * 8); var resultBytes = checked(resultCount * sizeof(ContactReport));
         GrowTransfer(ref _reportUpload, ref _reportUploadCapacity, checked(8 + requestBytes), SDL.GPUTransferBufferUsage.Upload);
         GrowTransfer(ref _reportDownload, ref _reportDownloadCapacity, checked(8 + countBytes + resultBytes), SDL.GPUTransferBufferUsage.Download);
-        var command = SDL.AcquireGPUCommandBuffer(Device);
-        if (command == 0) throw GPUPhysicsDevice.Failure("acquire selected contact reports");
+        return resultCount;
+    }
+
+    private void RecordContactRead(nint command, ContactRead read, int resultCount)
+    {
+        if (resultCount == 0) return;
+        var bodies = read.Bodies; var limits = read.Limits;
+        var requestBytes = checked(bodies.Length * sizeof(ReportRequest)); var countBytes = checked(bodies.Length * 8); var resultBytes = checked(resultCount * sizeof(ContactReport));
+        var mapped = SDL.MapGPUTransferBuffer(Device, _reportUpload!.DangerousGetHandle(), false);
+        if (mapped == 0) throw GPUPhysicsDevice.Failure("map contact report requests");
+        *(ulong*)mapped = 0; var requests = (ReportRequest*)((byte*)mapped + 8);
+        for (var i = 0; i < bodies.Length; i++)
+        { requests[i] = new() { Body = (uint)bodies[i].Index, Generation = bodies[i].Generation, Limit = (uint)limits[i] }; }
+        SDL.UnmapGPUTransferBuffer(Device, _reportUpload.DangerousGetHandle());
+        var copy = SDL.BeginGPUCopyPass(command);
+        if (copy == 0) throw GPUPhysicsDevice.Failure("begin contact report requests");
+        SDL.UploadToGPUBuffer(copy, new() { TransferBuffer = _reportUpload.DangerousGetHandle() }, new() { Buffer = _reportSummary!.DangerousGetHandle(), Size = 8 }, false);
+        SDL.UploadToGPUBuffer(copy, new() { TransferBuffer = _reportUpload.DangerousGetHandle(), Offset = 8 }, new() { Buffer = _reportRequests!.DangerousGetHandle(), Size = (uint)requestBytes }, false);
+        SDL.EndGPUCopyPass(copy); ReportPass(command, 5, bodies.Length, resultCount);
+        copy = SDL.BeginGPUCopyPass(command);
+        if (copy == 0) throw GPUPhysicsDevice.Failure("begin selected contact download");
+        SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _reportSummary.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _reportDownload!.DangerousGetHandle() });
+        SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _reportCounts!.DangerousGetHandle(), Size = (uint)countBytes }, new() { TransferBuffer = _reportDownload.DangerousGetHandle(), Offset = 8 });
+        SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _reportResults!.DangerousGetHandle(), Size = (uint)resultBytes }, new() { TransferBuffer = _reportDownload.DangerousGetHandle(), Offset = (uint)(8 + countBytes) });
+        SDL.EndGPUCopyPass(copy);
+    }
+
+    private void AcceptContactRead(ContactRead read, int resultCount)
+    {
+        var bodies = read.Bodies; var limits = read.Limits; var counts = read.Counts; var results = read.Results;
+        if (resultCount == 0) { counts[..bodies.Length].Clear(); return; }
+        var countBytes = checked(bodies.Length * 8);
+        UploadBytes += 8 + bodies.Length * sizeof(ReportRequest); ReadbackBytes += 8 + countBytes + resultCount * sizeof(ContactReport); ReportReadCount++;
+        var mapped = SDL.MapGPUTransferBuffer(Device, _reportDownload!.DangerousGetHandle(), false);
+        if (mapped == 0) throw GPUPhysicsDevice.Failure("map selected contact results");
         try
         {
-            var mapped = SDL.MapGPUTransferBuffer(Device, _reportUpload!.DangerousGetHandle(), false);
-            if (mapped == 0) throw GPUPhysicsDevice.Failure("map contact report requests");
-            *(ulong*)mapped = 0; var requests = (ReportRequest*)((byte*)mapped + 8);
+            var selected = ((uint*)mapped)[1]; var rows = (uint*)((byte*)mapped + 8); ulong sum = 0;
+            if (*(uint*)mapped != 0 || selected > resultCount) throw new InvalidOperationException("GPU contact report selection returned invalid data.");
             for (var i = 0; i < bodies.Length; i++)
-            { requests[i] = new() { Body = (uint)bodies[i].Index, Generation = bodies[i].Generation, Limit = (uint)limits[i] }; }
-            SDL.UnmapGPUTransferBuffer(Device, _reportUpload.DangerousGetHandle());
-            var copy = SDL.BeginGPUCopyPass(command);
-            if (copy == 0) throw GPUPhysicsDevice.Failure("begin contact report requests");
-            SDL.UploadToGPUBuffer(copy, new() { TransferBuffer = _reportUpload.DangerousGetHandle() }, new() { Buffer = _reportSummary!.DangerousGetHandle(), Size = 8 }, false);
-            SDL.UploadToGPUBuffer(copy, new() { TransferBuffer = _reportUpload.DangerousGetHandle(), Offset = 8 }, new() { Buffer = _reportRequests!.DangerousGetHandle(), Size = (uint)requestBytes }, false);
-            SDL.EndGPUCopyPass(copy); ReportPass(command, 5, bodies.Length, resultCount);
-            copy = SDL.BeginGPUCopyPass(command);
-            if (copy == 0) throw GPUPhysicsDevice.Failure("begin selected contact download");
-            SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _reportSummary.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _reportDownload!.DangerousGetHandle() });
-            SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _reportCounts!.DangerousGetHandle(), Size = (uint)countBytes }, new() { TransferBuffer = _reportDownload.DangerousGetHandle(), Offset = 8 });
-            SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _reportResults!.DangerousGetHandle(), Size = (uint)resultBytes }, new() { TransferBuffer = _reportDownload.DangerousGetHandle(), Offset = (uint)(8 + countBytes) });
-            SDL.EndGPUCopyPass(copy); _failed = true; Finish(ref command);
-            UploadBytes += 8 + requestBytes; ReadbackBytes += 8 + countBytes + resultBytes; ReportReadCount++;
-            mapped = SDL.MapGPUTransferBuffer(Device, _reportDownload.DangerousGetHandle(), false);
-            if (mapped == 0) throw GPUPhysicsDevice.Failure("map selected contact results");
-            try
             {
-                var selected = ((uint*)mapped)[1]; var rows = (uint*)((byte*)mapped + 8); ulong sum = 0;
-                if (*(uint*)mapped != 0 || selected > resultCount) throw new InvalidOperationException("GPU contact report selection returned invalid data.");
+                var count = rows[i * 2]; var first = rows[i * 2 + 1];
+                if (count > limits[i] || first > selected || count > selected - first) throw new InvalidOperationException("GPU contact report selection returned invalid ranges.");
+                sum += count;
+            }
+            if (sum != selected) throw new InvalidOperationException("GPU contact report selection returned inconsistent counts.");
+            fixed (ContactReport* target = results)
+            {
+                var offset = 0; var payload = (byte*)mapped + 8 + countBytes;
                 for (var i = 0; i < bodies.Length; i++)
                 {
                     var count = rows[i * 2]; var first = rows[i * 2 + 1];
-                    if (count > limits[i] || first > selected || count > selected - first) throw new InvalidOperationException("GPU contact report selection returned invalid ranges.");
-                    sum += count;
+                    if (count != 0) System.Buffer.MemoryCopy(payload + (long)first * sizeof(ContactReport), target + offset,
+                        (long)limits[i] * sizeof(ContactReport), (long)count * sizeof(ContactReport));
+                    offset += limits[i];
                 }
-                if (sum != selected) throw new InvalidOperationException("GPU contact report selection returned inconsistent counts.");
-                fixed (ContactReport* target = results)
-                {
-                    var offset = 0; var payload = (byte*)mapped + 8 + countBytes;
-                    for (var i = 0; i < bodies.Length; i++)
-                    {
-                        var count = rows[i * 2]; var first = rows[i * 2 + 1];
-                        if (count != 0) System.Buffer.MemoryCopy(payload + (long)first * sizeof(ContactReport), target + offset,
-                            (long)limits[i] * sizeof(ContactReport), (long)count * sizeof(ContactReport));
-                        offset += limits[i];
-                    }
-                }
-                // Commit counts after scattering so callers may alias their limits and count spans.
-                for (var i = 0; i < bodies.Length; i++) counts[i] = (int)rows[i * 2];
             }
-            finally { SDL.UnmapGPUTransferBuffer(Device, _reportDownload.DangerousGetHandle()); }
-            _failed = false;
+            // Commit counts after scattering so callers may alias their limits and count spans.
+            for (var i = 0; i < bodies.Length; i++) counts[i] = (int)rows[i * 2];
         }
-        finally { if (command != 0) SDL.CancelGPUCommandBuffer(command); }
+        finally { SDL.UnmapGPUTransferBuffer(Device, _reportDownload.DangerousGetHandle()); }
     }
     private void ReportPass(nint command, uint stage, int count, int resultCount = 0)
     {

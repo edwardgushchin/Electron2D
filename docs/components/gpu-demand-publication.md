@@ -1,6 +1,6 @@
 # GPU publication for current consumers
 
-Last updated: 2026-10-14
+Last updated: 2026-10-21
 
 [The 2026-10-11 paired trial](physics-current-performance.md) verifies complete
 headless and real-window paths on one main revision with freshly built assemblies.
@@ -45,8 +45,10 @@ one callback. Absence of force/callback/contact demand still skips activity capt
 
 Acquiring a GPU direct-body view refreshes that body's resolved field cache. Live
 raw views participate in subsequent selected completion, so fields and velocities
-remain fresh. Public queries continue to search resident geometry. Shape/contact
-reports and statistics keep their existing explicit reads. A started submission
+remain fresh. Public queries continue to search resident geometry. [Contact selection](gpu-resident-reports.md#shared-completion-for-body-state-and-contacts)
+shares the completion command/fence with selected body state. Changed-body
+publication retains its separate report read; statistics keep their existing
+reads. A started submission
 failure keeps the world failed and never replays it on CPU.
 
 Portable capture already batches the bound GPU identities. Apply preparation now

@@ -1,5 +1,11 @@
 # GPUPhysicsBodyStore
 
+[Shared state/contact completion](../components/gpu-resident-reports.md#shared-completion-for-body-state-and-contacts)
+records contact selection with selected body-state publication, sharing one
+fence. Changed-body publication retains its separate report read and bounded
+dense/sparse policy. Caller spans, generations, all contact fields, caps/order and failed
+store handling retain their existing contracts.
+
 [Active joint-batch convergence](../components/physics-joints.md#active-joint-batch-convergence)
 uses the actual joint incidence degree after colored contacts complete, preserving
 configured sweep counts and the full-degree fallback without host projection or

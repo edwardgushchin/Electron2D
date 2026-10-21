@@ -1,5 +1,11 @@
 # PhysicsSpace
 
+[Shared state/contact completion](../components/gpu-resident-reports.md#shared-completion-for-body-state-and-contacts)
+records contact selection with selected body-state publication, sharing one
+fence. Changed-body publication retains its separate report read and bounded
+dense/sparse policy. Caller spans, generations, all contact fields, caps/order and failed
+store handling retain their existing contracts.
+
 Cold world-query geometry now uses the [shared using-world borrow](../components/physics-queries.md#cold-query-geometry) before user suppliers run. Numerical writes, collider retirement/transfer and final world release reject; original supplier failures can retry. Existing pure input reads and nested query behavior are retained.
 
 Last updated: 2026-10-21

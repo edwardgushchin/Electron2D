@@ -16,6 +16,109 @@ adapter resolves them to retained common identities and logical shape indices,
 applies contact-limit assignment invalidation and preserves the existing callback/event
 sequence under [ADR 0070](../decisions/physics.md#adr-0070).
 
+## Shared completion for body state and contacts
+
+The world completion records configured contact selection in the same command as
+the selected body-state gather. Selected state and contact data share one
+submission and fence. Changed-body publication retains its separate contact read
+and its existing dense/sparse transfer policy. Transfer bounds, report fields,
+per-receiver order and cap policy remain unchanged.
+
+`GPUPhysicsBodyStore.ContactRead` carries caller spans on the stack for that
+synchronous invocation. Validation and capacity preparation precede recording;
+completed metadata is checked before scattering rows, with counts committed last
+for alias safety. No asynchronous request lifetime, host numerical mirror or CPU
+replay is introduced. Empty contact demand records no extra device work; empty
+state demand still services actual contact receivers. Publication errors keep the
+existing failed-store policy. Public callback delivery follows both projections.
+
+`ELECTRON2D_TEST_GPU_COMPLETION=1` includes selected/duplicate state, duplicate/aliased report requests, exact fields/caps and
+untouched tails, invalid/empty requests and 128 warmed combined reads with strict
+zero owner/all-thread managed-byte checks. Full physical/window and platform
+acceptance remain separate from this bounded contract.
+
+The selected-read implementation is checked through eight root profiles: combined completion, changed
+publication, scene contact workers on owner/separate physics threads, GPU private
+checkpoints, report-only bodies/replay, CPU with denied GPU drivers and CPU contact
+workers. Four public `--contact-frames` profiles pass in CLR and four in strict
+full-trim NativeAOT: CPU/GPU, each with owner/separate physics threads. These use a
+mixed scene/raw world, transient peers, signed impulse totals, cap/depth/ties,
+private restore and 128 strict zero owner/all-thread managed-byte cycles per run.
+Native process maps contain no CoreCLR; GPU maps select NVIDIA and exclude software
+Vulkan. The final runtime has the same 2,484 authored source checksums in both builds.
+The NativeAOT consumer has 267 verified authored source documents. Native allocator,
+foreign-platform and human/window acceptance remain open.
+
+## Selected-read result, final runtime
+
+The final CLR control restores one completed checkpoint before every read and
+validates all state/contact bytes afterward. Restore and validation are outside
+read latency and inside the strict managed-allocation bracket. Four blocks in
+serial/combined/combined/serial order use 32 warmup and 64 measured reads each,
+with 16,384 receivers and identical eight-row caps.
+
+| Block | Mean ms | p50 | p95 | p99 | Submissions |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Serial 1 | 1.0874 | 1.0636 | 1.2082 | 1.2952 | 2 |
+| Combined 2 | 1.0687 | 1.0257 | 1.2674 | 1.4906 | 1 |
+| Combined 3 | 1.0452 | 1.0254 | 1.1236 | 1.1472 | 1 |
+| Serial 4 | 1.1524 | 1.1437 | 1.2632 | 1.4133 | 2 |
+
+Mean read latency is 1.11990 to 1.05695 ms, a 5.62% reduction in this bounded control. Every read uploads 458,768 bytes and downloads 3,801,104 bytes; one completed submission replaces two. All 256 measured reads and their surrounding restores/byte checks allocate 0/0 owner/all-thread managed bytes. Tail latency does not improve uniformly across blocks. These are selected-read measurements; final whole-frame GPU throughput and window FPS remain open.
+
+Final runtime SHA-256: `766f4f4ed501245c50afebcb123c3aa521e74a0d750c621b83f3aeb0cbc43431`.
+Strict NativeAOT public consumer SHA-256: `bacae0cbb7552addaaf33eefdace4cb962e7940f449334bfb115555f55afc349`.
+
+## Coalescing trial, 2026-10-21
+
+The first candidate combined contacts with both changed and selected body reads.
+The following frozen CLR cohort used fresh GPU-only processes in A/B/B/A order,
+then a separate CPU-only process. A is the original implementation; B is that
+candidate, not the final selected-only runtime. Every run retained 16,384 scene
+bodies, four walls, 144 Hz, four substeps, 16 sweeps, eight monitored contacts,
+interpolation, disabled sleep, 1,600 warmup ticks and 256 measured complete
+headless frames. All 1,280 measured ticks passed physical and strict 0/0 managed
+allocation gates. This is not window FPS.
+
+| Process | Mean ms | p50 | p95 | p99 | Submissions/tick |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| GPU A1 | 103.0303 | 102.6135 | 112.2750 | 124.1659 | 19.1016 |
+| GPU B1 | 92.6962 | 92.1744 | 96.6802 | 100.1326 | 18.1484 |
+| GPU B2 | 90.5160 | 90.1391 | 97.1292 | 102.5634 | 18.0898 |
+| GPU A2 | 96.5352 | 96.3193 | 101.6481 | 105.1743 | 19.0273 |
+| CPU control | 102.4731 | 102.0798 | 107.8280 | 109.5178 | 0.0000 |
+
+Final states, contact hashes and event counts differ across the full physical
+runs. Phase differences also include solver/preparation work outside the changed
+completion path. These observations do not isolate a causal whole-frame gain.
+A fixed-state control therefore compares serial and combined reads on one store,
+restoring the same completed checkpoint for dense changes. It validates all
+16,384 snapshots, generations, contact bytes/caps and unchanged destination slots.
+Each path uses 32 warmup reads and A/B/B/A blocks of 64 measured reads. It performs
+no numerical replay during the timed read; restore and byte validation are outside
+the timing but inside the strict allocation bracket.
+
+| Fixed-state path | Serial mean ms | Combined mean ms | Change | Upload/readback bytes |
+| --- | ---: | ---: | ---: | --- |
+| Dense changes | 0.9321 | 0.9743 | +4.54% | 196,624 / 4,063,248 |
+| Selected states | 1.0562 | 0.9930 | -5.98% | 458,768 / 3,801,104 |
+
+Each combined read reduces two submissions to one with identical transfer bytes
+and 0/0 managed bytes. Dense changed publication regresses in this control, so
+its coalescing code and parameter were removed. Production keeps the original
+changed-state stream and batches contacts only with selected body snapshots.
+The full-scene B numbers above remain evidence for the rejected broader trial;
+they are not performance acceptance for the final implementation.
+
+Artifacts are under `bin/physics-completion/2026-10-21/`: the frozen `baseline`,
+`combined` trial, `selected` final payloads, source/PDB checksums, complete process
+maps, NVIDIA telemetry, kernel checks and validators. `validation-trial.json`
+records the broader cohort; `validation.json` records final selected-only checks.
+No new Xid was recorded in the trial; observed maximum GPU temperature/power was
+41 C/137.05 W. This does not verify the unchecked power cable or hardware stability.
+Native allocation, remaining inherited/API/network conformance, real-window FPS,
+foreign platforms and full-physics performance acceptance remain open.
+
 ## Frame accumulation
 
 Each solved interval contributes its applied normal and signed friction impulse,
