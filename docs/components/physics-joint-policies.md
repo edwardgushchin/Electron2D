@@ -1,6 +1,6 @@
 # Joint solver policies
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 Collision-policy publication now retains the latest requested flag and complete
 common pair contribution through selected errors. Equal setters and world
@@ -394,3 +394,32 @@ Those three expected RED receipts are preserved. No public declaration state is
 promoted by these numerical checks; the 64-byte full-suite allocation and massive
 GPU Xid/device-loss gates remain open.
 Receipts and frozen payloads are under `bin/physics-joint-recovery/2026-10-21/`.
+
+
+## Closed pin lattices and impact accuracy (2026-10-22)
+
+PhysicsJointEnergyTests, shared with the public --joint-energy consumer, now includes connected 4x4, 8x8 and 16x16 pin grids: 16/64/256 grid bodies and 24/112/480 horizontal/vertical joints. A rotated 8x8 profile alternates 1/8 kg masses. Every body remains awake, every edge remains present, gravity and authored damping are zero, and angular inertia is one scene inertia unit. A bare unit impulse supplies about 0.5 scene energy units. The contact variant adds a unit-mass free witness with an eight-unit impulse, about 32 scene energy units, real layer/mask participation and four reported contacts. It checks reported collider/shape identities and the complete contact impulse against the witness velocity change; the witness has no joint.
+
+Each case warms 128 complete raw-space steps. Contact cases also warm an actual impact for 256 steps and restore a local checkpoint. Restoration is compared with the captured warmed pose, rotation and velocities, not ideal authored zeros: finite solver preparation can leave small values before capture. The measured bracket includes the impulse, 512 full 1/60 s steps, every body's state and every joint-anchor gap. It requires 0/0 owner/all-thread managed bytes, exact tick/backend/iteration selection, finite awake state, peak energy within 1% of the actual initial state plus impulse work and 0.0001 scene energy units, and complete linear-momentum error below 0.002 kg*scene-unit/s. Maximum anchor separation is below 0.05 scene units. A contact case must observe nonzero physical impulse; a missing joint implementation cannot pass the anchor bound.
+
+### Angular convergence boundary
+
+An initial diagnostic applied one 0.03 scene-angular-momentum bound to all profiles. The 60 Hz/16-iteration GPU 8x8 impact exceeded it at frame 47 with 0.0381907 while energy remained below the supplied 32 and linear momentum remained conserved. The 16x16 and mixed profiles also exceeded that provisional bound. These failures remain archived; no production solver was changed or certified by discarding them.
+
+Full-trajectory controls over the same 8.5333 simulated seconds show the following maxima. Timings overlap compilation and other functional work and are not performance evidence.
+
+| Backend | Fixed Hz / requested iterations | Angular-momentum error | Maximum anchor gap, scene units |
+| --- | --- | ---: | ---: |
+| CPU | 60 / 16 | 0.0185584 | 0.000487331 |
+| CPU | 120 / 16 | 0.00951182 | 0.000243902 |
+| CPU | 60 / 64 | 0.00957085 | 0.0000524608 |
+| GPU | 60 / 16 | 0.0381928 | 0.00468491 |
+| GPU | 120 / 16 | 0.0149422 | 0.00232034 |
+| GPU | 240 / 16 | 0.00952733 | 0.00117074 |
+| GPU | 60 / 64 | 0.00813132 | 0.00113124 |
+
+This establishes convergence for this coupled impact, not an exact angular-conservation guarantee at every time step or topology. The permanent accuracy pair keeps the same 8x8 impact at 60 Hz and explicitly requests 16 then 64 iterations. Both angular and anchor errors must decrease by at least 25%, allowing only 0.0001 scene angular-momentum units and 0.00001 scene units of comparison noise; the 64-iteration angular error must also stay below the original 0.03 bound. That bound is less than 0.1% of the witness impulse times the four-unit cell pitch. It applies to this explicit accuracy profile, not a universal default-iteration promise. The same physical population, materials, contacts, impulse/energy checks and zero-byte budgets remain on both sides.
+
+The seven previous chain profiles are retained. Nine new lattice profiles bring each executable invocation to sixteen 512-step response cases. All eight CLR/strict NativeAOT profiles pass on CPU/GPU and owner/separate numerical lanes: 65,536 measured response steps at strict 0/0 managed bytes, including 36,864 new lattice steps. CPU processes disable GPU discovery; GPU process maps confirm NVIDIA without a software driver, and NativeAOT profiles have no CoreCLR mapping. Stable payload hashes and PDB proofs bind 2,501 runtime and 268 consumer source documents; the rebuilt root fixture separately matches 943 documents. A stale root-test binary found during proof verification is excluded from acceptance; these profiles exercise the current public consumer.
+
+Source/PDB proofs, original diagnostic failures, trajectory controls and the accepted cohort are retained under ignored bin/physics-joint-lattice/2026-10-22/, with suite-validation.json recording the final checks. These raw-space numerical checks do not establish scene/rendered output, arbitrary custom-extension coupling, separate-process network acceptance, native allocation totals, foreign platforms or hardware throughput. No API declaration is promoted; physics remains 1306/1369 (95.40%), with 63 open declarations.
