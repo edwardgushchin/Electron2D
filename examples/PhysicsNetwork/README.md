@@ -206,10 +206,10 @@ smoothing counts, separately from physics/replay metrics.
 
 ## NativeAOT on Linux
 
-The [current hardware verification](../../docs/components/physics-network-example.md#hardware-network-regression-after-joint-cache-damping-2026-10-21)
-retains an intermittent NativeAOT GPU owner stall as an open failure. Successful
-controls do not close that gate; CPU native and the separate numerical GPU profile
-have their own passing receipts.
+Cold native pipeline creation can block the client's transport polling. The
+[current hardware investigation](../../docs/components/physics-network-example.md#cold-pipeline-compilation-2026-10-21)
+reports compiler optimization separately; the NativeAOT GPU startup gate remains
+open. Successful diagnostic controls do not close that failure.
 
 Publish the complete native output directory and run its executable directly:
 

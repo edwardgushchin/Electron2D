@@ -71,6 +71,11 @@ def generate(output, source_root=ROOT):
                 with tempfile.TemporaryDirectory(dir=target.parent) as temporary:
                     compiled = Path(temporary) / 'shader.spv'
                     command = [str(compiler), '-V', '--target-env', 'vulkan1.0', '-S', stage, '-e', 'main']
+                    if domain == 'Physics' and source.name in (
+                            'PhysicsResidentCCD.comp.glsl', 'PhysicsResidentShapeQueries.comp.glsl',
+                            'PhysicsResidentMotionQueries.comp.glsl'):
+                        # Reduce cold driver compilation before these sweeps block a live simulation.
+                        command += ['-O']
                     if source.suffix == '.hlsl':
                         command += ['-D', '--hlsl-iomap']
                     subprocess.run([*command, *defines, '-o', str(compiled), str(source)], check=True)

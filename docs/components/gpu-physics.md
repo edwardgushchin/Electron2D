@@ -1,6 +1,12 @@
 # GPU physics implementation status
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
+
+[Cold pipeline compilation](physics-network-example.md#cold-pipeline-compilation-2026-10-21)
+now has a failed-session native stack and separate driver-creation measurements.
+Offline optimization reduces CCD and shape/motion-query compilation cost, while
+the NativeAOT network startup failure remains open. This changes build output,
+without changing physical declarations or numerical budgets.
 
 The [2026-10-20 RTX baseline](physics-rtx-current.md) measures complete CPU/GPU
 paths on one frozen runtime: raw-server medians and actual windows improve,

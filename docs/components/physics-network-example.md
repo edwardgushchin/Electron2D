@@ -2,6 +2,94 @@
 
 Last updated: 2026-10-21
 
+## Cold pipeline compilation, 2026-10-21
+
+A fresh cold-cache diagnostic reproduces the native GPU-client failure in
+141.829 seconds, with the same final authority tick 378. Periodic client progress
+stops at tick 0 during preparation. Two debugger snapshots, triggered after 5.09
+and 12.09 seconds without a new progress line, show the main thread in NVIDIA's
+compiler through SDL compute-pipeline creation and resident simulation preparation.
+The client later reaches tick 13 before reporting disconnection. This is actual
+blocking compilation in a failed session, rather than a snapshot of normal replay
+in a successful control. No Xid or changed executable is observed.
+
+The network owner calls correction/replay synchronously before its next transport
+poll. Cold pipeline creation can therefore prevent that client from servicing the
+connection. Separate isolated creation checks on the RTX 3090 Ti, with the shader
+disk cache disabled, measure the following single observations:
+
+| Program | Previous SPIR-V, ms | Offline performance optimization, ms |
+| --- | ---: | ---: |
+| Resident CCD | 12393.6162 | 4868.6743 |
+| Shape queries | 38664.9850 | 17432.4556 |
+| Body-motion queries | 21227.3138 | 6988.2725 |
+
+The runtime shader builder now applies the pinned compiler's `-O` only to these
+three programs. Their GLSL algorithms, iteration limits, shape population and
+public interface stay unchanged. All 32 embedded physics programs validate, and
+the three changed resources match independently compiled optimized bytes; the
+other 29 are byte-identical. A `DontUnroll`-only CCD experiment changes only one
+loop hint and source metadata, but measures 10889.4802 ms against its 12419.6896-ms
+control. It is not retained. The separate `-Os` CCD experiment measures 4836.3534
+ms; the final build uses performance optimization. These are cold pipeline-creation
+costs, including reflection/toolchain calls and the driver; they do not measure
+whole-step throughput, native allocation or window FPS.
+
+The original public managed GPU-owner scenario passes with the cache disabled in
+126.208 seconds, retaining 900 ticks, admission at 310, a 250-ms poll delay and all
+original physical, event, convergence, deadline and strict warm allocation checks.
+The first corresponding optimized NativeAOT owner attempt still fails in 141.859
+seconds at authority tick 378. Its failure remains open. A later debugger control's
+application passes in 127.065 seconds; its observer script separately rejects the
+independent checkout changes described below. Its 20-second stack shows shape-query compilation during
+Area scanning, and its 40-second stack is ordinary sleep. That passing control does
+not close the failure. The required continuation is explicit initial-world
+preparation/readiness before a time-sensitive network session, with startup cost
+and active simulation accounted separately and complete initial-state restoration
+verified. Repeating cached runs does not establish that boundary.
+
+Thirty focused physical profiles pass: 24 GPU public-consumer owner/separate checks
+cover geometry/logical queries, shape-pair and motion matrices, long convex/capsule
+and oblique disk motion, hollow pairs, crossed capsules, CCD policy/response and
+portable geometry; four CPU controls and two root pipeline/CCD checks also pass.
+They retain their original physical, lifetime, error and warmed allocation assertions.
+They do not establish a successful cold NativeAOT network session.
+
+A separate same-host regression observation runs the example's 29-actor initial
+scene directly, without networking or a window: identical scripted impulses,
+geometry queries and whole SceneTree frames at 1/60 second, 512 warmup frames and
+256 measured frames. One identical benchmark host and all 57 native library files
+are shared between the previous and optimized shader payloads. The six runs retain
+zero owner/all-thread managed bytes throughout all 1536 measured frames.
+
+| Backend / numerical lane | Previous P50 / P95 / P99, ms | Optimized P50 / P95 / P99, ms |
+| --- | --- | --- |
+| GPU owner | 5.9826 / 7.7779 / 8.9047 | 6.1008 / 7.8479 / 8.8772 |
+| GPU separate | 5.9698 / 8.1155 / 9.0753 | 6.0297 / 8.0865 / 9.0117 |
+| CPU owner control | .1078 / .1999 / .2900 | .1060 / .2019 / .2920 |
+
+These single paired observations show no demonstrated warmed throughput gain;
+GPU medians are slightly higher. CPU is much faster for this small scene. The
+change targets cold compilation, and these results do not establish a mass-scene
+GPU advantage, native allocator totals or rendered FPS. The first benchmark host
+omitted a runtime dependency and failed before simulation; its corrected cohort
+and six successful measurements are separate receipts.
+
+Portable-PDB inputs bind the frozen functional payloads to `ba422515`: 2440 runtime,
+14 public-example, 265 consumer and 934 root-test documents, with a 3627-document
+authored union including the cost host. The independent `96698e158` host-identity
+commit lands during the passing debugger control; its changed paths are retained,
+while the executed payload remains unchanged. Frozen functional evidence is
+separate from integrated-main build/API/wiki checks. Evidence lives under
+`bin/physics-network-stall/2026-10-21/`: `causal-analysis.json`, the failed and
+successful attempt receipts, `embedded-shaders-proof.json`, source/commit proofs
+and the focused functional cohort. `validation.json` has SHA-256
+`f263e94730d3466432ee3f96e7ccd15a1f0bf0df5cd91e924d9b60b68cc2e710`.
+No declaration state changes: 1304/1369
+Implemented (95.25%), 65 open and 92 Excluded. Native startup, complete-goal,
+native/foreign allocator, real-window and target mass-load performance gates remain
+open; the power cable is still unverified.
+
 ## Hardware network regression after joint cache damping, 2026-10-21
 
 The [joint cache damping](physics-joint-policies.md#retained-hard-row-guesses)

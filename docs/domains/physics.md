@@ -1,5 +1,10 @@
 # Physics domain
 
+[Cold pipeline compilation](../components/physics-network-example.md#cold-pipeline-compilation-2026-10-21)
+now has direct failed-session compiler stacks and scoped offline optimization.
+Physical regressions pass; the NativeAOT network startup boundary remains open.
+Declaration coverage is unchanged.
+
 [The hardware network regression](../components/physics-network-example.md#hardware-network-regression-after-joint-cache-damping-2026-10-21)
 passes eleven of twelve main attempts after joint cache damping. The intermittent
 NativeAOT GPU owner stall remains open despite successful diagnostic controls;
