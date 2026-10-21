@@ -109,3 +109,7 @@ Registered `shader_globals/name` definitions use [GlobalShaderParameterSettings<
 ## Localized resource files
 
 The permanent LocaleResourceRemaps definition stores up to 4096 immutable source/locale/target records in a copied array. Feature overrides and project persistence use compiled JSON metadata, including strict NativeAOT. Edits affect subsequent loads and translation refresh; they do not perform file I/O in settings setters. See [localized resources](localized-resources.md).
+
+## Host platform integration
+
+OS and registries share the built-in host/build/architecture/device vocabulary. Parent architecture tags such as x86 and arm, pointer bitness, template build configuration and supported thread profile now select real typed overrides. Custom tags remain runtime-managed; saving stores override values rather than activation. Dynamic service feature observations belong to OS.HasFeature and explicit caller selection contexts.

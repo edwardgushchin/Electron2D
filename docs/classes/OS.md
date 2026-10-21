@@ -262,3 +262,68 @@ Changes the next measured sample in Engine.Run/RunAsync. Stable effective classi
 `public static void SetUseFileAccessSaveAndSwap(bool enabled)`
 
 Thread-safely selects staging for subsequent exact write-only FileAccess opens; false is the process default. Existing streams capture their selection. Flush persists staging, while Close/disposal publishes it. Mixed modes, pipes and independent transformed/configuration commits retain their contracts. See [file save and swap](../components/file-save-and-swap.md) for symlinks, permissions, temporary files, failures and recovery. This is blocking filesystem work.
+
+## Host identity and feature queries
+
+Sources: [OS.Host.cs](../../src/Core/OS/OS.Host.cs), [OS.Features.cs](../../src/Core/OS/OS.Features.cs). All operations are static on the retained process service.
+
+| Signature | Contract |
+| --- | --- |
+| `public static string GetName()` | Platform family; no renderer required. |
+| `public static string GetDistributionName()` | Exact Linux os-release NAME, otherwise platform-family fallback. |
+| `public static string GetVersion()` | Linux VERSION or kernel build description; other profiles currently use the managed OS description. |
+| `public static int GetProcessorCount()` | Native logical CPU count; zero means unknown. |
+| `public static string GetProcessorName()` | Cached CPUID/Linux CPU model, empty when unavailable. |
+| `public static string GetLocale()` | Live host locale, independent of application Culture. |
+| `public static string GetLocaleLanguage()` | Language component, retaining nonstandard system values. |
+| `public static bool IsDebugBuild()` | Engine assembly's Debug configuration. |
+| `public static bool IsSandboxed()` | Live Linux application sandbox detection. |
+| `public static bool HasFeature(string tagName)` | Shared host/custom tags and live movie/font/renderer observations. |
+
+### GetName
+
+Returns Windows, Linux, macOS, Android, iOS, tvOS or Web for supported platform families. An unrecognized managed profile supplies its OS description. This does not report the distribution or engine version.
+
+### GetDistributionName
+
+Reads bounded optional metadata once. Linux uses the exact NAME key, ignoring PRETTY_NAME and other keys containing that word. Missing/empty NAME falls back to GetName. Other profile-specific distribution integration retains its platform gate.
+
+### GetVersion
+
+Linux selects the exact VERSION key rather than VERSION_ID; missing/empty metadata falls back to the native uname version field. Initial I/O may allocate. Other detailed platform version descriptions still require their owning native adapters; a managed description is not a claim of exact foreign reference formatting.
+
+### GetProcessorCount
+
+Returns the native host logical-core count, possibly zero. It is independent of cgroup/affinity recommendations for a game worker pool. No graphics device is opened.
+
+### GetProcessorName
+
+Caches the available CPUID brand string on supported x86 hosts or a model/Hardware field in bounded Linux CPU input. Empty means unavailable. Complete foreign non-x86 model providers retain their adapter trigger; it does not substitute the architecture name for a CPU model.
+
+### GetLocale
+
+Linux/FreeBSD read live LANG and strip its first encoding suffix. Absence returns en; C and empty/nonstandard system values remain host data. Other profiles read the first native preferred language/country entry and free its array. Calls serialize with OS environment edits. This cold query can allocate and does not change TranslationServer.Culture.
+
+### GetLocaleLanguage
+
+Returns the locale's language component before `_`, `-` or `@`, including three-letter identifiers. It does not perform catalog negotiation or invent a supported CultureInfo entry.
+
+### IsDebugBuild
+
+Observes the engine build symbol. A Release engine remains Release when its consumer is debugged or built in Debug. Host feature tags debug/release and template_debug/template_release use the same value.
+
+### IsSandboxed
+
+On Linux, Flatpak/container-manager markers or the complete SNAP, SNAP_NAME and SNAP_REVISION environment identify application sandboxing. Environment observations are live; one or two unrelated Snap variables are insufficient. Other profiles throw PlatformNotSupportedException until their native application sandbox adapter exists.
+
+### HasFeature
+
+Null throws ArgumentNullException. Case-insensitive matching shares the existing typed project policy; unknown/empty/malformed names return false. Host/custom tags reuse the project registry. Movie reflects the current output lifecycle, system_fonts the available host provider, and native compression tags the current renderer snapshot. First font discovery is cold. Renderer queries create no device and expire at shutdown. Project default feature overrides retain their documented host/custom context; explicit supplied features remain a caller-owned selection context.
+
+```csharp
+int workers = Math.Max(1, OS.GetProcessorCount());
+bool nativeBlocks = OS.HasFeature("s3tc");
+string hostLanguage = OS.GetLocaleLanguage();
+```
+
+See [host query lifecycle and executable consumers](../components/host-platform.md) and [ADR0113](../decisions/host-platform.md#adr-0113). Linux JIT/AOT/native evidence does not establish detailed foreign adapters, native allocation, editor or human acceptance.

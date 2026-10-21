@@ -1,0 +1,1 @@
+HostPlatformChecks.Run(args);

@@ -9,6 +9,7 @@ internal readonly record struct SystemFontMatch(string Path, int FaceIndex, stri
 internal sealed partial class NativeSystemFonts
 {
 #if IOS || TVOS || ANDROID || ELECTRON2D_BROWSER_NATIVE
+    internal bool IsAvailable => false;
     internal string[] Names() => [];
     internal SystemFontMatch[] Match(string family, string text, string locale, int weight, int stretch, bool italic) => [];
 #else
@@ -25,6 +26,7 @@ internal sealed partial class NativeSystemFonts
         catch (Exception error) when (error is DllNotFoundException or EntryPointNotFoundException or BadImageFormatException) { return false; }
         return _config != 0;
     }
+    internal bool IsAvailable { get { lock (_gate) return Ensure(); } }
     internal string[] Names()
     {
         lock (_gate)

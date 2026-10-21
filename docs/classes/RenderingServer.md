@@ -1875,3 +1875,7 @@ Native thin-stroke batch bounds include half-pixel coverage and an additional ha
 | --- | --- |
 | `public static long GetRenderingInfo(RenderingInfo info)` | Allocation-free, any-thread aggregate observation; zero without a native session. |
 | `public static long ViewportGetRenderInfo(RID viewport, ViewportRenderInfoType type, ViewportRenderInfo info)` | Same per-viewport fields through a live scene or server-owned RID; native owner required. |
+
+## Native OS feature query
+
+`public static bool HasOSFeature(string feature)` reads the active backend's immutable native ordinary-image upload snapshot. Null throws ArgumentNullException; an absent service throws InvalidOperationException. Unknown names return false. Supported native family tags are s3tc, rgtc and bptc when every required format can be sampled natively. CPU decoding and unrelated device-only format support do not imply this upload capability. Queries can run across threads, allocate no prepared managed data and never create another device. OS.HasFeature observes this same snapshot, returning false outside an active session. See [host platform queries](../components/host-platform.md).

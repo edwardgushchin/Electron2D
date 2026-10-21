@@ -133170,6 +133170,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.GetDistributionName()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetDistributionName",
+    "signature": "public static System.String GetDistributionName()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.GetEnvironment(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -133221,6 +133234,45 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.GetLocale()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetLocale",
+    "signature": "public static System.String GetLocale()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetLocaleLanguage()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetLocaleLanguage",
+    "signature": "public static System.String GetLocaleLanguage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetName()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetName",
+    "signature": "public static System.String GetName()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.GetProcessExitCode(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -133250,6 +133302,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetProcessorCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetProcessorCount",
+    "signature": "public static System.Int32 GetProcessorCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetProcessorName()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetProcessorName",
+    "signature": "public static System.String GetProcessorName()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -133464,6 +133542,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.GetVersion()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetVersion",
+    "signature": "public static System.String GetVersion()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.HasEnvironment(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -133479,6 +133570,38 @@
         "default": null
       }
     ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.HasFeature(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "HasFeature",
+    "signature": "public static System.Boolean HasFeature(System.String tagName)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tagName",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.IsDebugBuild()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "IsDebugBuild",
+    "signature": "public static System.Boolean IsDebugBuild()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Boolean",
     "value": null
   },
@@ -133526,6 +133649,19 @@
     "declaringType": "Electron2D.OS",
     "name": "IsRestartOnExitSet",
     "signature": "public static System.Boolean IsRestartOnExitSet()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.IsSandboxed()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "IsSandboxed",
+    "signature": "public static System.Boolean IsSandboxed()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -162080,6 +162216,25 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.HasOSFeature(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "HasOSFeature",
+    "signature": "public static System.Boolean HasOSFeature(System.String feature)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "feature",
+        "type": "System.String",
+        "default": null
+      }
+    ],
     "returnType": "System.Boolean",
     "value": null
   },

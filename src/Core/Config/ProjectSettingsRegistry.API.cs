@@ -182,7 +182,7 @@ public partial class ProjectSettingsRegistry
     /// <summary>Stores a value selected when the named feature is active.</summary>
     /// <typeparam name="T">The non-null setting value type.</typeparam>
     /// <param name="setting">The exact registered definition.</param>
-    /// <param name="feature">The platform, build, architecture, or custom feature tag.</param>
+    /// <param name="feature">The host, build, architecture/device-family, or runtime-managed custom feature tag.</param>
     /// <param name="value">The non-null value to validate and snapshot.</param>
     /// <remarks>New overrides have lower priority than existing overrides for the same setting.</remarks>
     /// <exception cref="ArgumentNullException">An argument is <see langword="null"/>.</exception>
@@ -233,7 +233,7 @@ public partial class ProjectSettingsRegistry
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
     public bool RemoveCustomFeature(string feature) => RemoveCustomFeatureCore(feature);
 
-    /// <summary>Determines whether a platform, build, architecture, or custom feature is active.</summary>
+    /// <summary>Determines whether a host, build, architecture/device-family, or runtime-managed custom feature is active.</summary>
     /// <param name="feature">The feature tag to inspect.</param>
     /// <returns><see langword="true"/> when the normalized feature is active.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="feature"/> is <see langword="null"/>.</exception>

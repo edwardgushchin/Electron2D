@@ -1656,3 +1656,7 @@ Advanced stored Boolean registered in each project registry. Ordinary save/load/
 ### LineBreakingStrictness
 
 Advanced stored definition, registered with restart-required metadata in every independent project registry. Invalid values reject before base/feature mutation; ordinary persistence and reset apply. The process registry's effective feature value is captured on the first nonempty native line-boundary request. Later changes require process restart. Supplied option-bearing language tags retain their native options instead of receiving the default. Auto forwards the locale unchanged. [The executing text component](../components/line-breaking-strictness.md) records source lifetime, native cache, consumers, tests and platform limits.
+
+## Host platform integration
+
+Host feature tags now share OS.AddHostFeatures: platform and device family, pointer bitness, process architecture/family, managed runtime/scalar precision, template build role and supported thread profile. Query matching and override precedence retain the existing normalized case-insensitive policy. Runtime custom activation remains explicit after settings save/load. OS adds live service observations to its own query; default registry overrides remain host/custom and an explicit feature list retains full caller control.

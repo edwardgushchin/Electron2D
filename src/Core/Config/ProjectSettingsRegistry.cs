@@ -532,6 +532,11 @@ public partial class ProjectSettingsRegistry : ElectronObject
         }
     }
 
+    internal bool HasFeatureQueryCore(string feature)
+    {
+        lock (_gate) { ThrowIfDisposed(); return _builtInFeatures.Contains(feature) || _customFeatures.Contains(feature); }
+    }
+
     internal IReadOnlyList<string> GetActiveFeaturesCore()
     {
         ThrowIfDisposed();
@@ -818,37 +823,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         base.Dispose(disposing);
     }
 
-    private static void AddBuiltInFeatures(HashSet<string> features)
-    {
-        features.Add("dotnet");
-#if DEBUG
-        features.Add("debug");
-#else
-        features.Add("release");
-#endif
-
-        if (OperatingSystem.IsWindows())
-            features.Add("windows");
-        else if (OperatingSystem.IsLinux())
-            features.Add("linux");
-        else if (OperatingSystem.IsMacOS())
-            features.Add("macos");
-        else if (OperatingSystem.IsAndroid())
-            features.Add("android");
-        else if (OperatingSystem.IsIOS())
-            features.Add("ios");
-        else if (OperatingSystem.IsBrowser())
-            features.Add("web");
-
-        features.Add(RuntimeInformation.ProcessArchitecture switch
-        {
-            Architecture.X64 => "x86_64",
-            Architecture.X86 => "x86_32",
-            Architecture.Arm64 => "arm64",
-            Architecture.Arm => "arm32",
-            _ => RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant()
-        });
-    }
+    private static void AddBuiltInFeatures(HashSet<string> features) => OS.AddHostFeatures(features);
 
     private bool ChangeCustomFeature(string feature, bool add)
     {

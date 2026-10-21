@@ -19,6 +19,7 @@ internal readonly record struct CanvasPresentation(CanvasRenderTarget Target, Re
 
 internal abstract partial class CanvasBackend : IDisposable
 {
+    internal virtual bool HasOSFeature(string feature) => false;
     private CanvasRenderTarget? _presentation;
     protected CanvasRenderTarget PreparePresentation() => PreparePresentation(GetPixelSize(), ref _presentation);
     protected CanvasRenderTarget PreparePresentation(Vector2i size, ref CanvasRenderTarget? storage)

@@ -1,6 +1,6 @@
 # ProjectSettingsRegistry
 
-Last updated: 2026-10-17
+Last updated: 2026-10-21
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -877,3 +877,7 @@ The built-in `ProjectSettings.WebPCompressionMethod` and `WebPLosslessCompressio
 The built-in registry includes the advanced AudioVideoDelayCompensationMSEC key and persists its signed value and feature overrides through the ordinary project settings path.
 
 Registered `shader_globals/name` definitions use [GlobalShaderParameterSettings<T>](GlobalShaderParameterSettings.Generic.md) with exact numeric carriers, copied matrices or image-path strings. Rendering-session preparation samples active features before scene Ready and owns loaded images through shutdown; later setting edits apply to the next session. Headless configuration authoring remains independent of a renderer. See [project global behavior](../components/global-shader-parameters.md#project-authored-globals).
+
+## Host platform integration
+
+Construction captures the same host feature vocabulary as OS. Independent registries keep their own custom activation and override storage. OS queries use the retained global registry; they do not borrow custom flags from another registry. Public explicit feature lists remain their own selection context.

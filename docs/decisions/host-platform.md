@@ -1,0 +1,34 @@
+# Host platform queries
+
+Last updated: 2026-10-21
+
+<a id="adr-0113"></a>
+## ADR 0113: Retained host identity and feature queries
+
+Last updated: 2026-10-21
+
+- Status: Accepted
+- Scope: OS platform/CPU/locale/sandbox queries, typed project host tags and renderer feature observations
+- Preserves: [0004](product.md#adr-0004), [0019](core-data-io.md#adr-0019), [0021](product.md#adr-0021), [0028](rendering.md#adr-0028), [0095](singleton-services.md#adr-0095)
+
+### Context
+
+Games need to choose assets and worker settings using the actual host and available rendering path. A package being installed does not establish native compression support, and application translation culture is separate from operating-system locale. Existing process/environment, typed project feature and renderer lifecycle services provide those observations without opening another device.
+
+### Decision
+
+OS keeps static public operations on its retained service. GetName reports the platform family. GetProcessorCount uses the native logical-core query, including its unknown-zero result; it is host information rather than a worker recommendation. GetProcessorName caches available CPUID brand data or Linux CPU metadata. GetDistributionName uses the exact Linux os-release NAME field, with platform-family fallback. Linux GetVersion uses the exact VERSION field, falling back to the kernel build description. Optional metadata reads are bounded and cold; immutable results are prepared once. Other detailed platform adapters retain their applicable reference behavior and remain explicit gaps where this implementation has only a managed description or no native model source.
+
+Linux/FreeBSD locale queries read live LANG and strip the encoding suffix, using en only when absent. Other profiles use the native preferred locale API, serialized with environment edits and freed after reading its pointer array. GetLocaleLanguage returns the language component, including three-letter languages and nonstandard system values. Neither query assigns TranslationServer.Culture; ADR0007 retains its managed application-culture startup policy. IsDebugBuild observes the engine assembly's build, independently of debugger attachment. Current Linux sandbox detection checks Flatpak/container markers and the complete three-variable Snap environment; other platform sandbox adapters remain missing instead of guessing false.
+
+OS and ProjectSettings share normalized, case-insensitive host/build/architecture tags under ADR0019. Host tags include process bitness and architecture families, scalar precision, template/build role and current supported thread profile. Custom project tags remain runtime-managed; saved typed overrides follow explicit feature activation. OS.HasFeature also observes live movie output state, the available system-font provider and current renderer tags. Unknown tags return false and null is rejected. Dynamic service observations are available through OS; the typed registry's default feature set remains its documented host/custom set, while explicit caller feature lists retain their own complete selection context.
+
+RenderingServer.HasOSFeature reports the active ordinary native-image upload profile. Each GPU backend captures complete BC family support after creating its already selected device; compatibility has no native compressed-upload family. Queries reuse immutable session data, require no new device and can run across threads. OS returns false for renderer tags without a published service; the renderer's public operation retains its ordinary active-service requirement. Native capability data retires with the session. CPU decompression support and unrelated SDL device-only image roles do not advertise ordinary canvas native upload support.
+
+### Verification and remaining gates
+
+The public HostPlatform.Consumer checks host metadata, shared and custom tags, typed override selection/save/load, live locale/environment isolation, sandbox boundaries and prepared queries. Its native modes select an actual compressed or fallback texture, draw and capture pixels on each claimed backend/display pair. Root checks cover metadata parsing and related project/environment/process/font/movie contracts. Strict NativeAOT is a separate executable gate. Foreign detailed version/model/sandbox and simulator/browser feature adapters, native allocations, physical GPU, editor and human acceptance remain distinct from the exercised Linux profile.
+
+### Reference evidence
+
+The pinned [OS feature dispatch](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/os/os.cpp#L471-L644), [Linux metadata and sandbox queries](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/platform/linuxbsd/os_linuxbsd.cpp#L211-L344) and [Unix locale query](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/drivers/unix/os_unix.cpp#L1031-L1042) define the applicable behavior. Exact metadata key parsing avoids matching VERSION_ID or PRETTY_NAME when another field was requested. No comparison engine identity enters production source, XML or the public wiki.

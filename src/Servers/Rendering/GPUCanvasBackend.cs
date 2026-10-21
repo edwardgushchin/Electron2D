@@ -61,6 +61,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             Check(SDL.ClaimWindowForGPUDevice(Device, _window), "claim window for GPU rendering");
             claimed = _windowClaimed = true;
             Driver = SDL.GetGPUDeviceDriver(Device) ?? "unknown";
+            _osFeatureBits = CaptureOSFeatures();
             vertex = CreateShader(BuiltInShaders.Vertex, fragment: false);
             _vertexShader = vertex;
             _instancedVertexShader = instancedVertex = CreateShader(BuiltInShaders.InstancedVertex, fragment: false);

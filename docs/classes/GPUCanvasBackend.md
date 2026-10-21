@@ -128,3 +128,7 @@ Exported/indirect MultiMesh storage selects a retained GPU consumer. CanvasMesh 
 The [independent native window path](../components/window-runtime.md#independent-native-windows) retains one scene renderer and display service. GPU surfaces share the authoritative device/targets; compatibility surfaces use the main driver and replay frozen submissions after cold history import. Native window IDs expire on child hide/detachment; viewport resources survive hiding.
 
 [Loading-image presentation](../components/boot-images.md) reuses ordinary color targets and native presentation without mutating scene viewport targets. ReleaseTemporaryTexture removes a cold loading image from the native image cache immediately after submission, including failed attempts; no caller-owned image resource is disposed.
+
+## Host platform integration
+
+Startup captures support for every format in each ordinary native BC upload family after the selected device exists. HasOSFeature reads immutable s3tc/rgtc/bptc bits; it never creates a device, retains no resource beyond the existing backend and allocates no prepared managed state. Shutdown retires the published service snapshot.

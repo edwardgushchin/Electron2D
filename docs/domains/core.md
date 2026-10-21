@@ -339,3 +339,7 @@ Factory construction provenance is shared by resource, script, file and scene cr
 ## Localized resource files
 
 The typed project schema includes ordered LocaleResourceRemaps with compiled JSON persistence. Localization commits Culture/options, then ResourceLoader refreshes associated live file resources before current-MainLoop notification. This is cold allocation-capable file work; a prepared empty map preserves zero owner-managed bytes. String-alias normalization in startup locale settings remains distinct from typed CultureInfo assignment. See [localized resources](../components/localized-resources.md).
+
+## Host platform integration
+
+OS now exposes actual host platform/distribution/version, native logical CPU count and available model, live system locale and Linux sandbox observations. Shared host features drive typed project overrides; OS also observes current movie/font/rendering capabilities without opening a graphics device. See [host identity and features](../components/host-platform.md).

@@ -2039,3 +2039,5 @@ FontContourPoint, FontGlyphContours, FontSizeCacheInfo and TextServer.ContourPoi
 
 
 [Complete body motion operation](components/physics-motion-operation.md) records the selected CPU/resident-GPU/registered geometry, recovery, restored timing, result ownership and failure audit. Its operation row is Implemented; physics is 1304/1369 (95.25%) with 65 declarations open. Broader numerical and overall-goal gates remain open.
+
+[Host identity and runtime features](components/host-platform.md) extend existing OS, ProjectSettingsRegistry, RenderingServer, CanvasBackend/GPUCanvasBackend and NativeSystemFonts implementations. No new production type is introduced; public host queries and session compression observations use their retained owners.
