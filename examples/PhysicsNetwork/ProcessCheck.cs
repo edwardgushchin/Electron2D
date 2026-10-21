@@ -100,6 +100,9 @@ internal static partial class ProcessCheck
                     "Every process excludes its own physical warmup before measured samples");
                 Check(report.JointSteps == report.CompletedSteps && report.JointKicks > 0 && report.MaxPinError < .5f && report.MaxGrooveError < .5f && report.MaxSpringLength < 130,
                     "Every authority/predicted/replayed step executes finite groove and spring constraints under real impulses");
+                Check(report.LatticeSteps == report.CompletedSteps && report.LatticeKicks > 0 && report.LatticeContacts > 0 &&
+                    report.MaxLatticeEnergy <= 32 * 1.01 + .0001 && report.MaxLatticeMomentumError < .002f && report.MaxLatticeAnchorError < .05f,
+                    "Every complete step preserves the closed pin loop, passive energy, momentum and actual witness contact");
                 Check(report.SupportSteps == report.CompletedSteps && report.SupportContacts > 0 && report.SupportSleeping > 0 &&
                     report.SupportImpulseSamples > 0 && report.MaxSupportPinError < .5f && report.MaxSupportGrooveError < .5f,
                     "Every process solves the shared contact-supported graph with real supported sleep and balanced impulses");
@@ -119,7 +122,8 @@ internal static partial class ProcessCheck
                 if (report.BackendInstrumented && report.Backend == "CPU")
                     Check(report.NumericalSteps > 0 && report.NumericalThreadVerified, "Actual CPU intervals run on the requested owner or separate numerical lane");
             }
-            Check(authority.Actors.Length == 30 && authority.Actors.Any(actor => actor.ID == 101) && authority.Actors.Any(actor => actor.ID == 102) && authority.Actors.Any(actor => actor.ID == 110) && authority.Actors.Any(actor => actor.ID == 111) && authority.Actors.Any(actor => actor.ID == 112),
+            Check(authority.Actors.Length == 39 && authority.Actors.Any(actor => actor.ID == 101) && authority.Actors.Any(actor => actor.ID == 102) && authority.Actors.Any(actor => actor.ID == 110) && authority.Actors.Any(actor => actor.ID == 111) && authority.Actors.Any(actor => actor.ID == 112) &&
+                authority.Actors.Count(actor => actor.ID is >= 300 and <= 304 or >= 330 and <= 333) == 9,
                 "All three joint families and their endpoints survive authority and late-join topology");
             Check(authority.Actors.Any(actor => Math.Abs(actor.AngularVelocity) > .05),
                 "Final authority state carries a real nonzero angular response for cross-backend restoration");
@@ -144,6 +148,8 @@ internal static partial class ProcessCheck
                 Check(client.InterpolatedSamples > 0 && client.SmoothedSamples > 0 && client.PostDriftCorrections > 0 && client.DriftCorrectionDistance > 10, "Remote interpolation, local smoothing and injected divergence recovery execute");
                 Check(client.AngularDriftCorrection > .1, "Injected rotation/angular-velocity divergence is corrected through real authority state");
                 Check(client.CrossedContactCorrections > 0, "Clients import real crossed capsule impulses, angular response and mapped shape identities");
+                Check(client.LatticeCorrections > 0 && client.LatticeContactCorrections > 0,
+                    "Clients import the closed pin loop's real witness contact before replay");
                 Check(client.SupportCorrections > 0 && client.SupportContactCorrections > 0 && client.SupportSleepingCorrections > 0,
                     "Actual authority corrections restore the coupled graph's floor contacts and sleeping state");
                 Check(client.GeometryCorrections > 0 && client.GeometryContactCorrections == NetworkWorld.GeometryFamilyMask && client.GeometrySleepingCorrections == NetworkWorld.GeometryFamilyMask,

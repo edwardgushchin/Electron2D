@@ -1,6 +1,105 @@
 # Authoritative physics network example
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
+
+## Closed pin-loop impact under correction, 2026-10-22
+
+The current application adds four unit-mass grid circles, four existing Pin recipes
+and a free unit-mass impact witness to the preceding 30-object topology. The final
+39 actors use 64 prepared slots; command history is 524,288 bytes per participant,
+excluding array headers. Application wire version six rejects versions one through
+five before decoding. The engine portable snapshot format is unchanged.
+
+The square has four-unit cell pitch, radius-one circles and explicit unit inertia.
+It occupies an isolated collision layer, with zero gravity/damping and sleep
+disabled. Tick one, the existing numbered phases and the final authority step
+reset its five authored poses/velocities and apply an eight-unit central impulse
+to the free witness. Each intervening complete authority/prediction/replay step
+retains all four constraints, finite awake state, energy at most 32 * 1.01 + .0001,
+total linear-momentum error below .002 and anchor gaps below .05 scene units.
+The complete witness contact impulse explains its velocity change within .002 and
+preserves actual local object/RID/shape-slot identity. The pre-step velocity comes
+from live public server state after the impulse, rather than the preceding scene
+publication. These bounds reuse the [passive coupled checks](physics-joint-policies.md#closed-pin-lattices-and-impact-accuracy-2026-10-22);
+they do not assert universal angular conservation at the default iteration count.
+
+Authority correction verifies imported witness contacts before replay; the final
+snapshot requires actual impact state. Per-participant Lattice counters and maxima
+separate locally solved episodes from imported contacts. Independent startup
+controls reject missing witness collision, disabled pin forces and omitted contact
+snapshots. The existing topology, capsule/support/geometry, input, lifecycle,
+ownership, late admission, event, sleep/wake, convergence and strict warmed-byte
+assertions remain in place. Verification evidence for this new workload is separate
+from the historical matrices below; declaration coverage is unchanged.
+
+The first real-window attempt completes its network session but fails the capture
+gate: at low rendered cadence the new correction is decayed over the entire prior
+poll interval before it can appear. Its 408 rendered frames, missing PNG and false
+RenderedPhysicsPreserved flag remain a failed observation, not proof of physical
+mutation. Per-actor offset timestamps now age the old value to receipt time before
+adding a fresh correction, then age that result only from its own timestamp.
+A deterministic 200 ms gap control checks independent actor clocks and unchanged
+encoded physical state. The eight-pixel separation, RGB tolerance and before/after
+snapshot equality are unchanged. The first corrected Wayland GPU window passes
+those actual pixel/snapshot checks; its intermediate result is retained separately
+from the final source cohort below.
+Drawing also includes the new lattice circles and both enabled crossed capsules,
+omitting their disabled sentinel slots.
+
+Fourteen final public-example profiles pass on the RTX 3090 Ti with the driver
+shader disk cache disabled: CLR/strict NativeAOT CPU/GPU owner/separate paced
+sessions, two NativeAOT GPU ordinary sessions and four real Wayland windows.
+Every authority completes 900 ticks with late admission requested at 310. The
+eight headless paced profiles retain the 250 ms poll delay; ordinary and window
+profiles use zero artificial delay. Across 42 simulation participants, 127,504
+complete steps include 14,771 warmed ordinary steps and 93,245 warmed replay
+intervals, all at exactly 0/0 owner/all-thread managed bytes. The workload records
+2,059 local nonzero witness contacts and 187 imported-contact observations. Peak
+energy is 8.499655, momentum error 0.000046767 and pin gap 0.002075196, within the
+original bounds. The existing event, ownership, lifecycle and convergence gates
+also pass.
+
+All four windows retain actual interpolated/smoothed markers and identical complete
+portable physical state before/after their accepted PNG. Their observed costs are:
+
+| Window | Frames | FPS | Frame p50 / p95 / p99, ms | Window owner / all-thread managed bytes |
+| --- | ---: | ---: | ---: | ---: |
+| CLR GPU | 590 | 14.9362 | 8.0210 / 202.0612 / 224.6216 | 4255352 / 4255352 |
+| CLR Compatibility | 1380 | 30.8894 | 0.6361 / 192.8268 / 210.0058 | 4723584 / 4723584 |
+| NativeAOT GPU | 395 | 8.6830 | 111.4326 / 207.0026 / 222.1948 | 4299072 / 4301376 |
+| NativeAOT Compatibility | 3081 | 96.4317 | 0.8947 / 101.0379 / 113.4113 | 4764592 / 4764592 |
+
+Window bytes include protocol/capture work and are separate from the zero-byte
+physical brackets. Concurrent root and network checks share the host; these single
+observations do not establish a renderer comparison or a throughput improvement.
+The four saved PNGs were inspected in addition to the executable pixel checks.
+
+A separate current-source instrumented GPU-owner session passes in 143.281 seconds.
+Its physical step p50/p95/p99 is 12.7008/22.6361/33.9084 ms and whole correction/replay
+149.1814/272.7447/298.9708 ms. Active GPU counters reconcile to 7,416,248 upload bytes,
+20,386,764 readback bytes, 133,545,344 uniform bytes, 164,879 submissions and
+29,256.5301 ms of fence wait; active device-copy bytes are zero. Initial counters
+are separate: 27,352 upload, 8,060 readback, 11,840 device-copy and 36,960 uniform
+bytes, 72 submissions and 14.4076 ms wait. Both CPU participants verify their actual
+numerical lane and retain zero GPU counters. All three retain the physical warmed
+zero-byte gates. This measures transfer/command costs, not native allocator totals.
+
+Evidence is under `bin/physics-network-lattice/2026-10-22/`: `release-validation.json`
+names the fourteen final profiles and `cost-release-gpu/validated-costs.json` the
+instrumented observation. Complete 65-file CLR and 126-file native payload manifests
+verify after execution. Source/PDB proofs bind all 2,509 runtime and 16 public
+example documents; the instrumented host has 19 documents, sharing every example
+implementation document and replacing only its entry point. Strict native publish
+retains warning-as-error compiler evidence. The 80 observed processes include 42
+participants, 14 launchers and 24 native image-loader/sandbox helpers. Only GPU
+clients map NVIDIA, no software GPU is observed, NativeAOT maps no CoreCLR and no
+new Xid is recorded. Release/API/wiki, scoped formatting and identity checks pass;
+the engine snapshot remains 16,133 declarations. Earlier lattice oracle failures
+and the failed first window remain separate receipts, as do pre-fix passing cohorts.
+No declaration is promoted: physics remains 1306/1369 Implemented (95.40%), with
+63 open and 92 Excluded. Full native allocation, arbitrary/dense network workloads,
+foreign platforms, sustained hardware stability and mass-load GPU advantage remain
+open.
 
 ## Initial-world preparation, 2026-10-21
 
@@ -80,7 +179,8 @@ payload files verify. `validation.json` SHA-256 is
 The earlier shader-only cold NativeAOT failure is superseded by these local
 loading-boundary checks, not by a cached retry. Full native allocation accounting,
 foreign platforms, actual-window FPS and target mass-load GPU advantage remain
-open. The unverified power cable still precludes a prolonged mass-load run.
+open. The power cable was unverified at this checkpoint; these functional checks
+do not establish sustained mass-load stability.
 
 The instrumented cost host initially rejects CPU preparation because its test
 stage-provider callback was installed before the checkpoint. The test-only probe

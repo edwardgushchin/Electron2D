@@ -20,7 +20,7 @@ internal static class ProtocolChecks
         }
         var header = new byte[8]; var headerWriter = new WireWriter(header); headerWriter.Header(3);
         var headerReader = new WireReader(header); Check(headerReader.Header() == 3, "Current application wire header round trip"); headerReader.End();
-        foreach (var oldVersion in new uint[] { 0x31504E45, 0x32504E45, 0x33504E45, 0x34504E45 })
+        foreach (var oldVersion in new uint[] { 0x31504E45, 0x32504E45, 0x33504E45, 0x34504E45, 0x35504E45 })
         {
             BinaryPrimitives.WriteUInt32LittleEndian(header, oldVersion);
             var oldHeaderRejected = false;
@@ -50,6 +50,7 @@ internal static class ProtocolChecks
         BinaryPrimitives.WriteUInt32LittleEndian(encoded.AsSpan(20), 0); RejectInput(encoded);
         CheckInitialPreparation();
         CheckJointContinuations();
+        CheckLatticeControls();
         CheckSupportControls();
         CheckGeometryControls();
         CheckCrossedControls();
@@ -57,6 +58,7 @@ internal static class ProtocolChecks
         CheckPacketOrder();
         NetworkSession.CheckInputCommands();
         NetworkSession.CheckHandoffInputs();
+        NetworkSession.CheckPresentationOffsetTiming();
     }
     private static void CheckInitialPreparation()
     {
@@ -72,7 +74,7 @@ internal static class ProtocolChecks
                 prepared.Observed = preparedEvents.Add; control.Observed = controlEvents.Add;
                 prepared.PrepareInitialState(); control.Reconcile(NetworkWorld.InitialObjects);
                 Check(prepared.Tick == 0 && prepared.EventSequence == 0 && preparedEvents.Count == 0 &&
-                    prepared.PreparationFrames == 1 && prepared.JointSteps == 0 && prepared.SupportSteps == 0 && prepared.GeometrySteps == 0 &&
+                    prepared.PreparationFrames == 1 && prepared.JointSteps == 0 && prepared.SupportSteps == 0 && prepared.GeometrySteps == 0 && prepared.LatticeSteps == 0 &&
                     prepared.CrossedContacts == 0 && prepared.Removed == 0 && prepared.OwnershipChanges == 0,
                     "Preparation restores physical time without emitting effects or claiming gameplay steps");
                 var first = new PhysicsSnapshot(24000); var second = new PhysicsSnapshot(24000);
@@ -108,6 +110,26 @@ internal static class ProtocolChecks
             Check(rejected, "A disabled constraint fails the real trajectory check for each joint family");
         }
     }
+    private static void CheckLatticeControls()
+    {
+        for (var edit = 0; edit < 2; edit++)
+        {
+            using var world = new NetworkWorld(PhysicsServer.Backend.CPU); world.Reconcile(NetworkWorld.InitialObjects);
+            if (edit == 0) ((RigidBody)world.Find(304)!.Body!).CollisionMask = 0;
+            else for (ulong id = 330; id <= 333; id++) PhysicsServer.JointSetMaxForce(world.Find(id)!.RID, 0);
+            var rejected = false;
+            try { for (var i = 0; i < 32; i++) world.Step(SimulationPhase.Authority); }
+            catch (InvalidOperationException error) when (error.Message.StartsWith("Network lattice", StringComparison.Ordinal)) { rejected = true; }
+            Check(rejected, "The lattice requires the actual witness contact and closed constraints");
+        }
+        using var source = new NetworkWorld(PhysicsServer.Backend.CPU); source.Reconcile(NetworkWorld.InitialObjects);
+        using var target = new NetworkWorld(PhysicsServer.Backend.CPU); target.Reconcile(NetworkWorld.InitialObjects);
+        source.Step(SimulationPhase.Authority); var snapshot = new PhysicsSnapshot(24000); source.Map.Capture(snapshot);
+        target.CheckLatticeCorrection(); Check(target.LatticeContactCorrections == 0, "An omitted lattice snapshot supplies no imported contact evidence");
+        target.Map.Apply(snapshot); target.CheckLatticeCorrection(true);
+        Check(target.LatticeContactCorrections == 1 && target.EventSequence == 0, "The closed-loop impact snapshot imports complete contacts silently into distinct local objects");
+    }
+
     private static void CheckSupportControls()
     {
         for (var edit = 0; edit < 2; edit++)
@@ -275,6 +297,26 @@ internal sealed partial class NetworkSession
         }
         static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
     }
+    internal static void CheckPresentationOffsetTiming()
+    {
+        using var session = new NetworkSession(true, PhysicsServer.Backend.CPU, 0, Guid.NewGuid(), 360, false);
+        var snapshot = new PhysicsSnapshot(24000); session.Simulation.Map.Capture(snapshot);
+        var before = new byte[snapshot.GetEncodedSize()]; snapshot.WriteTo(before);
+        session._offsets[0] = new(10, 0); session._offsetTimes[0] = 1;
+        session._offsets[1] = new(7, 0); session._offsetTimes[1] = 1;
+        session.AddPresentationOffset(0, new(35, -15), 1.2);
+        var fresh = new Vector2(36.3533528f, -15);
+        Check(session._offsets[0].DistanceTo(fresh) < .0001f, "Only the prior offset ages before a newly received correction");
+        session.DecayPresentationOffset(0, 1.2);
+        Check(session._offsets[0].DistanceTo(fresh) < .0001f, "The first display retains the fresh correction after a long poll gap");
+        session.DecayPresentationOffset(0, 1.3); session.DecayPresentationOffset(1, 1.3);
+        Check(session._offsets[0].DistanceTo(fresh * .36787945f) < .0001f && session._offsets[1].DistanceTo(new(.3485095f, 0)) < .0001f,
+            "Each actor retains its own exact exponential decay interval");
+        session.Simulation.Map.Capture(snapshot); var after = new byte[snapshot.GetEncodedSize()]; snapshot.WriteTo(after);
+        Check(before.AsSpan().SequenceEqual(after), "Correction presentation timing never changes portable physical state");
+        static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
+    }
+
     internal static void CheckInputCommands()
     {
         using var session = new NetworkSession(true, PhysicsServer.Backend.CPU, 0, Guid.NewGuid(), 360, false);

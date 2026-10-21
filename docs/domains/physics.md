@@ -1,5 +1,7 @@
 # Physics domain
 
+[The network closed pin loop](../components/physics-network-example.md#closed-pin-loop-impact-under-correction-2026-10-22) adds real impact, constraint continuation and imported-contact checks to authority, prediction and replay. Per-actor correction timestamps also preserve fresh presentation offsets across long polling gaps. The application retains its existing lifecycle/event/physical assertions; no engine API or numerical policy changes.
+
 [Closed pin-lattice verification](../components/physics-joint-policies.md#closed-pin-lattices-and-impact-accuracy-2026-10-22) covers connected grids, real contact impulses, checkpoint restoration and iteration-dependent accuracy alongside the retained passive chains. Runtime behavior and declaration states are unchanged.
 
 [Registry probe measurement isolation](../components/physics-allocation-measurement.md#bounded-registry-probe-waits-2026-10-22) preserves five-second worker deadlines without creating timers in three cold checks. Production physics and zero-byte gates are unchanged; aggregate allocation attribution remains separate.

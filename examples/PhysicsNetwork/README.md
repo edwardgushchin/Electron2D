@@ -144,9 +144,9 @@ support impulse against both bodies' weight and spring load. Numbered kicks from
 tick 240 every 120 ticks must wake both bodies from natural sleep. Both clients
 must restore actual floor contacts and sleeping state from server corrections.
 Startup negative controls remove the floor or spring load and require rejection.
-The complete current topology contains 30 actors within 32 prepared slots. Command
-history uses 262144 bytes per process, excluding array headers. The application's
-wire is version five and rejects previous recipe/slot layouts; the engine portable
+The complete current topology contains 39 actors within 64 prepared slots. Command
+history uses 524288 bytes per process, excluding array headers. The application's
+wire is version six and rejects previous recipe/slot layouts; the engine portable
 snapshot format has its separate versioning.
 
 The additional geometry island includes an infinite boundary, a two-segment concave
@@ -168,7 +168,7 @@ Checks require actual angular motion and restored moving angular state on each
 client. Both compound slots must independently produce contacts and positive
 impulses; restored contacts must include both indices and match the authored
 left-circle/right-box geometry. Startup controls disable each slot and lock the
-free ray, requiring the corresponding evidence to fail. Headers one through four
+free ray, requiring the corresponding evidence to fail. Headers one through five
 are rejected before message decoding.
 
 Two additional unequal-mass capsules collide off centre at tick 1, tick 240 and
@@ -179,8 +179,34 @@ paired linear/angular impulses, opposite rotation, separating velocity and bound
 energy. Clients check the same contact state immediately after authority correction,
 including remapped peer objects and logical slots. `CrossedContacts` counts locally
 solved episodes and `CrossedContactCorrections` counts imported episodes. The final
-manifest has 30 objects within the existing 32 slots. Application wire version five
+manifest also retains the closed pin loop below. Application wire version six
 rejects the earlier recipe layouts before decoding.
+
+Four unit-mass circles form a closed square of four pin constraints. A fifth free
+unit-mass witness strikes it with an eight-unit impulse at tick 1, every scripted
+phase and the final authority step. Each episode resets these five authored poses
+and velocities; all five remain awake with zero gravity and damping on their own
+collision layer. Every subsequent complete authority, prediction and replay step
+checks finite state, total energy below the supplied 32 plus 1% and 0.0001,
+linear-momentum error below 0.002 and every pin-anchor gap below 0.05 scene units.
+The witness's full reported contact impulse must explain its velocity change,
+with actual mapped colliders and logical slot zero. Its initial velocity is sampled
+from live public server state after applying the impulse; scene velocity publishes
+at completed-frame boundaries.
+
+`LatticeSteps`, `LatticeKicks`, `LatticeContacts` and the three maximum-error fields
+report local continuation; `LatticeCorrections`/`LatticeContactCorrections` report
+authority imports. The final correction must retain the real impact contact before
+replay. Startup controls disable the witness collision or all four pin forces and
+require numerical rejection; an omitted snapshot must supply no imported contact.
+
+Correction offsets retain an independent timestamp per actor. Existing offsets
+decay to receipt time before adding a new correction; subsequent presentation
+samples decay only from that time. A long polling gap therefore cannot consume a
+fresh correction before its first displayed frame. The startup timing control
+checks a 200 ms gap, independent actor clocks and unchanged portable physical state.
+The window draws the lattice and enabled crossed-capsule geometry, retaining the
+existing eight-pixel separated-marker and complete snapshot checks.
 
 `NetworkWorld` owns the game scene and lifecycle recipes. `NetworkSession` owns
 bounded command/event histories and peer policy. `NetworkSession.State` applies
@@ -189,8 +215,9 @@ and local correction smoothing separately from solved poses. `Wire` owns the typ
 bounded game format and deterministic network impairment. `ProcessCheck` launches
 and verifies the separate processes; it does not simulate networking in memory.
 
-This is a scripted headless example, with presentation coordinates verified
-numerically. It opens no game window and makes no rendered/FPS claim. The admission
+The default scripted example is headless; optional window mode verifies actual
+presentation markers, physical-state preservation and observed frame costs.
+These functional observations do not establish a throughput target. The admission
 token and loopback binding are a local demonstration, not an Internet security
 protocol. Geometry recipes and lifecycle policy are deliberately application-owned;
 this example is not a generic scene serializer or a production matchmaking service.

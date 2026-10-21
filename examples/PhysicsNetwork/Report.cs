@@ -48,6 +48,14 @@ internal sealed class SessionReport
     public float MaxPinError { get; set; }
     public float MaxGrooveError { get; set; }
     public float MaxSpringLength { get; set; }
+    public int LatticeSteps { get; set; }
+    public int LatticeKicks { get; set; }
+    public int LatticeContacts { get; set; }
+    public int LatticeCorrections { get; set; }
+    public int LatticeContactCorrections { get; set; }
+    public double MaxLatticeEnergy { get; set; }
+    public float MaxLatticeMomentumError { get; set; }
+    public float MaxLatticeAnchorError { get; set; }
     public int CrossedContacts { get; set; }
     public int CrossedContactCorrections { get; set; }
     public int GeometrySteps { get; set; }
@@ -196,6 +204,14 @@ internal sealed partial class NetworkSession
             MaxPinError = Simulation.MaxPinError,
             MaxGrooveError = Simulation.MaxGrooveError,
             MaxSpringLength = Simulation.MaxSpringLength,
+            LatticeSteps = Simulation.LatticeSteps,
+            LatticeKicks = Simulation.LatticeKicks,
+            LatticeContacts = Simulation.LatticeContacts,
+            LatticeCorrections = Simulation.LatticeCorrections,
+            LatticeContactCorrections = Simulation.LatticeContactCorrections,
+            MaxLatticeEnergy = Simulation.MaxLatticeEnergy,
+            MaxLatticeMomentumError = Simulation.MaxLatticeMomentumError,
+            MaxLatticeAnchorError = Simulation.MaxLatticeAnchorError,
             CrossedContacts = Simulation.CrossedContacts,
             CrossedContactCorrections = Simulation.CrossedContactCorrections,
             GeometrySteps = Simulation.GeometrySteps,

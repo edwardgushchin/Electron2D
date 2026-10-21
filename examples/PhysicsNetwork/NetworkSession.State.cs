@@ -14,7 +14,8 @@ internal sealed partial class NetworkSession
     private readonly ObjectSpec[] _oldSpecs = new ObjectSpec[NetworkWorld.Capacity];
     private readonly GameEvent[] _confirmedLog = new GameEvent[EventCapacity];
     private int _nextRender, _renderFrames;
-    private double _authorArrival, _lastPresentation;
+    private double _authorArrival;
+    private readonly double[] _offsetTimes = new double[NetworkWorld.Capacity];
     internal int InterpolatedSamples, SmoothedSamples, PostDriftCorrections;
     private bool _interpolating;
     internal Vector2 PresentationPosition(int slot) => _renderFrames == 0 ? Simulation.Actors[slot]!.Position : _visual[slot];
@@ -116,7 +117,7 @@ internal sealed partial class NetworkSession
             Simulation.Map.Apply(_snapshot);
             ProfileForTesting(7, false);
             ProfileForTesting(8, true);
-            Simulation.CheckSupportCorrection(); Simulation.CheckGeometryCorrection(); Simulation.CheckCrossedCorrection(final);
+            Simulation.CheckSupportCorrection(); Simulation.CheckGeometryCorrection(); Simulation.CheckCrossedCorrection(final); Simulation.CheckLatticeCorrection(final);
             ProfileForTesting(8, false);
             Simulation.EventSequence = eventEnd;
             for (var i = 0; i < count; i++)
@@ -133,6 +134,7 @@ internal sealed partial class NetworkSession
         }
         catch (Exception error) { throw new InvalidOperationException("Authoritative correction failed; this client must stop.", error); }
         ProfileForTesting(10, true);
+        var presentationTime = _clock.Elapsed.TotalSeconds;
         for (var i = 0; i < Simulation.Actors.Length; i++)
             if (Simulation.Actors[i] is { } actor)
             {
@@ -140,8 +142,8 @@ internal sealed partial class NetworkSession
                 var distance = same ? actor.Position.DistanceTo(_oldPredicted[i]) : 0;
                 MaxCorrectionDistance = Math.Max(MaxCorrectionDistance, distance);
                 if (same && actor.Spec.Owner == _network.GetUniqueID() && _oldSpecs[i].Owner == actor.Spec.Owner)
-                    _offsets[i] += _oldPredicted[i] - actor.Position;
-                else _offsets[i] = default;
+                    AddPresentationOffset(i, _oldPredicted[i] - actor.Position, presentationTime);
+                else { _offsets[i] = default; _offsetTimes[i] = presentationTime; }
                 if (_injectedDrift && actor.Spec.ID == 10)
                 {
                     PostDriftCorrections++; DriftCorrectionDistance = Math.Max(DriftCorrectionDistance, distance);
@@ -233,6 +235,18 @@ internal sealed partial class NetworkSession
         }
         return fallback;
     }
+    private void DecayPresentationOffset(int slot, double time)
+    {
+        time = Math.Max(time, _offsetTimes[slot]);
+        _offsets[slot] *= MathF.Exp(-(float)(time - _offsetTimes[slot]) / .1f);
+        _offsetTimes[slot] = time;
+    }
+    private void AddPresentationOffset(int slot, Vector2 correction, double time)
+    {
+        // A fresh correction must not age during the preceding polling interval.
+        DecayPresentationOffset(slot, time);
+        _offsets[slot] += correction;
+    }
     private void UpdatePresentation()
     {
         if (_authority || !_started || _renderFrames == 0) return;
@@ -249,14 +263,13 @@ internal sealed partial class NetworkSession
         var duration = (double)_renderTicks[second] - _renderTicks[first];
         var alpha = duration > 0 ? (float)Math.Clamp((renderTick - _renderTicks[first]) / duration, 0, 1) : 0;
         _interpolating = first != second && alpha is > 0 and < 1;
-        var decay = MathF.Exp(-(float)Math.Max(0, _now - _lastPresentation) / .1f); _lastPresentation = _now;
         for (var i = 0; i < Simulation.Actors.Length; i++)
         {
             if (Simulation.Actors[i] is not { Body: not null } actor) continue;
             var solved = actor.Position;
             if (actor.Spec.Owner == _network.GetUniqueID())
             {
-                _offsets[i] *= decay; _visual[i] = solved + _offsets[i];
+                DecayPresentationOffset(i, _now); _visual[i] = solved + _offsets[i];
                 if (_offsets[i].LengthSquared() > .0001f) SmoothedSamples++;
             }
             else
