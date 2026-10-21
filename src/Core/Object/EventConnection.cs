@@ -17,6 +17,32 @@ namespace Electron2D;
 /// </remarks>
 public sealed class EventConnection : IDisposable
 {
+    internal interface IPublisher
+    {
+        bool Contains(Delegate wrapper);
+    }
+
+    private Delegate? _wrapper;
+    private List<IPublisher>? _publishers;
+
+    internal void ObservePublisher(IPublisher publisher, Delegate wrapper)
+    {
+        lock (_gate)
+        {
+            if (_state != ConnectionState.Active || _wrapper?.Equals(wrapper) != true) return;
+            _publishers ??= [];
+            foreach (var existing in _publishers) if (ReferenceEquals(existing, publisher)) return;
+            _publishers.Add(publisher);
+        }
+    }
+
+    private bool PublisherRetainsWrapper()
+    {
+        if (_publishers is null) return true;
+        foreach (var publisher in _publishers) if (publisher.Contains(_wrapper!)) return true;
+        return false;
+    }
+
     private Action? Finished;
     internal void OnFinished(Action callback)
     {
@@ -52,21 +78,24 @@ public sealed class EventConnection : IDisposable
             _deferredZeroCallback = InvokeDeferred;
     }
 
-    /// <summary>Gets whether this connection still accepts event emissions.</summary>
+    /// <summary>Gets whether this token is active and its observed publisher still retains its wrapper.</summary>
     /// <value>
-    /// <see langword="true"/> until disposal or, for a one-shot connection, until the first emission is accepted.
+    /// <see langword="true"/> while active and attached to at least one observed prepared publisher.
+    /// With unobserved custom accessors, the query reports the token's logical active state.
     /// A deferred one-shot callback can still be pending when this property is <see langword="false"/>.
     /// </value>
     /// <remarks>
-    /// This reports the token's logical state. It cannot detect a publisher that independently clears or replaces its
-    /// event invocation list.
+    /// Prepared engine publishers expose current membership without invoking handlers. Removal and clearing affect
+    /// this query without cancelling an already captured snapshot or accepted deferred callback. An active wrapper
+    /// re-added by a custom accessor can become connected again; disposed or consumed tokens cannot.
+    /// Ordinary unobserved accessors cannot report independent invocation-list changes.
     /// </remarks>
     public bool IsConnected
     {
         get
         {
             lock (_gate)
-                return _state == ConnectionState.Active;
+                return _state == ConnectionState.Active && PublisherRetainsWrapper();
         }
     }
 
@@ -301,12 +330,13 @@ public sealed class EventConnection : IDisposable
             if (_state is ConnectionState.Completed or ConnectionState.Disposed)
                 return;
 
-            _disconnectedByDisposal = _state == ConnectionState.Active;
+            _disconnectedByDisposal = _state == ConnectionState.Active && PublisherRetainsWrapper();
             _state = ConnectionState.Disposed;
             unsubscribe = _unsubscribe;
             _unsubscribe = null;
             _defer = null;
             _handler = null; _typedScheduler = null; _typedCallback = null;
+            _wrapper = null; _publishers = null;
         }
 
         List<Exception>? errors = null;
@@ -331,6 +361,7 @@ public sealed class EventConnection : IDisposable
 
         var connection = new EventConnection(handler, oneShot, defer);
         var wrapper = createWrapper(connection);
+        connection._wrapper = wrapper;
         connection._unsubscribe = () => unsubscribe(wrapper);
 
         try
@@ -502,6 +533,7 @@ public sealed class EventConnection : IDisposable
             defer = _defer; typedScheduler = _typedScheduler; typedCallback = _typedCallback;
             _defer = null;
             _state = defer is not null ? ConnectionState.Pending : ConnectionState.Completed;
+            _wrapper = null; _publishers = null;
             unsubscribe = _unsubscribe; _unsubscribe = null;
             if (defer is null) { _handler = null; _typedScheduler = null; _typedCallback = null; }
         }

@@ -1,12 +1,14 @@
 # Core domain
 
+[Prepared publisher membership](../components/event-connections.md#current-prepared-publisher-membership) now lets EventConnection observe exact wrapper removal/clear and release publisher references on token retirement. Captured/deferred delivery and ordinary field-like fallback retain their contracts.
+
 [Object lifetime monitors](../components/object-lifetime-monitors.md) add live object, cached-resource, attached-node and orphan-node populations without owning targets, forcing collection or opening a native device.
 
 [Compiled project batch execution](../components/project-batch.md) now joins project operations, detached authoring, headless stepping and actual native capture through public runtime APIs. Four documented tooling SDK types remain in a separate development-tool assembly; the runtime adds six typed host-input overloads without changing existing signatures.
 
 The Android application host supplies [system back navigation](../components/window-runtime.md#system-back-navigation) through the ordinary Engine lifecycle. Its existing unavailable STDIN read contract now has an explicit Android console guard; size validation remains first.
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 [Custom object iteration](../components/object-lifecycle.md#custom-typed-iteration) uses the ordinary typed C# enumerator protocol on concrete compiled subclasses. Independent cursor state, readonly value retrieval, early exit/error cleanup and caller-owned lifetime guards preserve the applicable capability without a universal enumerable ElectronObject or dynamic value system.
 

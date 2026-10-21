@@ -1,9 +1,11 @@
 # EventHandlers.Generic
 
-Last updated: 2026-10-14
+[Current owned-wrapper membership](../components/event-connections.md#current-prepared-publisher-membership) is observed by EventConnection without changing the handler snapshot. Registration runs before storage locking; queries inspect only the current list. The exact owned dispatcher is distinguished from an unrelated token.Dispose handler.
+
+Last updated: 2026-10-22
 
 - **Source:** [EventHandlers.cs](../../src/Core/Object/EventHandlers.cs)
-- **Declaration:** `internal sealed class EventHandlers<T> where T : Delegate`
+- **Declaration:** `internal sealed class EventHandlers<T> : EventConnection.IPublisher where T : Delegate`
 - **Visibility:** Internal implementation only; no game-facing API.
 
 ## Description

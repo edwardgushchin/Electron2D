@@ -1,5 +1,7 @@
 # Physics domain
 
+[Physical event membership](../components/event-connections.md#current-prepared-publisher-membership) observes disposal and current handler storage across all 18 prepared body/Area/pointer accessors without numerical queries. The inherited general connection-query row remains Partial for opaque publisher identities; declaration counts do not change.
+
 [GPU state/contact completion](../components/gpu-resident-reports.md#shared-completion-for-body-state-and-contacts)
 now shares the publication submission and wait for selected body-state and contact
 consumers. Changed-body publication retains separate report reads; contact semantics and
@@ -19,7 +21,7 @@ public callback order remain intact. API declaration counts are unchanged.
 
 [Inherited point/line drawing](../components/canvas-rendering.md#native-point-and-line-primitives) now reaches native GPU topology through both scene and server producers, including a moving physical receiver. The SDL_Renderer coverage gap remains open; declaration counts stay 1305/1369 (95.33%).
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 [Kinematic synchronization in processing groups](../components/physics-bodies.md#kinematic-synchronization-from-processing-groups) now permits the current group to read and switch AnimatableBody presentation policy while retaining capture, ownership and physical-borrow guards. Declaration coverage stays 1305/1369 (95.33%); inherited and final acceptance gaps remain open.
 

@@ -1,6 +1,6 @@
 # EventConnection
 
-Last updated: 2026-10-17
+Last updated: 2026-10-22
 
 **Inherits:** —
 
@@ -46,7 +46,7 @@ using EventConnection connection = EventConnection.Subscribe<Resource>(
 
 | Member | Description |
 | --- | --- |
-| [`public bool IsConnected { get; }`](#p-electron2d-eventconnection-isconnected) | Gets whether this connection still accepts event emissions. |
+| [`public bool IsConnected { get; }`](#p-electron2d-eventconnection-isconnected) | Gets whether this token is active and its observed publisher still retains its wrapper. |
 
 ## Methods
 
@@ -64,13 +64,11 @@ using EventConnection connection = EventConnection.Subscribe<Resource>(
 <a id="p-electron2d-eventconnection-isconnected"></a>
 ### `public bool IsConnected { get; }`
 
-Gets whether this connection still accepts event emissions.
+Gets whether this token is active and its observed publisher still retains its wrapper.
 
-**Value:** `true` until disposal or, for a one-shot connection, until the first emission is accepted.
-A deferred one-shot callback can still be pending when this property is `false`.
+**Value:** True while active and retained by at least one observed prepared publisher. With no observed prepared publisher, custom accessors retain the logical lifecycle query. A pending one-shot is already false.
 
-**Remarks:** This reports the token's logical state. It cannot detect a publisher that independently clears or replaces its
-event invocation list.
+**Remarks:** Prepared engine stores expose current membership without invoking handlers. Removing the last matching wrapper or clearing a store changes the query; duplicate entries and another observed store keep it true. Re-adding an active wrapper restores membership. Disposed/consumed tokens remain false. A captured immutable emission and already accepted deferred work retain their delivery rules; only explicit token disposal cancels pending work. Opaque field-like attachment identity remains outside this observation.
 
 ## Method Descriptions
 

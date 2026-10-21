@@ -268,6 +268,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_AA") is { } fontAAP
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_DISTANCE") == "managed") { CanvasDistanceFieldTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_GLYPH") is { } glyphProfile) { if (glyphProfile == "managed") CanvasGlyphTests.RunManaged(); else if (glyphProfile == "modules") CanvasGlyphTests.RunModules(); else CanvasGlyphTests.RunNative(glyphProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_EVENT_MEMBERSHIP") == "1") { EventConnectionMembershipTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_EVENT_CONNECTIONS") is { } eventProfile)
 {
     VerifyEventConnections();
