@@ -21,12 +21,37 @@ class NativePackageTests(unittest.TestCase):
         for profile in ("Linux", "MacOS", "Windows"):
             name = next(name for name in package.LIBRARIES[profile] if "Electron2DTextBreak" in name)
             exports = package.required_exports(name)
-            self.assertEqual(len(exports), 19)
+            self.assertEqual(len(exports), 25)
             self.assertTrue(additions <= exports)
         native = package.ROOT / "src/Servers/Text/Native"
         for symbol in additions:
             self.assertIn(symbol + ";", (native / "exports.map").read_text())
             self.assertIn("_" + symbol + "\n", (native / "exports-macos.txt").read_text())
+
+    def test_regex_private_sources_and_symbols(self):
+        import subprocess
+        subprocess.run(["python3", "-B", str(package.ROOT / "tools/update-pcre2.py"), "--check"], check=True)
+        additions = {"e2d_regex_" + name for name in ("create", "destroy", "info", "match", "substitute", "error")}
+        self.assertTrue(additions <= package.TEXT_EXPORTS)
+        native = package.ROOT / "src/Servers/Text/Native"
+        for symbol in additions:
+            self.assertIn(symbol + ";", (native / "exports.map").read_text())
+            self.assertIn("_" + symbol + "\n", (native / "exports-macos.txt").read_text())
+        for platform in package.LIBRARIES:
+            name = next(name for name in package.LIBRARIES[platform] if "TextBreak" in name)
+            self.assertTrue(additions <= package.required_exports(name))
+
+    def test_text_static_symbols_cannot_collide_with_application_pcre2(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name in package.LIBRARIES["iOS"]:
+                (root / name).write_bytes(b"!<arch>\n")
+            for symbol in ("pcre2_compile_32", "_pcre2_match_32"):
+                def exports(path, rid):
+                    return package.required_exports(path.name) | ({symbol} if "TextBreak" in path.name else set())
+                with patch.object(package, "archive_exports", side_effect=exports):
+                    with self.assertRaisesRegex(ValueError, "PCRE2 symbols"):
+                        package.inspect("ios-arm64", root)
 
     def test_webrtc_desktop_exports_and_pinned_sources(self):
         for profile in ("Linux", "MacOS", "Windows"):

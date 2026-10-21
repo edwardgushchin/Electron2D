@@ -1,18 +1,12 @@
 # RegEx
 
-Last updated: 2026-09-23
+Last updated: 2026-10-21
 
 - **Inherits:** [ElectronObject](ElectronObject.md)
-- **Inherited By:** —
-- **Source:** [`src/Core/String/RegEx.cs`](../../src/Core/String/RegEx.cs)
-- **Namespace:** `Electron2D`
-**Declaration:** `public sealed class RegEx : ElectronObject`
+- **Source:** [RegEx.cs](../../src/Core/String/RegEx.cs)
+- **Declaration:** `public sealed class RegEx : ElectronObject`
 
-## Description
-
-Compiles one pattern and searches or replaces strings. An instance is reusable: `Compile` replaces the previous program, and `Clear` removes it. Searches snapshot the compiled program under the instance lock. Returned [RegExMatch](RegExMatch.md) objects own immutable result data and remain valid after a later compile or clear. Dispose each returned object when finished.
-
-This implementation uses `System.Text.RegularExpressions` with culture-invariant matching and a five-second match timeout. It supports the .NET pattern and replacement dialect. The pinned reference uses PCRE2 over Unicode code points; .NET uses UTF-16 indices and has different syntax, group numbering for mixed named/unnamed captures, duplicate-name behavior, and replacement tokens. [Coverage](../coverage/classes/RegEx.md) records these as semantic gaps. Text utilities allocate and are unsuitable for a real-time frame hot path.
+Compiles a PCRE2 pattern and searches or replaces ordinary C# strings. The pinned private interpreter supports recursive/conditional/branch-reset patterns, native group numbering and Unicode code-point regions. Programs use deterministic native ownership and one instance lock; independent instances can run concurrently. Results retain immutable captured data after program retirement. Matching allocates and may block; see [the component](../components/text-patterns.md) for exact budgets, errors, native provenance and verification boundaries.
 
 ## Example
 
@@ -20,80 +14,72 @@ This implementation uses `System.Text.RegularExpressions` with culture-invariant
 using var pattern = RegEx.CreateFromString(@"(?<name>[a-z]+)-\d+");
 using var match = pattern.Search("item-42");
 if (match is not null)
-    Console.WriteLine(match.GetString("name")); // item
+    Console.WriteLine(match.GetString("name"));
 ```
-
-## Constructors
-
-| Signature | Behavior |
-| --- | --- |
-| `public RegEx()` | Creates an uncompiled expression. |
-| `public RegEx(string pattern)` | Compiles immediately; invalid patterns throw. |
 
 ## Properties
 
-| Signature | Behavior |
+| Signature | Contract |
 | --- | --- |
-| [`public string Pattern { get; }`](#pattern) | Last attempted pattern, including a failed compile; empty after `Clear`. |
-| [`public bool IsValid { get; }`](#isvalid) | Whether a compiled program exists. |
-| [`public int GroupCount { get; }`](#groupcount) | Capturing group count, excluding group zero; zero when uncompiled. |
+| `public string Pattern { get; }` | [Pattern](#pattern): last attempted pattern, retained after Clear. |
+| `public bool IsValid { get; }` | [IsValid](#isvalid): a compiled program currently exists. |
+| `public int GroupCount { get; }` | [GroupCount](#groupcount): captures excluding group zero. |
 
 ## Methods
 
-| Signature | Behavior |
+| Signature | Contract |
 | --- | --- |
-| [`public void Compile(string pattern)`](#compile) | Replaces the program; throws `ArgumentException` with diagnostics on invalid syntax. |
-| [`public void Clear()`](#clear) | Removes the program and pattern text. |
-| [`public static RegEx CreateFromString(string pattern)`](#createfromstring) | Constructs and compiles a caller-owned expression. |
-| [`public string[] GetNames()`](#getnames) | Fresh array of named capture groups; empty when uncompiled. |
-| [`public RegExMatch? Search(string subject, int offset = 0, int end = -1)`](#search) | First match or null in the region. |
-| [`public RegExMatch[] SearchAll(string subject, int offset = 0, int end = -1)`](#searchall) | All nonoverlapping matches in source order. |
-| [`public string Sub(string subject, string replacement, bool all = false, int offset = 0, int end = -1)`](#sub) | Replaces the first or all matches in the region. |
+| `public RegEx()` | Creates an uncompiled owner. |
+| `public RegEx(string pattern)` | Compiles immediately or throws. |
+| `public void Compile(string pattern)` | [Compile](#compile) |
+| `public void Clear()` | [Clear](#clear) |
+| `public static RegEx CreateFromString(string pattern)` | [CreateFromString](#createfromstring) |
+| `public string[] GetNames()` | [GetNames](#getnames) |
+| `public RegExMatch? Search(string subject, int offset = 0, int end = -1)` | [Search](#search) |
+| `public RegExMatch[] SearchAll(string subject, int offset = 0, int end = -1)` | [SearchAll](#searchall) |
+| `public string Sub(string subject, string replacement, bool all = false, int offset = 0, int end = -1)` | [Sub](#sub) |
+| `protected override void Dispose(bool disposing)` | Releases the native program before managed retirement. |
 
-## Property descriptions
+### Pattern
 
-### `Pattern`
+Last attempted pattern, including failed compilation. Initially empty; Clear retains it. Disposed access throws.
 
-The last attempted pattern. It remains available after a compile error and becomes empty on `Clear`. Access is synchronized; disposal throws `ObjectDisposedException`.
+### IsValid
 
-### `IsValid`
+True while a compiled program exists. Failed compilation, Clear and disposal release that program.
 
-True only while a compiled program exists. Invalid compilation and `Clear` make it false. Access is synchronized; disposal throws `ObjectDisposedException`.
+### GroupCount
 
-### `GroupCount`
+The fixed capture count excluding group zero, or zero before compilation. Named and unnamed groups follow source order; branch-reset groups retain native numbering.
 
-The number of captures excluding group zero, or zero when uncompiled. Named and unnamed captures are counted. The result depends on the .NET dialect. Access is synchronized; disposal throws `ObjectDisposedException`.
+### Compile
 
-## Method descriptions
+Validates non-null input before changing state, releases the previous program, stores the attempted pattern and compiles PCRE2. ArgumentException carries native diagnostics and a code-point location. Native allocation failure is distinct. Explicit UTF/UCP directives select their native character policy.
 
-### `Compile`
+### Clear
 
-Accepts a non-null .NET pattern. It clears the old program before compiling, retains the attempted `Pattern` on failure, and throws `ArgumentException` with diagnostics instead of returning a numeric error or printing it. Null throws `ArgumentNullException`; disposal throws `ObjectDisposedException`. Compilation is serialized per instance.
+Releases the compiled program and retains Pattern. Existing RegExMatch objects remain independent.
 
-### `Clear`
+### CreateFromString
 
-Resets both pattern and compiled program under the instance lock. Existing match results stay valid. Disposal throws `ObjectDisposedException`.
+Constructs and compiles a caller-owned expression. Invalid patterns throw rather than return an invalid factory result or emit a separate logging switch.
 
-### `CreateFromString`
+### GetNames
 
-Creates and compiles a caller-owned expression, with the same pattern validation and diagnostics as `Compile`. The caller disposes the returned expression.
+Returns a fresh array of distinct named groups in native table order, or an empty array when uncompiled. Duplicate names remain valid; individual matches select their first participating capture.
 
-### `GetNames`
+### Search
 
-Returns a fresh array of distinct named capture groups, or an empty array before compilation. .NET's named-group order and duplicate handling are not promised to match the pinned reference. Disposal throws `ObjectDisposedException`.
+Finds the first match, or returns null. Offset/end count code points; negative end uses the complete subject and a larger end clamps to its length. A negative offset throws; an offset beyond the region has no match. Start anchors still address the original beginning. The result retains the full original Subject. Native work/deadline failure throws, preserving the compiled program.
 
-### `Search`
+### SearchAll
 
-Returns the first match or null. It accepts a non-null subject, nonnegative inclusive `offset`, and exclusive `end`; negative `end` means the full string and values above its length are capped. The expression sees the prefix up to `end`, so `^` is relative to the original start rather than `offset`. If `offset` exceeds the effective end, it returns null. Null subject, negative offset, uncompiled state, disposal and match timeout raise the respective .NET exceptions. The caller owns the result.
+Uses the same region contract and returns caller-owned results in source order. An empty match advances one code point; an empty final match is retained. Failure releases already produced results before rethrowing.
 
-### `SearchAll`
+### Sub
 
-Uses the same region and validation rules as `Search`. Returns all nonoverlapping caller-owned matches in source order. Empty matches advance, and partial results are disposed if a later match throws. It returns an empty array when no match exists.
+Replaces the first or all native matches. Supports PCRE2 capture tokens such as $0, $&, $1 and ${name}; $$ yields a literal dollar and unset/unknown groups become empty. It preserves prefix and the suffix outside end. An offset beyond the region or invalid replacement throws. Native global empty substitution uses its own nonempty-alternative progression.
 
-### `Sub`
+## Lifecycle and limits
 
-Uses the same region and validation rules. It preserves the suffix after `end`. It accepts .NET replacement syntax, including `$1`, `${name}` and `$$`. The default replaces one match; `all: true` replaces all. Null replacement throws `ArgumentNullException`. A match timeout throws `RegexMatchTimeoutException` without changing the compiled program.
-
-## Lifecycle, threading, and limits
-
-Compilation, clearing and access to program metadata are serialized per instance. Concurrent searches operate on their captured immutable program. Disposal makes later calls fail with `ObjectDisposedException` but does not invalidate existing result objects. There is no native regex dependency. The managed [RegExTests](../../tests/Electron2D.Tests/RegExTests.cs) cover matching, group snapshots, anchors, range bounds, replacement, zero-width progress, compile failure, and disposal. PCRE2 parity and other platform runtimes remain unverified.
+Dispose every returned result and expression when finished; a private SafeHandle also releases a forgotten native program. Operations on one expression serialize, including disposal. Pattern/subject/replacement/output are bounded to 16,777,216 code points. Native match heap is 32 MiB; normal work/depth limits and a five-second callout deadline apply. All are cold preparation operations. Linux source-native, independent oracle, sanitizer, public consumer and software rendering evidence do not establish old bundle support, foreign hosts or release readiness.

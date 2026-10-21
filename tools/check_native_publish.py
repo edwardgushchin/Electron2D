@@ -9,6 +9,7 @@ from pathlib import Path
 
 
 TEXT_EXPORTS = {
+    "e2d_regex_create", "e2d_regex_destroy", "e2d_regex_info", "e2d_regex_match", "e2d_regex_substitute", "e2d_regex_error",
     "e2d_text_init", "e2d_text_versions", "e2d_text_is_nonprinting",
     "e2d_text_case", "e2d_text_strip_diacritics", "e2d_text_character_properties", "e2d_text_is_identifier",
     "e2d_spoof_open", "e2d_spoof_close", "e2d_spoof_skeleton", "e2d_spoof_check",
@@ -47,7 +48,7 @@ def check_private_text(rid: str, library: Path) -> None:
     assert exports == TEXT_EXPORTS, f"Unexpected private text exports: {exports ^ TEXT_EXPORTS}"
     dynamic = subprocess.check_output(["readelf", "--wide", "--dynamic", str(library)], text=True)
     needed = re.findall(r"\(NEEDED\).*\[([^]]+)\]", dynamic)
-    assert not any(name.lower().startswith("libicu") for name in needed), f"Private text library depends on global ICU: {needed}"
+    assert not any(name.lower().startswith(("libicu", "libpcre2")) for name in needed), f"Private text library depends on global text/regex libraries: {needed}"
     sonames = re.findall(r"\(SONAME\).*\[([^]]+)\]", dynamic)
     assert sonames == ["libElectron2DTextBreak.so"], f"Unexpected private text SONAME: {sonames}"
 

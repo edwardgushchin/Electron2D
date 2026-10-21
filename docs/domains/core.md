@@ -61,7 +61,7 @@ The domain contains the following active components:
 | [Engine runtime](../components/engine-runtime.md) | Process-wide loop coordination, fixed-step scheduling, time scaling, metrics, build information, and named singletons | Implemented and verified |
 | [Scalar math](../components/scalar-math.md) | Stateless constants, transcendental functions, angles, interpolation, approximation, rounding, wrapping, and audio conversion | Implemented and verified |
 | [Random generation](../components/random-generation.md) | Independent PCG32 streams, seed/state restoration, bounded, weighted and normal sampling | Implemented and managed-verified |
-| [Text patterns](../components/text-patterns.md) | Managed expression compilation, capture results, bounded searches and replacement | Partial parity with the pinned PCRE2 dialect |
+| [Text patterns](../components/text-patterns.md) | Managed expression compilation, capture results, bounded searches and replacement | Applicable PCRE2 interpreter API implemented; source-native Linux and public consumers verified |
 | [Color values](../components/color-values.md) | Floating-point RGBA math, HSV/OKHSL conversion, packing/parsing, and the standard named catalog | Implemented and verified |
 | [Geometry values](../components/geometry-values.md) | Engine-owned vectors, rectangles, affine transforms, side identities, and pure 2D geometry queries | Values and Geometry class implemented |
 
@@ -115,7 +115,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 - Core does not depend on SDL3-CS.
 - Scalar math depends only on .NET numeric primitives and has no mutable state, native backend, or higher-domain dependency.
 - Random generation uses .NET numeric and wall/monotonic clock primitives and inherited object lifetime; encryption and temporary-name code explicitly uses the separate .NET cryptographic generator.
-- Text patterns use .NET regular expressions with a finite timeout and no native or higher-domain dependency.
+- Text patterns use the private pinned PCRE2 interpreter through the existing native text library, with code-point regions and explicit time/heap/work/text budgets; no scene, video initialization or global regex installation is required.
 - XML parsing uses managed byte/token processing and the existing `FileAccess` path resolver; it does not require a native parser or resource loader.
 - Color math depends on `Mathf`, .NET primitives, and the bundled MIT-licensed managed OKHSL formulas; it has no native or rendering dependency. `ConfigFile` provides its strict finite JSON schema, while typed scene property storage consumes the reference-free value without a dependency back from Core Math to Scene.
 - Vector, rectangle, and transform math depends on `Mathf` plus .NET layout/formatting primitives. `ConfigFile` provides strict vector, `Position`/`Size`, and `X`/`Y`/`Origin` schemas, while typed scene storage consumes reference-free values without a dependency back from Core Math to Scene.

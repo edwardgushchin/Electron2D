@@ -156431,6 +156431,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RegEx.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RegEx",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RegEx.GetNames()",
     "kind": "method",
     "declaringType": "Electron2D.RegEx",

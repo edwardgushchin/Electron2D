@@ -155,7 +155,7 @@ def configuration():
 
 def source_hash():
     files = set()
-    for directory in ("src/Vendor/ICU", "src/Vendor/MSDFGen", "src/Vendor/FAudio", "src/Vendor/ENet",
+    for directory in ("src/Vendor/ICU", "src/Vendor/MSDFGen", "src/Vendor/PCRE2", "src/Vendor/FAudio", "src/Vendor/ENet",
                       "src/Vendor/FastLZ", "src/Vendor/libdatachannel", "src/Vendor/meshoptimizer", "src/Servers/Text/Native",
                       "tools/audio-native", "tools/enet-native", "tools/webrtc-native", "tools/mesh-native", "tools/webp-native", "tools/ogv-native", "tools/ktx-native", "tools/font-native", "tools/native"):
         files.update(p for p in (ROOT / directory).rglob("*") if p.is_file()
@@ -192,6 +192,8 @@ def inspect(rid, directory):
                 raise ValueError(f"Missing engine or dependency ABI in archive: {path}")
             if "Electron2DKTX" in name and any(symbol.startswith(("ZSTD", "XXH", "POOL_", "FSE_", "HUF_", "HIST_", "ZDICT_", "COVER_", "FASTCOVER_", "ERR_")) for symbol in exports):
                 raise ValueError(f"KTX static archive contains global codec symbols: {path}")
+            if "TextBreak" in name and any(symbol.startswith(("pcre2_", "_pcre2_")) for symbol in exports):
+                raise ValueError(f"Private text archive contains application-visible PCRE2 symbols: {path}")
             checksums[name] = hashlib.sha256(data).hexdigest()
             continue
         if rid.startswith(("osx-", "win-")):

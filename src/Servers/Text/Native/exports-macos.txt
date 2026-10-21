@@ -17,3 +17,9 @@ _e2d_spoof_open
 _e2d_spoof_close
 _e2d_spoof_skeleton
 _e2d_spoof_check
+_e2d_regex_create
+_e2d_regex_destroy
+_e2d_regex_info
+_e2d_regex_match
+_e2d_regex_substitute
+_e2d_regex_error

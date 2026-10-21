@@ -1,6 +1,6 @@
 # RegExMatch
 
-Last updated: 2026-09-23
+Last updated: 2026-10-21
 
 - **Inherits:** [ElectronObject](ElectronObject.md)
 - **Inherited By:** —
@@ -59,7 +59,7 @@ The number of captures other than group zero; an explicitly empty result returns
 
 ### `Names`
 
-A read-only snapshot of successfully matched names and their numeric indices. Unmatched names are absent; .NET mixed-group numbering and duplicate-name behavior may differ from PCRE2.
+A read-only snapshot of successfully matched names and their numeric indices. Unmatched names are absent; native source-order numbering and the first participating duplicate name are preserved.
 
 ### `Strings`
 
@@ -99,8 +99,10 @@ Uses a matched named group; unknown or unmatched names return an empty string. N
 
 All bounds are positions in `Subject`. Calls after disposal throw `ObjectDisposedException`.
 
-The managed backend uses UTF-16 positions and its own numeric capture ordering. Mixed named and unnamed captures and duplicate names may differ from the pinned PCRE2 reference. See [RegEx](RegEx.md) and [coverage](../coverage/classes/RegExMatch.md).
+The managed backend uses code-point positions and its own numeric capture ordering. Mixed named and unnamed captures and duplicate names may differ from the pinned PCRE2 reference. See [RegEx](RegEx.md) and [coverage](../coverage/classes/RegExMatch.md).
 
 ## Lifecycle and verification
 
 The result is immutable after construction. Disposal makes later property and method calls throw `ObjectDisposedException`. [RegExTests](../../tests/Electron2D.Tests/RegExTests.cs) check bounds, names, absent captures, copied data, empty construction and disposal. No native backend is involved; full PCRE2 equivalence is pending.
+
+Positions count Unicode code points; captured text and Subject remain original C# strings. Surrogate pairs occupy one position. Captures retain the immutable original subject and copied positions/name map independently of native program lifetime. Captured text is materialized on query, avoiding eager copies for overlapping groups. The complete contract and executable checks are in [text patterns](../components/text-patterns.md).

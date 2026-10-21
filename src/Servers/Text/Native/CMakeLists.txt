@@ -54,6 +54,7 @@ target_compile_definitions(Electron2DTextBreak PRIVATE MSDFGEN_PUBLIC= MSDFGEN_U
 target_include_directories(Electron2DTextBreak PRIVATE "${ICU_ROOT}/common" "${ICU_ROOT}/i18n")
 target_compile_definitions(Electron2DTextBreak PRIVATE ${ICU_DEFINITIONS})
 set_target_properties(Electron2DTextBreak PROPERTIES CXX_VISIBILITY_PRESET hidden VISIBILITY_INLINES_HIDDEN YES)
+include("${CMAKE_CURRENT_LIST_DIR}/Regex.cmake")
 if(APPLE)
     set_target_properties(Electron2DTextBreak PROPERTIES INSTALL_NAME_DIR "@rpath" BUILD_WITH_INSTALL_NAME_DIR TRUE SKIP_BUILD_RPATH TRUE)
 endif()

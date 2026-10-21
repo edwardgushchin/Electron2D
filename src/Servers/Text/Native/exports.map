@@ -19,5 +19,11 @@
         e2d_spoof_close;
         e2d_spoof_skeleton;
         e2d_spoof_check;
-    local: *;
+        e2d_regex_create;
+        e2d_regex_destroy;
+        e2d_regex_info;
+        e2d_regex_match;
+        e2d_regex_substitute;
+        e2d_regex_error;
+  local: *;
 };

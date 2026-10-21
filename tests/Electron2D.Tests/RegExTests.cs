@@ -16,7 +16,7 @@ internal static class RegExTests
         Check(first.GetString() == "abc-12", "Returned group strings are an independent copy.");
 
         var all = expression.SearchAll("abc-12 xyz", 0, 10);
-        Check(all.Length == 2 && all[0].GetString() == "abc-12" && all[1].GetString() == "xyz" && all[1].GetStart(1) == -1,
+        Check(all.Length == 2 && all[0].GetString() == "abc-12" && all[1].GetString() == "xyz" && all[1].GetStart(2) == -1,
             "SearchAll finds nonoverlapping matches and preserves unmatched groups.");
         foreach (var match in all) match.Dispose();
 
@@ -41,11 +41,12 @@ internal static class RegExTests
         Check(!expression.IsValid && expression.Pattern == "(", "Failed compilation clears the old compiled program but preserves attempted text.");
         Check(first.GetString("name") == "abc", "A match remains valid after its expression is replaced.");
         expression.Clear();
-        Check(!expression.IsValid && expression.Pattern == "", "Clear resets the expression.");
+        Check(!expression.IsValid && expression.Pattern == "(", "Clear retains the last attempted pattern text.");
         Reject<InvalidOperationException>(() => expression.Search("abc"));
         first.Dispose();
         Reject<ObjectDisposedException>(() => first.GetString());
         Console.WriteLine("RegEx managed search, replacement, group and lifetime checks passed.");
+        RegExPCRETests.Run();
     }
 
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
