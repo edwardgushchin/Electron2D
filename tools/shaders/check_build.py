@@ -2,6 +2,7 @@
 """Verify the published shader importer in an ordinary public-API consumer project."""
 from pathlib import Path
 import argparse
+import json
 import os
 import shutil
 import subprocess
@@ -30,7 +31,7 @@ with tempfile.TemporaryDirectory(prefix="electron2d shader build '&-") as tempor
     factor = shaders / 'factor.inc'
     factor.write_text('#define FACTOR 0.5\n')
     (shaders / 'nested/entry.inc').write_text('#ifndef INCLUDED\n#define INCLUDED\n#include "../factor.inc"\n#endif\n')
-    hlsl = '#include "nested/entry.inc"\nfloat4 main(float4 color : TEXCOORD0) : SV_Target0 { return color * FACTOR; }\n'
+    hlsl = '#include "nested/entry.inc"\ncbuffer BuildValues:register(b0,space3){float authoredGain;};\nfloat4 main(float4 color : TEXCOORD0) : SV_Target0 { return color * (FACTOR+authoredGain); }\n'
     (shaders / 'Surface.hlsl').write_text(hlsl)
     (shaders / 'Surface.glsl').write_text('#version 450\n#extension GL_GOOGLE_include_directive : require\n'
                                         '#include "nested/entry.inc"\nlayout(location=0) in vec4 color;\n'
@@ -85,6 +86,26 @@ Console.WriteLine("Public shader consumer passed");
     assert not (directory / 'INJECTED').exists(), 'Build arguments were interpreted by a shell'
     print('Build: both languages, external bytecode, quoted paths, stable unchanged output.', flush=True)
 
+    defaults = shaders / 'Surface.hlsl.defaults.json'
+    defaults.write_text(json.dumps({'version': 1, 'parameters': {'authoredGain': .25}}))
+    run('build', '--no-restore')
+    authored = generated / 'Surface.hlsl.spv'
+    assert authored.read_bytes() != previous[authored.name][0], 'Added defaults did not rebuild the shader'
+    first_defaults = authored.read_bytes()
+    stamp = defaults.stat()
+    defaults.write_text(json.dumps({'version': 1, 'parameters': {'authoredGain': .75}}))
+    os.utime(defaults, ns=(stamp.st_atime_ns, stamp.st_mtime_ns))
+    run('build', '--no-restore')
+    assert authored.read_bytes() != first_defaults, 'A same-timestamp default edit was ignored'
+    valid_defaults = authored.read_bytes()
+    defaults.write_text('{"version":1,"parameters":{"missing":1}}')
+    assert str(defaults) in run('build', '--no-restore', success=False)
+    assert authored.read_bytes() == valid_defaults, 'Invalid defaults replaced usable output'
+    defaults.unlink(); run('build', '--no-restore')
+    assert all(path.read_bytes() == previous[path.name][0] for path in artifacts), 'Removed defaults remained in a rebuilt artifact'
+    previous = {path.name: (path.read_bytes(), path.stat().st_mtime_ns) for path in artifacts}
+    print('Defaults: addition, unchanged-timestamp edit, invalid atomic failure and removal rebuild correctly.', flush=True)
+
     stamp = factor.stat()
     factor.write_text('#define FACTOR 0.2\n')
     os.utime(factor, ns=(stamp.st_atime_ns, stamp.st_mtime_ns))
@@ -125,7 +146,7 @@ Console.WriteLine("Public shader consumer passed");
 
     declarations[0].set('Profile', 'invalid')
     save_project()
-    assert 'Profile must be canvas or device' in run('build', '--no-restore', success=False)
+    assert 'Profile must be canvas, device, texture-blit or particles' in run('build', '--no-restore', success=False)
     del declarations[0].attrib['Profile']
     for name, stage, original in [('DeviceComputeGLSL.glsl', 'compute', 'LocalCompute.comp.glsl'),
                                    ('DeviceComputeHLSL.hlsl', 'compute', 'LocalComputeHLSL.comp.hlsl'),

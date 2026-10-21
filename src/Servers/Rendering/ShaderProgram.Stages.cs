@@ -22,7 +22,7 @@ internal sealed partial class ShaderProgram
     internal void ValidateVertexFrame()
     {
         var frame = Uniforms.Values.Where(u => u.Buffer == 0).ToArray();
-        if (BufferSizes.Length == 0 || BufferSizes[0] != 16 || frame.Length != 1 || frame[0].Type != typeof(Vector2) || frame[0].Offset != 0 || frame[0].ArrayLength != 0 ||
+        if (BufferSizes.Length == 0 || BufferSizes[0] != 16 || frame.Length != 1 || frame[0].Type != typeof(Vector2) || frame[0].Offset != 0 || frame[0].ArrayLength != 0 || frame[0].DefaultWords is not null ||
             InstanceUniforms.Values.Any(u => u.Buffer == 0) || TimeUniform?.Buffer == 0 || ScreenPixelSizeUniform?.Buffer == 0 || SDFCoordsUniform?.Buffer == 0)
             throw new NotSupportedException("The vertex Frame block at binding zero contains only a float2 client size at offset zero.");
     }
@@ -46,6 +46,9 @@ internal sealed partial class ShaderProgram
             if (target.TryGetValue(value.Name, out var canonical))
             {
                 if (!canonical.SameType(mapped)) throw new ArgumentException($"Shader parameter '{value.Name}' has different types across stages.");
+                if (canonical.DefaultWords is not null && mapped.DefaultWords is not null && !canonical.HasSameDefault(mapped.DefaultWords))
+                    throw new ArgumentException($"Shader parameter '{value.Name}' has conflicting defaults across stages.");
+                if (canonical.DefaultWords is null && mapped.DefaultWords is not null) target[value.Name] = canonical = canonical with { DefaultWords = mapped.DefaultWords };
                 copies.Add((canonical, mapped));
             }
             else target.Add(mapped.Name, mapped);

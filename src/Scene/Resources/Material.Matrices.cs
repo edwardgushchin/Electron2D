@@ -6,7 +6,8 @@ public sealed partial class ShaderMaterial
     /// <param name="name">The exact, case-sensitive material member name.</param>
     /// <param name="values">Copied column-major elements: nine for mat3, sixteen for mat4, concatenated for arrays.</param>
     /// <remarks>Every component must be finite. Shape and all values are validated before mutation; successful writes emit Changed.
-    /// Values start at identity and migrate across compatible shader layouts. Prepared updates allocate no managed memory.</remarks>
+    /// Values start at the authored shader default, or identity when absent. Explicit values migrate across compatible shader layouts.
+    /// Prepared updates allocate no managed memory.</remarks>
     /// <exception cref="ArgumentException">The name, matrix role, component count or a value is invalid.</exception>
     /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
     /// <exception cref="ObjectDisposedException">The material or shader is disposed.</exception>
@@ -18,6 +19,7 @@ public sealed partial class ShaderMaterial
             var size = uniform.MatrixWidth * uniform.MatrixWidth;
             if (values.Length != size * uniform.Count) throw new ArgumentException("Component count must match the entire reflected matrix parameter.", nameof(values));
             foreach (var value in values) if (!float.IsFinite(value)) throw new ArgumentException("Matrix components must be finite.", nameof(values));
+            state.UniformOverrides.Add(name);
             for (var i = 0; i < uniform.Count; i++)
                 uniform.WriteMatrix(state.Buffers[uniform.Buffer].AsSpan(uniform.Offset + i * uniform.Stride, uniform.ElementSize), values.Slice(i * size, size));
         }
@@ -26,7 +28,7 @@ public sealed partial class ShaderMaterial
 
     /// <summary>Returns an independent column-major copy of a numeric mat3/mat4 uniform or fixed array.</summary>
     /// <param name="name">The exact, case-sensitive material member name.</param>
-    /// <returns>Nine/sixteen components per matrix, concatenated for arrays; initially identity for each element.</returns>
+    /// <returns>Nine/sixteen components per matrix, concatenated for arrays; initially the shader default or implicit identity.</returns>
     /// <exception cref="ArgumentException">The name does not identify a numeric mat3/mat4 material parameter.</exception>
     /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
     /// <exception cref="ObjectDisposedException">The material or shader is disposed.</exception>

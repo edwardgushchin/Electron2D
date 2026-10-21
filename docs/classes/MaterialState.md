@@ -40,9 +40,9 @@ state?.PushUniforms(commandBuffer, (float)renderTime, inverseTargetSize);
 
 `internal MaterialState(object gate, ShaderProgram program, MaterialState? previous, Shader? shader = null)`
 
-Allocates zeroed buffers and texture slots, then initializes each float2x2 value/array element to identity. Reserved TIME starts at zero and is never copied as a user parameter. Migrates prior uniforms by name plus shader element type (including integer signedness) and array length, copying stored components to new offsets/strides. Float2x2 values pass through Transform basis components so changed matrix stride and row/column order do not change the represented value. RGB copies exactly twelve bytes without touching the following scalar; migrates texture overrides by name. The caller holds the old state gate while copying it.
+Allocates buffers and texture slots, then initializes each material and Instance value/array element from validated compiled defaults (implicit numeric zero or matrix identity). Reserved TIME starts at zero and is never copied as a user parameter. Migrates explicitly owned prior uniforms by name plus shader element type (including integer signedness) and array length, copying stored components to new offsets/strides. Float2x2 values pass through Transform basis components so changed matrix stride and row/column order do not change the represented value. RGB copies exactly twelve bytes without touching the following scalar; migrates texture overrides by name. The caller holds the old state gate while copying it.
 
-Logical boolean width is part of migration compatibility. Bool values use false defaults and vector masks use zero. Matching boolean buffers preserve normalized components; numeric/bool or width changes reset the member.
+Logical boolean width is part of migration compatibility. Bool/mask defaults come from canonical zero/one component metadata, with false/zero when absent. Matching boolean buffers preserve normalized components; numeric/bool or width changes reset the member.
 
 ### Program
 
@@ -101,3 +101,7 @@ Textures holds one borrowed override per physical descriptor element. Migration 
 The retained particle compute path pushes typed user/global/TIME/SDF uniforms to compute slots one through three while the renderer owns frame slot zero. Canvas fragment/vertex pushing keeps its existing separate stage mapping. See [GPU particles](../components/gpu-particles.md).
 
 SamplerConfiguration?[] Samplers aligns with the immutable program image slots. CaptureSamplerStates refreshes copied Shader metadata during image preparation, preserving an old material program only for currently compatible image types. It allocates no new per-frame table. Drawable blits capture the same metadata before submission. See [explicit image sampler state](../components/shader-materials.md#explicit-image-sampler-state).
+
+## Compiled defaults
+
+`UniformOverrides` retains exact names written through numeric/matrix setters. A compatible program transition copies only those values; unset members are initialized from the new immutable ShaderUniform default. Reset writes the current default and removes its ownership flag. Fallback Instance buffers carry the same defaults when no per-item owner is supplied. See [authored uniform defaults](../components/shader-materials.md#authored-uniform-defaults).

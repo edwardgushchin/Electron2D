@@ -369,7 +369,7 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
     };
     private void WriteProperties(StreamPeerBuffer stream, ElectronObject owner, ScenePropertyData[]? captured, bool prepareSchema = false)
     {
-        var properties = captured ?? owner.GetPropertyList().Where(p => p.IsStored).Select(p => new ScenePropertyData(p.Name, p.CaptureStoredValue(owner))).ToArray();
+        var properties = captured ?? owner.GetPropertyList().Where(p => p.ShouldStore(owner)).Select(p => new ScenePropertyData(p.Name, p.CaptureStoredValue(owner))).ToArray();
         if ((flags & SaverFlags.OmitEditorProperties) != 0) properties = properties.Where(p => !p.Name.StartsWith("__editor", StringComparison.Ordinal)).ToArray();
         stream.Put32(properties.Length);
         var descriptors = owner.GetPropertyList();

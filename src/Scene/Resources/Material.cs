@@ -77,6 +77,7 @@ public sealed partial class ShaderMaterial : Material
             var state = RequireState();
             var uniform = Find<T>(state, name, array: false);
             ValidateValue(in value);
+            state.UniformOverrides.Add(name);
             uniform.Write(state.Buffers[uniform.Buffer].AsSpan(uniform.Offset, uniform.ElementSize), in value);
         }
         EmitChanged();
@@ -99,6 +100,7 @@ public sealed partial class ShaderMaterial : Material
             var uniform = Find<T>(state, name, array: true);
             if (values.Length != uniform.ArrayLength) throw new ArgumentException($"Uniform '{name}' requires {uniform.ArrayLength} elements.", nameof(values));
             foreach (ref readonly var value in values) ValidateValue(in value);
+            state.UniformOverrides.Add(name);
             for (var i = 0; i < values.Length; i++)
                 uniform.Write(state.Buffers[uniform.Buffer].AsSpan(uniform.Offset + i * uniform.Stride, uniform.ElementSize), in values[i]);
         }
@@ -170,13 +172,14 @@ public sealed partial class ShaderMaterial : Material
         return uniform;
     }
 
-    /// <summary>Sets a borrowed ordinary image override for a scalar sampled descriptor.</summary>
-    /// <param name="name">The exact, case-sensitive texture parameter name.</param>
-    /// <param name="texture">A live texture, or null to use the Shader default.</param>
+    /// <summary>Sets a borrowed ordinary image override, or clears a named parameter override.</summary>
+    /// <param name="name">The exact, case-sensitive material parameter name.</param>
+    /// <param name="texture">A live ordinary scalar texture, or null to reset a numeric, matrix, array or image parameter to its shader default.</param>
     /// <remarks>An unbound parameter without a Shader default fails explicitly before drawing. Textures are sampled
     /// with linear float or nearest integer filtering, clamped coordinates and LOD restricted to the base level, independently of canvas sampling
-    /// properties. Configurable named sampler state remains pending. Changes emit Changed.</remarks>
-    /// <exception cref="ArgumentException">The parameter is not an ordinary scalar sampled descriptor or the supplied sampled scalar type differs.</exception>
+    /// properties. A numeric reset removes explicit ownership, so later compatible reloads follow new shader defaults.
+    /// An image-array reset clears every element. Changes emit Changed.</remarks>
+    /// <exception cref="ArgumentException">The parameter is absent, or a nonnull image does not match an ordinary scalar sampled descriptor.</exception>
     /// <exception cref="InvalidOperationException">No shader is assigned, or texture validation reenters mutation or replaces the program.</exception>
     /// <exception cref="ObjectDisposedException">The material, shader or supplied texture is disposed.</exception>
     public void SetShaderParameter(string name, Texture? texture) => SetSampledResource(name, texture, false);
@@ -194,7 +197,7 @@ public sealed partial class ShaderMaterial : Material
 
     /// <summary>Sets a borrowed layered image override for a scalar sampled descriptor.</summary>
     /// <param name="name">The exact sampler parameter name.</param>
-    /// <param name="texture">A live array resource, or null to use the shader default.</param>
+    /// <param name="texture">A live layered resource, or null to clear any named material parameter override.</param>
     /// <remarks>Sampling uses linear float or nearest integer filtering, clamp addressing and base-level LOD. Changes need no geometry
     /// rerecording. An unbound parameter fails before drawing. Ownership remains with the caller.</remarks>
     /// <exception cref="ArgumentException">The parameter is not a layered scalar sampled descriptor or the supplied sampled scalar type differs.</exception>
@@ -216,6 +219,7 @@ public sealed partial class ShaderMaterial : Material
     { lock (_gate) { var state = RequireState(); var slot = state.Program.FindTexture(name); state.Program.Textures[slot].RequireBindingArray(false); return state.Textures[slot]; } }
     internal void SetSampledResource(string name, Resource? texture, bool? layered = null)
     {
+        if (texture is null) { ResetParameter(name); return; }
         lock (_gate)
         {
             var state = RequireState(); var slot = state.Program.FindTexture(name); var descriptor = state.Program.Textures[slot]; descriptor.RequireBindingArray(false);
@@ -240,6 +244,8 @@ public sealed partial class ShaderMaterial : Material
         foreach (var component in MemoryMarshal.Cast<T, float>(MemoryMarshal.CreateReadOnlySpan(in value, 1)))
             if (!float.IsFinite(component)) throw new ArgumentException("Material floating-point values must be finite.", nameof(value));
     }
+
+    internal bool HasStoredUniform(string name) { lock (_gate) return RequireState().UniformOverrides.Contains(name); }
 
     private MaterialState RequireState() => GetCanvasState() ?? throw new InvalidOperationException("Shader parameters require an assigned shader.");
 
@@ -298,6 +304,7 @@ internal sealed class MaterialState
 {
     private readonly object _gate;
     internal readonly ShaderProgram Program;
+    internal readonly HashSet<string> UniformOverrides = new(StringComparer.Ordinal);
     internal readonly byte[][] Buffers;
     internal readonly Resource?[] Textures;
     internal readonly SamplerConfiguration?[] Samplers;
@@ -313,29 +320,22 @@ internal sealed class MaterialState
         Buffers = program.BufferSizes.Select(size => new byte[size]).ToArray();
         Textures = new Resource?[program.Textures.Length];
         Samplers = new SamplerConfiguration?[program.Textures.Length];
-        Span<float> identity = stackalloc float[16];
         foreach (var uniform in program.Uniforms.Values)
-        {
-            if (uniform.Type == typeof(Transform))
-                for (var i = 0; i < uniform.Count; i++)
-                    uniform.Write(Buffers[uniform.Buffer].AsSpan(uniform.Offset + i * uniform.Stride, uniform.ElementSize), Transform.Identity);
-            else if (uniform.MatrixWidth > 2)
-            {
-                identity.Clear();
-                for (var axis = 0; axis < uniform.MatrixWidth; axis++) identity[axis * (uniform.MatrixWidth + 1)] = 1;
-                for (var i = 0; i < uniform.Count; i++)
-                    uniform.WriteMatrix(Buffers[uniform.Buffer].AsSpan(uniform.Offset + i * uniform.Stride, uniform.ElementSize), identity);
-            }
-        }
+            uniform.InitializeDefault(Buffers[uniform.Buffer].AsSpan(uniform.Offset, uniform.StorageSize));
+        foreach (var uniform in program.InstanceUniforms.Values)
+            uniform.InitializeDefault(Buffers[uniform.Buffer].AsSpan(uniform.Offset, uniform.StorageSize));
         if (previous is null) return;
         foreach (var uniform in program.Uniforms.Values)
-            if (previous.Program.Uniforms.TryGetValue(uniform.Name, out var old) && uniform.SameType(old))
+            if (previous.UniformOverrides.Contains(uniform.Name) && previous.Program.Uniforms.TryGetValue(uniform.Name, out var old) && uniform.SameType(old))
+            {
+                UniformOverrides.Add(uniform.Name);
                 for (var i = 0; i < uniform.Count; i++)
                 {
                     var source = previous.Buffers[old.Buffer].AsSpan(old.Offset + i * old.Stride, old.ElementSize);
                     var target = Buffers[uniform.Buffer].AsSpan(uniform.Offset + i * uniform.Stride, uniform.ElementSize);
                     old.CopyValue(source, uniform, target);
                 }
+            }
         for (var i = 0; i < Textures.Length; i++)
             for (var j = 0; j < previous.Textures.Length; j++)
                 if (program.Textures[i].Name == previous.Program.Textures[j].Name && program.Textures[i].Element == previous.Program.Textures[j].Element && program.Textures[i].SameType(previous.Program.Textures[j])) Textures[i] = previous.Textures[j];

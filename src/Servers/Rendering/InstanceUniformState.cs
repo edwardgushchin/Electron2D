@@ -5,6 +5,8 @@ internal sealed class InstanceUniformState
     private abstract class Value
     {
         internal ShaderUniform? Declaration;
+        internal bool Stored = true;
+        internal PropertyDescriptor? PreparedDescriptor;
         internal abstract Type Type { get; }
         internal abstract void Write(ShaderUniform uniform, Span<byte> target);
         internal abstract PropertyDescriptor Descriptor(string name);
@@ -27,10 +29,10 @@ internal sealed class InstanceUniformState
     private readonly Dictionary<string, PropertyDescriptor> _descriptors = new(StringComparer.Ordinal);
     private readonly System.Runtime.CompilerServices.ConditionalWeakTable<ShaderProgram, byte[]?[]> _buffers = new();
     internal IEnumerable<PropertyDescriptor> StoredDescriptors => _descriptors.Values;
-    internal bool HasStored(string name) => _values.ContainsKey(name);
+    internal bool HasStored(string name) => _values.TryGetValue(name, out var value) && value.Stored;
     internal T? GetStored<T>(string name, ShaderProgram? program) where T : unmanaged
     {
-        if (!_values.TryGetValue(name, out var value)) return null;
+        if (!_values.TryGetValue(name, out var value) || !value.Stored) return null;
         if (program?.InstanceUniforms.TryGetValue(name, out var declaration) == true && !value.Matches(declaration)) return null;
         if (value is Value<T> exact) return exact.Data;
         return Get<T>(name, program);
@@ -38,13 +40,19 @@ internal sealed class InstanceUniformState
     internal bool Set<T>(string name, T? value, ShaderProgram? program) where T : unmanaged
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
-        if (value is not { } data) { _values.Remove(name); return _descriptors.Remove(name); }
+        if (value is not { } data) { if (_values.TryGetValue(name, out var cleared)) cleared.Stored = false; return _descriptors.Remove(name); }
         Supported<T>(); ShaderMaterial.ValidateValue(in data);
         ShaderUniform? uniform = null;
         program?.InstanceUniforms.TryGetValue(name, out uniform);
         if (uniform is not null && !uniform.Accepts<T>()) throw new ArgumentException("The instance parameter has a different logical type.", nameof(value));
-        if (_values.TryGetValue(name, out var existing) && existing is Value<T> typed) { typed.Data = data; typed.Declaration = uniform; return false; }
-        var replacement = new Value<T>(data) { Declaration = uniform }; _values[name] = replacement; _descriptors[name] = replacement.Descriptor(name); return true;
+        if (_values.TryGetValue(name, out var existing) && existing is Value<T> typed)
+        {
+            var added = !typed.Stored; typed.Data = data; typed.Declaration = uniform; typed.Stored = true;
+            if (added) _descriptors[name] = typed.PreparedDescriptor!;
+            return added;
+        }
+        var replacement = new Value<T>(data) { Declaration = uniform }; replacement.PreparedDescriptor = replacement.Descriptor(name);
+        _values[name] = replacement; _descriptors[name] = replacement.PreparedDescriptor; return true;
     }
     internal T? Get<T>(string name, ShaderProgram? program, bool defaults = false) where T : unmanaged
     {
@@ -52,7 +60,7 @@ internal sealed class InstanceUniformState
         ShaderUniform? uniform = null;
         program?.InstanceUniforms.TryGetValue(name, out uniform);
         if (uniform is not null && !uniform.Accepts<T>()) throw new ArgumentException("The instance parameter has a different logical type.", nameof(name));
-        if (!defaults && _values.TryGetValue(name, out var stored))
+        if (!defaults && _values.TryGetValue(name, out var stored) && stored.Stored)
         {
             if (uniform is not null)
             {
@@ -64,7 +72,7 @@ internal sealed class InstanceUniformState
         }
         return uniform is null ? null : Default<T>(uniform);
     }
-    private static T Default<T>(ShaderUniform uniform) where T : unmanaged { Span<byte> bytes = stackalloc byte[16]; bytes.Clear(); return uniform.Read<T>(bytes[..uniform.ElementSize]); }
+    private static T Default<T>(ShaderUniform uniform) where T : unmanaged => uniform.ReadDefault<T>();
     internal byte[]?[] Prepare(ShaderProgram program)
     {
         var buffers = _buffers.GetValue(program, static current =>
@@ -75,7 +83,11 @@ internal sealed class InstanceUniformState
         });
         foreach (var buffer in buffers) buffer?.AsSpan().Clear();
         foreach (var uniform in program.InstanceUniforms.Values)
-            if (_values.TryGetValue(uniform.Name, out var value) && value.Matches(uniform)) value.Write(uniform, buffers[uniform.Buffer]!.AsSpan(uniform.Offset, uniform.ElementSize));
+        {
+            var target = buffers[uniform.Buffer]!.AsSpan(uniform.Offset, uniform.ElementSize);
+            uniform.InitializeDefault(target);
+            if (_values.TryGetValue(uniform.Name, out var value) && value.Stored && value.Matches(uniform)) value.Write(uniform, target);
+        }
         return buffers;
     }
     internal static PropertyDescriptor? StoredParameter(Node node, string name, Type type)

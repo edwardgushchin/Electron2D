@@ -1,6 +1,6 @@
 # PropertyDescriptor\<TOwner, TValue\>
 
-Last updated: 2026-10-19
+Last updated: 2026-10-21
 
 ## Stored physical state
 
@@ -238,3 +238,7 @@ File values use the exact TValue schema with registered codecs, graph-aware reso
 The internal stored-restore delegate can stage terrain indices before graph association, without exposing a second public setter. Ordinary typed writes keep their configured setter and validation; portable codecs still validate owner/value types and copied values. Terrain file/scene tests verify this distinction, including inactive peering values.
 
 [ObjectPropertyTests](../../tests/Electron2D.Tests/ObjectPropertyTests.cs) executes discovery snapshots, compatible replacement/filtering and invalid lists, owner policy, live/default/null/array values, readonly/validation/delegate errors and teardown inspection. Explicit CPU/GPU serial and separate-thread profiles use real RigidBody properties, permitted post-solver mass edits, owner/capture rejection and callback-error recovery. Each retains 128 warm/128 measured full frames with typed inspection, velocity writes and reversion at strict zero owner/all-thread managed bytes. GPU runs use CPU-only Vulkan; this does not establish hardware performance, editor automation or native/platform acceptance.
+
+## Material defaults and storage
+
+Engine numeric shader descriptors use a private owner predicate to store only explicitly owned material fields while retaining the existing public IsStored capability. Explicit values equal to their revert default still store; unset values follow new shader defaults after reload. Revert factories copy each typed array, and CanRevert compares all supported boolean, unsigned, vector, rectangle and Transform array contents. External descriptor behavior remains defined by IsStored. See [authored uniform defaults](../components/shader-materials.md#authored-uniform-defaults).

@@ -13,7 +13,7 @@ Pairs a borrowed Shader with independently owned parameter values and borrowed t
 
 Reserved TIME is not a user parameter: getters, setters, property discovery, duplication and value migration exclude it. The renderer fills its reflected float32 location immediately before each buffer upload without emitting Changed.
 
-State operations are serialized per material. Native uniform upload uses the same gate. Notifications run after mutation outside the gate. Successful scalar/vector/matrix or span updates reuse initialized storage. Matrices initially contain identity; other stored components contain zero. Float3 Color readers reconstruct alpha one; float2x2 Transform readers reconstruct zero Origin. No source defaults are extracted. Shader replacement migrates matching names, shader element types (including integer signedness and logical boolean width) and array lengths to new offsets/bindings on the next parameter access or draw. Incompatible or newly introduced members start at their typed defaults; assigning null discards values.
+State operations are serialized per material. Native uniform upload uses the same gate. Notifications run after mutation outside the gate. Successful scalar/vector/matrix or span updates reuse initialized storage. Numeric values initialize from compiled authored defaults, with zero/matrix identity only when absent. Float3 Color readers reconstruct alpha one; float2x2 Transform readers reconstruct zero Origin. Explicit ownership is independent of value equality. Shader replacement migrates explicitly written matching names, shader element types (including integer signedness and logical boolean width) and array lengths to new offsets/bindings on the next parameter access or draw. Incompatible or newly introduced members start at their typed defaults; assigning null discards values.
 
 ## Example
 
@@ -41,7 +41,7 @@ Color tint = material.GetShaderParameter<Color>("tint");
 | `T[] GetShaderParameterArray<T>(string name) where T : unmanaged` | Returns a copy of a complete fixed-size array. |
 | `void CopyShaderParameterArray<T>(string name, Span<T> destination) where T : unmanaged` | Copies the complete reflected array into exact-length caller storage; prepared copies allocate no managed memory. |
 
-Numeric mat3/mat4 values and fixed arrays use `SetShaderMatrixParameter(string, ReadOnlySpan<float>)`, `GetShaderMatrixParameter(string)` and `CopyShaderMatrixParameter(string, Span<float>)`. Each matrix contributes nine/sixteen column-major components. Values are copied, finite, identity by default and retained across compatible layout reload. Typed float-array descriptors use the same storage and revert contract. See [numeric material matrices](../components/shader-materials.md#numeric-material-matrices).
+Numeric mat3/mat4 values and fixed arrays use `SetShaderMatrixParameter(string, ReadOnlySpan<float>)`, `GetShaderMatrixParameter(string)` and `CopyShaderMatrixParameter(string, Span<float>)`. Each matrix contributes nine/sixteen column-major components. Values are copied and finite; unset values follow compiled defaults (implicit identity), while explicit values survive compatible layout reload. Typed float-array descriptors use the same storage and revert contract. See [numeric material matrices](../components/shader-materials.md#numeric-material-matrices).
 
 ## Property descriptions
 
@@ -57,13 +57,13 @@ Names are nonblank and case-sensitive. Supported types currently include bool, f
 
 Logical bool uses C# bool; bool2/3/4 use an int component mask (low bits X/Y/Z/W). Higher bits are ignored and reads return the represented bits. Arrays use one bool or int mask per logical shader element. These types require validated [artifact metadata](../components/shader-materials.md#boolean-type-information); unannotated unsigned storage remains numeric. Defaults and reverts are false/zero.
 
-Texture overloads require a reflected sampled image name and a live Texture, or null to use the Shader default. Missing defaults or unreadable/disposed textures fail before rendering. Texture updates and changes to bindings affect later frames without redrawing geometry. By default, named float samplers use linear filtering and integer samplers use nearest, with clamp-to-edge coordinates and LOD zero independently of CanvasItem/Viewport properties. Shader.SetTextureSamplerState supplies explicit shared sampler state; see [the verified defaults](../components/shader-materials.md#named-sampler-defaults).
+A nonnull Texture requires a reflected ordinary scalar sampled image. Null clears any named numeric, matrix, array or image parameter override; it restores the compiled default and later follows new defaults after reload. Missing defaults or unreadable/disposed textures fail before rendering. Texture updates and changes to bindings affect later frames without redrawing geometry. By default, named float samplers use linear filtering and integer samplers use nearest, with clamp-to-edge coordinates and LOD zero independently of CanvasItem/Viewport properties. Shader.SetTextureSamplerState supplies explicit shared sampler state; see [the verified defaults](../components/shader-materials.md#named-sampler-defaults).
 
 The full request is validated before writing, including all array elements. A failed update preserves previous values. A successful update emits `Changed` and takes effect on later draws without `QueueRedraw`. Callback failure propagates after committed mutation. No Shader causes `InvalidOperationException`; bad names/types/shapes/lengths/nonfinite values cause `ArgumentException`; disposal causes `ObjectDisposedException`. The generic unmanaged constraint does not imply arbitrary unmanaged types are accepted.
 
 ### GetShaderParameter
 
-The generic overload returns the matching scalar/vector/matrix value, initially identity for float2x2 and zero for other stored components (alpha one for float3 Color). Transform Origin is always zero. The nongeneric overload returns the explicit borrowed texture override, or null when the Shader default applies. The type and scalar shape must match. Uses the same name, missing-Shader and disposal checks as setters. No mutable backing storage is returned.
+The generic overload returns the matching scalar/vector/matrix value, initially its compiled default or implicit numeric zero/matrix identity (alpha one for float3 Color). Transform Origin is always zero. The nongeneric overload returns the explicit borrowed texture override, or null when the Shader default applies. The type and scalar shape must match. Uses the same name, missing-Shader and disposal checks as setters. No mutable backing storage is returned.
 
 ### GetShaderParameterArray
 
@@ -216,3 +216,7 @@ A Shader with Mode.TextureBlit executes through DrawableTexture blit methods and
 The [particle shader contract](../components/particle-shaders.md) adds compiled HLSL/GLSL compute modules, typed material parameters, portable state/frame/subemission includes and explicit RenderingDevice execution. Process programs preserve their domain through duplication and file graphs and reject canvas/blit submission. Retained emission, particle nodes and canvas output remain separate dependencies.
 
 The retained item distance-field mode uses the existing glyph composition contract: incoming COLOR is decoded before the fragment, while explicit TEXTURE samples still see encoded image values. No additional material uniform block is consumed; a no-TEXTURE fragment requires the existing extra engine sampler. See [retained distance-field mode](../components/canvas-rendering.md#retained-distance-field-mode).
+
+## Authored defaults and ownership
+
+The [authored uniform defaults](../components/shader-materials.md#authored-uniform-defaults) contract initializes real buffers, descriptors and each array element. Explicit writes remain explicit even when equal to the current default. Nullable-image null resets numeric/matrix/array/image fields; image arrays clear every override. Invalid names or values preserve state/events. Resource copying and archives preserve this ownership distinction; only explicit numeric fields are stored. Prepared writes, reset and exact-span copies reuse storage.

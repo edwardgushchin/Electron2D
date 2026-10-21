@@ -49,12 +49,16 @@ internal static partial class SamplerArrayTests
             values[1] = blue; Check(ReferenceEquals(material.GetShaderTextureParameterArray("colorMaps")[1], red), "Set copies references out of caller storage.");
             var copy = material.GetShaderTextureParameterArray("colorMaps"); copy[1] = blue;
             Check(ReferenceEquals(material.GetShaderTextureParameterArray("colorMaps")[1], red), "Get copies storage and borrows resources.");
-            Reject<ArgumentException>(() => material.SetShaderParameter("colorMaps", red)); Reject<ArgumentException>(() => material.SetShaderParameter("colorMaps", null)); Reject<ArgumentException>(() => material.SetShaderLayeredParameter("colorMaps", null)); Reject<ArgumentException>(() => material.GetShaderParameter("colorMaps"));
+            Reject<ArgumentException>(() => material.SetShaderParameter("colorMaps", red)); Reject<ArgumentException>(() => material.GetShaderParameter("colorMaps"));
             Reject<ArgumentException>(() => material.SetShaderTextureParameterArray("colorMaps", new Texture?[1]));
             using var disposed = Solid(Colors.White); disposed.Dispose(); Reject<ObjectDisposedException>(() => material.SetShaderTextureParameterArray("colorMaps", new Texture?[] { blue, disposed }));
             Check(events == 0 && ReferenceEquals(material.GetShaderTextureParameterArray("colorMaps")[1], red), "Invalid tail preserves every existing override and signal count.");
             Resource?[] effective = new Resource?[2]; material.GetCanvasState()!.CopyTextures(effective);
             Check(ReferenceEquals(effective[0], red) && ReferenceEquals(effective[1], red), "Null override resolves its own element default.");
+            material.SetShaderParameter("colorMaps", null); material.GetCanvasState()!.CopyTextures(effective);
+            Check(events == 1 && material.GetShaderTextureParameterArray("colorMaps").All(t => t is null) && ReferenceEquals(effective[0], red) && ReferenceEquals(effective[1], blue), "Null parameter reset clears the whole descriptor array and resolves indexed defaults.");
+            material.SetShaderTextureParameterArray("colorMaps", new Texture?[] { red, red }); material.SetShaderLayeredParameter("colorMaps", null);
+            Check(events == 3 && material.GetShaderTextureParameterArray("colorMaps").All(t => t is null), "Either nullable-image boundary clears a named override without inventing a nonnull shape.");
             shader.SetDefaultTextureParameter("colorMaps", null, 1); material.SetShaderTextureParameterArray("colorMaps", new Texture?[2]);
             Reject<InvalidOperationException>(() => material.GetCanvasState()!.CopyTextures(effective)); shader.SetDefaultTextureParameter("colorMaps", red, 1);
             material.SetShaderTextureParameterArray("colorMaps", new Texture?[] { red, null });

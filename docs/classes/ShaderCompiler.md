@@ -1,6 +1,6 @@
 # ShaderCompiler
 
-Last updated: 2026-10-18
+Last updated: 2026-10-21
 
 - Declaration: `internal static unsafe class ShaderCompiler`
 - Source: [ShaderCompiler.cs](../../src/Servers/Rendering/ShaderCompiler.cs)
@@ -72,3 +72,7 @@ ValidateCanvasProgram checks both module lengths before copying either, validate
 ## Sampled descriptor array integration
 
 ValidateInterface reflects the original logical interface and then verifies native metadata against the derived NativeCode, including the physical sixteen-sampler stage bound. Paired validation and vertex adaptation use derived modules. Structural validation admits only the required sampled-array dynamic/nonuniform and image-query capabilities in addition to the established canvas capabilities; unsupported domains still reject. See [the component contract](../components/shader-materials.md#fixed-sampled-descriptor-arrays).
+
+## Default metadata validation
+
+Reflection validates the versioned typed default OpString payload before constructing/publishing a program. Names, scalar/array length, logical type and finite/canonical components must match active user material/Instance fields. Renderer/global defaults reject. Both canvas stages, TextureBlit and particle compute use this same boundary. Source extraction remains offline in ShaderImport. See [authored uniform defaults](../components/shader-materials.md#authored-uniform-defaults).

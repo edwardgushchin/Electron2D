@@ -1242,7 +1242,7 @@ Static scene/retained item setters, effective getters, declaration defaults and 
 | --- | --- |
 | `CanvasItemSetInstanceShaderParameter<T>(RID instance, string parameter, T? value)` | Copies one override; null resets it. |
 | `CanvasItemGetInstanceShaderParameter<T>(RID instance, string parameter)` | Effective nullable value. |
-| `CanvasItemGetInstanceShaderParameterDefaultValue<T>(RID instance, string parameter)` | Declared zero default ignoring overrides, or null when absent. |
+| `CanvasItemGetInstanceShaderParameterDefaultValue<T>(RID instance, string parameter)` | Compiled authored default (implicit zero when absent), ignoring overrides, or null when undeclared. |
 | `CanvasItemGetInstanceShaderParameterList(RID instance)` | Immutable copied typed descriptors for effective item/surface shaders. |
 
 A live rendering session and its owner thread are required. Scene and retained item identities share state. Invalid identities and foreign sessions fail; setter capture/generated-tile ownership guards remain in force.
@@ -1907,3 +1907,17 @@ RenderingServer.CanvasItemAddTextureRect(item, new Rect2(0, 0, 128, 32), texture
 ```
 
 The snippet requires a prepared MSDF `texture`; [the standalone consumer](../../tests/CanvasDistanceField.Consumer/CanvasDistanceField.Consumer.csproj) provides images, items, host and cleanup.
+
+## Compiled numeric shader defaults
+
+| Declaration | Contract |
+| --- | --- |
+| `static T ShaderGetParameterDefault<T>(RID shader, string name) where T : unmanaged` | Read the compiled scalar/vector/float2x2 default through its supported typed carrier. |
+| `static T[] ShaderGetParameterDefaultArray<T>(RID shader, string name) where T : unmanaged` | Return an independent copy of each fixed-array element. |
+| `static void ShaderGetParameterDefault<T>(RID shader, string name, Span<T> destination) where T : unmanaged` | Copy a fixed array into exactly sized caller storage without prepared managed allocation. |
+| `static float[] ShaderGetMatrixParameterDefault(RID shader, string name)` | Return concatenated column-major numeric mat3/mat4 defaults, including fixed arrays. |
+| `static void ShaderGetMatrixParameterDefault(RID shader, string name, Span<float> destination)` | Copy all wide-matrix components into exactly sized caller storage without prepared managed allocation. |
+
+Requires the active rendering service and its owner thread. Live owned and borrowed Shader identities permit reads. Wrong/stale identity, missing case-sensitive name, unsupported carrier, scalar/array mismatch or destination length throws ArgumentException before destination writes. Renderer/global parameters are excluded. Defaults come from immutable compiled metadata, or implicit numeric zero/matrix identity, independently of material overrides. Mat2 uses Transform with zero Origin; Color/Rect2 aliases and bool masks follow the material contract. Existing sampled-image default APIs remain indexed.
+
+An empty texture RID passed to MaterialSetParam clears any numeric/matrix/array/image override and restores its shader default; a nonempty image still follows sampled-shape validation. Mutations retain the owned-material requirement. See [authored uniform defaults](../components/shader-materials.md#authored-uniform-defaults).

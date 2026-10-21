@@ -20,7 +20,7 @@ internal static unsafe partial class ShaderSourceTypes
         var pointers = instructions.Where(i => Electron2D.MaterialLightingProgram.Op(i) == 32 && i[2] == 0 && arrays.Contains(i[3])).Select(i => i[1]).ToHashSet();
         return instructions.Any(i => Electron2D.MaterialLightingProgram.Op(i) == 59 && pointers.Contains(i[1]));
     }
-    internal static byte[] CompileHLSL(string source, RenderingDevice.ShaderStage stage, string? includeDirectory)
+    internal static byte[] CompileHLSL(string source, RenderingDevice.ShaderStage stage, string? includeDirectory, bool preprocess = false, bool defaults = false)
     {
         nint compiler = 0, utilities = 0, include = 0, result = 0, errors = 0, output = 0;
         var strings = new List<nint>();
@@ -33,6 +33,8 @@ internal static unsafe partial class ShaderSourceTypes
             Check(((delegate* unmanaged<nint, nint*, int>)Slot(utilities, 9))(utilities, &include));
             var profile = stage == RenderingDevice.ShaderStage.Compute ? "cs_6_0" : stage == RenderingDevice.ShaderStage.Vertex ? "vs_6_0" : "ps_6_0";
             var arguments = new List<string> { "-E", "main", "-T", profile, "-HV", "2021", "-spirv", "-fspv-preserve-bindings", "-fspv-preserve-interface", "-encoding", "utf8" };
+            if (preprocess) arguments.Add("-P");
+            if (defaults) { arguments.Remove("-fspv-preserve-interface"); arguments.Remove("-fspv-preserve-bindings"); }
             if (includeDirectory is not null) { arguments.Add("-I"); arguments.Add(includeDirectory); }
             foreach (var argument in arguments)
             {

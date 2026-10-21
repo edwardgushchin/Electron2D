@@ -2049,3 +2049,5 @@ FontContourPoint, FontGlyphContours, FontSizeCacheInfo and TextServer.ContourPoi
 [Host identity and runtime features](components/host-platform.md) extend existing OS, ProjectSettingsRegistry, RenderingServer, CanvasBackend/GPUCanvasBackend and NativeSystemFonts implementations. No new production type is introduced; public host queries and session compression observations use their retained owners.
 
 [Retained distance-field mode](components/canvas-rendering.md#retained-distance-field-mode) extends existing RenderingServer, RenderingCanvasItemState, CanvasItem, CanvasMesh, CanvasParticles and GPUCanvasBackend types. No new production type or native dependency is introduced.
+
+ShaderUniform/ShaderProgram and MaterialState carry validated authored numeric defaults and explicit material ownership; existing InstanceUniformState retains prepared set/clear entries. The static RenderingServer default-query family and nullable/empty-RID reset share [the executable default contract](components/shader-materials.md#authored-uniform-defaults). These additions belong to existing inventoried types, with no new runtime type.

@@ -75,6 +75,8 @@ public abstract partial class PropertyDescriptor
     /// <exception cref="Exception">A configured getter, revert-value, validator, or setter delegate throws.</exception>
     public abstract void Revert(ElectronObject owner);
 
+    internal virtual bool ShouldStore(ElectronObject owner) => IsStored;
+
     internal virtual Resource? ReadResource(ElectronObject owner) => throw new NotSupportedException($"Property descriptor '{Name}' has no typed resource accessor.");
 
     internal virtual StoredPropertyValue CaptureStoredValue(ElectronObject owner) =>
@@ -125,6 +127,8 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
     private readonly Action<TOwner, TValue>? _setter;
     private readonly Func<TOwner, TValue>? _revertValue;
     private readonly Func<TOwner, TValue, bool>? _validator;
+    internal Func<TOwner, bool>? StoreCondition { get; init; }
+    internal override bool ShouldStore(ElectronObject owner) => IsStored && (StoreCondition?.Invoke((TOwner)owner) ?? true);
     internal Func<TOwner, TValue>? StoredGetter { get; init; }
     internal Action<TOwner, TValue>? StoredSetter { get; init; }
 
@@ -353,7 +357,16 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
         if (left is string[] strings && right is string[] otherStrings) return strings.AsSpan().SequenceEqual(otherStrings);
         if (left is int[] integers && right is int[] otherIntegers) return integers.AsSpan().SequenceEqual(otherIntegers);
         if (left is float[] numbers && right is float[] otherNumbers) return numbers.AsSpan().SequenceEqual(otherNumbers);
+        if (left is uint[] unsigned && right is uint[] otherUnsigned) return unsigned.AsSpan().SequenceEqual(otherUnsigned);
+        if (left is bool[] flags && right is bool[] otherFlags) return flags.AsSpan().SequenceEqual(otherFlags);
         if (left is Vector2[] points && right is Vector2[] otherPoints) return points.AsSpan().SequenceEqual(otherPoints);
+        if (left is Vector3[] triples && right is Vector3[] otherTriples) return triples.AsSpan().SequenceEqual(otherTriples);
+        if (left is Vector4[] quads && right is Vector4[] otherQuads) return quads.AsSpan().SequenceEqual(otherQuads);
+        if (left is Vector2i[] pairsI && right is Vector2i[] otherPairsI) return pairsI.AsSpan().SequenceEqual(otherPairsI);
+        if (left is Vector3i[] triplesI && right is Vector3i[] otherTriplesI) return triplesI.AsSpan().SequenceEqual(otherTriplesI);
+        if (left is Vector4i[] quadsI && right is Vector4i[] otherQuadsI) return quadsI.AsSpan().SequenceEqual(otherQuadsI);
+        if (left is Transform[] bases && right is Transform[] otherBases) return bases.AsSpan().SequenceEqual(otherBases);
+        if (left is Rect2[] rectangles && right is Rect2[] otherRectangles) return rectangles.AsSpan().SequenceEqual(otherRectangles);
         if (left is Color[] colors && right is Color[] otherColors) return colors.AsSpan().SequenceEqual(otherColors);
         if (left is int[][] contours && right is int[][] otherContours)
             return contours.Length == otherContours.Length &&

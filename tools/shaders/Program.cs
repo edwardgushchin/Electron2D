@@ -21,6 +21,7 @@ var debugTemporary = temporary + ".debug";
 try
 {
     Dictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null;
+    string? hlslSource = null;
     await RequireVersion("spirv-val", "SPIRV-Tools v2026.4");
     var extension = IOPath.GetExtension(input).ToLowerInvariant();
     using var builtIns = extension is ".hlsl" or ".glsl" ? new BuiltInIncludeFiles() : null;
@@ -30,7 +31,8 @@ try
             var source = File.ReadAllText(input);
             // Keep original source locations in diagnostics reported by the native compiler.
             var escaped = input.Replace("\\", "/").Replace("\"", "\\\"");
-            var code = CompileHLSL("#line 1 \"" + escaped + "\"\n" + source,
+            hlslSource = "#line 1 \"" + escaped + "\"\n" + source;
+            var code = CompileHLSL(hlslSource,
                 stage, includeRoot, builtIns!.DirectoryPath, deviceImport, particleImport, out sourceTypes);
             File.WriteAllBytes(temporary, code);
             break;
@@ -54,6 +56,21 @@ try
     if (sourceTypes is not null)
     {
         result = ShaderSourceTypes.Annotate(result, args[1] == "fragment", sourceTypes, particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
+        File.WriteAllBytes(temporary, result);
+    }
+    if (!deviceImport)
+    {
+        if (hlslSource is not null)
+        {
+            var directory = Directory.GetCurrentDirectory();
+            try
+            {
+                Directory.SetCurrentDirectory(builtIns!.DirectoryPath);
+                result = ShaderSourceTypes.AddHLSLDefaults(result, hlslSource, stage, includeRoot, particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
+            }
+            finally { Directory.SetCurrentDirectory(directory); }
+        }
+        result = ShaderSourceTypes.AddConfiguredDefaults(result, input, args[1] == "fragment", particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
         File.WriteAllBytes(temporary, result);
     }
     Console.Write(await Execute("spirv-val", "--target-env", "vulkan1.0", temporary));

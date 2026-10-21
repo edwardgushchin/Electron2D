@@ -19,7 +19,7 @@ internal static class CanvasVertexProgramTests
         var state = new MaterialState(new object(), program, null);
         var expected = .375f; MemoryMarshal.Write(state.Buffers[0].AsSpan(16), in expected); state.SynchronizeSharedUniforms();
         Check(MemoryMarshal.Read<float>(state.Buffers[1].AsSpan(4)) == expected, "A shared value reaches a different stage binding and offset.");
-        var previous = new MaterialState(new object(), fragment, null); MemoryMarshal.Write(previous.Buffers[0].AsSpan(16), in expected);
+        var previous = new MaterialState(new object(), fragment, null); previous.UniformOverrides.Add(shared.Name); MemoryMarshal.Write(previous.Buffers[0].AsSpan(16), in expected);
         var migrated = new MaterialState(new object(), program, previous); migrated.SynchronizeSharedUniforms();
         Check(MemoryMarshal.Read<float>(migrated.Buffers[1].AsSpan(4)) == expected, "Reload from fragment-only state retains shared values.");
         var badFrame = new ShaderProgram([], [16], new() { [frame.Name] = frame }, timeUniform: shared with { Name = "TIME", Offset = 8 });

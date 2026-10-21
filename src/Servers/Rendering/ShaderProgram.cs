@@ -99,14 +99,15 @@ internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = fa
         m => m.GetShaderParameter(Name), (m, t) => m.SetShaderParameter(Name, t), _ => null, stored: true);
 }
 
-internal sealed record ShaderUniform(string Name, Type Type, int Buffer, int Offset, int ElementSize, int ArrayLength, int Stride, bool Unsigned, int MatrixStride, bool RowMajor, int BooleanWidth, int MatrixWidth = 0)
+internal sealed partial record ShaderUniform(string Name, Type Type, int Buffer, int Offset, int ElementSize, int ArrayLength, int Stride, bool Unsigned, int MatrixStride, bool RowMajor, int BooleanWidth, int MatrixWidth = 0)
 {
     internal int Count => Math.Max(1, ArrayLength);
     internal bool Accepts<T>() where T : unmanaged => typeof(T) == Type || Type == typeof(Vector3) && typeof(T) == typeof(Color) || Type == typeof(Vector4) && (typeof(T) == typeof(Color) || typeof(T) == typeof(Rect2));
     internal bool SameType(ShaderUniform other) => Type == other.Type && Unsigned == other.Unsigned && ArrayLength == other.ArrayLength && BooleanWidth == other.BooleanWidth && MatrixWidth == other.MatrixWidth;
 
     internal PropertyDescriptor Describe(string propertyName) => MatrixWidth > 2 ? new PropertyDescriptor<ShaderMaterial, float[]>(propertyName,
-        m => m.GetShaderMatrixParameter(Name), (m, v) => { ArgumentNullException.ThrowIfNull(v); m.SetShaderMatrixParameter(Name, v); }, _ => MatrixDefaults(), stored: true) : Type == typeof(float) ? Describe<float>(propertyName) :
+        m => m.GetShaderMatrixParameter(Name), (m, v) => { ArgumentNullException.ThrowIfNull(v); m.SetShaderMatrixParameter(Name, v); }, _ => MatrixDefaults(), stored: true)
+    { StoreCondition = m => m.HasStoredUniform(Name) } : Type == typeof(float) ? Describe<float>(propertyName) :
         Type == typeof(bool) ? Describe<bool>(propertyName) : Type == typeof(int) ? Describe<int>(propertyName) : Type == typeof(uint) ? Describe<uint>(propertyName) :
         Type == typeof(Vector2) ? Describe<Vector2>(propertyName) : Type == typeof(Vector3) ? Describe<Vector3>(propertyName) : Type == typeof(Vector4) ? Describe<Vector4>(propertyName) :
         Type == typeof(Transform) ? Describe<Transform>(propertyName) : Type == typeof(Vector2i) ? Describe<Vector2i>(propertyName) : Type == typeof(Vector3i) ? Describe<Vector3i>(propertyName) : Describe<Vector4i>(propertyName);
@@ -152,8 +153,12 @@ internal sealed record ShaderUniform(string Name, Type Type, int Buffer, int Off
     private float[] MatrixDefaults()
     {
         var values = new float[Count * MatrixWidth * MatrixWidth];
+        Span<byte> storage = stackalloc byte[ElementSize];
         for (var i = 0; i < Count; i++)
-            for (var axis = 0; axis < MatrixWidth; axis++) values[i * MatrixWidth * MatrixWidth + axis * (MatrixWidth + 1)] = 1;
+        {
+            storage.Clear(); WriteDefaultElement(storage, i);
+            ReadMatrix(storage, values.AsSpan(i * MatrixWidth * MatrixWidth, MatrixWidth * MatrixWidth));
+        }
         return values;
     }
 
@@ -193,12 +198,11 @@ internal sealed record ShaderUniform(string Name, Type Type, int Buffer, int Off
 
     private PropertyDescriptor Describe<T>(string propertyName) where T : unmanaged
     {
-        var defaults = new byte[ElementSize];
-        if (Type == typeof(Transform)) Write(defaults, Transform.Identity);
-        var initial = Read<T>(defaults);
+        var initial = ReadDefault<T>();
         return ArrayLength == 0
-            ? new PropertyDescriptor<ShaderMaterial, T>(propertyName, m => m.GetShaderParameter<T>(Name), (m, v) => m.SetShaderParameter(Name, v), _ => initial, stored: true)
+            ? new PropertyDescriptor<ShaderMaterial, T>(propertyName, m => m.GetShaderParameter<T>(Name), (m, v) => m.SetShaderParameter(Name, v), _ => initial, stored: true) { StoreCondition = m => m.HasStoredUniform(Name) }
             : new PropertyDescriptor<ShaderMaterial, T[]>(propertyName, m => m.GetShaderParameterArray<T>(Name),
-                (m, v) => { ArgumentNullException.ThrowIfNull(v); m.SetShaderParameter<T>(Name, v.AsSpan()); }, _ => Enumerable.Repeat(initial, ArrayLength).ToArray(), stored: true);
+                (m, v) => { ArgumentNullException.ThrowIfNull(v); m.SetShaderParameter<T>(Name, v.AsSpan()); }, _ => DefaultArray<T>(), stored: true)
+            { StoreCondition = m => m.HasStoredUniform(Name) };
     }
 }

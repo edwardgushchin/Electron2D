@@ -55,8 +55,9 @@ public abstract partial class CanvasItem
     /// <param name="value">Copied value, or null to reset to the shader default.</param>
     /// <remarks>Values may be authored before a material is assigned. Live matching Instance members use the
     /// override independently of shared materials, without rerecording geometry. Floating values must be finite.
-    /// Textures, arrays and matrices are not per-item parameters. The supported compiled buffer profile
-    /// defaults to zero; nonzero source initializer metadata is not imported. Each MultiMesh node owns
+    /// Textures, arrays and matrices are not per-item parameters. Unset parameters follow the compiled shader default,
+    /// with implicit zero when absent; explicit values survive compatible reloads. Prepared names retain their typed
+    /// storage and descriptor so repeated set/clear cycles allocate no managed memory. Each MultiMesh node owns
     /// one parameter set shared by its hardware instances. Compatible surface materials also consume it.</remarks>
     /// <exception cref="ArgumentException">The name/type is invalid or the value is nonfinite.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the scene owner or a capture is active.</exception>

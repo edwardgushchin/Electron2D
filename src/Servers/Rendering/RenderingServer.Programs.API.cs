@@ -148,10 +148,10 @@ public sealed partial class RenderingServer
     /// <exception cref="InvalidOperationException">The service is unavailable or owner/lifetime rules reject the operation.</exception>
     public static void MaterialGetMatrixParam(RID material, string name, Span<float> destination) => RequireService().MaterialGetMatrixParamCore(material, name, destination);
 
-    /// <summary>Sets a borrowed sampled texture override; empty restores the program default.</summary>
+    /// <summary>Sets a borrowed sampled texture override; an empty texture clears any named material parameter override.</summary>
     /// <param name="material">Live material identity; mutations require ownership and a programmable material.</param>
     /// <param name="name">Exact case-sensitive reflected user parameter name.</param>
-    /// <param name="texture">Borrowed live texture RID or empty to clear/select default.</param>
+    /// <param name="texture">Borrowed live texture RID, or empty to reset a numeric, matrix, array or image parameter to its shader default.</param>
     /// <exception cref="ArgumentException">An identity, parameter, destination or payload is invalid.</exception>
     /// <exception cref="InvalidOperationException">The service is unavailable or owner/submission/lifetime rules reject the operation.</exception>
     public static void MaterialSetParam(RID material, string name, RID texture) => RequireService().MaterialSetParamTextureCore(material, name, texture);

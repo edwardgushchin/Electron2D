@@ -1377,3 +1377,7 @@ The policy is stored in PackedScene and inherited by Entity, Control and their d
 [Native point and line primitives](../components/canvas-rendering.md#native-point-and-line-primitives) preserve DrawPrimitive attributes and pre-vertex snapping through GPU Points/Lines batches. Compatibility retains its triangle footprints and native subpixel coverage limit. This applies to inherited physical nodes as well as ordinary scene items.
 
 ResolveCanvasGlyph projects the retained item MSDF flag only onto ordinary image commands. Explicit glyph commands and untextured drawing retain their policy; children do not inherit the flag. The flag changes replay without changing authored properties or recording another draw. See [retained distance-field mode](../components/canvas-rendering.md#retained-distance-field-mode).
+
+## Compiled instance defaults
+
+Unset/cleared instance parameters read their compiled authored scalar/vector default, with zero only when metadata is absent. Explicit values survive compatible reload. Prepared parameter names retain their typed value/descriptor for allocation-free set/clear cycles, while cleared values stay out of active stored descriptors. Rendered ordinary/surface/mesh/instance consumers use per-item defaults. See [authored uniform defaults](../components/shader-materials.md#authored-uniform-defaults).

@@ -18,7 +18,8 @@ namespace Electron2D;
 /// supply the same metadata; unannotated unsigned storage retains its numeric type.
 /// A stage uniform block named Instance (type.Instance in imported HLSL) owns at most sixteen scalar/vector
 /// per-item fields. CanvasItem and RenderingServer instance access is independent of shared material values.
-/// Instance arrays, matrices and renderer-owned fields are rejected; supported declaration defaults are zero.
+/// Instance arrays, matrices and renderer-owned fields are rejected. Validated compiled metadata retains authored
+/// numeric defaults for material and instance fields; absent values use numeric zero or matrix identity.
 /// Material uniforms use validated std140 buffers at descriptor
 /// set three and sampled 2D or image-array textures at set two. Named textures default to linear/base-level/clamp sampling, independently
 /// of canvas properties; SetTextureSamplerState supplies copied explicit sampling for any reflected image. The paired-stage API adds vertex Frame at set one/binding zero, material blocks at set one/bindings one through three and sampled textures at set zero. Shared names use one typed parameter namespace across stages. Nested uniform structs remain pending. Blit fragments use the explicit TextureBlit domain and have their own source/output interface.
@@ -102,7 +103,8 @@ public sealed partial class Shader : Resource
 
     /// <summary>Returns typed material property descriptors for this program's reflected uniforms.</summary>
     /// <returns>An immutable list with case-sensitive member names. Float4 values use Vector4 descriptors;
-    /// material access also accepts Color and Rect2. Float2x2 uses Transform with an identity revert value. Float3 uses Vector3; material access also accepts Color with alpha one on read. Signed/unsigned integer vectors
+    /// material access also accepts Color and Rect2. Float2x2 uses Transform. Revert values use each compiled default,
+    /// with implicit numeric zero/matrix identity when absent. Float3 uses Vector3; material access also accepts Color with alpha one on read. Signed/unsigned integer vectors
     /// use Vector2i, Vector3i or Vector4i with preserved component bits. Logical bool uses bool; boolean vectors use int component masks. Fixed numeric and sampled descriptor arrays use array-valued descriptors; scalar sampled images use Texture or TextureLayered, matched by image role and float/signed/unsigned scalar type.
     /// Renderer-owned command/blit sources and render TIME are omitted.</returns>
     /// <remarks>Descriptors access ShaderMaterial values through its typed parameter methods. Buffer padding and

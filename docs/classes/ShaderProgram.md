@@ -1,6 +1,6 @@
 # ShaderProgram
 
-Last updated: 2026-10-19
+Last updated: 2026-10-21
 
 - Declaration: `internal sealed class ShaderProgram`
 - Source: [ShaderProgram.cs](../../src/Servers/Rendering/ShaderProgram.cs)
@@ -117,3 +117,7 @@ Code retains the immutable original payload; NativeCode retains the derived scal
 ## Particle integration
 
 ParticleStorageBuffers records the validated native writable descriptor count, one for state or two with the optional bounded subemission queue; retained simulation binds exactly that count. See [GPU particles](../components/gpu-particles.md).
+
+## Authored uniform defaults
+
+Each validated ShaderUniform carries its own compiled defaults before descriptors are constructed. Paired stages require equal explicit defaults for shared names; a default authored in either stage supplies the canonical value when the other is absent. Physical copies translate each matrix storage order. Renderer Frame defaults reject. Descriptors retain the immutable version and copy array revert values; explicit-storage predicates omit unset numeric values from material archives. See [authored uniform defaults](../components/shader-materials.md#authored-uniform-defaults).
