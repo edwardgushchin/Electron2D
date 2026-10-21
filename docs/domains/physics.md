@@ -1,5 +1,9 @@
 # Physics domain
 
+[Passive joint-chain checks](../components/physics-joint-policies.md#retained-hard-row-guesses)
+expose energy feedback hidden by momentum-only checks. CPU hard-row cache damping
+preserves the complete solve; declaration coverage and full-goal gates remain open.
+
 [Observed dense contact capacity](../components/physics-sleep.md#observed-dense-contact-capacity)
 lets CPU active/dormant graph storage grow beyond its initial body-based budget.
 Public compound sleep/wake and checkpoint checks retain every contact identity and

@@ -2,7 +2,7 @@
 
 [Networked crossed capsules and CPU wake preparation](../components/physics-network-example.md#crossed-capsule-correction-and-cpu-wake-preparation-2026-10-20) extend authoritative correction with complete angular/linear contact state and prepare joint storage before later replayed wake.
 
-Last updated: 2026-10-19
+Last updated: 2026-10-21
 
 ## Typed parameter publication
 
@@ -109,3 +109,11 @@ hardware, broader geometry/graphs and network acceptance remain open.
 
 
 [Closed coupled graph](../components/physics-joints.md#closed-coupled-graph-2026-10-14) verifies all three joint families together, scene/raw ownership, momentum/stability, private replay and CPU-authoritative portable correction on CPU/GPU with zero warmed managed allocation. Larger/contact-rich/native/foreign/network/performance acceptance remains open; declaration states are unchanged.
+
+
+[Passive long-chain checks](../components/physics-joint-policies.md#retained-hard-row-guesses)
+verify complete energy, momentum and anchor response after a real impulse on
+public CPU/GPU worlds. CPU preparation damps retained hard-row impulse guesses
+before the full solve to remove the observed feedback; requested parameters,
+constraint count and physical force budgets retain their existing roles. Bounded
+allocation and numerical checks do not establish general stability or performance.

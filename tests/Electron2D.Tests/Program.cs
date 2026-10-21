@@ -917,6 +917,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILTER_CONTRACT") is { }
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_ONE_WAY") == "1") { GPUPhysicsOneWayTests.Run(); OneWayCollisionTests.Run(PhysicsServer.Backend.GPU); CollisionPolygonTests.Run(PhysicsServer.Backend.GPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_EXCEPTIONS") == "1") { GPUPhysicsExceptionStoreTests.Run(); PhysicsCollisionExceptionTests.Run(PhysicsServer.Backend.GPU); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JOINT_ENERGY") is { } jointEnergy) { PhysicsJointEnergyTests.Run(jointEnergy == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DENSE_CAPACITY") is { } denseCapacity) { PhysicsDenseContactCapacityTests.Run(denseCapacity == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DORMANT_CAPACITY") is { } dormant) { PhysicsDormantCapacityTests.Run(dormant == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_JOINTS") == "1") { GPUPhysicsJointStoreTests.Run(); return; }

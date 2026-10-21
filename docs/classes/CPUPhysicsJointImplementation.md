@@ -1,6 +1,6 @@
 # CPUPhysicsJointImplementation
 
-Last updated: 2026-10-14
+Last updated: 2026-10-21
 
 **Declaration:** `internal sealed partial class CPUPhysicsJointImplementation : PhysicsJointImplementation` · **Source:** [CPUPhysicsJointImplementation.cs](../../src/Servers/Physics/CPUPhysicsJointImplementation.cs) · **Component:** [Physics joints](../components/physics-joints.md#runtime-flow-and-invariants)
 
@@ -30,3 +30,10 @@ scene units; the shared public consumer now verifies the rotated plane at tangen
 distance 6,000 within .005 units. Numerical integration is unchanged. See
 [boundary verification](../components/physics-registered-adapter.md#registered-boundary-numerics)
 for the zero-allocation, lifecycle, impulse and remaining acceptance limits.
+
+
+Native preparation halves retained engine-policy pin anchor/angular-stop and
+wheel transverse/endpoint impulse guesses before the complete solve. Requested
+bias, softness, limits, motor/spring caches and force budgets retain their existing
+roles. Raw native policy is unchanged. See [passive-chain verification](../components/physics-joint-policies.md#retained-hard-row-guesses)
+for the energy-feedback defect, public checks and remaining limits.

@@ -26,6 +26,10 @@ PhysicalBone borrows its first authored direct Joint child and optionally config
 
 [Joint](../classes/Joint.md) is the spatial base that stores two body paths, resolves them against one SceneTree world, and owns a backend constraint lifetime. [PinJoint](../classes/PinJoint.md) makes a revolute connection with collision suppression, angular limits and a finite-torque motor. [GrooveJoint](../classes/GrooveJoint.md) keeps a second-body anchor inside a finite guide on the first body while allowing free rotation. [DampedSpringJoint](../classes/DampedSpringJoint.md) supplies an elastic force and axial damping between sampled anchors. All inherit Entity's transform and Node's scene lifecycle; none replaces a PhysicsBody or owns shape resources.
 
+[Retained hard-row guesses](physics-joint-policies.md#retained-hard-row-guesses)
+now reduce CPU warm-start feedback in passive long chains. Public energy, momentum,
+anchor and managed-allocation checks supplement the existing joint-family tests.
+
 ## Runtime flow and invariants
 
 The selected PhysicsWorldBackend now creates a fresh PhysicsJointImplementation for each constraint attachment. PhysicsJointBackend retains only that current implementation; RID, authored values, local frames, membership and pair-exception accounting stay in PhysicsJointRuntime. CPUPhysicsJointImplementation owns native endpoint/joint IDs, exact compiled local frames and transient spring evaluation. GPUPhysicsJointImplementation owns its resident handle and retained definition, using the device solver for spring/constraint execution. Generic live setters, solver policy, portable frames and release all dispatch through the selected attachment. Current-body local-frame sampling also dispatches through the selected collider implementation; detached sampling preserves the existing CPU numeric convention. CPUPhysicsWorldBackend owns its lazy shape-free world anchor and prepares solver/contact-motion capacity when its body slot is added; GPU pins retain their virtual world endpoint with no CPU body. [Capacity boundaries](physics-retained-memory.md#world-anchor-capacity) cover first attachment after a full collider capacity.

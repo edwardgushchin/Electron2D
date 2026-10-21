@@ -192,14 +192,16 @@ strict 0/0 bytes. Record object supply remains four per budget unit; no numerica
 iterations or tolerances change.
 
 An earlier fixture retained warm-started joints while teleporting all bodies to
-reset a preceding impulse. The old and new runtimes produce exactly the same
+reset a preceding impulse. At that dormant-storage checkpoint, both runtimes produced the same
 failed group-65 observation: body 0 position .04293163, velocity -3.0948648 and no
-sleep after the tested window. That retained-impulse convergence scenario remains
-outside this capacity acceptance; its failed baseline behavioral control is
+sleep after the tested window. That convergence scenario was not accepted as a capacity regression or
+a convergence proof at that checkpoint; its failed baseline behavioral control is
 preserved. The control disables allocation assertions only in an ignored probe
-copy, and is not zero-allocation or functional conformance acceptance. The final
-fixture retains its original step count, pose/momentum bounds and allocation
-assertions.
+copy, and is not zero-allocation or functional conformance acceptance.
+[The hard-row feedback follow-up](physics-joint-policies.md#retained-hard-row-guesses)
+now restores the retained-joint partition scenario in the final fixture with its
+original step count, pose/momentum bounds and zero-allocation assertions. The
+historical failed control remains retained.
 
 Receipts, source proofs, exact allocation stacks and failed controls are under
 `bin/physics-dormant/2026-10-21/`. [Observed dense graph preparation](#observed-dense-contact-capacity)

@@ -66,9 +66,6 @@ internal static class PhysicsDormantCapacityTests
         }
         internal void Partition(int group)
         {
-            // New topology starts at rest without retained impulses from the preceding wake control.
-            for (var i = 0; i < _joints.Length; i++)
-                if (_joints[i].IsValid()) { PhysicsServer.FreeRID(_joints[i]); _joints[i] = default; }
             for (var i = 0; i < _bodies.Length; i++)
             {
                 PhysicsServer.BodySetCanSleep(_bodies[i], false); PhysicsServer.BodySetSleeping(_bodies[i], false);
@@ -76,11 +73,17 @@ internal static class PhysicsDormantCapacityTests
                 PhysicsServer.BodySetLinearVelocity(_bodies[i], Vector2.Zero); PhysicsServer.BodySetAngularVelocity(_bodies[i], 0);
             }
             for (var i = 1; i < _bodies.Length; i++)
-                if (i % group != 0)
+            {
+                if (i % group == 0)
+                {
+                    if (_joints[i - 1].IsValid()) { PhysicsServer.FreeRID(_joints[i - 1]); _joints[i - 1] = default; }
+                }
+                else if (!_joints[i - 1].IsValid())
                 {
                     var joint = _joints[i - 1] = PhysicsServer.JointCreate();
                     PhysicsServer.JointMakePin(joint, new(i * 4 - 2, 0), _bodies[i - 1], _bodies[i]);
                 }
+            }
             for (var i = 0; i < 128; i++) PhysicsServer.SpaceStep(_space, 1d / 60);
         }
         internal (long Owner, long All) Sleep(int frames = 16)

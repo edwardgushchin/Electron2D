@@ -259,6 +259,14 @@ namespace Box2D.NET
             float km = iA + iB;
             joint.motorMass = km > 0.0f ? 1.0f / km : 0.0f;
 
+            // Dampen hard-row guesses to prevent warm-start feedback through long chains.
+            if (@base.correctionBias >= 0.0f)
+            {
+                joint.perpImpulse *= 0.5f;
+                joint.lowerImpulse *= 0.5f;
+                joint.upperImpulse *= 0.5f;
+            }
+
             if (context.enableWarmStarting == false)
             {
                 joint.perpImpulse = 0.0f;

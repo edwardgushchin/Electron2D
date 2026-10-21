@@ -261,6 +261,14 @@ namespace Box2D.NET
 
             joint.springSoftness = b2MakeSoft(joint.hertz, joint.dampingRatio, context.h);
 
+            // Dampen hard-row guesses to prevent warm-start feedback through long chains.
+            if (@base.correctionBias >= 0.0f)
+            {
+                joint.linearImpulse = b2MulSV(0.5f, joint.linearImpulse);
+                joint.lowerImpulse *= 0.5f;
+                joint.upperImpulse *= 0.5f;
+            }
+
             if (context.enableWarmStarting == false)
             {
                 joint.linearImpulse = b2Vec2_zero;

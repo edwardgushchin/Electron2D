@@ -1,6 +1,6 @@
 # Joint solver policies
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 Collision-policy publication now retains the latest requested flag and complete
 common pair contribution through selected errors. Equal setters and world
@@ -339,3 +339,58 @@ recovered exact RED source inputs, payload hashes and validation are under
 `bin/physics-joint-impact-budget/2026-10-20/`. Functional elapsed times overlap
 compilation/quality work and are not performance measurements. The API census
 remains 1304/1369 Implemented (95.25%), 65 open, 92 Excluded.
+
+
+## Retained hard-row guesses
+
+The CPU native preparation halves retained pin anchor/angular-stop and groove
+transverse/endpoint impulse guesses once per native interval for engine-owned
+joint policies. The complete subsequent solve still uses the requested bias,
+compliance, force/correction caps and iteration count. Motor and angular-spring
+guesses keep their existing behavior; raw native joints without an engine policy
+keep the original preparation. The independent resident GPU solver is unchanged.
+This reduces feedback from approximate cached hard-row reactions in long chains;
+it adds no authored damping, compliance, public setting or topology limit.
+
+The original public 65-body pin chain retained momentum after a unit axial impulse
+but its kinetic energy grew from a supplied 0.5 to a peak 318.221957 over the first
+128 frames. A 129-body chain grew still further. These values are
+kg*scene-unit²/s², not SI joules (divide by 10,000 for SI at the current scale).
+The earlier momentum-only assertion could not detect this defect. Clearing old
+pin impulse guesses after teleports removed the prior retained-partition failure,
+but an ordinary impulse without teleporting reproduced the wider feedback.
+An ignored 0.75 carry control still grew energy; 0.5 and zero carry controls
+remained bounded over the diagnostic window. These controls are causal probes,
+not general stability or performance proofs.
+
+`PhysicsJointEnergyTests`, shared with the public-only consumer as
+`--joint-energy`, tests pin and groove chains with 65/129/257 bodies and a
+129-body rotated pin chain with alternating 1/8 kg masses. After 128 active warm
+frames, a unit impulse on the first 1 kg body is followed for 512 complete steps.
+Every step checks kinetic energy including authored angular inertia, complete
+linear momentum and zero owner/all-thread managed allocation. The passive energy
+bound is 0.5051 scene energy units: 1% above the supplied 0.5 plus 0.0001 for float
+anchor noise. Momentum error is below 0.002 kg*scene-unit/s; final joined anchors
+stay within 0.05 scene units. Bodies remain active and retain every constraint;
+there is no sleeping or population reduction in this measurement.
+
+The dormant-capacity fixture again preserves existing joints while changing
+partitions and resetting body poses/velocities. Its former group-65 case retains
+the original 128-frame active warmup, 16-frame natural-sleep window, pose/momentum
+bounds and zero-byte assertions. Broader coupled/contact/CCD/network, native
+allocation, foreign-platform and hardware performance gates remain separate.
+All eight CPU/GPU owner/separate JIT/strict NativeAOT energy profiles pass with
+strict 0/0 managed bytes across 28,672 measured response frames. Eight retained
+partition/sleep/checkpoint profiles and ten adjacent root/family/checkpoint/coupled
+profiles also pass (26 successful profiles). The diagnostic stage profile remains
+separate from the independent public GPU world. CPU processes disable GPU discovery;
+GPU mappings confirm NVIDIA without a software driver. PDB proofs match 2436
+runtime, 930 root-test and 265 consumer authored sources, with matched AOT inputs.
+
+With the identical final public consumer DLL/PDB, the former CPU runtime fails
+the 65-body energy bound on frame 47 at 0.5290228178546386 scene energy units on
+both owner/separate lanes, and still fails the retained group-65 sleep scenario.
+Those three expected RED receipts are preserved. No public declaration state is
+promoted by these numerical checks; the 64-byte full-suite allocation and massive
+GPU Xid/device-loss gates remain open.
+Receipts and frozen payloads are under `bin/physics-joint-recovery/2026-10-21/`.
