@@ -949,7 +949,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeDerivativeFunc](classes/VisualShaderNodeDerivativeFunc.md) | VisualShaderNode | Blocked | 19 |
 | [VisualShaderNodeDeterminant](classes/VisualShaderNodeDeterminant.md) | VisualShaderNode | Excluded | 0 |
 | [VisualShaderNodeDistanceFade](classes/VisualShaderNodeDistanceFade.md) | VisualShaderNode | Unimplemented | 0 |
-| [VisualShaderNodeDotProduct](classes/VisualShaderNodeDotProduct.md) | VisualShaderNode | Unimplemented | 0 |
+| [VisualShaderNodeDotProduct](classes/VisualShaderNodeDotProduct.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeExpression](classes/VisualShaderNodeExpression.md) | VisualShaderNodeGroupBase | Blocked | 1 |
 | [VisualShaderNodeFaceForward](classes/VisualShaderNodeFaceForward.md) | VisualShaderNodeVectorBase | Unimplemented | 0 |
 | [VisualShaderNodeFloatConstant](classes/VisualShaderNodeFloatConstant.md) | VisualShaderNodeConstant | Implemented | 1 |
@@ -1032,13 +1032,13 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeVec4Constant](classes/VisualShaderNodeVec4Constant.md) | VisualShaderNodeConstant | Implemented | 1 |
 | [VisualShaderNodeVec4Parameter](classes/VisualShaderNodeVec4Parameter.md) | VisualShaderNodeParameter | Blocked | 2 |
 | [VisualShaderNodeVectorBase](classes/VisualShaderNodeVectorBase.md) | VisualShaderNode | Implemented | 6 |
-| [VisualShaderNodeVectorCompose](classes/VisualShaderNodeVectorCompose.md) | VisualShaderNodeVectorBase | Unimplemented | 0 |
-| [VisualShaderNodeVectorDecompose](classes/VisualShaderNodeVectorDecompose.md) | VisualShaderNodeVectorBase | Unimplemented | 0 |
-| [VisualShaderNodeVectorDistance](classes/VisualShaderNodeVectorDistance.md) | VisualShaderNodeVectorBase | Unimplemented | 0 |
+| [VisualShaderNodeVectorCompose](classes/VisualShaderNodeVectorCompose.md) | VisualShaderNodeVectorBase | Implemented | 0 |
+| [VisualShaderNodeVectorDecompose](classes/VisualShaderNodeVectorDecompose.md) | VisualShaderNodeVectorBase | Implemented | 0 |
+| [VisualShaderNodeVectorDistance](classes/VisualShaderNodeVectorDistance.md) | VisualShaderNodeVectorBase | Implemented | 0 |
 | [VisualShaderNodeVectorFunc](classes/VisualShaderNodeVectorFunc.md) | VisualShaderNodeVectorBase | Implemented | 36 |
-| [VisualShaderNodeVectorLen](classes/VisualShaderNodeVectorLen.md) | VisualShaderNodeVectorBase | Unimplemented | 0 |
+| [VisualShaderNodeVectorLen](classes/VisualShaderNodeVectorLen.md) | VisualShaderNodeVectorBase | Implemented | 0 |
 | [VisualShaderNodeVectorOp](classes/VisualShaderNodeVectorOp.md) | VisualShaderNodeVectorBase | Implemented | 15 |
-| [VisualShaderNodeVectorRefract](classes/VisualShaderNodeVectorRefract.md) | VisualShaderNodeVectorBase | Unimplemented | 0 |
+| [VisualShaderNodeVectorRefract](classes/VisualShaderNodeVectorRefract.md) | VisualShaderNodeVectorBase | Implemented | 0 |
 | [VisualShaderNodeWorldPositionFromDepth](classes/VisualShaderNodeWorldPositionFromDepth.md) | VisualShaderNode | Excluded | 0 |
 | [VoxelGI](classes/VoxelGI.md) | VisualInstance3D | Excluded | 12 |
 | [VoxelGIData](classes/VoxelGIData.md) | Resource | Excluded | 14 |

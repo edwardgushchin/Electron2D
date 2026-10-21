@@ -12,7 +12,8 @@ source compiler.
 
 The current definition family is VisualShaderNode, VisualShaderNodeConstant,
 Float/Int/UInt/Boolean/Vec2/Vec3/Vec4/Color constant nodes, FloatOp, VectorBase,
-VectorOp, FloatFunc, VectorFunc, Input and Output. VisualShaderConnection copies one directed edge.
+VectorOp, FloatFunc, VectorFunc, VectorCompose/VectorDecompose, DotProduct,
+VectorDistance, VectorLen, VectorRefract, Input and Output. VisualShaderConnection copies one directed edge.
 VisualShaderPortDefault and its generic entry expose heterogeneous numeric
 input defaults without an untyped public value accessor. Three/four-component
 vectors are numeric shader data, not spatial scene types.
@@ -163,6 +164,50 @@ Add this definition to a graph, connect its output and use the same source-save,
 offline import and compiled material path shown above. Duplication and fresh
 archives retain Function, OpType, exact defaults and explicit default absence.
 
+## Vector dataflow and geometry
+
+VectorCompose assembles scalar inputs in X/Y/Z/W order at the selected OpType.
+VectorDecompose exposes that same component order as separate scalar outputs.
+Connections can fan out from several outputs of the same node into several
+inputs of one consumer; the shared compiler orders the complete producer before
+its consumers. Width changes retain stored edges. Import explicitly rejects an
+edge to a removed output until the source graph is repaired.
+
+A composition definition has four typed scalar default slots even while only
+two or three components are connected. The fourth default is initially absent;
+the initial X/Y/Z defaults are zero. Get/set/default-table/copy/archive operations
+retain dormant component values. Narrowing does not erase Z/W. Widening recreates
+missing active defaults as zero while keeping existing reserved values. Clearing
+the table removes dormant values too. Graph connection validation still uses only
+the selected active port count. This does not create arbitrary unbounded ports.
+
+VectorLen returns the selected vector's length; VectorDistance returns distance
+between its two vectors. DotProduct has the fixed three-component numeric input
+contract and scalar output, independently of the width-selected family. Ordinary
+numeric connection conversion can supply planar vectors with a zero third
+component. All operations consume actual selected components, including W.
+
+VectorRefract consumes incident and normal vectors plus scalar eta at input two.
+Width changes convert the vector inputs and leave eta's scalar value and explicit
+absence intact. The native refract expression returns zero under total internal
+reflection; zero/negative ratios retain their numeric shader behavior. Incident
+and normal normalization remain caller responsibilities. Authoring rejects
+nonfinite numeric inputs without fabricating runtime arithmetic results.
+
+```csharp
+using var distance = new VisualShaderNodeVectorDistance
+{
+    OpType = VisualShaderNodeVectorBase.OpTypeEnum.Vector2
+};
+distance.SetInputPortDefaultValue(1, new Vector2(.5f, .5f));
+// Connect a UV Input definition to input zero for a radial-distance material.
+```
+
+Use the existing save/import/load path. Composition/decomposition also permits
+routing an authored W value to fragment alpha or another scalar operation;
+geometry expressions execute in either canvas stage. The public fixtures include
+UV-driven radial distance, separate alpha blending and a vertex UV transform.
+
 ## Canvas boundary
 
 Vertex inputs follow the existing supplied framebuffer-pixel canvas ABI.
@@ -191,10 +236,12 @@ Sky/volumetric scene domains and deprecated inert graph offset are excluded.
 The public `tests/VisualShader.Consumer` covers ownership, aliases, factory
 replacement, invalid requests, snapshots, default presence/conversion, change
 semantics, shallow/deep/copy operations, and fresh resource archives, including
-compressed big-endian data. Two hundred twenty-seven imported programs exercise the 57 foundation programs
-and 170 unary-function programs: every scalar/vector function, all vector widths,
+compressed big-endian data. Two hundred sixty-eight imported programs include the 57 foundation programs,
+170 unary-function programs and 41 vector-dataflow programs. Unary coverage includes every scalar/vector function, all vector widths,
 negative/clamped/round-even cases, both canvas stages, and a normalization witness
-for every vec4 function that makes its fourth component observable in RGB. Software Vulkan Wayland/X11 and HDR/MSAA
+for every vec4 function that makes its fourth component observable in RGB. Dataflow
+covers all widths/components, dormant defaults, scalar eta, reflection boundaries,
+fan-out, direct alpha and UV-driven vertex/fragment geometry. Software Vulkan Wayland/X11 and HDR/MSAA
 readback is checked in CLR and strict full-trim NativeAOT. Normalized byte targets
 clamp output; HDR half-float readback retains signed/out-of-unit arithmetic.
 Each native profile measures 64 active and 64 idle complete frames at zero

@@ -14490,6 +14490,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.VisualShaderNodeDotProduct",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeDotProduct",
+    "name": "VisualShaderNodeDotProduct",
+    "signature": "public sealed class Electron2D.VisualShaderNodeDotProduct",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.VisualShaderNodeFloatConstant",
     "kind": "type",
     "declaringType": "Electron2D.VisualShaderNodeFloatConstant",
@@ -14709,6 +14724,51 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.VisualShaderNodeVectorCompose",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeVectorCompose",
+    "name": "VisualShaderNodeVectorCompose",
+    "signature": "public sealed class Electron2D.VisualShaderNodeVectorCompose",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeVectorBase",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeVectorDecompose",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeVectorDecompose",
+    "name": "VisualShaderNodeVectorDecompose",
+    "signature": "public sealed class Electron2D.VisualShaderNodeVectorDecompose",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeVectorBase",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeVectorDistance",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeVectorDistance",
+    "name": "VisualShaderNodeVectorDistance",
+    "signature": "public sealed class Electron2D.VisualShaderNodeVectorDistance",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeVectorBase",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.VisualShaderNodeVectorFunc",
     "kind": "type",
     "declaringType": "Electron2D.VisualShaderNodeVectorFunc",
@@ -14742,6 +14802,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.VisualShaderNodeVectorLen",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeVectorLen",
+    "name": "VisualShaderNodeVectorLen",
+    "signature": "public sealed class Electron2D.VisualShaderNodeVectorLen",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeVectorBase",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.VisualShaderNodeVectorOp",
     "kind": "type",
     "declaringType": "Electron2D.VisualShaderNodeVectorOp",
@@ -14769,6 +14844,21 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeVectorRefract",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeVectorRefract",
+    "name": "VisualShaderNodeVectorRefract",
+    "signature": "public sealed class Electron2D.VisualShaderNodeVectorRefract",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeVectorBase",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -26105,6 +26195,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.VisualShaderNodeDotProduct..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeDotProduct",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeDotProduct()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.VisualShaderNodeFloatConstant..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.VisualShaderNodeFloatConstant",
@@ -26248,6 +26351,45 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.VisualShaderNodeVectorCompose..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeVectorCompose",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeVectorCompose()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeVectorDecompose..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeVectorDecompose",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeVectorDecompose()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeVectorDistance..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeVectorDistance",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeVectorDistance()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.VisualShaderNodeVectorFunc..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.VisualShaderNodeVectorFunc",
@@ -26261,11 +26403,37 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.VisualShaderNodeVectorLen..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeVectorLen",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeVectorLen()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.VisualShaderNodeVectorOp..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.VisualShaderNodeVectorOp",
     "name": ".ctor",
     "signature": "public VisualShaderNodeVectorOp()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeVectorRefract..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeVectorRefract",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeVectorRefract()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -220088,6 +220256,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.VisualShaderNodeDotProduct.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeDotProduct",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.VisualShaderNodeFloatConstant.CreateDuplicateInstance()",
     "kind": "method",
     "declaringType": "Electron2D.VisualShaderNodeFloatConstant",
@@ -220393,6 +220574,45 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.VisualShaderNodeVectorCompose.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeVectorCompose",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeVectorDecompose.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeVectorDecompose",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeVectorDistance.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeVectorDistance",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.VisualShaderNodeVectorFunc.CreateDuplicateInstance()",
     "kind": "method",
     "declaringType": "Electron2D.VisualShaderNodeVectorFunc",
@@ -220419,6 +220639,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.VisualShaderNodeVectorLen.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeVectorLen",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.VisualShaderNodeVectorOp.CreateDuplicateInstance()",
     "kind": "method",
     "declaringType": "Electron2D.VisualShaderNodeVectorOp",
@@ -220442,6 +220675,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeVectorRefract.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeVectorRefract",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
     "value": null
   },
   {

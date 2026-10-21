@@ -21,8 +21,10 @@ public abstract class VisualShaderNodeVectorBase : VisualShaderNode
     protected VisualShaderNodeVectorBase() { }
     /// <summary>Gets or selects the component count, converting existing input defaults.</summary>
     /// <value>Vector3 initially; expanding a default repeats its last previous component.</value>
-    /// <remarks>An unchanged selection emits no event. Changing width recreates removed defaults with zero
-    /// vectors, or (0,0,0,1) for four components. Cross product requires three components.</remarks>
+    /// <remarks>An unchanged selection emits no event. Vector defaults convert or are recreated with zero
+    /// vectors, or (0,0,0,1) for four components; mixed scalar inputs retain their values and absence.
+    /// Composition retains its reserved scalar components and recreates missing active defaults as zero.
+    /// Cross product requires three components.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The component-count selection is undefined.</exception>
     /// <exception cref="NotSupportedException">The selected cross-product width is not three.</exception>
     /// <exception cref="ObjectDisposedException">The operation is disposed.</exception>

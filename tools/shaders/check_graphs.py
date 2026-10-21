@@ -50,6 +50,9 @@ def main():
         assert target.read_bytes() == before and target.stat().st_mtime_ns == stamp
         run("wrong-domain", [str(tool), str(valid), "compute", str(target), "--visual-shader"], success=False)
         assert target.read_bytes() == before and target.stat().st_mtime_ns == stamp
+        output = run("missing-output-port", [str(tool), str(sources / "invalid/flow-missing-output.e2dres"), "canvas", str(target), "--visual-shader"], success=False)
+        assert "Invalid stored visual shader connection" in output
+        assert target.read_bytes() == before and target.stat().st_mtime_ns == stamp
         invalid = project / "truncated.e2dres"
         invalid.write_bytes(valid.read_bytes()[:63])
         run("truncated-import", [str(tool), str(invalid), "canvas", str(target), "--visual-shader"], success=False)

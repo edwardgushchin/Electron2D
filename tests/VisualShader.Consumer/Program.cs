@@ -26,6 +26,7 @@ internal static partial class GraphChecks
     internal static void CPU()
     {
         UnaryCPU();
+        DataflowCPU();
         using var graph = new VisualShader();
         using var scalar = new VisualShaderNodeFloatConstant { Constant = .375f };
         using var operation = new VisualShaderNodeFloatOp();
@@ -115,6 +116,12 @@ internal static partial class GraphChecks
             Check(loaded.GetNodeConnections(VisualShader.Type.Fragment).Length == 2, "Typed connections restore.");
             using var cleared = ResourceLoader.Load<VisualShader>(IOPath.Combine(folder, "cleared.e2dres"), ResourceLoader.CacheMode.IgnoreDeep);
             Check(cleared.GetNode(VisualShader.Type.Fragment, 2).GetDefaultInputValues().Count == 0, "Removed constructor defaults stay removed after restore.");
+            using var hidden = ResourceLoader.Load<VisualShader>(IOPath.Combine(folder, "flow-hidden-compose.e2dres"), ResourceLoader.CacheMode.IgnoreDeep);
+            var compose = (VisualShaderNodeVectorCompose)hidden.GetNode(VisualShader.Type.Fragment, 2);
+            Check(compose.OpType == VisualShaderNodeVectorBase.OpTypeEnum.Vector2 && compose.GetInputPortDefaultValue<float>(3) == .5f, "Fresh archives retain a reserved scalar default while its component is inactive.");
+            compose.OpType = VisualShaderNodeVectorBase.OpTypeEnum.Vector4;
+            Check(compose.GetInputPortDefaultValue<float>(2) == .75f && compose.GetInputPortDefaultValue<float>(3) == .5f, "Restored dormant components survive widening.");
+            Reject<InvalidDataException>(() => ResourceLoader.Load<VisualShader>(IOPath.Combine(folder, "invalid/flow-missing-output.e2dres"), ResourceLoader.CacheMode.IgnoreDeep));
         }
         finally { if (Directory.Exists(folder)) Directory.Delete(folder, true); }
         Console.WriteLine("Visual graph ownership, numeric defaults, invalid requests, snapshots, duplication and archives passed.");
@@ -123,6 +130,7 @@ internal static partial class GraphChecks
     {
         Directory.CreateDirectory(folder);
         AuthorFunctions(folder);
+        AuthorDataflow(folder);
         using (var graph = new VisualShader())
         using (var color = new VisualShaderNodeColorConstant { Constant = new(.25f, .5f, .75f, 1) })
         using (var alpha = new VisualShaderNodeFloatConstant { Constant = 1 })

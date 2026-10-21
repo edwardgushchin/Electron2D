@@ -210,3 +210,13 @@ Operator/OpType/Function properties across source, callers, stored descriptors,
 compiled API/coverage and docs; reject enum sentinels without mutation.
 
 Point-containment allocation investigations use ELECTRON2D_TEST_POINT_CONTAINMENT=cpu|gpu or the public consumer --point-containment [--gpu]. Failure output includes exact owner/all-thread bytes, all case parameters and GC deltas. Optional ELECTRON2D_POINT_ALLOCATION_TRACE loads a separately calibrated Linux CoreCLR begin/end profiler with the matching CORECLR_ENABLE_PROFILING/CORECLR_PROFILER/CORECLR_PROFILER_PATH and fresh E2D_ALLOCATION_TRACE prefix. Do not combine it with E2D_TRACE_STATE. Validate positive/empty controls and native boundaries before interpreting measured object events; retain other-thread control allocations and original failed gates. See [the measurement protocol](components/physics-allocation-measurement.md#in-fixture-point-query-tracing-2026-10-21).
+
+Vector graph dataflow checks must retain Compose's dormant Z/W defaults across
+narrowing, whole-table replacement, copy and fresh archives. Refraction eta is a
+scalar independent of vector width; removing it must remain distinct from an
+explicit zero. Verify every decompose output, parallel producer-to-consumer ports,
+all vector widths, valid normalized refraction inputs, total internal reflection,
+exact representable grazing boundary, direct alpha and UV-driven vertex/fragment
+pixels. Invalidated output edges must fail import without replacing a valid
+artifact. Recheck the earlier arithmetic/unary graph consumers after changes to
+the shared default-slot/width implementation.

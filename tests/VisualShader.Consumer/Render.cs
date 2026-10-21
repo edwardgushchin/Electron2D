@@ -93,7 +93,7 @@ internal static partial class GraphChecks
             base.Dispose(disposing);
         }
     }
-    private static Color Expected(string name) => name.StartsWith("unary-", StringComparison.Ordinal) ? UnaryExpected(name) : name switch
+    private static Color Expected(string name) => name.StartsWith("flow-", StringComparison.Ordinal) ? DataflowExpected(name) : name.StartsWith("unary-", StringComparison.Ordinal) ? UnaryExpected(name) : name switch
     {
         "color" or "vertex-shift" => new(.25f, .5f, .75f, 1),
         "cleared" => Colors.Black,

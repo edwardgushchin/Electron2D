@@ -148,42 +148,42 @@
     {
       "godot": "VisualShaderNode::method:clear_default_input_values()",
       "electron2d": "method:Electron2D.VisualShaderNode.ClearDefaultInputValues()",
-      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
+      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper. Composition defaults include reserved scalar component slots zero through three, preserving inactive values; mixed vector/scalar definitions retain scalar type, value and absence when width changes."
     },
     {
       "godot": "VisualShaderNode::method:get_default_input_port(int:VisualShaderNode.PortType)",
       "electron2d": "method:Electron2D.VisualShaderNode.GetDefaultInputPort(Electron2D.VisualShaderNode.PortType)",
-      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
+      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper. Composition defaults include reserved scalar component slots zero through three, preserving inactive values; mixed vector/scalar definitions retain scalar type, value and absence when width changes."
     },
     {
       "godot": "VisualShaderNode::method:get_default_input_values()",
       "electron2d": "method:Electron2D.VisualShaderNode.GetDefaultInputValues()",
-      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
+      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper. Composition defaults include reserved scalar component slots zero through three, preserving inactive values; mixed vector/scalar definitions retain scalar type, value and absence when width changes."
     },
     {
       "godot": "VisualShaderNode::method:get_input_port_default_value(int:)",
       "electron2d": "method:Electron2D.VisualShaderNode.GetInputPortDefaultValue`1(System.Int32)",
-      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
+      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper. Composition defaults include reserved scalar component slots zero through three, preserving inactive values; mixed vector/scalar definitions retain scalar type, value and absence when width changes."
     },
     {
       "godot": "VisualShaderNode::method:remove_input_port_default_value(int:)",
       "electron2d": "method:Electron2D.VisualShaderNode.RemoveInputPortDefaultValue(System.Int32)",
-      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
+      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper. Composition defaults include reserved scalar component slots zero through three, preserving inactive values; mixed vector/scalar definitions retain scalar type, value and absence when width changes."
     },
     {
       "godot": "VisualShaderNode::method:set_default_input_values(Array:)",
       "electron2d": "method:Electron2D.VisualShaderNode.SetDefaultInputValues(System.Collections.Generic.IReadOnlyList<Electron2D.VisualShaderPortDefault>)",
-      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
+      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper. Composition defaults include reserved scalar component slots zero through three, preserving inactive values; mixed vector/scalar definitions retain scalar type, value and absence when width changes."
     },
     {
       "godot": "VisualShaderNode::method:set_input_port_default_value(int:,Variant:,Variant:)",
       "electron2d": "method:Electron2D.VisualShaderNode.SetInputPortDefaultValue`1(System.Int32,T)",
-      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
+      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper. Composition defaults include reserved scalar component slots zero through three, preserving inactive values; mixed vector/scalar definitions retain scalar type, value and absence when width changes."
     },
     {
       "godot": "VisualShaderNode::method:set_input_port_default_value(int:,Variant:,Variant:)",
       "electron2d": "method:Electron2D.VisualShaderNode.SetInputPortDefaultValue`2(System.Int32,T,TPrevious)",
-      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
+      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper. Composition defaults include reserved scalar component slots zero through three, preserving inactive values; mixed vector/scalar definitions retain scalar type, value and absence when width changes."
     },
     {
       "godot": "VisualShaderNodeBooleanConstant::property:constant",
@@ -333,7 +333,7 @@
     {
       "godot": "VisualShaderNodeVectorBase::property:op_type",
       "electron2d": "property:Electron2D.VisualShaderNodeVectorBase.OpType()",
-      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
+      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper. Composition defaults include reserved scalar component slots zero through three, preserving inactive values; mixed vector/scalar definitions retain scalar type, value and absence when width changes."
     },
     {
       "godot": "VisualShaderNodeVectorOp::enum:Operator",
@@ -774,6 +774,36 @@
       "godot": "VisualShaderNodeVectorFunc::property:function",
       "electron2d": "property:Electron2D.VisualShaderNodeVectorFunc.Function()",
       "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "godot": "class:VisualShaderNodeVectorCompose",
+      "electron2d": "T:Electron2D.VisualShaderNodeVectorCompose",
+      "reason": "ADRs 0001/0013/0028: executable numeric vector dataflow uses the existing typed graph, resource archive, offline compiler and retained material. Compose/decompose preserve component order and dormant scalar defaults; fixed-three-component dot and width-selected length/distance/refraction retain their port semantics. Refraction keeps scalar eta distinct across width changes. Actual graph consumers cover all widths, multi-output fan-out, alpha, vertex/fragment paths and valid/error boundaries."
+    },
+    {
+      "godot": "class:VisualShaderNodeVectorDecompose",
+      "electron2d": "T:Electron2D.VisualShaderNodeVectorDecompose",
+      "reason": "ADRs 0001/0013/0028: executable numeric vector dataflow uses the existing typed graph, resource archive, offline compiler and retained material. Compose/decompose preserve component order and dormant scalar defaults; fixed-three-component dot and width-selected length/distance/refraction retain their port semantics. Refraction keeps scalar eta distinct across width changes. Actual graph consumers cover all widths, multi-output fan-out, alpha, vertex/fragment paths and valid/error boundaries."
+    },
+    {
+      "godot": "class:VisualShaderNodeDotProduct",
+      "electron2d": "T:Electron2D.VisualShaderNodeDotProduct",
+      "reason": "ADRs 0001/0013/0028: executable numeric vector dataflow uses the existing typed graph, resource archive, offline compiler and retained material. Compose/decompose preserve component order and dormant scalar defaults; fixed-three-component dot and width-selected length/distance/refraction retain their port semantics. Refraction keeps scalar eta distinct across width changes. Actual graph consumers cover all widths, multi-output fan-out, alpha, vertex/fragment paths and valid/error boundaries."
+    },
+    {
+      "godot": "class:VisualShaderNodeVectorDistance",
+      "electron2d": "T:Electron2D.VisualShaderNodeVectorDistance",
+      "reason": "ADRs 0001/0013/0028: executable numeric vector dataflow uses the existing typed graph, resource archive, offline compiler and retained material. Compose/decompose preserve component order and dormant scalar defaults; fixed-three-component dot and width-selected length/distance/refraction retain their port semantics. Refraction keeps scalar eta distinct across width changes. Actual graph consumers cover all widths, multi-output fan-out, alpha, vertex/fragment paths and valid/error boundaries."
+    },
+    {
+      "godot": "class:VisualShaderNodeVectorLen",
+      "electron2d": "T:Electron2D.VisualShaderNodeVectorLen",
+      "reason": "ADRs 0001/0013/0028: executable numeric vector dataflow uses the existing typed graph, resource archive, offline compiler and retained material. Compose/decompose preserve component order and dormant scalar defaults; fixed-three-component dot and width-selected length/distance/refraction retain their port semantics. Refraction keeps scalar eta distinct across width changes. Actual graph consumers cover all widths, multi-output fan-out, alpha, vertex/fragment paths and valid/error boundaries."
+    },
+    {
+      "godot": "class:VisualShaderNodeVectorRefract",
+      "electron2d": "T:Electron2D.VisualShaderNodeVectorRefract",
+      "reason": "ADRs 0001/0013/0028: executable numeric vector dataflow uses the existing typed graph, resource archive, offline compiler and retained material. Compose/decompose preserve component order and dormant scalar defaults; fixed-three-component dot and width-selected length/distance/refraction retain their port semantics. Refraction keeps scalar eta distinct across width changes. Actual graph consumers cover all widths, multi-output fan-out, alpha, vertex/fragment paths and valid/error boundaries."
     }
   ],
   "statusGroups": [
@@ -1070,6 +1100,18 @@
         "VisualShaderNodeVectorFunc::property:function"
       ],
       "reason": "ADRs 0001/0028/0051: typed unary numeric canvas expressions use the existing graph compiler and retained ShaderMaterial. Every pinned function identity executes, with vector widths two/three/four, finite authored defaults, native arithmetic domain/rounding behavior, portable archives and ordinary resource copy/lifetime. Function/Operator/OpType remain owning properties; distinct nested enum domains use Enum suffixes without aliases."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:VisualShaderNodeVectorCompose",
+        "class:VisualShaderNodeVectorDecompose",
+        "class:VisualShaderNodeDotProduct",
+        "class:VisualShaderNodeVectorDistance",
+        "class:VisualShaderNodeVectorLen",
+        "class:VisualShaderNodeVectorRefract"
+      ],
+      "reason": "ADRs 0001/0013/0028: executable numeric vector dataflow uses the existing typed graph, resource archive, offline compiler and retained material. Compose/decompose preserve component order and dormant scalar defaults; fixed-three-component dot and width-selected length/distance/refraction retain their port semantics. Refraction keeps scalar eta distinct across width changes. Actual graph consumers cover all widths, multi-output fan-out, alpha, vertex/fragment paths and valid/error boundaries."
     }
   ],
   "extras": [
@@ -1368,6 +1410,54 @@
     {
       "electron2d": "method:Electron2D.VisualShaderNodeVectorFunc.GetPropertyDescriptors()",
       "reason": "ADRs 0001/0013/0028: concrete resource construction, typed duplication and stored Function descriptors for the executable unary graph definition; base resource lifetime/default methods retain their existing contracts."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeVectorCompose..ctor()",
+      "reason": "ADRs 0001/0013/0028: concrete graph resource construction and typed duplicate-instance factory; state is copied through existing default/width contracts."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeVectorCompose.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: concrete graph resource construction and typed duplicate-instance factory; state is copied through existing default/width contracts."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeVectorDecompose..ctor()",
+      "reason": "ADRs 0001/0013/0028: concrete graph resource construction and typed duplicate-instance factory; state is copied through existing default/width contracts."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeVectorDecompose.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: concrete graph resource construction and typed duplicate-instance factory; state is copied through existing default/width contracts."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeDotProduct..ctor()",
+      "reason": "ADRs 0001/0013/0028: concrete graph resource construction and typed duplicate-instance factory; state is copied through existing default/width contracts."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeDotProduct.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: concrete graph resource construction and typed duplicate-instance factory; state is copied through existing default/width contracts."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeVectorDistance..ctor()",
+      "reason": "ADRs 0001/0013/0028: concrete graph resource construction and typed duplicate-instance factory; state is copied through existing default/width contracts."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeVectorDistance.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: concrete graph resource construction and typed duplicate-instance factory; state is copied through existing default/width contracts."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeVectorLen..ctor()",
+      "reason": "ADRs 0001/0013/0028: concrete graph resource construction and typed duplicate-instance factory; state is copied through existing default/width contracts."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeVectorLen.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: concrete graph resource construction and typed duplicate-instance factory; state is copied through existing default/width contracts."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeVectorRefract..ctor()",
+      "reason": "ADRs 0001/0013/0028: concrete graph resource construction and typed duplicate-instance factory; state is copied through existing default/width contracts."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeVectorRefract.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: concrete graph resource construction and typed duplicate-instance factory; state is copied through existing default/width contracts."
     }
   ]
 }

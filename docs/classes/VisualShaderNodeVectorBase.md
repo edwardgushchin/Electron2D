@@ -10,7 +10,7 @@ public abstract class Electron2D.VisualShaderNodeVectorBase
 
 Inherits: [VisualShaderNode](VisualShaderNode.md).
 
-Inherited by: [VisualShaderNodeVectorFunc](VisualShaderNodeVectorFunc.md), [VisualShaderNodeVectorOp](VisualShaderNodeVectorOp.md).
+Inherited by: [VisualShaderNodeVectorCompose](VisualShaderNodeVectorCompose.md), [VisualShaderNodeVectorDecompose](VisualShaderNodeVectorDecompose.md), [VisualShaderNodeVectorDistance](VisualShaderNodeVectorDistance.md), [VisualShaderNodeVectorFunc](VisualShaderNodeVectorFunc.md), [VisualShaderNodeVectorLen](VisualShaderNodeVectorLen.md), [VisualShaderNodeVectorOp](VisualShaderNodeVectorOp.md), [VisualShaderNodeVectorRefract](VisualShaderNodeVectorRefract.md).
 
 ## Description
 
@@ -51,7 +51,7 @@ public Electron2D.VisualShaderNodeVectorBase.OpTypeEnum OpType { get; set; }
 
 Gets or selects the component count, converting existing input defaults.
 
-An unchanged selection emits no event. Changing width recreates removed defaults with zero vectors, or (0,0,0,1) for four components. Cross product requires three components.
+An unchanged selection emits no event. Vector defaults convert or are recreated with zero vectors, or (0,0,0,1) for four components; mixed scalar inputs retain their values and absence. Composition retains its reserved scalar components and recreates missing active defaults as zero. Cross product requires three components.
 
 Vector3 initially; expanding a default repeats its last previous component.
 
@@ -65,7 +65,7 @@ Exceptions:
 
 Definitions are cold, single-threaded Resource authoring objects. Graph additions borrow them; ordinary disposal guards apply. Defaults, selectors and width survive duplication and typed archives. Editing requires reimport before rendering changes.
 
-The public VisualShader.Consumer covers typed requests, copy/archives, every scalar/vector function and real software-rendered pixels. See [the component contract](../components/visual-shaders.md) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
+The public VisualShader.Consumer covers typed requests, mixed/dormant defaults, copy/archives, multi-output graphs and real software-rendered pixels. See [the component contract](../components/visual-shaders.md) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
 
 ## Decisions
 
