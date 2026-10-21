@@ -1,6 +1,6 @@
 # Typed resource and scene files
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 ## Live-scene authoring save
 
@@ -189,3 +189,5 @@ Missing linked archives additionally produce OriginalScene and configuration war
 ## Localized resource files
 
 Localized archives retain logical root/subresource paths and original source UID while decoding a selected physical file. Relative external references resolve beside that physical archive. Dependency discovery reports resolved fallback paths; rewrite accepts full paths or stored relative tokens and preserves relative encoding and registered UID priority. Archive and localized-resource checks exercise replacement and metadata rewrite through the real loader. See [localized resources](localized-resources.md).
+
+Numeric shader matrix values use the BCL System.Numerics.Matrix4x4 carrier. Its portable codec writes sixteen explicit row-order float words using the selected archive byte order; nullable and value-array forms use the ordinary markers/counts. Matrix graph defaults/constants validate finiteness at their setter boundary. The general codec retains the same float-bit policy as other primitive codecs. MatrixValueCodecTests verifies exact words, both byte orders, null/empty arrays, nullable values and truncation; public graph archives verify component identity in fresh CLR and NativeAOT consumers.

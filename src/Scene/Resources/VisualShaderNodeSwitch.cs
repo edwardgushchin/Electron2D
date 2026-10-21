@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>Selects between two numeric or Boolean graph inputs using a Boolean condition.</summary>
 /// <remarks>Inputs are condition, true value and false value. Floating selections use native interpolation;
-/// integer and Boolean selections retain exact values. Type changes preserve the condition's presence and value.</remarks>
+/// integer, Boolean and matrix selections retain exact values. Type changes preserve the condition's presence and value.</remarks>
 public sealed class VisualShaderNodeSwitch : VisualShaderNode
 {
     private VisualShaderValueType _type;
@@ -12,6 +12,7 @@ public sealed class VisualShaderNodeSwitch : VisualShaderNode
     /// <summary>Gets or selects the result type, converting both value defaults atomically.</summary>
     /// <value>Float initially. A changed type recreates absent value defaults; the condition is unchanged.</value>
     /// <remarks>Vector expansion repeats the last component. Boolean conversions retain target initial values.
+    /// Matrix layout changes use identity operands; conversions from matrices use the target defaults.
     /// Unchanged selection is quiet; Changed runs after the new type and defaults commit.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The selection is undefined or the count sentinel.</exception>
     /// <exception cref="OverflowException">An operand cannot be represented by the target integer type; state is unchanged.</exception>
@@ -33,6 +34,7 @@ public sealed class VisualShaderNodeSwitch : VisualShaderNode
                 VisualShaderValueType.Vector2 => new Vector2(1, 1),
                 VisualShaderValueType.Vector3 => new Vector3(1, 1, 1),
                 VisualShaderValueType.Vector4 => new Vector4(1, 1, 1, 1),
+                VisualShaderValueType.Matrix => System.Numerics.Matrix4x4.Identity,
                 _ => true
             };
             ChangeDefaultTypes([one, VisualShaderValues.Zero(kind)], 1); _type = value; EmitChanged();

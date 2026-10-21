@@ -1,8 +1,8 @@
 # VisualShaderNode.PortType
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
-Source: [`VisualShaderNode.cs`](../../src/Scene/Resources/VisualShaderNode.cs).
+Source: [VisualShaderNode.cs](../../src/Scene/Resources/VisualShaderNode.cs).
 
 ```csharp
 public enum Electron2D.VisualShaderNode.PortType
@@ -17,6 +17,7 @@ The numeric value role carried by a graph port.
 | Member | Contract |
 | --- | --- |
 | [`public const Electron2D.VisualShaderNode.PortType Boolean = 6`](#member-bc51c1d68f30) | A Boolean scalar. |
+| [`public const Electron2D.VisualShaderNode.PortType Matrix = 7`](#member-f5aa6431158b) | A four-by-four numeric matrix carried by System.Numerics.Matrix4x4. |
 | [`public const Electron2D.VisualShaderNode.PortType Max = 9`](#member-042e6a654b2d) | The nonselectable upper bound of the complete logical port type table. |
 | [`public const Electron2D.VisualShaderNode.PortType Scalar = 0`](#member-bed930ad0a4f) | A single-precision scalar. |
 | [`public const Electron2D.VisualShaderNode.PortType ScalarInt = 1`](#member-a5ab7a2bf8c0) | A signed 32-bit scalar. |
@@ -34,6 +35,14 @@ public const Electron2D.VisualShaderNode.PortType Boolean = 6
 
 A Boolean scalar.
 
+<a id="member-f5aa6431158b"></a>
+### `Matrix`
+
+```csharp
+public const Electron2D.VisualShaderNode.PortType Matrix = 7
+```
+
+A four-by-four numeric matrix carried by System.Numerics.Matrix4x4.
 
 <a id="member-042e6a654b2d"></a>
 ### `Max`
@@ -44,7 +53,6 @@ public const Electron2D.VisualShaderNode.PortType Max = 9
 
 The nonselectable upper bound of the complete logical port type table.
 
-
 <a id="member-bed930ad0a4f"></a>
 ### `Scalar`
 
@@ -53,7 +61,6 @@ public const Electron2D.VisualShaderNode.PortType Scalar = 0
 ```
 
 A single-precision scalar.
-
 
 <a id="member-a5ab7a2bf8c0"></a>
 ### `ScalarInt`
@@ -64,7 +71,6 @@ public const Electron2D.VisualShaderNode.PortType ScalarInt = 1
 
 A signed 32-bit scalar.
 
-
 <a id="member-dc29b158f555"></a>
 ### `ScalarUInt`
 
@@ -73,7 +79,6 @@ public const Electron2D.VisualShaderNode.PortType ScalarUInt = 2
 ```
 
 An unsigned 32-bit scalar.
-
 
 <a id="member-ab6e384ab888"></a>
 ### `Vector2`
@@ -84,7 +89,6 @@ public const Electron2D.VisualShaderNode.PortType Vector2 = 3
 
 Two numeric floating components.
 
-
 <a id="member-93033b68b5b5"></a>
 ### `Vector3`
 
@@ -93,7 +97,6 @@ public const Electron2D.VisualShaderNode.PortType Vector3 = 4
 ```
 
 Three numeric floating components.
-
 
 <a id="member-6926103f2c95"></a>
 ### `Vector4`
@@ -104,14 +107,14 @@ public const Electron2D.VisualShaderNode.PortType Vector4 = 5
 
 Four numeric floating components.
 
-
 ## Lifecycle and verification
 
-This enum or immutable value carrier has ordinary value lifetime and is not disposable. Enum sentinels are not selectable roles; typed default entries validate their numeric value at construction. Authoring and snapshots are allocating cold operations.
+This selector has value lifetime and is not disposable. Max is a nonselectable logical bound; undefined values do not become selectable through numeric casts.
 
-`tests/VisualShader.Consumer` exercises ownership, invalid requests, snapshots, shallow/deep copying, fresh archives and native graph execution. Fifty-seven programs cover constants, scalar/vector arithmetic, width conversion, UVs and authored vertex movement on Linux software Wayland/X11/HDR/MSAA. Prepared active/idle replay is checked separately from cold generation. See [the component contract](../components/visual-shaders.md) for exact coverage and limits.
+The public VisualShader.Consumer covers typed requests, all sixteen matrix components, copy/archive state, row/column layout and real software-rendered pixels. See [the component contract](../components/visual-shaders.md#comparisons-and-conditional-results) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
 
 ## Decisions
 
-- [Typed shader authoring and import](../decisions/rendering.md#adr-0028)
-- [Typed resource lifetime and archives](../decisions/resources.md#adr-0013)
+- [Typed graph import](../decisions/rendering.md#adr-0028)
+- [Enum identities](../decisions/enum-identities.md#adr-0051)
+- [Typed resources](../decisions/resources.md#adr-0013)

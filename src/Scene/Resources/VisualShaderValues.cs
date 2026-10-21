@@ -1,4 +1,5 @@
 using System.Globalization;
+using Matrix4x4 = System.Numerics.Matrix4x4;
 using P = Electron2D.VisualShaderNode.PortType;
 
 namespace Electron2D;
@@ -14,6 +15,7 @@ internal static class VisualShaderValues
         Vector2 => P.Vector2,
         Vector3 => P.Vector3,
         Vector4 or Color => P.Vector4,
+        Matrix4x4 => P.Matrix,
         _ => throw new ArgumentException("Unsupported graph value type.")
     };
     internal static void Validate(object value)
@@ -26,6 +28,7 @@ internal static class VisualShaderValues
             Vector3 v => float.IsFinite(v.X) && float.IsFinite(v.Y) && float.IsFinite(v.Z),
             Vector4 v => float.IsFinite(v.X) && float.IsFinite(v.Y) && float.IsFinite(v.Z) && float.IsFinite(v.W),
             Color c => float.IsFinite(c.R) && float.IsFinite(c.G) && float.IsFinite(c.B) && float.IsFinite(c.A),
+            Matrix4x4 m => MatrixComponents(m).All(float.IsFinite),
             _ => true
         };
         if (!finite) throw new ArgumentException("Graph values must be finite.");
@@ -39,6 +42,7 @@ internal static class VisualShaderValues
         (Vector3 a, Vector3 b) => Mathf.IsEqualApprox(a.X, b.X) && Mathf.IsEqualApprox(a.Y, b.Y) && Mathf.IsEqualApprox(a.Z, b.Z),
         (Vector4 a, Vector4 b) => Mathf.IsEqualApprox(a.X, b.X) && Mathf.IsEqualApprox(a.Y, b.Y) && Mathf.IsEqualApprox(a.Z, b.Z) && Mathf.IsEqualApprox(a.W, b.W),
         (Color a, Color b) => Mathf.IsEqualApprox(a.R, b.R) && Mathf.IsEqualApprox(a.G, b.G) && Mathf.IsEqualApprox(a.B, b.B) && Mathf.IsEqualApprox(a.A, b.A),
+        (Matrix4x4 a, Matrix4x4 b) => MatrixComponents(a).Zip(MatrixComponents(b), (x, y) => Mathf.IsEqualApprox(x, y)).All(v => v),
         _ => left.Equals(right)
     };
     internal static VisualShaderPortDefault Entry(int port, object value) => value switch
@@ -51,6 +55,7 @@ internal static class VisualShaderValues
         Vector3 v => new VisualShaderPortDefault<Vector3>(port, v),
         Vector4 v => new VisualShaderPortDefault<Vector4>(port, v),
         Color v => new VisualShaderPortDefault<Vector4>(port, new(v.R, v.G, v.B, v.A)),
+        Matrix4x4 v => new VisualShaderPortDefault<Matrix4x4>(port, v),
         _ => throw new ArgumentException("Unsupported graph value type.")
     };
     internal static object Zero(P kind) => kind switch
@@ -62,6 +67,7 @@ internal static class VisualShaderValues
         P.Vector2 => Vector2.Zero,
         P.Vector3 => Vector3.Zero,
         P.Vector4 => Vector4.Zero,
+        P.Matrix => Matrix4x4.Identity,
         _ => throw new ArgumentOutOfRangeException(nameof(kind))
     };
     internal static T Cast<T>(object value) where T : unmanaged
@@ -77,6 +83,7 @@ internal static class VisualShaderValues
     {
         if (previous is bool || fallback is bool) return fallback;
         if (previous.GetType() == fallback.GetType()) return previous;
+        if (previous is Matrix4x4 || fallback is Matrix4x4) return fallback;
         if (fallback is int && previous is uint unsigned) return checked((int)unsigned);
         if (fallback is uint && previous is int signed) return checked((uint)signed);
         var v = previous switch
@@ -113,7 +120,9 @@ internal static class VisualShaderValues
     internal static bool HasScalarControls(VisualShaderNumericOpType type) => type is
         VisualShaderNumericOpType.Vector2Scalar or VisualShaderNumericOpType.Vector3Scalar or VisualShaderNumericOpType.Vector4Scalar;
     internal static string Name(P kind) => kind switch
-    { P.Scalar => "float", P.ScalarInt => "int", P.ScalarUInt => "uint", P.Boolean => "bool", P.Vector2 => "vec2", P.Vector3 => "vec3", P.Vector4 => "vec4", _ => throw new ArgumentOutOfRangeException(nameof(kind)) };
+    { P.Scalar => "float", P.ScalarInt => "int", P.ScalarUInt => "uint", P.Boolean => "bool", P.Vector2 => "vec2", P.Vector3 => "vec3", P.Vector4 => "vec4", P.Matrix => "mat4", _ => throw new ArgumentOutOfRangeException(nameof(kind)) };
+    private static float[] MatrixComponents(Matrix4x4 matrix) => Enumerable.Range(0, 16).Select(i => matrix[i / 4, i % 4]).ToArray();
+    private static string MatrixLiteral(Matrix4x4 matrix) => "mat4(" + string.Join(", ", Enumerable.Range(0, 16).Select(i => Float(matrix[i % 4, i / 4]))) + ")";
     private static string Float(float value)
     { var text = value.ToString("R", CultureInfo.InvariantCulture); return text.Contains('.') || text.Contains('E') ? text : text + ".0"; }
     internal static string Literal(object value) => value switch
@@ -127,11 +136,13 @@ internal static class VisualShaderValues
         Vector3 v => $"vec3({Float(v.X)}, {Float(v.Y)}, {Float(v.Z)})",
         Vector4 v => $"vec4({Float(v.X)}, {Float(v.Y)}, {Float(v.Z)}, {Float(v.W)})",
         Color c => $"vec4({Float(c.R)}, {Float(c.G)}, {Float(c.B)}, {Float(c.A)})",
+        Matrix4x4 m => MatrixLiteral(m),
         _ => throw new ArgumentException("Unsupported graph value type.")
     };
     internal static string ConvertExpression(string expression, P from, P to)
     {
         if (from == to) return expression;
+        if (from == P.Matrix || to == P.Matrix) throw new InvalidOperationException("Matrix graph ports require a matrix connection.");
         var vector = from is P.Vector2 or P.Vector3 or P.Vector4;
         var source = "(" + expression + ")";
         if (to is P.Scalar or P.ScalarInt or P.ScalarUInt)

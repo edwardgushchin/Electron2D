@@ -22,6 +22,8 @@ public abstract class VisualShaderNode : Resource
         Vector4 = 5,
         /// <summary>A Boolean scalar.</summary>
         Boolean = 6,
+        /// <summary>A four-by-four numeric matrix carried by System.Numerics.Matrix4x4.</summary>
+        Matrix = 7,
         /// <summary>The nonselectable upper bound of the complete logical port type table.</summary>
         Max = 9,
     }
@@ -46,7 +48,7 @@ public abstract class VisualShaderNode : Resource
     { ThrowIfDisposed(); if (!Enum.IsDefined(type) || type == PortType.Max) throw new ArgumentOutOfRangeException(nameof(type)); return 0; }
 
     /// <summary>Copies a typed default into an input port.</summary>
-    /// <typeparam name="T">The exact numeric input type; Color also represents a four-component port.</typeparam>
+    /// <typeparam name="T">The exact numeric input type; Color also represents a four-component port and System.Numerics.Matrix4x4 represents a matrix.</typeparam>
     /// <param name="port">The input index, including a reserved composition component.</param>
     /// <param name="value">The finite numeric default.</param>
     /// <exception cref="ArgumentException">The value has the wrong type or nonfinite components.</exception>
@@ -178,6 +180,7 @@ public abstract class VisualShaderNode : Resource
                 PortType.Vector2 => DefaultDescriptor<Vector2>(port),
                 PortType.Vector3 => DefaultDescriptor<Vector3>(port),
                 PortType.Vector4 => DefaultDescriptor<Vector4>(port),
+                PortType.Matrix => DefaultDescriptor<System.Numerics.Matrix4x4>(port),
                 _ => throw new InvalidOperationException("Invalid input type.")
             };
         }

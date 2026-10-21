@@ -1559,6 +1559,186 @@
       "godot": "VisualShaderNodeIs::property:function",
       "electron2d": "property:Electron2D.VisualShaderNodeIs.Function()",
       "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
+    },
+    {
+      "godot": "class:VisualShaderNodeTransformConstant",
+      "electron2d": "T:Electron2D.VisualShaderNodeMatrixConstant",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformConstant::property:constant",
+      "electron2d": "property:Electron2D.VisualShaderNodeMatrixConstant.Constant()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeTransformOp",
+      "electron2d": "T:Electron2D.VisualShaderNodeMatrixOp",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformOp::enum:Operator",
+      "electron2d": "T:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformOp::enum_value:Operator.OP_ADD",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.Add()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformOp::enum_value:Operator.OP_A_DIV_B",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.Divide()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformOp::enum_value:Operator.OP_A_MINUS_B",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.Subtract()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformOp::enum_value:Operator.OP_AxB",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.Multiply()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformOp::enum_value:Operator.OP_AxB_COMP",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.MultiplyComponents()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformOp::enum_value:Operator.OP_B_DIV_A",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.DivideReversed()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformOp::enum_value:Operator.OP_B_MINUS_A",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.SubtractReversed()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformOp::enum_value:Operator.OP_BxA",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.MultiplyReversed()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformOp::enum_value:Operator.OP_BxA_COMP",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.MultiplyComponentsReversed()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformOp::enum_value:Operator.OP_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformOp::property:operator",
+      "electron2d": "property:Electron2D.VisualShaderNodeMatrixOp.Operator()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeTransformFunc",
+      "electron2d": "T:Electron2D.VisualShaderNodeMatrixFunc",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformFunc::enum:Function",
+      "electron2d": "T:Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformFunc::enum_value:Function.FUNC_INVERSE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum.Inverse()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformFunc::enum_value:Function.FUNC_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformFunc::enum_value:Function.FUNC_TRANSPOSE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum.Transpose()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformFunc::property:function",
+      "electron2d": "property:Electron2D.VisualShaderNodeMatrixFunc.Function()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeTransformVecMult",
+      "electron2d": "T:Electron2D.VisualShaderNodeMatrixVecMult",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformVecMult::enum:Operator",
+      "electron2d": "T:Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformVecMult::enum_value:Operator.OP_3x3_AxB",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum.MatrixTimesDirection()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformVecMult::enum_value:Operator.OP_3x3_BxA",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum.DirectionTimesMatrix()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformVecMult::enum_value:Operator.OP_AxB",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum.MatrixTimesVector()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformVecMult::enum_value:Operator.OP_BxA",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum.VectorTimesMatrix()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformVecMult::enum_value:Operator.OP_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeTransformVecMult::property:operator",
+      "electron2d": "property:Electron2D.VisualShaderNodeMatrixVecMult.Operator()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeTransformCompose",
+      "electron2d": "T:Electron2D.VisualShaderNodeMatrixCompose",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeTransformDecompose",
+      "electron2d": "T:Electron2D.VisualShaderNodeMatrixDecompose",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeDeterminant",
+      "electron2d": "T:Electron2D.VisualShaderNodeDeterminant",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeOuterProduct",
+      "electron2d": "T:Electron2D.VisualShaderNodeOuterProduct",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNode::enum_value:PortType.PORT_TYPE_TRANSFORM",
+      "electron2d": "enumValue:Electron2D.VisualShaderNode.PortType.Matrix()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_TRANSFORM",
+      "electron2d": "enumValue:Electron2D.VisualShaderValueType.Matrix()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
+    },
+    {
+      "godot": "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_TRANSFORM",
+      "electron2d": "enumValue:Electron2D.VisualShaderValueType.Matrix()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
     }
   ],
   "statusGroups": [
@@ -2032,18 +2212,60 @@
     {
       "state": "Blocked",
       "godot": [
-        "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_TRANSFORM",
-        "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_TRANSFORM",
-        "VisualShaderNode::enum_value:PortType.PORT_TYPE_TRANSFORM"
+        "VisualShaderNode::enum_value:PortType.PORT_TYPE_SAMPLER"
       ],
-      "reason": "Trigger: typed matrix graph values/default snapshots and persistence, matrix connection/source conversions and an executing matrix producer/consumer integration. ADR 0028 admits ordinary numeric matrix data independently of excluded Transform3D scene types. Raw material matrices already execute; their graph operand/default contract is not implemented. Do not expose an inert selector."
+      "reason": "Trigger: typed sampled-image graph operands/defaults/expressions and an executing sampled-image node importer with material/image ownership, over the existing texture reflection backend under ADR 0028."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:VisualShaderNodeTransformConstant",
+        "VisualShaderNodeTransformConstant::property:constant",
+        "class:VisualShaderNodeTransformOp",
+        "VisualShaderNodeTransformOp::enum:Operator",
+        "VisualShaderNodeTransformOp::enum_value:Operator.OP_ADD",
+        "VisualShaderNodeTransformOp::enum_value:Operator.OP_A_DIV_B",
+        "VisualShaderNodeTransformOp::enum_value:Operator.OP_A_MINUS_B",
+        "VisualShaderNodeTransformOp::enum_value:Operator.OP_AxB",
+        "VisualShaderNodeTransformOp::enum_value:Operator.OP_AxB_COMP",
+        "VisualShaderNodeTransformOp::enum_value:Operator.OP_B_DIV_A",
+        "VisualShaderNodeTransformOp::enum_value:Operator.OP_B_MINUS_A",
+        "VisualShaderNodeTransformOp::enum_value:Operator.OP_BxA",
+        "VisualShaderNodeTransformOp::enum_value:Operator.OP_BxA_COMP",
+        "VisualShaderNodeTransformOp::enum_value:Operator.OP_MAX",
+        "VisualShaderNodeTransformOp::property:operator",
+        "class:VisualShaderNodeTransformFunc",
+        "VisualShaderNodeTransformFunc::enum:Function",
+        "VisualShaderNodeTransformFunc::enum_value:Function.FUNC_INVERSE",
+        "VisualShaderNodeTransformFunc::enum_value:Function.FUNC_MAX",
+        "VisualShaderNodeTransformFunc::enum_value:Function.FUNC_TRANSPOSE",
+        "VisualShaderNodeTransformFunc::property:function",
+        "class:VisualShaderNodeTransformVecMult",
+        "VisualShaderNodeTransformVecMult::enum:Operator",
+        "VisualShaderNodeTransformVecMult::enum_value:Operator.OP_3x3_AxB",
+        "VisualShaderNodeTransformVecMult::enum_value:Operator.OP_3x3_BxA",
+        "VisualShaderNodeTransformVecMult::enum_value:Operator.OP_AxB",
+        "VisualShaderNodeTransformVecMult::enum_value:Operator.OP_BxA",
+        "VisualShaderNodeTransformVecMult::enum_value:Operator.OP_MAX",
+        "VisualShaderNodeTransformVecMult::property:operator",
+        "class:VisualShaderNodeTransformCompose",
+        "class:VisualShaderNodeTransformDecompose",
+        "class:VisualShaderNodeDeterminant",
+        "class:VisualShaderNodeOuterProduct",
+        "VisualShaderNode::enum_value:PortType.PORT_TYPE_TRANSFORM",
+        "VisualShaderNodeCompare::enum_value:ComparisonType.CTYPE_TRANSFORM",
+        "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_TRANSFORM"
+      ],
+      "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
     },
     {
       "state": "Blocked",
       "godot": [
-        "VisualShaderNode::enum_value:PortType.PORT_TYPE_SAMPLER"
+        "class:VisualShaderNodeTransformParameter",
+        "VisualShaderNodeTransformParameter::property:default_value",
+        "VisualShaderNodeTransformParameter::property:default_value_enabled"
       ],
-      "reason": "Trigger: typed sampled-image graph operands/defaults/expressions and an executing sampled-image node importer with material/image ownership, over the existing texture reflection backend under ADR 0028."
+      "reason": "Trigger: typed matrix graph parameter declarations, symbol/scope resolution, qualifier/instance layout and imported default/hint metadata over the existing raw material matrix backend and now-executing Matrix4x4 graph operand contract under ADR 0028. Numeric matrix shader data is applicable independently of excluded 3D scene types."
     }
   ],
   "extras": [
@@ -2554,6 +2776,86 @@
     {
       "electron2d": "method:Electron2D.VisualShaderNodeIs.GetPropertyDescriptors()",
       "reason": "ADRs 0001/0013/0028: explicit compiled graph Resource construction, duplicate factory and typed stored selector projection over the existing default/archive contract."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeMatrixConstant..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeMatrixConstant.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeMatrixConstant.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeMatrixOp..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeMatrixOp.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeMatrixOp.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeMatrixFunc..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeMatrixFunc.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeMatrixFunc.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeMatrixVecMult..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeMatrixVecMult.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeMatrixVecMult.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeMatrixCompose..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeMatrixCompose.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeMatrixDecompose..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeMatrixDecompose.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeDeterminant..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeDeterminant.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeOuterProduct..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeOuterProduct.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric-matrix Resource construction, duplicate factory and stored selector/value descriptor over the existing graph default/archive contract."
     }
   ]
 }

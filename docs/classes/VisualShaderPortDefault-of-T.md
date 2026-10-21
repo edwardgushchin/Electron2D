@@ -1,6 +1,6 @@
 # VisualShaderPortDefault<T>
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 Source: [`VisualShaderPortDefault.cs`](../../src/Scene/Resources/VisualShaderPortDefault.cs).
 
@@ -63,3 +63,5 @@ This enum or immutable value carrier has ordinary value lifetime and is not disp
 
 - [Typed shader authoring and import](../decisions/rendering.md#adr-0028)
 - [Typed resource lifetime and archives](../decisions/resources.md#adr-0013)
+
+Matrix4x4 entries copy all sixteen components by value. Returned struct edits cannot mutate the stored snapshot; graph setters validate finiteness. Matrix fields use the matrix default/codec contract in [numeric matrix graphs](../components/visual-shaders.md#numeric-matrix-data).

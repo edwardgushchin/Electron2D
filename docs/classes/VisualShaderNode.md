@@ -10,7 +10,7 @@ public abstract class Electron2D.VisualShaderNode
 
 Inherits: [Resource](Resource.md).
 
-Inherited by: [VisualShaderNodeClamp](VisualShaderNodeClamp.md), [VisualShaderNodeCompare](VisualShaderNodeCompare.md), [VisualShaderNodeConstant](VisualShaderNodeConstant.md), [VisualShaderNodeDotProduct](VisualShaderNodeDotProduct.md), [VisualShaderNodeFloatFunc](VisualShaderNodeFloatFunc.md), [VisualShaderNodeFloatOp](VisualShaderNodeFloatOp.md), [VisualShaderNodeIf](VisualShaderNodeIf.md), [VisualShaderNodeInput](VisualShaderNodeInput.md), [VisualShaderNodeIntFunc](VisualShaderNodeIntFunc.md), [VisualShaderNodeIntOp](VisualShaderNodeIntOp.md), [VisualShaderNodeIs](VisualShaderNodeIs.md), [VisualShaderNodeMix](VisualShaderNodeMix.md), [VisualShaderNodeMultiplyAdd](VisualShaderNodeMultiplyAdd.md), [VisualShaderNodeOutput](VisualShaderNodeOutput.md), [VisualShaderNodeRemap](VisualShaderNodeRemap.md), [VisualShaderNodeSmoothStep](VisualShaderNodeSmoothStep.md), [VisualShaderNodeStep](VisualShaderNodeStep.md), [VisualShaderNodeSwitch](VisualShaderNodeSwitch.md), [VisualShaderNodeUIntFunc](VisualShaderNodeUIntFunc.md), [VisualShaderNodeUIntOp](VisualShaderNodeUIntOp.md), [VisualShaderNodeVectorBase](VisualShaderNodeVectorBase.md).
+Inherited by: [VisualShaderNodeClamp](VisualShaderNodeClamp.md), [VisualShaderNodeCompare](VisualShaderNodeCompare.md), [VisualShaderNodeConstant](VisualShaderNodeConstant.md), [VisualShaderNodeDeterminant](VisualShaderNodeDeterminant.md), [VisualShaderNodeDotProduct](VisualShaderNodeDotProduct.md), [VisualShaderNodeFloatFunc](VisualShaderNodeFloatFunc.md), [VisualShaderNodeFloatOp](VisualShaderNodeFloatOp.md), [VisualShaderNodeIf](VisualShaderNodeIf.md), [VisualShaderNodeInput](VisualShaderNodeInput.md), [VisualShaderNodeIntFunc](VisualShaderNodeIntFunc.md), [VisualShaderNodeIntOp](VisualShaderNodeIntOp.md), [VisualShaderNodeIs](VisualShaderNodeIs.md), [VisualShaderNodeMatrixCompose](VisualShaderNodeMatrixCompose.md), [VisualShaderNodeMatrixDecompose](VisualShaderNodeMatrixDecompose.md), [VisualShaderNodeMatrixFunc](VisualShaderNodeMatrixFunc.md), [VisualShaderNodeMatrixOp](VisualShaderNodeMatrixOp.md), [VisualShaderNodeMatrixVecMult](VisualShaderNodeMatrixVecMult.md), [VisualShaderNodeMix](VisualShaderNodeMix.md), [VisualShaderNodeMultiplyAdd](VisualShaderNodeMultiplyAdd.md), [VisualShaderNodeOuterProduct](VisualShaderNodeOuterProduct.md), [VisualShaderNodeOutput](VisualShaderNodeOutput.md), [VisualShaderNodeRemap](VisualShaderNodeRemap.md), [VisualShaderNodeSmoothStep](VisualShaderNodeSmoothStep.md), [VisualShaderNodeStep](VisualShaderNodeStep.md), [VisualShaderNodeSwitch](VisualShaderNodeSwitch.md), [VisualShaderNodeUIntFunc](VisualShaderNodeUIntFunc.md), [VisualShaderNodeUIntOp](VisualShaderNodeUIntOp.md), [VisualShaderNodeVectorBase](VisualShaderNodeVectorBase.md).
 
 ## Description
 
@@ -179,7 +179,7 @@ Copies a typed default into an input port.
 
 Type parameters:
 
-- `T`: The exact numeric input type; Color also represents a four-component port.
+- `T`: The exact numeric input type; Color also represents a four-component port and System.Numerics.Matrix4x4 represents a matrix.
 
 Parameters:
 
@@ -222,7 +222,7 @@ Exceptions:
 
 Definitions are cold, single-threaded Resource authoring objects. Graphs borrow them. Selectors, typed defaults and default absence survive copies and archives. Changes require reimport before rendering.
 
-The public VisualShader.Consumer covers typed requests, dormant tolerance, condition presence, transactional operand conversion, copy/archives and real software-rendered pixels. See [the component contract](../components/visual-shaders.md#comparisons-and-conditional-results) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
+The public VisualShader.Consumer covers typed requests, all sixteen matrix components, copy/archive state, row/column layout and real software-rendered pixels. See [the component contract](../components/visual-shaders.md#comparisons-and-conditional-results) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
 
 ## Decisions
 

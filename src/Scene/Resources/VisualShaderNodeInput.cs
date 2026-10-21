@@ -21,7 +21,9 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
         {
             ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(value);
             if (value.Length > 128 || value.Any(char.IsControl)) throw new ArgumentException("Invalid graph input name.", nameof(value));
-            if (value is "canvas_matrix" or "model_matrix" or "screen_matrix" or "texture" or "normal_texture" or "specular_shininess_texture" or
+            if (value is "canvas_matrix" or "model_matrix" or "screen_matrix")
+                throw new NotSupportedException("This matrix graph input requires the renderer's canvas matrix ABI producer.");
+            if (value is "texture" or "normal_texture" or "specular_shininess_texture" or
                 "region_rect" or "specular_shininess" or "light" or "light_color" or "light_direction" or "light_energy" or "light_is_directional")
                 throw new NotSupportedException("This graph input requires its typed matrix, sampled-image or lighting integration.");
             var previous = InputKind; _inputName = value;

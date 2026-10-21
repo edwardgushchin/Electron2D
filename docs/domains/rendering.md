@@ -1,5 +1,7 @@
 [Polygon edge smoothing](../components/meshes.md#polygon-edge-smoothing) now executes shared-boundary and inverted-loop coverage geometry on both canvas backends, including skeletal pose replay.
 
+[Numeric matrix graph data](../components/visual-shaders.md#numeric-matrix-data) executes constants, arithmetic, inverse/transpose, vector products, composition/decomposition, determinant and outer product with typed Matrix4x4 defaults and existing comparison/selection. No 3D scene transform service is introduced.
+
 [Graph comparisons and conditional results](../components/visual-shaders.md#comparisons-and-conditional-results) execute typed comparisons, All/Any reductions, exact integer/Boolean choices, floating interpolation, three-way branches and native floating classification through the ordinary shader import/material path.
 
 [Point/line primitives](../components/canvas-rendering.md#native-point-and-line-primitives) now use native GPU topology and initialized point-size output while preserving compatibility footprints and its explicit subpixel limit.

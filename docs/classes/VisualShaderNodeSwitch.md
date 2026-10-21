@@ -14,7 +14,7 @@ Inherits: [VisualShaderNode](VisualShaderNode.md).
 
 Selects between two numeric or Boolean graph inputs using a Boolean condition.
 
-Inputs are condition, true value and false value. Floating selections use native interpolation; integer and Boolean selections retain exact values. Type changes preserve the condition's presence and value.
+Inputs are condition, true value and false value. Floating selections use native interpolation; integer, Boolean and matrix selections retain exact values. Type changes preserve the condition's presence and value.
 
 ## Member summary
 
@@ -57,7 +57,7 @@ public Electron2D.VisualShaderValueType OpType { get; set; }
 
 Gets or selects the result type, converting both value defaults atomically.
 
-Vector expansion repeats the last component. Boolean conversions retain target initial values. Unchanged selection is quiet; Changed runs after the new type and defaults commit.
+Vector expansion repeats the last component. Boolean conversions retain target initial values. Matrix layout changes use identity operands; conversions from matrices use the target defaults. Unchanged selection is quiet; Changed runs after the new type and defaults commit.
 
 Float initially. A changed type recreates absent value defaults; the condition is unchanged.
 
@@ -71,7 +71,7 @@ Exceptions:
 
 Definitions are cold, single-threaded Resource authoring objects. Graphs borrow them. Selectors, typed defaults and default absence survive copies and archives. Changes require reimport before rendering.
 
-The public VisualShader.Consumer covers typed requests, dormant tolerance, condition presence, transactional operand conversion, copy/archives and real software-rendered pixels. See [the component contract](../components/visual-shaders.md#comparisons-and-conditional-results) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
+The public VisualShader.Consumer covers typed requests, all sixteen matrix components, copy/archive state, row/column layout and real software-rendered pixels. See [the component contract](../components/visual-shaders.md#comparisons-and-conditional-results) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
 
 ## Decisions
 

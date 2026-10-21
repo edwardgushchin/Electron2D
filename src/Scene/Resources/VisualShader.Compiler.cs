@@ -19,6 +19,7 @@ public sealed partial class VisualShader
         foreach (var edge in graph.Connections)
         {
             if (!PortsExist(graph, edge)) throw new InvalidDataException("A graph connection no longer has live matching ports.");
+            if (!PortsCompatible(graph, edge)) throw new InvalidDataException("Matrix graph ports require a matrix connection.");
             incoming[(edge.ToNode, edge.ToPort)] = edge;
         }
         var root = GetNode(stage, 0);

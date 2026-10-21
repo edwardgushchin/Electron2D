@@ -83,6 +83,15 @@ internal static class ResourceFileCodecs
             ResourceFileTypes.Codec<Vector2>().Write(s, v.X); ResourceFileTypes.Codec<Vector2>().Write(s, v.Y); ResourceFileTypes.Codec<Vector2>().Write(s, v.Origin);
         }
 , s => new(ResourceFileTypes.Codec<Vector2>().Read(s), ResourceFileTypes.Codec<Vector2>().Read(s), ResourceFileTypes.Codec<Vector2>().Read(s)));
+        Add<System.Numerics.Matrix4x4>((s, v) =>
+        {
+            for (var row = 0; row < 4; row++) for (var column = 0; column < 4; column++) s.PutFloat(v[row, column]);
+        }, s =>
+        {
+            var value = new System.Numerics.Matrix4x4();
+            for (var row = 0; row < 4; row++) for (var column = 0; column < 4; column++) value[row, column] = s.GetFloat();
+            return value;
+        });
         Add<Dictionary<string, int>>((s, v) =>
         {
             s.Put32(v.Count); foreach (var pair in v.OrderBy(p => p.Key, StringComparer.Ordinal))
@@ -137,6 +146,7 @@ internal static class ResourceFileCodecs
         Nullable<Vector4i>();
         Nullable<Rect2i>();
         Nullable<Transform>();
+        Nullable<System.Numerics.Matrix4x4>();
         Add<GraphConnection>((s, v) => { ResourceArchiveStrings.Write(s, v.FromNode); s.Put32(v.FromPort); ResourceArchiveStrings.Write(s, v.ToNode); s.Put32(v.ToPort); s.PutU8(v.KeepAlive ? (byte)1 : (byte)0); }, s => { var from = ResourceArchiveStrings.Read(s); var fp = s.Get32(); var to = ResourceArchiveStrings.Read(s); var tp = s.Get32(); var alive = s.GetU8(); if (alive > 1 || fp < 0 || tp < 0 || from.Length == 0 || to.Length == 0) throw new InvalidDataException("Invalid graph connection."); return new(from, fp, to, tp, alive == 1); });
         Arrays<GraphConnection>();
         Add<Dictionary<int, string>>((s, v) => { s.Put32(v.Count); foreach (var pair in v.OrderBy(p => p.Key)) { s.Put32(pair.Key); ResourceArchiveStrings.Write(s, pair.Value); } }, s => { var count = s.Get32(); if (count < 0 || count > 1048576) throw new InvalidDataException("Graph type-name count exceeds file budget."); var result = new Dictionary<int, string>(); for (var i = 0; i < count; i++) if (!result.TryAdd(s.Get32(), ResourceArchiveStrings.Read(s))) throw new InvalidDataException("Duplicate graph type identifier."); return result; });
@@ -158,6 +168,7 @@ internal static class ResourceFileCodecs
         Arrays<Vector3i>();
         Arrays<Vector4i>();
         Arrays<Transform>();
+        Arrays<System.Numerics.Matrix4x4>();
     }
     private static void Add<T>(Action<StreamPeerBuffer, T> write, Func<StreamPeerBuffer, T> read) => ResourceFileTypes.RegisterValueCodec(write, read);
     private static void Nullable<T>() where T : struct => Add<T?>((s, v) =>

@@ -18,6 +18,8 @@ public enum VisualShaderValueType
     Vector4 = 5,
     /// <summary>A Boolean scalar.</summary>
     Boolean = 6,
+    /// <summary>A four-by-four numeric matrix.</summary>
+    Matrix = 7,
     /// <summary>The nonselectable upper bound of the logical selection table.</summary>
     Max = 8,
 }

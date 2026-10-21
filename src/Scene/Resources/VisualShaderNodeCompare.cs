@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>Compares two numeric graph inputs and produces a Boolean scalar.</summary>
 /// <remarks>Floating equality uses a strict absolute tolerance. Vector comparisons reduce exact component results
-/// with All or Any. Boolean ordering functions produce false. The tolerance default remains stored while inactive.</remarks>
+/// with All or Any. Boolean and matrix ordering functions produce false. The tolerance default remains stored while inactive.</remarks>
 public sealed class VisualShaderNodeCompare : VisualShaderNode
 {
     /// <summary>The comparison performed on each input component.</summary>
@@ -42,6 +42,7 @@ public sealed class VisualShaderNodeCompare : VisualShaderNode
     /// <summary>Gets or selects the compared value type, converting both operand defaults atomically.</summary>
     /// <value>Float initially. A changed type recreates absent operands and preserves the dormant tolerance.</value>
     /// <remarks>Vector expansion repeats the last component. Boolean conversions use the target's initial default.
+    /// Matrix layout changes use identity operands; conversions from matrices use the target defaults.
     /// Repeated selection is quiet; Changed runs after the new type and defaults commit.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The selection is undefined or the count sentinel.</exception>
     /// <exception cref="OverflowException">An operand cannot be represented by the target integer type; state is unchanged.</exception>
@@ -99,7 +100,7 @@ public sealed class VisualShaderNodeCompare : VisualShaderNode
             var equal = $"(abs({inputs[0]} - {inputs[1]}) < {inputs[2]})";
             return _function == FunctionEnum.Equal ? equal : $"(!{equal})";
         }
-        if (_type == VisualShaderValueType.Boolean && _function > FunctionEnum.NotEqual) return "false";
+        if (_type is VisualShaderValueType.Boolean or VisualShaderValueType.Matrix && _function > FunctionEnum.NotEqual) return "false";
         if (_type is VisualShaderValueType.Vector2 or VisualShaderValueType.Vector3 or VisualShaderValueType.Vector4)
         {
             var function = _function switch { FunctionEnum.Equal => "equal", FunctionEnum.NotEqual => "notEqual", FunctionEnum.GreaterThan => "greaterThan", FunctionEnum.GreaterThanEqual => "greaterThanEqual", FunctionEnum.LessThan => "lessThan", _ => "lessThanEqual" };

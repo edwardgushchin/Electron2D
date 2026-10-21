@@ -232,7 +232,7 @@ def main():
         "T:Electron2D.VisualShaderNodeVectorBase.OpType", "property:Electron2D.VisualShaderNodeFloatOp.Operation()",
         "property:Electron2D.VisualShaderNodeVectorOp.Operation()", "property:Electron2D.VisualShaderNodeVectorBase.OperationType()"})
     assert " | Blocked | " in pages[CLASS_PAGES / "VisualShaderNodeParameter.md"]
-    assert " | Excluded | " in pages[CLASS_PAGES / "VisualShaderNodeTransformOp.md"]
+    assert " | Implemented | " in pages[CLASS_PAGES / "VisualShaderNodeTransformOp.md"]
 
     check_texture_pages(pages, upstream)
     aliases = json.loads(ALIASES.read_text())
@@ -785,12 +785,14 @@ def main():
         assert ' | Partial | ' in row and 'RenderingTextureProxyTests' in row and 'actual methods' in row, row
     for name, count in [("VisualShaderNodeCompare", 26), ("VisualShaderNodeSwitch", 12), ("VisualShaderNodeIf", 1), ("VisualShaderNodeIs", 6)]:
         rows = [line for line in pages[CLASS_PAGES / (name + ".md")].splitlines() if line.startswith("| [`")]
-        blocked_count = 1 if name in ("VisualShaderNodeCompare", "VisualShaderNodeSwitch") else 0
-        assert len(rows) == count and sum(" | Implemented | " in row for row in rows) == count - blocked_count
-        assert sum(" | Blocked | " in row for row in rows) == blocked_count
-        if blocked_count: assert "VisualShaderValueType" in pages[CLASS_PAGES / (name + ".md")]
+        assert len(rows) == count and all(" | Implemented | " in row for row in rows)
+        if name in ("VisualShaderNodeCompare", "VisualShaderNodeSwitch"): assert "VisualShaderValueType" in pages[CLASS_PAGES / (name + ".md")]
+    for name, count in [("TransformConstant", 2), ("TransformOp", 13), ("TransformFunc", 6), ("TransformVecMult", 8), ("TransformCompose", 1), ("TransformDecompose", 1), ("Determinant", 1), ("OuterProduct", 1)]:
+        rows = [row for row in pages[CLASS_PAGES / ("VisualShaderNode" + name + ".md")].splitlines() if row.startswith("| [`")]
+        assert len(rows) == count and all(" | Implemented | " in row for row in rows)
+    assert " | Blocked | " in pages[CLASS_PAGES / "VisualShaderNodeTransformParameter.md"]
     base_rows = pages[CLASS_PAGES / "VisualShaderNode.md"].splitlines()
-    assert " | Blocked | " in next(row for row in base_rows if "PORT_TYPE_TRANSFORM [" in row)
+    assert " | Implemented | " in next(row for row in base_rows if "PORT_TYPE_TRANSFORM [" in row)
     assert " | Blocked | " in next(row for row in base_rows if "PORT_TYPE_SAMPLER [" in row)
     assert not any(t["id"] in ("T:Electron2D.VisualShaderNodeCompare.ComparisonType", "T:Electron2D.VisualShaderNodeSwitch.OpTypeEnum") for t in engine)
     canvas_rows = pages[CLASS_PAGES / "CanvasItem.md"].splitlines()

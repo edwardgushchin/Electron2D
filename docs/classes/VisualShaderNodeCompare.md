@@ -14,7 +14,7 @@ Inherits: [VisualShaderNode](VisualShaderNode.md).
 
 Compares two numeric graph inputs and produces a Boolean scalar.
 
-Floating equality uses a strict absolute tolerance. Vector comparisons reduce exact component results with All or Any. Boolean ordering functions produce false. The tolerance default remains stored while inactive.
+Floating equality uses a strict absolute tolerance. Vector comparisons reduce exact component results with All or Any. Boolean and matrix ordering functions produce false. The tolerance default remains stored while inactive.
 
 ## Member summary
 
@@ -95,7 +95,7 @@ public Electron2D.VisualShaderValueType Type { get; set; }
 
 Gets or selects the compared value type, converting both operand defaults atomically.
 
-Vector expansion repeats the last component. Boolean conversions use the target's initial default. Repeated selection is quiet; Changed runs after the new type and defaults commit.
+Vector expansion repeats the last component. Boolean conversions use the target's initial default. Matrix layout changes use identity operands; conversions from matrices use the target defaults. Repeated selection is quiet; Changed runs after the new type and defaults commit.
 
 Float initially. A changed type recreates absent operands and preserves the dormant tolerance.
 
@@ -109,7 +109,7 @@ Exceptions:
 
 Definitions are cold, single-threaded Resource authoring objects. Graphs borrow them. Selectors, typed defaults and default absence survive copies and archives. Changes require reimport before rendering.
 
-The public VisualShader.Consumer covers typed requests, dormant tolerance, condition presence, transactional operand conversion, copy/archives and real software-rendered pixels. See [the component contract](../components/visual-shaders.md#comparisons-and-conditional-results) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
+The public VisualShader.Consumer covers typed requests, all sixteen matrix components, copy/archive state, row/column layout and real software-rendered pixels. See [the component contract](../components/visual-shaders.md#comparisons-and-conditional-results) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
 
 ## Decisions
 

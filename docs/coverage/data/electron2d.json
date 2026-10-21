@@ -14592,6 +14592,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.VisualShaderNodeDeterminant",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeDeterminant",
+    "name": "VisualShaderNodeDeterminant",
+    "signature": "public sealed class Electron2D.VisualShaderNodeDeterminant",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.VisualShaderNodeDotProduct",
     "kind": "type",
     "declaringType": "Electron2D.VisualShaderNodeDotProduct",
@@ -14814,6 +14829,150 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.VisualShaderNodeMatrixCompose",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixCompose",
+    "name": "VisualShaderNodeMatrixCompose",
+    "signature": "public sealed class Electron2D.VisualShaderNodeMatrixCompose",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeMatrixConstant",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixConstant",
+    "name": "VisualShaderNodeMatrixConstant",
+    "signature": "public sealed class Electron2D.VisualShaderNodeMatrixConstant",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeConstant",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeMatrixDecompose",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixDecompose",
+    "name": "VisualShaderNodeMatrixDecompose",
+    "signature": "public sealed class Electron2D.VisualShaderNodeMatrixDecompose",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeMatrixFunc",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixFunc",
+    "name": "VisualShaderNodeMatrixFunc",
+    "signature": "public sealed class Electron2D.VisualShaderNodeMatrixFunc",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum",
+    "name": "FunctionEnum",
+    "signature": "public enum Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeMatrixOp",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixOp",
+    "name": "VisualShaderNodeMatrixOp",
+    "signature": "public sealed class Electron2D.VisualShaderNodeMatrixOp",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "name": "OperatorEnum",
+    "signature": "public enum Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeMatrixVecMult",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixVecMult",
+    "name": "VisualShaderNodeMatrixVecMult",
+    "signature": "public sealed class Electron2D.VisualShaderNodeMatrixVecMult",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum",
+    "name": "OperatorEnum",
+    "signature": "public enum Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.VisualShaderNodeMix",
     "kind": "type",
     "declaringType": "Electron2D.VisualShaderNodeMix",
@@ -14856,6 +15015,21 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeOuterProduct",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeOuterProduct",
+    "name": "VisualShaderNodeOuterProduct",
+    "signature": "public sealed class Electron2D.VisualShaderNodeOuterProduct",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -26611,6 +26785,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.VisualShaderNodeDeterminant..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeDeterminant",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeDeterminant()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.VisualShaderNodeDotProduct..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.VisualShaderNodeDotProduct",
@@ -26741,6 +26928,84 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.VisualShaderNodeMatrixCompose..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixCompose",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeMatrixCompose()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeMatrixConstant..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixConstant",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeMatrixConstant()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeMatrixDecompose..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixDecompose",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeMatrixDecompose()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeMatrixFunc..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixFunc",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeMatrixFunc()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeMatrixOp..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixOp",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeMatrixOp()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeMatrixVecMult..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixVecMult",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeMatrixVecMult()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.VisualShaderNodeMix..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.VisualShaderNodeMix",
@@ -26759,6 +27024,19 @@
     "declaringType": "Electron2D.VisualShaderNodeMultiplyAdd",
     "name": ".ctor",
     "signature": "public VisualShaderNodeMultiplyAdd()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeOuterProduct..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeOuterProduct",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeOuterProduct()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -56095,6 +56373,19 @@
     "value": "6"
   },
   {
+    "id": "enumValue:Electron2D.VisualShaderNode.PortType.Matrix()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNode.PortType",
+    "name": "Matrix",
+    "signature": "public const Electron2D.VisualShaderNode.PortType Matrix = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNode.PortType",
+    "value": "7"
+  },
+  {
     "id": "enumValue:Electron2D.VisualShaderNode.PortType.Max()",
     "kind": "enumValue",
     "declaringType": "Electron2D.VisualShaderNode.PortType",
@@ -57083,6 +57374,240 @@
     "value": "2"
   },
   {
+    "id": "enumValue:Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum.Inverse()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum",
+    "name": "Inverse",
+    "signature": "public const Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum Inverse = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum",
+    "name": "Max",
+    "signature": "public const Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum Max = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum.Transpose()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum",
+    "name": "Transpose",
+    "signature": "public const Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum Transpose = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.Add()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "name": "Add",
+    "signature": "public const Electron2D.VisualShaderNodeMatrixOp.OperatorEnum Add = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.Divide()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "name": "Divide",
+    "signature": "public const Electron2D.VisualShaderNodeMatrixOp.OperatorEnum Divide = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.DivideReversed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "name": "DivideReversed",
+    "signature": "public const Electron2D.VisualShaderNodeMatrixOp.OperatorEnum DivideReversed = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "name": "Max",
+    "signature": "public const Electron2D.VisualShaderNodeMatrixOp.OperatorEnum Max = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.Multiply()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "name": "Multiply",
+    "signature": "public const Electron2D.VisualShaderNodeMatrixOp.OperatorEnum Multiply = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.MultiplyComponents()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "name": "MultiplyComponents",
+    "signature": "public const Electron2D.VisualShaderNodeMatrixOp.OperatorEnum MultiplyComponents = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.MultiplyComponentsReversed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "name": "MultiplyComponentsReversed",
+    "signature": "public const Electron2D.VisualShaderNodeMatrixOp.OperatorEnum MultiplyComponentsReversed = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.MultiplyReversed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "name": "MultiplyReversed",
+    "signature": "public const Electron2D.VisualShaderNodeMatrixOp.OperatorEnum MultiplyReversed = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.Subtract()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "name": "Subtract",
+    "signature": "public const Electron2D.VisualShaderNodeMatrixOp.OperatorEnum Subtract = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeMatrixOp.OperatorEnum.SubtractReversed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "name": "SubtractReversed",
+    "signature": "public const Electron2D.VisualShaderNodeMatrixOp.OperatorEnum SubtractReversed = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum.DirectionTimesMatrix()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum",
+    "name": "DirectionTimesMatrix",
+    "signature": "public const Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum DirectionTimesMatrix = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum.MatrixTimesDirection()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum",
+    "name": "MatrixTimesDirection",
+    "signature": "public const Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum MatrixTimesDirection = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum.MatrixTimesVector()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum",
+    "name": "MatrixTimesVector",
+    "signature": "public const Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum MatrixTimesVector = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum",
+    "name": "Max",
+    "signature": "public const Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum Max = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum.VectorTimesMatrix()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum",
+    "name": "VectorTimesMatrix",
+    "signature": "public const Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum VectorTimesMatrix = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum",
+    "value": "1"
+  },
+  {
     "id": "enumValue:Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum.Max()",
     "kind": "enumValue",
     "declaringType": "Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum",
@@ -57991,6 +58516,19 @@
     "parameters": [],
     "returnType": "Electron2D.VisualShaderValueType",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderValueType.Matrix()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderValueType",
+    "name": "Matrix",
+    "signature": "public const Electron2D.VisualShaderValueType Matrix = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderValueType",
+    "value": "7"
   },
   {
     "id": "enumValue:Electron2D.VisualShaderValueType.Max()",
@@ -221686,6 +222224,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.VisualShaderNodeDeterminant.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeDeterminant",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.VisualShaderNodeDotProduct.CreateDuplicateInstance()",
     "kind": "method",
     "declaringType": "Electron2D.VisualShaderNodeDotProduct",
@@ -221952,6 +222503,136 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.VisualShaderNodeMatrixCompose.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixCompose",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeMatrixConstant.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixConstant",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeMatrixConstant.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixConstant",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeMatrixDecompose.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixDecompose",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeMatrixFunc.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixFunc",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeMatrixFunc.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixFunc",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeMatrixOp.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixOp",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeMatrixOp.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixOp",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeMatrixVecMult.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixVecMult",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeMatrixVecMult.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixVecMult",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.VisualShaderNodeMix.CreateDuplicateInstance()",
     "kind": "method",
     "declaringType": "Electron2D.VisualShaderNodeMix",
@@ -222001,6 +222682,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeOuterProduct.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeOuterProduct",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
     "value": null
   },
   {
@@ -270719,6 +271413,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.VisualShaderNodeIs.FunctionEnum",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisualShaderNodeMatrixConstant.Constant()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixConstant",
+    "name": "Constant",
+    "signature": "public System.Numerics.Matrix4x4 Constant { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Numerics.Matrix4x4",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisualShaderNodeMatrixFunc.Function()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixFunc",
+    "name": "Function",
+    "signature": "public Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum Function { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixFunc.FunctionEnum",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisualShaderNodeMatrixOp.Operator()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixOp",
+    "name": "Operator",
+    "signature": "public Electron2D.VisualShaderNodeMatrixOp.OperatorEnum Operator { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixOp.OperatorEnum",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisualShaderNodeMatrixVecMult.Operator()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeMatrixVecMult",
+    "name": "Operator",
+    "signature": "public Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum Operator { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum",
     "value": null
   },
   {

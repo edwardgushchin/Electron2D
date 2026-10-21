@@ -52,7 +52,7 @@ internal static partial class GraphChecks
                 Check(changes == (from == to ? 0 : 1) && compare.GetInputPortDefaultValue<float>(2) == .125f && select.GetInputPortDefaultValue<bool>(0) == true, "Type changes preserve dormant tolerance and the unchanged condition.");
                 Check(ConditionDefault(compare, to, 0) is not null && ConditionDefault(select, to, 1) is not null, "Both converted operands retain their selected types.");
                 var before = compare.GetDefaultInputValues();
-                foreach (var invalid in new[] { -1, 7, 8, 99 })
+                foreach (var invalid in new[] { -1, 8, 99 })
                 {
                     Reject<ArgumentOutOfRangeException>(() => compare.Type = (VisualShaderValueType)invalid);
                     Reject<ArgumentOutOfRangeException>(() => select.OpType = (VisualShaderValueType)invalid);

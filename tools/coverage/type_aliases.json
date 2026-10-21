@@ -106,7 +106,14 @@
     "PlaceholderTexture2D": "PlaceholderTexture",
     "DrawableTexture2D": "DrawableTexture",
     "PortableCompressedTexture2D": "PortableCompressedTexture",
-    "GPUParticles2D": "GPUParticles"
+    "GPUParticles2D": "GPUParticles",
+    "VisualShaderNodeTransformConstant": "VisualShaderNodeMatrixConstant",
+    "VisualShaderNodeTransformOp": "VisualShaderNodeMatrixOp",
+    "VisualShaderNodeTransformFunc": "VisualShaderNodeMatrixFunc",
+    "VisualShaderNodeTransformVecMult": "VisualShaderNodeMatrixVecMult",
+    "VisualShaderNodeTransformCompose": "VisualShaderNodeMatrixCompose",
+    "VisualShaderNodeTransformDecompose": "VisualShaderNodeMatrixDecompose",
+    "VisualShaderNodeTransformParameter": "VisualShaderNodeMatrixParameter"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",

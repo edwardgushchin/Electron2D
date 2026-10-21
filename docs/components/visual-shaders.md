@@ -329,20 +329,18 @@ programs without changing their local geometry or UV coordinates.
 ## Comparisons and conditional results
 
 VisualShaderNodeCompare and VisualShaderNodeSwitch share VisualShaderValueType:
-Float, Int, UInt, Vector2, Vector3, Vector4 and Boolean. This selector excludes
+Float, Int, UInt, Vector2, Vector3, Vector4, Boolean and Matrix. This selector excludes
 sampled images; VisualShaderNode.PortType remains the broader port contract with
-a separate pending sampled-image role. Max=8 is a nonselectable logical bound;
-value seven is not exposed until the separate typed matrix graph value/default,
-persistence and conversion contract executes. Raw material matrix arrays already
-execute under ADR 0028; they do not supply graph operands or scene transforms.
+a separate pending sampled-image role. Max=8 is a nonselectable logical bound. Matrix=7 carries copied numeric
+System.Numerics.Matrix4x4 values; its graph operations are described below.
 
 Compare initially tests two zero floats for equality with an explicit 0.00001
 absolute tolerance. Float Equal uses abs(a-b) < tolerance, and NotEqual negates
 that test. The tolerance input is active only for these two functions; its typed
 stored default and absence survive all other function/type selections and fresh
 archives. Integer comparisons retain all bits. Vector equality/ordering tests
-components exactly and reduces them with Condition All or Any. Boolean Equal
-and NotEqual compare directly; its four ordering functions produce false.
+components exactly and reduces them with Condition All or Any. Boolean and matrix Equal/NotEqual compare directly; their four ordering
+functions produce false.
 
 Changing Type converts only the two operands and recreates missing operands.
 A failed integer conversion changes no field or default. A missing Vector4
@@ -355,8 +353,7 @@ Switch inputs are condition, true value and false value. Its initial defaults
 are false, 1.0 and 0.0. Changing OpType converts/recreates only the value inputs;
 the condition retains both its Boolean value and its explicit presence/absence.
 Boolean value conversions use true/false fallbacks. Floating/vector selection
-uses native mix(falseValue, trueValue, float(condition)); integer/Boolean
-selection uses the exact selected operand. Native nonfinite interpolation
+uses native mix(falseValue, trueValue, float(condition)); integer/Boolean/matrix selection uses the exact selected operand. Native nonfinite interpolation
 behavior is retained, so this is not a promise to suppress a nonfinite unused
 floating operand.
 
@@ -406,6 +403,73 @@ Ordinary condition colors allow 0.0021 readback error for half a UNORM8 step; by
 stored edge into a subsequently hidden tolerance port is rejected on load/import,
 and failed import preserves the existing target artifact.
 
+## Numeric matrix data
+
+Matrix ports carry all sixteen finite System.Numerics.Matrix4x4 components as
+copied numeric data. Matrix and nonmatrix ports are incompatible. Ordinary
+CanConnectNodes/ConnectNodes enforce this rule. ConnectNodesForced retains its
+authoring bypass; importing an incompatible edge fails before replacing an
+existing artifact. Missing matrix defaults evaluate as identity, while the
+explicit default table still distinguishes absence from a stored identity.
+Switch/Compare type changes use identity on entry to Matrix and the destination
+fallback on exit; they preserve condition/tolerance values and absence.
+
+The carrier's [row,column] components use explicit row order in portable
+archives and explicit column order in GLSL mat4 literals. No native memory
+layout or scene transform convention is inferred. All sixteen components,
+including the fourth row, survive compressed big-endian archives and copies.
+The general value codec also supports nullable matrices and typed matrix arrays;
+byte-level tests verify both byte orders and truncated payload rejection.
+
+| Definition | Native numeric behavior |
+| --- | --- |
+| MatrixConstant | Copied finite Matrix4x4, initially identity; approximate-equal writes preserve the original value. |
+| MatrixOp | A*B, B*A, both component multiplication orders, addition, both subtraction orders and both component division orders. |
+| MatrixFunc | Inverse or transpose; initially inverse. |
+| MatrixVecMult | Matrix/vector in both orders, with explicit homogeneous 1 or 0, returning xyz. |
+| MatrixCompose | Three numeric columns with w=0 and one final column with w=1; inputs initially zero. |
+| MatrixDecompose | xyz of each of the four matrix columns; matrix input initially identity. |
+| Determinant | The full four-by-four determinant; matrix input initially identity. |
+| OuterProduct | outerProduct(vec4(a,0),vec4(b,0)); inputs initially zero. |
+
+These are VisualShaderNode-prefixed Resource types. Three selector-bearing
+nodes keep their distinct OperatorEnum/FunctionEnum sets and count sentinels.
+Unchanged selections are quiet; invalid selections preserve state, and Changed
+observers run after commit. Matrix operation/function inputs initially contain
+identity; the vector input of MatrixVecMult is zero. Their aliases, selectors,
+values and default absence use the ordinary graph copy/archive contract.
+
+```csharp
+using M4 = System.Numerics.Matrix4x4;
+var values = M4.Identity;
+values.M14 = .25f;
+values.M24 = .5f;
+values.M34 = .75f;
+using var constant = new VisualShaderNodeMatrixConstant { Constant = values };
+using var product = new VisualShaderNodeMatrixVecMult();
+using var graph = new VisualShader();
+graph.AddNode(VisualShader.Type.Fragment, constant, Vector2.Zero, 2);
+graph.AddNode(VisualShader.Type.Fragment, product, Vector2.Zero, 3);
+graph.ConnectNodes(VisualShader.Type.Fragment, 2, 0, 3, 0);
+graph.ConnectNodes(VisualShader.Type.Fragment, 3, 0, VisualShader.NodeIDOutput, 0);
+ResourceSaver.Save(graph, "res://Shaders/matrix-source.e2dres", SaverFlags.BundleResources);
+```
+
+After ordinary source import this produces (.25,.5,.75) in RGB through the
+matrix times (0,0,0,1) data operation. It does not create a scene transform.
+Canvas/model/screen matrix input names still require their renderer ABI producer;
+parameter declarations still require their symbol/scope/qualifier metadata path.
+
+The 585 matrix programs exercise every matrix arithmetic/function/vector-product
+selection, all decomposition outputs, all sixteen comparison components, both
+canvas stages, initial/removed defaults and a UV-controlled matrix choice.
+Independent double-precision matrix multiplication, elimination and determinant
+oracles drive framebuffer expectations. Nonsymmetric matrices and both vector
+orders expose literal row/column layout; determinant/comparison witnesses retain
+the fourth row and final component. A single quad checks both spatial branches.
+Singular inverse and component division by zero are separate import/fresh-load
+boundaries; their undefined native results are not portable pixel assertions.
+
 ## Canvas boundary
 
 Vertex inputs follow the existing supplied framebuffer-pixel canvas ABI.
@@ -434,8 +498,8 @@ Sky/volumetric scene domains and deprecated inert graph offset are excluded.
 The public `tests/VisualShader.Consumer` covers ownership, aliases, factory
 replacement, invalid requests, snapshots, default presence/conversion, change
 semantics, shallow/deep/copy operations, and fresh resource archives, including
-compressed big-endian data. One thousand two hundred forty-five rendered imported programs include the 57 foundation programs,
-170 unary-function programs, 41 vector-dataflow programs, 138 range/mask programs, 258 integer programs and 581 comparison/conditional programs.
+compressed big-endian data. One thousand eight hundred thirty rendered imported programs include the 57 foundation programs,
+170 unary-function programs, 41 vector-dataflow programs, 138 range/mask programs, 258 integer programs and 581 comparison/conditional programs and 585 matrix programs.
 The separate zero-width Remap boundary and ten integer boundary programs verify import and fresh load without portable undefined-domain pixel assertions. Unary coverage includes every scalar/vector function, all vector widths,
 negative/clamped/round-even cases, both canvas stages, and a normalization witness
 for every vec4 function that makes its fourth component observable in RGB. Dataflow

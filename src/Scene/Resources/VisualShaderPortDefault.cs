@@ -16,7 +16,7 @@ public abstract class VisualShaderPortDefault
 }
 
 /// <summary>An immutable numeric input-default entry with a concrete value type.</summary>
-/// <typeparam name="T">Single, Int32, UInt32, Boolean, Vector2, Vector3, Vector4, or Color.</typeparam>
+/// <typeparam name="T">Single, Int32, UInt32, Boolean, Vector2, Vector3, Vector4, Color, or System.Numerics.Matrix4x4.</typeparam>
 public sealed class VisualShaderPortDefault<T> : VisualShaderPortDefault where T : unmanaged
 {
     /// <summary>Copies and validates an input-default value.</summary>
