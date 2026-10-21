@@ -59,7 +59,7 @@ Four numeric components.
 
 ## Lifecycle and verification
 
-This owner-specific numeric selector has value lifetime and is not disposable. The Max/EnumSize sentinel is not selectable. Distinct scalar/vector domains retain their own numeric identities.
+This owner-specific numeric selector has value lifetime and is not disposable. Max is a nonselectable count sentinel. Distinct scalar/vector domains retain their own numeric identities.
 
 The public VisualShader.Consumer covers typed requests, copy/archives, every scalar/vector function and real software-rendered pixels. See [the component contract](../components/visual-shaders.md) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
 
