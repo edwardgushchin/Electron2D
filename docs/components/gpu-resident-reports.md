@@ -138,6 +138,54 @@ An earlier ordinary root run at `9a90dd665` aborted after 630.642 seconds in the
 
 The current ordinary root run aborts after 469.079 seconds in GPU/separate-thread PhysicsScriptFactoryTests with 0 owner / 64 all-thread managed bytes. CPU owner/separate and GPU owner variants passed immediately before it. That fixture has one moving body and no contact partner, so it bypasses packed contact selection. Its isolated identical GPU/separate profile passes in 1.483 seconds with 128 full frames/queries at 0/0 bytes. This does not attribute or fix the earlier 64 bytes: complete-suite allocation acceptance remains open, with the original failed interval preserved in `integrated-root/` and the isolated receipt in `integrated-factory-threaded/`. No threshold, assertion or physical workload is weakened.
 
+### Script-factory allocation investigation
+
+The failed 0/64-byte interval above remains open. Diagnostic runs preserve the
+original runtime and test binaries, whose hashes are listed in the integration
+checkpoint, at committed source checkpoint `b3eb6d426`. No runtime behavior,
+allocation threshold, frame count or query workload changes in this investigation.
+
+A private CoreCLR object-allocation recorder is calibrated against one escaping
+64-byte object, two 32-byte objects, and one 64-byte object on a dedicated worker.
+It distinguishes the worker's 0 owner / 64 all-thread counter delta and resolves
+the allocating thread and managed stack. The final recorder stores at most 4,096
+off-owner objects of at most 64 bytes in preallocated native storage, then resolves
+metadata after the region. Calibration and the exercised factory traces have no
+overflow, incomplete record, stack error or recursive callback. Its library/source
+SHA-256 values are `1a751ee900424306cb341737b441365b97f35ea055abb13f59bb76e7c5b6042f`
+and `1f5db6dd7682ca28f95139770245291468bf73f103431b6e65e19ccf8dac37a3`.
+
+| Diagnostic | Observed result | Boundary |
+| --- | --- | --- |
+| Five fresh unmodified script/factory sequences | All 30 cases pass | CPU/GPU/registered, owner/separate hosts; 128 full frames and queries per measured case, strict 0/0 bytes. |
+| Full root suite with native interval markers | Process passes in 668.439 s; no allocation events in any of six measured factory intervals | Diagnostic test assembly only: 921 pinned authored inputs plus the marker helper, with 922 exact PDB source hashes. Original runtime retained. |
+| Full root suite with unmodified binaries and JIT-triggered recording | Passes in 598.740 s; all six factory intervals 0/0 bytes | Captures setup, warmup and measurement together. Profiler timings are diagnostic, not performance comparisons. |
+| Full root suite with unmodified binaries and deferred metadata recording | Process passes in 658.731 s; all six factory intervals 0/0 bytes | 1,473 small off-owner objects across setup, warmup and measurement; 2,577,114 raw trace bytes. Those records cannot be attributed to a measured interval. |
+| Prepared-worker/ambient-context sequence | Passes in 4.236 s; all six factory intervals 0/0 bytes | Adds the existing worker-pool suite before scripts; this is an additional stress condition, not the default root order. |
+
+Both full suites with marker/deferred recording finish with unchanged payload
+hashes but their live-source guards reject concurrent unrelated main edits. Their
+immutable input manifests qualify the frozen diagnostic checkpoint only; neither
+run certifies later main. The unmodified eager/deferred prefix profiles also pass.
+In total, 12 diagnostic profiles retain 72 successful factory cases; the earlier
+failed interval is retained separately and is not replaced by these passes.
+
+Cold/setup traces contain 64-byte solver-buffer delegates and allocator objects;
+one prefix also records a 64-byte string on the socket finalizer. No trace places
+these in the original failed interval. A separate forced-finalization control
+also includes runtime GC callbacks and larger totals, so it does not identify the
+original 64 bytes. There is no causal fix or complete-suite allocation acceptance.
+The remaining requirement is to capture a failing measured interval and establish
+its source before changing the runtime or fixture.
+
+Local evidence is under `bin/physics-script-allocation/2026-10-21/`: calibrated
+native source/library, original and instrumented payloads, frozen sources, PDB
+proofs, per-process traces, hardware maps and receipts. Run its `validate.py` to
+check 12 profile receipts, input hashes, six factory cases per profile, trace
+integrity and the retained original failure. `validation.json` states the open
+gate explicitly. The large eager prefix trace and decoded JSON are losslessly
+compressed; `trace-compression.json` retains original/decompressed hashes.
+
 ### Separate network processes on the integration payload
 
 Two headless 900-tick impaired-delivery checks pass on the same current payload, with owner/separate numerical hosts. Each launches an unavailable-GPU CPU authority, an NVIDIA resident-GPU client and a late unavailable-GPU CPU client. All three processes converge to the authority's 30-object final topology, identities, control epochs, poses, velocities and sleep states under the existing 0.002 final-correction tolerance. Late clients join at ticks 329/327 respectively after the tick-310 admission gate. The existing checks retain all three joint families, contacts, crossed-capsule/rotating-ray corrections, lifecycle, ownership, event confirmation, prediction/replay, and positive warmed sample counts; step/replay owner/all-thread managed bytes are zero in every report.

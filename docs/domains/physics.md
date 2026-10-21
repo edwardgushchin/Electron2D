@@ -1,5 +1,10 @@
 # Physics domain
 
+[Script-factory allocation diagnostics](../components/gpu-resident-reports.md#script-factory-allocation-investigation)
+add calibrated object/stack recording and three successful full frozen-checkpoint
+suites. The prior 0/64-byte failure remains unattributed; these diagnostic retries
+do not close allocation, later-main or whole-goal acceptance.
+
 [Packed GPU contact selection](../components/gpu-resident-reports.md#packed-selection-and-one-completion-readback-2026-10-21) removes capacity-slot traffic with a resident record/multiplicity bound and one completion, preserving caps, receiver fields, lifetime and callback order. Declaration states remain unchanged; whole-goal acceptance stays open. The current unique census is 1304/1369 Implemented (95.25%), 65 open and 92 Excluded; older counts below describe their own checkpoints.
 
 [One-way body-motion entry](../components/physics-queries.md#one-way-body-motion-entry) now distinguishes new front-corner contacts from initial-overlap departure across CPU, resident GPU and public providers. Existing declaration states and wider acceptance gates remain open.

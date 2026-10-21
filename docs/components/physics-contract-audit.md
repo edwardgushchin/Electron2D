@@ -2,6 +2,13 @@
 
 # Physics contract and backend audit
 
+[Script-factory allocation diagnostics](gpu-resident-reports.md#script-factory-allocation-investigation)
+preserve the full-suite 0/64-byte failure alongside calibrated object/stack traces
+and 72 passing factory cases on the frozen payload. The failing interval has no
+causal attribution or fix; declaration states and complete-suite allocation
+acceptance remain open. Concurrent main edits are recorded separately from the
+unchanged diagnostic binaries.
+
 [System back navigation](window-runtime.md#system-back-navigation) closes inherited notification 1007 through the actual production Android host, typed Window signal and configured root quit policy. That system-back slice recorded 1303/1369 Implemented (95.18%), with 66 open declarations (52 Partial, 11 Blocked, 3 Unimplemented), 92 Excluded. The final connected software/Android checks measure 4352 moving physics frames at strict 0/0 managed bytes; hardware/performance and complete-goal acceptance remain open.
 
 The current declaration census and complete open-row list are generated in the

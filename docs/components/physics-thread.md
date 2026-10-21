@@ -1,6 +1,6 @@
 # Separate numerical physics thread
 
-Last updated: 2026-10-15
+Last updated: 2026-10-21
 
 ## Contract and runtime flow
 
@@ -133,3 +133,10 @@ and quiet-clock restoration. Hardware and broader acceptance remain open.
 substantial free glibc arena/RSS growth on the separate-lane software GPU despite
 joined threads and collected selected owners. Default native retention remains
 open; a diagnostic one-arena process control is not a production fix.
+
+[Script-factory allocation diagnostics](gpu-resident-reports.md#script-factory-allocation-investigation)
+retain the full-suite GPU/separate failure at 0 owner / 64 all-thread bytes.
+Calibrated per-object recording, three full diagnostic suites and the prepared
+worker sequence do not reproduce it. Successful frozen-checkpoint retries do not
+attribute or fix the failed interval; complete-suite allocation acceptance stays
+open and the strict zero-byte assertions remain unchanged.
