@@ -331,6 +331,70 @@ Receipts, unchanged payload hashes, NVIDIA/no-software mappings, telemetry,
 source proofs, failed candidates and the default-16/diagnostic-64 controls remain
 under `bin/physics-mixed-support/2026-10-21/`. Its `validate.py` checks all fourteen
 final receipts and the retained failing/converged controls. Builds and functional
-profiles overlap, so elapsed times are not performance comparisons. Per-row
-incidence counting and dense-joint latency remain unmeasured costs; native/foreign,
+profiles overlap, so elapsed times are not performance comparisons. The packed-state counting and dense-joint latency are measured below; native/foreign,
 network, full-suite allocation and whole-goal acceptance remain open.
+
+
+### Cached active joint degree
+
+The packed solver now counts each dynamic body's active joint prefix once per
+prepared contact/joint interval, instead of walking that prefix for every endpoint
+of every joint row and sweep. The count occupies the spare `surface.w` word in the
+existing 48-byte iterative body record. The authored body's collision priority is
+unchanged: unpacking copies only velocity/correction XYZ. A shared bounded helper
+retains index/membership checks for packing and the unpacked joint-only fallback;
+full Jacobi batches keep their full incidence degree. Contact-only worlds skip
+the prefix walk. Existing heads/status bindings and 16-byte pack uniforms carry
+the input; no storage capacity, passes, host projection, waits or readbacks are
+added. Topology changes recompute the count on the next interval.
+
+`ELECTRON2D_TEST_GPU_JOINT_DEGREE=1` verifies 1/64/256 real world pins against a
+moving static conveyor, actual contact reports and unchanged 16 sweeps. Packed
+contacts/bodies, packed contacts alone and unpacked layouts all pass, including
+pin removal, slot reuse/regrowth, full removal and a free-motion control. The nine
+128-warm/128-measured cases keep strict 0/0 owner/all-thread managed bytes and no
+joint authoring upload in their measured frames.
+
+Two serialized ABBA cycles compare the previous prefix walk with the cache on
+RTX 3090 Ti/Vulkan 615.71.09. Each variant runs in four fresh processes using the
+identical benchmark DLL/PDB, with 128 warm and 128 measured frames per pin count.
+The fixture contains two actual bodies and the stated number of live pins; a frame
+includes `Simulate`, selected body read and contact-report projection. The table
+shows medians of the four per-process p50 measurements.
+
+| Pins | Prefix walk (ms) | Cached (ms) | Reduction |
+| ---: | ---: | ---: | ---: |
+| 1 | 0.9090 | 0.9097 | -0.07% |
+| 16 | 1.1850 | 1.1071 | 6.57% |
+| 64 | 2.0298 | 1.6941 | 16.54% |
+| 256 | 5.3377 | 3.9456 | 26.08% |
+| 1024 | 18.4550 | 12.7925 | 30.68% |
+
+At 1024 pins the medians of mean/p95/p99/max fall from
+18.5867/19.6988/20.2069/20.9160 to 12.8451/13.4326/14.1587/14.4537 ms;
+mean recorded wait falls from 17.9191 to 12.2104 ms. Both variants transfer
+300 upload, 464 readback and 6237 uniform bytes per frame, retain strict 0/0
+managed bytes and the same numerical bounds (maximum anchor error below
+0.000023 and speed below 0.000265). Preliminary timings overlapped source-proof
+work and are excluded. These measurements compare this internal dense-joint
+frame, not the complete public CPU/GPU workloads, window FPS or networking.
+
+The final current-main build passes twelve focused process profiles: the new
+layout fixture, public collision priority, contact-color scheduling, resident
+joint policy/store (including 4096 limited/unlimited pins), and eight public
+compound-support JIT/strict NativeAOT CPU/GPU owner/separate-host profiles. The
+CPU profiles disable GPU discovery; GPU mappings confirm NVIDIA with no software
+driver. PDB checks match all 2434 runtime, 926 root-test and 262 consumer authored
+sources, with a separate matched AOT input cohort. The four affected iterative
+SPIR-V payloads also match the managed runtime and native executable. Release,
+coverage, formatter and wiki checks pass. These focused results retain the
+larger failed hardware gate below.
+
+The broader resident-solver regression passes its small cases and 4096-circle
+residency, then **fails** during 65,536-circle warmup with
+`vkWaitForFences: VK_ERROR_DEVICE_LOST`. Its saved kernel receipt records Xid 79
+and 154 with an OS-reboot recovery request. The power cable remains unchecked;
+the receipt does not establish the cause. The failure remains open, and the
+successful bounded fixtures do not replace that hardware gate. Paired payloads,
+all eight timing receipts, numerical/transfer results, source proofs and the
+failed regression are retained under `bin/physics-joint-degree/2026-10-21/`.

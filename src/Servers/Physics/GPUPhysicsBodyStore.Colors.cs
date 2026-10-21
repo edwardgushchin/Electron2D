@@ -154,20 +154,22 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         Grow(ref _packedConstraints, ref _packedConstraintCapacity, ContactPointCount, 64, false);
         Grow(ref _packedImpulses, ref _packedImpulseCapacity, ContactPointCount, 32, false);
     }
+    /// <summary>Packs iterative state and prepares active joint degree once per interval in existing body scratch.</summary>
     private void PackSolverState(nint command, uint stage)
     {
-        var inputs = stackalloc nint[2] { _constraintsGPU!.DangerousGetHandle(), _colorOrder!.DangerousGetHandle() };
-        var outputs = stackalloc SDL.GPUStorageBufferReadWriteBinding[6]
+        var inputs = stackalloc nint[3] { _constraintsGPU!.DangerousGetHandle(), _colorOrder!.DangerousGetHandle(), _contactHeadsGPU!.DangerousGetHandle() };
+        var outputs = stackalloc SDL.GPUStorageBufferReadWriteBinding[7]
         {
             new() { Buffer = _constraintImpulsesGPU!.DangerousGetHandle() },
             new() { Buffer = _packedConstraints!.DangerousGetHandle() }, new() { Buffer = _packedImpulses!.DangerousGetHandle() },
-            new() { Buffer = _bodies!.DangerousGetHandle() }, new() { Buffer = _positionCorrectionsGPU!.DangerousGetHandle() }, new() { Buffer = _solverBodies!.DangerousGetHandle() }
+            new() { Buffer = _bodies!.DangerousGetHandle() }, new() { Buffer = _positionCorrectionsGPU!.DangerousGetHandle() }, new() { Buffer = _solverBodies!.DangerousGetHandle() },
+            new() { Buffer = _spatialSummary!.DangerousGetHandle() }
         };
-        var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, 6);
+        var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, 7);
         if (compute == 0) throw GPUPhysicsDevice.Failure("begin packed solver state");
-        SDL.BindGPUComputePipeline(compute, _packSolverPipeline!.DangerousGetHandle()); SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 2);
+        SDL.BindGPUComputePipeline(compute, _packSolverPipeline!.DangerousGetHandle()); SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 3);
         var count = (uint)(stage >= 2 ? _highWater : _colorStarts[ContactColorCount - 1] + _colorCounts[ContactColorCount - 1]);
-        var settings = stackalloc uint[4] { stage, count, 0, 0 };
+        var settings = stackalloc uint[4] { stage, count, (uint)ContactPointCount, checked((uint)(ContactPointCount + (JointCount > 0 ? JointRows * _jointHighWater : 0))) };
         SDL.PushGPUComputeUniformData(command, 0, (nint)settings, 16); SDL.DispatchGPUCompute(compute, (count + 63) / 64, 1, 1); SDL.EndGPUComputePass(compute); UniformBytes += 16;
     }
     private void DisposeColors()

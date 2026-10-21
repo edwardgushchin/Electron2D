@@ -1759,3 +1759,14 @@ It preserves the current API census and the wider completion gates.
 now retain consumed force in the independent public provider. A free witness checks
 its displacement/velocity reachability budget alongside the actual contact and
 full impulse on CPU/resident-GPU/registered worlds. The API census is unchanged.
+
+
+[Cached active joint degree](../components/physics-joints.md#cached-active-joint-degree)
+reuses packed iterative body scratch to count the joint prefix once per interval,
+preserving full/unpacked fallbacks, authored collision priority and transfer policy.
+Paired NVIDIA ABBA measurements show 18.4550 to 12.7925 ms median at 1024 pins in
+the two-body internal complete-frame fixture, with strict 0/0 managed bytes and
+unchanged numerical bounds. This is a scoped optimization. The broader
+65,536-circle regression failed with device loss/Xid 79 and 154 and stays open;
+public CPU/GPU, window, network, native/platform and full-goal acceptance remain
+separate.

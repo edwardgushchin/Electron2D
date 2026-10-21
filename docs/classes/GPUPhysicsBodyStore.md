@@ -4,6 +4,10 @@
 uses the actual joint incidence degree after colored contacts complete, preserving
 configured sweep counts and the full-degree fallback without host projection or
 new device storage. The mixed compound contact/sleep/CCD fixture covers this path.
+[Cached active joint degree](../components/physics-joints.md#cached-active-joint-degree)
+now reuses the existing 48-byte packed body record, with bounded topology-change
+checks and paired dense-joint measurements. The larger hardware regression
+failed with device loss and remains open.
 
 [Saturated angular friction](../components/gpu-contact-solver.md#saturated-angular-friction-2026-10-20) now solves coupled normal/tangent contact impulses on device, including a preserved authoritative-replay case that exhausted the unchanged CCD interval budget.
 

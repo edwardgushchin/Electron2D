@@ -13,22 +13,13 @@ layout(std430,set=1,binding=1) buffer Status { uvec2 status; };
 layout(std140,set=2,binding=0) uniform Settings { uvec4 control; vec4 time; vec4 policy; uvec4 history; vec4 correctionPolicy; };
 const uint none=0xffffffffu;
 void fail(){atomicOr(status.x,1u);}
+#include "PhysicsResidentDegree.inc.glsl"
 uint activeDegree(uint body,bool dynamicResponse)
 {
     if(!dynamicResponse)return 0u;
-    uvec2 list=heads[body];
-    if((history.w&2u)==0u)return list.y;
-    // Joint rows precede contacts; already completed colored rows are outside this Jacobi batch.
-    uint at=list.x,count=0u;
-    for(uint visited=0u;visited<list.y&&at!=none;visited++)
-    {
-        uint index=at>>1;if(index<history.z)return count;
-        if(index>=control.w){fail();return list.y;}
-        Constraint row=constraints[index];bool second=(at&1u)!=0u;
-        if((second?row.bodies.y:row.bodies.x)!=body){fail();return list.y;}
-        count++;at=second?row.bodies.w:row.bodies.z;
-    }
-    if(at!=none)fail();return count;
+    if((history.w&2u)==0u)return heads[body].y;
+    if((history.w&8u)!=0u)return floatBitsToUint(solverBodies[body].surface.w);
+    return jointDegree(body,history.z,control.w);
 }
 void main()
 {
