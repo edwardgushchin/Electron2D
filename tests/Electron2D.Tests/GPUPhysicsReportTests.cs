@@ -8,7 +8,7 @@ internal static class GPUPhysicsReportTests
     internal static void Run()
     {
         foreach (var steps in new[] { 1, 4, 8 }) { Momentum(steps); Transient(steps); }
-        WarmHistory(); Rotating(); Selection(); Sleeping(); SurfaceAndSensors(); Proximity(); Lifetime(); PackedSelection(); Measure();
+        WarmHistory(); Rotating(); Selection(); Sleeping(); SurfaceAndSensors(); Proximity(); Lifetime(); PackedSelection(); Completion(); Measure();
         Console.WriteLine("Resident contact reports: complete impulses, transient/CCD contacts, caps, snapshots, sleep, lifecycle and warmed allocation passed.");
     }
     private static Store.Snapshot State(Store s, Store.BodyHandle body)
@@ -229,6 +229,62 @@ internal static class GPUPhysicsReportTests
                 offset += caps[i];
             }
             Check(actual[^1] == -1 && output[^1].Equals(marker), "Caller count/result tails remain untouched");
+        }
+    }
+
+    internal static void Completion()
+    {
+        using var s = new Store { CaptureContactReports = true }; using var shape = new RectangleShape { Size = new(10, 10) };
+        var floor = Add(s, Mode.Static, new(0, 10)); var body = Add(s, Mode.Rigid, Vector2.Zero); var idle = Add(s, Mode.Rigid, new(1000, 0));
+        s.AddShape(floor, shape); s.AddShape(body, shape); s.AddShape(idle, shape); s.Simulate(.01f, Vector2.Zero);
+        Store.BodyHandle[] bodies = [body, body, floor, idle]; int[] limits = [1, 8, 4, 2];
+        var expectedCounts = new int[4]; var expectedReports = new Store.ContactReport[15];
+        s.ReadContactReports(bodies, limits, expectedCounts, expectedReports);
+        Check(expectedCounts[0] == 1 && expectedCounts[1] > 0 && expectedCounts[2] > 0 && expectedCounts[3] == 0, "Combined completion starts with real contact demand");
+        var counts = new int[5]; var reports = new Store.ContactReport[16];
+        var states = new Store.Snapshot[5]; var reference = new Store.Snapshot[4];
+        s.Read(bodies, reference); Verify();
+        s.SetVelocity(body, new(12, 34), 0); s.Read(bodies, reference); Verify();
+        var aliased = limits.ToArray();
+        s.Read(bodies, states, new(bodies, aliased, aliased, reports));
+        Check(aliased.AsSpan().SequenceEqual(expectedCounts), "Combined completion commits aliased counts after report scatter");
+        var submissions = s.SubmissionCount;
+        Reject<ArgumentOutOfRangeException>(() => s.Read(bodies, states, new(bodies, new[] { -1, 8, 4, 2 }, counts, reports)));
+        Reject<ArgumentException>(() => s.Read(bodies, states, new(bodies, limits, counts, new Store.ContactReport[1])));
+        var stale = idle; s.Remove(idle);
+        Reject<ArgumentException>(() => s.Read(new[] { body }, states, new(new[] { stale }, new[] { 1 }, counts, reports)));
+        Check(s.SubmissionCount == submissions, "Invalid combined requests reject before device work");
+        s.Read(new[] { body }, states); // Flush the removal before measuring only completion work.
+        s.Read(ReadOnlySpan<Store.BodyHandle>.Empty, states, new(new[] { body }, new[] { 1 }, counts, reports));
+        Check(counts[0] == 1, "An empty state request still completes actual report consumers");
+        int[] zeroLimits = [0, 0, 0]; Store.BodyHandle[] live = [body, floor, body];
+        s.Read(live, states, new(live, zeroLimits, counts, Span<Store.ContactReport>.Empty));
+        Check(counts.AsSpan(0, 3).SequenceEqual(zeroLimits), "Zero report caps clear counts with the selected state completion");
+        var liveReports = new Store.ContactRead(live, new[] { 2, 2, 1 }, counts, reports);
+        for (var i = 0; i < 128; i++) { s.Read(live, states, liveReports); s.Read(live, states, liveReports); }
+        var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+        for (var i = 0; i < 64; i++) { s.Read(live, states, liveReports); s.Read(live, states, liveReports); }
+        owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+        Check(owner == 0 && all == 0, $"Combined selected completions allocate {owner}/{all} managed bytes");
+        Console.WriteLine("Combined GPU completion: selected state, duplicates, alias/tails, invalid/empty requests and 128 zero-allocation reads passed.");
+
+        void Verify()
+        {
+            Array.Fill(counts, -1); Array.Fill(reports, new Store.ContactReport { Shape = uint.MaxValue });
+            states[^1] = new() { Pose = new(123, 456, 0, 0) };
+            var before = s.SubmissionCount;
+            s.Read(bodies, states, new(bodies, limits, counts, reports));
+            Check(s.SubmissionCount - before == 1, "Selected state and reports share the same completion wait");
+            for (var i = 0; i < bodies.Length; i++) Check(states[i].Equals(reference[i]), "Selected completion keeps exact current state and duplicate order");
+            Check(states[^1].Pose.X == 123 && counts[^1] == -1 && reports[^1].Shape == uint.MaxValue, "Combined caller tails remain untouched");
+            var offset = 0;
+            for (var i = 0; i < bodies.Length; i++)
+            {
+                Check(counts[i] == expectedCounts[i], "Combined report caps/counts remain exact");
+                for (var j = 0; j < counts[i]; j++) Check(reports[offset + j].Equals(expectedReports[offset + j]), "Every completed contact field and encounter order survives coalescing");
+                for (var j = counts[i]; j < limits[i]; j++) Check(reports[offset + j].Shape == uint.MaxValue, "Combined unused report slots stay untouched");
+                offset += limits[i];
+            }
         }
     }
 

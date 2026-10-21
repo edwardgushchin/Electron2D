@@ -117,7 +117,19 @@ internal sealed partial class PhysicsSpace
 
     internal void PublishGPUCompletion()
     {
-        if (_serverColliders.Count == 0) { PublishGPU(); return; }
+        PublishGPUCompletion(new(_gpuReportBodies.AsSpan(0, _gpuReportBodyCount), _gpuReportLimits.AsSpan(0, _gpuReportBodyCount), _gpuReportCounts, _gpuReports));
+        _gpuReportRanges.Clear();
+        var offset = 0;
+        for (var i = 0; i < _gpuReportBodyCount; i++)
+        {
+            _gpuReportRanges.Add(_gpuReportBodies[i].Index, (offset, _gpuReportCounts[i]));
+            offset += _gpuReportLimits[i];
+        }
+    }
+
+    private void PublishGPUCompletion(GPUPhysicsBodyStore.ContactRead reports)
+    {
+        if (_serverColliders.Count == 0) { PublishGPU(); GPUStore!.ReadContactReports(reports); return; }
         var observed = _bodies.Count;
         var likelyChanges = _serverColliders.Count + _areas.Count;
         foreach (var body in _bodies) if (GPUCollider(body.Backend).GPUChangeLikely) likelyChanges++;
@@ -126,15 +138,15 @@ internal sealed partial class PhysicsSpace
         // Last observations predict cost only. Both paths acquire validated current device state.
         var changedBytes = 8 + (long)likelyChanges * System.Runtime.CompilerServices.Unsafe.SizeOf<GPUPhysicsBodyStore.BodyChange>();
         var selectedBytes = 16 + (long)observed * System.Runtime.CompilerServices.Unsafe.SizeOf<GPUPhysicsBodyStore.Snapshot>();
-        if (_bodies.Count > 0 && changedBytes < selectedBytes) { PublishGPU(); return; }
+        if (_bodies.Count > 0 && changedBytes < selectedBytes) { PublishGPU(); GPUStore!.ReadContactReports(reports); return; }
         PrepareGPUCapacity();
         var count = 0;
         foreach (var body in _bodies) Observe(body.Backend);
         foreach (var body in _serverColliders)
             if (RequiresGPUCompletion(body)) Observe(body.Backend);
-        if (count == 0) return;
+        if (count == 0) { GPUStore!.ReadContactReports(reports); return; }
         FlushGPUWakes();
-        GPUStore!.Read(_gpuObservedBodies.AsSpan(0, count), _gpuObservedStates.AsSpan(0, count));
+        GPUStore!.Read(_gpuObservedBodies.AsSpan(0, count), _gpuObservedStates.AsSpan(0, count), reports);
         for (var i = 0; i < count; i++)
         {
             GPUCollider(_gpuObservedBackends[i]!).AcceptGPUState(_gpuObservedStates[i]);
@@ -186,19 +198,6 @@ internal sealed partial class PhysicsSpace
         }
         if (_gpuReports.Length < contacts) Array.Resize(ref _gpuReports, Math.Max(8, contacts * 2));
         GPUStore!.CaptureContactReports = _gpuReportBodyCount > 0;
-    }
-    internal void ReadGPUReports()
-    {
-        _gpuReportRanges.Clear();
-        if (_gpuReportBodyCount == 0) return;
-        GPUStore!.ReadContactReports(_gpuReportBodies.AsSpan(0, _gpuReportBodyCount), _gpuReportLimits.AsSpan(0, _gpuReportBodyCount),
-            _gpuReportCounts, _gpuReports);
-        var offset = 0;
-        for (var i = 0; i < _gpuReportBodyCount; i++)
-        {
-            _gpuReportRanges.Add(_gpuReportBodies[i].Index, (offset, _gpuReportCounts[i]));
-            offset += _gpuReportLimits[i];
-        }
     }
     private void ReleaseGPUState()
     {

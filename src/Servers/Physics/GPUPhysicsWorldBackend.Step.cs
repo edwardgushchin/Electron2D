@@ -68,7 +68,7 @@ internal sealed partial class GPUPhysicsWorldBackend
     internal override void SyncResults()
     {
         Space.InvalidateGPUStates(wake: false);
-        Space.PublishGPUCompletion(); Space.ReadGPUReports(); _resultsReady = true;
+        Space.PublishGPUCompletion(); _resultsReady = true;
     }
     internal override void CompleteBody(PhysicsServerCollider body)
     {
