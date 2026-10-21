@@ -1,6 +1,6 @@
 # Scene hierarchy component
 
-Last updated: 2026-10-18
+Last updated: 2026-10-21
 
 ## Node authoring observations
 
@@ -455,7 +455,7 @@ The scene owner or any active process-group thread may read Entity local/global 
 
 Coordinate concurrent mutations; these are individual logical observations, not an atomic multi-node snapshot or backend query. Ordinary pool work without group context rejects attached reads unless it is physically the scene owner. Transform setters and mutating helpers now follow the current-group authoring contract below. Hierarchy, notification forcing, rendering and native physical authoring retain their separate guards. Their missing own-group mutation path is explicitly Partial in coverage rather than certified by read-only checks.
 
-Dirty global composition invokes user getters before taking the retained canvas-item gate. A single publisher commits the matrix and clears the volatile invalidation flag under the gate; other readers use the committed value. Reusing the identity/lifetime gate avoids a new per-node allocation. Clearing invalidation preserves the next assignment's notification queueing, including equal owner assignments after a worker read. Errors leave the getter failure visible while frame completion continues.
+Dirty global composition invokes user getters before taking the retained reentrant canvas-item gate. A single publisher commits the matrix and clears the volatile invalidation flag under the gate; other readers use the committed value. Reusing the identity/lifetime gate avoids a second per-node gate object. Clearing invalidation preserves the next assignment's notification queueing, including equal owner assignments after a worker read. Errors leave the getter failure visible while frame completion continues. [The gate comparison](gpu-resident-reports.md#scene-transform-publication-gate-2026-10-21) rejects a System.Threading.Lock replacement after full-step measurements and its higher cold memory cost; production retains the original object gate.
 
 [The public consumer](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.GroupTransforms.cs) forces two readers into the same dirty ancestor getter concurrently, so holding a gate across virtual computation would fail. It covers ordinary and pooled tree owners, shared/foreign-group ordinary and physical nodes, reflected/skewed/TopLevel/neutral/control chains, errors, lifetime, non-owner ordinary jobs and owner publication before actual CPU/software-GPU/registered physics. Per-profile 128 measured full intervals include snapshots, invalidation, notifications, group observation, physics, point queries and identity at strict zero owner/all-thread managed bytes. Coordinate round trips and scale-compensated angles use 0.0001 distance/radian bounds for nested float matrices. Evidence: `bin/physics-group-transforms/2026-10-18/validation.json`; native allocation totals, hardware speed, rendered FPS and complete physics acceptance remain separate.
 

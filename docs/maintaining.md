@@ -220,3 +220,5 @@ exact representable grazing boundary, direct alpha and UV-driven vertex/fragment
 pixels. Invalidated output edges must fail import without replacing a valid
 artifact. Recheck the earlier arithmetic/unary graph consumers after changes to
 the shared default-slot/width implementation.
+
+PhysicsPipelinePerformance measurements retain the backend process sequence as part of their cohort: ELECTRON2D_PHYSICS_PERFORMANCE_BACKEND=both executes CPU then GPU in one process; cpu/gpu select one backend per invocation. Run each standalone control in a fresh process. Keep those histories distinct, preserve all physical/feature/allocation gates, and require standalone controls before generalizing a paired ratio to ordinary single-backend games. The [scene gate comparison](components/gpu-resident-reports.md#scene-transform-publication-gate-2026-10-21) records a substantial paired/standalone GPU timing difference whose process-history versus time/environment cause remains unisolated. Full physical frames, native window FPS, sampling diagnostics and native allocator totals retain their separate scopes.

@@ -217,6 +217,45 @@ A fixed instrumented baseline/candidate control runs all 32 CPU/GPU point-query 
 
 No declaration is promoted: physics coverage remains 1306/1369 (95.40%), with 63 open rows. Historical unattributed allocation failures, coupled/network and foreign-platform acceptance, native/driver allocator totals and complete target-scene performance remain separate gates. The RTX 3090 Ti/Cougar GX-800 power cable is still user-confirmed unchecked; successful monitored trials do not resolve that hardware uncertainty.
 
+## Scene transform publication gate (2026-10-21)
+
+CanvasItem retains its original per-item object gate for transform-cache publication and canvas identity. A System.Threading.Lock trial preserved the four lock scopes: cache publication, invalidation, identity acquisition and retirement. Virtual transform getters and notifications remained outside the gate; owner/current-group guards, volatile revision checks, physical preparation, callback order and interpolation were unchanged. The trial is rejected below. Final source XML and class documentation clarify the existing reentrancy/getter boundary; no runtime behavior changes.
+
+A fifteen-second EventPipe selection during the initial frozen 16,384-body GPU scene warmup records 69,716 samples with no missing stacks. That payload precedes the independent unary-shader integration and binds 2475 runtime documents; it is separate from the controlled pair below. It locates cache invalidation/Monitor.Enter_Slowpath, contact snapshot copies and GPU fence waits. Retained workers contribute many waiting samples; safepoint stacks also affect the distribution. These samples locate paths, not exclusive CPU costs or ordinary performance acceptance. StoreContact's separate CLR disassembly contains one bulk write barrier in 274 code bytes; its contact representation and copying remain unchanged.
+
+The typed-gate trial passes 32 CLR and 28 strict NativeAOT profiles. Public CPU/no-device, NVIDIA GPU and registered worlds exercise shared dirty-parent readers, transform writes, notification failures/reentry, interpolation and real owner/pooled processing groups. Owner and separate numerical modes are represented. Eight included Wayland window profiles inspect transformed physical output with both GPU and compatibility rendering. Existing strict owner/all-thread zero-managed-allocation assertions remain active. These are trial checks, not a final new runtime implementation or complete inherited/native allocation acceptance.
+
+The cold CLR control creates 32,768 objects per gate type outside any physical measurement, with its holder array excluded from the counter interval. Empty reference writes allocate zero; object gates request 786,432 bytes (24 each), Lock gates 1,310,720 bytes (40 each). The trial would add sixteen managed bytes per CanvasItem, about .5 MiB for the target body/shape population. This is a construction-allocation estimate on .NET 10.0.1/Linux x64, not whole-process retained memory or a foreign-runtime result. The rejected replacement adds no production memory cost.
+
+### Complete headless scene comparison
+
+Both payloads retain the same 16,384 awake RigidBody circles, four walls, 144 Hz fixed ticks, four substeps, sixteen sweeps, eight reported contacts, actual entry/exit handlers and interpolation. Each backend receives 1600 warmup and 256 measured complete SceneTree ticks, with ordinary GC and DOTNET_TieredCompilation=0. The first two processes run CPU then GPU; the reverse-order repeat pair runs GPU alone. Report those process histories separately. Their common GPU gate sequence is object/Lock/Lock/object, but the histories differ between the two pairs.
+
+| Process / gate | Backend | Complete step mean / p50 / p95 / p99 / max, ms | Pose-fields / contact-monitor mean, ms | Managed owner / all threads, B |
+| --- | --- | --- | --- | --- |
+| CPU then GPU / object | CPU | 102.7604 / 101.6564 / 112.6845 / 119.7325 / 120.7742 | 7.5961 / 17.8500 | 0 / 0 |
+| CPU then GPU / Lock | CPU | 103.9963 / 103.6761 / 107.7004 / 114.0920 / 116.8608 | 7.7000 / 19.6096 | 0 / 0 |
+| CPU then GPU / object | GPU | 65.4095 / 61.3570 / 77.9959 / 83.3627 / 87.6045 | 9.9618 / 8.6699 | 0 / 0 |
+| CPU then GPU / Lock | GPU | 65.7030 / 61.9987 / 76.4003 / 78.6580 / 80.9205 | 9.5405 / 8.5258 | 0 / 0 |
+| GPU alone / Lock | GPU | 102.6932 / 101.9693 / 109.7620 / 121.5799 / 124.8365 | 14.6979 / 9.2437 | 0 / 0 |
+| GPU alone / object | GPU | 99.7370 / 99.3339 / 105.5098 / 108.9509 / 112.6186 | 16.1653 / 8.8439 | 0 / 0 |
+| CPU alone, no GPU / object | CPU | 103.8824 / 103.7262 / 108.3385 / 111.0142 / 112.5641 | 7.9912 / 18.9923 | 0 / 0 |
+
+| GPU process / gate | Upload / readback, B per tick | Submissions per tick | GPU wait p50 / p95 / p99 / max, ms |
+| --- | --- | ---: | --- |
+| CPU then GPU / object | 196888 / 8793959.3125 | 19.05078125 | 17.5308 / 32.5227 / 37.7498 / 38.0557 |
+| CPU then GPU / Lock | 196888 / 8720648.6875 | 19.16796875 | 17.5658 / 32.1729 / 35.3608 / 35.8859 |
+| GPU alone / Lock | 196888 / 8835296.6250 | 19.21875000 | 40.1344 / 42.2584 / 44.0476 / 60.7433 |
+| GPU alone / object | 196888 / 8774054.7500 | 19.02343750 | 39.8609 / 41.4487 / 42.5253 / 44.3714 |
+
+All seven rows (1792 measured ticks) pass unchanged physical/cap/population/energy and zero-managed-byte gates. The final CPU-only process uses dummy video and unavailable Vulkan ICDs; maps confirm no NVIDIA/software-GPU library. The typed gate raises mean CPU time 1.20%, paired GPU .45% and standalone GPU 2.96%. Small pose-subphase improvements do not produce a whole-step benefit. Together with the higher cold memory cost, this rejects the replacement. The contact and state streams remain complete; trajectory-dependent report bytes and submission counts are retained rather than forced equal.
+
+Standalone GPU repeats are much slower than GPU after CPU. Process history and time both changed, so this observation establishes neither one's causality. The paired object's 1.57x GPU/CPU mean ratio must not become a general fresh-process GPU advantage. Separate original-gate CPU/GPU processes give only a 1.04x mean ratio in this ordered desktop trial, with no isolated repeatability proof. Sampling traces, constructor microcontrols and instrumented warmup timings do not resolve that uncertainty; the wider performance gate stays open.
+
+Controlled payloads are built from one captured source tree; only CanvasItem.Skeleton.cs and the CanvasItem class XML remarks differ. Runtime/root/consumer PDB proofs bind 2478/942/267 authored documents. Original native-copy failure, cancelled scratch toolchain work and the timestamp-stale CLR assembly rejected by its PDB checksum gate remain separate receipts. The stale assembly never enters a physical comparison. Evidence is local ignored bin/physics-pose-publication/2026-10-21/; validate.py checks source/payload/native bindings and all accepted results. The reverted private field and trial binaries remain distinct from final documentation changes.
+
+No API declaration is promoted. Historical aggregate allocation failures, complete numerical/extension/network acceptance, native/driver allocation, foreign platforms, full-scene window FPS and the unchecked RTX power cable remain separate limits.
+
 ## Verification
 
 The dedicated entry point is `ELECTRON2D_TEST_GPU_REPORTS=1`; it runs
