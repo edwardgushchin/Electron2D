@@ -745,6 +745,39 @@ Transparent native PopupPanel/PopupMenu output executes through the compatibilit
 
 [Loading images](boot-images.md) reuse the native image/target/presentation path for explicit main-client output outside scene submission. SetBootImageWithStretch preserves scene viewport content, counters and pending frame requests, and retires temporary texture ownership after presenting. Its six stretch modes and native pixel checks have their own component contract.
 
+## Native point and line primitives
+
+`CanvasItem.DrawPrimitive` and `RenderingServer.CanvasItemAddPrimitive` now retain
+one point or two line endpoints in their common pooled polygon kernel. Three/four
+vertices keep the existing triangle/quad indices. The native prefix returns its
+count/topology to normal batching, which never merges it with triangles. Preserve
+copied attributes, atlas policy, transforms, HDR color conversion and equal endpoint
+suppression. Primitive snapping occurs before the authored vertex program;
+negative-width strokes retain their existing endpoint/corner snapping policy.
+Native point batches use the same conservative raster margin as other thin shapes.
+
+GPU pipelines submit Points/Lines. Built-in vertex modules write a one-pixel point
+size. Authored vertex composition initializes an existing standalone/member size
+builtin, or creates one, before the original entry; later author writes survive.
+Compatibility rendering expands points/lines to its existing triangle footprints
+and splits software textured quads into triangles to preserve constant/rotated UVs.
+This keeps its native subpixel precision gap open.
+
+NativeStrokeTests includes direct scene and public server producers, endpoint
+colors/UVs, integer/fractional points, clipped affine transforms, vertex/fragment
+materials, HDR/MSAA, and a moving physical subclass rendering both primitives.
+Its GPU oracle constructs independent RenderingDevice point/line pipelines from
+public transforms and original input arrays. The comparison uses the existing
+0.012 per-channel tolerance; a four-sample marker may resolve to quarter intensity,
+so marker presence uses its unique yellow channel relation rather than full coverage.
+Warm active/idle process-frame brackets retain strict zero owner/all-thread
+managed byte assertions. The separate physics bracket runs from PhysicsFrameStarted
+through the moving body's state-sync callback; it does not measure later frame work.
+Compatibility controls use the baseline runtime's pixels and do not establish equivalence to native GPU rasterization.
+Evidence: `bin/physics-native-primitives/2026-10-21/validation.json` and its pinned
+RD canvas source manifest. Full physics, foreign platforms, native allocator,
+real-window FPS and mass-performance acceptance remain separate.
+
 ## Retained distance-field mode
 
 `RenderingServer.CanvasItemSetDistanceFieldMode(RID item, bool enabled)` enables multichannel signed-distance-field (MSDF) decoding for ordinary image commands of a live scene or caller-owned item. It uses the existing RGB-median/derivative decoder with pixel range four and no outline. The [pinned method description](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/RenderingServer.xml) specifies multichannel images, including msdfgen output; this is distinct from scene collision SDF sampling and scalar-alpha distance images.

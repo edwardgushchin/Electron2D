@@ -14,12 +14,18 @@ internal static class NativeStrokeTests
     }
     private sealed class MovingLine : RigidBody
     {
-        protected override void OnDraw() => DrawPolyline([Vector2.Zero, new(30, 3), new(10, 10)], Colors.Cyan, -1);
+        protected override void OnDraw()
+        {
+            DrawPolyline([Vector2.Zero, new(30, 3), new(10, 10)], Colors.Cyan, -1);
+            DrawPrimitive([new(0, 15), new(20, 18)], [Colors.Magenta], []);
+            DrawPrimitive([new(0, 20)], [Colors.Yellow], []);
+        }
     }
-    private sealed record Case(string Name, Vector2[] Points, Color[] Colors, bool Connected, Action<Painter> Draw);
+    private sealed record Case(string Name, Vector2[] Points, Color[] Colors, bool Connected, Action<Painter> Draw, bool VertexColors = false, Vector2[]? UVs = null);
     internal static void Managed()
     {
         CanvasStrokeTests.Run();
+        CanvasPolygonTests.Run();
         using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData { Vertices = [new(1, 1), new(5, 1), new(1, 5)] });
         using var painter = new Painter
         {
@@ -44,7 +50,21 @@ internal static class NativeStrokeTests
         painter.Paint = n => n.DrawLine(Vector2.Zero, new(10, 5), Colors.White, -1, true); painter.InvalidateCanvas(); painter.PrepareCanvas();
         vertices.Clear(); batches.Clear(); painter.AppendCanvas(vertices, batches, new Transform(Vector2.Zero, Vector2.Zero, Vector2.Zero));
         Check(batches.All(b => b.Primitive == Mesh.PrimitiveType.Triangles && b.Count % 3 == 0), "Collapsed native cores cannot consume antialias triangle vertices");
-        Console.WriteLine("Native stroke topology, mesh boundaries, strip separation and split AA/snap policy passed.");
+        painter.Paint = n =>
+        {
+            n.DrawPrimitive([new(.25f, .5f)], [Colors.Cyan], [new(.2f, .3f)]);
+            n.DrawPrimitive([new(.25f, .5f), new(4, 7)], [Colors.Red, Colors.Blue], [Vector2.Zero, Vector2.One]);
+            n.DrawPrimitive([Vector2.Zero, Vector2.Right, Vector2.Down], [], []);
+        };
+        painter.InvalidateCanvas(); painter.PrepareCanvas(); vertices.Clear(); batches.Clear();
+        painter.AppendCanvas(vertices, batches, Transform.Identity, renderViewport: viewport);
+        Check(batches.Count == 3 && batches[0].Primitive == Mesh.PrimitiveType.Points && batches[0].Count == 1 &&
+              batches[1].Primitive == Mesh.PrimitiveType.Lines && batches[1].Count == 2 && batches[2].Primitive == Mesh.PrimitiveType.Triangles && batches[2].Count == 3,
+            "Point and line primitives retain native topology independently of adjacent triangles");
+        Check(vertices.Count == 6 && vertices[0].Position == new Vector2(0, 1) && vertices[0].UV == new Vector2(.2f, .3f) &&
+              vertices[1].Color == Colors.Red && vertices[2].Color == Colors.Blue && !batches[0].SnapNativeLines && batches[0].RasterMargin == .5f,
+            "Primitive positions, point UVs, endpoint colors and snap bounds survive native batching");
+        Console.WriteLine("Native stroke/primitive topology, mesh boundaries, strip separation and split AA/snap policy passed.");
     }
     private static byte[] Module(string name)
     {
@@ -66,7 +86,12 @@ internal static class NativeStrokeTests
         }
         Vector2[] rectangle = [new(9.25f, 12.5f), new(52.75f, 12.5f), new(52.75f, 48.25f), new(9.25f, 48.25f), new(9.25f, 12.5f)];
         Vector2[] dash = [new(8.25f, 20.5f), new(14.25f, 20.5f), new(20.25f, 20.5f), new(26.25f, 20.5f), new(32.25f, 20.5f), new(38.25f, 20.5f), new(44.25f, 20.5f), new(50.25f, 20.5f)];
+        Vector2[] primitiveLineUVs = [new(.25f, .5f), new(.75f, .125f)];
         return [
+            new("server primitive integer point", [new(16, 12)], [Colors.Cyan], false, n => RenderingServer.CanvasItemAddPrimitive(n.GetCanvasItem(), [new(16, 12)], [Colors.Cyan], [], default)),
+            new("primitive fractional point", [new(16.25f, 12.5f)], [Colors.Yellow], false, n => n.DrawPrimitive([new(16.25f, 12.5f)], [Colors.Yellow], [])),
+            new("primitive line", line, [Colors.Red, Colors.Blue], false, n => n.DrawPrimitive(line, [Colors.Red, Colors.Blue], []), true),
+            new("primitive UV line", line, [Colors.Cyan, Colors.Magenta], false, n => RenderingServer.CanvasItemAddPrimitive(n.GetCanvasItem(), line, [Colors.Cyan, Colors.Magenta], primitiveLineUVs, default), true, primitiveLineUVs),
             new("line", line, [Colors.White], false, n => n.DrawLine(line[0], line[1], Colors.White)),
             new("polyline", strip, [Colors.White], true, n => n.DrawPolyline(strip, Colors.White, -1, true)),
             new("polyline colors", strip, gradient, true, n => n.DrawPolylineColors(strip, gradient, -1, true)),
@@ -89,13 +114,16 @@ internal static class NativeStrokeTests
         ProjectSettings.Set(ProjectSettings.RenderingMethod, gpu ? "gpu" : "compatibility"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         ProjectSettings.Set(ProjectSettings.SnapVerticesToPixel, snap); ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, profile.Contains("separate", StringComparison.Ordinal)); Engine.MaxFPS = 120;
         using var world = new World(profile.Contains("physics-gpu", StringComparison.Ordinal) ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU);
-        using var window = new Window { Size = new(768, 544), World = world, UseHDR2D = hdr, MSAA2D = profile.Contains("msaa", StringComparison.Ordinal) ? Viewport.MSAA.Samples4X : Viewport.MSAA.Disabled };
-        using var fragment = gpu && profile.Contains("material", StringComparison.Ordinal) ? Shader.CreateFromSPIRV(Module($"DeviceNativeStroke{language}.frag.spv")) : null;
+        var cases = Cases(); var height = ((cases.Length + 3) / 4) * 160 + 64;
+        using var window = new Window { Size = new(768, height), World = world, UseHDR2D = hdr, MSAA2D = profile.Contains("msaa", StringComparison.Ordinal) ? Viewport.MSAA.Samples4X : Viewport.MSAA.Disabled };
+        var customVertex = profile.Contains("vertex", StringComparison.Ordinal);
+        using var fragment = gpu && (profile.Contains("material", StringComparison.Ordinal) || customVertex) ? customVertex
+            ? Shader.CreateFromSPIRV(Module($"DeviceNative{(profile.Contains("declared", StringComparison.Ordinal) ? "Stroke" : "Primitive")}{language}.vert.spv"), Module($"DeviceNativeStroke{language}.frag.spv"))
+            : Shader.CreateFromSPIRV(Module($"DeviceNativeStroke{language}.frag.spv")) : null;
         using var subjectMaterial = fragment is null ? null : new ShaderMaterial { Shader = fragment };
         var comparisons = new List<(Vector2i Origin, string Name)>();
         var subjects = new List<(Painter Painter, Case Definition, Vector2i Origin)>(); Image? oracle = null;
         Transform[] bases = [Transform.Identity, new(.18f, new(1.1f, .8f), .14f, new(3, -2)), new(0, new(-.8f, 1.1f), 0, new(56, 0)), new(0, new(1.25f, 1.5f), 0, new(-10.25f, -8.25f))];
-        var cases = Cases();
         for (var row = 0; row < cases.Length; row++)
             for (var column = 0; column < bases.Length; column++)
             {
@@ -108,7 +136,7 @@ internal static class NativeStrokeTests
                 subjects.Add((painter, item, origin));
             }
         var modulation = new CanvasModulate(); window.AddChild(modulation);
-        var moving = new MovingLine { Position = new(12, 510), GravityScale = 0, CanSleep = false, CollisionLayer = 0, CollisionMask = 0, LinearVelocity = new(6, 0), LinearDamp = 0, LinearDampMode = RigidBody.DampMode.Replace };
+        var moving = new MovingLine { Position = new(12, height - 34), GravityScale = 0, CanSleep = false, CollisionLayer = 0, CollisionMask = 0, LinearVelocity = new(6, 0), LinearDamp = 0, LinearDampMode = RigidBody.DampMode.Replace };
         using var shape = new CircleShape { Radius = 1 }; moving.AddChild(new CollisionShape { Shape = shape }); window.AddChild(moving);
         var physicsTicks = 0; long physicsBefore = 0, physicsAllBefore = 0, physicsOwn = 0, physicsAll = 0;
         var frame = 0; long ownBefore = 0, allBefore = 0, activeOwn = 0, activeAll = 0, idleOwn = 0, idleAll = 0; var comparedPixels = 0; var colored = 0;
@@ -139,7 +167,17 @@ internal static class NativeStrokeTests
                         Console.WriteLine($"OpenGL vendor/renderer: {Marshal.PtrToStringAnsi(query(0x1F00))} / {Marshal.PtrToStringAnsi(query(0x1F01))}");
                     }
                     using var image = window.GetTexture().GetImage()!;
-                    if (gpu) oracle ??= Oracle(subjects, new(image.Width, image.Height), snap, hdr, window.MSAA2D != Viewport.MSAA.Disabled, language);
+                    var marker = moving.GlobalPosition + new Vector2(0, 20); var markerPixels = 0; var markerPeak = 0f;
+                    for (var y = (int)marker.Y - 2; y <= (int)marker.Y + 2; y++)
+                        for (var x = (int)marker.X - 2; x <= (int)marker.X + 2; x++)
+                        {
+                            var pixel = image.GetPixel(x, y);
+                            if (pixel.R > .1f && pixel.G > .1f && MathF.Abs(pixel.R - pixel.G) < .01f && pixel.B < .05f)
+                            { markerPixels++; markerPeak = MathF.Max(markerPeak, pixel.R); }
+                        }
+                    Check(markerPixels > 0, "The moving physical subclass renders its inherited point primitive");
+                    Console.WriteLine($"Physical primitive marker {profile}: pixels={markerPixels}, peak={markerPeak}.");
+                    if (gpu) oracle ??= Oracle(subjects, new(image.Width, image.Height), snap, hdr, window.MSAA2D != Viewport.MSAA.Disabled, language, customVertex ? 2 : fragment is null ? 0 : 1);
                     if (Environment.GetEnvironmentVariable("ELECTRON2D_CAPTURE_DIR") is { } folder) { Directory.CreateDirectory(folder); image.SavePNG(System.IO.Path.Combine(folder, $"native-strokes-{profile}-{frame}.png")); oracle?.SavePNG(System.IO.Path.Combine(folder, $"native-strokes-{profile}-oracle.png")); }
                     using var golden = !gpu && Environment.GetEnvironmentVariable("ELECTRON2D_NATIVE_STROKE_GOLDEN") is { } path ? Image.LoadFromFile(path) : null;
                     foreach (var (origin, name) in comparisons)
@@ -166,12 +204,12 @@ internal static class NativeStrokeTests
         };
         try { Check(Engine.Run(window) == 0 && frame == 160, "Native stroke frame loop completed"); }
         finally { window.Dispose(); oracle?.Dispose(); }
-        Console.WriteLine($"Native strokes {profile}: 48 clipped affine cases, compared={comparedPixels}, colored={colored}; moving {world.PhysicsBackend} physics; active={activeOwn}/{activeAll}, idle={idleOwn}/{idleAll} B; physics={physicsOwn}/{physicsAll} B in {physicsTicks} intervals.");
+        Console.WriteLine($"Native strokes {profile}: {cases.Length * bases.Length} clipped affine cases, compared={comparedPixels}, colored={colored}; moving {world.PhysicsBackend} physics; active={activeOwn}/{activeAll}, idle={idleOwn}/{idleAll} B; physics={physicsOwn}/{physicsAll} B in {physicsTicks} intervals.");
     }
-    private static Image Oracle(List<(Painter Painter, Case Definition, Vector2i Origin)> subjects, Vector2i size, bool snap, bool hdr, bool msaa, string language)
+    private static Image Oracle(List<(Painter Painter, Case Definition, Vector2i Origin)> subjects, Vector2i size, bool snap, bool hdr, bool msaa, string language, int shaderMode)
     {
         using var device = RenderingServer.CreateLocalRenderingDevice();
-        using var module = RenderingDeviceGraphicsTests.Load("DeviceNativeStroke" + language); var shader = device.ShaderCreateFromSPIRV(module);
+        using var module = new RDShaderSPIRV { BytecodeVertex = Module($"DeviceNativePrimitiveOracle{language}.vert.spv"), BytecodeFragment = Module($"DeviceNativeStroke{language}.frag.spv") }; var shader = device.ShaderCreateFromSPIRV(module);
         using var position = new RDVertexAttribute { Binding = 0, Location = 0, Stride = 32, Format = DataFormat.R32G32SFLOAT };
         using var color = new RDVertexAttribute { Binding = 0, Location = 1, Offset = 8, Stride = 32, Format = DataFormat.R32G32B32A32SFLOAT };
         using var uv = new RDVertexAttribute { Binding = 0, Location = 2, Offset = 24, Stride = 32, Format = DataFormat.R32G32SFLOAT };
@@ -191,27 +229,29 @@ internal static class NativeStrokeTests
         using var blend = new RDPipelineColorBlendState { Attachments = [blendAttachment] };
         using var samples = new RDPipelineMultisampleState { SampleCount = msaa ? TextureSamples.Samples4 : TextureSamples.Samples1 };
         var lines = device.RenderPipelineCreate(shader, device.FramebufferGetFormat(framebuffer), vertexFormat, RenderPrimitive.Lines, raster, blend, multisampleState: samples);
+        var points = device.RenderPipelineCreate(shader, device.FramebufferGetFormat(framebuffer), vertexFormat, RenderPrimitive.Points, raster, blend, multisampleState: samples);
         var strip = device.RenderPipelineCreate(shader, device.FramebufferGetFormat(framebuffer), vertexFormat, RenderPrimitive.LineStrips, raster, blend, multisampleState: samples);
-        float[] dimensions = [size.X, size.Y, 0, 0]; var frameBuffer = device.UniformBufferCreate(16, MemoryMarshal.AsBytes(dimensions.AsSpan()));
+        float[] dimensions = [size.X, size.Y, shaderMode, 0]; var frameBuffer = device.UniformBufferCreate(16, MemoryMarshal.AsBytes(dimensions.AsSpan()));
         using var frameUniform = new RDUniform { Binding = 0, UniformType = UniformType.UniformBuffer }; frameUniform.AddID(frameBuffer);
-        var frameSet = device.UniformSetCreate([frameUniform], shader, 1); var draws = new List<(RID Vertices, bool Strip, Vector2i Origin)>();
+        var frameSet = device.UniformSetCreate([frameUniform], shader, 1); var draws = new List<(RID Vertices, RID Pipeline, Vector2i Origin)>();
         foreach (var (painter, definition, origin) in subjects)
         {
             var pose = painter.GetGlobalTransform(); var data = new float[definition.Points.Length * 8];
             for (var i = 0; i < definition.Points.Length; i++)
             {
                 var point = pose * definition.Points[i]; if (snap) point = (point + new Vector2(.5f, .5f)).Floor();
-                var tint = definition.Colors[Math.Min(definition.Colors.Length - 1, definition.Connected ? i : i / 2)];
+                var tint = definition.Colors[definition.VertexColors ? i < definition.Colors.Length ? i : 0 : Math.Min(definition.Colors.Length - 1, definition.Connected ? i : i / 2)];
                 data[i * 8] = point.X; data[i * 8 + 1] = point.Y;
+                if (definition.UVs is { } uvs) { data[i * 8 + 6] = uvs[i].X; data[i * 8 + 7] = uvs[i].Y; }
                 data[i * 8 + 2] = tint.R; data[i * 8 + 3] = tint.G; data[i * 8 + 4] = tint.B; data[i * 8 + 5] = tint.A;
             }
             var buffer = device.VertexBufferCreate((uint)(data.Length * 4), MemoryMarshal.AsBytes(data.AsSpan()));
-            draws.Add((device.VertexArrayCreate((uint)definition.Points.Length, vertexFormat, [buffer]), definition.Connected, origin));
+            draws.Add((device.VertexArrayCreate((uint)definition.Points.Length, vertexFormat, [buffer]), definition.Points.Length == 1 ? points : definition.Connected ? strip : lines, origin));
         }
         var list = device.DrawListBegin(framebuffer, DrawFlags.ClearAll, msaa ? [Colors.Black, Colors.Black] : [Colors.Black]);
         foreach (var draw in draws)
         {
-            device.DrawListBindRenderPipeline(list, draw.Strip ? strip : lines); device.DrawListBindVertexArray(list, draw.Vertices);
+            device.DrawListBindRenderPipeline(list, draw.Pipeline); device.DrawListBindVertexArray(list, draw.Vertices);
             device.DrawListBindUniformSet(list, frameSet, 1); device.DrawListEnableScissor(list, new(draw.Origin, new Vector2(64, 32)));
             device.DrawListDraw(list, false, 1);
         }

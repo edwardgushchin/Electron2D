@@ -161,6 +161,20 @@ internal static class CanvasVertexProgram
         var voidType = function[1]; var functionType = function[4];
         uint zeroVector = 0;
         if (procedural) { zeroVector = ID(); added.Add(Instruction(46, float2, zeroVector)); body.Add(Instruction(62, position, zeroVector)); }
+        uint pointOutput = 0;
+        foreach (var variable in variables.Values.Where(v => v[3] == 3))
+        {
+            if (instructions.Any(i => Op(i) == 71 && i[1] == variable[2] && i[2] == 11 && i[3] == 1)) { pointOutput = variable[2]; break; }
+            var member = instructions.FirstOrDefault(i => Op(i) == 72 && i[1] == Pointee(variable[2]) && i[3] == 11 && i[4] == 1);
+            if (member is not null) { pointOutput = Value(65, Pointer(3, scalar), variable[2], Constant(member[2])); break; }
+        }
+        if (pointOutput == 0)
+        {
+            pointOutput = ID(); added.Add(Instruction(59, Pointer(3, scalar), pointOutput, 3));
+            annotations.Add(Instruction(71, pointOutput, 11, 1)); newOutputs.Add(pointOutput);
+        }
+        var pointSize = ID(); added.Add(Instruction(43, scalar, pointSize, 0x3f800000));
+        body.Add(Instruction(62, pointOutput, pointSize));
         _ = Value(57, voidType, originalMain);
         if (procedural)
         {

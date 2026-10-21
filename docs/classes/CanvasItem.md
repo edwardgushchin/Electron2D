@@ -1374,4 +1374,6 @@ DrawMesh and DrawMultiMesh revalidate the selected geometry resource after virtu
 
 The policy is stored in PackedScene and inherited by Entity, Control and their descendants, including physics nodes. Visible preparation rerecords changed factors without requiring transform notifications. Stable replay keeps logical dimensions and reuses native pixels; scale changes may allocate. Active item/viewport owners share raster-level lifetime, with last-owner release on changes, tree exit and disposal. See [ownership and checks](../components/scalable-svg.md#item-scale-oversampling).
 
+[Native point and line primitives](../components/canvas-rendering.md#native-point-and-line-primitives) preserve DrawPrimitive attributes and pre-vertex snapping through GPU Points/Lines batches. Compatibility retains its triangle footprints and native subpixel coverage limit. This applies to inherited physical nodes as well as ordinary scene items.
+
 ResolveCanvasGlyph projects the retained item MSDF flag only onto ordinary image commands. Explicit glyph commands and untextured drawing retain their policy; children do not inherit the flag. The flag changes replay without changing authored properties or recording another draw. See [retained distance-field mode](../components/canvas-rendering.md#retained-distance-field-mode).

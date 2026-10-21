@@ -1,5 +1,7 @@
 # Engine inventory
 
+Existing CanvasPolygon/CanvasGeometry/CanvasBatch/GPUCanvasBackend/CompatibilityCanvasBackend and CanvasVertexProgram now carry [native point/line primitives](components/canvas-rendering.md#native-point-and-line-primitives). No production type or public declaration is added.
+
 AnimatableBody synchronization now shares the current-group pose-authoring boundary, with immediate pending-target presentation and joined owner numerical preparation. [Contract and verification](components/physics-bodies.md#kinematic-synchronization-from-processing-groups). No production type or public declaration was added.
 
 [Completed canvas counters](components/canvas-counters.md) use [ViewportRenderInfo](classes/ViewportRenderInfo.md), [ViewportRenderInfoType](classes/ViewportRenderInfoType.md) and [RenderingServer.RenderingInfo](classes/RenderingServer.RenderingInfo.md) for actual submitted geometry. Existing CanvasBatch/CanvasBackend/Viewport/RenderingServer/Performance retain the counter state and completion boundary; no independent renderer or profiling service is added.

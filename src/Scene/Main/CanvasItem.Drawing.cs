@@ -423,7 +423,7 @@ public abstract partial class CanvasItem
             var batch = new CanvasBatch(first, count, material, replay.Texture, filter, repeat, anisotropy, blend, commandClip, InstanceOwner: material?.Program.HasInstanceUniforms == true ? this : null, Glyph: glyph, GlyphModulation: glyphModulation, LinearColors: linearColors, TextureSource: command.Texture);
             if (native.Count != 0)
             {
-                AddCanvasBatch(batches, batch with { Count = native.Count, Primitive = native.Primitive, SnapNativeLines = viewport?.SnapVerticesToPixel == true });
+                AddCanvasBatch(batches, batch with { Count = native.Count, Primitive = native.Primitive, SnapNativeLines = replay.Polygon is null && viewport?.SnapVerticesToPixel == true });
                 batch = batch with { First = first + native.Count, Count = count - native.Count };
             }
             AddCanvasBatch(batches, batch);

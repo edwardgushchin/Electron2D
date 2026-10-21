@@ -252,9 +252,14 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                     if (!color.IsFinite()) throw new InvalidOperationException("Canvas modulation overflowed finite colors.");
                     _vertices[vertex].Color = new() { R = color.R, G = color.G, B = color.B, A = color.A };
                 }
+                if (batch.Primitive == Mesh.PrimitiveType.Points)
+                {
+                    RecordCanvasDraw(batch, DrawPoints(renderer, texture, _vertices.AsSpan(batch.First, batch.Count), Driver == "software" && texture != 0));
+                    continue;
+                }
                 if (batch.Primitive is Mesh.PrimitiveType.Lines or Mesh.PrimitiveType.LineStrip)
                 {
-                    RecordCanvasDraw(batch, DrawThinLines(renderer, texture, _vertices.AsSpan(batch.First, batch.Count), batch.Primitive, batch.SnapNativeLines));
+                    RecordCanvasDraw(batch, DrawThinLines(renderer, texture, _vertices.AsSpan(batch.First, batch.Count), batch.Primitive, batch.SnapNativeLines, Driver == "software" && texture != 0));
                     continue;
                 }
                 // SDL 3.4.16's software quad shortcut loses transposed/constant UVs. Separate triangles bypass it.
@@ -272,7 +277,26 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         }
     }
 
-    private static int DrawThinLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, Mesh.PrimitiveType primitive, bool snap)
+    private static int DrawPoints(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, bool splitTriangles)
+    {
+        var calls = 0;
+        Span<SDL.Vertex> quad = stackalloc SDL.Vertex[6];
+        foreach (var center in vertices)
+        {
+            quad.Fill(center);
+            for (var j = 0; j < quad.Length; j++)
+                quad[j].Position = new() { X = center.Position.X + (j is 0 or 1 or 3 ? .5f : -.5f), Y = center.Position.Y + (j is 0 or 3 or 5 ? -.5f : .5f) };
+            var step = splitTriangles ? 3 : 6;
+            for (var first = 0; first < quad.Length; first += step)
+            {
+                Check(SDL.RenderGeometry(renderer, texture, quad.Slice(first, step), step, 0, 0), "draw compatibility point");
+                calls++;
+            }
+        }
+        return calls;
+    }
+
+    private static int DrawThinLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, Mesh.PrimitiveType primitive, bool snap, bool splitTriangles)
     {
         var calls = 0;
         Span<SDL.Vertex> quad = stackalloc SDL.Vertex[6];
@@ -288,8 +312,12 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                 if (snap) position = CanvasGeometry.Snap(position);
                 quad[j].Position = new() { X = position.X, Y = position.Y };
             }
-            Check(SDL.RenderGeometry(renderer, texture, quad, quad.Length, 0, 0), "draw compatibility thin line");
-            calls++;
+            var step = splitTriangles ? 3 : 6;
+            for (var first = 0; first < quad.Length; first += step)
+            {
+                Check(SDL.RenderGeometry(renderer, texture, quad.Slice(first, step), step, 0, 0), "draw compatibility thin line");
+                calls++;
+            }
         }
         return calls;
     }
