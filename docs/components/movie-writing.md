@@ -71,3 +71,7 @@ AVI framing verification uses a portable fixed-byte odd/even chunk vector to est
 ## Input-driven recording scenarios
 
 Callback-first recording Run/RunAsync and configured RunMovie/RunMovieAsync overloads use the same path/FPS selection and writer lifecycle. A non-null `Action<Window, ulong>` executes after readiness and native pumping, before the first and every later scheduler step. Injected Input.ParseInputEvent state and delivery therefore precede physics/process and the resulting completed frame. The one-based process index resets per run; quit skips pending work and callback exceptions attempt ordinary writer/scene/native cleanup. The original window-first signatures and delegates remain available. The [compiled batch runner](project-batch.md) uses this boundary with public MovieWriter PNG capture and explicit completed-step reporting.
+
+[File save and swap](file-save-and-swap.md) optionally stages OGV exact Write output until successful EOS/close and cancels it on codec/callback failure. AVI and PNG WAV mixed-mode access retains its existing direct behavior; valid submitted frames still finalize after an unrelated scene failure.
+
+OGV render fixtures explicitly fix the content viewport to 66x50 (or 65x49 for rejection), so native window size/DPI rounding does not accidentally change the codec input dimensions.

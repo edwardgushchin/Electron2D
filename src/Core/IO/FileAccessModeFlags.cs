@@ -8,6 +8,7 @@ public enum FileAccessModeFlags
     Read = 1,
 
     /// <summary>Creates or truncates a file and opens it for writing from its beginning.</summary>
+    /// <remarks>The default-disabled OS save-and-swap policy delays destination replacement until close for this exact mode.</remarks>
     Write = 2,
 
     /// <summary>Opens an existing file for reading and writing without truncating it.</summary>

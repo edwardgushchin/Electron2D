@@ -157,7 +157,7 @@ Executable tests cover the typed registry, exact identity, mutable snapshots, va
 <a id="adr-0020"></a>
 ## ADR 0020: Typed file access and transformed-file containers
 
-Last updated: 2026-10-13
+Last updated: 2026-10-21
 
 ### Status
 
@@ -173,7 +173,11 @@ The BCL supplies robust streams, hashes, DEFLATE/GZip/Brotli, PBKDF2, and AES-GC
 
 `FileAccess` derives directly from `ElectronObject` and owns one stream until idempotent `Close` or disposal. Exact reference enum numbers are preserved in `FileAccessModeFlags`, `FileCompressionMode`, and `UnixPermissionFlags`. Public members use typed PascalCase C# and standard exceptions; acronyms in method names stay fully uppercase under [ADR 0045](product.md#adr-0045). No process-global last error exists.
 
-Ordinary, `res://`, and `user://` paths resolve through `ProjectSettings`; the latter two support directory-backed paths and the mounted resource overlays below. Raw access uses `FileStream`. The cursor, EOF state, endian state, and individual seekable-file operations are serialized by one instance lock. Process pipes use independent read/write operation locks because their two directions have no shared cursor; native lifetime calls retain a shared process gate. OS.ExecuteWithPipe additionally supplies owned non-seekable FileAccess process streams; these are existing open pipes, not a named-pipe filesystem connector. Compound caller sequences are explicitly not transactional.
+Ordinary, `res://`, and `user://` paths resolve through `ProjectSettings`; the latter two support directory-backed paths and the mounted resource overlays below. Raw access uses `FileStream`, with opt-in streaming staging for exact Write.
+
+The retained OS service exposes static SetUseFileAccessSaveAndSwap(bool), initially false and captured at each subsequent open. The internal stream exclusively creates a random sibling of the final resolved target, copies existing Unix permissions (0644 for a new target), and uses the existing SDL filesystem classifier to reject nonregular destinations before opening them. Original Path stays stable; AbsolutePath and instance metadata identify staging. Flush persists staging without publication; successful Close/disposal replaces the target. Preserve symbolic links by resolving their target at open. Mixed modes, pipes and independent transformed/configuration persistence keep their behavior. Underlying I/O failure cancels partial output; final replacement failure leaves completed staging for recovery. Empty successful output and caller exceptions do not imply cancellation. PCK directory and OGV codec owners explicitly cancel failed producers. Concurrent writers are last-completion-wins; no external path-race sandbox, power-failure or filesystem durability guarantee is added. Windows uses replacement metadata preservation and bounded sharing-failure retries. [File save and swap](../components/file-save-and-swap.md) records executable checks and foreign-host limits.
+
+The cursor, EOF state, endian state, and individual seekable-file operations are serialized by one instance lock. Process pipes use independent read/write operation locks because their two directions have no shared cursor; native lifetime calls retain a shared process gate. OS.ExecuteWithPipe additionally supplies owned non-seekable FileAccess process streams; these are existing open pipes, not a named-pipe filesystem connector. Compound caller sequences are explicitly not transactional.
 
 Fixed-width binary values and Pascal strings require complete reads. Buffer reads return the available prefix. `ReadReal`/`WriteReal` use binary32 because Electron2D's 2D numeric types are single-precision; explicit double methods remain available. Text is strict UTF-8; CSV supports quoting and multiline fields. `get_var`/`store_var` have no replacement because ADR 0001 excludes a universal value boundary.
 

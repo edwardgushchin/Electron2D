@@ -256,3 +256,9 @@ See [change reporting, producer coverage and verification](../components/low-pro
 ### DeltaSmoothing
 
 Changes the next measured sample in Engine.Run/RunAsync. Stable effective classical VSync is required; bypass retains history and raw fractional elapsed input. New runs reset estimator state. This nonstored typed service property has true as its revert default. Manual/batch explicit elapsed and fixed movie clocks do not sample it. FPS/Performance diagnostics retain raw measured time. See [host delta smoothing](../components/host-delta-smoothing.md) for confidence, pause, rate-change and platform boundaries.
+
+## File save policy
+
+`public static void SetUseFileAccessSaveAndSwap(bool enabled)`
+
+Thread-safely selects staging for subsequent exact write-only FileAccess opens; false is the process default. Existing streams capture their selection. Flush persists staging, while Close/disposal publishes it. Mixed modes, pipes and independent transformed/configuration commits retain their contracts. See [file save and swap](../components/file-save-and-swap.md) for symlinks, permissions, temporary files, failures and recovery. This is blocking filesystem work.

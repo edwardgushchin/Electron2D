@@ -1,6 +1,6 @@
 # FileAccess
 
-Last updated: 2026-10-13
+Last updated: 2026-10-21
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -37,7 +37,7 @@ file.WriteString("ready");
 | --- | --- |
 | [`public bool BigEndian { get; set; }`](#p-electron2d-fileaccess-bigendian) | Gets or sets whether multi-byte numeric values use big-endian byte order. |
 | [`public string Path { get; }`](#p-electron2d-fileaccess-path) | Gets the path supplied when this file was opened. |
-| [`public string AbsolutePath { get; }`](#p-electron2d-fileaccess-absolutepath) | Gets the normalized absolute operating-system path. |
+| [`public string AbsolutePath { get; }`](#p-electron2d-fileaccess-absolutepath) | Gets the physical operating-system path, including staging when save and swap is enabled. |
 | [`public bool IsOpen { get; }`](#p-electron2d-fileaccess-isopen) | Gets whether the owned stream is still open. |
 | [`public bool EOFReached { get; }`](#p-electron2d-fileaccess-eofreached) | Gets whether a read has attempted to move beyond the end of the file. |
 | [`public long Position { get; }`](#p-electron2d-fileaccess-position) | Gets the current byte offset. |
@@ -55,7 +55,7 @@ file.WriteString("ready");
 | [`public static FileAccess OpenCompressed(string path, FileAccessModeFlags mode, FileCompressionMode compressionMode = FileCompressionMode.FastLz)`](#m-electron2d-fileaccess-opencompressed-system-string-electron2d-fileaccessmode-electron2d-filecompressionmode) | Opens a whole-file compressed container. |
 | [`public static FileAccess OpenEncrypted(string path, FileAccessModeFlags mode, ReadOnlySpan<byte> key)`](#m-electron2d-fileaccess-openencrypted-system-string-electron2d-fileaccessmode-system-readonlyspan-system-byte) | Opens a whole-file container protected by a 256-bit key and authenticated encryption. |
 | [`public static FileAccess OpenEncryptedWithPassword(string path, FileAccessModeFlags mode, string password)`](#m-electron2d-fileaccess-openencryptedwithpassword-system-string-electron2d-fileaccessmode-system-string) | Opens a whole-file container protected by a password and authenticated encryption. |
-| [`public void Close()`](#m-electron2d-fileaccess-close) | Closes the file, committing buffered transformed data when necessary. |
+| [`public void Close()`](#m-electron2d-fileaccess-close) | Closes the file, committing transformed data or completed save-and-swap output when necessary. |
 | [`public void Flush()`](#m-electron2d-fileaccess-flush) | Flushes pending data to the physical file. |
 | [`public void Seek(long position)`](#m-electron2d-fileaccess-seek-system-int64) | Moves the cursor to an absolute byte offset. |
 | [`public void SeekEnd(long offset = 0)`](#m-electron2d-fileaccess-seekend-system-int64) | Moves the cursor relative to the end of the file. |
@@ -131,9 +131,9 @@ Gets the path supplied when this file was opened.
 <a id="p-electron2d-fileaccess-absolutepath"></a>
 ### `public string AbsolutePath { get; }`
 
-Gets the normalized absolute operating-system path.
+Gets the physical operating-system path, including staging when save and swap is enabled.
 
-**Value:** The resolved path used for physical file operations.
+**Value:** The staging path for save-and-swap writes, the resolved native path otherwise, or the mounted res:// identity.
 
 <a id="p-electron2d-fileaccess-isopen"></a>
 ### `public bool IsOpen { get; }`
@@ -351,7 +351,7 @@ Opens a whole-file container protected by a password and authenticated encryptio
 <a id="m-electron2d-fileaccess-close"></a>
 ### `public void Close()`
 
-Closes the file, committing buffered transformed data when necessary.
+Closes the file, committing transformed data or completed save-and-swap output when necessary.
 
 **Exceptions**
 
@@ -373,7 +373,7 @@ Flushes pending data to the physical file.
 - `IO.IOException`: The data cannot be persisted.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
-**Remarks:** Transformed data is encoded and atomically replaces the destination; ordinary streams are flushed to disk.
+**Remarks:** Transformed data atomically replaces the destination. Save-and-swap streams persist staging without publishing it; ordinary streams flush to disk.
 
 <a id="m-electron2d-fileaccess-seek-system-int64"></a>
 ### `public void Seek(long position)`
@@ -1293,3 +1293,7 @@ OS.ExecuteWithPipe supplies owned stdin/stdout and stderr FileAccess streams. By
 
 
 Mounted res:// resources now share [resource pack resolution](../components/resource-packs.md). PCK/ZIP overlays, synthetic directories, read-only packed metadata, relative scene dependencies and bitmap-font pages use the mounted bytes. Ordinary absolute paths and user:// retain physical access. Cached resources keep their normal cache-mode policy.
+
+## Staged ordinary saves
+
+[OS.SetUseFileAccessSaveAndSwap](OS.md#file-save-policy) enables close-time replacement for subsequent exact Write opens. Path remains the requested name; AbsolutePath and instance metadata address the physical sibling. Flush alone does not publish. Underlying I/O failure cancels partial staging, while final replacement failure retains completed data for recovery. Compressed/encrypted Flush, mixed modes and pipes keep their existing behavior. The [component contract](../components/file-save-and-swap.md) records links, Unix modes, temporary ownership, concurrent writers and verified limits.

@@ -39,6 +39,7 @@ public sealed partial class FileAccess : ElectronObject
     private readonly bool _packed;
     private readonly string _path;
     private readonly string _absolutePath;
+    private readonly string _physicalPath;
     private readonly FileAccessModeFlags _mode;
     private Stream? _stream;
     private Func<byte[], byte[]>? _encoder;
@@ -59,6 +60,7 @@ public sealed partial class FileAccess : ElectronObject
         _packed = packed;
         _path = path;
         _absolutePath = packed ? "res://" + PCKFormat.Normalize(ResourceUID.EnsurePath(path)) : absolutePath;
+        _physicalPath = stream is SaveAndSwapStream staged ? staged.PhysicalPath : _absolutePath;
         _mode = mode;
         _stream = stream;
         _pipeWriteGate = stream is ProcessPipeStream ? new object() : null;
@@ -67,6 +69,7 @@ public sealed partial class FileAccess : ElectronObject
     }
 
     internal Stream BorrowStream => EnsureOpen();
+    internal void CancelPendingSave() { lock (_gate) { if (_stream is SaveAndSwapStream staged) staged.Cancel(); } }
 
     internal static FileAccess FromProcessPipe(string path, Stream stream, FileAccessModeFlags mode) => new(path, path, mode, stream);
 
@@ -99,9 +102,9 @@ public sealed partial class FileAccess : ElectronObject
     /// <value>The original virtual or ordinary path.</value>
     public string Path => _path;
 
-    /// <summary>Gets the normalized absolute file path or mounted resource identity.</summary>
-    /// <value>The resolved native path, or res:// identity for a mounted read-only file.</value>
-    public string AbsolutePath => _absolutePath;
+    /// <summary>Gets the current physical file path or mounted resource identity.</summary>
+    /// <value>The staging path for save-and-swap writes, resolved native path otherwise, or res:// identity for a mounted read-only file.</value>
+    public string AbsolutePath => _physicalPath;
 
     /// <summary>Gets whether the owned stream is still open.</summary>
     /// <value><see langword="true"/> until <see cref="Close"/> succeeds or releases the stream after a failure.</value>
@@ -181,7 +184,7 @@ public sealed partial class FileAccess : ElectronObject
             lock (_gate)
             {
                 EnsureOpen();
-                return _packed ? false : IsHidden(_absolutePath);
+                return _packed ? false : IsHidden(_physicalPath);
             }
         }
         set
@@ -191,7 +194,7 @@ public sealed partial class FileAccess : ElectronObject
             {
                 EnsureOpen();
                 if (_packed) throw new UnauthorizedAccessException("Packed file metadata is read-only.");
-                SetHidden(_absolutePath, value);
+                SetHidden(_physicalPath, value);
             }
         }
     }
@@ -211,7 +214,7 @@ public sealed partial class FileAccess : ElectronObject
             lock (_gate)
             {
                 EnsureOpen();
-                return _packed || IsReadOnly(_absolutePath);
+                return _packed || IsReadOnly(_physicalPath);
             }
         }
         set
@@ -221,7 +224,7 @@ public sealed partial class FileAccess : ElectronObject
             {
                 EnsureOpen();
                 if (_packed) throw new UnauthorizedAccessException("Packed file metadata is read-only.");
-                SetReadOnly(_absolutePath, value);
+                SetReadOnly(_physicalPath, value);
             }
         }
     }
@@ -242,7 +245,7 @@ public sealed partial class FileAccess : ElectronObject
             lock (_gate)
             {
                 EnsureOpen();
-                return GetUnixPermissions(_absolutePath);
+                return GetUnixPermissions(_physicalPath);
             }
         }
         set
@@ -251,7 +254,7 @@ public sealed partial class FileAccess : ElectronObject
             lock (_gate)
             {
                 EnsureOpen();
-                SetUnixPermissions(_absolutePath, value);
+                SetUnixPermissions(_physicalPath, value);
             }
         }
     }
@@ -260,6 +263,9 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="path">A nonempty ordinary, <c>res://</c>, or <c>user://</c> path.</param>
     /// <param name="mode">The required read, write, truncation, and creation behavior.</param>
     /// <returns>A new owner of the opened file stream.</returns>
+    /// <remarks>OS.SetUseFileAccessSaveAndSwap selects staging for the exact Write mode at open. Path retains the
+    /// supplied name and AbsolutePath identifies staging. Close/disposal publishes completed output; Flush alone does not.
+    /// I/O write failure aborts staging. A failed final replacement retains completed staging for recovery.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The path is empty or <paramref name="mode"/> is invalid.</exception>
     /// <exception cref="IOException">The file cannot be opened.</exception>
@@ -475,7 +481,7 @@ public sealed partial class FileAccess : ElectronObject
         return result;
     }
 
-    /// <summary>Closes the file, committing buffered transformed data when necessary.</summary>
+    /// <summary>Closes the file, committing transformed data or completed save-and-swap output when necessary.</summary>
     /// <remarks>The method is idempotent. Owned buffers and key material are released even when commit or deletion fails.</remarks>
     /// <exception cref="IOException">A pending write cannot be committed or a temporary file cannot be deleted.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller cannot replace or delete the physical file.</exception>
@@ -492,7 +498,7 @@ public sealed partial class FileAccess : ElectronObject
     }
 
     /// <summary>Flushes pending data to the physical file.</summary>
-    /// <remarks>Transformed data is encoded and atomically replaces the destination; ordinary streams are flushed to disk.</remarks>
+    /// <remarks>Transformed data atomically replaces the destination. Save-and-swap streams flush staging without publishing it; ordinary streams flush to disk.</remarks>
     /// <exception cref="InvalidOperationException">The file is closed or was opened read-only.</exception>
     /// <exception cref="IOException">The data cannot be persisted.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
@@ -1541,10 +1547,10 @@ public sealed partial class FileAccess : ElectronObject
         }
     }
 
-    private static FileStream OpenPhysical(string path, FileAccessModeFlags mode) => mode switch
+    private static Stream OpenPhysical(string path, FileAccessModeFlags mode) => mode switch
     {
         FileAccessModeFlags.Read => new FileStream(path, FileMode.Open, IoFileAccess.Read, FileShare.Read),
-        FileAccessModeFlags.Write => new FileStream(path, FileMode.Create, IoFileAccess.Write, FileShare.None),
+        FileAccessModeFlags.Write => OS.UseFileAccessSaveAndSwap ? SaveAndSwapStream.Open(path) : new FileStream(path, FileMode.Create, IoFileAccess.Write, FileShare.None),
         FileAccessModeFlags.ReadWrite => new FileStream(path, FileMode.Open, IoFileAccess.ReadWrite, FileShare.None),
         FileAccessModeFlags.WriteRead => new FileStream(path, FileMode.Create, IoFileAccess.ReadWrite, FileShare.None),
         _ => throw new ArgumentOutOfRangeException(nameof(mode))

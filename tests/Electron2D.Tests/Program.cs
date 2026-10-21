@@ -9,6 +9,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length == 3 && args[0] == "--save-swap-child") { FileSaveAndSwapTests.Child(args[1], args[2]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SAVE_SWAP") is { } saveSwapProfile) { FileSaveAndSwapTests.Run(saveSwapProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINE_STRICTNESS") is { } strictnessProfile) { LineBreakingStrictnessTests.Run(strictnessProfile); return; }
 if (args.Length == 2 && args[0] == "--debanding-storage") { CanvasDebandingTests.ReadStorage(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_STROKES") is { } nativeStrokeProfile) { if (nativeStrokeProfile == "managed") NativeStrokeTests.Managed(); else NativeStrokeTests.Run(nativeStrokeProfile); return; }

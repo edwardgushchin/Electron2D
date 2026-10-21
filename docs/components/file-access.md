@@ -1,6 +1,6 @@
 # File and directory access component
 
-Last updated: 2026-10-13
+Last updated: 2026-10-21
 
 ## Scope
 
@@ -21,7 +21,7 @@ Sources live in [`src/Core/IO/`](../../src/Core/IO/).
 ## Runtime flow
 
 1. A file open resolves the path through `ProjectSettings`, validates the exact mode and transformation inputs, and acquires/decodes the content before returning an instance.
-2. Raw files use a `FileStream`; transformed files use an owned expandable memory stream.
+2. Raw files use a `FileStream`; opt-in exact Write access uses a streaming sibling with close-time replacement through [file save and swap](file-save-and-swap.md). Transformed files use an owned expandable memory stream.
 3. A directory open captures physical/resource/user scope and its current directory. Listing begin captures an unsorted entry snapshot; sorted helpers create independent immutable snapshots.
 4. Every instance operation locks its stream/cursor or directory/listing state boundary.
 5. Dirty compressed/encrypted content is encoded to a complete snapshot and atomically replaces its target on flush/close.
@@ -32,7 +32,7 @@ Sources live in [`src/Core/IO/`](../../src/Core/IO/).
 - Depends on Core object lifetime and process `ProjectSettings` path resolution.
 - Shares an internal atomic-file helper with `ConfigFile`.
 - Uses .NET BCL compression/cryptography/hash/file/directory/drive/link APIs, native Linux/macOS xattrs, Windows alternate data streams, native filesystem identity/case/capacity metadata, Linux mount/bookmark metadata, and macOS volume/file-package metadata.
-- Ordinary files do not depend on Scene, rendering, input, audio, physics or editor. Process-pipe stream adapters use the Core OS owner and approved internal SDL process/IO binding.
+- Ordinary files do not depend on Scene, rendering, input, audio, physics or editor. Process-pipe stream adapters use the Core OS owner and approved internal SDL process/IO binding. Opt-in staged opens use its existing native filesystem classifier without video initialization.
 - Mounted PCK/ZIP resource reads share the typed binary methods and [resource pack resolver](resource-packs.md). Sparse/delta export formats retain separate decoder dependencies.
 
 ## Invariants
@@ -80,3 +80,5 @@ The file-codec slice additionally exercises 110 random/repeated empty, tiny, blo
 
 
 Mounted res:// resources now share [resource pack resolution](resource-packs.md). PCK/ZIP overlays, synthetic directories, read-only packed metadata, relative scene dependencies and bitmap-font pages use the mounted bytes. Ordinary absolute paths and user:// retain physical access. Cached resources keep their normal cache-mode policy.
+
+[File save and swap](file-save-and-swap.md) documents the default-disabled OS policy, physical staging paths, Flush/Close distinction, links, metadata, failure recovery and PCK/OGV integration.

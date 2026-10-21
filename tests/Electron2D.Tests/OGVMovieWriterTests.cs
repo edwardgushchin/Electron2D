@@ -55,7 +55,7 @@ internal static class OGVMovieWriterTests
             Validate(failedPath, 2, 44100, 2, 59, 47); Check(failure.IsDisposed, "Failure closes OGV recording.");
             var snapshot = AnimatedScene(source); snapshot.Size = new(66, 50); snapshot.AddChild(new Finish(3)); snapshot.Ready += _ => { ProjectSettings.Set(ProjectSettings.MovieWriterVideoQuality, 0); ProjectSettings.Set(ProjectSettings.MovieWriterOGVAudioQuality, -.1f); };
             var snapshotPath = Path.Combine(folder, "snapshot.ogv"); Engine.Run(snapshot, snapshotPath, 59); Validate(snapshotPath, 2, 44100, 2, 59, 47);
-            var odd = AnimatedScene(source); odd.Size = new(65, 49); Reject<NotSupportedException>(() => Engine.Run(odd, Path.Combine(folder, "odd.ogv"))); Check(odd.IsDisposed, "Odd-size failure consumes reserved scene.");
+            var odd = AnimatedScene(source); odd.Size = new(65, 49); odd.ContentScaleSize = odd.Size; Reject<NotSupportedException>(() => Engine.Run(odd, Path.Combine(folder, "odd.ogv"))); Check(odd.IsDisposed, "Odd-size failure consumes reserved scene.");
             if (OperatingSystem.IsLinux())
             {
                 var fullPath = Path.Combine(folder, "full.ogv"); File.Delete(fullPath); File.CreateSymbolicLink(fullPath, "/dev/full");
@@ -80,7 +80,7 @@ internal static class OGVMovieWriterTests
         Console.WriteLine("OGV: real capture, all channel modes, quality/speed/keyframes, exact clocks, empty blocks and failure cleanup passed.");
     }
     private static Window AnimatedScene(AudioStream source)
-    { var window = Scene(source); window.AddChild(new AnimatedMarker()); return window; }
+    { var window = Scene(source); window.ContentScaleMode = ContentScaleMode.Viewport; window.ContentScaleSize = new(66, 50); window.AddChild(new AnimatedMarker()); return window; }
     private sealed class AnimatedMarker : Entity
     {
         private int _frame;

@@ -1,0 +1,19 @@
+{
+  "mappings": [
+    {
+      "godot": "OS::method:set_use_file_access_save_and_swap(bool:)",
+      "electron2d": "method:Electron2D.OS.SetUseFileAccessSaveAndSwap(System.Boolean)",
+      "reason": "ADR 0020/0095: retained static process policy, initially false, snapshots subsequent exact Write opens into an exclusive streaming sibling. Flush persists staging; Close/disposal replaces the resolved target. Original Path, physical AbsolutePath/metadata, Unix modes, symlink identity, temporary ownership, independent writers and explicit partial-I/O cancellation/completed-output recovery execute. PCK and native OGV producers cancel invalid output. FileSaveAndSwapTests covers managed failure/child-exit boundaries, 1024 prepared zero-owner/all-thread writes and actual local software Wayland/X11 GPU/Compatibility movie consumers. Foreign hosts, hardware, native allocations and power-loss durability remain unverified."
+    }
+  ],
+  "extras": [],
+  "statusGroups": [
+    {
+      "godot": [
+        "OS::method:set_use_file_access_save_and_swap(bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0020/0095: retained static process policy, initially false, snapshots subsequent exact Write opens into an exclusive streaming sibling. Flush persists staging; Close/disposal replaces the resolved target. Original Path, physical AbsolutePath/metadata, Unix modes, symlink identity, temporary ownership, independent writers and explicit partial-I/O cancellation/completed-output recovery execute. PCK and native OGV producers cancel invalid output. FileSaveAndSwapTests covers managed failure/child-exit boundaries, 1024 prepared zero-owner/all-thread writes and actual local software Wayland/X11 GPU/Compatibility movie consumers. Foreign hosts, hardware, native allocations and power-loss durability remain unverified."
+    }
+  ]
+}

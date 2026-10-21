@@ -1,6 +1,6 @@
 # Non-real-time movie writing
 
-Last updated: 2026-10-16
+Last updated: 2026-10-21
 
 <a id="adr-0109"></a>
 ## ADR 0109: Typed movie writers over the owned window lifecycle
@@ -30,7 +30,7 @@ The OGV handler samples shared video quality and MovieWriterOGVAudioQuality (-0.
 
 Vorbis channel mapping differs from the mixer. Reorder 5.1/7.1 into the standard Vorbis speaker order. Vorbis has no standard 3.1 layout: preserve its front/center/LFE roles in a six-channel 5.1 container with silent rear channels, while the mixer and writer input remain four-channel 3.1. Do not relabel center/LFE as the rear channels of four-channel quadraphonic Vorbis. Stereo remains two channels. Container conversion does not alter AudioServer speaker mode.
 
-Preserve rational cumulative audio counts, including frames with no PCM samples; a zero-length per-frame block must not signal Vorbis EOS. Isolate the initial zero-duration Vorbis priming packet on its own page so very short recordings retain an unambiguous starting clock. Delay draining the newest Theora frame until its successor or End so the last packet receives EOS. Mux copied pending pages by granule time; End drains both logical streams, including header-only zero-frame output. Managed write callbacks contain exceptions, fail the recording and always release native/file ownership. A disk failure may leave incomplete output; scene failures finalize already submitted frames. Readback/conversion/encoding/muxing are cold allocating work, independent of the prepared mixer allocation contract.
+Preserve rational cumulative audio counts, including frames with no PCM samples; a zero-length per-frame block must not signal Vorbis EOS. Isolate the initial zero-duration Vorbis priming packet on its own page so very short recordings retain an unambiguous starting clock. Delay draining the newest Theora frame until its successor or End so the last packet receives EOS. Mux copied pending pages by granule time; End drains both logical streams, including header-only zero-frame output. Managed write callbacks contain exceptions, fail the recording and always release native/file ownership. A disk failure may leave incomplete output under direct writing. The default-disabled ADR 0020 save-and-swap policy stages exact Write OGV streams; codec/callback initialization, frame or finalization failure cancels staging, while successful EOS/close publishes it. Mixed-mode AVI/PNG WAV output keeps direct semantics. Scene failures finalize already submitted valid frames. Readback/conversion/encoding/muxing are cold allocating work, independent of the prepared mixer allocation contract.
 
 ### Verification boundary
 

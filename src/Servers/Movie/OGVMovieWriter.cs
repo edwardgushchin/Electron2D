@@ -25,16 +25,24 @@ internal sealed partial class OGVMovieWriter : MovieWriter
         var speed = ProjectSettings.GetWithOverride(ProjectSettings.MovieWriterOGVEncodingSpeed);
         var keyframes = ProjectSettings.GetWithOverride(ProjectSettings.MovieWriterOGVKeyframeInterval);
         _file = FileAccess.Open(basePath, FileAccessModeFlags.Write);
-        _handle = GCHandle.Alloc(this);
-        Check(Create(movieSize.X, movieSize.Y, fps, (int)AudioServer.GetMixRate(), _channels, quality, audioQuality, speed, keyframes,
+        try
+        {
+            _handle = GCHandle.Alloc(this);
+            Check(Create(movieSize.X, movieSize.Y, fps, (int)AudioServer.GetMixRate(), _channels, quality, audioQuality, speed, keyframes,
             &WritePage, GCHandle.ToIntPtr(_handle), out _encoder));
+        }
+        catch { _failed = true; throw; }
     }
     protected override unsafe void OnWriteFrame(Image frameImage, ReadOnlySpan<int> audioFrameBlock)
     {
-        var rgb = frameImage.GetData();
-        fixed (byte* pixels = rgb)
-        fixed (int* audio = audioFrameBlock)
-            Check(Frame(_encoder, pixels, (nuint)rgb.Length, audio, audioFrameBlock.Length / _channels));
+        try
+        {
+            var rgb = frameImage.GetData();
+            fixed (byte* pixels = rgb)
+            fixed (int* audio = audioFrameBlock)
+                Check(Frame(_encoder, pixels, (nuint)rgb.Length, audio, audioFrameBlock.Length / _channels));
+        }
+        catch { _failed = true; throw; }
     }
     private void Check(int status)
     {
@@ -45,13 +53,14 @@ internal sealed partial class OGVMovieWriter : MovieWriter
     protected override void OnWriteEnd()
     {
         try { if (_encoder != 0 && !_failed) Check(Finish(_encoder)); }
+        catch { _failed = true; throw; }
         finally
         {
             try { if (_encoder != 0) { Destroy(_encoder); _encoder = 0; } }
             finally
             {
                 if (_handle.IsAllocated) _handle.Free();
-                var file = _file; _file = null; file?.Dispose();
+                var file = _file; _file = null; if (_failed) file?.CancelPendingSave(); file?.Dispose();
             }
         }
     }

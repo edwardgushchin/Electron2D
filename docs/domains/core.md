@@ -333,3 +333,5 @@ Factory construction provenance is shared by resource, script, file and scene cr
 [Host delta smoothing](../components/host-delta-smoothing.md) connects OS/project policy and effective native VSync to the ordinary owned clock before fixed-step synchronization. Manual and fixed movie input remain explicit; FPS, diagnostics and pacing use measured time.
 
 [Project line-breaking strictness](../components/line-breaking-strictness.md) now selects native locale line rules for all shared text layouts and retained buffers. Its first nonempty-analysis snapshot, explicit language options and restart boundary are documented with executable consumers.
+
+[File save and swap](../components/file-save-and-swap.md) adds opt-in streaming write-only saves with close-time replacement, physical staging metadata and producer failure cancellation through the retained static OS service.

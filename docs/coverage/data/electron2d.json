@@ -133703,6 +133703,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.SetUseFileAccessSaveAndSwap(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "SetUseFileAccessSaveAndSwap",
+    "signature": "public static System.Void SetUseFileAccessSaveAndSwap(System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.ShellOpen(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.OS",

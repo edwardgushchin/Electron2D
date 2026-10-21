@@ -20,7 +20,7 @@ public sealed class PCKPacker : ElectronObject
     /// <summary>Creates a closed resource package writer.</summary>
     public PCKPacker() { }
 
-    /// <summary>Starts a new package, truncating its destination after validating the options.</summary>
+    /// <summary>Starts a new package after validating the options.</summary>
     /// <param name="pckPath">Ordinary, res:// or user:// destination path.</param>
     /// <param name="alignment">Positive byte alignment for the file region and every entry.</param>
     /// <param name="key">Exactly 64 hexadecimal characters defining the AES-256 key.</param>
@@ -29,6 +29,7 @@ public sealed class PCKPacker : ElectronObject
     /// <exception cref="ArgumentOutOfRangeException">Alignment is not positive.</exception>
     /// <exception cref="IOException">A previous session cannot flush or the destination cannot open.</exception>
     /// <exception cref="ObjectDisposedException">This writer is disposed.</exception>
+    /// <remarks>The OS save-and-swap policy defers publication until successful finalization; faulted staging is cancelled.</remarks>
     public void PCKStart(string pckPath, int alignment = 32, string key = "0000000000000000000000000000000000000000000000000000000000000000", bool encryptDirectory = false)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(alignment);
@@ -112,6 +113,7 @@ public sealed class PCKPacker : ElectronObject
     private void Finish(bool verbose = false)
     {
         if (_stream is null) return;
+        var complete = false;
         try
         {
             if (_faulted) return;
@@ -132,14 +134,15 @@ public sealed class PCKPacker : ElectronObject
             _stream.Position = 32; header.Write(start); _stream.Position = start; header.Write(_entries.Count);
             if (_encryptDirectory) PCKFormat.Encrypt(_stream, directory.GetBuffer().AsSpan(0, (int)directory.Length), _key);
             else directory.WriteTo(_stream);
-            _stream.Flush();
+            _stream.Flush(); complete = true;
         }
-        finally { Release(); }
+        finally { Release(complete); }
     }
 
-    private void Release()
+    private void Release(bool complete = false)
     {
         var file = _file; _file = null; _stream = null; _entries.Clear(); CryptographicOperations.ZeroMemory(_key);
+        if (!complete) file?.CancelPendingSave();
         file?.Dispose();
     }
 

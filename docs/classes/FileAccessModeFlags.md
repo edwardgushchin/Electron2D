@@ -68,3 +68,5 @@ The enum depends only on `System.FlagsAttribute`. `CreateTemp` creates the empty
 ## Verification
 
 `tests/Electron2D.Tests/Program.cs` verifies every mode's existence/truncation/read/write behavior and invalid combinations.
+
+Exact Write participates in the default-disabled [save-and-swap policy](../components/file-save-and-swap.md): creation/truncation becomes visible on close. ReadWrite and WriteRead remain direct.
