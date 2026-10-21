@@ -6405,7 +6405,7 @@
         "AnimatableBody2D::property:sync_to_physics"
       ],
       "state": "Implemented",
-      "reason": "Kinematic target velocity moves rigid contacts while fixed-step synchronization controls scene presentation; AnimatableBodyTests now runs the same mode, rotation, zero-step, callback-failure, packing, reentry and warm active/idle allocation cases on public CPU/GPU worlds (ADR 0060)."
+      "reason": "Kinematic target velocity moves rigid contacts while fixed-step synchronization controls scene presentation; AnimatableBodyTests now runs the same mode, rotation, zero-step, callback-failure, packing, reentry and warm active/idle allocation cases on public CPU/GPU worlds (ADR 0060). Current-group AnimatableBody synchronization reads/writes now share inherited pose authoring: pending/idle/zero-step presentation, original observer errors, physical/query identities, dynamic contact response, capture/lifetime/foreign/numerical guards and zero warmed full-frame bytes execute through public consumers. Indexed descriptor writes retain their owner boundary. Evidence: bin/physics-group-kinematic-sync/2026-10-21/validation.json; other inherited worker capabilities remain Partial."
     },
     {
       "godot": [

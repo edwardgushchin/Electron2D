@@ -24,15 +24,17 @@ public sealed partial class AnimatableBody : StaticBody
     /// <summary>Gets or sets whether transform changes are presented after the next fixed physics step.</summary>
     /// <value>True by default. False shows a caller's transform change immediately.</value>
     /// <remarks>Both modes send the target through the kinematic solver, deriving contact velocity from
-    /// the change over one fixed step. Attached access requires the scene owner thread.</remarks>
-    /// <exception cref="InvalidOperationException">Attached access is off the scene owner thread.</exception>
+    /// the change over one fixed step. Attached access permits the scene owner or this body's current processing
+    /// group. Worker edits change presentation metadata immediately; the joined owner consumes the target before
+    /// its next numerical step. Writes retain capture and physical-borrow validation, including equal values.</remarks>
+    /// <exception cref="InvalidOperationException">Access is outside the owner/current group, or a write occurs during scene capture or an incompatible physical borrow.</exception>
     /// <exception cref="ObjectDisposedException">The body has been disposed.</exception>
     public bool SyncToPhysics
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _syncToPhysics; }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this); return _syncToPhysics; }
         set
         {
-            EnsureMutable();
+            EnsureTransformMutable();
             if (_syncToPhysics == value) return;
             if (!value && _hasTarget)
             {

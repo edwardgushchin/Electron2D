@@ -1,5 +1,7 @@
 # Engine inventory
 
+AnimatableBody synchronization now shares the current-group pose-authoring boundary, with immediate pending-target presentation and joined owner numerical preparation. [Contract and verification](components/physics-bodies.md#kinematic-synchronization-from-processing-groups). No production type or public declaration was added.
+
 [Completed canvas counters](components/canvas-counters.md) use [ViewportRenderInfo](classes/ViewportRenderInfo.md), [ViewportRenderInfoType](classes/ViewportRenderInfoType.md) and [RenderingServer.RenderingInfo](classes/RenderingServer.RenderingInfo.md) for actual submitted geometry. Existing CanvasBatch/CanvasBackend/Viewport/RenderingServer/Performance retain the counter state and completion boundary; no independent renderer or profiling service is added.
 
 [MissingNode](classes/MissingNode.md) now provides loader-created recovery of unavailable compiled node factories and linked scene files. Its bounded typed fields and retained connection records integrate with current archive, scene and duplication lifetimes. The internal UnresolvedSceneConnectionSchema metadata role and Node.RecordedConnectionLease are documented in [scene recovery internals](classes/UnresolvedSceneConnectionSchema.md).

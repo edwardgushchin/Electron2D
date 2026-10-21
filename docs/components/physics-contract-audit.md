@@ -2,6 +2,8 @@
 
 # Physics contract and backend audit
 
+[Current-group kinematic synchronization](physics-bodies.md#kinematic-synchronization-from-processing-groups) permits AnimatableBody.SyncToPhysics alongside its already executable worker poses. The bounded pending/idle/zero-step, selected contact/query, lifetime/capture/failure and allocation checks add behavior evidence without closing other inherited or native/performance gates. Counts remain 1305/1369 Implemented (95.33%), 64 open, 92 Excluded.
+
 [Script-factory allocation diagnostics](gpu-resident-reports.md#script-factory-allocation-investigation)
 preserve the full-suite 0/64-byte failure alongside calibrated object/stack traces
 and 72 passing factory cases on the frozen payload. The failing interval has no
@@ -2034,3 +2036,13 @@ The exact managed/NativeAOT Linux checks, zero-byte frame brackets, source/PDB c
 ## One-way motion corner entry
 
 [One-way entry](physics-queries.md#one-way-body-motion-entry) corrects an overbroad input-motion prefilter in CPU, resident GPU and the independently registered provider. It restores tangent/receding front-corner hits while preserving initial-overlap departure, side/back rejection, later obstacle selection and existing depth/ray rules. The extension motion row remains Partial pending the rest of its numerical/custom contract; no declaration count is promoted by this bounded fix.
+
+## Inherited output linear notification
+
+The inherited output-linear notification remains Unimplemented. The pinned Window
+contract couples it to an observed output value and HDR request/fallback pipeline;
+`GPUCanvasBackend.ApplyVSync` currently always selects an SDR swapchain, and its
+presentation pass converts linear canvas content to SDR. Existing half-float
+canvas targets under ADR 0028 do not supply native HDR output. A numeric constant
+or unconsumed SDL HDR event would not implement this contract. Complete the actual
+per-window output mode/value/event chain before closing this inherited row.

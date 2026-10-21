@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-21
 
+[Kinematic synchronization in processing groups](../components/physics-bodies.md#kinematic-synchronization-from-processing-groups) now permits the current group to read and switch AnimatableBody presentation policy while retaining capture, ownership and physical-borrow guards. Declaration coverage stays 1305/1369 (95.33%); inherited and final acceptance gaps remain open.
+
 [The complete numerical-thread setting contract](../components/physics-thread.md#complete-setting-contract-2026-10-21)
 now verifies captured true/false/feature policies, aliases, independent NVIDIA GPU,
 CPU startup fallback, owner callbacks, terminal errors and joined retirement in

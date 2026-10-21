@@ -69,7 +69,7 @@ Rigid and static bodies gain capsule contact response, and areas gain capsule se
 <a id="adr-0060"></a>
 ## ADR 0060: Fixed-step kinematic platform motion
 
-Last updated: 2026-09-30
+Last updated: 2026-10-21
 
 - Status: Accepted
 - Scope: AnimatableBody scene role and synchronized kinematic movement
@@ -83,6 +83,7 @@ Static bodies constrain a rigid body but teleport when their scene transform cha
 
 - Allow `StaticBody` inheritance and add `AnimatableBody : StaticBody` with stored `SyncToPhysics=true`. It borrows existing collision shapes and the inherited surface material. Its backend body is kinematic with zero mass: contacts and external forces cannot displace it, but movement affects dynamic bodies through contact velocity.
 - After node physics callbacks and before the world step, send the latest finite unit-scale, zero-skew target to the backend for that step. With synchronization enabled, a caller's local transform edit records the global target, restores the last solved scene transform, and presents the backend result after the step. Zero delta does not consume the target. With synchronization disabled, the scene transform changes immediately while the backend reaches it during the next step. Disabling synchronization with a pending target presents that target immediately. Preserve the exact derived node type and flag in PackedScene.
+- `SyncToPhysics` reads and writes permit the scene owner or the body's current processing group. This is the same presentation metadata boundary as own-group Entity pose edits under ADR 0008: guard capture, lifetime, group membership and physical borrows before even equal writes. Commit the flag, pending target and presentation immediately, including synchronous local observers; the joined owner consumes the target before numerical stepping. Do not grant arbitrary physical writes, foreign-group access, or descriptor-based indexed writes through this policy.
 - Keep the existing body fixture and material synchronization, but avoid teleporting this kinematic backend when its scene transform changes. A shared internal transform hook leaves rigid/static behavior intact. Clear pending movement on tree exit; reentry captures the current scene pose. Invalid scaled/skewed targets reject after restoring the prior scene pose. A throwing user transform callback does not erase a valid pending target. Warm active and idle kinematic paths reuse existing backend storage and allocate zero managed bytes in the checked Linux/.NET 8 profile.
 
 ### Consequences

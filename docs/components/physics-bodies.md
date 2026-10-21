@@ -374,3 +374,39 @@ The [complete processing metadata contract](scene-tree.md#complete-processing-me
 Inherited [ordinary event blocking](../classes/ElectronObject.md#ordinary-event-delivery) suppresses new event emissions at the publisher, preserving subscriptions and already accepted deferred work. Notifications, virtual callbacks, committed physical state and resource revisions continue; Disposed cleanup remains independent.
 
 [Physical canvas notification publication](scene-hierarchy.md#physical-canvas-notifications-from-processing-groups) now preserves current-group body/Area/tile identity requests and effective participation through the joined owner phase. Logical canvas-layer reads accept active groups; attachment epochs and exact generated RID targets protect owner reentry. General reserved notification consumers remain Partial.
+
+## Kinematic synchronization from processing groups
+
+`AnimatableBody.SyncToPhysics` now uses the same logical authoring validation as
+its inherited Entity poses. The owner or current processing group may read and
+change it. Disabling synchronization presents an already pending target on that
+caller; reenabling captures the current scene pose and stages subsequent targets.
+The original scene owner still prepares and solves the selected world after all
+workers join. No numerical state is written by this property on a worker.
+
+Validation precedes equal-value exits and pending-state changes. Capture, disposed
+objects, foreign groups, unrelated jobs and borrowed numerical hooks retain their
+individual rejection boundaries. Completed public body callbacks run on the scene
+owner and may change this policy. Typed current-group calls and setters invoke the
+ordinary property directly; indexed descriptor writes retain their owner guard.
+Synchronous local observers read the current policy outside scene queue gates; an
+observer error retains a valid target and reaches the frame's aggregated errors.
+
+[GroupKinematicSync](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.GroupKinematicSync.cs)
+checks pending-target toggles, idle and zero-duration frames, capture/storage,
+foreign/equal/numerical writes, original observer errors, stable query/body
+identities and a moving platform's dynamic rider. Prepared intervals include 128
+complete selected physics steps and point queries, with zero owner/all-thread
+managed bytes. Evidence: `bin/physics-group-kinematic-sync/2026-10-21/validation.json`;
+its pinned source manifest audits the complete synchronization declaration family.
+Twelve public CoreCLR and twelve strict NativeAOT profiles exercise CPU, independent
+NVIDIA GPU and the registered provider, each with owner/separate numerical execution
+and ordinary/pooled scene owners. Two root-runner profiles bring the measured total
+to 3328 full steps across 26 zero-byte profiles. Two original transform-authoring
+profiles and the sixteen-family shared physics suite on CPU/GPU also pass. The final
+fixture fails against the baseline runtime at the old owner-only getter; its frozen
+source/PDB and payload manifests preserve both sides of this regression check.
+The 0.02 scene-unit target tolerance matches the existing kinematic checks; the
+resting rider uses the existing 77..83 support interval and positive lateral
+transport rather than matching solver list order. Native allocator totals,
+foreign platforms, real window/FPS and mass-scene performance remain open.
