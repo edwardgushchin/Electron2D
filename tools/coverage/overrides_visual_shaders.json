@@ -1114,6 +1114,236 @@
       "godot": "VisualShaderNodeRemap::property:op_type",
       "electron2d": "property:Electron2D.VisualShaderNodeRemap.OpType()",
       "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "godot": "class:VisualShaderNodeIntOp",
+      "electron2d": "T:Electron2D.VisualShaderNodeIntOp",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntOp::enum:Operator",
+      "electron2d": "T:Electron2D.VisualShaderIntegerOperator",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntOp::enum_value:Operator.OP_ADD",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.Add()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntOp::enum_value:Operator.OP_BITWISE_AND",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.BitwiseAnd()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntOp::enum_value:Operator.OP_BITWISE_LEFT_SHIFT",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.BitwiseLeftShift()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntOp::enum_value:Operator.OP_BITWISE_OR",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.BitwiseOr()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntOp::enum_value:Operator.OP_BITWISE_RIGHT_SHIFT",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.BitwiseRightShift()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntOp::enum_value:Operator.OP_BITWISE_XOR",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.BitwiseXor()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntOp::enum_value:Operator.OP_DIV",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.Divide()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntOp::enum_value:Operator.OP_ENUM_SIZE",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.EnumSize()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntOp::enum_value:Operator.OP_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntOp::enum_value:Operator.OP_MIN",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.Min()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntOp::enum_value:Operator.OP_MOD",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.Modulo()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntOp::enum_value:Operator.OP_MUL",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.Multiply()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntOp::enum_value:Operator.OP_SUB",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.Subtract()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntOp::property:operator",
+      "electron2d": "property:Electron2D.VisualShaderNodeIntOp.Operator()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "class:VisualShaderNodeUIntOp",
+      "electron2d": "T:Electron2D.VisualShaderNodeUIntOp",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntOp::enum:Operator",
+      "electron2d": "T:Electron2D.VisualShaderIntegerOperator",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntOp::enum_value:Operator.OP_ADD",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.Add()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntOp::enum_value:Operator.OP_BITWISE_AND",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.BitwiseAnd()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntOp::enum_value:Operator.OP_BITWISE_LEFT_SHIFT",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.BitwiseLeftShift()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntOp::enum_value:Operator.OP_BITWISE_OR",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.BitwiseOr()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntOp::enum_value:Operator.OP_BITWISE_RIGHT_SHIFT",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.BitwiseRightShift()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntOp::enum_value:Operator.OP_BITWISE_XOR",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.BitwiseXor()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntOp::enum_value:Operator.OP_DIV",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.Divide()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntOp::enum_value:Operator.OP_ENUM_SIZE",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.EnumSize()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntOp::enum_value:Operator.OP_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntOp::enum_value:Operator.OP_MIN",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.Min()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntOp::enum_value:Operator.OP_MOD",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.Modulo()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntOp::enum_value:Operator.OP_MUL",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.Multiply()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntOp::enum_value:Operator.OP_SUB",
+      "electron2d": "enumValue:Electron2D.VisualShaderIntegerOperator.Subtract()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntOp::property:operator",
+      "electron2d": "property:Electron2D.VisualShaderNodeUIntOp.Operator()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "class:VisualShaderNodeIntFunc",
+      "electron2d": "T:Electron2D.VisualShaderNodeIntFunc",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntFunc::enum:Function",
+      "electron2d": "T:Electron2D.VisualShaderNodeIntFunc.FunctionEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntFunc::enum_value:Function.FUNC_ABS",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeIntFunc.FunctionEnum.Abs()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntFunc::enum_value:Function.FUNC_BITWISE_NOT",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeIntFunc.FunctionEnum.BitwiseNot()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntFunc::enum_value:Function.FUNC_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeIntFunc.FunctionEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntFunc::enum_value:Function.FUNC_NEGATE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeIntFunc.FunctionEnum.Negate()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntFunc::enum_value:Function.FUNC_SIGN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeIntFunc.FunctionEnum.Sign()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeIntFunc::property:function",
+      "electron2d": "property:Electron2D.VisualShaderNodeIntFunc.Function()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "class:VisualShaderNodeUIntFunc",
+      "electron2d": "T:Electron2D.VisualShaderNodeUIntFunc",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntFunc::enum:Function",
+      "electron2d": "T:Electron2D.VisualShaderNodeUIntFunc.FunctionEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntFunc::enum_value:Function.FUNC_BITWISE_NOT",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeUIntFunc.FunctionEnum.BitwiseNot()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntFunc::enum_value:Function.FUNC_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeUIntFunc.FunctionEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntFunc::enum_value:Function.FUNC_NEGATE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeUIntFunc.FunctionEnum.Negate()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
+    },
+    {
+      "godot": "VisualShaderNodeUIntFunc::property:function",
+      "electron2d": "property:Electron2D.VisualShaderNodeUIntFunc.Function()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
     }
   ],
   "statusGroups": [
@@ -1490,6 +1720,58 @@
         "VisualShaderNodeRemap::property:op_type"
       ],
       "reason": "ADRs 0001/0004/0013/0028/0051: executable numeric interval/threshold/interpolation graph definitions preserve typed scalar/vector/control roles, exact selectors, transactional default conversion, copy/archive and existing offline canvas materials. Shared scalar-control layout identities use VisualShaderNumericOpType; integer clamp and fused multiply/add retain their numeric roles. Nonselectable bounds reject without mutation. Graph edits remain cold source authoring."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:VisualShaderNodeIntOp",
+        "VisualShaderNodeIntOp::enum:Operator",
+        "VisualShaderNodeIntOp::enum_value:Operator.OP_ADD",
+        "VisualShaderNodeIntOp::enum_value:Operator.OP_BITWISE_AND",
+        "VisualShaderNodeIntOp::enum_value:Operator.OP_BITWISE_LEFT_SHIFT",
+        "VisualShaderNodeIntOp::enum_value:Operator.OP_BITWISE_OR",
+        "VisualShaderNodeIntOp::enum_value:Operator.OP_BITWISE_RIGHT_SHIFT",
+        "VisualShaderNodeIntOp::enum_value:Operator.OP_BITWISE_XOR",
+        "VisualShaderNodeIntOp::enum_value:Operator.OP_DIV",
+        "VisualShaderNodeIntOp::enum_value:Operator.OP_ENUM_SIZE",
+        "VisualShaderNodeIntOp::enum_value:Operator.OP_MAX",
+        "VisualShaderNodeIntOp::enum_value:Operator.OP_MIN",
+        "VisualShaderNodeIntOp::enum_value:Operator.OP_MOD",
+        "VisualShaderNodeIntOp::enum_value:Operator.OP_MUL",
+        "VisualShaderNodeIntOp::enum_value:Operator.OP_SUB",
+        "VisualShaderNodeIntOp::property:operator",
+        "class:VisualShaderNodeUIntOp",
+        "VisualShaderNodeUIntOp::enum:Operator",
+        "VisualShaderNodeUIntOp::enum_value:Operator.OP_ADD",
+        "VisualShaderNodeUIntOp::enum_value:Operator.OP_BITWISE_AND",
+        "VisualShaderNodeUIntOp::enum_value:Operator.OP_BITWISE_LEFT_SHIFT",
+        "VisualShaderNodeUIntOp::enum_value:Operator.OP_BITWISE_OR",
+        "VisualShaderNodeUIntOp::enum_value:Operator.OP_BITWISE_RIGHT_SHIFT",
+        "VisualShaderNodeUIntOp::enum_value:Operator.OP_BITWISE_XOR",
+        "VisualShaderNodeUIntOp::enum_value:Operator.OP_DIV",
+        "VisualShaderNodeUIntOp::enum_value:Operator.OP_ENUM_SIZE",
+        "VisualShaderNodeUIntOp::enum_value:Operator.OP_MAX",
+        "VisualShaderNodeUIntOp::enum_value:Operator.OP_MIN",
+        "VisualShaderNodeUIntOp::enum_value:Operator.OP_MOD",
+        "VisualShaderNodeUIntOp::enum_value:Operator.OP_MUL",
+        "VisualShaderNodeUIntOp::enum_value:Operator.OP_SUB",
+        "VisualShaderNodeUIntOp::property:operator",
+        "class:VisualShaderNodeIntFunc",
+        "VisualShaderNodeIntFunc::enum:Function",
+        "VisualShaderNodeIntFunc::enum_value:Function.FUNC_ABS",
+        "VisualShaderNodeIntFunc::enum_value:Function.FUNC_BITWISE_NOT",
+        "VisualShaderNodeIntFunc::enum_value:Function.FUNC_MAX",
+        "VisualShaderNodeIntFunc::enum_value:Function.FUNC_NEGATE",
+        "VisualShaderNodeIntFunc::enum_value:Function.FUNC_SIGN",
+        "VisualShaderNodeIntFunc::property:function",
+        "class:VisualShaderNodeUIntFunc",
+        "VisualShaderNodeUIntFunc::enum:Function",
+        "VisualShaderNodeUIntFunc::enum_value:Function.FUNC_BITWISE_NOT",
+        "VisualShaderNodeUIntFunc::enum_value:Function.FUNC_MAX",
+        "VisualShaderNodeUIntFunc::enum_value:Function.FUNC_NEGATE",
+        "VisualShaderNodeUIntFunc::property:function"
+      ],
+      "reason": "ADRs 0001/0004/0013/0028/0051: executable signed/unsigned 32-bit graph operations retain exact integer ports, defaults, native arithmetic/bit operations, selectors, copy/archive and existing offline material execution. The binary selector is shared as VisualShaderIntegerOperator; unary value sets retain distinct FunctionEnum types. Full-byte readback and UV-derived integer computation cover both stages. Native undefined-domain boundaries are verified through import/fresh load, not portable pixel expectations."
     }
   ],
   "extras": [
@@ -1908,6 +2190,54 @@
     {
       "electron2d": "method:Electron2D.VisualShaderNodeRemap.GetPropertyDescriptors()",
       "reason": "ADRs 0001/0013/0028: explicit compiled numeric graph Resource construction, duplicate factory and stored layout descriptor over existing portable graph defaults."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeIntOp..ctor()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled integer graph Resource constructor, duplicate-instance factory and stored operation selector over existing typed default/archive semantics."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeIntOp.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled integer graph Resource constructor, duplicate-instance factory and stored operation selector over existing typed default/archive semantics."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeIntOp.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled integer graph Resource constructor, duplicate-instance factory and stored operation selector over existing typed default/archive semantics."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeUIntOp..ctor()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled integer graph Resource constructor, duplicate-instance factory and stored operation selector over existing typed default/archive semantics."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeUIntOp.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled integer graph Resource constructor, duplicate-instance factory and stored operation selector over existing typed default/archive semantics."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeUIntOp.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled integer graph Resource constructor, duplicate-instance factory and stored operation selector over existing typed default/archive semantics."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeIntFunc..ctor()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled integer graph Resource constructor, duplicate-instance factory and stored operation selector over existing typed default/archive semantics."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeIntFunc.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled integer graph Resource constructor, duplicate-instance factory and stored operation selector over existing typed default/archive semantics."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeIntFunc.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled integer graph Resource constructor, duplicate-instance factory and stored operation selector over existing typed default/archive semantics."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeUIntFunc..ctor()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled integer graph Resource constructor, duplicate-instance factory and stored operation selector over existing typed default/archive semantics."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeUIntFunc.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled integer graph Resource constructor, duplicate-instance factory and stored operation selector over existing typed default/archive semantics."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeUIntFunc.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: explicit compiled integer graph Resource constructor, duplicate-instance factory and stored operation selector over existing typed default/archive semantics."
     }
   ]
 }

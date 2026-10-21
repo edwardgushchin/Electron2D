@@ -28,6 +28,7 @@ internal static partial class GraphChecks
         UnaryCPU();
         DataflowCPU();
         RangesCPU();
+        IntegersCPU();
         using var graph = new VisualShader();
         using var scalar = new VisualShaderNodeFloatConstant { Constant = .375f };
         using var operation = new VisualShaderNodeFloatOp();
@@ -133,6 +134,7 @@ internal static partial class GraphChecks
         AuthorFunctions(folder);
         AuthorDataflow(folder);
         AuthorRanges(folder);
+        AuthorIntegers(folder);
         using (var graph = new VisualShader())
         using (var color = new VisualShaderNodeColorConstant { Constant = new(.25f, .5f, .75f, 1) })
         using (var alpha = new VisualShaderNodeFloatConstant { Constant = 1 })
@@ -185,6 +187,7 @@ internal static partial class GraphChecks
                 "A zero-width native arithmetic boundary imports and reloads without fabricating a finite value.");
         }
         ReadRanges(graph);
+        if (IOPath.GetFileNameWithoutExtension(file).StartsWith("integer-", StringComparison.Ordinal)) VerifyIntegerArchive(IOPath.GetFileNameWithoutExtension(file), graph);
         Check(graph.GetMode() == Shader.Mode.CanvasItem, "Imported graph domain.");
         Check(graph.GetSPIRV(RenderingDevice.ShaderStage.Vertex).Length > 20 && graph.GetSPIRV(RenderingDevice.ShaderStage.Fragment).Length > 20, "Both canvas stages are compiled.");
         Console.WriteLine("Imported visual shader loaded with both native program stages.");

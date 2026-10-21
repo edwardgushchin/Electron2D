@@ -963,8 +963,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeIf](classes/VisualShaderNodeIf.md) | VisualShaderNode | Unimplemented | 0 |
 | [VisualShaderNodeInput](classes/VisualShaderNodeInput.md) | VisualShaderNode | Partial | 3 |
 | [VisualShaderNodeIntConstant](classes/VisualShaderNodeIntConstant.md) | VisualShaderNodeConstant | Implemented | 1 |
-| [VisualShaderNodeIntFunc](classes/VisualShaderNodeIntFunc.md) | VisualShaderNode | Unimplemented | 7 |
-| [VisualShaderNodeIntOp](classes/VisualShaderNodeIntOp.md) | VisualShaderNode | Unimplemented | 15 |
+| [VisualShaderNodeIntFunc](classes/VisualShaderNodeIntFunc.md) | VisualShaderNode | Implemented | 7 |
+| [VisualShaderNodeIntOp](classes/VisualShaderNodeIntOp.md) | VisualShaderNode | Implemented | 15 |
 | [VisualShaderNodeIntParameter](classes/VisualShaderNodeIntParameter.md) | VisualShaderNodeParameter | Blocked | 13 |
 | [VisualShaderNodeIs](classes/VisualShaderNodeIs.md) | VisualShaderNode | Unimplemented | 5 |
 | [VisualShaderNodeLinearSceneDepth](classes/VisualShaderNodeLinearSceneDepth.md) | VisualShaderNode | Excluded | 0 |
@@ -1017,8 +1017,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeTransformParameter](classes/VisualShaderNodeTransformParameter.md) | VisualShaderNodeParameter | Excluded | 2 |
 | [VisualShaderNodeTransformVecMult](classes/VisualShaderNodeTransformVecMult.md) | VisualShaderNode | Excluded | 7 |
 | [VisualShaderNodeUIntConstant](classes/VisualShaderNodeUIntConstant.md) | VisualShaderNodeConstant | Implemented | 1 |
-| [VisualShaderNodeUIntFunc](classes/VisualShaderNodeUIntFunc.md) | VisualShaderNode | Unimplemented | 5 |
-| [VisualShaderNodeUIntOp](classes/VisualShaderNodeUIntOp.md) | VisualShaderNode | Unimplemented | 15 |
+| [VisualShaderNodeUIntFunc](classes/VisualShaderNodeUIntFunc.md) | VisualShaderNode | Implemented | 5 |
+| [VisualShaderNodeUIntOp](classes/VisualShaderNodeUIntOp.md) | VisualShaderNode | Implemented | 15 |
 | [VisualShaderNodeUIntParameter](classes/VisualShaderNodeUIntParameter.md) | VisualShaderNodeParameter | Blocked | 2 |
 | [VisualShaderNodeUVFunc](classes/VisualShaderNodeUVFunc.md) | VisualShaderNode | Unimplemented | 5 |
 | [VisualShaderNodeUVPolarCoord](classes/VisualShaderNodeUVPolarCoord.md) | VisualShaderNode | Unimplemented | 0 |

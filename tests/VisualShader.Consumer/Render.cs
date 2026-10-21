@@ -3,13 +3,14 @@ using IOPath = System.IO.Path;
 
 internal static partial class GraphChecks
 {
+    private const int GraphColumns = 20;
     internal static void Render(string folder, string[] args)
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu");
         ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         if (args.Contains("msaa")) ProjectSettings.Set(ProjectSettings.MSAA2D, Viewport.MSAA.Samples4X);
-        var rows = (Directory.GetFiles(folder, "*.e2dres").Length + 9) / 10;
-        using var window = new Window { Size = new(288, Math.Max(224, rows * 24 + 24)), Title = "Imported visual shader graphs", UseHDR2D = args.Contains("hdr") };
+        var rows = (Directory.GetFiles(folder, "*.e2dres").Length + GraphColumns - 1) / GraphColumns;
+        using var window = new Window { Size = new(8 + GraphColumns * 24, Math.Max(224, rows * 24 + 24)), Title = "Imported visual shader graphs", UseHDR2D = args.Contains("hdr") };
         window.AddChild(new GraphScene(folder)); Engine.Run(window);
         Check(window.IsDisposed && !RenderingServer.IsAvailable, "Graph render host retires its resources.");
     }
@@ -35,9 +36,10 @@ internal static partial class GraphChecks
             {
                 var name = IOPath.GetFileNameWithoutExtension(file);
                 var shader = Own(ResourceLoader.Load<VisualShader>(file, ResourceLoader.CacheMode.IgnoreDeep));
+                if (name.StartsWith("integer-", StringComparison.Ordinal)) VerifyIntegerArchive(name, shader);
                 if (name.StartsWith("range-", StringComparison.Ordinal)) VerifyRangeArchive(name, shader);
                 var material = Own(new ShaderMaterial { Shader = shader });
-                var position = new Vector2(8 + _cases.Count % 10 * 24, 8 + _cases.Count / 10 * 24);
+                var position = new Vector2(8 + _cases.Count % GraphColumns * 24, 8 + _cases.Count / GraphColumns * 24);
                 var painter = new GraphPainter(texture) { Position = position, Material = material };
                 AddChild(painter); _cases.Add((painter, name, position));
             }
@@ -61,7 +63,8 @@ internal static partial class GraphChecks
                     if (!GetWindow()!.UseHDR2D)
                         expected = new(Math.Clamp(expected.R, 0, 1), Math.Clamp(expected.G, 0, 1), Math.Clamp(expected.B, 0, 1), expected.A);
                     var actual = pixels.GetPixel((int)item.Position.X + 8, (int)item.Position.Y + 8);
-                    Check(MathF.Abs(actual.R - expected.R) < .016f && MathF.Abs(actual.G - expected.G) < .016f && MathF.Abs(actual.B - expected.B) < .016f,
+                    var tolerance = item.Name.StartsWith("integer-", StringComparison.Ordinal) ? .001f : .016f;
+                    Check(MathF.Abs(actual.R - expected.R) < tolerance && MathF.Abs(actual.G - expected.G) < tolerance && MathF.Abs(actual.B - expected.B) < tolerance,
                         $"Graph {item.Name}: actual {actual}, expected {expected}.");
                     if (item.Name == "vertex-shift")
                     {
@@ -94,7 +97,7 @@ internal static partial class GraphChecks
             base.Dispose(disposing);
         }
     }
-    private static Color Expected(string name) => name.StartsWith("range-", StringComparison.Ordinal) ? RangeExpected(name) : name.StartsWith("flow-", StringComparison.Ordinal) ? DataflowExpected(name) : name.StartsWith("unary-", StringComparison.Ordinal) ? UnaryExpected(name) : name switch
+    private static Color Expected(string name) => name.StartsWith("integer-", StringComparison.Ordinal) ? IntegerExpected(name) : name.StartsWith("range-", StringComparison.Ordinal) ? RangeExpected(name) : name.StartsWith("flow-", StringComparison.Ordinal) ? DataflowExpected(name) : name.StartsWith("unary-", StringComparison.Ordinal) ? UnaryExpected(name) : name switch
     {
         "color" or "vertex-shift" => new(.25f, .5f, .75f, 1),
         "cleared" => Colors.Black,

@@ -262,6 +262,70 @@ nonfinite/undefined behavior; the importer does not replace them with finite
 values. The zero-width boundary is verified through import and fresh loading,
 without asserting a portable framebuffer value.
 
+## Integer arithmetic and bit patterns
+
+VisualShaderNodeIntOp and VisualShaderNodeUIntOp operate on signed/unsigned
+32-bit scalar ports. Their shared VisualShaderIntegerOperator selects addition,
+subtraction, multiplication, division, modulo, min/max, bitwise AND/OR/XOR and
+left/right shifts. Max is the actual maximum operation; EnumSize is the
+nonselectable count bound. Both definitions initially add two explicit zeros.
+
+VisualShaderNodeIntFunc initially selects Sign and supports Abs, Negate, Sign and
+BitwiseNot. VisualShaderNodeUIntFunc initially selects Negate and also supports
+BitwiseNot. Their different valid sets and numeric identities retain distinct
+nested FunctionEnum types. Their Max values are nonselectable count bounds.
+Each function has one explicit zero input. Unchanged selectors are quiet;
+invalid selectors leave state unchanged, and Changed observers run after commit.
+Selectors, all 32 input bits and explicit default absence survive deep/shallow
+copies, assignment and fresh compressed big-endian graph archives.
+
+Integer nodes retain their exact port types until an ordinary numeric connection
+converts the result. Integer-to-float conversion can discard low bits in large
+values. Decode individual bytes with unsigned shifts/AND before normalizing a
+color channel when those bits must be observable:
+
+```csharp
+using var mask = new VisualShaderNodeUIntOp
+{
+    Operator = VisualShaderIntegerOperator.BitwiseAnd
+};
+mask.SetInputPortDefaultValue(0, 0xfedcba98u);
+mask.SetInputPortDefaultValue(1, 255u);
+using var normalize = new VisualShaderNodeFloatOp
+{
+    Operator = VisualShaderNodeFloatOp.OperatorEnum.Divide
+};
+normalize.SetInputPortDefaultValue(1, 255f);
+using var graph = new VisualShader();
+graph.AddNode(VisualShader.Type.Fragment, mask, Vector2.Zero, 2);
+graph.AddNode(VisualShader.Type.Fragment, normalize, Vector2.Zero, 3);
+graph.ConnectNodes(VisualShader.Type.Fragment, 2, 0, 3, 0);
+graph.ConnectNodes(VisualShader.Type.Fragment, 3, 0, VisualShader.NodeIDOutput, 0);
+```
+
+This produces 0x98/255 in RGB after ordinary source save/import. The fixtures
+also derive an unsigned integer seed from UV, combine multiply/add/XOR/shift
+operations and render the resulting bytes. These are native shader computations;
+CLR does not evaluate a graph per frame.
+
+Signed division truncates toward zero. Unsigned negation and ordinary integer
+add/subtract/multiply retain their 32-bit native representation. Signed right
+shift extends the sign bit; unsigned right shift zero-fills. Shift counts must
+be below 32. Division/modulo by zero, signed minimum divided by minus one and
+out-of-range shifts are native domain boundaries. The graph contract does not require maintenance8, so negative signed modulo
+is outside its portable result contract. Abs of the signed minimum is retained as an additional
+native boundary rather than a fabricated positive value. These ten archived
+boundary graphs are imported and freshly loaded without executing them in the
+portable framebuffer oracle. See the [SPIR-V instruction rules](https://registry.khronos.org/SPIR-V/specs/unified1/SPIRV.html)
+and [Vulkan execution environment](https://docs.vulkan.org/spec/latest/appendices/spirvenv.html).
+
+The 258 integer programs expose all four result bytes, every binary/unary
+selection, zero/sign/large-value cases, bit 31, signed/unsigned right shifts,
+constructor defaults, removed defaults and both canvas stages. Integer channels
+use a tighter 0.001 readback tolerance, sufficient to detect one-byte differences
+on normalized and half-float targets. The wider fixture grid accommodates these
+programs without changing their local geometry or UV coordinates.
+
 ## Canvas boundary
 
 Vertex inputs follow the existing supplied framebuffer-pixel canvas ABI.
@@ -290,9 +354,9 @@ Sky/volumetric scene domains and deprecated inert graph offset are excluded.
 The public `tests/VisualShader.Consumer` covers ownership, aliases, factory
 replacement, invalid requests, snapshots, default presence/conversion, change
 semantics, shallow/deep/copy operations, and fresh resource archives, including
-compressed big-endian data. Four hundred six rendered imported programs include the 57 foundation programs,
-170 unary-function programs, 41 vector-dataflow programs and 138 range/mask programs.
-The 139th new program separately verifies zero-width Remap import and fresh load. Unary coverage includes every scalar/vector function, all vector widths,
+compressed big-endian data. Six hundred sixty-four rendered imported programs include the 57 foundation programs,
+170 unary-function programs, 41 vector-dataflow programs, 138 range/mask programs and 258 integer programs.
+The separate zero-width Remap boundary and ten integer boundary programs verify import and fresh load without portable undefined-domain pixel assertions. Unary coverage includes every scalar/vector function, all vector widths,
 negative/clamped/round-even cases, both canvas stages, and a normalization witness
 for every vec4 function that makes its fourth component observable in RGB. Dataflow
 covers all widths/components, dormant defaults, scalar eta, reflection boundaries,

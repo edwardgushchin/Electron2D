@@ -218,10 +218,16 @@ def main():
         rows = [row for row in pages[CLASS_PAGES / (name + ".md")].splitlines() if row.startswith("| [`")]
         assert len(rows) == count and all(" | Implemented | " in row for row in rows)
         assert ("OpTypeEnum" if name in ("VisualShaderNodeClamp", "VisualShaderNodeMultiplyAdd") else "VisualShaderNumericOpType") in pages[CLASS_PAGES / (name + ".md")]
+    for name, count in [("VisualShaderNodeIntOp", 16), ("VisualShaderNodeUIntOp", 16),
+                        ("VisualShaderNodeIntFunc", 8), ("VisualShaderNodeUIntFunc", 6)]:
+        rows = [row for row in pages[CLASS_PAGES / (name + ".md")].splitlines() if row.startswith("| [`")]
+        assert len(rows) == count and all(" | Implemented | " in row for row in rows)
+        assert ("VisualShaderIntegerOperator" if name.endswith("Op") else "FunctionEnum") in pages[CLASS_PAGES / (name + ".md")]
     assert "OperatorEnum" in pages[CLASS_PAGES / "VisualShaderNodeFloatOp.md"]
     assert "OpTypeEnum" in pages[CLASS_PAGES / "VisualShaderNodeVectorBase.md"]
     engine_ids = {item["id"] for item in json.loads((DATA / "electron2d.json").read_text())}
     assert not engine_ids.intersection({
+        "T:Electron2D.VisualShaderNodeIntOp.OperatorEnum", "T:Electron2D.VisualShaderNodeUIntOp.OperatorEnum",
         "T:Electron2D.VisualShaderNodeFloatOp.Operator", "T:Electron2D.VisualShaderNodeVectorOp.Operator",
         "T:Electron2D.VisualShaderNodeVectorBase.OpType", "property:Electron2D.VisualShaderNodeFloatOp.Operation()",
         "property:Electron2D.VisualShaderNodeVectorOp.Operation()", "property:Electron2D.VisualShaderNodeVectorBase.OperationType()"})

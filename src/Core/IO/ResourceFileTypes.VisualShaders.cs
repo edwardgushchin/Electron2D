@@ -23,6 +23,10 @@ public static partial class ResourceFileTypes
         RegisterResource("VisualShaderNodeSmoothStep", CreateVisualShaderNodeSmoothStepFileResource);
         RegisterResource("VisualShaderNodeMultiplyAdd", CreateVisualShaderNodeMultiplyAddFileResource);
         RegisterResource("VisualShaderNodeRemap", CreateVisualShaderNodeRemapFileResource);
+        RegisterResource("VisualShaderNodeIntOp", CreateVisualShaderNodeIntOpFileResource);
+        RegisterResource("VisualShaderNodeUIntOp", CreateVisualShaderNodeUIntOpFileResource);
+        RegisterResource("VisualShaderNodeIntFunc", CreateVisualShaderNodeIntFuncFileResource);
+        RegisterResource("VisualShaderNodeUIntFunc", CreateVisualShaderNodeUIntFuncFileResource);
         RegisterResource("VisualShaderNodeFloatConstant", CreateVisualShaderNodeFloatConstantFileResource);
         RegisterResource("VisualShaderNodeIntConstant", CreateVisualShaderNodeIntConstantFileResource);
         RegisterResource("VisualShaderNodeUIntConstant", CreateVisualShaderNodeUIntConstantFileResource);
@@ -51,6 +55,10 @@ public static partial class ResourceFileTypes
     private static VisualShaderNodeSmoothStep CreateVisualShaderNodeSmoothStepFileResource() => new();
     private static VisualShaderNodeMultiplyAdd CreateVisualShaderNodeMultiplyAddFileResource() => new();
     private static VisualShaderNodeRemap CreateVisualShaderNodeRemapFileResource() => new();
+    private static VisualShaderNodeIntOp CreateVisualShaderNodeIntOpFileResource() => new();
+    private static VisualShaderNodeUIntOp CreateVisualShaderNodeUIntOpFileResource() => new();
+    private static VisualShaderNodeIntFunc CreateVisualShaderNodeIntFuncFileResource() => new();
+    private static VisualShaderNodeUIntFunc CreateVisualShaderNodeUIntFuncFileResource() => new();
     private static VisualShaderNodeFloatConstant CreateVisualShaderNodeFloatConstantFileResource() => new();
     private static VisualShaderNodeIntConstant CreateVisualShaderNodeIntConstantFileResource() => new();
     private static VisualShaderNodeUIntConstant CreateVisualShaderNodeUIntConstantFileResource() => new();
