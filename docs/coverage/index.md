@@ -1,3 +1,5 @@
+[Initial-world preparation](../components/physics-network-example.md#initial-world-preparation-2026-10-21) now restores the example's physical tick zero after a separately accounted loading frame before ENet connection. Six fresh cold-cache CLR/NativeAOT owner/separate GPU network profiles pass with the original physical/event assertions and zero warmed managed bytes. No declaration states change: physics remains 1304/1369 Implemented (95.25%), 65 open and 92 Excluded. Full-goal native/platform/window/mass-performance acceptance remains open; earlier startup failures below describe preceding checkpoints.
+
 [Object lifetime monitors](../components/object-lifetime-monitors.md) now expose four executable populations: reachable pre-commit engine objects, registered cached resources, nodes in the attached Engine tree and nodes outside it. Current API accounting is 12,005 Implemented of 18,837 applicable declarations (63.73%), 1,264 Partial, 502 Unimplemented, 5,066 Blocked and 8,456 Excluded; zero declarations are unmapped. Weak collection/cycles, cancellation/cleanup errors, cache identity, deferred membership, workers and prepared zero owner managed bytes execute in public/root consumers and strict NativeAOT; eight software Linux display/backend profiles verify real pixels. Full-suite, hardware, foreign, native allocator and human acceptance remain separate. Earlier figures below are historical checkpoints.
 
 [Cold physical pipeline compilation](../components/physics-network-example.md#cold-pipeline-compilation-2026-10-21) now has failed-session native compiler stacks and three optimized built-in sweep programs. Thirty focused physical profiles pass, while the NativeAOT network startup failure remains open. No declaration state changes: physics 1304/1369 Implemented (95.25%), 65 open and 92 Excluded.
@@ -234,7 +236,7 @@ status changes; full retained/native/device history budgets remain open.
 
 [Resident GPU buffer accounting](../components/gpu-memory.md) now covers all storage/transfer allocations, growth peaks and replay retirement. This internal measurement changes no public declaration status and leaves complete retained/native/device budgets open.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 [Resource font identities and glyph/run snapshots](../components/text-server.md#resource-sources-glyph-snapshots-and-visual-runs) implement fifteen declarations through real resource/fallback/linked caches and copied complete metadata. This checkpoint has 11,876 Implemented of 18,841 applicable declarations (63.03% API coverage), with 1,282 Partial, 552 Unimplemented and 5,131 Blocked. Scoped source/lifetime tests, exact reconstructed software-rendered pixels on both Linux display/backend pairs and warmed allocation checks remain separate from external provider, platform/package/hardware/native-allocator/owner gates.
 

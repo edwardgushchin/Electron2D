@@ -19,6 +19,13 @@ Use `--client-backend gpu` with an explicitly selected Vulkan driver for the GPU
 
 Each cost file contains nonoverlapping owner-side intervals for authority, prediction and replay preparation, whole tree physics frames, post-frame contract checks, sleep reads, snapshot capture, correction stages and presentation updates. GPU upload/readback/device-copy/uniform bytes, submission count and accumulated fence waits come from the independent resident store. CPU participants have zero GPU counters. Frame intervals include callbacks and scene work; they are not kernel timings. Initial setup byte/submission/wait counters are separate; initial wallMS is zero because setup wall time is outside this sampler. Session totals reconcile exactly to measured plus unattributed counters. Unattributed wall time includes polling, packet handling, sleeps and instrumentation outside brackets. Report capture precedes disposal.
 
+Initial counters now include the example's preconnection scene preparation and
+checkpoint/snapshot verification. The ordinary session report separately records
+that real loading frame, time and managed bytes. Its lifetime GPU counters include
+both initial and active work; compare them with `initial + total`, rather than
+assigning cold preparation to an active physics bracket. The loading recipe and
+its scene-clock limits are described in the example documentation.
+
 One preallocated 4096-sample segment per region uses 655360 sample-payload bytes per participant, excluding array/object headers and the counter table. All counts and counter sums are retained; only the first bounded wall-time samples feed P50/P95/P99. Sample/unsampled counts disclose truncation. Samples include cold work and observer overhead; they are neither warmed distributions nor a matched CPU/GPU throughput comparison. Serialization/sorting occur after simulation. Brackets submit no GPU work, reject nesting, invalid order, foreign threads and counter rollback, and remain allocation-free after warmup. A cost file is accepted only after the original parent process check succeeds; files from failed cohorts are evidence only. The self-test covers known deltas, reconciliation, bounded retention, guard failures and strict zero owner/all-thread managed bytes.
 
 See [measured scope and acceptance limits](../../docs/components/physics-network-example.md) for source-bound results. Native/driver allocations, retained history graphs, target hardware, real-window FPS and GPU advantage remain separate measurements.

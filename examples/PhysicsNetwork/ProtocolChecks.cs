@@ -48,6 +48,7 @@ internal static class ProtocolChecks
         BinaryPrimitives.WriteUInt32LittleEndian(encoded.AsSpan(16), 0); RejectInput(encoded);
         BinaryPrimitives.WriteUInt32LittleEndian(encoded.AsSpan(16), 2);
         BinaryPrimitives.WriteUInt32LittleEndian(encoded.AsSpan(20), 0); RejectInput(encoded);
+        CheckInitialPreparation();
         CheckJointContinuations();
         CheckSupportControls();
         CheckGeometryControls();
@@ -56,6 +57,41 @@ internal static class ProtocolChecks
         CheckPacketOrder();
         NetworkSession.CheckInputCommands();
         NetworkSession.CheckHandoffInputs();
+    }
+    private static void CheckInitialPreparation()
+    {
+        var separate = ProjectSettings.GetWithOverride(ProjectSettings.Physics2DRunOnSeparateThread);
+        try
+        {
+            foreach (var threaded in new[] { false, true })
+            {
+                ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
+                using var prepared = new NetworkWorld(PhysicsServer.Backend.CPU);
+                using var control = new NetworkWorld(PhysicsServer.Backend.CPU);
+                var preparedEvents = new List<GameEvent>(); var controlEvents = new List<GameEvent>();
+                prepared.Observed = preparedEvents.Add; control.Observed = controlEvents.Add;
+                prepared.PrepareInitialState(); control.Reconcile(NetworkWorld.InitialObjects);
+                Check(prepared.Tick == 0 && prepared.EventSequence == 0 && preparedEvents.Count == 0 &&
+                    prepared.PreparationFrames == 1 && prepared.JointSteps == 0 && prepared.SupportSteps == 0 && prepared.GeometrySteps == 0 &&
+                    prepared.CrossedContacts == 0 && prepared.Removed == 0 && prepared.OwnershipChanges == 0,
+                    "Preparation restores physical time without emitting effects or claiming gameplay steps");
+                var first = new PhysicsSnapshot(24000); var second = new PhysicsSnapshot(24000);
+                var a = new byte[24000]; var b = new byte[24000];
+                for (var tick = 0; tick <= 16; tick++)
+                {
+                    if (tick > 0) { prepared.Step(SimulationPhase.Authority); control.Step(SimulationPhase.Authority); }
+                    prepared.Map.Capture(first); control.Map.Capture(second);
+                    var length = first.WriteTo(a); var otherLength = second.WriteTo(b);
+                    Check(length == otherLength && a.AsSpan(0, length).SequenceEqual(b.AsSpan(0, otherLength)),
+                        "Prepared CPU continuation preserves contacts, sleep, forces and joints against an untouched control");
+                }
+                Check(preparedEvents.SequenceEqual(controlEvents), "Preparation preserves subsequent exactly-once gameplay events");
+                var rejected = false;
+                try { prepared.PrepareInitialState(); } catch (InvalidOperationException) { rejected = true; }
+                Check(rejected && prepared.Tick == 16, "Preparation rejects a live world without rewinding it");
+            }
+        }
+        finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, separate); }
     }
     private static void CheckJointContinuations()
     {

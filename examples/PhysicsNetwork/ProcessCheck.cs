@@ -43,7 +43,9 @@ internal static partial class ProcessCheck
             var lateJoinReady = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
             var port = int.Parse(ready[10..]); drains.Add(Drain(server, "server", ready, lateJoinReady));
             var clientProcess = Start(primary, port, clientBackend, headless: clientBackend == "cpu");
-            children.Add(clientProcess); drains.Add(Drain(clientProcess, primary, ""));
+            var prepared = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            children.Add(clientProcess); drains.Add(Drain(clientProcess, primary, "", prepared: prepared));
+            await prepared.Task.WaitAsync(TimeSpan.FromSeconds(NetworkSession.AdmissionTimeoutSeconds));
             await lateJoinReady.Task.WaitAsync(checkDeadline);
             var late = Start("late", port, "cpu", headless: true); children.Add(late); drains.Add(Drain(late, "late", ""));
             foreach (var child in children) await child.WaitForExitAsync().WaitAsync(checkDeadline);
@@ -75,6 +77,9 @@ internal static partial class ProcessCheck
                 var report = Read(name);
                 Check(report.ClientPollDelayMS == (name == primary ? clientPollDelayMS : 0) && report.ElapsedMS > 0,
                     "Every process records actual client poll delay and session duration");
+                Check(report.PreparationFrames == 1 && report.PreparationMS > 0 && report.PreparationMS <= NetworkSession.PreparationTimeoutSeconds * 1000 &&
+                    report.PreparationManagedBytes >= 0 && report.AdmissionMS >= 0 && report.ActiveMS > 0 && report.ActiveMS <= checkDeadline.TotalMilliseconds,
+                    "Every process accounts for bounded preconnection preparation, restored physical state and the original active deadline");
                 if (checkProgress)
                 {
                     uint requiredPhases = 0;
@@ -195,15 +200,17 @@ internal static partial class ProcessCheck
             ConfigureChildForTesting(info, role);
             return Process.Start(info) ?? throw new InvalidOperationException("Could not start child process.");
         }
-        async Task Drain(Process process, string role, string first, TaskCompletionSource? lateJoinReady = null)
+        async Task Drain(Process process, string role, string first, TaskCompletionSource? lateJoinReady = null, TaskCompletionSource? prepared = null)
         {
             var stdout = new System.Text.StringBuilder(first).AppendLine(); var stderr = process.StandardError.ReadToEndAsync();
             while (await process.StandardOutput.ReadLineAsync() is { } line)
             {
                 stdout.AppendLine(line);
+                if (line == "PREPARED") prepared?.TrySetResult();
                 if (line.StartsWith("LATE_JOIN_READY ") && ulong.TryParse(line.AsSpan(16), out var tick) && tick >= (ulong)lateJoinTick) lateJoinReady?.TrySetResult();
             }
             lateJoinReady?.TrySetException(new IOException("Authority exited before the late-join tick."));
+            prepared?.TrySetException(new IOException("Client exited before completing initial preparation."));
             await File.WriteAllTextAsync(System.IO.Path.Combine(output, role + ".log"), stdout + "\n" + await stderr);
         }
         SessionReport Read(string name) => JsonSerializer.Deserialize(File.ReadAllText(System.IO.Path.Combine(output, name + ".json")), ReportJSON.Default.SessionReport)!;

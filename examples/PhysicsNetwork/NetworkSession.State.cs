@@ -157,7 +157,7 @@ internal sealed partial class NetworkSession
             _confirmedLog[(int)(item.Sequence % EventCapacity)] = item; ConfirmedEffects++; _confirmedEvent = item.Sequence;
         }
         _frameSerial = serial; _confirmedTick = tick; _finalState = final;
-        if (!_started) { _started = true; _nextStep = _now + NetworkWorld.FixedStep; }
+        if (!_started) { _started = true; _sessionStartedAt = _now; _nextStep = _now + NetworkWorld.FixedStep; }
         Corrections++; var duration = Stopwatch.GetElapsedTime(started).TotalMilliseconds; CorrectionMS += duration;
         if (CorrectionSampleCount < CorrectionSamples.Length) CorrectionSamples[CorrectionSampleCount++] = duration;
     }

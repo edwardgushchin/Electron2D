@@ -24,6 +24,11 @@ internal sealed class SessionReport
     public bool SeparateThread { get; set; }
     public int ClientPollDelayMS { get; set; }
     public double ElapsedMS { get; set; }
+    public double PreparationMS { get; set; }
+    public long PreparationManagedBytes { get; set; }
+    public int PreparationFrames { get; set; }
+    public double AdmissionMS { get; set; }
+    public double ActiveMS { get; set; }
     public int RetiredCommandReplacements { get; set; }
     public bool CheckProgressEnabled { get; set; }
     public uint CheckPhases { get; set; }
@@ -168,6 +173,11 @@ internal sealed partial class NetworkSession
             Backend = Simulation.World.PhysicsBackend.ToString(),
             RetiredCommandReplacements = RetiredCommandReplacements,
             ElapsedMS = _clock.Elapsed.TotalMilliseconds,
+            PreparationMS = Simulation.PreparationMS,
+            PreparationManagedBytes = Simulation.PreparationManagedBytes,
+            PreparationFrames = Simulation.PreparationFrames,
+            AdmissionMS = _sessionStartedAt * 1000 - Simulation.PreparationMS,
+            ActiveMS = (_clock.Elapsed.TotalSeconds - _sessionStartedAt) * 1000,
             CheckProgressEnabled = _checkProgress,
             CheckPhases = CheckPhases,
             CheckWaitPolls = CheckWaitPolls,

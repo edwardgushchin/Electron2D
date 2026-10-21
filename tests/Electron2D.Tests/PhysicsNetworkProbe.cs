@@ -7,8 +7,11 @@ internal sealed partial class NetworkSession
 {
     private int _numericalSteps;
     private bool _numericalThreadVerified = true;
-    partial void PrepareBackendProbe()
+    private bool _backendProbePrepared;
+    partial void BeforeStepForTesting(bool warm, SimulationPhase phase)
     {
+        if (_backendProbePrepared) return;
+        _backendProbePrepared = true;
         var space = PhysicsServer.Service.GetSceneSpace(Simulation.World.Space);
         if (Simulation.World.PhysicsBackend != PhysicsServer.Backend.CPU) return;
         var owner = Environment.CurrentManagedThreadId;

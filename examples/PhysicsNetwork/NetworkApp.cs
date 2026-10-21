@@ -41,6 +41,7 @@ internal static class NetworkApp
             var reportPath = Value("--report", authority ? "physics-server.json" : "physics-client.json");
             using var session = new NetworkSession(authority, backend, port, token, ticks, args.Contains("--impaired"), args.Contains("--check-progress"));
             if (authority) { Console.WriteLine($"LISTENING {session.Port}"); Console.Out.Flush(); }
+            else { Console.WriteLine("PREPARED"); Console.Out.Flush(); }
             var windowReport = new SessionReport();
             if (windowed) NetworkWindow.Run(session, windowReport, Value("--renderer", "gpu"), Value("--capture", ""));
             var announcedLateJoin = false;

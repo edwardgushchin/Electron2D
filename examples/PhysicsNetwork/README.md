@@ -5,6 +5,15 @@ steps a headless scene at 60 Hz. Clients send numbered inputs, predict locally,
 apply portable server snapshots and replay unconfirmed input. The verification run
 starts an independent GPU client and a CPU client that joins later.
 
+Each participant prepares the known initial scene before opening its network host.
+One preparation frame is followed by local checkpoint restoration and an exact
+portable-state check at physical tick zero, with contact effects suppressed.
+Reports account for its cold time, managed bytes and frame separately from gameplay
+steps. This example has no scene scripts or timers to rewind. Preparation is bounded
+to 90 seconds; admission allows another 15 seconds. The active-session deadline
+starts at admission and retains its original duration. The launcher waits for the
+client's explicit readiness marker before checking session progress.
+
 To run the same three-process scenario entirely on CPU without a graphics device,
 select the first client's backend explicitly. Add `--threaded` to run each world's
 numerical physics on its retained separate thread:
@@ -206,10 +215,12 @@ smoothing counts, separately from physics/replay metrics.
 
 ## NativeAOT on Linux
 
-Cold native pipeline creation can block the client's transport polling. The
-[current hardware investigation](../../docs/components/physics-network-example.md#cold-pipeline-compilation-2026-10-21)
-reports compiler optimization separately; the NativeAOT GPU startup gate remains
-open. Successful diagnostic controls do not close that failure.
+Initial-world preparation now finishes before connecting, so cold pipeline
+creation is outside the active transport interval. The
+[current hardware checks](../../docs/components/physics-network-example.md#initial-world-preparation-2026-10-21)
+pass fresh cold-cache CLR/NativeAOT owner/separate sessions, including ordinary
+NativeAOT sessions. Preparation cost, native allocation, foreign platforms and
+full performance acceptance remain separate measurements.
 
 Publish the complete native output directory and run its executable directly:
 

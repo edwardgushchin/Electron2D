@@ -1,14 +1,18 @@
 # Physics domain
 
-[Cold pipeline compilation](../components/physics-network-example.md#cold-pipeline-compilation-2026-10-21)
-now has direct failed-session compiler stacks and scoped offline optimization.
-Physical regressions pass; the NativeAOT network startup boundary remains open.
-Declaration coverage is unchanged.
+Last updated: 2026-10-21
+
+[Initial-world preparation](../components/physics-network-example.md#initial-world-preparation-2026-10-21)
+now completes before the example opens ENet, restores physical tick zero and
+accounts for its cold frame/time/managed allocation separately. Six fresh
+CLR/NativeAOT GPU network profiles pass on the RTX 3090 Ti, with 6467 warmed steps
+and 43843 warmed replay intervals at zero owner/all-thread managed bytes.
+Declaration coverage and full-goal acceptance are unchanged.
 
 [The hardware network regression](../components/physics-network-example.md#hardware-network-regression-after-joint-cache-damping-2026-10-21)
-passes eleven of twelve main attempts after joint cache damping. The intermittent
-NativeAOT GPU owner stall remains open despite successful diagnostic controls;
-declaration coverage and complete-goal acceptance are unchanged.
+passed eleven of twelve main attempts after joint cache damping. Its cold
+NativeAOT failure motivated the loading-boundary fix above; successful debugger
+controls alone did not close it. Full native/platform/performance gates remain open.
 
 [Passive joint-chain checks](../components/physics-joint-policies.md#retained-hard-row-guesses)
 expose energy feedback hidden by momentum-only checks. CPU hard-row cache damping

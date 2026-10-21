@@ -2,11 +2,13 @@
 
 Last updated: 2026-10-21
 
-[Cold pipeline compilation](physics-network-example.md#cold-pipeline-compilation-2026-10-21)
-now has a failed-session native stack and separate driver-creation measurements.
-Offline optimization reduces CCD and shape/motion-query compilation cost, while
-the NativeAOT network startup failure remains open. This changes build output,
-without changing physical declarations or numerical budgets.
+[Initial-world preparation](physics-network-example.md#initial-world-preparation-2026-10-21)
+now finishes before the example opens ENet. Six fresh cold-cache public network
+profiles pass on the RTX 3090 Ti, including NativeAOT owner/separate ordinary and
+paced sessions. The physical state returns to tick zero after one separately
+accounted preparation frame. This closes the preceding local startup regression;
+full native allocation, foreign-platform, window/FPS and mass-load acceptance
+remain separate. Physical declarations and numerical budgets are unchanged.
 
 The [2026-10-20 RTX baseline](physics-rtx-current.md) measures complete CPU/GPU
 paths on one frozen runtime: raw-server medians and actual windows improve,

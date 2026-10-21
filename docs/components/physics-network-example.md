@@ -2,7 +2,122 @@
 
 Last updated: 2026-10-21
 
+## Initial-world preparation, 2026-10-21
+
+Every example participant now builds the known initial manifest before opening
+its ENet host. It captures a local checkpoint and portable snapshot, executes one
+real preparation frame with gameplay contact effects suppressed, restores the
+checkpoint, and requires tick zero, event sequence zero and byte-identical portable
+state. This prepares the simulation and Area-query pipelines before transport
+polling becomes time-sensitive. The local checkpoint also preserves backend-private
+continuation state; the portable comparison independently verifies the observable
+body/contact/sleep/joint and pending-input state.
+
+This is example loading work, not an extra authoritative tick or warmed measurement.
+`PreparationFrames`, `PreparationMS` and `PreparationManagedBytes` report that frame
+and its cold managed cost separately. `CompletedSteps` and all physical-family
+counters begin at zero after preparation; their original warmup and strict zero-byte
+assertions remain intact. The example's tree contains no scene scripts or timers.
+Its preparation frame is not removed from SceneTree clocks, so this recipe does
+not promise to rewind arbitrary gameplay scripts, timers or effects. Applications
+with those consumers need their own loading boundary. A live/nonempty example
+world rejects this preparation operation before mutation.
+
+Preparation has a separate 90-second budget. Initial admission is bounded by 105
+seconds, including preparation and a 15-second connection margin. The process
+launcher waits for an explicit `PREPARED` client marker, then retains the original
+active-session budget: fixed duration plus 120 seconds for the phase-paced check,
+or plus 30 seconds for ordinary sessions. `ElapsedMS` includes preparation and
+admission; `AdmissionMS` reports the remaining pre-session interval and `ActiveMS`
+reports the active session. A slow or failed preparation cannot silently become a
+successful network result. Existing 900-tick checks, late admission at 310,
+250-ms polling, physical assertions and complete event/convergence checks remain
+their own gates.
+
+Protocol controls compare the prepared CPU world with an untouched world at tick
+zero and after each of 16 real steps on both numerical lanes, including identical
+portable state and gameplay events. They reject preparation of a live world and
+require no preparation effects or claimed physical-family steps. Hardware/native
+results for this loading boundary are recorded separately from the historical
+cold-compilation failure below.
+
+Six fresh public-example profiles pass on the RTX 3090 Ti with
+`__GL_SHADER_DISK_CACHE=0`, no debugger and no changed payload/source files:
+
+| Profile | Parent duration, s | GPU preparation, s | GPU active session, s |
+| --- | ---: | ---: | ---: |
+| NativeAOT owner, paced | 124.724 | 25.799 | 96.984 |
+| CLR owner, paced | 125.868 | 25.643 | 95.522 |
+| NativeAOT separate, paced | 124.388 | 25.564 | 96.867 |
+| CLR separate, paced | 127.196 | 25.755 | 96.797 |
+| NativeAOT owner, ordinary | 46.897 | 28.363 | 16.408 |
+| NativeAOT separate, ordinary | 43.938 | 25.216 | 16.259 |
+
+Every profile retains 900 real authority ticks, late CPU admission at 310 and a
+250-ms early-client poll delay. The original physical-family, input, lifecycle,
+ownership, sleep/wake, interpolation, injected divergence, exactly-once event and
+final convergence assertions pass. Across 18 simulation processes, 6467 warmed
+steps and 43843 warmed replay intervals retain zero owner/all-thread managed bytes.
+The single preparation frame is excluded from those counts and costs about
+9.85–9.91 MB of cold managed allocation in the GPU participants. This is startup
+cost, not zero-allocation startup. The ordinary active sessions also retain their
+45-second budget. These single observations are not a throughput comparison.
+
+All 24 observed processes retain driver/runtime map evidence: NVIDIA is loaded
+only by the GPU clients, no software GPU is observed, and all NativeAOT processes
+map no CoreCLR. CPU participants explicitly reject unavailable GPU startup. No new
+Xid is observed. Two completed CPU processes lose their final command line in the
+observer's exit race; their accumulated driver/runtime observations and original
+participant reports remain available. The validator does not invent the lost
+per-PID role label. The future observer now retains its last nonempty command line.
+
+Evidence is under `bin/physics-network-preparation/2026-10-21/`: six immutable
+receipts/logs, `source-proof.json`, `payloads.json` and `validation.json`.
+Portable PDBs bind both ordinary and pre-AOT inputs to all 2445 runtime and 15
+example authored C# files on `f327d8ba5` plus this example change. All 198 frozen
+payload files verify. `validation.json` SHA-256 is
+`206796e2e0fd882af28743ec444e27ab1ed1174e321b41d05e5a709c6bf439ce`.
+The earlier shader-only cold NativeAOT failure is superseded by these local
+loading-boundary checks, not by a cached retry. Full native allocation accounting,
+foreign platforms, actual-window FPS and target mass-load GPU advantage remain
+open. The unverified power cable still precludes a prolonged mass-load run.
+
+The instrumented cost host initially rejects CPU preparation because its test
+stage-provider callback was installed before the checkpoint. The test-only probe
+now attaches once before the first real gameplay step, outside its allocation
+bracket. Public-example sources and the six executed payloads are unchanged by
+that fix. The failed instrumented attempt is retained separately; it supplies no
+accepted cost result.
+
+The corrected instrumented GPU-owner scenario passes the original parent check in
+126.591 seconds. Its initial GPU counters, covering scene setup, the loading frame
+and checkpoint/snapshot verification, are 20876 upload bytes, 6596 readback bytes,
+9808 device-copy bytes, 36576 uniform bytes, 60 submissions and 25.7856 ms of fence
+wait. Loading wall time is separately 25530.6274 ms; driver compilation is host
+work, so it must not be called GPU fence time. The two portable captures verify
+the known initial world, and the device-local checkpoint preserves its private
+continuation; both are temporary startup consumers, not a per-step host mirror.
+
+Active instrumented GPU totals are separately 6739152 upload bytes, 17291772
+readback bytes, 126361248 uniform bytes, 162006 submissions and 25179.3289 ms of
+fence wait. Active device-copy bytes are zero. These totals reconcile exactly to
+measured plus unattributed regions, and lifetime report counters reconcile to
+initial plus active totals. CPU participants retain zero GPU counters and verify
+their numerical lane. This is an instrumented network observation, not a matched
+throughput or native allocator benchmark. The corrected cost host's 18 authored
+source documents and the compiled root host's 938 match the current files, along
+with their 2445-document runtime. See `consumer-source-proof.json` and
+`cost-gpu-owner-cold-final/validated-costs.json` under the same evidence directory.
+An additional instrumented CPU-only separate-thread scenario passes in 65.627
+seconds with actual denied GPU startup, verified numerical callbacks on the
+separate lane and zero GPU counters in all three processes. Both instrumented
+profiles retain the original warmed zero-byte assertions; `validation-cost.json`
+records their distinct scope and reconciled counters.
+
 ## Cold pipeline compilation, 2026-10-21
+
+This is the preceding shader-only checkpoint; current startup results are in
+[initial-world preparation](#initial-world-preparation-2026-10-21) above.
 
 A fresh cold-cache diagnostic reproduces the native GPU-client failure in
 141.829 seconds, with the same final authority tick 378. Periodic client progress

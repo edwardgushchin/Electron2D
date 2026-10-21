@@ -6,6 +6,7 @@ namespace Electron2D.Examples.PhysicsNetwork;
 internal sealed partial class NetworkSession : IDisposable
 {
     internal const int History = 256, EventCapacity = 256;
+    internal const int PreparationTimeoutSeconds = 90, AdmissionTimeoutSeconds = PreparationTimeoutSeconds + 15;
     private const int Lead = 12;
     private const int CheckLead = Lead + 2;
     private sealed class PeerState(int id, ulong baseline)
@@ -46,6 +47,7 @@ internal sealed partial class NetworkSession : IDisposable
     private readonly HashSet<int> _connected = [];
     private readonly Stopwatch _clock = Stopwatch.StartNew();
     private double _now, _nextStep, _nextSend, _nextHello;
+    private double _sessionStartedAt;
     private double _finishedAt;
     private bool _started, _finalState, _done, _disposed;
     private int _firstPeer, _secondPeer;
@@ -69,29 +71,38 @@ internal sealed partial class NetworkSession : IDisposable
     {
         _authority = authority; _token = token; _ticks = ticks; _checkProgress = checkProgress;
         Simulation = new(backend); Simulation.Observed = Observe;
-        PrepareBackendProbe();
-        _peer.SetBindIP("127.0.0.1");
-        if (authority) _peer.CreateServer(port, 4, 1); else _peer.CreateClient("127.0.0.1", port, 1);
-        _network.MultiplayerPeer = _peer;
-        _network.PeerConnected += id => _connected.Add(id);
-        _network.PeerDisconnected += id =>
+        try
         {
-            _connected.Remove(id); _link!.Forget(id);
-            if (FindPeer(id) is { } peer) peer.Ready = false;
-            if (!_authority)
+            PrepareBackendProbe();
+            Simulation.PrepareInitialState();
+            _peer.SetBindIP("127.0.0.1");
+            if (authority) _peer.CreateServer(port, 4, 1); else _peer.CreateClient("127.0.0.1", port, 1);
+            _network.MultiplayerPeer = _peer;
+            _network.PeerConnected += id => _connected.Add(id);
+            _network.PeerDisconnected += id =>
             {
-                if (_finalState) _done = true;
-                else if (!_done) throw new IOException("The authority disconnected before completing the session.");
+                _connected.Remove(id); _link!.Forget(id);
+                if (FindPeer(id) is { } peer) peer.Ready = false;
+                if (!_authority)
+                {
+                    if (_finalState) _done = true;
+                    else if (!_done) throw new IOException("The authority disconnected before completing the session.");
+                }
+            };
+            _network.PeerPacket += Receive;
+            _link = new(_network, impaired);
+            if (authority)
+            {
+                var initial = NetworkWorld.InitialObjects; _manifestCount = initial.Length; initial.CopyTo(_manifest);
             }
-        };
-        _network.PeerPacket += Receive;
-        _link = new(_network, impaired);
-        if (authority)
-        {
-            var initial = NetworkWorld.InitialObjects; _manifestCount = initial.Length; initial.CopyTo(_manifest);
-            Simulation.Reconcile(_manifest.AsSpan(0, _manifestCount));
+            SessionReadyForTesting();
         }
-        SessionReadyForTesting();
+        catch (Exception error)
+        {
+            try { Dispose(); }
+            catch (Exception cleanup) { throw new AggregateException("Session startup and cleanup failed.", error, cleanup); }
+            throw;
+        }
     }
     partial void PrepareBackendProbe();
     partial void SessionReadyForTesting();
@@ -99,7 +110,8 @@ internal sealed partial class NetworkSession : IDisposable
     internal void Poll()
     {
         _now = _clock.Elapsed.TotalSeconds;
-        if (_now > _ticks * NetworkWorld.FixedStep + (_checkProgress ? 120 : 30)) throw new TimeoutException($"Physics network deadline: authority={_authority}, started={_started}, tick={Simulation.Tick}, corrections={Corrections}, malformed={MalformedPackets}, received={ReceivedBytes}, event={_confirmedEvent}, peer={_peer.GetConnectionStatus()}, phaseWaits={CheckPhaseWaitPolls}, inputWaits={CheckInputWaitPolls}.");
+        if (_started ? _now - _sessionStartedAt > _ticks * NetworkWorld.FixedStep + (_checkProgress ? 120 : 30) : _now > AdmissionTimeoutSeconds)
+            throw new TimeoutException($"Physics network deadline: authority={_authority}, started={_started}, tick={Simulation.Tick}, corrections={Corrections}, malformed={MalformedPackets}, received={ReceivedBytes}, event={_confirmedEvent}, peer={_peer.GetConnectionStatus()}, phaseWaits={CheckPhaseWaitPolls}, inputWaits={CheckInputWaitPolls}.");
         _network.Poll();
         if (_pendingStateLength > 0)
         {
@@ -258,7 +270,7 @@ internal sealed partial class NetworkSession : IDisposable
             _secondPeer = sender; SetOwner(11, sender);
             if (Simulation.Tick >= 300) _lateSleepTick = Simulation.Tick + 32;
         }
-        if (!_started) { _started = true; _nextStep = _now; }
+        if (!_started) { _started = true; _sessionStartedAt = _now; _nextStep = _now; }
         SendState(peer);
     }
     private void SetOwner(ulong id, int peer)
