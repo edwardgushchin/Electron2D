@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Electron2DShaderImportTool>../../tools/shaders/bin/$(Configuration)/net10.0/Electron2D.ShaderImport</Electron2DShaderImportTool>
+  </PropertyGroup>
+  <ItemGroup><ProjectReference Include="../../Electron2D.csproj" />
+    <Content Include="../Electron2D.Tests/Shaders/GlyphColorGLSL.spv;../Electron2D.Tests/Shaders/GlyphColorHLSL.spv" Link="Shaders/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <Import Project="../../tools/native-consumer.props" />
+  <ItemGroup><Electron2DShader Include="Shaders/*.frag.glsl;Shaders/*.frag.hlsl" Stage="fragment" Profile="canvas" /></ItemGroup>
+  <Import Project="../../tools/shaders/Electron2D.Shaders.targets" />
+  <Target Name="BuildDistanceImportTool" BeforeTargets="_CompileElectron2DShaders">
+    <MSBuild Projects="../../tools/shaders/ShaderImport.csproj" Targets="Restore;Build"
+             Properties="Configuration=$(Configuration);RuntimeIdentifier=$(NETCoreSdkRuntimeIdentifier)"
+             RemoveProperties="PublishAot;PublishTrimmed;TrimMode;SelfContained;IlcTreatWarningsAsErrors;ILLinkTreatWarningsAsErrors" />
+  </Target>
+</Project>

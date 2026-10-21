@@ -1,6 +1,6 @@
 # Two-dimensional mesh surfaces
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 ## Executable skeletal polygons
 
@@ -220,3 +220,5 @@ The renderer regression fixtures also separate retained-command comparisons from
 The broad renderer runner also had an unbounded stale failure fixture: a custom texture with default null GetImage now legitimately draws the diagnostic placeholder. Its error-cleanup fixture now supplies an explicit throwing image producer, preserving exception and native retirement assertions without waiting indefinitely for an error that the current contract does not require. Production texture behavior is unchanged.
 The broad runner verifies the existing Wayland/Vulkan remap rejection after a presented window is hidden, preserving hidden state; native presentation-completion/unmap acknowledgement remains its precise prerequisite. Other native profiles retain the complete hide/show lifecycle sequence. Shader time/vector checks compare warmed recording counts after startup; TIME retains thirty-two measured zero-allocation intervals.
 Continuous shader value/sampler checks capture recording counts after native startup. The named-sampler fixture still requires the exact 2/1/2 recordings for its controlled inherited-filter transition before entering the live loop, then verifies unchanged prepared counts and zero measured bytes. This avoids counting unrelated native configure events as material-induced recording work.
+
+Retained [MSDF mode](canvas-rendering.md#retained-distance-field-mode) now reaches textured mesh ranges, ordinary/native instances, GPU-authored instance storage and particle templates. Complete per-range glyph data is stamped before GPU expansion, and incompatible decoding policies do not batch together. Geometry, surface materials, culling, authored CPU poses and device ownership keep their existing contracts.

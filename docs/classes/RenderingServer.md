@@ -1888,3 +1888,20 @@ Native thin-stroke batch bounds include half-pixel coverage and an additional ha
 | `public static RDSamplerState? ShaderGetTextureSamplerState(RID shader, string name, int index = 0)` | Reads owned or borrowed shader metadata as an independent caller-owned disposable copy, or null. |
 
 Both operations require the live server owner thread. Invalid/stale/wrong-kind identities reject; borrowed mutation throws InvalidOperationException. Name, descriptor element, copied input ownership, validation, Changed publication and backend limits follow [Shader's complete method contract](Shader.md#texture-sampler-state). No sampler RID is borrowed or exposed; configuring metadata precedes native renderer preparation. See [the executable consumer](../../tests/ShaderSamplers.Consumer/ShaderSamplers.Consumer.csproj).
+
+## CanvasItemSetDistanceFieldMode
+
+`public static void CanvasItemSetDistanceFieldMode(RID item, bool enabled)`
+
+Enables renderer-session MSDF decoding on the exact live scene/caller-owned item. `item` must be a canvas item identity in the current rendering owner; `enabled = false` restores ordinary image sampling. Calls require the active owner thread and reject submission/shutdown, wrong/stale identities, foreign trees/sessions and generated tile drawing by the shared retained-operation guards. The setting is not inherited and clears at renderer teardown.
+
+Ordinary image commands use range four with no outline; explicit LCD/MSDF commands keep their own parameters. Untextured geometry is unaffected. Replay changes require no QueueRedraw and no geometry rerecording. Materials consume decoded incoming color while explicit TEXTURE reads remain encoded. Unsupported integer/Compatibility drawing rejects at preparation. See [the complete contract and public executable](../components/canvas-rendering.md#retained-distance-field-mode).
+
+Partial snippet inside an active renderer, for an already created `item`:
+
+```csharp
+RenderingServer.CanvasItemSetDistanceFieldMode(item, true);
+RenderingServer.CanvasItemAddTextureRect(item, new Rect2(0, 0, 128, 32), texture.GetRID(), false);
+```
+
+The snippet requires a prepared MSDF `texture`; [the standalone consumer](../../tests/CanvasDistanceField.Consumer/CanvasDistanceField.Consumer.csproj) provides images, items, host and cleanup.

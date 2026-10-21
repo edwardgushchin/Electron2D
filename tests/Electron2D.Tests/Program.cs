@@ -265,6 +265,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_MSDF") is { } fontM
 if (args.Length == 2 && args[0] == "--font-aa-archive") { FontAntialiasingTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_AA") is { } fontAAProfile) { if (fontAAProfile == "managed") FontAntialiasingTests.RunManaged(); else if (fontAAProfile == "raster") FontAntialiasingTests.RunRaster(); else FontAntialiasingTests.RunNative(fontAAProfile); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_DISTANCE") == "managed") { CanvasDistanceFieldTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_GLYPH") is { } glyphProfile) { if (glyphProfile == "managed") CanvasGlyphTests.RunManaged(); else if (glyphProfile == "modules") CanvasGlyphTests.RunModules(); else CanvasGlyphTests.RunNative(glyphProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_EVENT_CONNECTIONS") is { } eventProfile)
 {

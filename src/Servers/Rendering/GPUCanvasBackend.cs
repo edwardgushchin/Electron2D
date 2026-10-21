@@ -570,12 +570,12 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     internal override void ReleaseTemporaryTexture(Texture texture)
     { _usedTextures.Remove(texture); if (_textures.Remove(texture, out var value)) value.Dispose(); }
 
-    internal override void BeginFrame() { _shaderSamplers?.AdvanceEpoch(); BeginParticleFrame(); (_usedPrograms, _previousPrograms) = (_previousPrograms, _usedPrograms); _usedLinearViews.Clear(); _usedGlyphPrograms.Clear(); _usedLitPrograms.Clear(); _usedPrograms.Clear(); _usedPrograms.Add((_defaultFragment, null, BlendMode.Mix, false, SDL.GPUSampleCount.SampleCount1, false, SDL.GPUTextureFormat.R8G8B8A8Unorm, Mesh.PrimitiveType.Triangles)); _usedTextures.Clear(); _usedLayeredTextures.Clear(); _usedMaterials.Clear(); }
+    internal override void BeginFrame() { _shaderSamplers?.AdvanceEpoch(); BeginParticleFrame(); (_usedPrograms, _previousPrograms) = (_previousPrograms, _usedPrograms); _usedLinearViews.Clear(); BeginGlyphFrame(); _usedLitPrograms.Clear(); _usedPrograms.Clear(); _usedPrograms.Add((_defaultFragment, null, BlendMode.Mix, false, SDL.GPUSampleCount.SampleCount1, false, SDL.GPUTextureFormat.R8G8B8A8Unorm, Mesh.PrimitiveType.Triangles)); _usedTextures.Clear(); _usedLayeredTextures.Clear(); _usedMaterials.Clear(); }
     internal override void EndFrame()
     {
         RetireParticleVertices(); RetireParticlePrograms();
         RetireColorViews();
-        foreach (var pair in _glyphPrograms) if (!_usedGlyphPrograms.Contains(pair.Key)) _unusedGlyphPrograms.Add(pair.Key);
+        foreach (var pair in _glyphPrograms) if (!_usedGlyphPrograms.Contains(pair.Key) && !_previousGlyphPrograms.Contains(pair.Key)) _unusedGlyphPrograms.Add(pair.Key);
         foreach (var key in _unusedGlyphPrograms) _glyphPrograms.Remove(key); _unusedGlyphPrograms.Clear();
         foreach (var pair in _pipelines) if (!_usedPrograms.Contains(pair.Key) && !_previousPrograms.Contains(pair.Key) && !ReferenceEquals(pair.Key.Code, _defaultFragment) && !ReferenceEquals(pair.Key.Code, BuiltInShaders.Clip(0)) && !ReferenceEquals(pair.Key.Code, BuiltInShaders.Clip(1)) && !ReferenceEquals(pair.Key.Code, BuiltInShaders.Clip(2))) { pair.Value.Dispose(); _pipelines.Remove(pair.Key); }
         foreach (var pair in _textures) if (!_usedTextures.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed)) { pair.Value.Dispose(); _textures.Remove(pair.Key); }

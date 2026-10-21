@@ -5221,6 +5221,11 @@
       "godot": "ProjectSettings::property:rendering/anti_aliasing/quality/use_debanding",
       "electron2d": "property:Electron2D.ProjectSettings.UseDebanding()",
       "reason": "ADRs 0028/0095: stored viewport/root-project configuration and live renderer overrides execute stable zero-centered RGB dithering after HDR-to-SDR transfer and before byte quantization. Only the root HDR canvas screen output changes; alpha, SDR/offscreen/linear viewport images and movie capture retain their semantics. Compatibility rejects enabled debanding explicitly. Fresh scene/project storage, real Linux software-GPU pixels, scaling/clipping, MSAA, identity/owner/capture guards and prepared zero-owner-allocation presentation are exercised; physical GPUs, other platforms and human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_distance_field_mode(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetDistanceFieldMode(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0028: documented multichannel MSDF mode executes through existing median/derivative glyph composition, range four/no outline for ordinary textured commands. Scene/caller-owned item ownership, noninheritance, explicit glyph precedence, live replay without redraw, renderer-session reset, materials with/without TEXTURE, ordinary/atlas/mesh/native/GPU-authored instance and particle paths have public software Wayland/X11 pixel checks. Full glyph metadata separates batches and alternating modes retain prepared programs; 64 active/64 idle owner/all managed bytes are zero. MSAA/HDR/light/mask/group/transparency integration and explicit Compatibility rejection are checked. This is not scalar-alpha SDF. Physical GPU, native allocations and foreign-platform acceptance remain unverified."
     }
   ],
   "statusGroups": [
@@ -5235,11 +5240,11 @@
       "reason": "ADRs 0028/0046/0095: executable retained LCD/MSDF regions consume caller-supplied encoded textures through direct backing RIDs, finite/signed geometry and owner/lifetime/recording guards. GPU decodes median/derivative/range/outline or exact-alpha RGB coverage, composes incoming COLOR with full material and automatic lights, then applies LCD final-alpha component blend and command/ancestor constants. Four uniform slots, combined/paired/no-TEXTURE sampler layouts, scalar masks, transparent groups, shader reload, transparency and MSAA execute. Linux pixels and 64 active/64 idle zero-managed-allocation intervals plus 732 glyph/257 lighting module validation are checked; compatibility explicitly rejects the unsupported profile. FontFile image generation, other-platform/native-allocation/owner acceptance remain separate."
     },
     {
-      "state": "Blocked",
+      "state": "Implemented",
       "godot": [
         "RenderingServer::method:canvas_item_set_distance_field_mode(RID:,bool:)"
       ],
-      "reason": "Trigger: approved executable scalar-distance texture consumer and its retained sampling/material policy under ADR 0028. Pinned ed1daf0bf001b61586d9930840f2f1394092c079 renderer_canvas_cull.cpp:674-678 only stores Item.distance_field; the pinned RD/GLES canvas renderers and shader have no distance_field consumer. LCD/MSDF explicit region commands do not read it. A public stored flag alone would be an inert compatibility stub, and inventing an alpha-SDF renderer behavior without an accepted decision would not preserve the reference contract."
+      "reason": "ADR 0028: documented multichannel MSDF mode executes through existing median/derivative glyph composition, range four/no outline for ordinary textured commands. Scene/caller-owned item ownership, noninheritance, explicit glyph precedence, live replay without redraw, renderer-session reset, materials with/without TEXTURE, ordinary/atlas/mesh/native/GPU-authored instance and particle paths have public software Wayland/X11 pixel checks. Full glyph metadata separates batches and alternating modes retain prepared programs; 64 active/64 idle owner/all managed bytes are zero. MSAA/HDR/light/mask/group/transparency integration and explicit Compatibility rejection are checked. This is not scalar-alpha SDF. Physical GPU, native allocations and foreign-platform acceptance remain unverified."
     },
     {
       "godot": [

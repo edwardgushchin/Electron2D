@@ -6,7 +6,8 @@ internal sealed unsafe partial class GPUCanvasBackend
 {
     private readonly Dictionary<(byte[] Code, bool LCD), byte[]> _glyphPrograms = [];
     private readonly List<(byte[] Code, bool LCD)> _unusedGlyphPrograms = [];
-    private readonly HashSet<(byte[] Code, bool LCD)> _usedGlyphPrograms = [];
+    private HashSet<(byte[] Code, bool LCD)> _usedGlyphPrograms = [], _previousGlyphPrograms = [];
+    private void BeginGlyphFrame() { (_usedGlyphPrograms, _previousGlyphPrograms) = (_previousGlyphPrograms, _usedGlyphPrograms); _usedGlyphPrograms.Clear(); }
     private byte[] GlyphCode(CanvasBatch batch)
     {
         var source = BatchCode(batch);

@@ -60,6 +60,7 @@ internal sealed class RenderingCanvasItemState
     internal TileMapLayer? TileOwner;
     internal RID Parent, Material;
     internal bool MaterialAssigned;
+    internal bool DistanceFieldMode;
     internal bool ParentAssigned;
     internal Transform? Transform;
     internal bool? Interpolated;

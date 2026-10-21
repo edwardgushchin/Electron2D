@@ -314,6 +314,9 @@ public abstract partial class CanvasItem
     internal Material? CanvasMaterial => (ServerState?.UseParentMaterial ?? _useParentMaterial) ? RenderParent?.CanvasMaterial : ServerState is { MaterialAssigned: true } state ? RenderingProgramRegistry<Material>.ResolveOrNull(state.Material) : _material;
     internal Color InheritedModulate => GetParentItem() is not { } parent ? _modulate : parent.InheritedModulate * _modulate;
 
+    internal CanvasGlyph ResolveCanvasGlyph(Texture? texture, CanvasGlyph explicitGlyph = default) =>
+        explicitGlyph.Mode == CanvasGlyphMode.None && texture is not null && ServerState?.DistanceFieldMode == true ? new(CanvasGlyphMode.MSDF) : explicitGlyph;
+
     internal void AppendCanvas(List<CanvasVertex> vertices, List<CanvasBatch> batches, Transform transform, double time = 0, Rect2i? clip = null, Vector2i? outputSize = null, Viewport? renderViewport = null, bool illumination = false)
     {
         var commands = ServerState?.Commands?._canvasCommands ?? _canvasCommands;
@@ -387,7 +390,7 @@ public abstract partial class CanvasItem
                     replay = replay with { Source = new(replay.Source.Position + new Vector2(frame % animation.Horizontal, frame / animation.Horizontal) * frameSize, frameSize) };
                 }
             }
-            var glyph = replay.Glyph;
+            var glyph = ResolveCanvasGlyph(replay.Texture, replay.Glyph);
             var glyphModulation = glyph.Mode == CanvasGlyphMode.LCD ? replay.Color * color : default;
             var first = vertices.Count;
             if (!capturedMaterial && replay.Polygon is { Antialiased: true })

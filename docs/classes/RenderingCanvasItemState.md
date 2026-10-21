@@ -1,6 +1,6 @@
 # RenderingCanvasItemState
 
-Last updated: 2026-10-11
+Last updated: 2026-10-21
 
 - Visibility: internal
 - Source: [RenderingCanvasRuntime.cs](../../src/Servers/Rendering/RenderingCanvasRuntime.cs)
@@ -19,3 +19,5 @@ Separate native parent/field/command projections, renderer ownership and weak ex
 Native DrawIndex and VisibilityLayer override renderer order/culling without changing authored Node/CanvasItem values. Renderer source-structure publication clears affected index overrides; the source mask setter republishes that mask. See [the executable primitive contract](../components/canvas-rendering.md#low-level-primitive-commands).
 
 TileOwner identifies a transient layer-owned drawing item. It projects current layer self modulation/visibility, guards caller mutation/lifetime and is cleared for authorized retirement. RemoveChild drops dead/retired weak links.
+
+DistanceFieldMode stores the per-item renderer-session MSDF setting. It defaults false, is not inherited or authored storage, and is discarded with borrowed session state at renderer teardown. See [retained distance-field mode](../components/canvas-rendering.md#retained-distance-field-mode).

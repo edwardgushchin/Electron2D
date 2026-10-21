@@ -44,3 +44,5 @@ Exported/indirect MultiMesh storage selects a retained GPU consumer. CanvasMesh 
 ## Particle mesh templates
 
 [CanvasMesh.Particles.cs](../../src/Servers/Rendering/CanvasMesh.Particles.cs) prepares ordinary mesh surface templates for retained GPU particle batches. It preserves topology, indexed/procedural vertex identity, materials, UV/custom channels and all four/eight bone influences, validates trail indices and omits empty tessellation. Particle-specific native streams belong to the GPU renderer; cached geometry metadata is described in [CanvasParticles](CanvasParticles.md).
+
+Batch creation resolves the item glyph policy. ApplyGlyph stamps complete parameters onto mesh/native-instance/particle template ranges before batching or GPU expansion. AddBatch compares complete glyph policy so plain and encoded ranges cannot merge incorrectly. Explicit glyph geometry and untextured meshes retain their existing paths. See [retained distance-field mode](../components/canvas-rendering.md#retained-distance-field-mode).

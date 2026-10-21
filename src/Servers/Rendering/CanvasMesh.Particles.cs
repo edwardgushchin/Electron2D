@@ -40,6 +40,7 @@ internal sealed partial class CanvasMesh
             if (vertices.Count == first) return;
             var batch = Batch(first, vertices.Count - first, material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, owner,
                 linear: linear, visibility: visibility, procedural: data.IsProcedural, primitive: primitive, snap: snap, textureSource: textureSource);
+            ApplyGlyph(vertices, batch);
             batches.Add(batch with { Particles = new(source, geometry, canvas, modulation, sheet), SnapGeneratedVertices = snap });
             void Add(int index)
             {

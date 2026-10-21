@@ -17,6 +17,7 @@ public sealed partial class RenderingServer
     internal void CanvasItemAddClipIgnoreCore(RID rid, bool ignore) => CommandTarget(rid).RecordServerClipIgnore(ignore);
     internal void CanvasItemSetDrawIndexCore(RID rid, int index) => Change(rid, out _).DrawIndex = index;
     internal void CanvasItemSetVisibilityLayerCore(RID rid, uint layer) => Change(rid, out _).VisibilityLayer = layer;
+    internal void CanvasItemSetDistanceFieldModeCore(RID rid, bool enabled) => Change(rid, out _).DistanceFieldMode = enabled;
     internal void CanvasItemSetUseParentMaterialCore(RID rid, bool enabled) => Change(rid, out _).UseParentMaterial = enabled;
     private readonly List<(CanvasItem Node, int Index, int Stable)> _canvasChildOrder = [];
     private readonly Dictionary<RID, int> _canvasRootOrder = [];

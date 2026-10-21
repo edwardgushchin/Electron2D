@@ -1,6 +1,6 @@
 # CanvasParticles
 
-Last updated: 2026-10-19
+Last updated: 2026-10-21
 
 - Visibility: internal; unavailable to engine consumers.
 - Source: [CanvasParticles.cs](../../src/Servers/Rendering/CanvasParticles.cs)
@@ -29,3 +29,5 @@ Internal surface cache in the same source. Copies up to eight bone indices/weigh
 ## ParticleGPUDraw
 
 Internal immutable batch metadata: source storage, geometry cache, captured canvas transform, modulation and sprite-sheet lanes. It feeds native vertex expansion without copying particle state to the CPU.
+
+Particle draw templates use the owner item glyph policy through CanvasMesh.Batch and receive complete glyph parameters before GPU vertex generation. Rendering policy does not alter particle process-material sampling, emission, simulation or authored particle state. See [retained distance-field mode](../components/canvas-rendering.md#retained-distance-field-mode).

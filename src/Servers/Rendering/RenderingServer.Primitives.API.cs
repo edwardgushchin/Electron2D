@@ -180,4 +180,17 @@ public sealed partial class RenderingServer
     /// <exception cref="ArgumentException">The identity is absent or disposed.</exception>
     /// <exception cref="InvalidOperationException">Ownership, unavailable service or submission rules reject the operation.</exception>
     public static void CanvasItemSetUseParentMaterial(RID item, bool enabled) => RequireService().CanvasItemSetUseParentMaterialCore(item, enabled);
+
+    /// <summary>Enables multichannel signed-distance-field decoding for this item's textured drawing.</summary>
+    /// <param name="item">A live scene or caller-owned canvas item identity.</param>
+    /// <param name="enabled">True to decode ordinary image commands as MSDF; false restores ordinary sampling.</param>
+    /// <remarks>The renderer-session flag applies to this item, without inheritance or geometry rerecording.
+    /// Ordinary image commands use pixel range four and no outline. Explicit LCD/MSDF drawing keeps its own
+    /// decoding parameters. Untextured drawing is unchanged. State clears at renderer teardown.
+    /// Shader materials consume decoded incoming color while explicit texture reads retain encoded values.
+    /// Compatibility cannot execute distance-field decoding and rejects submitted encoded drawing.</remarks>
+    /// <exception cref="ArgumentException">The identity is absent, disposed or not a canvas item.</exception>
+    /// <exception cref="InvalidOperationException">The service is unavailable or owner/submission/lifetime rules reject mutation.</exception>
+    public static void CanvasItemSetDistanceFieldMode(RID item, bool enabled) => RequireService().CanvasItemSetDistanceFieldModeCore(item, enabled);
+
 }

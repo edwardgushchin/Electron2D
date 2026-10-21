@@ -214,3 +214,5 @@ A Shader with Mode.TextureBlit executes through DrawableTexture blit methods and
 ## Particle compute profile
 
 The [particle shader contract](../components/particle-shaders.md) adds compiled HLSL/GLSL compute modules, typed material parameters, portable state/frame/subemission includes and explicit RenderingDevice execution. Process programs preserve their domain through duplication and file graphs and reject canvas/blit submission. Retained emission, particle nodes and canvas output remain separate dependencies.
+
+The retained item distance-field mode uses the existing glyph composition contract: incoming COLOR is decoded before the fragment, while explicit TEXTURE samples still see encoded image values. No additional material uniform block is consumed; a no-TEXTURE fragment requires the existing extra engine sampler. See [retained distance-field mode](../components/canvas-rendering.md#retained-distance-field-mode).
