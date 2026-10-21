@@ -29,25 +29,27 @@
                 var input = source.GetMetadata("FullPath");
                 var stage = source.GetMetadata("Stage");
                 var profile = source.GetMetadata("Profile");
-                if (profile.Length != 0 && profile != "canvas" && profile != "device" && profile != "texture-blit" && profile != "particles")
-                    throw new ArgumentException(input + ": Profile must be canvas, device, texture-blit or particles.");
+                if (profile.Length != 0 && profile != "canvas" && profile != "device" && profile != "texture-blit" && profile != "particles" && profile != "visual-shader")
+                    throw new ArgumentException(input + ": Profile must be canvas, device, texture-blit, particles or visual-shader.");
                 var device = profile == "device" || profile == "particles";
+                var graph = profile == "visual-shader";
+                if (graph && stage != "canvas") throw new ArgumentException(input + ": Visual shaders require the canvas domain.");
                 if (profile == "particles" && stage != "compute") throw new ArgumentException(input + ": Particle programs require a compute stage.");
                 if (profile == "texture-blit" && stage != "fragment") throw new ArgumentException(input + ": Blit programs require a fragment stage.");
-                if (stage != "vertex" && stage != "fragment" && !(device && stage == "compute"))
+                if (!graph && stage != "vertex" && stage != "fragment" && !(device && stage == "compute"))
                     throw new ArgumentException(input + ": Stage must be vertex/fragment, or compute for Profile=device/particles.");
                 var target = source.GetMetadata("TargetPath");
                 if (target.Length == 0)
                 {
                     target = source.GetMetadata("Link");
                     if (target.Length == 0) target = source.ItemSpec;
-                    target += ".spv";
+                    target += graph ? ".compiled.e2dres" : ".spv";
                 }
                 target = target.Replace('\\', '/');
                 if (Path.IsPathRooted(target) || target.Contains(':') ||
                     Array.Exists(target.Split('/'), part => part == ".." || part == "." || part.Length == 0) ||
-                    !target.EndsWith(".spv", StringComparison.OrdinalIgnoreCase))
-                    throw new ArgumentException(input + ": TargetPath must be a relative .spv path without . or .. components.");
+                    !target.EndsWith(graph ? ".e2dres" : ".spv", StringComparison.OrdinalIgnoreCase))
+                    throw new ArgumentException(input + ": TargetPath must be a relative " + (graph ? ".e2dres" : ".spv") + " path without . or .. components.");
                 var output = Path.Combine(directory, target);
                 if (!paths.Add(output)) throw new ArgumentException("Duplicate shader TargetPath: " + target);
                 var item = new Microsoft.Build.Utilities.TaskItem(output);
@@ -82,6 +84,7 @@
                     if (output.GetMetadata("Profile") == "device") arguments.Add("--device");
                     if (output.GetMetadata("Profile") == "texture-blit") arguments.Add("--texture-blit");
                     if (output.GetMetadata("Profile") == "particles") arguments.Add("--particles");
+                    if (output.GetMetadata("Profile") == "visual-shader") arguments.Add("--visual-shader");
                     using (var process = Process.Start(start))
                     {
                         if (process == null) throw new InvalidOperationException("Cannot start " + tool);

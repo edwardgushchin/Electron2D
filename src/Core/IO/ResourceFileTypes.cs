@@ -122,6 +122,7 @@ public static partial class ResourceFileTypes
         RegisterResource("CanvasItemMaterial", CreateCanvasItemMaterialResource);
         RegisterResource("ParticleProcessMaterial", CreateParticleProcessMaterialResource);
         RegisterResource("Shader", CreateShaderFileResource);
+        RegisterVisualShaderResources();
         RegisterResource("ShaderInclude", CreateShaderIncludeFileResource);
         RegisterResource("Translation", CreateTranslationFileResource);
         RegisterResource("ShaderMaterial", CreateShaderMaterialFileResource);

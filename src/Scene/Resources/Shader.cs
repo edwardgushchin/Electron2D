@@ -27,7 +27,7 @@ namespace Electron2D;
 /// three further typed uniform blocks and up to sixteen sampled bindings at set zero. The portable particle includes define
 /// its state and optional bounded subemission ABI. Export its Compute stage to RenderingDevice for explicit execution;
 /// this resource does not schedule emission or draw particles. It cannot be used for canvas or writable-texture drawing.</remarks>
-public sealed partial class Shader : Resource
+public partial class Shader : Resource
 {
     /// <summary>Identifies the supported two-dimensional shader domain.</summary>
     public enum Mode

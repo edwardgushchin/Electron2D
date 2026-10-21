@@ -2,7 +2,7 @@ using System.Buffers.Binary;
 
 namespace Electron2D;
 
-public sealed partial class Shader
+public partial class Shader
 {
     /// <summary>Creates a canvas program from copied vertex and fragment SPIR-V modules.</summary>
     /// <param name="vertexBytecode">A vertex module using the canvas attribute and renderer-owned Frame interface.</param>

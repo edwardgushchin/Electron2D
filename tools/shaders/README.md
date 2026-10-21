@@ -4,6 +4,25 @@ This build tool imports HLSL, GLSL or compatible SPIR-V into the engine's common
 SPIR-V material interface. Games load the resulting bytes through
 `Shader.CreateFromSPIRV`; source compilation runs before the game starts.
 
+## Visual shader graph resources
+
+The same tool imports a saved typed `VisualShader` resource into an editable
+resource carrying compiled canvas vertex/fragment programs:
+
+```text
+Electron2D.ShaderImport source.e2dres canvas compiled.e2dres --visual-shader
+```
+
+Use `Electron2DShader` with `Profile="visual-shader"`, `Stage="canvas"` and an
+`.e2dres` TargetPath in the existing SDK target. The default destination appends
+`.compiled.e2dres`. Nested output directories and paths with spaces are supported.
+Graph edits require reimport; games load the compiled resource through
+`ResourceLoader.Load<VisualShader>` and ordinary `ShaderMaterial`. Invalid source
+preserves the previous output, and identical results preserve output timestamps.
+The [graph contract](../../docs/components/visual-shaders.md) lists supported
+numeric nodes, ownership and remaining producers. `check_graphs.py` verifies
+direct import and actual SDK edit/error/recovery/build/publish/Clean consumers.
+
 ## Build and publish
 
 The compiler bootstrap selects the Linux, macOS or Windows x64/arm64 **host**, independently

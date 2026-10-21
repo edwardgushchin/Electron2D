@@ -4,101 +4,108 @@ using Electron2D;
 using SDL3;
 using System.Runtime.InteropServices;
 
-var particleImport = args.Length is 4 or 5 && args[3] == "--particles";
-var blitImport = args.Length is 4 or 5 && args[3] == "--texture-blit";
-var deviceImport = args.Length is 4 or 5 && args[3] == "--device";
-if ((!deviceImport && !blitImport && !particleImport && args.Length != 3) || (blitImport && args[1] != "fragment") || (particleImport && args[1] != "compute") || args[1] is not ("vertex" or "fragment" or "compute") || args[1] == "compute" && !deviceImport && !particleImport)
+if (args.Length == 4 && args[3] == "--visual-shader") return await ImportVisualGraph(args);
+return await ImportModule(args);
+
+static async Task<int> ImportModule(string[] args)
 {
-    Console.Error.WriteLine("Usage: ShaderImport <source.hlsl|source.glsl|source.spv> <vertex|fragment|compute> <output.spv> [--device|--texture-blit|--particles [include-root]]");
-    return 2;
-}
-var input = IOPath.GetFullPath(args[0]);
-var output = IOPath.GetFullPath(args[2]);
-var stage = args[1] == "compute" ? RenderingDevice.ShaderStage.Compute : args[1] == "fragment" ? RenderingDevice.ShaderStage.Fragment : RenderingDevice.ShaderStage.Vertex;
-var includeRoot = args.Length == 5 ? IOPath.GetFullPath(args[4]) : IOPath.GetDirectoryName(input);
-var temporary = IOPath.Combine(IOPath.GetTempPath(), "electron2d-shader-" + Guid.NewGuid().ToString("N") + ".spv");
-var debugTemporary = temporary + ".debug";
-try
-{
-    Dictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null;
-    string? hlslSource = null;
-    await RequireVersion("spirv-val", "SPIRV-Tools v2026.4");
-    var extension = IOPath.GetExtension(input).ToLowerInvariant();
-    using var builtIns = extension is ".hlsl" or ".glsl" ? new BuiltInIncludeFiles() : null;
-    switch (extension)
+    var particleImport = args.Length is 4 or 5 && args[3] == "--particles";
+    var blitImport = args.Length is 4 or 5 && args[3] == "--texture-blit";
+    var deviceImport = args.Length is 4 or 5 && args[3] == "--device";
+    if ((!deviceImport && !blitImport && !particleImport && args.Length != 3) || (blitImport && args[1] != "fragment") || (particleImport && args[1] != "compute") || args[1] is not ("vertex" or "fragment" or "compute") || args[1] == "compute" && !deviceImport && !particleImport)
     {
-        case ".hlsl":
-            var source = File.ReadAllText(input);
-            // Keep original source locations in diagnostics reported by the native compiler.
-            var escaped = input.Replace("\\", "/").Replace("\"", "\\\"");
-            hlslSource = "#line 1 \"" + escaped + "\"\n" + source;
-            var code = CompileHLSL(hlslSource,
-                stage, includeRoot, builtIns!.DirectoryPath, deviceImport, particleImport, out sourceTypes);
-            File.WriteAllBytes(temporary, code);
-            break;
-        case ".glsl":
-            await RequireVersion("glslangValidator", "Glslang Version: 11:16.6.0");
-            Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.0", "-S",
-                args[1] == "compute" ? "comp" : args[1] == "fragment" ? "frag" : "vert", "-I" + includeRoot, "-I" + builtIns!.DirectoryPath, "-e", "main", "-o", temporary, input));
-            if (!deviceImport)
-            {
-                Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.0", "-S",
-                    args[1] == "compute" ? "comp" : args[1] == "fragment" ? "frag" : "vert", "-I" + includeRoot, "-I" + builtIns!.DirectoryPath, "-e", "main", "-gV", "-o", debugTemporary, input));
-                sourceTypes = ShaderSourceTypes.GLSL(File.ReadAllBytes(debugTemporary), args[1] == "fragment", particleImport);
-            }
-            break;
-        case ".spv":
-            File.Copy(input, temporary);
-            break;
-        default: throw new ArgumentException("The supported source languages are HLSL and GLSL; external compilers must supply SPIR-V.");
+        Console.Error.WriteLine("Usage: ShaderImport <source.hlsl|source.glsl|source.spv> <vertex|fragment|compute> <output.spv> [--device|--texture-blit|--particles [include-root]]\n       ShaderImport <graph.e2dres> canvas <output.e2dres> --visual-shader");
+        return 2;
     }
-    var result = File.ReadAllBytes(temporary);
-    if (sourceTypes is not null)
-    {
-        result = ShaderSourceTypes.Annotate(result, args[1] == "fragment", sourceTypes, particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
-        File.WriteAllBytes(temporary, result);
-    }
-    if (!deviceImport)
-    {
-        if (hlslSource is not null)
-        {
-            var directory = Directory.GetCurrentDirectory();
-            try
-            {
-                Directory.SetCurrentDirectory(builtIns!.DirectoryPath);
-                result = ShaderSourceTypes.AddHLSLDefaults(result, hlslSource, stage, includeRoot, particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
-            }
-            finally { Directory.SetCurrentDirectory(directory); }
-        }
-        result = ShaderSourceTypes.AddConfiguredDefaults(result, input, args[1] == "fragment", particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
-        File.WriteAllBytes(temporary, result);
-    }
-    Console.Write(await Execute("spirv-val", "--target-env", "vulkan1.0", temporary));
-    if (deviceImport) RenderingDevice.ValidateSourceModule(result, stage);
-    else ShaderCompiler.ValidateInterface(result, fragment: args[1] == "fragment", mode: particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
-    if (File.Exists(output) && new FileInfo(output).Length == result.Length &&
-        File.ReadAllBytes(output).AsSpan().SequenceEqual(result))
-    {
-        Console.WriteLine($"Unchanged {input} ({args[1]}) -> {output}: {result.Length} bytes");
-        return 0;
-    }
-    Directory.CreateDirectory(IOPath.GetDirectoryName(output)!);
-    var adjacent = output + "." + Guid.NewGuid().ToString("N") + ".tmp";
+    var input = IOPath.GetFullPath(args[0]);
+    var output = IOPath.GetFullPath(args[2]);
+    var stage = args[1] == "compute" ? RenderingDevice.ShaderStage.Compute : args[1] == "fragment" ? RenderingDevice.ShaderStage.Fragment : RenderingDevice.ShaderStage.Vertex;
+    var includeRoot = args.Length == 5 ? IOPath.GetFullPath(args[4]) : IOPath.GetDirectoryName(input);
+    var temporary = IOPath.Combine(IOPath.GetTempPath(), "electron2d-shader-" + Guid.NewGuid().ToString("N") + ".spv");
+    var debugTemporary = temporary + ".debug";
     try
     {
-        File.WriteAllBytes(adjacent, result);
-        File.Move(adjacent, output, overwrite: true);
+        Dictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null;
+        string? hlslSource = null;
+        await RequireVersion("spirv-val", "SPIRV-Tools v2026.4");
+        var extension = IOPath.GetExtension(input).ToLowerInvariant();
+        using var builtIns = extension is ".hlsl" or ".glsl" ? new BuiltInIncludeFiles() : null;
+        switch (extension)
+        {
+            case ".hlsl":
+                var source = File.ReadAllText(input);
+                // Keep original source locations in diagnostics reported by the native compiler.
+                var escaped = input.Replace("\\", "/").Replace("\"", "\\\"");
+                hlslSource = "#line 1 \"" + escaped + "\"\n" + source;
+                var code = CompileHLSL(hlslSource,
+                    stage, includeRoot, builtIns!.DirectoryPath, deviceImport, particleImport, out sourceTypes);
+                File.WriteAllBytes(temporary, code);
+                break;
+            case ".glsl":
+                await RequireVersion("glslangValidator", "Glslang Version: 11:16.6.0");
+                Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.0", "-S",
+                    args[1] == "compute" ? "comp" : args[1] == "fragment" ? "frag" : "vert", "-I" + includeRoot, "-I" + builtIns!.DirectoryPath, "-e", "main", "-o", temporary, input));
+                if (!deviceImport)
+                {
+                    Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.0", "-S",
+                        args[1] == "compute" ? "comp" : args[1] == "fragment" ? "frag" : "vert", "-I" + includeRoot, "-I" + builtIns!.DirectoryPath, "-e", "main", "-gV", "-o", debugTemporary, input));
+                    sourceTypes = ShaderSourceTypes.GLSL(File.ReadAllBytes(debugTemporary), args[1] == "fragment", particleImport);
+                }
+                break;
+            case ".spv":
+                File.Copy(input, temporary);
+                break;
+            default: throw new ArgumentException("The supported source languages are HLSL and GLSL; external compilers must supply SPIR-V.");
+        }
+        var result = File.ReadAllBytes(temporary);
+        if (sourceTypes is not null)
+        {
+            result = ShaderSourceTypes.Annotate(result, args[1] == "fragment", sourceTypes, particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
+            File.WriteAllBytes(temporary, result);
+        }
+        if (!deviceImport)
+        {
+            if (hlslSource is not null)
+            {
+                var directory = Directory.GetCurrentDirectory();
+                try
+                {
+                    Directory.SetCurrentDirectory(builtIns!.DirectoryPath);
+                    result = ShaderSourceTypes.AddHLSLDefaults(result, hlslSource, stage, includeRoot, particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
+                }
+                finally { Directory.SetCurrentDirectory(directory); }
+            }
+            result = ShaderSourceTypes.AddConfiguredDefaults(result, input, args[1] == "fragment", particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
+            File.WriteAllBytes(temporary, result);
+        }
+        Console.Write(await Execute("spirv-val", "--target-env", "vulkan1.0", temporary));
+        if (deviceImport) RenderingDevice.ValidateSourceModule(result, stage);
+        else ShaderCompiler.ValidateInterface(result, fragment: args[1] == "fragment", mode: particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
+        if (File.Exists(output) && new FileInfo(output).Length == result.Length &&
+            File.ReadAllBytes(output).AsSpan().SequenceEqual(result))
+        {
+            Console.WriteLine($"Unchanged {input} ({args[1]}) -> {output}: {result.Length} bytes");
+            return 0;
+        }
+        Directory.CreateDirectory(IOPath.GetDirectoryName(output)!);
+        var adjacent = output + "." + Guid.NewGuid().ToString("N") + ".tmp";
+        try
+        {
+            File.WriteAllBytes(adjacent, result);
+            File.Move(adjacent, output, overwrite: true);
+        }
+        finally { File.Delete(adjacent); }
+        Console.WriteLine($"Imported {input} ({args[1]}) -> {output}: {result.Length} bytes");
+        return 0;
     }
-    finally { File.Delete(adjacent); }
-    Console.WriteLine($"Imported {input} ({args[1]}) -> {output}: {result.Length} bytes");
-    return 0;
+    catch (Exception error)
+    {
+        Console.Error.WriteLine($"{input} ({args[1]}): {error.Message}");
+        return 1;
+    }
+    finally { File.Delete(temporary); File.Delete(debugTemporary); }
+
 }
-catch (Exception error)
-{
-    Console.Error.WriteLine($"{input} ({args[1]}): {error.Message}");
-    return 1;
-}
-finally { File.Delete(temporary); File.Delete(debugTemporary); }
 
 static async Task<string> Execute(string executable, params string[] arguments)
 {
@@ -157,4 +164,36 @@ static async Task RequireVersion(string executable, string expected)
     var firstLine = version.Split('\n')[0].TrimEnd('\r');
     if (firstLine != expected && !firstLine.StartsWith(expected + " ", StringComparison.Ordinal))
         throw new InvalidOperationException($"The shader toolchain requires {expected}; reported version:\n{version}");
+}
+
+static async Task<int> ImportVisualGraph(string[] args)
+{
+    var input = IOPath.GetFullPath(args[0]);
+    var output = IOPath.GetFullPath(args[2]);
+    var temporary = IOPath.Combine(IOPath.GetTempPath(), "electron2d-graph-" + Guid.NewGuid().ToString("N"));
+    try
+    {
+        if (args[1] != "canvas" || !output.EndsWith(".e2dres", StringComparison.OrdinalIgnoreCase))
+            throw new ArgumentException("Visual shader import requires the canvas domain and an .e2dres destination.");
+        using var graph = ResourceLoader.Load<VisualShader>(input, ResourceLoader.CacheMode.IgnoreDeep);
+        var sources = graph.GenerateSources();
+        Directory.CreateDirectory(temporary);
+        var vertex = IOPath.Combine(temporary, "graph.vert.glsl");
+        var fragment = IOPath.Combine(temporary, "graph.frag.glsl");
+        File.WriteAllText(vertex, sources.Vertex); File.WriteAllText(fragment, sources.Fragment);
+        if (await ImportModule([vertex, "vertex", vertex + ".spv"]) != 0 ||
+            await ImportModule([fragment, "fragment", fragment + ".spv"]) != 0)
+            throw new InvalidDataException("Generated visual shader source failed compilation or interface validation.");
+        graph.SetSPIRV(File.ReadAllBytes(vertex + ".spv"), File.ReadAllBytes(fragment + ".spv"));
+        Directory.CreateDirectory(IOPath.GetDirectoryName(output)!);
+        ResourceArchive.Save(graph, output, SaverFlags.BundleResources | SaverFlags.Compress, skipUnchanged: true);
+        Console.WriteLine($"Imported visual shader {input} -> {output}");
+        return 0;
+    }
+    catch (Exception error)
+    {
+        Console.Error.WriteLine($"{input} (visual-shader): {error.Message}");
+        return 1;
+    }
+    finally { if (Directory.Exists(temporary)) Directory.Delete(temporary, true); }
 }

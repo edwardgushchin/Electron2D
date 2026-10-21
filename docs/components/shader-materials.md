@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-21
 
+[Visual shader graphs](visual-shaders.md) author typed numeric canvas programs and compile them through the same SPIR-V import/material pipeline. Resource archives carry both editable graphs and the last imported program; editing requires reimport.
+
 [Particle shaders](particle-shaders.md) now execute a validated HLSL/GLSL compute profile through public RenderingDevice, with typed material/archive state and portable bounded-subemission includes. [Retained GPU particles](gpu-particles.md) now execute server-owned simulation, mesh canvas output, trails and subemitters. High-level emitter and process-material authoring remain pending.
 
 [Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Copied byte, normalized/float, block and unsigned-integer images execute; foreign/native-allocation acceptance remains separate.

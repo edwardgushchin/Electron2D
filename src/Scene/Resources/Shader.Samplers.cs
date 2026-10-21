@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Electron2D;
 
-public sealed partial class Shader
+public partial class Shader
 {
     private readonly Dictionary<(string Name, int Index), SamplerConfiguration> _samplerStates = [];
 

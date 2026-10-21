@@ -4,8 +4,8 @@ Last updated: 2026-10-18
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1262 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 502 missing declarations in already represented type families; split each type by its documented dependency trigger.
+1. Close 1268 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+2. Complete 773 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [VisualShaderNodeClamp](classes/VisualShaderNodeClamp.md), [VisualShaderNodeColorFunc](classes/VisualShaderNodeColorFunc.md), [VisualShaderNodeColorOp](classes/VisualShaderNodeColorOp.md), [VisualShaderNodeCompare](classes/VisualShaderNodeCompare.md), [VisualShaderNodeDistanceFade](classes/VisualShaderNodeDistanceFade.md), [VisualShaderNodeDotProduct](classes/VisualShaderNodeDotProduct.md), [VisualShaderNodeFaceForward](classes/VisualShaderNodeFaceForward.md), [VisualShaderNodeFloatFunc](classes/VisualShaderNodeFloatFunc.md), [VisualShaderNodeFresnel](classes/VisualShaderNodeFresnel.md), [VisualShaderNodeIf](classes/VisualShaderNodeIf.md), [VisualShaderNodeIntFunc](classes/VisualShaderNodeIntFunc.md), [VisualShaderNodeIntOp](classes/VisualShaderNodeIntOp.md), [VisualShaderNodeIs](classes/VisualShaderNodeIs.md), [VisualShaderNodeMix](classes/VisualShaderNodeMix.md), [VisualShaderNodeMultiplyAdd](classes/VisualShaderNodeMultiplyAdd.md), [VisualShaderNodeOuterProduct](classes/VisualShaderNodeOuterProduct.md), [VisualShaderNodeProximityFade](classes/VisualShaderNodeProximityFade.md), [VisualShaderNodeRandomRange](classes/VisualShaderNodeRandomRange.md), [VisualShaderNodeRemap](classes/VisualShaderNodeRemap.md), [VisualShaderNodeReroute](classes/VisualShaderNodeReroute.md), [VisualShaderNodeRotationByAxis](classes/VisualShaderNodeRotationByAxis.md), [VisualShaderNodeSmoothStep](classes/VisualShaderNodeSmoothStep.md), [VisualShaderNodeStep](classes/VisualShaderNodeStep.md), [VisualShaderNodeSwitch](classes/VisualShaderNodeSwitch.md), [VisualShaderNodeUIntFunc](classes/VisualShaderNodeUIntFunc.md), [VisualShaderNodeUIntOp](classes/VisualShaderNodeUIntOp.md), [VisualShaderNodeUVFunc](classes/VisualShaderNodeUVFunc.md), [VisualShaderNodeUVPolarCoord](classes/VisualShaderNodeUVPolarCoord.md), [VisualShaderNodeVectorCompose](classes/VisualShaderNodeVectorCompose.md), [VisualShaderNodeVectorDecompose](classes/VisualShaderNodeVectorDecompose.md), [VisualShaderNodeVectorDistance](classes/VisualShaderNodeVectorDistance.md), [VisualShaderNodeVectorFunc](classes/VisualShaderNodeVectorFunc.md), [VisualShaderNodeVectorLen](classes/VisualShaderNodeVectorLen.md), [VisualShaderNodeVectorRefract](classes/VisualShaderNodeVectorRefract.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -80,20 +80,27 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [Texture2DRD](classes/TextureRD.md) | 0 | 1 |
 | [TileSetAtlasSource](classes/TileSetAtlasSource.md) | 0 | 1 |
 | [Timer](classes/Timer.md) | 0 | 1 |
+| [VisualShader](classes/VisualShader.md) | 0 | 1 |
+| [VisualShaderNode](classes/VisualShaderNode.md) | 0 | 1 |
 
 ## Blocked type families
 
 | Exact trigger | Classes |
 | --- | ---: |
-| Trigger: first typed 2D visual-shader graph translation and shader-import slice (ADR 0028). | 92 |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
+| Trigger: typed graph parameter declarations, qualifier/hint/default metadata and imported material/image ownership over the existing shader reflection under ADR 0028. | 13 |
+| Trigger: particle graph stage/output translation into the executing compute ABI under ADR 0028; the numeric canvas graph importer does not provide particle lifecycle stages. | 10 |
+| Trigger: graph sampled-image/screen/SDF expression roles and required fragment derivative/renderer producers in the shared offline importer under ADR 0028; this family enters its operation-specific graph integration. | 9 |
 | Trigger: an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001). | 7 |
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
+| Trigger: typed custom/group port declarations, source scopes and compiled provider/factory registration through the offline graph importer under ADRs 0001/0013/0028; no serialized delegates or runtime assembly loading. | 5 |
 | ADR 0046/0107: built-in buffers and service-owned fonts/caches now execute. Requires constructible external TextServerExtension virtual/callback dispatch for the complete family, provider-owned source/cache lifetimes, callback errors/reentry, retirement and public provider registration/replacement integration. This member enters that external implementation/dispatch slice. | 4 |
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
 | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 3 |
 | Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. | 3 |
+| Trigger: typed custom graph varying declaration and native vertex/fragment/light transport beyond the fixed canvas/mesh ABI under ADR 0028; this family enters that first transport slice. | 3 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
+| Trigger: graph-frame/comment authoring with a real editor graph layout/preview consumer under ADRs 0027/0028; numeric canvas graph import already executes. | 2 |
 | Navigation2D: trigger is the next operation-specific navigation link, agent/obstacle avoidance, source-geometry bake or typed query slice beyond the authored map/region backend (ADRs 0052/0097). | 1 |
 | The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |
 | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. | 1 |

@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-public sealed partial class Shader
+public partial class Shader
 {
     private RID _renderingRID;
     internal void BindRenderingRID(RID rid) { lock (_codeGate) _renderingRID = rid; }

@@ -17,7 +17,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "file_save_swap", "host_delta", "movie_writing", "video_playback", "diagnostics", "zip", "resource_packs", "jobs", "display", "key_names", "joy_motion", "rendering", "canvas_counters", "project_shader_globals", "texture_arrays", "compressed_arrays", "compressed_textures", "device", "navigation", "navigation_baking", "polygon_path", "resources", "dpi_textures", "preloader", "threaded_resources", "physics", "text", "line_breaking", "text_objects", "text_server", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "link_button", "gui_primitives", "undo", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "mesh_texture", "drawable_textures", "portable_textures", "particles", "skeleton", "networking", "ip", "jsonrpc", "tiles")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "file_save_swap", "host_delta", "movie_writing", "video_playback", "diagnostics", "zip", "resource_packs", "jobs", "display", "key_names", "joy_motion", "rendering", "visual_shaders", "canvas_counters", "project_shader_globals", "texture_arrays", "compressed_arrays", "compressed_textures", "device", "navigation", "navigation_baking", "polygon_path", "resources", "dpi_textures", "preloader", "threaded_resources", "physics", "text", "line_breaking", "text_objects", "text_server", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "link_button", "gui_primitives", "undo", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "mesh_texture", "drawable_textures", "portable_textures", "particles", "skeleton", "networking", "ip", "jsonrpc", "tiles")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
@@ -315,7 +315,19 @@ def reason_for_type(item, lookup):
     if name in {"AESContext", "HMACContext", "HashingContext"}:
         return "Blocked", "Trigger: accepted typed cryptography utility contract and first portable crypto-service slice (ADR 0001)."
     if name.startswith("VisualShader"):
-        return "Blocked", "Trigger: first typed 2D visual-shader graph translation and shader-import slice (ADR 0028)."
+        if name in {"VisualShaderNodeFrame", "VisualShaderNodeComment"}:
+            return "Blocked", "Trigger: graph-frame/comment authoring with a real editor graph layout/preview consumer under ADRs 0027/0028; numeric canvas graph import already executes."
+        if "Varying" in name:
+            return "Blocked", "Trigger: typed custom graph varying declaration and native vertex/fragment/light transport beyond the fixed canvas/mesh ABI under ADR 0028; this family enters that first transport slice."
+        if "Particle" in name:
+            return "Blocked", "Trigger: particle graph stage/output translation into the executing compute ABI under ADR 0028; the numeric canvas graph importer does not provide particle lifecycle stages."
+        if "Parameter" in name or "UniformRef" in name:
+            return "Blocked", "Trigger: typed graph parameter declarations, qualifier/hint/default metadata and imported material/image ownership over the existing shader reflection under ADR 0028."
+        if any(token in name for token in ("Texture", "Derivative", "SDF")):
+            return "Blocked", "Trigger: graph sampled-image/screen/SDF expression roles and required fragment derivative/renderer producers in the shared offline importer under ADR 0028; this family enters its operation-specific graph integration."
+        if name in {"VisualShaderNodeCustom", "VisualShaderNodeExpression", "VisualShaderNodeGlobalExpression", "VisualShaderNodeGroupBase", "VisualShaderNodeResizableBase"}:
+            return "Blocked", "Trigger: typed custom/group port declarations, source scopes and compiled provider/factory registration through the offline graph importer under ADRs 0001/0013/0028; no serialized delegates or runtime assembly loading."
+        return "Unimplemented", f"ADR 0028: numeric canvas graph authoring, persistence and offline native execution now exist. Next slice: implement the typed {name} operation, port semantics and source generation with an executing graph consumer."
     if name == "GPUParticles2D":
         return "Blocked", "Trigger: connect GPUParticles scene authoring, stored properties, lifecycle, signals and conversions to the executing RenderingServer particle storage/canvas family under ADR 0028; connect typed ParticleProcessMaterial settings where conversion requires them. Retained simulation, trails, subemitters and actual mesh canvas output now execute; no scene emitter placeholder is exposed."
     if name == "ParticleProcessMaterial":
@@ -702,6 +714,8 @@ def render():
             updated = "2026-10-19"
         if name in {"PhysicsDirectSpaceState2D", "PhysicsServer2D", "PhysicsServer2DExtension", "RenderingDevice", "RDAttachmentFormat", "RDTextureFormat"}:
             updated = "2026-10-20"
+        if name.startswith("VisualShader"):
+            updated = "2026-10-21"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

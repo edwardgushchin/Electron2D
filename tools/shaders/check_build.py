@@ -146,7 +146,7 @@ Console.WriteLine("Public shader consumer passed");
 
     declarations[0].set('Profile', 'invalid')
     save_project()
-    assert 'Profile must be canvas, device, texture-blit or particles' in run('build', '--no-restore', success=False)
+    assert 'Profile must be canvas, device, texture-blit, particles or visual-shader' in run('build', '--no-restore', success=False)
     del declarations[0].attrib['Profile']
     for name, stage, original in [('DeviceComputeGLSL.glsl', 'compute', 'LocalCompute.comp.glsl'),
                                    ('DeviceComputeHLSL.hlsl', 'compute', 'LocalComputeHLSL.comp.hlsl'),

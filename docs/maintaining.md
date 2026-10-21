@@ -190,3 +190,14 @@ Polygon boundary coverage uses ELECTRON2D_TEST_POLYGON_AA=managed, gpu or compat
 File save-and-swap changes use `ELECTRON2D_TEST_SAVE_SWAP=managed`, `gpu`, `compatibility`, `ogv-gpu` and `ogv-compatibility` with the Release runner. Preserve exact Write selection, virtual/symlink/permission/temp ownership, independent concurrent writers, partial I/O cleanup versus completed replacement recovery, PCK/OGV producer cancellation and abrupt-child-exit evidence. Run default file/resource-pack/movie regressions as well. Native profiles require matching OGV and codec assets and actual software Wayland/X11 movie output; they do not establish power-loss durability or foreign execution.
 
 PCRE2 text changes require the focused ELECTRON2D_TEST_REGEX=1 runner, independent tools/coverage/regex_oracle.py vectors compared with --regex-oracle, and the public-only tests/RegEx.Consumer managed/gpu/compatibility profiles. Preserve code-point regions, duplicate/source-order groups, native replacement, retained results, deadlines/resource failure and concurrent owner retirement. Build/run Electron2DRegexCheck normally and with ASan/UBSan/leak detection. Verify immutable source with tools/update-pcre2.py --check (and --archive for reproduction), source/package/native symbols and existing text/font regressions. The private text ABI now includes six regex exports; source-native assets must match. Linux source and software display checks do not establish foreign, old-bundle, native allocator or release acceptance.
+
+Visual graph changes use the public `tests/VisualShader.Consumer` CPU/author/read/gpu
+commands and `tools/shaders/check_graphs.py --tool <ShaderImport> --consumer <consumer.dll>`.
+Verify all scalar/vector operations, width conversions, explicit default absence,
+owned outputs/replacements and borrowed aliases through fresh archives. The SDK
+check covers nested/spaced paths, identical output timestamps, changed source with
+unchanged timestamp, cyclic/truncated failures preserving the old artifact,
+recovery, publish and Clean. Exercise actual imported programs under software
+Wayland/X11 and HDR/MSAA in CLR and strict full-trim NativeAOT; measure prepared
+64 active/64 idle complete frames separately from cold author/import work. Keep
+unsupported graph producers and editor/domain prerequisites exact in coverage.

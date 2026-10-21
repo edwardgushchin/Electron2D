@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-public sealed partial class Shader
+public partial class Shader
 {
     /// <summary>Creates a compiled fragment or particle compute program for a selected executing shader domain.</summary>
     /// <param name="bytecode">A copied SPIR-V module, at most sixteen MiB.</param>

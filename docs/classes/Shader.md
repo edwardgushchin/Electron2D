@@ -2,9 +2,10 @@
 
 Last updated: 2026-10-21
 
-- Declaration: `public sealed class Shader : Resource`
+- Declaration: `public class Shader : Resource`
 - Source: [Shader.cs](../../src/Scene/Resources/Shader.cs)
 - Inherits: [Resource](Resource.md)
+- Inherited by: [VisualShader](VisualShader.md)
 - Component: [Shader materials](../components/shader-materials.md)
 
 ## Description

@@ -27,7 +27,7 @@ internal static partial class ResourceArchive
             if (System.IO.File.Exists(temporary)) System.IO.File.Delete(temporary);
         }
     }
-    internal static void Save(Resource resource, string path, SaverFlags flags)
+    internal static void Save(Resource resource, string path, SaverFlags flags, bool skipUnchanged = false)
     {
         var context = new ResourceArchiveWrite(resource, path, flags);
         var payload = context.Encode();
@@ -52,7 +52,9 @@ internal static partial class ResourceArchive
         BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(28), encoded.Length);
         SHA256.HashData(payload).CopyTo(file, 32);
         encoded.CopyTo(file, 64);
-        AtomicWrite(path, file);
+        var absolute = Absolute(path);
+        if (!skipUnchanged || !System.IO.File.Exists(absolute) || new FileInfo(absolute).Length != file.Length ||
+            !System.IO.File.ReadAllBytes(absolute).AsSpan().SequenceEqual(file)) AtomicWrite(path, file);
         ResourceUID.SetID(uid, path);
         context.CommitPaths();
     }

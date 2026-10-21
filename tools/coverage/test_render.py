@@ -199,6 +199,15 @@ def main():
     pages, summary = render()
     check_object_registry_exclusions(pages, upstream)
     check_physics_report(pages)
+    graph = pages[CLASS_PAGES / "VisualShader.md"]
+    offset = next(line for line in graph.splitlines() if line.startswith("| [`property Vector2 graph_offset"))
+    assert " | Excluded | " in offset and 'This property does nothing and always equals to zero.' in offset
+    assert "ed1daf0bf001b61586d9930840f2f1394092c079" in offset
+    assert " | Implemented | " in pages[CLASS_PAGES / "VisualShaderNodeFloatOp.md"]
+    assert " | Unimplemented | " in pages[CLASS_PAGES / "VisualShaderNodeFloatFunc.md"]
+    assert " | Blocked | " in pages[CLASS_PAGES / "VisualShaderNodeParameter.md"]
+    assert " | Excluded | " in pages[CLASS_PAGES / "VisualShaderNodeTransformOp.md"]
+
     check_texture_pages(pages, upstream)
     aliases = json.loads(ALIASES.read_text())
     assert aliases["classes"]["CSharpScript"] == "Script", "C# scripts must share the concrete Script identity"

@@ -1,0 +1,173 @@
+using Electron2D;
+using IOPath = System.IO.Path;
+
+try
+{
+    if (args.Length == 0 || args[0] == "cpu") GraphChecks.CPU();
+    else if (args[0] == "author") GraphChecks.Author(IOPath.GetFullPath(args[1]));
+    else if (args[0] == "edit")
+    {
+        using var graph = ResourceLoader.Load<VisualShader>(args[1], ResourceLoader.CacheMode.IgnoreDeep);
+        ((VisualShaderNodeColorConstant)graph.GetNode(VisualShader.Type.Fragment, 2)).Constant = new(float.Parse(args[2], System.Globalization.CultureInfo.InvariantCulture), .5f, .75f, 1);
+        ResourceSaver.Save(graph, args[1], SaverFlags.BundleResources);
+    }
+    else if (args[0] == "gpu") GraphChecks.Render(IOPath.GetFullPath(args[1]), args);
+    else if (args[0] == "read") GraphChecks.Read(IOPath.GetFullPath(args[1]));
+    else throw new ArgumentException("Unknown graph check.");
+}
+catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; }
+
+internal static partial class GraphChecks
+{
+    private static void Check(bool condition, string message)
+    { if (!condition) throw new InvalidOperationException(message); }
+    private static void Reject<T>(Action action) where T : Exception
+    { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }
+    internal static void CPU()
+    {
+        using var graph = new VisualShader();
+        using var scalar = new VisualShaderNodeFloatConstant { Constant = .375f };
+        using var operation = new VisualShaderNodeFloatOp();
+        var scalarChanges = 0; scalar.Changed += _ => scalarChanges++;
+        scalar.Constant = MathF.BitIncrement(.375f);
+        Check(scalar.Constant == .375f && scalarChanges == 0, "Approximately equal constants preserve the stored value and suppress change events.");
+        var operationChanges = 0; operation.Changed += _ => operationChanges++;
+        operation.Operation = VisualShaderNodeFloatOp.Operator.Add;
+        Check(operationChanges == 0, "An unchanged arithmetic selection emits no change event.");
+        var storedConnections = (PropertyDescriptor<VisualShader, int[]>)graph.GetPropertyList().Single(p => p.Name == "GraphConnections");
+        Reject<InvalidDataException>(() => storedConnections.SetValue(graph, new int[(4096 * 8 + 1) * 5]));
+        Check(graph.GetNodeConnections(VisualShader.Type.Vertex).Length == 0, "Stored edges enforce the per-stage budget before commitment.");
+        using (var input = new VisualShaderNodeInput())
+        {
+            var inputChanges = 0;
+            input.Changed += _ => throw new InvalidOperationException("Observer failure");
+            input.InputTypeChanged += () => inputChanges++;
+            Reject<InvalidOperationException>(() => input.InputName = "uv");
+            Check(input.InputName == "uv" && inputChanges == 1, "A committed type change publishes both channels despite an observer failure.");
+        }
+        Check(graph.GetNodeList(VisualShader.Type.Vertex).SequenceEqual(new[] { 0 }) && graph.GetValidNodeID(VisualShader.Type.Fragment) == 2, "Initial stage IDs.");
+        graph.AddNode(VisualShader.Type.Fragment, scalar, new(4, 8), 2);
+        graph.AddNode(VisualShader.Type.Fragment, operation, new(12, 16), 3);
+        graph.ConnectNodes(VisualShader.Type.Fragment, 2, 0, 3, 0);
+        graph.ConnectNodes(VisualShader.Type.Fragment, 3, 0, 0, 0);
+        Check(!graph.CanConnectNodes(VisualShader.Type.Fragment, 3, 0, 3, 1), "Self cycle rejected.");
+        Check(!graph.CanConnectNodes(VisualShader.Type.Fragment, 2, 0, 3, 0), "Duplicate rejected.");
+        Reject<ArgumentException>(() => graph.ConnectNodes(VisualShader.Type.Fragment, 3, 0, 3, 1));
+        Reject<ArgumentException>(() => graph.AddNode(VisualShader.Type.Fragment, scalar, new(float.NaN, 0), 4));
+        Reject<ArgumentException>(() => graph.AddNode(VisualShader.Type.Fragment, scalar, default, 2));
+        Reject<ArgumentException>(() => graph.RemoveNode(VisualShader.Type.Fragment, 0));
+        Reject<ArgumentOutOfRangeException>(() => graph.GetNode((VisualShader.Type)9, 0));
+        var edges = graph.GetNodeConnections(VisualShader.Type.Fragment); edges[0] = default;
+        Check(graph.IsNodeConnection(VisualShader.Type.Fragment, 2, 0, 3, 0), "Connection snapshots own their arrays.");
+        operation.SetInputPortDefaultValue(1, .25f);
+        var snapshot = operation.GetDefaultInputValues();
+        operation.SetInputPortDefaultValue(1, .75f);
+        Check(((VisualShaderPortDefault<float>)snapshot.Single(x => x.Port == 1)).Value == .25f, "Default snapshots are immutable.");
+        Reject<ArgumentException>(() => operation.SetInputPortDefaultValue(1, float.NaN));
+        Reject<ArgumentException>(() => operation.SetInputPortDefaultValue(1, 1));
+        Reject<ArgumentException>(() => operation.SetDefaultInputValues(new VisualShaderPortDefault[] { new VisualShaderPortDefault<float>(0, 2), new VisualShaderPortDefault<float>(0, 3) }));
+        Check(operation.GetInputPortDefaultValue<float>(1) == .75f, "Rejected replacements preserve defaults.");
+        operation.SetInputPortDefaultValue(1, 0f, new Vector3(.125f, .5f, .75f));
+        Check(operation.GetInputPortDefaultValue<float>(1) == .125f, "Previous vectors convert by first component.");
+        operation.RemoveInputPortDefaultValue(1); Check(operation.GetInputPortDefaultValue<float>(1) is null, "Removed defaults return null.");
+        using var vec4 = new VisualShaderNodeVec4Constant();
+        Check(vec4.Constant == new Vector4(0, 0, 0, 1), "Four-component defaults retain their numeric homogeneous component.");
+        using var vectorOperation = new VisualShaderNodeVectorOp();
+        vectorOperation.SetInputPortDefaultValue(0, new Vector3(.125f, .25f, .5f));
+        vectorOperation.OperationType = VisualShaderNodeVectorBase.OpType.Vector4;
+        Check(vectorOperation.GetInputPortDefaultValue<Vector4>(0) == new Vector4(.125f, .25f, .5f, .5f), "Changing vector width repeats the previous last component.");
+        vectorOperation.ClearDefaultInputValues(); vectorOperation.OperationType = VisualShaderNodeVectorBase.OpType.Vector2;
+        Check(vectorOperation.GetInputPortDefaultValue<Vector2>(0) == Vector2.Zero, "A width change recreates a missing default.");
+        Reject<NotSupportedException>(() => vectorOperation.Operation = VisualShaderNodeVectorOp.Operator.Cross);
+        using var shallow = (VisualShader)graph.Duplicate();
+        using var deep = (VisualShader)graph.Duplicate(true);
+        Check(ReferenceEquals(shallow.GetNode(VisualShader.Type.Fragment, 2), scalar), "Shallow graph borrows operation resources.");
+        Check(!ReferenceEquals(deep.GetNode(VisualShader.Type.Fragment, 2), scalar), "Deep graph copies operation resources.");
+        Check(((VisualShaderNodeFloatConstant)deep.GetNode(VisualShader.Type.Fragment, 2)).Constant == .375f, "Deep graph copies authored constant values.");
+        using var copied = new VisualShader(); copied.CopyFromResource(graph);
+        Check(!ReferenceEquals(copied.GetNode(VisualShader.Type.Vertex, 0), graph.GetNode(VisualShader.Type.Vertex, 0)), "CopyFromResource preserves independent reserved outputs.");
+        Check(!ReferenceEquals(shallow.GetNode(VisualShader.Type.Vertex, 0), graph.GetNode(VisualShader.Type.Vertex, 0)), "Output definitions remain independently owned.");
+        graph.RemoveNode(VisualShader.Type.Fragment, 2);
+        Check(!scalar.IsDisposed && graph.GetNodeConnections(VisualShader.Type.Fragment).Length == 1, "Removal borrows the resource and removes incident edges.");
+        using (var replacements = new VisualShader())
+        using (var borrowed = new VisualShaderNodeFloatConstant())
+        {
+            replacements.AddNode(VisualShader.Type.Fragment, borrowed, new(3, 4), 2);
+            replacements.ReplaceNode(VisualShader.Type.Fragment, 2, "VisualShaderNodeVec3Constant");
+            var owned = (VisualShaderNodeVec3Constant)replacements.GetNode(VisualShader.Type.Fragment, 2);
+            owned.Constant = new(.1f, .2f, .3f);
+            replacements.AddNode(VisualShader.Type.Vertex, owned, default, 2);
+            using var aliasCopy = (VisualShader)replacements.Duplicate();
+            Check(!ReferenceEquals(aliasCopy.GetNode(VisualShader.Type.Fragment, 2), owned) && ReferenceEquals(aliasCopy.GetNode(VisualShader.Type.Fragment, 2), aliasCopy.GetNode(VisualShader.Type.Vertex, 2)), "Owned replacements duplicate independently while retaining graph aliases.");
+            replacements.RemoveNode(VisualShader.Type.Fragment, 2); Check(!owned.IsDisposed, "A replacement lives while another graph entry refers to it.");
+            replacements.RemoveNode(VisualShader.Type.Vertex, 2); Check(owned.IsDisposed && !borrowed.IsDisposed, "The last graph alias retires an owned replacement, preserving borrowed originals.");
+            Reject<ArgumentException>(() => aliasCopy.ReplaceNode(VisualShader.Type.Fragment, 2, "Resource"));
+            Check(aliasCopy.GetNodePosition(VisualShader.Type.Fragment, 2) == new Vector2(3, 4), "Replacement preserves authoring position.");
+        }
+        var folder = IOPath.Combine(IOPath.GetTempPath(), "electron2d-visual-check-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            Author(folder);
+            using var loaded = ResourceLoader.Load<VisualShader>(IOPath.Combine(folder, "color.e2dres"), ResourceLoader.CacheMode.IgnoreDeep);
+            Check(loaded.GetNodeList(VisualShader.Type.Fragment).Length == 3, "Fresh resource graph node table.");
+            Check(((VisualShaderNodeColorConstant)loaded.GetNode(VisualShader.Type.Fragment, 2)).Constant == new Color(.25f, .5f, .75f, 1), "Typed constants restore.");
+            Check(loaded.GetNodeConnections(VisualShader.Type.Fragment).Length == 2, "Typed connections restore.");
+            using var cleared = ResourceLoader.Load<VisualShader>(IOPath.Combine(folder, "cleared.e2dres"), ResourceLoader.CacheMode.IgnoreDeep);
+            Check(cleared.GetNode(VisualShader.Type.Fragment, 2).GetDefaultInputValues().Count == 0, "Removed constructor defaults stay removed after restore.");
+        }
+        finally { if (Directory.Exists(folder)) Directory.Delete(folder, true); }
+        Console.WriteLine("Visual graph ownership, numeric defaults, invalid requests, snapshots, duplication and archives passed.");
+    }
+    internal static void Author(string folder)
+    {
+        Directory.CreateDirectory(folder);
+        using (var graph = new VisualShader())
+        using (var color = new VisualShaderNodeColorConstant { Constant = new(.25f, .5f, .75f, 1) })
+        using (var alpha = new VisualShaderNodeFloatConstant { Constant = 1 })
+        {
+            graph.AddNode(VisualShader.Type.Fragment, color, new(10, 20), 2);
+            graph.AddNode(VisualShader.Type.Fragment, alpha, new(20, 40), 3);
+            graph.ConnectNodes(VisualShader.Type.Fragment, 2, 0, 0, 0);
+            graph.ConnectNodes(VisualShader.Type.Fragment, 3, 0, 0, 1);
+            ResourceSaver.Save(graph, IOPath.Combine(folder, "color.e2dres"), SaverFlags.BundleResources);
+        }
+        using (var graph = new VisualShader())
+        using (var operation = new VisualShaderNodeFloatOp())
+        {
+            operation.ClearDefaultInputValues(); graph.AddNode(VisualShader.Type.Fragment, operation, default, 2);
+            graph.ConnectNodes(VisualShader.Type.Fragment, 2, 0, 0, 0);
+            ResourceSaver.Save(graph, IOPath.Combine(folder, "cleared.e2dres"), SaverFlags.BundleResources | SaverFlags.Compress | SaverFlags.SaveBigEndian);
+        }
+        using (var graph = new VisualShader())
+        using (var uv = new VisualShaderNodeInput { InputName = "uv" })
+        {
+            graph.AddNode(VisualShader.Type.Fragment, uv, default, 2); graph.ConnectNodes(VisualShader.Type.Fragment, 2, 0, 0, 0);
+            ResourceSaver.Save(graph, IOPath.Combine(folder, "uv.e2dres"), SaverFlags.BundleResources);
+        }
+        using (var graph = new VisualShader())
+        using (var operation = new VisualShaderNodeFloatOp())
+        {
+            graph.AddNode(VisualShader.Type.Fragment, operation, default, 2);
+            graph.ConnectNodesForced(VisualShader.Type.Fragment, 2, 0, 2, 0);
+            graph.ConnectNodesForced(VisualShader.Type.Fragment, 2, 0, 0, 0);
+            ResourceSaver.Save(graph, IOPath.Combine(folder, "cycle.e2dres"), SaverFlags.BundleResources);
+        }
+        using (var graph = new VisualShader())
+        using (var uv = new VisualShaderNodeVec2Constant { Constant = new(.25f, .75f) })
+        using (var input = new VisualShaderNodeInput { InputName = "uv" })
+        {
+            graph.AddNode(VisualShader.Type.Vertex, uv, default, 2); graph.ConnectNodes(VisualShader.Type.Vertex, 2, 0, 0, 1);
+            graph.AddNode(VisualShader.Type.Fragment, input, default, 2); graph.ConnectNodes(VisualShader.Type.Fragment, 2, 0, 0, 0);
+            ResourceSaver.Save(graph, IOPath.Combine(folder, "vertex-uv.e2dres"), SaverFlags.BundleResources);
+        }
+        AuthorNumeric(folder);
+        Console.WriteLine("Authored typed visual shader fixtures.");
+    }
+    internal static void Read(string file)
+    {
+        using var graph = ResourceLoader.Load<VisualShader>(file, ResourceLoader.CacheMode.IgnoreDeep);
+        Check(graph.GetMode() == Shader.Mode.CanvasItem, "Imported graph domain.");
+        Check(graph.GetSPIRV(RenderingDevice.ShaderStage.Vertex).Length > 20 && graph.GetSPIRV(RenderingDevice.ShaderStage.Fragment).Length > 20, "Both canvas stages are compiled.");
+        Console.WriteLine("Imported visual shader loaded with both native program stages.");
+    }
+}
