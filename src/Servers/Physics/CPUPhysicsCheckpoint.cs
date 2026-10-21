@@ -40,8 +40,19 @@ internal sealed class CPUPhysicsCheckpoint : IDisposable
     {
         ValidateRestore();
         var destination = Check(); var saved = _saved!;
+        if (destination.prepareSleepingStorage is { } prepare)
+            for (var i = 3; i < saved.solverSets.count; i++)
+            {
+                var set = saved.solverSets.data[i];
+                if (set.setIndex >= 3) prepare(destination.solverSets.data[i], set.bodySims.count,
+                    set.contactSims.count, set.jointSims.count, set.islandSims.count);
+            }
         // Reserve every nested destination before overwriting any live logical state.
         Copy(saved, destination, true); Copy(saved, destination, false);
+        if (destination.releaseSleepingStorage is { } release)
+            for (var i = 3; i < destination.solverSets.data.Length; i++)
+                if (i >= destination.solverSets.count || destination.solverSets.data[i].setIndex < 3)
+                    release(destination.solverSets.data[i]);
     }
 
     private B2World Check()
@@ -166,6 +177,7 @@ internal sealed class CPUPhysicsCheckpoint : IDisposable
     }
     private static void Data<T>(T[]? a, ref T[] b, int count, bool prepare)
     {
+        if (count == 0) return;
         if (b is null || b.Length < count) Array.Resize(ref b, count);
         if (!prepare) a.AsSpan(0, count).CopyTo(b);
     }
@@ -177,7 +189,7 @@ internal sealed class CPUPhysicsCheckpoint : IDisposable
     private static void Bits(in B2BitSet a, ref B2BitSet b, bool prepare)
     {
         Data(a.bits, ref b.bits, a.blockCount, prepare);
-        if (!prepare) { b.blockCount = a.blockCount; b.blockCapacity = b.bits.Length; }
+        if (!prepare) { b.blockCount = a.blockCount; b.blockCapacity = b.bits?.Length ?? 0; }
     }
     private static void Hash(in B2HashSet a, ref B2HashSet b, bool prepare)
     {

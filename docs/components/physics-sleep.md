@@ -1,6 +1,6 @@
 # World sleep policy
 
-Last updated: 2026-10-18
+Last updated: 2026-10-21
 
 [World policy publication recovery](physics-registered-adapter.md#failed-world-policy-publication) retains complete current profiles after partial selected errors, retries before numerical preparation and preserves skipped-interval and cleanup behavior.
 
@@ -127,3 +127,83 @@ only in separate public profiles. Evidence is retained under
 `bin/physics-public-sleep/2026-10-14/`. Software timing is diagnostic; arbitrary
 registered geometry, native allocation, foreign platforms, networking, massive
 hardware advantage and real-window FPS remain separate acceptance gates.
+
+
+## Pooled dormant island storage
+
+CPU natural sleep previously reserved only 16 body, 32 contact and 4 joint records
+for each dormant set. A 16-body/15-pin chain warmed for 128 active frames then
+allocated 3624/3624 owner/all-thread managed bytes during its first natural sleep.
+The original failing process and source/PDB proof are retained. Increasing every
+sleeping set to whole-world capacity would multiply record storage by the number
+of possible islands.
+
+[CPUPhysicsSleepStorage](../classes/CPUPhysicsSleepStorage.md) instead prepares
+rounded array buckets and a separate reusable record supply for bodies, contacts,
+joints and islands. It uses the current sleep-capable body capacity, existing
+contact graph budget and joint identity budget. Natural sleep and sleeping-set
+merge acquire capacity; wake returns cleared dormant storage. Growing a live
+array moves its existing references and returns only spare objects, preserving
+physical records. Array reference storage grows with the budget times its
+logarithm, while prepared record objects grow linearly. Worlds that never enable
+dynamic sleep do not create this pool. Disposal clears both retained storage and
+native callback references.
+
+Checkpoint restore prepares the saved live counts before copying numerical
+state and releases inactive destination arrays afterwards. The current and saved
+partitions can coexist during preparation; pool bookkeeping is not snapshot or
+wire state. Existing body/joint identity and sleep equations are unchanged.
+
+An additional 6408-byte partition failure was traced to two 1176-byte island-split
+scratch arrays and a 4056-byte arena growth, independently of the new pool.
+Sleep enabling now also prepares the existing integer split-arena budget for
+small worlds; it had previously been prepared only at 256 body-capacity slots.
+The allocation-profiler build and temporary pool-miss assertions are diagnostic
+artifacts and are absent from the production candidate.
+
+`PhysicsDormantCapacityTests`, also linked into the public-only consumer as
+`--dormant-capacity`, verifies first sleep for 16/17/33/65 bodies, real impulse wake
+and linear momentum, eleven successive fresh partitions of the same 65 bodies,
+a touching contact/pin chain and 128 measured complete wake/checkpoint-restore
+cycles after 128 warm cycles. New partitions remove old joints before resetting
+poses and create the desired constraints at rest. All eight CPU/GPU JIT/strict NativeAOT
+owner/separate profiles pass with strict 0/0 managed bytes. CPU processes disable
+GPU discovery; NVIDIA mappings exclude a software driver in the GPU profiles. Cold capacity preparation is measured outside
+the warmed step interval; it remains actual construction/configuration work.
+With the identical final public consumer DLL/PDB, the old runtime fails the
+16-body case at 3624/3624 warmed bytes and the new runtime passes at 0/0. Cold
+preparation allocates 210968/210968 versus 134696/134696 bytes in that pair.
+These are allocation counters for preparation, not retained heap/native size.
+PDB proofs match 2436 runtime, 928 root-test and 263 consumer authored sources,
+with a separately matched AOT input cohort, including the concurrent PCRE2 main
+integration. Adjacent CPU kernel checkpoint and
+public sleep/compound joint-contact owner/separate regressions also pass.
+
+A further public 128-body case changes contact groups while preserving all body
+and shape identities, then restores the saved sleeping partition. Each natural
+sleep interval allows 256 steps for at most 128 pending splits and the quiet
+timer; the original 16-step cases retain their bound. A one-partition array
+reserve allocated 376 bytes on this first different restore. Preparing arrays
+for both current and saved partitions removed 352 bytes. Exact allocation stacks
+attributed the remaining 24 bytes to an empty `Array.Resize` in checkpoint copy;
+zero-size copies now retain nullable storage and valid empty bitset capacity.
+The resulting CPU owner/separate case restores all 128 poses and sleep flags at
+strict 0/0 bytes. Record object supply remains four per budget unit; no numerical
+iterations or tolerances change.
+
+An earlier fixture retained warm-started joints while teleporting all bodies to
+reset a preceding impulse. The old and new runtimes produce exactly the same
+failed group-65 observation: body 0 position .04293163, velocity -3.0948648 and no
+sleep after the tested window. That retained-impulse convergence scenario remains
+outside this capacity acceptance; its failed baseline behavioral control is
+preserved. The control disables allocation assertions only in an ignored probe
+copy, and is not zero-allocation or functional conformance acceptance. The final
+fixture retains its original step count, pose/momentum bounds and allocation
+assertions.
+
+Receipts, source proofs, exact allocation stacks and failed controls are under
+`bin/physics-dormant/2026-10-21/`. The global four-contacts-per-prepared-body graph
+budget remains; denser unseen graphs retain correct growth and can allocate.
+Full numerical, allocation/native/platform/network and hardware performance
+acceptance remain open, including the separate 64-byte full-suite failure and
+the 65,536-body GPU device-loss/Xid gate.

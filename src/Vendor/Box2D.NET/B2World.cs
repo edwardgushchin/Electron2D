@@ -33,6 +33,8 @@ namespace Box2D.NET
         internal System.Action<int> shapeFilterChanged;
         internal System.Action<int> shapeGeometryChanged;
         internal System.Action<int> jointFilterChanged;
+        internal System.Action<B2SolverSet, int, int, int, int> prepareSleepingStorage;
+        internal System.Action<B2SolverSet> releaseSleepingStorage;
         internal readonly B2StepContext reusableStepContext = new B2StepContext();
         internal readonly ArraySegment<B2SolverBlock>[] reusableGraphColorBlocks = new ArraySegment<B2SolverBlock>[B2Constants.B2_GRAPH_COLOR_COUNT];
         public B2ArenaAllocator arena;
@@ -211,6 +213,8 @@ namespace Box2D.NET
             shapeFilterChanged = null;
             shapeGeometryChanged = null;
             jointFilterChanged = null;
+            prepareSleepingStorage = null;
+            releaseSleepingStorage = null;
             arena = null;
             broadPhase = null;
 

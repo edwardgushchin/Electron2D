@@ -1,6 +1,6 @@
 # CPUPhysicsCheckpoint
 
-Last updated: 2026-10-15
+Last updated: 2026-10-21
 
 **Declaration:** `internal sealed class CPUPhysicsCheckpoint : IDisposable`
 
@@ -34,3 +34,15 @@ Report-only geometry does not create native constraint contacts. The containing
 observations, receiver snapshots and adapter reporting eligibility alongside this
 solver checkpoint. A standalone CPUPhysicsCheckpoint remains a solver-only
 snapshot and does not capture those adapter observations.
+
+
+The containing CPU owner now [pools dormant records](CPUPhysicsSleepStorage.md).
+Restore prepares each saved sleeping set's live counts before the existing copy
+phases, preserving current numerical state during preparation, and returns
+inactive destination storage afterwards. Pool capacity and callbacks remain
+owned by the destination world and are not copied into the checkpoint.
+
+Empty payloads preserve their existing nullable storage without constructing an
+empty destination array. Empty bitsets retain a valid zero capacity. This avoids
+a first-restore allocation when a saved contact partition leaves unused graph
+metadata, while retaining prepared nonempty buffers.

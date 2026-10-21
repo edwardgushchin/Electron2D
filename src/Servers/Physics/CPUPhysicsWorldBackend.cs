@@ -133,6 +133,7 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
         try { _stageGPU?.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }
         _stageGPU = null;
         try { if (b2World_IsValid(_worldID)) b2DestroyWorld(_worldID); } catch (Exception error) { (errors ??= []).Add(error); }
+        _sleepStorage?.Clear(); _sleepStorage = null;
         if (errors is not null) throw new AggregateException("CPU physics-world cleanup failed.", errors);
     }
     private void ThrowIfDisposed() { if (_disposed) throw new ObjectDisposedException(nameof(CPUPhysicsWorldBackend)); }

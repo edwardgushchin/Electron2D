@@ -7,6 +7,7 @@ namespace Electron2D;
 internal sealed partial class CPUPhysicsWorldBackend
 {
     private int _preparedBodyCapacity, _preparedSleepCapacity;
+    private CPUPhysicsSleepStorage? _sleepStorage;
     // Keep this conservative flag across private restores and retired attachments.
     private bool _maySleep;
     internal bool MaySleep => _maySleep;
@@ -33,6 +34,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         // Restored sleep islands can move any existing joint to a different graph color on wake.
         foreach (ref var color in world.constraintGraph.colors.AsSpan())
             Box2D.NET.B2Arrays.b2Array_Reserve(ref color.jointSims, capacity);
+        _sleepStorage?.Reserve(_preparedSleepCapacity, checked(_preparedBodyCapacity * 4), capacity);
     }
 
     internal override void PrepareSolverCapacity()
@@ -65,8 +67,20 @@ internal sealed partial class CPUPhysicsWorldBackend
         var awake = world.solverSets.data[(int)B2SolverSetType.b2_awakeSet];
         Box2D.NET.B2Arrays.b2Array_Reserve(ref awake.bodyStates, capacity);
         Box2D.NET.B2Arrays.b2Array_Reserve(ref world.bodyMoveEvents, capacity);
-        // ponytail: Four contacts per body is the prepared graph budget; larger topologies need explicit capacity preparation.
+        // shortcut: Four contacts per body are prepared; use observed demand for denser warm workloads.
         var contacts = checked(capacity * 4);
+        if (sleepCapacity > 0)
+        {
+            // Splitting can first run when sleep is enabled after an active warmup.
+            world.arena.GetOrCreateFor<int>().Reserve(checked(capacity * 9 + 96));
+            if (_sleepStorage is null)
+            {
+                _sleepStorage = new();
+                world.prepareSleepingStorage = _sleepStorage.Prepare;
+                world.releaseSleepingStorage = _sleepStorage.Release;
+            }
+            _sleepStorage.Reserve(sleepCapacity, contacts, world.jointIdPool.nextIndex);
+        }
         // The pair table grows at half occupancy, so prepare two slots per budgeted contact.
         var pairCapacity = checked(contacts * 2);
         while (world.broadPhase.pairSet.capacity < pairCapacity) B2Tables.b2GrowTable(ref world.broadPhase.pairSet);
@@ -77,11 +91,11 @@ internal sealed partial class CPUPhysicsWorldBackend
         for (var i = 0; i < world.solverSets.count; i++)
         {
             var set = world.solverSets.data[i];
-            // ponytail: Dormant budget is 16 bodies/32 contacts; larger island topologies need explicit preparation.
-            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.bodySims, i < 3 ? capacity : 16);
-            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.contactSims, i < 3 ? contacts : 32);
+            if (i >= 3) continue;
+            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.bodySims, capacity);
+            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.contactSims, contacts);
             Box2D.NET.B2Arrays.b2Array_Reserve(ref set.jointSims, 4);
-            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.islandSims, i < 3 ? capacity : 1);
+            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.islandSims, capacity);
         }
         foreach (var task in world.taskContexts.data.AsSpan(0, world.taskContexts.count))
         {

@@ -1770,3 +1770,11 @@ unchanged numerical bounds. This is a scoped optimization. The broader
 65,536-circle regression failed with device loss/Xid 79 and 154 and stays open;
 public CPU/GPU, window, network, native/platform and full-goal acceptance remain
 separate.
+
+
+[Pooled CPU dormant storage](../components/physics-sleep.md#pooled-dormant-island-storage)
+prepares changing sleep partitions and small-world split scratch. Natural sleep,
+real impulse wake and public checkpoint restoration reuse record storage without
+changing physical identity or sleep policy. The existing global contact graph
+budget, retained-impulse convergence and broader allocation/native/network/
+platform/hardware performance gates remain open.

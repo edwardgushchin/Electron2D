@@ -31,6 +31,10 @@ namespace Box2D.NET
         public static void b2DestroySolverSet(B2World world, int setIndex, bool releaseStorage = false)
         {
             B2SolverSet set = b2Array_Get(ref world.solverSets, setIndex);
+            if (!releaseStorage && setIndex >= (int)B2SolverSetType.b2_firstSleepingSet)
+            {
+                world.releaseSleepingStorage?.Invoke(set);
+            }
             if (releaseStorage)
             {
                 b2Array_Destroy(ref set.bodySims);
@@ -210,6 +214,7 @@ namespace Box2D.NET
             B2_ASSERT(0 <= island.localIndex && island.localIndex < awakeSet.islandSims.count);
 
             sleepSet.setIndex = sleepSetId;
+            world.prepareSleepingStorage?.Invoke(sleepSet, island.bodyCount, island.contactCount, island.jointCount, 1);
             // Sleeping set identities and their prepared buffers are reused after wakeup.
             b2Array_Reserve(ref sleepSet.bodySims, island.bodyCount);
             b2Array_Reserve(ref sleepSet.contactSims, island.contactCount);
@@ -473,6 +478,10 @@ namespace Box2D.NET
                 setId1 = setId2;
                 setId2 = tempId;
             }
+
+            world.prepareSleepingStorage?.Invoke(set1, set1.bodySims.count + set2.bodySims.count,
+                set1.contactSims.count + set2.contactSims.count, set1.jointSims.count + set2.jointSims.count,
+                set1.islandSims.count + set2.islandSims.count);
 
             // transfer bodies
             {

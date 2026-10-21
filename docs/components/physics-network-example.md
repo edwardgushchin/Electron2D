@@ -1,6 +1,6 @@
 # Authoritative physics network example
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 ## Crossed capsule correction and CPU wake preparation, 2026-10-20
 
@@ -25,7 +25,9 @@ all joint graph colors when attaching a joint, using a power-of-two retained joi
 budget. It adds no joint buffers to worlds with no joints and does not change
 constraint selection, numerical policy, identity or event delivery. This trades
 bounded cold storage across graph colors for zero growth during later wake. The
-existing larger dormant-island capacity limits remain separate requirements.
+[pooled dormant storage](physics-sleep.md#pooled-dormant-island-storage) now removes
+fixed per-island record limits; the global dense-contact budget and broader
+acceptance remain separate requirements.
 The original failure and temporary allocation/stack diagnostics are preserved;
 the diagnostic source changes are reverted.
 

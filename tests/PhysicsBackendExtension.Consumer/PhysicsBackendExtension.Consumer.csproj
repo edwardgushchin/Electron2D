@@ -18,6 +18,7 @@
   <ItemGroup><Compile Include="../Electron2D.Tests/PhysicsNodeTweenTests.cs" Link="PhysicsNodeTweenTests.cs" /></ItemGroup>
   <ItemGroup><Compile Include="../Electron2D.Tests/PhysicsBodyParameterTests.cs" Link="PhysicsBodyParameterTests.cs" /></ItemGroup>
   <Import Project="../../tools/native-consumer.props" />
+  <ItemGroup><Compile Include="../Electron2D.Tests/PhysicsDormantCapacityTests.cs" Link="PhysicsDormantCapacityTests.cs" /></ItemGroup>
   <ItemGroup><Compile Include="../Electron2D.Tests/PhysicsActivityTests.cs" Link="PhysicsActivityTests.cs" /></ItemGroup>
   <ItemGroup><Compile Include="../Electron2D.Tests/CanvasOversamplingTests.cs" Link="CanvasOversamplingTests.cs" /><Content Include="../../editor/Assets/IBMPlexSans-Regular.ttf" Link="Assets/IBMPlexSans-Regular.ttf" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup><Compile Include="../Electron2D.Tests/DegenerateShapeCollisionTests.cs" Link="DegenerateShapeCollisionTests.cs" /></ItemGroup>

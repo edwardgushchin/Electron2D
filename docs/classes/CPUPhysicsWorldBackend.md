@@ -6,7 +6,7 @@ Cold world-query geometry now uses the [shared using-world borrow](../components
 
 The query/Area partials now share body-local unrounded polygon containment through PhysicsShapeBackend. Direct points, ordinary ray inside-start policy, directed shape-query origin filtering and Area audio no longer inherit GJK zero-distance slack outside an edge. [Public CPU/GPU checks](../components/physics-point-containment.md) preserve logical identity and warmed allocation bounds.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 **Declaration:** `internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend` · **Source:** [CPUPhysicsWorldBackend.cs](../../src/Servers/Physics/CPUPhysicsWorldBackend.cs) · **Component:** [Physics backends](../components/physics-backends.md)
 
@@ -39,7 +39,7 @@ CreateJoint receives the retained common joint identity. Attachments consume [Ph
 
 The selected owner now applies sleep/contact thresholds, solver iterations and world joint defaults. PhysicsSpace validates and retains authored values, then dispatches implementation work. CPU owns native threshold updates, waking, worker selection, sensor scratch, solver/arena capacity and native sensor/process-statistics traversal. GPU applies resident settings and epoch invalidation, prepares existing GPU publication/report scratch and reads completed store statistics; it creates no CPU motion-history mirror.
 
-CPU capacity preparation keeps a conservative flag once any dynamic attachment can sleep. Worlds whose dynamic bodies have never enabled sleep skip repeated complete-body scans during attachment. Enabling sleep or changing a sleep-enabled static/kinematic body to a dynamic role prepares dormant capacity immediately. The flag never resets, so private checkpoint restores cannot introduce an unobserved sleeping role. Existing dormant budgets and physics semantics are retained.
+CPU capacity preparation keeps a conservative flag once any dynamic attachment can sleep. Worlds whose dynamic bodies have never enabled sleep skip repeated complete-body scans during attachment. Enabling sleep or changing a sleep-enabled static/kinematic body to a dynamic role prepares dormant capacity immediately. The flag never resets, so private checkpoint restores cannot introduce an unobserved sleeping role. [Pooled dormant storage](CPUPhysicsSleepStorage.md) replaces the fixed per-island body/contact/joint limits. Sleep semantics and the global contact graph budget remain unchanged; split scratch is also prepared when sleep first becomes possible.
 
 The broad-phase contact-pair hash table now reserves two slots per prepared
 contact, matching its half-full growth threshold and the existing four-contact-

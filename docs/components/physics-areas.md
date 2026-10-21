@@ -1,6 +1,6 @@
 # Physics areas component
 
-Last updated: 2026-10-19
+Last updated: 2026-10-21
 
 ## Finite composed physics poses
 
@@ -168,7 +168,7 @@ Logical shape-pair monitoring now uses a shared PhysicsShapePairTracker and comm
 
 Typed PhysicsServer Area field getter/setters now share scene/server profiles and address a space default Area by its Space RID. Bounded fields use current exact overlap and descending mixed priority; monitor flags/callbacks are independent. Initial space defaults sample ProjectSettings, then explicit live edits apply on the next nonzero step without changing other worlds. Point/default gravity, body damping/scaling, wakeup and failure recovery are verified by [PhysicsServerAreaFieldTests](../../tests/Electron2D.Tests/PhysicsServerAreaFieldTests.cs) under [ADR 0056](../decisions/physics-fields.md#adr-0056). Native allocation, other platforms and owner visual acceptance remain unverified.
 
-Scene/server membership and monitor configuration prepare object/pair/change storage from the existing fixture inventory. Body creation also prepares dormant solver-set identities and buffers, so first sleep after a long run can reuse them. Prepared graph storage is four contacts per rounded body-capacity slot; unusual denser topologies can exceed that tested budget and are outside the sandbox measurement. Cache capacity grows during explicit construction/configuration and remains owned by the world until disposal.
+Scene/server membership and monitor configuration prepare object/pair/change storage from the existing fixture inventory. Body creation also prepares dormant solver-set identities; [pooled dormant records](physics-sleep.md#pooled-dormant-island-storage) prepare changing island partitions without fixed per-island body/contact/joint limits. Prepared graph storage is four contacts per rounded body-capacity slot; unusual denser topologies can exceed that tested budget and are outside the sandbox measurement. Cache capacity grows during explicit construction/configuration and remains owned by the world until disposal.
 
 CPU field/overlap/audio geometry and retained priority scratch now belong to
 CPUPhysicsWorldBackend. GPU resident Area scans and audio scratch belong to
