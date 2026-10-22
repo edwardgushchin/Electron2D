@@ -156,6 +156,12 @@ passes 28 selected NativeAOT profiles and fourteen real process/window sessions
 on the same frozen runtime. Broader conformance and massive-scene performance
 remain separate gates.
 
+A [later default aggregate at d90d89c1c](physics-allocation-measurement.md#default-clr-aggregate-at-d90d89c1c-2026-10-22)
+also completes in 4740.632 seconds with unchanged payload, no new Xid and all six
+point-field allocation gates passing 768 measured frames at 0/0 bytes. Its pinned
+runtime precedes the later cached-color command reduction; the result retains
+that source boundary and establishes no massive-scene speed ratio.
+
 The earlier isolated eight-case timing plan at 7b6db6079 stops after its first CPU case:
 physical and 0/0-byte checks pass, but foreign workload reaches 2.107 mean cores
 in an observed interval against the predeclared 1.0 limit. Its 1/8 result is

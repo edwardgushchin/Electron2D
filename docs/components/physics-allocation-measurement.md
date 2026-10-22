@@ -512,3 +512,32 @@ The successful current aggregate does not retrospectively accept older failed
 intervals or prove all native, network, foreign-platform or massive-scene
 performance requirements. Physics declaration coverage stays 1306/1369 (95.40%),
 with 63 open rows and 92 excluded.
+
+## Default CLR aggregate at d90d89c1c (2026-10-22)
+
+The later frozen default CLR suite at
+`d90d89c1c989fdb4a98243d53000f29f18144fbb` exits 0 in 4740.632 seconds with
+`Electron2D checks passed.` The ordinary process has no test-scope filters or
+profiler attached. All six point-field gates pass 768 measured complete frames at
+strict 0/0 owner/all-thread managed bytes. Payload hashes remain unchanged;
+process maps observe NVIDIA without a software GPU, and the fresh kernel read
+contains no new Xid.
+
+The source/PDB proof covers 2554 runtime, 947 root-test and 269 consumer documents:
+3769 match the pinned commit, plus the same explicitly preserved extra checkpoint
+test. The two unaccepted report-range runtime prototypes remain excluded through
+verified committed-source overrides. Runtime SHA-256 is
+`d20e79e032c31d87ef04eb3d4fa3c3329ee518dc7ec3787dd07085e28a61cec4`;
+root-test SHA-256 is
+`2bbb5d0060baa7479a663d3f3bd2379908c8e2439c0859e90248d4c61fd9d636`.
+The receipt SHA-256 is
+`846eb79bfb69fe96b63a822f4946029dea7335dffe6e8d30c993c4850f0e883a`;
+its log is `6b80582c40b23dd3ef1b6b62a0867ba711a90ba0076a63228c3404f305aff333`.
+
+Local evidence is `d90-aggregate-analysis.json`, `d90-source-proof.json`,
+`d90-cohort-manifest.json`, `d90-aggregate/check.json` and
+`validate-d90-aggregate.py` under the existing pair/contact evidence directory.
+This completes that exact older aggregate. It does not certify later rendering
+or cached-color command changes, the rejected contact-copy experiment, mass-scene
+speedup, real-window FPS or the complete physics goal. The API census remains
+1306/1369 (95.40%), with 63 open and 92 Excluded.

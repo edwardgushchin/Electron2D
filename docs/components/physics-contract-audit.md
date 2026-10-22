@@ -2089,3 +2089,23 @@ zero managed allocations remain executable. This changes internal command
 scheduling only: 1306/1369 applicable declarations remain Implemented (95.40%),
 with 49 Partial, 11 Blocked, 3 Unimplemented and 92 Excluded. No remaining inherited
 API row or final CPU/GPU performance requirement is promoted by this work.
+
+## Contact-copy experiment, 2026-10-22
+
+The [contact-storage investigation](physics-scene-performance.md#contact-copy-hypothesis-rejected-2026-10-22)
+rejected a mutable field-store alternative: removing the bulk GC-reference helper
+improved only a small warm-cache copy control, while the complete 16,384-body
+contact/monitor stage remained about 20.3 ms. Both full processes retained strict
+zero managed allocation and physical gates. Sampled thread stacks alone do not
+prove CPU cost. The temporary runtime/test changes were reverted; the original
+readonly contact representation remains. No declaration or inherited capability
+gap is promoted: 1306/1369 (95.40%), 63 open and 92 Excluded.
+
+## Completed default aggregate at d90d89c1c, 2026-10-22
+
+The [source-bound default suite](physics-allocation-measurement.md#default-clr-aggregate-at-d90d89c1c-2026-10-22)
+passes in 4740.632 seconds, with its final success marker, unchanged payload,
+768 strict zero-byte point-field frames and no new Xid. This records the completed
+older d90 runtime; it does not promote the later main, performance or inherited
+API acceptance. The live process is terminal and must not be restarted as if an
+observer timeout had ended it.

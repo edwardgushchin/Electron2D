@@ -878,10 +878,10 @@ publication can dominate host completion; they do not establish isolated scaling
 or a GPU speedup. The earlier default-only run also passed with 0/0 bytes and a
 91.5712 ms step median, illustrating between-run host variability.
 
-The GPU currently collects completed scene contacts serially after immutable
-readback. Its new subphase timing has not been exercised. Parallel host conversion
-is a candidate to measure, preserving owner-thread callbacks and device-owned
-numerics. Capacity-sized GPU reports are another measured cost: 80-byte rows at
+At that revision, GPU scene-contact conversion was serial after immutable
+readback. The current backend now uses retained contact workers for at least 256
+configured scene receivers under ADR 0054, preserving owner-thread callbacks and
+device-owned numerics. The numbers in this historical table remain CPU-only. Capacity-sized GPU reports are another measured cost: 80-byte rows at
 eight slots for 16,384 receivers occupy 10,485,760 bytes before counts and state
 publication. Compacting those destinations must account for any additional
 selection/count wait; neither optimization is implemented by this slice.
@@ -1036,3 +1036,49 @@ pass; generated output remains ignored.
 - Corrected matched runtime SHA-256: `89f4503aa9ba4fcfb0b2ef8c8cdea6c56ce664a55f611aa877afae9190713117`.
 - Identical raw fixture SHA-256: `175060a92bcf474476faab13ffd7b6978c2bcc57ce5328624d6a1468eda1cd5b`.
 - Baseline runtime SHA-256: `b2ed5fd923de2056cfff69387815e9b049e9b0b8cb8eed9b54859db3247b3794`.
+## Contact-copy hypothesis rejected, 2026-10-22
+
+A source-verified 16,384-body CPU process retained four walls, four substeps,
+16 solver iterations, 1600 warmup/256 measured ticks, contact monitoring/cap eight,
+awake bodies and scene interpolation. A 60-second EventPipe sample repeatedly
+landed in contact-storage stacks through `BulkMoveWithWriteBarrier`/GC polling.
+The sample contains native/blocked thread intervals and safepoint bias; these
+weights are not CPU utilization or isolated elapsed costs. The complete process
+passed its physical and strict zero-managed-byte gates.
+
+A temporary implementation replaced the private 120-byte contact copy with typed
+field stores after resolving both logical identities. JIT output confirms that it
+removed `CORINFO_HELP_BULK_WRITEBARRIER`, while retaining ordinary reference write
+barriers. Field/getter, sampled/supplied identity, aliased-input and GC checks
+passed. A single-slot warm-cache control observed 65,536 stores in 0.7332 ms
+before and 0.6162 ms after, both at strict 0/0 owner/all-thread managed bytes.
+This control does not represent the full scene's scattered contact storage.
+
+| Complete 16,384-body CPU process | Step p50 / p95 / p99 ms | Contact/monitor mean ms | Owner/all managed bytes |
+| --- | ---: | ---: | ---: |
+| Original readonly contact record; sample collected during warmup | 111.9335 / 118.7445 / 121.8720 | 20.354788 | 0 / 0 |
+| Temporary field-store variant | 121.6592 / 136.5429 / 148.4696 | 20.315773 | 0 / 0 |
+
+Both retain the unchanged physical gates, 86,303 reported contacts and the same
+state/contact diagnostic hashes. These are sequential shared-host functional
+observations with concurrent aggregate, compilation and GPU controls. The step
+increase cannot be attributed to the variant, and the contact-stage observations
+establish no useful improvement. The small single-slot result does not justify
+more complex mutable contact storage. The production change and its temporary
+test/selector were reverted; the original readonly record and bulk assignment
+remain. No public API, default test workload or allocation allowance changed.
+
+Evidence is in local ignored `bin/physics-contact-profile/2026-10-22/`:
+`plan.json`, `cpu-contact.nettrace`, `cpu-contact.speedscope.json`,
+`stack-analysis.json`, `top-inclusive.txt`, `top-exclusive.txt`, both
+`*-store.asm` files, `rejected-candidate.patch`, `rejected-source/` and the frozen
+control/source receipts. The analyzer checks balanced monotonic event stacks and
+an independent nested-interval fixture. A sub-two-second requested-GPU copy
+control passed its value assertions but ended before the second maps observation;
+its external driver proof is explicitly unconfirmed. Sixteen public contact-frame
+and portable-contact consumer profiles passed across CLR/NativeAOT, CPU/GPU and
+owner/separate lanes. Three broader CPU body/scene/publication suites passed.
+The GPU body suite was intentionally canceled after the experiment was rejected;
+the remaining two GPU suites were not run. None of these functional outcomes
+establishes a performance benefit. Full CPU/GPU advantage, real-window FPS,
+native memory and foreign platforms remain open.
