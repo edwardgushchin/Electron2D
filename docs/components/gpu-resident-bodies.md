@@ -151,8 +151,10 @@ pair/contact implementation, unchanged payload and all six point-field gates
 at 0/0 bytes across 768 measured full frames. The repaired native cohort includes
 KTX through its supported build property; the earlier missing-library failure
 remains a rejected result. Exact source substitutions and the preserved extra
-checkpoint test are recorded in that report. Native/network completion and
-massive-scene performance remain separate gates.
+checkpoint test are recorded in that report. The following [network regression](physics-network-example.md#network-regression-after-shared-contact-completion-2026-10-22)
+passes 28 selected NativeAOT profiles and fourteen real process/window sessions
+on the same frozen runtime. Broader conformance and massive-scene performance
+remain separate gates.
 
 The earlier isolated eight-case timing plan at 7b6db6079 stops after its first CPU case:
 physical and 0/0-byte checks pass, but foreign workload reaches 2.107 mean cores

@@ -2,6 +2,65 @@
 
 Last updated: 2026-10-22
 
+## Network regression after shared contact completion (2026-10-22)
+
+The frozen runtime at `c17f173af98febab1fc3c05b8843c6e2ca0413e9`
+passes fourteen public-example profiles after shared pair/contact completion:
+CLR/strict NativeAOT CPU/GPU owner/separate paced sessions, two NativeAOT GPU
+ordinary sessions and four actual Wayland windows. Each authority completes
+900 ticks, with late admission requested at 310. The eight headless paced
+profiles retain 250 ms polling; ordinary/window profiles use zero added delay.
+The workload retains 39 actors, all three joint families, floor support, crossed
+capsules and the closed pin-loop impact, with the scripted lifecycle unchanged. Existing input/token/generation,
+ownership/lifecycle/late-join, impaired transport, confirmed events, sleep/wake,
+contact import, divergence correction and final convergence assertions pass.
+
+Across 42 simulation participants, 14890 warmed ordinary steps and 91264 warmed
+replay intervals allocate exactly 0/0 owner/all-thread managed bytes. There are
+2027 local nonzero lattice witness contacts and 163 imported-contact observations.
+Maximum lattice energy is 8.4996543, momentum error 0.000046767 and anchor gap
+0.002075196, within the unchanged 32 * 1.01 + .0001 / .002 / .05 bounds. Each
+participant retains 524288 command-history bytes and 36864 event-history bytes,
+excluding array headers; transport slabs, engine history and device resources
+remain separate storage.
+
+All four saved PNGs were inspected. Executable pixel checks observe both local
+smoothing and remote interpolation; the encoded complete portable physical state
+is identical before/after capture. These complete-window observations include
+protocol and capture work, separately from the strict zero-byte physical brackets:
+
+| Window | Frames | FPS | Frame p50 / p95 / p99, ms | Window owner / all-thread managed bytes |
+| --- | ---: | ---: | --- | ---: |
+| CLR GPU | 829 | 26.6151 | 6.9898 / 106.6317 / 132.6491 | 4255800 / 4255800 |
+| CLR Compatibility | 4423 | 124.4943 | 0.6131 / 92.7639 / 105.4312 | 4724032 / 4724032 |
+| NativeAOT GPU | 818 | 26.1569 | 6.9904 / 106.7878 / 127.8760 | 4285880 / 4288184 |
+| NativeAOT Compatibility | 3087 | 98.7478 | 0.8651 / 95.5504 / 108.6098 | 4754272 / 4754272 |
+
+These are single functional session observations, not a renderer comparison or
+accepted massive-scene GPU speedup. Headless physical step, replay and delivery
+cost distributions remain in the per-participant reports.
+
+Source/PDB/ILC proofs bind the same 16 public example documents in CLR and native
+builds to runtime SHA-256
+`0c6dfbc36f18aa18884e4fadeef727657453d175122fb33c04f54ecd535f324f`.
+The public native consumer also passes 28 selected profiles (14 CPU/14 GPU):
+contact frames, portable history, mixed joint/friction, CCD impulse budgets,
+coupled 4/64-body graphs and rotating geometry, on owner/separate numerical lanes.
+Native process maps contain no CoreCLR; only actual GPU clients map NVIDIA,
+CPU authority/late participants verify denied GPU startup, no software GPU is
+observed and the fresh kernel read contains no new Xid.
+
+Evidence is local ignored `bin/physics-pair-contact-batch/2026-10-22/`:
+`main-network-acceptance.json`, `main-network-validation.json`,
+`main-network-visual-inspection.json`, `main-network-report-summary.json`,
+`main-native-validation.json` and their immutable manifests/receipts. This closes
+these source-bound selected/native/network regressions, not all backend,
+extension, native allocator, foreign-platform or mass-load performance work.
+The later main merge d90d89c1 changes the custom visual graph/runtime/import
+family while physics and network sources are unchanged. Its fresh Release build
+and source proof pass; its new full integration aggregate is still running.
+Physics coverage remains 1306/1369 (95.40%), with 63 open rows and 92 excluded.
+
 ## Closed pin-loop impact under correction, 2026-10-22
 
 The current application adds four unit-mass grid circles, four existing Pin recipes
