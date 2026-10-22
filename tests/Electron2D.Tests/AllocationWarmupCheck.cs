@@ -2,6 +2,13 @@ using System.Runtime.CompilerServices;
 
 internal static class AllocationWarmupCheck
 {
+    internal static void Collect()
+    {
+        // Finish background collection before its context retirement can change the allocation counters.
+        GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers();
+        GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers();
+    }
+
     internal static void Verify(Action collect)
     {
         using var entered = new ManualResetEventSlim(); using var release = new ManualResetEventSlim();

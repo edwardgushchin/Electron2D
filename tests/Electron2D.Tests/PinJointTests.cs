@@ -24,6 +24,7 @@ internal sealed class PinJointTests(PhysicsServer.Backend backend)
         root.AddChild(pin); root.AddChild(anchor); root.AddChild(bob);
         using var tree = new SceneTree(root);
         Check(pin.GetConfigurationWarnings().Length == 0, "Both late-entering bodies resolve before the first step.");
+        AllocationWarmupCheck.Collect();
         for (var frame = 0; frame < 40; frame++) tree.PhysicsFrame(1d / 60);
         Check(MathF.Abs(bob.GlobalPosition.Length() - 100) < 4 && bob.GlobalPosition.Y > 10,
             "Gravity swings the body around the fixed pin without stretching the anchor.");

@@ -541,3 +541,24 @@ This completes that exact older aggregate. It does not certify later rendering
 or cached-color command changes, the rejected contact-copy experiment, mass-scene
 speedup, real-window FPS or the complete physics goal. The API census remains
 1306/1369 (95.40%), with 63 open and 92 Excluded.
+
+## Shared pin-joint measurement preparation (2026-10-23)
+
+The point-field test's existing two blocking collections and pending-finalizer
+waits now live in `AllocationWarmupCheck.Collect`. Both point-field profiles keep
+their original calls and calibration; `PinJointTests` also calls it before its
+40-frame warmup. The following 64 complete moving-joint frames still require
+exactly zero owner-thread bytes on both CPU and GPU. Preparation does not run
+inside a measured interval, subtract bytes, retry failures or disable GC.
+
+During release validation the ordinary aggregate reported 5,152 owner bytes in
+the CPU moving pin-joint interval after the GPU pipeline checks. A fresh focused
+joint-policy run passed unchanged. That failed interval has no native object or
+allocation-context trace, so its cause remains unattributed. The shared
+preparation applies the already calibrated isolation against background context
+retirement; it does not retrospectively accept or explain the failed interval.
+
+The focused CPU/GPU joint contracts pass with this preparation. The shared
+second-finalization calibration and both point-field runs also pass: six
+128-frame measured intervals retain 0/0 owner/all-thread bytes. A fresh ordinary
+aggregate remains required; these focused runs do not replace it.
