@@ -20,7 +20,7 @@ internal static partial class GraphChecks
         switch (node)
         {
             case VisualShaderNodeClamp n: n.OpType = (VisualShaderNodeClamp.OpTypeEnum)type; break;
-            case VisualShaderNodeMultiplyAdd n: n.OpType = (VisualShaderNodeMultiplyAdd.OpTypeEnum)type; break;
+            case VisualShaderNodeMultiplyAdd n: n.OpType = (VisualShaderFloatOpType)type; break;
             case VisualShaderNodeMix n: n.OpType = (VisualShaderNumericOpType)type; break;
             case VisualShaderNodeStep n: n.OpType = (VisualShaderNumericOpType)type; break;
             case VisualShaderNodeSmoothStep n: n.OpType = (VisualShaderNumericOpType)type; break;
@@ -98,7 +98,7 @@ internal static partial class GraphChecks
         mix.Changed += _ => throw new InvalidOperationException("Range observer");
         Reject<InvalidOperationException>(() => mix.OpType = VisualShaderNumericOpType.Vector2Scalar);
         Check(mix.OpType == VisualShaderNumericOpType.Vector2Scalar && mix.GetInputPortDefaultValue<Vector2>(0) is not null, "Observer errors occur after the coherent layout commits.");
-        using var multiply = new VisualShaderNodeMultiplyAdd(); multiply.ClearDefaultInputValues(); multiply.OpType = VisualShaderNodeMultiplyAdd.OpTypeEnum.Vector4;
+        using var multiply = new VisualShaderNodeMultiplyAdd(); multiply.ClearDefaultInputValues(); multiply.OpType = VisualShaderFloatOpType.Vector4;
         Check(multiply.GetInputPortDefaultValue<Vector4>(0) == Vector4.Zero && multiply.GetInputPortDefaultValue<Vector4>(1) == Vector4.One, "MultiplyAdd recreates zero/one/zero vector defaults without homogeneous W.");
     }
     private static Vector4 RangeInput(string name, int mode, int port, string variant)

@@ -1,0 +1,146 @@
+{
+  "mappings": [
+    {
+      "godot": "class:VisualShaderNodeDerivativeFunc",
+      "electron2d": "T:Electron2D.VisualShaderNodeDerivativeFunc",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::enum:Function",
+      "electron2d": "T:Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::enum:OpType",
+      "electron2d": "T:Electron2D.VisualShaderFloatOpType",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::enum:Precision",
+      "electron2d": "T:Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::enum_value:Function.FUNC_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::enum_value:Function.FUNC_SUM",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum.Sum()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::enum_value:Function.FUNC_X",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum.X()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::enum_value:Function.FUNC_Y",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum.Y()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::enum_value:OpType.OP_TYPE_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderFloatOpType.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::enum_value:OpType.OP_TYPE_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderFloatOpType.Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::enum_value:OpType.OP_TYPE_VECTOR_2D",
+      "electron2d": "enumValue:Electron2D.VisualShaderFloatOpType.Vector2()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::enum_value:OpType.OP_TYPE_VECTOR_3D",
+      "electron2d": "enumValue:Electron2D.VisualShaderFloatOpType.Vector3()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::enum_value:OpType.OP_TYPE_VECTOR_4D",
+      "electron2d": "enumValue:Electron2D.VisualShaderFloatOpType.Vector4()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::enum_value:Precision.PRECISION_COARSE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum.Coarse()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::enum_value:Precision.PRECISION_FINE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum.Fine()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::enum_value:Precision.PRECISION_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::enum_value:Precision.PRECISION_NONE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum.None()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::property:function",
+      "electron2d": "property:Electron2D.VisualShaderNodeDerivativeFunc.Function()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::property:op_type",
+      "electron2d": "property:Electron2D.VisualShaderNodeDerivativeFunc.OpType()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    },
+    {
+      "godot": "VisualShaderNodeDerivativeFunc::property:precision",
+      "electron2d": "property:Electron2D.VisualShaderNodeDerivativeFunc.Precision()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:VisualShaderNodeDerivativeFunc",
+        "VisualShaderNodeDerivativeFunc::enum:Function",
+        "VisualShaderNodeDerivativeFunc::enum:OpType",
+        "VisualShaderNodeDerivativeFunc::enum:Precision",
+        "VisualShaderNodeDerivativeFunc::enum_value:Function.FUNC_MAX",
+        "VisualShaderNodeDerivativeFunc::enum_value:Function.FUNC_SUM",
+        "VisualShaderNodeDerivativeFunc::enum_value:Function.FUNC_X",
+        "VisualShaderNodeDerivativeFunc::enum_value:Function.FUNC_Y",
+        "VisualShaderNodeDerivativeFunc::enum_value:OpType.OP_TYPE_MAX",
+        "VisualShaderNodeDerivativeFunc::enum_value:OpType.OP_TYPE_SCALAR",
+        "VisualShaderNodeDerivativeFunc::enum_value:OpType.OP_TYPE_VECTOR_2D",
+        "VisualShaderNodeDerivativeFunc::enum_value:OpType.OP_TYPE_VECTOR_3D",
+        "VisualShaderNodeDerivativeFunc::enum_value:OpType.OP_TYPE_VECTOR_4D",
+        "VisualShaderNodeDerivativeFunc::enum_value:Precision.PRECISION_COARSE",
+        "VisualShaderNodeDerivativeFunc::enum_value:Precision.PRECISION_FINE",
+        "VisualShaderNodeDerivativeFunc::enum_value:Precision.PRECISION_MAX",
+        "VisualShaderNodeDerivativeFunc::enum_value:Precision.PRECISION_NONE",
+        "VisualShaderNodeDerivativeFunc::property:function",
+        "VisualShaderNodeDerivativeFunc::property:op_type",
+        "VisualShaderNodeDerivativeFunc::property:precision"
+      ],
+      "reason": "ADRs 0001/0004/0013/0028/0051: scalar/vector screen-space derivative graphs execute fwidth/dFdx/dFdy with exact default/coarse/fine operations in the existing offline fragment importer and material path. Shared floating layouts use VisualShaderFloatOpType. Typed defaults, change semantics, copies and portable archives are preserved; reachable vertex derivatives and malformed or misplaced SPIR-V derivative capabilities reject before publication. Native precision and discontinuities remain backend-defined; compatibility rendering rejects authored shaders."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeDerivativeFunc..ctor()",
+      "reason": "Typed Resource construction, duplicate factory and stored-property plumbing for the executing derivative graph definition."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeDerivativeFunc.CreateDuplicateInstance()",
+      "reason": "Typed Resource construction, duplicate factory and stored-property plumbing for the executing derivative graph definition."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeDerivativeFunc.GetPropertyDescriptors()",
+      "reason": "Typed Resource construction, duplicate factory and stored-property plumbing for the executing derivative graph definition."
+    }
+  ]
+}

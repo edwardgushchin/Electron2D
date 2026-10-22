@@ -283,3 +283,5 @@ Use `--particles` for a compute module, or `Stage="compute" Profile="particles"`
 ### Numeric graph parameters
 
 Canvas graph imports resolve typed material, global and per-item declarations across both stages. Graph-local references, default words and advisory range/enum/Color metadata enter the ordinary source-type annotation, spirv-val, reflected-interface and atomic-resource path. Normal parameters use existing typed runtime setters; globals use the registry, and per-item scalar/vector fields have sixteen explicit/automatic slots. Numeric matrix parameters use material/global storage. Editing a definition requires reimport. See [the graph contract](../../docs/components/visual-shaders.md#parameters-and-graph-local-references).
+
+Numeric derivative graphs emit fragment fwidth/dFdx/dFdy with their requested default/fine/coarse instruction. Reachable vertex derivatives reject import atomically. The ordinary common SPIR-V capability/stage validator applies, with no runtime source compiler or precision emulation.

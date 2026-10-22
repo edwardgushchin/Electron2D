@@ -403,6 +403,66 @@ Ordinary condition colors allow 0.0021 readback error for half a UNORM8 step; by
 stored edge into a subsequently hidden tolerance port is rejected on load/import,
 and failed import preserves the existing target artifact.
 
+## Screen-space derivatives
+
+VisualShaderNodeDerivativeFunc computes component-wise fwidth (Sum), dFdx (X)
+or dFdy (Y) for scalar, Vector2, Vector3 and Vector4 data. None precision uses
+the native default operation; Coarse and Fine retain their distinct native
+instructions. They do not mean different floating-point storage widths.
+A reachable derivative requires the fragment graph. An unconnected definition
+may remain in a vertex graph as authored data without executing it.
+
+OpType shares VisualShaderFloatOpType with MultiplyAdd. A changed layout converts
+the existing default by the ordinary numeric rules, repeating its last component
+when widening. An absent default is recreated with zero, or (0,0,0,1) for four
+components. Unchanged selectors are quiet. Invalid selectors and nonfinite
+inputs reject without mutation; valid state commits before Changed observers.
+Copies, aliases and compressed/big-endian archives retain the complete definition
+and explicit default absence. Shader edits still require offline reimport.
+
+The former MultiplyAdd.OpTypeEnum is replaced by the shared type, including its
+stored enum schema identity. Existing source/compiled graph archives containing
+that old identity require reauthoring and reimport. Unknown schemas reject
+explicitly; no old public alias or implicit value conversion is retained.
+
+```csharp
+using var graph = new VisualShader();
+using var uv = new VisualShaderNodeInput { InputName = "uv" };
+using var rate = new VisualShaderNodeDerivativeFunc
+{
+    OpType = VisualShaderFloatOpType.Vector2,
+    Function = VisualShaderNodeDerivativeFunc.FunctionEnum.X,
+    Precision = VisualShaderNodeDerivativeFunc.PrecisionEnum.Fine
+};
+using var scale = new VisualShaderNodeMultiplyAdd { OpType = rate.OpType };
+scale.SetInputPortDefaultValue(1, new Vector2(16, 16));
+graph.AddNode(VisualShader.Type.Fragment, uv, Vector2.Zero, 2);
+graph.AddNode(VisualShader.Type.Fragment, rate, Vector2.Zero, 3);
+graph.AddNode(VisualShader.Type.Fragment, scale, Vector2.Zero, 4);
+graph.ConnectNodes(VisualShader.Type.Fragment, 2, 0, 3, 0);
+graph.ConnectNodes(VisualShader.Type.Fragment, 3, 0, 4, 0);
+graph.ConnectNodes(VisualShader.Type.Fragment, 4, 0, 0, 0);
+ResourceSaver.Save(graph, "res://Shaders/rate-source.e2dres", SaverFlags.BundleResources);
+```
+
+Import and load this graph through the same canvas workflow above. The default,
+fine and coarse operations use fragment neighbors. Rates near discontinuities,
+nonuniform control flow, nonfinite results and implementation-dependent neighbor
+selection retain native shader rules; they are not analytic CPU derivatives.
+Compatibility rendering retains its ordinary rejection of authored shaders.
+
+The consumer contains 166 additional programs: all functions, precisions and
+widths, both default-presence choices, every component of affine UV rates,
+three derivative-scaled smooth antialiasing edges and an unreachable vertex
+witness. Affine slopes provide an independent spatial oracle without assuming
+which legal neighbor the implementation selects. Readback also checks both
+plateaus around a fractional antialiasing edge. Import verification checks the
+actual requested SPIR-V operation, not only equal pixels for linear data.
+Thirty-six reachable vertex cases and five malformed capability/instruction/stage
+replacements exercise rejection and preservation of the previous paired program.
+These checks remain separate from hardware, native-heap and foreign-platform
+acceptance.
+
 ## Parameters and graph-local references
 
 Nine concrete parameter definitions supply float, signed/unsigned integer, Boolean,
@@ -583,7 +643,7 @@ Sky/volumetric scene domains and deprecated inert graph offset are excluded.
 The public `tests/VisualShader.Consumer` covers ownership, aliases, factory
 replacement, invalid requests, snapshots, default presence/conversion, change
 semantics, shallow/deep/copy operations, and fresh resource archives, including
-compressed big-endian data. The current corpus contains 2,454 programs, adding the
+compressed big-endian data. The parameter checkpoint contains 2,454 programs, adding the
 624 parameter fixtures above to the prior matrix checkpoint. That checkpoint exercised 1,830 rendered imported programs: the 57 foundation programs,
 170 unary-function programs, 41 vector-dataflow programs, 138 range/mask programs, 258 integer programs and 581 comparison/conditional programs and 585 matrix programs.
 The separate zero-width Remap boundary and ten integer boundary programs verify import and fresh load without portable undefined-domain pixel assertions. Unary coverage includes every scalar/vector function, all vector widths,
@@ -616,4 +676,6 @@ editor usability and human visual acceptance are separate from this evidence.
 - [Realtime allocation](../decisions/resources.md#adr-0014)
 - [Programmatic authoring and rendered evidence](../decisions/agent-native.md#adr-0090)
 
-The current 2,454-program CLR and strict full-trim NativeAOT corpus passes software Wayland, X11 and HDR/MSAA readback. All 624 parameter programs also check typed overrides and reset, with retained geometry and 64 active/64 idle complete frames at zero owner/all-thread managed bytes. NativeAOT, hardware, native heap, foreign platforms and owner acceptance use independent checks; an earlier checkpoint does not establish the new source set.
+The prior 2,454-program parameter checkpoint passed software Wayland, X11 and HDR/MSAA readback in CLR and strict full-trim NativeAOT. All 624 parameter programs also checked typed overrides and reset, with retained geometry and 64 active/64 idle complete frames at zero owner/all-thread managed bytes. NativeAOT, hardware, native heap, foreign platforms and owner acceptance use independent checks; an earlier checkpoint does not establish the new source set.
+
+The derivative corpus expands the shared regression set to 2,620 programs. Source fixtures are recreated with the shared floating enum schema before import. Separate source-scoped CLR/NativeAOT receipts establish which native profiles executed; earlier checkpoint results do not establish changed inputs.

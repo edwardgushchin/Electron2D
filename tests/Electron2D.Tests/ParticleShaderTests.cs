@@ -34,6 +34,12 @@ internal static class ParticleShaderTests
             var events = 0; shader.Changed += _ => events++;
             var badLocalSize = Rewrite(code, 16, i => i.Length == 6 && i[2] == 17, i => i[3] = 32);
             Reject<NotSupportedException>(() => shader.SetSPIRV(badLocalSize, Shader.Mode.Particles));
+            var derivativeControl = new byte[code.Length + 8];
+            code.AsSpan(0, 20).CopyTo(derivativeControl);
+            var capability = MemoryMarshal.Cast<byte, uint>(derivativeControl.AsSpan(20, 8));
+            capability[0] = (2u << 16) | 17u; capability[1] = 51;
+            code.AsSpan(20).CopyTo(derivativeControl.AsSpan(28));
+            Reject<NotSupportedException>(() => shader.SetSPIRV(derivativeControl, Shader.Mode.Particles));
             Check(events == 0 && shader.GetSPIRV().AsSpan().SequenceEqual(code), "Invalid replacement preserves the entire program without events.");
             shader.SetSPIRV(Fixture(language == "GLSL" ? "HLSL" : "GLSL"), Shader.Mode.Particles);
             Check(events == 1 && material.GetShaderParameter<bool>("Enabled") && material.GetShaderParameter<Vector2>("Drift") == new Vector2(8, -4), "Cross-language replacement migrates typed material values.");

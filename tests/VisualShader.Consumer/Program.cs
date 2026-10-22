@@ -12,6 +12,8 @@ try
         ResourceSaver.Save(graph, args[1], SaverFlags.BundleResources);
     }
     else if (args[0] == "gpu") GraphChecks.Render(IOPath.GetFullPath(args[1]), args);
+    else if (args[0] == "derivatives-metadata") GraphChecks.DerivativeBytecodeChecks(IOPath.GetFullPath(args[1]));
+    else if (args[0] == "derivatives-author") GraphChecks.AuthorDerivatives(IOPath.GetFullPath(args[1]));
     else if (args[0] == "parameters-author") GraphChecks.AuthorParameters(IOPath.GetFullPath(args[1]));
     else if (args[0] == "parameters-metadata") GraphChecks.ParameterMetadataChecks(IOPath.GetFullPath(args[1]));
     else if (args[0] == "read") GraphChecks.Read(IOPath.GetFullPath(args[1]));
@@ -34,6 +36,7 @@ internal static partial class GraphChecks
         ConditionsCPU();
         MatricesCPU();
         ParametersCPU();
+        DerivativesCPU();
         using var graph = new VisualShader();
         using var scalar = new VisualShaderNodeFloatConstant { Constant = .375f };
         using var operation = new VisualShaderNodeFloatOp();
@@ -143,6 +146,7 @@ internal static partial class GraphChecks
         AuthorConditions(folder);
         AuthorMatrices(folder);
         AuthorParameters(folder);
+        AuthorDerivatives(folder);
         using (var graph = new VisualShader())
         using (var color = new VisualShaderNodeColorConstant { Constant = new(.25f, .5f, .75f, 1) })
         using (var alpha = new VisualShaderNodeFloatConstant { Constant = 1 })
@@ -199,6 +203,7 @@ internal static partial class GraphChecks
         if (IOPath.GetFileNameWithoutExtension(file).StartsWith("condition-", StringComparison.Ordinal)) VerifyConditionArchive(IOPath.GetFileNameWithoutExtension(file), graph);
         if (IOPath.GetFileNameWithoutExtension(file).StartsWith("matrix-", StringComparison.Ordinal)) VerifyMatrixArchive(IOPath.GetFileNameWithoutExtension(file), graph);
         if (IOPath.GetFileNameWithoutExtension(file).StartsWith("parameter-", StringComparison.Ordinal)) VerifyParameterArchive(IOPath.GetFileNameWithoutExtension(file), graph);
+        if (IOPath.GetFileNameWithoutExtension(file).StartsWith("derivative-", StringComparison.Ordinal)) VerifyDerivativeArchive(IOPath.GetFileNameWithoutExtension(file), graph);
         Check(graph.GetMode() == Shader.Mode.CanvasItem, "Imported graph domain.");
         Check(graph.GetSPIRV(RenderingDevice.ShaderStage.Vertex).Length > 20 && graph.GetSPIRV(RenderingDevice.ShaderStage.Fragment).Length > 20, "Both canvas stages are compiled.");
         Console.WriteLine("Imported visual shader loaded with both native program stages.");

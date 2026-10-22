@@ -473,3 +473,7 @@ labels or Color roles, independently of numeric default agreement. Import adds
 these records before the shared spirv-val/interface checks. Copied/saved shaders
 retain the self-contained records. Old descriptors keep their immutable metadata;
 source hint edits require reimport to produce new descriptors.
+
+## Fragment derivative instructions
+
+Canvas and blit fragment SPIR-V may declare DerivativeControl for fine/coarse operations. The common payload validator retains its capability allowlist, accepts that capability only for fragment graphics, requires the declared capability for fine/coarse operations and validates their unary instruction width. Vertex and particle stages reject screen-space derivatives before native publication. Failed replacements retain both prior stages. Numeric graph authoring uses the same importer and validators; see [screen-space derivatives](visual-shaders.md#screen-space-derivatives). Native neighboring-invocation semantics and translation/device capability errors remain authoritative.

@@ -145,7 +145,7 @@ internal static partial class GraphChecks
     {
         VisualShaderNode observer = observation < 4 ? new VisualShaderNodeMatrixDecompose() : observation == 4 ? new VisualShaderNodeDeterminant() : new VisualShaderNodeMatrixVecMult { Operator = (VisualShaderNodeMatrixVecMult.OperatorEnum)(observation - 5) };
         if (observation > 4) observer.SetInputPortDefaultValue(1, MatrixProbe);
-        var scale = new VisualShaderNodeMultiplyAdd { OpType = VisualShaderNodeMultiplyAdd.OpTypeEnum.Vector3 };
+        var scale = new VisualShaderNodeMultiplyAdd { OpType = VisualShaderFloatOpType.Vector3 };
         scale.SetInputPortDefaultValue(1, new Vector3(.0625f, .0625f, .0625f)); scale.SetInputPortDefaultValue(2, new Vector3(.25f, .25f, .25f));
         owned.AddRange([observer, scale]); graph.AddNode(stage, observer, default, 3); graph.AddNode(stage, scale, default, 4);
         graph.ConnectNodes(stage, root, 0, 3, 0); graph.ConnectNodes(stage, 3, observation < 4 ? observation : 0, 4, 0); graph.ConnectNodes(stage, 4, 0, 0, stage == VisualShader.Type.Vertex ? 2 : 0);

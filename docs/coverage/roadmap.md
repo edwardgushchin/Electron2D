@@ -89,7 +89,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | --- | ---: |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
 | Trigger: particle graph stage/output translation into the executing compute ABI under ADR 0028; the numeric canvas graph importer does not provide particle lifecycle stages. | 10 |
-| Trigger: graph sampled-image/screen/SDF expression roles and required fragment derivative/renderer producers in the shared offline importer under ADR 0028; this family enters its operation-specific graph integration. | 9 |
+| Trigger: graph sampled-image/screen/SDF expression roles and required fragment derivative/renderer producers in the shared offline importer under ADR 0028; this family enters its operation-specific graph integration. | 8 |
 | Trigger: an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001). | 7 |
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
 | Trigger: typed custom/group port declarations, source scopes and compiled provider/factory registration through the offline graph importer under ADRs 0001/0013/0028; no serialized delegates or runtime assembly loading. | 5 |

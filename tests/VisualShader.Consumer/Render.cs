@@ -36,6 +36,7 @@ internal static partial class GraphChecks
             {
                 var name = IOPath.GetFileNameWithoutExtension(file);
                 var shader = Own(ResourceLoader.Load<VisualShader>(file, ResourceLoader.CacheMode.IgnoreDeep));
+                if (name.StartsWith("derivative-", StringComparison.Ordinal)) VerifyDerivativeArchive(name, shader);
                 if (name.StartsWith("integer-", StringComparison.Ordinal)) VerifyIntegerArchive(name, shader);
                 if (name.StartsWith("condition-", StringComparison.Ordinal)) VerifyConditionArchive(name, shader);
                 if (name.StartsWith("matrix-", StringComparison.Ordinal)) VerifyMatrixArchive(name, shader);
@@ -70,7 +71,7 @@ internal static partial class GraphChecks
                         expected = new(Math.Clamp(expected.R, 0, 1), Math.Clamp(expected.G, 0, 1), Math.Clamp(expected.B, 0, 1), expected.A);
                     var actual = pixels.GetPixel((int)item.Position.X + 8, (int)item.Position.Y + 8);
                     var integerBytes = item.Name.StartsWith("parameter-1-", StringComparison.Ordinal) || item.Name.StartsWith("parameter-2-", StringComparison.Ordinal) || item.Name.StartsWith("integer-", StringComparison.Ordinal) || item.Name.StartsWith("condition-s-1-", StringComparison.Ordinal) || item.Name.StartsWith("condition-s-2-", StringComparison.Ordinal);
-                    var tolerance = integerBytes ? .001f : (item.Name.StartsWith("parameter-", StringComparison.Ordinal) || item.Name.StartsWith("condition-", StringComparison.Ordinal) || item.Name.StartsWith("matrix-", StringComparison.Ordinal)) ? .0021f : .016f;
+                    var tolerance = integerBytes ? .001f : (item.Name.StartsWith("derivative-", StringComparison.Ordinal) || item.Name.StartsWith("parameter-", StringComparison.Ordinal) || item.Name.StartsWith("condition-", StringComparison.Ordinal) || item.Name.StartsWith("matrix-", StringComparison.Ordinal)) ? .0021f : .016f;
                     Check(MathF.Abs(actual.R - expected.R) < tolerance && MathF.Abs(actual.G - expected.G) < tolerance && MathF.Abs(actual.B - expected.B) < tolerance,
                         $"Graph {item.Name}: actual {actual}, expected {expected}.");
                     if (item.Name == "vertex-shift")
@@ -88,6 +89,12 @@ internal static partial class GraphChecks
                         Check(MathF.Abs(left.R - leftExpected.R) < .0021f && MathF.Abs(left.G - leftExpected.G) < .0021f && MathF.Abs(left.B - leftExpected.B) < .0021f &&
                             MathF.Abs(right.R - rightExpected.R) < .0021f && MathF.Abs(right.G - rightExpected.G) < .0021f && MathF.Abs(right.B - rightExpected.B) < .0021f,
                             "UV control selects different numeric matrices across the same submitted quad.");
+                    }
+                    if (item.Name.StartsWith("derivative-aa-", StringComparison.Ordinal))
+                    {
+                        var left = pixels.GetPixel((int)item.Position.X + 7, (int)item.Position.Y + 8);
+                        var right = pixels.GetPixel((int)item.Position.X + 9, (int)item.Position.Y + 8);
+                        Check(left.R < .0021f && MathF.Abs(right.R - 1) < .0021f, "Derivative-scaled smoothing has a fractional edge between opaque plateaus.");
                     }
                     if (item.Name == "condition-procedural")
                     {
@@ -121,7 +128,7 @@ internal static partial class GraphChecks
             base.Dispose(disposing);
         }
     }
-    private static Color Expected(string name) => name.StartsWith("parameter-", StringComparison.Ordinal) ? ParameterExpected(name, 0) : name.StartsWith("matrix-", StringComparison.Ordinal) ? MatrixExpected(name) : name.StartsWith("condition-", StringComparison.Ordinal) ? ConditionExpected(name) : name.StartsWith("integer-", StringComparison.Ordinal) ? IntegerExpected(name) : name.StartsWith("range-", StringComparison.Ordinal) ? RangeExpected(name) : name.StartsWith("flow-", StringComparison.Ordinal) ? DataflowExpected(name) : name.StartsWith("unary-", StringComparison.Ordinal) ? UnaryExpected(name) : name switch
+    private static Color Expected(string name) => name.StartsWith("derivative-", StringComparison.Ordinal) ? DerivativeExpected(name) : name.StartsWith("parameter-", StringComparison.Ordinal) ? ParameterExpected(name, 0) : name.StartsWith("matrix-", StringComparison.Ordinal) ? MatrixExpected(name) : name.StartsWith("condition-", StringComparison.Ordinal) ? ConditionExpected(name) : name.StartsWith("integer-", StringComparison.Ordinal) ? IntegerExpected(name) : name.StartsWith("range-", StringComparison.Ordinal) ? RangeExpected(name) : name.StartsWith("flow-", StringComparison.Ordinal) ? DataflowExpected(name) : name.StartsWith("unary-", StringComparison.Ordinal) ? UnaryExpected(name) : name switch
     {
         "color" or "vertex-shift" => new(.25f, .5f, .75f, 1),
         "cleared" => Colors.Black,

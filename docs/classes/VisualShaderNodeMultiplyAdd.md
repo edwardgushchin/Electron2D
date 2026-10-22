@@ -1,6 +1,6 @@
 # VisualShaderNodeMultiplyAdd
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 Source: [VisualShaderNodeMultiplyAdd.cs](../../src/Scene/Resources/VisualShaderNodeMultiplyAdd.cs).
 
@@ -18,16 +18,20 @@ Inputs are a, b and c. Arithmetic executes in the imported shader; rounding foll
 
 ## Example
 
+This authoring snippet assumes an initialized project resource root.
+
 ```csharp
-using var node = new VisualShaderNodeMultiplyAdd { OpType = VisualShaderNodeMultiplyAdd.OpTypeEnum.Vector3 };
-node.SetInputPortDefaultValue(0, new Vector3(.125f, .25f, .5f));
+using Electron2D;
 using var graph = new VisualShader();
+using var node = new VisualShaderNodeMultiplyAdd { OpType = VisualShaderFloatOpType.Vector3 };
+node.SetInputPortDefaultValue(0, new Vector3(.125f, .25f, .375f));
+node.SetInputPortDefaultValue(1, new Vector3(2, 2, 2));
 graph.AddNode(VisualShader.Type.Fragment, node, Vector2.Zero, 2);
-graph.ConnectNodes(VisualShader.Type.Fragment, 2, 0, VisualShader.NodeIDOutput, 0);
-ResourceSaver.Save(graph, "res://Shaders/range-source.e2dres", SaverFlags.BundleResources);
+graph.ConnectNodes(VisualShader.Type.Fragment, 2, 0, 0, 0);
+ResourceSaver.Save(graph, "res://Shaders/operation-source.e2dres", SaverFlags.BundleResources);
 ```
 
-Import this resource through [the graph pipeline](../components/visual-shaders.md#numeric-ranges-and-masks) before assigning the compiled material.
+Import the saved source through [the canvas workflow](../components/visual-shaders.md#author-import-and-execute), then load the compiled resource and assign it to ShaderMaterial before drawing.
 
 ## Member summary
 
@@ -36,7 +40,7 @@ Import this resource through [the graph pipeline](../components/visual-shaders.m
 | [`public VisualShaderNodeMultiplyAdd()`](#member-15f9899df2df) | Creates a scalar definition with its initial input defaults. |
 | [`protected override Electron2D.Resource CreateDuplicateInstance()`](#member-056161b2db08) | Uses the inherited Resource construction or stored-property contract. |
 | [`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`](#member-17935be6c3b9) | Uses the inherited Resource construction or stored-property contract. |
-| [`public Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum OpType { get; set; }`](#member-e57339cca7d8) | Gets or selects the numeric input layout, converting existing defaults atomically. |
+| [`public Electron2D.VisualShaderFloatOpType OpType { get; set; }`](#member-e57339cca7d8) | Gets or selects the numeric input layout, converting existing defaults atomically. |
 
 <a id="member-15f9899df2df"></a>
 ### `.ctor`
@@ -67,7 +71,7 @@ protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDes
 ### `OpType`
 
 ```csharp
-public Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum OpType { get; set; }
+public Electron2D.VisualShaderFloatOpType OpType { get; set; }
 ```
 
 Gets or selects the numeric input layout, converting existing defaults atomically.
@@ -83,9 +87,9 @@ Exceptions:
 
 ## Lifecycle and verification
 
-Definitions are cold, single-threaded Resource authoring objects. Graph additions borrow them; ordinary disposal guards apply. Defaults, selectors and width survive duplication and typed archives. Editing requires reimport before rendering changes.
+Definitions are cold, single-threaded Resource authoring objects. Graphs borrow them. Selectors, typed defaults and default absence survive copies and archives. Changes require reimport before rendering.
 
-The public VisualShader.Consumer covers typed requests, mixed/dormant defaults, copy/archives, multi-output graphs and real software-rendered pixels. See [the component contract](../components/visual-shaders.md) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
+The public VisualShader.Consumer covers derivative layouts/functions/precisions, converted defaults, shared fused arithmetic and portable archives. The executable fixtures also observe real software-rendered pixels, affine rates and fractional antialiasing edges. See [the component contract](../components/visual-shaders.md#screen-space-derivatives) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
 
 ## Decisions
 

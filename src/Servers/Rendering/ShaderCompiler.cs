@@ -234,7 +234,7 @@ internal static unsafe partial class ShaderCompiler
         if (words[0] != 0x07230203 || words[1] is < 0x10000 or > 0x10600 || (words[1] & 0xff) != 0 ||
             words[3] is 0 or > 0x3fffff || words[4] != 0)
             throw new ArgumentException("Invalid or unsupported SPIR-V header.", nameof(code));
-        var entrypoints = 0;
+        var entrypoints = 0; var derivativeControl = false;
         for (var offset = 5; offset < words.Length;)
         {
             var count = (int)(words[offset] >> 16);
@@ -248,8 +248,18 @@ internal static unsafe partial class ShaderCompiler
                     throw new NotSupportedException("Canvas SPIR-V requires the selected stage with an entry point named main.");
                 entrypoints++;
             }
-            if (opcode == 17 && (count != 2 || words[offset + 1] is not (1 or 29 or 50 or 5301 or 5307)))
-                throw new NotSupportedException("Canvas shaders require baseline graphics, image queries or sampled descriptor indexing capabilities.");
+            if (opcode == 17)
+            {
+                if (count != 2 || words[offset + 1] is not (1 or 29 or 50 or 5301 or 5307) && !(fragment && !particles && words[offset + 1] == 51))
+                    throw new NotSupportedException("Canvas shaders require supported graphics, fragment derivative, image query or sampled descriptor indexing capabilities.");
+                if (words[offset + 1] == 51) derivativeControl = true;
+            }
+            if (opcode is >= 207 and <= 215)
+            {
+                if (!fragment || particles) throw new NotSupportedException("Screen-space derivatives require the fragment stage.");
+                if (count != 4) throw new ArgumentException("Invalid derivative instruction.", nameof(code));
+                if (opcode >= 210 && !derivativeControl) throw new ArgumentException("Fine/coarse derivatives require the derivative-control capability.", nameof(code));
+            }
             if (opcode == 14 && (count != 3 || words[offset + 1] != 0 || words[offset + 2] != 1))
                 throw new NotSupportedException("Canvas SPIR-V requires the logical GLSL450 memory model.");
             offset += count;

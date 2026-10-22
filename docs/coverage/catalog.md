@@ -946,7 +946,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeCurveTexture](classes/VisualShaderNodeCurveTexture.md) | VisualShaderNodeResizableBase | Blocked | 1 |
 | [VisualShaderNodeCurveXYZTexture](classes/VisualShaderNodeCurveXYZTexture.md) | VisualShaderNodeResizableBase | Blocked | 1 |
 | [VisualShaderNodeCustom](classes/VisualShaderNodeCustom.md) | VisualShaderNode | Blocked | 22 |
-| [VisualShaderNodeDerivativeFunc](classes/VisualShaderNodeDerivativeFunc.md) | VisualShaderNode | Blocked | 19 |
+| [VisualShaderNodeDerivativeFunc](classes/VisualShaderNodeDerivativeFunc.md) | VisualShaderNode | Implemented | 19 |
 | [VisualShaderNodeDeterminant](classes/VisualShaderNodeDeterminant.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeDistanceFade](classes/VisualShaderNodeDistanceFade.md) | VisualShaderNode | Unimplemented | 0 |
 | [VisualShaderNodeDotProduct](classes/VisualShaderNodeDotProduct.md) | VisualShaderNode | Implemented | 0 |

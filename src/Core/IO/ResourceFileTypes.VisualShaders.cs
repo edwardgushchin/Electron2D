@@ -5,6 +5,7 @@ public static partial class ResourceFileTypes
     private static void RegisterVisualShaderResources()
     {
         RegisterResource("VisualShader", CreateVisualShaderFileResource);
+        RegisterResource("VisualShaderNodeDerivativeFunc", CreateVisualShaderNodeDerivativeFuncFileResource);
         RegisterResource("VisualShaderNodeFloatParameter", CreateVisualShaderNodeFloatParameterFileResource);
         RegisterResource("VisualShaderNodeIntParameter", CreateVisualShaderNodeIntParameterFileResource);
         RegisterResource("VisualShaderNodeUIntParameter", CreateVisualShaderNodeUIntParameterFileResource);
@@ -68,6 +69,7 @@ public static partial class ResourceFileTypes
     private static VisualShaderNodeVectorLen CreateVisualShaderNodeVectorLenFileResource() => new();
     private static VisualShaderNodeVectorRefract CreateVisualShaderNodeVectorRefractFileResource() => new();
     private static VisualShader CreateVisualShaderFileResource() => new();
+    private static VisualShaderNodeDerivativeFunc CreateVisualShaderNodeDerivativeFuncFileResource() => new();
     private static VisualShaderNodeOutput CreateVisualShaderNodeOutputFileResource() => new();
     private static VisualShaderNodeInput CreateVisualShaderNodeInputFileResource() => new();
     private static VisualShaderNodeFloatOp CreateVisualShaderNodeFloatOpFileResource() => new();

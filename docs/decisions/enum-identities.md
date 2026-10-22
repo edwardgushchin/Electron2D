@@ -3,7 +3,7 @@
 <a id="adr-0051"></a>
 ## ADR 0051: Public enum identities and declaring owners
 
-Last updated: 2026-10-20
+Last updated: 2026-10-22
 
 ### Status
 
@@ -38,6 +38,8 @@ The following other selected names remain exact public type identities. Listed t
 Canvas light blend/filter/cull contracts share `LightBlendMode`, `LightShadowFilter` and `OccluderCullMode` between scene resources and RenderingServer. `LightMode` belongs to fixed material shading and remains distinct from point/directional `CanvasLightMode`. Viewport/server distance-field presets share `CanvasSDFOversize` and `CanvasSDFScale`; `CanvasTextureChannel` selects the three texture roles. Max bounds remain nonselectable. These identities execute in the first native light/occlusion consumer rather than storing inert choices.
 
 TabContainer.TabPosition and FoldableContainer.TitlePosition share top-level `BarPosition`: Top=0, Bottom=1, Max=2. Both selectable contracts place a GUI bar above or below its body; Max remains nonselectable. Keep TabsPosition and TitlePosition property names, update the complete consumer/schema/documentation family, and expose no former nested alias.
+
+VisualShaderNodeMultiplyAdd and VisualShaderNodeDerivativeFunc share top-level VisualShaderFloatOpType (Scalar0/Vector2=1/Vector3=2/Vector4=3/Max4). Their floating component domains have identical meanings and selectable values. OpType retains its name on both owners; the former MultiplyAdd nested enum is removed across consumers, schema identities, XML and coverage without a public alias. Stored source graphs using that old enum schema require reauthoring and reimport; loaders retain strict unknown-schema rejection.
 
 GraphEdit keeps the applicable `GridPattern` and `PanningScheme` properties. Its distinct owner-specific enum domains are `GraphEdit.GridPatternMode` (Lines/Dots) and `GraphEdit.PanningSchemeMode` (ScrollZooms/ScrollPans); the Mode suffix avoids C# member/type name collisions without moving or merging these unrelated domains.
 

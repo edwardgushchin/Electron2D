@@ -76,6 +76,7 @@ public sealed partial class VisualShader
                     var expression = node switch
                     {
                         VisualShaderNodeInput input => input.Expression(stage).Replace("TIME", "e2d_values.TIME", StringComparison.Ordinal).Replace("SCREEN_PIXEL_SIZE", "e2d_values.SCREEN_PIXEL_SIZE", StringComparison.Ordinal),
+                        VisualShaderNodeDerivativeFunc when stage != Type.Fragment => throw new NotSupportedException("Screen-space derivative nodes require the fragment graph stage."),
                         VisualShaderNodeParameter parameter => ParameterVariable(parameter),
                         VisualShaderNodeParameterRef reference => ParameterExpression(reference, output, parameters),
                         _ => node.Expression(output, inputs)

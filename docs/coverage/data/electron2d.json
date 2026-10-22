@@ -14430,6 +14430,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.VisualShaderFloatOpType",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderFloatOpType",
+    "name": "VisualShaderFloatOpType",
+    "signature": "public enum Electron2D.VisualShaderFloatOpType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.VisualShaderIntegerOperator",
     "kind": "type",
     "declaringType": "Electron2D.VisualShaderIntegerOperator",
@@ -14634,6 +14652,57 @@
     "baseType": "Electron2D.VisualShaderNode",
     "interfaces": [
       "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeDerivativeFunc",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeDerivativeFunc",
+    "name": "VisualShaderNodeDerivativeFunc",
+    "signature": "public sealed class Electron2D.VisualShaderNodeDerivativeFunc",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum",
+    "name": "FunctionEnum",
+    "signature": "public enum Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum",
+    "name": "PrecisionEnum",
+    "signature": "public enum Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
     ],
     "parameters": null,
     "returnType": null,
@@ -15126,24 +15195,6 @@
     "baseType": "Electron2D.VisualShaderNode",
     "interfaces": [
       "System.IDisposable"
-    ],
-    "parameters": null,
-    "returnType": null,
-    "value": null
-  },
-  {
-    "id": "T:Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum",
-    "kind": "type",
-    "declaringType": "Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum",
-    "name": "OpTypeEnum",
-    "signature": "public enum Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum",
-    "visibility": "public",
-    "baseType": "System.Enum",
-    "interfaces": [
-      "System.IComparable",
-      "System.IConvertible",
-      "System.IFormattable",
-      "System.ISpanFormattable"
     ],
     "parameters": null,
     "returnType": null,
@@ -27041,6 +27092,19 @@
     "name": ".ctor",
     "signature": "protected VisualShaderNodeConstant()",
     "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeDerivativeFunc..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeDerivativeFunc",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeDerivativeFunc()",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -57091,6 +57155,71 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.VisualShaderFloatOpType.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderFloatOpType",
+    "name": "Max",
+    "signature": "public const Electron2D.VisualShaderFloatOpType Max = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderFloatOpType",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderFloatOpType.Scalar()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderFloatOpType",
+    "name": "Scalar",
+    "signature": "public const Electron2D.VisualShaderFloatOpType Scalar = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderFloatOpType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderFloatOpType.Vector2()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderFloatOpType",
+    "name": "Vector2",
+    "signature": "public const Electron2D.VisualShaderFloatOpType Vector2 = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderFloatOpType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderFloatOpType.Vector3()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderFloatOpType",
+    "name": "Vector3",
+    "signature": "public const Electron2D.VisualShaderFloatOpType Vector3 = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderFloatOpType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderFloatOpType.Vector4()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderFloatOpType",
+    "name": "Vector4",
+    "signature": "public const Electron2D.VisualShaderFloatOpType Vector4 = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderFloatOpType",
+    "value": "3"
+  },
+  {
     "id": "enumValue:Electron2D.VisualShaderIntegerOperator.Add()",
     "kind": "enumValue",
     "declaringType": "Electron2D.VisualShaderIntegerOperator",
@@ -57596,6 +57725,110 @@
     "parameters": [],
     "returnType": "Electron2D.VisualShaderNodeCompare.FunctionEnum",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum",
+    "name": "Max",
+    "signature": "public const Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum Max = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum.Sum()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum",
+    "name": "Sum",
+    "signature": "public const Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum Sum = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum.X()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum",
+    "name": "X",
+    "signature": "public const Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum X = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum.Y()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum",
+    "name": "Y",
+    "signature": "public const Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum Y = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum.Coarse()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum",
+    "name": "Coarse",
+    "signature": "public const Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum Coarse = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum.Fine()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum",
+    "name": "Fine",
+    "signature": "public const Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum Fine = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum",
+    "name": "Max",
+    "signature": "public const Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum Max = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum",
+    "name": "None",
+    "signature": "public const Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.VisualShaderNodeFloatFunc.FunctionEnum.Abs()",
@@ -58623,71 +58856,6 @@
     "parameters": [],
     "returnType": "Electron2D.VisualShaderNodeMatrixVecMult.OperatorEnum",
     "value": "1"
-  },
-  {
-    "id": "enumValue:Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum.Max()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum",
-    "name": "Max",
-    "signature": "public const Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum Max = 4",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum",
-    "value": "4"
-  },
-  {
-    "id": "enumValue:Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum.Scalar()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum",
-    "name": "Scalar",
-    "signature": "public const Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum Scalar = 0",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum",
-    "value": "0"
-  },
-  {
-    "id": "enumValue:Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum.Vector2()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum",
-    "name": "Vector2",
-    "signature": "public const Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum Vector2 = 1",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum",
-    "value": "1"
-  },
-  {
-    "id": "enumValue:Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum.Vector3()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum",
-    "name": "Vector3",
-    "signature": "public const Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum Vector3 = 2",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum",
-    "value": "2"
-  },
-  {
-    "id": "enumValue:Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum.Vector4()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum",
-    "name": "Vector4",
-    "signature": "public const Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum Vector4 = 3",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum",
-    "value": "3"
   },
   {
     "id": "enumValue:Electron2D.VisualShaderNodeParameter.QualifierEnum.Global()",
@@ -223358,6 +223526,32 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.VisualShaderNodeDerivativeFunc.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeDerivativeFunc",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeDerivativeFunc.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeDerivativeFunc",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.VisualShaderNodeDeterminant.CreateDuplicateInstance()",
     "kind": "method",
     "declaringType": "Electron2D.VisualShaderNodeDeterminant",
@@ -272745,6 +272939,45 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.VisualShaderNodeDerivativeFunc.Function()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeDerivativeFunc",
+    "name": "Function",
+    "signature": "public Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum Function { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeDerivativeFunc.FunctionEnum",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisualShaderNodeDerivativeFunc.OpType()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeDerivativeFunc",
+    "name": "OpType",
+    "signature": "public Electron2D.VisualShaderFloatOpType OpType { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderFloatOpType",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisualShaderNodeDerivativeFunc.Precision()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeDerivativeFunc",
+    "name": "Precision",
+    "signature": "public Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum Precision { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeDerivativeFunc.PrecisionEnum",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.VisualShaderNodeFloatConstant.Constant()",
     "kind": "property",
     "declaringType": "Electron2D.VisualShaderNodeFloatConstant",
@@ -273113,12 +273346,12 @@
     "kind": "property",
     "declaringType": "Electron2D.VisualShaderNodeMultiplyAdd",
     "name": "OpType",
-    "signature": "public Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum OpType { get; set; }",
+    "signature": "public Electron2D.VisualShaderFloatOpType OpType { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.VisualShaderNodeMultiplyAdd.OpTypeEnum",
+    "returnType": "Electron2D.VisualShaderFloatOpType",
     "value": null
   },
   {
