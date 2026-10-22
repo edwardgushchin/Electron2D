@@ -1,3 +1,5 @@
+[Repeatable scalar graph variation](../components/visual-shaders.md#repeatable-scalar-variation) supplies seed-driven material values through the existing canvas, particle and writable-texture graph paths, including unclamped equal/reversed-bound arithmetic.
+
 [Screen-space derivative graphs](../components/visual-shaders.md#screen-space-derivatives) execute scalar/vector default, fine and coarse rates through offline fragment import, enabling derivative-scaled procedural edge smoothing.
 
 [Polygon edge smoothing](../components/meshes.md#polygon-edge-smoothing) now executes shared-boundary and inverted-loop coverage geometry on both canvas backends, including skeletal pose replay.

@@ -15636,6 +15636,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.VisualShaderNodeRandomRange",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeRandomRange",
+    "name": "VisualShaderNodeRandomRange",
+    "signature": "public sealed class Electron2D.VisualShaderNodeRandomRange",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.VisualShaderNodeRemap",
     "kind": "type",
     "declaringType": "Electron2D.VisualShaderNodeRemap",
@@ -28370,6 +28385,19 @@
     "declaringType": "Electron2D.VisualShaderNodeParticleSphereEmitter",
     "name": ".ctor",
     "signature": "public VisualShaderNodeParticleSphereEmitter()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeRandomRange..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeRandomRange",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeRandomRange()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -227391,6 +227419,19 @@
     "id": "method:Electron2D.VisualShaderNodeParticleSphereEmitter.CreateDuplicateInstance()",
     "kind": "method",
     "declaringType": "Electron2D.VisualShaderNodeParticleSphereEmitter",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeRandomRange.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeRandomRange",
     "name": "CreateDuplicateInstance",
     "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
     "visibility": "protected",

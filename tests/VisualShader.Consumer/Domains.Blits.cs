@@ -14,6 +14,7 @@ internal static partial class GraphChecks
             var name = IOPath.GetFileNameWithoutExtension(file);
             if (name.Length == 6 && char.IsAsciiDigit(name[^1])) continue;
             using var shader = ResourceLoader.Load<VisualShader>(file, ResourceLoader.CacheMode.IgnoreDeep); using var material = new ShaderMaterial { Shader = shader };
+            if (name.StartsWith("blit-random-range-", StringComparison.Ordinal)) { CheckRandomBlit(name, material); continue; }
             using var target = new DrawableTexture(); target.Setup(8, 8, DrawableTexture.DrawableFormat.RGBA8, Colors.Magenta);
             target.BlitRectMulti(new(0, 0, 8, 8), [source0, source1, source2, source3], [], material: material);
             using var image = target.GetImage()!; var actual = image.GetPixel(3, 3);

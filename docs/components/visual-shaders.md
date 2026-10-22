@@ -1216,3 +1216,48 @@ removes the previous mesh notification subscription. All numeric values retain t
 existing finite typed default validation and change-notification contract.
 
 Current validation distinguishes CPU authoring/import, actual software-rendered output and unmeasured hardware/native allocation boundaries. The repository consumer commands are domains-cpu, domains-author and domains-gpu; tools/shaders/check_domains.py covers direct/automatic profiles, rejected source preservation and SDK build/publish/Clean. ParticleShaderTests and the visual-graph native profile check storage layouts, per-stage state, SDF branches, supplied-field payloads, repeated births and reset. Detailed run receipts live with each verification cohort.
+
+## Repeatable scalar variation
+
+[VisualShaderNodeRandomRange](../classes/VisualShaderNodeRandomRange.md) executes a
+fixed three-component numeric hash and scalar bound mix in both canvas stages,
+all five particle lifecycle stages and the writable-texture stage. Its seed
+starts at (1, 1, 1), bounds at zero and one. It consumes no evolving random state.
+The hash factor lies in [-1, 1); mixing is unclamped, so the first bound is not a
+lower output guarantee. Zero seed gives twice the first bound minus the second;
+equal and reversed bounds preserve that formula. Native floating precision and
+overflow apply. Defaults, shared aliases, duplication and resource archives use
+the existing typed graph contract. Source edits require offline reimport;
+material parameters update seed/bounds without rebuilding the graph.
+
+The focused public consumer authors 48 programs across eight stages with six
+zero, unit, fractional, negative, mixed-sign and small seeds. Each compares an
+independently written pinned shader function with default and connected node
+occurrences and checks known negative, equal-bound and reversed-bound results
+before display conversion. Verification receipts are under
+`bin/visual-shader-random-range/2026-10-22/`. CLR and strict full-trim NativeAOT
+passed actual readback in software Vulkan Wayland, X11 and HDR/MSAA: twelve
+canvas, thirty particle and six writable-texture programs, plus existing domain
+controls. Canvas seed/bound edits and resets execute without reimport. Writable-texture
+checks read raw RGBAF values, compare node/reference channels and exercise
+negative/equal/reversed live bounds plus reset. Their opaque alpha preserves
+raw numeric channels through the programmable blit blend contract. The
+prepared canvas and particle runs allocate zero owner/all-thread managed bytes
+for 64 active and 64 idle frames. Separate CLR native-state checks passed all
+thirty new particle programs and 274 retained particle programs, including SDF
+contact; all 3,385 retained canvas source/interface hashes match exactly.
+
+The first inline-expression experiment disagreed with the pinned function at a
+constant seed while connected uniforms and known bound cases matched. The final
+compiler emits the function's operation sequence once per required stage or
+domain and reserves its generated name against user GLSL. All 48 fixtures also
+contain a deliberately conflicting user function name. The HDR fixture uses the
+particle renderer's sRGB conversion before comparing pixels.
+
+`VisualShader.Consumer random-cpu` exercises default/type/finite/port guards,
+independent duplication and a compressed big-endian shared-definition archive.
+`random-author <folder>` writes the 48 cold graphs. The existing `ShaderImport`
+`graph ... --visual-shader` command imports each; canvas fixtures use `gpu` and
+particle/blit fixtures use `domains-gpu` with existing domain controls. Receipts
+retain exact commands and source cohorts. Physical GPU, native heap, foreign
+hosts, editor and owner acceptance remain separate gates.

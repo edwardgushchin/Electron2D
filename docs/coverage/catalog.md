@@ -986,7 +986,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeParticleRingEmitter](classes/VisualShaderNodeParticleRingEmitter.md) | VisualShaderNodeParticleEmitter | Implemented | 0 |
 | [VisualShaderNodeParticleSphereEmitter](classes/VisualShaderNodeParticleSphereEmitter.md) | VisualShaderNodeParticleEmitter | Implemented | 0 |
 | [VisualShaderNodeProximityFade](classes/VisualShaderNodeProximityFade.md) | VisualShaderNode | Unimplemented | 0 |
-| [VisualShaderNodeRandomRange](classes/VisualShaderNodeRandomRange.md) | VisualShaderNode | Unimplemented | 0 |
+| [VisualShaderNodeRandomRange](classes/VisualShaderNodeRandomRange.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeRemap](classes/VisualShaderNodeRemap.md) | VisualShaderNode | Implemented | 10 |
 | [VisualShaderNodeReroute](classes/VisualShaderNodeReroute.md) | VisualShaderNode | Unimplemented | 1 |
 | [VisualShaderNodeResizableBase](classes/VisualShaderNodeResizableBase.md) | VisualShaderNode | Implemented | 1 |

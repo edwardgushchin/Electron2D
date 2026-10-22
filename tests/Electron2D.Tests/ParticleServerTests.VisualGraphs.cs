@@ -49,6 +49,8 @@ internal static partial class ParticleServerTests
             }
             else if (name == "particle-provider-contact")
             { Near(value.Color.X, .75f, "provider-only collide setup x"); Near(value.Color.Y, .5f, "provider-only collide setup y"); Near(value.Color.Z, .25f, "provider-only collide setup z"); }
+            else if (name.StartsWith("particle-random-range-", StringComparison.Ordinal))
+            { Near(value.Color.X, .25f, "random oracle x"); Near(value.Color.Y, .5f, "random oracle y"); Near(value.Color.Z, .75f, "random oracle z"); }
             else if (name.StartsWith("particle-parameter-", StringComparison.Ordinal))
             {
                 var role = int.Parse(name.Split('-')[3]);

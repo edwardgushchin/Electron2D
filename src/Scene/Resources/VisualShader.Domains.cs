@@ -139,6 +139,7 @@ public sealed partial class VisualShader
             if (aliases[role] != role) blocks.Add(new(primary, aliases[role], role));
         for (var i = 0; i < images.Count; i++) result.Append("layout(set=").Append(particle ? 0 : 2).Append(",binding=").Append(i).Append(") uniform ").Append(images[i].IsArray ? "sampler2DArray " : "sampler2D ").Append(images[i].Name).AppendLine(";");
         if (used.Any(n => n is VisualShaderNodeColorFunc { Function: VisualShaderNodeColorFunc.FunctionEnum.RGBToHSV })) result.Append(VisualShaderNodeColorFunc.RGBToHSVDefinition(aliases["e2d_rgb_to_hsv"]));
+        if (used.Any(n => n is VisualShaderNodeRandomRange)) result.Append(VisualShaderNodeRandomRange.HashDefinition(aliases["e2d_random_range"]));
         if (particle) result.AppendLine(RewriteExpression(ParticleMath, aliases));
         result.Append(CustomGlobals(custom, primary, aliases)).Append(GlobalExpressionHeader(primary, aliases)).AppendLine();
         return result.ToString();

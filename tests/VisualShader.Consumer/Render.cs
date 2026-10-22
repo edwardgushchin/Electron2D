@@ -56,6 +56,7 @@ internal static partial class GraphChecks
                 if (name.StartsWith("fx-", StringComparison.Ordinal)) PrepareEffectCase(name, shader, material, position);
                 if (name.StartsWith("expr-", StringComparison.Ordinal)) PrepareExpressionCase(name, shader, material, position);
                 if (name.StartsWith("custom-", StringComparison.Ordinal)) PrepareCustomCase(name, shader, material, position);
+                if (name.StartsWith("canvas-random-range-", StringComparison.Ordinal)) _randomCases.Add((material, position));
                 AddChild(painter); _cases.Add((painter, name, position));
                 if (name.StartsWith("img-device-", StringComparison.Ordinal)) _deviceImageCases.Add((painter, name, position));
                 if (name.StartsWith("img-filter-", StringComparison.Ordinal)) _imageSamplerCases.Add((shader, name, position));
@@ -67,6 +68,7 @@ internal static partial class GraphChecks
         protected override void OnProcess(double delta)
         {
             _frame++;
+            ProcessRandomRange();
             ProcessParameters();
             ProcessEffects();
             ProcessExpressions();
@@ -78,6 +80,7 @@ internal static partial class GraphChecks
         }
         private void AfterDraw()
         {
+            CheckRandomRange();
             CheckParameterFrames();
             if (_frame is 5 or 7) CheckEffectFrames();
             if (_frame is 5 or 7) CheckExpressionFrames();
@@ -157,7 +160,7 @@ internal static partial class GraphChecks
             base.Dispose(disposing);
         }
     }
-    private static Color Expected(string name) => name.StartsWith("derivative-", StringComparison.Ordinal) ? DerivativeExpected(name) : name.StartsWith("parameter-", StringComparison.Ordinal) ? ParameterExpected(name, 0) : name.StartsWith("matrix-", StringComparison.Ordinal) ? MatrixExpected(name) : name.StartsWith("condition-", StringComparison.Ordinal) ? ConditionExpected(name) : name.StartsWith("integer-", StringComparison.Ordinal) ? IntegerExpected(name) : name.StartsWith("range-", StringComparison.Ordinal) ? RangeExpected(name) : name.StartsWith("flow-", StringComparison.Ordinal) ? DataflowExpected(name) : name.StartsWith("unary-", StringComparison.Ordinal) ? UnaryExpected(name) : name switch
+    private static Color Expected(string name) => name.StartsWith("canvas-random-range-", StringComparison.Ordinal) ? new(.25f, .5f, .75f) : name.StartsWith("derivative-", StringComparison.Ordinal) ? DerivativeExpected(name) : name.StartsWith("parameter-", StringComparison.Ordinal) ? ParameterExpected(name, 0) : name.StartsWith("matrix-", StringComparison.Ordinal) ? MatrixExpected(name) : name.StartsWith("condition-", StringComparison.Ordinal) ? ConditionExpected(name) : name.StartsWith("integer-", StringComparison.Ordinal) ? IntegerExpected(name) : name.StartsWith("range-", StringComparison.Ordinal) ? RangeExpected(name) : name.StartsWith("flow-", StringComparison.Ordinal) ? DataflowExpected(name) : name.StartsWith("unary-", StringComparison.Ordinal) ? UnaryExpected(name) : name switch
     {
         "color" or "vertex-shift" => new(.25f, .5f, .75f, 1),
         "cleared" => Colors.Black,
