@@ -11,7 +11,7 @@ python3 -B tools/ktx-native/test_bridge.py obj/ktx-native/Electron2DKTXCheck tes
 python3 -B tools/ktx-native/test_bridge.py obj/ktx-native/Electron2DKTXCheck tests/Electron2D.Tests/TestData/CompressedArray/basis-oracle.json
 ```
 
-`-DELECTRON2D_STATIC_NATIVE=ON` produces one merged archive; no separate codec archive is needed by a consumer. The native check validates owner/input/output failure paths and compares all mips against the independent tool oracles. Set `ELECTRON2D_KTX_REPRO` to an ignored output path to retain the last deterministic mutation when diagnosing a test failure.
+`-DELECTRON2D_STATIC_NATIVE=ON` produces one merged archive; no separate codec archive is needed by a consumer. The pinned `ktx_read` archive already embeds the complete BasisU encoder closure, so the merge includes it once. Appending `basisu_encoder` again duplicates strong symbols when Apple applications load the complete archive. The native check validates owner/input/output failure paths and compares all mips against the independent tool oracles. Set `ELECTRON2D_KTX_REPRO` to an ignored output path to retain the last deterministic mutation when diagnosing a test failure.
 
 `generate_fixtures.py` regenerates the small test corpus with the official standalone 5.0.0-rc2 `ktx` tool. It records the tool hash and creates raw, Zstandard, ZLIB, ETC1S, UASTC LDR and two HDR profiles, plus corrupted codebook/DFD regression inputs. Only fixtures and recipe belong in Git; downloaded tools, archives and build products stay ignored.
 

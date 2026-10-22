@@ -148,7 +148,6 @@ if(ELECTRON2D_STATIC_NATIVE)
   set_property(SOURCE bridge.cpp APPEND PROPERTY OBJECT_DEPENDS "${stamp}")
   add_custom_command(TARGET Electron2DKTX POST_BUILD
     COMMAND ${CMAKE_COMMAND} "-DOUTPUT=$<TARGET_FILE:Electron2DKTX>" "-DCODEC=$<TARGET_FILE:ktx_read>"
-      "-DENCODER=$<TARGET_FILE:basisu_encoder>"
       "-DAR=${CMAKE_AR}" "-DAPPLE_HOST=${APPLE}" -P "${CMAKE_CURRENT_SOURCE_DIR}/merge.cmake")
 elseif(APPLE)
   set_target_properties(Electron2DKTX PROPERTIES INSTALL_NAME_DIR "@rpath" BUILD_WITH_INSTALL_NAME_DIR TRUE SKIP_BUILD_RPATH TRUE)
