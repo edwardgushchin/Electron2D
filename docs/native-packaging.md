@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-22
 
-A private prerelease consumer supplies its exact expected native version to the notice audit with --native-package-version; the ordinary release default still requires the product version. Native dependency versions, 72 ELF classification and all 92 notice byte comparisons remain strict.
+A private prerelease consumer supplies its exact expected native version to the notice audit with --native-package-version; the ordinary release default still requires the product version. Native dependency versions, 73 ELF classification and all 101 source, license and notice byte comparisons remain strict.
 
 The desktop publish checker accepts an optional third application-name argument (default CharacterMovement); the movie consumer uses Consumer. It checks a self-contained managed publish, since NativeAOT embeds the engine instead of shipping Electron2D.dll.
 
