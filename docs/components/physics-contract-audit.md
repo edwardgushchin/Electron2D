@@ -2109,3 +2109,15 @@ passes in 4740.632 seconds, with its final success marker, unchanged payload,
 older d90 runtime; it does not promote the later main, performance or inherited
 API acceptance. The live process is terminal and must not be restarted as if an
 observer timeout had ended it.
+
+## Rejected scene synchronization edits, 2026-10-22
+
+[Live synchronizer preflight](scene-replication.md#rejected-live-synchronization-edits-2026-10-22)
+keeps rejected authority/configuration/root edits from unregistering or poisoning
+an existing producer. Typed target/budget checks precede mutation; provider and
+equivalent-path registration callbacks retain their order, and empty roots stop
+automatic visibility work. Public actual-body CPU/no-device and physical GPU
+fixtures pass CLR/NativeAOT motion, identity, tick and packet assertions. The CLR
+WS/WSS suite retains its warmed owner-allocation checks. This fixes a lifecycle
+defect without promoting inherited API or performance gates: physics remains
+1306/1369 (95.40%), with 63 open and 92 Excluded.

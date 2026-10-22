@@ -1189,6 +1189,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DTLS") == "1") { DTLSTes
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_UPNP") == "1") { UPNPTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_REPLICATION") == "1") { SceneReplicationTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_REPLICATION_RECONFIGURATION") is { } reconfigurationBackend && reconfigurationBackend is "cpu" or "gpu")
+{ SceneReplicationTests.RunReconfiguration(reconfigurationBackend == "cpu" ? PhysicsServer.Backend.CPU : PhysicsServer.Backend.GPU); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_MULTIPLAYER") == "1") { SceneMultiplayerTests.Run(); return; }
 

@@ -3,7 +3,7 @@ using System.Buffers.Binary;
 using System.Net;
 using System.Net.Sockets;
 
-internal static class SceneReplicationTests
+internal static partial class SceneReplicationTests
 {
     private static readonly ReplicationProperty<Actor, int> Health = Property(1, static n => n.Health, static (n, v) => n.Health = v);
     private static readonly ReplicationProperty<Actor, int> Tag = Property(2, static n => n.Tag, static (n, v) => n.Tag = v);
@@ -27,7 +27,7 @@ internal static class SceneReplicationTests
     private static WebSocketMultiplayerPeer Peer() => new() { InboundBufferSize = 8192, OutboundBufferSize = 8192, MaxQueuedPackets = 128 };
     private static Node Branch(string name, out MultiplayerSpawner spawner)
     { var root = new Node { Name = name }; var actors = new Node { Name = "Actors" }; root.AddChild(actors); spawner = new MultiplayerSpawner { Name = "Spawner", SpawnPath = "../Actors", SpawnFunction = new SpawnFactory<int>(44, static value => new Actor { Health = value }, static _ => 4, static (value, bytes) => { BinaryPrimitives.WriteInt32LittleEndian(bytes, value); return 4; }, static bytes => bytes.Length == 4 ? BinaryPrimitives.ReadInt32LittleEndian(bytes) : throw new InvalidDataException()) }; root.AddChild(spawner); return root; }
-    internal static void Run() { Configuration(); BatchesAndValidation(); Native(false); Native(true); Console.WriteLine("Typed scene replication custom/automatic spawn, pre-ready state, sync/delta/visibility, lifecycle and allocation checks passed."); }
+    internal static void Run() { Configuration(); BatchesAndValidation(); RunReconfiguration(PhysicsServer.Backend.CPU); RunReconfiguration(PhysicsServer.Backend.GPU); Native(false); Native(true); Console.WriteLine("Typed scene replication custom/automatic spawn, pre-ready state, sync/delta/visibility, lifecycle and allocation checks passed."); }
     private static void Configuration()
     {
         using var c = new SceneReplicationConfig(); c.AddProperty(Health); c.AddProperty(Tag, 0); Check(c.GetProperties().Length == 2 && c.GetProperties()[0] == Tag && c.PropertyGetSpawn(Health) && c.PropertyGetSync(Health), "Ordered config defaults."); Reject<ArgumentException>(() => c.AddProperty(Health)); c.PropertySetWatch(Health, true); c.PropertySetSync(Health, false); Check(c.PropertyGetWatch(Health), "Legacy sync false preserves OnChange."); c.PropertySetWatch(Health, false); Check(c.PropertyGetReplicationMode(Health) == ReplicationMode.Never, "Legacy watch disable."); c.PropertySetSpawn(Health, false); using var copy = (SceneReplicationConfig)c.Duplicate(); c.RemoveProperty(Health); Check(copy.HasProperty(Health) && !copy.PropertyGetSpawn(Health) && !c.HasProperty(Health), "Config duplicate copies policies and shares immutable tokens."); Reject<KeyNotFoundException>(() => c.PropertyGetSpawn(Health)); c.ResetState(); Check(c.GetProperties().Length == 0, "Config reset."); using var api = new SceneMultiplayer(); Check(api.MaxSyncPacketSize == 1350 && api.MaxDeltaPacketSize == 65535, "Batch budget defaults."); Reject<ArgumentOutOfRangeException>(() => api.MaxSyncPacketSize = 127); using var s = new MultiplayerSynchronizer(); Check(s.PublicVisibility && s.RootPath == ".." && s.VisibilityUpdateMode == VisibilityUpdateMode.Idle, "Synchronizer defaults."); s.PublicVisibility = false; s.SetVisibilityFor(2, true); Check(!s.GetVisibilityFor(0) && s.GetVisibilityFor(2), "Explicit visibility membership."); Reject<ArgumentOutOfRangeException>(() => s.DeltaInterval = double.NaN);

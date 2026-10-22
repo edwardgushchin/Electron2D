@@ -34,9 +34,26 @@ public class MultiplayerSynchronizer : Node
     private void Check() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
     private void Mutate() { Check(); EnsureMutable(); if (API is SceneMultiplayer { ReplicationProcessing: true }) throw new InvalidOperationException("Cannot reconfigure while encoding replication state."); }
     /// <summary>Gets or sets the relative target root path.</summary><value>Parent path initially; empty disables synchronization.</value>
-    public string RootPath { get { Check(); return _rootPath; } set { Mutate(); ArgumentNullException.ThrowIfNull(value); if (value.Contains('\0')) throw new ArgumentException("Root path contains NUL."); if (_rootPath == value) return; Stop(); _rootPath = value; Rebind(); UpdateConfigurationWarnings(); } }
+    /// <remarks>A live replacement validates property targets and preparation limits before retiring the current binding.
+    /// Invalid bindings leave the path and active registration unchanged. Empty or missing roots disable automatic visibility work.</remarks>
+    public string RootPath { get { Check(); return _rootPath; } set { Mutate(); ArgumentNullException.ThrowIfNull(value); if (value.Contains('\0')) throw new ArgumentException("Root path contains NUL."); if (_rootPath == value) return; Rebind(value); UpdateConfigurationWarnings(); } }
     /// <summary>Gets or sets the borrowed ordered property configuration.</summary><value>Null initially, providing no property updates.</value>
-    public SceneReplicationConfig? ReplicationConfig { get { Check(); return _config; } set { Mutate(); if (ReferenceEquals(_config, value)) return; if (value is not null) ObjectDisposedException.ThrowIf(value.IsDisposed, value); _config = value; _configRevision = -1; Prepare(); } }
+    /// <remarks>Attached replacements prepare their complete typed bindings before commit. Rejected lifetime, target and
+    /// budget checks preserve the existing configuration, buffers and peer receipts. Detached resources prepare when attached.</remarks>
+    public SceneReplicationConfig? ReplicationConfig
+    {
+        get { Check(); return _config; }
+        set
+        {
+            Mutate(); if (ReferenceEquals(_config, value)) return;
+            if (value is not null) ObjectDisposedException.ThrowIf(value.IsDisposed, value);
+            var revision = value?.ChangeRevision ?? 0;
+            var bindings = RootNode is { } root ? CreateBindings(root, value) : null;
+            _config = value;
+            if (bindings is null) _configRevision = -1;
+            else CommitBindings(bindings, revision);
+        }
+    }
     /// <summary>Gets or sets the interval between Always updates in seconds.</summary><value>Zero initially; zero sends each network process frame.</value>
     public double ReplicationInterval { get { Check(); return _interval; } set { Mutate(); Interval(value); _interval = value; } }
     /// <summary>Gets or sets the minimum interval between OnChange updates per peer in seconds.</summary><value>Zero initially; zero checks each network process frame.</value>
@@ -64,29 +81,48 @@ public class MultiplayerSynchronizer : Node
     public void UpdateVisibility(int forPeer = 0) { Check(); if (forPeer < 0) throw new ArgumentOutOfRangeException(nameof(forPeer)); if (API is SceneMultiplayer api) api.UpdateReplicationVisibility(this, forPeer); MultiplayerAPI.Emit(BeginEventEmission(VisibilityChanged), forPeer); }
     internal bool IsVisibleTo(int peer) { var snapshot = _filterSnapshot; foreach (var filter in snapshot) if (!filter(peer)) return false; return _visible.Contains(0) || _visible.Contains(peer); }
     private void UpdateProcessing() { SetInternalProcessing(RootNode is not null && _filters.Count > 0 && _visibilityMode == VisibilityUpdateMode.Idle, RootNode is not null && _filters.Count > 0 && _visibilityMode == VisibilityUpdateMode.Physics); }
-    internal void Rebind()
+    internal void Rebind() => Rebind(_rootPath);
+    private void Rebind(string rootPath)
     {
-        if (Tree is null || _rootPath.Length == 0) { Stop(); return; }
-        var root = GetNodeOrNull(_rootPath); var api = Multiplayer;
-        if (ReferenceEquals(API, api) && ReferenceEquals(RootNode, root)) return; Stop(); RootNode = root; if (root is not null) { API = api; api.ObjectConfigurationAdd(root, this); Prepare(); }
+        if (Tree is null || rootPath.Length == 0) { Stop(); _rootPath = rootPath; UpdateProcessing(); return; }
+        var root = GetNodeOrNull(rootPath); var api = Multiplayer;
+        if (_rootPath == rootPath && ReferenceEquals(API, api) && ReferenceEquals(RootNode, root)) return;
+        if (root is not null) foreach (var entry in ConfigurationEntries(_config)) entry.Property.ValidateTarget(root);
+        Stop(); _rootPath = rootPath; RootNode = root;
+        if (root is not null) { API = api; api.ObjectConfigurationAdd(root, this); Prepare(); }
         UpdateProcessing();
     }
     private void Stop() { var api = API; var root = RootNode; API = null; RootNode = null; Bindings = []; Peers.Clear(); _configRevision = -1; if (api is not null && !api.IsDisposed && root is not null) api.ObjectConfigurationRemove(root, this); }
     internal void Prepare()
     {
-        if (RootNode is null) return; var revision = _config?.ChangeRevision ?? 0; if (_configRevision == revision) return; var entries = _config?.Snapshot() ?? [];
+        if (RootNode is null) return; var revision = _config?.ChangeRevision ?? 0; if (_configRevision == revision) return;
+        CommitBindings(CreateBindings(RootNode, _config), revision);
+    }
+    private static BoundReplicationProperty[] CreateBindings(Node root, SceneReplicationConfig? config)
+    {
+        var entries = ConfigurationEntries(config);
+        var bindings = new BoundReplicationProperty[entries.Length]; for (var i = 0; i < entries.Length; i++) { var entry = entries[i]; var bound = entry.Property.Bind(root); bound.Index = i; bound.Spawn = entry.Spawn; bound.Mode = entry.Mode; bindings[i] = bound; }
+        return bindings;
+    }
+    private static ReplicationConfigEntry[] ConfigurationEntries(SceneReplicationConfig? config)
+    {
+        var entries = config?.Snapshot() ?? [];
         long budget = 0; foreach (var entry in entries) budget += (long)entry.Property.MaxEncodedBytes * 2; if (budget > 67108864 || entries.Length > ushort.MaxValue) throw new ArgumentException("Synchronizer preparation exceeds its 64 MiB/count budget.");
-        var bindings = new BoundReplicationProperty[entries.Length]; for (var i = 0; i < entries.Length; i++) { var entry = entries[i]; var bound = entry.Property.Bind(RootNode); bound.Index = i; bound.Spawn = entry.Spawn; bound.Mode = entry.Mode; bindings[i] = bound; }
+        return entries;
+    }
+    private void CommitBindings(BoundReplicationProperty[] bindings, long revision)
+    {
         Bindings = bindings; _configRevision = revision; Peers.Clear(); _lastAlways = 0;
         if (API is SceneMultiplayer api) api.PrepareReplicationPeers(this);
     }
-    internal void PrepareDetached(Node root) { RootNode = root; _configRevision = -1; Prepare(); }
+    internal void PrepareDetached(Node root) { var revision = _config?.ChangeRevision ?? 0; var bindings = CreateBindings(root, _config); RootNode = root; CommitBindings(bindings, revision); }
     internal void CaptureFrame(long now) { Prepare(); AlwaysDue = now - _lastAlways >= _interval * System.Diagnostics.Stopwatch.Frequency; if (AlwaysDue) _lastAlways = now; foreach (var binding in Bindings) { if (binding.Mode == ReplicationMode.OnChange) binding.Watch(); else if (binding.Mode == ReplicationMode.Always && AlwaysDue) binding.Capture(); } }
     internal ReplicationPeerState PeerState(int peer) { if (!Peers.TryGetValue(peer, out var state)) { state = new ReplicationPeerState(Bindings.Length); Peers.Add(peer, state); } return state; }
     internal bool DeltaDue(ReplicationPeerState peer, long now) => now - peer.LastDelta >= _deltaInterval * System.Diagnostics.Stopwatch.Frequency;
     internal void EmitState(bool delta) { List<Exception>? errors = null; foreach (var subscriber in Delegate.EnumerateInvocationList(BeginEventEmission(delta ? DeltaSynchronized : Synchronized))) try { subscriber(); } catch (Exception e) { (errors ??= []).Add(e); } if (errors is not null) throw new AggregateException(errors); }
     /// <inheritdoc />
-    public override void SetMultiplayerAuthority(int id, bool recursive = true) { Mutate(); Stop(); base.SetMultiplayerAuthority(id, recursive); Rebind(); }
+    /// <remarks>Nonpositive IDs reject before unregistering active synchronization.</remarks>
+    public override void SetMultiplayerAuthority(int id, bool recursive = true) { Mutate(); ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id); Stop(); base.SetMultiplayerAuthority(id, recursive); Rebind(); }
     /// <inheritdoc />
     protected override void OnEnterTree() { base.OnEnterTree(); Rebind(); }
     /// <inheritdoc />

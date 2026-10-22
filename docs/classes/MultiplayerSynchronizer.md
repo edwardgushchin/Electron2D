@@ -1,6 +1,6 @@
 # MultiplayerSynchronizer
 
-Last updated: 2026-10-04
+Last updated: 2026-10-22
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.MultiplayerSynchronizer`. **Source:** [MultiplayerSynchronizer.cs](../../src/Scene/Multiplayer/MultiplayerSynchronizer.cs).
 
@@ -88,6 +88,11 @@ Gets or sets the borrowed ordered property configuration.
 
 Value: Null initially, providing no property updates.
 
+Attached replacement validates and prepares the complete candidate before
+publishing it. Disposed resources, incompatible or absent property targets and
+excessive aggregate budgets reject without changing the active resource, bindings
+or peer receipts. Detached configuration prepares when a root becomes available.
+
 <a id="member-b10f0d76adc1"></a>
 ### ReplicationInterval
 
@@ -105,6 +110,12 @@ Value: Zero initially; zero sends each network process frame.
 Gets or sets the relative target root path.
 
 Value: Parent path initially; empty disables synchronization.
+
+A live replacement validates typed property paths, target roles and buffer limits
+before retiring the existing registration. Rejected input preserves the old path
+and continued publication. Empty and missing roots disable automatic visibility
+processing; restoring a valid root resumes its selected lane. The selected
+MultiplayerAPI registration callback runs before final binding preparation.
 
 <a id="member-f9b26d5cf0f1"></a>
 ### VisibilityUpdateMode
@@ -257,6 +268,8 @@ id: Positive peer identity.
 recursive: True applies to current descendants; later children retain their own default/configuration.
 
 Remarks: This local configuration does not replicate itself; participants must agree separately.
+
+Nonpositive IDs reject before active synchronization is unregistered.
 
 <a id="member-e26e3f7f18c2"></a>
 ### SetVisibilityFor

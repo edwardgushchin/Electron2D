@@ -13,6 +13,7 @@ public abstract class ReplicationProperty
     public string NodePath { get; }
     /// <summary>Gets the finite maximum encoded value size prepared by a synchronizer.</summary>
     public int MaxEncodedBytes { get; }
+    internal abstract void ValidateTarget(Node root);
     internal abstract BoundReplicationProperty Bind(Node root);
 }
 /// <summary>Pairs a concrete Node property with direct typed accessors and an explicit wire codec.</summary>
@@ -27,8 +28,10 @@ public sealed class ReplicationProperty<TNode, T> : ReplicationProperty where TN
     /// <summary>Creates an immutable property/codec descriptor.</summary><param name="id">Stable nonzero wire identity.</param><param name="get">Direct getter.</param><param name="set">Direct setter.</param><param name="size">Exact encoded size.</param><param name="encode">Writes exactly the measured bytes.</param><param name="decode">Validates complete payload, returning a concrete value.</param><param name="maxEncodedBytes">Preparation budget for this value.</param><param name="nodePath">Relative node path; dot selects the synchronized root.</param>
     public ReplicationProperty(uint id, Func<TNode, T> get, Action<TNode, T> set, Func<T, int> size, RPCEncoder<T> encode, RPCDecoder<T> decode, int maxEncodedBytes = 65535, string nodePath = ".") : base(id, nodePath, maxEncodedBytes)
     { if (typeof(ElectronObject).IsAssignableFrom(typeof(T)) || typeof(T) == typeof(RID)) throw new NotSupportedException("Process-local objects and RIDs cannot be replicated."); ArgumentNullException.ThrowIfNull(get); ArgumentNullException.ThrowIfNull(set); ArgumentNullException.ThrowIfNull(size); ArgumentNullException.ThrowIfNull(encode); ArgumentNullException.ThrowIfNull(decode); _get = get; _set = set; _size = size; _encode = encode; _decode = decode; }
-    internal override BoundReplicationProperty Bind(Node root)
-    { var node = root.GetNode(NodePath); if (node is not TNode target || !ReferenceEquals(node, root) && !root.IsAncestorOf(node)) throw new ArgumentException("Replication property target must be a compatible node in the root subtree."); return new BoundReplicationProperty<TNode, T>(this, target, _get, _set, _size, _encode, _decode); }
+    private TNode ResolveTarget(Node root)
+    { var node = root.GetNode(NodePath); if (node is not TNode target || !ReferenceEquals(node, root) && !root.IsAncestorOf(node)) throw new ArgumentException("Replication property target must be a compatible node in the root subtree."); return target; }
+    internal override void ValidateTarget(Node root) => _ = ResolveTarget(root);
+    internal override BoundReplicationProperty Bind(Node root) => new BoundReplicationProperty<TNode, T>(this, ResolveTarget(root), _get, _set, _size, _encode, _decode);
 }
 internal abstract class BoundReplicationProperty(ReplicationProperty property)
 {

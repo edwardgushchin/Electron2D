@@ -14,6 +14,19 @@ New config entries include spawn state and Always updates. AddProperty inserts a
 
 Synchronizers bind descriptors to compatible nodes at relative NodePath under RootPath. RootPath starts parent (`..`); empty/missing roots stop registration and produce configuration warnings. Config starts null. Rebinding or config revision prepares concrete target/value state and current/previous encoded buffers; maximum combined buffers are 64 MiB, count at most ushort.MaxValue. No universal value boxing is required. Codec budgets are finite and the enclosing consumer applies its aggregate budget. Changes reprepare at the next network frame; mutation during state encoding rejects. Each admitted peer prepares receipt/sequence state, while initial path discovery is cold.
 
+Replacing a live ReplicationConfig prepares every typed target and buffer before
+publishing the resource, bindings or peer receipts. RootPath changes validate the
+candidate root's target paths/types and aggregate budget before unregistering the
+current producer. Nonpositive authority IDs also reject before unregistration.
+Rejected input therefore retains the original authored settings and continuing
+state publication. An empty or missing root disables both automatic visibility
+lanes; a valid binding restores the selected lane. Accepted registration still
+invokes the selected MultiplayerAPI provider before final preparation, so provider
+configuration changes participate rather than being overwritten by stale buffers.
+Direct edits to a shared config retain the existing next-frame preparation/error
+contract; user-provider callback effects after accepted registration are not
+transactionally rolled back.
+
 Root/interval/config/visibility settings are typed descriptors with PackedScene storage. Method/codec/factory tokens are authored by ordinary C# constructors/factories. Scene factories return default detached nodes without precreated children; PackedScene restores authored children. In-memory PackedScene instances carry internal template provenance, permitting automatic spawn identification even when ResourcePath is empty. File-backed scene add/get APIs require the typed scene disk-format/loader/saver producer and stay Partial in coverage; this delivery does not claim file/editor authoring.
 
 ## Custom and automatic spawn
@@ -47,3 +60,40 @@ Constructors/configuration/first paths/membership/template construction/spawn/de
 [SceneReplicationTests](../../tests/Electron2D.Tests/SceneReplicationTests.cs) executes native WS/WSS server/two-client public branches, custom/automatic template spawning, initial pre-Ready fields, periodic/change-only state, unchanged-delta suppression, hide/reveal/current replay, late admission, removal, limits, hidden-root RPC filtering and committed remote cleanup/peer replacement despite throwing despawn observers. Each 64-cycle warmed active sync/delta interval and 64 idle process-frame interval reports zero managed bytes. Independent BinaryWriter fixtures verify whole-group 128-byte batching, requested modes, malformed second codec preserving state, valid little-endian payload, old sequence and wrong-authority rejection. Config defaults/ordering/duplicate/copy/reset/legacy modes and invalid interval/budget boundaries execute.
 
 These are programmatic authoring and headless native network checks. Native allocation totals, foreign packaging/execution, real routed throughput/application schema acceptance, file/editor workflows and human/rendered/agent acceptance remain separate gates. See [platform verification](../platform-verification.md) and [ADR 0094](../decisions/networking.md#adr-0094).
+
+### Rejected live synchronization edits, 2026-10-22
+
+The public [reconfiguration fixture](../../tests/Electron2D.Tests/SceneReplicationTests.Reconfiguration.cs)
+executes eight rejected edits on an actual moving RigidBody: zero/negative
+authority, incompatible/missing property target, aggregate buffer overflow,
+incompatible root, disposed configuration and NUL path. After rejection it checks
+the original settings, ordinary typed packet values, complete physical steps,
+RID/instance identity and committed tick. Accepted configuration/root replacement,
+equivalent root paths with registration callbacks, null/missing/empty disabling,
+authority changes, detach/reentry and callback-authored configuration also execute.
+The per-step motion bound is 0.0001 scene units with zero gravity and replacement
+zero damping; it permits unit-conversion rounding without changing the solver.
+
+One byte-identical test DLL rejects the original runtime and the variant that
+skipped equivalent-path registration. A preceding frozen fixture also rejects
+stale prebuilt bindings after a provider changes configuration during registration.
+The corrected fixture passes in CLR and strict full-trim NativeAOT on CPU with
+graphics unavailable and on physical NVIDIA GPU. The complete CLR replication
+suite additionally passes WS/WSS lifecycle, wire/authority/batching cases and its
+existing 64 active/64 idle zero-owner-managed-byte brackets. The new WirePeer
+fixture allocates its explicit packet oracles; it is not a zero-allocation
+network/physics-frame measurement or a new separate-process network matrix.
+
+The final cohort includes the concurrent visual-graph integration at
+`25ffeef48534594bc120a2ae2c62d9abf8f3aa38`. Source/PDB receipts match 2570 runtime and 951 root-test authored inputs, with the
+two changed runtime files and three changed test files identified. The two
+pre-existing dirty runtime prototypes are excluded; the preserved extra checkpoint
+test is disclosed. Runtime/test DLL SHA-256 values are
+`4efb9fc750efb666b0cb3d310dfccd01974a033de3bd145d60921ffcf7a726ac` /
+`b089155b3c9533a8164805061c8f2ee10987f86439d5c3020ac16f50b69ed615`.
+The native consumer binds three verified source files to that runtime; its ELF
+SHA-256 is `6f1711cd6e40435127726821b8a11601fe75907b3aa054408cad723e852adeb3`.
+Local evidence is `bin/physics-replication-reconfiguration/2026-10-22/`, including
+`main-source-proof.json`, `main-native-proof.json`, matched controls and
+individual process receipts. No mass-scene speed, real-window FPS, native heap,
+foreign-platform or complete latest-main acceptance is established by this slice.

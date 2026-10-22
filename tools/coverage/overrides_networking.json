@@ -5290,7 +5290,7 @@
     {
       "electron2d": "method:Electron2D.MultiplayerSynchronizer.SetMultiplayerAuthority(System.Int32,System.Boolean)",
       "state": "Implemented",
-      "reason": "Typed property/factory/codec descriptor, caller configuration snapshot, scene/lifetime hook, constructor or concrete overload for scene replication. ADR 0094 executable typed scene replication: ordered immutable property descriptors and explicit Node getter/setter/argument codecs; copied resource policies with spawn/Always/OnChange and legacy sync/watch semantics; custom typed spawn factories and direct in-memory PackedScene provenance, authority/identity ownership, pre-Ready spawn state, automatic direct-child spawn/despawn, late admission and OR-composed synchronizer visibility/RPC filtering. Periodic/change-only complete groups batch under actual MaxSyncPacketSize/MaxDeltaPacketSize with requested Unreliable/Reliable modes, per-peer change receipts, high-resolution monotonic intervals, sequence/trust/schema validation and staged decode. SceneReplicationTests checks native WS/WSS public scene workflows, copied config/defaults/boundaries, custom/automatic/late/visibility lifecycle, independent little-endian malformed/old/wrong-authority packets, packet batching/modes and 64 warmed active/idle zero-managed-allocation intervals. Typed tokens/resources/factories replace Variant/Callable/string property invocation. Setup/membership/template/error/snapshot costs and caller codecs are separate; foreign/routed/native allocator/human/rendered/editor acceptance remain unverified."
+      "reason": "Typed property/factory/codec descriptor, caller configuration snapshot, scene/lifetime hook, constructor or concrete overload for scene replication. ADR 0094 executable typed scene replication: ordered immutable property descriptors and explicit Node getter/setter/argument codecs; copied resource policies with spawn/Always/OnChange and legacy sync/watch semantics; custom typed spawn factories and direct in-memory PackedScene provenance, authority/identity ownership, pre-Ready spawn state, automatic direct-child spawn/despawn, late admission and OR-composed synchronizer visibility/RPC filtering. Periodic/change-only complete groups batch under actual MaxSyncPacketSize/MaxDeltaPacketSize with requested Unreliable/Reliable modes, per-peer change receipts, high-resolution monotonic intervals, sequence/trust/schema validation and staged decode. SceneReplicationTests checks native WS/WSS public scene workflows, copied config/defaults/boundaries, custom/automatic/late/visibility lifecycle, independent little-endian malformed/old/wrong-authority packets, packet batching/modes and 64 warmed active/idle zero-managed-allocation intervals. Typed tokens/resources/factories replace Variant/Callable/string property invocation. Setup/membership/template/error/snapshot costs and caller codecs are separate; foreign/routed/native allocator/human/rendered/editor acceptance remain unverified. Nonpositive IDs reject before unregistering active synchronization; the physical reconfiguration regression checks continued public state publication."
     },
     {
       "electron2d": "method:Electron2D.SceneMultiplayer.ObjectConfigurationAdd(Electron2D.Node,Electron2D.MultiplayerSpawner)",
@@ -6518,9 +6518,7 @@
         "MultiplayerSynchronizer::method:update_visibility(int:)",
         "MultiplayerSynchronizer::property:delta_interval",
         "MultiplayerSynchronizer::property:public_visibility",
-        "MultiplayerSynchronizer::property:replication_config",
         "MultiplayerSynchronizer::property:replication_interval",
-        "MultiplayerSynchronizer::property:root_path",
         "MultiplayerSynchronizer::property:visibility_update_mode",
         "MultiplayerSynchronizer::signal:delta_synchronized()",
         "MultiplayerSynchronizer::signal:synchronized()",
@@ -6854,6 +6852,14 @@
         "WebRTCPeerConnectionExtension::method:_set_remote_description(String:,String:)"
       ],
       "reason": "ADR 0094 native WebRTC delivery: typed ICE/channel configuration and extension construction, explicit SDP generation/commitment, owner-polled events, exact UTF-8/NUL/binary/empty packets, bounded receive errors and caller channel lifetime. Negotiated multiplayer channels provide reserved/custom modes, target routing and consistent next-packet metadata; setup rollback and failed-channel cleanup aggregate failures. WebRTCTests passes native Linux peers, independent browser interoperability, extension/configuration/owner/lifetime/queue edges and SceneTree bidirectional typed RPC. Thirty-two prepared native and multiplayer cycles each allocate zero managed owner bytes. Routed STUN/TURN, browser-hosted engine adapter, foreign/mobile/static packaging, native allocation and owner acceptance retain their separate gates."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "MultiplayerSynchronizer::property:replication_config",
+        "MultiplayerSynchronizer::property:root_path"
+      ],
+      "reason": "ADR 0094 typed synchronization. Live configuration/root replacement validates complete property targets and aggregate buffer budgets before changing settings or unregistering the producer. Rejected resource lifetime, target/path/type and budget checks preserve live replication; nonpositive authority IDs reject before unregistration. Empty/missing roots disable automatic visibility lanes. Provider registration still precedes final preparation, preserving callback-authored configuration. Public CPU/no-device and physical GPU CLR/strict NativeAOT checks retain full physical motion, RID/instance/tick and typed wire values after eight rejected edits, valid replacement, disabling, reattachment and provider callbacks. Same-fixture controls reject the original runtime and stale callback bindings; WS/WSS lifecycle and warmed owner allocation checks execute separately. Source-bound evidence: bin/physics-replication-reconfiguration/2026-10-22/. No whole-backend, performance, foreign or owner acceptance is implied."
     }
   ]
 }
