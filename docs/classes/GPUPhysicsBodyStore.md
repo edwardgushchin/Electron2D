@@ -1,5 +1,12 @@
 # GPUPhysicsBodyStore
 
+[Shared pair/contact completion](../components/gpu-resident-bodies.md#shared-paircontact-completion-2026-10-22)
+keeps the pair count on device until contact generation completes, validates both
+status records with one wait and preserves bounded pair/contact capacity recovery.
+It adds an eight-byte contact status and prepares cold contact scratch even for
+empty pair output; the component records its measured capacity cost. No host
+simulation mirror is added.
+
 [Shared state/contact completion](../components/gpu-resident-reports.md#shared-completion-for-body-state-and-contacts)
 records contact selection with selected body-state publication, sharing one
 fence. Changed-body publication retains its separate report read and bounded

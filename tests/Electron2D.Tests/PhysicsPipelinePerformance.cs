@@ -104,6 +104,9 @@ internal static partial class PhysicsPipelinePerformance
             data.ForceGPUStatePublication = publicationControl;
             var serialContacts = Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_SERIAL_CONTACTS") == "1";
             data.ForceSerialContactPublication = serialContacts;
+            var separateContactSubmissions = Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_SEPARATE_CONTACT_SUBMISSIONS") == "1";
+            if (separateContactSubmissions && gpu is null) throw new ArgumentException("Separate contact submissions require GPU physics.");
+            if (gpu is not null) gpu.SeparateContactSubmissions = separateContactSubmissions;
             if (gpu is not null) gpu.ForceCountFirstChangeReadback = publicationControl;
             var times = new double[samples]; var waits = new double[samples]; var phases = new double[8]; var phaseBytes = new long[8]; var completionPhases = new double[3];
             var frameTimes = new double[samples]; var publishTimes = new double[samples]; var renderTimes = new double[samples];
@@ -228,6 +231,7 @@ internal static partial class PhysicsPipelinePerformance
                 presentationInterpolationFraction = display is null ? (double?)null : Engine.PhysicsInterpolationFraction,
                 publicationControl,
                 serialContacts,
+                separateContactSubmissions,
                 warmup,
                 samples,
                 meanMS = times.Average(),

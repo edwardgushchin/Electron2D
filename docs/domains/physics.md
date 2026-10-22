@@ -1,5 +1,11 @@
 # Physics domain
 
+[Shared pair/contact completion](../components/gpu-resident-bodies.md#shared-paircontact-completion-2026-10-22)
+records fresh pair discovery and contact generation together while retaining
+independent error records, one-way publication and bounded output growth. The
+paired contact controls verify one completion instead of two and strict zero
+managed allocation; full-scene performance acceptance remains separate.
+
 [Point-field allocation diagnostics](../components/physics-allocation-measurement.md#wide-coordinate-point-field-aggregate-failure-2026-10-22) preserve the ordinary aggregate failure while adding exact counter/GC and calibrated native observations without changing physical work or zero-byte thresholds. Attribution remains open.
 
 [The network closed pin loop](../components/physics-network-example.md#closed-pin-loop-impact-under-correction-2026-10-22) adds real impact, constraint continuation and imported-contact checks to authority, prediction and replay. Per-actor correction timestamps also preserve fresh presentation offsets across long polling gaps. The application retains its existing lifecycle/event/physical assertions; no engine API or numerical policy changes.

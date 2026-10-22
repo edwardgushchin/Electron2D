@@ -455,3 +455,20 @@ report directory.
 This attributes the current failed interval; it does not turn its zero-byte gate
 into a pass or retrospectively certify the older intervals without native context
 snapshots. A complete run using the preparation correction remains required.
+
+## Prepared ordinary aggregate (2026-10-22)
+
+The unprofiled frozen runtime at c1af6d3a6a2a9b738c6cd9362151a1f0b3bc9459
+contains the blocking field-fixture preparation. Its six CPU/GPU point-field
+gates pass 768 measured complete frames at strict 0/0 owner/all-thread bytes
+inside the ordinary aggregate process. This is a separate source cohort from
+the shared pair/contact completion change.
+
+The aggregate then exits -6 after 4168.539 seconds at
+IntegerSourceTextureTests.RunManaged: libElectron2DKTX.so is absent from the
+frozen native payload. Payload hashes remain unchanged and no Xid is recorded.
+This dependency failure keeps the full-suite gate open; the point-field success
+does not retrospectively clear older failed intervals. Receipts and preserved
+source bindings are in local ignored
+`bin/physics-report-ranges/2026-10-22/current-pair/main-aggregate-analysis.json`
+and `post-contact-batch-source-overrides.json`.

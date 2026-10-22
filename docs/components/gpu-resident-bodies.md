@@ -78,6 +78,73 @@ The current Vulkan loader still needs SDL video initialization. Shared
 GPUPhysicsDevice ownership retains that reference and applies the same platform
 environment policy as DisplayServer.
 
+## Shared pair/contact completion (2026-10-22)
+
+Fresh `FindContacts` work with at least two shapes now records resident bounds,
+tree/pair discovery and contact generation in one command. The contact kernel
+reads the device pair count, clamped to retained pair capacity; it never reads an
+unwritten pair. Pair and contact error/count records remain independent. An
+additional eight-byte device status buffer prevents contact reset from destroying
+the pair result once contact storage is prepared. A cold two-shape world without
+pairs now also prepares contact/one-way scratch: the measured device payload is
+63024 versus 51744 bytes for separate discovery (11280 extra bytes and seven
+buffers), with the same 16984-byte transfer capacity. Empty/real/empty transitions
+and complete release execute in both modes. These are requested payload capacities,
+not driver allocator totals. One completion validates both records before publishing counts
+and one-way history; optional velocity and one-way statuses retain separate
+checked slots in the same readback.
+
+Capacity recovery first grows an overflowing pair output, then a complete contact
+or one-way output, with one recovery per family. It reruns immutable discovery,
+without repeating pending velocity integration. Ordinary pair-only and spatial
+query work retains its existing path. The internal `SeparateContactSubmissions`
+control executes the same kernels with separate completion waits. Shared dispatch
+can launch unused lanes up to retained pair capacity; full-scene timings must
+account for that cost rather than assuming a throughput improvement.
+
+On Linux x64/.NET 10.0.1 and NVIDIA Vulkan, the paired contact control observes
+one versus two completion submissions, with the same 16 bytes uploaded and 16
+bytes downloaded. This control flushes authored pose edits with `Step(0)` before
+querying contacts; it is not a positive-duration scene simulation. Each mode
+passes 128 contact-refresh cycles at strict zero owner/all-thread managed bytes.
+Existing contact checks also pass 1620
+rotated geometry cases, concave output growth, generation/lifetime edits,
+terminal nonfinite failure and 4096/65536-body moving grids. The grid's existing
+allocation gate measures owner bytes only. Its integration/broad/narrow timings
+remain a partial-pipeline diagnostic. Evidence is retained in local ignored
+`bin/physics-pair-contact-batch/2026-10-22/`.
+
+The frozen CLR cohort passes fourteen adjacent solver, one-way, CCD, sleep,
+spatial/shape/motion-query, pipeline, common-world checkpoint and full-scene
+profiles. Eight strict full-trim NativeAOT public-consumer profiles pass contact
+frames and portable contacts on CPU/GPU, owner/separate numerical lanes. CPU
+profiles run with dummy video and unavailable Vulkan drivers. The final source,
+payload, native binary and embedded contact-program hashes are checked by
+`bin/physics-pair-contact-batch/2026-10-22/validate.py`.
+
+The full scene retains 16384 awake bodies, four walls, 144 Hz input, four substeps,
+16 solver iterations, eight reported contacts, monitoring and interpolation.
+After 1600 warm frames, each path measures 256 complete physical frames at strict
+zero owner/all-thread managed bytes and passes the existing physical gates.
+
+| Full path | Mean ms | p50 ms | p95 ms | p99 ms | Mean submissions/tick |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| GPU shared pair/contact completion | 93.573 | 98.822 | 109.575 | 120.390 | 15.188 |
+| GPU separate completion control | 95.450 | 102.528 | 115.154 | 116.830 | 19.238 |
+| CPU without a graphics device | 108.201 | 107.644 | 116.050 | 121.286 | 0 |
+
+Both GPU runs upload 196888 bytes/tick; observed mean readback is 8740159 and
+8767279.438 bytes/tick respectively. These remain complete report-driven reads.
+GPU fence-wait p50/p95/p99 is 33.640/38.512/56.871 ms for shared completion and
+38.200/42.521/42.943 ms for the control. CPU worker joins are included in its total
+step time; the GPU fence counter does not measure CPU waiting. Raw reports retain
+all transfer/uniform counts, completion phases, numerical diagnostics and maxima.
+
+These times were collected concurrently with an older aggregate and are
+diagnostic observations, not accepted speed ratios. The isolated control proves
+the removed intermediate completion; full-scene throughput, real-window FPS,
+foreign-platform and whole-goal acceptance remain open.
+
 ## Verification and measurement method
 
 Run `ELECTRON2D_TEST_GPU_RESIDENT_BODY=1 dotnet tests/Electron2D.Tests/bin/Release/net10.0/linux-x64/Electron2D.Tests.dll`

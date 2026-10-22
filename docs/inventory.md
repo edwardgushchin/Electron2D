@@ -1,5 +1,7 @@
 # Engine inventory
 
+[GPUPhysicsBodyStore](classes/GPUPhysicsBodyStore.md) now shares [fresh pair/contact completion](components/gpu-resident-bodies.md#shared-paircontact-completion-2026-10-22) with independent error records and bounded capacity recovery. It adds a contact status record and prepares contact scratch for cold empty pairs; the component records measured capacities. The existing type and public API remain.
+
 Existing CanvasPolygon/CanvasGeometry/CanvasBatch/GPUCanvasBackend/CompatibilityCanvasBackend and CanvasVertexProgram now carry [native point/line primitives](components/canvas-rendering.md#native-point-and-line-primitives). No production type or public declaration is added.
 
 AnimatableBody synchronization now shares the current-group pose-authoring boundary, with immediate pending-target presentation and joined owner numerical preparation. [Contract and verification](components/physics-bodies.md#kinematic-synchronization-from-processing-groups). No production type or public declaration was added.
