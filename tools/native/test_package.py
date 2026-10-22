@@ -85,15 +85,21 @@ endif()
                 source = root / (name + ".c")
                 source.write_text("int " + name + "(void) { return 1; }\n")
                 subprocess.run(["cc", "-c", str(source), "-o", str(root / (name + ".o"))], check=True)
-                subprocess.run(["ar", "rcs", str(root / (name + ".a")), str(root / (name + ".o"))], check=True)
+            for name, members in (("bridge", ("bridge",)), ("codec", ("codec", "encoder"))):
+                subprocess.run(["ar", "rcs", str(root / (name + ".a")),
+                                *[str(root / (member + ".o")) for member in members]], check=True)
             subprocess.run(["cmake", "-DOUTPUT=" + str(root / "bridge.a"), "-DCODEC=" + str(root / "codec.a"),
-                            "-DENCODER=" + str(root / "encoder.a"), "-DAR=" + shutil.which("ar"),
+                            "-DAR=" + shutil.which("ar"),
                             "-DAPPLE_HOST=" + ("ON" if sys.platform == "darwin" else "OFF"),
                             "-P", str(package.ROOT / "tools/ktx-native/merge.cmake")], check=True)
+            members = subprocess.check_output(["ar", "t", str(root / "bridge.a")], text=True).splitlines()
+            self.assertEqual(members.count("encoder.o"), 1)
             source = root / "main.c"
             source.write_text("int bridge(void), codec(void), encoder(void); int main(void) { return bridge() + codec() + encoder() != 3; }\n")
             executable = root / "consumer"
-            subprocess.run(["cc", str(source), str(root / "bridge.a"), "-o", str(executable)], check=True)
+            archive = str(root / "bridge.a")
+            load = ["-Wl,-force_load," + archive] if sys.platform == "darwin" else ["-Wl,--whole-archive", archive, "-Wl,--no-whole-archive"]
+            subprocess.run(["cc", str(source), *load, "-o", str(executable)], check=True)
             subprocess.run([str(executable)], check=True)
 
     def test_private_codec_export_lists_match_the_required_abi(self):

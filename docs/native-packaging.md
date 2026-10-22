@@ -18,6 +18,8 @@ The locally restored Linux x64 `0.1.0-alpha` FAudio asset checked on 2026-10-19 
 
 ## Installation model
 
+The native package regression models the pinned codec archive with its embedded encoder object and whole-loads the merged result (`-force_load` on Apple, `--whole-archive` on ELF). It requires one encoder member and executes a consumer of every fixture entry point. The fixture no longer assumes a separate encoder input to the merge helper.
+
 The KTX static merge includes `ktx_read` once: that pinned archive already embeds all 26 BasisU encoder objects. Appending the encoder archive again produced duplicate strong symbols in Apple simulator application links in CI run `39858176735`. The corrected Linux static closure has 81 members and 1,753 unique strong symbols, passes whole-archive linking with no undefined symbols, and runs the existing KTX/Basis, block and encoder checks, including 9,216 block mutations and 1,152 concurrent calls. These local checks do not establish corrected Apple linking or execution; the target CI rerun remains required.
 
 Full Electron2D delivery consists of the managed `Electron2D` package and seven platform packages: `Electron2D.Windows`, `Electron2D.Linux`, `Electron2D.MacOS`, `Electron2D.Android`, `Electron2D.iOS`, `Electron2D.tvOS` and `Electron2D.Web`. The managed package has no automatic platform dependencies. A game developer installs Electron2D and the packages for the platforms they intend to target through NuGet.
