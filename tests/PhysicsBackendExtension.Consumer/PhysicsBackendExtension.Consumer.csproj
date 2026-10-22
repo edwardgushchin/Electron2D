@@ -11,6 +11,7 @@
   <ItemGroup><Compile Include="../Electron2D.Tests/AllocationWarmupCheck.cs" Link="AllocationWarmupCheck.cs" /><Compile Include="../PhysicsSpaceExtension.Consumer/CircleQueries.cs" Link="CircleQueries.cs" /><Compile Include="../Electron2D.Tests/PhysicsDenseContactTests.cs" Link="PhysicsDenseContactTests.cs" /></ItemGroup>
   <ItemGroup><Compile Include="../Electron2D.Tests/PhysicsTransientContactTests.cs" Link="PhysicsTransientContactTests.cs" /></ItemGroup>
   <ItemGroup><Compile Include="../Electron2D.Tests/PhysicsPointContainmentTests.cs" Link="PhysicsPointContainmentTests.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../Electron2D.Tests/PhysicsAllocationTrace.cs" Link="PhysicsAllocationTrace.cs" /></ItemGroup>
   <ItemGroup><Compile Include="../Electron2D.Tests/SignalBlockingPhysicsTests.cs" Link="SignalBlockingPhysicsTests.cs" /></ItemGroup>
   <ItemGroup><Compile Include="../Electron2D.Tests/ObjectIterationTests.cs" Link="ObjectIterationTests.cs" /></ItemGroup>
   <ItemGroup><Compile Include="../Electron2D.Tests/CanvasTopLevelPhysicsTests.cs" Link="CanvasTopLevelPhysicsTests.cs" /></ItemGroup>

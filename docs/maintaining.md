@@ -220,6 +220,8 @@ compiled API/coverage and docs; reject enum sentinels without mutation.
 
 Point-containment allocation investigations use ELECTRON2D_TEST_POINT_CONTAINMENT=cpu|gpu or the public consumer --point-containment [--gpu]. Failure output includes exact owner/all-thread bytes, all case parameters and GC deltas. Optional ELECTRON2D_POINT_ALLOCATION_TRACE loads a separately calibrated Linux CoreCLR begin/end profiler with the matching CORECLR_ENABLE_PROFILING/CORECLR_PROFILER/CORECLR_PROFILER_PATH and fresh E2D_ALLOCATION_TRACE prefix. Do not combine it with E2D_TRACE_STATE. Validate positive/empty controls and native boundaries before interpreting measured object events; retain other-thread control allocations and original failed gates. See [the measurement protocol](components/physics-allocation-measurement.md#in-fixture-point-query-tracing-2026-10-21).
 
+Point-gravity diagnostics use ELECTRON2D_TEST_POINT_GRAVITY=cpu|gpu, optionally ELECTRON2D_TEST_THREADED_COLLIDER=1. They share PhysicsAllocationTrace and the same profiler environment. Tag offsets 32/33 identify the two wide-coordinate intervals and 34 the authored-reset interval; query tags and calibration ranges stay unchanged. Keep all 128 complete measured frames and strict owner/all-thread zero-byte gates. Focused passes do not attribute or replace an aggregate failure; see [the wide-coordinate investigation](components/physics-allocation-measurement.md#wide-coordinate-point-field-aggregate-failure-2026-10-22).
+
 Vector graph dataflow checks must retain Compose's dormant Z/W defaults across
 narrowing, whole-table replacement, copy and fresh archives. Refraction eta is a
 scalar independent of vector width; removing it must remain distinct from an

@@ -145,3 +145,55 @@ The original frozen terrain suite passes in isolation both without the profiler 
 The fixture now reports both child streams, PID, elapsed time and exit code on success, failure and timeout. It keeps the 30-second execution deadline, kills the timed-out process tree and bounds termination cleanup to five seconds. Archive-load, instantiate and consumer-attachment progress distinguishes cold stages before real queries and re-painting. No physical operation, allocation threshold or production behavior changes. The current complete terrain fixtures pass without/with profiling in 146.201/125.676 seconds; overlapping functional controls make those totals unsuitable for a speed comparison. Six successful isolated profiles and three expected-failure child controls validate the receipts. The timeout control retains both streams after termination at 30.157 seconds; nonzero exit 17 and exit zero without the success marker also reject with both streams intact.
 
 Isolated passing runs do not close the failed aggregate gate. Current source/PDB proofs bind 943 root-test and 2,501 runtime documents. Frozen payloads, preserved scenes, process samples, controlled child failures and validation.json are retained under ignored bin/physics-terrain-child/2026-10-22/. Physics remains 1306/1369 (95.40%), with 63 open declarations.
+
+## Wide-coordinate point-field aggregate failure (2026-10-22)
+
+The subsequent ordinary aggregate on that frozen 2,501-document runtime exits -6
+after 3,655.258 seconds. Both fresh terrain children complete within the retained
+deadline, and all CPU/GPU point-containment cases pass at 0/0 bytes. The later
+CPU point-gravity fixture passes its positive-coordinate warmed interval at 0/0,
+then fails the negative-coordinate interval. Its original assertion reports
+neither owner/global byte counts nor collection deltas, so the allocation's size,
+thread and cause are unknown. No new Xid or changed payload is observed. This is
+a failed aggregate; successful numerical checks and terrain children do not close
+its allocation gate or explain the preceding child timeout.
+
+Both point-gravity allocation brackets now retain exact owner/all-thread bytes,
+GC generation deltas, backend/case, runtime and server-GC policy on failure.
+Their 128 warmup and 128 measured complete frames, authored resets, tolerances
+and strict zero-byte assertions are unchanged. The existing optional native
+begin/end tracer is shared as PhysicsAllocationTrace with point containment,
+including its native lifetime/error guards and positive/empty controls. Within
+each run's tag block, offsets 32/33 identify positive/negative wide coordinates
+and 34 the authored-reset field interval; query offsets and calibration ranges
+retain their prior values. Markers surround counter reads and the complete
+physical loop; they do not timestamp the exact interior of those reads.
+
+The diagnostic source cohort includes the later matrix-graph integration:
+2,509 runtime and 946 root-test documents. Its runtime differences from the
+failed cohort are twelve rendering/resource files and eight new numeric graph
+types, recorded separately from these test-only changes. No production physical
+implementation, public signature or coverage state changes. Original receipts
+and the new frozen source/compiler evidence are under ignored
+`bin/physics-point-gravity-allocation/2026-10-22/`. Aggregate attribution and
+complete native/platform/network/performance acceptance remain open.
+
+Twelve focused profiles pass: four ordinary CLR and four strict NativeAOT
+CPU/GPU owner/separate point-field consumers, two calibrated CLR field consumers
+and two CLR containment regressions. All 6,912 measured complete frames retain
+0/0 owner/all-thread managed bytes: 3,840 field frames and 3,072 containment
+frames. The two calibrated profiles retain 256 positive controls at 64/64 bytes,
+64 empty controls at 0/0, 328 balanced native windows and zero object events in
+the physical intervals. All 256 positive allocations resolve with raw size 61
+(aligned 64) and successful stacks; recursion counts are zero. This validates
+the observation path and focused intervals, not attribution of the failed run.
+
+Frozen payload manifests and source/PDB inputs match the current files. The
+four-document native probe includes the same three field/tracer files and its
+explicit entry point; its runtime matches the CLR source cohort. CPU processes
+map no GPU driver; GPU profiles map NVIDIA without a software GPU, and native
+processes map no CoreCLR. Release/API/wiki and scoped formatting/identity checks
+pass. `validation.json` records the focused profiles and preserves the original
+failed aggregate separately. A new complete process with calibrated field/query
+markers is running on this frozen cohort; until it has a terminal result, it
+supplies no aggregate acceptance. Physics stays 1306/1369 (95.40%), with 63 open.
