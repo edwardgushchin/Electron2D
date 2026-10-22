@@ -349,3 +349,5 @@ The typed project schema includes ordered LocaleResourceRemaps with compiled JSO
 OS now exposes actual host platform/distribution/version, native logical CPU count and available model, live system locale and Linux sandbox observations. Shared host features drive typed project overrides; OS also observes current movie/font/rendering capabilities without opening a graphics device. See [host identity and features](../components/host-platform.md).
 
 Typed property discovery also carries immutable [advisory hints](../components/editor-properties.md#advisory-hints), consumed by imported numeric shader descriptors without a universal value accessor or runtime clamping.
+
+Standard-handle and managed process-termination helpers reject unsupported Apple mobile/TV and browser operations before reaching platform-specific BCL calls. The headless Linux CI profile supplies configured XDG desktop directory roles; standard-handle tests exercise unavailable-adapter errors on other hosts.

@@ -22,7 +22,7 @@ public sealed partial class RenderingDevice
     /// <param name="shaderSource">Non-null vertex, fragment and compute sources with one language.</param>
     /// <param name="allowCache">Permits bounded successful-module caching; false bypasses both lookup and storage. Sources with preprocessing dependencies are compiled every time.</param>
     /// <returns>A new resource with independent stage bytecode and compiler diagnostics. Failed stages remain empty; other stages are still attempted.</returns>
-    /// <remarks>This owner-thread cold authoring operation creates no GPU program and does not submit or complete pending work. Configure ELECTRON2D_SHADER_IMPORT_TOOL with the published ShaderImport executable, or install it beside the host. Relative includes resolve from the current project directory. Games loading compiled modules require no source compiler.</remarks>
+    /// <remarks>This owner-thread cold authoring operation creates no GPU program and does not submit or complete pending work. Configure ELECTRON2D_SHADER_IMPORT_TOOL with the published ShaderImport executable, or install it beside the host. Relative includes resolve from the current project directory. Invoking the executable requires process-launch support on the host. Games loading compiled modules require no source compiler.</remarks>
     /// <exception cref="NotSupportedException">The separate import executable is unavailable.</exception>
     /// <exception cref="ArgumentException">The language/source payload is invalid.</exception>
     public RDShaderSPIRV ShaderCompileSPIRVFromSource(RDShaderSource shaderSource, bool allowCache = true)
@@ -72,6 +72,7 @@ public sealed partial class RenderingDevice
     }
     private static byte[] CompileSource(string tool, ShaderLanguage language, ShaderStage stage, string source, string includeRoot, int timeoutMS = 60_000)
     {
+        if (OperatingSystem.IsIOS() || OperatingSystem.IsTvOS() || OperatingSystem.IsMacCatalyst() || OperatingSystem.IsBrowser()) throw new PlatformNotSupportedException("This host cannot launch the shader authoring executable.");
         var directory = Directory.CreateTempSubdirectory("electron2d-source-").FullName;
         try
         {

@@ -27,6 +27,7 @@ internal static partial class ProcessPlatform
     }
     internal static void Kill(Process process)
     {
+        if (OperatingSystem.IsIOS() || OperatingSystem.IsTvOS() || OperatingSystem.IsMacCatalyst() || OperatingSystem.IsBrowser()) throw new PlatformNotSupportedException("This host cannot terminate independent processes.");
         if (OperatingSystem.IsWindows()) { if (!TerminateWindows(process.Handle, 0)) throw new System.ComponentModel.Win32Exception(Marshal.GetLastPInvokeError()); }
         else process.Kill();
     }

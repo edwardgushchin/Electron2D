@@ -46,8 +46,16 @@ def check(rid, output):
     if profile["Properties"] != expected:
         raise ValueError(f"Wrong evaluated target profile: {profile['Properties']}")
     packages = {item["Identity"] for item in profile["Items"]["PackageReference"]}
-    if packages:
-        raise ValueError(f"The managed engine must not restore native packages: {packages}")
+    expected_packages = {"SDL3-CS.Android"} if row["platform"] == "Android" else set()
+    if packages != expected_packages:
+        raise ValueError(f"Wrong managed target dependencies: {packages}; expected {expected_packages}")
+    if expected_packages:
+        bootstrap, = profile["Items"]["PackageReference"]
+        if (bootstrap.get("Version") != native_package.configuration()["sdlVersion"] or
+                bootstrap.get("PrivateAssets") != "all" or
+                set(bootstrap.get("ExcludeAssets", "").split(";")) != {"compile", "runtime", "native"} or
+                bootstrap.get("GeneratePathProperty", "").lower() != "true"):
+            raise ValueError("The pinned Android bootstrap must remain private and exclude managed/native runtime assets.")
     with (output / "Electron2D.dll").open("rb") as assembly:
         if assembly.read(2) != b"MZ":
             raise ValueError("Missing managed PE assembly")
@@ -58,7 +66,7 @@ def check(rid, output):
               path.suffix == ".dll" and path.name != "Electron2D.dll") }
     if found:
         raise ValueError(f"The managed engine must not include native payloads: {found}")
-    print(f"{rid}: library, XML, target profile, managed-only dependency/payload selection passed; execution checked separately ({row['suite']}).")
+    print(f"{rid}: library, XML, target profile and dependency/payload selection passed; execution checked separately ({row['suite']}).")
 
 
 if __name__ == "__main__":

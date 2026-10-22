@@ -30,3 +30,5 @@ Both blocking reads explicitly reject Android before opening a managed console h
 ## Decisions and sources
 
 [ADR 0004](../decisions/product.md#adr-0004) owns typed errors, [ADR 0020](../decisions/core-data-io.md#adr-0020) owns explicit stream/UTF-8 behavior, [ADR 0045](../decisions/product.md#adr-0045) owns uppercase STDIN/STDOUT/STDERR member spelling, [ADR 0051](../decisions/enum-identities.md#adr-0051) owns enum identity and [ADR 0095](../decisions/singleton-services.md#adr-0095) owns retained static access. Native classification follows [statx](https://man7.org/linux/man-pages/man2/statx.2.html) and [GetFileType](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletype).
+
+OSStandardInputTests executes native pipe/file/terminal contracts on Linux/Windows and explicit unavailable-adapter exceptions for all five standard-handle/read operations on other profiles. Private console access also rejects unsupported mobile, TV and browser profiles before calling the managed console API.

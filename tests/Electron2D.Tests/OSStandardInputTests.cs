@@ -44,6 +44,16 @@ internal static class OSStandardInputTests
 
     internal static void Run()
     {
+        if (!(OperatingSystem.IsWindows() || OperatingSystem.IsLinux() && !OperatingSystem.IsAndroid()))
+        {
+            Reject<PlatformNotSupportedException>(() => OS.GetSTDINType());
+            Reject<PlatformNotSupportedException>(() => OS.GetSTDOUTType());
+            Reject<PlatformNotSupportedException>(() => OS.GetSTDERRType());
+            Reject<PlatformNotSupportedException>(() => OS.ReadBufferFromSTDIN(1));
+            Reject<PlatformNotSupportedException>(() => OS.ReadStringFromSTDIN(2));
+            Console.WriteLine("OS standard handles unavailable-host checks passed.");
+            return;
+        }
         var binary = new byte[] { 0, 255, 13, 10, 7 };
         using (var report = Redirected("binary", binary)) Verify(report, OS.StdHandleType.Pipe, "00FF0D0A07", eof: true);
         using (var report = Redirected("mixed", Encoding.UTF8.GetBytes("λ\r\nx\n"))) Verify(report, OS.StdHandleType.Pipe, "780A", "λ", eof: true);

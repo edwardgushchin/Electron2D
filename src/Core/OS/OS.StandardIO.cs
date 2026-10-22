@@ -29,10 +29,12 @@ public sealed partial class OS
 
     /// <summary>Gets the current native standard-output device type without writing to it.</summary>
     /// <returns>The device type; an absent handle is Invalid.</returns>
+    /// <exception cref="PlatformNotSupportedException">The host lacks a standard-handle adapter.</exception>
     public static StdHandleType GetSTDOUTType() => Service.GetStandardHandleType(1);
 
     /// <summary>Gets the current native standard-error device type without writing to it.</summary>
     /// <returns>The device type; an absent handle is Invalid.</returns>
+    /// <exception cref="PlatformNotSupportedException">The host lacks a standard-handle adapter.</exception>
     public static StdHandleType GetSTDERRType() => Service.GetStandardHandleType(2);
 
     /// <summary>Reads an owned raw byte buffer from process standard input.</summary>
@@ -98,7 +100,7 @@ public sealed partial class OS
 
     private static Stream OpenStandardInput()
     {
-        if (OperatingSystem.IsAndroid()) throw new PlatformNotSupportedException("This host has no standard-handle adapter.");
+        if (OperatingSystem.IsAndroid() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS() || OperatingSystem.IsMacCatalyst() || OperatingSystem.IsBrowser()) throw new PlatformNotSupportedException("This host has no standard-handle adapter.");
         return System.Console.OpenStandardInput();
     }
 

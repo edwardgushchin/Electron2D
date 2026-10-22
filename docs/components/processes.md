@@ -45,3 +45,5 @@ OS restart-on-exit configuration is a process-wide, desktop-only request with a 
 A restart attempt clears its retained flag and arguments before subsequent managed shutdown handlers run. Shutdown capture rejects later setters. A controlled Linux apphost fixture removes only its copied executable and verifies actual launch-failure reporting without changing the original exit status.
 
 CreateInstance relaunches an application executable directly. For a dotnet host it resolves the named entry DLL from AppContext.BaseDirectory and verifies the file before launching, without requiring Assembly.Location. Literal argument and process ownership contracts remain unchanged.
+
+Managed process termination explicitly rejects iOS, tvOS, MacCatalyst and browser profiles before reaching unsupported process APIs. The local iOS-profile platform-analysis build checks this guard; target-native execution remains a separate gate.

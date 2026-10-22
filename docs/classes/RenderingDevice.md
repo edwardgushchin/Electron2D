@@ -1270,7 +1270,7 @@ public Electron2D.RDShaderSPIRV ShaderCompileSPIRVFromSource(Electron2D.RDShader
 
 Compiles copied stage sources through the separately installed authoring tool.
 
-This owner-thread cold authoring operation creates no GPU program and does not submit or complete pending work. Configure ELECTRON2D_SHADER_IMPORT_TOOL with the published ShaderImport executable, or install it beside the host. Relative includes resolve from the current project directory. Games loading compiled modules require no source compiler.
+This owner-thread cold authoring operation creates no GPU program and does not submit or complete pending work. Configure ELECTRON2D_SHADER_IMPORT_TOOL with the published ShaderImport executable, or install it beside the host. Relative includes resolve from the current project directory. Invoking the executable requires process-launch support on the host. Games loading compiled modules require no source compiler.
 
 A new resource with independent stage bytecode and compiler diagnostics. Failed stages remain empty; other stages are still attempted.
 

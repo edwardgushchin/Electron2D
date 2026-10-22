@@ -2320,7 +2320,7 @@
         "OS::method:kill(int:)"
       ],
       "state": "Implemented",
-      "reason": "ADRs 0004/0020/0095: static process ID/native executable and copied argument/separator queries, retained real owned-child exit status (normal137 versus signal9, unknown-child exceptions), current-PID running/kill with reuse-aware lookup execute in OSProcessTests. Fresh-process/current-instance reports, actual nonzero exit, native and managed kill, invalid IDs and cleanup are verified on Linux/.NET10. Typed C# exceptions replace numeric operation errors; foreign-host acceptance remains unverified."
+      "reason": "ADRs 0004/0020/0095: static process ID/native executable and copied argument/separator queries, retained real owned-child exit status (normal137 versus signal9, unknown-child exceptions), current-PID running/kill with reuse-aware lookup execute in OSProcessTests. Fresh-process/current-instance reports, actual nonzero exit, native and managed kill, invalid IDs and cleanup are verified on Linux/.NET10. Typed C# exceptions replace numeric operation errors; foreign-host acceptance remains unverified. Managed process termination explicitly rejects iOS/tvOS/MacCatalyst/browser before calling unsupported BCL process APIs; local iOS-profile platform analysis passes."
     },
     {
       "godot": [
@@ -2390,7 +2390,7 @@
         "OS::method:read_string_from_stdin(int:)"
       ],
       "state": "Implemented",
-      "reason": "Retained static OS standard-input slice under ADR 0004/0020/0045/0051/0095: native standard-device types, borrowed serialized raw buffers and bounded strict-UTF8 lines execute, with uppercase STDIN/STDOUT/STDERR member names. OSStandardInputTests checks actual pipe/file/PTY/null/closed handles, fragmented filling, EOF, CRLF, bounds, raw/text alternation, malformed/split UTF8 and OS.ExecuteWithPipe integration. Text capacity includes one terminating boundary (minimum 2); C# strings retain NUL and invalid UTF8 raises a typed exception after consumption. Linux native evidence; Windows unverified, other host adapters unavailable explicitly."
+      "reason": "Retained static OS standard-input slice under ADR 0004/0020/0045/0051/0095: native standard-device types, borrowed serialized raw buffers and bounded strict-UTF8 lines execute, with uppercase STDIN/STDOUT/STDERR member names. OSStandardInputTests checks actual pipe/file/PTY/null/closed handles, fragmented filling, EOF, CRLF, bounds, raw/text alternation, malformed/split UTF8 and OS.ExecuteWithPipe integration. Text capacity includes one terminating boundary (minimum 2); C# strings retain NUL and invalid UTF8 raises a typed exception after consumption. Linux native evidence; Windows unverified, other host adapters unavailable explicitly. Console access explicitly guards unsupported mobile/TV/browser profiles; standard-input consumers assert the full unavailable-adapter family on other hosts."
     },
     {
       "godot": [

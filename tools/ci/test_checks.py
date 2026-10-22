@@ -3,6 +3,7 @@
 from contextlib import redirect_stdout
 from io import StringIO
 import json
+import os
 from pathlib import Path
 import re
 import struct
@@ -23,6 +24,26 @@ import run_browser
 
 
 class Checks(unittest.TestCase):
+    def test_windows_host_tools_preserve_managed_rid_platform_inference(self):
+        workflow = (rids.ROOT / ".github/workflows/rid.yml").read_text()
+        marker = "      - name: Restore managed SDK platform inference\n"
+        step = workflow.partition(marker)[2].split("\n      - ", 1)[0]
+        command = re.search(r"(?m)^        run: (.+)$", step)
+        self.assertIsNotNone(command, "Clear the host MSVC platform before managed RID commands")
+        self.assertGreater(workflow.index(marker), workflow.index("uses: ilammy/msvc-dev-cmd@v1"))
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "environment"
+            environment = os.environ | {"Platform": "x64", "GITHUB_ENV": str(output)}
+            subprocess.run(["bash", "-c", command[1]], env=environment, check=True)
+            environment.update(line.split("=", 1) for line in output.read_text().splitlines())
+            for rid in (row["rid"] for row in rids.matrix() if row["platform"] == "Windows"):
+                with self.subTest(rid=rid):
+                    profile = json.loads(subprocess.check_output(
+                        ["dotnet", "msbuild", "Electron2D.csproj", "-nologo", "-p:RuntimeIdentifier=" + rid,
+                         "-getProperty:RuntimeIdentifier,PlatformTarget"], cwd=rids.ROOT, env=environment))
+                    self.assertEqual(profile["Properties"]["RuntimeIdentifier"], rid)
+                    self.assertEqual(profile["Properties"]["PlatformTarget"].lower(), rid.removeprefix("win-"))
+
     def test_target_font_consumers_embed_the_shared_fixture_inventory(self):
         root = rids.ROOT
         required = set(re.findall(r'Read\(typeof\(FontTestFixtures\)\.Assembly,\s*"([^"]+)"\)',
@@ -450,11 +471,24 @@ class Checks(unittest.TestCase):
                 profile = {"Properties": {"RuntimeIdentifier": rid, "TargetFramework": row["framework"],
                                          "Electron2DNativePlatform": row["platform"]},
                            "Items": {"PackageReference": []}}
+                if row["platform"] == "Android":
+                    profile["Items"]["PackageReference"].append({
+                        "Identity": "SDL3-CS.Android", "Version": check_rid.native_package.configuration()["sdlVersion"],
+                        "PrivateAssets": "all", "ExcludeAssets": "compile;runtime;native", "GeneratePathProperty": "true"})
                 profile_file = output / "profile.json"
                 profile_file.write_text(json.dumps(profile))
                 (output / "Electron2D.dll").write_bytes(b"MZ")
                 (output / "Electron2D.xml").write_text("<doc><assembly><name>Electron2D</name></assembly></doc>")
                 check_rid.check(rid, output)
+                if row["platform"] == "Android":
+                    bootstrap = profile["Items"]["PackageReference"][0]
+                    for field, wrong in (("Version", "0.0.0"), ("PrivateAssets", ""), ("ExcludeAssets", "compile"), ("GeneratePathProperty", "false")):
+                        previous = bootstrap[field]
+                        bootstrap[field] = wrong
+                        profile_file.write_text(json.dumps(profile))
+                        with self.subTest(field=field), self.assertRaises(ValueError):
+                            check_rid.check(rid, output)
+                        bootstrap[field] = previous
                 profile["Properties"]["RuntimeIdentifier"] = "wrong-rid"
                 profile_file.write_text(json.dumps(profile))
                 with self.assertRaises(ValueError):
@@ -464,7 +498,7 @@ class Checks(unittest.TestCase):
                 profile_file.write_text(json.dumps(profile))
                 with self.assertRaises(ValueError):
                     check_rid.check(rid, output)
-                profile["Items"]["PackageReference"].clear()
+                profile["Items"]["PackageReference"].pop()
                 profile_file.write_text(json.dumps(profile))
                 flat = output / "libFAudio.so.0"
                 flat.write_bytes(b"native payload in a managed-only product")

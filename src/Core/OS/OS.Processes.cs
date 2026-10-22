@@ -100,6 +100,7 @@ public sealed partial class OS
     public static int GetProcessExitCode(int pid) => Service.ProcessExitCode(pid);
     /// <summary>Terminates one native process without terminating its descendants.</summary>
     /// <param name="pid">A positive process ID.</param>
+    /// <exception cref="PlatformNotSupportedException">The host cannot terminate independent processes.</exception>
     /// <exception cref="ArgumentException">The process no longer exists.</exception>
     /// <exception cref="System.ComponentModel.Win32Exception">The operating system denies termination.</exception>
     /// <exception cref="IOException">The native child cannot be terminated.</exception>
