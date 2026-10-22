@@ -280,3 +280,8 @@ SDK callback deadlines preserve output bytes/timestamps. Run
 python3 -B tools/shaders/check_host.py for the shared external-producer boundary.
 Keep custom runtime consumers independent of tool/backend assemblies. Software
 rendered and AOT evidence remains scoped to its exact source cohort and profiles.
+
+For Custom graph dependency changes, run the root --visual-shader-custom-topology
+probe and the Custom author/import/render corpus. Cover last incoming edges,
+selected versus overridden cycles, callback count and disconnected providers in
+the other stage; ordinary graph and provider traversal must select the same edges.

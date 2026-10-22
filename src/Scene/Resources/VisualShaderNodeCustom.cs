@@ -30,6 +30,7 @@ public abstract class VisualShaderNodeCustom : VisualShaderNode
     /// <param name="type">The executing graph stage.</param>
     /// <returns>Bounded strict UTF-8 GLSL; empty or literal null source emits no statements.</returns>
     /// <remarks>Use the supplied symbols without declaring replacements for them. They are opaque compiler names.
+    /// The last authored connection to an input supplies its value, matching the ordinary graph connection policy.
     /// Loops, branches, return and fragment discard follow the ordinary expression scope contract.</remarks>
     public abstract string GetCode(IReadOnlyList<string> inputVariables, IReadOnlyList<string> outputVariables, Shader.Mode mode, VisualShader.Type type);
     /// <inheritdoc />

@@ -20,6 +20,7 @@ internal static partial class GraphChecks
             11 => new(.125f, .375f, .625f, 1),
             12 => new(.75f, .75f, .75f, 1),
             13 => new(.375f, .375f, .4375f, 1),
+            14 or 15 => new(.875f, .875f, .875f, 1),
             _ => Colors.Black
         };
     }

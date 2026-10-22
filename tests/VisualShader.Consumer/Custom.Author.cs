@@ -13,9 +13,10 @@ internal static partial class GraphChecks
         {
             for (var role = 0; role < 8; role++) for (var mode = 0; mode < 3; mode++) SaveCustomNumeric(folder, stage, (P)role, mode);
             for (var kind = 0; kind <= 13; kind++) if (kind != 4 || stage == V.Type.Fragment) SaveCustomProcedure(folder, stage, kind);
+            SaveCustomPrecedence(folder, stage, false); SaveCustomPrecedence(folder, stage, true);
         }
         foreach (var kind in new[] { 100, 101, 102, 103, 104, 105, 106, 107, 109, 110 }) SaveCustomProcedure(IOPath.Combine(folder, "invalid-custom"), V.Type.Vertex, kind);
-        Console.WriteLine("Authored 75 custom programs and ten invalid custom source workflows.");
+        Console.WriteLine("Authored 79 custom programs and ten invalid custom source workflows.");
     }
     private static void SaveCustomNumeric(string folder, V.Type stage, P role, int mode)
     {
@@ -25,6 +26,15 @@ internal static partial class GraphChecks
         graph.ConnectNodes(stage, 2, 0, 3, 0); graph.ConnectNodes(stage, 3, 0, 0, stage == V.Type.Vertex ? 2 : 0);
         if (mode == 2) { parameter.ParameterName = "custom_value"; ParameterEnabled(parameter, true); graph.AddNode(stage, parameter, default, 4); graph.ConnectNodes(stage, 4, 0, 2, 0); }
         ResourceSaver.Save(graph, IOPath.Combine(folder, $"custom-numeric-{(int)role}-{mode}-{(int)stage}.e2dres"), SaverFlags.BundleResources | SaverFlags.Compress | SaverFlags.SaveBigEndian);
+    }
+    private static void SaveCustomPrecedence(string folder, V.Type stage, bool replacedCycle)
+    {
+        using var graph = new V(); using var node = new CustomNumericNode { InputMode = 2 };
+        using var first = new VisualShaderNodeFloatConstant { Constant = .125f }; using var last = new VisualShaderNodeFloatConstant { Constant = .875f };
+        graph.AddNode(stage, node, default, 2); graph.AddNode(stage, first, default, 3); graph.AddNode(stage, last, default, 4);
+        if (replacedCycle) graph.ConnectNodesForced(stage, 2, 0, 2, 0); else graph.ConnectNodes(stage, 3, 0, 2, 0);
+        graph.ConnectNodes(stage, 4, 0, 2, 0); graph.ConnectNodes(stage, 2, 0, 0, stage == V.Type.Vertex ? 2 : 0);
+        ResourceSaver.Save(graph, IOPath.Combine(folder, $"custom-procedural-{(replacedCycle ? 15 : 14)}-{(int)stage}.e2dres"), SaverFlags.BundleResources);
     }
     private static void SaveCustomProcedure(string folder, V.Type stage, int kind)
     {

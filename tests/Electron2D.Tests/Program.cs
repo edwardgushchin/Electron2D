@@ -10,6 +10,12 @@ using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
 if (args.Length == 3 && args[0] == "--visual-shader-source-hashes") { VisualShaderSourceRegressionTests.Write(args[1], args[2]); return; }
+if (args.SequenceEqual(new[] { "--visual-shader-custom-topology" }))
+{
+    try { VisualShaderCustomTopologyTests.Run(); }
+    catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; }
+    return;
+}
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MATRIX_CODEC") == "1") { MatrixValueCodecTests.Run(); return; }
 
@@ -1883,6 +1889,7 @@ FontLifetimeTests.Run(FontTestFixtures.OpenSans);
 FontTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
 LabelTests.Run(FontTestFixtures.OpenSans);
 FontResourceLoaderTests.Run();
+VisualShaderCustomTopologyTests.Run();
 ResourceArchiveTests.Run();
 AudioBusLayoutTests.Run();
 RigidBodyForceTests.Run(); RigidBodyForceTests.Run(PhysicsServer.Backend.GPU);

@@ -24,7 +24,7 @@ public sealed partial class VisualShader
             foreach (var edge in graph.Connections)
             {
                 if (!PortsExist(graph, edge) || !PortsCompatible(graph, edge)) throw new InvalidDataException("Custom graph connections require live compatible ports.");
-                incoming.Add((edge.ToNode, edge.ToPort), edge);
+                incoming[(edge.ToNode, edge.ToPort)] = edge;
             }
             var visited = new HashSet<int>(); var visiting = new HashSet<int>(); var stack = new Stack<(int ID, bool Exit)>(); stack.Push((0, false));
             while (stack.TryPop(out var step))

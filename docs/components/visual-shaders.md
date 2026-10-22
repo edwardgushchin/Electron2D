@@ -1074,7 +1074,7 @@ owned process tree. This is a build deadline, not a security sandbox for arbitra
 application callbacks. Direct shared-entry calls are serialized and reject
 concurrent/reentrant execution; their dedicated host owns its lifetime.
 
-Current executable fixtures cover 75 Custom programs, nine invalid source/ABI
+Current executable fixtures cover 79 Custom programs, nine invalid source/ABI
 imports, a hanging callback through the SDK deadline, missing registration,
 entry argument/concurrency/reentry guards and SDK build/publish/Clean. Receipts
 record the actual CLR/NativeAOT and software-renderer profiles that ran. Editor
@@ -1088,3 +1088,12 @@ software Vulkan readback under Wayland, X11 and HDR/MSAA, with zero owner/all-th
 managed bytes over 64 active and 64 idle prepared frames in every profile.
 Required Release, API coverage and wiki checks passed. The tool host ran in CLR;
 these results do not establish a NativeAOT compiler host or the separate acceptance gates above.
+
+Custom source preparation follows the ordinary last-authored-input policy even
+when several recorded edges address the same port. Only the selected edge
+contributes executing dependencies and provider traversal. An earlier overwritten
+cycle is disconnected from that input; a selected reachable cycle still rejects
+before source callbacks. All recorded edges retain the existing live-port and
+role validation. Public source/compiled archive and rendered fixtures cover both
+canvas stages; the root topology check also covers a disconnected Custom node in
+the other stage. This fixes the duplicate-key failure in provider preparation.

@@ -119,7 +119,7 @@ public abstract System.String GetCode(System.Collections.Generic.IReadOnlyList<S
 
 Produces one GLSL statement block using opaque input and output symbols.
 
-Use the supplied symbols without declaring replacements for them. They are opaque compiler names. Loops, branches, return and fragment discard follow the ordinary expression scope contract.
+Use the supplied symbols without declaring replacements for them. They are opaque compiler names. The last authored connection to an input supplies its value, matching the ordinary graph connection policy. Loops, branches, return and fragment discard follow the ordinary expression scope contract.
 
 Bounded strict UTF-8 GLSL; empty or literal null source emits no statements.
 
