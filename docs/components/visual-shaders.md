@@ -974,7 +974,7 @@ fresh-loads source/compiled graphs and renders parameters, all numeric roles,
 matrices, multi-output blocks, cross-graph globals, loops, return/discard, image
 ports and authored/private-name conflicts. Receipts record actual executed
 profiles and source cohorts. This does not establish editor resizing/preview,
-custom compiled provider registration, physical GPU, foreign hosts, native heap
+physical GPU, foreign hosts, native heap
 or human visual acceptance.
 
 The frozen 8,826-file source cohort passed all 28 final checks. All 3,385 programs
@@ -987,3 +987,104 @@ particle/resource checks, SDK build/publish/Clean, Release, coverage and wiki
 checks passed. Ignored receipts are under
 `bin/visual-shader-expressions/2026-10-22/`. Physical GPU, foreign platforms,
 native heap, editor and owner visual acceptance remain separate gates.
+
+## Compiled custom nodes
+
+[VisualShaderNodeCustom](../classes/VisualShaderNodeCustom.md) exposes the complete
+compiled C# provider callback family for canvas graph import. Derive a concrete
+resource, override GetCode and its port/metadata callbacks, then register the same
+ResourceFileTypes factory in authoring, import and runtime applications. The
+import host references the tool project and invokes
+Electron2D.Tools.ShaderImportApplication.RunAsync after registering factories.
+The executable [CustomImport consumer](../../tests/VisualShader.CustomImport/Program.cs)
+shows that boundary; runtime [provider definitions](../../tests/VisualShader.Custom/CustomNodes.cs)
+reference only the public engine API. The shared entry point belongs to the tool
+assembly. No resource archive loads an assembly or carries a delegate.
+
+The base constructor invokes no derived callbacks. Metadata discovery happens
+lazily, after the concrete constructor. Optional names/category/description,
+port counts/types/names, dropdown defaults/choices, result icon and advanced
+renderer mark retain their documented defaults. A nullable result-icon role
+represents absence. IsAvailable and IsHighEnd are authoring metadata; an existing
+authored graph still undergoes normal stage/source/interface validation.
+Callback implementations own their application-side validation and side effects.
+The importer validates active metadata, enum roles and strict UTF-8 text, with
+4,096 inputs/outputs/properties, 4,096 aggregate dropdown choices and eight MiB
+of metadata. Each source and combined custom source per stage is bounded to
+eight MiB; generated stage output retains its existing budget.
+
+GetInputPortDefaultValue returns a nullable VisualShaderPortDefault entry with
+its requested index and exact numeric role. Color follows the existing canonical
+Vector4 default representation. Missing defaults and missing sampler connections
+become empty input symbols. A numeric callback default becomes a typed temporary
+variable; connected inputs name converted upstream expressions. Sampler inputs
+refer to existing opaque image bindings. GetCode receives read-only input/output
+symbol lists. Use them as opaque names; output variables already exist and are
+initialized to numeric zero or matrix identity. Local sampler outputs reject.
+The ordinary generic default setters/getters remain available after discovery.
+RefreshDefinition and option edits regenerate callback numeric defaults.
+
+SetOptionIndex validates active properties and current choices, rebuilds the
+schema/defaults atomically and publishes Changed plus PropertyListChanged,
+even for an equal selection. A callback failure preserves the prior engine
+configuration. Reentrant default/option mutation is rejected while discovering
+metadata or generating source. Application-side callback effects are outside
+that rollback. Observers run after commitment; both notification channels are
+attempted if an observer throws. Dropdown initial defaults are seeded before
+port discovery, including properties exposed by an earlier default. GetOptionIndex
+returns zero for unknown indices; selected inactive properties remain stored.
+CustomOptions stores distinct bounded index/value pairs including explicit zero.
+Active option descriptors supply enum hints and current default reversion.
+A formerly active descriptor rejects a stale revert after its property disappears.
+Graph edges retain their indexed addresses; callers repair connections invalidated
+by a schema edit, and the next import rejects stale incompatible edges.
+
+GetGlobalCode contributes once per exact concrete reachable CLR provider type.
+Providers are discovered after their input dependencies, traversing inputs in
+ascending order and the vertex graph before fragment. The first encountered
+instance supplies shared global/function configuration, even when later
+instances have different options. Global source precedes ordinary global
+expression source and is visible in both stages. GetFuncCode contributes once
+per provider type at the beginning of each canvas stage function, including the
+other stage. Its local declarations are visible to GetCode blocks. Distinct
+providers own their authored names. GetCode executes once per reachable node
+entry after its dependencies; disconnected aliases contribute no source.
+Empty or literal null source emits no statements; an actual null return rejects.
+Existing source-aware symbol isolation, renderer builtins, native stage selection,
+return/discard and validation apply. Authored callback source compiles offline;
+material drawing never invokes provider callbacks or recompiles its program.
+
+Concrete resources retain ordinary explicit CreateDuplicateInstance and
+CopyCustomStateTo hooks; the base copies options and explicit numeric defaults.
+A concrete copy hook copies its backing schema fields without resetting the
+already copied defaults. Stored derived schema descriptors precede base
+CustomOptions/default descriptors so fresh factory loading restores types before
+values. Ordinary graph aliases, shallow/deep ownership and archive rules apply.
+The complete [public CPU checks](../../tests/VisualShader.Consumer/Custom.CPU.cs)
+and [authoring corpus](../../tests/VisualShader.Consumer/Custom.Author.cs) exercise
+all numeric roles and these lifecycle/option/port contracts.
+
+SDK consumers set Electron2DShaderImportTool to their compiled host executable.
+Electron2DShaderImportTimeoutMS defaults to 300000 and must be positive. The SDK
+uses an adjacent temporary output with the final extension, waits for successful
+process completion and drained diagnostics, then publishes the artifact. Failed,
+missing, symlink or timed-out output preserves the prior file. The shared importer retains the final resource UID while writing the staged path.
+Identical bytes preserve its timestamp. A timeout terminates a still-running importer and its
+owned process tree. This is a build deadline, not a security sandbox for arbitrary
+application callbacks. Direct shared-entry calls are serialized and reject
+concurrent/reentrant execution; their dedicated host owns its lifetime.
+
+Current executable fixtures cover 75 Custom programs, nine invalid source/ABI
+imports, a hanging callback through the SDK deadline, missing registration,
+entry argument/concurrency/reentry guards and SDK build/publish/Clean. Receipts
+record the actual CLR/NativeAOT and software-renderer profiles that ran. Editor
+UI, physical GPU, native heap, foreign hosts and owner acceptance remain separate.
+
+The 2026-10-22 frozen cohort passed all 33 final checks across 8,840 source inputs.
+All 75 Custom programs were freshly imported by the compiled C# host; the prior
+3,385 graphs retained identical generated sources and image/block metadata.
+The 3,460-program executing corpus passed CLR and strict full-trim NativeAOT
+software Vulkan readback under Wayland, X11 and HDR/MSAA, with zero owner/all-thread
+managed bytes over 64 active and 64 idle prepared frames in every profile.
+Required Release, API coverage and wiki checks passed. The tool host ran in CLR;
+these results do not establish a NativeAOT compiler host or the separate acceptance gates above.

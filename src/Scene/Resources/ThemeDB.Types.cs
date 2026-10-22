@@ -474,6 +474,7 @@ public sealed partial class ThemeDB
         ["VisualShaderNodeColorParameter"] = ["VisualShaderNodeColorParameter", "VisualShaderNodeParameter", "VisualShaderNode", "Resource", "ElectronObject"],
         ["VisualShaderNodeCompare"] = ["VisualShaderNodeCompare", "VisualShaderNode", "Resource", "ElectronObject"],
         ["VisualShaderNodeConstant"] = ["VisualShaderNodeConstant", "VisualShaderNode", "Resource", "ElectronObject"],
+        ["VisualShaderNodeCustom"] = ["VisualShaderNodeCustom", "VisualShaderNode", "Resource", "ElectronObject"],
         ["VisualShaderNodeDerivativeFunc"] = ["VisualShaderNodeDerivativeFunc", "VisualShaderNode", "Resource", "ElectronObject"],
         ["VisualShaderNodeDeterminant"] = ["VisualShaderNodeDeterminant", "VisualShaderNode", "Resource", "ElectronObject"],
         ["VisualShaderNodeDotProduct"] = ["VisualShaderNodeDotProduct", "VisualShaderNode", "Resource", "ElectronObject"],

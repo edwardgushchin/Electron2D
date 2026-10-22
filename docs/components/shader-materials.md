@@ -481,3 +481,5 @@ Canvas and blit fragment SPIR-V may declare DerivativeControl for fine/coarse op
 [Canvas SDF graph operations](visual-shaders.md#canvas-sdf-graphs) use the existing renderer-owned field and reflected SDF bindings through the shared offline importer.
 
 [GLSL expression blocks](visual-shaders.md#glsl-expression-blocks) now execute dynamic typed ports, local procedures and shared global definitions through the existing offline graph importer, preserving stage return/discard and portable source state.
+
+[Compiled custom graph nodes](visual-shaders.md#compiled-custom-nodes) provide typed C# metadata/default/source callbacks through registered resources and the shared offline import host. Program execution consumes imported bytecode.

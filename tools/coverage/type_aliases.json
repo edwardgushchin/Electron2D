@@ -126,7 +126,8 @@
     "VisualShaderNodeResizableBase": "VisualShaderNodeResizableBase",
     "VisualShaderNodeGroupBase": "VisualShaderNodeGroupBase",
     "VisualShaderNodeExpression": "VisualShaderNodeExpression",
-    "VisualShaderNodeGlobalExpression": "VisualShaderNodeGlobalExpression"
+    "VisualShaderNodeGlobalExpression": "VisualShaderNodeGlobalExpression",
+    "VisualShaderNodeCustom": "VisualShaderNodeCustom"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",

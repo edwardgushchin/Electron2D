@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>A typed operation in an offline-compiled visual shader graph.</summary>
 /// <remarks>Nodes are borrowed by graphs. Authoring is cold, single-threaded work. Edits emit Changed and
-/// affect the next import; existing compiled shader programs retain their immutable code.</remarks>
+/// affect the next import; existing compiled shader programs retain their immutable code.
+/// Compiled custom definitions discover their callback ports/defaults lazily. Their callbacks cannot reenter default mutation.</remarks>
 public abstract class VisualShaderNode : Resource
 {
     /// <summary>The value role carried by a graph port.</summary>
@@ -44,10 +45,10 @@ public abstract class VisualShaderNode : Resource
 
     /// <summary>Gets the default connection target used when adding this node from an existing port.</summary>
     /// <param name="type">The originating port role.</param>
-    /// <returns>Input zero, as specified by the base node connection policy.</returns>
+    /// <returns>Input zero in the base policy; compiled custom providers may override the connection target.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The port role is undefined.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
-    public int GetDefaultInputPort(PortType type)
+    public virtual int GetDefaultInputPort(PortType type)
     { ThrowIfDisposed(); if (!Enum.IsDefined(type) || type == PortType.Max) throw new ArgumentOutOfRangeException(nameof(type)); return 0; }
 
     /// <summary>Copies a typed default into an input port.</summary>
@@ -59,7 +60,7 @@ public abstract class VisualShaderNode : Resource
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public void SetInputPortDefaultValue<T>(int port, T value) where T : unmanaged
     {
-        ThrowIfDisposed(); ValidatePort(port); VisualShaderValues.Require(DefaultInputs[port], value);
+        ThrowIfDisposed(); BeforeDefaultMutation(); ValidatePort(port); VisualShaderValues.Require(DefaultInputs[port], value);
         _defaults[port] = VisualShaderValues.Entry(port, value); EmitChanged();
     }
 
@@ -75,7 +76,7 @@ public abstract class VisualShaderNode : Resource
     public void SetInputPortDefaultValue<T, TPrevious>(int port, T value, TPrevious previousValue)
         where T : unmanaged where TPrevious : unmanaged
     {
-        ThrowIfDisposed(); ValidatePort(port); VisualShaderValues.Require(DefaultInputs[port], value);
+        ThrowIfDisposed(); BeforeDefaultMutation(); ValidatePort(port); VisualShaderValues.Require(DefaultInputs[port], value);
         VisualShaderValues.Validate(previousValue);
         SetInputPortDefaultValue(port, VisualShaderValues.ConvertDefault(value, previousValue));
     }
@@ -98,7 +99,7 @@ public abstract class VisualShaderNode : Resource
     /// composition nodes also retain entries for temporarily inactive components.</returns>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public IReadOnlyList<VisualShaderPortDefault> GetDefaultInputValues()
-    { ThrowIfDisposed(); return Array.AsReadOnly(_defaults.OrderBy(p => p.Key).Select(p => p.Value).ToArray()); }
+    { ThrowIfDisposed(); _ = DefaultInputs; return Array.AsReadOnly(_defaults.OrderBy(p => p.Key).Select(p => p.Value).ToArray()); }
 
     /// <summary>Atomically replaces the complete explicit input-default table.</summary>
     /// <param name="values">Unique, correctly typed entries for existing or reserved inputs; an empty collection clears the table.</param>
@@ -108,7 +109,7 @@ public abstract class VisualShaderNode : Resource
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public void SetDefaultInputValues(IReadOnlyList<VisualShaderPortDefault> values)
     {
-        ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(values);
+        ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(values); BeforeDefaultMutation();
         if (values.Count > DefaultInputs.Length) throw new ArgumentException("Too many input defaults.", nameof(values));
         var replacement = new Dictionary<int, VisualShaderPortDefault>();
         foreach (var value in values)
@@ -125,12 +126,20 @@ public abstract class VisualShaderNode : Resource
     /// <exception cref="ArgumentOutOfRangeException">The input is neither active nor a reserved composition component.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public void RemoveInputPortDefaultValue(int port)
-    { ThrowIfDisposed(); ValidatePort(port); if (_defaults.Remove(port)) EmitChanged(); }
+    { ThrowIfDisposed(); BeforeDefaultMutation(); ValidatePort(port); if (_defaults.Remove(port)) EmitChanged(); }
 
     /// <summary>Clears all explicit input defaults.</summary>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public void ClearDefaultInputValues()
-    { ThrowIfDisposed(); if (_defaults.Count != 0) { _defaults.Clear(); EmitChanged(); } }
+    { ThrowIfDisposed(); BeforeDefaultMutation(); _ = DefaultInputs; if (_defaults.Count != 0) { _defaults.Clear(); EmitChanged(); } }
+
+    internal virtual void BeforeDefaultMutation() { }
+    internal VisualShaderPortDefault[] SnapshotDefinitionDefaults() => _defaults.Values.ToArray();
+    internal void ReplaceDefinitionDefaults(IReadOnlyList<VisualShaderPortDefault> values)
+    {
+        var replacement = values.ToDictionary(v => v.Port, v => VisualShaderValues.Entry(v.Port, v.BoxedValue));
+        _defaults.Clear(); foreach (var pair in replacement) _defaults.Add(pair.Key, pair.Value);
+    }
 
     internal virtual void ChangeDefaultWidth(PortType type)
     {
@@ -210,7 +219,7 @@ public abstract class VisualShaderNode : Resource
 
     private void RestoreDefaultPorts(int[] ports)
     {
-        ArgumentNullException.ThrowIfNull(ports);
+        ArgumentNullException.ThrowIfNull(ports); BeforeDefaultMutation();
         var count = DefaultInputs.Length;
         if (ports.Length > count || ports.Distinct().Count() != ports.Length || ports.Any(p => p < 0 || p >= count))
             throw new InvalidDataException("Invalid input-default table.");
@@ -228,7 +237,7 @@ public abstract class VisualShaderNode : Resource
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
-        var copy = (VisualShaderNode)target; copy._defaults.Clear();
+        _ = DefaultInputs; var copy = (VisualShaderNode)target; copy._defaults.Clear();
         foreach (var pair in _defaults) copy._defaults.Add(pair.Key, pair.Value);
         CopyDefinitionTo(copy);
     }

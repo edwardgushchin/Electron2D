@@ -381,3 +381,5 @@ Graph authoring, snapshots, import and file I/O are allocating cold operations. 
 Canvas SDF graph operations now use the shared offline importer and renderer-owned pixel field: signed sampling, normals, three raymarch results and screen UV conversion. See [the SDF graph contract](../components/visual-shaders.md#canvas-sdf-graphs) for units, live field policies, stages and verification limits.
 
 [GLSL expression blocks](../components/visual-shaders.md#glsl-expression-blocks) now execute dynamic typed ports, local procedures and shared global definitions through the existing offline graph importer, preserving stage return/discard and portable source state.
+
+[Compiled custom graph nodes](../components/visual-shaders.md#compiled-custom-nodes) provide typed C# metadata/default/source callbacks through registered resources and the shared offline import host. Program execution consumes imported bytecode.

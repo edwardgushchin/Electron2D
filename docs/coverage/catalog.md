@@ -945,7 +945,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeCubemapParameter](classes/VisualShaderNodeCubemapParameter.md) | VisualShaderNodeTextureParameter | Excluded | 0 |
 | [VisualShaderNodeCurveTexture](classes/VisualShaderNodeCurveTexture.md) | VisualShaderNodeResizableBase | Blocked | 1 |
 | [VisualShaderNodeCurveXYZTexture](classes/VisualShaderNodeCurveXYZTexture.md) | VisualShaderNodeResizableBase | Blocked | 1 |
-| [VisualShaderNodeCustom](classes/VisualShaderNodeCustom.md) | VisualShaderNode | Blocked | 22 |
+| [VisualShaderNodeCustom](classes/VisualShaderNodeCustom.md) | VisualShaderNode | Implemented | 22 |
 | [VisualShaderNodeDerivativeFunc](classes/VisualShaderNodeDerivativeFunc.md) | VisualShaderNode | Implemented | 19 |
 | [VisualShaderNodeDeterminant](classes/VisualShaderNodeDeterminant.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeDistanceFade](classes/VisualShaderNodeDistanceFade.md) | VisualShaderNode | Unimplemented | 0 |

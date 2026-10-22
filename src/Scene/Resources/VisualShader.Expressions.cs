@@ -7,8 +7,8 @@ public sealed partial class VisualShader
 {
     private IEnumerable<string> GlobalExpressions() => _graphs.SelectMany(g => g.Nodes.Values).Select(e => e.Node)
         .OfType<VisualShaderNodeGlobalExpression>().Select(n => n.Expression);
-    private IEnumerable<string> ExpressionSources(Type stage, HashSet<int> reachable) => GlobalExpressions().Concat(
-        reachable.Select(id => GetNode(stage, id)).OfType<VisualShaderNodeExpression>().Where(n => n is not VisualShaderNodeGlobalExpression).Select(n => n.Expression));
+    private IEnumerable<string> ExpressionSources(Type stage, HashSet<int> reachable, CustomPlan? custom = null) => GlobalExpressions().Concat(
+        reachable.Select(id => GetNode(stage, id)).OfType<VisualShaderNodeExpression>().Where(n => n is not VisualShaderNodeGlobalExpression).Select(n => n.Expression)).Concat(custom?.Sources(stage) ?? []);
     private static IEnumerable<(int Start, int Length, bool Member)> SourceIdentifiers(string source)
     {
         var previous = '\0'; var structure = 0; var pendingStructure = false;

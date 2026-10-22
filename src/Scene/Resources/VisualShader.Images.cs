@@ -30,12 +30,12 @@ public sealed partial class VisualShader
     }
 
     private (List<VisualShaderImage> Images, Dictionary<int, string> Nodes) ImagePlan(Type stage, HashSet<int> reachable,
-        Dictionary<string, VisualShaderNodeParameter> parameters)
+        Dictionary<string, VisualShaderNodeParameter> parameters, CustomPlan? custom)
     {
         var images = new List<VisualShaderImage>(); var nodes = new Dictionary<int, string>();
         var nativeNames = ImageNames(parameters);
         var reserved = nativeNames.Values.Concat(parameters.Keys).ToHashSet(StringComparer.Ordinal);
-        reserved.UnionWith(ExpressionSources(stage, reachable).SelectMany(s => SourceIdentifiers(s).Select(t => s.Substring(t.Start, t.Length))));
+        reserved.UnionWith(ExpressionSources(stage, reachable, custom).SelectMany(s => SourceIdentifiers(s).Select(t => s.Substring(t.Start, t.Length))));
         reserved.UnionWith(["TEXTURE", "NORMAL_TEXTURE", "SPECULAR_SHININESS_TEXTURE", "SCREEN_TEXTURE", "SDF_TEXTURE"]);
         if (stage == Type.Fragment) images.Add(new(stage, "TEXTURE", false));
         string Anonymous(int id)

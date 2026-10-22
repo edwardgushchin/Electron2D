@@ -285,3 +285,29 @@ Use `--particles` for a compute module, or `Stage="compute" Profile="particles"`
 Canvas graph imports resolve typed material, global and per-item declarations across both stages. Graph-local references, default words and advisory range/enum/Color metadata enter the ordinary source-type annotation, spirv-val, reflected-interface and atomic-resource path. Normal parameters use existing typed runtime setters; globals use the registry, and per-item scalar/vector fields have sixteen explicit/automatic slots. Numeric matrix parameters use material/global storage. Editing a definition requires reimport. See [the graph contract](../../docs/components/visual-shaders.md#parameters-and-graph-local-references).
 
 Numeric derivative graphs emit fragment fwidth/dFdx/dFdy with their requested default/fine/coarse instruction. Reachable vertex derivatives reject import atomically. The ordinary common SPIR-V capability/stage validator applies, with no runtime source compiler or precision emulation.
+
+## Compiled custom graph providers
+
+Derive VisualShaderNodeCustom in an ordinary C# project and register its concrete
+ResourceFileTypes factory in every authoring, import and runtime host. A compiled
+import executable references ShaderImport.csproj, registers its factories and
+returns the result of Electron2D.Tools.ShaderImportApplication.RunAsync(args).
+The tool assembly supplies the same CLI validation, pinned compiler assets and
+transactional publication. Concurrent/reentrant shared-entry calls reject.
+See tests/VisualShader.CustomImport for an executable host and
+[the provider contract](../../docs/components/visual-shaders.md#compiled-custom-nodes)
+for callbacks, defaults, options, source scope and portable copy/storage rules.
+Game programs reference only Electron2D and their compiled provider definitions.
+
+Set Electron2DShaderImportTool to that host executable when importing graphs from
+MSBuild. Electron2DShaderImportTimeoutMS defaults to 300000; positive values set
+the per-import process deadline. A failed or timed-out producer preserves the
+previous artifact; successful identical bytes preserve its timestamp. The SDK
+stages output beside its destination before publication and removes failed staged
+files. Native toolchain assets remain host-specific prerequisites.
+
+Run python3 -B tools/shaders/check_host.py for SDK producer failure/deadline checks.
+Run python3 -B tools/shaders/check_custom.py with --host, --stock-tool, --consumer
+and optional --receipt for registered custom import, argument/concurrency/reentry
+checks, source/ABI rejection and SDK build/publish/Clean. These Linux fixtures do
+not establish editor UI, physical GPU, foreign-platform or owner acceptance.

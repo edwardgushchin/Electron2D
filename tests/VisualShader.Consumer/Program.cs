@@ -3,6 +3,7 @@ using IOPath = System.IO.Path;
 
 try
 {
+    CustomNodes.Register();
     if (args.Length == 0 || args[0] == "cpu") GraphChecks.CPU();
     else if (args[0] == "author") GraphChecks.Author(IOPath.GetFullPath(args[1]));
     else if (args[0] == "edit")
@@ -14,6 +15,8 @@ try
     else if (args[0] == "gpu") GraphChecks.Render(IOPath.GetFullPath(args[1]), args);
     else if (args[0] == "images-metadata") GraphChecks.ImageMetadataChecks(IOPath.GetFullPath(args[1]));
     else if (args[0] == "expressions-author") GraphChecks.AuthorExpressions(IOPath.GetFullPath(args[1]));
+    else if (args[0] == "custom-author") GraphChecks.AuthorCustom(IOPath.GetFullPath(args[1]));
+    else if (args[0] == "custom-cpu") GraphChecks.CustomCPU();
     else if (args[0] == "expressions-metadata") GraphChecks.ExpressionMetadata(IOPath.GetFullPath(args[1]));
     else if (args[0] == "sdf-author") GraphChecks.AuthorSDF(IOPath.GetFullPath(args[1]));
     else if (args[0] == "sdf-metadata") GraphChecks.SDFMetadata(IOPath.GetFullPath(args[1]));
@@ -49,6 +52,7 @@ internal static partial class GraphChecks
         EffectsCPU();
         SDFCPU();
         ExpressionsCPU();
+        CustomCPU();
         using var graph = new VisualShader();
         using var scalar = new VisualShaderNodeFloatConstant { Constant = .375f };
         using var operation = new VisualShaderNodeFloatOp();

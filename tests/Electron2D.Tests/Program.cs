@@ -9,6 +9,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length == 3 && args[0] == "--visual-shader-source-hashes") { VisualShaderSourceRegressionTests.Write(args[1], args[2]); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MATRIX_CODEC") == "1") { MatrixValueCodecTests.Run(); return; }
 
 if (args.Length == 3 && args[0] == "--point-context-lifetime") { PhysicsAllocationTrace.VerifyContextLifetime(args[1], args[2]); return; }

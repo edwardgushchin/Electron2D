@@ -29,7 +29,7 @@ graph is published.
 | [`protected VisualShaderNode()`](#member-ff366100755e) | Initializes a typed graph node. |
 | [`public System.Void ClearDefaultInputValues()`](#member-c67c6dc2c295) | Clears all explicit input defaults. |
 | [`protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicateSubresource, System.Func<Electron2D.Resource, Electron2D.Resource> forceDuplicateSubresource)`](#member-58cd5cdb598d) | Uses the inherited Resource construction or stored-property contract. |
-| [`public System.Int32 GetDefaultInputPort(Electron2D.VisualShaderNode.PortType type)`](#member-ab8c82594b83) | Gets the default connection target used when adding this node from an existing port. |
+| [`public virtual System.Int32 GetDefaultInputPort(Electron2D.VisualShaderNode.PortType type)`](#member-ab8c82594b83) | Gets the default connection target used when adding this node from an existing port. |
 | [`public System.Collections.Generic.IReadOnlyList<Electron2D.VisualShaderPortDefault> GetDefaultInputValues()`](#member-714d2adc90b7) | Returns immutable typed copies of all explicitly authored input defaults. |
 | [`public Nullable<T> GetInputPortDefaultValue<T>(System.Int32 port)`](#member-d281ffbdd704) | Reads a copied authored input default. |
 | [`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`](#member-ee30536b1566) | Uses the inherited Resource construction or stored-property contract. |
@@ -71,12 +71,12 @@ protected override System.Void CopyCustomStateTo(Electron2D.Resource target, Sys
 ### `GetDefaultInputPort`
 
 ```csharp
-public System.Int32 GetDefaultInputPort(Electron2D.VisualShaderNode.PortType type)
+public virtual System.Int32 GetDefaultInputPort(Electron2D.VisualShaderNode.PortType type)
 ```
 
 Gets the default connection target used when adding this node from an existing port.
 
-Input zero, as specified by the base node connection policy.
+Input zero in the base policy; compiled custom providers may override the connection target.
 
 Parameters:
 
@@ -233,3 +233,5 @@ The public VisualShader.Consumer covers typed numeric and opaque ports, sampler 
 - [Typed graph import](../decisions/rendering.md#adr-0028)
 - [Enum identities](../decisions/enum-identities.md#adr-0051)
 - [Typed resources](../decisions/resources.md#adr-0013)
+
+[Compiled custom graph nodes](../components/visual-shaders.md#compiled-custom-nodes) provide typed C# metadata/default/source callbacks through registered resources and the shared offline import host. Program execution consumes imported bytecode.

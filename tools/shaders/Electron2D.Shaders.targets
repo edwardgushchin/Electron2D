@@ -1,6 +1,7 @@
 <Project>
   <PropertyGroup>
     <Electron2DShaderImportTool Condition="'$(Electron2DShaderImportTool)' == ''">$(MSBuildThisFileDirectory)Electron2D.ShaderImport</Electron2DShaderImportTool>
+    <Electron2DShaderImportTimeoutMS Condition="'$(Electron2DShaderImportTimeoutMS)' == ''">300000</Electron2DShaderImportTimeoutMS>
   </PropertyGroup>
   <UsingTask TaskName="Electron2DImportShaders" TaskFactory="RoslynCodeTaskFactory"
              AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
@@ -10,6 +11,7 @@
       <OutputDirectory ParameterType="System.String" Required="true" />
       <ToolPath ParameterType="System.String" Required="true" />
       <Compile ParameterType="System.Boolean" />
+      <TimeoutMS ParameterType="System.Int32" Required="true" />
       <Outputs ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true" />
     </ParameterGroup>
     <Task>
@@ -17,6 +19,7 @@
       <Using Namespace="System.IO" />
       <Using Namespace="System.Collections.Generic" />
       <Using Namespace="System.Diagnostics" />
+      <Using Namespace="System.Linq" />
       <Code Type="Fragment" Language="cs"><![CDATA[
         try
         {
@@ -63,42 +66,75 @@
             }
             if (Compile)
             {
+                if (TimeoutMS <= 0) throw new ArgumentOutOfRangeException("TimeoutMS", "Shader import requires a positive deadline.");
                 var tool = Path.GetFullPath(Path.Combine(ProjectDirectory, ToolPath));
                 if (!File.Exists(tool)) throw new FileNotFoundException("Electron2DShaderImportTool is missing: " + tool);
                 // ponytail: compile on every build so native include resolution stays authoritative;
                 // skip compilation only after a complete dependency cache is implemented and measured.
                 foreach (var output in outputs)
                 {
-                    var start = new ProcessStartInfo(tool) {
-                        UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true,
-                        WorkingDirectory = ProjectDirectory
-                    };
-                    // The task factory compiles against netstandard2.0; dotnet MSBuild
-                    // provides ArgumentList at runtime, avoiding shell/string argument parsing.
-                    var property = typeof(ProcessStartInfo).GetProperty("ArgumentList");
-                    if (property == null) throw new NotSupportedException("Shader import requires dotnet MSBuild.");
-                    var arguments = (IList<string>)property.GetValue(start);
-                    arguments.Add(output.GetMetadata("Source"));
-                    arguments.Add(output.GetMetadata("Stage"));
-                    arguments.Add(output.ItemSpec);
-                    if (output.GetMetadata("Profile") == "device") arguments.Add("--device");
-                    if (output.GetMetadata("Profile") == "texture-blit") arguments.Add("--texture-blit");
-                    if (output.GetMetadata("Profile") == "particles") arguments.Add("--particles");
-                    if (output.GetMetadata("Profile") == "visual-shader") arguments.Add("--visual-shader");
-                    using (var process = Process.Start(start))
+                    Directory.CreateDirectory(Path.GetDirectoryName(output.ItemSpec));
+                    var stagingPath = Path.Combine(Path.GetDirectoryName(output.ItemSpec), "." + Path.GetFileNameWithoutExtension(output.ItemSpec) +
+                        ".import-" + Guid.NewGuid().ToString("N") + Path.GetExtension(output.ItemSpec));
+                    try
                     {
-                        if (process == null) throw new InvalidOperationException("Cannot start " + tool);
-                        var stdout = process.StandardOutput.ReadToEndAsync();
-                        var stderr = process.StandardError.ReadToEndAsync();
-                        process.WaitForExit();
-                        var diagnostic = stdout.GetAwaiter().GetResult() + stderr.GetAwaiter().GetResult();
-                        if (process.ExitCode != 0)
+                        var start = new ProcessStartInfo(tool) {
+                            UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true,
+                            WorkingDirectory = ProjectDirectory
+                        };
+                        if (output.GetMetadata("Profile") == "visual-shader")
+                            start.EnvironmentVariables["ELECTRON2D_SHADER_IMPORT_OUTPUT_IDENTITY"] = output.ItemSpec;
+                        // The task factory compiles against netstandard2.0; dotnet MSBuild
+                        // provides ArgumentList at runtime, avoiding shell/string argument parsing.
+                        var property = typeof(ProcessStartInfo).GetProperty("ArgumentList");
+                        if (property == null) throw new NotSupportedException("Shader import requires dotnet MSBuild.");
+                        var arguments = (IList<string>)property.GetValue(start);
+                        arguments.Add(output.GetMetadata("Source"));
+                        arguments.Add(output.GetMetadata("Stage"));
+                        arguments.Add(stagingPath);
+                        if (output.GetMetadata("Profile") == "device") arguments.Add("--device");
+                        if (output.GetMetadata("Profile") == "texture-blit") arguments.Add("--texture-blit");
+                        if (output.GetMetadata("Profile") == "particles") arguments.Add("--particles");
+                        if (output.GetMetadata("Profile") == "visual-shader") arguments.Add("--visual-shader");
+                        using (var process = Process.Start(start))
                         {
-                            Log.LogError("Shader import failed ({0}): {1}", process.ExitCode, diagnostic);
-                            return false;
+                            if (process == null) throw new InvalidOperationException("Cannot start " + tool);
+                            var stdout = process.StandardOutput.ReadToEndAsync();
+                            var stderr = process.StandardError.ReadToEndAsync();
+                            var watch = Stopwatch.StartNew();
+                            var exited = process.WaitForExit(TimeoutMS);
+                            var remaining = Math.Max(1, TimeoutMS - (int)Math.Min(int.MaxValue, watch.ElapsedMilliseconds));
+                            var drained = exited && System.Threading.Tasks.Task.WaitAll(new System.Threading.Tasks.Task[] { stdout, stderr }, remaining);
+                            if (!drained)
+                            {
+                                if (!process.HasExited)
+                                {
+                                    var killTree = typeof(Process).GetMethod("Kill", new[] { typeof(bool) });
+                                    if (killTree == null) throw new NotSupportedException("Bounded shader import requires modern dotnet MSBuild.");
+                                    killTree.Invoke(process, new object[] { true });
+                                    process.WaitForExit(5000);
+                                }
+                                throw new TimeoutException("Shader import exceeded " + TimeoutMS + " ms: " + output.GetMetadata("Source"));
+                            }
+                            var diagnostic = stdout.GetAwaiter().GetResult() + stderr.GetAwaiter().GetResult();
+                            if (process.ExitCode != 0)
+                            {
+                                Log.LogError("Shader import failed ({0}): {1}", process.ExitCode, diagnostic);
+                                return false;
+                            }
+                            if (!File.Exists(stagingPath)) throw new InvalidDataException("Shader importer produced no artifact: " + output.GetMetadata("Source"));
+                            if ((File.GetAttributes(stagingPath) & FileAttributes.ReparsePoint) != 0) throw new InvalidDataException("Shader importer output must be a regular file.");
+                            var same = File.Exists(output.ItemSpec) && new FileInfo(output.ItemSpec).Length == new FileInfo(stagingPath).Length &&
+                                File.ReadAllBytes(output.ItemSpec).SequenceEqual(File.ReadAllBytes(stagingPath));
+                            if (!same)
+                            {
+                                if (File.Exists(output.ItemSpec)) File.Replace(stagingPath, output.ItemSpec, null);
+                                else File.Move(stagingPath, output.ItemSpec);
+                            }
+                            Log.LogMessage(Microsoft.Build.Framework.MessageImportance.Normal, "{0}", diagnostic.Replace(stagingPath, output.ItemSpec));
                         }
-                        Log.LogMessage(Microsoft.Build.Framework.MessageImportance.Normal, "{0}", diagnostic);
                     }
+                    finally { File.Delete(stagingPath); }
                 }
             }
             Outputs = outputs.ToArray();
@@ -114,7 +150,7 @@
   <Target Name="_PrepareElectron2DShaders" BeforeTargets="AssignTargetPaths"
           Condition="'@(Electron2DShader)' != '' and '$(DesignTimeBuild)' != 'true' and '$(IsCrossTargetingBuild)' != 'true'">
     <Electron2DImportShaders Sources="@(Electron2DShader)" ProjectDirectory="$(MSBuildProjectDirectory)"
-                            OutputDirectory="$(IntermediateOutputPath)Electron2D/shaders" ToolPath="$(Electron2DShaderImportTool)">
+                            OutputDirectory="$(IntermediateOutputPath)Electron2D/shaders" ToolPath="$(Electron2DShaderImportTool)" TimeoutMS="$(Electron2DShaderImportTimeoutMS)">
       <Output TaskParameter="Outputs" ItemName="_Electron2DShaderOutput" />
     </Electron2DImportShaders>
     <ItemGroup>
@@ -125,6 +161,6 @@
   <Target Name="_CompileElectron2DShaders" BeforeTargets="CoreCompile" DependsOnTargets="_PrepareElectron2DShaders"
           Condition="'@(Electron2DShader)' != '' and '$(DesignTimeBuild)' != 'true' and '$(IsCrossTargetingBuild)' != 'true'">
     <Electron2DImportShaders Sources="@(Electron2DShader)" ProjectDirectory="$(MSBuildProjectDirectory)" Compile="true"
-                            OutputDirectory="$(IntermediateOutputPath)Electron2D/shaders" ToolPath="$(Electron2DShaderImportTool)" />
+                            OutputDirectory="$(IntermediateOutputPath)Electron2D/shaders" ToolPath="$(Electron2DShaderImportTool)" TimeoutMS="$(Electron2DShaderImportTimeoutMS)" />
   </Target>
 </Project>

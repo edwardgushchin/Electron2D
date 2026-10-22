@@ -72,7 +72,7 @@ public sealed partial class VisualShader
         if (!symbols.TryGetValue(reference.ParameterName, out var declaration)) throw new InvalidDataException($"Graph parameter reference '{reference.ParameterName}' has no declaration.");
         return ParameterVariable(declaration, aliases) + (declaration is VisualShaderNodeColorParameter ? output == 0 ? ".rgb" : ".a" : "");
     }
-    private string ParameterHeader(Type stage, HashSet<int> reachable, Dictionary<string, VisualShaderNodeParameter> symbols, Dictionary<string, int> slots, List<VisualShaderImage> images, Dictionary<string, string> aliases)
+    private string ParameterHeader(Type stage, HashSet<int> reachable, Dictionary<string, VisualShaderNodeParameter> symbols, Dictionary<string, int> slots, List<VisualShaderImage> images, Dictionary<string, string> aliases, CustomPlan? custom)
     {
         var graph = GetGraph(stage); var used = new HashSet<string>(StringComparer.Ordinal);
         foreach (var id in reachable)
@@ -90,7 +90,7 @@ public sealed partial class VisualShader
             .Replace("#version 450", "#version 450\n#define ELECTRON2D_SHADER_STAGE " + ((int)stage).ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal);
         var screenUV = reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeTexture { Source: VisualShaderNodeTexture.SourceEnum.Screen }) && stage == Type.Fragment;
         var sdf = reachable.Any(id => UsesSDFImage(graph.Nodes[id].Node));
-        var rendererValues = ReadsRendererValues(ExpressionSources(stage, reachable)) || reachable.Any(id => IsSDFNode(graph.Nodes[id].Node)) || screenUV || selected.Any(p => p.Qualifier == Q.None) || reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeInput input &&
+        var rendererValues = ReadsRendererValues(ExpressionSources(stage, reachable, custom)) || reachable.Any(id => IsSDFNode(graph.Nodes[id].Node)) || screenUV || selected.Any(p => p.Qualifier == Q.None) || reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeInput input &&
             (input.GenerateExpression(stage).Contains("TIME", StringComparison.Ordinal) || input.GenerateExpression(stage).Contains("SCREEN_PIXEL_SIZE", StringComparison.Ordinal)));
         var reserved = stage == Type.Vertex ? "float TIME;" : "float TIME; vec2 SCREEN_PIXEL_SIZE;";
         var sdfFields = sdf ? " vec4 SDF_COORDS;" : "";
@@ -122,7 +122,7 @@ public sealed partial class VisualShader
         if (reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeColorFunc { Function: VisualShaderNodeColorFunc.FunctionEnum.RGBToHSV }))
             extra.Append(VisualShaderNodeColorFunc.RGBToHSVDefinition(aliases["e2d_rgb_to_hsv"]));
         if (sdf) extra.Append(SDFDefinitions(reachable.Select(id => graph.Nodes[id].Node), aliases));
-        extra.Append(GlobalExpressionHeader(stage, aliases));
+        extra.Append(CustomGlobals(custom, stage, aliases)).Append(GlobalExpressionHeader(stage, aliases));
         return header.Replace("void main() {", extra + "void main() {", StringComparison.Ordinal);
     }
 }

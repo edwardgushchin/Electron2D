@@ -9,12 +9,12 @@ public sealed partial class VisualShader
     {
         ThrowIfDisposed(); ValidateFileState();
         if (GetMode() != Mode.CanvasItem) throw new NotSupportedException("This visual graph importer requires the canvas shader domain.");
-        var parameters = ParameterSymbols(); var slots = InstanceSlots(parameters);
+        var parameters = ParameterSymbols(); var slots = InstanceSlots(parameters); var custom = PrepareCustomCode();
         var images = new List<VisualShaderImage>(); var blocks = new List<VisualShaderBlockName>();
-        return (GenerateStage(Type.Vertex, parameters, slots, images, blocks), GenerateStage(Type.Fragment, parameters, slots, images, blocks), images, blocks);
+        return (GenerateStage(Type.Vertex, parameters, slots, images, blocks, custom), GenerateStage(Type.Fragment, parameters, slots, images, blocks, custom), images, blocks);
     }
 
-    private string GenerateStage(Type stage, Dictionary<string, VisualShaderNodeParameter> parameters, Dictionary<string, int> slots, List<VisualShaderImage> allImages, List<VisualShaderBlockName> allBlocks)
+    private string GenerateStage(Type stage, Dictionary<string, VisualShaderNodeParameter> parameters, Dictionary<string, int> slots, List<VisualShaderImage> allImages, List<VisualShaderBlockName> allBlocks, CustomPlan? custom)
     {
         var graph = GetGraph(stage);
         var incoming = new Dictionary<(int Node, int Port), VisualShaderConnection>();
@@ -47,14 +47,15 @@ public sealed partial class VisualShader
                 if (incoming.TryGetValue((id, port), out var edge)) { remaining[id]++; dependents[edge.FromNode].Add(id); }
         var ready = new PriorityQueue<int, int>();
         foreach (var pair in remaining) if (pair.Value == 0) ready.Enqueue(pair.Key, pair.Key);
-        var plan = ImagePlan(stage, reachable, parameters); allImages.AddRange(plan.Images);
-        var expressionSources = ExpressionSources(stage, reachable).ToArray();
+        var plan = ImagePlan(stage, reachable, parameters, custom); allImages.AddRange(plan.Images);
+        var expressionSources = ExpressionSources(stage, reachable, custom).ToArray();
         var expressionNames = expressionSources.SelectMany(s => SourceIdentifiers(s).Select(t => s.Substring(t.Start, t.Length))).ToHashSet(StringComparer.Ordinal);
         var aliases = StageSymbols(plan.Images, expressionNames);
         foreach (var role in new[] { "Frame", "RendererValues", "Globals", "Instance" })
             if (aliases[role] != role) allBlocks.Add(new(stage, aliases[role], role));
-        var header = ParameterHeader(stage, reachable, parameters, slots, plan.Images, aliases);
+        var header = ParameterHeader(stage, reachable, parameters, slots, plan.Images, aliases, custom);
         var source = new StringBuilder(header);
+        EmitCustomFunctions(custom, stage, aliases, source);
         var names = parameters.Keys.Concat(plan.Images.Select(i => i.Name)).Concat(expressionNames).ToHashSet(StringComparer.Ordinal);
         var values = new Dictionary<(int Node, int Port), string>(); var completed = 0;
         string Input(int id, int port)
@@ -93,6 +94,13 @@ public sealed partial class VisualShader
             else
             {
                 var inputs = Enumerable.Range(0, node.Inputs.Length).Select(port => Input(id, port)).ToArray();
+                if (node is VisualShaderNodeCustom provider)
+                {
+                    var connected = Enumerable.Range(0, node.Inputs.Length).Where(p => incoming.ContainsKey((id, p))).ToHashSet();
+                    EmitCustom(provider, custom!.Blocks[(stage, id)], id, inputs, connected, stage, aliases, names, values, source);
+                    foreach (var next in dependents[id]) if (--remaining[next] == 0) ready.Enqueue(next, next);
+                    continue;
+                }
                 if (node is VisualShaderNodeExpression block)
                 {
                     EmitExpression(block, id, inputs, stage, aliases, names, values, source);
@@ -140,7 +148,7 @@ public sealed partial class VisualShader
             foreach (var next in dependents[id]) if (--remaining[next] == 0) ready.Enqueue(next, next);
         }
         if (completed != reachable.Count) throw new InvalidDataException("The reachable visual shader graph contains a cycle.");
-        if (reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeExpression)) WrapExpressionStage(source, header, stage, aliases);
+        if (custom is not null || reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeExpression)) WrapExpressionStage(source, header, stage, aliases);
         source.Append(StageExpression(stage == Type.Vertex ? VertexFooter : FragmentFooter, aliases));
         var result = source.ToString();
         if (Encoding.UTF8.GetByteCount(result) > ShaderInclude.MaximumSourceBytes) throw new InvalidDataException("Generated shader source exceeds the import budget.");

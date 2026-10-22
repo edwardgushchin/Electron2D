@@ -270,3 +270,13 @@ values; bound F16 target conversion per channel rather than assuming CLR roundin
 Execute UV/image/color material chains with live parameter update/reset and retain
 zero-allocation frame intervals. Undefined divide/center boundaries require
 import/load evidence without portable pixel assertions.
+
+Compiled custom visual graph changes also run the public Custom CPU/authoring
+consumer, the compiled registered import host and tools/shaders/check_custom.py.
+Check source/default/option budgets, explicit zero/inactive choices, derived
+schema ordering, copy/factory aliases, reachable type scope, both-stage function
+setup, numeric/image inputs and native return/discard. Verify failed imports and
+SDK callback deadlines preserve output bytes/timestamps. Run
+python3 -B tools/shaders/check_host.py for the shared external-producer boundary.
+Keep custom runtime consumers independent of tool/backend assemblies. Software
+rendered and AOT evidence remains scoped to its exact source cohort and profiles.

@@ -1,0 +1,172 @@
+{
+  "mappings": [
+    {
+      "godot": "class:VisualShaderNodeCustom",
+      "electron2d": "T:Electron2D.VisualShaderNodeCustom",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_category()",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetCategory()",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_code(String[]:,String[]:,int:Shader.Mode,int:VisualShader.Type)",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetCode(System.Collections.Generic.IReadOnlyList<System.String>,System.Collections.Generic.IReadOnlyList<System.String>,Electron2D.Shader.Mode,Electron2D.VisualShader.Type)",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_default_input_port(int:VisualShaderNode.PortType)",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetDefaultInputPort(Electron2D.VisualShaderNode.PortType)",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_description()",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetDescription()",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_func_code(int:Shader.Mode,int:VisualShader.Type)",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetFuncCode(Electron2D.Shader.Mode,Electron2D.VisualShader.Type)",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_global_code(int:Shader.Mode)",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetGlobalCode(Electron2D.Shader.Mode)",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_input_port_count()",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetInputPortCount()",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_input_port_default_value(int:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetInputPortDefaultValue(System.Int32)",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_input_port_name(int:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetInputPortName(System.Int32)",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_input_port_type(int:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetInputPortType(System.Int32)",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_name()",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetName()",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_output_port_count()",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetOutputPortCount()",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_output_port_name(int:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetOutputPortName(System.Int32)",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_output_port_type(int:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetOutputPortType(System.Int32)",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_property_count()",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetPropertyCount()",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_property_default_index(int:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetPropertyDefaultIndex(System.Int32)",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_property_name(int:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetPropertyName(System.Int32)",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_property_options(int:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetPropertyOptions(System.Int32)",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_get_return_icon_type()",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetReturnIconType()",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_is_available(int:Shader.Mode,int:VisualShader.Type)",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.IsAvailable(Electron2D.Shader.Mode,Electron2D.VisualShader.Type)",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:_is_highend()",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.IsHighEnd()",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeCustom::method:get_option_index(int:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetOptionIndex(System.Int32)",
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:VisualShaderNodeCustom",
+        "VisualShaderNodeCustom::method:_get_category()",
+        "VisualShaderNodeCustom::method:_get_code(String[]:,String[]:,int:Shader.Mode,int:VisualShader.Type)",
+        "VisualShaderNodeCustom::method:_get_default_input_port(int:VisualShaderNode.PortType)",
+        "VisualShaderNodeCustom::method:_get_description()",
+        "VisualShaderNodeCustom::method:_get_func_code(int:Shader.Mode,int:VisualShader.Type)",
+        "VisualShaderNodeCustom::method:_get_global_code(int:Shader.Mode)",
+        "VisualShaderNodeCustom::method:_get_input_port_count()",
+        "VisualShaderNodeCustom::method:_get_input_port_default_value(int:)",
+        "VisualShaderNodeCustom::method:_get_input_port_name(int:)",
+        "VisualShaderNodeCustom::method:_get_input_port_type(int:)",
+        "VisualShaderNodeCustom::method:_get_name()",
+        "VisualShaderNodeCustom::method:_get_output_port_count()",
+        "VisualShaderNodeCustom::method:_get_output_port_name(int:)",
+        "VisualShaderNodeCustom::method:_get_output_port_type(int:)",
+        "VisualShaderNodeCustom::method:_get_property_count()",
+        "VisualShaderNodeCustom::method:_get_property_default_index(int:)",
+        "VisualShaderNodeCustom::method:_get_property_name(int:)",
+        "VisualShaderNodeCustom::method:_get_property_options(int:)",
+        "VisualShaderNodeCustom::method:_get_return_icon_type()",
+        "VisualShaderNodeCustom::method:_is_available(int:Shader.Mode,int:VisualShader.Type)",
+        "VisualShaderNodeCustom::method:_is_highend()",
+        "VisualShaderNodeCustom::method:get_option_index(int:)"
+      ],
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeCustom..ctor()",
+      "reason": "Typed compiled-provider initialization, option mutation/refresh, resource property descriptors and reset lifecycle under ADRs 0001/0013/0028/0091."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetPropertyDescriptors()",
+      "reason": "Typed compiled-provider initialization, option mutation/refresh, resource property descriptors and reset lifecycle under ADRs 0001/0013/0028/0091."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.OnResetState()",
+      "reason": "Typed compiled-provider initialization, option mutation/refresh, resource property descriptors and reset lifecycle under ADRs 0001/0013/0028/0091."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.RefreshDefinition()",
+      "reason": "Typed compiled-provider initialization, option mutation/refresh, resource property descriptors and reset lifecycle under ADRs 0001/0013/0028/0091."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeCustom.SetOptionIndex(System.Int32,System.Int32)",
+      "reason": "Typed compiled-provider initialization, option mutation/refresh, resource property descriptors and reset lifecycle under ADRs 0001/0013/0028/0091."
+    }
+  ]
+}
