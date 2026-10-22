@@ -58,6 +58,14 @@ internal static class GPUPhysicsSolverStoreTests
         Console.WriteLine($"Resident retained colors: {store.ContactPointCount} rows, {store.ContactColorCount} colors, {store.ContactColorRounds} new proposal rounds.");
         Check(store.ContactColorRounds == 0 && store.ContactColorReuseCount == 1,
             "Retained contact colors are validated against the current graph without new proposals");
+        var proposals = store.ContactColorProposalRoundCount;
+        var submissions = store.SubmissionCount;
+        var uniforms = store.UniformBytes;
+        store.SolveConstraints(1f / 60, iterations: 1, margin: 0);
+        var steadySubmissions = store.SubmissionCount - submissions;
+        var steadyUniforms = store.UniformBytes - uniforms;
+        Check(store.ContactColorProposalRoundCount == proposals && store.ContactColorRounds == 0,
+            "A previously reused schedule records no empty proposal dispatches while validating every current row");
         store.SetPose(b, new(100, 0), 0);
         for (var i = 2; i < supports.Length; i++) store.SetPose(supports[i], new(2, 0), 0);
         store.SetVelocity(a, new(12, 0), 0);
@@ -71,12 +79,16 @@ internal static class GPUPhysicsSolverStoreTests
         GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers();
         var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
         var reused = store.ContactColorReuseCount;
+        proposals = store.ContactColorProposalRoundCount;
+        submissions = store.SubmissionCount;
         for (var i = 0; i < 128; i++) store.SolveConstraints(1f / 60, iterations: 1, margin: 0);
         Check(GC.GetAllocatedBytesForCurrentThread() == owner && GC.GetTotalAllocatedBytes(true) == all,
             "Validated retained contact schedules allocate zero owner/all-thread managed bytes");
         Check(store.ContactColorCount == 4 && store.ContactColorRounds == 0 && store.ContactColorFallbacks == 0 && store.ContactColorReuseCount - reused == 128,
             "Repeated cache validation retains all coupled rows without new proposals or fallback");
-        Console.WriteLine("Resident retained colors: same-size topology replacement rebuilds complete support; 128 warmed solves allocate 0/0 owner/all-thread bytes.");
+        Check(store.ContactColorProposalRoundCount == proposals && store.SubmissionCount - submissions == 128 * steadySubmissions,
+            "Steady schedule reuse removes proposal work without adding completion waits");
+        Console.WriteLine($"Resident retained colors: same-size topology replacement rebuilds complete support; 128 warmed solves allocate 0/0 owner/all-thread bytes with zero encoded proposals; steady submissions={steadySubmissions}, uniforms={steadyUniforms} B.");
         store.SetPose(supports[3], new(1000, 0), 0); store.SetVelocity(a, new(12, 0), 0);
         store.SolveConstraints(1f / 60, iterations: 1, margin: 0);
         Check(store.ContactPointCount == 3 && store.ContactColorCount >= 3 && store.ContactColorCount <= 4 && store.ContactColorRounds == 0 && store.ContactColorFallbacks == 0,

@@ -1,6 +1,6 @@
 # Resident contact scheduling and dense-world verification
 
-Last updated: 2026-10-18
+Last updated: 2026-10-22
 
 ## Validated device color cache, 2026-10-18
 
@@ -35,9 +35,12 @@ interval scope.
 Lookup and validation use the existing schedule completion check. Saving the next
 table joins the ordinary remaining solver commands; there is no separate cache
 submission/readback or CPU contact mirror. A miss after a previously reused graph
-can extend the ordinary four-round adaptive batch and add a completion check. The
-full workload counters include those waits and commands. Even a successful reuse
-still records the bounded proposal commands, whose device bodies exit immediately;
+can extend the adaptive batch and add a completion check. The full workload counters
+include those waits and commands. After a successful zero-round reuse, the next
+solve validates the cache before recording any proposals. If validation succeeds,
+no empty proposal commands are encoded. A miss then records the ordinary complete
+initial budget and bounded extensions; that miss costs one extra completion check.
+The first reuse after a productive rebuild still records its initial budget.
 ContactColorRounds is zero when no productive new proposal round was needed.
 
 A RED four-row control rebuilt two colors with two productive rounds. The keyed
@@ -164,6 +167,51 @@ The mass timings and complete fourteen/sixteen-profile cohorts above remain
 observations of their explicitly frozen 9a6c5f22-based sources, not a rerun of all
 those workloads on the later rendering change. Exact old source bytes displaced
 by that independent merge are retained and checked against their original PDB hashes.
+
+## Reused schedules without empty proposals, 2026-10-22
+
+The host predicts cache reuse only after the previous solve validated a retained
+multi-color schedule with zero productive rounds. The device still looks up every
+current contact key, validates all dynamic endpoints, rebuilds bucket counts/order
+and checks completion/conflicts before solving. A rejected prediction restarts the
+complete existing proposal budget at round zero; it never drops constraints,
+changes sweep counts or substitutes a CPU solve. No new buffer, CPU state mirror,
+shader or public API is introduced.
+
+The source-bound RED fixture fails on a four-row, two-color graph because the
+previous implementation records four empty proposal rounds. The changed path
+records zero, removing twelve compute passes and 384 uniform bytes per stable
+solve. The same fixture observes three total submissions and 2016 uniform bytes
+for the complete isolated velocity solve. Its 128 warmed four-color solves retain
+the same submission count and strict zero owner/all-thread managed bytes. A
+same-size replacement of the supported endpoints rejects the cached graph and
+rebuilds all four colors; a three-row subset still reuses its keyed colors.
+Single-row and six-row growth/shrink controls retain their previous physical
+velocity, momentum and pose bounds.
+
+The full resident solver and GPU checkpoint suites pass on this source-bound
+build, including the 65,536-body response control and contact/joint/sleep replay.
+Twenty-four public consumer profiles pass: CLR/strict NativeAOT, CPU/NVIDIA GPU,
+owner/separate physics lanes, each running contact caps/frame impulses, portable
+contact correction and the 64-body coupled pin/groove/spring graph. Existing
+strict zero-allocation and numerical assertions are unchanged. The runtime SHA-256
+is `1589138abff05ed1ac70128affb710d844ac5acc8dcbe5b40a3b81597537d3c1`;
+`validation.json` is `41b303111c1fdac62f02a58feacc2f070b789b80d57e29991270a9e01e223254`.
+
+A concurrent rendering fix advanced main to adac53847. Its Release/API/wiki checks
+pass, and an isolated build with the committed physics sources passes the color
+control again. The frozen full solver/consumer results above retain their original
+runtime identity; they do not certify the complete later main. One attempted
+shared-output control instead included the two preserved uncommitted physics
+prototypes after another build replaced those outputs. Its source check rejects
+it for this slice; the isolated main build excludes those prototypes.
+
+This establishes encoded-work reduction and bounded correctness on the tested
+NVIDIA Vulkan path. Changed topology can add a 144-byte completion readback and
+one wait before rebuilding. Whole-step throughput, mass-scene GPU advantage,
+window FPS and foreign-platform acceptance remain open. Evidence is in the local
+ignored `bin/physics-color-reuse/2026-10-22/`; the prematurely frozen first control
+is explicitly rejected there, and `red-current/` is the source-verified RED run.
 
 ## Row-bounded proposal batches, 2026-10-18
 

@@ -26,11 +26,18 @@ failed with device loss and remains open.
 
 [Buffer memory observations](../components/gpu-memory.md) are implemented in [GPUPhysicsBodyStore.Memory.cs](../../src/Servers/Physics/GPUPhysicsBodyStore.Memory.cs). They track all requested storage/transfer resources, growth overlap and checkpoint copies through native release, without a simulation mirror or extra GPU work. Complete driver/native and managed memory remains outside this counter.
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 [Resident Area sorting](../components/physics-areas.md#resident-area-sorting-in-nativeaot) now uses one cached explicit comparison over the existing active prefix. This removes a reproduced 48-byte NativeAOT allocation per dirty-profile sort while retaining priority/traversal order, buffers and transfer/wait policy. The full changed-parameter fixture keeps a strict zero managed-byte gate; native allocation and target GPU performance remain separate.
 
 [Validated color reuse](../components/gpu-contact-colors.md#validated-device-color-cache-2026-10-18) seeds schedules through retained device contact keys, then checks every current row and dynamic endpoint. Any miss/conflict rebuilds the complete schedule. `ContactColorReuseCount` counts accepted seeds; `ContactColorCacheStorageBytes` reports 48-byte record and four-byte table-slot capacity. This adds no CPU contact mirror, portable payload or cache-specific readback. Local GPU checkpoints retain this scheduling cache and its logical lookup size for bounded replay. A reused subset can leave empty color ranges; `ContactColorCount` is their exclusive upper index, and only populated ranges solve. `ContactColorRounds` is zero when validation needs no productive proposal round. Exact native/driver overhead and final hardware acceptance remain outside these counters.
+
+[Reuse before proposals](../components/gpu-contact-colors.md#reused-schedules-without-empty-proposals-2026-10-22)
+validates a previously reused schedule before encoding proposal rounds. Stable
+reuse removes empty dispatches without another wait; a miss runs the complete
+initial budget and can add one completion check. Every current key/endpoint,
+configured sweep and overflow fallback remains validated. No storage or public API
+is added; whole-step and mass-scene performance acceptance remain open.
 
 [Contact proposal budgets](../components/gpu-contact-colors.md#row-bounded-proposal-batches-2026-10-18) use the current row count to bound initial and extended schedule batches. `ContactColorProposalRoundCount` is a cumulative internal count of encoded complete proposal rounds, including device-empty padding. Reading it creates no GPU work, waits or state mirror; it is diagnostic metadata, not checkpoint state. Color validation, configured solver sweeps and full overflow response remain unchanged.
 

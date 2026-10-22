@@ -2078,3 +2078,14 @@ presentation pass converts linear canvas content to SDR. Existing half-float
 canvas targets under ADR 0028 do not supply native HDR output. A numeric constant
 or unconsumed SDL HDR event would not implement this contract. Complete the actual
 per-window output mode/value/event chain before closing this inherited row.
+
+## Retained contact schedule command reduction, 2026-10-22
+
+The [GPU schedule slice](gpu-contact-colors.md#reused-schedules-without-empty-proposals-2026-10-22)
+removes empty proposal commands after a validated reuse while retaining all
+current constraints, dynamic-endpoint checks, complete recoloring and high-degree
+fallback. Same-size graph replacement, keyed subsets, growth/shrink and strict
+zero managed allocations remain executable. This changes internal command
+scheduling only: 1306/1369 applicable declarations remain Implemented (95.40%),
+with 49 Partial, 11 Blocked, 3 Unimplemented and 92 Excluded. No remaining inherited
+API row or final CPU/GPU performance requirement is promoted by this work.

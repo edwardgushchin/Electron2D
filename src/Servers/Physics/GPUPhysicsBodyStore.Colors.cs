@@ -61,7 +61,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         // shortcut: 32 colors/64 rounds use complete Jacobi on overflow; enlarge the schedule if high-degree workloads need colored convergence.
         // An unfinished round assigns at least one row or selects the complete fallback.
         var budget = (uint)Math.Min(64, ContactPointCount);
-        var limit = (uint)Math.Clamp(ContactColorRounds + 1, Math.Min(4, ContactPointCount), (int)budget); var round = 0u;
+        var initialLimit = (uint)Math.Clamp(ContactColorRounds + 1, Math.Min(4, ContactPointCount), (int)budget);
+        // Validate a previously reused schedule before recording proposals that would only exit on device.
+        var limit = retained && ContactColorRounds == 0 ? 0u : initialLimit; var round = 0u;
         while (true)
         {
             for (; round < limit; round++)
@@ -100,7 +102,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             command = SDL.AcquireGPUCommandBuffer(Device);
             if (command == 0) throw GPUPhysicsDevice.Failure("acquire colored contact solve");
             if (!incomplete) { if (fallback) ContactColorFallbacks++; break; }
-            limit = Math.Min(budget, limit + 16);
+            limit = round == 0 ? initialLimit : Math.Min(budget, limit + 16);
         }
         // A single-color graph already completes in one productive proposal round.
         _retainedColorPointCount = ContactColorCount > 1 ? ContactPointCount : 0;
