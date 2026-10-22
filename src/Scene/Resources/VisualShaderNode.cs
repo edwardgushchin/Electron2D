@@ -32,6 +32,7 @@ public abstract class VisualShaderNode : Resource
 
     private readonly Dictionary<int, VisualShaderPortDefault> _defaults = [];
     private int[]? _fileDefaultPorts;
+    internal bool RestoringDefaultTable => _fileDefaultPorts is not null;
     internal abstract PortType[] Inputs { get; }
     internal virtual PortType[] DefaultInputs => Inputs;
     internal abstract PortType[] Outputs { get; }

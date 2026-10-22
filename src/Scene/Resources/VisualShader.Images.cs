@@ -94,7 +94,7 @@ public sealed partial class VisualShader
     private static Dictionary<string, string> StageSymbols(IEnumerable<VisualShaderImage> images)
     {
         var used = images.Select(i => i.Name).ToHashSet(StringComparer.Ordinal); var aliases = new Dictionary<string, string>(StringComparer.Ordinal);
-        foreach (var symbol in new[] { "VERTEX", "UV", "COLOR", "INSTANCE_CUSTOM", "e2d_values", "e2d_globals", "e2d_instance", "Frame", "RendererValues", "Globals", "Instance" })
+        foreach (var symbol in new[] { "VERTEX", "UV", "COLOR", "INSTANCE_CUSTOM", "e2d_values", "e2d_globals", "e2d_instance", "Frame", "RendererValues", "Globals", "Instance", "e2d_rgb_to_hsv" })
         {
             var name = symbol;
             for (var suffix = 2; !used.Add(name); suffix++) name = symbol + "_" + suffix.ToString(CultureInfo.InvariantCulture);

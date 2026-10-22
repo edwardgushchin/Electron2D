@@ -3,14 +3,15 @@ using IOPath = System.IO.Path;
 
 internal static partial class GraphChecks
 {
-    private const int GraphColumns = 72;
+    private const int GraphColumns = 80;
+    private const int GraphSpacing = 20;
     internal static void Render(string folder, string[] args)
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu");
         ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         if (args.Contains("msaa")) ProjectSettings.Set(ProjectSettings.MSAA2D, Viewport.MSAA.Samples4X);
         var rows = (Directory.GetFiles(folder, "*.e2dres").Length + GraphColumns - 1) / GraphColumns;
-        using var window = new Window { Size = new(8 + GraphColumns * 24, Math.Max(224, rows * 24 + 24)), Title = "Imported visual shader graphs", UseHDR2D = args.Contains("hdr") };
+        using var window = new Window { Size = new(8 + GraphColumns * GraphSpacing, Math.Max(224, rows * GraphSpacing + 24)), Title = "Imported visual shader graphs", UseHDR2D = args.Contains("hdr") };
         window.AddChild(new GraphScene(folder)); Engine.Run(window);
         Check(window.IsDisposed && !RenderingServer.IsAvailable, "Graph render host retires its resources.");
     }
@@ -35,12 +36,13 @@ internal static partial class GraphChecks
             var files = Directory.GetFiles(folder, "*.e2dres").Order(StringComparer.Ordinal).ToArray();
             var backgrounds = files.Select((file, index) => (Name: IOPath.GetFileNameWithoutExtension(file), Index: index))
                 .Where(item => item.Name.StartsWith("img-screen-", StringComparison.Ordinal) || item.Name.StartsWith("img-source-1-", StringComparison.Ordinal))
-                .Select(item => new Vector2(8 + item.Index % GraphColumns * 24, 8 + item.Index / GraphColumns * 24)).ToArray();
+                .Select(item => new Vector2(8 + item.Index % GraphColumns * GraphSpacing, 8 + item.Index / GraphColumns * GraphSpacing)).ToArray();
             if (backgrounds.Length != 0) AddChild(new ImageBackdrop(backgrounds));
             foreach (var file in files)
             {
                 var name = IOPath.GetFileNameWithoutExtension(file);
                 var shader = Own(ResourceLoader.Load<VisualShader>(file, ResourceLoader.CacheMode.IgnoreDeep));
+                if (name.StartsWith("fx-", StringComparison.Ordinal)) VerifyEffectArchive(name, shader);
                 if (name.StartsWith("derivative-", StringComparison.Ordinal)) VerifyDerivativeArchive(name, shader);
                 if (name.StartsWith("integer-", StringComparison.Ordinal)) VerifyIntegerArchive(name, shader);
                 if (name.StartsWith("condition-", StringComparison.Ordinal)) VerifyConditionArchive(name, shader);
@@ -48,9 +50,10 @@ internal static partial class GraphChecks
                 if (name.StartsWith("range-", StringComparison.Ordinal)) VerifyRangeArchive(name, shader);
                 if (name.StartsWith("parameter-", StringComparison.Ordinal)) PrepareParameterShader(name, shader);
                 var material = Own(new ShaderMaterial { Shader = shader });
-                var position = new Vector2(8 + _cases.Count % GraphColumns * 24, 8 + _cases.Count / GraphColumns * 24);
+                var position = new Vector2(8 + _cases.Count % GraphColumns * GraphSpacing, 8 + _cases.Count / GraphColumns * GraphSpacing);
                 var painter = new GraphPainter(name.StartsWith("img-", StringComparison.Ordinal) && !name.StartsWith("img-channel-", StringComparison.Ordinal) ? ImageCanvas(texture) : texture) { Position = position, Material = material };
                 if (name.StartsWith("img-", StringComparison.Ordinal)) PrepareImageCase(name, shader, material);
+                if (name.StartsWith("fx-", StringComparison.Ordinal)) PrepareEffectCase(name, shader, material, position);
                 AddChild(painter); _cases.Add((painter, name, position));
                 if (name.StartsWith("img-device-", StringComparison.Ordinal)) _deviceImageCases.Add((painter, name, position));
                 if (name.StartsWith("img-filter-", StringComparison.Ordinal)) _imageSamplerCases.Add((shader, name, position));
@@ -63,6 +66,7 @@ internal static partial class GraphChecks
         {
             _frame++;
             ProcessParameters();
+            ProcessEffects();
             ProcessDeviceImages();
             ProcessImageSamplers();
             if (_frame is > 30 and <= 94)
@@ -71,6 +75,7 @@ internal static partial class GraphChecks
         private void AfterDraw()
         {
             CheckParameterFrames();
+            if (_frame is 5 or 7) CheckEffectFrames();
             if (_frame is 5 or 7) CheckDeviceImageFrames();
             CheckImageSamplerFrames();
             if (_frame == 3)
@@ -78,13 +83,14 @@ internal static partial class GraphChecks
                 using var pixels = GetWindow()!.GetTexture().GetImage()!;
                 foreach (var item in _cases)
                 {
-                    var expected = item.Name.StartsWith("img-", StringComparison.Ordinal) ? ImageExpected(item.Name, GetWindow()!.UseHDR2D) : Expected(item.Name);
+                    var expected = item.Name.StartsWith("fx-", StringComparison.Ordinal) ? EffectExpected(item.Name, GetWindow()!.UseHDR2D) : item.Name.StartsWith("img-", StringComparison.Ordinal) ? ImageExpected(item.Name, GetWindow()!.UseHDR2D) : Expected(item.Name);
                     if (!GetWindow()!.UseHDR2D)
                         expected = new(Math.Clamp(expected.R, 0, 1), Math.Clamp(expected.G, 0, 1), Math.Clamp(expected.B, 0, 1), expected.A);
                     var actual = pixels.GetPixel((int)item.Position.X + 8, (int)item.Position.Y + 8);
                     var integerBytes = item.Name.StartsWith("parameter-1-", StringComparison.Ordinal) || item.Name.StartsWith("parameter-2-", StringComparison.Ordinal) || item.Name.StartsWith("integer-", StringComparison.Ordinal) || item.Name.StartsWith("condition-s-1-", StringComparison.Ordinal) || item.Name.StartsWith("condition-s-2-", StringComparison.Ordinal);
-                    var tolerance = integerBytes ? .001f : (item.Name.StartsWith("img-", StringComparison.Ordinal) || item.Name.StartsWith("derivative-", StringComparison.Ordinal) || item.Name.StartsWith("parameter-", StringComparison.Ordinal) || item.Name.StartsWith("condition-", StringComparison.Ordinal) || item.Name.StartsWith("matrix-", StringComparison.Ordinal)) ? .0021f : .016f;
-                    Check(MathF.Abs(actual.R - expected.R) < tolerance && MathF.Abs(actual.G - expected.G) < tolerance && MathF.Abs(actual.B - expected.B) < tolerance,
+                    var tolerance = integerBytes ? .001f : (item.Name.StartsWith("fx-", StringComparison.Ordinal) || item.Name.StartsWith("img-", StringComparison.Ordinal) || item.Name.StartsWith("derivative-", StringComparison.Ordinal) || item.Name.StartsWith("parameter-", StringComparison.Ordinal) || item.Name.StartsWith("condition-", StringComparison.Ordinal) || item.Name.StartsWith("matrix-", StringComparison.Ordinal)) ? .0021f : .016f;
+                    Check(item.Name.StartsWith("fx-", StringComparison.Ordinal) ? EffectPixelsMatch(actual, expected, GetWindow()!.UseHDR2D) :
+                        MathF.Abs(actual.R - expected.R) < tolerance && MathF.Abs(actual.G - expected.G) < tolerance && MathF.Abs(actual.B - expected.B) < tolerance,
                         $"Graph {item.Name}: actual {actual}, expected {expected}.");
                     if (item.Name == "vertex-shift")
                     {
@@ -127,6 +133,7 @@ internal static partial class GraphChecks
                 Console.WriteLine($"Graphs {(_frame == 94 ? "active" : "idle")}: 64 frames, owner={owner}, all={all} bytes.");
                 Check(owner == 0 && all == 0, "Compiled visual graph replay has zero prepared managed allocations.");
                 CheckDeviceImageFrames();
+                CheckEffectFrames();
                 for (var i = 0; i < _cases.Count; i++) Check(_cases[i].Painter.Draws == _drawCounts[i], "Graph replay retains draw commands.");
                 if (_frame == 174) Tree!.Quit();
             }

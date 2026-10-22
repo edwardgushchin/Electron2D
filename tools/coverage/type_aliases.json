@@ -257,6 +257,9 @@
     "VisualShaderNodeTextureParameter.TextureFilter": "VisualShaderNodeTextureParameter.TextureFilterEnum",
     "VisualShaderNodeTextureParameter.TextureRepeat": "VisualShaderNodeTextureParameter.TextureRepeatEnum",
     "VisualShaderNodeTextureParameter.TextureSource": "VisualShaderNodeTextureParameter.TextureSourceEnum",
-    "VisualShaderNodeTextureParameter.TextureType": "VisualShaderNodeTextureParameter.TextureTypeEnum"
+    "VisualShaderNodeTextureParameter.TextureType": "VisualShaderNodeTextureParameter.TextureTypeEnum",
+    "VisualShaderNodeColorFunc.Function": "VisualShaderNodeColorFunc.FunctionEnum",
+    "VisualShaderNodeColorOp.Operator": "VisualShaderNodeColorOp.OperatorEnum",
+    "VisualShaderNodeUVFunc.Function": "VisualShaderNodeUVFunc.FunctionEnum"
   }
 }

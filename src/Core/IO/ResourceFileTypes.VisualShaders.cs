@@ -5,6 +5,10 @@ public static partial class ResourceFileTypes
     private static void RegisterVisualShaderResources()
     {
         RegisterResource("VisualShader", CreateVisualShaderFileResource);
+        RegisterResource("VisualShaderNodeUVFunc", CreateVisualShaderNodeUVFuncFileResource);
+        RegisterResource("VisualShaderNodeUVPolarCoord", CreateVisualShaderNodeUVPolarCoordFileResource);
+        RegisterResource("VisualShaderNodeColorFunc", CreateVisualShaderNodeColorFuncFileResource);
+        RegisterResource("VisualShaderNodeColorOp", CreateVisualShaderNodeColorOpFileResource);
         RegisterResource("VisualShaderNodeTexture", CreateVisualShaderNodeTextureFileResource);
         RegisterResource("VisualShaderNodeTextureArray", CreateVisualShaderNodeTextureArrayFileResource);
         RegisterResource("VisualShaderNodeImageParameter", CreateVisualShaderNodeImageParameterFileResource);
@@ -122,4 +126,8 @@ public static partial class ResourceFileTypes
     private static VisualShaderNodeColorParameter CreateVisualShaderNodeColorParameterFileResource() => new();
     private static VisualShaderNodeMatrixParameter CreateVisualShaderNodeMatrixParameterFileResource() => new();
     private static VisualShaderNodeParameterRef CreateVisualShaderNodeParameterRefFileResource() => new();
+    private static VisualShaderNodeUVFunc CreateVisualShaderNodeUVFuncFileResource() => new();
+    private static VisualShaderNodeUVPolarCoord CreateVisualShaderNodeUVPolarCoordFileResource() => new();
+    private static VisualShaderNodeColorFunc CreateVisualShaderNodeColorFuncFileResource() => new();
+    private static VisualShaderNodeColorOp CreateVisualShaderNodeColorOpFileResource() => new();
 }

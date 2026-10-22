@@ -935,8 +935,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeBooleanParameter](classes/VisualShaderNodeBooleanParameter.md) | VisualShaderNodeParameter | Implemented | 2 |
 | [VisualShaderNodeClamp](classes/VisualShaderNodeClamp.md) | VisualShaderNode | Implemented | 9 |
 | [VisualShaderNodeColorConstant](classes/VisualShaderNodeColorConstant.md) | VisualShaderNodeConstant | Implemented | 1 |
-| [VisualShaderNodeColorFunc](classes/VisualShaderNodeColorFunc.md) | VisualShaderNode | Unimplemented | 9 |
-| [VisualShaderNodeColorOp](classes/VisualShaderNodeColorOp.md) | VisualShaderNode | Unimplemented | 12 |
+| [VisualShaderNodeColorFunc](classes/VisualShaderNodeColorFunc.md) | VisualShaderNode | Implemented | 9 |
+| [VisualShaderNodeColorOp](classes/VisualShaderNodeColorOp.md) | VisualShaderNode | Implemented | 12 |
 | [VisualShaderNodeColorParameter](classes/VisualShaderNodeColorParameter.md) | VisualShaderNodeParameter | Implemented | 2 |
 | [VisualShaderNodeComment](classes/VisualShaderNodeComment.md) | VisualShaderNodeFrame | Blocked | 1 |
 | [VisualShaderNodeCompare](classes/VisualShaderNodeCompare.md) | VisualShaderNode | Implemented | 25 |
@@ -1020,8 +1020,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeUIntFunc](classes/VisualShaderNodeUIntFunc.md) | VisualShaderNode | Implemented | 5 |
 | [VisualShaderNodeUIntOp](classes/VisualShaderNodeUIntOp.md) | VisualShaderNode | Implemented | 15 |
 | [VisualShaderNodeUIntParameter](classes/VisualShaderNodeUIntParameter.md) | VisualShaderNodeParameter | Implemented | 2 |
-| [VisualShaderNodeUVFunc](classes/VisualShaderNodeUVFunc.md) | VisualShaderNode | Unimplemented | 5 |
-| [VisualShaderNodeUVPolarCoord](classes/VisualShaderNodeUVPolarCoord.md) | VisualShaderNode | Unimplemented | 0 |
+| [VisualShaderNodeUVFunc](classes/VisualShaderNodeUVFunc.md) | VisualShaderNode | Implemented | 5 |
+| [VisualShaderNodeUVPolarCoord](classes/VisualShaderNodeUVPolarCoord.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeVarying](classes/VisualShaderNodeVarying.md) | VisualShaderNode | Blocked | 2 |
 | [VisualShaderNodeVaryingGetter](classes/VisualShaderNodeVaryingGetter.md) | VisualShaderNodeVarying | Blocked | 0 |
 | [VisualShaderNodeVaryingSetter](classes/VisualShaderNodeVaryingSetter.md) | VisualShaderNodeVarying | Blocked | 0 |

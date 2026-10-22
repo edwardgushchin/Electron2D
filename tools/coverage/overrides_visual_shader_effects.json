@@ -1,0 +1,238 @@
+{
+  "mappings": [
+    {
+      "godot": "class:VisualShaderNodeColorFunc",
+      "electron2d": "T:Electron2D.VisualShaderNodeColorFunc",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorFunc::enum:Function",
+      "electron2d": "T:Electron2D.VisualShaderNodeColorFunc.FunctionEnum",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorFunc::enum_value:Function.FUNC_GRAYSCALE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeColorFunc.FunctionEnum.Grayscale()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorFunc::enum_value:Function.FUNC_HSV2RGB",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeColorFunc.FunctionEnum.HSVToRGB()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorFunc::enum_value:Function.FUNC_LINEAR_TO_SRGB",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeColorFunc.FunctionEnum.LinearToSRGB()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorFunc::enum_value:Function.FUNC_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeColorFunc.FunctionEnum.Max()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorFunc::enum_value:Function.FUNC_RGB2HSV",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeColorFunc.FunctionEnum.RGBToHSV()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorFunc::enum_value:Function.FUNC_SEPIA",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeColorFunc.FunctionEnum.Sepia()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorFunc::enum_value:Function.FUNC_SRGB_TO_LINEAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeColorFunc.FunctionEnum.SRGBToLinear()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorFunc::property:function",
+      "electron2d": "property:Electron2D.VisualShaderNodeColorFunc.Function()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeColorOp",
+      "electron2d": "T:Electron2D.VisualShaderNodeColorOp",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorOp::enum:Operator",
+      "electron2d": "T:Electron2D.VisualShaderNodeColorOp.OperatorEnum",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorOp::enum_value:Operator.OP_BURN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeColorOp.OperatorEnum.Burn()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorOp::enum_value:Operator.OP_DARKEN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeColorOp.OperatorEnum.Darken()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorOp::enum_value:Operator.OP_DIFFERENCE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeColorOp.OperatorEnum.Difference()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorOp::enum_value:Operator.OP_DODGE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeColorOp.OperatorEnum.Dodge()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorOp::enum_value:Operator.OP_HARD_LIGHT",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeColorOp.OperatorEnum.HardLight()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorOp::enum_value:Operator.OP_LIGHTEN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeColorOp.OperatorEnum.Lighten()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorOp::enum_value:Operator.OP_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeColorOp.OperatorEnum.Max()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorOp::enum_value:Operator.OP_OVERLAY",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeColorOp.OperatorEnum.Overlay()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorOp::enum_value:Operator.OP_SCREEN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeColorOp.OperatorEnum.Screen()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorOp::enum_value:Operator.OP_SOFT_LIGHT",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeColorOp.OperatorEnum.SoftLight()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeColorOp::property:operator",
+      "electron2d": "property:Electron2D.VisualShaderNodeColorOp.Operator()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeUVFunc",
+      "electron2d": "T:Electron2D.VisualShaderNodeUVFunc",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeUVFunc::enum:Function",
+      "electron2d": "T:Electron2D.VisualShaderNodeUVFunc.FunctionEnum",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeUVFunc::enum_value:Function.FUNC_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeUVFunc.FunctionEnum.Max()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeUVFunc::enum_value:Function.FUNC_PANNING",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeUVFunc.FunctionEnum.Panning()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeUVFunc::enum_value:Function.FUNC_SCALING",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeUVFunc.FunctionEnum.Scaling()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeUVFunc::property:function",
+      "electron2d": "property:Electron2D.VisualShaderNodeUVFunc.Function()",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeUVPolarCoord",
+      "electron2d": "T:Electron2D.VisualShaderNodeUVPolarCoord",
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:VisualShaderNodeColorFunc",
+        "VisualShaderNodeColorFunc::enum:Function",
+        "VisualShaderNodeColorFunc::enum_value:Function.FUNC_GRAYSCALE",
+        "VisualShaderNodeColorFunc::enum_value:Function.FUNC_HSV2RGB",
+        "VisualShaderNodeColorFunc::enum_value:Function.FUNC_LINEAR_TO_SRGB",
+        "VisualShaderNodeColorFunc::enum_value:Function.FUNC_MAX",
+        "VisualShaderNodeColorFunc::enum_value:Function.FUNC_RGB2HSV",
+        "VisualShaderNodeColorFunc::enum_value:Function.FUNC_SEPIA",
+        "VisualShaderNodeColorFunc::enum_value:Function.FUNC_SRGB_TO_LINEAR",
+        "VisualShaderNodeColorFunc::property:function",
+        "class:VisualShaderNodeColorOp",
+        "VisualShaderNodeColorOp::enum:Operator",
+        "VisualShaderNodeColorOp::enum_value:Operator.OP_BURN",
+        "VisualShaderNodeColorOp::enum_value:Operator.OP_DARKEN",
+        "VisualShaderNodeColorOp::enum_value:Operator.OP_DIFFERENCE",
+        "VisualShaderNodeColorOp::enum_value:Operator.OP_DODGE",
+        "VisualShaderNodeColorOp::enum_value:Operator.OP_HARD_LIGHT",
+        "VisualShaderNodeColorOp::enum_value:Operator.OP_LIGHTEN",
+        "VisualShaderNodeColorOp::enum_value:Operator.OP_MAX",
+        "VisualShaderNodeColorOp::enum_value:Operator.OP_OVERLAY",
+        "VisualShaderNodeColorOp::enum_value:Operator.OP_SCREEN",
+        "VisualShaderNodeColorOp::enum_value:Operator.OP_SOFT_LIGHT",
+        "VisualShaderNodeColorOp::property:operator",
+        "class:VisualShaderNodeUVFunc",
+        "VisualShaderNodeUVFunc::enum:Function",
+        "VisualShaderNodeUVFunc::enum_value:Function.FUNC_MAX",
+        "VisualShaderNodeUVFunc::enum_value:Function.FUNC_PANNING",
+        "VisualShaderNodeUVFunc::enum_value:Function.FUNC_SCALING",
+        "VisualShaderNodeUVFunc::property:function",
+        "class:VisualShaderNodeUVPolarCoord"
+      ],
+      "reason": "ADRs 0001/0013/0028/0051: typed UV panning/scaling/polar coordinates and RGB functions/blends execute in the existing offline canvas importer. Preserve implicit UV, numeric default presence and selector transitions, borrowed definition aliases, portable archives, native arithmetic and signed/HDR values. Source edits require reimport; hardware, native heap, foreign platforms and editor acceptance remain separate."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeUVFunc..ctor()",
+      "reason": "Typed Resource construction, duplication and stored-property descriptors for the executing canvas image-effect node family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeUVFunc.CreateDuplicateInstance()",
+      "reason": "Typed Resource construction, duplication and stored-property descriptors for the executing canvas image-effect node family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeUVFunc.GetPropertyDescriptors()",
+      "reason": "Typed Resource construction, duplication and stored-property descriptors for the executing canvas image-effect node family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeUVPolarCoord..ctor()",
+      "reason": "Typed Resource construction, duplication and stored-property descriptors for the executing canvas image-effect node family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeUVPolarCoord.CreateDuplicateInstance()",
+      "reason": "Typed Resource construction, duplication and stored-property descriptors for the executing canvas image-effect node family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeColorFunc..ctor()",
+      "reason": "Typed Resource construction, duplication and stored-property descriptors for the executing canvas image-effect node family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeColorFunc.CreateDuplicateInstance()",
+      "reason": "Typed Resource construction, duplication and stored-property descriptors for the executing canvas image-effect node family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeColorFunc.GetPropertyDescriptors()",
+      "reason": "Typed Resource construction, duplication and stored-property descriptors for the executing canvas image-effect node family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeColorOp..ctor()",
+      "reason": "Typed Resource construction, duplication and stored-property descriptors for the executing canvas image-effect node family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeColorOp.CreateDuplicateInstance()",
+      "reason": "Typed Resource construction, duplication and stored-property descriptors for the executing canvas image-effect node family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeColorOp.GetPropertyDescriptors()",
+      "reason": "Typed Resource construction, duplication and stored-property descriptors for the executing canvas image-effect node family under ADRs 0001/0013/0028."
+    }
+  ]
+}

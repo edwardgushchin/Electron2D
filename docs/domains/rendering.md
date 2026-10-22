@@ -60,6 +60,10 @@ Weak logical rendering identities distinguish temporary pre-delete closure from 
 
 The retained canvas now draws caller-supplied LCD and MSDF textures through scene and static server commands. GPU executes coverage decoding, component blend, custom materials, lights, masks/groups and MSAA; compatibility rejects the unsupported profile. [The glyph contract and verification](../components/canvas-rendering.md#lcd-and-msdf-texture-regions) distinguish texture consumption from the separate FontFile generation prerequisite.
 
+UV panning/scaling/polar coordinates and RGB function/blend graphs compose with
+the sampled-image material path. [The image-effect contract](../components/visual-shaders.md#uv-and-color-image-effects)
+records implicit UV, default transitions, native arithmetic and verification limits.
+
 ## Executable shader and material identities
 
 Caller-owned compiled canvas programs and typed materials now bind directly to retained canvas items. Borrowed Shader/Material RIDs reuse the same parameter, texture, reload and native pipeline behavior. [The program contract](../components/shader-materials.md#shader-and-material-identities) records ownership, actual rendering and remaining initializer/sampler/profile dependencies.

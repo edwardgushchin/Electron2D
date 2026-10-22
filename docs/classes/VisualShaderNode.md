@@ -18,6 +18,10 @@ A typed operation in an offline-compiled visual shader graph.
 
 Nodes are borrowed by graphs. Authoring is cold, single-threaded work. Edits emit Changed and affect the next import; existing compiled shader programs retain their immutable code.
 
+UV Function restoration installs its stored default table without recreating a
+deliberately omitted pivot. Malformed/incomplete tables still reject before the
+graph is published.
+
 ## Member summary
 
 | Member | Contract |

@@ -259,3 +259,12 @@ snapshots before readback. Retain original failed gates. Reject malformed/duplic
 screen/qualifier/shape/default inputs and capacity excess without replacing the
 target or either stage. Recheck numeric graphs, sampler arrays, authored vertex
 and lighting/glyph consumers after shared reflection/backend changes.
+
+UV/color graph changes require both stages, all selector transitions and default
+presence through copies and fresh archives. Verify stored-but-implicit UV, absent
+pivot restoration, negative/zero/polar controls and per-vertex interpolation.
+Keep all color branches and transfer thresholds observable, including signed/HDR
+values; bound F16 target conversion per channel rather than assuming CLR rounding.
+Execute UV/image/color material chains with live parameter update/reset and retain
+zero-allocation frame intervals. Undefined divide/center boundaries require
+import/load evidence without portable pixel assertions.

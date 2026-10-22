@@ -116,6 +116,8 @@ public sealed partial class VisualShader
         foreach (var image in images.Where(i => stage != Type.Fragment || i.Name != "TEXTURE"))
             extra.Append("layout(set=").Append(stage == Type.Fragment ? 2 : 0).Append(",binding=").Append(imageBinding++).Append(") uniform ")
                 .Append(image.IsArray ? "sampler2DArray " : "sampler2D ").Append(image.Name).AppendLine(";");
+        if (reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeColorFunc { Function: VisualShaderNodeColorFunc.FunctionEnum.RGBToHSV }))
+            extra.Append(VisualShaderNodeColorFunc.RGBToHSVDefinition(aliases["e2d_rgb_to_hsv"]));
         return header.Replace("void main() {", extra + "void main() {", StringComparison.Ordinal);
     }
 }

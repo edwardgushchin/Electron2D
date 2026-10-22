@@ -239,6 +239,11 @@ def main():
     assert "VisualShaderNodeLayeredSample" in pages[CLASS_PAGES / "VisualShaderNodeSample3D.md"]
     assert "VisualShaderNodeImageParameter" in pages[CLASS_PAGES / "VisualShaderNodeTexture2DParameter.md"]
     assert "TextureFilterEnum" in pages[CLASS_PAGES / "VisualShaderNodeTextureParameter.md"]
+    for name, count in [("VisualShaderNodeUVFunc", 6), ("VisualShaderNodeUVPolarCoord", 1),
+                        ("VisualShaderNodeColorFunc", 10), ("VisualShaderNodeColorOp", 13)]:
+        rows = [row for row in pages[CLASS_PAGES / (name + ".md")].splitlines() if row.startswith("| [`")]
+        assert len(rows) == count and all(" | Implemented | " in row for row in rows)
+        assert all("Trigger:" not in row for row in rows)
     assert "OperatorEnum" in pages[CLASS_PAGES / "VisualShaderNodeFloatOp.md"]
     assert "OpTypeEnum" in pages[CLASS_PAGES / "VisualShaderNodeVectorBase.md"]
     engine_ids = {item["id"] for item in json.loads((DATA / "electron2d.json").read_text())}

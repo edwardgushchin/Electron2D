@@ -755,6 +755,73 @@ The SDK author/build/edit/error/recovery/publish/Clean workflow and 732 composed
 glyph modules were also checked. Physical GPU, native heap, foreign platforms and
 owner visual acceptance remain independent gates.
 
+## UV and color image effects
+
+`VisualShaderNodeUVFunc` has three Vector2 inputs: UV, scale and offset/pivot.
+Panning computes offset times scale plus UV; Scaling computes
+(UV minus pivot) times scale plus pivot. Both canvas stages use their current UV
+when input zero is unconnected. A stored numeric default on that port remains
+source data and does not override the implicit producer. Connected coordinates
+use the ordinary numeric port conversion path.
+
+The initial scale is one and offset zero. Changing Function preserves an
+existing offset/pivot, including the constructor's zero value. If input two is
+absent, a changed selection recreates zero for Panning or (0.5,0.5) for Scaling.
+An unchanged selection preserves absence. Resource restoration installs the
+stored default table without these authoring-time insertions; its complete-table
+validation remains strict. Copies preserve the actual selector and absence.
+
+`VisualShaderNodeUVPolarCoord` accepts UV, center, scalar zoom and scalar angular
+repeat. Center starts at (0.5,0.5), zoom/repeat at one, and UV is implicit.
+The first output component is twice the distance from center times zoom. The
+second is atan2(delta.y,delta.x) divided by two pi times angular repeat. Canvas
+output wraps both components with floor-based modulo one, including negative
+zoom/repeat. The angle at the exact center retains native undefined-domain
+semantics. Vertex operations run before interpolation; nonlinear polar output
+there differs from evaluating the function per fragment.
+
+`VisualShaderNodeColorFunc` uses one Vector3 input and output. Grayscale
+replicates the maximum component. HSVToRGB wraps hue and preserves numeric
+saturation/value; RGBToHSV uses a 1e-10 denominator stabilizer. Sepia uses the
+coefficient rows (0.393,0.769,0.189), (0.349,0.686,0.168) and
+(0.272,0.534,0.131). LinearToSRGB and SRGBToLinear use the piecewise transfer
+functions with thresholds 0.0031308 and 0.04045. These explicit transforms
+preserve negative linear branches and HDR values; they do not request an image
+source interpretation or change alpha.
+
+`VisualShaderNodeColorOp` consumes two Vector3 values A/B. Screen is
+1-(1-A)*(1-B), Difference is abs(A-B), Darken/Lighten select component minima/maxima,
+Dodge is A/(1-B), and Burn is 1-(1-A)/B. Overlay, SoftLight and HardLight select
+each component's branch using A < 0.5. Their low/high branches are respectively
+2*A*B / 1-2*(1-B)*(1-A), A*(B+0.5) / 1-(1-A)*(1.5-B), and
+2*A*B / 1-2*(1-A)*(1-B). Inputs start at zero; selectors preserve values and
+absence. Numeric output is unclamped; normalized framebuffer storage clamps.
+Dodge/Burn zero denominators retain native arithmetic semantics.
+
+The importer emits one private RGBToHSV helper per reachable stage and allocates
+its name against image bindings. User image names e2d_rgb_to_hsv and
+e2d_rgb_to_hsv_2 remain valid together. No runtime compiler or new backend is
+introduced. These nodes compose with ordinary/array image sampling and existing
+material/global/item values.
+
+The consumer authors 402 effect programs covering all operations in both stages,
+thresholds, signed/HDR colors, explicit/implicit coordinates, polar quadrants,
+negative/zero controls, stored defaults, aliases and omitted pivot. Six composed
+materials update/reset UV parameters while retaining image resources and draw
+commands; two programs exercise the helper-name collision. Six separate arithmetic
+boundary programs require import/fresh load without portable pixel assertions.
+The mixed regression set contains 3,291 programs: 402 fresh operation imports and
+2,889 retained compiled programs from the sampled-image checkpoint. Source-scoped
+receipts passed software Vulkan Wayland, X11 and HDR/MSAA in CLR and strict
+full-trim NativeAOT. Each profile checked 64 active/64 idle complete frames with
+zero owner/all-thread managed bytes, retained draw counts and live parameter
+update/reset pixels. CPU/source archives, 19 arithmetic boundary import/load cases,
+60 transactional negative imports, typed metadata and the SDK
+author/build/edit/error/recovery/publish/Clean workflow also passed. HDR comparisons account for adjacent F16 representations per channel;
+[Vulkan floating-point conversion](https://docs.vulkan.org/spec/latest/chapters/fundamentals.html#fundamentals-fp-conversion)
+allows either finite neighbor. Physical GPU, foreign hosts, native heap and owner
+visual acceptance remain independent gates.
+
 ## Decisions
 
 - [Typed shaders and rendering](../decisions/rendering.md#adr-0028)

@@ -58,6 +58,7 @@ public sealed partial class VisualShader
             if (!incoming.TryGetValue((id, port), out var edge))
             {
                 if (node.Inputs[port] == VisualShaderNode.PortType.Sampler) return "";
+                if (port == 0 && node is VisualShaderNodeUVFunc or VisualShaderNodeUVPolarCoord) return StageExpression("UV", aliases);
                 if (node is VisualShaderNodeTexture or VisualShaderNodeLayeredSample)
                 {
                     if (port == 0) return StageExpression(node is VisualShaderNodeLayeredSample ? "vec3(UV, 0.0)" :
@@ -102,6 +103,7 @@ public sealed partial class VisualShader
                         VisualShaderNodeInput input => StageExpression(input.Expression(stage), aliases).Replace("TIME", aliases["e2d_values"] + ".TIME", StringComparison.Ordinal).Replace("SCREEN_PIXEL_SIZE", aliases["e2d_values"] + ".SCREEN_PIXEL_SIZE", StringComparison.Ordinal),
                         VisualShaderNodeDerivativeFunc when stage != Type.Fragment => throw new NotSupportedException("Screen-space derivative nodes require the fragment graph stage."),
                         VisualShaderNodeTexture or VisualShaderNodeLayeredSample => SampleImage(sampler, inputs),
+                        VisualShaderNodeColorFunc color => color.Expression(output, inputs).Replace("e2d_rgb_to_hsv(", aliases["e2d_rgb_to_hsv"] + "(", StringComparison.Ordinal),
                         VisualShaderNodeTextureParameter => plan.Nodes[id],
                         VisualShaderNodeParameterRef when OutputTypes(node)[output] == VisualShaderNode.PortType.Sampler => plan.Nodes[id],
                         VisualShaderNodeParameter parameter => ParameterVariable(parameter, aliases),
