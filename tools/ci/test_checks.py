@@ -24,6 +24,31 @@ import run_browser
 
 
 class Checks(unittest.TestCase):
+    def test_linux_full_suite_selects_offscreen_video_without_changing_other_hosts(self):
+        workflow = (rids.ROOT / ".github/workflows/rid.yml").read_text()
+        prerequisites = workflow.partition("      - name: Install Linux native prerequisites\n")[2].split("\n      - ", 1)[0]
+        packages = re.search(r"sudo apt-get install -y ([^\n]+)", prerequisites)[1].split()
+        self.assertTrue({"libvulkan1", "mesa-vulkan-drivers"} <= set(packages))
+        step = workflow.partition("      - name: Run full headless runtime suite\n")[2].split("\n      - ", 1)[0]
+        command = "\n".join(line[10:] for line in step.partition("        run: |\n")[2].splitlines())
+        self.assertTrue(command)
+        with tempfile.TemporaryDirectory(prefix="e2d headless contract ") as directory:
+            root = Path(directory)
+            for rid in ("linux-x64", "linux-arm64", "win-x64", "osx-x64"):
+                with self.subTest(rid=rid):
+                    output = root / "bin/ci" / rid
+                    output.mkdir(parents=True)
+                    executable = root / "bin/ci-tests" / rid / ("Electron2D.Tests.exe" if rid.startswith("win-") else "Electron2D.Tests")
+                    executable.parent.mkdir(parents=True)
+                    expected = "offscreen:offscreen" if rid.startswith("linux-") else "owner:legacy"
+                    executable.write_text('#!/bin/sh\n[ "$SDL_VIDEO_DRIVER:$SDL_VIDEODRIVER" = "' + expected + '" ] || exit 97\nprintf "Electron2D checks passed.\\n"\n')
+                    executable.chmod(0o755)
+                    environment = os.environ | {"CI_RID": rid, "GITHUB_WORKSPACE": directory,
+                                                "SDL_VIDEO_DRIVER": "owner", "SDL_VIDEODRIVER": "legacy"}
+                    subprocess.run(["bash", "-e", "-o", "pipefail", "-c", command], cwd=root, env=environment,
+                                   check=True, stdout=subprocess.DEVNULL)
+                    self.assertEqual((output / "full-runtime.log").read_text(), "Electron2D checks passed.\n")
+
     def test_windows_host_tools_preserve_managed_rid_platform_inference(self):
         workflow = (rids.ROOT / ".github/workflows/rid.yml").read_text()
         marker = "      - name: Restore managed SDK platform inference\n"

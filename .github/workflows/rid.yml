@@ -83,7 +83,7 @@ jobs:
         if: inputs.tests && inputs.suite == 'full' && startsWith(inputs.rid, 'linux-')
         run: |
           sudo apt-get update
-          sudo apt-get install -y libzstd1 libssl-dev ffmpeg
+          sudo apt-get install -y libzstd1 libssl-dev ffmpeg libvulkan1 mesa-vulkan-drivers
           openssl version
           python -c 'import ctypes; ctypes.CDLL("libcrypto.so.3").BIO_s_dgram_pair'
           python - <<'PY'
@@ -132,6 +132,9 @@ jobs:
         run: |
           executable="$GITHUB_WORKSPACE/bin/ci-tests/$CI_RID/Electron2D.Tests"
           if [[ "$CI_RID" == win-* ]]; then executable="$executable.exe"; fi
+          if [[ "$CI_RID" == linux-* ]]; then
+            export SDL_VIDEO_DRIVER=offscreen SDL_VIDEODRIVER=offscreen
+          fi
           "$executable" | tee "bin/ci/$CI_RID/full-runtime.log"
           grep -Fx 'Electron2D checks passed.' "bin/ci/$CI_RID/full-runtime.log"
       - name: Diagnose an ARM64 native test crash without hiding the failure

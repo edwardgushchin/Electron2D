@@ -36,7 +36,7 @@ Mobile and browser contract apps share `FontTestFixtures`; embed every font reso
 
 Windows RID jobs retain the host MSVC environment for shader tools, then restore `Platform=AnyCPU` for managed SDK inference. Otherwise the host's `Platform=x64` overrides the selected `win-x86` target. The CI regression executes that environment step and checks all three Windows RID platform targets through MSBuild.
 
-Headless Linux test jobs provide an isolated `XDG_CONFIG_HOME/user-dirs.dirs` profile for desktop directory roles. Android target checks permit only the pinned private SDL bootstrap reference with compile/runtime/native assets excluded; target bundle checks retain native payload and duplicate-library validation.
+Headless Linux test jobs install the Vulkan loader and Mesa Vulkan drivers, then select `offscreen` through both SDL video-driver environment names for the full runtime process. This supplies video-subsystem initialization for real windowless compute without a desktop session; it does not establish rendered-window acceptance. The CI regression executes the actual launch script for both Linux RIDs and verifies that Windows/macOS retain their host selection. An isolated `XDG_CONFIG_HOME/user-dirs.dirs` profile supplies desktop directory roles. Android target checks permit only the pinned private SDL bootstrap reference with compile/runtime/native assets excluded; target bundle checks retain native payload and duplicate-library validation.
 
 Build/Tests job display names use each registry row's unique `label`, such as `Windows (x64)` or `iOS Simulator (ARM64)`, including the called workflow's leaf job. Keep the technical `rid` unchanged for toolchain selection, artifact identity and packaging.
 

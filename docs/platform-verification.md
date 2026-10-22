@@ -80,6 +80,16 @@ The Linux Wayland gate in [ADR 0021](decisions/product.md#adr-0021) remains the 
 
 ## Automated RID checks
 
+Linux full-suite jobs select SDL's `offscreen` video driver and install the Vulkan
+loader plus Mesa ICDs. GPU physics initializes the video subsystem even when its
+device has no window; an empty runner desktop must therefore have an explicit
+video backend. A local no-DISPLAY/no-Wayland pipeline check on NVIDIA Vulkan
+executes the production pair-table hash for 4,096 keys and both 26-pipeline
+owner/solver-thread profiles. The pipeline driver can report an unavailable
+headless-surface extension without preventing windowless compute. This targeted
+result does not establish Mesa execution on both CI architectures, a complete
+offscreen suite or rendered-window acceptance; those gates remain separate.
+
 The single [CI workflow](../.github/workflows/ci.yml) owns the complete 18-RID [matrix](../tools/ci/rids.json), one shared [native producer](../.github/workflows/native.yml), and separate Build/Tests matrices using the same [target workflow](../.github/workflows/rid.yml). Both matrices restore the same audited native artifacts from that run; native compilation, package auditing and fresh consumer checks are not duplicated. The matrix generator rejects missing, duplicate, extra or differently mapped RIDs relative to `Electron2D.csproj`. CI runs on main pushes, pull requests and manual dispatch, with fail-fast disabled and superseded runs cancelled per ref. Its final `Build` and `Tests` checks require every respective dependency to succeed; failures, skipped and cancelled work cannot count as passing. The two README badges select those checks by name on `main`; a successful badge covers the checks below, not full platform acceptance.
 
 | RIDs | Build | Tests |
