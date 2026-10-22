@@ -432,3 +432,5 @@ lanes and 2048 complete measured diagnostic frames at strict zero owner/all-thre
 managed bytes. Built-in no-device/software-GPU and real-window renderer companions
 complete 43 processes. These three operation rows close; complete numerical,
 network/native/platform and hardware performance gates remain open.
+
+[GPU contact observation ranges](../components/physics-space-checkpoints.md#indexed-gpu-contact-projection) are retained by slot high-water and restored with the selected GPU history. Empty or invalidated publication exposes no old ranges, including after sparse-slot churn.

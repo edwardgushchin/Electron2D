@@ -957,7 +957,7 @@ Common PhysicsSpace.Checkpoint now dispatches PrepareCheckpoint before creating
 or recapturing the selected solver history. CPU retains its existing idle/native
 preparation. GPU compiles pending body/Area/joint/exception policy in its owner,
 then captures device history together with already published contact reports,
-report ranges, publication epochs, wake state and exact collider observation caches
+slot-indexed report ranges, publication epochs, wake state and exact collider observation caches
 in [PhysicsSpace.GPUCheckpoint](../classes/PhysicsSpaceGPUCheckpoint.md).
 
 Common scene/server replay records contain no GPU state, handles or report types.
@@ -1461,3 +1461,5 @@ hardware performance remain separate acceptance gates.
 [Transform notification policies and forcing](scene-hierarchy.md#transform-notification-policies-and-forcing-from-groups) now accept their processing-group contexts. Forced user notifications remain immediate; camera viewport and generated tile physics/navigation updates publish after the joined worker stage before owner queries/stepping. Shared queue cancellation and lifecycle accounting support concurrent forcing without holding gates across callbacks. Inherited interpolation reads permit active groups; mode mutation and reset permit the owner/current group. Reset callbacks remain immediate, with foreign branches reported and later siblings attempted. Ordered camera scroll/reset and borrowed renderer policies publish after the joined worker stage; see [interpolation publication](scene-hierarchy.md#physics-interpolation-from-processing-groups).
 
 General notification traversal now runs immediately in the owner/current processing group, including physical descendants, and preserves foreign-branch errors, callback reentry and protected geometry ownership. Reserved physics/GUI consumer effects retain their independent guards and open coverage. See [verification](scene-hierarchy.md#general-notification-traversal-from-processing-groups).
+
+[Indexed contact observations](physics-space-checkpoints.md#indexed-gpu-contact-projection) use retained body-slot high-water storage through publication and local checkpoints. Sparse slots and empty restoration preserve the same scene/server contact API and native ownership.

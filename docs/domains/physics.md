@@ -1,3 +1,5 @@
+[Indexed GPU contact observations](../components/physics-space-checkpoints.md#indexed-gpu-contact-projection) now retain sparse body-slot ranges through publication and local checkpoints, including empty-history restoration and new-body slot reuse. Declaration counts remain unchanged; this completes the previously uncommitted projection draft.
+
 # Physics domain
 
 [Shared pair/contact completion](../components/gpu-resident-bodies.md#shared-paircontact-completion-2026-10-22)

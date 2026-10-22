@@ -1,6 +1,6 @@
 # PhysicsSpace.GPUCheckpoint
 
-Last updated: 2026-10-11
+Last updated: 2026-10-22
 
 **Declaration:** `internal sealed class PhysicsSpace.GPUCheckpoint : PhysicsBackendCheckpoint` · **Source:** [PhysicsSpace.GPUCheckpoint.cs](../../src/Servers/Physics/PhysicsSpace.GPUCheckpoint.cs) · **Component:** [Selected checkpoint ownership](../components/physics-backends.md#selected-checkpoint-ownership)
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-11
 
 The selected GPU world creates this same-world history object after preparing pending body/Area/joint/exception policy. It owns a GPUPhysicsBodyStore.Checkpoint and already published host observation data: reports/ranges, publication epochs, pending wake state and generation-qualified collider caches. Concrete cache copies retain actual store attachments; common PhysicsReplayEntry contains no GPU cache or native handles.
 
-Construction captures the device kernel and observers. Failed observer construction disposes the kernel. Capture reuses high-water array/dictionary capacity. Restore first validates and restores the device kernel, then reports/epochs/cache values before common scene/server backing state is restored. No new body-state download or full physical CPU mirror is introduced. Kernel command flushing and copy waits remain part of checkpoint cost.
+Construction captures the device kernel and observers. Failed observer construction disposes the kernel. Capture reuses high-water arrays and collider dictionaries. Report ranges are an array indexed by body slot, sized by the store slot high-water including retired holes. Copying replaces the saved prefix and clears only any retained destination tail, so an empty projection cannot expose populated future ranges. Restore first validates and restores the device kernel, then reports/epochs/cache values before common scene/server backing state is restored. No new body-state download or full physical CPU mirror is introduced. Kernel command flushing and copy waits remain part of checkpoint cost.
 
 ## Internal operation family
 
@@ -26,3 +26,5 @@ The common caller validates owner thread, completed interval, authoring and atta
 ## Verification and limits
 
 [Selected checkpoint tests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.SelectedCheckpoint.cs) wrap real CPU/GPU kernels, inject recoverable prepare/capture/validation and release failures, reject recursive or destructive access, restore actual motion and check 64 warmed capture/restore cycles at zero owner/all-thread allocation. Shared public/common-world checkpoint tests cover contacts, Area events, force/target state, joints, one-way CCD, sleep, configuration and lifetime. Portable network state remains a separate wire contract. Public registration, native allocator and foreign-platform acceptance remain open.
+
+[Indexed contact projection checks](../components/physics-space-checkpoints.md#indexed-gpu-contact-projection) force fresh internal scene/server capture after restoring populated and empty observations, exercise high sparse slots, and use a public consumer for complete contact fields and reused-slot lifetime. These checks add no declaration-completion claim.

@@ -2,7 +2,7 @@ namespace Electron2D;
 
 internal sealed partial class PhysicsSpace
 {
-    /// <summary>Retains resident solver history and implementation-local publication caches for one GPU world.</summary>
+    /// <summary>Retains resident solver history and implementation-local slot-indexed contact observations for one GPU world.</summary>
     internal sealed class GPUCheckpoint : PhysicsBackendCheckpoint
     {
         private readonly PhysicsSpace _space;
@@ -10,7 +10,7 @@ internal sealed partial class PhysicsSpace
         private readonly GPUPhysicsBodyStore.Checkpoint _kernel;
         private readonly Dictionary<PhysicsColliderBackend, GPUPhysicsColliderImplementation.ReplayState> _colliders = [];
         private GPUPhysicsBodyStore.ContactReport[] _reports = [];
-        private readonly Dictionary<int, (int Offset, int Count)> _ranges = [];
+        private (int Offset, int Count)[] _ranges = [];
         private long _epoch, _publication;
         private bool _wake, _disposed;
 
@@ -26,7 +26,8 @@ internal sealed partial class PhysicsSpace
         {
             var s = _space;
             PhysicsReplayCopy.Buffer<GPUPhysicsBodyStore.ContactReport>(s._gpuReports, ref _reports);
-            PhysicsReplayCopy.Map(s._gpuReportRanges, _ranges);
+            PhysicsReplayCopy.Buffer<(int Offset, int Count)>(s._gpuReportRanges, ref _ranges);
+            _ranges.AsSpan(s._gpuReportRanges.Length).Clear();
             _epoch = s.GPUStateEpoch; _publication = s.GPUStatePublicationEpoch; _wake = s._gpuWakePending;
             _colliders.Clear(); _colliders.EnsureCapacity(s._bodies.Count + s._areas.Count + s._serverColliders.Count);
             foreach (var body in s._bodies) CaptureCollider(body.Backend);
@@ -40,7 +41,8 @@ internal sealed partial class PhysicsSpace
         {
             ValidateRestore(); _kernel.Restore(); var s = _space;
             PhysicsReplayCopy.Buffer<GPUPhysicsBodyStore.ContactReport>(_reports, ref s._gpuReports);
-            PhysicsReplayCopy.Map(_ranges, s._gpuReportRanges);
+            PhysicsReplayCopy.Buffer<(int Offset, int Count)>(_ranges, ref s._gpuReportRanges);
+            s._gpuReportRanges.AsSpan(_ranges.Length).Clear();
             s.GPUStateEpoch = _epoch; s.GPUStatePublicationEpoch = _publication; s._gpuWakePending = _wake;
             foreach (var pair in _colliders) _store.NativeCollider(pair.Key).RestoreReplay(pair.Value);
         }
@@ -48,7 +50,7 @@ internal sealed partial class PhysicsSpace
         {
             if (_disposed) return;
             try { _kernel.Dispose(); }
-            finally { _disposed = true; _colliders.Clear(); _ranges.Clear(); _reports = []; }
+            finally { _disposed = true; _colliders.Clear(); _ranges = []; _reports = []; }
         }
     }
 }

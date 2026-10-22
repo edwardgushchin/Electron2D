@@ -26,7 +26,8 @@ internal sealed partial class PhysicsSpace
     private int _gpuSensorShapeCount;
     internal bool TryGetGPUShapeOwner(uint index, out (PhysicsColliderBackend Owner, uint Generation, int Slot) owner) => _gpuShapeOwners.TryGetValue(index, out owner);
     internal int GPUSensorShapeCount => _gpuSensorShapeCount;
-    internal void ClearGPUReports() => _gpuReportRanges.Clear();
+    /// <summary>Invalidates every published contact range while retaining slot-indexed capacity.</summary>
+    internal void ClearGPUReports() => Array.Clear(_gpuReportRanges);
     internal bool TryGetGPUCollider(RID rid, out PhysicsColliderBackend collider) => _gpuRIDColliders.TryGetValue((ulong)rid.GetID(), out collider!);
     internal bool TryGetGPUCollider(int index, out PhysicsColliderBackend collider) => _gpuColliders.TryGetValue(index, out collider!);
     private GPUPhysicsBodyStore.BodyChange[] _gpuChanges = [];
@@ -38,7 +39,7 @@ internal sealed partial class PhysicsSpace
     private int[] _gpuReportLimits = [], _gpuReportCounts = [];
     private GPUPhysicsBodyStore.ContactReport[] _gpuReports = [];
     private int _gpuReportBodyCount;
-    private readonly Dictionary<int, (int Offset, int Count)> _gpuReportRanges = [];
+    private (int Offset, int Count)[] _gpuReportRanges = [];
 
     internal void RegisterGPUCollider(PhysicsColliderBackend backend)
     {
@@ -77,7 +78,7 @@ internal sealed partial class PhysicsSpace
         {
             var capacity = Math.Max(8, count * 2);
             Array.Resize(ref _gpuReportBodies, capacity); Array.Resize(ref _gpuReportLimits, capacity); Array.Resize(ref _gpuReportCounts, capacity);
-            _gpuReportRanges.EnsureCapacity(capacity);
+            Array.Resize(ref _gpuReportRanges, capacity);
         }
     }
     internal void PublishGPU()
@@ -118,11 +119,11 @@ internal sealed partial class PhysicsSpace
     internal void PublishGPUCompletion()
     {
         PublishGPUCompletion(new(_gpuReportBodies.AsSpan(0, _gpuReportBodyCount), _gpuReportLimits.AsSpan(0, _gpuReportBodyCount), _gpuReportCounts, _gpuReports));
-        _gpuReportRanges.Clear();
+        Array.Clear(_gpuReportRanges);
         var offset = 0;
         for (var i = 0; i < _gpuReportBodyCount; i++)
         {
-            _gpuReportRanges.Add(_gpuReportBodies[i].Index, (offset, _gpuReportCounts[i]));
+            _gpuReportRanges[_gpuReportBodies[i].Index] = (offset, _gpuReportCounts[i]);
             offset += _gpuReportLimits[i];
         }
     }
@@ -202,14 +203,17 @@ internal sealed partial class PhysicsSpace
     private void ReleaseGPUState()
     {
         _gpuQueryGeometry?.Dispose(); _gpuQueryGeometry = null; _gpuQueryShape = null;
-        _gpuColliders.Clear(); _gpuRIDColliders.Clear(); _gpuShapeOwners.Clear(); _gpuReportRanges.Clear();
+        _gpuColliders.Clear(); _gpuRIDColliders.Clear(); _gpuShapeOwners.Clear(); _gpuReportRanges = [];
         _gpuChanges = []; _gpuActivity = []; _gpuObservedBodies = []; _gpuObservedStates = []; _gpuObservedBackends = []; _gpuReportBodies = []; _gpuReportLimits = []; _gpuReportCounts = []; _gpuReports = [];
         _gpuQueryExclusions = []; _gpuPointHits = []; _gpuShapeHits = [];
         _gpuShapeQuery[0] = default;
     }
     internal void CaptureGPUViewContacts(PhysicsColliderBackend backend, PhysicsDirectBodyState view, int limit)
     {
-        if (!_gpuReportRanges.TryGetValue(GPUCollider(backend).GPUHandle.Index, out var range)) return;
+        var index = GPUCollider(backend).GPUHandle.Index;
+        if ((uint)index >= (uint)_gpuReportRanges.Length) return;
+        var range = _gpuReportRanges[index];
+        if (range.Count == 0) return;
         foreach (ref readonly var contact in _gpuReports.AsSpan(range.Offset, range.Count))
         {
             if (!_gpuShapeOwners.TryGetValue(contact.Shape, out var own) || own.Generation != contact.ShapeGeneration ||

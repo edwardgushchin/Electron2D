@@ -64,7 +64,25 @@ internal static class PhysicsSpaceCheckpointTests
     }
     private static void Contacts(PhysicsServer.Backend backend)
     {
-        using var r = new Rig(backend); r.Ground(); var body = r.Ball("Ball", new(0, 80)); var server = r.ServerBall(new(60, 80));
+        using var r = new Rig(backend); r.Ground();
+        var holes = new RID[backend == PhysicsServer.Backend.GPU ? 48 : 0];
+        try
+        {
+            for (var i = 0; i < holes.Length; i++) { holes[i] = PhysicsServer.BodyCreate(); PhysicsServer.BodySetSpace(holes[i], r.World.Space); }
+            var body = r.Ball("Ball", new(0, 80)); var server = r.ServerBall(new(60, 80));
+            for (var i = 0; i < holes.Length; i++) { PhysicsServer.FreeRID(holes[i]); holes[i] = default; }
+            if (backend == PhysicsServer.Backend.GPU)
+            {
+                Check(r.Space.TryGetGPUCollider(body.GetRID(), out var sceneBackend) && r.Space.GPUCollider(sceneBackend).GPUHandle.Index >= 48, "Scene reports use a high sparse slot.");
+                Check(r.Space.TryGetGPUCollider(server, out var rawBackend) && r.Space.GPUCollider(rawBackend).GPUHandle.Index >= 48, "Server reports use a high sparse slot.");
+                Check(r.Space.GPUStore!.BodySlotCount > r.Space.GPUStore.Count, "Report capacity follows slot high-water rather than live body count.");
+            }
+            Contacts(r, backend, body, server);
+        }
+        finally { foreach (var hole in holes) if (hole.IsValid()) PhysicsServer.FreeRID(hole); }
+    }
+    private static void Contacts(Rig r, PhysicsServer.Backend backend, RigidBody body, RID server)
+    {
         using var region = new RectangleShape { Size = new(200, 200) };
         var area = new Area { Name = "Sensor", Position = new(0, 50), Monitoring = true };
         area.AddChild(new CollisionShape { Shape = region }); r.Root.AddChild(area);
@@ -76,6 +94,19 @@ internal static class PhysicsSpaceCheckpointTests
         var count = view.GetContactCount(); Check(count > 0 && serverView.GetContactCount() > 0 && area.OverlapsBody(body), "Actual scene/server contacts and overlap exist");
         var impulse = view.GetContactImpulse(0); var normal = view.GetContactLocalNormal(0); var before = Read(body); var serverBefore = Read(server);
         using var saved = r.Space.CreateCheckpoint(); var enterBefore = entered; var bodyEnterBefore = bodyEntered; var serverEnterBefore = serverEntered;
+        if (backend == PhysicsServer.Backend.GPU)
+        {
+            var serverCount = serverView.GetContactCount();
+            r.Space.ClearGPUReports(); view.CaptureContacts(); serverView.CaptureContacts();
+            Check(view.GetContactCount() == 0 && serverView.GetContactCount() == 0, "Invalidated reports expose no stale scene/server contacts");
+            using var empty = r.Space.CreateCheckpoint();
+            saved.Restore(); view.CaptureContacts(); serverView.CaptureContacts();
+            Check(view.GetContactCount() == count && serverView.GetContactCount() == serverCount && view.GetContactImpulse(0) == impulse,
+                "Fresh scene/server contact capture uses restored backend reports rather than retained view contents");
+            empty.Restore(); view.CaptureContacts(); serverView.CaptureContacts();
+            Check(view.GetContactCount() == 0 && serverView.GetContactCount() == 0, "An empty checkpoint clears a later populated report projection");
+            saved.Restore();
+        }
         Advance(); var future = Read(body); var serverFuture = Read(server); var exits = exited; var serverExits = serverExited;
         Check(exits > 0 && serverExits > 0, "Discarded future leaves monitored region");
         var notifications = 0; body.NotifyLocalTransformChanges = true; body.NotifyTransformChanges = true;

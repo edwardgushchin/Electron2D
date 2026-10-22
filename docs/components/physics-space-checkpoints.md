@@ -158,3 +158,39 @@ pending-world-setting check. No hidden simulation step is used to prepare captur
 ## Selected preparation and failure lifetime
 
 [Checkpoint ownership](physics-backends.md#selected-checkpoint-ownership) now dispatches preparation and keeps implementation-local reports/cache epochs with the actual solver history. Common field configuration uses engine values without GPU types. Selected operations borrow world/point lifetime; recursive capture/restore/disposal and membership changes reject. A capture failure is replaceable, preflight rejects before mutation, begun restore failure is terminal, and cleanup failure retires the point in finally. Wrapped CPU/GPU checks exercise these paths and warmed reusable copies; no public registration status is closed.
+
+## Indexed GPU contact projection
+
+The selected GPU owner keeps completed contact report ranges in a retained array
+indexed by body slot. Capacity follows `GPUPhysicsBodyStore.BodySlotCount`, the
+slot high-water including freed holes, rather than the number of live bodies.
+Publication invalidates old entries before storing each selected receiver's range;
+explicit invalidation retains capacity and exposes no contacts. Existing shape
+index/generation validation still qualifies decoded contact observations.
+
+The selected checkpoint copies these already published observations with its
+device history. It copies the current range prefix and clears any retained
+capacity tail, rather than clearing a prefix that will immediately be overwritten.
+Restoring an empty projection removes populated future ranges. No fresh body-state
+download, public identity or wire-format change is introduced.
+
+`PhysicsSpaceCheckpointTests` forces fresh internal scene/server contact capture
+from restored backend reports, including empty history and high sparse slot IDs.
+The public-only `PhysicsContactProjectionTests`, linked into
+`PhysicsBackendExtension.Consumer --contact-projection`, checks every contact
+field, collider object/identity, silent populated/empty restore and a replacement
+body after slot retirement. It covers CPU/GPU and owner/separate numerical lanes.
+Receipts under `bin/gpu-contact-projection/2026-10-22/` record actual executed
+profiles; graphics output, physical GPU, native allocator, other hosts and owner
+acceptance retain separate gates. This finishes the existing three-file indexed
+projection draft; no new reference declarations are claimed.
+
+The final Linux consumer passed all eight CLR/strict full-trim NativeAOT profiles:
+CPU and software Vulkan GPU, each with owner and separate numerical scheduling.
+After 64 warmups, each profile measured 64 active frames, 64 idle frames and 64
+populated/empty replay cycles at zero owner/all-thread managed bytes. Complete
+contact values, both collider-object accessors and fresh replacement observations
+matched. The common-world CPU/GPU suite separately forced fresh backend capture
+at high sparse slots and measured 64-body capture/restore with no body-state
+upload/readback and zero managed bytes. Device copies/waits remain checkpoint
+work; these runs establish no hardware speedup or native-heap acceptance.
