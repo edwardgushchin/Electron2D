@@ -1044,7 +1044,8 @@ awake bodies and scene interpolation. A 60-second EventPipe sample repeatedly
 landed in contact-storage stacks through `BulkMoveWithWriteBarrier`/GC polling.
 The sample contains native/blocked thread intervals and safepoint bias; these
 weights are not CPU utilization or isolated elapsed costs. The complete process
-passed its physical and strict zero-managed-byte gates.
+passed its physical and strict zero-managed-byte gates. No retained phase marker
+establishes whether the sampled interval falls within warmup or measured ticks.
 
 A temporary implementation replaced the private 120-byte contact copy with typed
 field stores after resolving both logical identities. JIT output confirms that it
@@ -1056,7 +1057,7 @@ This control does not represent the full scene's scattered contact storage.
 
 | Complete 16,384-body CPU process | Step p50 / p95 / p99 ms | Contact/monitor mean ms | Owner/all managed bytes |
 | --- | ---: | ---: | ---: |
-| Original readonly contact record; sample collected during warmup | 111.9335 / 118.7445 / 121.8720 | 20.354788 | 0 / 0 |
+| Original readonly contact record; sample collected during the run | 111.9335 / 118.7445 / 121.8720 | 20.354788 | 0 / 0 |
 | Temporary field-store variant | 121.6592 / 136.5429 / 148.4696 | 20.315773 | 0 / 0 |
 
 Both retain the unchanged physical gates, 86,303 reported contacts and the same
@@ -1082,3 +1083,32 @@ The GPU body suite was intentionally canceled after the experiment was rejected;
 the remaining two GPU suites were not run. None of these functional outcomes
 establishes a performance benefit. Full CPU/GPU advantage, real-window FPS,
 native memory and foreign platforms remain open.
+
+### Current-revision comparison stopped by competing load
+
+A new eight-process plan freezes `c30f704e737ec732e658fdcba46b3e954940ed0d`,
+including the retained cached-color scheduling change and the restored readonly
+contact storage. Source receipts match 2554 runtime and 948 test authored inputs
+against that commit, apart from the disclosed pre-existing extra checkpoint test;
+the two dirty runtime report-range prototypes are excluded. Runtime/test DLL
+SHA-256 values are
+`b8d854c5ff41b06450bbd219ac5e65a463cd0978ebcd6ad99f3937756f81561a` /
+`a113a8d8d0a5ee18c5a5efd71acbb7f185e68da3f5b1c19eef99cb24279849c3`.
+
+The plan retains the complete 16,384-body scene above and specifies fresh-process
+CPU/GPU/GPU/CPU headless trials followed by the same order in a real window.
+Before the first process it requires 60 consecutive seconds at no more than
+0.25 other CPU cores; each process retains the existing 1.0-core observed-load
+ceiling. The first CPU/no-device process exits zero in 221.9425 seconds with
+physical gates and strict 0/0 owner/all-thread managed bytes. Its observed other
+load peaks at 13.8845 cores. The busiest recorded interval includes VBCSCompiler
+PID 1757699/startTicks 11370100 consuming 28.00 CPU seconds over 2.0325 seconds.
+The controller therefore stops after 1/8 trials; no GPU or window trial starts.
+The CPU timing is confounded, the comparison is rejected and no automatic retry
+is scheduled. This outcome establishes no CPU/GPU advantage or window FPS result.
+
+The same local evidence directory retains `current-method.json`,
+`committed-source-proof.json`, `current-controller.json`,
+`current-isolation-confounded.json`, and `current-step-0-cpu/check.json` with all
+activity intervals beside its unchanged physical report. These results do not
+change API coverage or complete performance acceptance.
