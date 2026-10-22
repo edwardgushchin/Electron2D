@@ -3,7 +3,7 @@
     {
       "godot": "class:VisualShaderNodeCustom",
       "electron2d": "T:Electron2D.VisualShaderNodeCustom",
-      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates. Nonempty particle function setup activates its lifecycle stage, including provider-only Collide/SDF execution; return empty source for inactive stages."
     },
     {
       "godot": "VisualShaderNodeCustom::method:_get_category()",
@@ -28,7 +28,7 @@
     {
       "godot": "VisualShaderNodeCustom::method:_get_func_code(int:Shader.Mode,int:VisualShader.Type)",
       "electron2d": "method:Electron2D.VisualShaderNodeCustom.GetFuncCode(Electron2D.Shader.Mode,Electron2D.VisualShader.Type)",
-      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates. Nonempty particle function setup activates its lifecycle stage, including provider-only Collide/SDF execution; return empty source for inactive stages."
     },
     {
       "godot": "VisualShaderNodeCustom::method:_get_global_code(int:Shader.Mode)",
@@ -144,7 +144,7 @@
         "VisualShaderNodeCustom::method:_is_highend()",
         "VisualShaderNodeCustom::method:get_option_index(int:)"
       ],
-      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates."
+      "reason": "ADRs 0001/0004/0013/0028/0090/0091: compiled C# provider callbacks execute through typed resource factories and a shared offline import host. Preserve bounded metadata/options, callback numeric defaults, explicit zero/dormant selections, provider/type scope, reachable dependency order, both-stage function setup, opaque sampler inputs and native control flow. Variant defaults project to nullable typed VisualShaderPortDefault entries; absent return-icon metadata projects to nullable PortType. Source/ABI failures and SDK callback deadlines preserve prior artifacts. Editor discovery UI, physical GPU, native heap, foreign hosts and owner acceptance have separate gates. Nonempty particle function setup activates its lifecycle stage, including provider-only Collide/SDF execution; return empty source for inactive stages."
     }
   ],
   "extras": [

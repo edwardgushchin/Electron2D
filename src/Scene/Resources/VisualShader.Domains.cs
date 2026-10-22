@@ -69,7 +69,8 @@ public sealed partial class VisualShader
                 if (previous is null) imagesAll.Add(canonical);
                 else if (previous != canonical) throw new InvalidDataException("Conflicting graph image declarations across lifecycle stages.");
             }
-            var collision = _mode == Mode.Particles && (HasStageEffect(domain, Type.Collide) || domain.Plans.Any(p => ExpressionSources(p.Key, p.Value.Order.ToHashSet(), custom).Any(s => SourceIdentifiers(s).Any(t => !t.Member && s.Substring(t.Start, t.Length) is "COLLIDED" or "COLLISION_NORMAL" or "COLLISION_DEPTH"))));
+            var collide = _mode == Mode.Particles && HasStageEffect(domain, Type.Collide, custom);
+            var collision = _mode == Mode.Particles && (collide || domain.Plans.Any(p => ExpressionSources(p.Key, p.Value.Order.ToHashSet(), custom).Any(s => SourceIdentifiers(s).Any(t => !t.Member && s.Substring(t.Start, t.Length) is "COLLIDED" or "COLLISION_NORMAL" or "COLLISION_DEPTH"))));
             if (collision) imagesAll.Add(new(primary, "SDF_TEXTURE", false));
             if (imagesAll.Count > 16) throw new NotSupportedException("A shader stage supports at most sixteen sampled-image descriptors.");
             var names = domain.Plans.SelectMany(p => ExpressionSources(p.Key, p.Value.Order.ToHashSet(), custom))
@@ -91,7 +92,7 @@ public sealed partial class VisualShader
             var header = DomainParameterHeader(domain, parameters, imagesAll, blocks, custom, primary);
             var source = new StringBuilder(header);
             foreach (var stage in ActiveStages) source.Append(GenerateStage(stage, parameters, [], [], [], custom, domain));
-            source.Append(_mode == Mode.Particles ? ParticleEntry(domain, collision) : BlitEntry(domain));
+            source.Append(_mode == Mode.Particles ? ParticleEntry(domain, collision, collide) : BlitEntry(domain));
             var code = source.ToString();
             if (ShaderInclude.SourceEncoding.GetByteCount(code) > ShaderInclude.MaximumSourceBytes) throw new InvalidDataException("Generated shader source exceeds the import budget.");
             return new(_mode, null, code, imagesAll, blocks, owned);
@@ -104,7 +105,7 @@ public sealed partial class VisualShader
             throw;
         }
     }
-    private bool HasStageEffect(DomainCompilation domain, Type stage) => domain.Plans[stage].Order.Count > 1 || GetNode(stage, 0).GetDefaultInputValues().Count != 0;
+    private bool HasStageEffect(DomainCompilation domain, Type stage, CustomPlan? custom) => domain.Plans[stage].Order.Count > 1 || GetNode(stage, 0).GetDefaultInputValues().Count != 0 || custom?.Functions[stage].Any(source => source.Length != 0) == true;
     private string DomainParameterHeader(DomainCompilation domain, Dictionary<string, VisualShaderNodeParameter> parameters,
         List<VisualShaderImage> images, List<VisualShaderBlockName> blocks, CustomPlan? custom, Type primary)
     {

@@ -8,6 +8,12 @@ internal static partial class GraphChecks
 {
     private static void AuthorDomainIntegration(string folder)
     {
+        using (var graph = new V())
+        using (var provider = new CustomProcedureNode { Kind = 16 })
+        {
+            graph.SetMode(Shader.Mode.Particles); graph.AddNode(V.Type.Start, provider, default, 2); graph.ConnectNodes(V.Type.Start, 2, 0, 0, 2);
+            SaveDomain(graph, folder, "particle-provider-contact");
+        }
         foreach (var stage in ParticleStages.Append(V.Type.TextureBlit))
         {
             var prefix = stage == V.Type.TextureBlit ? "blit" : "particle";
@@ -31,7 +37,7 @@ internal static partial class GraphChecks
                 }
             for (var kind = 0; kind < 3; kind++)
             {
-                using var graph = NewGraph(); using var node = new CustomProcedureNode { Kind = kind == 0 ? 0 : kind == 1 ? 6 : stage == V.Type.TextureBlit ? 8 : 10 };
+                using var graph = NewGraph(); using var node = new CustomProcedureNode { Kind = kind == 0 ? 200 + (int)stage : kind == 1 ? 6 : stage == V.Type.TextureBlit ? 8 : 10 };
                 graph.AddNode(stage, node, default, 2); using var boundary = Connect(graph, 2); SaveDomain(graph, folder, $"{prefix}-custom-{(int)stage}-{kind}");
             }
             for (var array = 0; array < 2; array++)

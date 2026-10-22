@@ -84,6 +84,7 @@ internal class CustomProcedureNode : VisualShaderNodeCustom
         CustomNodes.Calls.Add("global");
         return Kind switch
         {
+            >= 200 and <= 210 => "vec3 customShared(){return vec3(0.25,0.5,0.75);}",
             0 => "vec3 customShared(){return vec3(" + (GetOptionIndex(0) == 0 ? "0.125,0.25,0.375" : "0.25,0.5,0.75") + ");}",
             6 => "vec3 Frame(vec3 x){return x;} vec3 n2p0(vec3 x){return x;} vec3 result(vec3 x){return x;} vec3 e2d_graph(vec3 x){return x;}",
             7 => "#if ELECTRON2D_SHADER_STAGE == 0\nlayout(set=1,binding=2,std140) uniform CustomValues {float raw_value;};\n#else\nlayout(set=3,binding=1,std140) uniform CustomValues {float raw_value;};\n#endif\n",
@@ -95,7 +96,7 @@ internal class CustomProcedureNode : VisualShaderNodeCustom
     public override string GetFuncCode(Shader.Mode mode, VisualShader.Type type)
     {
         CustomNodes.Calls.Add("function:" + type);
-        return Kind == 0 ? "vec3 customLocal=customShared();" : Kind == 10 ? "COLOR=vec4(0.25,0.5,0.75,1.0);return;" : Kind == 110 ? "/*" + new string('b', 5 * 1024 * 1024) + "*/" : "";
+        return Kind is >= 200 and <= 210 ? (type == (VisualShader.Type)(Kind - 200) ? "vec3 customLocal=customShared();" : "") : Kind == 16 && mode == Shader.Mode.Particles && type == VisualShader.Type.Collide ? "COLOR=vec4(0.75,0.5,0.25,1.0); return;" : Kind == 0 ? "vec3 customLocal=customShared();" : Kind == 10 ? "COLOR=vec4(0.25,0.5,0.75,1.0);return;" : Kind == 110 ? "/*" + new string('b', 5 * 1024 * 1024) + "*/" : "";
     }
     public override string GetCode(IReadOnlyList<string> inputVariables, IReadOnlyList<string> outputVariables, Shader.Mode mode, VisualShader.Type type)
     {
@@ -103,7 +104,7 @@ internal class CustomProcedureNode : VisualShaderNodeCustom
         var output = outputVariables[0];
         return Kind switch
         {
-            0 => output + "=customLocal;",
+            0 or >= 200 and <= 210 => output + "=customLocal;",
             1 => "float value=0.0;for(int i=0;i<4;i++){if(i!=1)value+=0.125;}" + output + "=vec3(value,0.5,0.75);" + outputVariables[1] + "=0.5;",
             2 => "COLOR=vec4(0.25,0.5,0.75,1.0);return;",
             3 => output + "=vec3(UV,0.25);",
@@ -115,6 +116,7 @@ internal class CustomProcedureNode : VisualShaderNodeCustom
             9 => "null",
             10 => output + "=vec3(0.9);",
             12 => output + "=" + (GetOptionIndex(0) == 0 ? "vec3(" + inputVariables[0] + " ? 0.75 : 0.25)" : inputVariables[0] + ".rgb*" + inputVariables[1]) + ";",
+            16 => output + "=vec3(0.125);",
             100 => "this is invalid GLSL;",
             101 => null!,
             102 => "\ud800",

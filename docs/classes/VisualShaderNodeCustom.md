@@ -56,8 +56,8 @@ Import through [the compiled provider workflow](../components/visual-shaders.md#
 | [`public abstract System.String GetCode(System.Collections.Generic.IReadOnlyList<System.String> inputVariables, System.Collections.Generic.IReadOnlyList<System.String> outputVariables, Electron2D.Shader.Mode mode, Electron2D.VisualShader.Type type)`](#member-8cd5ccf5674b) | Produces one GLSL statement block using opaque input and output symbols. |
 | [`public override System.Int32 GetDefaultInputPort(Electron2D.VisualShaderNode.PortType type)`](#member-a97bc9ff4bff) | Returns the compiled provider connection target; the base policy selects input zero. |
 | [`public virtual System.String GetDescription()`](#member-091b8118ab78) | Returns the authoring description. |
-| [`public virtual System.String GetFuncCode(Electron2D.Shader.Mode mode, Electron2D.VisualShader.Type type)`](#member-7de9a6c66b8e) | Produces one statement block at the beginning of each canvas stage function. |
-| [`public virtual System.String GetGlobalCode(Electron2D.Shader.Mode mode)`](#member-c309e03b9d3c) | Produces shared GLSL declarations for both canvas stages. |
+| [`public virtual System.String GetFuncCode(Electron2D.Shader.Mode mode, Electron2D.VisualShader.Type type)`](#member-7de9a6c66b8e) | Produces one statement block at the beginning of each active graph stage function. |
+| [`public virtual System.String GetGlobalCode(Electron2D.Shader.Mode mode)`](#member-c309e03b9d3c) | Produces shared GLSL declarations for the active shader module. |
 | [`public virtual System.Int32 GetInputPortCount()`](#member-23ed832080e8) | Returns the active input count. |
 | [`public virtual Electron2D.VisualShaderPortDefault GetInputPortDefaultValue(System.Int32 port)`](#member-421ed1ca1cec) | Provides a copied, strongly typed default for one input. |
 | [`public virtual System.String GetInputPortName(System.Int32 port)`](#member-c90c3e227086) | Returns the input label supplied to programmatic authoring tools. |
@@ -157,14 +157,14 @@ Empty unless overridden.
 public virtual System.String GetFuncCode(Electron2D.Shader.Mode mode, Electron2D.VisualShader.Type type)
 ```
 
-Produces one statement block at the beginning of each canvas stage function.
+Produces one statement block at the beginning of each active graph stage function.
 
 Empty initially; source is included once per concrete provider type and stage.
 
 Parameters:
 
 - `mode`: The shader domain.
-- `type`: The target graph stage, including the other stage when this provider is reachable.
+- `type`: The target graph stage, including other stages when this provider is reachable.
 
 <a id="member-c309e03b9d3c"></a>
 ### `GetGlobalCode`
@@ -173,7 +173,7 @@ Parameters:
 public virtual System.String GetGlobalCode(Electron2D.Shader.Mode mode)
 ```
 
-Produces shared GLSL declarations for both canvas stages.
+Produces shared GLSL declarations for the active shader module.
 
 Use ELECTRON2D_SHADER_STAGE for native stage-specific declarations. Distinct provider types own their own symbol names.
 
@@ -474,3 +474,5 @@ The public VisualShader.Consumer exercises typed defaults, copies, factories, ty
 
 - [Typed graph import](../decisions/rendering.md#adr-0028)
 - [Typed resources](../decisions/resources.md#adr-0013)
+
+Nonempty GetFuncCode particle-stage setup activates that stage, including SDF contact queries and the Collide/Process branch, when its reserved output is empty. Return empty source for stages the provider does not define. The provider-only contact regression checks actual compute state rather than compilation alone.

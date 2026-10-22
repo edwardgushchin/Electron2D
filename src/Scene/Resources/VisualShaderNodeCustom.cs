@@ -39,13 +39,15 @@ public abstract class VisualShaderNodeCustom : VisualShaderNode
     /// <summary>Returns the authoring description.</summary>
     /// <returns>Empty unless overridden.</returns>
     public virtual string GetDescription() { ThrowIfDisposed(); return ""; }
-    /// <summary>Produces one statement block at the beginning of each canvas stage function.</summary>
+    /// <summary>Produces one statement block at the beginning of each active graph stage function.</summary>
     /// <param name="mode">The shader domain.</param>
-    /// <param name="type">The target graph stage, including the other stage when this provider is reachable.</param>
+    /// <param name="type">The target graph stage, including other stages when this provider is reachable.</param>
     /// <returns>Empty initially; source is included once per concrete provider type and stage.</returns>
+    /// <remarks>Nonempty particle-stage setup activates that stage even when its reserved output has no assignments.
+    /// Return empty source for stages that should remain inactive.</remarks>
     public virtual string GetFuncCode(Shader.Mode mode, VisualShader.Type type)
     { RequireContext(mode, type); return ""; }
-    /// <summary>Produces shared GLSL declarations for both canvas stages.</summary>
+    /// <summary>Produces shared GLSL declarations for the active shader module.</summary>
     /// <param name="mode">The shader domain.</param>
     /// <returns>Empty initially; source is included once per concrete reachable provider type.</returns>
     /// <remarks>Use ELECTRON2D_SHADER_STAGE for native stage-specific declarations. Distinct provider types own their own symbol names.</remarks>

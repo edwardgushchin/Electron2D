@@ -1115,7 +1115,7 @@ Electron2DShader Profile=visual-shader uses the authored mode when Stage is omit
 Explicit mismatches reject before artifact replacement. Compiled custom providers
 use the existing registered import host and factory contract in each domain.
 Global provider code is emitted once per concrete type in the combined module;
-function setup is emitted once per active authored stage. ELECTRON2D_SHADER_STAGE
+function setup is emitted once per active authored stage. Nonempty particle-stage setup activates that lifecycle stage even without root assignments or an operation stored there; this includes SDF production and the Collide/Process branch. Providers should return empty source for stages they do not define. ELECTRON2D_SHADER_STAGE
 is 4 in particle module globals and the canonical lifecycle ID inside each stage;
 it is 10 throughout writable-texture generation. Local expressions and callbacks
 return from their own stage function, preserving subsequent stages and publication.

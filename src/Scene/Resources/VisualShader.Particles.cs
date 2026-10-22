@@ -25,7 +25,7 @@ public sealed partial class VisualShader
             """, domain.Symbols)).AppendLine();
         return source.ToString();
     }
-    private string ParticleEntry(DomainCompilation domain, bool collision)
+    private string ParticleEntry(DomainCompilation domain, bool collision, bool collide)
     {
         var source = new StringBuilder();
         if (collision) source.Append(ParticleCollision);
@@ -60,7 +60,7 @@ public sealed partial class VisualShader
         source.AppendLine("if (ACTIVE) {");
         if (collision) source.AppendLine("e2d_collision();");
         source.AppendLine("e2d_seed = e2d_hash(NUMBER + 1u + RANDOM_SEED);");
-        if (HasStageEffect(domain, Type.Collide))
+        if (collide)
             source.Append("if (COLLIDED) ").Append(domain.Symbols["e2d_stage_5"]).Append("(); else ").Append(domain.Symbols["e2d_stage_4"]).AppendLine("();");
         else source.Append(domain.Symbols["e2d_stage_4"]).AppendLine("();");
         source.Append(domain.Symbols["e2d_stage_7"]).AppendLine("(); }");

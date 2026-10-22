@@ -47,6 +47,8 @@ internal static partial class ParticleServerTests
                 Check(records.All(p => (p.State.X & 1) == 0), "The graph's process stage deactivates each newborn after recording its number.");
                 if (++counterRound < 4) { if (counterRound == 3) RenderingServer.ParticlesRestart(particles); Emit(67); return; }
             }
+            else if (name == "particle-provider-contact")
+            { Near(value.Color.X, .75f, "provider-only collide setup x"); Near(value.Color.Y, .5f, "provider-only collide setup y"); Near(value.Color.Z, .25f, "provider-only collide setup z"); }
             else if (name.StartsWith("particle-parameter-", StringComparison.Ordinal))
             {
                 var role = int.Parse(name.Split('-')[3]);
@@ -126,6 +128,6 @@ internal static partial class ParticleServerTests
         }
         try { Engine.Run(root); Check(current == files.Length, "The complete imported particle corpus executed."); }
         finally { if (RenderingServer.IsAvailable) RenderingServer.FramePostDraw -= AfterDraw; material?.Dispose(); shader?.Dispose(); }
-        Console.WriteLine($"{current} native graph programs: lifecycle inputs/math, side effects, bounded queues, planar shapes, paged mesh channels and 268 exact reused-slot/reset birth numbers passed.");
+        Console.WriteLine($"{current} native particle graph programs passed; {counterRound * 67} birth-number observations across slot reuse/reset.");
     }
 }
