@@ -5,6 +5,7 @@ internal static class PhysicsPointGravityRangeTests
 {
     internal static void Run(PhysicsServer.Backend backend)
     {
+        AllocationWarmupCheck.Verify(Collect);
         using var trace = PhysicsAllocationTrace.Open(backend);
         PhysicsPointGravityFailureTests.Run(backend);
         WideCoordinates(backend, trace);
@@ -67,6 +68,7 @@ internal static class PhysicsPointGravityRangeTests
                 Check(rejected && rigid.GetGravity() == prior && rigid.GetGravity().IsFinite(), "Genuinely unrepresentable force rejects before field-cache publication.");
                 area.GravityPointCenter = new(1e20f, 0); area.Gravity = 10;
             }
+            Collect();
             for (var i = 0; i < 128; i++) { Reset(rigid, body); tree.PhysicsFrame(.001); }
             var generation0 = GC.CollectionCount(0); var generation1 = GC.CollectionCount(1); var generation2 = GC.CollectionCount(2);
             var tag = trace?.Tag(34) ?? 0; trace?.Begin(tag);
@@ -103,6 +105,13 @@ internal static class PhysicsPointGravityRangeTests
         }
         finally { PhysicsServer.FreeRID(rawArea); PhysicsServer.FreeRID(regionShape); PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(shape); }
     }
+    private static void Collect()
+    {
+        // Finish background collection before its context retirement can change the allocation counters.
+        GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers();
+        GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers();
+    }
+
     private static void WideCoordinates(PhysicsServer.Backend backend, PhysicsAllocationTrace? trace)
     {
         foreach (var sign in new[] { 1f, -1f })
@@ -127,6 +136,7 @@ internal static class PhysicsPointGravityRangeTests
                     Near(PhysicsServer.BodyGetDirectState(body)!.TotalGravity, expected, "Wide raw point offset");
                     Check(rigid.Position.IsFinite() && PhysicsServer.BodyGetTransform(body).Origin.IsFinite(), "Wide finite positions survive the complete interval.");
                 }
+                Collect();
                 for (var i = 0; i < 128; i++) tree.PhysicsFrame(.001);
                 var generation0 = GC.CollectionCount(0); var generation1 = GC.CollectionCount(1); var generation2 = GC.CollectionCount(2);
                 var tag = trace?.Tag(sign > 0 ? 32UL : 33UL) ?? 0; trace?.Begin(tag);
