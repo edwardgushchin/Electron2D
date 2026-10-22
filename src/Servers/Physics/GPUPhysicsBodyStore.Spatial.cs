@@ -40,13 +40,13 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         if (!float.IsFinite(sweepDelta) || sweepDelta < 0) throw new ArgumentOutOfRangeException(nameof(sweepDelta));
         if (_shapeHighWater == 0) return 0;
         Step(0, default); FlushJoints();
-        if (_pairBodyVersion == _bodyVersion && _pairShapeVersion == _shapeVersion && _spatialEpoch == Shape.GeometryEpoch && _pairMargin == margin && _pairSweepDelta == sweepDelta && _pairSweepCorrections == sweepCorrections) return PairCount;
+        if (PairsCurrent(margin, sweepDelta, sweepCorrections)) return PairCount;
         _pairBodyVersion = -1; _pairMargin = margin; _pairSweepDelta = sweepDelta; _pairSweepCorrections = sweepCorrections;
         PrepareGeometry(); EnsureSpatial();
         var retry = false;
         while (true)
         {
-            var count = DispatchSpatial(retry);
+            var count = DispatchSpatial(retry).Pairs;
             if (count > _pairCapacity)
             {
                 if (retry) { _failed = true; throw new InvalidOperationException("The immutable GPU pair batch changed during capacity recovery."); }
@@ -59,6 +59,10 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         _pairBodyVersion = _boundsBodyVersion = _bodyVersion; _pairShapeVersion = _boundsShapeVersion = _shapeVersion;
         return PairCount;
     }
+
+    private bool PairsCurrent(float margin, float sweepDelta = 0, bool sweepCorrections = false) =>
+        _pairBodyVersion == _bodyVersion && _pairShapeVersion == _shapeVersion && _spatialEpoch == Shape.GeometryEpoch &&
+        _pairMargin == margin && _pairSweepDelta == sweepDelta && _pairSweepCorrections == sweepCorrections;
 
     internal int ReadPairs(Span<ShapePair> destination)
     {
@@ -154,7 +158,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         capacity = next;
     }
 
-    private int DispatchSpatial(bool retry, bool pairs = true)
+    private (int Pairs, int Contacts, int OneWay) DispatchSpatial(bool retry, bool pairs = true, bool contacts = false)
     {
         var batchVelocity = _batchedVelocity.HasValue;
         var command = SDL.AcquireGPUCommandBuffer(Device);
@@ -203,27 +207,32 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 }
             }
             if (pairs) uniformBytes += SpatialPass(command, 4, _shapeHighWater);
+            if (contacts) uniformBytes += RecordContacts(command, _contactMargin, residentPairs: true);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin resident pair summary");
             SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _spatialSummary!.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _spatialDownload!.DangerousGetHandle() });
             if (batchVelocity) SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _status!.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _spatialDownload.DangerousGetHandle(), Offset = 8 });
-            SDL.EndGPUCopyPass(copy); _failed = true; Finish(ref command);
+            SDL.EndGPUCopyPass(copy);
+            if (contacts) DownloadContactStatus(command, 16);
+            _failed = true; Finish(ref command);
             UploadBytes += 8 + vertexBytes + geometryBytes + shapeBytes; UniformBytes += uniformBytes; ReadbackBytes += 8;
             if (batchVelocity) { UploadBytes += 8; ReadbackBytes += 8; }
+            if (contacts) { UploadBytes += _oneWayShapeCount > 0 ? 16 : 8; ReadbackBytes += _oneWayShapeCount > 0 ? 16 : 8; ContactSubmissionCount++; }
             GeometryUploadBytes += vertexBytes + geometryBytes; ShapeUploadBytes += shapeBytes; if (pairs) BroadPhaseSubmissionCount++; else QuerySpatialSubmissionCount++;
             mapped = SDL.MapGPUTransferBuffer(Device, _spatialDownload.DangerousGetHandle(), false);
             if (mapped == 0) throw GPUPhysicsDevice.Failure("map resident pair summary");
-            uint count;
+            uint count; var contactCounts = (Contacts: 0, OneWay: 0);
             try
             {
                 if (*(uint*)mapped != 0) throw new InvalidOperationException("GPU resident geometry returned invalid bounds or pair state.");
                 if (batchVelocity && ((uint*)mapped)[2] != 0) throw new InvalidOperationException("GPU resident velocity work returned invalid state.");
                 count = ((uint*)mapped)[1];
+                if (contacts) contactCounts = AcceptContactStatus(mapped, 16);
             }
             finally { SDL.UnmapGPUTransferBuffer(Device, _spatialDownload.DangerousGetHandle()); }
             if (count > int.MaxValue) throw new InvalidOperationException("The GPU pair count exceeds addressable storage.");
             _failed = false; _treeTopologyDirty = false;
-            return (int)count;
+            return ((int)count, contactCounts.Contacts, contactCounts.OneWay);
         }
         finally { if (command != 0) SDL.CancelGPUCommandBuffer(command); }
     }

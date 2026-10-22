@@ -9,6 +9,7 @@ layout(std430, set=0, binding=1) readonly buffer Vertices { vec2 vertices[]; };
 layout(std430, set=0, binding=2) readonly buffer Geometries { Geometry geometries[]; };
 layout(std430, set=0, binding=3) readonly buffer Shapes { Shape shapes[]; };
 layout(std430, set=0, binding=4) readonly buffer Pairs { uvec4 pairs[]; };
+layout(std430, set=0, binding=7) readonly buffer PairSummary { uvec2 pairSummary; };
 layout(std430, set=1, binding=0) buffer Contacts { ContactPoint contacts[]; };
 layout(std430, set=1, binding=1) buffer Summary { uvec2 summary; };
 layout(std140, set=2, binding=0) uniform Settings { uvec4 counts; vec4 tolerances; uvec4 history; uvec4 historyOutput; };
@@ -91,7 +92,8 @@ void main()
         }
         fail();return;
     }
-    if(index>=counts.x)return;
+    uint pairCount=historyOutput.y!=0u?min(counts.x,pairSummary.y):counts.x;
+    if(index>=pairCount||(historyOutput.y!=0u&&pairSummary.x!=0u))return;
     oneWayInfo=history.yz;
     activePair=pairs[index];
     if(activePair.x>=counts.z||activePair.y>=counts.z){fail();return;}

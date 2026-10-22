@@ -8,6 +8,10 @@ internal static class GPUPhysicsContactStoreTests
 {
     internal static void Run()
     {
+        VerifySharedCompletion(false);
+        VerifySharedCompletion(true);
+        VerifyEmptyCompletion(false);
+        VerifyEmptyCompletion(true);
         VerifyPrimitivesAndEdits();
         VerifyFamilies();
         VerifyConcaveAndRays();
@@ -17,6 +21,57 @@ internal static class GPUPhysicsContactStoreTests
     }
     private static Body Add(GPUPhysicsBodyStore store, Vector2 position = default, float rotation = 0, Vector2 velocity = default) =>
         store.Add(new(Mode.Rigid, position, rotation, velocity, 0));
+
+    private static void VerifySharedCompletion(bool separate)
+    {
+        using var store = new GPUPhysicsBodyStore { SeparateContactSubmissions = separate };
+        using var circle = new CircleShape { Radius = 1 };
+        var a = Add(store); var b = Add(store, new(1.5f, 0));
+        store.AddShape(a, circle); store.AddShape(b, circle);
+        void Refresh(int index)
+        {
+            store.SetPose(b, new(1.5f + (index % 2) * .1f, 0), 0); store.Step(0, Vector2.Zero);
+            Check(store.FindContacts() == 1 && store.PairCount == 1, "Fresh pair/contact completion preserves the actual overlap");
+        }
+        AllocationWarmupCheck.Verify(() =>
+        {
+            for (var i = 0; i < 2; i++)
+            { GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: false); GC.WaitForPendingFinalizers(); }
+        });
+        for (var i = 0; i < 64; i++) Refresh(i);
+        store.SetPose(b, new(1.5f, 0), 0); store.Step(0, Vector2.Zero);
+        var submissions = store.SubmissionCount; var uploaded = store.UploadBytes; var downloaded = store.ReadbackBytes;
+        Check(store.FindContacts() == 1, "The completed pair list feeds its contact pass");
+        Check(store.SubmissionCount - submissions == (separate ? 2 : 1) && store.UploadBytes - uploaded == 16 && store.ReadbackBytes - downloaded == 16,
+            "Shared completion removes one wait while preserving both status records and their byte accounting");
+        submissions = store.SubmissionCount; store.FindContacts();
+        Check(store.SubmissionCount == submissions, "An unchanged shared completion stays resident");
+        var owner = GC.GetAllocatedBytesForCurrentThread(); var total = GC.GetTotalAllocatedBytes(true);
+        for (var i = 0; i < 128; i++) Refresh(i);
+        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; var allBytes = GC.GetTotalAllocatedBytes(true) - total;
+        Check(ownerBytes == 0 && allBytes == 0, "Complete refreshed pair/contact cycles allocate zero owner/all-thread managed bytes");
+        var points = new Point[4]; Check(store.ReadContacts(points) == 1, "The shared completion retains readable contacts");
+        Invariant(points[0], Transform.Identity, new(0, new(1.6f, 0)), .0001f);
+        Near(new(points[0].Normal.X, points[0].Normal.Y), Vector2.Right, .00001f, "Shared completion circle normal");
+        Console.WriteLine($"Resident pair/contact completion: separate={separate}, 1/2 completion submissions, unchanged status bytes and 128 refreshed cycles owner/all=0/0 passed.");
+        store.Dispose(); GPUPhysicsMemoryTests.Empty(store);
+    }
+
+    private static void VerifyEmptyCompletion(bool separate)
+    {
+        using var store = new GPUPhysicsBodyStore { SeparateContactSubmissions = separate };
+        using var circle = new CircleShape { Radius = 1 };
+        var a = Add(store); var b = Add(store, new(10, 0)); store.AddShape(a, circle); store.AddShape(b, circle);
+        Check(store.FindContacts() == 0 && store.PairCount == 0, "Empty pair output never reads unwritten pair slots");
+        var memory = store.BufferMemory; var submissions = store.SubmissionCount;
+        Check(store.FindContacts() == 0 && store.SubmissionCount == submissions, "Empty contact completion remains cached");
+        store.SetPose(b, new(1.5f, 0), 0);
+        Check(store.FindContacts() == 1, "An empty completion does not hide a subsequent real contact");
+        store.SetPose(b, new(10, 0), 0);
+        Check(store.FindContacts() == 0 && store.OneWayPairCount == 0, "A later empty completion clears contact history");
+        store.Dispose(); GPUPhysicsMemoryTests.Empty(store);
+        Console.WriteLine($"Resident empty completion: separate={separate}, deviceBytes={memory.DeviceBytes}, transferBytes={memory.TransferBytes}, deviceBuffers={memory.DeviceBuffers}; empty/real/empty transitions and complete release passed.");
+    }
 
     private static void VerifyPrimitivesAndEdits()
     {
@@ -147,6 +202,7 @@ internal static class GPUPhysicsContactStoreTests
         store.AddShape(Add(store), capsule, sensor: true); store.AddShape(Add(store), capsule, sensor: true);
         Reject<InvalidOperationException>(() => store.FindContacts());
         Reject<InvalidOperationException>(() => store.Step(0.01f, Vector2.Zero));
+        store.Dispose(); GPUPhysicsMemoryTests.Empty(store);
         Console.WriteLine("Nonfinite contact intermediates fail closed without CPU replay.");
     }
 
