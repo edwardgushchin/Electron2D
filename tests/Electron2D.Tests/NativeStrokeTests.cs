@@ -3,7 +3,7 @@ using Electron2D;
 using static Electron2D.RenderingDevice;
 using static TextureArrayTests;
 
-internal static class NativeStrokeTests
+internal static partial class NativeStrokeTests
 {
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate nint GLString(uint name);
@@ -87,6 +87,9 @@ internal static class NativeStrokeTests
         Vector2[] rectangle = [new(9.25f, 12.5f), new(52.75f, 12.5f), new(52.75f, 48.25f), new(9.25f, 48.25f), new(9.25f, 12.5f)];
         Vector2[] dash = [new(8.25f, 20.5f), new(14.25f, 20.5f), new(20.25f, 20.5f), new(26.25f, 20.5f), new(32.25f, 20.5f), new(38.25f, 20.5f), new(44.25f, 20.5f), new(50.25f, 20.5f)];
         Vector2[] primitiveLineUVs = [new(.25f, .5f), new(.75f, .125f)];
+        Vector2[] repeated = [new(8.25f, 12.5f), new(8.25f, 12.5f), new(30.25f, 12.5f), new(30.25f, 12.5f), new(50.25f, 25.5f)];
+        Vector2[] collapsed = [new(45.1f, 8.1f), new(45.2f, 8.2f), new(8.25f, 12.5f), new(40.25f, 25.5f)];
+        var translucent = new Color(.2f, .6f, .9f, .5f);
         return [
             new("server primitive integer point", [new(16, 12)], [Colors.Cyan], false, n => RenderingServer.CanvasItemAddPrimitive(n.GetCanvasItem(), [new(16, 12)], [Colors.Cyan], [], default)),
             new("primitive fractional point", [new(16.25f, 12.5f)], [Colors.Yellow], false, n => n.DrawPrimitive([new(16.25f, 12.5f)], [Colors.Yellow], [])),
@@ -103,7 +106,9 @@ internal static class NativeStrokeTests
             new("ellipse arc", Curve(23, 13, 4.7f, .2f, 17), [Colors.White], true, n => n.DrawEllipseArc(center, 23, 13, 4.7f, .2f, 17, Colors.White, -1, true)),
             new("rectangle", rectangle, [Colors.White], true, n => n.DrawRect(new(rectangle[0], rectangle[2] - rectangle[0]), Colors.White, false)),
             new("dashes", dash, [Colors.White], false, n => n.DrawDashedLine(new(8.25f, 20.5f), new(56.25f, 20.5f), Colors.White, -1, 6, false, true)),
-            new("short dash", [new(8.25f, 20.5f), new(11.25f, 20.5f)], [Colors.White], false, n => n.DrawDashedLine(new(8.25f, 20.5f), new(11.25f, 20.5f), Colors.White, -1, 6))
+            new("short dash", [new(8.25f, 20.5f), new(11.25f, 20.5f)], [Colors.White], false, n => n.DrawDashedLine(new(8.25f, 20.5f), new(11.25f, 20.5f), Colors.White, -1, 6)),
+            new("repeated translucent strip", repeated, [translucent], true, n => n.DrawPolyline(repeated, translucent)),
+            new("collapsed segments", collapsed, [translucent], false, n => n.DrawMultiline(collapsed, translucent))
         ];
     }
     internal static void Run(string profile)
@@ -121,7 +126,7 @@ internal static class NativeStrokeTests
             ? Shader.CreateFromSPIRV(Module($"DeviceNative{(profile.Contains("declared", StringComparison.Ordinal) ? "Stroke" : "Primitive")}{language}.vert.spv"), Module($"DeviceNativeStroke{language}.frag.spv"))
             : Shader.CreateFromSPIRV(Module($"DeviceNativeStroke{language}.frag.spv")) : null;
         using var subjectMaterial = fragment is null ? null : new ShaderMaterial { Shader = fragment };
-        var comparisons = new List<(Vector2i Origin, string Name)>();
+        var comparisons = new List<(Vector2i Origin, string Name, bool Native)>();
         var subjects = new List<(Painter Painter, Case Definition, Vector2i Origin)>(); Image? oracle = null;
         Transform[] bases = [Transform.Identity, new(.18f, new(1.1f, .8f), .14f, new(3, -2)), new(0, new(-.8f, 1.1f), 0, new(56, 0)), new(0, new(1.25f, 1.5f), 0, new(-10.25f, -8.25f))];
         for (var row = 0; row < cases.Length; row++)
@@ -132,7 +137,7 @@ internal static class NativeStrokeTests
                 var painter = new Painter { Transform = basis, Paint = item.Draw, Material = subjectMaterial }; if (item.Name == "short dash" && !profile.StartsWith("software", StringComparison.Ordinal)) { var group = new CanvasGroup { FitMargin = 0, ClearMargin = 0 }; group.AddChild(painter); cell.AddChild(group); }
                 else cell.AddChild(painter);
                 window.AddChild(cell);
-                comparisons.Add((origin, item.Name + "/" + column));
+                comparisons.Add((origin, item.Name + "/" + column, FlatSDLColor(item)));
                 subjects.Add((painter, item, origin));
             }
         var modulation = new CanvasModulate(); window.AddChild(modulation);
@@ -177,17 +182,18 @@ internal static class NativeStrokeTests
                         }
                     Check(markerPixels > 0, "The moving physical subclass renders its inherited point primitive");
                     Console.WriteLine($"Physical primitive marker {profile}: pixels={markerPixels}, peak={markerPeak}.");
+                    if (!gpu && !baseline) oracle ??= SDLOracle(subjects, new(image.Width, image.Height), snap);
                     if (gpu) oracle ??= Oracle(subjects, new(image.Width, image.Height), snap, hdr, window.MSAA2D != Viewport.MSAA.Disabled, language, customVertex ? 2 : fragment is null ? 0 : 1);
                     if (Environment.GetEnvironmentVariable("ELECTRON2D_CAPTURE_DIR") is { } folder) { Directory.CreateDirectory(folder); image.SavePNG(System.IO.Path.Combine(folder, $"native-strokes-{profile}-{frame}.png")); oracle?.SavePNG(System.IO.Path.Combine(folder, $"native-strokes-{profile}-oracle.png")); }
                     using var golden = !gpu && Environment.GetEnvironmentVariable("ELECTRON2D_NATIVE_STROKE_GOLDEN") is { } path ? Image.LoadFromFile(path) : null;
-                    foreach (var (origin, name) in comparisons)
+                    foreach (var (origin, name, native) in comparisons)
                     {
                         var nonempty = 0;
                         for (var y = 0; y < 32; y++) for (var x = 0; x < 64; x++)
                             {
                                 var actual = image.GetPixel(origin.X + x, origin.Y + y); if (actual.R + actual.G + actual.B > .1f) { colored++; nonempty++; }
-                                if (baseline || !gpu && golden is null) continue;
-                                var expected = gpu ? oracle!.GetPixel(origin.X + x, origin.Y + y) : golden!.GetPixel(origin.X + x, origin.Y + y);
+                                if (baseline || !gpu && !native && golden is null) continue;
+                                var expected = gpu || native ? oracle!.GetPixel(origin.X + x, origin.Y + y) : golden!.GetPixel(origin.X + x, origin.Y + y);
                                 if (MathF.Abs(actual.R - expected.R) > .012f || MathF.Abs(actual.G - expected.G) > .012f || MathF.Abs(actual.B - expected.B) > .012f || MathF.Abs(actual.A - expected.A) > .012f)
                                     throw new InvalidOperationException($"Native stroke {profile}/{name} at {x},{y}: actual={actual}, native={expected}");
                                 comparedPixels++;
@@ -225,7 +231,7 @@ internal static class NativeStrokeTests
             framebuffer = device.FramebufferCreateMultipass([multisample, output], [pass]);
         }
         else framebuffer = device.FramebufferCreate([output]);
-        using var raster = new RDPipelineRasterizationState(); using var blendAttachment = new RDPipelineColorBlendStateAttachment();
+        using var raster = new RDPipelineRasterizationState(); using var blendAttachment = new RDPipelineColorBlendStateAttachment { EnableBlend = true, SrcColorBlendFactor = BlendFactor.SrcAlpha, DstColorBlendFactor = BlendFactor.OneMinusSrcAlpha, SrcAlphaBlendFactor = BlendFactor.One, DstAlphaBlendFactor = BlendFactor.OneMinusSrcAlpha };
         using var blend = new RDPipelineColorBlendState { Attachments = [blendAttachment] };
         using var samples = new RDPipelineMultisampleState { SampleCount = msaa ? TextureSamples.Samples4 : TextureSamples.Samples1 };
         var lines = device.RenderPipelineCreate(shader, device.FramebufferGetFormat(framebuffer), vertexFormat, RenderPrimitive.Lines, raster, blend, multisampleState: samples);

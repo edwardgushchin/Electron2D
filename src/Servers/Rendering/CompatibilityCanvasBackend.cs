@@ -7,6 +7,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
 {
     private readonly RenderHandle _renderer;
     private SDL.Vertex[] _vertices = [];
+    private SDL.FPoint[] _linePoints = [];
     private readonly Dictionary<Texture, (RenderHandle Handle, TexturePixels Pixels, ulong Revision)> _textures = [];
     private readonly HashSet<Texture> _usedTextures = [];
     private (nint Context, nint EGLDisplay, nint EGLConfig, nint GLXVisualID, nint GLXFBConfig) _graphics;
@@ -283,6 +284,13 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         Span<SDL.Vertex> quad = stackalloc SDL.Vertex[6];
         foreach (var center in vertices)
         {
+            if (texture == 0)
+            {
+                SetPrimitiveColor(renderer, center.Color);
+                Check(SDL.RenderPoint(renderer, center.Position.X, center.Position.Y), "draw compatibility point");
+                calls++;
+                continue;
+            }
             quad.Fill(center);
             for (var j = 0; j < quad.Length; j++)
                 quad[j].Position = new() { X = center.Position.X + (j is 0 or 1 or 3 ? .5f : -.5f), Y = center.Position.Y + (j is 0 or 3 or 5 ? -.5f : .5f) };
@@ -296,14 +304,44 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         return calls;
     }
 
-    private static int DrawThinLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, Mesh.PrimitiveType primitive, bool snap, bool splitTriangles)
+    private int DrawThinLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, Mesh.PrimitiveType primitive, bool snap, bool splitTriangles)
     {
+        if (texture == 0 && primitive == Mesh.PrimitiveType.LineStrip && vertices.Length > 1)
+        {
+            var flat = true;
+            foreach (var vertex in vertices) flat &= SameColor(vertex.Color, vertices[0].Color);
+            if (flat)
+            {
+                if (_linePoints.Length < vertices.Length) Array.Resize(ref _linePoints, Math.Max(vertices.Length, _linePoints.Length * 2));
+                var count = 0;
+                foreach (var vertex in vertices)
+                {
+                    var point = LinePoint(vertex.Position, snap);
+                    if (count == 0 || point.X != _linePoints[count - 1].X || point.Y != _linePoints[count - 1].Y) _linePoints[count++] = point;
+                }
+                if (count < 2) return 0;
+                SetPrimitiveColor(renderer, vertices[0].Color);
+                Check(SDL.RenderLines(renderer, _linePoints.AsSpan(0, count), count), "draw compatibility line strip");
+                return 1;
+            }
+        }
         var calls = 0;
         Span<SDL.Vertex> quad = stackalloc SDL.Vertex[6];
+        Span<SDL.FPoint> endpoints = stackalloc SDL.FPoint[2];
         for (var i = 1; i < vertices.Length; i += primitive == Mesh.PrimitiveType.LineStrip ? 1 : 2)
         {
             var a = vertices[i - 1]; var b = vertices[i]; var from = new Vector2(a.Position.X, a.Position.Y); var to = new Vector2(b.Position.X, b.Position.Y);
             if (from == to) continue;
+            if (texture == 0 && primitive == Mesh.PrimitiveType.Lines && SameColor(a.Color, b.Color))
+            {
+                endpoints[0] = LinePoint(a.Position, snap); endpoints[1] = LinePoint(b.Position, snap);
+                if (endpoints[0].X == endpoints[1].X && endpoints[0].Y == endpoints[1].Y) continue;
+                SetPrimitiveColor(renderer, a.Color);
+                Check(SDL.RenderLines(renderer, endpoints, 2), "draw compatibility line");
+                calls++;
+                continue;
+            }
+            // shortcut: SDL primitives cannot interpolate colors or UVs; retain geometry until an attribute-capable fallback exists.
             var offset = CanvasStroke.ThinLineOffset(from, to);
             quad[0] = quad[1] = quad[3] = a; quad[2] = quad[4] = quad[5] = b;
             for (var j = 0; j < quad.Length; j++)
@@ -321,6 +359,18 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         }
         return calls;
     }
+
+    private static SDL.FPoint LinePoint(SDL.FPoint point, bool snap)
+    {
+        if (!snap) return point;
+        var position = CanvasGeometry.Snap(new(point.X, point.Y));
+        return new() { X = position.X, Y = position.Y };
+    }
+
+    private static bool SameColor(SDL.FColor a, SDL.FColor b) => a.R == b.R && a.G == b.G && a.B == b.B && a.A == b.A;
+
+    private static void SetPrimitiveColor(nint renderer, SDL.FColor color) =>
+        Check(SDL.SetRenderDrawColorFloat(renderer, color.R, color.G, color.B, color.A), "set compatibility primitive color");
 
     internal override void Present(ReadOnlySpan<CanvasPresentation> viewports)
     {

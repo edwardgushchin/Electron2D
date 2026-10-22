@@ -574,7 +574,7 @@ Both polygon methods require this item's active NotificationDraw, synchronous Dr
 
 Copies one to four local points: one point, a two-point line, a triangle, or a quad split along vertices 0–2. Zero points and more than four throw ArgumentException. No polygon triangulation is performed. Missing colors repeat the first supplied color, or white if empty; missing UVs are zero. Extra attributes are ignored. Used values must be finite. Texture borrowing, errors, scope, transforms and modulation follow DrawPolygon. Atlas primitives sample the full underlying image with unchanged UVs.
 
-Points cover one framebuffer pixel; lines use a one-pixel flat-cap strip, even under nonuniform item or drawing scale. Coincident line endpoints draw nothing. These short primitives have no antialias fringe. Both backends consume triangle geometry; exact subpixel point/line coverage is subject to their rasterizer precision, including software coordinate truncation. Vertex snapping snaps transformed primitive endpoints before constructing the one-pixel footprint.
+Points cover one framebuffer pixel; lines use a one-pixel flat-cap strip, even under nonuniform item or drawing scale. Coincident line endpoints draw nothing. These short primitives have no antialias fringe. GPU rendering submits native points/lines. Compatibility uses native SDL points and uniform-color lines when untextured; textured or interpolated-color primitives retain triangle footprints. Subpixel coverage follows each driver. Vertex snapping snaps transformed primitive endpoints before submission.
 
 Example inside an Entity subclass (uses only the public API):
 
@@ -1380,7 +1380,7 @@ DrawMesh and DrawMultiMesh revalidate the selected geometry resource after virtu
 
 The policy is stored in PackedScene and inherited by Entity, Control and their descendants, including physics nodes. Visible preparation rerecords changed factors without requiring transform notifications. Stable replay keeps logical dimensions and reuses native pixels; scale changes may allocate. Active item/viewport owners share raster-level lifetime, with last-owner release on changes, tree exit and disposal. See [ownership and checks](../components/scalable-svg.md#item-scale-oversampling).
 
-[Native point and line primitives](../components/canvas-rendering.md#native-point-and-line-primitives) preserve DrawPrimitive attributes and pre-vertex snapping through GPU Points/Lines batches. Compatibility retains its triangle footprints and native subpixel coverage limit. This applies to inherited physical nodes as well as ordinary scene items.
+[Native point and line primitives](../components/canvas-rendering.md#native-point-and-line-primitives) preserve DrawPrimitive attributes and pre-vertex snapping through GPU Points/Lines batches. Compatibility uses native SDL untextured points and uniform-color lines/strips; textured or interpolated-color ranges retain their triangle footprints and native subpixel coverage limit. This applies to inherited physical nodes as well as ordinary scene items.
 
 ResolveCanvasGlyph projects the retained item MSDF flag only onto ordinary image commands. Explicit glyph commands and untextured drawing retain their policy; children do not inherit the flag. The flag changes replay without changing authored properties or recording another draw. See [retained distance-field mode](../components/canvas-rendering.md#retained-distance-field-mode).
 

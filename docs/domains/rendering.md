@@ -6,7 +6,7 @@
 
 [Graph comparisons and conditional results](../components/visual-shaders.md#comparisons-and-conditional-results) execute typed comparisons, All/Any reductions, exact integer/Boolean choices, floating interpolation, three-way branches and native floating classification through the ordinary shader import/material path.
 
-[Point/line primitives](../components/canvas-rendering.md#native-point-and-line-primitives) now use native GPU topology and initialized point-size output while preserving compatibility footprints and its explicit subpixel limit.
+[Point/line primitives](../components/canvas-rendering.md#native-point-and-line-primitives) now use native GPU topology and initialized point-size output and native SDL untextured points/uniform-color lines. Textured or interpolated-color compatibility ranges retain triangle footprints and an explicit subpixel limit.
 
 [HDR screen debanding](../components/hdr-canvas.md#screen-debanding) now connects stored viewport/root-project controls and renderer-session overrides to final GPU dithering before byte output. Linear/offscreen images and movie capture retain their precision; no production type is added.
 

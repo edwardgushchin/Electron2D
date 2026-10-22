@@ -27,8 +27,9 @@ internal static partial class RenderingRuntimeTests
             n.DrawSetTransform(new(4, 44)); n.DrawPolygon(quad, [], uvs, texture);
             n.DrawSetTransform(new(40, 44)); n.DrawPolygon(quad, [], uvs, atlas);
             n.DrawSetTransform(new(76, 44)); n.DrawPrimitive(quad, [], uvs, atlas);
-            n.DrawSetTransform(new(112.5f, 8.5f), scale: new(2, 2));
+            n.DrawSetTransform(new(112.25f, 8.25f), scale: new(2, 2));
             n.DrawPrimitive([Vector2.Zero], [Colors.Yellow], []);
+            n.DrawSetTransform(new(112.5f, 8.5f), scale: new(2, 2));
             n.DrawPrimitive([new(2, 0), new(10, 0)], [Colors.Cyan], []);
             n.DrawSetTransform(new(112, 44)); n.DrawPrimitive([Vector2.Zero, new(24, 0), new(0, 24)], [Colors.Magenta], []);
             n.DrawSetTransform(new(4, 80)); n.DrawPolygon(quad, [], [new(0.25f, 0.25f), new(1.25f, 0.25f), new(1.25f, 1.25f), new(0.25f, 1.25f)], texture);

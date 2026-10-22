@@ -1,6 +1,6 @@
 # CompatibilityCanvasBackend
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 - Declaration: `internal sealed class CompatibilityCanvasBackend : CanvasBackend`
 - Source: [CompatibilityCanvasBackend.cs](../../src/Servers/Rendering/CompatibilityCanvasBackend.cs)
@@ -64,7 +64,7 @@ Queries physical render output dimensions.
 
 `internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)`
 
-Validates shader absence, prepares base-level texture copies and prunes unused resources. Converts vertices into reusable SDL storage, applies clamp/repeat and nearest filtering, and submits triangles. Native thin stroke ranges expand per segment into six stack-stored vertices using the legacy half-pixel normal and triangle order; snapping follows expansion, preserving fallback pixels. The software driver gets separate textured triangles to avoid its incorrect quad shortcut. Restores the window target in finally. present controls final window copy/presentation.
+Validates shader absence, prepares base-level texture copies and prunes unused resources. Converts vertices into reusable SDL storage, applies clamp/repeat and nearest filtering, and submits triangles. Untextured points use SDL.RenderPoint. Uniform-color thin lines use SDL.RenderLines with endpoint snapping; connected strips retain reusable point storage and suppress consecutive equal endpoints. A strip uses one native call, preserving translucent joins. Textured or interpolated-color lines retain per-segment triangle geometry and final-corner snapping; textured points retain their triangle footprint. Native draw accounting follows actual submissions. The software driver gets separate textured triangles to avoid its incorrect quad shortcut. Restores the window target in finally. present controls final window copy/presentation.
 
 ### Readback
 
