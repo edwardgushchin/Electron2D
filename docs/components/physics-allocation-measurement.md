@@ -188,12 +188,53 @@ the physical intervals. All 256 positive allocations resolve with raw size 61
 (aligned 64) and successful stacks; recursion counts are zero. This validates
 the observation path and focused intervals, not attribution of the failed run.
 
-Frozen payload manifests and source/PDB inputs match the current files. The
+Frozen payload manifests and source/PDB inputs match the preserved build inputs. The
 four-document native probe includes the same three field/tracer files and its
 explicit entry point; its runtime matches the CLR source cohort. CPU processes
 map no GPU driver; GPU profiles map NVIDIA without a software GPU, and native
 processes map no CoreCLR. Release/API/wiki and scoped formatting/identity checks
 pass. `validation.json` records the focused profiles and preserves the original
-failed aggregate separately. A new complete process with calibrated field/query
-markers is running on this frozen cohort; until it has a terminal result, it
-supplies no aggregate acceptance. Physics stays 1306/1369 (95.40%), with 63 open.
+failed aggregate separately. The complete calibrated process now has the failed
+terminal result below. Physics stays 1306/1369 (95.40%), with 63 open.
+
+## Finalizer events in the wide-coordinate diagnostic (2026-10-22)
+
+The same complete process exits -6 after 4,242.435 seconds at the negative
+wide-coordinate CPU point-field gate. Its 128 warmed complete frames report
+owner/all=5,520/10,512 bytes, GC=0/0/0, trace=1003033, .NET 10.0.1 and
+serverGC=false. The positive wide-coordinate interval passes at 0/0. This is a
+failed allocation gate; no physical implementation or threshold has changed.
+
+The failed native bracket contains 29 successful ObjectAllocated stacks on OS
+thread 763448, named .NET Finalizer; the fixture owner is 763440. Fifteen
+System.GCMemoryInfoData objects of 288 bytes and fourteen
+ConditionalWeakTable enumerators of 48 bytes total 4,992 bytes. Fourteen pairs
+run through SharedArrayPool.Trim and Gen2GcCallback.Finalize; the remaining
+memory-info object runs through PortableThreadPool.OnGen2GCCallback. These are
+observed finalizer callbacks, even though collection counts do not change in
+the measured interval.
+
+The 4,992 observed bytes equal the all-minus-owner counter difference. No owner
+ObjectAllocated event explains its 5,520-byte delta. The calibrated profiler does
+not thereby prove a counter defect or absence of engine allocations: ownership
+and accounting of that unmatched delta remain open. Native markers surround the
+counter reads rather than timestamping their exact interior. Do not subtract
+these events, discard the interval or claim aggregate acceptance.
+
+All 517 entered native brackets balance before abort: three transition warmups,
+384 positive controls, 96 empty controls, 32 containment cases and two wide
+point-field cases. Every positive owner/all control reports 64/64 bytes with one
+raw-size-61 allocation and a successful stack; every empty control is 0/0. The
+32 containment intervals and positive wide-field interval report 0/0 with no
+object events. The abort has no profiler SHUTDOWN record. Payload hashes remain
+unchanged and no new Xid is recorded.
+
+The runtime/root PDBs still bind 2,509/946 authored documents to preserved inputs
+before the contact-range prototype and later rendering integration. The trace,
+terminal receipt and scenes remain in
+`bin/physics-point-gravity-allocation/2026-10-22/current-aggregate-trace/`;
+`bin/physics-report-ranges/2026-10-22/aggregate-source-proof.json`,
+`aggregate-decoded.json` and `aggregate-analysis.json` retain the source binding,
+decoded stacks and unresolved difference. The older untraced failures retain
+their own limits. Complete allocation, native/platform/network and performance
+acceptance remain open; the declaration census is unchanged.
