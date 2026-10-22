@@ -3,6 +3,7 @@
 
 import argparse
 import fnmatch
+import hashlib
 import json
 import re
 import xml.etree.ElementTree as ET
@@ -72,7 +73,10 @@ def check(publish: Path, application_licenses=(), native_package_version: str | 
     source = ROOT / "licence"
     expected = {p.name for p in source.iterdir() if p.is_file()} - {"ReferenceData-LICENSE.txt"}
     delivered = publish / "licence"
-    assert len(expected) == 99, f"Expected 99 license and notice files, found {len(expected)}"
+    assert len(expected) == 101, f"Expected 101 source, license and notice files, found {len(expected)}"
+    receipt = json.loads((delivered / "vkd3d-SOURCE.json").read_text())
+    assert receipt["source"]["componentSourceRef"] == "e55cf5e31ced6f3d1be5cc6d0c50e99384f9f4ba", "Unreviewed Vkd3d producer"
+    assert hashlib.sha256((delivered / "vkd3d-2.0.tar.xz").read_bytes()).hexdigest() == receipt["source"]["sha256"] == "9ad29bb236808186a47ec66e853b21e6fca59b9dc62a9474b05d5e3eda2710ef", "Vkd3d corresponding source differs"
     extra = {p.name: p for p in application_licenses}
     assert len(extra) == len(application_licenses) and not expected.intersection(extra), "Duplicate application notice names"
     assert {p.name for p in delivered.iterdir() if p.is_file()} == expected | extra.keys(), "Unexpected published license files"

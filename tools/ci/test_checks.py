@@ -22,6 +22,12 @@ import run_browser
 
 
 class Checks(unittest.TestCase):
+    def test_repository_paths_can_be_checked_out_on_windows(self):
+        root = Path(__file__).resolve().parents[2]
+        paths = subprocess.check_output(["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"], cwd=root).decode().split("\0")
+        invalid = [path for path in paths if path and (root / path).exists() and any(char in path for char in '<>:"\\|?*')]
+        self.assertEqual(invalid, [], "Repository filenames must be valid on Windows")
+
     def test_android_sdl_manifests_keep_exported_launcher_and_assets_contract(self):
         root = Path(__file__).resolve().parents[2]
         android = "{http://schemas.android.com/apk/res/android}"

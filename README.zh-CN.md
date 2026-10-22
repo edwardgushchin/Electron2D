@@ -11,13 +11,13 @@
 </h1>
 
 <p align="center">
-  <a href="#installation"><img alt="构建所需的 .NET 版本" src="https://img.shields.io/badge/dynamic/xml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fedwardgushchin%2FElectron2D%2Fmain%2FElectron2D.csproj&amp;query=substring-after%28%2FProject%2FPropertyGroup%2FTargetFramework%5Bnot%28%40Condition%29%5D%5B1%5D%2C+%27net%27%29&amp;label=.NET&amp;suffix=+SDK&amp;color=A63B75" height="28"></a>
-  <a href="#license"><img alt="引擎许可证" src="https://img.shields.io/badge/dynamic/regex?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fedwardgushchin%2FElectron2D%2Fmain%2Flicence%2FElectron2D-LICENSE.txt&amp;search=%5E%5Cs%2A%28%5CS%2B%29%5Cs%2BLicense&amp;replace=%241&amp;label=%E8%AE%B8%E5%8F%AF%E8%AF%81&amp;color=A63B75" height="28"></a>
-  <a href="https://github.com/edwardgushchin/Electron2D/releases"><img alt="最新发布版本" src="https://img.shields.io/badge/dynamic/xml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fgithub.com%2Fedwardgushchin%2FElectron2D%2Freleases.atom&amp;query=concat%28substring-after%28string%28%28%2F%2F%2A%5Blocal-name%28%29%3D%22entry%22%5D%5B1%5D%2F%2A%5Blocal-name%28%29%3D%22link%22%5D%2F%40href%29%5B1%5D%29%2C+%22%2Ftag%2F%22%29%2C+substring%28%22%E6%9A%82%E6%97%A0%E7%89%88%E6%9C%AC%22%2C+1+div+not%28%2F%2F%2A%5Blocal-name%28%29%3D%22entry%22%5D%29%29%29&amp;label=%E7%89%88%E6%9C%AC&amp;color=A63B75" height="28"></a>
+  <a href="#installation"><img alt="构建所需的 .NET 版本" src="https://img.shields.io/badge/dynamic/xml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fedwardgushchin%2FElectron2D%2Fmain%2FElectron2D.csproj&amp;query=substring-after%28%2FProject%2FPropertyGroup%2FTargetFramework%5Bnot%28%40Condition%29%5D%5B1%5D%2C+%27net%27%29&amp;label=.NET&amp;suffix=+SDK&amp;color=brightgreen" height="28"></a>
+  <a href="#license"><img alt="引擎许可证" src="https://img.shields.io/badge/dynamic/regex?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fedwardgushchin%2FElectron2D%2Fmain%2Flicence%2FElectron2D-LICENSE.txt&amp;search=%5E%5Cs%2A%28%5CS%2B%29%5Cs%2BLicense&amp;replace=%241&amp;label=%E8%AE%B8%E5%8F%AF%E8%AF%81&amp;color=brightgreen" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/releases"><img alt="最新发布版本" src="https://img.shields.io/badge/dynamic/xml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fgithub.com%2Fedwardgushchin%2FElectron2D%2Freleases.atom&amp;query=concat%28substring-after%28string%28%28%2F%2F%2A%5Blocal-name%28%29%3D%22entry%22%5D%5B1%5D%2F%2A%5Blocal-name%28%29%3D%22link%22%5D%2F%40href%29%5B1%5D%29%2C+%22%2Ftag%2F%22%29%2C+substring%28%22%E6%9A%82%E6%97%A0%E7%89%88%E6%9C%AC%22%2C+1+div+not%28%2F%2F%2A%5Blocal-name%28%29%3D%22entry%22%5D%29%29%29&amp;label=%E7%89%88%E6%9C%AC&amp;color=brightgreen" height="28"></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/edwardgushchin/Electron2D/commits/main"><img alt="main 分支的最近提交" src="https://img.shields.io/github/last-commit/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%E6%9C%80%E5%90%8E%E6%8F%90%E4%BA%A4&amp;display_timestamp=committer&amp;color=A63B75" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/commits/main"><img alt="main 分支的最近提交" src="https://img.shields.io/github/last-commit/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%E6%9C%80%E5%90%8E%E6%8F%90%E4%BA%A4&amp;display_timestamp=committer&amp;color=brightgreen" height="28"></a>
   <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/ci.yml"><img alt="自动构建状态" src="https://img.shields.io/github/check-runs/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%E6%9E%84%E5%BB%BA&amp;nameFilter=Build" height="28"></a>
   <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/ci.yml"><img alt="测试 (GitHub Actions)" src="https://img.shields.io/github/check-runs/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%E6%B5%8B%E8%AF%95&amp;nameFilter=Tests" height="28"></a>
 </p>
@@ -46,7 +46,7 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 
 这里概述引擎已经实现的主要功能。各子系统的 API 仍在开发中，具体范围和限制见对应文档。
 
-- [图形](docs/domains/rendering.md)。精灵、纹理图集、摄像机、视差，以及图形和文字绘制。支持为材质导入 HLSL 和 GLSL 着色器。
+- [图形](docs/domains/rendering.md)。精灵、纹理图集、摄像机、视差，以及图形和文字绘制。支持 HLSL 和 GLSL 材质、可视化着色器图、CPU/GPU 粒子和 2D 网格。
 - [场景与动画](docs/domains/scene.md)。游戏对象层级、场景保存与加载、逐帧动画、属性动画和计时器。
 - [物理](docs/domains/physics.md)。刚体、碰撞、区域、相交查询、铰链和弹簧。
 - [游戏界面](docs/domains/scene.md)。按钮、输入框、滚动、布局容器、字体和主题。
@@ -73,7 +73,7 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 
 通过 NuGet 安装主包 `Electron2D` 和目标平台的包，命令见[下方表格](#use-electron2d-in-your-game)。NuGet 会自动还原原生依赖。[平台包版本规则](docs/native-packaging.md)。
 
-安装预发布包时需要 `--prerelease`。请使用版本匹配的引擎包和平台包。当前 NuGet 版本：[`0.1.0-alpha`](https://www.nuget.org/packages/Electron2D/0.1.0-alpha)。
+安装预发布包时需要 `--prerelease`。请使用版本匹配的引擎包和平台包。当前 NuGet 版本：[`0.2.0-alpha`](https://www.nuget.org/packages/Electron2D/0.2.0-alpha)。
 
 ### 构建与运行
 
@@ -174,7 +174,7 @@ dotnet run -c Release
 | iOS，ARM64 Mac 上的模拟器 | `dotnet build examples/MyGame/MyGame.csproj -c Release -r iossimulator-arm64 -p:EnableCodeSigning=false` | [模拟器和已签名应用](examples/CharacterMovement/README.md#ios) |
 | Apple TV，ARM64 Mac 上的模拟器 | `dotnet build examples/MyGame/MyGame.csproj -c Release -r tvossimulator-arm64 -p:EnableCodeSigning=false` | [tvOS 模拟器和设备](examples/CharacterMovement/README.md#apple-tv-tvos) |
 
-手机和电视也有其他架构，示例 README 列出了全部选项。构建 iOS 和 tvOS 需要 macOS 和 Xcode。这些项目使用当前引擎源码：所需的 `Engine.RunAsync` 尚未包含在已发布的 `0.1.0-alpha` 包中。
+手机和电视也有其他架构，示例 README 列出了全部选项。构建 iOS 和 tvOS 需要 macOS 和 Xcode。
 
 手机和电视上的应用占满屏幕。浏览器提供全屏按钮。游戏区域适应屏幕宽高比，角色、文字和网格统一缩放。
 
@@ -217,6 +217,7 @@ Electron2D 处于 alpha 阶段。公共 API 仍在开发中，可能随版本变
 | 查找类或方法 | [API 参考](docs/inventory.md) |
 | 了解子系统 | [文档目录](docs/README.md) |
 | 准备着色器 | [HLSL 和 GLSL 导入工具](tools/shaders/README.md) |
+| 自动构建项目、运行场景和捕获画面 | [项目批处理工具](tools/Batch/README.md) |
 
 <a id="examples"></a>
 

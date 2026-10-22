@@ -120,6 +120,7 @@ if(ELECTRON2D_STATIC_NATIVE)
 endif()
 add_library(Electron2DKTX ${kind} bridge.cpp blocks.cpp encode.cpp)
 target_include_directories(Electron2DKTX PRIVATE "${CMAKE_CURRENT_BINARY_DIR}"
+  "${electron2dktxcodec_SOURCE_DIR}/external/dfdutils"
   "${electron2dktxcodec_SOURCE_DIR}/external/astc-encoder/Source")
 target_compile_features(Electron2DKTX PRIVATE cxx_std_17)
 target_link_libraries(Electron2DKTX PRIVATE ktx_read basisu_encoder)
@@ -131,18 +132,21 @@ if(ELECTRON2D_STATIC_NATIVE)
   set(stamp "${CMAKE_CURRENT_BINARY_DIR}/ktx-closure.stamp")
   add_custom_command(OUTPUT "${stamp}"
     COMMAND ${CMAKE_COMMAND} -E touch "${stamp}"
-    DEPENDS ktx_read "${CMAKE_CURRENT_SOURCE_DIR}/merge.cmake")
+    DEPENDS ktx_read basisu_encoder "${CMAKE_CURRENT_SOURCE_DIR}/merge.cmake")
   target_sources(Electron2DKTX PRIVATE "${stamp}")
   set_property(SOURCE bridge.cpp APPEND PROPERTY OBJECT_DEPENDS "${stamp}")
   add_custom_command(TARGET Electron2DKTX POST_BUILD
     COMMAND ${CMAKE_COMMAND} "-DOUTPUT=$<TARGET_FILE:Electron2DKTX>" "-DCODEC=$<TARGET_FILE:ktx_read>"
+      "-DENCODER=$<TARGET_FILE:basisu_encoder>"
       "-DAR=${CMAKE_AR}" "-DAPPLE_HOST=${APPLE}" -P "${CMAKE_CURRENT_SOURCE_DIR}/merge.cmake")
 elseif(APPLE)
   set_target_properties(Electron2DKTX PROPERTIES INSTALL_NAME_DIR "@rpath" BUILD_WITH_INSTALL_NAME_DIR TRUE SKIP_BUILD_RPATH TRUE)
+  target_link_options(Electron2DKTX PRIVATE "LINKER:-exported_symbols_list,${CMAKE_CURRENT_SOURCE_DIR}/exports.macos")
 elseif(WIN32)
   target_sources(Electron2DKTX PRIVATE exports.def)
 elseif(UNIX)
-  target_link_options(Electron2DKTX PRIVATE "LINKER:--exclude-libs,ALL" "LINKER:-z,defs")
+  set_property(TARGET Electron2DKTX APPEND PROPERTY LINK_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/exports.map")
+  target_link_options(Electron2DKTX PRIVATE "LINKER:--version-script=${CMAKE_CURRENT_SOURCE_DIR}/exports.map" "LINKER:--exclude-libs,ALL" "LINKER:-z,defs")
 endif()
 add_executable(Electron2DKTXCheck EXCLUDE_FROM_ALL test_bridge.cpp)
 find_package(Threads QUIET)

@@ -2,8 +2,12 @@
 
 import hashlib
 import json
+import re
+import shutil
 from pathlib import Path
 import struct
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import Mock, patch
@@ -16,6 +20,34 @@ import test_consumer
 
 
 class NativePackageTests(unittest.TestCase):
+    @unittest.skipUnless(all(shutil.which(tool) for tool in ("cc", "ar", "cmake")), "Native archive tools are unavailable")
+    def test_static_ktx_closure_links_decoder_and_encoder(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name in ("bridge", "codec", "encoder"):
+                source = root / (name + ".c")
+                source.write_text("int " + name + "(void) { return 1; }\n")
+                subprocess.run(["cc", "-c", str(source), "-o", str(root / (name + ".o"))], check=True)
+                subprocess.run(["ar", "rcs", str(root / (name + ".a")), str(root / (name + ".o"))], check=True)
+            subprocess.run(["cmake", "-DOUTPUT=" + str(root / "bridge.a"), "-DCODEC=" + str(root / "codec.a"),
+                            "-DENCODER=" + str(root / "encoder.a"), "-DAR=" + shutil.which("ar"),
+                            "-DAPPLE_HOST=" + ("ON" if sys.platform == "darwin" else "OFF"),
+                            "-P", str(package.ROOT / "tools/ktx-native/merge.cmake")], check=True)
+            source = root / "main.c"
+            source.write_text("int bridge(void), codec(void), encoder(void); int main(void) { return bridge() + codec() + encoder() != 3; }\n")
+            executable = root / "consumer"
+            subprocess.run(["cc", str(source), str(root / "bridge.a"), "-o", str(executable)], check=True)
+            subprocess.run([str(executable)], check=True)
+
+    def test_private_codec_export_lists_match_the_required_abi(self):
+        for component, name in (("mesh-native", "libElectron2DMesh.so"), ("ktx-native", "libElectron2DKTX.so")):
+            directory = package.ROOT / "tools" / component
+            expected = package.required_exports(name)
+            for filename in ("exports.map", "exports.macos", "exports.def"):
+                with self.subTest(component=component, filename=filename):
+                    symbols = set(re.findall(r"\be2d_\w+", (directory / filename).read_text().replace("_e2d_", "e2d_")))
+                    self.assertEqual(symbols, expected)
+
     def test_text_unicode_operations_are_in_every_private_abi(self):
         additions = {"e2d_text_case", "e2d_text_strip_diacritics", "e2d_text_character_properties", "e2d_text_is_identifier", "e2d_spoof_open", "e2d_spoof_close", "e2d_spoof_skeleton", "e2d_spoof_check"}
         for profile in ("Linux", "MacOS", "Windows"):

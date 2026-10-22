@@ -11,13 +11,13 @@
 </h1>
 
 <p align="center">
-  <a href="#installation"><img alt="Версия .NET для сборки проекта" src="https://img.shields.io/badge/dynamic/xml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fedwardgushchin%2FElectron2D%2Fmain%2FElectron2D.csproj&amp;query=substring-after%28%2FProject%2FPropertyGroup%2FTargetFramework%5Bnot%28%40Condition%29%5D%5B1%5D%2C+%27net%27%29&amp;label=.NET&amp;suffix=+SDK&amp;color=A63B75" height="28"></a>
-  <a href="#license"><img alt="Лицензия движка" src="https://img.shields.io/badge/dynamic/regex?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fedwardgushchin%2FElectron2D%2Fmain%2Flicence%2FElectron2D-LICENSE.txt&amp;search=%5E%5Cs%2A%28%5CS%2B%29%5Cs%2BLicense&amp;replace=%241&amp;label=%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D1%8F&amp;color=A63B75" height="28"></a>
-  <a href="https://github.com/edwardgushchin/Electron2D/releases"><img alt="Последний опубликованный релиз" src="https://img.shields.io/badge/dynamic/xml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fgithub.com%2Fedwardgushchin%2FElectron2D%2Freleases.atom&amp;query=concat%28substring-after%28string%28%28%2F%2F%2A%5Blocal-name%28%29%3D%22entry%22%5D%5B1%5D%2F%2A%5Blocal-name%28%29%3D%22link%22%5D%2F%40href%29%5B1%5D%29%2C+%22%2Ftag%2F%22%29%2C+substring%28%22%D0%BD%D0%B5%D1%82+%D1%80%D0%B5%D0%BB%D0%B8%D0%B7%D0%BE%D0%B2%22%2C+1+div+not%28%2F%2F%2A%5Blocal-name%28%29%3D%22entry%22%5D%29%29%29&amp;label=%D0%A0%D0%B5%D0%BB%D0%B8%D0%B7&amp;color=A63B75" height="28"></a>
+  <a href="#installation"><img alt="Версия .NET для сборки проекта" src="https://img.shields.io/badge/dynamic/xml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fedwardgushchin%2FElectron2D%2Fmain%2FElectron2D.csproj&amp;query=substring-after%28%2FProject%2FPropertyGroup%2FTargetFramework%5Bnot%28%40Condition%29%5D%5B1%5D%2C+%27net%27%29&amp;label=.NET&amp;suffix=+SDK&amp;color=brightgreen" height="28"></a>
+  <a href="#license"><img alt="Лицензия движка" src="https://img.shields.io/badge/dynamic/regex?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fedwardgushchin%2FElectron2D%2Fmain%2Flicence%2FElectron2D-LICENSE.txt&amp;search=%5E%5Cs%2A%28%5CS%2B%29%5Cs%2BLicense&amp;replace=%241&amp;label=%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D1%8F&amp;color=brightgreen" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/releases"><img alt="Последний опубликованный релиз" src="https://img.shields.io/badge/dynamic/xml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fgithub.com%2Fedwardgushchin%2FElectron2D%2Freleases.atom&amp;query=concat%28substring-after%28string%28%28%2F%2F%2A%5Blocal-name%28%29%3D%22entry%22%5D%5B1%5D%2F%2A%5Blocal-name%28%29%3D%22link%22%5D%2F%40href%29%5B1%5D%29%2C+%22%2Ftag%2F%22%29%2C+substring%28%22%D0%BD%D0%B5%D1%82+%D1%80%D0%B5%D0%BB%D0%B8%D0%B7%D0%BE%D0%B2%22%2C+1+div+not%28%2F%2F%2A%5Blocal-name%28%29%3D%22entry%22%5D%29%29%29&amp;label=%D0%A0%D0%B5%D0%BB%D0%B8%D0%B7&amp;color=brightgreen" height="28"></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/edwardgushchin/Electron2D/commits/main"><img alt="Последний коммит в main" src="https://img.shields.io/github/last-commit/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%D0%9F%D0%BE%D1%81%D0%BB%D0%B5%D0%B4%D0%BD%D0%B8%D0%B9+%D0%BA%D0%BE%D0%BC%D0%BC%D0%B8%D1%82&amp;display_timestamp=committer&amp;color=A63B75" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/commits/main"><img alt="Последний коммит в main" src="https://img.shields.io/github/last-commit/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%D0%9F%D0%BE%D1%81%D0%BB%D0%B5%D0%B4%D0%BD%D0%B8%D0%B9+%D0%BA%D0%BE%D0%BC%D0%BC%D0%B8%D1%82&amp;display_timestamp=committer&amp;color=brightgreen" height="28"></a>
   <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/ci.yml"><img alt="Статус автоматической сборки" src="https://img.shields.io/github/check-runs/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%D0%A1%D0%B1%D0%BE%D1%80%D0%BA%D0%B0&amp;nameFilter=Build" height="28"></a>
   <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/ci.yml"><img alt="Тесты (GitHub Actions)" src="https://img.shields.io/github/check-runs/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%D0%A2%D0%B5%D1%81%D1%82%D1%8B&amp;nameFilter=Tests" height="28"></a>
 </p>
@@ -46,7 +46,7 @@ Electron2D - **свободный кроссплатформенный 2D-дви
 
 Это обзор основных возможностей, которые уже есть в движке. API отдельных подсистем ещё развивается; подробности и ограничения описаны по ссылкам.
 
-- [Графика](docs/domains/rendering.md). Спрайты и атласы, камеры, параллакс, рисование фигур и текста. Импорт шейдеров HLSL и GLSL для материалов.
+- [Графика](docs/domains/rendering.md). Спрайты и атласы, камеры, параллакс, рисование фигур и текста. Материалы HLSL и GLSL, визуальные графы шейдеров, CPU/GPU-частицы и 2D-меши.
 - [Сцены и анимация](docs/domains/scene.md). Иерархия игровых объектов, сохранение и загрузка сцен, покадровая анимация, анимация свойств и таймеры.
 - [Физика](docs/domains/physics.md). Твёрдые тела, столкновения, области, проверка пересечений, шарниры и пружины.
 - [Игровой интерфейс](docs/domains/scene.md). Кнопки, поля ввода, прокрутка, контейнеры для размещения элементов, шрифты и темы оформления.
@@ -73,7 +73,7 @@ Electron2D - **свободный кроссплатформенный 2D-дви
 
 Установите через NuGet основной пакет `Electron2D` и пакет целевой платформы из [таблицы ниже](#use-electron2d-in-your-game). Нативные зависимости NuGet загрузит автоматически. [Правила версий платформенных пакетов](docs/native-packaging.md).
 
-Для предварительных версий добавляйте `--prerelease`. Используйте совпадающие версии движка и платформенных пакетов. Текущая версия в NuGet: [`0.1.0-alpha`](https://www.nuget.org/packages/Electron2D/0.1.0-alpha).
+Для предварительных версий добавляйте `--prerelease`. Используйте совпадающие версии движка и платформенных пакетов. Текущая версия в NuGet: [`0.2.0-alpha`](https://www.nuget.org/packages/Electron2D/0.2.0-alpha).
 
 ### Сборка и запуск
 
@@ -174,7 +174,7 @@ dotnet run -c Release
 | iOS, симулятор на Mac ARM64 | `dotnet build examples/MyGame/MyGame.csproj -c Release -r iossimulator-arm64 -p:EnableCodeSigning=false` | [Симулятор и подписанное приложение](examples/CharacterMovement/README.md#ios) |
 | Apple TV, симулятор на Mac ARM64 | `dotnet build examples/MyGame/MyGame.csproj -c Release -r tvossimulator-arm64 -p:EnableCodeSigning=false` | [Симулятор и устройство tvOS](examples/CharacterMovement/README.md#apple-tv-tvos) |
 
-У телефонов и телевизоров бывают другие архитектуры; все варианты перечислены в README примера. Сборка iOS и tvOS требует macOS и Xcode. Эти проекты используют новые исходники движка: нужного им `Engine.RunAsync` пока нет в опубликованном пакете `0.1.0-alpha`.
+У телефонов и телевизоров бывают другие архитектуры; все варианты перечислены в README примера. Сборка iOS и tvOS требует macOS и Xcode.
 
 На телефоне и телевизоре приложение занимает весь экран. В браузере доступна кнопка полноэкранного режима. Поле подстраивается под соотношение сторон, а персонаж, текст и сетка масштабируются вместе.
 
@@ -217,6 +217,7 @@ Electron2D находится на стадии alpha. Публичный API е
 | Найти класс или метод | [Справочник API](docs/inventory.md) |
 | Разобраться в подсистеме | [Оглавление документации](docs/README.md) |
 | Подготовить шейдеры | [Инструмент импорта HLSL и GLSL](tools/shaders/README.md) |
+| Автоматизировать сборку проектов, сценарии и захват кадров | [Пакетный запуск проектов](tools/Batch/README.md) |
 
 <a id="examples"></a>
 

@@ -54,7 +54,7 @@ jobs:
       - name: Install native build prerequisites
         run: |
           apt-get update
-          apt-get install -y git python3 ca-certificates curl build-essential cmake ninja-build pkg-config zlib1g-dev libzstd-dev libicu70 libssl3
+          apt-get install -y git python3 ca-certificates curl build-essential cmake ninja-build pkg-config zlib1g-dev libzstd-dev libicu70 libssl-dev
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v6
         with:

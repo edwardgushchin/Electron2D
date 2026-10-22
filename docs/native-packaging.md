@@ -1,6 +1,6 @@
 # Electron2D NuGet delivery
 
-Last updated: 2026-10-19
+Last updated: 2026-10-22
 
 A private prerelease consumer supplies its exact expected native version to the notice audit with --native-package-version; the ordinary release default still requires the product version. Native dependency versions, 72 ELF classification and all 92 notice byte comparisons remain strict.
 
@@ -36,6 +36,8 @@ Each platform package supplies audited engine-owned native assets and selects on
 A platform package may contain all supported architectures of its OS, under the ordinary NuGet `runtimes/<RID>/native` layout. The requested game RID selects the files to deploy. A project may reference several platform packages for cross-platform development, but one build still deploys only its own RID. A desktop build without an explicit RID selects the SDK host's native assets, including those from transitive dependencies. Universal macOS dependencies using the architecture-neutral `osx` RID are retained on macOS and deployed into the selected `osx-x64` or `osx-arm64` directory; they are excluded on other desktop hosts. Native runtime files preserve the selected RID directory; the .NET runtime and SDK application host retain their own normal layout. SDK static-link/native-app rules apply to Apple, Android and Web artifacts.
 
 ## Version and minimum engine
+
+The `0.2.0-alpha` release uses matching managed and platform versions. Its native build requires OpenSSL development headers on Linux, Windows-safe source filenames, exact private mesh/KTX bridge exports and the KTX DFD headers for static targets. Publication and fresh public restore must pass for the complete eight-package bundle.
 
 **The version of `Electron2D.{Platform}` identifies the minimum supported version of Electron2D, including its prerelease suffix.** `Electron2D.Linux` `0.1.0-alpha` requires Electron2D `0.1.0-alpha` or later. Its NuGet dependency enforces that minimum, and its binary manifest records `minimumEngineVersion`. Users should select matching product/platform release versions unless another combination has been verified. SDL, OpenSSL, FreeType and other upstream versions are implementation pins and do not replace this version rule. See [ADR 0096](decisions/versioning.md#adr-0096).
 

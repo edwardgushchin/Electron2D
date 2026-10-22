@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "package": "SDL3-CS.Linux.Shadercross",
+  "packageVersion": "3.0.0.13",
+  "packageRepositoryCommit": "8b89846448328879a15a4da7bd433a05001fa008",
+  "source": {
+    "id": "vkd3d",
+    "component": "SDL_shadercross",
+    "componentSourceRef": "e55cf5e31ced6f3d1be5cc6d0c50e99384f9f4ba",
+    "upstream": "https://dl.winehq.org/vkd3d/source/vkd3d-2.0.tar.xz",
+    "revision": "2.0",
+    "archive": "vkd3d-2.0.tar.xz",
+    "sha256": "9ad29bb236808186a47ec66e853b21e6fca59b9dc62a9474b05d5e3eda2710ef",
+    "license": "licenses/ShadercrossVkd3d/LGPL-2.1-or-later.txt"
+  },
+  "receipts": [
+    {
+      "rid": "linux-x64",
+      "componentSourceRef": "e55cf5e31ced6f3d1be5cc6d0c50e99384f9f4ba",
+      "artifacts": [
+        {
+          "Name": "libvkd3d-shader.so",
+          "RelativePath": "lib/linux-x64/libvkd3d-shader.so",
+          "Length": 2345249,
+          "Sha256": "0d6b221ef750b5bdbbb5245d5249e3c4878257022b9a930d1e1b4b140406748a"
+        },
+        {
+          "Name": "libvkd3d-shader.so.1",
+          "RelativePath": "lib/linux-x64/libvkd3d-shader.so.1",
+          "Length": 2345249,
+          "Sha256": "0d6b221ef750b5bdbbb5245d5249e3c4878257022b9a930d1e1b4b140406748a"
+        },
+        {
+          "Name": "libvkd3d-shader.so.1.18.0",
+          "RelativePath": "lib/linux-x64/libvkd3d-shader.so.1.18.0",
+          "Length": 2345249,
+          "Sha256": "0d6b221ef750b5bdbbb5245d5249e3c4878257022b9a930d1e1b4b140406748a"
+        },
+        {
+          "Name": "libvkd3d-utils.so",
+          "RelativePath": "lib/linux-x64/libvkd3d-utils.so",
+          "Length": 219321,
+          "Sha256": "6710d8d522e23a2943bda3a43a05696d2eaf9c3f36374841cc06c2b1d99efb02"
+        },
+        {
+          "Name": "libvkd3d-utils.so.1",
+          "RelativePath": "lib/linux-x64/libvkd3d-utils.so.1",
+          "Length": 219321,
+          "Sha256": "6710d8d522e23a2943bda3a43a05696d2eaf9c3f36374841cc06c2b1d99efb02"
+        },
+        {
+          "Name": "libvkd3d-utils.so.1.6.6",
+          "RelativePath": "lib/linux-x64/libvkd3d-utils.so.1.6.6",
+          "Length": 219321,
+          "Sha256": "6710d8d522e23a2943bda3a43a05696d2eaf9c3f36374841cc06c2b1d99efb02"
+        },
+        {
+          "Name": "libvkd3d.so",
+          "RelativePath": "lib/linux-x64/libvkd3d.so",
+          "Length": 1034569,
+          "Sha256": "c4ae0d67876fe5c11587e9c85e6c3d4e92ed4ce73f05f2cc2a81631082ac6509"
+        },
+        {
+          "Name": "libvkd3d.so.1",
+          "RelativePath": "lib/linux-x64/libvkd3d.so.1",
+          "Length": 1034569,
+          "Sha256": "c4ae0d67876fe5c11587e9c85e6c3d4e92ed4ce73f05f2cc2a81631082ac6509"
+        },
+        {
+          "Name": "libvkd3d.so.1.20.0",
+          "RelativePath": "lib/linux-x64/libvkd3d.so.1.20.0",
+          "Length": 1034569,
+          "Sha256": "c4ae0d67876fe5c11587e9c85e6c3d4e92ed4ce73f05f2cc2a81631082ac6509"
+        }
+      ]
+    },
+    {
+      "rid": "linux-arm64",
+      "componentSourceRef": "e55cf5e31ced6f3d1be5cc6d0c50e99384f9f4ba",
+      "artifacts": [
+        {
+          "Name": "libvkd3d-shader.so",
+          "RelativePath": "lib/linux-arm64/libvkd3d-shader.so",
+          "Length": 2427177,
+          "Sha256": "4ab02d28f04439bbbf8817d0c376065db04100439ab8ab48b8f5c4bbd4635be0"
+        },
+        {
+          "Name": "libvkd3d-shader.so.1",
+          "RelativePath": "lib/linux-arm64/libvkd3d-shader.so.1",
+          "Length": 2427177,
+          "Sha256": "4ab02d28f04439bbbf8817d0c376065db04100439ab8ab48b8f5c4bbd4635be0"
+        },
+        {
+          "Name": "libvkd3d-shader.so.1.18.0",
+          "RelativePath": "lib/linux-arm64/libvkd3d-shader.so.1.18.0",
+          "Length": 2427177,
+          "Sha256": "4ab02d28f04439bbbf8817d0c376065db04100439ab8ab48b8f5c4bbd4635be0"
+        },
+        {
+          "Name": "libvkd3d-utils.so",
+          "RelativePath": "lib/linux-arm64/libvkd3d-utils.so",
+          "Length": 264361,
+          "Sha256": "39efc37a635b227be8dea364a32dd59b65f18e4ff71a6196ae803673035a5e57"
+        },
+        {
+          "Name": "libvkd3d-utils.so.1",
+          "RelativePath": "lib/linux-arm64/libvkd3d-utils.so.1",
+          "Length": 264361,
+          "Sha256": "39efc37a635b227be8dea364a32dd59b65f18e4ff71a6196ae803673035a5e57"
+        },
+        {
+          "Name": "libvkd3d-utils.so.1.6.6",
+          "RelativePath": "lib/linux-arm64/libvkd3d-utils.so.1.6.6",
+          "Length": 264361,
+          "Sha256": "39efc37a635b227be8dea364a32dd59b65f18e4ff71a6196ae803673035a5e57"
+        },
+        {
+          "Name": "libvkd3d.so",
+          "RelativePath": "lib/linux-arm64/libvkd3d.so",
+          "Length": 985393,
+          "Sha256": "bd57aaa795c3d4862dee5910553e1862c5ab6c4eb1f91864a14b1cb7e05ad0a6"
+        },
+        {
+          "Name": "libvkd3d.so.1",
+          "RelativePath": "lib/linux-arm64/libvkd3d.so.1",
+          "Length": 985393,
+          "Sha256": "bd57aaa795c3d4862dee5910553e1862c5ab6c4eb1f91864a14b1cb7e05ad0a6"
+        },
+        {
+          "Name": "libvkd3d.so.1.20.0",
+          "RelativePath": "lib/linux-arm64/libvkd3d.so.1.20.0",
+          "Length": 985393,
+          "Sha256": "bd57aaa795c3d4862dee5910553e1862c5ab6c4eb1f91864a14b1cb7e05ad0a6"
+        }
+      ]
+    }
+  ]
+}

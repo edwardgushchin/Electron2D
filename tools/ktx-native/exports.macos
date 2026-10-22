@@ -1,0 +1,7 @@
+_e2d_ktx_create
+_e2d_ktx_level
+_e2d_ktx_destroy
+_e2d_basis_create
+_e2d_block_decode
+_e2d_image_encode
+_e2d_image_encoded_free

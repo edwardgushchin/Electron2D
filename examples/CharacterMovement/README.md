@@ -17,7 +17,7 @@ git clone https://github.com/edwardgushchin/Electron2D.git
 cd Electron2D
 ```
 
-The example references the engine source in this checkout. NuGet restores the selected `Electron2D.{Platform}` package and native dependencies automatically. The new `Engine.RunAsync` host is not in the published `Electron2D` version `0.1.0-alpha`; use the checkout for these mobile, TV and browser entry points until a release includes it. A desktop project using the published packages is described in the [main README](../../README.md#use-electron2d-in-your-game).
+The example references the engine source in this checkout. NuGet restores the selected `Electron2D.{Platform}` package and native dependencies automatically. The `0.2.0-alpha` release includes the `Engine.RunAsync` host used by mobile, TV and browser entry points. A desktop project using the published packages is described in the [main README](../../README.md#use-electron2d-in-your-game).
 
 | Target | Additional tools |
 | --- | --- |

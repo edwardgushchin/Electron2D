@@ -11,13 +11,13 @@
 </h1>
 
 <p align="center">
-  <a href="#installation"><img alt="Versão do .NET necessária para compilar" src="https://img.shields.io/badge/dynamic/xml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fedwardgushchin%2FElectron2D%2Fmain%2FElectron2D.csproj&amp;query=substring-after%28%2FProject%2FPropertyGroup%2FTargetFramework%5Bnot%28%40Condition%29%5D%5B1%5D%2C+%27net%27%29&amp;label=.NET&amp;suffix=+SDK&amp;color=A63B75" height="28"></a>
-  <a href="#license"><img alt="Licença do motor" src="https://img.shields.io/badge/dynamic/regex?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fedwardgushchin%2FElectron2D%2Fmain%2Flicence%2FElectron2D-LICENSE.txt&amp;search=%5E%5Cs%2A%28%5CS%2B%29%5Cs%2BLicense&amp;replace=%241&amp;label=Licen%C3%A7a&amp;color=A63B75" height="28"></a>
-  <a href="https://github.com/edwardgushchin/Electron2D/releases"><img alt="Última versão publicada" src="https://img.shields.io/badge/dynamic/xml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fgithub.com%2Fedwardgushchin%2FElectron2D%2Freleases.atom&amp;query=concat%28substring-after%28string%28%28%2F%2F%2A%5Blocal-name%28%29%3D%22entry%22%5D%5B1%5D%2F%2A%5Blocal-name%28%29%3D%22link%22%5D%2F%40href%29%5B1%5D%29%2C+%22%2Ftag%2F%22%29%2C+substring%28%22sem+vers%C3%B5es%22%2C+1+div+not%28%2F%2F%2A%5Blocal-name%28%29%3D%22entry%22%5D%29%29%29&amp;label=Vers%C3%A3o&amp;color=A63B75" height="28"></a>
+  <a href="#installation"><img alt="Versão do .NET necessária para compilar" src="https://img.shields.io/badge/dynamic/xml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fedwardgushchin%2FElectron2D%2Fmain%2FElectron2D.csproj&amp;query=substring-after%28%2FProject%2FPropertyGroup%2FTargetFramework%5Bnot%28%40Condition%29%5D%5B1%5D%2C+%27net%27%29&amp;label=.NET&amp;suffix=+SDK&amp;color=brightgreen" height="28"></a>
+  <a href="#license"><img alt="Licença do motor" src="https://img.shields.io/badge/dynamic/regex?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fedwardgushchin%2FElectron2D%2Fmain%2Flicence%2FElectron2D-LICENSE.txt&amp;search=%5E%5Cs%2A%28%5CS%2B%29%5Cs%2BLicense&amp;replace=%241&amp;label=Licen%C3%A7a&amp;color=brightgreen" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/releases"><img alt="Última versão publicada" src="https://img.shields.io/badge/dynamic/xml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fgithub.com%2Fedwardgushchin%2FElectron2D%2Freleases.atom&amp;query=concat%28substring-after%28string%28%28%2F%2F%2A%5Blocal-name%28%29%3D%22entry%22%5D%5B1%5D%2F%2A%5Blocal-name%28%29%3D%22link%22%5D%2F%40href%29%5B1%5D%29%2C+%22%2Ftag%2F%22%29%2C+substring%28%22sem+vers%C3%B5es%22%2C+1+div+not%28%2F%2F%2A%5Blocal-name%28%29%3D%22entry%22%5D%29%29%29&amp;label=Vers%C3%A3o&amp;color=brightgreen" height="28"></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/edwardgushchin/Electron2D/commits/main"><img alt="Último commit na main" src="https://img.shields.io/github/last-commit/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%C3%9Altimo+commit&amp;display_timestamp=committer&amp;color=A63B75" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/commits/main"><img alt="Último commit na main" src="https://img.shields.io/github/last-commit/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%C3%9Altimo+commit&amp;display_timestamp=committer&amp;color=brightgreen" height="28"></a>
   <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/ci.yml"><img alt="Status da compilação automática" src="https://img.shields.io/github/check-runs/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=Compila%C3%A7%C3%A3o&amp;nameFilter=Build" height="28"></a>
   <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/ci.yml"><img alt="Testes (GitHub Actions)" src="https://img.shields.io/github/check-runs/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=Testes&amp;nameFilter=Tests" height="28"></a>
 </p>
@@ -46,7 +46,7 @@ Crie mundos e mecânicas de jogo com as ferramentas habituais do .NET. Codex, Cl
 
 Este é um resumo dos principais recursos já implementados no motor. As APIs dos subsistemas continuam evoluindo; os links descrevem o que funciona e suas limitações.
 
-- [Gráficos](docs/domains/rendering.md). Sprites e atlas, câmeras, paralaxe, desenho de formas e texto. Importação de shaders HLSL e GLSL para materiais.
+- [Gráficos](docs/domains/rendering.md). Sprites e atlas, câmeras, paralaxe, desenho de formas e texto. Materiais HLSL e GLSL, grafos visuais de shaders, partículas CPU/GPU e malhas 2D.
 - [Cenas e animação](docs/domains/scene.md). Hierarquias de objetos do jogo, salvamento e carregamento de cenas, animação por quadros, animação de propriedades e temporizadores.
 - [Física](docs/domains/physics.md). Corpos rígidos, colisões, áreas, consultas de interseção, articulações e molas.
 - [Interface de jogo](docs/domains/scene.md). Botões, campos de texto, rolagem, contêineres de layout, fontes e temas.
@@ -73,7 +73,7 @@ Comece por [CharacterMovement](examples/CharacterMovement/README.md). Mova o per
 
 Instale pelo NuGet o pacote principal `Electron2D` e o pacote da plataforma de destino com os [comandos da tabela abaixo](#use-electron2d-in-your-game). O NuGet restaura as dependências nativas automaticamente. [Regras de versões dos pacotes de plataforma](docs/native-packaging.md).
 
-Pacotes de pré-lançamento exigem `--prerelease`. Use versões correspondentes do motor e dos pacotes de plataforma. Versão atual no NuGet: [`0.1.0-alpha`](https://www.nuget.org/packages/Electron2D/0.1.0-alpha).
+Pacotes de pré-lançamento exigem `--prerelease`. Use versões correspondentes do motor e dos pacotes de plataforma. Versão atual no NuGet: [`0.2.0-alpha`](https://www.nuget.org/packages/Electron2D/0.2.0-alpha).
 
 ### Compilar e executar
 
@@ -174,7 +174,7 @@ Depois, escolha um destino:
 | iOS, simulador em um Mac ARM64 | `dotnet build examples/MyGame/MyGame.csproj -c Release -r iossimulator-arm64 -p:EnableCodeSigning=false` | [Simulador e aplicativo assinado](examples/CharacterMovement/README.md#ios) |
 | Apple TV, simulador em um Mac ARM64 | `dotnet build examples/MyGame/MyGame.csproj -c Release -r tvossimulator-arm64 -p:EnableCodeSigning=false` | [Simulador e dispositivo tvOS](examples/CharacterMovement/README.md#apple-tv-tvos) |
 
-Celulares e TVs também usam outras arquiteturas; o README do exemplo lista todas as opções. Compilar iOS e tvOS exige macOS e Xcode. Esses projetos usam o código-fonte atual do motor: o `Engine.RunAsync` de que precisam ainda não está no pacote publicado `0.1.0-alpha`.
+Celulares e TVs também usam outras arquiteturas; o README do exemplo lista todas as opções. Compilar iOS e tvOS exige macOS e Xcode.
 
 O aplicativo ocupa a tela inteira em celulares e TVs. O navegador oferece um botão de tela cheia. O campo se adapta à proporção da tela, enquanto o personagem, o texto e a grade são escalados juntos.
 
@@ -217,6 +217,7 @@ Você pode criar cenas em código, salvá-las com `PackedScene` e carregá-las n
 | Encontrar uma classe ou um método | [Referência da API](docs/inventory.md) |
 | Entender um subsistema | [Índice da documentação](docs/README.md) |
 | Preparar shaders | [Ferramenta de importação de HLSL e GLSL](tools/shaders/README.md) |
+| Automatizar compilações, cenários e capturas | [Execução de projetos em lote](tools/Batch/README.md) |
 
 <a id="examples"></a>
 

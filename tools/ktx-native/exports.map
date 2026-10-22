@@ -1,0 +1,5 @@
+{
+  global: e2d_ktx_create; e2d_ktx_level; e2d_ktx_destroy; e2d_basis_create;
+          e2d_block_decode; e2d_image_encode; e2d_image_encoded_free;
+  local: *;
+};
