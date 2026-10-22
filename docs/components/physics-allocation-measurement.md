@@ -454,7 +454,8 @@ report directory.
 
 This attributes the current failed interval; it does not turn its zero-byte gate
 into a pass or retrospectively certify the older intervals without native context
-snapshots. A complete run using the preparation correction remains required.
+snapshots. The current-main ordinary aggregate below completes the separate
+unprofiled verification; this failed interval itself remains rejected.
 
 ## Prepared ordinary aggregate (2026-10-22)
 
@@ -467,8 +468,47 @@ the shared pair/contact completion change.
 The aggregate then exits -6 after 4168.539 seconds at
 IntegerSourceTextureTests.RunManaged: libElectron2DKTX.so is absent from the
 frozen native payload. Payload hashes remain unchanged and no Xid is recorded.
-This dependency failure keeps the full-suite gate open; the point-field success
-does not retrospectively clear older failed intervals. Receipts and preserved
+This dependency failure kept that cohort's full-suite gate open; its point-field
+success does not retrospectively clear older failed intervals. Receipts and preserved
 source bindings are in local ignored
 `bin/physics-report-ranges/2026-10-22/current-pair/main-aggregate-analysis.json`
 and `post-contact-batch-source-overrides.json`.
+
+## Current-main ordinary aggregate (2026-10-22)
+
+The complete default CLR test aggregate at
+`c17f173af98febab1fc3c05b8843c6e2ca0413e9`, including shared pair/contact
+completion, exits 0 after 4391.535 seconds with the final
+`Electron2D checks passed.` marker. This is an ordinary, unprofiled process with
+no test-scope environment filters. All six CPU/GPU point-field allocation gates
+pass 768 measured complete frames at exactly 0/0 owner/all-thread bytes.
+The existing force-overflow failure, selection/publication and retirement checks
+also pass; no assertion or allocation threshold was relaxed.
+
+The Release build supplies the existing local native KTX bridge through
+`Electron2DKTXNativeLibrary`. Its integer/compressed/block image tests now pass
+inside the full aggregate, beyond the previous missing-dependency stop. The
+frozen payload remains unchanged. Runtime/source/PDB proofs bind 2552 runtime,
+946 root-test and 269 public-consumer documents to this revision: 3766 match Git,
+and the sole extra is a preserved, uncommitted fresh-contact checkpoint regression.
+Two unaccepted runtime report-range prototype files are excluded using verified
+committed-source substitutions. This is not acceptance of that prototype.
+
+Runtime SHA-256:
+`0c6dfbc36f18aa18884e4fadeef727657453d175122fb33c04f54ecd535f324f`.
+Root test SHA-256:
+`bf0b38a162030d289c53560d37dc3b76abd637bf3151f2450caeb54cfb4ef078`.
+Process maps observe the NVIDIA backend and no software GPU; a fresh kernel-log
+read confirms no new Xid. The 2149 telemetry samples reach 43 C and 115.98 W.
+These observations do not verify the unchecked power cable or sustained hardware
+stability.
+
+Receipts, payload/source/shader proofs and the validator are under local ignored
+`bin/physics-pair-contact-batch/2026-10-22/`: `main-aggregate-analysis.json`,
+`main-source-proof.json`, `main-shader-proof.json`, `main-cohort-manifest.json`
+and `validate-main-aggregate.py`. The validator also checks its six-gate parser
+against the earlier rejected KTX cohort, without requiring gate-log order.
+The successful current aggregate does not retrospectively accept older failed
+intervals or prove all native, network, foreign-platform or massive-scene
+performance requirements. Physics declaration coverage stays 1306/1369 (95.40%),
+with 63 open rows and 92 excluded.

@@ -145,6 +145,21 @@ diagnostic observations, not accepted speed ratios. The isolated control proves
 the removed intermediate completion; full-scene throughput, real-window FPS,
 foreign-platform and whole-goal acceptance remain open.
 
+The later [current-main ordinary aggregate](physics-allocation-measurement.md#current-main-ordinary-aggregate-2026-10-22)
+passes the complete default CLR suite at c17f173af in 4391.535 seconds, with this
+pair/contact implementation, unchanged payload and all six point-field gates
+at 0/0 bytes across 768 measured full frames. The repaired native cohort includes
+KTX through its supported build property; the earlier missing-library failure
+remains a rejected result. Exact source substitutions and the preserved extra
+checkpoint test are recorded in that report. Native/network completion and
+massive-scene performance remain separate gates.
+
+The earlier isolated eight-case timing plan at 7b6db6079 stops after its first CPU case:
+physical and 0/0-byte checks pass, but foreign workload reaches 2.107 mean cores
+in an observed interval against the predeclared 1.0 limit. Its 1/8 result is
+rejected, with no automatic retry or changed threshold. It establishes no GPU
+speed ratio or real-window FPS result; see local `isolated-analysis.json`.
+
 ## Verification and measurement method
 
 Run `ELECTRON2D_TEST_GPU_RESIDENT_BODY=1 dotnet tests/Electron2D.Tests/bin/Release/net10.0/linux-x64/Electron2D.Tests.dll`
