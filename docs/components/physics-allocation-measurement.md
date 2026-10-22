@@ -430,3 +430,28 @@ owner/all-thread 0/0 bytes. The four traced profiles retain 660 balanced bracket
 cohort binds 2,541 runtime, 946 root and 269 consumer documents at 24e906cb4 plus
 the pending contact-range prototype. That prototype, the older failed aggregates,
 NativeAOT, native allocation totals and performance remain separately unaccepted.
+
+## Aggregate context-retirement witness (2026-10-22)
+
+The original context-enabled aggregate terminates at the negative wide-coordinate
+CPU case after 3,757.413 seconds, before the preparation correction is part of its
+frozen payload. Tag 1003033 reports owner/all-thread 3,184/5,440 bytes. Frame 83
+has an unused native context tail of exactly 3,184 bytes; frame 84 has zero pointer
+and limit, the same TLS identity and unchanged SOH/UOH totals. Both native formulas
+equal the saved owner counters. This directly identifies the owner counter jump
+as the independently reproduced background-context retirement, with no owner
+ObjectAllocated event.
+
+The bracket contains twelve finalizer-thread objects: seven GCMemoryInfoData at
+288 bytes and five ConditionalWeakTable enumerators at 48 bytes, totaling 2,256
+bytes, exactly the all-thread remainder. Eleven stacks pass through
+SharedArrayPool.Trim and one through PortableThreadPool.OnGen2GCCallback; all
+reach Gen2GcCallback.Finalize. Counter interiors are still bracketed rather than
+individually timestamped. All 520 native brackets balance with zero recursion;
+the payload is unchanged. The raw trace and decoded evidence are retained in
+context-aggregate-trace/ and context-aggregate-analysis.json under the same ignored
+report directory.
+
+This attributes the current failed interval; it does not turn its zero-byte gate
+into a pass or retrospectively certify the older intervals without native context
+snapshots. A complete run using the preparation correction remains required.
