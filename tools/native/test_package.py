@@ -60,13 +60,18 @@ endif()
             root = Path(directory)
             source = root / "CMakeLists.txt"
             source.write_text("before\n" + guard + "\nafter\n")
+            library = root / "lib/CMakeLists.txt"
+            library.parent.mkdir()
+            library.write_bytes(source.read_bytes())
             command = ["cmake", "-DROOT=" + str(root), "-P", str(package.ROOT / "tools/ktx-native/configure-guards.cmake")]
             subprocess.run(command, check=True)
             patched = source.read_bytes()
             self.assertTrue(patched.startswith(b"before\n") and patched.endswith(b"\nafter\n"))
             self.assertNotIn(b"FATAL_ERROR", patched)
+            self.assertEqual(library.read_bytes(), patched)
             subprocess.run(command, check=True)
             self.assertEqual(source.read_bytes(), patched)
+            self.assertEqual(library.read_bytes(), patched)
             source.write_text("unknown upstream source\n")
             result = subprocess.run(command, capture_output=True, text=True)
             self.assertNotEqual(result.returncode, 0)

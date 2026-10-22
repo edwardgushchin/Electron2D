@@ -21,10 +21,12 @@ set(BASISU_SSE OFF CACHE BOOL "" FORCE)
 set(BASISU_OPENCL OFF CACHE BOOL "" FORCE)
 set(KTX_FEATURE_LOADTEST_APPS OFF CACHE STRING "" FORCE)
 set(ASTCENC_ISA_NONE ON CACHE BOOL "" FORCE)
+# Invalidate FetchContent's patch stamp when the guarded adapter changes.
+file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/configure-guards.cmake" configure_guard_sha256)
 FetchContent_Declare(Electron2DKTXCodec
   URL https://codeload.github.com/KhronosGroup/KTX-Software/tar.gz/refs/tags/v5.0.0-rc2
   URL_HASH SHA256=bce6794bca57d86de2f00683ba8eaa6b3e8875d5abe45ac1136e206eb68aa476
-  PATCH_COMMAND ${CMAKE_COMMAND} "-DROOT=<SOURCE_DIR>" -P "${CMAKE_CURRENT_SOURCE_DIR}/configure-guards.cmake")
+  PATCH_COMMAND ${CMAKE_COMMAND} "-DROOT=<SOURCE_DIR>" "-DADAPTER_SHA256=${configure_guard_sha256}" -P "${CMAKE_CURRENT_SOURCE_DIR}/configure-guards.cmake")
 FetchContent_MakeAvailable(Electron2DKTXCodec)
 FetchContent_Declare(Electron2DETC
   URL https://codeload.github.com/hglm/detex/tar.gz/cab11584d9be140602a66fd9a88ef0b99f08a97a
@@ -118,6 +120,10 @@ endforeach()
 if(ANDROID AND CMAKE_SIZEOF_VOID_P EQUAL 4)
   # Android 21 exposes the 32-bit stdio ABI; encoder file helpers already reject oversized input.
   target_compile_options(basisu_encoder PRIVATE -U_FILE_OFFSET_BITS -D_FILE_OFFSET_BITS=32)
+  if(ANDROID_ABI STREQUAL "armeabi-v7a")
+    # ARMv7 cannot enable the upstream floating-point exception mode.
+    target_compile_options(astcenc-none-static PRIVATE -ffp-exception-behavior=ignore)
+  endif()
 endif()
 set(kind SHARED)
 if(ELECTRON2D_STATIC_NATIVE)
