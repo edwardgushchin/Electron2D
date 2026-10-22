@@ -238,3 +238,48 @@ terminal receipt and scenes remain in
 decoded stacks and unresolved difference. The older untraced failures retain
 their own limits. Complete allocation, native/platform/network and performance
 acceptance remain open; the declaration census is unchanged.
+
+## Owner-counter boundary diagnostics (2026-10-22)
+
+Engine-free controls do not reproduce the unmatched owner delta. Four array
+entry points (ordinary, uninitialized, pinned and reflection-created byte arrays)
+each retain eight 5,520-byte owner/global counter deltas and eight corresponding
+ObjectAllocated events. Eight small positive controls retain 64-byte deltas/raw
+size 61; eight empty controls are 0/0 without events. These controls establish
+coverage of those allocation paths, not every runtime allocation source.
+
+A separate 512-window owner-only/owner-plus-precise control retains zero owner
+bytes during 1,366 explicit nonblocking generation-2 collection requests. Four
+paired processes repeat 512 windows each with/without fourteen seeded ArrayPools
+and with/without profiling, using the identical executable. All 2,048 owner
+deltas remain zero. The seeded profiled process observes 38,858 finalizer events,
+including the same memory-info/enumerator producers as the failed aggregate.
+Neither collection requests nor those finalizers alone reproduce its owner
+delta. These controls do not resolve or replace the failed physical gate.
+
+Optional point-field tracing now retains 129 owner-counter samples around the
+unchanged 128 complete authored-reset/step intervals. A failed byte gate reports
+the initial counter-read boundary, each nonzero frame delta, and the final
+boundary after native END. The reusable sample array is created before fixture
+authoring/warmup. Untraced execution creates no tracer or sample array. No
+collection preparation, physical operation count, retry or allocation threshold
+changes. Tag offset 400 calibrates exactly 64 bytes before frame zero, 64 bytes
+in frame 63 and 64 bytes after the last frame, with all other frame deltas zero.
+
+The local framed profiler retains the existing begin/end ABI and also writes its
+cumulative recursion count at each END, so an aborted process need not rely on
+SHUTDOWN for that diagnostic. The control projects, immutable receipts, decoded
+events and profiler source/compiler command are retained under ignored
+`bin/physics-report-ranges/2026-10-22/`. These are observation tools; attribution,
+aggregate acceptance and full-goal readiness remain open.
+
+Six CLR profiles pass 4,608 complete CPU/GPU field/containment frames at strict
+0/0 owner/all-thread managed bytes. They retain 864 balanced native marker pairs,
+five successful frame-boundary calibrations, no physical object events and zero
+reported profiler recursion. CPU profiles have no GPU driver; GPU profiles map
+NVIDIA without a software GPU. The frozen working-tree cohort binds 2,526
+runtime, 946 root and 269 public-consumer source documents, based on 53b2bd674;
+it includes the separately pending contact-range prototype and does not accept
+that optimization. Scoped formatting, Release/API/wiki and identity checks pass.
+NativeAOT and a new complete aggregate result are separate; successful focused
+windows do not attribute the historical 5,520-byte owner delta.

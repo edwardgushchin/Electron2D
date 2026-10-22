@@ -72,14 +72,21 @@ internal static class PhysicsPointGravityRangeTests
             var tag = trace?.Tag(34) ?? 0; trace?.Begin(tag);
             var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
             long ownerBytes, allBytes;
-            try { for (var i = 0; i < 128; i++) { Reset(rigid, body); tree.PhysicsFrame(.001); } }
+            try
+            {
+                for (var i = 0; i < 128; i++) { trace?.MarkFrame(i); Reset(rigid, body); tree.PhysicsFrame(.001); }
+                trace?.MarkFrame(128);
+            }
             finally
             {
                 ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; allBytes = GC.GetTotalAllocatedBytes(true) - all;
                 trace?.End();
             }
             if (ownerBytes != 0 || allBytes != 0)
+            {
+                trace?.ReportFrames(owner, ownerBytes);
                 throw new InvalidOperationException($"Point gravity reset {backend}: 128 warmed complete frames allocated owner/all={ownerBytes}/{allBytes} B; GC={GC.CollectionCount(0) - generation0}/{GC.CollectionCount(1) - generation1}/{GC.CollectionCount(2) - generation2}, trace={tag}, runtime={RuntimeInformation.FrameworkDescription}, serverGC={System.Runtime.GCSettings.IsServerGC}.");
+            }
             Console.WriteLine($"Point gravity range: backend={backend}, profiles=3, cases={cases.Length}, receivers=3, warmFrames=128, ownerBytes={ownerBytes}, allBytes={allBytes}.");
             if (backend == PhysicsServer.Backend.GPU)
             {
@@ -125,14 +132,21 @@ internal static class PhysicsPointGravityRangeTests
                 var tag = trace?.Tag(sign > 0 ? 32UL : 33UL) ?? 0; trace?.Begin(tag);
                 var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
                 long ownerBytes, allBytes;
-                try { for (var i = 0; i < 128; i++) tree.PhysicsFrame(.001); }
+                try
+                {
+                    for (var i = 0; i < 128; i++) { trace?.MarkFrame(i); tree.PhysicsFrame(.001); }
+                    trace?.MarkFrame(128);
+                }
                 finally
                 {
                     ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner; allBytes = GC.GetTotalAllocatedBytes(true) - all;
                     trace?.End();
                 }
                 if (ownerBytes != 0 || allBytes != 0)
+                {
+                    trace?.ReportFrames(owner, ownerBytes);
                     throw new InvalidOperationException($"Wide point gravity {backend}, sign={sign}: 128 warmed complete frames allocated owner/all={ownerBytes}/{allBytes} B; GC={GC.CollectionCount(0) - generation0}/{GC.CollectionCount(1) - generation1}/{GC.CollectionCount(2) - generation2}, trace={tag}, runtime={RuntimeInformation.FrameworkDescription}, serverGC={System.Runtime.GCSettings.IsServerGC}.");
+                }
                 Console.WriteLine($"Wide point warm gate: backend={backend}, frames=128, ownerBytes={ownerBytes}, allBytes={allBytes}.");
             }
             finally { PhysicsServer.FreeRID(body); }

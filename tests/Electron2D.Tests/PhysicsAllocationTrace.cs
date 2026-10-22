@@ -10,6 +10,7 @@ internal sealed class PhysicsAllocationTrace : IDisposable
     private readonly nint _library;
     private readonly BeginTrace _begin;
     private readonly EndTrace _end;
+    private readonly long[] _frameOwners = new long[129];
     private readonly ulong _base = 1_000_000UL + (ulong)Interlocked.Increment(ref _runs) * 1000;
     private PhysicsAllocationTrace(nint library)
     {
@@ -37,6 +38,14 @@ internal sealed class PhysicsAllocationTrace : IDisposable
     internal ulong Tag(ulong scenario) => _base + scenario;
     internal void Begin(ulong tag) => _begin(tag);
     internal void End() => _end();
+    internal void MarkFrame(int frame) => _frameOwners[frame] = GC.GetAllocatedBytesForCurrentThread();
+    private long FrameDelta(int frame) => _frameOwners[frame + 1] - _frameOwners[frame];
+    internal void ReportFrames(long baseline, long allocated)
+    {
+        Console.WriteLine($"Point frame boundaries: prefix={_frameOwners[0] - baseline}, suffix={baseline + allocated - _frameOwners[^1]} B.");
+        for (var i = 0; i < 128; i++)
+            if (FrameDelta(i) != 0) Console.WriteLine($"Point frame {i}: owner={FrameDelta(i)} B.");
+    }
     private void Controls(PhysicsServer.Backend backend)
     {
         for (var i = 0; i < 160; i++)
@@ -50,6 +59,20 @@ internal sealed class PhysicsAllocationTrace : IDisposable
             End(); GC.KeepAlive(value);
             Console.WriteLine($"Point trace control {backend}, positive={positive}, trace={tag}, owner/all={owner}/{all} B.");
         }
+        MarkFrame(0);
+        var frameTag = Tag(400); Begin(frameTag);
+        var before = GC.GetAllocatedBytesForCurrentThread(); var total = GC.GetTotalAllocatedBytes(true);
+        var prefix = Allocate(); object? middle = null;
+        for (var i = 0; i < 128; i++) { MarkFrame(i); if (i == 63) middle = Allocate(); }
+        MarkFrame(128); var suffix = Allocate();
+        var delta = GC.GetAllocatedBytesForCurrentThread() - before; total = GC.GetTotalAllocatedBytes(true) - total;
+        End(); GC.KeepAlive(prefix); GC.KeepAlive(middle); GC.KeepAlive(suffix);
+        if (delta != 192 || _frameOwners[0] - before != 64 || before + delta - _frameOwners[^1] != 64)
+            throw new InvalidOperationException("Frame trace control did not retain its prefix/suffix allocations.");
+        for (var i = 0; i < 128; i++)
+            if (FrameDelta(i) != (i == 63 ? 64 : 0)) throw new InvalidOperationException("Frame trace control reported the wrong allocation interval.");
+        Console.WriteLine($"Frame trace control {backend}, trace={frameTag}, owner/all={delta}/{total} B; prefix/frame63/suffix=64/64/64 B.");
+        ReportFrames(before, delta);
     }
     [MethodImpl(MethodImplOptions.NoInlining)] private static object Allocate() => new byte[37];
     public void Dispose() => NativeLibrary.Free(_library);
