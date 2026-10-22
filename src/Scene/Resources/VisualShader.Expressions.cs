@@ -5,7 +5,7 @@ namespace Electron2D;
 
 public sealed partial class VisualShader
 {
-    private IEnumerable<string> GlobalExpressions() => _graphs.SelectMany(g => g.Nodes.Values).Select(e => e.Node)
+    private IEnumerable<string> GlobalExpressions() => ActiveStages.SelectMany(stage => _graphs[(int)stage].Nodes.Values).Select(e => e.Node)
         .OfType<VisualShaderNodeGlobalExpression>().Select(n => n.Expression);
     private IEnumerable<string> ExpressionSources(Type stage, HashSet<int> reachable, CustomPlan? custom = null) => GlobalExpressions().Concat(
         reachable.Select(id => GetNode(stage, id)).OfType<VisualShaderNodeExpression>().Where(n => n is not VisualShaderNodeGlobalExpression).Select(n => n.Expression)).Concat(custom?.Sources(stage) ?? []);
@@ -62,6 +62,11 @@ public sealed partial class VisualShader
     private static Dictionary<string, string> ExpressionBuiltins(Type stage, Dictionary<string, string> aliases, bool global = false)
     {
         var result = new Dictionary<string, string>(StringComparer.Ordinal) { ["TIME"] = aliases["e2d_values"] + ".TIME" };
+        if (IsParticleStage(stage) || stage == Type.TextureBlit)
+        {
+            foreach (var role in global ? Array.Empty<string>() : DomainBuiltins) if (aliases.TryGetValue(role, out var symbol)) result[role] = symbol;
+            return result;
+        }
         if (stage == Type.Fragment) result["SCREEN_PIXEL_SIZE"] = aliases["e2d_values"] + ".SCREEN_PIXEL_SIZE";
         if (!global)
         {

@@ -1,8 +1,8 @@
 # VisualShader
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
-Source: [`VisualShader.cs`](../../src/Scene/Resources/VisualShader.cs).
+Source: [VisualShader.cs](../../src/Scene/Resources/VisualShader.cs).
 
 ```csharp
 public sealed class Electron2D.VisualShader
@@ -12,48 +12,54 @@ Inherits: [Shader](Shader.md).
 
 ## Description
 
-A typed canvas graph and its last successfully imported shader program.
+Typed editable shader graphs and their last successfully imported program.
 
 Graph edits are source authoring. Save the resource and run ShaderImport with --visual-shader to produce a new compiled resource. Existing materials keep the previous immutable program until reloaded. Added nodes are borrowed; reserved outputs and factory-created replacements belong to the graph. Authoring is single-threaded cold work.
 
 ## Example
 
-```csharp
-using var graph = new VisualShader();
-using var color = new VisualShaderNodeColorConstant { Constant = new Color(.25f, .5f, .75f, 1) };
-graph.AddNode(VisualShader.Type.Fragment, color, new Vector2(10, 20), 2);
-graph.ConnectNodes(VisualShader.Type.Fragment, 2, 0, VisualShader.NodeIDOutput, 0);
-ResourceSaver.Save(graph, "res://Shaders/color-source.e2dres", SaverFlags.BundleResources);
-```
-
-Compile the saved graph with `ShaderImport color-source.e2dres canvas color.e2dres --visual-shader`, then load `color.e2dres` as a VisualShader and assign it to ShaderMaterial. The complete compiled workflow is exercised by `tests/VisualShader.Consumer`.
+See the executable authoring and runtime workflow in [particle and writable-texture graphs](../components/visual-shaders.md#particle-and-writable-texture-graph-domains). It includes canonical stages, port order, units, defaults, mode transitions and ownership.
 
 ## Member summary
 
 | Member | Contract |
 | --- | --- |
+| [`public sealed class Electron2D.VisualShader`](#member-5b40f778f238) | Typed editable shader graphs and their last successfully imported program. |
 | [`public const System.Int32 NodeIDInvalid = -1`](#member-d8958f3c4b8c) | The sentinel for an absent node. |
 | [`public const System.Int32 NodeIDOutput = 0`](#member-12489fb369a6) | The reserved output node in each stage. |
-| [`public VisualShader()`](#member-517e90a99215) | Creates two empty canvas graphs with independent owned output nodes. |
+| [`public VisualShader()`](#member-517e90a99215) | Creates independent owned outputs for the supported source stages; canvas mode is initially selected. |
 | [`public System.Void AddNode(Electron2D.VisualShader.Type type, Electron2D.VisualShaderNode node, Electron2D.Vector2 position, System.Int32 id)`](#member-d838266863d0) | Adds a borrowed numeric operation at a finite authoring position. |
 | [`public System.Boolean CanConnectNodes(Electron2D.VisualShader.Type type, System.Int32 fromNode, System.Int32 fromPort, System.Int32 toNode, System.Int32 toPort)`](#member-aa675f576da3) | Tests whether a new numeric connection is valid and acyclic. |
 | [`public System.Void ConnectNodes(Electron2D.VisualShader.Type type, System.Int32 fromNode, System.Int32 fromPort, System.Int32 toNode, System.Int32 toPort)`](#member-b0802f781262) | Adds a validated numeric connection. |
 | [`public System.Void ConnectNodesForced(Electron2D.VisualShader.Type type, System.Int32 fromNode, System.Int32 fromPort, System.Int32 toNode, System.Int32 toPort)`](#member-c9afcad3894c) | Records an edge between existing ports without rejecting graph cycles. |
-| [`protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicateSubresource, System.Func<Electron2D.Resource, Electron2D.Resource> forceDuplicateSubresource)`](#member-760215bda1bf) | Inherited typed Resource lifecycle implementation. |
-| [`protected override Electron2D.Resource CreateDuplicateInstance()`](#member-7ad2dafde8d0) | Inherited typed Resource lifecycle implementation. |
+| [`protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicateSubresource, System.Func<Electron2D.Resource, Electron2D.Resource> forceDuplicateSubresource)`](#member-760215bda1bf) | Uses the inherited Resource construction or stored-property contract. |
+| [`protected override Electron2D.Resource CreateDuplicateInstance()`](#member-7ad2dafde8d0) | Uses the inherited Resource construction or stored-property contract. |
 | [`public System.Void DisconnectNodes(Electron2D.VisualShader.Type type, System.Int32 fromNode, System.Int32 fromPort, System.Int32 toNode, System.Int32 toPort)`](#member-491eb1eabc43) | Removes an exact edge if present. |
-| [`protected override System.Void Dispose(System.Boolean disposing)`](#member-f7d98cacf90d) | Inherited typed Resource lifecycle implementation. |
+| [`protected override System.Void Dispose(System.Boolean disposing)`](#member-f7d98cacf90d) | Uses the inherited Resource construction or stored-property contract. |
+| [`public override Electron2D.Shader.Mode GetMode()`](#member-ac38931cfbb4) | Returns the authored domain, independently of the retained compiled program. |
 | [`public Electron2D.VisualShaderNode GetNode(Electron2D.VisualShader.Type type, System.Int32 id)`](#member-4783f6cc0b46) | Returns a borrowed operation in a stage. |
 | [`public Electron2D.VisualShaderConnection[] GetNodeConnections(Electron2D.VisualShader.Type type)`](#member-fc569b224695) | Copies connections in authoring order. |
 | [`public System.Int32[] GetNodeList(Electron2D.VisualShader.Type type)`](#member-094aeedb9035) | Copies the stage's node IDs in ascending order. |
 | [`public Electron2D.Vector2 GetNodePosition(Electron2D.VisualShader.Type type, System.Int32 id)`](#member-cd67579285ae) | Reads a node's finite authoring position. |
-| [`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`](#member-e8e49be7ac36) | Inherited typed Resource lifecycle implementation. |
+| [`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`](#member-e8e49be7ac36) | Uses the inherited Resource construction or stored-property contract. |
 | [`public System.Int32 GetValidNodeID(Electron2D.VisualShader.Type type)`](#member-a3751654a775) | Returns the next unused ID after the largest stage ID, with two as the minimum. |
 | [`public System.Boolean IsNodeConnection(Electron2D.VisualShader.Type type, System.Int32 fromNode, System.Int32 fromPort, System.Int32 toNode, System.Int32 toPort)`](#member-7d3c760afd8d) | Tests whether an exact edge is stored. |
-| [`protected override System.Void RemapResourceReferences(System.Func<Electron2D.Resource, Electron2D.Resource> remap)`](#member-3b08d4afa739) | Inherited typed Resource lifecycle implementation. |
+| [`protected override System.Void RemapResourceReferences(System.Func<Electron2D.Resource, Electron2D.Resource> remap)`](#member-3b08d4afa739) | Uses the inherited Resource construction or stored-property contract. |
 | [`public System.Void RemoveNode(Electron2D.VisualShader.Type type, System.Int32 id)`](#member-bbd77fa617e9) | Removes a borrowed operation and all incident connections. |
 | [`public System.Void ReplaceNode(Electron2D.VisualShader.Type type, System.Int32 id, System.String newClass)`](#member-c7a10e092377) | Replaces an operation using an explicitly registered compiled resource factory. |
+| [`public System.Void SetMode(Electron2D.Shader.Mode mode)`](#member-ebc2b739c95e) | Selects the source domain and removes input/output boundary connections. |
 | [`public System.Void SetNodePosition(Electron2D.VisualShader.Type type, System.Int32 id, Electron2D.Vector2 position)`](#member-a985cea8c0e1) | Changes a node's finite authoring position without changing compiled code. |
+
+<a id="member-5b40f778f238"></a>
+### `VisualShader`
+
+```csharp
+public sealed class Electron2D.VisualShader
+```
+
+Typed editable shader graphs and their last successfully imported program.
+
+Graph edits are source authoring. Save the resource and run ShaderImport with --visual-shader to produce a new compiled resource. Existing materials keep the previous immutable program until reloaded. Added nodes are borrowed; reserved outputs and factory-created replacements belong to the graph. Authoring is single-threaded cold work.
 
 <a id="member-d8958f3c4b8c"></a>
 ### `NodeIDInvalid`
@@ -64,7 +70,6 @@ public const System.Int32 NodeIDInvalid = -1
 
 The sentinel for an absent node.
 
-
 <a id="member-12489fb369a6"></a>
 ### `NodeIDOutput`
 
@@ -74,7 +79,6 @@ public const System.Int32 NodeIDOutput = 0
 
 The reserved output node in each stage.
 
-
 <a id="member-517e90a99215"></a>
 ### `.ctor`
 
@@ -82,8 +86,7 @@ The reserved output node in each stage.
 public VisualShader()
 ```
 
-Creates two empty canvas graphs with independent owned output nodes.
-
+Creates independent owned outputs for the supported source stages; canvas mode is initially selected.
 
 <a id="member-d838266863d0"></a>
 ### `AddNode`
@@ -94,13 +97,18 @@ public System.Void AddNode(Electron2D.VisualShader.Type type, Electron2D.VisualS
 
 Adds a borrowed numeric operation at a finite authoring position.
 
-- `type`: The canvas stage.
+Parameters:
+
+- `type`: The source stage.
 - `node`: A live operation; output nodes cannot be added.
 - `position`: Position metadata in graph coordinates.
 - `id`: A unique ID of at least two.
-- `System.ArgumentException`: The node, position or ID is invalid or already occupied.
-- `System.InvalidOperationException`: The graph has exhausted its node budget.
-- `System.ObjectDisposedException`: This graph or the supplied node is disposed.
+
+Exceptions:
+
+- `T:System.ArgumentException`: The node, position or ID is invalid or already occupied.
+- `T:System.InvalidOperationException`: The graph has exhausted its node budget.
+- `T:System.ObjectDisposedException`: This graph or the supplied node is disposed.
 
 <a id="member-aa675f576da3"></a>
 ### `CanConnectNodes`
@@ -113,13 +121,18 @@ Tests whether a new numeric connection is valid and acyclic.
 
 False for absent/disposed nodes, invalid ports, duplicates, self edges or cycles.
 
-- `type`: The canvas stage.
+Parameters:
+
+- `type`: The source stage.
 - `fromNode`: The source ID.
 - `fromPort`: The source output.
 - `toNode`: The destination ID.
 - `toPort`: The destination input.
-- `System.ArgumentOutOfRangeException`: The stage is undefined.
-- `System.ObjectDisposedException`: This graph is disposed.
+
+Exceptions:
+
+- `T:System.ArgumentOutOfRangeException`: The stage is undefined.
+- `T:System.ObjectDisposedException`: This graph is disposed.
 
 <a id="member-b0802f781262"></a>
 ### `ConnectNodes`
@@ -132,14 +145,19 @@ Adds a validated numeric connection.
 
 Several edges may target an input; the last authored edge supplies its value at import.
 
-- `type`: The canvas stage.
+Parameters:
+
+- `type`: The source stage.
 - `fromNode`: The source ID.
 - `fromPort`: The source output.
 - `toNode`: The destination ID.
 - `toPort`: The destination input.
-- `System.ArgumentException`: The connection is invalid, duplicated or cyclic.
-- `System.ArgumentOutOfRangeException`: The stage is undefined.
-- `System.ObjectDisposedException`: This graph is disposed.
+
+Exceptions:
+
+- `T:System.ArgumentException`: The connection is invalid, duplicated or cyclic.
+- `T:System.ArgumentOutOfRangeException`: The stage is undefined.
+- `T:System.ObjectDisposedException`: This graph is disposed.
 
 <a id="member-c9afcad3894c"></a>
 ### `ConnectNodesForced`
@@ -150,17 +168,22 @@ public System.Void ConnectNodesForced(Electron2D.VisualShader.Type type, System.
 
 Records an edge between existing ports without rejecting graph cycles.
 
-Duplicate edges are unchanged. Import rejects reachable cycles atomically.
+Duplicate edges are unchanged. This bypasses type compatibility; import rejects incompatible ports and reachable cycles atomically.
 
-- `type`: The canvas stage.
+Parameters:
+
+- `type`: The source stage.
 - `fromNode`: The source ID.
 - `fromPort`: The source output.
 - `toNode`: The destination ID.
 - `toPort`: The destination input.
-- `System.ArgumentException`: A selected node or port is absent or disposed.
-- `System.InvalidOperationException`: The connection budget is exhausted.
-- `System.ArgumentOutOfRangeException`: The stage is undefined.
-- `System.ObjectDisposedException`: This graph is disposed.
+
+Exceptions:
+
+- `T:System.ArgumentException`: A selected node or port is absent or disposed.
+- `T:System.InvalidOperationException`: The connection budget is exhausted.
+- `T:System.ArgumentOutOfRangeException`: The stage is undefined.
+- `T:System.ObjectDisposedException`: This graph is disposed.
 
 <a id="member-760215bda1bf"></a>
 ### `CopyCustomStateTo`
@@ -169,14 +192,12 @@ Duplicate edges are unchanged. Import rejects reachable cycles atomically.
 protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicateSubresource, System.Func<Electron2D.Resource, Electron2D.Resource> forceDuplicateSubresource)
 ```
 
-
 <a id="member-7ad2dafde8d0"></a>
 ### `CreateDuplicateInstance`
 
 ```csharp
 protected override Electron2D.Resource CreateDuplicateInstance()
 ```
-
 
 <a id="member-491eb1eabc43"></a>
 ### `DisconnectNodes`
@@ -187,13 +208,18 @@ public System.Void DisconnectNodes(Electron2D.VisualShader.Type type, System.Int
 
 Removes an exact edge if present.
 
-- `type`: The canvas stage.
+Parameters:
+
+- `type`: The source stage.
 - `fromNode`: The source ID.
 - `fromPort`: The source output.
 - `toNode`: The destination ID.
 - `toPort`: The destination input.
-- `System.ArgumentOutOfRangeException`: The stage is undefined.
-- `System.ObjectDisposedException`: This graph is disposed.
+
+Exceptions:
+
+- `T:System.ArgumentOutOfRangeException`: The stage is undefined.
+- `T:System.ObjectDisposedException`: This graph is disposed.
 
 <a id="member-f7d98cacf90d"></a>
 ### `Dispose`
@@ -202,6 +228,20 @@ Removes an exact edge if present.
 protected override System.Void Dispose(System.Boolean disposing)
 ```
 
+<a id="member-ac38931cfbb4"></a>
+### `GetMode`
+
+```csharp
+public override Electron2D.Shader.Mode GetMode()
+```
+
+Returns the authored domain, independently of the retained compiled program.
+
+The selected CanvasItem, Particles or TextureBlit source domain.
+
+Exceptions:
+
+- `T:System.ObjectDisposedException`: This graph is disposed.
 
 <a id="member-4783f6cc0b46"></a>
 ### `GetNode`
@@ -214,10 +254,15 @@ Returns a borrowed operation in a stage.
 
 The live borrowed operation.
 
-- `type`: The canvas stage.
+Parameters:
+
+- `type`: The source stage.
 - `id`: An existing node ID, including zero for the output.
-- `System.ArgumentOutOfRangeException`: The stage or node does not exist.
-- `System.ObjectDisposedException`: This graph or the node is disposed.
+
+Exceptions:
+
+- `T:System.ArgumentOutOfRangeException`: The stage or node does not exist.
+- `T:System.ObjectDisposedException`: This graph or the node is disposed.
 
 <a id="member-fc569b224695"></a>
 ### `GetNodeConnections`
@@ -230,9 +275,14 @@ Copies connections in authoring order.
 
 An independent typed edge array.
 
-- `type`: The canvas stage.
-- `System.ArgumentOutOfRangeException`: The stage is undefined.
-- `System.ObjectDisposedException`: This graph is disposed.
+Parameters:
+
+- `type`: The source stage.
+
+Exceptions:
+
+- `T:System.ArgumentOutOfRangeException`: The stage is undefined.
+- `T:System.ObjectDisposedException`: This graph is disposed.
 
 <a id="member-094aeedb9035"></a>
 ### `GetNodeList`
@@ -245,9 +295,14 @@ Copies the stage's node IDs in ascending order.
 
 An independent ID array, including the reserved output.
 
-- `type`: The canvas stage.
-- `System.ArgumentOutOfRangeException`: The stage is undefined.
-- `System.ObjectDisposedException`: This graph is disposed.
+Parameters:
+
+- `type`: The source stage.
+
+Exceptions:
+
+- `T:System.ArgumentOutOfRangeException`: The stage is undefined.
+- `T:System.ObjectDisposedException`: This graph is disposed.
 
 <a id="member-cd67579285ae"></a>
 ### `GetNodePosition`
@@ -260,10 +315,15 @@ Reads a node's finite authoring position.
 
 The graph-coordinate position.
 
-- `type`: The canvas stage.
+Parameters:
+
+- `type`: The source stage.
 - `id`: An existing node ID.
-- `System.ArgumentOutOfRangeException`: The stage or node does not exist.
-- `System.ObjectDisposedException`: This graph is disposed.
+
+Exceptions:
+
+- `T:System.ArgumentOutOfRangeException`: The stage or node does not exist.
+- `T:System.ObjectDisposedException`: This graph is disposed.
 
 <a id="member-e8e49be7ac36"></a>
 ### `GetPropertyDescriptors`
@@ -271,7 +331,6 @@ The graph-coordinate position.
 ```csharp
 protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()
 ```
-
 
 <a id="member-a3751654a775"></a>
 ### `GetValidNodeID`
@@ -284,10 +343,15 @@ Returns the next unused ID after the largest stage ID, with two as the minimum.
 
 The next ID; holes below the largest ID are preserved.
 
-- `type`: The canvas stage.
-- `System.OverflowException`: The largest ID is Int32.MaxValue.
-- `System.ArgumentOutOfRangeException`: The stage is undefined.
-- `System.ObjectDisposedException`: This graph is disposed.
+Parameters:
+
+- `type`: The source stage.
+
+Exceptions:
+
+- `T:System.OverflowException`: The largest ID is Int32.MaxValue.
+- `T:System.ArgumentOutOfRangeException`: The stage is undefined.
+- `T:System.ObjectDisposedException`: This graph is disposed.
 
 <a id="member-7d3c760afd8d"></a>
 ### `IsNodeConnection`
@@ -300,13 +364,18 @@ Tests whether an exact edge is stored.
 
 True only for the exact stored edge.
 
-- `type`: The canvas stage.
+Parameters:
+
+- `type`: The source stage.
 - `fromNode`: The source ID.
 - `fromPort`: The source output.
 - `toNode`: The destination ID.
 - `toPort`: The destination input.
-- `System.ArgumentOutOfRangeException`: The stage is undefined.
-- `System.ObjectDisposedException`: This graph is disposed.
+
+Exceptions:
+
+- `T:System.ArgumentOutOfRangeException`: The stage is undefined.
+- `T:System.ObjectDisposedException`: This graph is disposed.
 
 <a id="member-3b08d4afa739"></a>
 ### `RemapResourceReferences`
@@ -314,7 +383,6 @@ True only for the exact stored edge.
 ```csharp
 protected override System.Void RemapResourceReferences(System.Func<Electron2D.Resource, Electron2D.Resource> remap)
 ```
-
 
 <a id="member-bbd77fa617e9"></a>
 ### `RemoveNode`
@@ -325,11 +393,16 @@ public System.Void RemoveNode(Electron2D.VisualShader.Type type, System.Int32 id
 
 Removes a borrowed operation and all incident connections.
 
-- `type`: The canvas stage.
+Parameters:
+
+- `type`: The source stage.
 - `id`: An existing non-output ID.
-- `System.ArgumentException`: The reserved output was selected.
-- `System.ArgumentOutOfRangeException`: The stage or node does not exist.
-- `System.ObjectDisposedException`: This graph is disposed.
+
+Exceptions:
+
+- `T:System.ArgumentException`: The reserved output was selected.
+- `T:System.ArgumentOutOfRangeException`: The stage or node does not exist.
+- `T:System.ObjectDisposedException`: This graph is disposed.
 
 <a id="member-c7a10e092377"></a>
 ### `ReplaceNode`
@@ -342,14 +415,39 @@ Replaces an operation using an explicitly registered compiled resource factory.
 
 An unchanged runtime type is a no-op. Positions and stored edges remain; import rejects any edges whose ports no longer exist. The graph owns the replacement until its final graph alias is removed. No assembly loading, member reflection or runtime source compilation occurs.
 
-- `type`: The canvas stage.
+Parameters:
+
+- `type`: The source stage.
 - `id`: An existing node ID of at least two.
 - `newClass`: The exact registered type ID, for example VisualShaderNodeVec3Constant.
-- `System.ArgumentException`: The ID or registered class does not identify an ordinary graph operation.
-- `System.ArgumentOutOfRangeException`: The stage or node does not exist.
-- `System.InvalidOperationException`: The compiled factory violates its freshness/type contract.
-- `System.ObjectDisposedException`: The graph is disposed.
-- `System.AggregateException`: Independent observer and retirement failures occur after commitment.
+
+Exceptions:
+
+- `T:System.ArgumentException`: The ID or registered class does not identify an ordinary graph operation.
+- `T:System.ArgumentOutOfRangeException`: The stage or node does not exist.
+- `T:System.InvalidOperationException`: The compiled factory violates its freshness/type contract.
+- `T:System.ObjectDisposedException`: The graph is disposed.
+- `T:System.AggregateException`: Independent observer and retirement failures occur after commitment.
+
+<a id="member-ebc2b739c95e"></a>
+### `SetMode`
+
+```csharp
+public System.Void SetMode(Electron2D.Shader.Mode mode)
+```
+
+Selects the source domain and removes input/output boundary connections.
+
+An equal mode is unchanged. All nodes, positions, numeric defaults and ordinary links remain, including inactive stages. The prior compiled program remains executable until a successful import. Schema and Changed observers run after commitment, even if another observer fails.
+
+Parameters:
+
+- `mode`: A supported shader domain.
+
+Exceptions:
+
+- `T:System.ArgumentOutOfRangeException`: The domain is undefined.
+- `T:System.ObjectDisposedException`: This graph is disposed.
 
 <a id="member-a985cea8c0e1"></a>
 ### `SetNodePosition`
@@ -360,26 +458,25 @@ public System.Void SetNodePosition(Electron2D.VisualShader.Type type, System.Int
 
 Changes a node's finite authoring position without changing compiled code.
 
-- `type`: The canvas stage.
+Parameters:
+
+- `type`: The source stage.
 - `id`: An existing node ID.
 - `position`: Finite graph coordinates.
-- `System.ArgumentException`: The position is nonfinite.
-- `System.ArgumentOutOfRangeException`: The stage or node does not exist.
-- `System.ObjectDisposedException`: This graph is disposed.
+
+Exceptions:
+
+- `T:System.ArgumentException`: The position is nonfinite.
+- `T:System.ArgumentOutOfRangeException`: The stage or node does not exist.
+- `T:System.ObjectDisposedException`: This graph is disposed.
 
 ## Lifecycle and verification
 
-Graph authoring, snapshots, import and file I/O are allocating cold operations. Definition resources are single-threaded authoring objects. Access after disposal rejects ordinary reads/writes; graph disposal detaches borrowed definitions and retires its owned outputs/replacements. Immutable connection/default entries have value lifetime and are not disposable.
+Definitions are cold, single-threaded Resource authoring objects. Graphs borrow them. Typed values, explicit default absence and shared definition aliases survive copies and portable archives. Changes require reimport before execution.
 
-`tests/VisualShader.Consumer` exercises ownership, invalid requests, snapshots, shallow/deep copying, fresh archives and native graph execution. Fifty-seven programs cover constants, scalar/vector arithmetic, width conversion, UVs and authored vertex movement on Linux software Wayland/X11/HDR/MSAA. Prepared active/idle replay is checked separately from cold generation. See [the component contract](../components/visual-shaders.md) for exact coverage and limits.
+The public VisualShader.Consumer and native particle integration corpus exercise typed defaults, copies, factories, source/compiled archives and executable compute/blit graphs. See [the domain contract](../components/visual-shaders.md#particle-and-writable-texture-graph-domains) for ports, units, scope, control flow, source validation and current verification limits.
 
 ## Decisions
 
-- [Typed shader authoring and import](../decisions/rendering.md#adr-0028)
-- [Typed resource lifetime and archives](../decisions/resources.md#adr-0013)
-
-Canvas SDF graph operations now use the shared offline importer and renderer-owned pixel field: signed sampling, normals, three raymarch results and screen UV conversion. See [the SDF graph contract](../components/visual-shaders.md#canvas-sdf-graphs) for units, live field policies, stages and verification limits.
-
-[GLSL expression blocks](../components/visual-shaders.md#glsl-expression-blocks) now execute dynamic typed ports, local procedures and shared global definitions through the existing offline graph importer, preserving stage return/discard and portable source state.
-
-[Compiled custom graph nodes](../components/visual-shaders.md#compiled-custom-nodes) provide typed C# metadata/default/source callbacks through registered resources and the shared offline import host. Program execution consumes imported bytecode.
+- [Typed graph import](../decisions/rendering.md#adr-0028)
+- [Typed resources](../decisions/resources.md#adr-0013)

@@ -42,7 +42,7 @@ pairedMaterial.SetShaderParameter("offset", new Vector2(16, 0));
 | --- | --- |
 | `override RID GetRID()` | Stable borrowed logical shader identity; reads use RenderingServer, mutations/free remain resource-owned. |
 | `Shader()` | Precompiled texture-times-color fragment program. |
-| `Mode GetMode()` | Returns the executing CanvasItem, TextureBlit or Particles domain. |
+| `virtual Mode GetMode()` | Returns the executing CanvasItem, TextureBlit or Particles domain. |
 | `static Shader CreateFromSPIRV(ReadOnlySpan<byte> bytecode)` | Copies and validates a fragment program. |
 | `void SetSPIRV(ReadOnlySpan<byte> bytecode)` | Validates then atomically replaces the program and emits `Changed`. |
 | `byte[] GetSPIRV()` | Returns an independent copy of the fragment module. |
@@ -64,7 +64,7 @@ Creates the embedded fragment program multiplying the command texture sample by 
 
 ### GetMode
 
-Returns the executing domain: `CanvasItem` (1), `Particles` (2) or `TextureBlit` (5). Throws `ObjectDisposedException` after disposal.
+For Shader, returns the executing domain: `CanvasItem` (1), `Particles` (2) or `TextureBlit` (5). Throws `ObjectDisposedException` after disposal.
 
 ### CreateFromSPIRV
 
@@ -255,3 +255,5 @@ shader.SetTextureSamplerState("pixels", null);
 ## Authored uniform defaults
 
 Compiled numeric defaults survive SPIR-V export, reload, duplication and graph archives as validated metadata. Every descriptor captures its immutable program default, with independent array revert copies. Shared vertex/fragment names accept matching explicit defaults or adopt the only authored value; conflicts reject the whole replacement. Static RenderingServer typed queries read these defaults through owned or borrowed shader identities, independently of material values. Renderer/global fields remain outside this namespace; sampled defaults keep their indexed APIs. See [authored uniform defaults](../components/shader-materials.md#authored-uniform-defaults).
+
+VisualShader overrides GetMode to report its authored source domain. A mode edit retains the last compiled program until successful reimport; bytecode and execution continue to use that retained program.

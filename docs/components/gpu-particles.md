@@ -1,6 +1,6 @@
 # GPU particles
 
-Last updated: 2026-10-19
+Last updated: 2026-10-22
 
 ## Executable scope
 
@@ -73,3 +73,5 @@ Scene pause/process policy gates automatic time; explicit requests continue to w
 CPU/GPU conversion copies common authored settings, curves/gradients and readable emission texels, without copying live particles or transforms. GPU-to-CPU conversion rejects unsupported capacity and reverse-lifetime ordering before mutation. GPU-only channels/custom compute have no CPU projection. CPU-to-GPU conversion stores private initial-speed lifetime and scalar-times-split scale curve inputs and uses dedicated built-in compute variants; public ParticleProcessMaterial texture roles remain unchanged. The extra private inputs survive duplication and fresh-process files.
 
 Node profiles verify actual native pixels/bounds, atlas updates, relative routing, world/pause behavior, two renderer sessions, callback rejection/retry, saved scenes and converted private curves. Warmed trail/turbulence node frames check zero managed owner bytes. These checks use Linux software Vulkan and do not establish physical GPU, native allocator, foreign platform or owner acceptance.
+
+Compiled [particle and writable-texture visual graphs](../components/visual-shaders.md#particle-and-writable-texture-graph-domains) use the existing offline importer, immutable program/material ownership and native compute/blit consumers. Lifecycle graph roots, exact device birth numbers, borrowed planar mesh emission and typed supplied-field masks execute through those consumers; light/varying/editor transport retains its own gate.

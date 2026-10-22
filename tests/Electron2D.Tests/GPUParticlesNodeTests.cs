@@ -15,7 +15,7 @@ internal static partial class GPUParticlesNodeTests
         root.Ready += _ =>
         {
             RenderingServer.SetDefaultClearColor(Colors.Black);
-            node.EmitParticle(Transform.Identity, Vector2.Zero, Colors.White, Colors.White, GPUParticles.EmitFlags.Position);
+            node.EmitParticle(Transform.Identity, Vector2.Zero, Colors.White, Colors.White, ParticlesEmitFlags.Position);
             node.RequestParticlesProcess(.125f);
             RenderingServer.FramePostDraw += () =>
             {

@@ -36,7 +36,8 @@
                     throw new ArgumentException(input + ": Profile must be canvas, device, texture-blit, particles or visual-shader.");
                 var device = profile == "device" || profile == "particles";
                 var graph = profile == "visual-shader";
-                if (graph && stage != "canvas") throw new ArgumentException(input + ": Visual shaders require the canvas domain.");
+                if (graph && stage.Length == 0) stage = "graph";
+                if (graph && stage != "graph" && stage != "canvas" && stage != "particles" && stage != "texture-blit") throw new ArgumentException(input + ": Visual shaders require graph, canvas, particles or texture-blit domain.");
                 if (profile == "particles" && stage != "compute") throw new ArgumentException(input + ": Particle programs require a compute stage.");
                 if (profile == "texture-blit" && stage != "fragment") throw new ArgumentException(input + ": Blit programs require a fragment stage.");
                 if (!graph && stage != "vertex" && stage != "fragment" && !(device && stage == "compute"))

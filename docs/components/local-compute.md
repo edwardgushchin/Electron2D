@@ -1,6 +1,6 @@
 # Local compute
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 The public [RenderingDevice](../classes/RenderingDevice.md) compute slice is created by `RenderingServer.CreateLocalRenderingDevice()` under [ADR 0028](../decisions/rendering.md#adr-0028). It supplies a portable compute path for application algorithms without exposing native handles or adding domain-specific fluid API. [RDShaderSPIRV](../classes/RDShaderSPIRV.md) owns copied bytecode and compiler diagnostics; [RDUniform](../classes/RDUniform.md) describes borrowed resource bindings. [ShaderStage](../classes/RenderingDevice.ShaderStage.md) and [UniformType](../classes/RenderingDevice.UniformType.md) retain their applicable numeric identities.
 
@@ -343,3 +343,5 @@ ShaderCreatePlaceholder reserves a real device-owned RID without a native progra
 [RenderingDeviceBinaryTests](../../tests/Electron2D.Tests/RenderingDeviceBinaryTests.cs) covers copied stages/containers, Unicode names and bounds, malformed headers/checksums/lengths/UTF-8/flags/modules, valid-digest semantic rejection, placeholder retry and ownership, pipeline/set invalidation, GLSL/HLSL compute/paired graphics, typed specialization and fresh-process disk loading with PATH empty and a missing source frontend. [Graphics and canvas checks](../../tests/Electron2D.Tests/RenderingDeviceBinaryTests.Graphics.cs) use actual native pixels and prepared zero-owner-managed-byte cycles. The completed Linux x64 software-Vulkan checks execute both languages, fresh-process loading and actual native results. Thirty-two prepared compute and graphics/readback cycles per language allocate zero owner-thread managed bytes; thirty-two full canvas frames per language pass on Wayland and X11 with the same zero-byte bound. Native/driver allocator totals, physical GPU behavior, foreign targets and the full engine suite remain unverified.
 
 RDSamplerState creation shares its validated native projection with [high-level Shader image sampling](shader-materials.md#explicit-image-sampler-state). Anisotropy requires both its flag and a maximum above one; a maximum of one leaves nearest integer images and relaxed devices legal. RID ownership and native lifetime remain independent from the value cache used by high-level canvas/particle/blit consumers.
+
+Compiled [particle and writable-texture visual graphs](../components/visual-shaders.md#particle-and-writable-texture-graph-domains) use the existing offline importer, immutable program/material ownership and native compute/blit consumers. Lifecycle graph roots, exact device birth numbers, borrowed planar mesh emission and typed supplied-field masks execute through those consumers; light/varying/editor transport retains its own gate.

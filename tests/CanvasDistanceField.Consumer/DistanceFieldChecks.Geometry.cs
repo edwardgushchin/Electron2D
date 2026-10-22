@@ -38,7 +38,7 @@ internal static partial class DistanceFieldChecks
                 Modulate = Tint
             };
             _nodes.Add(particles); AddChild(particles); RenderingServer.CanvasItemSetDefaultTextureFilter(particles.GetCanvasItem(), TextureFilter.Nearest);
-            RenderingServer.CanvasItemSetDistanceFieldMode(particles.GetCanvasItem(), true); particles.EmitParticle(Transform.Identity, Vector2.Zero, Colors.White, Colors.White, GPUParticles.EmitFlags.Position);
+            RenderingServer.CanvasItemSetDistanceFieldMode(particles.GetCanvasItem(), true); particles.EmitParticle(Transform.Identity, Vector2.Zero, Colors.White, Colors.White, ParticlesEmitFlags.Position);
             Probes(8, 104, 0, true, "GPU-particle");
             var atlas = Own(new AtlasTexture { Atlas = texture, Region = new(0, 0, 4, 1) }); Add(atlas, 248, 80, true);
         }

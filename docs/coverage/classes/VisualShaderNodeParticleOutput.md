@@ -4,10 +4,10 @@ Last updated: 2026-10-21
 
 Godot source: [modules/visual_shader/doc_classes/VisualShaderNodeParticleOutput.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/visual_shader/doc_classes/VisualShaderNodeParticleOutput.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
-Godot base: [VisualShaderNodeOutput](VisualShaderNodeOutput.md). Electron2D type: —.
+Godot base: [VisualShaderNodeOutput](VisualShaderNodeOutput.md). Electron2D type: [`public sealed class Electron2D.VisualShaderNodeParticleOutput`](../../classes/VisualShaderNodeParticleOutput.md).
 
 Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class VisualShaderNodeParticleOutput`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/visual_shader/doc_classes/VisualShaderNodeParticleOutput.xml) | — | Blocked | Trigger: particle graph stage/output translation into the executing compute ABI under ADR 0028; the numeric canvas graph importer does not provide particle lifecycle stages. |
+| [`class VisualShaderNodeParticleOutput`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/visual_shader/doc_classes/VisualShaderNodeParticleOutput.xml) | [`public sealed class Electron2D.VisualShaderNodeParticleOutput`](../../classes/VisualShaderNodeParticleOutput.md) | Implemented | ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates. |

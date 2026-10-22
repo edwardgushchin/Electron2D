@@ -1,28 +1,44 @@
 # VisualShaderNodeOutput
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
-Source: [`VisualShaderNodeOutput.cs`](../../src/Scene/Resources/VisualShaderNodeOutput.cs).
+Source: [VisualShaderNodeOutput.cs](../../src/Scene/Resources/VisualShaderNodeOutput.cs).
 
 ```csharp
-public sealed class Electron2D.VisualShaderNodeOutput
+public class Electron2D.VisualShaderNodeOutput
 ```
 
 Inherits: [VisualShaderNode](VisualShaderNode.md).
 
 ## Description
 
-The reserved canvas output operation owned by a visual shader stage.
+The reserved canvas or writable-texture output operation owned by a visual shader stage.
 
-Retrieve it as node zero. Its input indices follow the canvas vertex or fragment port table. The initial graph importer executes vertex position/UV/color/alpha and fragment color/alpha.
+Retrieve it as node zero. Its input indices follow the containing stage. Canvas vertex and fragment roots retain their renderer roles; TextureBlit accepts four numeric RGBA outputs. Particle roots use VisualShaderNodeParticleOutput.
+
+## Example
+
+See the executable authoring and runtime workflow in [particle and writable-texture graphs](../components/visual-shaders.md#particle-and-writable-texture-graph-domains). It includes canonical stages, port order, units, defaults, mode transitions and ownership.
 
 ## Member summary
 
 | Member | Contract |
 | --- | --- |
+| [`public class Electron2D.VisualShaderNodeOutput`](#member-7d81b91565a0) | The reserved canvas or writable-texture output operation owned by a visual shader stage. |
 | [`public VisualShaderNodeOutput()`](#member-4df3df9d230f) | Creates an unbound fragment output definition. |
-| [`protected override Electron2D.Resource CreateDuplicateInstance()`](#member-004a7f904f56) | Inherited typed Resource lifecycle implementation. |
-| [`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`](#member-ca715114a207) | Inherited typed Resource lifecycle implementation. |
+| [`protected override Electron2D.Resource CreateDuplicateInstance()`](#member-004a7f904f56) | Uses the inherited Resource construction or stored-property contract. |
+| [`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`](#member-ca715114a207) | Uses the inherited Resource construction or stored-property contract. |
+
+<a id="member-7d81b91565a0"></a>
+### `VisualShaderNodeOutput`
+
+```csharp
+public class Electron2D.VisualShaderNodeOutput
+```
+
+The reserved canvas or writable-texture output operation owned by a visual shader stage.
+
+Retrieve it as node zero. Its input indices follow the containing stage. Canvas vertex and fragment roots retain their renderer roles; TextureBlit accepts four numeric RGBA outputs. Particle roots use VisualShaderNodeParticleOutput.
 
 <a id="member-4df3df9d230f"></a>
 ### `.ctor`
@@ -33,14 +49,12 @@ public VisualShaderNodeOutput()
 
 Creates an unbound fragment output definition.
 
-
 <a id="member-004a7f904f56"></a>
 ### `CreateDuplicateInstance`
 
 ```csharp
 protected override Electron2D.Resource CreateDuplicateInstance()
 ```
-
 
 <a id="member-ca715114a207"></a>
 ### `GetPropertyDescriptors`
@@ -49,14 +63,13 @@ protected override Electron2D.Resource CreateDuplicateInstance()
 protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()
 ```
 
-
 ## Lifecycle and verification
 
-Graph authoring, snapshots, import and file I/O are allocating cold operations. Definition resources are single-threaded authoring objects. Access after disposal rejects ordinary reads/writes; graph disposal detaches borrowed definitions and retires its owned outputs/replacements. Immutable connection/default entries have value lifetime and are not disposable.
+Definitions are cold, single-threaded Resource authoring objects. Graphs borrow them. Typed values, explicit default absence and shared definition aliases survive copies and portable archives. Changes require reimport before execution.
 
-`tests/VisualShader.Consumer` exercises ownership, invalid requests, snapshots, shallow/deep copying, fresh archives and native graph execution. Fifty-seven programs cover constants, scalar/vector arithmetic, width conversion, UVs and authored vertex movement on Linux software Wayland/X11/HDR/MSAA. Prepared active/idle replay is checked separately from cold generation. See [the component contract](../components/visual-shaders.md) for exact coverage and limits.
+The public VisualShader.Consumer and native particle integration corpus exercise typed defaults, copies, factories, source/compiled archives and executable compute/blit graphs. See [the domain contract](../components/visual-shaders.md#particle-and-writable-texture-graph-domains) for ports, units, scope, control flow, source validation and current verification limits.
 
 ## Decisions
 
-- [Typed shader authoring and import](../decisions/rendering.md#adr-0028)
-- [Typed resource lifetime and archives](../decisions/resources.md#adr-0013)
+- [Typed graph import](../decisions/rendering.md#adr-0028)
+- [Typed resources](../decisions/resources.md#adr-0013)

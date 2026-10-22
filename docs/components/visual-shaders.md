@@ -634,7 +634,7 @@ command-texture-size producer.
 Point-size, normal/normal-map/depth, light-vertex and shadow-vertex output ports
 retain their documented port indices, but selecting them rejects import until
 their actual graph-to-canvas ABI integration exists. The class coverage remains
-Partial. Particle/light/blit graph domains, custom varying transport and editor
+Partial. Light graphs, custom varying transport and editor
 frame/preview consumers remain explicit prerequisites.
 Sky/volumetric scene domains and deprecated inert graph offset are excluded.
 
@@ -1097,3 +1097,122 @@ before source callbacks. All recorded edges retain the existing live-port and
 role validation. Public source/compiled archive and rendered fixtures cover both
 canvas stages; the root topology check also covers a disconnected Custom node in
 the other stage. This fixes the duplicate-key failure in provider preparation.
+
+## Particle and writable-texture graph domains
+
+`VisualShader.SetMode` selects CanvasItem, Particles or TextureBlit. `GetMode` reports
+that authored choice even through a Shader reference. Editing the mode retains the
+last compiled program, all stage nodes, positions and defaults, and ordinary links;
+it removes only links incident to input/output definitions in every stored stage.
+An equal mode is unchanged. Property-list and Changed notifications follow
+commitment independently. Archives store SourceMode after compiled-program data
+and retain canonical stage IDs, including inactive graphs. Reimport publishes the
+new immutable program. A source graph and its last compiled mode may differ.
+
+The offline CLI accepts `graph` for automatic selection, or the matching explicit
+`canvas`, `particles` or `texture-blit` profile with `--visual-shader`.
+Electron2DShader Profile=visual-shader uses the authored mode when Stage is omitted.
+Explicit mismatches reject before artifact replacement. Compiled custom providers
+use the existing registered import host and factory contract in each domain.
+Global provider code is emitted once per concrete type in the combined module;
+function setup is emitted once per active authored stage. ELECTRON2D_SHADER_STAGE
+is 4 in particle module globals and the canonical lifecycle ID inside each stage;
+it is 10 throughout writable-texture generation. Local expressions and callbacks
+return from their own stage function, preserving subsequent stages and publication.
+
+Particle stages use IDs Start=3, Process=4, Collide=5, StartCustom=6 and
+ProcessCustom=7. Start then StartCustom execute on birth. A live particle executes
+Collide on SDF contact when that graph has an effect, otherwise Process, followed
+by ProcessCustom. The existing native step advances existing motion and age before
+custom compute; newborn age starts at zero and DELTA retains the native fractional
+birth interval. Nominal lifetime deactivates particles before the processing pair.
+The graph owns contact response, activity and custom data; CUSTOM.w remains raw
+user data. SDF contact queries use the existing canvas distance field and collision
+base size, with no CPU simulation mirror.
+
+| Stage | Root inputs in index order |
+| --- | --- |
+| Start | active, velocity Vector2, RGB Vector3, alpha, position Vector2, scale, angle |
+| Process | active, velocity Vector2, RGB Vector3, alpha, scale, angle |
+| Collide | active, velocity Vector2, RGB Vector3, alpha, numeric Matrix4x4 |
+| StartCustom / ProcessCustom | custom RGB, custom alpha, velocity Vector2, RGB Vector3, alpha, numeric Matrix4x4 |
+
+Absent root inputs preserve the current channel. An authored active input gates the
+remaining ordinary root assignments. Start initializes missing position through
+the emission transform and multiplies authored rotation/scale into the current
+matrix. Process replaces the matrix for each authored angle/scale input in that
+order, matching its operation contract; scale therefore supersedes angle when
+both are authored and resets translation. Angles are radians about the planar
+normal. Matrix data uses mathematical row/column indexing: origin is M14/M24;
+only XY basis and origin persist to physical particle state.
+
+Particle emitters are always planar. The dimension selector and ring height are
+absent. Sphere and ring retain their sampled-radius distributions, and box input
+means full extents. Cone velocity, axis-angle multiplication and accelerator nodes
+retain complete numeric Vector3 arithmetic; physical state is lifted with zero Z.
+Randomness shares VisualShaderFloatOpType with arithmetic/derivatives. Its missing
+seed consumes the lifecycle stream, reset once for each lifecycle pair; an explicit
+seed is a writable local/connected value advanced per component. NUMBER comes from
+an exact retained device birth counter, rather than a slot/cycle approximation.
+
+[ParticlesEmitFlags](../classes/ParticlesEmitFlags.md) is the shared five-bit supplied
+field mask for scene manual emission and graph subemission. Missing graph field
+inputs read current transform, velocity, color and custom data. Every unconnected
+ParticleEmit node is an executable side-effect root. Dependency order precedes the
+reserved output, then independent side effects follow in node-ID order. A false
+condition emits nothing; a full bounded queue drops excess records.
+
+Mesh emitters borrow Mesh and observe its changes. Import snapshots selected
+surfaces in vertex order, without index weighting. One sampled vertex index selects
+all connected position/normal/color/alpha/UV/UV2 channels. Missing channels supply
+aligned zero entries. Selected empty/absent surfaces produce zero. Positions,
+canonical decoded normals and UVs bake into numeric RGBAF images; colors use RGBA8.
+Images page at width 4096, with a 64 MiB bound per channel, and are owned by the
+import transaction. No texture is exposed as an extra public mesh-emitter setting.
+
+Particle named inputs provide current activity, color/custom, delta, emission and
+particle transforms, index, lifetime, exact number, seed, time and planar velocity.
+Restart applies to processing/collision stages; contact normal/depth apply to
+Collide. Shared definitions resolve independently per borrowing stage. Unknown or
+out-of-context names yield scalar zero; GetInputRealName and InputTypeChanged refer
+to the named semantic role without a mutable borrower binding. Image and UV
+operations require explicit coordinate connections in particle stages. Material
+and global numeric/image parameters use existing reflected storage; instance
+parameters lack a producer in these domains and reject import.
+
+TextureBlit uses canonical ID 10, four RGBA root ports and contiguous native color
+locations through the highest connected/authored output, with at least one target.
+Untouched outputs are opaque black. Connecting a Vector3 to a Vector4 root follows numeric widening with a zero fourth component; construct explicit RGBA with alpha one for an opaque result. Inputs include UV, modulate, fragment position
+and SOURCE_TEXTURE0 through SOURCE_TEXTURE3 supplied by DrawableTexture.BlitRectMulti.
+These source names are reserved from material declarations. Fragment derivatives,
+ordinary/array images, numeric/global parameters and compiled procedures use the
+same importer and ShaderMaterial ownership as existing writable-texture programs.
+Compatibility rendering still rejects authored compute and blit programs.
+
+The portable particle ABI optionally exposes a third contiguous writable buffer at
+set one/binding two: a uint counter followed by Amount uint slot birth numbers.
+The renderer owns and resets it with particle storage. Explicit RenderingDevice
+callers supply it themselves. Existing one-/two-buffer programs keep their raw
+contract; record/frame sizes remain 96/192 bytes. Both portable include languages
+use ELECTRON2D_PARTICLE_BIRTH_NUMBERS to declare it. No native-heap or physical-GPU
+allocation claim follows from managed warm-frame measurements.
+
+| Particle operation | Inputs | Outputs and defaults |
+| --- | --- | --- |
+| SphereEmitter | radius, inner radius | planar position; 10 and 0 |
+| BoxEmitter | Vector2 extent | planar position; full size (1,1) |
+| RingEmitter | radius, inner radius | planar position; 10 and 0 |
+| MeshEmitter | none | position Vector2, normal Vector2, RGB Vector3, alpha, UV Vector2, UV2 Vector2 |
+| Randomness | seed uint, from, to | selected scalar/vector width; bounds -1 and 1 |
+| ConeVelocity | numeric Vector3 direction, spread degrees | normalized Vector3; direction (1,0,0), spread 45 |
+| MultiplyByAxisAngle | numeric Vector3 value, axis, angle | Vector3; zero value, axis (1,0,0), angle 0; DegreesMode initially true |
+| Accelerator | numeric Vector3 amount, randomness, numeric Vector3 axis | Vector3 acceleration; amount one, randomness 0, axis (0,-9.8,0); linear/radial/tangential direction |
+| Emit | condition, Matrix4x4, velocity Vector2, RGB Vector3, alpha, custom Vector3, custom alpha | no value output; condition true, missing field inputs use current state; all five mask bits initially set |
+
+Emitter definitions are borrowed Resources. Removing a definition does not dispose
+it; owned roots and factory replacements retire with their last graph alias.
+Mesh duplication follows shallow/deep resource policy, and rebinding/disposal
+removes the previous mesh notification subscription. All numeric values retain the
+existing finite typed default validation and change-notification contract.
+
+Current validation distinguishes CPU authoring/import, actual software-rendered output and unmeasured hardware/native allocation boundaries. The repository consumer commands are domains-cpu, domains-author and domains-gpu; tools/shaders/check_domains.py covers direct/automatic profiles, rejected source preservation and SDK build/publish/Clean. ParticleShaderTests and the visual-graph native profile check storage layouts, per-stage state, SDF branches, supplied-field payloads, repeated births and reset. Detailed run receipts live with each verification cohort.

@@ -19,7 +19,7 @@ internal static unsafe partial class SpirvReflection
             try
             {
                 var utf8 = new UTF8Encoding(false, true); var parts = utf8.GetString(bytes[..end]).Split(':');
-                if (parts.Length != 12 || parts[2] != "2" || !canvas) throw new NotSupportedException("Unsupported shader image metadata or domain.");
+                if (parts.Length != 12 || parts[2] != "2") throw new NotSupportedException("Unsupported shader image metadata or domain.");
                 string Name(int field)
                 {
                     var encoded = Convert.FromBase64String(parts[field]);
@@ -46,7 +46,7 @@ internal static unsafe partial class SpirvReflection
                 if (slot < 0) throw new ArgumentException("Shader image metadata names an absent or inactive image.", nameof(code));
                 var texture = textures[slot];
                 if (texture.IsEngineTexture || texture.PixelType != 0 || texture.ArrayLength != 0 || texture.IsArray != array || array && fallback > 2 ||
-                    screen && (array || !fragment || color || fallback != 0))
+                    screen && (!canvas || array || !fragment || color || fallback != 0))
                     throw new ArgumentException("Shader image policy differs from the image role, shape or stage.", nameof(code));
                 textures[slot] = texture with { Name = publicName, ImagePolicy = new(color, fallback, filter, repeat, screen, global.Length == 0 ? null : global) };
             }

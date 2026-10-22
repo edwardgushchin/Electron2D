@@ -17,7 +17,7 @@ internal static unsafe partial class SpirvReflection
     }
     private static void ValidateParticleStorage(nint compiler, nint resources)
     {
-        if (GetResources(resources, 2, out var pointer, out var count) != 0 || count is < 1 or > 2)
+        if (GetResources(resources, 2, out var pointer, out var count) != 0 || count is < 1 or > 3)
             throw new NotSupportedException("Particle programs require state storage and optional subemission storage.");
         var seen = 0u;
         foreach (var resource in new ReadOnlySpan<ReflectedResource>((void*)pointer, (int)count))
@@ -29,6 +29,15 @@ internal static unsafe partial class SpirvReflection
             seen |= 1u << (int)binding;
             if (GetArrayDimensions(GetType(compiler, resource.TypeId)) != 0) throw new NotSupportedException("Particle storage descriptors cannot be arrays.");
             var type = GetType(compiler, resource.BaseTypeId);
+            if (binding == 2)
+            {
+                if (GetMemberCount(type) != 1 || GetMemberOffset(compiler, type, 0, out var numberOffset) != 0 || numberOffset != 0 || GetArrayStride(compiler, type, 0, out var numberStride) != 0 || numberStride != 4)
+                    throw new NotSupportedException("Particle birth numbers require a tightly packed uint runtime array.");
+                var numbers = GetType(compiler, GetMemberType(type, 0));
+                if (GetArrayDimensions(numbers) != 1 || GetArrayLength(numbers, 0) != 0 || GetBaseType(numbers) != 8 || GetBitWidth(numbers) != 32 || GetVectorSize(numbers) != 1 || GetColumns(numbers) != 1)
+                    throw new NotSupportedException("Particle birth numbers require scalar uint32 elements.");
+                continue;
+            }
             if (GetMemberCount(type) != 1 || GetMemberOffset(compiler, type, 0, out var start) != 0 || start != 0 || GetArrayStride(compiler, type, 0, out var stride) != 0 || stride != ParticleStateLayout.ByteSize)
                 throw new NotSupportedException("Particle state requires a tightly packed runtime array.");
             var element = GetType(compiler, GetMemberType(type, 0));

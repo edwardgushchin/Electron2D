@@ -44,7 +44,7 @@ internal sealed unsafe partial class GPUCanvasBackend
                 _particlePrepared.Add(source);
             }
             finally { source.Preparing = false; server.EndParticleScenePreparation(); }
-            if (source.Subemitter is { Released: false, Amount: > 0 } child && source.PreparedProcess?.Program.ParticleStorageBuffers == 2)
+            if (source.Subemitter is { Released: false, Amount: > 0 } child && source.PreparedProcess?.Program.ParticleStorageBuffers >= 2)
                 child.Requested = true;
         }
     }
@@ -135,10 +135,15 @@ internal sealed unsafe partial class GPUCanvasBackend
                 SDFTransformY = new(toSDF.X.Y, toSDF.Y.Y, 0, toSDF.Origin.Y),
                 Options = new((source.Emitting ? 1 : 0) | (source.FractionalDelta ? 2 : 0) | (source.LocalCoordinates ? 4 : 0) | (reset ? 8 : 0) | (duration >= 1 ? 16 : 0) | (source.PreparedProcess is null ? 32 : 0), 0, 0, checked((int)groups.Width * 64))
             };
+            if (reset)
+            {
+                Span<uint> counter = stackalloc uint[1]; counter[0] = 0;
+                gpu.Upload(command, gpu.BirthNumbers, 0, MemoryMarshal.AsBytes(counter));
+            }
             gpu.CopyPrevious(command);
             SDL.PushGPUComputeUniformData(command, 0, (nint)(&frame), (uint)sizeof(ParticleFrameLayout));
-            var writable = stackalloc SDL.GPUStorageBufferReadWriteBinding[2]; writable[0] = new() { Buffer = gpu.State.DangerousGetHandle() }; writable[1] = new() { Buffer = gpu.Incoming.DangerousGetHandle() };
-            var pass = SDL.BeginGPUComputePass(command, 0, 0, (nint)writable, 2); if (pass == 0) throw Failure("begin particle step");
+            var writable = stackalloc SDL.GPUStorageBufferReadWriteBinding[3]; writable[0] = new() { Buffer = gpu.State.DangerousGetHandle() }; writable[1] = new() { Buffer = gpu.Incoming.DangerousGetHandle() }; writable[2] = new() { Buffer = gpu.BirthNumbers.DangerousGetHandle() };
+            var pass = SDL.BeginGPUComputePass(command, 0, 0, (nint)writable, 3); if (pass == 0) throw Failure("begin particle step");
             SDL.BindGPUComputePipeline(pass, _particleStep!.DangerousGetHandle()); SDL.DispatchGPUCompute(pass, groups.Width, groups.Height, 1); SDL.EndGPUComputePass(pass);
             if (source.PreparedProcess is { } material)
             {
@@ -163,7 +168,7 @@ internal sealed unsafe partial class GPUCanvasBackend
             }
             gpu.CaptureHistory(command); if (!gpu.Initialized || reset) gpu.CopyPrevious(command);
             gpu.Initialized = true; source.Clear = false; source.PreviousEmission = emission;
-            if (source.Subemitter is { GPU: { } target, Released: false } child && source.PreparedProcess?.Program.ParticleStorageBuffers == 2)
+            if (source.Subemitter is { GPU: { } target, Released: false } child && source.PreparedProcess?.Program.ParticleStorageBuffers >= 2)
             {
                 var queueGroups = ParticleDispatch(gpu.OutgoingCapacity);
                 var pose = source.LocalCoordinates ? source.Emission : Transform.Identity; if (child.LocalCoordinates) pose = child.Emission.AffineInverse() * pose;

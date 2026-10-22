@@ -57,4 +57,7 @@ bool Electron2D_EmitSubparticle(Electron2D_Particle particle)
     }
 }
 #endif
+#ifdef ELECTRON2D_PARTICLE_BIRTH_NUMBERS
+RWStructuredBuffer<uint> BIRTH_NUMBERS : register(u2, space1);
+#endif
 #endif

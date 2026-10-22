@@ -1,6 +1,6 @@
 # Shader materials
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 [Visual shader graphs](visual-shaders.md) author typed numeric canvas programs and compile them through the same SPIR-V import/material pipeline. Resource archives carry both editable graphs and the last imported program; editing requires reimport.
 
@@ -483,3 +483,5 @@ Canvas and blit fragment SPIR-V may declare DerivativeControl for fine/coarse op
 [GLSL expression blocks](visual-shaders.md#glsl-expression-blocks) now execute dynamic typed ports, local procedures and shared global definitions through the existing offline graph importer, preserving stage return/discard and portable source state.
 
 [Compiled custom graph nodes](visual-shaders.md#compiled-custom-nodes) provide typed C# metadata/default/source callbacks through registered resources and the shared offline import host. Program execution consumes imported bytecode.
+
+Compiled [particle and writable-texture visual graphs](../components/visual-shaders.md#particle-and-writable-texture-graph-domains) use the existing offline importer, immutable program/material ownership and native compute/blit consumers. Lifecycle graph roots, exact device birth numbers, borrowed planar mesh emission and typed supplied-field masks execute through those consumers; light/varying/editor transport retains its own gate.

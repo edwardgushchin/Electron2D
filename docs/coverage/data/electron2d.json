@@ -4808,24 +4808,6 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.GPUParticles.EmitFlags",
-    "kind": "type",
-    "declaringType": "Electron2D.GPUParticles.EmitFlags",
-    "name": "EmitFlags",
-    "signature": "public enum Electron2D.GPUParticles.EmitFlags",
-    "visibility": "public",
-    "baseType": "System.Enum",
-    "interfaces": [
-      "System.IComparable",
-      "System.IConvertible",
-      "System.IFormattable",
-      "System.ISpanFormattable"
-    ],
-    "parameters": null,
-    "returnType": null,
-    "value": null
-  },
-  {
     "id": "T:Electron2D.Geometry",
     "kind": "type",
     "declaringType": "Electron2D.Geometry",
@@ -8265,6 +8247,24 @@
     "declaringType": "Electron2D.ParticlesEmissionShape",
     "name": "ParticlesEmissionShape",
     "signature": "public enum Electron2D.ParticlesEmissionShape",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ParticlesEmitFlags",
+    "kind": "type",
+    "declaringType": "Electron2D.ParticlesEmitFlags",
+    "name": "ParticlesEmitFlags",
+    "signature": "public enum Electron2D.ParticlesEmitFlags",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -15394,7 +15394,7 @@
     "kind": "type",
     "declaringType": "Electron2D.VisualShaderNodeOutput",
     "name": "VisualShaderNodeOutput",
-    "signature": "public sealed class Electron2D.VisualShaderNodeOutput",
+    "signature": "public class Electron2D.VisualShaderNodeOutput",
     "visibility": "public",
     "baseType": "Electron2D.VisualShaderNode",
     "interfaces": [
@@ -15445,6 +15445,189 @@
     "signature": "public sealed class Electron2D.VisualShaderNodeParameterRef",
     "visibility": "public",
     "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeParticleAccelerator",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeParticleAccelerator",
+    "name": "VisualShaderNodeParticleAccelerator",
+    "signature": "public sealed class Electron2D.VisualShaderNodeParticleAccelerator",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum",
+    "name": "ModeEnum",
+    "signature": "public enum Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeParticleBoxEmitter",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeParticleBoxEmitter",
+    "name": "VisualShaderNodeParticleBoxEmitter",
+    "signature": "public sealed class Electron2D.VisualShaderNodeParticleBoxEmitter",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeParticleEmitter",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeParticleConeVelocity",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeParticleConeVelocity",
+    "name": "VisualShaderNodeParticleConeVelocity",
+    "signature": "public sealed class Electron2D.VisualShaderNodeParticleConeVelocity",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeParticleEmit",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeParticleEmit",
+    "name": "VisualShaderNodeParticleEmit",
+    "signature": "public sealed class Electron2D.VisualShaderNodeParticleEmit",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeParticleEmitter",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeParticleEmitter",
+    "name": "VisualShaderNodeParticleEmitter",
+    "signature": "public abstract class Electron2D.VisualShaderNodeParticleEmitter",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeParticleMeshEmitter",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeParticleMeshEmitter",
+    "name": "VisualShaderNodeParticleMeshEmitter",
+    "signature": "public sealed class Electron2D.VisualShaderNodeParticleMeshEmitter",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeParticleEmitter",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeParticleMultiplyByAxisAngle",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeParticleMultiplyByAxisAngle",
+    "name": "VisualShaderNodeParticleMultiplyByAxisAngle",
+    "signature": "public sealed class Electron2D.VisualShaderNodeParticleMultiplyByAxisAngle",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeParticleOutput",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeParticleOutput",
+    "name": "VisualShaderNodeParticleOutput",
+    "signature": "public sealed class Electron2D.VisualShaderNodeParticleOutput",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeOutput",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeParticleRandomness",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeParticleRandomness",
+    "name": "VisualShaderNodeParticleRandomness",
+    "signature": "public sealed class Electron2D.VisualShaderNodeParticleRandomness",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeParticleRingEmitter",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeParticleRingEmitter",
+    "name": "VisualShaderNodeParticleRingEmitter",
+    "signature": "public sealed class Electron2D.VisualShaderNodeParticleRingEmitter",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeParticleEmitter",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeParticleSphereEmitter",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeParticleSphereEmitter",
+    "name": "VisualShaderNodeParticleSphereEmitter",
+    "signature": "public sealed class Electron2D.VisualShaderNodeParticleSphereEmitter",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeParticleEmitter",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -28052,6 +28235,149 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.VisualShaderNodeParticleAccelerator..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeParticleAccelerator",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeParticleAccelerator()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeParticleBoxEmitter..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeParticleBoxEmitter",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeParticleBoxEmitter()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeParticleConeVelocity..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeParticleConeVelocity",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeParticleConeVelocity()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeParticleEmit..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeParticleEmit",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeParticleEmit()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeParticleEmitter..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeParticleEmitter",
+    "name": ".ctor",
+    "signature": "protected VisualShaderNodeParticleEmitter()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeParticleMeshEmitter..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeParticleMeshEmitter",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeParticleMeshEmitter()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeParticleMultiplyByAxisAngle..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeParticleMultiplyByAxisAngle",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeParticleMultiplyByAxisAngle()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeParticleOutput..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeParticleOutput",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeParticleOutput()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeParticleRandomness..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeParticleRandomness",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeParticleRandomness()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeParticleRingEmitter..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeParticleRingEmitter",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeParticleRingEmitter()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeParticleSphereEmitter..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeParticleSphereEmitter",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeParticleSphereEmitter()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.VisualShaderNodeRemap..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.VisualShaderNodeRemap",
@@ -35317,71 +35643,6 @@
     "parameters": [],
     "returnType": "Electron2D.FractalType",
     "value": "2"
-  },
-  {
-    "id": "enumValue:Electron2D.GPUParticles.EmitFlags.Color()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.GPUParticles.EmitFlags",
-    "name": "Color",
-    "signature": "public const Electron2D.GPUParticles.EmitFlags Color = 8",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.GPUParticles.EmitFlags",
-    "value": "8"
-  },
-  {
-    "id": "enumValue:Electron2D.GPUParticles.EmitFlags.Custom()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.GPUParticles.EmitFlags",
-    "name": "Custom",
-    "signature": "public const Electron2D.GPUParticles.EmitFlags Custom = 16",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.GPUParticles.EmitFlags",
-    "value": "16"
-  },
-  {
-    "id": "enumValue:Electron2D.GPUParticles.EmitFlags.Position()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.GPUParticles.EmitFlags",
-    "name": "Position",
-    "signature": "public const Electron2D.GPUParticles.EmitFlags Position = 1",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.GPUParticles.EmitFlags",
-    "value": "1"
-  },
-  {
-    "id": "enumValue:Electron2D.GPUParticles.EmitFlags.RotationScale()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.GPUParticles.EmitFlags",
-    "name": "RotationScale",
-    "signature": "public const Electron2D.GPUParticles.EmitFlags RotationScale = 2",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.GPUParticles.EmitFlags",
-    "value": "2"
-  },
-  {
-    "id": "enumValue:Electron2D.GPUParticles.EmitFlags.Velocity()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.GPUParticles.EmitFlags",
-    "name": "Velocity",
-    "signature": "public const Electron2D.GPUParticles.EmitFlags Velocity = 4",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.GPUParticles.EmitFlags",
-    "value": "4"
   },
   {
     "id": "enumValue:Electron2D.Geometry.PolyBooleanOperation.Difference()",
@@ -45132,6 +45393,71 @@
     "parameters": [],
     "returnType": "Electron2D.ParticlesEmissionShape",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ParticlesEmitFlags.Color()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ParticlesEmitFlags",
+    "name": "Color",
+    "signature": "public const Electron2D.ParticlesEmitFlags Color = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ParticlesEmitFlags",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.ParticlesEmitFlags.Custom()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ParticlesEmitFlags",
+    "name": "Custom",
+    "signature": "public const Electron2D.ParticlesEmitFlags Custom = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ParticlesEmitFlags",
+    "value": "16"
+  },
+  {
+    "id": "enumValue:Electron2D.ParticlesEmitFlags.Position()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ParticlesEmitFlags",
+    "name": "Position",
+    "signature": "public const Electron2D.ParticlesEmitFlags Position = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ParticlesEmitFlags",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ParticlesEmitFlags.RotationScale()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ParticlesEmitFlags",
+    "name": "RotationScale",
+    "signature": "public const Electron2D.ParticlesEmitFlags RotationScale = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ParticlesEmitFlags",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ParticlesEmitFlags.Velocity()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ParticlesEmitFlags",
+    "name": "Velocity",
+    "signature": "public const Electron2D.ParticlesEmitFlags Velocity = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ParticlesEmitFlags",
+    "value": "4"
   },
   {
     "id": "enumValue:Electron2D.Performance.Monitor.ObjectCount()",
@@ -57874,6 +58200,19 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.VisualShader.Type.Collide()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShader.Type",
+    "name": "Collide",
+    "signature": "public const Electron2D.VisualShader.Type Collide = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShader.Type",
+    "value": "5"
+  },
+  {
     "id": "enumValue:Electron2D.VisualShader.Type.Fragment()",
     "kind": "enumValue",
     "declaringType": "Electron2D.VisualShader.Type",
@@ -57898,6 +58237,71 @@
     "parameters": [],
     "returnType": "Electron2D.VisualShader.Type",
     "value": "11"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShader.Type.Process()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShader.Type",
+    "name": "Process",
+    "signature": "public const Electron2D.VisualShader.Type Process = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShader.Type",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShader.Type.ProcessCustom()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShader.Type",
+    "name": "ProcessCustom",
+    "signature": "public const Electron2D.VisualShader.Type ProcessCustom = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShader.Type",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShader.Type.Start()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShader.Type",
+    "name": "Start",
+    "signature": "public const Electron2D.VisualShader.Type Start = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShader.Type",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShader.Type.StartCustom()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShader.Type",
+    "name": "StartCustom",
+    "signature": "public const Electron2D.VisualShader.Type StartCustom = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShader.Type",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShader.Type.TextureBlit()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShader.Type",
+    "name": "TextureBlit",
+    "signature": "public const Electron2D.VisualShader.Type TextureBlit = 10",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShader.Type",
+    "value": "10"
   },
   {
     "id": "enumValue:Electron2D.VisualShader.Type.Vertex()",
@@ -59952,6 +60356,58 @@
     "parameters": [],
     "returnType": "Electron2D.VisualShaderNodeParameter.QualifierEnum",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum.Linear()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum",
+    "name": "Linear",
+    "signature": "public const Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum Linear = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum",
+    "name": "Max",
+    "signature": "public const Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum Max = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum.Radial()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum",
+    "name": "Radial",
+    "signature": "public const Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum Radial = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum.Tangential()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum",
+    "name": "Tangential",
+    "signature": "public const Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum Tangential = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.VisualShaderNodeTexture.SourceEnum.Canvas()",
@@ -110359,11 +110815,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.GPUParticles.EmitParticle(Electron2D.Transform,Electron2D.Vector2,Electron2D.Color,Electron2D.Color,Electron2D.GPUParticles.EmitFlags)",
+    "id": "method:Electron2D.GPUParticles.EmitParticle(Electron2D.Transform,Electron2D.Vector2,Electron2D.Color,Electron2D.Color,Electron2D.ParticlesEmitFlags)",
     "kind": "method",
     "declaringType": "Electron2D.GPUParticles",
     "name": "EmitParticle",
-    "signature": "public System.Void EmitParticle(Electron2D.Transform transform, Electron2D.Vector2 velocity, Electron2D.Color color, Electron2D.Color custom, Electron2D.GPUParticles.EmitFlags flags)",
+    "signature": "public System.Void EmitParticle(Electron2D.Transform transform, Electron2D.Vector2 velocity, Electron2D.Color color, Electron2D.Color custom, Electron2D.ParticlesEmitFlags flags)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -110390,7 +110846,7 @@
       },
       {
         "name": "flags",
-        "type": "Electron2D.GPUParticles.EmitFlags",
+        "type": "Electron2D.ParticlesEmitFlags",
         "default": null
       }
     ],
@@ -181174,7 +181630,7 @@
     "kind": "method",
     "declaringType": "Electron2D.Shader",
     "name": "GetMode",
-    "signature": "public Electron2D.Shader.Mode GetMode()",
+    "signature": "public virtual Electron2D.Shader.Mode GetMode()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -224319,6 +224775,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.VisualShader.GetMode()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShader",
+    "name": "GetMode",
+    "signature": "public override Electron2D.Shader.Mode GetMode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Shader.Mode",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.VisualShader.GetNode(Electron2D.VisualShader.Type,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.VisualShader",
@@ -224541,6 +225010,25 @@
       {
         "name": "newClass",
         "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShader.SetMode(Electron2D.Shader.Mode)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShader",
+    "name": "SetMode",
+    "signature": "public System.Void SetMode(Electron2D.Shader.Mode mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mode",
+        "type": "Electron2D.Shader.Mode",
         "default": null
       }
     ],
@@ -226657,6 +227145,259 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeParticleAccelerator.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeParticleAccelerator",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeParticleAccelerator.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeParticleAccelerator",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeParticleBoxEmitter.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeParticleBoxEmitter",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeParticleConeVelocity.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeParticleConeVelocity",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeParticleEmit.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeParticleEmit",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeParticleEmit.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeParticleEmit",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeParticleMeshEmitter.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeParticleMeshEmitter",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeParticleMeshEmitter.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeParticleMeshEmitter",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeParticleMeshEmitter.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeParticleMeshEmitter",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeParticleMeshEmitter.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeParticleMeshEmitter",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeParticleMultiplyByAxisAngle.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeParticleMultiplyByAxisAngle",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeParticleMultiplyByAxisAngle.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeParticleMultiplyByAxisAngle",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeParticleOutput.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeParticleOutput",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeParticleRandomness.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeParticleRandomness",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeParticleRandomness.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeParticleRandomness",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeParticleRingEmitter.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeParticleRingEmitter",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeParticleSphereEmitter.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeParticleSphereEmitter",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
     "value": null
   },
   {
@@ -276220,6 +276961,97 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisualShaderNodeParticleAccelerator.Mode()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeParticleAccelerator",
+    "name": "Mode",
+    "signature": "public Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum Mode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisualShaderNodeParticleEmit.Flags()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeParticleEmit",
+    "name": "Flags",
+    "signature": "public Electron2D.ParticlesEmitFlags Flags { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ParticlesEmitFlags",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisualShaderNodeParticleMeshEmitter.Mesh()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeParticleMeshEmitter",
+    "name": "Mesh",
+    "signature": "public Electron2D.Mesh Mesh { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisualShaderNodeParticleMeshEmitter.SurfaceIndex()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeParticleMeshEmitter",
+    "name": "SurfaceIndex",
+    "signature": "public System.Int32 SurfaceIndex { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisualShaderNodeParticleMeshEmitter.UseAllSurfaces()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeParticleMeshEmitter",
+    "name": "UseAllSurfaces",
+    "signature": "public System.Boolean UseAllSurfaces { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisualShaderNodeParticleMultiplyByAxisAngle.DegreesMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeParticleMultiplyByAxisAngle",
+    "name": "DegreesMode",
+    "signature": "public System.Boolean DegreesMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisualShaderNodeParticleRandomness.OpType()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeParticleRandomness",
+    "name": "OpType",
+    "signature": "public Electron2D.VisualShaderFloatOpType OpType { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderFloatOpType",
     "value": null
   },
   {

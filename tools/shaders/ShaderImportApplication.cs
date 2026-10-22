@@ -42,7 +42,7 @@ public static class ShaderImportApplication
         var deviceImport = args.Length is 4 or 5 && args[3] == "--device";
         if ((!deviceImport && !blitImport && !particleImport && args.Length != 3) || (blitImport && args[1] != "fragment") || (particleImport && args[1] != "compute") || args[1] is not ("vertex" or "fragment" or "compute") || args[1] == "compute" && !deviceImport && !particleImport)
         {
-            Console.Error.WriteLine("Usage: ShaderImport <source.hlsl|source.glsl|source.spv> <vertex|fragment|compute> <output.spv> [--device|--texture-blit|--particles [include-root]]\n       ShaderImport <graph.e2dres> canvas <output.e2dres> --visual-shader");
+            Console.Error.WriteLine("Usage: ShaderImport <source.hlsl|source.glsl|source.spv> <vertex|fragment|compute> <output.spv> [--device|--texture-blit|--particles [include-root]]\n       ShaderImport <graph.e2dres> <graph|canvas|particles|texture-blit> <output.e2dres> --visual-shader");
             return 2;
         }
         var input = IOPath.GetFullPath(args[0]);
@@ -77,7 +77,7 @@ public static class ShaderImportApplication
                     {
                         Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.0", "-S",
                             args[1] == "compute" ? "comp" : args[1] == "fragment" ? "frag" : "vert", "-I" + includeRoot, "-I" + builtIns!.DirectoryPath, "-e", "main", "-gV", "-o", debugTemporary, input));
-                        sourceTypes = ShaderSourceTypes.GLSL(ShaderSourceTypes.CanonicalizeGraphBlocks(File.ReadAllBytes(debugTemporary), blocks ?? [], args[1] == "fragment"), args[1] == "fragment", particleImport);
+                        sourceTypes = ShaderSourceTypes.GLSL(ShaderSourceTypes.CanonicalizeGraphBlocks(File.ReadAllBytes(debugTemporary), blocks ?? [], args[1] == "fragment", particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem), args[1] == "fragment", particleImport);
                     }
                     break;
                 case ".spv":
@@ -85,7 +85,7 @@ public static class ShaderImportApplication
                     break;
                 default: throw new ArgumentException("The supported source languages are HLSL and GLSL; external compilers must supply SPIR-V.");
             }
-            var result = ShaderSourceTypes.CanonicalizeGraphBlocks(File.ReadAllBytes(temporary), blocks ?? [], args[1] == "fragment");
+            var result = ShaderSourceTypes.CanonicalizeGraphBlocks(File.ReadAllBytes(temporary), blocks ?? [], args[1] == "fragment", particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
             if (sourceTypes is not null)
             {
                 result = ShaderSourceTypes.Annotate(result, args[1] == "fragment", sourceTypes, particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
@@ -107,7 +107,7 @@ public static class ShaderImportApplication
                 if (graph is not null)
                 {
                     result = ShaderSourceTypes.AddGraphParameters(result, graph, args[1] == "fragment");
-                    result = ShaderSourceTypes.AddGraphImages(result, images ?? [], args[1] == "fragment");
+                    result = ShaderSourceTypes.AddGraphImages(result, images ?? [], args[1] == "fragment", graph.GetMode());
                 }
                 File.WriteAllBytes(temporary, result);
             }
@@ -206,18 +206,30 @@ public static class ShaderImportApplication
         var temporary = IOPath.Combine(IOPath.GetTempPath(), "electron2d-graph-" + Guid.NewGuid().ToString("N"));
         try
         {
-            if (args[1] != "canvas" || !output.EndsWith(".e2dres", StringComparison.OrdinalIgnoreCase))
-                throw new ArgumentException("Visual shader import requires the canvas domain and an .e2dres destination.");
+            if (args[1] is not ("graph" or "canvas" or "particles" or "texture-blit") || !output.EndsWith(".e2dres", StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException("Visual shader import requires a supported graph domain and an .e2dres destination.");
             using var graph = ResourceLoader.Load<VisualShader>(input, ResourceLoader.CacheMode.IgnoreDeep);
-            var sources = graph.GenerateSources();
+            using var sources = graph.GenerateDomainSources();
+            if (args[1] != "graph" && args[1] != (sources.Mode == Shader.Mode.CanvasItem ? "canvas" : sources.Mode == Shader.Mode.Particles ? "particles" : "texture-blit"))
+                throw new ArgumentException("The requested graph domain differs from its authored mode.");
             Directory.CreateDirectory(temporary);
-            var vertex = IOPath.Combine(temporary, "graph.vert.glsl");
-            var fragment = IOPath.Combine(temporary, "graph.frag.glsl");
-            File.WriteAllText(vertex, sources.Vertex); File.WriteAllText(fragment, sources.Fragment);
-            if (await ImportModule([vertex, "vertex", vertex + ".spv"], graph, sources.Images, sources.Blocks) != 0 ||
-                await ImportModule([fragment, "fragment", fragment + ".spv"], graph, sources.Images, sources.Blocks) != 0)
-                throw new InvalidDataException("Generated visual shader source failed compilation or interface validation.");
-            graph.SetSPIRV(File.ReadAllBytes(vertex + ".spv"), File.ReadAllBytes(fragment + ".spv"));
+            if (sources.Mode == Shader.Mode.CanvasItem)
+            {
+                var vertex = IOPath.Combine(temporary, "graph.vert.glsl"); var fragment = IOPath.Combine(temporary, "graph.frag.glsl");
+                File.WriteAllText(vertex, sources.Vertex); File.WriteAllText(fragment, sources.Code);
+                if (await ImportModule([vertex, "vertex", vertex + ".spv"], graph, sources.Images, sources.Blocks) != 0 ||
+                    await ImportModule([fragment, "fragment", fragment + ".spv"], graph, sources.Images, sources.Blocks) != 0)
+                    throw new InvalidDataException("Generated canvas graph source failed compilation or interface validation.");
+                graph.SetSPIRV(File.ReadAllBytes(vertex + ".spv"), File.ReadAllBytes(fragment + ".spv"));
+            }
+            else
+            {
+                var particle = sources.Mode == Shader.Mode.Particles;
+                var source = IOPath.Combine(temporary, particle ? "graph.comp.glsl" : "graph.frag.glsl"); File.WriteAllText(source, sources.Code);
+                if (await ImportModule([source, particle ? "compute" : "fragment", source + ".spv", particle ? "--particles" : "--texture-blit"], graph, sources.Images, sources.Blocks) != 0)
+                    throw new InvalidDataException("Generated graph source failed compilation or interface validation.");
+                graph.SetSPIRV(File.ReadAllBytes(source + ".spv"), sources.Mode);
+            }
             var compiled = graph.GetProgram();
             foreach (var image in sources.Images.Where(i => i.Default is not null).DistinctBy(i => i.Name))
             {

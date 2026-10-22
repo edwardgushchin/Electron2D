@@ -141,7 +141,7 @@ public partial class GPUParticles
     /// <summary>Queues one manually supplied particle in the current native rendering session.</summary>
     /// <param name="transform">Particle pose.</param><param name="velocity">Particle velocity.</param>
     /// <param name="color">Particle color.</param><param name="custom">Four numeric custom channels.</param><param name="flags">Fields copied into the new particle.</param>
-    public void EmitParticle(Transform transform, Vector2 velocity, Color color, Color custom, EmitFlags flags)
+    public void EmitParticle(Transform transform, Vector2 velocity, Color color, Color custom, ParticlesEmitFlags flags)
     { Edit(); RenderingServer.ParticlesEmit(EnsureNative(), transform, velocity, color, custom, (int)flags); }
     /// <summary>Restarts native storage, emission and one-shot completion tracking.</summary>
     /// <param name="keepSeed">Preserves Seed even when UseFixedSeed is false.</param>

@@ -7,11 +7,12 @@ namespace Electron2D;
 
 public sealed partial class VisualShader
 {
-    internal IEnumerable<VisualShaderNodeParameter> ParameterDefinitions() => _graphs.SelectMany(g => g.Nodes.Values)
+    internal IEnumerable<VisualShaderNodeParameter> ParameterDefinitions() => ActiveStages.SelectMany(stage => _graphs[(int)stage].Nodes.Values)
         .Select(e => e.Node).OfType<VisualShaderNodeParameter>().Distinct<VisualShaderNodeParameter>(ReferenceEqualityComparer.Instance);
 
-    private P[] OutputTypes(VisualShaderNode node)
+    private P[] OutputTypes(VisualShaderNode node, Type stage)
     {
+        if (node is VisualShaderNodeInput input) return input.OutputsFor(stage);
         if (node is not VisualShaderNodeParameterRef reference || reference.ParameterName == "[None]") return node.Outputs;
         var declaration = ParameterDefinitions().FirstOrDefault(p => p.ParameterName == reference.ParameterName);
         return declaration is VisualShaderNodeColorParameter ? [P.Vector3, P.Scalar] : declaration?.Outputs ?? [P.Scalar];
@@ -22,7 +23,7 @@ public sealed partial class VisualShader
         var start = 0; while (start < name.Length && !char.IsAsciiLetter(name[start])) start++;
         name = new string(name[start..].Where(c => char.IsAsciiLetterOrDigit(c) || c == '_' || c == ' ').ToArray()).Replace(' ', '_');
         if (name.Length == 0) name = parameter.ParameterCaption.Replace("Vec", "Vector", StringComparison.Ordinal);
-        var existing = ParameterDefinitions().Where(p => !ReferenceEquals(p, parameter)).Select(p => p.ParameterName).ToHashSet(StringComparer.Ordinal);
+        var existing = _graphs.SelectMany(g => g.Nodes.Values).Select(e => e.Node).OfType<VisualShaderNodeParameter>().Where(p => !ReferenceEquals(p, parameter)).Select(p => p.ParameterName).ToHashSet(StringComparer.Ordinal);
         for (var attempt = 2; existing.Contains(name); attempt++)
         {
             name = name.TrimEnd('0', '1', '2', '3', '4', '5', '6', '7', '8', '9') + attempt.ToString(CultureInfo.InvariantCulture);
@@ -40,6 +41,8 @@ public sealed partial class VisualShader
                 name.StartsWith("gl_", StringComparison.Ordinal) || name.Contains("__", StringComparison.Ordinal) ||
                 name is "TIME" or "SCREEN_PIXEL_SIZE" or "SDF_COORDS" or "size" or "TEXTURE" or "NORMAL_TEXTURE" or "SPECULAR_SHININESS_TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE")
                 throw new InvalidDataException("A graph parameter requires a nonreserved ASCII shader identifier.");
+            if (_mode == Mode.TextureBlit && name is "SOURCE_TEXTURE0" or "SOURCE_TEXTURE1" or "SOURCE_TEXTURE2" or "SOURCE_TEXTURE3")
+                throw new InvalidDataException("Writable-texture source names are renderer-owned and cannot be material parameters.");
             if (!result.TryAdd(name, parameter)) throw new InvalidDataException($"Graph parameter '{name}' has duplicate declarations.");
             if (parameter is VisualShaderNodeMatrixParameter or VisualShaderNodeTextureParameter && parameter.Qualifier is Q.Instance or Q.InstanceIndex)
                 throw new NotSupportedException("Matrix and sampled-image graph parameters cannot use per-item storage.");

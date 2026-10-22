@@ -30,7 +30,7 @@ internal static partial class ShaderSamplerChecks
                 var particleTexture = Own(ImageTexture.CreateFromImage(particleImage));
                 var point = new Vector2i(language == "GLSL" ? 224 : 240, 112);
                 var node = new GPUParticles { Amount = 1, Emitting = false, Lifetime = 1000, FixedFPS = 0, Interpolate = false, LocalCoords = true, Texture = particleTexture, Position = (Vector2)point, ProcessMaterial = material };
-                Parent!.AddChild(node); _particles.Add(node); node.EmitParticle(Transform.Identity, Vector2.Zero, Colors.White, Colors.White, GPUParticles.EmitFlags.Position);
+                Parent!.AddChild(node); _particles.Add(node); node.EmitParticle(Transform.Identity, Vector2.Zero, Colors.White, Colors.White, ParticlesEmitFlags.Position);
                 _pixels.Add((point, new(0, 1, 0, 1), language + "/particles"));
             }
             var vertex = File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "Shaders", "SampleGLSL.vert.glsl.spv"));

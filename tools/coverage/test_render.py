@@ -248,6 +248,13 @@ def main():
     for name, count in [("VisualShaderNodeResizableBase",2),("VisualShaderNodeGroupBase",22),("VisualShaderNodeExpression",2),("VisualShaderNodeGlobalExpression",1)]:
         rows = [row for row in pages[CLASS_PAGES / (name + ".md")].splitlines() if row.startswith("| [`")]
         assert len(rows) == count and all(" | Implemented | " in row for row in rows)
+    particle_rows = [row for row in pages[CLASS_PAGES / "VisualShaderNodeParticleEmitter.md"].splitlines() if row.startswith("| [`")]
+    assert len(particle_rows) == 2 and sum(" | Excluded | " in row for row in particle_rows) == 1
+    for particle_name in ("MeshEmitter", "Randomness", "Emit", "Output", "Accelerator", "BoxEmitter", "SphereEmitter", "RingEmitter", "ConeVelocity", "MultiplyByAxisAngle"):
+        particle_rows = [row for row in pages[CLASS_PAGES / ("VisualShaderNodeParticle" + particle_name + ".md")].splitlines() if row.startswith("| [`")]
+        assert particle_rows and all(" | Implemented | " in row for row in particle_rows)
+    assert "ParticlesEmitFlags" in pages[CLASS_PAGES / "VisualShaderNodeParticleEmit.md"]
+    assert "VisualShaderFloatOpType" in pages[CLASS_PAGES / "VisualShaderNodeParticleRandomness.md"]
     custom_rows = [row for row in pages[CLASS_PAGES / "VisualShaderNodeCustom.md"].splitlines() if row.startswith("| [`")]
     assert len(custom_rows) == 23 and all(" | Implemented | " in row for row in custom_rows)
     assert "VisualShaderPortDefault" in pages[CLASS_PAGES / "VisualShaderNodeCustom.md"]

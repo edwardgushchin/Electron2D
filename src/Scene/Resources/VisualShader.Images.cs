@@ -83,7 +83,7 @@ public sealed partial class VisualShader
             }
             else if (node is VisualShaderNodeTextureArray layered && layered.Source == VisualShaderNodeLayeredSample.SourceEnum.Texture)
                 Add(id, new(stage, Anonymous(id), true, new(false, 0, 0, 0, false), layered.TextureArray));
-            else if (node is VisualShaderNodeInput input && input.Outputs[0] == P.Sampler)
+            else if (node is VisualShaderNodeInput input && input.OutputsFor(stage)[0] == P.Sampler)
             {
                 _ = input.GenerateExpression(stage);
                 Add(id, new(stage, input.GetInputRealName(), false));

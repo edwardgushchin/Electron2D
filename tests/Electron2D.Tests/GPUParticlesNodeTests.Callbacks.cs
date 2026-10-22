@@ -23,7 +23,7 @@ internal static partial class GPUParticlesNodeTests
                 texture.SizeCallback = mutation; Reject<InvalidOperationException>(() => node.RequestParticlesProcess(.125f)); failed++;
                 Check(!node.IsDisposed && !parent.IsDisposed && ReferenceEquals(node.Parent, parent) && node.Amount == 1 && parent.Position == Vector2.Zero && node.CaptureRect() == default, "Texture-size callback rejection precedes scene ownership or property changes.");
             }
-            texture.SizeCallback = null; node.EmitParticle(Transform.Identity, Vector2.Zero, Colors.White, Colors.White, GPUParticles.EmitFlags.Position); node.RequestParticlesProcess(.125f);
+            texture.SizeCallback = null; node.EmitParticle(Transform.Identity, Vector2.Zero, Colors.White, Colors.White, ParticlesEmitFlags.Position); node.RequestParticlesProcess(.125f);
             ramp.ImageCallback = () => parent.Dispose(); Reject<InvalidOperationException>(() => RenderingServer.ForceDraw(false)); failed++;
             Check(!node.IsDisposed && !parent.IsDisposed && node.CaptureRect() == default, "Process texture callbacks cannot dispose the emitter's parent before publication.");
             ramp.ImageCallback = null; RenderingServer.ForceDraw(false);

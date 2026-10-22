@@ -28,6 +28,17 @@ with tempfile.TemporaryDirectory(prefix='electron2d-particle-import-') as tempor
         assert output.read_bytes() == expected, 'External SPIR-V import changed authored bytes'
         run(['dotnet', str(TOOL), str(source), 'fragment', str(output), '--particles'], success=False)
         assert output.read_bytes() == expected, 'Invalid profile/stage changed the destination'
+    for language, extension in [('GLSL', 'glsl'), ('HLSL', 'hlsl')]:
+        original = ROOT / f'tests/Electron2D.Tests/Shaders/Particle{language}.comp.{extension}'
+        birth_source = directory / f'birth.{extension}'
+        code = original.read_text().replace('#define ELECTRON2D_PARTICLE_SUBEMISSION', '#define ELECTRON2D_PARTICLE_SUBEMISSION\n#define ELECTRON2D_PARTICLE_BIRTH_NUMBERS')
+        code = code.replace('PARTICLES[index] = particle;', 'BIRTH_NUMBERS[index + 1u] = particle.State.y; PARTICLES[index] = particle;')
+        birth_source.write_text(code)
+        output = directory / f'birth-{language}.spv'
+        run(['dotnet', str(TOOL), str(birth_source), 'compute', str(output), '--particles'])
+        before = output.read_bytes()
+        run(['dotnet', str(TOOL), str(output), 'compute', str(output), '--particles'])
+        assert output.read_bytes() == before, 'Optional uint birth storage changed external bytecode'
     invalid = directory / 'invalid.comp.glsl'
     invalid.write_text('#version 450\nlayout(local_size_x=64) in; void main() {}\n')
     output = directory / 'GLSL.spv'

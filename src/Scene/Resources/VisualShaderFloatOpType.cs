@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-/// <summary>The floating component layout shared by fused arithmetic and derivative graph operations.</summary>
+/// <summary>The floating component layout shared by fused arithmetic, derivative and particle range graph operations.</summary>
 public enum VisualShaderFloatOpType
 {
     /// <summary>A floating scalar.</summary>

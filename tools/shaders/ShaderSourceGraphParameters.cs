@@ -5,9 +5,9 @@ using Electron2D;
 
 internal static unsafe partial class ShaderSourceTypes
 {
-    internal static byte[] CanonicalizeGraphBlocks(byte[] code, IReadOnlyList<VisualShaderBlockName> blocks, bool fragment)
+    internal static byte[] CanonicalizeGraphBlocks(byte[] code, IReadOnlyList<VisualShaderBlockName> blocks, bool fragment, Shader.Mode mode = Shader.Mode.CanvasItem)
     {
-        var names = blocks.Where(b => b.Stage == (fragment ? VisualShader.Type.Fragment : VisualShader.Type.Vertex)).ToDictionary(b => b.Name, b => b.Canonical, StringComparer.Ordinal);
+        var names = blocks.Where(b => b.Stage == GraphStage(fragment, mode)).ToDictionary(b => b.Name, b => b.Canonical, StringComparer.Ordinal);
         if (names.Count == 0) return code;
         var words = MemoryMarshal.Cast<byte, uint>(code); var structures = new HashSet<uint>();
         for (var at = 5; at < words.Length; at += (int)(words[at] >> 16))
@@ -33,7 +33,7 @@ internal static unsafe partial class ShaderSourceTypes
 
     internal static byte[] AddGraphParameters(byte[] code, VisualShader graph, bool fragment)
     {
-        var program = ShaderCompiler.ValidateInterface(code, fragment); var records = new List<string>();
+        var program = ShaderCompiler.ValidateInterface(code, fragment, mode: graph.GetMode()); var records = new List<string>();
         foreach (var declaration in graph.ParameterDefinitions().OrderBy(p => p.ParameterName, StringComparer.Ordinal))
         {
             var name = declaration.ParameterName;
@@ -63,10 +63,10 @@ internal static unsafe partial class ShaderSourceTypes
         }
         return AppendMetadata(code, records);
     }
-    internal static byte[] AddGraphImages(byte[] code, IReadOnlyList<VisualShaderImage> images, bool fragment)
+    internal static byte[] AddGraphImages(byte[] code, IReadOnlyList<VisualShaderImage> images, bool fragment, Shader.Mode mode = Shader.Mode.CanvasItem)
     {
-        var program = ShaderCompiler.ValidateInterface(code, fragment); var records = new List<string>();
-        foreach (var image in images.Where(i => i.Stage == (fragment ? VisualShader.Type.Fragment : VisualShader.Type.Vertex) && i.Policy is not null))
+        var program = ShaderCompiler.ValidateInterface(code, fragment, mode: mode); var records = new List<string>();
+        foreach (var image in images.Where(i => i.Stage == GraphStage(fragment, mode) && i.Policy is not null))
         {
             if (!program.Textures.Any(t => t.Name == image.Name)) continue;
             var policy = image.Policy!.Value;
@@ -74,6 +74,8 @@ internal static unsafe partial class ShaderSourceTypes
         }
         return AppendMetadata(code, records);
     }
+    private static VisualShader.Type GraphStage(bool fragment, Shader.Mode mode) => mode switch
+    { Shader.Mode.Particles => VisualShader.Type.Process, Shader.Mode.TextureBlit => VisualShader.Type.TextureBlit, _ => fragment ? VisualShader.Type.Fragment : VisualShader.Type.Vertex };
     private static uint[] GraphDefaultWords(object value)
     {
         static uint F(float number) => BitConverter.SingleToUInt32Bits(number);

@@ -42,7 +42,7 @@ internal static partial class DefaultChecks
                 Check(RenderingServer.ShaderGetParameterDefault<bool>(processShader.GetRID(), "enabled"), "Particle defaults query through borrowed identity.");
                 using var image = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8); image.Fill(Colors.White); var texture = Own(ImageTexture.CreateFromImage(image));
                 var particles = new GPUParticles { Texture = texture, ProcessMaterial = process, Amount = 1, Lifetime = 1000, Emitting = false, FixedFPS = 0, Interpolate = false, LocalCoords = true, Position = new(x, 216), Scale = new(16, 16) };
-                AddChild(particles); particles.EmitParticle(Transform.Identity, Vector2.Zero, Colors.White, Colors.White, GPUParticles.EmitFlags.Position); x += 64;
+                AddChild(particles); particles.EmitParticle(Transform.Identity, Vector2.Zero, Colors.White, Colors.White, ParticlesEmitFlags.Position); x += 64;
             }
         }
     }

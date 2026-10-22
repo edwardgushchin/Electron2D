@@ -7,7 +7,7 @@ internal sealed unsafe class ParticleGPUState : IDisposable
 {
     private readonly RenderHandle _device;
     internal readonly int Amount;
-    internal RenderHandle State, Previous, Incoming, Outgoing, Order, History, Poses;
+    internal RenderHandle State, Previous, Incoming, Outgoing, BirthNumbers, Order, History, Poses;
     private RenderHandle _upload;
     private RenderHandle? _download;
     private uint _uploadSize, _downloadSize;
@@ -21,11 +21,11 @@ internal sealed unsafe class ParticleGPUState : IDisposable
     {
         _device = device; Amount = source.Amount;
         var bytes = checked((uint)(Amount * ParticleStateLayout.ByteSize));
-        State = Previous = Incoming = Outgoing = Order = History = Poses = _upload = null!;
+        State = Previous = Incoming = Outgoing = BirthNumbers = Order = History = Poses = _upload = null!;
         try
         {
             State = Buffer(bytes); Previous = Buffer(bytes);
-            Incoming = Buffer(96); Outgoing = Buffer(96); History = Buffer(bytes); Poses = Buffer(32);
+            Incoming = Buffer(96); Outgoing = Buffer(96); BirthNumbers = Buffer(checked(((uint)Amount + 1) * 4)); History = Buffer(bytes); Poses = Buffer(32);
             OrderCount = 1; while (OrderCount < Amount) OrderCount = checked(OrderCount * 2);
             Order = Buffer(checked((uint)OrderCount * 8)); _uploadSize = 96; _upload = Transfer(_uploadSize, SDL.GPUTransferBufferUsage.Upload);
             HistoryFrames = 1;
@@ -122,5 +122,5 @@ internal sealed unsafe class ParticleGPUState : IDisposable
     }
     internal void CancelPreparedUploads() => _uploadedPoses = null;
     public void Dispose()
-    { State?.Dispose(); Previous?.Dispose(); Incoming?.Dispose(); Outgoing?.Dispose(); Order?.Dispose(); History?.Dispose(); Poses?.Dispose(); _upload?.Dispose(); _download?.Dispose(); }
+    { State?.Dispose(); Previous?.Dispose(); Incoming?.Dispose(); Outgoing?.Dispose(); BirthNumbers?.Dispose(); Order?.Dispose(); History?.Dispose(); Poses?.Dispose(); _upload?.Dispose(); _download?.Dispose(); }
 }

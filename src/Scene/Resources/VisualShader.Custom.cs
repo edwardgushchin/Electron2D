@@ -11,41 +11,25 @@ public sealed partial class VisualShader
     {
         internal readonly Dictionary<(Type Stage, int ID), CustomBlock> Blocks = [];
         internal readonly List<string> Globals = [];
-        internal readonly Dictionary<Type, List<string>> Functions = new() { [Type.Vertex] = [], [Type.Fragment] = [] };
+        internal readonly Dictionary<Type, List<string>> Functions = GraphStages.ToDictionary(s => s, _ => new List<string>());
         internal IEnumerable<string> Sources(Type stage) => Globals.Concat(Functions[stage]).Concat(Blocks.Where(p => p.Key.Stage == stage).Select(p => p.Value.Source));
     }
     private CustomPlan? PrepareCustomCode()
     {
         if (!_graphs.Any(g => g.Nodes.Values.Any(e => e.Node is VisualShaderNodeCustom))) return null;
         var entries = new List<(Type Stage, int ID, VisualShaderNodeCustom Node, HashSet<int> Connected)>();
-        foreach (var stage in new[] { Type.Vertex, Type.Fragment })
+        foreach (var stage in ActiveStages)
         {
-            var graph = GetGraph(stage); var incoming = new Dictionary<(int Node, int Port), VisualShaderConnection>();
-            foreach (var edge in graph.Connections)
+            var stagePlan = PlanStage(stage);
+            foreach (var id in stagePlan.Order)
             {
-                if (!PortsExist(graph, edge) || !PortsCompatible(graph, edge)) throw new InvalidDataException("Custom graph connections require live compatible ports.");
-                incoming[(edge.ToNode, edge.ToPort)] = edge;
-            }
-            var visited = new HashSet<int>(); var visiting = new HashSet<int>(); var stack = new Stack<(int ID, bool Exit)>(); stack.Push((0, false));
-            while (stack.TryPop(out var step))
-            {
-                if (visited.Contains(step.ID)) continue;
-                var node = graph.Nodes[step.ID].Node;
-                if (step.Exit)
-                {
-                    visiting.Remove(step.ID); visited.Add(step.ID);
-                    if (node is VisualShaderNodeCustom custom)
-                        entries.Add((stage, step.ID, custom, Enumerable.Range(0, node.Inputs.Length).Where(p => incoming.ContainsKey((step.ID, p))).ToHashSet()));
-                    continue;
-                }
-                if (!visiting.Add(step.ID)) throw new InvalidDataException("The reachable visual shader graph contains a cycle.");
-                stack.Push((step.ID, true));
-                for (var port = node.Inputs.Length - 1; port >= 0; port--)
-                    if (incoming.TryGetValue((step.ID, port), out var edge)) stack.Push((edge.FromNode, false));
+                var node = GetNode(stage, id);
+                if (node is VisualShaderNodeCustom custom)
+                    entries.Add((stage, id, custom, Enumerable.Range(0, node.Inputs.Length).Where(p => stagePlan.Incoming.ContainsKey((id, p))).ToHashSet()));
             }
         }
         if (entries.Count == 0) return null;
-        var plan = new CustomPlan(); var providers = new HashSet<System.Type>(); var bytes = new long[2];
+        var plan = new CustomPlan(); var providers = new HashSet<System.Type>(); var bytes = new long[(int)Type.Max];
         void Budget(Type stage, string source)
         {
             if ((bytes[(int)stage] += ShaderInclude.SourceEncoding.GetByteCount(source)) > ShaderInclude.MaximumSourceBytes)
@@ -62,7 +46,7 @@ public sealed partial class VisualShader
             if (providers.Add(node.GetType()))
             {
                 var global = Evaluate(() => node.GetGlobalCode(GetMode())); plan.Globals.Add(global);
-                foreach (var stage in new[] { Type.Vertex, Type.Fragment })
+                foreach (var stage in ActiveStages)
                 {
                     Budget(stage, global); var function = Evaluate(() => node.GetFuncCode(GetMode(), stage)); Budget(stage, function); plan.Functions[stage].Add(function);
                 }

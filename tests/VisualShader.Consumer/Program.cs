@@ -5,6 +5,9 @@ try
 {
     CustomNodes.Register();
     if (args.Length == 0 || args[0] == "cpu") GraphChecks.CPU();
+    else if (args[0] == "domains-gpu") GraphChecks.RenderDomains(IOPath.GetFullPath(args[1]), args);
+    else if (args[0] == "domains-cpu") GraphChecks.DomainCPU();
+    else if (args[0] == "domains-author") GraphChecks.AuthorDomains(IOPath.GetFullPath(args[1]));
     else if (args[0] == "author") GraphChecks.Author(IOPath.GetFullPath(args[1]));
     else if (args[0] == "edit")
     {

@@ -127,7 +127,18 @@
     "VisualShaderNodeGroupBase": "VisualShaderNodeGroupBase",
     "VisualShaderNodeExpression": "VisualShaderNodeExpression",
     "VisualShaderNodeGlobalExpression": "VisualShaderNodeGlobalExpression",
-    "VisualShaderNodeCustom": "VisualShaderNodeCustom"
+    "VisualShaderNodeCustom": "VisualShaderNodeCustom",
+    "VisualShaderNodeParticleAccelerator": "VisualShaderNodeParticleAccelerator",
+    "VisualShaderNodeParticleBoxEmitter": "VisualShaderNodeParticleBoxEmitter",
+    "VisualShaderNodeParticleConeVelocity": "VisualShaderNodeParticleConeVelocity",
+    "VisualShaderNodeParticleEmit": "VisualShaderNodeParticleEmit",
+    "VisualShaderNodeParticleEmitter": "VisualShaderNodeParticleEmitter",
+    "VisualShaderNodeParticleMeshEmitter": "VisualShaderNodeParticleMeshEmitter",
+    "VisualShaderNodeParticleMultiplyByAxisAngle": "VisualShaderNodeParticleMultiplyByAxisAngle",
+    "VisualShaderNodeParticleOutput": "VisualShaderNodeParticleOutput",
+    "VisualShaderNodeParticleRandomness": "VisualShaderNodeParticleRandomness",
+    "VisualShaderNodeParticleRingEmitter": "VisualShaderNodeParticleRingEmitter",
+    "VisualShaderNodeParticleSphereEmitter": "VisualShaderNodeParticleSphereEmitter"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",
@@ -253,7 +264,7 @@
     "ParticleProcessMaterial.CollisionMode": "ParticleProcessMaterial.CollisionModeEnum",
     "ParticleProcessMaterial.SubEmitterMode": "ParticleProcessMaterial.SubEmitterModeEnum",
     "GPUParticles2D.DrawOrder": "ParticlesDrawOrder",
-    "GPUParticles2D.EmitFlags": "GPUParticles.EmitFlags",
+    "GPUParticles2D.EmitFlags": "ParticlesEmitFlags",
     "RenderingServer.ParticlesDrawOrder": "ParticlesDrawOrder",
     "CanvasItem.OversamplingWithScale": "OversamplingWithScale",
     "Viewport.RenderInfo": "ViewportRenderInfo",
@@ -270,6 +281,9 @@
     "VisualShaderNodeTextureParameter.TextureType": "VisualShaderNodeTextureParameter.TextureTypeEnum",
     "VisualShaderNodeColorFunc.Function": "VisualShaderNodeColorFunc.FunctionEnum",
     "VisualShaderNodeColorOp.Operator": "VisualShaderNodeColorOp.OperatorEnum",
-    "VisualShaderNodeUVFunc.Function": "VisualShaderNodeUVFunc.FunctionEnum"
+    "VisualShaderNodeUVFunc.Function": "VisualShaderNodeUVFunc.FunctionEnum",
+    "VisualShaderNodeParticleRandomness.OpType": "VisualShaderFloatOpType",
+    "VisualShaderNodeParticleEmit.EmitFlags": "ParticlesEmitFlags",
+    "VisualShaderNodeParticleAccelerator.Mode": "VisualShaderNodeParticleAccelerator.ModeEnum"
   }
 }

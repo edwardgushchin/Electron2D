@@ -13,7 +13,7 @@ internal static partial class GPUParticlesNodeTests
         root.AddChild(parent); root.AddChild(child); var frames = 0;
         root.Ready += _ =>
         {
-            parent.EmitParticle(Transform.Identity, Vector2.Zero, Colors.White, Colors.White, GPUParticles.EmitFlags.Position);
+            parent.EmitParticle(Transform.Identity, Vector2.Zero, Colors.White, Colors.White, ParticlesEmitFlags.Position);
             RenderingServer.FramePostDraw += () =>
             {
                 using var capture = root.GetTexture().GetImage()!; var pixel = capture.GetPixel(20, 20);
@@ -33,7 +33,7 @@ internal static partial class GPUParticlesNodeTests
         var node = new GPUParticles { Amount = 1, Emitting = false, FixedFPS = 0, SpeedScale = 0, Interpolate = false, LocalCoords = true, Texture = atlas, Position = new(20, 20), ProcessMaterial = process }; root.AddChild(node); var frames = 0;
         root.Ready += _ =>
         {
-            node.EmitParticle(Transform.Identity, Vector2.Zero, Colors.White, Colors.White, GPUParticles.EmitFlags.Position);
+            node.EmitParticle(Transform.Identity, Vector2.Zero, Colors.White, Colors.White, ParticlesEmitFlags.Position);
             RenderingServer.FramePostDraw += () =>
             {
                 using var capture = root.GetTexture().GetImage()!; var color = capture.GetPixel(20, 20);
@@ -51,7 +51,7 @@ internal static partial class GPUParticlesNodeTests
         var node = new GPUParticles { Amount = 1, Emitting = false, Lifetime = 10, FixedFPS = 0, Interpolate = false, SpeedScale = 1, Texture = texture, ProcessMaterial = material, Position = new(20, 20) }; root.AddChild(node); var frame = 0; var pausedWorld = Vector2.Zero; var resumed = false;
         root.Ready += _ =>
         {
-            node.EmitParticle(new Transform(0, new Vector2(20, 20)), Vector2.Zero, Colors.White, Colors.White, GPUParticles.EmitFlags.Position); node.RequestParticlesProcess(.125f);
+            node.EmitParticle(new Transform(0, new Vector2(20, 20)), Vector2.Zero, Colors.White, Colors.White, ParticlesEmitFlags.Position); node.RequestParticlesProcess(.125f);
             RenderingServer.FramePostDraw += () =>
             {
                 var world = node.CaptureRect().GetCenter() + node.Position;

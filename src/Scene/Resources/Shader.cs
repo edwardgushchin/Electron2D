@@ -50,9 +50,9 @@ public partial class Shader : Resource
     public Shader() { }
 
     /// <summary>Gets this shader's executing domain.</summary>
-    /// <returns>CanvasItem, TextureBlit or Particles.</returns>
+    /// <returns>CanvasItem, TextureBlit or Particles. VisualShader overrides this with its authored source domain.</returns>
     /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>
-    public Mode GetMode() => GetProgram().Mode;
+    public virtual Mode GetMode() => GetProgram().Mode;
 
     /// <summary>Creates a canvas fragment shader from a copied SPIR-V module.</summary>
     /// <param name="bytecode">A little-endian SPIR-V module, at most 16 MiB, with one fragment entry point named main.</param>

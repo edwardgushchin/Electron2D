@@ -1,5 +1,6 @@
 #version 450
 #extension GL_GOOGLE_include_directive : require
+#define ELECTRON2D_PARTICLE_BIRTH_NUMBERS
 #include "Includes/electron2d/particles.glslinc"
 layout(local_size_x = 64) in;
 layout(std430, set = 1, binding = 1) buffer Intake { Electron2D_Particle EMISSIONS[]; };
@@ -15,6 +16,7 @@ void birth(inout Electron2D_Particle particle, uint index)
     particle.TransformY = (Options.x & 4u) != 0 ? vec4(0, 1, 0, 0) : EmissionY;
     particle.Color = vec4(1); particle.Custom = vec4(0); particle.VelocityAge = vec4(0);
     particle.State = uvec4(3, Counts.y, particleHash(Counts.z + index), floatBitsToUint(Time.x));
+    BIRTH_NUMBERS[index + 1u] = atomicAdd(BIRTH_NUMBERS[0], 1u);
 }
 void main()
 {

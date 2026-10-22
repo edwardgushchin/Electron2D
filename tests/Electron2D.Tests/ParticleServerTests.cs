@@ -12,6 +12,12 @@ internal static partial class ParticleServerTests
     private sealed class Control : Entity { protected override void OnDraw() => DrawRect(new(40, 10, 8, 8), Colors.Green); }
     internal static void Run(string profile)
     {
+        if (profile == "visual-graphs")
+        {
+            try { VisualGraphs(Environment.GetEnvironmentVariable("ELECTRON2D_GRAPH_FIXTURES") ?? throw new ArgumentException("Missing graph fixture directory.")); }
+            catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; }
+            return;
+        }
         if (profile == "node-cpu-curves") { GPUParticlesNodeTests.CPUCurves(); return; }
         if (profile == "node-cpu-file") { GPUParticlesNodeTests.CPUCurves(Environment.GetEnvironmentVariable("ELECTRON2D_GPU_NODE_FILE") ?? throw new ArgumentException("Missing GPU curve file.")); return; }
         if (profile == "node-file") { GPUParticlesNodeTests.FileChild(Environment.GetEnvironmentVariable("ELECTRON2D_GPU_NODE_FILE") ?? throw new ArgumentException("Missing GPU scene file.")); return; }

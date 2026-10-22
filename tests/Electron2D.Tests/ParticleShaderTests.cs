@@ -77,6 +77,13 @@ internal static class ParticleShaderTests
         }
         Check(changed, "Malformed ABI fixture changed its intended instruction."); return result;
     }
+    internal static void VerifyBirthNumbers(byte[] code)
+    {
+        using var shader = Shader.CreateFromSPIRV(code, Shader.Mode.Particles);
+        Reject<NotSupportedException>(() => shader.SetSPIRV(Rewrite(code, 71, i => i.Length == 4 && i[2] == 6 && i[3] == 4, i => i[3] = 8), Shader.Mode.Particles));
+        Reject<NotSupportedException>(() => shader.SetSPIRV(Rewrite(code, 71, i => i.Length == 4 && i[2] == 33 && i[3] == 2, i => i[3] = 3), Shader.Mode.Particles));
+        Check(shader.GetSPIRV().AsSpan().SequenceEqual(code), "Malformed birth-number stride or noncontiguous binding preserves the previous program.");
+    }
     internal static void RunNative()
     {
         using var device = RenderingServer.CreateLocalRenderingDevice();

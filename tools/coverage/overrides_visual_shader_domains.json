@@ -1,0 +1,389 @@
+{
+  "mappings": [
+    {
+      "godot": "class:VisualShaderNodeParticleAccelerator",
+      "electron2d": "T:Electron2D.VisualShaderNodeParticleAccelerator",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleAccelerator::enum:Mode",
+      "electron2d": "T:Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleAccelerator::enum_value:Mode.MODE_LINEAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum.Linear()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleAccelerator::enum_value:Mode.MODE_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleAccelerator::enum_value:Mode.MODE_RADIAL",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum.Radial()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleAccelerator::enum_value:Mode.MODE_TANGENTIAL",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeParticleAccelerator.ModeEnum.Tangential()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleAccelerator::property:mode",
+      "electron2d": "property:Electron2D.VisualShaderNodeParticleAccelerator.Mode()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "class:VisualShaderNodeParticleBoxEmitter",
+      "electron2d": "T:Electron2D.VisualShaderNodeParticleBoxEmitter",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "class:VisualShaderNodeParticleConeVelocity",
+      "electron2d": "T:Electron2D.VisualShaderNodeParticleConeVelocity",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "class:VisualShaderNodeParticleEmit",
+      "electron2d": "T:Electron2D.VisualShaderNodeParticleEmit",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleEmit::enum:EmitFlags",
+      "electron2d": "T:Electron2D.ParticlesEmitFlags",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleEmit::enum_value:EmitFlags.EMIT_FLAG_COLOR",
+      "electron2d": "enumValue:Electron2D.ParticlesEmitFlags.Color()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleEmit::enum_value:EmitFlags.EMIT_FLAG_CUSTOM",
+      "electron2d": "enumValue:Electron2D.ParticlesEmitFlags.Custom()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleEmit::enum_value:EmitFlags.EMIT_FLAG_POSITION",
+      "electron2d": "enumValue:Electron2D.ParticlesEmitFlags.Position()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleEmit::enum_value:EmitFlags.EMIT_FLAG_ROT_SCALE",
+      "electron2d": "enumValue:Electron2D.ParticlesEmitFlags.RotationScale()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleEmit::enum_value:EmitFlags.EMIT_FLAG_VELOCITY",
+      "electron2d": "enumValue:Electron2D.ParticlesEmitFlags.Velocity()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleEmit::property:flags",
+      "electron2d": "property:Electron2D.VisualShaderNodeParticleEmit.Flags()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "class:VisualShaderNodeParticleEmitter",
+      "electron2d": "T:Electron2D.VisualShaderNodeParticleEmitter",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "class:VisualShaderNodeParticleMeshEmitter",
+      "electron2d": "T:Electron2D.VisualShaderNodeParticleMeshEmitter",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleMeshEmitter::property:mesh",
+      "electron2d": "property:Electron2D.VisualShaderNodeParticleMeshEmitter.Mesh()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleMeshEmitter::property:surface_index",
+      "electron2d": "property:Electron2D.VisualShaderNodeParticleMeshEmitter.SurfaceIndex()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleMeshEmitter::property:use_all_surfaces",
+      "electron2d": "property:Electron2D.VisualShaderNodeParticleMeshEmitter.UseAllSurfaces()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "class:VisualShaderNodeParticleMultiplyByAxisAngle",
+      "electron2d": "T:Electron2D.VisualShaderNodeParticleMultiplyByAxisAngle",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleMultiplyByAxisAngle::property:degrees_mode",
+      "electron2d": "property:Electron2D.VisualShaderNodeParticleMultiplyByAxisAngle.DegreesMode()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "class:VisualShaderNodeParticleOutput",
+      "electron2d": "T:Electron2D.VisualShaderNodeParticleOutput",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "class:VisualShaderNodeParticleRandomness",
+      "electron2d": "T:Electron2D.VisualShaderNodeParticleRandomness",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleRandomness::enum:OpType",
+      "electron2d": "T:Electron2D.VisualShaderFloatOpType",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleRandomness::enum_value:OpType.OP_TYPE_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderFloatOpType.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleRandomness::enum_value:OpType.OP_TYPE_SCALAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderFloatOpType.Scalar()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleRandomness::enum_value:OpType.OP_TYPE_VECTOR_2D",
+      "electron2d": "enumValue:Electron2D.VisualShaderFloatOpType.Vector2()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleRandomness::enum_value:OpType.OP_TYPE_VECTOR_3D",
+      "electron2d": "enumValue:Electron2D.VisualShaderFloatOpType.Vector3()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleRandomness::enum_value:OpType.OP_TYPE_VECTOR_4D",
+      "electron2d": "enumValue:Electron2D.VisualShaderFloatOpType.Vector4()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShaderNodeParticleRandomness::property:op_type",
+      "electron2d": "property:Electron2D.VisualShaderNodeParticleRandomness.OpType()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "class:VisualShaderNodeParticleRingEmitter",
+      "electron2d": "T:Electron2D.VisualShaderNodeParticleRingEmitter",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "class:VisualShaderNodeParticleSphereEmitter",
+      "electron2d": "T:Electron2D.VisualShaderNodeParticleSphereEmitter",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShader::enum_value:Type.TYPE_START",
+      "electron2d": "enumValue:Electron2D.VisualShader.Type.Start()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShader::enum_value:Type.TYPE_PROCESS",
+      "electron2d": "enumValue:Electron2D.VisualShader.Type.Process()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShader::enum_value:Type.TYPE_COLLIDE",
+      "electron2d": "enumValue:Electron2D.VisualShader.Type.Collide()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShader::enum_value:Type.TYPE_START_CUSTOM",
+      "electron2d": "enumValue:Electron2D.VisualShader.Type.StartCustom()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShader::enum_value:Type.TYPE_PROCESS_CUSTOM",
+      "electron2d": "enumValue:Electron2D.VisualShader.Type.ProcessCustom()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShader::enum_value:Type.TYPE_TEXTURE_BLIT",
+      "electron2d": "enumValue:Electron2D.VisualShader.Type.TextureBlit()",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "godot": "VisualShader::method:set_mode(int:Shader.Mode)",
+      "electron2d": "method:Electron2D.VisualShader.SetMode(Electron2D.Shader.Mode)",
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:VisualShaderNodeParticleAccelerator",
+        "VisualShaderNodeParticleAccelerator::enum:Mode",
+        "VisualShaderNodeParticleAccelerator::enum_value:Mode.MODE_LINEAR",
+        "VisualShaderNodeParticleAccelerator::enum_value:Mode.MODE_MAX",
+        "VisualShaderNodeParticleAccelerator::enum_value:Mode.MODE_RADIAL",
+        "VisualShaderNodeParticleAccelerator::enum_value:Mode.MODE_TANGENTIAL",
+        "VisualShaderNodeParticleAccelerator::property:mode",
+        "class:VisualShaderNodeParticleBoxEmitter",
+        "class:VisualShaderNodeParticleConeVelocity",
+        "class:VisualShaderNodeParticleEmit",
+        "VisualShaderNodeParticleEmit::enum:EmitFlags",
+        "VisualShaderNodeParticleEmit::enum_value:EmitFlags.EMIT_FLAG_COLOR",
+        "VisualShaderNodeParticleEmit::enum_value:EmitFlags.EMIT_FLAG_CUSTOM",
+        "VisualShaderNodeParticleEmit::enum_value:EmitFlags.EMIT_FLAG_POSITION",
+        "VisualShaderNodeParticleEmit::enum_value:EmitFlags.EMIT_FLAG_ROT_SCALE",
+        "VisualShaderNodeParticleEmit::enum_value:EmitFlags.EMIT_FLAG_VELOCITY",
+        "VisualShaderNodeParticleEmit::property:flags",
+        "class:VisualShaderNodeParticleEmitter",
+        "class:VisualShaderNodeParticleMeshEmitter",
+        "VisualShaderNodeParticleMeshEmitter::property:mesh",
+        "VisualShaderNodeParticleMeshEmitter::property:surface_index",
+        "VisualShaderNodeParticleMeshEmitter::property:use_all_surfaces",
+        "class:VisualShaderNodeParticleMultiplyByAxisAngle",
+        "VisualShaderNodeParticleMultiplyByAxisAngle::property:degrees_mode",
+        "class:VisualShaderNodeParticleOutput",
+        "class:VisualShaderNodeParticleRandomness",
+        "VisualShaderNodeParticleRandomness::enum:OpType",
+        "VisualShaderNodeParticleRandomness::enum_value:OpType.OP_TYPE_MAX",
+        "VisualShaderNodeParticleRandomness::enum_value:OpType.OP_TYPE_SCALAR",
+        "VisualShaderNodeParticleRandomness::enum_value:OpType.OP_TYPE_VECTOR_2D",
+        "VisualShaderNodeParticleRandomness::enum_value:OpType.OP_TYPE_VECTOR_3D",
+        "VisualShaderNodeParticleRandomness::enum_value:OpType.OP_TYPE_VECTOR_4D",
+        "VisualShaderNodeParticleRandomness::property:op_type",
+        "class:VisualShaderNodeParticleRingEmitter",
+        "class:VisualShaderNodeParticleSphereEmitter",
+        "VisualShader::enum_value:Type.TYPE_START",
+        "VisualShader::enum_value:Type.TYPE_PROCESS",
+        "VisualShader::enum_value:Type.TYPE_COLLIDE",
+        "VisualShader::enum_value:Type.TYPE_START_CUSTOM",
+        "VisualShader::enum_value:Type.TYPE_PROCESS_CUSTOM",
+        "VisualShader::enum_value:Type.TYPE_TEXTURE_BLIT",
+        "VisualShader::method:set_mode(int:Shader.Mode)"
+      ],
+      "reason": "ADRs 0001/0004/0013/0028/0033/0051/0090: particle lifecycle and writable-texture graphs compile offline into existing compute/blit programs. Preserve canonical stages, authored/compiled mode separation, lifecycle/side-effect ordering, current channels, exact device birth numbers, numeric Vector3/Matrix4x4 arithmetic and planar physical projection. Borrow planar Mesh and bake aligned paged numeric images; preserve defaults, ownership, copies, schema and source failure boundaries. Shared floating layouts and supplied-field masks reuse their semantic enum identities. Physical GPU, native heap, foreign platforms and editor/owner acceptance remain separate gates."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "VisualShaderNodeParticleEmitter::property:mode_2d"
+      ],
+      "reason": "ADR 0004/0028: physical emission is always planar; the spatial dimension selector has no applicable value domain. All planar mesh and shape emitters execute without that switch."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeParticleAccelerator..ctor()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeParticleBoxEmitter..ctor()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeParticleConeVelocity..ctor()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeParticleEmit..ctor()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeParticleEmitter..ctor()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeParticleMeshEmitter..ctor()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeParticleMultiplyByAxisAngle..ctor()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeParticleOutput..ctor()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeParticleRandomness..ctor()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeParticleRingEmitter..ctor()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeParticleSphereEmitter..ctor()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShader.GetMode()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParticleAccelerator.CreateDuplicateInstance()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParticleAccelerator.GetPropertyDescriptors()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParticleBoxEmitter.CreateDuplicateInstance()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParticleConeVelocity.CreateDuplicateInstance()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParticleEmit.CreateDuplicateInstance()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParticleEmit.GetPropertyDescriptors()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParticleMeshEmitter.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParticleMeshEmitter.CreateDuplicateInstance()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParticleMeshEmitter.Dispose(System.Boolean)",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParticleMeshEmitter.GetPropertyDescriptors()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParticleMultiplyByAxisAngle.CreateDuplicateInstance()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParticleMultiplyByAxisAngle.GetPropertyDescriptors()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParticleOutput.CreateDuplicateInstance()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParticleRandomness.CreateDuplicateInstance()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParticleRandomness.GetPropertyDescriptors()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParticleRingEmitter.CreateDuplicateInstance()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParticleSphereEmitter.CreateDuplicateInstance()",
+      "reason": "Typed resource construction, descriptors, copied borrowed Mesh and authored source-mode query under ADRs 0001/0013/0028/0051."
+    }
+  ]
+}

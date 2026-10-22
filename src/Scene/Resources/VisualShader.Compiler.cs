@@ -14,30 +14,18 @@ public sealed partial class VisualShader
         return (GenerateStage(Type.Vertex, parameters, slots, images, blocks, custom), GenerateStage(Type.Fragment, parameters, slots, images, blocks, custom), images, blocks);
     }
 
-    private string GenerateStage(Type stage, Dictionary<string, VisualShaderNodeParameter> parameters, Dictionary<string, int> slots, List<VisualShaderImage> allImages, List<VisualShaderBlockName> allBlocks, CustomPlan? custom)
+    private string GenerateStage(Type stage, Dictionary<string, VisualShaderNodeParameter> parameters, Dictionary<string, int> slots, List<VisualShaderImage> allImages, List<VisualShaderBlockName> allBlocks, CustomPlan? custom, DomainCompilation? domain = null)
     {
         var graph = GetGraph(stage);
-        var incoming = new Dictionary<(int Node, int Port), VisualShaderConnection>();
-        foreach (var edge in graph.Connections)
-        {
-            if (!PortsExist(graph, edge)) throw new InvalidDataException("A graph connection no longer has live matching ports.");
-            if (!PortsCompatible(graph, edge)) throw new InvalidDataException("Graph ports require compatible numeric or sampled-image roles.");
-            incoming[(edge.ToNode, edge.ToPort)] = edge;
-        }
+        var stagePlan = domain?.Plans[stage] ?? PlanStage(stage);
+        var incoming = stagePlan.Incoming;
         var root = GetNode(stage, 0);
-        var lastSupported = stage == Type.Vertex ? 3 : 1;
+        var lastSupported = domain is null ? stage == Type.Vertex ? 3 : 1 : root.Inputs.Length - 1;
         for (var port = lastSupported + 1; port < root.Inputs.Length; port++)
             if (incoming.ContainsKey((0, port)) || root.GetDefaultInputValues().Any(v => v.Port == port))
                 throw new NotSupportedException($"Canvas {stage} output {port} requires its separate graph output integration.");
 
-        var reachable = new HashSet<int>(); var stack = new Stack<int>(); stack.Push(0);
-        while (stack.TryPop(out var id))
-        {
-            if (!reachable.Add(id)) continue;
-            var node = GetNode(stage, id);
-            for (var port = 0; port < node.Inputs.Length; port++)
-                if (incoming.TryGetValue((id, port), out var edge)) stack.Push(edge.FromNode);
-        }
+        var reachable = stagePlan.Order.ToHashSet();
         if (stage != Type.Fragment && reachable.Any(id => IsSDFNode(graph.Nodes[id].Node)))
             throw new NotSupportedException("Canvas SDF nodes require the fragment graph stage.");
         var remaining = reachable.ToDictionary(id => id, _ => 0);
@@ -45,15 +33,17 @@ public sealed partial class VisualShader
         foreach (var id in reachable)
             for (var port = 0; port < graph.Nodes[id].Node.Inputs.Length; port++)
                 if (incoming.TryGetValue((id, port), out var edge)) { remaining[id]++; dependents[edge.FromNode].Add(id); }
+        var ranks = domain is null ? null : stagePlan.Order.Select((id, rank) => (id, rank)).ToDictionary(p => p.id, p => p.rank);
+        int Priority(int id) => ranks?.GetValueOrDefault(id) ?? id;
         var ready = new PriorityQueue<int, int>();
-        foreach (var pair in remaining) if (pair.Value == 0) ready.Enqueue(pair.Key, pair.Key);
-        var plan = ImagePlan(stage, reachable, parameters, custom); allImages.AddRange(plan.Images);
+        foreach (var pair in remaining) if (pair.Value == 0) ready.Enqueue(pair.Key, Priority(pair.Key));
+        var plan = domain?.ImagePlans[stage] ?? ImagePlan(stage, reachable, parameters, custom); if (domain is null) allImages.AddRange(plan.Images);
         var expressionSources = ExpressionSources(stage, reachable, custom).ToArray();
         var expressionNames = expressionSources.SelectMany(s => SourceIdentifiers(s).Select(t => s.Substring(t.Start, t.Length))).ToHashSet(StringComparer.Ordinal);
-        var aliases = StageSymbols(plan.Images, expressionNames);
-        foreach (var role in new[] { "Frame", "RendererValues", "Globals", "Instance" })
+        var aliases = domain?.Symbols ?? StageSymbols(plan.Images, expressionNames);
+        foreach (var role in domain is null ? new[] { "Frame", "RendererValues", "Globals", "Instance" } : Array.Empty<string>())
             if (aliases[role] != role) allBlocks.Add(new(stage, aliases[role], role));
-        var header = ParameterHeader(stage, reachable, parameters, slots, plan.Images, aliases, custom);
+        var header = domain is null ? ParameterHeader(stage, reachable, parameters, slots, plan.Images, aliases, custom) : domain.StageHeader(stage);
         var source = new StringBuilder(header);
         EmitCustomFunctions(custom, stage, aliases, source);
         var names = parameters.Keys.Concat(plan.Images.Select(i => i.Name)).Concat(expressionNames).ToHashSet(StringComparer.Ordinal);
@@ -64,7 +54,11 @@ public sealed partial class VisualShader
             if (!incoming.TryGetValue((id, port), out var edge))
             {
                 if (node.Inputs[port] == VisualShaderNode.PortType.Sampler) return "";
+                if (domain is not null && DomainInputDefault(node, port) is { } implicitValue && !node.GetDefaultInputValues().Any(v => v.Port == port))
+                    return RewriteExpression(implicitValue, aliases);
                 if (node is VisualShaderNodeScreenUVToSDF) return StageExpression("(gl_FragCoord.xy * e2d_values.SCREEN_PIXEL_SIZE)", aliases);
+                if (domain is not null && IsParticleStage(stage) && port == 0 && node is VisualShaderNodeUVFunc or VisualShaderNodeUVPolarCoord or VisualShaderNodeTexture or VisualShaderNodeLayeredSample)
+                    throw new NotSupportedException("Particle image and UV operations require an explicit coordinate connection.");
                 if (port == 0 && node is VisualShaderNodeUVFunc or VisualShaderNodeUVPolarCoord) return StageExpression("UV", aliases);
                 if (node is VisualShaderNodeTexture or VisualShaderNodeLayeredSample)
                 {
@@ -75,13 +69,19 @@ public sealed partial class VisualShader
                 return node.InputDefaultExpression(port);
             }
             var from = graph.Nodes[edge.FromNode].Node;
-            return VisualShaderValues.ConvertExpression(values[(edge.FromNode, edge.FromPort)], OutputTypes(from)[edge.FromPort], node.Inputs[port]);
+            return VisualShaderValues.ConvertExpression(values[(edge.FromNode, edge.FromPort)], OutputTypes(from, stage)[edge.FromPort], node.Inputs[port]);
         }
         while (ready.TryDequeue(out var id, out _))
         {
             completed++; var node = graph.Nodes[id].Node;
             if (id == 0)
             {
+                if (domain is not null)
+                {
+                    EmitDomainOutput(stage, root, incoming, Input, source, aliases, domain);
+                    foreach (var next in dependents[id]) if (--remaining[next] == 0) ready.Enqueue(next, Priority(next));
+                    continue;
+                }
                 var defaults = node.GetDefaultInputValues();
                 for (var port = 0; port <= lastSupported; port++)
                 {
@@ -94,17 +94,22 @@ public sealed partial class VisualShader
             else
             {
                 var inputs = Enumerable.Range(0, node.Inputs.Length).Select(port => Input(id, port)).ToArray();
+                if (domain is not null && EmitDomainNode(domain, stage, node, id, inputs, incoming, names, values, source))
+                {
+                    foreach (var next in dependents[id]) if (--remaining[next] == 0) ready.Enqueue(next, Priority(next));
+                    continue;
+                }
                 if (node is VisualShaderNodeCustom provider)
                 {
                     var connected = Enumerable.Range(0, node.Inputs.Length).Where(p => incoming.ContainsKey((id, p))).ToHashSet();
                     EmitCustom(provider, custom!.Blocks[(stage, id)], id, inputs, connected, stage, aliases, names, values, source);
-                    foreach (var next in dependents[id]) if (--remaining[next] == 0) ready.Enqueue(next, next);
+                    foreach (var next in dependents[id]) if (--remaining[next] == 0) ready.Enqueue(next, Priority(next));
                     continue;
                 }
                 if (node is VisualShaderNodeExpression block)
                 {
                     EmitExpression(block, id, inputs, stage, aliases, names, values, source);
-                    foreach (var next in dependents[id]) if (--remaining[next] == 0) ready.Enqueue(next, next);
+                    foreach (var next in dependents[id]) if (--remaining[next] == 0) ready.Enqueue(next, Priority(next));
                     continue;
                 }
                 string? raymarch = null;
@@ -114,7 +119,7 @@ public sealed partial class VisualShader
                     for (var suffix = 2; !names.Add(raymarch); suffix++) raymarch = stem + "_" + suffix.ToString(CultureInfo.InvariantCulture);
                     source.Append("    vec4 ").Append(raymarch).Append(" = ").Append(aliases["e2d_sdf_raymarch"]).Append('(').Append(inputs[0]).Append(", ").Append(inputs[1]).AppendLine(");");
                 }
-                for (var output = 0; output < OutputTypes(node).Length; output++)
+                for (var output = 0; output < OutputTypes(node, stage).Length; output++)
                 {
                     var stem = "n" + id.ToString(CultureInfo.InvariantCulture) + "p" + output.ToString(CultureInfo.InvariantCulture); var name = stem;
                     for (var suffix = 2; !names.Add(name); suffix++) name = stem + "_" + suffix.ToString(CultureInfo.InvariantCulture);
@@ -127,29 +132,32 @@ public sealed partial class VisualShader
                     }
                     var expression = node switch
                     {
+                        VisualShaderNodeInput input when domain is not null => RewriteExpression(input.GenerateExpression(stage), ExpressionBuiltins(stage, aliases)),
                         VisualShaderNodeInput input => StageExpression(input.GenerateExpression(stage), aliases).Replace("TIME", aliases["e2d_values"] + ".TIME", StringComparison.Ordinal).Replace("SCREEN_PIXEL_SIZE", aliases["e2d_values"] + ".SCREEN_PIXEL_SIZE", StringComparison.Ordinal),
-                        VisualShaderNodeDerivativeFunc when stage != Type.Fragment => throw new NotSupportedException("Screen-space derivative nodes require the fragment graph stage."),
+                        VisualShaderNodeDerivativeFunc when stage is not (Type.Fragment or Type.TextureBlit) => throw new NotSupportedException("Screen-space derivative nodes require the fragment graph stage."),
                         VisualShaderNodeSDFRaymarch => raymarch + (output == 0 ? ".x" : output == 1 ? ".y != 0.0" : ".zw"),
                         VisualShaderNodeTextureSDF or VisualShaderNodeTextureSDFNormal or VisualShaderNodeSDFToScreenUV or VisualShaderNodeScreenUVToSDF => SDFExpression(node.GenerateExpression(output, inputs), aliases),
                         VisualShaderNodeTexture or VisualShaderNodeLayeredSample => SampleImage(sampler, inputs),
                         VisualShaderNodeColorFunc color => color.GenerateExpression(output, inputs).Replace("e2d_rgb_to_hsv(", aliases["e2d_rgb_to_hsv"] + "(", StringComparison.Ordinal),
                         VisualShaderNodeTextureParameter => plan.Nodes[id],
-                        VisualShaderNodeParameterRef when OutputTypes(node)[output] == VisualShaderNode.PortType.Sampler => plan.Nodes[id],
+                        VisualShaderNodeParameterRef when OutputTypes(node, stage)[output] == VisualShaderNode.PortType.Sampler => plan.Nodes[id],
                         VisualShaderNodeParameter parameter => ParameterVariable(parameter, aliases),
                         VisualShaderNodeParameterRef reference => ParameterExpression(reference, output, parameters, aliases),
                         _ => node.GenerateExpression(output, inputs)
                     };
-                    if (OutputTypes(node)[output] == VisualShaderNode.PortType.Sampler)
+                    if (domain is not null) expression = RewriteExpression(expression, aliases);
+                    if (OutputTypes(node, stage)[output] == VisualShaderNode.PortType.Sampler)
                     { values.Add((id, output), expression); continue; }
-                    source.Append("    ").Append(VisualShaderValues.Name(OutputTypes(node)[output])).Append(' ').Append(name).Append(" = ").Append(expression).AppendLine(";");
+                    source.Append("    ").Append(VisualShaderValues.Name(OutputTypes(node, stage)[output])).Append(' ').Append(name).Append(" = ").Append(expression).AppendLine(";");
                     values.Add((id, output), name);
                 }
             }
-            foreach (var next in dependents[id]) if (--remaining[next] == 0) ready.Enqueue(next, next);
+            foreach (var next in dependents[id]) if (--remaining[next] == 0) ready.Enqueue(next, Priority(next));
         }
         if (completed != reachable.Count) throw new InvalidDataException("The reachable visual shader graph contains a cycle.");
-        if (custom is not null || reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeExpression)) WrapExpressionStage(source, header, stage, aliases);
-        source.Append(StageExpression(stage == Type.Vertex ? VertexFooter : FragmentFooter, aliases));
+        if (domain is null && (custom is not null || reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeExpression))) WrapExpressionStage(source, header, stage, aliases);
+        if (domain is null) source.Append(StageExpression(stage == Type.Vertex ? VertexFooter : FragmentFooter, aliases));
+        else source.AppendLine("}");
         var result = source.ToString();
         if (Encoding.UTF8.GetByteCount(result) > ShaderInclude.MaximumSourceBytes) throw new InvalidDataException("Generated shader source exceeds the import budget.");
         return result;

@@ -10,10 +10,11 @@ public sealed partial class VisualShader
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
     {
         foreach (var descriptor in base.GetPropertyDescriptors()) yield return descriptor;
+        yield return new PropertyDescriptor<VisualShader, Mode>("SourceMode", n => n.GetMode(), (n, v) => n.SetMode(v), stored: true);
         yield return new PropertyDescriptor<VisualShader, string[]>("GraphNodes", n => n.FileKeys(), (n, v) => n.RestoreKeys(v), stored: true);
-        for (var stageIndex = 0; stageIndex < _graphs.Length; stageIndex++)
+        foreach (var stage in GraphStages)
         {
-            var stage = (Type)stageIndex;
+            var stageIndex = (int)stage;
             yield return new PropertyDescriptor<VisualShader, VisualShaderNodeOutput>($"Output[{stageIndex}]", n => (VisualShaderNodeOutput)n.GetNode(stage, 0),
                 (n, v) => n.RestoreOutput(stage, v), stored: true);
             yield return new PropertyDescriptor<VisualShader, Vector2>($"OutputPosition[{stageIndex}]", n => n.GetNodePosition(stage, 0),
@@ -29,12 +30,12 @@ public sealed partial class VisualShader
         }
         yield return new PropertyDescriptor<VisualShader, int[]>("GraphConnections", n => n.FileConnections(), (n, v) => n.RestoreConnections(v), stored: true);
     }
-    private string[] FileKeys() => _graphs.SelectMany((g, stage) => g.Nodes.Keys.Where(id => id != 0)
-        .Select(id => stage.ToString(CultureInfo.InvariantCulture) + "/" + id.ToString(CultureInfo.InvariantCulture))).ToArray();
+    private string[] FileKeys() => GraphStages.SelectMany(stage => _graphs[(int)stage].Nodes.Keys.Where(id => id != 0)
+        .Select(id => ((int)stage).ToString(CultureInfo.InvariantCulture) + "/" + id.ToString(CultureInfo.InvariantCulture))).ToArray();
     private static (Type Stage, int ID) ParseKey(string key)
     {
         var parts = key.Split('/');
-        if (parts.Length != 2 || !int.TryParse(parts[0], NumberStyles.None, CultureInfo.InvariantCulture, out var stage) || stage is < 0 or > 1 ||
+        if (parts.Length != 2 || !int.TryParse(parts[0], NumberStyles.None, CultureInfo.InvariantCulture, out var stage) || !IsGraphStage((Type)stage) ||
             !int.TryParse(parts[1], NumberStyles.None, CultureInfo.InvariantCulture, out var id) || id < 2 || key != stage.ToString(CultureInfo.InvariantCulture) + "/" + id.ToString(CultureInfo.InvariantCulture))
             throw new InvalidDataException("Invalid visual shader node key.");
         return ((Type)stage, id);
@@ -42,11 +43,11 @@ public sealed partial class VisualShader
     private void RestoreKeys(string[] keys)
     {
         ArgumentNullException.ThrowIfNull(keys);
-        if (keys.Length > (MaximumNodes - 1) * 2 || keys.Any(k => k is null) || keys.Distinct(StringComparer.Ordinal).Count() != keys.Length)
+        if (keys.Length > (MaximumNodes - 1) * GraphStages.Length || keys.Any(k => k is null) || keys.Distinct(StringComparer.Ordinal).Count() != keys.Length)
             throw new InvalidDataException("Invalid visual shader node table.");
         foreach (var key in keys) _ = ParseKey(key);
         if (keys.GroupBy(k => ParseKey(k).Stage).Any(g => g.Count() >= MaximumNodes)) throw new InvalidDataException("Visual shader node capacity exceeded.");
-        for (var stage = 0; stage < _graphs.Length; stage++)
+        foreach (var stage in GraphStages.Select(s => (int)s))
         {
             foreach (var id in _graphs[stage].Nodes.Keys.Where(id => id != 0).ToArray()) RemoveNode((Type)stage, id);
             _graphs[stage].Connections.Clear();
@@ -57,20 +58,21 @@ public sealed partial class VisualShader
     private void RestoreOutput(Type stage, VisualShaderNodeOutput output)
     {
         ArgumentNullException.ThrowIfNull(output); ObjectDisposedException.ThrowIf(output.IsDisposed, output);
+        if (IsParticleStage(stage) != (output is VisualShaderNodeParticleOutput)) throw new InvalidDataException("Visual shader output role differs from its stage.");
         var entry = GetEntry(stage, 0); if (ReferenceEquals(entry.Node, output)) return;
         if (_graphs.Any(g => g.Nodes.Values.Any(e => ReferenceEquals(e.Node, output)))) throw new InvalidDataException("Visual shader outputs must be independent.");
         var previous = entry.Node; Unwatch(previous); output.Stage = stage; entry.Node = output; Watch(output); _ownedDefinitions.Add(output);
         if (TakeRetired(previous) is { } retired) retired.Dispose();
     }
-    private int[] FileConnections() => _graphs.SelectMany((g, stage) => g.Connections.SelectMany(c => new[] { stage, c.FromNode, c.FromPort, c.ToNode, c.ToPort })).ToArray();
+    private int[] FileConnections() => GraphStages.SelectMany(stage => _graphs[(int)stage].Connections.SelectMany(c => new[] { (int)stage, c.FromNode, c.FromPort, c.ToNode, c.ToPort })).ToArray();
     private void RestoreConnections(int[] values)
     {
         ArgumentNullException.ThrowIfNull(values);
-        if (values.Length % 5 != 0 || values.Length > MaximumNodes * 8 * 2 * 5) throw new InvalidDataException("Invalid visual shader connections.");
+        if (values.Length % 5 != 0 || values.Length > MaximumNodes * 8 * GraphStages.Length * 5) throw new InvalidDataException("Invalid visual shader connections.");
         for (var i = 0; i < values.Length; i += 5)
-            if (values[i] is < 0 or > 1 || values[i + 1] < 0 || values[i + 2] < 0 || values[i + 3] < 0 || values[i + 4] < 0)
+            if (!IsGraphStage((Type)values[i]) || values[i + 1] < 0 || values[i + 2] < 0 || values[i + 3] < 0 || values[i + 4] < 0)
                 throw new InvalidDataException("Invalid visual shader connection index.");
-        for (var stage = 0; stage < _graphs.Length; stage++)
+        foreach (var stage in GraphStages.Select(s => (int)s))
             if (Enumerable.Range(0, values.Length / 5).Count(i => values[i * 5] == stage) > MaximumNodes * 8)
                 throw new InvalidDataException("Visual shader connection capacity exceeded.");
         _fileConnections = (int[])values.Clone();
@@ -78,8 +80,8 @@ public sealed partial class VisualShader
     internal override void ValidateFileState()
     {
         base.ValidateFileState();
-        for (var stage = 0; stage < _graphs.Length; stage++)
-            if (!_graphs[stage].Nodes.TryGetValue(0, out var entry) || entry.Node is not VisualShaderNodeOutput output || output.Stage != (Type)stage)
+        foreach (var stage in GraphStages.Select(s => (int)s))
+            if (!_graphs[stage].Nodes.TryGetValue(0, out var entry) || entry.Node is not VisualShaderNodeOutput output || output.Stage != (Type)stage || IsParticleStage((Type)stage) != (output is VisualShaderNodeParticleOutput))
                 throw new InvalidDataException("Visual shader output stage mismatch.");
         if (_fileKeys is not null)
         {
@@ -104,9 +106,9 @@ public sealed partial class VisualShader
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
         base.CopyCustomStateTo(target, deep, subresourceMode, duplicateSubresource, forceDuplicateSubresource);
-        var copy = (VisualShader)target;
+        var copy = (VisualShader)target; copy._mode = _mode;
         var ownedCopies = new Dictionary<VisualShaderNode, VisualShaderNode>(ReferenceEqualityComparer.Instance);
-        for (var stage = 0; stage < _graphs.Length; stage++)
+        foreach (var stage in GraphStages.Select(s => (int)s))
         {
             var to = copy._graphs[stage];
             foreach (var id in to.Nodes.Keys.Where(id => id != 0).ToArray())
@@ -142,10 +144,10 @@ public sealed partial class VisualShader
     protected override void RemapResourceReferences(Func<Resource, Resource> remap)
     {
         base.RemapResourceReferences(remap);
-        var replacements = _graphs.SelectMany((g, stage) => g.Nodes.Select(e => (Stage: stage, ID: e.Key, Entry: e.Value,
+        var replacements = GraphStages.SelectMany(stage => _graphs[(int)stage].Nodes.Select(e => (Stage: (int)stage, ID: e.Key, Entry: e.Value,
             Node: remap(e.Value.Node) as VisualShaderNode ?? throw new InvalidDataException("A graph node must remain a visual shader operation.")))).ToArray();
         foreach (var replacement in replacements)
-            if (replacement.ID == 0 && replacement.Node is not VisualShaderNodeOutput || replacement.ID != 0 && replacement.Node is VisualShaderNodeOutput)
+            if (replacement.ID == 0 && replacement.Node is not VisualShaderNodeOutput || replacement.ID != 0 && replacement.Node is VisualShaderNodeOutput || replacement.ID == 0 && IsParticleStage((Type)replacement.Stage) != (replacement.Node is VisualShaderNodeParticleOutput))
                 throw new InvalidDataException("Invalid visual shader output replacement.");
         var owned = new HashSet<VisualShaderNode>(ReferenceEqualityComparer.Instance);
         foreach (var replacement in replacements)

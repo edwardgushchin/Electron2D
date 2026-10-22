@@ -32,6 +32,16 @@ public static partial class ResourceFileTypes
         RegisterResource("VisualShaderNodeMatrixParameter", CreateVisualShaderNodeMatrixParameterFileResource);
         RegisterResource("VisualShaderNodeParameterRef", CreateVisualShaderNodeParameterRefFileResource);
         RegisterResource("VisualShaderNodeOutput", CreateVisualShaderNodeOutputFileResource);
+        RegisterResource("VisualShaderNodeParticleMeshEmitter", CreateVisualShaderNodeParticleMeshEmitterFileResource);
+        RegisterResource("VisualShaderNodeParticleOutput", CreateVisualShaderNodeParticleOutputFileResource);
+        RegisterResource("VisualShaderNodeParticleSphereEmitter", CreateVisualShaderNodeParticleSphereEmitterFileResource);
+        RegisterResource("VisualShaderNodeParticleBoxEmitter", CreateVisualShaderNodeParticleBoxEmitterFileResource);
+        RegisterResource("VisualShaderNodeParticleRingEmitter", CreateVisualShaderNodeParticleRingEmitterFileResource);
+        RegisterResource("VisualShaderNodeParticleRandomness", CreateVisualShaderNodeParticleRandomnessFileResource);
+        RegisterResource("VisualShaderNodeParticleMultiplyByAxisAngle", CreateVisualShaderNodeParticleMultiplyByAxisAngleFileResource);
+        RegisterResource("VisualShaderNodeParticleConeVelocity", CreateVisualShaderNodeParticleConeVelocityFileResource);
+        RegisterResource("VisualShaderNodeParticleAccelerator", CreateVisualShaderNodeParticleAcceleratorFileResource);
+        RegisterResource("VisualShaderNodeParticleEmit", CreateVisualShaderNodeParticleEmitFileResource);
         RegisterResource("VisualShaderNodeInput", CreateVisualShaderNodeInputFileResource);
         RegisterResource("VisualShaderNodeFloatOp", CreateVisualShaderNodeFloatOpFileResource);
         RegisterResource("VisualShaderNodeVectorOp", CreateVisualShaderNodeVectorOpFileResource);
@@ -144,4 +154,15 @@ public static partial class ResourceFileTypes
     private static VisualShaderNodeUVPolarCoord CreateVisualShaderNodeUVPolarCoordFileResource() => new();
     private static VisualShaderNodeColorFunc CreateVisualShaderNodeColorFuncFileResource() => new();
     private static VisualShaderNodeColorOp CreateVisualShaderNodeColorOpFileResource() => new();
+
+    private static VisualShaderNodeParticleOutput CreateVisualShaderNodeParticleOutputFileResource() => new();
+    private static VisualShaderNodeParticleSphereEmitter CreateVisualShaderNodeParticleSphereEmitterFileResource() => new();
+    private static VisualShaderNodeParticleBoxEmitter CreateVisualShaderNodeParticleBoxEmitterFileResource() => new();
+    private static VisualShaderNodeParticleRingEmitter CreateVisualShaderNodeParticleRingEmitterFileResource() => new();
+    private static VisualShaderNodeParticleRandomness CreateVisualShaderNodeParticleRandomnessFileResource() => new();
+    private static VisualShaderNodeParticleMultiplyByAxisAngle CreateVisualShaderNodeParticleMultiplyByAxisAngleFileResource() => new();
+    private static VisualShaderNodeParticleConeVelocity CreateVisualShaderNodeParticleConeVelocityFileResource() => new();
+    private static VisualShaderNodeParticleAccelerator CreateVisualShaderNodeParticleAcceleratorFileResource() => new();
+    private static VisualShaderNodeParticleEmit CreateVisualShaderNodeParticleEmitFileResource() => new();
+    private static VisualShaderNodeParticleMeshEmitter CreateVisualShaderNodeParticleMeshEmitterFileResource() => new();
 }

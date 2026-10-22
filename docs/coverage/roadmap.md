@@ -87,7 +87,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Exact trigger | Classes |
 | --- | ---: |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
-| Trigger: particle graph stage/output translation into the executing compute ABI under ADR 0028; the numeric canvas graph importer does not provide particle lifecycle stages. | 10 |
 | Trigger: an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001). | 7 |
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
 | ADR 0046/0107: built-in buffers and service-owned fonts/caches now execute. Requires constructible external TextServerExtension virtual/callback dispatch for the complete family, provider-owned source/cache lifetimes, callback errors/reentry, retirement and public provider registration/replacement integration. This member enters that external implementation/dispatch slice. | 4 |

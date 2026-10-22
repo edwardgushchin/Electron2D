@@ -17,7 +17,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "file_save_swap", "host_delta", "movie_writing", "video_playback", "diagnostics", "zip", "resource_packs", "jobs", "display", "key_names", "joy_motion", "rendering", "visual_shaders", "visual_shader_parameters", "visual_shader_derivatives", "visual_shader_images", "visual_shader_effects", "visual_shader_sdf", "visual_shader_expressions", "visual_shader_custom", "canvas_counters", "project_shader_globals", "texture_arrays", "compressed_arrays", "compressed_textures", "device", "navigation", "navigation_baking", "polygon_path", "resources", "dpi_textures", "preloader", "threaded_resources", "physics", "text", "line_breaking", "text_objects", "text_server", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "link_button", "gui_primitives", "undo", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "mesh_texture", "drawable_textures", "portable_textures", "particles", "skeleton", "networking", "ip", "jsonrpc", "tiles")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "file_save_swap", "host_delta", "movie_writing", "video_playback", "diagnostics", "zip", "resource_packs", "jobs", "display", "key_names", "joy_motion", "rendering", "visual_shaders", "visual_shader_parameters", "visual_shader_derivatives", "visual_shader_images", "visual_shader_effects", "visual_shader_sdf", "visual_shader_expressions", "visual_shader_custom", "visual_shader_domains", "canvas_counters", "project_shader_globals", "texture_arrays", "compressed_arrays", "compressed_textures", "device", "navigation", "navigation_baking", "polygon_path", "resources", "dpi_textures", "preloader", "threaded_resources", "physics", "text", "line_breaking", "text_objects", "text_server", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "link_button", "gui_primitives", "undo", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "mesh_texture", "drawable_textures", "portable_textures", "particles", "skeleton", "networking", "ip", "jsonrpc", "tiles")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
@@ -229,7 +229,7 @@ def reason_for_type(item, lookup):
         "RenderSceneDataExtension", "ResourceImporterOBJ", "ResourceImporterScene",
         "RibbonTrailMesh", "SphereMesh", "TextMesh", "TorusMesh", "TubeTrailMesh",
         "VisualShaderNodeBillboard", "VisualShaderNodeCubemap", "VisualShaderNodeCubemapParameter",
-        "VisualShaderNodeLinearSceneDepth", "VisualShaderNodeParticleMeshEmitter",
+        "VisualShaderNodeLinearSceneDepth",
         "VisualShaderNodeScreenNormalWorldSpace", "VisualShaderNodeTexture3DParameter",
         "VisualShaderNodeTextureParameterTriplanar", "VisualShaderNodeWorldPositionFromDepth",
         "VisualShaderNodeDeterminant", "VisualShaderNodeTransformCompose",
@@ -319,8 +319,6 @@ def reason_for_type(item, lookup):
             return "Blocked", "Trigger: graph-frame/comment authoring with a real editor graph layout/preview consumer under ADRs 0027/0028; numeric canvas graph import already executes."
         if "Varying" in name:
             return "Blocked", "Trigger: typed custom graph varying declaration and native vertex/fragment/light transport beyond the fixed canvas/mesh ABI under ADR 0028; this family enters that first transport slice."
-        if "Particle" in name:
-            return "Blocked", "Trigger: particle graph stage/output translation into the executing compute ABI under ADR 0028; the numeric canvas graph importer does not provide particle lifecycle stages."
         if "Parameter" in name or "UniformRef" in name:
             return "Blocked", "Trigger: typed graph parameter declarations, qualifier/hint/default metadata and imported material/image ownership over the existing shader reflection under ADR 0028."
         if any(token in name for token in ("Texture", "Derivative", "SDF")):

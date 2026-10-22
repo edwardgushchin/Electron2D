@@ -12,21 +12,37 @@ Inherits: [VisualShaderNode](VisualShaderNode.md).
 
 ## Description
 
-Reads a named typed canvas input in an imported visual shader stage.
+Reads a named typed input in an imported visual shader stage.
 
-Unknown input names retain the scalar-zero source role. Known inputs without a current canvas ABI producer reject import rather than silently producing a replacement value.
+Unknown or out-of-context names retain the scalar-zero role. A borrowing graph resolves the port type independently for its stage; changing one borrower does not bind this definition to it. InputTypeChanged reports the named semantic role. Known inputs in their applicable context require a real renderer producer.
+
+## Example
+
+See the executable authoring and runtime workflow in [particle and writable-texture graphs](../components/visual-shaders.md#particle-and-writable-texture-graph-domains). It includes canonical stages, port order, units, defaults, mode transitions and ownership.
 
 ## Member summary
 
 | Member | Contract |
 | --- | --- |
+| [`public sealed class Electron2D.VisualShaderNodeInput`](#member-f87639042e23) | Reads a named typed input in an imported visual shader stage. |
 | [`public VisualShaderNodeInput()`](#member-df6a594a559d) | Creates a scalar-zero input operation. |
 | [`public event System.Action InputTypeChanged`](#member-b7f7fe261ce3) | Occurs after a name edit changes the output's value role. |
 | [`protected override Electron2D.Resource CreateDuplicateInstance()`](#member-94ac2e8f5771) | Uses the inherited Resource construction or stored-property contract. |
 | [`protected override System.Void Dispose(System.Boolean disposing)`](#member-b5818444deae) | Uses the inherited Resource construction or stored-property contract. |
 | [`public System.String GetInputRealName()`](#member-58f82dfcb768) | Returns the source symbol corresponding to the selected input. |
 | [`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`](#member-30ef36d55514) | Uses the inherited Resource construction or stored-property contract. |
-| [`public System.String InputName { get; set; }`](#member-2ae4f40562df) | Gets or replaces the case-sensitive canvas input name. |
+| [`public System.String InputName { get; set; }`](#member-2ae4f40562df) | Gets or replaces the case-sensitive input name. |
+
+<a id="member-f87639042e23"></a>
+### `VisualShaderNodeInput`
+
+```csharp
+public sealed class Electron2D.VisualShaderNodeInput
+```
+
+Reads a named typed input in an imported visual shader stage.
+
+Unknown or out-of-context names retain the scalar-zero role. A borrowing graph resolves the port type independently for its stage; changing one borrower does not bind this definition to it. InputTypeChanged reports the named semantic role. Known inputs in their applicable context require a real renderer producer.
 
 <a id="member-df6a594a559d"></a>
 ### `.ctor`
@@ -69,7 +85,7 @@ public System.String GetInputRealName()
 
 Returns the source symbol corresponding to the selected input.
 
-The uppercase canvas symbol, or an empty string for an unknown input.
+The uppercase named symbol, or an empty string for an unknown input; this query has no borrowing-stage context.
 
 Exceptions:
 
@@ -89,11 +105,11 @@ protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDes
 public System.String InputName { get; set; }
 ```
 
-Gets or replaces the case-sensitive canvas input name.
+Gets or replaces the case-sensitive input name.
 
 Changed is emitted after commitment. InputTypeChanged then reports a changed value role.
 
-Initially [None]; examples are uv, color, vertex and time.
+Initially [None]; examples are uv, color, velocity, number and time.
 
 Exceptions:
 
@@ -103,12 +119,11 @@ Exceptions:
 
 ## Lifecycle and verification
 
-Definitions are cold, single-threaded Resource authoring objects. Graphs borrow them. Selectors, typed defaults and default absence survive copies and archives. Changes require reimport before rendering.
+Definitions are cold, single-threaded Resource authoring objects. Graphs borrow them. Typed values, explicit default absence and shared definition aliases survive copies and portable archives. Changes require reimport before execution.
 
-The public VisualShader.Consumer covers typed numeric and opaque ports, sampler policies, resource aliases and portable archives. Its image fixtures check real software-rendered pixels, color transfer, independent layers/mips and refreshed native storage. See [the component contract](../components/visual-shaders.md#sampled-images-and-canvas-channels) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
+The public VisualShader.Consumer and native particle integration corpus exercise typed defaults, copies, factories, source/compiled archives and executable compute/blit graphs. See [the domain contract](../components/visual-shaders.md#particle-and-writable-texture-graph-domains) for ports, units, scope, control flow, source validation and current verification limits.
 
 ## Decisions
 
 - [Typed graph import](../decisions/rendering.md#adr-0028)
-- [Enum identities](../decisions/enum-identities.md#adr-0051)
 - [Typed resources](../decisions/resources.md#adr-0013)

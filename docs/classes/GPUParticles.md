@@ -79,7 +79,7 @@ All settings are stored through typed descriptors. Finite values are required fo
 
 `Rect2 CaptureRect()` synchronously reads current native geometry bounds. It returns default before initialization; this is a cold query, not an automatic frame readback.
 
-`void EmitParticle(Transform transform, Vector2 velocity, Color color, Color custom, GPUParticles.EmitFlags flags)` queues one particle. [EmitFlags](GPUParticles.EmitFlags.md) selects supplied fields; remaining fields use the process material. Inputs follow retained server validation. Rendering requires an active GPU session.
+`void EmitParticle(Transform transform, Vector2 velocity, Color color, Color custom, ParticlesEmitFlags flags)` queues one particle. [EmitFlags](ParticlesEmitFlags.md) selects supplied fields; remaining fields use the process material. Inputs follow retained server validation. Rendering requires an active GPU session.
 
 `void RequestParticlesProcess(float processTime, float processTimeResidual = 0)` requests nonnegative explicit simulation time independently of visibility, pause and SpeedScale. The residual is a final variable step.
 
@@ -96,3 +96,5 @@ Inherited protected overrides integrate drawing, notifications, typed property d
 ## Verification limits
 
 GPUParticlesNodeTests covers managed authoring/ranges/one-shot behavior, conversions, actual software-Vulkan pixels/bounds, atlas updates, relative subemitters, world/pause behavior, fresh-process files, private conversion curve execution, callback retry, session reuse and prepared allocation. Physical GPU, native allocator accounting, other platforms, independent publish/AOT and owner acceptance require separate evidence.
+
+The manual emission mask is shared [ParticlesEmitFlags](ParticlesEmitFlags.md), also used by compiled graph subemission. The former nested enum is removed under ADR 0051.

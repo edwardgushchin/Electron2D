@@ -5,21 +5,6 @@ namespace Electron2D;
 /// Textures and materials remain borrowed. The renderer owns transient particle storage for its current session.</remarks>
 public partial class GPUParticles : Entity
 {
-    /// <summary>Selects the supplied fields of a manually emitted particle.</summary>
-    [Flags]
-    public enum EmitFlags
-    {
-        /// <summary>Copies the supplied position.</summary>
-        Position = 1,
-        /// <summary>Copies the supplied rotation and scale.</summary>
-        RotationScale = 2,
-        /// <summary>Copies the supplied velocity.</summary>
-        Velocity = 4,
-        /// <summary>Copies the supplied color.</summary>
-        Color = 8,
-        /// <summary>Copies the supplied four numeric custom channels.</summary>
-        Custom = 16,
-    }
     private readonly ArrayMesh _mesh = new();
     private readonly RandomNumberGenerator _random = new();
     private RenderingServer? _server;

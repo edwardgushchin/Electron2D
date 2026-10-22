@@ -1872,16 +1872,9 @@
     {
       "state": "Blocked",
       "godot": [
-        "VisualShader::enum_value:Type.TYPE_COLLIDE",
-        "VisualShader::enum_value:Type.TYPE_LIGHT",
-        "VisualShader::enum_value:Type.TYPE_PROCESS",
-        "VisualShader::enum_value:Type.TYPE_PROCESS_CUSTOM",
-        "VisualShader::enum_value:Type.TYPE_START",
-        "VisualShader::enum_value:Type.TYPE_START_CUSTOM",
-        "VisualShader::enum_value:Type.TYPE_TEXTURE_BLIT",
-        "VisualShader::method:set_mode(int:Shader.Mode)"
+        "VisualShader::enum_value:Type.TYPE_LIGHT"
       ],
-      "reason": "Trigger: executing particle/light/blit graph domains and mode transition/output schemas in the shared offline graph importer under ADR 0028."
+      "reason": "Trigger: translate authored light graphs into native canvas-light custom shader transport in the first light-graph slice under ADR 0028; particle and writable-texture graphs already execute."
     },
     {
       "state": "Excluded",

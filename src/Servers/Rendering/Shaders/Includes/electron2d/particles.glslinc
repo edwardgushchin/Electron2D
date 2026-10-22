@@ -15,6 +15,9 @@ struct Electron2D_Particle
 };
 
 layout(std430, set = 1, binding = 0) buffer ParticleState { Electron2D_Particle PARTICLES[]; };
+#ifndef ELECTRON2D_PARTICLE_FRAME_INSTANCE
+#define ELECTRON2D_PARTICLE_FRAME_INSTANCE
+#endif
 layout(std140, set = 2, binding = 0) uniform ParticleFrame
 {
     uvec4 Counts;
@@ -29,7 +32,7 @@ layout(std140, set = 2, binding = 0) uniform ParticleFrame
     vec4 SDFTransformX;
     vec4 SDFTransformY;
     uvec4 Options;
-};
+} ELECTRON2D_PARTICLE_FRAME_INSTANCE;
 
 #ifdef ELECTRON2D_PARTICLE_SUBEMISSION
 layout(std430, set = 1, binding = 1) buffer ParticleSubemission { Electron2D_Particle SUBPARTICLES[]; };
@@ -56,5 +59,8 @@ bool Electron2D_EmitSubparticle(Electron2D_Particle particle)
         expected = observed;
     }
 }
+#endif
+#ifdef ELECTRON2D_PARTICLE_BIRTH_NUMBERS
+layout(std430, set = 1, binding = 2) buffer ParticleBirthNumbers { uint BIRTH_NUMBERS[]; };
 #endif
 #endif

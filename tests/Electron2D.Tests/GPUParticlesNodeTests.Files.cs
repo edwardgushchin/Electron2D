@@ -11,7 +11,7 @@ internal static partial class GPUParticlesNodeTests
         node.TrailEnabled = false; node.Interpolate = false; node.SubEmitter = string.Empty; var frames = 0;
         root.Ready += _ =>
         {
-            node.EmitParticle(new Transform(0, new Vector2(20.5f, 20.5f)), Vector2.Zero, Colors.White, Colors.White, GPUParticles.EmitFlags.Position);
+            node.EmitParticle(new Transform(0, new Vector2(20.5f, 20.5f)), Vector2.Zero, Colors.White, Colors.White, ParticlesEmitFlags.Position);
             RenderingServer.FramePostDraw += () =>
             {
                 using var image = root.GetTexture().GetImage()!; var pixel = image.GetPixel(20, 20);
@@ -33,7 +33,7 @@ internal static partial class GPUParticlesNodeTests
             var position = new Vector2(20 + session * 10, 20); using var root = new Window { Size = new(64, 64) }; node.Position = position; root.AddChild(node);
             root.Ready += _ =>
             {
-                node.EmitParticle(Transform.Identity, Vector2.Zero, Colors.White, Colors.White, GPUParticles.EmitFlags.Position);
+                node.EmitParticle(Transform.Identity, Vector2.Zero, Colors.White, Colors.White, ParticlesEmitFlags.Position);
                 RenderingServer.FramePostDraw += () =>
                 {
                     using var frame = root.GetTexture().GetImage()!; var pixel = frame.GetPixel((int)position.X, 20); Check(pixel.G > .98 && pixel.R < .02 && node.CaptureRect().HasArea(), "Each rendering session owns fresh native state for the retained authored node.");
