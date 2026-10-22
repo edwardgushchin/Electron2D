@@ -60,6 +60,18 @@ public sealed partial class Image
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public void SaveWebP(string path, bool lossy = false, float quality = 0.75f) => SaveEncodedFile(path, SaveWebPToBuffer(lossy, quality));
 
+    private static unsafe State DecodeWebP(byte[] bytes, Vector2i size)
+    {
+        var pixels = new byte[GetRequiredDataSize(size.X, size.Y, Format.Rgba8, false)];
+        fixed (byte* input = bytes)
+        fixed (byte* output = pixels)
+        {
+            var status = WebPDecodeNative(input, (ulong)bytes.Length, output, (ulong)pixels.Length, size.X, size.Y);
+            if (status != 0) throw new InvalidDataException($"Cannot decode WebP: codec status {status}.");
+        }
+        return new(size.X, size.Y, Format.Rgba8, false, pixels);
+    }
+
     private sealed class WebPOutput : IDisposable
     {
         internal readonly MemoryStream Stream = new();
@@ -85,4 +97,8 @@ public sealed partial class Image
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial int WebPEncodeNative(byte* pixels, ulong length, int width, int height, int lossy, float quality,
         int method, delegate* unmanaged[Cdecl]<byte*, nuint, nint, int> writer, nint context);
+
+    [LibraryImport(NativeLibraries.WebPLibrary, EntryPoint = "e2d_webp_decode")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static unsafe partial int WebPDecodeNative(byte* bytes, ulong length, byte* pixels, ulong capacity, int width, int height);
 }

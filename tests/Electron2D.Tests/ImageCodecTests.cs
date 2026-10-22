@@ -7,6 +7,8 @@ internal static class ImageCodecTests
 {
     private static readonly byte[] Pixels = [255, 0, 0, 128, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 0, 255, 255, 0, 255, 255, 0, 255, 255, 255];
     private const string WEBP = "UklGRjQAAABXRUJQVlA4TCgAAAAvAkAAEC8gEEjaH3qN+RcQFPk/moCg6Lrlgh9EMgoCATJEjBIR/Y9Y";
+    // libwebpmux fixture: a red 2x2 first frame at (2, 2) on a transparent 4x4 canvas, then a blue frame.
+    private const string AnimatedWEBP = "UklGRoQAAABXRUJQVlA4WAoAAAACAAAAAwAAAwAAQU5JTQYAAAAAAAAAAABBTk1GKAAAAAEAAAEAAAEAAAEAAGQAAAJWUDhMDwAAAC8BQAAABxD9j/4HIqL/AQBBTk1GKAAAAAAAAAAAAAMAAAMAAGQAAAJWUDhMDwAAAC8DwAAABxDR//4HIqL/AQA=";
     private const string SVG = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"3px\" height=\"2px\"><rect width=\"3\" height=\"2\" fill=\"#ff0000\"/></svg>";
 
     internal static void Run()
@@ -27,6 +29,7 @@ internal static class ImageCodecTests
         Check(!image.HasMIPMaps && loaded == 1, "Load replaces the whole image and emits Changed once.");
         image.LoadWebPFromBuffer(Convert.FromBase64String(WEBP));
         CheckPixels(image, Pixels);
+        VerifyAnimatedWebP();
         image.LoadSVGFromString(SVG);
         Check(image.Size == new Vector2i(3, 2) && image.PixelFormat == Image.Format.Rgba8 && image.GetPixel(1, 1) == Colors.Red,
             "SVG string rasterizes at intrinsic size and color.");
@@ -113,6 +116,25 @@ internal static class ImageCodecTests
         if (!OperatingSystem.IsBrowser())
             Parallel.For(0, 12, _ => { using var copy = new Image(); copy.LoadPNGFromBuffer(png); copy.LoadPNGFromBuffer(copy.SavePNGToBuffer()); CheckPixels(copy, Pixels); });
         Console.WriteLine("Image codec checks passed (PNG/JPEG/WebP/BMP/TGA/SVG; buffers, files, failures, ownership).");
+    }
+
+    private static void VerifyAnimatedWebP()
+    {
+        var bytes = Convert.FromBase64String(AnimatedWEBP);
+        using var image = new Image();
+        var changes = 0;
+        image.Changed += _ => changes++;
+        image.LoadWebPFromBuffer(bytes);
+        Check(image.Size == new Vector2i(4, 4) && !image.HasMIPMaps && changes == 1, "Animated WebP publishes one complete base canvas.");
+        for (var y = 0; y < 4; y++)
+            for (var x = 0; x < 4; x++)
+                Check(image.GetPixel(x, y) == (x >= 2 && y >= 2 ? Colors.Red : new Color(0, 0, 0, 0)), "The first WebP frame retains its canvas offset and transparent background.");
+        var before = image.GetData();
+        var malformed = (byte[])bytes.Clone();
+        malformed[malformed.AsSpan().IndexOf("VP8L"u8) + 8] = 0;
+        foreach (var invalid in new[] { bytes[..^1], malformed })
+            Reject<InvalidDataException>(() => image.LoadWebPFromBuffer(invalid));
+        Check(changes == 1 && image.GetData().AsSpan().SequenceEqual(before), "Animation parse/decode failures preserve pixels and events.");
     }
 
     private static unsafe void VerifyNativeIOCounts()

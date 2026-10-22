@@ -1308,7 +1308,7 @@
     {
       "electron2d": "method:Electron2D.Image.LoadWebPFromBuffer(System.ReadOnlySpan<System.Byte>)",
       "godot": "Image::method:load_webp_from_buffer(PackedByteArray:)",
-      "reason": "Typed span/caller-owned bytes and exceptions; uppercase acronym spelling under ADR 0045. Current native codec profile and remaining semantic gaps are documented in Image and ADR 0039."
+      "reason": "Typed span/caller-owned bytes and exceptions; uppercase acronym spelling under ADR 0045. The existing private libwebp bridge decodes straight RGBA8 and the first reconstructed animation canvas, including frame offsets; copied input, dimension/pixel bounds and atomic failure preserve the Image contract when platform SDL_image lacks WebP. ImageCodecTests and the native bridge check cover offset animation, exact transparent RGB, malformed data and output canaries. Foreign execution/publication and remaining channel/color metadata semantics stay separate under ADR 0039."
     },
     {
       "electron2d": "method:Electron2D.Image.SaveJPG(System.String,System.Single)",
@@ -3403,7 +3403,7 @@
         "Image::method:save_png(String:)",
         "Image::method:save_png_to_buffer()"
       ],
-      "reason": "Executable native PNG/JPEG/WebP/BMP/TGA/SVG loading and PNG/JPEG saving with file/buffer paths, RGBA8 copied base pixels, size preflight, atomic replacement and Linux x64 tests in ImageCodecTests; decoded PNG texture output verified on Wayland/Vulkan. SVG CSS sizing, source channel layouts, color/profile metadata, full codec variants, additional Load formats and AOT remain unaudited or unfinished. See docs/classes/Image.md and ADR 0039."
+      "reason": "Executable native PNG/JPEG/WebP/BMP/TGA/SVG loading and PNG/JPEG saving with file/buffer paths, RGBA8 copied base pixels, size preflight, atomic replacement and Linux x64 tests in ImageCodecTests; decoded PNG texture output verified on Wayland/Vulkan. WebP uses the existing private libwebp decoder for straight RGBA8 and first-frame canvas reconstruction, preserving offsets and atomic malformed-input failure independently of platform SDL_image support. The changed decoder ABI and Apple demux closure require renewed target/package verification. SVG CSS sizing, source channel layouts, color/profile metadata, full codec variants, additional Load formats and AOT remain unaudited or unfinished. See docs/classes/Image.md and ADR 0039."
     },
     {
       "state": "Implemented",

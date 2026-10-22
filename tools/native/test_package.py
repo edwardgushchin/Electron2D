@@ -162,6 +162,14 @@ endif()
             with self.assertRaises(ValueError):
                 build_webrtc.build("browser-wasm", root / "bridge", root / "tls")
 
+    def test_webp_decoder_and_animation_closure_are_required(self):
+        for profile, names in package.LIBRARIES.items():
+            name = next(name for name in names if "Electron2DWebP" in name)
+            self.assertEqual(package.required_exports(name), {"e2d_webp_encode", "e2d_webp_decode"})
+            if profile in ("iOS", "tvOS", "Web"):
+                self.assertEqual(names.count("libwebpdemux.a"), 1)
+                self.assertIn("WebPAnimDecoderGetNext", package.required_exports("libwebpdemux.a"))
+
     def test_ktx_bridge_is_required_in_every_profile(self):
         for profile, names in package.LIBRARIES.items():
             name = next(name for name in names if "Electron2DKTX" in name)

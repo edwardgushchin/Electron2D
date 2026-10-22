@@ -1,3 +1,4 @@
 LIBRARY Electron2DWebP
 EXPORTS
+    e2d_webp_decode
     e2d_webp_encode

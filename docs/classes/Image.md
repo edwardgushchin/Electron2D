@@ -20,7 +20,7 @@ All 47 raw [`Image.Format`](Image.Format.md) identities are accepted for storage
 
 Pixel coordinates use a top-left origin: X increases rightward and Y increases downward. Rectangles are half-open. Stored multi-byte components use little-endian order. `GetData` and data-taking APIs copy their arrays, so callers never share mutable buffer ownership with an image.
 
-The browser platform package statically links the existing SDL core/image codecs. Its contract app executes PNG/JPEG/WebP/BMP/TGA/SVG loading and PNG/JPEG saving through this same API, including decoder rejection and state preservation. Canvas presentation and additional codec formats remain outside that check.
+The browser platform package statically links the existing SDL core/image codecs and private WebP codec/demux closure. Its contract app executes PNG/JPEG/WebP/BMP/TGA/SVG loading and PNG/JPEG saving through this same API, including decoder rejection and state preservation. Canvas presentation and additional codec formats remain outside that check.
 
 Every state read and mutation is synchronized per instance. Bulk mutations prepare and commit a complete replacement state; `SetPixel` updates only the addressed pixel under serialization. Both raise inherited [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) after releasing locks. A throwing subscriber observes committed state and propagates its exception. Calls involving multiple images snapshot sources before changing the destination; no cross-image lock is held during callbacks.
 
@@ -493,7 +493,7 @@ Replaces pixels from JPEG bytes. Decoding and native cleanup finish before commi
 <a id="loadwebpfrombuffer"></a>
 ### `public void LoadWebPFromBuffer(ReadOnlySpan<byte> buffer)`
 
-Replaces pixels from WebP bytes. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The input span is copied before validation. Invalid or truncated data raises `InvalidDataException`; disposed instances reject access. Animated WebP supplies its first composited frame.
+Replaces pixels from WebP bytes through the existing private libwebp bridge. Static decoding preserves straight RGBA8; animation uses the mature decoder to reconstruct the first canvas with frame offsets and blending. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The input span is copied before validation. Invalid or truncated data raises `InvalidDataException`; disposed instances reject access. Animated WebP supplies its first composited frame.
 
 <a id="loadbmpfrombuffer"></a>
 ### `public void LoadBMPFromBuffer(ReadOnlySpan<byte> buffer)`
@@ -590,7 +590,7 @@ Public state reads and writes are safe for concurrent calls on the same image. M
 
 The implemented surface covers all backend-independent CPU operations in the audited reference API, adapted to typed C# properties, exceptions, arrays, and `ImageMetrics`. The following capability boundaries remain:
 
-- PNG/JPEG/WebP/BMP/TGA/SVG/DDS/EXR/KTX file and buffer loading and PNG/JPEG/WebP/EXR saving are executable under their documented codec profiles. WebP saving uses the private exact/lossy encoder; EXR retains HDR channels and precision. SVG raster dimensions use the documented XML preflight and may differ from SVG renderers with other CSS sizing rules. KTX1/KTX2 and Basis LDR/HDR loading execute under their [documented profile](../components/image-ktx.md); complete color/metadata semantics remain unfinished.
+- PNG/JPEG/WebP/BMP/TGA/SVG/DDS/EXR/KTX file and buffer loading and PNG/JPEG/WebP/EXR saving are executable under their documented codec profiles. WebP loading/saving uses the private decoder and exact/lossy encoder; EXR retains HDR channels and precision. SVG raster dimensions use the documented XML preflight and may differ from SVG renderers with other CSS sizing rules. KTX1/KTX2 and Basis LDR/HDR loading execute under their [documented profile](../components/image-ktx.md); complete color/metadata semantics remain unfinished.
 - Compress/CompressFromChannels execute S3TC/BPTC; ETC/EAC/ASTC require portable encoders; decoding and shared texture consumers execute.
 - `Decompress` executes every stored BC/ETC/EAC/ASTC role, with complete mips and signed/HDR precision.
 - ImageTexture and layered resources sample the supported byte/float and all block families; integer sampling and target-driver precision limits remain explicit.

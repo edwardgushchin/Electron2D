@@ -27,10 +27,10 @@ LIBRARIES = {"Linux": ("libElectron2DTextBreak.so", "libFAudio.so.0", "libElectr
 LIBRARIES["Android"] = ("libElectron2DTextBreak.so", "libFAudio.so", "libElectron2DENet.so", "libElectron2DMesh.so", "libElectron2DWebP.so", "libElectron2DOGV.so", "libElectron2DKTX.so",
                         "libElectron2DCrypto.so", "libElectron2DSSL.so", "libElectron2DFreeType.so", "libElectron2DHarfBuzz.so")
 ARCHIVES = ("libElectron2DTextBreak.a", "libFAudio.a", "libElectron2DENet.a", "libElectron2DMesh.a", "libElectron2DWebP.a", "libElectron2DOGV.a", "libElectron2DKTX.a", "libwebp.a", "libsharpyuv.a", "libElectron2DCrypto.a",
-            "libElectron2DSSL.a", "libElectron2DFreeType.a", "libElectron2DHarfBuzz.a", "libElectron2DZlib.a",
+            "libElectron2DSSL.a", "libElectron2DFreeType.a", "libElectron2DHarfBuzz.a", "libwebpdemux.a", "libElectron2DZlib.a",
             "libElectron2DPNG.a", "libElectron2DBrotliDec.a", "libElectron2DBrotliCommon.a", "libElectron2DZstd.a")
 LIBRARIES.update(iOS=ARCHIVES, tvOS=ARCHIVES, Web=(*ARCHIVES, "libSDL3.a", "libElectron2DWasmCompat.a",
-                 "libSDL3_image.a", "libwebpdemux.a", "libwebpmux.a"))
+                 "libSDL3_image.a", "libwebpmux.a"))
 
 
 def required_exports(name):
@@ -42,7 +42,7 @@ def required_exports(name):
         return {"e2d_ogv_create", "e2d_ogv_frame", "e2d_ogv_finish", "e2d_ogv_destroy",
                 "e2d_video_create", "e2d_video_frame", "e2d_video_audio", "e2d_video_seek_audio", "e2d_video_destroy"}
     if "Electron2DWebP" in name:
-        return {"e2d_webp_encode"}
+        return {"e2d_webp_encode", "e2d_webp_decode"}
     if "FreeType" in name:
         return {"FT_Init_FreeType", "FT_New_Memory_Face", "FT_Load_Glyph"}
     if "Crypto" in name or "crypto" in name:
@@ -67,7 +67,7 @@ def required_exports(name):
     if name == "libwebp.a":
         return {"WebPDecodeRGBAInto", "WebPEncode", "WebPPictureImportRGBA", "WebPPictureFree", "WebPConfigInitInternal", "WebPPictureInitInternal", "WebPValidateConfig"}
     if name == "libwebpdemux.a":
-        return {"WebPDemuxInternal"}
+        return {"WebPDemuxInternal", "WebPAnimDecoderNewInternal", "WebPAnimDecoderGetNext", "WebPAnimDecoderDelete"}
     if name == "libwebpmux.a":
         return {"WebPNewInternal"}
     if name == "libsharpyuv.a":

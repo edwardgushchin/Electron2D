@@ -56,7 +56,7 @@ public sealed partial class Image
 
     /// <summary>Decodes a WebP buffer and replaces the image atomically.</summary>
     /// <param name="buffer">WebP data, copied before validation and decoding, at most 64 MiB.</param>
-    /// <remarks>Produces RGBA8 without mipmaps. Animated input supplies its first frame. Failure preserves pixels; success emits Changed.</remarks>
+    /// <remarks>Uses the private native codec to produce RGBA8 without mipmaps. Animated input supplies its first composited frame. Failure preserves pixels; success emits Changed.</remarks>
     /// <exception cref="InvalidDataException">Data is malformed or exceeds image limits.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public void LoadWebPFromBuffer(ReadOnlySpan<byte> buffer) => DecodeAndCommit(buffer, "WEBP");
@@ -162,6 +162,11 @@ public sealed partial class Image
         var size = codec == "SVG" ? SVGSize(bytes, scale) : EncodedSize(bytes, codec);
         try { ValidateDimensions(size.X, size.Y); }
         catch (ArgumentOutOfRangeException e) { throw new InvalidDataException("Encoded dimensions exceed the image limits.", e); }
+        if (codec == "WEBP")
+        {
+            Commit(DecodeWebP(bytes, size));
+            return;
+        }
         State decoded;
         fixed (byte* pointer = bytes)
         {
@@ -175,7 +180,6 @@ public sealed partial class Image
                     // decoder already ships with the engine and preserves the 8-bit result.
                     "PNG" => SDL.LoadPNGIO(stream, false),
                     "JPG" => SDL3.Image.LoadJPGIO(stream),
-                    "WEBP" => SDL3.Image.LoadWEBPIO(stream),
                     "BMP" => SDL3.Image.LoadBMPIO(stream),
                     "TGA" => SDL3.Image.LoadTGAIO(stream),
                     "SVG" => SDL3.Image.LoadSizedSVGIO(stream, size.X, size.Y),

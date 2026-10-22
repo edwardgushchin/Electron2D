@@ -36,6 +36,8 @@ This Resources component owns portable managed 2D pixel buffers, binary masks, r
 7. Disposal drops the managed buffer, clears image state, then completes inherited Resource disposal.
 8. BitMap can classify a copied Image alpha plane, edit packed bits, dilate or erode a region, and extract marching-squares contours without a renderer.
 
+WebP file/buffer decoding uses the existing private codec for straight RGBA8 and the first reconstructed animation canvas; see [WebP I/O](image-webp.md). The published native ABI requires the decoder export and static demux closure.
+
 ## Dependencies and interactions
 
 Color-space conversions use `SRGBToLinear`, `LinearToSRGB` and `RGBEToSRGB`, following the same acronym spelling as the underlying Color API. Their pixel conversion and format contracts are unchanged.

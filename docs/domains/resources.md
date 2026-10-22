@@ -49,7 +49,7 @@ Ordinary [texture placeholders](../components/texture-placeholders.md) execute e
 
 Shader import retains logical bool and boolean vectors/arrays in validated SPIR-V metadata. Materials expose bool scalars and int vector masks; raw unsigned fields retain their numeric types. Both source languages and compatible external artifacts share reflection and backend checks. See [the boolean contract](../components/shader-materials.md#boolean-type-information).
 
-The Resources domain defines reusable typed data, portable CPU image buffers and binary masks used by textures, atlases, importers, and other assets across the runtime targets. It contains the common resource contract, managed `Image` and `BitMap`, and the partial shader/material integration described below. Texture resources, ordinary Node/Texture drawing and sampled shader bindings are executable; PNG/JPEG/WebP/BMP/TGA/SVG file/buffer decoding, PNG/JPEG/WebP saving and synchronous ImageTexture/FontFile/WAV/MP3/Ogg loading are executable. General asset loading remains incomplete. SDL_image is an approved internal dependency for the codec integration.
+The Resources domain defines reusable typed data, portable CPU image buffers and binary masks used by textures, atlases, importers, and other assets across the runtime targets. It contains the common resource contract, managed `Image` and `BitMap`, and the partial shader/material integration described below. Texture resources, ordinary Node/Texture drawing and sampled shader bindings are executable; PNG/JPEG/WebP/BMP/TGA/SVG file/buffer decoding, PNG/JPEG/WebP saving and synchronous ImageTexture/FontFile/WAV/MP3/Ogg loading are executable. General asset loading remains incomplete. SDL_image is an approved internal dependency for the codec integration; WebP loading/saving uses the existing private libwebp bridge, including first-frame animation reconstruction.
 
 Resource base and image sources live under `src/Core/IO/`; shader/material/texture/frame-library/curve/font resources live under `src/Scene/Resources/`. The public namespace remains `Electron2D`.
 
@@ -263,7 +263,7 @@ The primary realized face supplies OpenType metadata through `GetSupportedFeatur
 
 Standalone Shape.ResetState uses the same preflight before OnResetState. The public-only regression rejects reset during numerical/access/geometry hooks, checks no custom-reset side effects, and preserves allowed quiescent reset without Changed. Copying invokes reset exactly once after its own accepted preflight.
 
-WebP lossless/lossy saving, live codec settings, compressed-source conversion, atomic files and texture/capture consumers are described in [the executable codec contract](../components/image-webp.md). Foreign-target native execution and prebuilt bundle publication remain unverified.
+WebP decoding, first-frame animation reconstruction, lossless/lossy saving, live codec settings, compressed-source conversion, atomic files and texture/capture consumers are described in [the executable codec contract](../components/image-webp.md). Foreign-target native execution and prebuilt bundle publication remain unverified.
 
 The [EXR I/O slice](../components/image-exr.md) supplies precision-preserving HDR file/buffer load and lossless save. Image and texture resource discovery includes DDS and EXR alongside PNG/JPEG/WebP/BMP/TGA/SVG; typed archives also expose their registered extensions. GPU float sampling, explicit Compatibility byte conversion and float-driver rejection are separate exercised profiles.
 
