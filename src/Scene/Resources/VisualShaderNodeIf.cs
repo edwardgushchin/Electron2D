@@ -13,7 +13,7 @@ public sealed class VisualShaderNodeIf : VisualShaderNode
     }
     internal override PortType[] Inputs => [PortType.Scalar, PortType.Scalar, PortType.Scalar, PortType.Vector3, PortType.Vector3, PortType.Vector3];
     internal override PortType[] Outputs => [PortType.Vector3];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) =>
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) =>
         $"(abs({inputs[0]} - {inputs[1]}) < {inputs[2]} ? {inputs[3]} : ({inputs[0]} < {inputs[1]} ? {inputs[5]} : {inputs[4]}))";
     internal override void CopyDefinitionTo(VisualShaderNode target) { }
     /// <inheritdoc />

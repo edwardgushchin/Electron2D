@@ -4,6 +4,8 @@ public static partial class ResourceFileTypes
 {
     private static void RegisterVisualShaderResources()
     {
+        RegisterResource("VisualShaderNodeExpression", CreateVisualShaderNodeExpressionFileResource);
+        RegisterResource("VisualShaderNodeGlobalExpression", CreateVisualShaderNodeGlobalExpressionFileResource);
         RegisterResource("VisualShaderNodeTextureSDF", CreateVisualShaderNodeTextureSDFFileResource);
         RegisterResource("VisualShaderNodeTextureSDFNormal", CreateVisualShaderNodeTextureSDFNormalFileResource);
         RegisterResource("VisualShaderNodeSDFRaymarch", CreateVisualShaderNodeSDFRaymarchFileResource);
@@ -72,6 +74,8 @@ public static partial class ResourceFileTypes
         RegisterResource("VisualShaderNodeVec4Constant", CreateVisualShaderNodeVec4ConstantFileResource);
         RegisterResource("VisualShaderNodeColorConstant", CreateVisualShaderNodeColorConstantFileResource);
     }
+    private static VisualShaderNodeExpression CreateVisualShaderNodeExpressionFileResource() => new();
+    private static VisualShaderNodeGlobalExpression CreateVisualShaderNodeGlobalExpressionFileResource() => new();
     private static VisualShaderNodeTextureSDF CreateVisualShaderNodeTextureSDFFileResource() => new();
     private static VisualShaderNodeTextureSDFNormal CreateVisualShaderNodeTextureSDFNormalFileResource() => new();
     private static VisualShaderNodeSDFRaymarch CreateVisualShaderNodeSDFRaymarchFileResource() => new();

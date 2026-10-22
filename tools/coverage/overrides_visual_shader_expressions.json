@@ -1,0 +1,212 @@
+{
+  "mappings": [
+    {
+      "godot": "class:VisualShaderNodeResizableBase",
+      "electron2d": "T:Electron2D.VisualShaderNodeResizableBase",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeResizableBase::property:size",
+      "electron2d": "property:Electron2D.VisualShaderNodeResizableBase.Size()",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "class:VisualShaderNodeGroupBase",
+      "electron2d": "T:Electron2D.VisualShaderNodeGroupBase",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:add_input_port(int:,int:,String:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.AddInputPort(System.Int32,Electron2D.VisualShaderNode.PortType,System.String)",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:add_output_port(int:,int:,String:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.AddOutputPort(System.Int32,Electron2D.VisualShaderNode.PortType,System.String)",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:clear_input_ports()",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.ClearInputPorts()",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:clear_output_ports()",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.ClearOutputPorts()",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:get_free_input_port_id()",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.GetFreeInputPortID()",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:get_free_output_port_id()",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.GetFreeOutputPortID()",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:get_input_port_count()",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.GetInputPortCount()",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:get_inputs()",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.GetInputs()",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:get_output_port_count()",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.GetOutputPortCount()",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:get_outputs()",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.GetOutputs()",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:has_input_port(int:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.HasInputPort(System.Int32)",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:has_output_port(int:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.HasOutputPort(System.Int32)",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:is_valid_port_name(String:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.IsValidPortName(System.String)",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:remove_input_port(int:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.RemoveInputPort(System.Int32)",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:remove_output_port(int:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.RemoveOutputPort(System.Int32)",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:set_input_port_name(int:,String:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.SetInputPortName(System.Int32,System.String)",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:set_input_port_type(int:,int:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.SetInputPortType(System.Int32,Electron2D.VisualShaderNode.PortType)",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:set_inputs(String:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.SetInputs(System.String)",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:set_output_port_name(int:,String:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.SetOutputPortName(System.Int32,System.String)",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:set_output_port_type(int:,int:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.SetOutputPortType(System.Int32,Electron2D.VisualShaderNode.PortType)",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeGroupBase::method:set_outputs(String:)",
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.SetOutputs(System.String)",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "class:VisualShaderNodeExpression",
+      "electron2d": "T:Electron2D.VisualShaderNodeExpression",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "VisualShaderNodeExpression::property:expression",
+      "electron2d": "property:Electron2D.VisualShaderNodeExpression.Expression()",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    },
+    {
+      "godot": "class:VisualShaderNodeGlobalExpression",
+      "electron2d": "T:Electron2D.VisualShaderNodeGlobalExpression",
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:VisualShaderNodeResizableBase",
+        "VisualShaderNodeResizableBase::property:size",
+        "class:VisualShaderNodeGroupBase",
+        "VisualShaderNodeGroupBase::method:add_input_port(int:,int:,String:)",
+        "VisualShaderNodeGroupBase::method:add_output_port(int:,int:,String:)",
+        "VisualShaderNodeGroupBase::method:clear_input_ports()",
+        "VisualShaderNodeGroupBase::method:clear_output_ports()",
+        "VisualShaderNodeGroupBase::method:get_free_input_port_id()",
+        "VisualShaderNodeGroupBase::method:get_free_output_port_id()",
+        "VisualShaderNodeGroupBase::method:get_input_port_count()",
+        "VisualShaderNodeGroupBase::method:get_inputs()",
+        "VisualShaderNodeGroupBase::method:get_output_port_count()",
+        "VisualShaderNodeGroupBase::method:get_outputs()",
+        "VisualShaderNodeGroupBase::method:has_input_port(int:)",
+        "VisualShaderNodeGroupBase::method:has_output_port(int:)",
+        "VisualShaderNodeGroupBase::method:is_valid_port_name(String:)",
+        "VisualShaderNodeGroupBase::method:remove_input_port(int:)",
+        "VisualShaderNodeGroupBase::method:remove_output_port(int:)",
+        "VisualShaderNodeGroupBase::method:set_input_port_name(int:,String:)",
+        "VisualShaderNodeGroupBase::method:set_input_port_type(int:,int:)",
+        "VisualShaderNodeGroupBase::method:set_inputs(String:)",
+        "VisualShaderNodeGroupBase::method:set_output_port_name(int:,String:)",
+        "VisualShaderNodeGroupBase::method:set_output_port_type(int:,int:)",
+        "VisualShaderNodeGroupBase::method:set_outputs(String:)",
+        "class:VisualShaderNodeExpression",
+        "VisualShaderNodeExpression::property:expression",
+        "class:VisualShaderNodeGlobalExpression"
+      ],
+      "reason": "ADRs 0001/0004/0013/0028: dynamic typed ports, source layout and local/shared GLSL expressions execute through the existing offline canvas importer. Preserve port ordering, numeric default presence/conversion, aliases, portable archives and native control flow, including return/discard. Validate source/port budgets, scope and native ABI before replacing artifacts. Editor widgets, separate shader domains, compiled custom providers, physical GPU, native heap, foreign platforms and owner acceptance retain independent gates."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeExpression..ctor()",
+      "reason": "Typed Resource initialization, duplicate construction and portable property descriptors for executable GLSL expression definitions under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeGlobalExpression..ctor()",
+      "reason": "Typed Resource initialization, duplicate construction and portable property descriptors for executable GLSL expression definitions under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeGroupBase..ctor()",
+      "reason": "Typed Resource initialization, duplicate construction and portable property descriptors for executable GLSL expression definitions under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeResizableBase..ctor()",
+      "reason": "Typed Resource initialization, duplicate construction and portable property descriptors for executable GLSL expression definitions under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeExpression.CreateDuplicateInstance()",
+      "reason": "Typed Resource initialization, duplicate construction and portable property descriptors for executable GLSL expression definitions under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeExpression.GetPropertyDescriptors()",
+      "reason": "Typed Resource initialization, duplicate construction and portable property descriptors for executable GLSL expression definitions under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeGlobalExpression.CreateDuplicateInstance()",
+      "reason": "Typed Resource initialization, duplicate construction and portable property descriptors for executable GLSL expression definitions under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeGroupBase.GetPropertyDescriptors()",
+      "reason": "Typed Resource initialization, duplicate construction and portable property descriptors for executable GLSL expression definitions under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeResizableBase.GetPropertyDescriptors()",
+      "reason": "Typed Resource initialization, duplicate construction and portable property descriptors for executable GLSL expression definitions under ADRs 0001/0013/0028."
+    }
+  ]
+}

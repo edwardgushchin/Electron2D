@@ -96,7 +96,7 @@ public sealed class VisualShaderNodeFloatFunc : VisualShaderNode
     }
     internal override PortType[] Inputs => [PortType.Scalar];
     internal override PortType[] Outputs => [PortType.Scalar];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => VisualShaderFunctions.Expression(_function.ToString(), inputs[0]);
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => VisualShaderFunctions.GenerateExpression(_function.ToString(), inputs[0]);
     internal override void CopyDefinitionTo(VisualShaderNode target)
     {
         ((VisualShaderNodeFloatFunc)target)._function = _function;

@@ -64,7 +64,7 @@ public sealed class VisualShaderNodeTexture : VisualShaderNode
     { get { ThrowIfDisposed(); return _texture; } set { ThrowIfDisposed(); if (value is not null) ObjectDisposedException.ThrowIf(value.IsDisposed, value); _texture = value; EmitChanged(); } }
     internal override PortType[] Inputs => [PortType.Vector2, PortType.Scalar, PortType.Sampler];
     internal override PortType[] Outputs => [PortType.Vector4];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => throw new InvalidOperationException("Image sampling requires the containing stage's sampler plan.");
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => throw new InvalidOperationException("Image sampling requires the containing stage's sampler plan.");
     internal override void CopyDefinitionTo(VisualShaderNode target)
     { var copy = (VisualShaderNodeTexture)target; copy._source = _source; copy._textureType = _textureType; copy._texture = _texture; }
     /// <inheritdoc />

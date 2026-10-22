@@ -10,7 +10,7 @@ public sealed class VisualShaderNodeSDFToScreenUV : VisualShaderNode
     public VisualShaderNodeSDFToScreenUV() { }
     internal override PortType[] Inputs => [PortType.Vector2];
     internal override PortType[] Outputs => [PortType.Vector2];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => "(" + inputs[0] + " * e2d_values.SCREEN_PIXEL_SIZE)";
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => "(" + inputs[0] + " * e2d_values.SCREEN_PIXEL_SIZE)";
     internal override void CopyDefinitionTo(VisualShaderNode target) { }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeSDFToScreenUV();

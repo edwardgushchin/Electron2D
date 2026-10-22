@@ -8,7 +8,7 @@ public sealed class VisualShaderNodeDeterminant : VisualShaderNode
     public VisualShaderNodeDeterminant() { InitializeDefault(0, System.Numerics.Matrix4x4.Identity); }
     internal override PortType[] Inputs => [PortType.Matrix];
     internal override PortType[] Outputs => [PortType.Scalar];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => $"determinant({inputs[0]})";
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => $"determinant({inputs[0]})";
     internal override void CopyDefinitionTo(VisualShaderNode target) { }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeDeterminant();

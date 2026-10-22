@@ -36,7 +36,7 @@ public abstract class VisualShaderNode : Resource
     internal abstract PortType[] Inputs { get; }
     internal virtual PortType[] DefaultInputs => Inputs;
     internal abstract PortType[] Outputs { get; }
-    internal abstract string Expression(int output, IReadOnlyList<string> inputs);
+    internal abstract string GenerateExpression(int output, IReadOnlyList<string> inputs);
     internal abstract void CopyDefinitionTo(VisualShaderNode target);
 
     /// <summary>Initializes a typed graph node.</summary>
@@ -156,6 +156,19 @@ public abstract class VisualShaderNode : Resource
             values[port] = VisualShaderValues.Entry(port, value);
         }
         _defaults.Clear(); foreach (var pair in values) _defaults.Add(pair.Key, pair.Value);
+    }
+    internal void RemapDefaults(IReadOnlyList<(int Source, PortType Type)> ports)
+    {
+        var replacement = new Dictionary<int, VisualShaderPortDefault>();
+        for (var port = 0; port < ports.Count; port++)
+        {
+            var (source, type) = ports[port];
+            if (type == PortType.Sampler || !_defaults.TryGetValue(source, out var value)) continue;
+            var converted = VisualShaderValues.Kind(value.BoxedValue) == type ? value.BoxedValue :
+                VisualShaderValues.ConvertDefaultValue(VisualShaderValues.Zero(type), value.BoxedValue);
+            replacement.Add(port, VisualShaderValues.Entry(port, converted));
+        }
+        _defaults.Clear(); foreach (var pair in replacement) _defaults.Add(pair.Key, pair.Value);
     }
     internal virtual object InitialDefault(int port) => VisualShaderValues.Zero(Inputs[port]);
     internal void InitializeDefault<T>(int port, T value) where T : unmanaged => _defaults[port] = VisualShaderValues.Entry(port, value);

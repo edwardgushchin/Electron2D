@@ -10,7 +10,7 @@ public sealed class VisualShaderNodeSDFRaymarch : VisualShaderNode
     public VisualShaderNodeSDFRaymarch() { }
     internal override PortType[] Inputs => [PortType.Vector2, PortType.Vector2];
     internal override PortType[] Outputs => [PortType.Scalar, PortType.Boolean, PortType.Vector2];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => throw new InvalidOperationException("Raymarch outputs require shared graph lowering.");
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => throw new InvalidOperationException("Raymarch outputs require shared graph lowering.");
     internal override void CopyDefinitionTo(VisualShaderNode target) { }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeSDFRaymarch();

@@ -42,7 +42,7 @@ public sealed class VisualShaderNodeSwitch : VisualShaderNode
     }
     internal override PortType[] Inputs => [PortType.Boolean, (PortType)_type, (PortType)_type];
     internal override PortType[] Outputs => [(PortType)_type];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => _type is VisualShaderValueType.Float or VisualShaderValueType.Vector2 or VisualShaderValueType.Vector3 or VisualShaderValueType.Vector4
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => _type is VisualShaderValueType.Float or VisualShaderValueType.Vector2 or VisualShaderValueType.Vector3 or VisualShaderValueType.Vector4
         ? $"mix({inputs[2]}, {inputs[1]}, float({inputs[0]}))" : $"({inputs[0]} ? {inputs[1]} : {inputs[2]})";
     internal override void CopyDefinitionTo(VisualShaderNode target) => ((VisualShaderNodeSwitch)target)._type = _type;
     /// <inheritdoc />

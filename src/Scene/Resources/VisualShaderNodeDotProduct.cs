@@ -12,7 +12,7 @@ public sealed class VisualShaderNodeDotProduct : VisualShaderNode
     }
     internal override PortType[] Inputs => [PortType.Vector3, PortType.Vector3];
     internal override PortType[] Outputs => [PortType.Scalar];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => $"dot({inputs[0]}, {inputs[1]})";
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => $"dot({inputs[0]}, {inputs[1]})";
     internal override void CopyDefinitionTo(VisualShaderNode target) { }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeDotProduct();

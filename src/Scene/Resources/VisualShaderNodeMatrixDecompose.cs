@@ -8,7 +8,7 @@ public sealed class VisualShaderNodeMatrixDecompose : VisualShaderNode
     public VisualShaderNodeMatrixDecompose() { InitializeDefault(0, System.Numerics.Matrix4x4.Identity); }
     internal override PortType[] Inputs => [PortType.Matrix];
     internal override PortType[] Outputs => [PortType.Vector3, PortType.Vector3, PortType.Vector3, PortType.Vector3];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => $"({inputs[0]})[{output}].xyz";
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => $"({inputs[0]})[{output}].xyz";
     internal override void CopyDefinitionTo(VisualShaderNode target) { }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeMatrixDecompose();

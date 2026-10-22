@@ -29,7 +29,7 @@ public abstract class VisualShaderNodeLayeredSample : VisualShaderNode
     }
     internal override PortType[] Inputs => [PortType.Vector3, PortType.Scalar, PortType.Sampler];
     internal override PortType[] Outputs => [PortType.Vector4];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => throw new InvalidOperationException("Layer sampling requires the containing stage's sampler plan.");
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => throw new InvalidOperationException("Layer sampling requires the containing stage's sampler plan.");
     internal override void CopyDefinitionTo(VisualShaderNode target) => ((VisualShaderNodeLayeredSample)target)._source = _source;
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(

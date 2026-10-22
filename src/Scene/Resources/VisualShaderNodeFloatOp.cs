@@ -44,7 +44,7 @@ public sealed class VisualShaderNodeFloatOp : VisualShaderNode
     }
     internal override PortType[] Inputs => [PortType.Scalar, PortType.Scalar];
     internal override PortType[] Outputs => [PortType.Scalar];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => _operation switch
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => _operation switch
     {
         OperatorEnum.Add => $"({inputs[0]} + {inputs[1]})",
         OperatorEnum.Subtract => $"({inputs[0]} - {inputs[1]})",

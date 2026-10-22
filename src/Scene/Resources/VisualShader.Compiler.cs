@@ -48,11 +48,14 @@ public sealed partial class VisualShader
         var ready = new PriorityQueue<int, int>();
         foreach (var pair in remaining) if (pair.Value == 0) ready.Enqueue(pair.Key, pair.Key);
         var plan = ImagePlan(stage, reachable, parameters); allImages.AddRange(plan.Images);
-        var aliases = StageSymbols(plan.Images);
+        var expressionSources = ExpressionSources(stage, reachable).ToArray();
+        var expressionNames = expressionSources.SelectMany(s => SourceIdentifiers(s).Select(t => s.Substring(t.Start, t.Length))).ToHashSet(StringComparer.Ordinal);
+        var aliases = StageSymbols(plan.Images, expressionNames);
         foreach (var role in new[] { "Frame", "RendererValues", "Globals", "Instance" })
             if (aliases[role] != role) allBlocks.Add(new(stage, aliases[role], role));
-        var source = new StringBuilder(ParameterHeader(stage, reachable, parameters, slots, plan.Images, aliases));
-        var names = parameters.Keys.Concat(plan.Images.Select(i => i.Name)).ToHashSet(StringComparer.Ordinal);
+        var header = ParameterHeader(stage, reachable, parameters, slots, plan.Images, aliases);
+        var source = new StringBuilder(header);
+        var names = parameters.Keys.Concat(plan.Images.Select(i => i.Name)).Concat(expressionNames).ToHashSet(StringComparer.Ordinal);
         var values = new Dictionary<(int Node, int Port), string>(); var completed = 0;
         string Input(int id, int port)
         {
@@ -90,6 +93,12 @@ public sealed partial class VisualShader
             else
             {
                 var inputs = Enumerable.Range(0, node.Inputs.Length).Select(port => Input(id, port)).ToArray();
+                if (node is VisualShaderNodeExpression block)
+                {
+                    EmitExpression(block, id, inputs, stage, aliases, names, values, source);
+                    foreach (var next in dependents[id]) if (--remaining[next] == 0) ready.Enqueue(next, next);
+                    continue;
+                }
                 string? raymarch = null;
                 if (node is VisualShaderNodeSDFRaymarch)
                 {
@@ -110,17 +119,17 @@ public sealed partial class VisualShader
                     }
                     var expression = node switch
                     {
-                        VisualShaderNodeInput input => StageExpression(input.Expression(stage), aliases).Replace("TIME", aliases["e2d_values"] + ".TIME", StringComparison.Ordinal).Replace("SCREEN_PIXEL_SIZE", aliases["e2d_values"] + ".SCREEN_PIXEL_SIZE", StringComparison.Ordinal),
+                        VisualShaderNodeInput input => StageExpression(input.GenerateExpression(stage), aliases).Replace("TIME", aliases["e2d_values"] + ".TIME", StringComparison.Ordinal).Replace("SCREEN_PIXEL_SIZE", aliases["e2d_values"] + ".SCREEN_PIXEL_SIZE", StringComparison.Ordinal),
                         VisualShaderNodeDerivativeFunc when stage != Type.Fragment => throw new NotSupportedException("Screen-space derivative nodes require the fragment graph stage."),
                         VisualShaderNodeSDFRaymarch => raymarch + (output == 0 ? ".x" : output == 1 ? ".y != 0.0" : ".zw"),
-                        VisualShaderNodeTextureSDF or VisualShaderNodeTextureSDFNormal or VisualShaderNodeSDFToScreenUV or VisualShaderNodeScreenUVToSDF => SDFExpression(node.Expression(output, inputs), aliases),
+                        VisualShaderNodeTextureSDF or VisualShaderNodeTextureSDFNormal or VisualShaderNodeSDFToScreenUV or VisualShaderNodeScreenUVToSDF => SDFExpression(node.GenerateExpression(output, inputs), aliases),
                         VisualShaderNodeTexture or VisualShaderNodeLayeredSample => SampleImage(sampler, inputs),
-                        VisualShaderNodeColorFunc color => color.Expression(output, inputs).Replace("e2d_rgb_to_hsv(", aliases["e2d_rgb_to_hsv"] + "(", StringComparison.Ordinal),
+                        VisualShaderNodeColorFunc color => color.GenerateExpression(output, inputs).Replace("e2d_rgb_to_hsv(", aliases["e2d_rgb_to_hsv"] + "(", StringComparison.Ordinal),
                         VisualShaderNodeTextureParameter => plan.Nodes[id],
                         VisualShaderNodeParameterRef when OutputTypes(node)[output] == VisualShaderNode.PortType.Sampler => plan.Nodes[id],
                         VisualShaderNodeParameter parameter => ParameterVariable(parameter, aliases),
                         VisualShaderNodeParameterRef reference => ParameterExpression(reference, output, parameters, aliases),
-                        _ => node.Expression(output, inputs)
+                        _ => node.GenerateExpression(output, inputs)
                     };
                     if (OutputTypes(node)[output] == VisualShaderNode.PortType.Sampler)
                     { values.Add((id, output), expression); continue; }
@@ -131,6 +140,7 @@ public sealed partial class VisualShader
             foreach (var next in dependents[id]) if (--remaining[next] == 0) ready.Enqueue(next, next);
         }
         if (completed != reachable.Count) throw new InvalidDataException("The reachable visual shader graph contains a cycle.");
+        if (reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeExpression)) WrapExpressionStage(source, header, stage, aliases);
         source.Append(StageExpression(stage == Type.Vertex ? VertexFooter : FragmentFooter, aliases));
         var result = source.ToString();
         if (Encoding.UTF8.GetByteCount(result) > ShaderInclude.MaximumSourceBytes) throw new InvalidDataException("Generated shader source exceeds the import budget.");
@@ -146,7 +156,7 @@ public sealed partial class VisualShader
         layout(location=0) out vec4 outColor;
         layout(location=1) out vec2 outUV;
         layout(location=2) out vec4 outCustom;
-        layout(set=1,binding=0,std140) uniform Frame { vec2 size; };
+        layout(set=1,binding=0,std140) uniform Frame { vec2 size; } e2d_frame;
         layout(set=1,binding=1,std140) uniform RendererValues { float TIME; };
         void main() {
             vec2 VERTEX = inPosition;
@@ -156,7 +166,7 @@ public sealed partial class VisualShader
 
         """;
     private const string VertexFooter = """
-            gl_Position = vec4(VERTEX.x / size.x * 2.0 - 1.0, 1.0 - VERTEX.y / size.y * 2.0, 0.0, 1.0);
+            gl_Position = vec4(VERTEX.x / e2d_frame.size.x * 2.0 - 1.0, 1.0 - VERTEX.y / e2d_frame.size.y * 2.0, 0.0, 1.0);
             outColor = COLOR; outUV = UV; outCustom = INSTANCE_CUSTOM;
         }
 

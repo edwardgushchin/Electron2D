@@ -14805,6 +14805,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.VisualShaderNodeExpression",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeExpression",
+    "name": "VisualShaderNodeExpression",
+    "signature": "public class Electron2D.VisualShaderNodeExpression",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeGroupBase",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.VisualShaderNodeFloatConstant",
     "kind": "type",
     "declaringType": "Electron2D.VisualShaderNodeFloatConstant",
@@ -14913,6 +14928,36 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeGlobalExpression",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeGlobalExpression",
+    "name": "VisualShaderNodeGlobalExpression",
+    "signature": "public sealed class Electron2D.VisualShaderNodeGlobalExpression",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeExpression",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeGroupBase",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "VisualShaderNodeGroupBase",
+    "signature": "public abstract class Electron2D.VisualShaderNodeGroupBase",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeResizableBase",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -15398,6 +15443,21 @@
     "declaringType": "Electron2D.VisualShaderNodeRemap",
     "name": "VisualShaderNodeRemap",
     "signature": "public sealed class Electron2D.VisualShaderNodeRemap",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeResizableBase",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeResizableBase",
+    "name": "VisualShaderNodeResizableBase",
+    "signature": "public abstract class Electron2D.VisualShaderNodeResizableBase",
     "visibility": "public",
     "baseType": "Electron2D.VisualShaderNode",
     "interfaces": [
@@ -27587,6 +27647,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.VisualShaderNodeExpression..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeExpression",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeExpression()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.VisualShaderNodeFloatConstant..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.VisualShaderNodeFloatConstant",
@@ -27632,6 +27705,32 @@
     "name": ".ctor",
     "signature": "public VisualShaderNodeFloatParameter()",
     "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeGlobalExpression..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeGlobalExpression",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeGlobalExpression()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeGroupBase..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": ".ctor",
+    "signature": "protected VisualShaderNodeGroupBase()",
+    "visibility": "protected",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -27931,6 +28030,19 @@
     "name": ".ctor",
     "signature": "public VisualShaderNodeRemap()",
     "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeResizableBase..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeResizableBase",
+    "name": ".ctor",
+    "signature": "protected VisualShaderNodeResizableBase()",
+    "visibility": "protected",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -225002,6 +225114,32 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.VisualShaderNodeExpression.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeExpression",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeExpression.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeExpression",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.VisualShaderNodeFloatConstant.CreateDuplicateInstance()",
     "kind": "method",
     "declaringType": "Electron2D.VisualShaderNodeFloatConstant",
@@ -225103,6 +225241,423 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGlobalExpression.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGlobalExpression",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.AddInputPort(System.Int32,Electron2D.VisualShaderNode.PortType,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "AddInputPort",
+    "signature": "public System.Void AddInputPort(System.Int32 id, Electron2D.VisualShaderNode.PortType type, System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "type",
+        "type": "Electron2D.VisualShaderNode.PortType",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.AddOutputPort(System.Int32,Electron2D.VisualShaderNode.PortType,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "AddOutputPort",
+    "signature": "public System.Void AddOutputPort(System.Int32 id, Electron2D.VisualShaderNode.PortType type, System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "type",
+        "type": "Electron2D.VisualShaderNode.PortType",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.ClearInputPorts()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "ClearInputPorts",
+    "signature": "public System.Void ClearInputPorts()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.ClearOutputPorts()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "ClearOutputPorts",
+    "signature": "public System.Void ClearOutputPorts()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.GetFreeInputPortID()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "GetFreeInputPortID",
+    "signature": "public System.Int32 GetFreeInputPortID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.GetFreeOutputPortID()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "GetFreeOutputPortID",
+    "signature": "public System.Int32 GetFreeOutputPortID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.GetInputPortCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "GetInputPortCount",
+    "signature": "public System.Int32 GetInputPortCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.GetInputs()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "GetInputs",
+    "signature": "public System.String GetInputs()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.GetOutputPortCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "GetOutputPortCount",
+    "signature": "public System.Int32 GetOutputPortCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.GetOutputs()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "GetOutputs",
+    "signature": "public System.String GetOutputs()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.HasInputPort(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "HasInputPort",
+    "signature": "public System.Boolean HasInputPort(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.HasOutputPort(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "HasOutputPort",
+    "signature": "public System.Boolean HasOutputPort(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.IsValidPortName(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "IsValidPortName",
+    "signature": "public System.Boolean IsValidPortName(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.RemoveInputPort(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "RemoveInputPort",
+    "signature": "public System.Void RemoveInputPort(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.RemoveOutputPort(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "RemoveOutputPort",
+    "signature": "public System.Void RemoveOutputPort(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.SetInputPortName(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "SetInputPortName",
+    "signature": "public System.Void SetInputPortName(System.Int32 id, System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.SetInputPortType(System.Int32,Electron2D.VisualShaderNode.PortType)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "SetInputPortType",
+    "signature": "public System.Void SetInputPortType(System.Int32 id, Electron2D.VisualShaderNode.PortType type)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "type",
+        "type": "Electron2D.VisualShaderNode.PortType",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.SetInputs(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "SetInputs",
+    "signature": "public System.Void SetInputs(System.String inputs)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputs",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.SetOutputPortName(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "SetOutputPortName",
+    "signature": "public System.Void SetOutputPortName(System.Int32 id, System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.SetOutputPortType(System.Int32,Electron2D.VisualShaderNode.PortType)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "SetOutputPortType",
+    "signature": "public System.Void SetOutputPortType(System.Int32 id, Electron2D.VisualShaderNode.PortType type)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "type",
+        "type": "Electron2D.VisualShaderNode.PortType",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeGroupBase.SetOutputs(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeGroupBase",
+    "name": "SetOutputs",
+    "signature": "public System.Void SetOutputs(System.String outputs)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "outputs",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -225635,6 +226190,19 @@
     "id": "method:Electron2D.VisualShaderNodeRemap.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.VisualShaderNodeRemap",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeResizableBase.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeResizableBase",
     "name": "GetPropertyDescriptors",
     "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
     "visibility": "protected",
@@ -274714,6 +275282,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.VisualShaderNodeExpression.Expression()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeExpression",
+    "name": "Expression",
+    "signature": "public System.String Expression { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.VisualShaderNodeFloatConstant.Constant()",
     "kind": "property",
     "declaringType": "Electron2D.VisualShaderNodeFloatConstant",
@@ -275166,6 +275747,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.VisualShaderNumericOpType",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisualShaderNodeResizableBase.Size()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeResizableBase",
+    "name": "Size",
+    "signature": "public Electron2D.Vector2 Size { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {

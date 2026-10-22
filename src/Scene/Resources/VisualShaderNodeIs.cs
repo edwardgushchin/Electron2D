@@ -34,7 +34,7 @@ public sealed class VisualShaderNodeIs : VisualShaderNode
     }
     internal override PortType[] Inputs => [PortType.Scalar];
     internal override PortType[] Outputs => [PortType.Boolean];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => $"{(_function == FunctionEnum.IsInf ? "isinf" : "isnan")}({inputs[0]})";
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => $"{(_function == FunctionEnum.IsInf ? "isinf" : "isnan")}({inputs[0]})";
     internal override void CopyDefinitionTo(VisualShaderNode target) => ((VisualShaderNodeIs)target)._function = _function;
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeIs();

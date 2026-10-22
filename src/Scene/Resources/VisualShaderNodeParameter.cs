@@ -49,7 +49,7 @@ public abstract class VisualShaderNodeParameter : VisualShaderNode
     internal abstract bool HasParameterDefault { get; }
     internal virtual string ParameterCaption => GetType().Name["VisualShaderNode".Length..];
     internal override PortType[] Inputs => [];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => ParameterName;
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => ParameterName;
     internal override void CopyDefinitionTo(VisualShaderNode target)
     { var copy = (VisualShaderNodeParameter)target; copy._parameterName = _parameterName; copy._qualifier = _qualifier; copy._instanceIndex = _instanceIndex; }
     internal void SetDefinitionValue<T>(ref T field, T value, bool quiet) where T : unmanaged

@@ -74,7 +74,7 @@ public sealed class VisualShaderNodeDerivativeFunc : VisualShaderNode
     { VisualShaderFloatOpType.Scalar => PortType.Scalar, VisualShaderFloatOpType.Vector2 => PortType.Vector2, VisualShaderFloatOpType.Vector3 => PortType.Vector3, _ => PortType.Vector4 };
     internal override PortType[] Inputs => [Kind(_operationType)];
     internal override PortType[] Outputs => Inputs;
-    internal override string Expression(int output, IReadOnlyList<string> inputs) =>
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) =>
         $"{(_function == FunctionEnum.Sum ? "fwidth" : _function == FunctionEnum.X ? "dFdx" : "dFdy")}{(_precision == PrecisionEnum.Coarse ? "Coarse" : _precision == PrecisionEnum.Fine ? "Fine" : "")}({inputs[0]})";
     internal override void CopyDefinitionTo(VisualShaderNode target)
     { var copy = (VisualShaderNodeDerivativeFunc)target; copy._operationType = _operationType; copy._function = _function; copy._precision = _precision; }

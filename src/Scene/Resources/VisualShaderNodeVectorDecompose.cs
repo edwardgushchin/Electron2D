@@ -9,7 +9,7 @@ public sealed class VisualShaderNodeVectorDecompose : VisualShaderNodeVectorBase
     public VisualShaderNodeVectorDecompose() => InitializeDefault(0, Vector3.Zero);
     internal override PortType[] Inputs => [VectorKind];
     internal override PortType[] Outputs => Enumerable.Repeat(PortType.Scalar, (int)OpType + 2).ToArray();
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => $"({inputs[0]}).{"xyzw"[output]}";
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => $"({inputs[0]}).{"xyzw"[output]}";
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeVectorDecompose();
 }

@@ -904,3 +904,86 @@ metadata, root resource/particle contracts, SDK author/edit/error/recovery/publi
 Clean, Release, coverage and wiki gates passed. Evidence remains under ignored
 `bin/visual-shader-sdf/2026-10-22/`; physical GPU, foreign platforms, native heap
 and owner visual acceptance were not established.
+
+## GLSL expression blocks
+
+[VisualShaderNodeExpression](../classes/VisualShaderNodeExpression.md) executes a
+GLSL statement block with named typed inputs and outputs. It inherits ordered
+port authoring from [VisualShaderNodeGroupBase](../classes/VisualShaderNodeGroupBase.md)
+and portable layout size from [VisualShaderNodeResizableBase](../classes/VisualShaderNodeResizableBase.md).
+[VisualShaderNodeGlobalExpression](../classes/VisualShaderNodeGlobalExpression.md)
+contributes functions, constants and native-interface declarations shared by both
+canvas stages, including definitions stored in the other graph. Sources from
+all global entries are ordered by stage and node ID, including disconnected
+entries. Aliasing the same global resource in multiple entries contributes each
+entry; duplicate declarations are diagnosed by the compiler.
+
+The source language is GLSL, following ADR 0028. Statements execute after their
+input dependencies inside a local block. Integer/unsigned/float/vector/Boolean
+outputs initialize to zero; matrices initialize to identity. All outputs of a
+block are computed once. A generated stage function contains graph code so a
+local return preserves the final vertex/color epilogue. A fragment discard
+terminates its invocation normally. Unreachable local blocks do not execute.
+Global functions receive local graph values through arguments/ports, or access
+an explicitly declared interface that passes the current shader validator.
+Native GLSL stage restrictions, declaration order and syntax still apply.
+`ELECTRON2D_SHADER_STAGE` is zero for Vertex and one for Fragment during
+preprocessing; use it to select the existing native descriptor sets when declaring
+stage-specific interfaces. Imported uniforms use the ordinary typed material API;
+matrix material values retain SetShaderMatrixParameter column arrays.
+
+Port identifiers are placeholders for connected values/defaults and output
+locals. Replacement respects identifier boundaries, comments, literals, member
+selectors and struct fields. Generated names avoid authored source identifiers,
+image bindings and other generated names. Local UV, COLOR and INSTANCE_CUSTOM
+read the current canvas values; vertex VERTEX is writable, while fragment VERTEX
+reads framebuffer position. TIME and fragment SCREEN_PIXEL_SIZE use renderer-owned
+uniforms when referenced. These symbols belong to the existing executing canvas
+profile. Separate matrix/light/output producers retain their coverage gates.
+Sampler inputs refer to connected ordinary or array bindings and accept no
+numeric defaults. A local sampler output is invalid native GLSL and rejects
+import. Fragment discard and derivative legality are checked by the compiler.
+
+Port lists use contiguous zero-based indices. Add inserts below the count and
+appends for any larger nonnegative index; remove renumbers following ports.
+Borrowing graph connections retain their indexed addresses, so callers repair
+affected edges. Input defaults move with inserted/removed ports, convert atomically
+on role changes and preserve explicit absence. Selecting Sampler removes a
+numeric default. Integer conversion overflow preserves the complete prior state.
+Clear resets descriptions and defaults together. Mutations commit before Changed
+and PropertyListChanged; unchanged selections/replacements are quiet.
+
+GetInputs/GetOutputs return canonical `id,type,name;` rows. Set methods accept
+semicolon-separated rows with a final semicolon optional, at most 4,096 ports per
+side. Names are unique across both lists and use ASCII identifier characters,
+up to 128 characters. Keyword conflicts are source-compiler diagnostics. Invalid
+IDs, roles, names and bulk rows fail before mutation. Nonnegative out-of-range
+membership queries return false. Source has strict UTF-8 validation and an eight
+MiB budget, as does generated stage output. Invalid source/ABI never replaces an
+existing compiled artifact. There is no runtime compiler or serialized delegate.
+
+Size is finite, signed source-layout metadata with zero default; its setter does
+not publish Changed and never changes rendered geometry. Expression assignments
+publish Changed even for equal text. Source edits retain the prior imported
+program until a successful import. Copies and fresh archives preserve source,
+size, port schema, typed defaults and definition aliases. Factories directly
+construct both concrete expression resources for trimmed/AOT consumers.
+
+The public VisualShader.Consumer authors 73 programs and ten invalid workflows,
+fresh-loads source/compiled graphs and renders parameters, all numeric roles,
+matrices, multi-output blocks, cross-graph globals, loops, return/discard, image
+ports and authored/private-name conflicts. Receipts record actual executed
+profiles and source cohorts. This does not establish editor resizing/preview,
+custom compiled provider registration, physical GPU, foreign hosts, native heap
+or human visual acceptance.
+
+The frozen 8,826-file source cohort passed all 28 final checks. All 3,385 programs
+were freshly imported with the current shared generator (73 expression programs
+and 3,312 regression programs); ten negative imports preserved the prior target.
+CLR and strict full-trim NativeAOT passed software Vulkan Wayland, X11 and
+HDR/MSAA pixel readback, parameter update/reset and 64 active/64 idle complete
+frames at zero owner/all-thread managed bytes. Source/archive, selected managed
+particle/resource checks, SDK build/publish/Clean, Release, coverage and wiki
+checks passed. Ignored receipts are under
+`bin/visual-shader-expressions/2026-10-22/`. Physical GPU, foreign platforms,
+native heap, editor and owner visual acceptance remain separate gates.

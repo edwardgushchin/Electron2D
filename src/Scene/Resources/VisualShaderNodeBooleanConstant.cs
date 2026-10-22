@@ -16,7 +16,7 @@ public sealed class VisualShaderNodeBooleanConstant : VisualShaderNodeConstant
         set { ThrowIfDisposed(); VisualShaderValues.Validate(value); if (VisualShaderValues.SameConstant(_constant, value)) return; _constant = value; EmitChanged(); }
     }
     internal override PortType[] Outputs => [PortType.Boolean];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => VisualShaderValues.Literal(_constant);
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => VisualShaderValues.Literal(_constant);
     internal override void CopyDefinitionTo(VisualShaderNode target) => ((VisualShaderNodeBooleanConstant)target)._constant = _constant;
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeBooleanConstant();

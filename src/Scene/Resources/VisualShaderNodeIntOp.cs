@@ -27,7 +27,7 @@ public sealed class VisualShaderNodeIntOp : VisualShaderNode
     }
     internal override PortType[] Inputs => [PortType.ScalarInt, PortType.ScalarInt];
     internal override PortType[] Outputs => [PortType.ScalarInt];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => VisualShaderFunctions.IntegerOperation(_operation, inputs);
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => VisualShaderFunctions.IntegerOperation(_operation, inputs);
     internal override void CopyDefinitionTo(VisualShaderNode target) => ((VisualShaderNodeIntOp)target)._operation = _operation;
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeIntOp();

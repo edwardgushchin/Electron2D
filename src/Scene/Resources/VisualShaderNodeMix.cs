@@ -36,7 +36,7 @@ public sealed class VisualShaderNodeMix : VisualShaderNode
     private static PortType[] InputsFor(VisualShaderNumericOpType type) => [Kind(type), Kind(type), ControlKind(type)];
     internal override PortType[] Inputs => InputsFor(_operationType);
     internal override PortType[] Outputs => [Kind(_operationType)];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => $"mix({inputs[0]}, {inputs[1]}, {inputs[2]})";
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => $"mix({inputs[0]}, {inputs[1]}, {inputs[2]})";
     internal override void CopyDefinitionTo(VisualShaderNode target) => ((VisualShaderNodeMix)target)._operationType = _operationType;
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeMix();

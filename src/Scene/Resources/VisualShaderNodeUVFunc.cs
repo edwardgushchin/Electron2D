@@ -36,7 +36,7 @@ public sealed class VisualShaderNodeUVFunc : VisualShaderNode
     }
     internal override PortType[] Inputs => [PortType.Vector2, PortType.Vector2, PortType.Vector2];
     internal override PortType[] Outputs => [PortType.Vector2];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => _function == FunctionEnum.Panning
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => _function == FunctionEnum.Panning
         ? "(" + inputs[2] + " * " + inputs[1] + " + " + inputs[0] + ")"
         : "((" + inputs[0] + " - " + inputs[2] + ") * " + inputs[1] + " + " + inputs[2] + ")";
     internal override void CopyDefinitionTo(VisualShaderNode target) => ((VisualShaderNodeUVFunc)target)._function = _function;

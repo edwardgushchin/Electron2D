@@ -17,7 +17,7 @@ public sealed class VisualShaderNodeParameterRef : VisualShaderNode
     { get { ThrowIfDisposed(); return _parameterName; } set { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(value); _parameterName = value; EmitChanged(); } }
     internal override PortType[] Inputs => [];
     internal override PortType[] Outputs => [PortType.Scalar];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => _parameterName == "[None]" ? "0.0" : _parameterName;
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => _parameterName == "[None]" ? "0.0" : _parameterName;
     internal override void CopyDefinitionTo(VisualShaderNode target) => ((VisualShaderNodeParameterRef)target)._parameterName = _parameterName;
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeParameterRef();

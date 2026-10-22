@@ -98,7 +98,7 @@ public sealed class VisualShaderNodeVectorFunc : VisualShaderNodeVectorBase
     }
     internal override PortType[] Inputs => [VectorKind];
     internal override PortType[] Outputs => [VectorKind];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => VisualShaderFunctions.Expression(_function.ToString(), inputs[0]);
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => VisualShaderFunctions.GenerateExpression(_function.ToString(), inputs[0]);
     internal override void CopyDefinitionTo(VisualShaderNode target)
     {
         base.CopyDefinitionTo(target);

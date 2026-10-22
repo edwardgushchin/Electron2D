@@ -41,7 +41,7 @@ public sealed class VisualShaderNodeIntFunc : VisualShaderNode
     }
     internal override PortType[] Inputs => [PortType.ScalarInt];
     internal override PortType[] Outputs => [PortType.ScalarInt];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => _function switch
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => _function switch
     {
         FunctionEnum.Abs => $"abs({inputs[0]})",
         FunctionEnum.Negate => $"(-({inputs[0]}))",

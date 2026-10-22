@@ -62,7 +62,7 @@ public sealed class VisualShaderNodeClamp : VisualShaderNode
     private static PortType[] InputsFor(OpTypeEnum type) => [Kind(type), Kind(type), Kind(type)];
     internal override PortType[] Inputs => InputsFor(_operationType);
     internal override PortType[] Outputs => [Kind(_operationType)];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => $"clamp({inputs[0]}, {inputs[1]}, {inputs[2]})";
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => $"clamp({inputs[0]}, {inputs[1]}, {inputs[2]})";
     internal override void CopyDefinitionTo(VisualShaderNode target) => ((VisualShaderNodeClamp)target)._operationType = _operationType;
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeClamp();

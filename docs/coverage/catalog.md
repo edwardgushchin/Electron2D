@@ -950,7 +950,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeDeterminant](classes/VisualShaderNodeDeterminant.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeDistanceFade](classes/VisualShaderNodeDistanceFade.md) | VisualShaderNode | Unimplemented | 0 |
 | [VisualShaderNodeDotProduct](classes/VisualShaderNodeDotProduct.md) | VisualShaderNode | Implemented | 0 |
-| [VisualShaderNodeExpression](classes/VisualShaderNodeExpression.md) | VisualShaderNodeGroupBase | Blocked | 1 |
+| [VisualShaderNodeExpression](classes/VisualShaderNodeExpression.md) | VisualShaderNodeGroupBase | Implemented | 1 |
 | [VisualShaderNodeFaceForward](classes/VisualShaderNodeFaceForward.md) | VisualShaderNodeVectorBase | Unimplemented | 0 |
 | [VisualShaderNodeFloatConstant](classes/VisualShaderNodeFloatConstant.md) | VisualShaderNodeConstant | Implemented | 1 |
 | [VisualShaderNodeFloatFunc](classes/VisualShaderNodeFloatFunc.md) | VisualShaderNode | Implemented | 35 |
@@ -958,8 +958,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeFloatParameter](classes/VisualShaderNodeFloatParameter.md) | VisualShaderNodeParameter | Implemented | 11 |
 | [VisualShaderNodeFrame](classes/VisualShaderNodeFrame.md) | VisualShaderNodeResizableBase | Blocked | 7 |
 | [VisualShaderNodeFresnel](classes/VisualShaderNodeFresnel.md) | VisualShaderNode | Unimplemented | 0 |
-| [VisualShaderNodeGlobalExpression](classes/VisualShaderNodeGlobalExpression.md) | VisualShaderNodeExpression | Blocked | 0 |
-| [VisualShaderNodeGroupBase](classes/VisualShaderNodeGroupBase.md) | VisualShaderNodeResizableBase | Blocked | 21 |
+| [VisualShaderNodeGlobalExpression](classes/VisualShaderNodeGlobalExpression.md) | VisualShaderNodeExpression | Implemented | 0 |
+| [VisualShaderNodeGroupBase](classes/VisualShaderNodeGroupBase.md) | VisualShaderNodeResizableBase | Implemented | 21 |
 | [VisualShaderNodeIf](classes/VisualShaderNodeIf.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeInput](classes/VisualShaderNodeInput.md) | VisualShaderNode | Partial | 3 |
 | [VisualShaderNodeIntConstant](classes/VisualShaderNodeIntConstant.md) | VisualShaderNodeConstant | Implemented | 1 |
@@ -989,7 +989,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeRandomRange](classes/VisualShaderNodeRandomRange.md) | VisualShaderNode | Unimplemented | 0 |
 | [VisualShaderNodeRemap](classes/VisualShaderNodeRemap.md) | VisualShaderNode | Implemented | 10 |
 | [VisualShaderNodeReroute](classes/VisualShaderNodeReroute.md) | VisualShaderNode | Unimplemented | 1 |
-| [VisualShaderNodeResizableBase](classes/VisualShaderNodeResizableBase.md) | VisualShaderNode | Blocked | 1 |
+| [VisualShaderNodeResizableBase](classes/VisualShaderNodeResizableBase.md) | VisualShaderNode | Implemented | 1 |
 | [VisualShaderNodeRotationByAxis](classes/VisualShaderNodeRotationByAxis.md) | VisualShaderNode | Unimplemented | 0 |
 | [VisualShaderNodeSDFRaymarch](classes/VisualShaderNodeSDFRaymarch.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeSDFToScreenUV](classes/VisualShaderNodeSDFToScreenUV.md) | VisualShaderNode | Implemented | 0 |

@@ -36,7 +36,7 @@ public sealed class VisualShaderNodeSmoothStep : VisualShaderNode
     private static PortType[] InputsFor(VisualShaderNumericOpType type) => [ControlKind(type), ControlKind(type), Kind(type)];
     internal override PortType[] Inputs => InputsFor(_operationType);
     internal override PortType[] Outputs => [Kind(_operationType)];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => $"smoothstep({inputs[0]}, {inputs[1]}, {inputs[2]})";
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => $"smoothstep({inputs[0]}, {inputs[1]}, {inputs[2]})";
     internal override void CopyDefinitionTo(VisualShaderNode target) => ((VisualShaderNodeSmoothStep)target)._operationType = _operationType;
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeSmoothStep();

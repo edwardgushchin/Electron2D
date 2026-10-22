@@ -37,7 +37,7 @@ public sealed class VisualShaderNodeMultiplyAdd : VisualShaderNode
     private static PortType[] InputsFor(VisualShaderFloatOpType type) => [Kind(type), Kind(type), Kind(type)];
     internal override PortType[] Inputs => InputsFor(_operationType);
     internal override PortType[] Outputs => [Kind(_operationType)];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => $"fma({inputs[0]}, {inputs[1]}, {inputs[2]})";
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => $"fma({inputs[0]}, {inputs[1]}, {inputs[2]})";
     internal override void CopyDefinitionTo(VisualShaderNode target) => ((VisualShaderNodeMultiplyAdd)target)._operationType = _operationType;
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeMultiplyAdd();

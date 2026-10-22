@@ -12,7 +12,7 @@ public sealed class VisualShaderNodeVectorDistance : VisualShaderNodeVectorBase
     }
     internal override PortType[] Inputs => [VectorKind, VectorKind];
     internal override PortType[] Outputs => [PortType.Scalar];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => $"distance({inputs[0]}, {inputs[1]})";
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => $"distance({inputs[0]}, {inputs[1]})";
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeVectorDistance();
 }

@@ -38,7 +38,7 @@ public sealed class VisualShaderNodeMatrixVecMult : VisualShaderNode
     }
     internal override PortType[] Inputs => [PortType.Matrix, PortType.Vector3];
     internal override PortType[] Outputs => [PortType.Vector3];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => _selection switch
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => _selection switch
     {
         OperatorEnum.MatrixTimesVector => $"({inputs[0]} * vec4({inputs[1]}, 1.0)).xyz",
         OperatorEnum.VectorTimesMatrix => $"(vec4({inputs[1]}, 1.0) * {inputs[0]}).xyz",

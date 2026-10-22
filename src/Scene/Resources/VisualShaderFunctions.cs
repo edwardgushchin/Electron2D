@@ -19,7 +19,7 @@ internal static class VisualShaderFunctions
         _ => throw new InvalidOperationException("Invalid integer operation.")
     };
 
-    internal static string Expression(string function, string input) => function switch
+    internal static string GenerateExpression(string function, string input) => function switch
     {
         "Negate" => $"(-({input}))",
         "Reciprocal" => $"(1.0 / ({input}))",

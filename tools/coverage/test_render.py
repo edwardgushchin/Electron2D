@@ -245,6 +245,10 @@ def main():
         rows = [row for row in pages[CLASS_PAGES / (name + ".md")].splitlines() if row.startswith("| [`")]
         assert len(rows) == count and all(" | Implemented | " in row for row in rows)
         assert all("Trigger:" not in row for row in rows)
+    for name, count in [("VisualShaderNodeResizableBase",2),("VisualShaderNodeGroupBase",22),("VisualShaderNodeExpression",2),("VisualShaderNodeGlobalExpression",1)]:
+        rows = [row for row in pages[CLASS_PAGES / (name + ".md")].splitlines() if row.startswith("| [`")]
+        assert len(rows) == count and all(" | Implemented | " in row for row in rows)
+    assert "compiled custom-node provider/factory" in pages[CLASS_PAGES / "VisualShaderNodeCustom.md"]
     assert "OperatorEnum" in pages[CLASS_PAGES / "VisualShaderNodeFloatOp.md"]
     assert "OpTypeEnum" in pages[CLASS_PAGES / "VisualShaderNodeVectorBase.md"]
     engine_ids = {item["id"] for item in json.loads((DATA / "electron2d.json").read_text())}

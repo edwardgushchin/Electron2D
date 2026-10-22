@@ -93,7 +93,7 @@ public sealed class VisualShaderNodeCompare : VisualShaderNode
     internal override PortType[] Inputs => _type == VisualShaderValueType.Float && _function is FunctionEnum.Equal or FunctionEnum.NotEqual
         ? DefaultInputs : [(PortType)_type, (PortType)_type];
     internal override PortType[] Outputs => [PortType.Boolean];
-    internal override string Expression(int output, IReadOnlyList<string> inputs)
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs)
     {
         if (_type == VisualShaderValueType.Float && _function is FunctionEnum.Equal or FunctionEnum.NotEqual)
         {

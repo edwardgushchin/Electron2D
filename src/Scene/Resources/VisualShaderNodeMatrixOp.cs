@@ -49,7 +49,7 @@ public sealed class VisualShaderNodeMatrixOp : VisualShaderNode
     }
     internal override PortType[] Inputs => [PortType.Matrix, PortType.Matrix];
     internal override PortType[] Outputs => [PortType.Matrix];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => _selection switch
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => _selection switch
     {
         OperatorEnum.Multiply => $"({inputs[0]} * {inputs[1]})",
         OperatorEnum.MultiplyReversed => $"({inputs[1]} * {inputs[0]})",

@@ -13,7 +13,7 @@ public sealed class VisualShaderNodeVectorRefract : VisualShaderNodeVectorBase
     }
     internal override PortType[] Inputs => [VectorKind, VectorKind, PortType.Scalar];
     internal override PortType[] Outputs => [VectorKind];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => $"refract({inputs[0]}, {inputs[1]}, {inputs[2]})";
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => $"refract({inputs[0]}, {inputs[1]}, {inputs[2]})";
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeVectorRefract();
 }

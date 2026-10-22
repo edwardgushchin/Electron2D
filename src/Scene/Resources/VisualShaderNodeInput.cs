@@ -54,8 +54,8 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
     };
     internal override PortType[] Inputs => [];
     internal override PortType[] Outputs => [InputKind];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => IsKnown ? GetInputRealName() : "0.0";
-    internal string Expression(VisualShader.Type stage) => _inputName switch
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => IsKnown ? GetInputRealName() : "0.0";
+    internal string GenerateExpression(VisualShader.Type stage) => _inputName switch
     {
         "texture" or "normal_texture" or "specular_shininess_texture" when stage == VisualShader.Type.Fragment => GetInputRealName(),
         "color" => "COLOR",

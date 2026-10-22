@@ -12,7 +12,7 @@ public sealed class VisualShaderNodeVectorCompose : VisualShaderNodeVectorBase
     internal override PortType[] Inputs => Enumerable.Repeat(PortType.Scalar, (int)OpType + 2).ToArray();
     internal override PortType[] DefaultInputs => [PortType.Scalar, PortType.Scalar, PortType.Scalar, PortType.Scalar];
     internal override PortType[] Outputs => [VectorKind];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) =>
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) =>
         $"{VisualShaderValues.Name(VectorKind)}({string.Join(", ", inputs)})";
     internal override void ChangeDefaultWidth(PortType type)
     {

@@ -35,7 +35,7 @@ public sealed class VisualShaderNodeStep : VisualShaderNode
     private static PortType[] InputsFor(VisualShaderNumericOpType type) => [ControlKind(type), Kind(type)];
     internal override PortType[] Inputs => InputsFor(_operationType);
     internal override PortType[] Outputs => [Kind(_operationType)];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => $"step({inputs[0]}, {inputs[1]})";
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => $"step({inputs[0]}, {inputs[1]})";
     internal override void CopyDefinitionTo(VisualShaderNode target) => ((VisualShaderNodeStep)target)._operationType = _operationType;
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeStep();

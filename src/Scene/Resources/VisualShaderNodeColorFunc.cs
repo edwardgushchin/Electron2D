@@ -38,7 +38,7 @@ public sealed class VisualShaderNodeColorFunc : VisualShaderNode
     }
     internal override PortType[] Inputs => [PortType.Vector3];
     internal override PortType[] Outputs => [PortType.Vector3];
-    internal override string Expression(int output, IReadOnlyList<string> inputs)
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs)
     {
         var c = "(" + inputs[0] + ")";
         return _function switch

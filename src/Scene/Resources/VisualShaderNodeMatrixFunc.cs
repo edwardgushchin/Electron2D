@@ -35,7 +35,7 @@ public sealed class VisualShaderNodeMatrixFunc : VisualShaderNode
     }
     internal override PortType[] Inputs => [PortType.Matrix];
     internal override PortType[] Outputs => [PortType.Matrix];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => $"{(_selection == FunctionEnum.Inverse ? "inverse" : "transpose")}({inputs[0]})";
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => $"{(_selection == FunctionEnum.Inverse ? "inverse" : "transpose")}({inputs[0]})";
     internal override void CopyDefinitionTo(VisualShaderNode target) => ((VisualShaderNodeMatrixFunc)target)._selection = _selection;
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeMatrixFunc();

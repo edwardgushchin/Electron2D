@@ -8,7 +8,7 @@ public sealed class VisualShaderNodeMatrixCompose : VisualShaderNode
     public VisualShaderNodeMatrixCompose() { for (var port = 0; port < 4; port++) InitializeDefault(port, Vector3.Zero); }
     internal override PortType[] Inputs => [PortType.Vector3, PortType.Vector3, PortType.Vector3, PortType.Vector3];
     internal override PortType[] Outputs => [PortType.Matrix];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => $"mat4(vec4({inputs[0]}, 0.0), vec4({inputs[1]}, 0.0), vec4({inputs[2]}, 0.0), vec4({inputs[3]}, 1.0))";
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => $"mat4(vec4({inputs[0]}, 0.0), vec4({inputs[1]}, 0.0), vec4({inputs[2]}, 0.0), vec4({inputs[3]}, 1.0))";
     internal override void CopyDefinitionTo(VisualShaderNode target) { }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeMatrixCompose();

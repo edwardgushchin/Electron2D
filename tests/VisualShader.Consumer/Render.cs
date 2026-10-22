@@ -54,6 +54,7 @@ internal static partial class GraphChecks
                 var painter = new GraphPainter(name.StartsWith("img-", StringComparison.Ordinal) && !name.StartsWith("img-channel-", StringComparison.Ordinal) ? ImageCanvas(texture) : texture) { Position = position, Material = material };
                 if (name.StartsWith("img-", StringComparison.Ordinal)) PrepareImageCase(name, shader, material);
                 if (name.StartsWith("fx-", StringComparison.Ordinal)) PrepareEffectCase(name, shader, material, position);
+                if (name.StartsWith("expr-", StringComparison.Ordinal)) PrepareExpressionCase(name, shader, material, position);
                 AddChild(painter); _cases.Add((painter, name, position));
                 if (name.StartsWith("img-device-", StringComparison.Ordinal)) _deviceImageCases.Add((painter, name, position));
                 if (name.StartsWith("img-filter-", StringComparison.Ordinal)) _imageSamplerCases.Add((shader, name, position));
@@ -67,6 +68,7 @@ internal static partial class GraphChecks
             _frame++;
             ProcessParameters();
             ProcessEffects();
+            ProcessExpressions();
             ProcessDeviceImages();
             ProcessImageSamplers();
             if (_frame is > 30 and <= 94)
@@ -76,6 +78,7 @@ internal static partial class GraphChecks
         {
             CheckParameterFrames();
             if (_frame is 5 or 7) CheckEffectFrames();
+            if (_frame is 5 or 7) CheckExpressionFrames();
             if (_frame is 5 or 7) CheckDeviceImageFrames();
             CheckImageSamplerFrames();
             if (_frame == 3)
@@ -83,13 +86,13 @@ internal static partial class GraphChecks
                 using var pixels = GetWindow()!.GetTexture().GetImage()!;
                 foreach (var item in _cases)
                 {
-                    var expected = item.Name.StartsWith("fx-", StringComparison.Ordinal) ? EffectExpected(item.Name, GetWindow()!.UseHDR2D) : item.Name.StartsWith("img-", StringComparison.Ordinal) ? ImageExpected(item.Name, GetWindow()!.UseHDR2D) : Expected(item.Name);
+                    var expected = item.Name.StartsWith("expr-", StringComparison.Ordinal) ? ExpressionExpected(item.Name) : item.Name.StartsWith("fx-", StringComparison.Ordinal) ? EffectExpected(item.Name, GetWindow()!.UseHDR2D) : item.Name.StartsWith("img-", StringComparison.Ordinal) ? ImageExpected(item.Name, GetWindow()!.UseHDR2D) : Expected(item.Name);
                     if (!GetWindow()!.UseHDR2D)
                         expected = new(Math.Clamp(expected.R, 0, 1), Math.Clamp(expected.G, 0, 1), Math.Clamp(expected.B, 0, 1), expected.A);
                     var actual = pixels.GetPixel((int)item.Position.X + 8, (int)item.Position.Y + 8);
                     var integerBytes = item.Name.StartsWith("parameter-1-", StringComparison.Ordinal) || item.Name.StartsWith("parameter-2-", StringComparison.Ordinal) || item.Name.StartsWith("integer-", StringComparison.Ordinal) || item.Name.StartsWith("condition-s-1-", StringComparison.Ordinal) || item.Name.StartsWith("condition-s-2-", StringComparison.Ordinal);
                     var tolerance = integerBytes ? .001f : (item.Name.StartsWith("fx-", StringComparison.Ordinal) || item.Name.StartsWith("img-", StringComparison.Ordinal) || item.Name.StartsWith("derivative-", StringComparison.Ordinal) || item.Name.StartsWith("parameter-", StringComparison.Ordinal) || item.Name.StartsWith("condition-", StringComparison.Ordinal) || item.Name.StartsWith("matrix-", StringComparison.Ordinal)) ? .0021f : .016f;
-                    Check(item.Name.StartsWith("fx-", StringComparison.Ordinal) ? EffectPixelsMatch(actual, expected, GetWindow()!.UseHDR2D) :
+                    Check(item.Name.StartsWith("fx-", StringComparison.Ordinal) || item.Name.StartsWith("expr-", StringComparison.Ordinal) ? EffectPixelsMatch(actual, expected, GetWindow()!.UseHDR2D) :
                         MathF.Abs(actual.R - expected.R) < tolerance && MathF.Abs(actual.G - expected.G) < tolerance && MathF.Abs(actual.B - expected.B) < tolerance,
                         $"Graph {item.Name}: actual {actual}, expected {expected}.");
                     if (item.Name == "vertex-shift")
@@ -134,6 +137,7 @@ internal static partial class GraphChecks
                 Check(owner == 0 && all == 0, "Compiled visual graph replay has zero prepared managed allocations.");
                 CheckDeviceImageFrames();
                 CheckEffectFrames();
+                CheckExpressionFrames();
                 for (var i = 0; i < _cases.Count; i++) Check(_cases[i].Painter.Draws == _drawCounts[i], "Graph replay retains draw commands.");
                 if (_frame == 174) Tree!.Quit();
             }

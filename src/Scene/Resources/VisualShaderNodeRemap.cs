@@ -38,7 +38,7 @@ public sealed class VisualShaderNodeRemap : VisualShaderNode
     private static PortType[] InputsFor(VisualShaderNumericOpType type) => [Kind(type), ControlKind(type), ControlKind(type), ControlKind(type), ControlKind(type)];
     internal override PortType[] Inputs => InputsFor(_operationType);
     internal override PortType[] Outputs => [Kind(_operationType)];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => $"({inputs[3]} + ({inputs[4]} - {inputs[3]}) * (({inputs[0]} - {inputs[1]}) / ({inputs[2]} - {inputs[1]})))";
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => $"({inputs[3]} + ({inputs[4]} - {inputs[3]}) * (({inputs[0]} - {inputs[1]}) / ({inputs[2]} - {inputs[1]})))";
     internal override void CopyDefinitionTo(VisualShaderNode target) => ((VisualShaderNodeRemap)target)._operationType = _operationType;
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeRemap();

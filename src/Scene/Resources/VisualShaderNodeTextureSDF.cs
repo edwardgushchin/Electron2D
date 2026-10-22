@@ -10,7 +10,7 @@ public sealed class VisualShaderNodeTextureSDF : VisualShaderNode
     public VisualShaderNodeTextureSDF() { }
     internal override PortType[] Inputs => [PortType.Vector2];
     internal override PortType[] Outputs => [PortType.Scalar];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => "e2d_sdf(" + inputs[0] + ")";
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => "e2d_sdf(" + inputs[0] + ")";
     internal override void CopyDefinitionTo(VisualShaderNode target) { }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeTextureSDF();

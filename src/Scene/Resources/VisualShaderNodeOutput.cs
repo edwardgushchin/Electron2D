@@ -12,7 +12,7 @@ public sealed class VisualShaderNodeOutput : VisualShaderNode
         ? [PortType.Vector2, PortType.Vector2, PortType.Vector3, PortType.Scalar, PortType.Scalar]
         : [PortType.Vector3, PortType.Scalar, PortType.Vector3, PortType.Vector3, PortType.Scalar, PortType.Vector3, PortType.Vector2];
     internal override PortType[] Outputs => [];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => throw new InvalidOperationException("Output nodes have no output ports.");
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => throw new InvalidOperationException("Output nodes have no output ports.");
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
         new PropertyDescriptor[] { new PropertyDescriptor<VisualShaderNodeOutput, VisualShader.Type>("Stage", n => n.Stage,

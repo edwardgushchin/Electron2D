@@ -122,7 +122,11 @@
     "VisualShaderNodeTextureSDFNormal": "VisualShaderNodeTextureSDFNormal",
     "VisualShaderNodeSDFRaymarch": "VisualShaderNodeSDFRaymarch",
     "VisualShaderNodeSDFToScreenUV": "VisualShaderNodeSDFToScreenUV",
-    "VisualShaderNodeScreenUVToSDF": "VisualShaderNodeScreenUVToSDF"
+    "VisualShaderNodeScreenUVToSDF": "VisualShaderNodeScreenUVToSDF",
+    "VisualShaderNodeResizableBase": "VisualShaderNodeResizableBase",
+    "VisualShaderNodeGroupBase": "VisualShaderNodeGroupBase",
+    "VisualShaderNodeExpression": "VisualShaderNodeExpression",
+    "VisualShaderNodeGlobalExpression": "VisualShaderNodeGlobalExpression"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",

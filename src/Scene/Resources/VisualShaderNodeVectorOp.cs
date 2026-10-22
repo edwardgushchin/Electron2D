@@ -48,7 +48,7 @@ public sealed class VisualShaderNodeVectorOp : VisualShaderNodeVectorBase
     }
     internal override PortType[] Inputs => [VectorKind, VectorKind];
     internal override PortType[] Outputs => [VectorKind];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => _operation switch
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => _operation switch
     {
         OperatorEnum.Add => $"({inputs[0]} + {inputs[1]})",
         OperatorEnum.Subtract => $"({inputs[0]} - {inputs[1]})",

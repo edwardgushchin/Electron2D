@@ -11,7 +11,7 @@ public sealed class VisualShaderNodeVectorLen : VisualShaderNodeVectorBase
     }
     internal override PortType[] Inputs => [VectorKind];
     internal override PortType[] Outputs => [PortType.Scalar];
-    internal override string Expression(int output, IReadOnlyList<string> inputs) => $"length({inputs[0]})";
+    internal override string GenerateExpression(int output, IReadOnlyList<string> inputs) => $"length({inputs[0]})";
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeVectorLen();
 }

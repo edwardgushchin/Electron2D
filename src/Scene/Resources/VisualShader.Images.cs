@@ -35,6 +35,7 @@ public sealed partial class VisualShader
         var images = new List<VisualShaderImage>(); var nodes = new Dictionary<int, string>();
         var nativeNames = ImageNames(parameters);
         var reserved = nativeNames.Values.Concat(parameters.Keys).ToHashSet(StringComparer.Ordinal);
+        reserved.UnionWith(ExpressionSources(stage, reachable).SelectMany(s => SourceIdentifiers(s).Select(t => s.Substring(t.Start, t.Length))));
         reserved.UnionWith(["TEXTURE", "NORMAL_TEXTURE", "SPECULAR_SHININESS_TEXTURE", "SCREEN_TEXTURE", "SDF_TEXTURE"]);
         if (stage == Type.Fragment) images.Add(new(stage, "TEXTURE", false));
         string Anonymous(int id)
@@ -84,7 +85,7 @@ public sealed partial class VisualShader
                 Add(id, new(stage, Anonymous(id), true, new(false, 0, 0, 0, false), layered.TextureArray));
             else if (node is VisualShaderNodeInput input && input.Outputs[0] == P.Sampler)
             {
-                _ = input.Expression(stage);
+                _ = input.GenerateExpression(stage);
                 Add(id, new(stage, input.GetInputRealName(), false));
             }
         }
@@ -92,10 +93,10 @@ public sealed partial class VisualShader
         return (images, nodes);
     }
 
-    private static Dictionary<string, string> StageSymbols(IEnumerable<VisualShaderImage> images)
+    private static Dictionary<string, string> StageSymbols(IEnumerable<VisualShaderImage> images, IEnumerable<string> sourceNames)
     {
-        var used = images.Select(i => i.Name).ToHashSet(StringComparer.Ordinal); var aliases = new Dictionary<string, string>(StringComparer.Ordinal);
-        foreach (var symbol in new[] { "VERTEX", "UV", "COLOR", "INSTANCE_CUSTOM", "e2d_values", "e2d_globals", "e2d_instance", "Frame", "RendererValues", "Globals", "Instance", "e2d_rgb_to_hsv", "e2d_sdf", "e2d_sdf_normal", "e2d_sdf_raymarch" })
+        var used = images.Select(i => i.Name).Concat(sourceNames).ToHashSet(StringComparer.Ordinal); var aliases = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var symbol in new[] { "VERTEX", "UV", "COLOR", "INSTANCE_CUSTOM", "e2d_values", "e2d_globals", "e2d_instance", "Frame", "RendererValues", "Globals", "Instance", "e2d_rgb_to_hsv", "e2d_sdf", "e2d_sdf_normal", "e2d_sdf_raymarch", "e2d_graph", "e2d_frame", "result", "inPosition", "inColor", "inUV", "inCustom", "outColor", "outUV", "outCustom" })
         {
             var name = symbol;
             for (var suffix = 2; !used.Add(name); suffix++) name = symbol + "_" + suffix.ToString(CultureInfo.InvariantCulture);
@@ -104,7 +105,7 @@ public sealed partial class VisualShader
         return aliases;
     }
     private static string StageExpression(string expression, Dictionary<string, string> aliases) =>
-        System.Text.RegularExpressions.Regex.Replace(expression, @"\b(VERTEX|UV|COLOR|INSTANCE_CUSTOM|e2d_values|e2d_globals|e2d_instance|Frame|RendererValues|Globals|Instance)\b", m => aliases[m.Value]);
+        System.Text.RegularExpressions.Regex.Replace(expression, @"\b(VERTEX|UV|COLOR|INSTANCE_CUSTOM|e2d_values|e2d_globals|e2d_instance|Frame|RendererValues|Globals|Instance|e2d_frame|result|inPosition|inColor|inUV|inCustom|outColor|outUV|outCustom)\b", m => aliases[m.Value]);
 
     private static string SampleImage(string sampler, IReadOnlyList<string> inputs)
     {
