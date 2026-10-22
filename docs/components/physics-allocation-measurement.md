@@ -281,5 +281,112 @@ NVIDIA without a software GPU. The frozen working-tree cohort binds 2,526
 runtime, 946 root and 269 public-consumer source documents, based on 53b2bd674;
 it includes the separately pending contact-range prototype and does not accept
 that optimization. Scoped formatting, Release/API/wiki and identity checks pass.
-NativeAOT and a new complete aggregate result are separate; successful focused
-windows do not attribute the historical 5,520-byte owner delta.
+NativeAOT remains separate; the complete aggregate result below fails. Successful
+focused windows do not attribute the historical 5,520-byte owner delta.
+
+
+## Framed aggregate: owner delta in frame 77 (2026-10-22)
+
+The same frozen aggregate process exits -6 after 3,594.691 seconds, before its
+5,400-second diagnostic deadline. The CPU negative wide-coordinate point-field
+case reports 3,184 owner and 8,176 all-thread bytes over its unchanged 128 warmed
+complete frames, with collection deltas 0/0/0. Tag 1003033 brackets the failure.
+The new 129 counter samples locate the entire owner delta in frame 77; the
+initial and final boundaries both report zero. This is a failed strict physical
+gate, not aggregate acceptance or a successful allocation fix.
+
+The bracket contains 29 ObjectAllocated callbacks on the separate .NET Finalizer
+thread: fifteen 288-byte GCMemoryInfoData objects and fourteen 48-byte
+ConditionalWeakTable enumerators. Their stacks again identify
+PortableThreadPool.OnGen2GCCallback and SharedArrayPool.Trim through
+Gen2GcCallback.Finalize. The 4,992 observed bytes equal all-minus-owner. There is
+no owner-thread ObjectAllocated callback in the bracket. The 3,184-byte owner
+delta remains unattributed; finalizer callbacks do not explain it.
+
+All 520 entered native brackets balance. Their END records retain zero
+cumulative profiler recursion, including the aborting bracket. All 384 positive
+controls preserve their 64-byte owner counter and raw size-61 callback; all 96
+empty controls remain zero. Three frame-boundary controls locate their
+64/64/64-byte prefix/frame63/suffix allocations correctly. Thus the recorded
+reentrant-callback drop counter does not account for the missing owner event.
+This does not prove that every runtime allocation route has been observed.
+
+The [v10.0.1 counter implementation](https://github.com/dotnet/runtime/blob/v10.0.1/src/coreclr/vm/comutilnative.cpp)
+reads alloc_bytes + alloc_bytes_uoh minus unused current allocation-context
+space. It does not enumerate ObjectAllocated callbacks. That source distinction
+provides no causal explanation for this failure and changes no byte threshold.
+The next allocation investigation must distinguish an actual unobserved owner
+producer from allocation-context accounting; repeating the same full run without
+stronger observation would not resolve that distinction.
+
+The payload is unchanged, NVIDIA remains available, and no new Xid is recorded.
+The 2,526 runtime, 946 root and 269 public-consumer source bindings are checked
+through preserved overrides after the later texture-boundary fix. Raw/decoded
+traces and assertions are in local ignored
+bin/physics-report-ranges/2026-10-22/framed-aggregate-trace/ and
+framed-aggregate-analysis.json. The owner result differs from the earlier
+5,520-byte failure; neither result is discarded or attributed from the other.
+Physics coverage remains 1306/1369 (95.40%), with 63 open declarations.
+
+
+## Optional native allocation-context snapshots (2026-10-22)
+
+PhysicsAllocationTrace also accepts ELECTRON2D_POINT_CONTEXT_TRACE while ordinary
+CoreCLR allocation tracing is enabled. Its caller-supplied helper is built from
+[PhysicsAllocationContextProbe.cpp](../../tests/Electron2D.Tests/Fixtures/PhysicsAllocationContextProbe.cpp):
+
+`g++ -std=c++17 -O2 -fPIC -shared -Wl,--no-undefined -o libContextProbe.so tests/Electron2D.Tests/Fixtures/PhysicsAllocationContextProbe.cpp`
+
+This is a bounded Linux x64 observation profile. Initialization follows the
+known counter entry stub, validates its complete native instruction sequence,
+and obtains that implementation's TLS accessor/descriptor. A different counter
+implementation rejects before field authoring. It never patches runtime code
+or writes the allocation context. The short snapshot call suppresses the GC
+transition and copies TLS identity, allocation pointer/limit and SOH/UOH byte
+counters into storage created before fixture authoring/warmup. Failed frame
+reports include both native boundaries alongside the existing owner delta.
+Ordinary untraced execution loads neither diagnostic library; NativeAOT tracing
+remains explicitly unavailable.
+
+The standalone probe validates sixteen allocations of each of four array sizes
+(64, 3,184, 5,520 and 100,024 counter bytes), plus sixteen empty controls. All 80
+native formulas agree with the managed counter on the observed .NET 10.0.1
+runtime; null and wrong-function initialization reject. The ordinary frame-63
+calibration additionally requires agreement at all 129 native boundaries.
+There is no subtraction, counter replacement or changed zero-byte assertion.
+These observations do not yet reproduce or explain the aggregate owner delta.
+Native helper code, source/PDB/payload proofs and direct controls are retained
+under ignored bin/physics-report-ranges/2026-10-22/allocation-context-probe/ and
+context-source-proof.json.
+
+
+The --point-context-lifetime root-runner mode accepts an incorrect helper and a
+correct helper path. [PhysicsAllocationContextInvalid.cpp](../../tests/Electron2D.Tests/Fixtures/PhysicsAllocationContextInvalid.cpp)
+supplies deliberate zero samples for the negative path. Calibration failure
+releases both libraries before propagating the original error; the same process
+checks that the helper mapping disappears, opens a correct tracer and verifies
+normal disposal. Both backend labels exercise this setup/retirement contract
+without creating a numerical world. The first incorrect-snapshot control was
+RED because Open released only its base profiler reference; the corrected
+cleanup and in-process recovery are GREEN. Numerical GPU evidence remains the
+separate field/query profiles, not those enum-label checks.
+
+
+Four initial CLR context-enabled CPU/GPU owner/separate profiles, the original
+trace ABI and ordinary CLR/strict NativeAOT query consumers pass 8,064 measured
+physical frames. Those retained source cohorts precede the cleanup correction
+and the independent sampled-image graph integration. The final integrated main
+cohort repeats CPU/GPU context-enabled field intervals and strict NativeAOT CPU
+queries, adding 1,792 frames. All 9,856 physical intervals retain 0/0 owner/all
+managed bytes. Two root-runner lifecycle processes additionally verify failure
+cleanup and same-process recovery; they are excluded from physical-frame totals.
+Unsupported counter code and NativeAOT tracing reject before authoring.
+
+The final cohort binds 2,537 runtime, 946 root and 269 public-consumer documents
+at e820cbe20 plus this fixture change and the separately pending contact-range
+prototype. It does not accept that optimization. The older graph/texture source
+versions remain preserved and checked independently. Source/payload proofs,
+strict publisher arguments and context-initial-validation.json/context-validation.json
+record these separate scopes. Successful focused checks do not close the failed
+framed aggregate, the unattributed owner delta, native allocator, foreign-platform,
+network, mass-throughput, window-FPS or owner-acceptance gates. No API row changes.

@@ -11,6 +11,8 @@ using EngineTimer = Electron2D.Timer;
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MATRIX_CODEC") == "1") { MatrixValueCodecTests.Run(); return; }
 
+if (args.Length == 3 && args[0] == "--point-context-lifetime") { PhysicsAllocationTrace.VerifyContextLifetime(args[1], args[2]); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OBJECT_CENSUS") == "1") { ObjectCensusChecks.Run(args); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HOST_PLATFORM") == "1") { HostPlatformTests.Run(); HostPlatformChecks.Run(args); return; }
