@@ -107,13 +107,13 @@ internal sealed partial record ShaderUniform(string Name, Type Type, int Buffer,
 
     internal PropertyDescriptor Describe(string propertyName) => MatrixWidth > 2 ? new PropertyDescriptor<ShaderMaterial, float[]>(propertyName,
         m => m.GetShaderMatrixParameter(Name), (m, v) => { ArgumentNullException.ThrowIfNull(v); m.SetShaderMatrixParameter(Name, v); }, _ => MatrixDefaults(), stored: true)
-    { StoreCondition = m => m.HasStoredUniform(Name) } : Type == typeof(float) ? Describe<float>(propertyName) :
+    { Hint = Hint, HintString = HintString, StoreCondition = m => m.HasStoredUniform(Name) } : SourceColor ? Describe<Color>(propertyName) : Type == typeof(float) ? Describe<float>(propertyName) :
         Type == typeof(bool) ? Describe<bool>(propertyName) : Type == typeof(int) ? Describe<int>(propertyName) : Type == typeof(uint) ? Describe<uint>(propertyName) :
         Type == typeof(Vector2) ? Describe<Vector2>(propertyName) : Type == typeof(Vector3) ? Describe<Vector3>(propertyName) : Type == typeof(Vector4) ? Describe<Vector4>(propertyName) :
         Type == typeof(Transform) ? Describe<Transform>(propertyName) : Type == typeof(Vector2i) ? Describe<Vector2i>(propertyName) : Type == typeof(Vector3i) ? Describe<Vector3i>(propertyName) : Describe<Vector4i>(propertyName);
 
-    internal PropertyDescriptor DescribeInstance(string name) => Type == typeof(float) ? InstanceDescriptor<float>(name) : Type == typeof(bool) ? InstanceDescriptor<bool>(name) : Type == typeof(int) ? InstanceDescriptor<int>(name) : Type == typeof(uint) ? InstanceDescriptor<uint>(name) : Type == typeof(Vector2) ? InstanceDescriptor<Vector2>(name) : Type == typeof(Vector3) ? InstanceDescriptor<Vector3>(name) : Type == typeof(Vector4) ? InstanceDescriptor<Vector4>(name) : Type == typeof(Vector2i) ? InstanceDescriptor<Vector2i>(name) : Type == typeof(Vector3i) ? InstanceDescriptor<Vector3i>(name) : InstanceDescriptor<Vector4i>(name);
-    private PropertyDescriptor InstanceDescriptor<T>(string propertyName) where T : unmanaged => new PropertyDescriptor<CanvasItem, T?>(propertyName, item => item.GetStoredInstanceParameter<T>(Name), (item, value) => item.SetInstanceShaderParameter<T>(Name, value), _ => null, stored: true) { StoredSetter = (item, value) => item.RestoreInstanceParameter<T>(Name, value) };
+    internal PropertyDescriptor DescribeInstance(string name) => SourceColor ? InstanceDescriptor<Color>(name) : Type == typeof(float) ? InstanceDescriptor<float>(name) : Type == typeof(bool) ? InstanceDescriptor<bool>(name) : Type == typeof(int) ? InstanceDescriptor<int>(name) : Type == typeof(uint) ? InstanceDescriptor<uint>(name) : Type == typeof(Vector2) ? InstanceDescriptor<Vector2>(name) : Type == typeof(Vector3) ? InstanceDescriptor<Vector3>(name) : Type == typeof(Vector4) ? InstanceDescriptor<Vector4>(name) : Type == typeof(Vector2i) ? InstanceDescriptor<Vector2i>(name) : Type == typeof(Vector3i) ? InstanceDescriptor<Vector3i>(name) : InstanceDescriptor<Vector4i>(name);
+    private PropertyDescriptor InstanceDescriptor<T>(string propertyName) where T : unmanaged => new PropertyDescriptor<CanvasItem, T?>(propertyName, item => item.GetStoredInstanceParameter<T>(Name), (item, value) => item.SetInstanceShaderParameter<T>(Name, value), _ => null, stored: true) { Hint = Hint, HintString = HintString, StoredSetter = (item, value) => item.RestoreInstanceParameter<T>(Name, value) };
 
     internal void Write<T>(Span<byte> target, in T value) where T : unmanaged
     {
@@ -200,9 +200,9 @@ internal sealed partial record ShaderUniform(string Name, Type Type, int Buffer,
     {
         var initial = ReadDefault<T>();
         return ArrayLength == 0
-            ? new PropertyDescriptor<ShaderMaterial, T>(propertyName, m => m.GetShaderParameter<T>(Name), (m, v) => m.SetShaderParameter(Name, v), _ => initial, stored: true) { StoreCondition = m => m.HasStoredUniform(Name) }
+            ? new PropertyDescriptor<ShaderMaterial, T>(propertyName, m => m.GetShaderParameter<T>(Name), (m, v) => m.SetShaderParameter(Name, v), _ => initial, stored: true) { Hint = Hint, HintString = HintString, StoreCondition = m => m.HasStoredUniform(Name) }
             : new PropertyDescriptor<ShaderMaterial, T[]>(propertyName, m => m.GetShaderParameterArray<T>(Name),
                 (m, v) => { ArgumentNullException.ThrowIfNull(v); m.SetShaderParameter<T>(Name, v.AsSpan()); }, _ => DefaultArray<T>(), stored: true)
-            { StoreCondition = m => m.HasStoredUniform(Name) };
+            { Hint = Hint, HintString = HintString, StoreCondition = m => m.HasStoredUniform(Name) };
     }
 }

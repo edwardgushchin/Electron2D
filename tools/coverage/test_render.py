@@ -231,7 +231,7 @@ def main():
         "T:Electron2D.VisualShaderNodeFloatOp.Operator", "T:Electron2D.VisualShaderNodeVectorOp.Operator",
         "T:Electron2D.VisualShaderNodeVectorBase.OpType", "property:Electron2D.VisualShaderNodeFloatOp.Operation()",
         "property:Electron2D.VisualShaderNodeVectorOp.Operation()", "property:Electron2D.VisualShaderNodeVectorBase.OperationType()"})
-    assert " | Blocked | " in pages[CLASS_PAGES / "VisualShaderNodeParameter.md"]
+    assert " | Implemented | " in pages[CLASS_PAGES / "VisualShaderNodeParameter.md"]
     assert " | Implemented | " in pages[CLASS_PAGES / "VisualShaderNodeTransformOp.md"]
 
     check_texture_pages(pages, upstream)
@@ -790,7 +790,13 @@ def main():
     for name, count in [("TransformConstant", 2), ("TransformOp", 13), ("TransformFunc", 6), ("TransformVecMult", 8), ("TransformCompose", 1), ("TransformDecompose", 1), ("Determinant", 1), ("OuterProduct", 1)]:
         rows = [row for row in pages[CLASS_PAGES / ("VisualShaderNode" + name + ".md")].splitlines() if row.startswith("| [`")]
         assert len(rows) == count and all(" | Implemented | " in row for row in rows)
-    assert " | Blocked | " in pages[CLASS_PAGES / "VisualShaderNodeTransformParameter.md"]
+    for name, count in [("Parameter", 10), ("FloatParameter", 12), ("IntParameter", 14), ("UIntParameter", 3), ("BooleanParameter", 3), ("Vec2Parameter", 3), ("Vec3Parameter", 3), ("Vec4Parameter", 3), ("ColorParameter", 3), ("TransformParameter", 3), ("ParameterRef", 2)]:
+        rows = [row for row in pages[CLASS_PAGES / ("VisualShaderNode" + name + ".md")].splitlines() if row.startswith("| [`")]
+        assert len(rows) == count and all(" | Implemented | " in row for row in rows)
+    hint_rows = [row for row in pages[CLASS_PAGES / "@GlobalScope.md"].splitlines() if "PROPERTY_HINT_" in row.split(" | ")[0]]
+    assert len(hint_rows) == 45
+    assert sum(" | Implemented | " in row for row in hint_rows) == 40
+    assert sum(" | Excluded | " in row for row in hint_rows) == 5
     base_rows = pages[CLASS_PAGES / "VisualShaderNode.md"].splitlines()
     assert " | Implemented | " in next(row for row in base_rows if "PORT_TYPE_TRANSFORM [" in row)
     assert " | Blocked | " in next(row for row in base_rows if "PORT_TYPE_SAMPLER [" in row)

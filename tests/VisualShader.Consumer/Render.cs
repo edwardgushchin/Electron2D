@@ -3,7 +3,7 @@ using IOPath = System.IO.Path;
 
 internal static partial class GraphChecks
 {
-    private const int GraphColumns = 48;
+    private const int GraphColumns = 64;
     internal static void Render(string folder, string[] args)
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu");
@@ -19,7 +19,7 @@ internal static partial class GraphChecks
         internal int Draws;
         protected override void OnDraw() { Draws++; DrawTextureRect(texture, new(0, 0, 16, 16), false); }
     }
-    private sealed class GraphScene(string folder) : Node
+    private sealed partial class GraphScene(string folder) : Node
     {
         private readonly List<Resource> _owned = [];
         private readonly List<(GraphPainter Painter, string Name, Vector2 Position)> _cases = [];
@@ -40,10 +40,12 @@ internal static partial class GraphChecks
                 if (name.StartsWith("condition-", StringComparison.Ordinal)) VerifyConditionArchive(name, shader);
                 if (name.StartsWith("matrix-", StringComparison.Ordinal)) VerifyMatrixArchive(name, shader);
                 if (name.StartsWith("range-", StringComparison.Ordinal)) VerifyRangeArchive(name, shader);
+                if (name.StartsWith("parameter-", StringComparison.Ordinal)) PrepareParameterShader(name, shader);
                 var material = Own(new ShaderMaterial { Shader = shader });
                 var position = new Vector2(8 + _cases.Count % GraphColumns * 24, 8 + _cases.Count / GraphColumns * 24);
                 var painter = new GraphPainter(texture) { Position = position, Material = material };
                 AddChild(painter); _cases.Add((painter, name, position));
+                if (name.StartsWith("parameter-", StringComparison.Ordinal)) AddParameterCase(name, material, painter, position);
             }
             Check(_cases.Count > 0, "Compiled graph fixtures exist.");
             RenderingServer.FramePostDraw += AfterDraw;
@@ -51,11 +53,13 @@ internal static partial class GraphChecks
         protected override void OnProcess(double delta)
         {
             _frame++;
+            ProcessParameters();
             if (_frame is > 30 and <= 94)
                 foreach (var item in _cases) item.Painter.Position = item.Position + new Vector2(_frame % 2, 0);
         }
         private void AfterDraw()
         {
+            CheckParameterFrames();
             if (_frame == 3)
             {
                 using var pixels = GetWindow()!.GetTexture().GetImage()!;
@@ -65,8 +69,8 @@ internal static partial class GraphChecks
                     if (!GetWindow()!.UseHDR2D)
                         expected = new(Math.Clamp(expected.R, 0, 1), Math.Clamp(expected.G, 0, 1), Math.Clamp(expected.B, 0, 1), expected.A);
                     var actual = pixels.GetPixel((int)item.Position.X + 8, (int)item.Position.Y + 8);
-                    var integerBytes = item.Name.StartsWith("integer-", StringComparison.Ordinal) || item.Name.StartsWith("condition-s-1-", StringComparison.Ordinal) || item.Name.StartsWith("condition-s-2-", StringComparison.Ordinal);
-                    var tolerance = integerBytes ? .001f : (item.Name.StartsWith("condition-", StringComparison.Ordinal) || item.Name.StartsWith("matrix-", StringComparison.Ordinal)) ? .0021f : .016f;
+                    var integerBytes = item.Name.StartsWith("parameter-1-", StringComparison.Ordinal) || item.Name.StartsWith("parameter-2-", StringComparison.Ordinal) || item.Name.StartsWith("integer-", StringComparison.Ordinal) || item.Name.StartsWith("condition-s-1-", StringComparison.Ordinal) || item.Name.StartsWith("condition-s-2-", StringComparison.Ordinal);
+                    var tolerance = integerBytes ? .001f : (item.Name.StartsWith("parameter-", StringComparison.Ordinal) || item.Name.StartsWith("condition-", StringComparison.Ordinal) || item.Name.StartsWith("matrix-", StringComparison.Ordinal)) ? .0021f : .016f;
                     Check(MathF.Abs(actual.R - expected.R) < tolerance && MathF.Abs(actual.G - expected.G) < tolerance && MathF.Abs(actual.B - expected.B) < tolerance,
                         $"Graph {item.Name}: actual {actual}, expected {expected}.");
                     if (item.Name == "vertex-shift")
@@ -117,7 +121,7 @@ internal static partial class GraphChecks
             base.Dispose(disposing);
         }
     }
-    private static Color Expected(string name) => name.StartsWith("matrix-", StringComparison.Ordinal) ? MatrixExpected(name) : name.StartsWith("condition-", StringComparison.Ordinal) ? ConditionExpected(name) : name.StartsWith("integer-", StringComparison.Ordinal) ? IntegerExpected(name) : name.StartsWith("range-", StringComparison.Ordinal) ? RangeExpected(name) : name.StartsWith("flow-", StringComparison.Ordinal) ? DataflowExpected(name) : name.StartsWith("unary-", StringComparison.Ordinal) ? UnaryExpected(name) : name switch
+    private static Color Expected(string name) => name.StartsWith("parameter-", StringComparison.Ordinal) ? ParameterExpected(name, 0) : name.StartsWith("matrix-", StringComparison.Ordinal) ? MatrixExpected(name) : name.StartsWith("condition-", StringComparison.Ordinal) ? ConditionExpected(name) : name.StartsWith("integer-", StringComparison.Ordinal) ? IntegerExpected(name) : name.StartsWith("range-", StringComparison.Ordinal) ? RangeExpected(name) : name.StartsWith("flow-", StringComparison.Ordinal) ? DataflowExpected(name) : name.StartsWith("unary-", StringComparison.Ordinal) ? UnaryExpected(name) : name switch
     {
         "color" or "vertex-shift" => new(.25f, .5f, .75f, 1),
         "cleared" => Colors.Black,

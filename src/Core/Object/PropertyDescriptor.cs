@@ -48,6 +48,23 @@ public abstract partial class PropertyDescriptor
     /// <value>The value type supplied when the descriptor was constructed.</value>
     public Type ValueType { get; }
 
+    private PropertyHint _hint;
+    private string _hintString = "";
+    /// <summary>Gets the immutable advisory presentation hint.</summary>
+    /// <value>None unless supplied by the provider; hints do not clamp or validate values.</value>
+    /// <exception cref="ArgumentOutOfRangeException">Initialization supplies an undefined value or the count sentinel.</exception>
+    public PropertyHint Hint
+    {
+        get => _hint;
+        init { if (!Enum.IsDefined(value) || value == PropertyHint.Max) throw new ArgumentOutOfRangeException(nameof(value)); _hint = value; }
+    }
+    /// <summary>Gets the immutable hint-specific text supplied to tooling.</summary>
+    /// <value>Empty initially. Numeric shader ranges use invariant minimum, maximum and optional step;
+    /// integer choices retain their ordered label/value text. The text is advisory.</value>
+    /// <exception cref="ArgumentNullException">Initialization supplies null.</exception>
+    public string HintString
+    { get => _hintString; init { ArgumentNullException.ThrowIfNull(value); _hintString = value; } }
+
     /// <summary>Gets whether the property has no setter.</summary>
     /// <value><see langword="true"/> for a read-only descriptor; otherwise <see langword="false"/>.</value>
     public bool IsReadOnly { get; }

@@ -59,6 +59,7 @@ public sealed partial class VisualShader : Shader
         if (id < 2 || graph.Nodes.ContainsKey(id) || !position.IsFinite() || node is VisualShaderNodeOutput)
             throw new ArgumentException("Invalid node, position or graph ID.");
         if (graph.Nodes.Count >= MaximumNodes) throw new InvalidOperationException("Visual shader node capacity exceeded.");
+        if (node is VisualShaderNodeParameter parameter) parameter.ParameterName = UniqueParameterName(parameter);
         graph.Nodes.Add(id, new(node, position)); Watch(node); EmitChanged();
     }
     /// <summary>Returns a borrowed operation in a stage.</summary>
@@ -223,11 +224,11 @@ public sealed partial class VisualShader : Shader
     private Graph GetGraph(Type type)
     { ThrowIfDisposed(); if (type is not (Type.Vertex or Type.Fragment)) throw new ArgumentOutOfRangeException(nameof(type)); return _graphs[(int)type]; }
     private Entry GetEntry(Type type, int id) => GetGraph(type).Nodes.TryGetValue(id, out var entry) ? entry : throw new ArgumentOutOfRangeException(nameof(id));
-    private static bool PortsExist(Graph graph, VisualShaderConnection c) =>
+    private bool PortsExist(Graph graph, VisualShaderConnection c) =>
         graph.Nodes.TryGetValue(c.FromNode, out var from) && graph.Nodes.TryGetValue(c.ToNode, out var to) && !from.Node.IsDisposed && !to.Node.IsDisposed &&
-        (uint)c.FromPort < (uint)from.Node.Outputs.Length && (uint)c.ToPort < (uint)to.Node.Inputs.Length;
-    private static bool PortsCompatible(Graph graph, VisualShaderConnection c) =>
-        (graph.Nodes[c.FromNode].Node.Outputs[c.FromPort] == VisualShaderNode.PortType.Matrix) == (graph.Nodes[c.ToNode].Node.Inputs[c.ToPort] == VisualShaderNode.PortType.Matrix);
+        (uint)c.FromPort < (uint)OutputTypes(from.Node).Length && (uint)c.ToPort < (uint)to.Node.Inputs.Length;
+    private bool PortsCompatible(Graph graph, VisualShaderConnection c) =>
+        (OutputTypes(graph.Nodes[c.FromNode].Node)[c.FromPort] == VisualShaderNode.PortType.Matrix) == (graph.Nodes[c.ToNode].Node.Inputs[c.ToPort] == VisualShaderNode.PortType.Matrix);
     private void Watch(VisualShaderNode node)
     { if (_watched.TryGetValue(node, out var count)) _watched[node] = count + 1; else { _watched.Add(node, 1); node.Changed += _childChanged; } }
     private void Unwatch(VisualShaderNode node)

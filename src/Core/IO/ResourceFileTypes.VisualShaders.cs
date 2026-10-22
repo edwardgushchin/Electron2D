@@ -5,6 +5,16 @@ public static partial class ResourceFileTypes
     private static void RegisterVisualShaderResources()
     {
         RegisterResource("VisualShader", CreateVisualShaderFileResource);
+        RegisterResource("VisualShaderNodeFloatParameter", CreateVisualShaderNodeFloatParameterFileResource);
+        RegisterResource("VisualShaderNodeIntParameter", CreateVisualShaderNodeIntParameterFileResource);
+        RegisterResource("VisualShaderNodeUIntParameter", CreateVisualShaderNodeUIntParameterFileResource);
+        RegisterResource("VisualShaderNodeBooleanParameter", CreateVisualShaderNodeBooleanParameterFileResource);
+        RegisterResource("VisualShaderNodeVec2Parameter", CreateVisualShaderNodeVec2ParameterFileResource);
+        RegisterResource("VisualShaderNodeVec3Parameter", CreateVisualShaderNodeVec3ParameterFileResource);
+        RegisterResource("VisualShaderNodeVec4Parameter", CreateVisualShaderNodeVec4ParameterFileResource);
+        RegisterResource("VisualShaderNodeColorParameter", CreateVisualShaderNodeColorParameterFileResource);
+        RegisterResource("VisualShaderNodeMatrixParameter", CreateVisualShaderNodeMatrixParameterFileResource);
+        RegisterResource("VisualShaderNodeParameterRef", CreateVisualShaderNodeParameterRefFileResource);
         RegisterResource("VisualShaderNodeOutput", CreateVisualShaderNodeOutputFileResource);
         RegisterResource("VisualShaderNodeInput", CreateVisualShaderNodeInputFileResource);
         RegisterResource("VisualShaderNodeFloatOp", CreateVisualShaderNodeFloatOpFileResource);
@@ -91,4 +101,15 @@ public static partial class ResourceFileTypes
     private static VisualShaderNodeVec3Constant CreateVisualShaderNodeVec3ConstantFileResource() => new();
     private static VisualShaderNodeVec4Constant CreateVisualShaderNodeVec4ConstantFileResource() => new();
     private static VisualShaderNodeColorConstant CreateVisualShaderNodeColorConstantFileResource() => new();
+
+    private static VisualShaderNodeFloatParameter CreateVisualShaderNodeFloatParameterFileResource() => new();
+    private static VisualShaderNodeIntParameter CreateVisualShaderNodeIntParameterFileResource() => new();
+    private static VisualShaderNodeUIntParameter CreateVisualShaderNodeUIntParameterFileResource() => new();
+    private static VisualShaderNodeBooleanParameter CreateVisualShaderNodeBooleanParameterFileResource() => new();
+    private static VisualShaderNodeVec2Parameter CreateVisualShaderNodeVec2ParameterFileResource() => new();
+    private static VisualShaderNodeVec3Parameter CreateVisualShaderNodeVec3ParameterFileResource() => new();
+    private static VisualShaderNodeVec4Parameter CreateVisualShaderNodeVec4ParameterFileResource() => new();
+    private static VisualShaderNodeColorParameter CreateVisualShaderNodeColorParameterFileResource() => new();
+    private static VisualShaderNodeMatrixParameter CreateVisualShaderNodeMatrixParameterFileResource() => new();
+    private static VisualShaderNodeParameterRef CreateVisualShaderNodeParameterRefFileResource() => new();
 }

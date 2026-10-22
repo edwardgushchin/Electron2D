@@ -2257,15 +2257,6 @@
         "VisualShaderNodeSwitch::enum_value:OpType.OP_TYPE_TRANSFORM"
       ],
       "reason": "ADRs 0001/0004/0013/0028/0051: these nodes operate on ordinary numeric matrix shader data, projected to Matrix-named resources and copied System.Numerics.Matrix4x4 values; no 3D scene transform API is introduced. All sixteen components retain portable row-order archives and column-order GLSL literals. Constant/arithmetic/inverse/transpose/composition/decomposition/determinant/outer/vector products and matrix comparison/selection execute in both canvas stages through the existing importer/material backend. Native singular/division-domain boundaries remain separate import/load checks. Independent numeric oracles, all-component copy/archive and spatial UV control verify the dataflow; hardware/platform/native-heap acceptance remains separate."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "class:VisualShaderNodeTransformParameter",
-        "VisualShaderNodeTransformParameter::property:default_value",
-        "VisualShaderNodeTransformParameter::property:default_value_enabled"
-      ],
-      "reason": "Trigger: typed matrix graph parameter declarations, symbol/scope resolution, qualifier/instance layout and imported default/hint metadata over the existing raw material matrix backend and now-executing Matrix4x4 graph operand contract under ADR 0028. Numeric matrix shader data is applicable independently of excluded 3D scene types."
     }
   ],
   "extras": [

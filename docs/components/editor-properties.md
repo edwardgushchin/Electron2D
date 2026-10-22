@@ -1,6 +1,6 @@
 # Typed editor properties component
 
-Last updated: 2026-10-19
+Last updated: 2026-10-22
 
 ## Stored physical state
 
@@ -92,3 +92,16 @@ Node.GetNodeAndResource reads resource references through the same typed descrip
 The internal indexed-property correspondence was inspected against pinned [object indexed reads and back-propagated writes](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/object.cpp). Compiled descriptors preserve typed access under ADRs 0001/0004/0005; dynamic property-name dispatch remains excluded.
 
 Typed GetValue/TryGetRevertValue/CanRevert inspection follows ADR 0009 during exact-thread teardown; SetValue and Revert reject once disposal starts, before restoration invokes a factory. Default availability is separate from CanRevert's retained value-difference policy. Null defaults are available values, factory results retain delegate ownership, validators reject before writing and committed setter changes remain visible after a callback throws. [ObjectPropertyTests](../../tests/Electron2D.Tests/ObjectPropertyTests.cs) exercises discovery snapshots, filtering/replacement/errors, dynamic defaults, custom owner policy and actual CPU/GPU serial/separate full-frame property flows at zero warmed owner/all-thread bytes. It preserves permitted post-solver mass edits, owner/capture rejection and recovery after a collected callback failure. Software Vulkan is functional evidence only; hardware/editor/native/platform gates remain open.
+
+## Advisory hints
+
+PropertyDescriptor exposes immutable init-only Hint and HintString metadata.
+PropertyHint retains applicable nondeprecated identities for typed tooling providers;
+Max and undefined values reject initialization. HintString rejects null. The text
+and hint do not change setter validation, readonly/stored state or runtime values.
+Through retains its leaf metadata; synthetic component/collection projections have
+no inferred hint. The public [graph parameter consumer](visual-shaders.md#parameters-and-graph-local-references)
+exercises provider metadata and compiled numeric range/enum/Color consumers.
+No editor controls or visual editor acceptance are implied by descriptor discovery.
+
+Value-presentation tags, including quaternion display, describe caller-provided CLR data without introducing an engine Quaternion type or a 3D scene service. Scene-3D layer tags and deprecated hints remain excluded under ADR 0004.

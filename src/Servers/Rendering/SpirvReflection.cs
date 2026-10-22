@@ -263,6 +263,7 @@ internal static unsafe partial class SpirvReflection
         if (particles && (sizes.Length == 0 || sizes[0] != ParticleFrameLayout.ByteSize || instances.Count != 0 || screenPixelSizeUniform is not null || textures.Any(t => t.IsCanvasTexture || t.IsScreenTexture)))
             throw new NotSupportedException("Particle programs require their renderer-owned frame and have no canvas command, screen or instance bindings.");
         ReadDefaults(code, uniforms, instances);
+        ReadHints(code, uniforms, instances, fragment);
         return new ShaderProgram(code, sizes, uniforms, textures, timeUniform, screenPixelSizeUniform, sdfCoordsUniform, instances, globals)
         { NativeCode = CanvasSamplerArrays.Lower(code, textures, needsSampler) };
     }

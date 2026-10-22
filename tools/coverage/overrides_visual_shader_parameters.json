@@ -1,0 +1,785 @@
+{
+  "mappings": [
+    {
+      "godot": "class:VisualShaderNodeBooleanParameter",
+      "electron2d": "T:Electron2D.VisualShaderNodeBooleanParameter",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeBooleanParameter::property:default_value",
+      "electron2d": "property:Electron2D.VisualShaderNodeBooleanParameter.DefaultValue()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeBooleanParameter::property:default_value_enabled",
+      "electron2d": "property:Electron2D.VisualShaderNodeBooleanParameter.DefaultValueEnabled()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "class:VisualShaderNodeColorParameter",
+      "electron2d": "T:Electron2D.VisualShaderNodeColorParameter",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeColorParameter::property:default_value",
+      "electron2d": "property:Electron2D.VisualShaderNodeColorParameter.DefaultValue()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeColorParameter::property:default_value_enabled",
+      "electron2d": "property:Electron2D.VisualShaderNodeColorParameter.DefaultValueEnabled()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "class:VisualShaderNodeFloatParameter",
+      "electron2d": "T:Electron2D.VisualShaderNodeFloatParameter",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeFloatParameter::enum:Hint",
+      "electron2d": "T:Electron2D.VisualShaderNodeFloatParameter.HintEnum",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeFloatParameter::enum_value:Hint.HINT_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatParameter.HintEnum.Max()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeFloatParameter::enum_value:Hint.HINT_NONE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatParameter.HintEnum.None()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeFloatParameter::enum_value:Hint.HINT_RANGE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatParameter.HintEnum.Range()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeFloatParameter::enum_value:Hint.HINT_RANGE_STEP",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeFloatParameter.HintEnum.RangeStep()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeFloatParameter::property:default_value",
+      "electron2d": "property:Electron2D.VisualShaderNodeFloatParameter.DefaultValue()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeFloatParameter::property:default_value_enabled",
+      "electron2d": "property:Electron2D.VisualShaderNodeFloatParameter.DefaultValueEnabled()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeFloatParameter::property:hint",
+      "electron2d": "property:Electron2D.VisualShaderNodeFloatParameter.Hint()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeFloatParameter::property:max",
+      "electron2d": "property:Electron2D.VisualShaderNodeFloatParameter.Max()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeFloatParameter::property:min",
+      "electron2d": "property:Electron2D.VisualShaderNodeFloatParameter.Min()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeFloatParameter::property:step",
+      "electron2d": "property:Electron2D.VisualShaderNodeFloatParameter.Step()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "class:VisualShaderNodeIntParameter",
+      "electron2d": "T:Electron2D.VisualShaderNodeIntParameter",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeIntParameter::enum:Hint",
+      "electron2d": "T:Electron2D.VisualShaderNodeIntParameter.HintEnum",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeIntParameter::enum_value:Hint.HINT_ENUM",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeIntParameter.HintEnum.Enum()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeIntParameter::enum_value:Hint.HINT_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeIntParameter.HintEnum.Max()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeIntParameter::enum_value:Hint.HINT_NONE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeIntParameter.HintEnum.None()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeIntParameter::enum_value:Hint.HINT_RANGE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeIntParameter.HintEnum.Range()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeIntParameter::enum_value:Hint.HINT_RANGE_STEP",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeIntParameter.HintEnum.RangeStep()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeIntParameter::property:default_value",
+      "electron2d": "property:Electron2D.VisualShaderNodeIntParameter.DefaultValue()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeIntParameter::property:default_value_enabled",
+      "electron2d": "property:Electron2D.VisualShaderNodeIntParameter.DefaultValueEnabled()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeIntParameter::property:enum_names",
+      "electron2d": "property:Electron2D.VisualShaderNodeIntParameter.EnumNames()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeIntParameter::property:hint",
+      "electron2d": "property:Electron2D.VisualShaderNodeIntParameter.Hint()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeIntParameter::property:max",
+      "electron2d": "property:Electron2D.VisualShaderNodeIntParameter.Max()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeIntParameter::property:min",
+      "electron2d": "property:Electron2D.VisualShaderNodeIntParameter.Min()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeIntParameter::property:step",
+      "electron2d": "property:Electron2D.VisualShaderNodeIntParameter.Step()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "class:VisualShaderNodeParameter",
+      "electron2d": "T:Electron2D.VisualShaderNodeParameter",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeParameter::enum:Qualifier",
+      "electron2d": "T:Electron2D.VisualShaderNodeParameter.QualifierEnum",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeParameter::enum_value:Qualifier.QUAL_GLOBAL",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeParameter.QualifierEnum.Global()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeParameter::enum_value:Qualifier.QUAL_INSTANCE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeParameter.QualifierEnum.Instance()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeParameter::enum_value:Qualifier.QUAL_INSTANCE_INDEX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeParameter.QualifierEnum.InstanceIndex()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeParameter::enum_value:Qualifier.QUAL_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeParameter.QualifierEnum.Max()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeParameter::enum_value:Qualifier.QUAL_NONE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeParameter.QualifierEnum.None()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeParameter::property:instance_index",
+      "electron2d": "property:Electron2D.VisualShaderNodeParameter.InstanceIndex()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeParameter::property:parameter_name",
+      "electron2d": "property:Electron2D.VisualShaderNodeParameter.ParameterName()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeParameter::property:qualifier",
+      "electron2d": "property:Electron2D.VisualShaderNodeParameter.Qualifier()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "class:VisualShaderNodeParameterRef",
+      "electron2d": "T:Electron2D.VisualShaderNodeParameterRef",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeParameterRef::property:parameter_name",
+      "electron2d": "property:Electron2D.VisualShaderNodeParameterRef.ParameterName()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "class:VisualShaderNodeTransformParameter",
+      "electron2d": "T:Electron2D.VisualShaderNodeMatrixParameter",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeTransformParameter::property:default_value",
+      "electron2d": "property:Electron2D.VisualShaderNodeMatrixParameter.DefaultValue()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeTransformParameter::property:default_value_enabled",
+      "electron2d": "property:Electron2D.VisualShaderNodeMatrixParameter.DefaultValueEnabled()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "class:VisualShaderNodeUIntParameter",
+      "electron2d": "T:Electron2D.VisualShaderNodeUIntParameter",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeUIntParameter::property:default_value",
+      "electron2d": "property:Electron2D.VisualShaderNodeUIntParameter.DefaultValue()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeUIntParameter::property:default_value_enabled",
+      "electron2d": "property:Electron2D.VisualShaderNodeUIntParameter.DefaultValueEnabled()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "class:VisualShaderNodeVec2Parameter",
+      "electron2d": "T:Electron2D.VisualShaderNodeVec2Parameter",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeVec2Parameter::property:default_value",
+      "electron2d": "property:Electron2D.VisualShaderNodeVec2Parameter.DefaultValue()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeVec2Parameter::property:default_value_enabled",
+      "electron2d": "property:Electron2D.VisualShaderNodeVec2Parameter.DefaultValueEnabled()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "class:VisualShaderNodeVec3Parameter",
+      "electron2d": "T:Electron2D.VisualShaderNodeVec3Parameter",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeVec3Parameter::property:default_value",
+      "electron2d": "property:Electron2D.VisualShaderNodeVec3Parameter.DefaultValue()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeVec3Parameter::property:default_value_enabled",
+      "electron2d": "property:Electron2D.VisualShaderNodeVec3Parameter.DefaultValueEnabled()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "class:VisualShaderNodeVec4Parameter",
+      "electron2d": "T:Electron2D.VisualShaderNodeVec4Parameter",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeVec4Parameter::property:default_value",
+      "electron2d": "property:Electron2D.VisualShaderNodeVec4Parameter.DefaultValue()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "VisualShaderNodeVec4Parameter::property:default_value_enabled",
+      "electron2d": "property:Electron2D.VisualShaderNodeVec4Parameter.DefaultValueEnabled()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum:PropertyHint",
+      "electron2d": "T:Electron2D.PropertyHint",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_ARRAY_TYPE",
+      "electron2d": "enumValue:Electron2D.PropertyHint.ArrayType()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_COLOR_NO_ALPHA",
+      "electron2d": "enumValue:Electron2D.PropertyHint.ColorNoAlpha()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_DICTIONARY_TYPE",
+      "electron2d": "enumValue:Electron2D.PropertyHint.DictionaryType()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_DIR",
+      "electron2d": "enumValue:Electron2D.PropertyHint.Dir()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_ENUM",
+      "electron2d": "enumValue:Electron2D.PropertyHint.Enum()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_ENUM_SUGGESTION",
+      "electron2d": "enumValue:Electron2D.PropertyHint.EnumSuggestion()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_EXPRESSION",
+      "electron2d": "enumValue:Electron2D.PropertyHint.Expression()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_EXP_EASING",
+      "electron2d": "enumValue:Electron2D.PropertyHint.ExpEasing()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_FILE",
+      "electron2d": "enumValue:Electron2D.PropertyHint.File()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_FILE_PATH",
+      "electron2d": "enumValue:Electron2D.PropertyHint.FilePath()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_FLAGS",
+      "electron2d": "enumValue:Electron2D.PropertyHint.Flags()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_GLOBAL_DIR",
+      "electron2d": "enumValue:Electron2D.PropertyHint.GlobalDir()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_GLOBAL_FILE",
+      "electron2d": "enumValue:Electron2D.PropertyHint.GlobalFile()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_GLOBAL_SAVE_FILE",
+      "electron2d": "enumValue:Electron2D.PropertyHint.GlobalSaveFile()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_GROUP_ENABLE",
+      "electron2d": "enumValue:Electron2D.PropertyHint.GroupEnable()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_INPUT_NAME",
+      "electron2d": "enumValue:Electron2D.PropertyHint.InputName()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_INT_IS_POINTER",
+      "electron2d": "enumValue:Electron2D.PropertyHint.IntIsPointer()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_LAYERS_2D_NAVIGATION",
+      "electron2d": "enumValue:Electron2D.PropertyHint.Layers2DNavigation()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_LAYERS_2D_PHYSICS",
+      "electron2d": "enumValue:Electron2D.PropertyHint.Layers2DPhysics()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_LAYERS_2D_RENDER",
+      "electron2d": "enumValue:Electron2D.PropertyHint.Layers2DRender()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_LAYERS_AVOIDANCE",
+      "electron2d": "enumValue:Electron2D.PropertyHint.LayersAvoidance()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_LINK",
+      "electron2d": "enumValue:Electron2D.PropertyHint.Link()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_LOCALE_ID",
+      "electron2d": "enumValue:Electron2D.PropertyHint.LocaleID()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_LOCALIZABLE_STRING",
+      "electron2d": "enumValue:Electron2D.PropertyHint.LocalizableString()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_MAX",
+      "electron2d": "enumValue:Electron2D.PropertyHint.Max()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_MULTILINE_TEXT",
+      "electron2d": "enumValue:Electron2D.PropertyHint.MultilineText()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_NODE_PATH_VALID_TYPES",
+      "electron2d": "enumValue:Electron2D.PropertyHint.NodePathValidTypes()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_NODE_TYPE",
+      "electron2d": "enumValue:Electron2D.PropertyHint.NodeType()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_NONE",
+      "electron2d": "enumValue:Electron2D.PropertyHint.None()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_OBJECT_ID",
+      "electron2d": "enumValue:Electron2D.PropertyHint.ObjectID()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_OBJECT_TOO_BIG",
+      "electron2d": "enumValue:Electron2D.PropertyHint.ObjectTooBig()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_ONESHOT",
+      "electron2d": "enumValue:Electron2D.PropertyHint.OneShot()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_PASSWORD",
+      "electron2d": "enumValue:Electron2D.PropertyHint.Password()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_PLACEHOLDER_TEXT",
+      "electron2d": "enumValue:Electron2D.PropertyHint.PlaceholderText()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_RANGE",
+      "electron2d": "enumValue:Electron2D.PropertyHint.Range()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_RESOURCE_TYPE",
+      "electron2d": "enumValue:Electron2D.PropertyHint.ResourceType()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_SAVE_FILE",
+      "electron2d": "enumValue:Electron2D.PropertyHint.SaveFile()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_TOOL_BUTTON",
+      "electron2d": "enumValue:Electron2D.PropertyHint.ToolButton()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_TYPE_STRING",
+      "electron2d": "enumValue:Electron2D.PropertyHint.TypeString()",
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_HIDE_QUATERNION_EDIT",
+      "electron2d": "enumValue:Electron2D.PropertyHint.HideQuaternionEdit()",
+      "reason": "ADR 0005: advisory display identity for caller-provided typed numeric data; it introduces no engine Quaternion type or three-dimensional scene service."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "godot": [
+        "@GlobalScope::enum:PropertyHint",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_ARRAY_TYPE",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_COLOR_NO_ALPHA",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_DICTIONARY_TYPE",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_DIR",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_ENUM",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_ENUM_SUGGESTION",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_EXPRESSION",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_EXP_EASING",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_FILE",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_FILE_PATH",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_FLAGS",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_GLOBAL_DIR",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_GLOBAL_FILE",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_GLOBAL_SAVE_FILE",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_GROUP_ENABLE",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_INPUT_NAME",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_INT_IS_POINTER",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_LAYERS_2D_NAVIGATION",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_LAYERS_2D_PHYSICS",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_LAYERS_2D_RENDER",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_LAYERS_AVOIDANCE",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_LINK",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_LOCALE_ID",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_LOCALIZABLE_STRING",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_MAX",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_MULTILINE_TEXT",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_NODE_PATH_VALID_TYPES",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_NODE_TYPE",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_NONE",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_OBJECT_ID",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_OBJECT_TOO_BIG",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_ONESHOT",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_PASSWORD",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_PLACEHOLDER_TEXT",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_RANGE",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_RESOURCE_TYPE",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_SAVE_FILE",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_TOOL_BUTTON",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_TYPE_STRING",
+        "VisualShaderNodeBooleanParameter::property:default_value",
+        "VisualShaderNodeBooleanParameter::property:default_value_enabled",
+        "VisualShaderNodeColorParameter::property:default_value",
+        "VisualShaderNodeColorParameter::property:default_value_enabled",
+        "VisualShaderNodeFloatParameter::enum:Hint",
+        "VisualShaderNodeFloatParameter::enum_value:Hint.HINT_MAX",
+        "VisualShaderNodeFloatParameter::enum_value:Hint.HINT_NONE",
+        "VisualShaderNodeFloatParameter::enum_value:Hint.HINT_RANGE",
+        "VisualShaderNodeFloatParameter::enum_value:Hint.HINT_RANGE_STEP",
+        "VisualShaderNodeFloatParameter::property:default_value",
+        "VisualShaderNodeFloatParameter::property:default_value_enabled",
+        "VisualShaderNodeFloatParameter::property:hint",
+        "VisualShaderNodeFloatParameter::property:max",
+        "VisualShaderNodeFloatParameter::property:min",
+        "VisualShaderNodeFloatParameter::property:step",
+        "VisualShaderNodeIntParameter::enum:Hint",
+        "VisualShaderNodeIntParameter::enum_value:Hint.HINT_ENUM",
+        "VisualShaderNodeIntParameter::enum_value:Hint.HINT_MAX",
+        "VisualShaderNodeIntParameter::enum_value:Hint.HINT_NONE",
+        "VisualShaderNodeIntParameter::enum_value:Hint.HINT_RANGE",
+        "VisualShaderNodeIntParameter::enum_value:Hint.HINT_RANGE_STEP",
+        "VisualShaderNodeIntParameter::property:default_value",
+        "VisualShaderNodeIntParameter::property:default_value_enabled",
+        "VisualShaderNodeIntParameter::property:enum_names",
+        "VisualShaderNodeIntParameter::property:hint",
+        "VisualShaderNodeIntParameter::property:max",
+        "VisualShaderNodeIntParameter::property:min",
+        "VisualShaderNodeIntParameter::property:step",
+        "VisualShaderNodeParameter::enum:Qualifier",
+        "VisualShaderNodeParameter::enum_value:Qualifier.QUAL_GLOBAL",
+        "VisualShaderNodeParameter::enum_value:Qualifier.QUAL_INSTANCE",
+        "VisualShaderNodeParameter::enum_value:Qualifier.QUAL_INSTANCE_INDEX",
+        "VisualShaderNodeParameter::enum_value:Qualifier.QUAL_MAX",
+        "VisualShaderNodeParameter::enum_value:Qualifier.QUAL_NONE",
+        "VisualShaderNodeParameter::property:instance_index",
+        "VisualShaderNodeParameter::property:parameter_name",
+        "VisualShaderNodeParameter::property:qualifier",
+        "VisualShaderNodeParameterRef::property:parameter_name",
+        "VisualShaderNodeTransformParameter::property:default_value",
+        "VisualShaderNodeTransformParameter::property:default_value_enabled",
+        "VisualShaderNodeUIntParameter::property:default_value",
+        "VisualShaderNodeUIntParameter::property:default_value_enabled",
+        "VisualShaderNodeVec2Parameter::property:default_value",
+        "VisualShaderNodeVec2Parameter::property:default_value_enabled",
+        "VisualShaderNodeVec3Parameter::property:default_value",
+        "VisualShaderNodeVec3Parameter::property:default_value_enabled",
+        "VisualShaderNodeVec4Parameter::property:default_value",
+        "VisualShaderNodeVec4Parameter::property:default_value_enabled",
+        "class:VisualShaderNodeBooleanParameter",
+        "class:VisualShaderNodeColorParameter",
+        "class:VisualShaderNodeFloatParameter",
+        "class:VisualShaderNodeIntParameter",
+        "class:VisualShaderNodeParameter",
+        "class:VisualShaderNodeParameterRef",
+        "class:VisualShaderNodeTransformParameter",
+        "class:VisualShaderNodeUIntParameter",
+        "class:VisualShaderNodeVec2Parameter",
+        "class:VisualShaderNodeVec3Parameter",
+        "class:VisualShaderNodeVec4Parameter",
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_HIDE_QUATERNION_EDIT"
+      ],
+      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_INT_IS_OBJECTID"
+      ],
+      "reason": "ADR 0004: pinned @GlobalScope.xml PROPERTY_HINT_INT_IS_OBJECTID deprecated metadata says: This hint is not used by the engine. No public alias or implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_LAYERS_3D_NAVIGATION"
+      ],
+      "reason": "ADR 0004: this hint selects named layers in the excluded three-dimensional scene rendering/physics/navigation domain. Typed property metadata does not create that scene domain; no implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_LAYERS_3D_PHYSICS"
+      ],
+      "reason": "ADR 0004: this hint selects named layers in the excluded three-dimensional scene rendering/physics/navigation domain. Typed property metadata does not create that scene domain; no implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_LAYERS_3D_RENDER"
+      ],
+      "reason": "ADR 0004: this hint selects named layers in the excluded three-dimensional scene rendering/physics/navigation domain. Typed property metadata does not create that scene domain; no implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_NODE_PATH_TO_EDITED_NODE"
+      ],
+      "reason": "ADR 0004: pinned @GlobalScope.xml PROPERTY_HINT_NODE_PATH_TO_EDITED_NODE deprecated metadata says: This hint is not used by the engine. No public alias or implementation trigger."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeBooleanParameter..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeColorParameter..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeFloatParameter..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeIntParameter..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeMatrixParameter..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeParameter..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeParameterRef..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeUIntParameter..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeVec2Parameter..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeVec3Parameter..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeVec4Parameter..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeBooleanParameter.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeBooleanParameter.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeColorParameter.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeColorParameter.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeFloatParameter.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeFloatParameter.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeIntParameter.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeIntParameter.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeMatrixParameter.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeMatrixParameter.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParameter.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParameterRef.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeParameterRef.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeUIntParameter.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeUIntParameter.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeVec2Parameter.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeVec2Parameter.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeVec3Parameter.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeVec3Parameter.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeVec4Parameter.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeVec4Parameter.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: compiled typed parameter Resource construction, duplicate factory and stored definition descriptors; borrowed aliases remain graph-local."
+    },
+    {
+      "electron2d": "property:Electron2D.PropertyDescriptor.Hint()",
+      "reason": "ADR 0005: immutable typed projection of the advisory hint and hint_string fields in property discovery, without untyped value access or runtime clamping."
+    },
+    {
+      "electron2d": "property:Electron2D.PropertyDescriptor.HintString()",
+      "reason": "ADR 0005: immutable typed projection of the advisory hint and hint_string fields in property discovery, without untyped value access or runtime clamping."
+    }
+  ]
+}

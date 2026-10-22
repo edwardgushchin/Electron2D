@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 if (args.Length == 4 && args[3] == "--visual-shader") return await ImportVisualGraph(args);
 return await ImportModule(args);
 
-static async Task<int> ImportModule(string[] args)
+static async Task<int> ImportModule(string[] args, VisualShader? graph = null)
 {
     var particleImport = args.Length is 4 or 5 && args[3] == "--particles";
     var blitImport = args.Length is 4 or 5 && args[3] == "--texture-blit";
@@ -76,6 +76,7 @@ static async Task<int> ImportModule(string[] args)
                 finally { Directory.SetCurrentDirectory(directory); }
             }
             result = ShaderSourceTypes.AddConfiguredDefaults(result, input, args[1] == "fragment", particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
+            if (graph is not null) result = ShaderSourceTypes.AddGraphParameters(result, graph, args[1] == "fragment");
             File.WriteAllBytes(temporary, result);
         }
         Console.Write(await Execute("spirv-val", "--target-env", "vulkan1.0", temporary));
@@ -181,8 +182,8 @@ static async Task<int> ImportVisualGraph(string[] args)
         var vertex = IOPath.Combine(temporary, "graph.vert.glsl");
         var fragment = IOPath.Combine(temporary, "graph.frag.glsl");
         File.WriteAllText(vertex, sources.Vertex); File.WriteAllText(fragment, sources.Fragment);
-        if (await ImportModule([vertex, "vertex", vertex + ".spv"]) != 0 ||
-            await ImportModule([fragment, "fragment", fragment + ".spv"]) != 0)
+        if (await ImportModule([vertex, "vertex", vertex + ".spv"], graph) != 0 ||
+            await ImportModule([fragment, "fragment", fragment + ".spv"], graph) != 0)
             throw new InvalidDataException("Generated visual shader source failed compilation or interface validation.");
         graph.SetSPIRV(File.ReadAllBytes(vertex + ".spv"), File.ReadAllBytes(fragment + ".spv"));
         Directory.CreateDirectory(IOPath.GetDirectoryName(output)!);

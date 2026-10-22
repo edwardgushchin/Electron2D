@@ -197,7 +197,7 @@ internal static partial class GraphChecks
         try
         {
             var uv = new VisualShaderNodeInput { InputName = "uv" }; var split = new VisualShaderNodeVectorDecompose { OpType = VisualShaderNodeVectorBase.OpTypeEnum.Vector2 };
-            var scale = new VisualShaderNodeFloatOp { Operator = VisualShaderNodeFloatOp.OperatorEnum.Multiply }; scale.SetInputPortDefaultValue(1, 64f);
+            var scale = new VisualShaderNodeMultiplyAdd(); scale.SetInputPortDefaultValue(1, 64f); scale.SetInputPortDefaultValue(2, .25f);
             var multiply = new VisualShaderNodeUIntOp { Operator = VisualShaderIntegerOperator.Multiply }; multiply.SetInputPortDefaultValue(1, 1664525u);
             var add = new VisualShaderNodeUIntOp { Operator = VisualShaderIntegerOperator.Add }; add.SetInputPortDefaultValue(1, 1013904223u);
             var shift = new VisualShaderNodeUIntOp { Operator = VisualShaderIntegerOperator.BitwiseRightShift }; shift.SetInputPortDefaultValue(1, 16u);

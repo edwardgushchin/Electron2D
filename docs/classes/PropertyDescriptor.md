@@ -1,6 +1,6 @@
 # PropertyDescriptor
 
-Last updated: 2026-10-14
+Last updated: 2026-10-22
 
 **Inherits:** —
 
@@ -208,3 +208,14 @@ There are no categories, ranges, hints, file-format flags, reflection-based acce
 See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.
 
 [ObjectPropertyTests](../../tests/Electron2D.Tests/ObjectPropertyTests.cs) executes discovery snapshots, compatible replacement/filtering and invalid lists, owner policy, live/default/null/array values, readonly/validation/delegate errors and teardown inspection. Explicit CPU/GPU serial and separate-thread profiles use real RigidBody properties, permitted post-solver mass edits, owner/capture rejection and callback-error recovery. Each retains 128 warm/128 measured full frames with typed inspection, velocity writes and reversion at strict zero owner/all-thread managed bytes. GPU runs use CPU-only Vulkan; this does not establish hardware performance, editor automation or native/platform acceptance.
+
+## Advisory hints
+
+PropertyDescriptor exposes immutable init-only Hint and HintString metadata.
+PropertyHint retains applicable nondeprecated identities for typed tooling providers;
+Max and undefined values reject initialization. HintString rejects null. The text
+and hint do not change setter validation, readonly/stored state or runtime values.
+Through retains its leaf metadata; synthetic component/collection projections have
+no inferred hint. The public [graph parameter consumer](../components/visual-shaders.md#parameters-and-graph-local-references)
+exercises provider metadata and compiled numeric range/enum/Color consumers.
+No editor controls or visual editor acceptance are implied by descriptor discovery.

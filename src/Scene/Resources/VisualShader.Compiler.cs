@@ -9,10 +9,11 @@ public sealed partial class VisualShader
     {
         ThrowIfDisposed(); ValidateFileState();
         if (GetMode() != Mode.CanvasItem) throw new NotSupportedException("This visual graph importer requires the canvas shader domain.");
-        return (GenerateStage(Type.Vertex), GenerateStage(Type.Fragment));
+        var parameters = ParameterSymbols(); var slots = InstanceSlots(parameters);
+        return (GenerateStage(Type.Vertex, parameters, slots), GenerateStage(Type.Fragment, parameters, slots));
     }
 
-    private string GenerateStage(Type stage)
+    private string GenerateStage(Type stage, Dictionary<string, VisualShaderNodeParameter> parameters, Dictionary<string, int> slots)
     {
         var graph = GetGraph(stage);
         var incoming = new Dictionary<(int Node, int Port), VisualShaderConnection>();
@@ -43,14 +44,14 @@ public sealed partial class VisualShader
                 if (incoming.TryGetValue((id, port), out var edge)) { remaining[id]++; dependents[edge.FromNode].Add(id); }
         var ready = new PriorityQueue<int, int>();
         foreach (var pair in remaining) if (pair.Value == 0) ready.Enqueue(pair.Key, pair.Key);
-        var source = new StringBuilder(stage == Type.Vertex ? VertexHeader : FragmentHeader);
+        var source = new StringBuilder(ParameterHeader(stage, reachable, parameters, slots));
         var values = new Dictionary<(int Node, int Port), string>(); var completed = 0;
         string Input(int id, int port)
         {
             var node = graph.Nodes[id].Node;
             if (!incoming.TryGetValue((id, port), out var edge)) return node.InputDefaultExpression(port);
             var from = graph.Nodes[edge.FromNode].Node;
-            return VisualShaderValues.ConvertExpression(values[(edge.FromNode, edge.FromPort)], from.Outputs[edge.FromPort], node.Inputs[port]);
+            return VisualShaderValues.ConvertExpression(values[(edge.FromNode, edge.FromPort)], OutputTypes(from)[edge.FromPort], node.Inputs[port]);
         }
         while (ready.TryDequeue(out var id, out _))
         {
@@ -69,11 +70,17 @@ public sealed partial class VisualShader
             else
             {
                 var inputs = Enumerable.Range(0, node.Inputs.Length).Select(port => Input(id, port)).ToArray();
-                for (var output = 0; output < node.Outputs.Length; output++)
+                for (var output = 0; output < OutputTypes(node).Length; output++)
                 {
                     var name = "n" + id.ToString(CultureInfo.InvariantCulture) + "p" + output.ToString(CultureInfo.InvariantCulture);
-                    var expression = node is VisualShaderNodeInput input ? input.Expression(stage) : node.Expression(output, inputs);
-                    source.Append("    ").Append(VisualShaderValues.Name(node.Outputs[output])).Append(' ').Append(name).Append(" = ").Append(expression).AppendLine(";");
+                    var expression = node switch
+                    {
+                        VisualShaderNodeInput input => input.Expression(stage).Replace("TIME", "e2d_values.TIME", StringComparison.Ordinal).Replace("SCREEN_PIXEL_SIZE", "e2d_values.SCREEN_PIXEL_SIZE", StringComparison.Ordinal),
+                        VisualShaderNodeParameter parameter => ParameterVariable(parameter),
+                        VisualShaderNodeParameterRef reference => ParameterExpression(reference, output, parameters),
+                        _ => node.Expression(output, inputs)
+                    };
+                    source.Append("    ").Append(VisualShaderValues.Name(OutputTypes(node)[output])).Append(' ').Append(name).Append(" = ").Append(expression).AppendLine(";");
                     values.Add((id, output), name);
                 }
             }

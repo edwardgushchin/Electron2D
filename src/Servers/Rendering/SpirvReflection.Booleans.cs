@@ -22,7 +22,7 @@ internal static unsafe partial class SpirvReflection
             {
                 var utf8 = new UTF8Encoding(false, true);
                 var parts = utf8.GetString(bytes[..end]).Split(':');
-                if (parts.Length > 2 && parts[1] == "default") continue;
+                if (parts.Length > 2 && parts[1] is "default" or "hint") continue;
                 if (parts.Length != 6 || parts[1] != "bool" || parts[2] != "1")
                     throw new NotSupportedException("Unsupported Electron2D shader type metadata.");
                 if (!int.TryParse(parts[3], NumberStyles.None, CultureInfo.InvariantCulture, out var width) || width is < 1 or > 4 ||

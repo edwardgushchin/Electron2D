@@ -442,3 +442,34 @@ Material state records explicit writes independently of their value. Thus explic
 Instance values keep nullable scalar/vector access and at most sixteen declarations. Null removes the override; getters/default queries and each draw use the current compiled default. Prepared names retain one typed value/descriptor per item, so warmed set/clear cycles reuse storage while cleared values remain nullable unset in scene snapshots and never revive as explicit overrides.
 
 Current public CLR and strict full-trim NativeAOT evidence on software Wayland/X11 and HDR/MSAA covers two-language imports, length-one arrays, all nineteen roles and thirty-eight scalar/array declarations, malformed metadata and atomic import failures, source/configuration agreement, copied graphs, separate-process compressed/big-endian archives, paired-stage adoption/conflicts, sixteen instance roles, real software-Vulkan canvas/particle/blit pixels and retained drawing. Prepared default queries, material reset and instance set/clear measure zero managed bytes on the owner and all threads over 64 active and 64 idle complete frames. The software driver has a [Gallivm nesting limit](https://gitlab.freedesktop.org/mesa/mesa/-/raw/main/src/gallium/auxiliary/gallivm/lp_bld_limits.h) of 80; an initial 135-level early-return fixture reproduced that limit in either order. The final value fixture evaluates all 135 comparisons with flat selects. Physical GPU performance, native allocator counts, foreign platforms and owner acceptance remain separate gates. Evidence is under `bin/shader-uniform-defaults/2026-10-21/`.
+
+## Imported tooling metadata
+
+Active numeric graph parameters carry immutable advisory hints into the ordinary
+ShaderMaterial/CanvasItem descriptors. PropertyHint and HintString describe
+presentation; typed setters and existing validators keep their value contract.
+Ranges do not clamp values. Integer enum labels retain order and explicit
+label/value syntax. Source Color selects Color descriptors over the existing
+literal vec4 carrier. Through projections retain the leaf hint; new component,
+array-element and map-value projections infer no presentation hint.
+
+The version-one SPIR-V OpString record is:
+
+```text
+Electron2D:hint:1:<base64-UTF8-name>:<hint>:<base64-UTF8-text>:<color>
+```
+
+The shader profile admits None=0, Range=1 and Enum=2. Color is zero or one and
+requires a scalar vec4 declaration with no separate numeric hint. Range requires
+float/int scalar storage; Enum requires a signed integer scalar. Names must identify
+active material/Instance fields. Renderer/global fields, arrays, incompatible
+logical types, duplicate names, unknown schemas, malformed UTF-8/base64 and invalid
+color flags reject before immutable program publication. Raw typed property
+providers may use the broader applicable nondeprecated PropertyHint table; this
+shader record is its numeric graph profile. It does not implement editor controls.
+
+Stage merging adopts absent metadata and rejects conflicting present hints,
+labels or Color roles, independently of numeric default agreement. Import adds
+these records before the shared spirv-val/interface checks. Copied/saved shaders
+retain the self-contained records. Old descriptors keep their immutable metadata;
+source hint edits require reimport to produce new descriptors.

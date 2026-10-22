@@ -14,7 +14,8 @@ public abstract partial class PropertyDescriptor
         ArgumentNullException.ThrowIfNull(parent); ArgumentNullException.ThrowIfNull(property);
         return new(parent.Name + ":" + property.Name,
             owner => property.GetValue(Child(parent.GetValue(owner), false)),
-            parent.IsReadOnly || property.IsReadOnly ? null : (owner, value) => { var child = Child(parent.GetValue(owner), true); property.SetValue(child, value); parent.SetValue(owner, child); });
+            parent.IsReadOnly || property.IsReadOnly ? null : (owner, value) => { var child = Child(parent.GetValue(owner), true); property.SetValue(child, value); parent.SetValue(owner, child); })
+        { Hint = property.Hint, HintString = property.HintString };
     }
     /// <summary>Composes a typed struct member into its owning property.</summary>
     /// <typeparam name="TOwner">The root owner type.</typeparam><typeparam name="TCompound">The compound value type.</typeparam><typeparam name="TValue">The member value type.</typeparam>

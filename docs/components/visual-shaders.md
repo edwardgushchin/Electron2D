@@ -403,6 +403,91 @@ Ordinary condition colors allow 0.0021 readback error for half a UNORM8 step; by
 stored edge into a subsequently hidden tolerance port is rejected on load/import,
 and failed import preserves the existing target artifact.
 
+## Parameters and graph-local references
+
+Nine concrete parameter definitions supply float, signed/unsigned integer, Boolean,
+Vector2/3/4, Color and Matrix4x4 data. They inherit VisualShaderNodeParameter;
+VisualShaderNodeParameterRef reads a declaration in either canvas stage. A borrowed
+reference resolves independently in every containing graph. Color declarations
+produce vec4 data; color references expose RGB and alpha on separate ports.
+The initial reference name `[None]` produces scalar zero. Missing declarations and
+stored edges into removed outputs reject before replacing the compiled target.
+
+AddNode sanitizes initial names to ASCII identifiers, replaces spaces with
+underscores and chooses a unique suffix across both stages, excluding the same
+borrowed declaration. Empty names use the parameter caption. Later name edits
+remain authored data until import validates uniqueness, reserved names and syntax.
+One declaration resource may be shared by both stages; its alias survives copies
+and resource archives. Distinct declarations cannot share a symbol.
+
+| Qualifier | Runtime owner | Default and layout contract |
+| --- | --- | --- |
+| None | ShaderMaterial | Typed authored default when enabled; numeric zero or matrix identity otherwise |
+| Global | RenderingServer global registry | Registry owns values/defaults; local enabled defaults reject |
+| Instance | CanvasItem | Automatic free slot; typed authored default or zero |
+| InstanceIndex | CanvasItem | Explicit slot zero through fifteen; typed authored default or zero |
+
+Per-item scalar/vector declarations occupy sixteen-byte slots. Automatic assignment
+uses ordinal names and avoids explicit reservations. Duplicate explicit slots and
+more than sixteen declarations reject; dormant InstanceIndex values remain stored.
+Matrix parameters support material/global storage and reject per-item ownership.
+Normal material fields share the renderer-values block; unused renderer blocks do
+not leave holes before global/instance bindings. The vertex Frame block retains
+binding zero. Mixed declarations fit the existing four-buffer stage contract.
+
+DefaultValueEnabled initially selects the fallback while retaining DefaultValue.
+Float/int/uint/Boolean/Color equality suppresses unchanged values, using approximate
+floating equality where applicable. Vector/matrix default and enable assignments
+emit Changed even when equal. Name and explicit-index assignments emit after every
+valid assignment; unchanged qualifiers/hints remain quiet. Finite authored floating
+values, strict selector domains and complete validation precede mutation. Observer
+errors occur after commitment. Source edits require reimport before drawing changes.
+
+Float parameters retain None/Range/RangeStep hints; integer parameters additionally
+retain copied EnumNames. Hints are advisory metadata and never clamp or validate
+material values. Disabled hints preserve their range/labels. Imported active material
+and instance descriptors expose immutable PropertyHint/HintString. Color declarations
+use typed Color descriptors and literal RGBA, following the existing material/global
+color contract. Global hints remain authored definition metadata; the registry owns
+global discovery. See [imported tooling metadata](shader-materials.md#imported-tooling-metadata).
+
+```csharp
+using var gain = new VisualShaderNodeFloatParameter
+{
+    ParameterName = "gain", DefaultValue = .5f, DefaultValueEnabled = true,
+    Hint = VisualShaderNodeFloatParameter.HintEnum.RangeStep,
+    Min = 0, Max = 2, Step = .125f
+};
+using var graph = new VisualShader();
+graph.AddNode(VisualShader.Type.Fragment, gain, Vector2.Zero, 2);
+graph.ConnectNodes(VisualShader.Type.Fragment, 2, 0, 0, 0);
+ResourceSaver.Save(graph, "res://Shaders/gain-source.e2dres", SaverFlags.BundleResources);
+```
+
+Run the importer from the project root:
+
+```text
+Electron2D.ShaderImport Shaders/gain-source.e2dres canvas Shaders/gain.e2dres --visual-shader
+```
+
+Load the compiled artifact before setting the value:
+
+```csharp
+using var compiled = ResourceLoader.Load<VisualShader>("res://Shaders/gain.e2dres");
+using var material = new ShaderMaterial { Shader = compiled };
+material.SetShaderParameter("gain", .75f);
+```
+
+The public consumer authors 624 parameter fixtures, including every type, qualifier,
+default presence, direct/reference route, both stages and every matrix component.
+Float/integer hints, exact integer bytes and separate Color alpha are observable.
+Sixteen mixed-stage fixtures preserve one shared material declaration, a shared
+global and all sixteen per-item fields, with independent SPIR-V offset checks.
+Prepared frame fixtures alternate typed updates/reset and retain source geometry.
+Invalid source names/references, storage conflicts and malformed hint records enter
+separate rejection/atomic-target checks. These fixtures do not establish an editor,
+physical GPU, native-heap, foreign-platform or owner-acceptance result.
+
 ## Numeric matrix data
 
 Matrix ports carry all sixteen finite System.Numerics.Matrix4x4 components as
@@ -458,7 +543,7 @@ ResourceSaver.Save(graph, "res://Shaders/matrix-source.e2dres", SaverFlags.Bundl
 After ordinary source import this produces (.25,.5,.75) in RGB through the
 matrix times (0,0,0,1) data operation. It does not create a scene transform.
 Canvas/model/screen matrix input names still require their renderer ABI producer;
-parameter declarations still require their symbol/scope/qualifier metadata path.
+Numeric parameter declarations now use the parameter path above; sampled-image parameter declarations retain their separate binding/ownership integration.
 
 The 585 matrix programs exercise every matrix arithmetic/function/vector-product
 selection, all decomposition outputs, all sixteen comparison components, both
@@ -489,7 +574,7 @@ command-texture-size producer.
 Point-size, normal/normal-map/depth, light-vertex and shadow-vertex output ports
 retain their documented port indices, but selecting them rejects import until
 their actual graph-to-canvas ABI integration exists. The class coverage remains
-Partial. Particle/light/blit graph domains, custom varying transport, parameter/
+Partial. Particle/light/blit graph domains, custom varying transport, sampled-image parameter/
 image nodes and editor frame/preview consumers remain explicit prerequisites.
 Sky/volumetric scene domains and deprecated inert graph offset are excluded.
 
@@ -498,7 +583,8 @@ Sky/volumetric scene domains and deprecated inert graph offset are excluded.
 The public `tests/VisualShader.Consumer` covers ownership, aliases, factory
 replacement, invalid requests, snapshots, default presence/conversion, change
 semantics, shallow/deep/copy operations, and fresh resource archives, including
-compressed big-endian data. One thousand eight hundred thirty rendered imported programs include the 57 foundation programs,
+compressed big-endian data. The current corpus contains 2,454 programs, adding the
+624 parameter fixtures above to the prior matrix checkpoint. That checkpoint exercised 1,830 rendered imported programs: the 57 foundation programs,
 170 unary-function programs, 41 vector-dataflow programs, 138 range/mask programs, 258 integer programs and 581 comparison/conditional programs and 585 matrix programs.
 The separate zero-width Remap boundary and ten integer boundary programs verify import and fresh load without portable undefined-domain pixel assertions. Unary coverage includes every scalar/vector function, all vector widths,
 negative/clamped/round-even cases, both canvas stages, and a normalization witness
@@ -507,8 +593,11 @@ covers all widths/components, dormant defaults, scalar eta, reflection boundarie
 fan-out, direct alpha and UV-driven vertex/fragment geometry. Range checks cover all
 38 selectable layouts and every pair of layout transitions, exact integer conversion
 and transactional overflow, all operation families in both stages, mixed controls,
-W witnesses, initial defaults and UV-derived masks. Software Vulkan Wayland/X11 and HDR/MSAA
-readback is checked in CLR and strict full-trim NativeAOT. Normalized byte targets
+W witnesses, initial defaults and UV-derived masks. The prior checkpoint checked software Vulkan Wayland/X11 and HDR/MSAA
+readback in CLR and strict full-trim NativeAOT. The current parameter verification
+runs these same profiles independently, including typed updates/reset and malformed
+metadata; source-scoped run receipts distinguish the exercised set from editor,
+hardware and platform acceptance. Normalized byte targets
 clamp output; HDR half-float readback retains signed/out-of-unit arithmetic.
 Each native profile measures 64 active and 64 idle complete frames at zero
 owner/all-thread managed bytes after preparation, with retained draw counts.
@@ -526,3 +615,5 @@ editor usability and human visual acceptance are separate from this evidence.
 - [Resource lifetime and archives](../decisions/resources.md#adr-0013)
 - [Realtime allocation](../decisions/resources.md#adr-0014)
 - [Programmatic authoring and rendered evidence](../decisions/agent-native.md#adr-0090)
+
+The current 2,454-program CLR and strict full-trim NativeAOT corpus passes software Wayland, X11 and HDR/MSAA readback. All 624 parameter programs also check typed overrides and reset, with retained geometry and 64 active/64 idle complete frames at zero owner/all-thread managed bytes. NativeAOT, hardware, native heap, foreign platforms and owner acceptance use independent checks; an earlier checkpoint does not establish the new source set.

@@ -49,6 +49,9 @@ internal sealed partial class ShaderProgram
                 if (canonical.DefaultWords is not null && mapped.DefaultWords is not null && !canonical.HasSameDefault(mapped.DefaultWords))
                     throw new ArgumentException($"Shader parameter '{value.Name}' has conflicting defaults across stages.");
                 if (canonical.DefaultWords is null && mapped.DefaultWords is not null) target[value.Name] = canonical = canonical with { DefaultWords = mapped.DefaultWords };
+                if (canonical.HintMetadata is { } firstHint && mapped.HintMetadata is { } secondHint && firstHint != secondHint)
+                    throw new ArgumentException($"Shader parameter '{value.Name}' has conflicting tooling metadata across stages.");
+                if (canonical.HintMetadata is null && mapped.HintMetadata is not null) target[value.Name] = canonical = canonical with { HintMetadata = mapped.HintMetadata };
                 copies.Add((canonical, mapped));
             }
             else target.Add(mapped.Name, mapped);

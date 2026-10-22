@@ -279,3 +279,7 @@ Use `--texture-blit` for a writable-texture fragment, or `Profile="texture-blit"
 ## Particle compute programs
 
 Use `--particles` for a compute module, or `Stage="compute" Profile="particles"` on an `Electron2DShader` item. The embedded `electron2d/particles.hlslinc` and `electron2d/particles.glslinc` fragments define the fixed state/frame ABI and optional bounded atomic subemission writer. Load with `Shader.CreateFromSPIRV(bytes, Shader.Mode.Particles)` and export its Compute stage to RenderingDevice for explicit execution. See [particle shaders](../../docs/components/particle-shaders.md) for the complete buffer contract and retained-emitter dependencies.
+
+### Numeric graph parameters
+
+Canvas graph imports resolve typed material, global and per-item declarations across both stages. Graph-local references, default words and advisory range/enum/Color metadata enter the ordinary source-type annotation, spirv-val, reflected-interface and atomic-resource path. Normal parameters use existing typed runtime setters; globals use the registry, and per-item scalar/vector fields have sixteen explicit/automatic slots. Numeric matrix parameters use material/global storage. Editing a definition requires reimport. See [the graph contract](../../docs/components/visual-shaders.md#parameters-and-graph-local-references).

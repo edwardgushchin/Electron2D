@@ -242,3 +242,5 @@ The internal stored-restore delegate can stage terrain indices before graph asso
 ## Material defaults and storage
 
 Engine numeric shader descriptors use a private owner predicate to store only explicitly owned material fields while retaining the existing public IsStored capability. Explicit values equal to their revert default still store; unset values follow new shader defaults after reload. Revert factories copy each typed array, and CanRevert compares all supported boolean, unsigned, vector, rectangle and Transform array contents. External descriptor behavior remains defined by IsStored. See [authored uniform defaults](../components/shader-materials.md#authored-uniform-defaults).
+
+Advisory Hint and HintString initialization is inherited from [PropertyDescriptor](PropertyDescriptor.md#advisory-hints); it does not change typed validation or revert semantics.
