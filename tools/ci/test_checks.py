@@ -4,6 +4,7 @@ from contextlib import redirect_stdout
 from io import StringIO
 import json
 from pathlib import Path
+import re
 import struct
 import subprocess
 import shutil
@@ -22,6 +23,22 @@ import run_browser
 
 
 class Checks(unittest.TestCase):
+    def test_target_font_consumers_embed_the_shared_fixture_inventory(self):
+        root = rids.ROOT
+        required = set(re.findall(r'Read\(typeof\(FontTestFixtures\)\.Assembly,\s*"([^"]+)"\)',
+                                  (root / "tests/Electron2D.Tests/FontTestFixtures.cs").read_text()))
+        self.assertTrue(required)
+        for target in ("Browser", "Android", "Apple"):
+            project = root / f"tests/Electron2D.{target}Tests/Electron2D.{target}Tests.csproj"
+            embedded = set()
+            for item in ET.parse(project).getroot().findall(".//EmbeddedResource"):
+                for pattern in item.get("Include", "").split(";"):
+                    if pattern:
+                        for path in project.parent.glob(pattern):
+                            embedded.add(item.get("LogicalName", "").replace("%(Filename)", path.stem).replace("%(Extension)", path.suffix))
+            with self.subTest(target=target):
+                self.assertFalse(required - embedded, f"Missing font fixtures: {sorted(required - embedded)}")
+
     def test_repository_paths_can_be_checked_out_on_windows(self):
         root = Path(__file__).resolve().parents[2]
         paths = subprocess.check_output(["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"], cwd=root).decode().split("\0")

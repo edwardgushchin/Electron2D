@@ -16,7 +16,7 @@
     <ProjectReference Include="../../Electron2D.csproj" SetRuntimeIdentifier="RuntimeIdentifier=browser-wasm" AdditionalProperties="RuntimeIdentifier=browser-wasm" Condition="'$(Electron2DUsePackage)' != 'true'" />
     <Compile Include="../Portability/ContractChecks.cs" Link="ContractChecks.cs" />
     <Compile Include="../Electron2D.Tests/NativeFontPrecisionTests.cs;../Electron2D.Tests/FontTestFixtures.cs;../Electron2D.Tests/ImageCodecTests.cs;../Electron2D.Tests/NativeTextBreakTests.cs" Link="%(Filename)%(Extension)" />
-    <EmbeddedResource Include="../Electron2D.Tests/Fixtures/Fonts/*.woff2;../Electron2D.Tests/Fixtures/Fonts/*.ttf" LogicalName="TestFonts.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="../Electron2D.Tests/Fixtures/Fonts/*.woff2;../Electron2D.Tests/Fixtures/Fonts/*.ttf;../Electron2D.Tests/Fixtures/Fonts/*.otf;../Electron2D.Tests/Fixtures/Fonts/*.ttc" LogicalName="TestFonts.%(Filename)%(Extension)" />
     <Content Update="wwwroot/main.js;wwwroot/index.html" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
   <Import Project="../../tools/native-consumer.props" />
