@@ -101,6 +101,13 @@ jobs:
         run: |
           brew install ffmpeg openssl@3
           echo "$(brew --prefix openssl@3)/bin" >> "$GITHUB_PATH"
+      - name: Prepare x64 execution on Apple Silicon
+        if: inputs.tests && inputs.rid == 'osx-x64' && runner.arch == 'ARM64'
+        run: |
+          if ! arch -x86_64 /usr/bin/true; then
+            sudo softwareupdate --install-rosetta --agree-to-license
+          fi
+          test "$(arch -x86_64 /usr/bin/uname -m)" = x86_64
       - name: Install Windows artifact auditor and test oracles
         if: inputs.tests && startsWith(inputs.rid, 'win-')
         shell: pwsh
@@ -124,6 +131,9 @@ jobs:
       - name: Publish desktop test runner
         if: inputs.tests && (inputs.suite == 'full' || inputs.suite == 'portable')
         run: dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r "$CI_RID" --self-contained true -o "bin/ci-tests/$CI_RID" --nologo
+      - name: Verify x64 application architecture
+        if: inputs.tests && inputs.rid == 'osx-x64'
+        run: lipo -archs "bin/ci-tests/$CI_RID/Electron2D.Tests" | grep -Fx x86_64
       - name: Run full headless runtime suite
         id: full_suite
         if: inputs.tests && inputs.suite == 'full'

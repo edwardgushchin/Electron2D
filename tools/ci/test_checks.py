@@ -24,6 +24,35 @@ import run_browser
 
 
 class Checks(unittest.TestCase):
+    def test_macos_x64_keeps_its_target_on_a_capable_gpu_host(self):
+        workflow = (rids.ROOT / ".github/workflows/ci.yml").read_text()
+        self.assertIn("runner: ${{ matrix.runner }}", workflow.partition("  tests:\n")[0])
+        self.assertIn("runner: ${{ matrix.rid == 'osx-x64' && 'macos-26' || matrix.runner }}", workflow.partition("  tests:\n")[2])
+        row = next(row for row in rids.matrix() if row["rid"] == "osx-x64")
+        self.assertEqual((row["runner"], row["suite"]), ("macos-26-intel", "full"))
+        target = (rids.ROOT / ".github/workflows/rid.yml").read_text()
+        step = target.partition("      - name: Prepare x64 execution on Apple Silicon\n")[2].split("\n      - ", 1)[0]
+        self.assertIn("inputs.tests && inputs.rid == 'osx-x64' && runner.arch == 'ARM64'", step)
+        command = "\n".join(line[10:] for line in step.partition("        run: |\n")[2].splitlines())
+        self.assertTrue(command)
+        self.assertIn('lipo -archs "bin/ci-tests/$CI_RID/Electron2D.Tests" | grep -Fx x86_64', target)
+        with tempfile.TemporaryDirectory(prefix="e2d Rosetta contract ") as directory:
+            root = Path(directory)
+            (root / "arch").write_text('#!/bin/sh\n[ "$1" = -x86_64 ] || exit 92\nif [ "$2" = /usr/bin/true ]; then [ "$READY" = 1 ]; else printf "%s\\n" "$REPORTED_ARCH"; fi\n')
+            (root / "sudo").write_text('#!/bin/sh\nprintf "%s\\n" "$*" > "$INSTALL_LOG"\nexit "$INSTALL_EXIT"\n')
+            for name in ("arch", "sudo"): (root / name).chmod(0o755)
+            for ready, install_exit, reported, success in (("1", "0", "x86_64", True), ("0", "0", "x86_64", True),
+                                                             ("0", "7", "x86_64", False), ("1", "0", "arm64", False)):
+                with self.subTest(ready=ready, install_exit=install_exit, reported=reported):
+                    log = root / "install.log"
+                    log.unlink(missing_ok=True)
+                    environment = os.environ | {"PATH": str(root) + os.pathsep + os.environ["PATH"], "READY": ready,
+                                                "INSTALL_EXIT": install_exit, "REPORTED_ARCH": reported, "INSTALL_LOG": str(log)}
+                    result = subprocess.run(["bash", "-e", "-o", "pipefail", "-c", command], env=environment)
+                    self.assertEqual(result.returncode == 0, success)
+                    self.assertEqual(log.exists(), ready == "0")
+                    if log.exists(): self.assertEqual(log.read_text(), "softwareupdate --install-rosetta --agree-to-license\n")
+
     def test_linux_full_suite_selects_offscreen_video_without_changing_other_hosts(self):
         workflow = (rids.ROOT / ".github/workflows/rid.yml").read_text()
         prerequisites = workflow.partition("      - name: Install Linux native prerequisites\n")[2].split("\n      - ", 1)[0]

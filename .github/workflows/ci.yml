@@ -48,7 +48,7 @@ jobs:
     with:
       rid: ${{ matrix.rid }}
       label: ${{ matrix.label }}
-      runner: ${{ matrix.runner }}
+      runner: ${{ matrix.rid == 'osx-x64' && 'macos-26' || matrix.runner }}
       workload: ${{ matrix.workload }}
       suite: ${{ matrix.suite }}
       tests: true

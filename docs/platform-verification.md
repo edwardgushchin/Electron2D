@@ -80,6 +80,16 @@ The Linux Wayland gate in [ADR 0021](decisions/product.md#adr-0021) remains the 
 
 ## Automated RID checks
 
+The `osx-x64` full Tests job uses the `macos-26` Apple Silicon host because the
+Intel CI host in run `39858176735` rejected SDL GPU's Metal requirements. The
+application and native assets remain x64; CI checks the application Mach-O
+architecture and prepares Rosetta before execution. Build/native production
+retain the Intel runner. [.NET 10 supports x64 execution through Rosetta](https://github.com/dotnet/core/blob/main/release-notes/10.0/supported-os.md)
+and [NativeAOT cross-architecture compilation with Xcode](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/cross-compile#mac).
+This configuration retains the full suite, trimmed and NativeAOT checks; its
+execution still requires the corrected CI run. Rosetta execution does not
+establish acceptance on a physical Intel GPU.
+
 Linux full-suite jobs select SDL's `offscreen` video driver and install the Vulkan
 loader plus Mesa ICDs. GPU physics initializes the video subsystem even when its
 device has no window; an empty runner desktop must therefore have an explicit

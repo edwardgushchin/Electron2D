@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-10-22
+Last updated: 2026-10-23
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -29,6 +29,8 @@ The managed engine project restores no native packages. Each executable explicit
 The macOS producer uses that package project with `NativePackagePlatform=MacOS`; run `tools/native/test_package.py` for architecture/identity/source-pin/global-codec rejection and inspect the matching-runner Mach-O receipts. Its private FreeType closure must execute `tools/font-native/test_freetype.py LIBRARY` against the bundled WOFF2 before staging. Earlier producers/package audits passed, but connected consumers failed decoding with the upstream FreeType; the corrected consumers and full suite remain required, not implied by binaries. The OpenSSL source hash, relocatable crypto dependency and ad-hoc signing are part of its binary audit. `TLSSystemTrustTests` verifies OS-anchor acceptance and unknown/missing-certificate rejection without changing system trust stores. The macOS oracle job places its independent Homebrew OpenSSL executable on PATH; it must not replace the private runtime libraries.
 
 ## CI matrix
+
+The x64 macOS Tests job runs the unchanged `osx-x64` target on Apple Silicon through Rosetta for Metal availability. Keep native production and Build on their registered Intel host, verify the test app's x64 Mach-O architecture, and retain the full suite plus trimmed/NativeAOT checks. `tools/ci/test_checks.py` executes the actual Rosetta setup script for already available, installed, failed-install and wrong-architecture cases; these dispatch checks do not establish target execution or physical Intel GPU acceptance.
 
 One CI workflow prepares native packages once and shares them across separate Build and Tests matrices. Both consume `tools/ci/rids.json` through `python3 -B tools/ci/rids.py`; keep it synchronized with the accepted mappings in `Electron2D.csproj`. `tools/ci/test_checks.py` checks matrix/dependency/layout drift, mobile results and strict aggregate status; `tools/native/test_windows.py` covers real PE rejection/import libraries with the pinned PE auditor. Final Build/Tests checks reject failed, skipped, cancelled or missing dependencies. The RID workflow enables trimming/AOT analysis and selects the full self-contained Linux/macOS/Windows headless suite; all seven desktop profiles passed at `975c9693`. Trimmed/NativeAOT desktop contracts exclude Windows x86 AOT; Android emulators, Apple simulators and Chromium execute managed and target-native contracts. All eighteen rows passed in run `37412313488`, with a separate iOS x64 job rerun after a system-boot timeout. Physical Apple profiles build unsigned apps only. Read [exact scope and limits](platform-verification.md#automated-rid-checks); these checks do not establish rendering, production-host lifecycle or hardware acceptance.
 
