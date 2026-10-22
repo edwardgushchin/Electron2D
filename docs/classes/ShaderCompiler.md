@@ -1,6 +1,6 @@
 # ShaderCompiler
 
-Last updated: 2026-10-21
+Last updated: 2026-10-23
 
 - Declaration: `internal static unsafe class ShaderCompiler`
 - Source: [ShaderCompiler.cs](../../src/Servers/Rendering/ShaderCompiler.cs)
@@ -38,6 +38,15 @@ var program = ShaderCompiler.ValidateFragmentInterface(bytecode);
 Queries shadercross-supported SPIR-V translations within its serialized native lifetime. The native enum stays internal.
 
 ### GPU shader creation
+
+Compute creation reflects and validates the complete storage/sampler/uniform
+counts and workgroup before native allocation. A DXIL-capable device uses the
+existing ShaderCross DXIL compiler and forwards that metadata to SDL. This avoids
+the convenience function's preference for FXC/DXBC; failed compilation preserves
+its diagnostic and never passes a null bytecode buffer to SDL. Compiled storage
+and reflection storage are freed in `finally`. Other device formats retain the
+native convenience path. Graphics shader creation is unchanged. Offline DXIL
+compilation and Linux Vulkan checks do not establish Windows execution.
 
 `internal static nint CreateShader(nint device, byte[] code, bool fragment)`
 

@@ -30,8 +30,8 @@ sxd -c2 ".ecxr; k; lm; q" sbo
 sxd -c2 ".ecxr; k; lm; q" *
 g
 '@ | Set-Content -Encoding ascii $commands
-$log = Join-Path $Output 'dtls-cdb.log'
+$log = Join-Path $Output 'runtime-cdb.log'
 $debugger = Start-Process -FilePath $cdb -ArgumentList @('-G', '-cf', "`"$commands`"", '-logo', "`"$log`"", "`"$Executable`"") -PassThru -NoNewWindow
-if (!$debugger.WaitForExit(120000)) { & taskkill /PID $debugger.Id /T /F; throw 'Native DTLS debugger deadline.' }
+if (!$debugger.WaitForExit(480000)) { & taskkill /PID $debugger.Id /T /F; throw 'Native runtime debugger deadline.' }
 if (!(Test-Path $log)) { throw 'CDB produced no diagnostic log.' }
 Get-Content $log

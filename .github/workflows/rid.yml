@@ -154,7 +154,6 @@ jobs:
         shell: pwsh
         env:
           DOTNET_TieredCompilation: '0'
-          ELECTRON2D_TEST_DTLS: '1'
         run: ./tools/ci/debug_windows.ps1 "bin/ci-tests/$env:CI_RID/Electron2D.Tests.exe" "bin/ci/$env:CI_RID/diagnostics"
       - uses: actions/upload-artifact@v4
         if: failure() && steps.full_suite.outcome == 'failure' && inputs.rid == 'win-arm64'

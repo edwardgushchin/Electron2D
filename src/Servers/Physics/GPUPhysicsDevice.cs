@@ -44,6 +44,9 @@ internal sealed class GPUPhysicsDevice : IDisposable
     internal RenderHandle CreatePipeline(string name)
     {
         PipelineCreationForTesting?.Invoke(name, _ownerThreadID, Environment.CurrentManagedThreadId);
+        if ((Driver is "metal" or "direct3d12") && name is
+            "PhysicsResidentCCD.comp.spv" or "PhysicsResidentShapeQueries.comp.spv" or "PhysicsResidentMotionQueries.comp.spv")
+            name = name.Replace(".spv", ".portable.spv", StringComparison.Ordinal);
         using var source = typeof(GPUPhysicsDevice).Assembly.GetManifestResourceStream("Electron2D.PhysicsShaders." + name)
             ?? throw new InvalidOperationException("The physics shader is missing: " + name);
         using var bytes = new MemoryStream(); source.CopyTo(bytes);

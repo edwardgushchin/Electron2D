@@ -2,7 +2,34 @@
 
 [Cold query geometry](physics-queries.md#cold-query-geometry) is resolved under the using-world numerical/lifetime guard before retained query-cache selection or replacement. Nested queries complete before outer cache preparation; resident algorithms, transfers and result formats are unchanged.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-23
+
+## Backend compiler profiles
+
+Resident shape queries, body-motion queries and CCD embed two modules from each
+unchanged source. Vulkan retains the `-O` module and its measured cold-pipeline
+improvement; Metal and Direct3D 12 use a function-preserving portable module.
+All 32 existing Vulkan modules remain byte-identical. The three additional
+modules pass `spirv-val` and native reflection reports the same nine resource and
+workgroup values as their optimized counterparts. Shape-query SPIR-V decreases
+from 1,314,532 to 153,452 bytes; generated backend source avoids the multi-megabyte
+expansion measured with the optimized module. Native ShaderCross compiled all 35
+physics modules to DXIL locally. The common compute boundary selects DXIL when
+the device advertises it, retaining the mature translator and reflected bindings.
+
+CI run `39858176735` failed at shape-query creation on Windows x64/x86 and returned
+an invalid collider identity on macOS ARM64. These failures motivate the profile
+change; the exact Metal cause is not isolated. Compilation, reflection and local
+Vulkan results do not establish corrected Windows/Metal query execution. Their
+full target suites remain the gate. Query algorithms, identity layouts, iteration
+limits, allocation gates and public coverage states are unchanged.
+
+Local NVIDIA Vulkan checks passed the pipeline ownership/hash profile and the
+functional shape/motion suites without a display, and the complete resident CCD
+profile through Wayland with zero warmed managed bytes per tick. The isolated
+offscreen CCD run failed while creating a later device with no supported backend;
+it did not complete. This host/environment difference remains separate from the
+unverified Metal/Direct3D profile execution and the complete Linux Mesa CI suite.
 
 ## Boundary and ownership
 

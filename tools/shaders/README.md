@@ -61,12 +61,15 @@ compiler handles both built-in languages (`main`, Vulkan 1.0); `spirv-val` valid
 each result. This bootstrap has no dependency on Electron2D.dll or SDL, so it can
 run before the runtime exists and when cross-compiling the runtime.
 
-The resident CCD, shape-query and body-motion-query programs use the pinned
-compiler's `-O` performance optimization before embedding. This reduces cold
-device compilation of their complex sweep code; it changes neither query/solver
-budgets nor the runtime resource interface. Other built-in programs retain their
-existing compiler settings. See the [cold pipeline investigation](../../docs/components/physics-network-example.md#cold-pipeline-compilation-2026-10-21)
-for measured costs and the remaining network startup gate.
+The resident CCD, shape-query and body-motion-query programs retain the pinned
+compiler's `-O` performance optimization for Vulkan. Each also embeds a
+`.comp.portable.spv` variant from the same source without that optimization for
+Metal and Direct3D 12. This keeps the translator's generated source bounded while
+preserving the measured Vulkan cold-compilation improvement. Both variants pass
+`spirv-val` and keep the same resource layout, workgroup and numerical budgets.
+Other built-in programs retain their existing compiler settings. See the
+[cold pipeline investigation](../../docs/components/physics-network-example.md#cold-pipeline-compilation-2026-10-21)
+and [backend verification limits](../../docs/components/gpu-resident-shape-queries.md#backend-compiler-profiles).
 
 The first build prepares the host tools under `tools/shaders/obj/toolchain/`.
 Later builds reuse that directory without downloads or native compilation while

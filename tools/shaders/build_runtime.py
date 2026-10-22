@@ -14,6 +14,9 @@ import material_lighting
 
 
 ROOT = Path(__file__).resolve().parents[2]
+VULKAN_OPTIMIZED_PHYSICS = (
+    'PhysicsResidentCCD.comp.glsl', 'PhysicsResidentShapeQueries.comp.glsl',
+    'PhysicsResidentMotionQueries.comp.glsl')
 
 
 def generate(output, source_root=ROOT):
@@ -40,6 +43,8 @@ def generate(output, source_root=ROOT):
                     digest.update(dependency.read_bytes())
             programs = [(source, source.stem, []) for source in sources if '.inc.' not in source.name]
             for source in sources:
+                if domain == 'Physics' and source.name in VULKAN_OPTIMIZED_PHYSICS:
+                    programs.append((source, source.stem + '.portable', []))
                 if source.name in ('Canvas.vert.hlsl', 'CanvasInstanced.vert.hlsl'):
                     programs.append((source, source.stem.replace('Canvas', 'CanvasLighting'), ['-DE2D_LIGHTING=1']))
                 if source.name == 'Lighting.frag.hlsl':
@@ -71,9 +76,7 @@ def generate(output, source_root=ROOT):
                 with tempfile.TemporaryDirectory(dir=target.parent) as temporary:
                     compiled = Path(temporary) / 'shader.spv'
                     command = [str(compiler), '-V', '--target-env', 'vulkan1.0', '-S', stage, '-e', 'main']
-                    if domain == 'Physics' and source.name in (
-                            'PhysicsResidentCCD.comp.glsl', 'PhysicsResidentShapeQueries.comp.glsl',
-                            'PhysicsResidentMotionQueries.comp.glsl'):
+                    if domain == 'Physics' and source.name in VULKAN_OPTIMIZED_PHYSICS and stem == source.stem:
                         # Reduce cold driver compilation before these sweeps block a live simulation.
                         command += ['-O']
                     if source.suffix == '.hlsl':

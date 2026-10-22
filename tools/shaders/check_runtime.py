@@ -23,15 +23,23 @@ layout(set=0,binding=0) buffer Data { float value; } data;
 void main() { data.value = VALUE; }
 ''')
     include = physics / 'Value.inc.glsl'
+    query = physics / 'PhysicsResidentShapeQueries.comp.glsl'
+    query.write_text((physics / 'Test.comp.glsl').read_text().replace(
+        'void main() { data.value = VALUE; }',
+        'float square(float value) { return value * value; }\nvoid main() { data.value = square(VALUE); }'))
     include.write_text('#define VALUE 1.0\n')
     output = root / 'generated'
     first = generate(output, root)
+    variants = ('Physics/PhysicsResidentShapeQueries.comp.spv', 'Physics/PhysicsResidentShapeQueries.comp.portable.spv')
+    assert all(name in first for name in variants), 'Missing backend shader variant'
+    assert first[variants[0]]['binary'] != first[variants[1]]['binary'], 'Portable shader reused Vulkan optimization'
     stamps = {key: (output / key).stat().st_mtime_ns for key in first}
     assert generate(output, root) == first
     assert stamps == {key: (output / key).stat().st_mtime_ns for key in first}, 'No-op generation rewrote outputs'
     include.write_text('#define VALUE 2.0\n')
     second = generate(output, root)
     assert first['Physics/Test.comp.spv']['binary'] != second['Physics/Test.comp.spv']['binary']
+    assert all(first[name]['binary'] != second[name]['binary'] for name in variants), 'Include edit retained a stale backend variant'
     assert (output / 'Rendering/Test.frag.spv').stat().st_mtime_ns == stamps['Rendering/Test.frag.spv']
     good = (output / 'Physics/Test.comp.spv').read_bytes()
     include.write_text('invalid shader\n')
@@ -48,6 +56,9 @@ void main() { data.value = VALUE; }
     (output / 'Physics/Test.comp.spv').write_bytes(b'corrupt')
     generate(output, root)
     assert (output / 'Physics/Test.comp.spv').read_bytes() == good, 'Corrupt cache was reused'
+    query.unlink()
+    generate(output, root)
+    assert all(not (output / name).exists() for name in variants), 'Removed shader retained a backend variant'
     # A fresh MSBuild consumer embeds generated resources and ships no compiler/toolchain.
     (root / 'Probe.csproj').write_text(f'''<Project Sdk="Microsoft.NET.Sdk">
 <PropertyGroup><TargetFramework>net10.0</TargetFramework><OutputType>Exe</OutputType>

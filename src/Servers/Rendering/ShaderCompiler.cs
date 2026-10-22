@@ -43,7 +43,32 @@ internal static unsafe partial class ShaderCompiler
                     Entrypoint = (nint)entrypoint,
                     ShaderStage = ShaderCross.ShaderStage.Compute
                 };
-                return ShaderCross.CompileComputePipelineFromSPIRV(device, in info, in metadata, 0);
+                if ((SDL.GetGPUShaderFormats(device) & SDL.GPUShaderFormat.DXIL) == 0)
+                    return ShaderCross.CompileComputePipelineFromSPIRV(device, in info, in metadata, 0);
+                // The native convenience path prefers FXC/DXBC even on DXIL-capable devices.
+                var compiled = ShaderCross.CompileDXILFromSPIRV(in info, out var size);
+                if (compiled == 0) return 0;
+                try
+                {
+                    var pipeline = new SDL.GPUComputePipelineCreateInfo
+                    {
+                        Code = compiled,
+                        CodeSize = size,
+                        Entrypoint = (nint)entrypoint,
+                        Format = SDL.GPUShaderFormat.DXIL,
+                        NumSamplers = metadata.NumSamplers,
+                        NumReadonlyStorageTextures = metadata.NumReadOnlyStorageTextures,
+                        NumReadonlyStorageBuffers = metadata.NumReadOnlyStorageBuffers,
+                        NumReadwriteStorageTextures = metadata.NumReadWriteStorageTextures,
+                        NumReadwriteStorageBuffers = metadata.NumReadWriteStorageBuffers,
+                        NumUniformBuffers = metadata.NumUniformBuffers,
+                        ThreadcountX = metadata.ThreadCountX,
+                        ThreadcountY = metadata.ThreadCountY,
+                        ThreadcountZ = metadata.ThreadCountZ
+                    };
+                    return SDL.CreateGPUComputePipeline(device, in pipeline);
+                }
+                finally { SDL.Free(compiled); }
             }
             finally { SDL.Free(reflection); }
         }

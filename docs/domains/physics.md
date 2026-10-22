@@ -688,6 +688,11 @@ disabled participation, CharacterBody and physical-bone activation/reentry.
 
 ## Verification and limits
 
+The [backend compiler profiles](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
+retain optimized Vulkan query/CCD modules and use function-preserving modules
+for Metal/Direct3D 12. Matching reflection and offline DXIL compilation are local
+evidence; corrected foreign query execution still requires target CI.
+
 [Portable pair hashing](../components/gpu-physics.md#portable-pair-hashing) retains
 the canonical 64-bit arithmetic through half-word products and explicit carries
 shared by the historical GPU host and independent resident world. Public API and
