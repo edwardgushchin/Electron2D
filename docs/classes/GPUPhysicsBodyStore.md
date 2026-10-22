@@ -1,5 +1,9 @@
 # GPUPhysicsBodyStore
 
+[Portable pair hashing](../components/gpu-physics.md#portable-pair-hashing) preserves
+the canonical pair/history hash through half-word products and explicit carries.
+The shared kernels require neither shaderInt64 nor extended integer multiplication.
+
 [Shared pair/contact completion](../components/gpu-resident-bodies.md#shared-paircontact-completion-2026-10-22)
 keeps the pair count on device until contact generation completes, validates both
 status records with one wait and preserves bounded pair/contact capacity recovery.

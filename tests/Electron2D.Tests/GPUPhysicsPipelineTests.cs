@@ -4,6 +4,7 @@ internal static class GPUPhysicsPipelineTests
 {
     internal static void Run()
     {
+        GPUPhysicsPairHashTests.Run();
         var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         if (GPUPhysicsDevice.PipelineCreationForTesting is not null) throw new InvalidOperationException("The pipeline probe is already in use.");
         try

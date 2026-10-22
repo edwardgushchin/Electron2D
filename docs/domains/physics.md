@@ -688,6 +688,12 @@ disabled participation, CharacterBody and physical-bone activation/reentry.
 
 ## Verification and limits
 
+[Portable pair hashing](../components/gpu-physics.md#portable-pair-hashing) retains
+the canonical 64-bit arithmetic through half-word products and explicit carries
+shared by the historical GPU host and independent resident world. Public API and
+declaration states are unchanged; shader translation and native execution have
+separate verification boundaries.
+
 GPU physics is being developed under [ADR 0054](../decisions/physics-backends.md#adr-0054)
 alongside the retained CPU backend. The internal compute host
 currently executes resident broad-phase tree construction/refit/traversal, built-in pair filtering with resident shape/joint metadata and contact lookup, contact ID allocation/initialization, adjacency construction/disjoint-contact removal and resident contact-driven island merging/unlinking with parallel ordered contact lists, compact publication and complete host validation using independent packed CPU flags and disconnected-island splitting, integration, resident circle/capsule/segment/polygon geometry and manifolds, material/contact-state updates, collision-batch constraint coloring, fused body-pose/sleep-eligibility/fast-body finalization, and contact/revolute/wheel preparation and solving; this historical stage host remains CPU-owned. Public GPU worlds use the independent

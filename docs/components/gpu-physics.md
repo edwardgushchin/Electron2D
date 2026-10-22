@@ -160,6 +160,7 @@ contacts. There is no density cap or truncated-pair fallback. The GPU also appli
 self/moved-pair deduplication, existing-contact lookup, same-body and sensor veto,
 64-bit category/mask and signed group filtering, and joint collision veto. The
 shared pair hash uses split 32-bit arithmetic, so this does not require shaderInt64.
+Its [portable multiplication](#portable-pair-hashing) also avoids extended integer operations.
 Joint filtering walks the smaller body adjacency list. User filters remain on the
 owner after readback, followed by GPU contact identity allocation and initialization.
 Body/contact adjacency is built and retained on GPU; disjoint-contact unlink and ID
@@ -1428,3 +1429,25 @@ The normal full suite runs both material owners. The focused path performs
 simulation/resource checks and does not open a rendered window.
 
 The resident point-field reducer preserves guarded float operation order with GLSL precise intermediates and propagates reconstruction validity separately from the value. Values beyond the finite output range do not enter subsequent arithmetic as infinity sentinels. A later Replace/ReplaceCombine contribution resets validity with the channel; Combine retains an invalid earlier contribution. Final invalid fields fail before body-field publication or solver motion through the existing eight-byte status read and terminal GPU-world policy. Mantissa/exponent normalization avoids reciprocals outside the normal range for large/tiny coordinates. No CPU mirror, buffer growth, new readback or wait is introduced. [Hardware verification](physics-areas.md#hardware-point-field-guards-2026-10-14).
+
+## Portable pair hashing
+
+The shared `PhysicsPairHash.inc.glsl` helper preserves the canonical 64-bit pair
+and history hash using 16-bit partial products, explicit carries and ordinary
+32-bit operations. It requires neither shaderInt64 nor extended integer
+multiplication. The previous extended multiply reached HLSL as an unsupported
+operation and prevented nine physics kernels from compiling. Hash constants,
+contact identities, table probing and buffer layouts are unchanged.
+
+`GPUPhysicsPairHashTests`, called by the ordinary full-suite pipeline checks,
+dispatches the actual embedded pair-table kernel with 4,096 boundary/random
+64-bit keys. Distinct CPU-computed home slots make parallel insertion order
+irrelevant; readback compares all 65,536 slots and the device error word against
+an independent unsigned 64-bit oracle. The test uses the production module, so
+changed shared includes follow the runtime shader build's existing content hash.
+
+A Linux native ShaderCross compiler probe now compiles all 32 physics modules to
+DXIL, compared with 23 before the change. This proves translation through the
+pinned compiler; Windows execution remains a separate CI check. The Linux vkd3d
+DXBC compiler still accepts only one module because its writable-buffer method
+support is incomplete; that result does not establish Windows FXC behavior.

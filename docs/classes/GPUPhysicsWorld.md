@@ -1,6 +1,6 @@
 # GPUPhysicsWorld
 
-Last updated: 2026-10-09
+Last updated: 2026-10-23
 
 Device and offline pipeline ownership now use [GPUPhysicsDevice](GPUPhysicsDevice.md).
 The separate [GPUPhysicsBodyStore](GPUPhysicsBodyStore.md) develops resident body
@@ -34,7 +34,9 @@ permit a single warmed submission. Overflow returns its full count and grows/ret
 the immutable query before publishing candidates to the owner-side user filter.
 GPU built-in checks include self/moved/existing-pair deduplication, same-body/sensor
 veto, 64-bit masks, signed groups and the smaller joint adjacency list. Pair-table
-hashing uses split 32-bit arithmetic. Shape/joint records use 48/32 bytes; resident table slots and contact keys use 4/8 bytes.
+hashing uses [half-word products](../components/gpu-physics.md#portable-pair-hashing)
+with explicit carries, preserving its canonical hash without extended integer operations.
+Shape/joint records use 48/32 bytes; resident table slots and contact keys use 4/8 bytes.
 Shape/joint metadata stays resident. Shape and joint lifecycle/filter observers
 coalesce final dirty records, including predecessor links and endpoint shape
 adjacency after joint deletion. A GPU scatter pass updates those records, then a
