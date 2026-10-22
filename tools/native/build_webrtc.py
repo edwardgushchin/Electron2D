@@ -20,7 +20,7 @@ def build(rid, output, tls):
     for path in (include / "openssl/ssl.h", include / "openssl/opensslv.h", crypto, ssl):
         if not path.is_file():
             raise ValueError("Build the pinned target OpenSSL before WebRTC: " + str(path))
-    options = ["-DCMAKE_C_COMPILER=cl", "-DCMAKE_CXX_COMPILER=cl", "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded"] if windows else []
+    options = ["-DCMAKE_C_COMPILER=cl", "-DCMAKE_CXX_COMPILER=cl", "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded", "-DOPENSSL_ROOT_DIR=" + str(generated)] if windows else []
     subprocess.run(["cmake", "-S", str(package.ROOT / "tools/webrtc-native"), "-B", str(output), "-G", "Ninja", "-DCMAKE_BUILD_TYPE=Release", "-DOPENSSL_INCLUDE_DIR=" + str(include), "-DOPENSSL_CRYPTO_LIBRARY=" + str(crypto), "-DOPENSSL_SSL_LIBRARY=" + str(ssl), *options], check=True)
     subprocess.run(["cmake", "--build", str(output), "--target", "Electron2DWebRTC", "--parallel", "2"], check=True)
     if not windows:

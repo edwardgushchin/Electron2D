@@ -20,6 +20,58 @@ import test_consumer
 
 
 class NativePackageTests(unittest.TestCase):
+    @unittest.skipUnless(shutil.which("cmake"), "CMake is unavailable")
+    def test_webrtc_windows_finds_the_selected_private_import_libraries(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            tls = root / "tls"
+            headers = tls / ("openssl-" + build_tls.VERSION) / "include/openssl"
+            headers.mkdir(parents=True)
+            (headers / "ssl.h").write_text("")
+            (headers / "opensslv.h").write_text("#define OPENSSL_VERSION_MAJOR 3\n#define OPENSSL_VERSION_MINOR 6\n#define OPENSSL_VERSION_PATCH 5\n")
+            (tls / "build/include").mkdir(parents=True)
+            for name in ("libcrypto.lib", "libssl.lib"):
+                (tls / "build" / name).write_bytes(b"selected private import library")
+            with patch.object(build_webrtc.subprocess, "run") as run:
+                build_webrtc.build("win-x86", root / "bridge", tls)
+                options = [arg for arg in run.call_args_list[0].args[0] if arg.startswith("-DOPENSSL_")]
+            project = root / "probe"
+            project.mkdir()
+            (project / "CMakeLists.txt").write_text('''cmake_minimum_required(VERSION 3.24)
+project(PrivateOpenSSL NONE)
+set(WIN32 TRUE)
+set(MSVC TRUE)
+set(CMAKE_FIND_LIBRARY_PREFIXES "")
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
+find_package(OpenSSL REQUIRED)
+if(NOT OPENSSL_CRYPTO_LIBRARY STREQUAL "${EXPECTED}/libcrypto.lib" OR NOT OPENSSL_SSL_LIBRARY STREQUAL "${EXPECTED}/libssl.lib")
+  message(FATAL_ERROR "A foreign OpenSSL import library was selected")
+endif()
+''')
+            command = ["cmake", "-S", str(project), "-B", str(root / "found"), "-DEXPECTED=" + str(tls / "build"), *options]
+            subprocess.run(command, check=True, capture_output=True, text=True)
+            missing = [arg.replace(str(root / "found"), str(root / "missing")) for arg in command if not arg.startswith("-DOPENSSL_ROOT_DIR=")]
+            self.assertNotEqual(subprocess.run(missing, capture_output=True).returncode, 0)
+
+    @unittest.skipUnless(shutil.which("cmake"), "CMake is unavailable")
+    def test_ktx_architecture_adapter_is_guarded_and_repeatable(self):
+        guard = 'if (CPU_ARCHITECTURE STREQUAL x86)\n    message(FATAL_ERROR "This project cannot be built for x86 cpu.")\nendif()'
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "CMakeLists.txt"
+            source.write_text("before\n" + guard + "\nafter\n")
+            command = ["cmake", "-DROOT=" + str(root), "-P", str(package.ROOT / "tools/ktx-native/configure-guards.cmake")]
+            subprocess.run(command, check=True)
+            patched = source.read_bytes()
+            self.assertTrue(patched.startswith(b"before\n") and patched.endswith(b"\nafter\n"))
+            self.assertNotIn(b"FATAL_ERROR", patched)
+            subprocess.run(command, check=True)
+            self.assertEqual(source.read_bytes(), patched)
+            source.write_text("unknown upstream source\n")
+            result = subprocess.run(command, capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("guard no longer matches", result.stderr)
+
     @unittest.skipUnless(all(shutil.which(tool) for tool in ("cc", "ar", "cmake")), "Native archive tools are unavailable")
     def test_static_ktx_closure_links_decoder_and_encoder(self):
         with tempfile.TemporaryDirectory() as directory:

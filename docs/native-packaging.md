@@ -37,7 +37,7 @@ A platform package may contain all supported architectures of its OS, under the 
 
 ## Version and minimum engine
 
-The `0.2.0-alpha` release uses matching managed and platform versions. Its native build requires OpenSSL development headers on Linux, Windows-safe source filenames, exact private mesh/KTX bridge exports and the KTX DFD headers for static targets. Publication and fresh public restore must pass for the complete eight-package bundle.
+The `0.2.0-alpha` release uses matching managed and platform versions. Ubuntu 22.04 producers install pinned CMake 3.31.10. Windows WebRTC production supplies the selected private OpenSSL build directory to CMake import-library discovery, avoiding host-library selection. KTX uses an exact-preimage x86 build adapter and the Android API-21 32-bit stdio profile; the complete target CI remains the execution gate. Its native build requires OpenSSL development headers on Linux, Windows-safe source filenames, exact private mesh/KTX bridge exports and the KTX DFD headers for static targets. Publication and fresh public restore must pass for the complete eight-package bundle.
 
 **The version of `Electron2D.{Platform}` identifies the minimum supported version of Electron2D, including its prerelease suffix.** `Electron2D.Linux` `0.1.0-alpha` requires Electron2D `0.1.0-alpha` or later. Its NuGet dependency enforces that minimum, and its binary manifest records `minimumEngineVersion`. Users should select matching product/platform release versions unless another combination has been verified. SDL, OpenSSL, FreeType and other upstream versions are implementation pins and do not replace this version rule. See [ADR 0096](decisions/versioning.md#adr-0096).
 
