@@ -12,6 +12,7 @@ internal static class CanvasDrawCallbackTests
     {
         internal int ExpectedThread, Notifications, Signals, Draws, Phase, FailStage = -1;
         internal bool Reenter, QueueDeletion;
+        internal Action<Painter>? TextureProbe;
         internal readonly Exception Failure = new InvalidOperationException("draw callback fixture");
         internal Painter()
         {
@@ -32,6 +33,7 @@ internal static class CanvasDrawCallbackTests
         {
             Check(Phase == (IsBlockingSignals() ? 1 : 2), "The virtual callback follows notification and synchronous signal");
             Phase = 3; Draws++; DrawRect(new(24, 0, 8, 8), Colors.Blue); Fail(2);
+            TextureProbe?.Invoke(this);
             QueueRedraw(); // An in-scope request belongs to this recording.
             if (Reenter) Reject<InvalidOperationException>(() => RenderingServer.ForceDraw(false));
             if (QueueDeletion) QueueFree();
@@ -90,6 +92,7 @@ internal static class CanvasDrawCallbackTests
                     Check(body.GlobalPosition.X > 8.1f && world.PhysicsBackend == backend && world.PhysicsFallbackReason is null,
                         "The selected physical receiver actually moves before callback verification");
                     identity = body.GetRID(); VerifyBody();
+                    TextureBoundaries(body);
                     RenderingServer.ForceDraw(false); Pixels(true);
                     var before = body.Draws; RenderingServer.ForceDraw(false);
                     Check(body.Draws == before, "Retained replay does not repeat the callback or its in-scope redraw request");
@@ -184,6 +187,49 @@ internal static class CanvasDrawCallbackTests
         {
             ProjectSettings.Set(ProjectSettings.RenderingMethod, oldRenderer); ProjectSettings.Set(ProjectSettings.RenderingFallback, oldFallback);
             ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, oldThread); Engine.MaxFPS = oldFPS; Engine.PhysicsTicksPerSecond = oldTicks;
+        }
+    }
+    private sealed class SizeCallbackTexture : Texture
+    {
+        internal int Queries;
+        internal Action? Query;
+        public override int GetWidth() => 1;
+        public override int GetHeight() => 1;
+        public override Vector2 GetSize() { Queries++; Query?.Invoke(); return Vector2.One; }
+    }
+    private static void TextureBoundaries(Painter body)
+    {
+        using var outside = new SizeCallbackTexture();
+        Reject<InvalidOperationException>(() => outside.Draw(body, Vector2.Zero));
+        Check(outside.Queries == 0, "Direct texture drawing rejects an inactive recording before virtual size callbacks");
+        for (var route = 0; route < 9; route++)
+        {
+            using var texture = new SizeCallbackTexture(); var rid = texture.GetRID();
+            var lastQuery = route % 3 == 0 ? 2 : 1;
+            texture.Query = () => { if (texture.Queries == lastQuery) texture.Dispose(); };
+            body.TextureProbe = item =>
+            {
+                Reject<ObjectDisposedException>(() => DrawTextureRoute(item, texture, rid, route));
+                Check(texture.IsDisposed && texture.Queries == lastQuery, "The final virtual size callback retired the borrowed texture");
+            };
+            try { body.QueueRedraw(); RenderingServer.ForceDraw(false); }
+            finally { body.TextureProbe = null; }
+        }
+    }
+    internal static void DrawTextureRoute(CanvasItem item, Texture texture, RID rid, int route)
+    {
+        switch (route)
+        {
+            case 0: item.DrawTexture(texture, Vector2.Zero); break;
+            case 1: item.DrawTextureRect(texture, new(0, 0, 1, 1), false); break;
+            case 2: item.DrawTextureRectRegion(texture, new(0, 0, 1, 1), new(0, 0, 1, 1)); break;
+            case 3: item.DrawTexture(rid, Vector2.Zero); break;
+            case 4: item.DrawTextureRect(rid, new(0, 0, 1, 1), false); break;
+            case 5: item.DrawTextureRectRegion(rid, new(0, 0, 1, 1), new(0, 0, 1, 1)); break;
+            case 6: texture.Draw(item, Vector2.Zero); break;
+            case 7: texture.DrawRect(item, new(0, 0, 1, 1), false); break;
+            case 8: texture.DrawRectRegion(item, new(0, 0, 1, 1), new(0, 0, 1, 1)); break;
+            default: throw new ArgumentOutOfRangeException(nameof(route));
         }
     }
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }

@@ -25,6 +25,7 @@ if (args.Length == 3 && args[0] == "--save-swap-child") { FileSaveAndSwapTests.C
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SAVE_SWAP") is { } saveSwapProfile) { FileSaveAndSwapTests.Run(saveSwapProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINE_STRICTNESS") is { } strictnessProfile) { LineBreakingStrictnessTests.Run(strictnessProfile); return; }
 if (args.Length == 2 && args[0] == "--debanding-storage") { CanvasDebandingTests.ReadStorage(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_POLYGONS") == "1") { CanvasPolygonTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DRAW_CALLBACK") is { } callbackRenderer) { CanvasDrawCallbackTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DRAW_CALLBACK_PHYSICS") == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU, callbackRenderer, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_STROKES") is { } nativeStrokeProfile) { if (nativeStrokeProfile == "managed") NativeStrokeTests.Managed(); else NativeStrokeTests.Run(nativeStrokeProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEBANDING") is { } debandingProfile) { if (debandingProfile == "managed") CanvasDebandingTests.Managed(); else CanvasDebandingTests.Native(debandingProfile); return; }

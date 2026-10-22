@@ -1,6 +1,6 @@
 # Texture
 
-Last updated: 2026-10-18
+Last updated: 2026-10-22
 
 - Declaration: `public abstract class Texture : Resource`
 - Source: [Texture.cs](../../src/Scene/Resources/Texture.cs)
@@ -94,6 +94,8 @@ Returns GetWidth() and GetHeight() as a Vector2. ImageTexture reads both coordin
 ### Draw
 
 Records a borrowed texture at `position` with its current logical GetSize(). The target must be inside its own canvas recording scope on the scene owner thread; null targets, disposed resources and nonfinite arguments are rejected. Null modulation means white. Transpose exchanges source axes and the destination width/height. An uninitialized zero-size texture records nothing.
+
+Texture drawing validates the target recording scope and finite arguments before a virtual size query. After the final size callback, it revalidates the canvas and borrowed texture before retaining a command, including zero-size results. A callback that disposes either resource throws ObjectDisposedException; disposing the canvas does not dispose its borrowed texture. Object, RID and direct Texture drawing share this boundary.
 
 ### DrawRect
 

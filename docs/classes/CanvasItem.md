@@ -1,6 +1,6 @@
 # CanvasItem
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 **Inherits:** [Node](Node.md)
 
@@ -680,6 +680,8 @@ Records a borrowed [StyleBox](StyleBox.md) using its typed Draw/OnDraw path duri
 **Parameters:** `styleBox` is a live caller-owned style; `rect` is a finite local rectangle. Null style throws ArgumentNullException, disposed style/target throws ObjectDisposedException, and a wrong owner or inactive recording scope throws InvalidOperationException. Nonfinite geometry throws ArgumentException. The style is not retained as a live draw dependency: the commands capture its current values, while referenced textures remain borrowed.
 
 The caller requests redraw after style changes, and minimum-size refresh when it uses the style's margins. StyleBox.GetCurrentItemDrawn returns this item throughout NotificationDraw, Draw and OnDraw on the recording thread; the context is restored in finally after success or failure. A failed recording drops partial commands under the existing canvas cleanup contract. Typed Theme lookup and current panel skin selection execute under [ADR 0083](../decisions/rendering.md#adr-0083); automatic GUI mask routing remains separate. See [ADR 0082](../decisions/rendering.md#adr-0082).
+
+Texture drawing validates the target recording scope and finite arguments before a virtual size query. After the final size callback, it revalidates the canvas and borrowed texture before retaining a command, including zero-size results. A callback that disposes either resource throws ObjectDisposedException; disposing the canvas does not dispose its borrowed texture. Object, RID and direct Texture drawing share this boundary.
 
 <a id="m-electron2d-canvasitem-drawtexture-electron2d-texture-electron2d-vector2-system-nullable-electron2d-color"></a>
 ### `public void DrawTexture(Texture texture, Vector2 position, Color? modulate = null)`

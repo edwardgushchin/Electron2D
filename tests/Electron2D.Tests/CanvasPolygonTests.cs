@@ -6,6 +6,7 @@ internal static class CanvasPolygonTests
 
     internal static void Run()
     {
+        TextureCallbackLifetimes();
         using var node = new Painter();
         Reject<InvalidOperationException>(() => node.DrawPolygon(Contour, []));
         var vertices = new List<CanvasVertex>(); var batches = new List<CanvasBatch>();
@@ -95,6 +96,18 @@ internal static class CanvasPolygonTests
         node.Paint = n => n.DrawPolygon(Contour, [], texture: source); node.InvalidateCanvas(); Reject<ObjectDisposedException>(node.PrepareCanvas);
     }
 
+    private static void TextureCallbackLifetimes()
+    {
+        for (var route = 0; route < 9; route++)
+        {
+            using var texture = new SizeCallbackTexture(); using var node = new Painter();
+            var rid = texture.GetRID(); var queries = 0; var lastQuery = route % 3 == 0 ? 2 : 1;
+            texture.Query = () => { if (++queries == lastQuery) node.Dispose(); };
+            node.Paint = n => CanvasDrawCallbackTests.DrawTextureRoute(n, texture, rid, route);
+            Reject<ObjectDisposedException>(node.PrepareCanvas);
+            Check(node.IsDisposed && !texture.IsDisposed && queries == lastQuery, "Size callbacks cannot revive a retired canvas receiver or consume its borrowed texture");
+        }
+    }
     private sealed class SizeCallbackTexture : Texture
     {
         internal Action? Query;

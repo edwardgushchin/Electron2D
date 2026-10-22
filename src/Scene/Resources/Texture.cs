@@ -104,6 +104,8 @@ public abstract class Texture : Resource
     /// <param name="position">The finite local top-left position.</param>
     /// <param name="modulate">The finite color multiplier, or null for white.</param>
     /// <param name="transpose">Whether to exchange the texture axes and drawing dimensions.</param>
+    /// <remarks>The target and arguments are validated before virtual size queries. Recording revalidates
+    /// both borrowed resources after a size callback, including callbacks that dispose the target or texture.</remarks>
     /// <exception cref="ArgumentException">Geometry or modulation is not finite.</exception>
     /// <exception cref="ArgumentNullException">The target node is null.</exception>
     /// <exception cref="InvalidOperationException">The target is not recording canvas commands on its owner thread.</exception>
@@ -111,6 +113,7 @@ public abstract class Texture : Resource
     public virtual void Draw(CanvasItem canvasItem, Vector2 position, Color? modulate = null, bool transpose = false)
     {
         ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(canvasItem);
+        canvasItem.ValidateTextureDraw(this, new Rect2(position, Vector2.Zero), modulate ?? Colors.White);
         canvasItem.RecordTexture(this, new Rect2(position, GetSize()), null, modulate ?? Colors.White, false, transpose, false);
     }
 
