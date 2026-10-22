@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>Reads a named parameter declared in either canvas graph stage.</summary>
 /// <remarks>Resolution is local to the containing graph, including when definitions are borrowed by several graphs.
-/// Color references expose RGB and alpha separately. The initial [None] selection produces scalar zero.
+/// Color references expose RGB and alpha separately; image references carry the containing declaration's sampler shape. The initial [None] selection produces scalar zero.
 /// Renaming or removing a declaration may invalidate stored connections; import rejects them before replacing output.</remarks>
 public sealed class VisualShaderNodeParameterRef : VisualShaderNode
 {

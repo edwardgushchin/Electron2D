@@ -66,11 +66,11 @@ internal sealed partial class ShaderProgram
             var sampler = vertex.Textures[i];
             if (uniforms.ContainsKey(sampler.Name) || instances.ContainsKey(sampler.Name) || globals.ContainsKey(sampler.Name) || sampler.IsGlobal && (uniforms.ContainsKey(sampler.GlobalName) || instances.ContainsKey(sampler.GlobalName) || globals.ContainsKey(sampler.GlobalName)))
                 throw new ArgumentException($"Shader parameter '{sampler.Name}' has conflicting uniform and sampled-image roles across stages.");
-            if (samplers.FirstOrDefault(t => t.Name == sampler.Name) is { } existing && !existing.SameType(sampler))
+            if (samplers.FirstOrDefault(t => t.Name == sampler.Name) is { } existing && (!existing.SameType(sampler) || existing.ImagePolicy != sampler.ImagePolicy))
                 throw new ArgumentException($"Sampled image '{sampler.Name}' has different types across stages.");
             var index = samplers.FindIndex(t => t.Name == sampler.Name && t.Element == sampler.Element);
             if (index < 0) { index = samplers.Count; samplers.Add(sampler); }
-            else if (!samplers[index].SameType(sampler)) throw new ArgumentException($"Sampled image '{sampler.Name}' has different types across stages.");
+            else if (!samplers[index].SameType(sampler) || samplers[index].ImagePolicy != sampler.ImagePolicy) throw new ArgumentException($"Sampled image '{sampler.Name}' has different types across stages.");
             textureIndices[i] = index;
         }
         ShaderUniform? Builtin(ShaderUniform? first, ShaderUniform? second)

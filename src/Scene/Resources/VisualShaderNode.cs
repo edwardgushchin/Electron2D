@@ -1,11 +1,11 @@
 namespace Electron2D;
 
-/// <summary>A typed numeric operation in an offline-compiled visual shader graph.</summary>
+/// <summary>A typed operation in an offline-compiled visual shader graph.</summary>
 /// <remarks>Nodes are borrowed by graphs. Authoring is cold, single-threaded work. Edits emit Changed and
 /// affect the next import; existing compiled shader programs retain their immutable code.</remarks>
 public abstract class VisualShaderNode : Resource
 {
-    /// <summary>The numeric value role carried by a graph port.</summary>
+    /// <summary>The value role carried by a graph port.</summary>
     public enum PortType
     {
         /// <summary>A single-precision scalar.</summary>
@@ -24,6 +24,8 @@ public abstract class VisualShaderNode : Resource
         Boolean = 6,
         /// <summary>A four-by-four numeric matrix carried by System.Numerics.Matrix4x4.</summary>
         Matrix = 7,
+        /// <summary>An opaque sampled-image reference; it accepts no numeric default or conversion.</summary>
+        Sampler = 8,
         /// <summary>The nonselectable upper bound of the complete logical port type table.</summary>
         Max = 9,
     }
@@ -36,13 +38,13 @@ public abstract class VisualShaderNode : Resource
     internal abstract string Expression(int output, IReadOnlyList<string> inputs);
     internal abstract void CopyDefinitionTo(VisualShaderNode target);
 
-    /// <summary>Initializes a numeric graph node.</summary>
+    /// <summary>Initializes a typed graph node.</summary>
     protected VisualShaderNode() { }
 
     /// <summary>Gets the default connection target used when adding this node from an existing port.</summary>
-    /// <param name="type">The originating numeric port type.</param>
+    /// <param name="type">The originating port role.</param>
     /// <returns>Input zero, as specified by the base node connection policy.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">The numeric port type is undefined.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The port role is undefined.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public int GetDefaultInputPort(PortType type)
     { ThrowIfDisposed(); if (!Enum.IsDefined(type) || type == PortType.Max) throw new ArgumentOutOfRangeException(nameof(type)); return 0; }
@@ -117,7 +119,7 @@ public abstract class VisualShaderNode : Resource
         ThrowIfDisposed(); _defaults.Clear(); foreach (var pair in replacement) _defaults.Add(pair.Key, pair.Value); EmitChanged();
     }
 
-    /// <summary>Removes one explicit input default so compilation uses the port's zero-valued fallback.</summary>
+    /// <summary>Removes one explicit input default so compilation uses the node's implicit input policy.</summary>
     /// <param name="port">The input index, including a reserved composition component.</param>
     /// <exception cref="ArgumentOutOfRangeException">The input is neither active nor a reserved composition component.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
@@ -171,6 +173,7 @@ public abstract class VisualShaderNode : Resource
         for (var index = 0; index < inputs.Length; index++)
         {
             var port = index;
+            if (inputs[index] == PortType.Sampler) continue;
             yield return inputs[index] switch
             {
                 PortType.Scalar => DefaultDescriptor<float>(port),

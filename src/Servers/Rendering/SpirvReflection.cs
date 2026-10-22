@@ -97,7 +97,7 @@ internal static unsafe partial class SpirvReflection
                     throw new NotSupportedException("The built-in SCREEN_PIXEL_SIZE requires a non-array float32 vector of width two in a stage uniform buffer.");
                 if (name == "SDF_COORDS" && (GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 4 || GetColumns(field) != 1 || dimensions != 0))
                     throw new NotSupportedException("SDF_COORDS requires a non-array float32 vector of width four in a stage uniform buffer.");
-                if (name is "SCREEN_TEXTURE" or "SDF_TEXTURE") throw new NotSupportedException("Renderer-owned texture names require sampled texture bindings.");
+                if (name is "SCREEN_TEXTURE" or "SDF_TEXTURE" or "NORMAL_TEXTURE" or "SPECULAR_SHININESS_TEXTURE") throw new NotSupportedException("Renderer-owned texture names require sampled texture bindings.");
                 if (GetBitWidth(field) != 32 || GetColumns(field) != 1 && !matrix || dimensions > 1)
                     throw new NotSupportedException($"Uniform '{name}' requires a supported 32-bit scalar/vector, square float matrix of width two through four or a fixed one-dimensional array; nonsquare matrices and nested structs are not supported.");
                 booleans.Remove(name, out var logical);
@@ -200,16 +200,19 @@ internal static unsafe partial class SpirvReflection
                 ImageIsMultisampled(imageType) != 0 || ImageIsStorage(imageType) != 0 || GetBaseType(sampleType) is not (7 or 8 or 13) || GetBitWidth(sampleType) != 32)
                 throw new NotSupportedException($"Texture '{name}' requires a non-depth 2D or image-array float, signed or unsigned scalar image.");
             var array = ImageIsArray(imageType) != 0;
-            if (array && name is "TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE") throw new NotSupportedException("Renderer-owned samplers require ordinary 2D images.");
-            if (name is "SCREEN_TEXTURE" or "SDF_TEXTURE" && GetBaseType(sampleType) != 13) throw new NotSupportedException("Renderer-owned screen and distance images require float sampling.");
+            if (array && name is "TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE" or "NORMAL_TEXTURE" or "SPECULAR_SHININESS_TEXTURE") throw new NotSupportedException("Renderer-owned samplers require ordinary 2D images.");
+            if (name is "SCREEN_TEXTURE" or "SDF_TEXTURE" or "NORMAL_TEXTURE" or "SPECULAR_SHININESS_TEXTURE" && GetBaseType(sampleType) != 13) throw new NotSupportedException("Renderer-owned screen and distance images require float sampling.");
             var resourceType = GetType(compiler, resource.TypeId);
             var length = GetArrayDimensions(resourceType) == 0 ? 0 : (int)GetArrayLength(resourceType, 0);
-            if (length != 0 && (name is "TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE" || name.StartsWith("GLOBAL_", StringComparison.Ordinal)))
+            if (length != 0 && (name is "TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE" or "NORMAL_TEXTURE" or "SPECULAR_SHININESS_TEXTURE" || name.StartsWith("GLOBAL_", StringComparison.Ordinal)))
                 throw new NotSupportedException("Renderer-owned and global images require scalar descriptor bindings.");
             var blitSource = blit && name is "SOURCE_TEXTURE0" or "SOURCE_TEXTURE1" or "SOURCE_TEXTURE2" or "SOURCE_TEXTURE3";
             if (blitSource && (array || length != 0 || GetBaseType(sampleType) != 13)) throw new NotSupportedException("Blit source samplers require scalar float 2D images.");
             textures[slot] = new(name, (int)slot, array, GetBaseType(sampleType) switch { 7 => 1, 8 => 2, _ => 0 }, length, BlitSource: blitSource);
         }
+        if ((!fragment || blit || particles) && textures.Any(t => t.IsNormalTexture || t.IsSpecularTexture))
+            throw new NotSupportedException("Canvas normal and specular images require the canvas fragment stage.");
+        ReadImages(code, textures, fragment, !blit && !particles, uniforms);
         var samplerSlots = new bool[(int)textureCount];
         foreach (var resource in new ReadOnlySpan<ReflectedResource>((void*)samplerPointer, (int)samplerCount))
         {
@@ -260,7 +263,7 @@ internal static unsafe partial class SpirvReflection
                 if (string.IsNullOrWhiteSpace(texture.GlobalName) || globals.ContainsKey(texture.GlobalName) || uniforms.ContainsKey(texture.GlobalName) || instances.ContainsKey(texture.GlobalName))
                     throw new NotSupportedException("Global image names must be nonblank and cannot alias numeric or material fields.");
             }
-        if (particles && (sizes.Length == 0 || sizes[0] != ParticleFrameLayout.ByteSize || instances.Count != 0 || screenPixelSizeUniform is not null || textures.Any(t => t.IsCanvasTexture || t.IsScreenTexture)))
+        if (particles && (sizes.Length == 0 || sizes[0] != ParticleFrameLayout.ByteSize || instances.Count != 0 || screenPixelSizeUniform is not null || textures.Any(t => t.IsCanvasTexture || t.IsScreenTexture || t.IsNormalTexture || t.IsSpecularTexture)))
             throw new NotSupportedException("Particle programs require their renderer-owned frame and have no canvas command, screen or instance bindings.");
         ReadDefaults(code, uniforms, instances);
         ReadHints(code, uniforms, instances, fragment);

@@ -14,7 +14,7 @@ Inherits: [VisualShaderNode](VisualShaderNode.md).
 
 Reads a named parameter declared in either canvas graph stage.
 
-Resolution is local to the containing graph, including when definitions are borrowed by several graphs. Color references expose RGB and alpha separately. The initial [None] selection produces scalar zero. Renaming or removing a declaration may invalidate stored connections; import rejects them before replacing output.
+Resolution is local to the containing graph, including when definitions are borrowed by several graphs. Color references expose RGB and alpha separately; image references carry the containing declaration's sampler shape. The initial [None] selection produces scalar zero. Renaming or removing a declaration may invalidate stored connections; import rejects them before replacing output.
 
 ## Member summary
 
@@ -68,7 +68,7 @@ Exceptions:
 
 Definitions are cold, single-threaded Resource authoring objects. Graphs borrow them. Selectors, typed defaults and default absence survive copies and archives. Changes require reimport before rendering.
 
-The public VisualShader.Consumer covers typed parameter definitions, copied defaults/hints, storage qualifiers, graph-local references and portable archives. The executable fixtures also observe real software-rendered pixels, typed updates/reset and all sixteen instance slots. See [the component contract](../components/visual-shaders.md#parameters-and-graph-local-references) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
+The public VisualShader.Consumer covers typed numeric and opaque ports, sampler policies, resource aliases and portable archives. Its image fixtures check real software-rendered pixels, color transfer, independent layers/mips and refreshed native storage. See [the component contract](../components/visual-shaders.md#sampled-images-and-canvas-channels) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
 
 ## Decisions
 

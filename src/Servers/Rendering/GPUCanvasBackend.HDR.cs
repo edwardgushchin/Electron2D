@@ -63,6 +63,7 @@ internal sealed unsafe partial class GPUCanvasBackend
 
     private void ConvertColorSources(nint command, int vertexOffset, int first)
     {
+        ConvertArrayColorSources(command, vertexOffset, first);
         foreach (var source in _linearSources)
         {
             var view = _linearViews[source.Key];
@@ -80,6 +81,7 @@ internal sealed unsafe partial class GPUCanvasBackend
 
     private void RetireColorViews()
     {
+        RetireArrayColorViews();
         foreach (var pair in _linearViews)
             if (!_usedLinearViews.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed))
             { pair.Value.View.Dispose(); _linearViews.Remove(pair.Key); }
@@ -88,6 +90,7 @@ internal sealed unsafe partial class GPUCanvasBackend
 
     private void DisposeColorViews()
     {
+        DisposeArrayColorViews();
         foreach (var view in _linearViews.Values) view.View.Dispose();
         _linearViews.Clear(); _linearSources.Clear(); _usedLinearViews.Clear();
         _linearizePipeline?.Dispose(); _presentationPipeline?.Dispose();

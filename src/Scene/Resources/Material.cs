@@ -338,7 +338,7 @@ internal sealed class MaterialState
             }
         for (var i = 0; i < Textures.Length; i++)
             for (var j = 0; j < previous.Textures.Length; j++)
-                if (program.Textures[i].Name == previous.Program.Textures[j].Name && program.Textures[i].Element == previous.Program.Textures[j].Element && program.Textures[i].SameType(previous.Program.Textures[j])) Textures[i] = previous.Textures[j];
+                if (program.Textures[i].IsMaterialTexture && previous.Program.Textures[j].IsMaterialTexture && program.Textures[i].Name == previous.Program.Textures[j].Name && program.Textures[i].Element == previous.Program.Textures[j].Element && program.Textures[i].SameType(previous.Program.Textures[j])) Textures[i] = previous.Textures[j];
     }
 
     internal void CopyTextures(Span<Resource?> target)
@@ -349,9 +349,11 @@ internal sealed class MaterialState
             CaptureSamplerStates();
             for (var i = 0; i < Textures.Length; i++)
             {
-                target[i] = Program.Textures[i].IsEngineTexture ? null : Program.Textures[i].IsGlobal ? (RenderingServer.ActiveGlobalParameters ?? throw new InvalidOperationException("Global images require an active renderer.")).Resolve(Program.Textures[i]) : Textures[i] ?? Shader?.DefaultTexture(Program.Textures[i].Name, Program.Textures[i].Element)
-                    ?? throw new InvalidOperationException($"Texture parameter '{Program.Textures[i].Name}' has no texture or Shader default.");
-                Program.Textures[i].Validate(target[i]);
+                var texture = Program.Textures[i];
+                target[i] = texture.IsEngineTexture ? null : texture.IsGlobal ? (RenderingServer.ActiveGlobalParameters ?? throw new InvalidOperationException("Global images require an active renderer.")).Resolve(texture) : Textures[i] ?? Shader?.DefaultTexture(texture.Name, texture.Element);
+                if (target[i] is null && !texture.IsEngineTexture && texture.ImagePolicy is null)
+                    throw new InvalidOperationException($"Texture parameter '{texture.Name}' has no texture or Shader default.");
+                texture.Validate(target[i]);
             }
         }
     }

@@ -174,7 +174,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true)
     {
         ResetRenderInfo();
-        _currentHDR = output.HDR; _linearSources.Clear();
+        _currentHDR = output.HDR; _linearSources.Clear(); _linearArraySources.Clear();
         if (output.HDR) clear = LinearColor(clear);
         var samples = (SDL.GPUSampleCount)output.MSAA; var format = CanvasFormat(output.HDR);
         _materialMasks = lighting.Masks.Count != 0;
@@ -202,7 +202,11 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                     _pipelines.Add((_defaultFragment, null, BlendMode.PremultAlpha, false, samples, false, format, Mesh.PrimitiveType.Triangles), CreatePipeline(_defaultFragment, BlendMode.PremultAlpha, format: format, samples: samples));
                 _ = Sampler(TextureFilter.Nearest, TextureRepeat.Disabled);
             }
-            if (batch.Material is { } material && material.Textures.Length != 0) { _usedMaterials.Add(material); PrepareTextures(material); }
+            if (batch.Material is { } material && material.Textures.Length != 0)
+            {
+                _usedMaterials.Add(material); PrepareTextures(material, batch.MaxAnisotropy);
+                PrepareGraphChannels(batch);
+            }
             if (!batch.GroupShader && UsesCanvasTexture(batch)) _ = CanvasBinding(batch);
             if (batch.Glyph.Mode != CanvasGlyphMode.None) _ = CanvasBinding(batch with { Material = null });
             if (batch.Lighting is not null) PrepareLightingChannels(batch);
@@ -223,7 +227,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         var maskFirst = checked(vertices.Length + (sdfUsed ? 6 : 0));
         var seedFirst = checked(maskFirst + (lightingUsed ? lighting.Masks.Count * 6 : 0));
         var colorFirst = checked(seedFirst + (samples != SDL.GPUSampleCount.SampleCount1 ? 6 : 0));
-        var colorQuad = _linearSources.Count != 0;
+        var colorQuad = _linearSources.Count != 0 || _linearArraySources.Count != 0;
         var vertexBytes = checked((colorFirst + (colorQuad ? 6 : 0)) * sizeof(CanvasVertex));
         var uploadBytes = checked(lightingBytes + vertexBytes + instances.Length * sizeof(CanvasInstance));
         EnsureBuffers(uploadBytes);
@@ -273,7 +277,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 SDL.EndGPUCopyPass(copy);
             }
 
-            if (_linearSources.Count != 0) ConvertColorSources(command, lightingBytes, colorFirst);
+            if (_linearSources.Count != 0 || _linearArraySources.Count != 0) ConvertColorSources(command, lightingBytes, colorFirst);
             if (lightingUsed) CopyLightingAtlas(command, lighting, lightingBytes, maskFirst);
             if (sdfUsed) DrawSDF(command, lighting, lightingBytes, vertices.Length);
             if (processParticles && RenderingServer.Service is { } particleOwner) ProcessParticles(command, particleOwner, time, lighting);
@@ -349,10 +353,12 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                     var samplers = _textureBindings[textured];
                     for (var i = 0; i < samplers.Length; i++)
                     {
-                        var configured = textured.Samplers[i].HasValue ? samplers[i].Sampler : 0;
+                        var image = textured.Program.Textures[i];
+                        var configured = textured.Samplers[i].HasValue ? samplers[i].Sampler : image.ImagePolicy is { } policy ? ImageSampler(policy, batch.MaxAnisotropy) : 0;
                         if (textured.Program.Textures[i].IsSDFTexture) samplers[i] = new() { Texture = _sdfTarget!.DangerousGetHandle(), Sampler = Sampler(TextureFilter.Linear, TextureRepeat.Disabled) };
                         else if (textured.Program.Textures[i].IsScreenTexture) samplers[i] = new() { Texture = output.BackBuffer!.DangerousGetHandle(), Sampler = Sampler(TextureFilter.LinearWithMipmaps, TextureRepeat.Disabled) };
-                        else if (textured.Program.Textures[i].IsCanvasTexture) samplers[i] = CanvasBinding(batch);
+                        else if (image.IsCanvasTexture) samplers[i] = CanvasBinding(batch);
+                        else if (image.IsNormalTexture || image.IsSpecularTexture) samplers[i] = ChannelBinding(batch, image.IsNormalTexture);
                         if (configured != 0) samplers[i].Sampler = configured;
                     }
                     if (VertexCode(batch) is not null)
@@ -537,7 +543,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
 
     private static byte[]? VertexCode(CanvasBatch batch) => (batch.GroupShader || batch.MaskShader) && !batch.Procedural ? null : batch.Material?.Program.VertexCode(batch.InstanceCount > 0, batch.Lighting is not null && !batch.MaskShader && !batch.GroupShader, batch.Procedural);
 
-    private void PrepareTextures(MaterialState material)
+    private void PrepareTextures(MaterialState material, int anisotropy)
     {
         if (!_textureBindings.TryGetValue(material, out var bindings))
             _textureBindings.Add(material, bindings = new SDL.GPUTextureSamplerBinding[material.Textures.Length]);
@@ -548,8 +554,22 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             {
                 var configured = material.Samplers[i] is { } configuration
                     ? (_shaderSamplers ??= new(_device, Driver, !_relaxedAndroidDevice)).Get(configuration) : 0;
-                if (material.Program.Textures[i].IsEngineTexture) { bindings[i] = new() { Sampler = configured }; continue; }
-                bindings[i] = new SDL.GPUTextureSamplerBinding { Texture = _textureScratch[i] is TextureLayered array ? PrepareLayeredTexture(array) : PrepareTexture((Texture)_textureScratch[i]!), Sampler = configured != 0 ? configured : Sampler(material.Program.Textures[i].PixelType == 0 ? TextureFilter.Linear : TextureFilter.Nearest, TextureRepeat.Disabled, integer: material.Program.Textures[i].PixelType != 0) };
+                if (material.Program.Textures[i].IsEngineTexture) { if (configured == 0 && material.Program.Textures[i].ImagePolicy is { } enginePolicy) configured = ImageSampler(enginePolicy, anisotropy); bindings[i] = new() { Sampler = configured }; continue; }
+                var descriptor = material.Program.Textures[i];
+                if (configured == 0 && descriptor.ImagePolicy is { } policy) configured = ImageSampler(policy, anisotropy);
+                var resource = ShaderTexture.Source(_textureScratch[i]) ?? (_textureScratch[i] is Texture ? RenderingTextureRegistry.PlaceholderTexture : _textureScratch[i]) ?? ImageFallback(descriptor.IsArray, descriptor.ImagePolicy!.Value.Fallback);
+                nint handle;
+                if (resource is TextureLayered array)
+                {
+                    handle = PrepareLayeredTexture(array);
+                    if (_currentHDR && descriptor.ImagePolicy is { SourceColor: true }) handle = LinearLayeredTexture(array, handle);
+                }
+                else
+                {
+                    var ordinary = (Texture)resource; handle = PrepareTexture(ordinary);
+                    if (_currentHDR && descriptor.ImagePolicy is { SourceColor: true }) handle = LinearTexture(ordinary, handle);
+                }
+                bindings[i] = new() { Texture = handle, Sampler = configured != 0 ? configured : Sampler(descriptor.PixelType == 0 ? TextureFilter.Linear : TextureFilter.Nearest, TextureRepeat.Disabled, integer: descriptor.PixelType != 0) };
             }
         }
         finally { Array.Clear(_textureScratch); }
@@ -570,7 +590,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     internal override void ReleaseTemporaryTexture(Texture texture)
     { _usedTextures.Remove(texture); if (_textures.Remove(texture, out var value)) value.Dispose(); }
 
-    internal override void BeginFrame() { _shaderSamplers?.AdvanceEpoch(); BeginParticleFrame(); (_usedPrograms, _previousPrograms) = (_previousPrograms, _usedPrograms); _usedLinearViews.Clear(); BeginGlyphFrame(); _usedLitPrograms.Clear(); _usedPrograms.Clear(); _usedPrograms.Add((_defaultFragment, null, BlendMode.Mix, false, SDL.GPUSampleCount.SampleCount1, false, SDL.GPUTextureFormat.R8G8B8A8Unorm, Mesh.PrimitiveType.Triangles)); _usedTextures.Clear(); _usedLayeredTextures.Clear(); _usedMaterials.Clear(); }
+    internal override void BeginFrame() { _shaderSamplers?.AdvanceEpoch(); BeginParticleFrame(); (_usedPrograms, _previousPrograms) = (_previousPrograms, _usedPrograms); _usedLinearViews.Clear(); _usedLinearArrayViews.Clear(); BeginGlyphFrame(); _usedLitPrograms.Clear(); _usedPrograms.Clear(); _usedPrograms.Add((_defaultFragment, null, BlendMode.Mix, false, SDL.GPUSampleCount.SampleCount1, false, SDL.GPUTextureFormat.R8G8B8A8Unorm, Mesh.PrimitiveType.Triangles)); _usedTextures.Clear(); _usedLayeredTextures.Clear(); _usedMaterials.Clear(); }
     internal override void EndFrame()
     {
         RetireParticleVertices(); RetireParticlePrograms();
@@ -681,7 +701,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         _textures.Clear(); _usedTextures.Clear(); _textureBindings.Clear(); _usedMaterials.Clear();
         _shaderSamplers?.Dispose();
         foreach (var sampler in _samplers.Values) sampler.Dispose();
-        _samplers.Clear(); DisposeColorViews(); _whiteTexture?.Dispose(); _lightAtlas?.Dispose();
+        _samplers.Clear(); DisposeColorViews(); DisposeImageFallbacks(); _whiteTexture?.Dispose(); _lightAtlas?.Dispose();
         foreach (var pipeline in _lightMaskPipelines) pipeline?.Dispose();
         _sdfTarget?.Dispose(); _sdfPipeline?.Dispose(); ReleaseParticlePrograms(); ReleaseParticleVertices();
         _litPrograms.Clear(); _usedLitPrograms.Clear();

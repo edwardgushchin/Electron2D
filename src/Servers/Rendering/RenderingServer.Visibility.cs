@@ -24,7 +24,7 @@ public sealed partial class RenderingServer
             var filter = channels?.TextureFilter is { } ownFilter && ownFilter != TextureFilter.ParentNode ? ownFilter : batch.Filter;
             var repeat = channels?.TextureRepeat is { } ownRepeat && ownRepeat != TextureRepeat.ParentNode ? ownRepeat : batch.Repeat;
             var shaded = illumination && mode != LightMode.Unshaded;
-            _batches[i] = batch with { Filter = filter, Repeat = repeat, MaxAnisotropy = filter >= TextureFilter.NearestWithMipmapsAnisotropic ? 1 << (int)_viewport.AnisotropicFilteringLevel : 1, CanvasModulation = canvasModulation, Lighting = shaded ? new(node.RenderCanvas()?.Modulate ?? Colors.White, node.RenderLightMask, node.RenderZ, layer, mode) : null };
+            _batches[i] = batch with { Filter = filter, Repeat = repeat, MaxAnisotropy = 1 << (int)_viewport.AnisotropicFilteringLevel, CanvasModulation = canvasModulation, Lighting = shaded ? new(node.RenderCanvas()?.Modulate ?? Colors.White, node.RenderLightMask, node.RenderZ, layer, mode) : null };
         }
         SampleCanvasVisibility(node, transform, clip, pixels);
         if (node is not VisibleOnScreenNotifier notifier || notifier.ScreenCandidate || notifier.RenderInheritedModulate.A < 0.007f) return;

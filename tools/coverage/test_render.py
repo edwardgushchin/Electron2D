@@ -226,6 +226,19 @@ def main():
     rows = [row for row in pages[CLASS_PAGES / "VisualShaderNodeDerivativeFunc.md"].splitlines() if row.startswith("| [`")]
     assert len(rows) == 20 and all(" | Implemented | " in row for row in rows)
     assert "VisualShaderFloatOpType" in pages[CLASS_PAGES / "VisualShaderNodeDerivativeFunc.md"]
+    for name, count, excluded in [("VisualShaderNodeTexture", 19, 3), ("VisualShaderNodeTextureParameter", 37, 2),
+                                   ("VisualShaderNodeTexture2DParameter", 1, 0), ("VisualShaderNodeTexture2DArrayParameter", 1, 0),
+                                   ("VisualShaderNodeSample3D", 6, 0), ("VisualShaderNodeTexture2DArray", 2, 0)]:
+        rows = [row for row in pages[CLASS_PAGES / (name + ".md")].splitlines() if row.startswith("| [`")]
+        assert len(rows) == count and sum(" | Excluded | " in row for row in rows) == excluded
+        assert sum(" | Implemented | " in row for row in rows) == count - excluded
+        assert all("Trigger:" not in row for row in rows)
+    port_rows = pages[CLASS_PAGES / "VisualShaderNode.md"].splitlines()
+    assert " | Implemented | " in next(row for row in port_rows if row.startswith("| [`enum PortType`"))
+    assert " | Implemented | " in next(row for row in port_rows if "PORT_TYPE_SAMPLER" in row)
+    assert "VisualShaderNodeLayeredSample" in pages[CLASS_PAGES / "VisualShaderNodeSample3D.md"]
+    assert "VisualShaderNodeImageParameter" in pages[CLASS_PAGES / "VisualShaderNodeTexture2DParameter.md"]
+    assert "TextureFilterEnum" in pages[CLASS_PAGES / "VisualShaderNodeTextureParameter.md"]
     assert "OperatorEnum" in pages[CLASS_PAGES / "VisualShaderNodeFloatOp.md"]
     assert "OpTypeEnum" in pages[CLASS_PAGES / "VisualShaderNodeVectorBase.md"]
     engine_ids = {item["id"] for item in json.loads((DATA / "electron2d.json").read_text())}
@@ -803,7 +816,7 @@ def main():
     assert sum(" | Excluded | " in row for row in hint_rows) == 5
     base_rows = pages[CLASS_PAGES / "VisualShaderNode.md"].splitlines()
     assert " | Implemented | " in next(row for row in base_rows if "PORT_TYPE_TRANSFORM [" in row)
-    assert " | Blocked | " in next(row for row in base_rows if "PORT_TYPE_SAMPLER [" in row)
+    assert " | Implemented | " in next(row for row in base_rows if "PORT_TYPE_SAMPLER [" in row)
     assert not any(t["id"] in ("T:Electron2D.VisualShaderNodeCompare.ComparisonType", "T:Electron2D.VisualShaderNodeSwitch.OpTypeEnum") for t in engine)
     canvas_rows = pages[CLASS_PAGES / "CanvasItem.md"].splitlines()
     for name in ('draw_texture(', 'draw_texture_rect(', 'draw_texture_rect_region('):

@@ -12,6 +12,8 @@ try
         ResourceSaver.Save(graph, args[1], SaverFlags.BundleResources);
     }
     else if (args[0] == "gpu") GraphChecks.Render(IOPath.GetFullPath(args[1]), args);
+    else if (args[0] == "images-metadata") GraphChecks.ImageMetadataChecks(IOPath.GetFullPath(args[1]));
+    else if (args[0] == "images-author") GraphChecks.AuthorImages(IOPath.GetFullPath(args[1]));
     else if (args[0] == "derivatives-metadata") GraphChecks.DerivativeBytecodeChecks(IOPath.GetFullPath(args[1]));
     else if (args[0] == "derivatives-author") GraphChecks.AuthorDerivatives(IOPath.GetFullPath(args[1]));
     else if (args[0] == "parameters-author") GraphChecks.AuthorParameters(IOPath.GetFullPath(args[1]));
@@ -37,6 +39,7 @@ internal static partial class GraphChecks
         MatricesCPU();
         ParametersCPU();
         DerivativesCPU();
+        ImagesCPU();
         using var graph = new VisualShader();
         using var scalar = new VisualShaderNodeFloatConstant { Constant = .375f };
         using var operation = new VisualShaderNodeFloatOp();
@@ -147,6 +150,7 @@ internal static partial class GraphChecks
         AuthorMatrices(folder);
         AuthorParameters(folder);
         AuthorDerivatives(folder);
+        AuthorImages(folder);
         using (var graph = new VisualShader())
         using (var color = new VisualShaderNodeColorConstant { Constant = new(.25f, .5f, .75f, 1) })
         using (var alpha = new VisualShaderNodeFloatConstant { Constant = 1 })

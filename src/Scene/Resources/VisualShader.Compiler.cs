@@ -5,22 +5,23 @@ namespace Electron2D;
 
 public sealed partial class VisualShader
 {
-    internal (string Vertex, string Fragment) GenerateSources()
+    internal (string Vertex, string Fragment, IReadOnlyList<VisualShaderImage> Images, IReadOnlyList<VisualShaderBlockName> Blocks) GenerateSources()
     {
         ThrowIfDisposed(); ValidateFileState();
         if (GetMode() != Mode.CanvasItem) throw new NotSupportedException("This visual graph importer requires the canvas shader domain.");
         var parameters = ParameterSymbols(); var slots = InstanceSlots(parameters);
-        return (GenerateStage(Type.Vertex, parameters, slots), GenerateStage(Type.Fragment, parameters, slots));
+        var images = new List<VisualShaderImage>(); var blocks = new List<VisualShaderBlockName>();
+        return (GenerateStage(Type.Vertex, parameters, slots, images, blocks), GenerateStage(Type.Fragment, parameters, slots, images, blocks), images, blocks);
     }
 
-    private string GenerateStage(Type stage, Dictionary<string, VisualShaderNodeParameter> parameters, Dictionary<string, int> slots)
+    private string GenerateStage(Type stage, Dictionary<string, VisualShaderNodeParameter> parameters, Dictionary<string, int> slots, List<VisualShaderImage> allImages, List<VisualShaderBlockName> allBlocks)
     {
         var graph = GetGraph(stage);
         var incoming = new Dictionary<(int Node, int Port), VisualShaderConnection>();
         foreach (var edge in graph.Connections)
         {
             if (!PortsExist(graph, edge)) throw new InvalidDataException("A graph connection no longer has live matching ports.");
-            if (!PortsCompatible(graph, edge)) throw new InvalidDataException("Matrix graph ports require a matrix connection.");
+            if (!PortsCompatible(graph, edge)) throw new InvalidDataException("Graph ports require compatible numeric or sampled-image roles.");
             incoming[(edge.ToNode, edge.ToPort)] = edge;
         }
         var root = GetNode(stage, 0);
@@ -44,12 +45,27 @@ public sealed partial class VisualShader
                 if (incoming.TryGetValue((id, port), out var edge)) { remaining[id]++; dependents[edge.FromNode].Add(id); }
         var ready = new PriorityQueue<int, int>();
         foreach (var pair in remaining) if (pair.Value == 0) ready.Enqueue(pair.Key, pair.Key);
-        var source = new StringBuilder(ParameterHeader(stage, reachable, parameters, slots));
+        var plan = ImagePlan(stage, reachable, parameters); allImages.AddRange(plan.Images);
+        var aliases = StageSymbols(plan.Images);
+        foreach (var role in new[] { "Frame", "RendererValues", "Globals", "Instance" })
+            if (aliases[role] != role) allBlocks.Add(new(stage, aliases[role], role));
+        var source = new StringBuilder(ParameterHeader(stage, reachable, parameters, slots, plan.Images, aliases));
+        var names = parameters.Keys.Concat(plan.Images.Select(i => i.Name)).ToHashSet(StringComparer.Ordinal);
         var values = new Dictionary<(int Node, int Port), string>(); var completed = 0;
         string Input(int id, int port)
         {
             var node = graph.Nodes[id].Node;
-            if (!incoming.TryGetValue((id, port), out var edge)) return node.InputDefaultExpression(port);
+            if (!incoming.TryGetValue((id, port), out var edge))
+            {
+                if (node.Inputs[port] == VisualShaderNode.PortType.Sampler) return "";
+                if (node is VisualShaderNodeTexture or VisualShaderNodeLayeredSample)
+                {
+                    if (port == 0) return StageExpression(node is VisualShaderNodeLayeredSample ? "vec3(UV, 0.0)" :
+                        node is VisualShaderNodeTexture { Source: VisualShaderNodeTexture.SourceEnum.Screen } && stage == Type.Fragment ? "(gl_FragCoord.xy * e2d_values.SCREEN_PIXEL_SIZE)" : "UV", aliases);
+                    if (port == 1) return "";
+                }
+                return node.InputDefaultExpression(port);
+            }
             var from = graph.Nodes[edge.FromNode].Node;
             return VisualShaderValues.ConvertExpression(values[(edge.FromNode, edge.FromPort)], OutputTypes(from)[edge.FromPort], node.Inputs[port]);
         }
@@ -64,7 +80,7 @@ public sealed partial class VisualShader
                     if (!incoming.ContainsKey((0, port)) && !defaults.Any(d => d.Port == port)) continue;
                     var destination = stage == Type.Vertex ? port switch { 0 => "VERTEX", 1 => "UV", 2 => "COLOR.rgb", _ => "COLOR.a" }
                         : port == 0 ? "COLOR.rgb" : "COLOR.a";
-                    source.Append("    ").Append(destination).Append(" = ").Append(Input(0, port)).AppendLine(";");
+                    source.Append("    ").Append(StageExpression(destination, aliases)).Append(" = ").Append(Input(0, port)).AppendLine(";");
                 }
             }
             else
@@ -72,15 +88,28 @@ public sealed partial class VisualShader
                 var inputs = Enumerable.Range(0, node.Inputs.Length).Select(port => Input(id, port)).ToArray();
                 for (var output = 0; output < OutputTypes(node).Length; output++)
                 {
-                    var name = "n" + id.ToString(CultureInfo.InvariantCulture) + "p" + output.ToString(CultureInfo.InvariantCulture);
+                    var stem = "n" + id.ToString(CultureInfo.InvariantCulture) + "p" + output.ToString(CultureInfo.InvariantCulture); var name = stem;
+                    for (var suffix = 2; !names.Add(name); suffix++) name = stem + "_" + suffix.ToString(CultureInfo.InvariantCulture);
+                    var sample = node is VisualShaderNodeTexture or VisualShaderNodeLayeredSample;
+                    var sampler = plan.Nodes.GetValueOrDefault(id, node is VisualShaderNodeTexture { Source: VisualShaderNodeTexture.SourceEnum.Port } or VisualShaderNodeLayeredSample { Source: VisualShaderNodeLayeredSample.SourceEnum.Port } ? inputs[2] : "");
+                    if (sample && sampler.Length != 0)
+                    {
+                        var image = plan.Images.First(i => i.Name == sampler);
+                        if (image.IsArray != (node is VisualShaderNodeLayeredSample)) throw new InvalidDataException("A connected graph sampler has the wrong image shape.");
+                    }
                     var expression = node switch
                     {
-                        VisualShaderNodeInput input => input.Expression(stage).Replace("TIME", "e2d_values.TIME", StringComparison.Ordinal).Replace("SCREEN_PIXEL_SIZE", "e2d_values.SCREEN_PIXEL_SIZE", StringComparison.Ordinal),
+                        VisualShaderNodeInput input => StageExpression(input.Expression(stage), aliases).Replace("TIME", aliases["e2d_values"] + ".TIME", StringComparison.Ordinal).Replace("SCREEN_PIXEL_SIZE", aliases["e2d_values"] + ".SCREEN_PIXEL_SIZE", StringComparison.Ordinal),
                         VisualShaderNodeDerivativeFunc when stage != Type.Fragment => throw new NotSupportedException("Screen-space derivative nodes require the fragment graph stage."),
-                        VisualShaderNodeParameter parameter => ParameterVariable(parameter),
-                        VisualShaderNodeParameterRef reference => ParameterExpression(reference, output, parameters),
+                        VisualShaderNodeTexture or VisualShaderNodeLayeredSample => SampleImage(sampler, inputs),
+                        VisualShaderNodeTextureParameter => plan.Nodes[id],
+                        VisualShaderNodeParameterRef when OutputTypes(node)[output] == VisualShaderNode.PortType.Sampler => plan.Nodes[id],
+                        VisualShaderNodeParameter parameter => ParameterVariable(parameter, aliases),
+                        VisualShaderNodeParameterRef reference => ParameterExpression(reference, output, parameters, aliases),
                         _ => node.Expression(output, inputs)
                     };
+                    if (OutputTypes(node)[output] == VisualShaderNode.PortType.Sampler)
+                    { values.Add((id, output), expression); continue; }
                     source.Append("    ").Append(VisualShaderValues.Name(OutputTypes(node)[output])).Append(' ').Append(name).Append(" = ").Append(expression).AppendLine(";");
                     values.Add((id, output), name);
                 }
@@ -88,7 +117,7 @@ public sealed partial class VisualShader
             foreach (var next in dependents[id]) if (--remaining[next] == 0) ready.Enqueue(next, next);
         }
         if (completed != reachable.Count) throw new InvalidDataException("The reachable visual shader graph contains a cycle.");
-        source.Append(stage == Type.Vertex ? VertexFooter : FragmentFooter);
+        source.Append(StageExpression(stage == Type.Vertex ? VertexFooter : FragmentFooter, aliases));
         var result = source.ToString();
         if (Encoding.UTF8.GetByteCount(result) > ShaderInclude.MaximumSourceBytes) throw new InvalidDataException("Generated shader source exceeds the import budget.");
         return result;

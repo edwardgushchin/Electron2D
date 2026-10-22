@@ -331,7 +331,7 @@ programs without changing their local geometry or UV coordinates.
 VisualShaderNodeCompare and VisualShaderNodeSwitch share VisualShaderValueType:
 Float, Int, UInt, Vector2, Vector3, Vector4, Boolean and Matrix. This selector excludes
 sampled images; VisualShaderNode.PortType remains the broader port contract with
-a separate pending sampled-image role. Max=8 is a nonselectable logical bound. Matrix=7 carries copied numeric
+its opaque Sampler role. Max=8 is a nonselectable logical bound. Matrix=7 carries copied numeric
 System.Numerics.Matrix4x4 values; its graph operations are described below.
 
 Compare initially tests two zero floats for equality with an explicit 0.00001
@@ -634,8 +634,8 @@ command-texture-size producer.
 Point-size, normal/normal-map/depth, light-vertex and shadow-vertex output ports
 retain their documented port indices, but selecting them rejects import until
 their actual graph-to-canvas ABI integration exists. The class coverage remains
-Partial. Particle/light/blit graph domains, custom varying transport, sampled-image parameter/
-image nodes and editor frame/preview consumers remain explicit prerequisites.
+Partial. Particle/light/blit graph domains, custom varying transport and editor
+frame/preview consumers remain explicit prerequisites.
 Sky/volumetric scene domains and deprecated inert graph offset are excluded.
 
 ## Verification and limits
@@ -667,6 +667,93 @@ cyclic/truncated/invalid-domain rejection, fresh public load and the actual SDK
 build/edit/error/recovery/publish/Clean path. Shader import is cold allocating
 work. Physical GPU, native-heap allocation, foreign host toolchains/platforms,
 editor usability and human visual acceptance are separate from this evidence.
+
+## Sampled images and canvas channels
+
+`VisualShaderNodeTexture` samples an ordinary image. Source selects its borrowed
+Texture property, the fragment screen copy, the current canvas diffuse/normal
+channel or a connected sampler. `VisualShaderNodeTextureArray` derives from
+`VisualShaderNodeLayeredSample` and samples independent image layers using
+numeric UV plus layer coordinates. These resources remain separate from scene
+spatial data. Sources that have no vertex-stage producer return zero there;
+ordinary/property and connected-image sampling can execute in either stage.
+
+Both sampling families accept UV/UV-layer at input zero, scalar LOD at one and
+an opaque Sampler at two, and produce one Vector4. Unconnected coordinates use
+the current UV and layer zero; the direct screen source uses screen coordinates.
+Unconnected LOD uses implicit sampling. Stored numeric defaults on these inputs
+remain source data and do not replace those implicit inputs. A connected LOD
+uses explicit textureLod; Port without a connected sampler produces zero.
+Sampler ports accept no numeric default or numeric/matrix conversion. Import
+rejects an ordinary/array sampler shape mismatch before replacing the target.
+
+`VisualShaderNodeTextureParameter` is the abstract hint owner.
+`VisualShaderNodeImageParameter` declares an ordinary image and
+`VisualShaderNodeTextureArrayParameter` an independent array. Material parameters
+use existing ShaderMaterial setters and shader defaults; Global uses the typed
+renderer registry. Per-item qualifiers reject at import. ParameterRef resolves
+sampler shape in each containing graph, including references to declarations in
+the other stage. Known fragment Input names `texture`, `normal_texture` and
+`specular_shininess_texture` produce the current CanvasTexture channels.
+Missing normal/specular channels use flat normal/opaque white respectively.
+
+Parameter TextureType selects Data, Color, NormalMap or Anisotropy. Data/Color
+use ColorDefault White/Black/Transparent when no image is assigned. Ordinary
+normal and flow fallbacks are RGBA (128,128,255,255) and (255,128,255,255), in byte
+units; normal/flow arrays fall back to white. These are renderer-owned images,
+not authored defaults: public material/default/global queries retain absence.
+Property-backed ordinary nodes have Data/Color/NormalMap interpretation;
+property-backed arrays retain raw data interpretation and a white fallback.
+
+TextureFilter Default is shader-domain linear/base-level filtering, independent
+of CanvasItem parent policies. The other six filters select nearest/linear,
+the project mip-selection policy and optional viewport-controlled anisotropy. TextureRepeat
+Default/Disabled clamp; Enabled repeats. These owner-specific enum domains differ
+from canvas parent/repeat policies. Existing explicit Shader sampler state takes
+precedence; resetting it restores the imported image policy. Integer scalar
+images cannot be installed in these floating sampler definitions.
+
+TextureSource Screen selects the renderer backbuffer instead of material/global
+image storage. It requires an ordinary fragment sampler, a Data/Color
+interpretation and the white default. Screen parameters expose no material
+image descriptor. Replacing a material image with a renderer-owned screen image
+drops its material override and authored default; returning to material storage
+starts unassigned. Screen colors retain the render-target domain, including
+linear HDR output; mipmapped filters use the existing backbuffer mip pipeline.
+
+In HDR passes, Color images with encoded normalized source pixels are decoded
+before filtering. GPU color views preserve alpha and refresh every used layer
+and mip from native storage each frame, including device writes. Float images
+and already linear/sRGB-decoded native images retain their existing values.
+Data, normal and flow sampling do not request this conversion. Prepared views,
+image fallbacks and sampler states use retained renderer caches and retire with
+their owning session/resources. No CPU image bridge is introduced.
+
+Private version-two image records in the compiled modules retain sampler role,
+render-only fallback, filter, repeat and screen ownership. Reflection checks
+native/public names, explicit logical global ownership, scalar type, image shape,
+stage, domain, values and duplicates;
+paired stages reject conflicting policies. Generated symbols avoid authored
+parameter names and local canvas symbols. Material names beginning with GLOBAL_
+retain material ownership; generated global collisions use distinct native names
+and retain their original registry key. Cold import restores canonical buffer
+role names in SPIR-V after GLSL name allocation; this keeps material/global/item
+storage and public parameter names independent of generator names.
+
+The public consumer's image fixtures cover both stages, defaults/absence,
+resource and node aliases, big-endian/compressed source archives, typed material
+and global images, screen/channels, filter/repeat/LOD, HDR color and independent
+layers/mips. Metadata rejection preserves both stages. Source-scoped native
+receipts cover 2,889 programs, including 269 image programs, in software Vulkan
+Wayland, X11 and HDR/MSAA. Each profile checked 64 active/64 idle complete frames
+with zero owner/all-thread managed bytes, 42 sampler override/reset cases and 36
+refreshed native image views. The same profiles passed strict full-trim
+NativeAOT with the same pixel and allocation gates. Sixty rejected imports
+preserved their existing target bytes; 27 malformed, duplicate, misplaced or
+conflicting image-policy modules preserved both stages in CLR and NativeAOT.
+The SDK author/build/edit/error/recovery/publish/Clean workflow and 732 composed
+glyph modules were also checked. Physical GPU, native heap, foreign platforms and
+owner visual acceptance remain independent gates.
 
 ## Decisions
 

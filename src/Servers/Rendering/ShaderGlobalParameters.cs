@@ -188,10 +188,11 @@ internal sealed partial class ShaderGlobalParameters
             entry.Write(u, buffers[u.Buffer].AsSpan(u.Offset, u.ElementSize));
         }
     }
-    internal Resource Resolve(ShaderTexture texture)
+    internal Resource? Resolve(ShaderTexture texture)
     {
         var entry = ImageEntry(texture.GlobalName, texture.IsArray);
-        var value = entry.Effective ?? throw new InvalidOperationException($"Global image '{texture.GlobalName}' has no effective resource.");
+        var value = entry.Effective;
+        if (value is null && texture.ImagePolicy is null) throw new InvalidOperationException($"Global image '{texture.GlobalName}' has no effective resource.");
         texture.Validate(value); return value;
     }
 }

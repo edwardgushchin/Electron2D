@@ -1,6 +1,6 @@
 # ShaderProgram
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 - Declaration: `internal sealed class ShaderProgram`
 - Source: [ShaderProgram.cs](../../src/Servers/Rendering/ShaderProgram.cs)
@@ -121,3 +121,5 @@ ParticleStorageBuffers records the validated native writable descriptor count, o
 ## Authored uniform defaults
 
 Each validated ShaderUniform carries its own compiled defaults before descriptors are constructed. Paired stages require equal explicit defaults for shared names; a default authored in either stage supplies the canonical value when the other is absent. Physical copies translate each matrix storage order. Renderer Frame defaults reject. Descriptors retain the immutable version and copy array revert values; explicit-storage predicates omit unset numeric values from material archives. See [authored uniform defaults](../components/shader-materials.md#authored-uniform-defaults).
+
+Sampled-image graph imports retain validated ShaderImagePolicy records per ShaderTexture: encoded color, render-only fallback, filter/repeat and screen ownership. Paired stages reject differing policies for one image name. NativeName retains the module binding identity while metadata preserves public material aliases and explicit logical global names. Renderer-owned normal/specular/screen aliases are excluded from material descriptors. See [sampled graph images](../components/visual-shaders.md#sampled-images-and-canvas-channels).

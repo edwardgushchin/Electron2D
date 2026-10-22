@@ -38,11 +38,11 @@ public sealed partial class VisualShader
             var name = parameter.ParameterName;
             if (name.Length == 0 || !char.IsAsciiLetter(name[0]) || name.Any(c => !(char.IsAsciiLetterOrDigit(c) || c == '_')) ||
                 name.StartsWith("gl_", StringComparison.Ordinal) || name.Contains("__", StringComparison.Ordinal) ||
-                name is "TIME" or "SCREEN_PIXEL_SIZE" or "SDF_COORDS" or "size" or "TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE")
+                name is "TIME" or "SCREEN_PIXEL_SIZE" or "SDF_COORDS" or "size" or "TEXTURE" or "NORMAL_TEXTURE" or "SPECULAR_SHININESS_TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE")
                 throw new InvalidDataException("A graph parameter requires a nonreserved ASCII shader identifier.");
             if (!result.TryAdd(name, parameter)) throw new InvalidDataException($"Graph parameter '{name}' has duplicate declarations.");
-            if (parameter is VisualShaderNodeMatrixParameter && parameter.Qualifier is Q.Instance or Q.InstanceIndex)
-                throw new NotSupportedException("Matrix graph parameters cannot use per-item storage.");
+            if (parameter is VisualShaderNodeMatrixParameter or VisualShaderNodeTextureParameter && parameter.Qualifier is Q.Instance or Q.InstanceIndex)
+                throw new NotSupportedException("Matrix and sampled-image graph parameters cannot use per-item storage.");
             if (parameter.Qualifier == Q.Global && parameter.HasParameterDefault)
                 throw new InvalidDataException("Global graph parameters receive defaults from the global registry.");
         }
@@ -64,15 +64,15 @@ public sealed partial class VisualShader
         }
         return result;
     }
-    private static string ParameterVariable(VisualShaderNodeParameter declaration) =>
-        (declaration.Qualifier == Q.Global ? "e2d_globals." : declaration.Qualifier is Q.Instance or Q.InstanceIndex ? "e2d_instance." : "e2d_values.") + declaration.ParameterName;
-    private static string ParameterExpression(VisualShaderNodeParameterRef reference, int output, Dictionary<string, VisualShaderNodeParameter> symbols)
+    private static string ParameterVariable(VisualShaderNodeParameter declaration, Dictionary<string, string> aliases) =>
+        aliases[declaration.Qualifier == Q.Global ? "e2d_globals" : declaration.Qualifier is Q.Instance or Q.InstanceIndex ? "e2d_instance" : "e2d_values"] + "." + declaration.ParameterName;
+    private static string ParameterExpression(VisualShaderNodeParameterRef reference, int output, Dictionary<string, VisualShaderNodeParameter> symbols, Dictionary<string, string> aliases)
     {
         if (reference.ParameterName == "[None]") return "0.0";
         if (!symbols.TryGetValue(reference.ParameterName, out var declaration)) throw new InvalidDataException($"Graph parameter reference '{reference.ParameterName}' has no declaration.");
-        return ParameterVariable(declaration) + (declaration is VisualShaderNodeColorParameter ? output == 0 ? ".rgb" : ".a" : "");
+        return ParameterVariable(declaration, aliases) + (declaration is VisualShaderNodeColorParameter ? output == 0 ? ".rgb" : ".a" : "");
     }
-    private string ParameterHeader(Type stage, HashSet<int> reachable, Dictionary<string, VisualShaderNodeParameter> symbols, Dictionary<string, int> slots)
+    private string ParameterHeader(Type stage, HashSet<int> reachable, Dictionary<string, VisualShaderNodeParameter> symbols, Dictionary<string, int> slots, List<VisualShaderImage> images, Dictionary<string, string> aliases)
     {
         var graph = GetGraph(stage); var used = new HashSet<string>(StringComparer.Ordinal);
         foreach (var id in reachable)
@@ -85,13 +85,14 @@ public sealed partial class VisualShader
                 used.Add(reference.ParameterName);
             }
         }
-        var selected = used.OrderBy(n => n, StringComparer.Ordinal).Select(n => symbols[n]).ToArray();
-        var header = stage == Type.Vertex ? VertexHeader : FragmentHeader;
-        var rendererValues = selected.Any(p => p.Qualifier == Q.None) || reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeInput input &&
+        var selected = used.OrderBy(n => n, StringComparer.Ordinal).Select(n => symbols[n]).Where(p => p is not VisualShaderNodeTextureParameter).ToArray();
+        var header = StageExpression(stage == Type.Vertex ? VertexHeader : FragmentHeader, aliases);
+        var screenUV = reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeTexture { Source: VisualShaderNodeTexture.SourceEnum.Screen }) && stage == Type.Fragment;
+        var rendererValues = screenUV || selected.Any(p => p.Qualifier == Q.None) || reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeInput input &&
             (input.Expression(stage).Contains("TIME", StringComparison.Ordinal) || input.Expression(stage).Contains("SCREEN_PIXEL_SIZE", StringComparison.Ordinal)));
         var reserved = stage == Type.Vertex ? "float TIME;" : "float TIME; vec2 SCREEN_PIXEL_SIZE;";
         var fields = string.Join(" ", selected.Where(p => p.Qualifier == Q.None).Select(p => VisualShaderValues.Name(p.Outputs[0]) + " " + p.ParameterName + ";"));
-        header = header.Replace(reserved + " };", reserved + " " + fields + " } e2d_values;", StringComparison.Ordinal);
+        header = header.Replace(reserved + " };", reserved + " " + fields + " } " + aliases["e2d_values"] + ";", StringComparison.Ordinal);
         if (!rendererValues)
         {
             var at = header.IndexOf("uniform RendererValues", StringComparison.Ordinal);
@@ -103,14 +104,18 @@ public sealed partial class VisualShader
         {
             var members = selected.Where(p => global ? p.Qualifier == Q.Global : p.Qualifier is Q.Instance or Q.InstanceIndex).ToArray();
             if (members.Length == 0) continue;
-            extra.Append("layout(set=").Append(stage == Type.Vertex ? 1 : 3).Append(",binding=").Append(binding++).Append(",std140) uniform ").Append(global ? "Globals" : "Instance").AppendLine(" {");
+            extra.Append("layout(set=").Append(stage == Type.Vertex ? 1 : 3).Append(",binding=").Append(binding++).Append(",std140) uniform ").Append(aliases[global ? "Globals" : "Instance"]).AppendLine(" {");
             foreach (var p in global ? members : members.OrderBy(p => slots[p.ParameterName]).ToArray())
             {
                 if (!global) extra.Append("layout(offset=").Append(slots[p.ParameterName] * 16).Append(") ");
                 extra.Append(VisualShaderValues.Name(p.Outputs[0])).Append(' ').Append(p.ParameterName).AppendLine(";");
             }
-            extra.Append("} ").Append(global ? "e2d_globals" : "e2d_instance").AppendLine(";");
+            extra.Append("} ").Append(aliases[global ? "e2d_globals" : "e2d_instance"]).AppendLine(";");
         }
+        var imageBinding = stage == Type.Fragment ? 1 : 0;
+        foreach (var image in images.Where(i => stage != Type.Fragment || i.Name != "TEXTURE"))
+            extra.Append("layout(set=").Append(stage == Type.Fragment ? 2 : 0).Append(",binding=").Append(imageBinding++).Append(") uniform ")
+                .Append(image.IsArray ? "sampler2DArray " : "sampler2D ").Append(image.Name).AppendLine(";");
         return header.Replace("void main() {", extra + "void main() {", StringComparison.Ordinal);
     }
 }

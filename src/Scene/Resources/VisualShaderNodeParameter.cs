@@ -31,7 +31,7 @@ public abstract class VisualShaderNodeParameter : VisualShaderNode
     public string ParameterName
     { get { ThrowIfDisposed(); return _parameterName; } set { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(value); _parameterName = value; EmitChanged(); } }
     /// <summary>Gets or selects the value owner.</summary>
-    /// <value>None initially. An unchanged selection is quiet. Matrix instance declarations reject at import.</value>
+    /// <value>None initially. An unchanged selection is quiet. Matrix and sampled-image declarations reject per-item storage at import.</value>
     /// <exception cref="ArgumentOutOfRangeException">The value is undefined or the count sentinel.</exception>
     /// <exception cref="ObjectDisposedException">The definition is disposed.</exception>
     public QualifierEnum Qualifier
@@ -45,7 +45,7 @@ public abstract class VisualShaderNodeParameter : VisualShaderNode
     /// <exception cref="ObjectDisposedException">The definition is disposed.</exception>
     public int InstanceIndex
     { get { ThrowIfDisposed(); return _instanceIndex; } set { ThrowIfDisposed(); if ((uint)value >= 16) throw new ArgumentOutOfRangeException(nameof(value)); _instanceIndex = value; EmitChanged(); } }
-    internal abstract object ParameterDefault { get; }
+    internal abstract object? ParameterDefault { get; }
     internal abstract bool HasParameterDefault { get; }
     internal virtual string ParameterCaption => GetType().Name["VisualShaderNode".Length..];
     internal override PortType[] Inputs => [];

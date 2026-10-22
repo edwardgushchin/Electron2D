@@ -10,7 +10,7 @@ public abstract class Electron2D.VisualShaderNodeParameter
 
 Inherits: [VisualShaderNode](VisualShaderNode.md).
 
-Inherited by: [VisualShaderNodeBooleanParameter](VisualShaderNodeBooleanParameter.md), [VisualShaderNodeColorParameter](VisualShaderNodeColorParameter.md), [VisualShaderNodeFloatParameter](VisualShaderNodeFloatParameter.md), [VisualShaderNodeIntParameter](VisualShaderNodeIntParameter.md), [VisualShaderNodeMatrixParameter](VisualShaderNodeMatrixParameter.md), [VisualShaderNodeUIntParameter](VisualShaderNodeUIntParameter.md), [VisualShaderNodeVec2Parameter](VisualShaderNodeVec2Parameter.md), [VisualShaderNodeVec3Parameter](VisualShaderNodeVec3Parameter.md), [VisualShaderNodeVec4Parameter](VisualShaderNodeVec4Parameter.md).
+Inherited by: [VisualShaderNodeBooleanParameter](VisualShaderNodeBooleanParameter.md), [VisualShaderNodeColorParameter](VisualShaderNodeColorParameter.md), [VisualShaderNodeFloatParameter](VisualShaderNodeFloatParameter.md), [VisualShaderNodeIntParameter](VisualShaderNodeIntParameter.md), [VisualShaderNodeMatrixParameter](VisualShaderNodeMatrixParameter.md), [VisualShaderNodeTextureParameter](VisualShaderNodeTextureParameter.md), [VisualShaderNodeUIntParameter](VisualShaderNodeUIntParameter.md), [VisualShaderNodeVec2Parameter](VisualShaderNodeVec2Parameter.md), [VisualShaderNodeVec3Parameter](VisualShaderNodeVec3Parameter.md), [VisualShaderNodeVec4Parameter](VisualShaderNodeVec4Parameter.md).
 
 ## Description
 
@@ -85,7 +85,7 @@ public Electron2D.VisualShaderNodeParameter.QualifierEnum Qualifier { get; set; 
 
 Gets or selects the value owner.
 
-None initially. An unchanged selection is quiet. Matrix instance declarations reject at import.
+None initially. An unchanged selection is quiet. Matrix and sampled-image declarations reject per-item storage at import.
 
 Exceptions:
 
@@ -96,7 +96,7 @@ Exceptions:
 
 Definitions are cold, single-threaded Resource authoring objects. Graphs borrow them. Selectors, typed defaults and default absence survive copies and archives. Changes require reimport before rendering.
 
-The public VisualShader.Consumer covers typed parameter definitions, copied defaults/hints, storage qualifiers, graph-local references and portable archives. The executable fixtures also observe real software-rendered pixels, typed updates/reset and all sixteen instance slots. See [the component contract](../components/visual-shaders.md#parameters-and-graph-local-references) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
+The public VisualShader.Consumer covers typed numeric and opaque ports, sampler policies, resource aliases and portable archives. Its image fixtures check real software-rendered pixels, color transfer, independent layers/mips and refreshed native storage. See [the component contract](../components/visual-shaders.md#sampled-images-and-canvas-channels) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
 
 ## Decisions
 

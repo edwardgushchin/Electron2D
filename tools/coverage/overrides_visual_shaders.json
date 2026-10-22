@@ -268,17 +268,17 @@
     {
       "godot": "VisualShaderNodeInput::method:get_input_real_name()",
       "electron2d": "method:Electron2D.VisualShaderNodeInput.GetInputRealName()",
-      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
+      "reason": "ADR 0028: numeric canvas inputs and texture/normal_texture/specular_shininess_texture sampler inputs execute through the same offline graph/material pipeline. Unknown names retain scalar zero; remaining matrix, logical-size and light-stage producers keep explicit dependencies. InputTypeChanged follows logical role changes after Changed publication. Source changes require reimport."
     },
     {
       "godot": "VisualShaderNodeInput::property:input_name",
       "electron2d": "property:Electron2D.VisualShaderNodeInput.InputName()",
-      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
+      "reason": "ADR 0028: numeric canvas inputs and texture/normal_texture/specular_shininess_texture sampler inputs execute through the same offline graph/material pipeline. Unknown names retain scalar zero; remaining matrix, logical-size and light-stage producers keep explicit dependencies. InputTypeChanged follows logical role changes after Changed publication. Source changes require reimport."
     },
     {
       "godot": "VisualShaderNodeInput::signal:input_type_changed()",
       "electron2d": "event:Electron2D.VisualShaderNodeInput.InputTypeChanged()",
-      "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
+      "reason": "ADR 0028: numeric canvas inputs and texture/normal_texture/specular_shininess_texture sampler inputs execute through the same offline graph/material pipeline. Unknown names retain scalar zero; remaining matrix, logical-size and light-stage producers keep explicit dependencies. InputTypeChanged follows logical role changes after Changed publication. Source changes require reimport."
     },
     {
       "godot": "VisualShaderNodeIntConstant::property:constant",
@@ -1943,13 +1943,6 @@
       "reason": "ADR 0028: numeric canvas graph stages and port roles execute. Separate particle/light/blit graph translators and matrix/sampled-image port integration retain their explicit missing roles; no inert selector values are exposed."
     },
     {
-      "state": "Partial",
-      "godot": [
-        "VisualShaderNode::enum:PortType"
-      ],
-      "reason": "ADR 0028: numeric canvas graph stages and port roles execute. Separate particle/light/blit graph translators and matrix/sampled-image port integration retain their explicit missing roles; no inert selector values are exposed."
-    },
-    {
       "state": "Implemented",
       "godot": [
         "class:VisualShaderNodeFloatFunc",
@@ -2208,13 +2201,6 @@
         "VisualShaderNodeIs::property:function"
       ],
       "reason": "ADRs 0001/0004/0013/0028/0051: native canvas graph comparison, selection, three-way branches and floating classification retain typed defaults, dormant tolerance, condition presence, transactional type conversion, selectors and copy/archive state. Compare and Switch share VisualShaderValueType; the broader PortType contract also includes the separate sampled-image role. Public authoring/import/material consumers exercise all applicable types/functions/reductions and both stages, exact integer selection bytes and UV-driven control. Nonfinite producer results are software-backend evidence, not a portable arithmetic-domain guarantee."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "VisualShaderNode::enum_value:PortType.PORT_TYPE_SAMPLER"
-      ],
-      "reason": "Trigger: typed sampled-image graph operands/defaults/expressions and an executing sampled-image node importer with material/image ownership, over the existing texture reflection backend under ADR 0028."
     },
     {
       "state": "Implemented",

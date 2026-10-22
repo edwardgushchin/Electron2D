@@ -113,7 +113,11 @@
     "VisualShaderNodeTransformVecMult": "VisualShaderNodeMatrixVecMult",
     "VisualShaderNodeTransformCompose": "VisualShaderNodeMatrixCompose",
     "VisualShaderNodeTransformDecompose": "VisualShaderNodeMatrixDecompose",
-    "VisualShaderNodeTransformParameter": "VisualShaderNodeMatrixParameter"
+    "VisualShaderNodeTransformParameter": "VisualShaderNodeMatrixParameter",
+    "VisualShaderNodeTexture2DParameter": "VisualShaderNodeImageParameter",
+    "VisualShaderNodeTexture2DArrayParameter": "VisualShaderNodeTextureArrayParameter",
+    "VisualShaderNodeSample3D": "VisualShaderNodeLayeredSample",
+    "VisualShaderNodeTexture2DArray": "VisualShaderNodeTextureArray"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",
@@ -245,6 +249,14 @@
     "Viewport.RenderInfo": "ViewportRenderInfo",
     "Viewport.RenderInfoType": "ViewportRenderInfoType",
     "RenderingServer.ViewportRenderInfo": "ViewportRenderInfo",
-    "RenderingServer.ViewportRenderInfoType": "ViewportRenderInfoType"
+    "RenderingServer.ViewportRenderInfoType": "ViewportRenderInfoType",
+    "VisualShaderNodeSample3D.Source": "VisualShaderNodeLayeredSample.SourceEnum",
+    "VisualShaderNodeTexture.Source": "VisualShaderNodeTexture.SourceEnum",
+    "VisualShaderNodeTexture.TextureType": "VisualShaderNodeTexture.TextureTypeEnum",
+    "VisualShaderNodeTextureParameter.ColorDefault": "VisualShaderNodeTextureParameter.ColorDefaultEnum",
+    "VisualShaderNodeTextureParameter.TextureFilter": "VisualShaderNodeTextureParameter.TextureFilterEnum",
+    "VisualShaderNodeTextureParameter.TextureRepeat": "VisualShaderNodeTextureParameter.TextureRepeatEnum",
+    "VisualShaderNodeTextureParameter.TextureSource": "VisualShaderNodeTextureParameter.TextureSourceEnum",
+    "VisualShaderNodeTextureParameter.TextureType": "VisualShaderNodeTextureParameter.TextureTypeEnum"
   }
 }

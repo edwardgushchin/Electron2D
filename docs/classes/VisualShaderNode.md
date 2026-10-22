@@ -10,11 +10,11 @@ public abstract class Electron2D.VisualShaderNode
 
 Inherits: [Resource](Resource.md).
 
-Inherited by: [VisualShaderNodeClamp](VisualShaderNodeClamp.md), [VisualShaderNodeCompare](VisualShaderNodeCompare.md), [VisualShaderNodeConstant](VisualShaderNodeConstant.md), [VisualShaderNodeDeterminant](VisualShaderNodeDeterminant.md), [VisualShaderNodeDotProduct](VisualShaderNodeDotProduct.md), [VisualShaderNodeFloatFunc](VisualShaderNodeFloatFunc.md), [VisualShaderNodeFloatOp](VisualShaderNodeFloatOp.md), [VisualShaderNodeIf](VisualShaderNodeIf.md), [VisualShaderNodeInput](VisualShaderNodeInput.md), [VisualShaderNodeIntFunc](VisualShaderNodeIntFunc.md), [VisualShaderNodeIntOp](VisualShaderNodeIntOp.md), [VisualShaderNodeIs](VisualShaderNodeIs.md), [VisualShaderNodeMatrixCompose](VisualShaderNodeMatrixCompose.md), [VisualShaderNodeMatrixDecompose](VisualShaderNodeMatrixDecompose.md), [VisualShaderNodeMatrixFunc](VisualShaderNodeMatrixFunc.md), [VisualShaderNodeMatrixOp](VisualShaderNodeMatrixOp.md), [VisualShaderNodeMatrixVecMult](VisualShaderNodeMatrixVecMult.md), [VisualShaderNodeMix](VisualShaderNodeMix.md), [VisualShaderNodeMultiplyAdd](VisualShaderNodeMultiplyAdd.md), [VisualShaderNodeOuterProduct](VisualShaderNodeOuterProduct.md), [VisualShaderNodeOutput](VisualShaderNodeOutput.md), [VisualShaderNodeRemap](VisualShaderNodeRemap.md), [VisualShaderNodeSmoothStep](VisualShaderNodeSmoothStep.md), [VisualShaderNodeStep](VisualShaderNodeStep.md), [VisualShaderNodeSwitch](VisualShaderNodeSwitch.md), [VisualShaderNodeUIntFunc](VisualShaderNodeUIntFunc.md), [VisualShaderNodeUIntOp](VisualShaderNodeUIntOp.md), [VisualShaderNodeVectorBase](VisualShaderNodeVectorBase.md).
+Inherited by: [VisualShaderNodeClamp](VisualShaderNodeClamp.md), [VisualShaderNodeCompare](VisualShaderNodeCompare.md), [VisualShaderNodeConstant](VisualShaderNodeConstant.md), [VisualShaderNodeDerivativeFunc](VisualShaderNodeDerivativeFunc.md), [VisualShaderNodeDeterminant](VisualShaderNodeDeterminant.md), [VisualShaderNodeDotProduct](VisualShaderNodeDotProduct.md), [VisualShaderNodeFloatFunc](VisualShaderNodeFloatFunc.md), [VisualShaderNodeFloatOp](VisualShaderNodeFloatOp.md), [VisualShaderNodeIf](VisualShaderNodeIf.md), [VisualShaderNodeInput](VisualShaderNodeInput.md), [VisualShaderNodeIntFunc](VisualShaderNodeIntFunc.md), [VisualShaderNodeIntOp](VisualShaderNodeIntOp.md), [VisualShaderNodeIs](VisualShaderNodeIs.md), [VisualShaderNodeLayeredSample](VisualShaderNodeLayeredSample.md), [VisualShaderNodeMatrixCompose](VisualShaderNodeMatrixCompose.md), [VisualShaderNodeMatrixDecompose](VisualShaderNodeMatrixDecompose.md), [VisualShaderNodeMatrixFunc](VisualShaderNodeMatrixFunc.md), [VisualShaderNodeMatrixOp](VisualShaderNodeMatrixOp.md), [VisualShaderNodeMatrixVecMult](VisualShaderNodeMatrixVecMult.md), [VisualShaderNodeMix](VisualShaderNodeMix.md), [VisualShaderNodeMultiplyAdd](VisualShaderNodeMultiplyAdd.md), [VisualShaderNodeOuterProduct](VisualShaderNodeOuterProduct.md), [VisualShaderNodeOutput](VisualShaderNodeOutput.md), [VisualShaderNodeParameter](VisualShaderNodeParameter.md), [VisualShaderNodeParameterRef](VisualShaderNodeParameterRef.md), [VisualShaderNodeRemap](VisualShaderNodeRemap.md), [VisualShaderNodeSmoothStep](VisualShaderNodeSmoothStep.md), [VisualShaderNodeStep](VisualShaderNodeStep.md), [VisualShaderNodeSwitch](VisualShaderNodeSwitch.md), [VisualShaderNodeTexture](VisualShaderNodeTexture.md), [VisualShaderNodeUIntFunc](VisualShaderNodeUIntFunc.md), [VisualShaderNodeUIntOp](VisualShaderNodeUIntOp.md), [VisualShaderNodeVectorBase](VisualShaderNodeVectorBase.md).
 
 ## Description
 
-A typed numeric operation in an offline-compiled visual shader graph.
+A typed operation in an offline-compiled visual shader graph.
 
 Nodes are borrowed by graphs. Authoring is cold, single-threaded work. Edits emit Changed and affect the next import; existing compiled shader programs retain their immutable code.
 
@@ -22,14 +22,14 @@ Nodes are borrowed by graphs. Authoring is cold, single-threaded work. Edits emi
 
 | Member | Contract |
 | --- | --- |
-| [`protected VisualShaderNode()`](#member-ff366100755e) | Initializes a numeric graph node. |
+| [`protected VisualShaderNode()`](#member-ff366100755e) | Initializes a typed graph node. |
 | [`public System.Void ClearDefaultInputValues()`](#member-c67c6dc2c295) | Clears all explicit input defaults. |
 | [`protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicateSubresource, System.Func<Electron2D.Resource, Electron2D.Resource> forceDuplicateSubresource)`](#member-58cd5cdb598d) | Uses the inherited Resource construction or stored-property contract. |
 | [`public System.Int32 GetDefaultInputPort(Electron2D.VisualShaderNode.PortType type)`](#member-ab8c82594b83) | Gets the default connection target used when adding this node from an existing port. |
 | [`public System.Collections.Generic.IReadOnlyList<Electron2D.VisualShaderPortDefault> GetDefaultInputValues()`](#member-714d2adc90b7) | Returns immutable typed copies of all explicitly authored input defaults. |
 | [`public Nullable<T> GetInputPortDefaultValue<T>(System.Int32 port)`](#member-d281ffbdd704) | Reads a copied authored input default. |
 | [`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`](#member-ee30536b1566) | Uses the inherited Resource construction or stored-property contract. |
-| [`public System.Void RemoveInputPortDefaultValue(System.Int32 port)`](#member-2e3abedf6c5c) | Removes one explicit input default so compilation uses the port's zero-valued fallback. |
+| [`public System.Void RemoveInputPortDefaultValue(System.Int32 port)`](#member-2e3abedf6c5c) | Removes one explicit input default so compilation uses the node's implicit input policy. |
 | [`public System.Void SetDefaultInputValues(System.Collections.Generic.IReadOnlyList<Electron2D.VisualShaderPortDefault> values)`](#member-bae84faeacfa) | Atomically replaces the complete explicit input-default table. |
 | [`public System.Void SetInputPortDefaultValue<T>(System.Int32 port, T value)`](#member-ee57fa5c0933) | Copies a typed default into an input port. |
 | [`public System.Void SetInputPortDefaultValue<T, TPrevious>(System.Int32 port, T value, TPrevious previousValue)`](#member-32ed460be1b5) | Converts a previous numeric default to a newly selected port value type. |
@@ -41,7 +41,7 @@ Nodes are borrowed by graphs. Authoring is cold, single-threaded work. Edits emi
 protected VisualShaderNode()
 ```
 
-Initializes a numeric graph node.
+Initializes a typed graph node.
 
 <a id="member-c67c6dc2c295"></a>
 ### `ClearDefaultInputValues`
@@ -76,11 +76,11 @@ Input zero, as specified by the base node connection policy.
 
 Parameters:
 
-- `type`: The originating numeric port type.
+- `type`: The originating port role.
 
 Exceptions:
 
-- `T:System.ArgumentOutOfRangeException`: The numeric port type is undefined.
+- `T:System.ArgumentOutOfRangeException`: The port role is undefined.
 - `T:System.ObjectDisposedException`: The node is disposed.
 
 <a id="member-714d2adc90b7"></a>
@@ -137,7 +137,7 @@ protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDes
 public System.Void RemoveInputPortDefaultValue(System.Int32 port)
 ```
 
-Removes one explicit input default so compilation uses the port's zero-valued fallback.
+Removes one explicit input default so compilation uses the node's implicit input policy.
 
 Parameters:
 
@@ -222,7 +222,7 @@ Exceptions:
 
 Definitions are cold, single-threaded Resource authoring objects. Graphs borrow them. Selectors, typed defaults and default absence survive copies and archives. Changes require reimport before rendering.
 
-The public VisualShader.Consumer covers typed requests, all sixteen matrix components, copy/archive state, row/column layout and real software-rendered pixels. See [the component contract](../components/visual-shaders.md#comparisons-and-conditional-results) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
+The public VisualShader.Consumer covers typed numeric and opaque ports, sampler policies, resource aliases and portable archives. Its image fixtures check real software-rendered pixels, color transfer, independent layers/mips and refreshed native storage. See [the component contract](../components/visual-shaders.md#sampled-images-and-canvas-channels) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
 
 ## Decisions
 

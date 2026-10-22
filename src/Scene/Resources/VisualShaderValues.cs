@@ -142,7 +142,7 @@ internal static class VisualShaderValues
     internal static string ConvertExpression(string expression, P from, P to)
     {
         if (from == to) return expression;
-        if (from == P.Matrix || to == P.Matrix) throw new InvalidOperationException("Matrix graph ports require a matrix connection.");
+        if (from is P.Matrix or P.Sampler || to is P.Matrix or P.Sampler) throw new InvalidOperationException("Matrix graph ports require a matrix connection.");
         var vector = from is P.Vector2 or P.Vector3 or P.Vector4;
         var source = "(" + expression + ")";
         if (to is P.Scalar or P.ScalarInt or P.ScalarUInt)

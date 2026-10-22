@@ -4,10 +4,10 @@ Last updated: 2026-10-21
 
 Godot source: [modules/visual_shader/doc_classes/VisualShaderNodeTexture2DArrayParameter.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/visual_shader/doc_classes/VisualShaderNodeTexture2DArrayParameter.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
-Godot base: [VisualShaderNodeTextureParameter](VisualShaderNodeTextureParameter.md). Electron2D type: —.
+Godot base: [VisualShaderNodeTextureParameter](VisualShaderNodeTextureParameter.md). Electron2D type: [`public sealed class Electron2D.VisualShaderNodeTextureArrayParameter`](../../classes/VisualShaderNodeTextureArrayParameter.md).
 
 Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class VisualShaderNodeTexture2DArrayParameter`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/visual_shader/doc_classes/VisualShaderNodeTexture2DArrayParameter.xml) | — | Blocked | Trigger: typed graph parameter declarations, qualifier/hint/default metadata and imported material/image ownership over the existing shader reflection under ADR 0028. |
+| [`class VisualShaderNodeTexture2DArrayParameter`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/visual_shader/doc_classes/VisualShaderNodeTexture2DArrayParameter.xml) | [`public sealed class Electron2D.VisualShaderNodeTextureArrayParameter`](../../classes/VisualShaderNodeTextureArrayParameter.md) | Implemented | ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate. |

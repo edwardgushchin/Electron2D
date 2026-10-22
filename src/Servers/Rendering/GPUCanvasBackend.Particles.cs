@@ -54,7 +54,7 @@ internal sealed unsafe partial class GPUCanvasBackend
         _usedParticlePrograms.Add(state.Program);
         if (!_particlePrograms.ContainsKey(state.Program))
             _particlePrograms.Add(state.Program, new(ShaderCompiler.CreateComputePipeline(Device, state.Program.NativeCode), h => SDL.ReleaseGPUComputePipeline(Device, h), _device));
-        if (state.Textures.Length > 0) { _usedMaterials.Add(state); PrepareTextures(state); }
+        if (state.Textures.Length > 0) { _usedMaterials.Add(state); PrepareTextures(state, 1); }
     }
     private static void ValidateParticleWork(RenderingParticleState source, double delta)
     {

@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 if (args.Length == 4 && args[3] == "--visual-shader") return await ImportVisualGraph(args);
 return await ImportModule(args);
 
-static async Task<int> ImportModule(string[] args, VisualShader? graph = null)
+static async Task<int> ImportModule(string[] args, VisualShader? graph = null, IReadOnlyList<VisualShaderImage>? images = null, IReadOnlyList<VisualShaderBlockName>? blocks = null)
 {
     var particleImport = args.Length is 4 or 5 && args[3] == "--particles";
     var blitImport = args.Length is 4 or 5 && args[3] == "--texture-blit";
@@ -49,7 +49,7 @@ static async Task<int> ImportModule(string[] args, VisualShader? graph = null)
                 {
                     Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.0", "-S",
                         args[1] == "compute" ? "comp" : args[1] == "fragment" ? "frag" : "vert", "-I" + includeRoot, "-I" + builtIns!.DirectoryPath, "-e", "main", "-gV", "-o", debugTemporary, input));
-                    sourceTypes = ShaderSourceTypes.GLSL(File.ReadAllBytes(debugTemporary), args[1] == "fragment", particleImport);
+                    sourceTypes = ShaderSourceTypes.GLSL(ShaderSourceTypes.CanonicalizeGraphBlocks(File.ReadAllBytes(debugTemporary), blocks ?? [], args[1] == "fragment"), args[1] == "fragment", particleImport);
                 }
                 break;
             case ".spv":
@@ -57,7 +57,7 @@ static async Task<int> ImportModule(string[] args, VisualShader? graph = null)
                 break;
             default: throw new ArgumentException("The supported source languages are HLSL and GLSL; external compilers must supply SPIR-V.");
         }
-        var result = File.ReadAllBytes(temporary);
+        var result = ShaderSourceTypes.CanonicalizeGraphBlocks(File.ReadAllBytes(temporary), blocks ?? [], args[1] == "fragment");
         if (sourceTypes is not null)
         {
             result = ShaderSourceTypes.Annotate(result, args[1] == "fragment", sourceTypes, particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
@@ -76,7 +76,11 @@ static async Task<int> ImportModule(string[] args, VisualShader? graph = null)
                 finally { Directory.SetCurrentDirectory(directory); }
             }
             result = ShaderSourceTypes.AddConfiguredDefaults(result, input, args[1] == "fragment", particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
-            if (graph is not null) result = ShaderSourceTypes.AddGraphParameters(result, graph, args[1] == "fragment");
+            if (graph is not null)
+            {
+                result = ShaderSourceTypes.AddGraphParameters(result, graph, args[1] == "fragment");
+                result = ShaderSourceTypes.AddGraphImages(result, images ?? [], args[1] == "fragment");
+            }
             File.WriteAllBytes(temporary, result);
         }
         Console.Write(await Execute("spirv-val", "--target-env", "vulkan1.0", temporary));
@@ -182,10 +186,17 @@ static async Task<int> ImportVisualGraph(string[] args)
         var vertex = IOPath.Combine(temporary, "graph.vert.glsl");
         var fragment = IOPath.Combine(temporary, "graph.frag.glsl");
         File.WriteAllText(vertex, sources.Vertex); File.WriteAllText(fragment, sources.Fragment);
-        if (await ImportModule([vertex, "vertex", vertex + ".spv"], graph) != 0 ||
-            await ImportModule([fragment, "fragment", fragment + ".spv"], graph) != 0)
+        if (await ImportModule([vertex, "vertex", vertex + ".spv"], graph, sources.Images, sources.Blocks) != 0 ||
+            await ImportModule([fragment, "fragment", fragment + ".spv"], graph, sources.Images, sources.Blocks) != 0)
             throw new InvalidDataException("Generated visual shader source failed compilation or interface validation.");
         graph.SetSPIRV(File.ReadAllBytes(vertex + ".spv"), File.ReadAllBytes(fragment + ".spv"));
+        var compiled = graph.GetProgram();
+        foreach (var image in sources.Images.Where(i => i.Default is not null).DistinctBy(i => i.Name))
+        {
+            if (!compiled.Textures.Any(t => t.Name == image.Name && t.IsMaterialTexture)) continue;
+            if (image.IsArray) graph.SetDefaultLayeredTextureParameter(image.Name, (TextureLayered?)image.Default);
+            else graph.SetDefaultTextureParameter(image.Name, (Texture?)image.Default);
+        }
         Directory.CreateDirectory(IOPath.GetDirectoryName(output)!);
         ResourceArchive.Save(graph, output, SaverFlags.BundleResources | SaverFlags.Compress, skipUnchanged: true);
         Console.WriteLine($"Imported visual shader {input} -> {output}");

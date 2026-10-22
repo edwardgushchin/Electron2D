@@ -247,3 +247,15 @@ For graph parameter changes, cover every numeric role, direct and cross-stage re
 UV-to-integer byte witnesses must keep sample values away from integer truncation boundaries. The 64-times UV fixture adds a quarter-unit bias before conversion, retaining the independent expected center value 34 under different framebuffer widths; do not relax its exact byte tolerance to hide interpolation rounding.
 
 Derivative graph changes require all scalar/vector layouts, selector/default conversion and copy/archive checks, affine UV rates in every component and an independently evaluated fractional antialiasing edge. Verify default/fine/coarse SPIR-V opcodes as well as pixels, reject reachable vertex graphs and malformed or misplaced derivative capabilities without replacing either shader stage. Shared VisualShaderFloatOpType changes also exercise MultiplyAdd and recreate old-schema source fixtures before reimport. Native derivative behavior at discontinuities is not an analytic CPU oracle.
+
+Sampled-image graph changes require ordinary/array shape and sampler-port guards,
+implicit coordinates/LOD, material/global/default absence, all image hints,
+filter/repeat and explicit sampler override/reset. Preserve node/resource aliases
+through fresh source and compiled archives, including big-endian sources. Verify
+screen/channel ownership, missing normal/specular fallbacks, HDR transfer before
+filtering, linear float sources and independent layers/mips. Clear device images
+on the GPU between frames and verify refreshed views. Keep pixel readback outside measured intervals; take the final allocation
+snapshots before readback. Retain original failed gates. Reject malformed/duplicate/wrong-owner image records, incompatible
+screen/qualifier/shape/default inputs and capacity excess without replacing the
+target or either stage. Recheck numeric graphs, sampler arrays, authored vertex
+and lighting/glyph consumers after shared reflection/backend changes.

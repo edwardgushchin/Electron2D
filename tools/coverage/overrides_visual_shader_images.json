@@ -1,0 +1,462 @@
+{
+  "mappings": [
+    {
+      "godot": "class:VisualShaderNodeSample3D",
+      "electron2d": "T:Electron2D.VisualShaderNodeLayeredSample",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeSample3D::enum:Source",
+      "electron2d": "T:Electron2D.VisualShaderNodeLayeredSample.SourceEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeSample3D::enum_value:Source.SOURCE_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeLayeredSample.SourceEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeSample3D::enum_value:Source.SOURCE_PORT",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeLayeredSample.SourceEnum.Port()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeSample3D::enum_value:Source.SOURCE_TEXTURE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeLayeredSample.SourceEnum.Texture()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeSample3D::property:source",
+      "electron2d": "property:Electron2D.VisualShaderNodeLayeredSample.Source()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeTexture",
+      "electron2d": "T:Electron2D.VisualShaderNodeTexture",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTexture::enum:Source",
+      "electron2d": "T:Electron2D.VisualShaderNodeTexture.SourceEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTexture::enum:TextureType",
+      "electron2d": "T:Electron2D.VisualShaderNodeTexture.TextureTypeEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTexture::enum_value:Source.SOURCE_2D_NORMAL",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTexture.SourceEnum.CanvasNormal()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTexture::enum_value:Source.SOURCE_2D_TEXTURE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTexture.SourceEnum.Canvas()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTexture::enum_value:Source.SOURCE_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTexture.SourceEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTexture::enum_value:Source.SOURCE_PORT",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTexture.SourceEnum.Port()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTexture::enum_value:Source.SOURCE_SCREEN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTexture.SourceEnum.Screen()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTexture::enum_value:Source.SOURCE_TEXTURE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTexture.SourceEnum.Texture()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTexture::enum_value:TextureType.TYPE_COLOR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTexture.TextureTypeEnum.Color()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTexture::enum_value:TextureType.TYPE_DATA",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTexture.TextureTypeEnum.Data()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTexture::enum_value:TextureType.TYPE_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTexture.TextureTypeEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTexture::enum_value:TextureType.TYPE_NORMAL_MAP",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTexture.TextureTypeEnum.NormalMap()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTexture::property:source",
+      "electron2d": "property:Electron2D.VisualShaderNodeTexture.Source()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTexture::property:texture",
+      "electron2d": "property:Electron2D.VisualShaderNodeTexture.Texture()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTexture::property:texture_type",
+      "electron2d": "property:Electron2D.VisualShaderNodeTexture.TextureType()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeTexture2DArray",
+      "electron2d": "T:Electron2D.VisualShaderNodeTextureArray",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTexture2DArray::property:texture_array",
+      "electron2d": "property:Electron2D.VisualShaderNodeTextureArray.TextureArray()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeTexture2DArrayParameter",
+      "electron2d": "T:Electron2D.VisualShaderNodeTextureArrayParameter",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeTexture2DParameter",
+      "electron2d": "T:Electron2D.VisualShaderNodeImageParameter",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeTextureParameter",
+      "electron2d": "T:Electron2D.VisualShaderNodeTextureParameter",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum:ColorDefault",
+      "electron2d": "T:Electron2D.VisualShaderNodeTextureParameter.ColorDefaultEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum:TextureFilter",
+      "electron2d": "T:Electron2D.VisualShaderNodeTextureParameter.TextureFilterEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum:TextureRepeat",
+      "electron2d": "T:Electron2D.VisualShaderNodeTextureParameter.TextureRepeatEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum:TextureSource",
+      "electron2d": "T:Electron2D.VisualShaderNodeTextureParameter.TextureSourceEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum:TextureType",
+      "electron2d": "T:Electron2D.VisualShaderNodeTextureParameter.TextureTypeEnum",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:ColorDefault.COLOR_DEFAULT_BLACK",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.ColorDefaultEnum.Black()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:ColorDefault.COLOR_DEFAULT_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.ColorDefaultEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:ColorDefault.COLOR_DEFAULT_TRANSPARENT",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.ColorDefaultEnum.Transparent()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:ColorDefault.COLOR_DEFAULT_WHITE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.ColorDefaultEnum.White()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureFilter.FILTER_DEFAULT",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureFilterEnum.Default()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureFilter.FILTER_LINEAR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureFilterEnum.Linear()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureFilter.FILTER_LINEAR_MIPMAP",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureFilterEnum.LinearMipmap()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureFilter.FILTER_LINEAR_MIPMAP_ANISOTROPIC",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureFilterEnum.LinearMipmapAnisotropic()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureFilter.FILTER_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureFilterEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureFilter.FILTER_NEAREST",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureFilterEnum.Nearest()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureFilter.FILTER_NEAREST_MIPMAP",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureFilterEnum.NearestMipmap()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureFilter.FILTER_NEAREST_MIPMAP_ANISOTROPIC",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureFilterEnum.NearestMipmapAnisotropic()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureRepeat.REPEAT_DEFAULT",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureRepeatEnum.Default()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureRepeat.REPEAT_DISABLED",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureRepeatEnum.Disabled()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureRepeat.REPEAT_ENABLED",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureRepeatEnum.Enabled()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureRepeat.REPEAT_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureRepeatEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureSource.SOURCE_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureSourceEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureSource.SOURCE_NONE",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureSourceEnum.None()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureSource.SOURCE_SCREEN",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureSourceEnum.Screen()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureType.TYPE_ANISOTROPY",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureTypeEnum.Anisotropy()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureType.TYPE_COLOR",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureTypeEnum.Color()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureType.TYPE_DATA",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureTypeEnum.Data()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureType.TYPE_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureTypeEnum.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::enum_value:TextureType.TYPE_NORMAL_MAP",
+      "electron2d": "enumValue:Electron2D.VisualShaderNodeTextureParameter.TextureTypeEnum.NormalMap()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::property:color_default",
+      "electron2d": "property:Electron2D.VisualShaderNodeTextureParameter.ColorDefault()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::property:texture_filter",
+      "electron2d": "property:Electron2D.VisualShaderNodeTextureParameter.TextureFilter()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::property:texture_repeat",
+      "electron2d": "property:Electron2D.VisualShaderNodeTextureParameter.TextureRepeat()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::property:texture_source",
+      "electron2d": "property:Electron2D.VisualShaderNodeTextureParameter.TextureSource()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeTextureParameter::property:texture_type",
+      "electron2d": "property:Electron2D.VisualShaderNodeTextureParameter.TextureType()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNode::enum_value:PortType.PORT_TYPE_SAMPLER",
+      "electron2d": "enumValue:Electron2D.VisualShaderNode.PortType.Sampler()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:VisualShaderNodeSample3D",
+        "VisualShaderNodeSample3D::enum:Source",
+        "VisualShaderNodeSample3D::enum_value:Source.SOURCE_MAX",
+        "VisualShaderNodeSample3D::enum_value:Source.SOURCE_PORT",
+        "VisualShaderNodeSample3D::enum_value:Source.SOURCE_TEXTURE",
+        "VisualShaderNodeSample3D::property:source",
+        "class:VisualShaderNodeTexture",
+        "VisualShaderNodeTexture::enum:Source",
+        "VisualShaderNodeTexture::enum:TextureType",
+        "VisualShaderNodeTexture::enum_value:Source.SOURCE_2D_NORMAL",
+        "VisualShaderNodeTexture::enum_value:Source.SOURCE_2D_TEXTURE",
+        "VisualShaderNodeTexture::enum_value:Source.SOURCE_MAX",
+        "VisualShaderNodeTexture::enum_value:Source.SOURCE_PORT",
+        "VisualShaderNodeTexture::enum_value:Source.SOURCE_SCREEN",
+        "VisualShaderNodeTexture::enum_value:Source.SOURCE_TEXTURE",
+        "VisualShaderNodeTexture::enum_value:TextureType.TYPE_COLOR",
+        "VisualShaderNodeTexture::enum_value:TextureType.TYPE_DATA",
+        "VisualShaderNodeTexture::enum_value:TextureType.TYPE_MAX",
+        "VisualShaderNodeTexture::enum_value:TextureType.TYPE_NORMAL_MAP",
+        "VisualShaderNodeTexture::property:source",
+        "VisualShaderNodeTexture::property:texture",
+        "VisualShaderNodeTexture::property:texture_type",
+        "class:VisualShaderNodeTexture2DArray",
+        "VisualShaderNodeTexture2DArray::property:texture_array",
+        "class:VisualShaderNodeTexture2DArrayParameter",
+        "class:VisualShaderNodeTexture2DParameter",
+        "class:VisualShaderNodeTextureParameter",
+        "VisualShaderNodeTextureParameter::enum:ColorDefault",
+        "VisualShaderNodeTextureParameter::enum:TextureFilter",
+        "VisualShaderNodeTextureParameter::enum:TextureRepeat",
+        "VisualShaderNodeTextureParameter::enum:TextureSource",
+        "VisualShaderNodeTextureParameter::enum:TextureType",
+        "VisualShaderNodeTextureParameter::enum_value:ColorDefault.COLOR_DEFAULT_BLACK",
+        "VisualShaderNodeTextureParameter::enum_value:ColorDefault.COLOR_DEFAULT_MAX",
+        "VisualShaderNodeTextureParameter::enum_value:ColorDefault.COLOR_DEFAULT_TRANSPARENT",
+        "VisualShaderNodeTextureParameter::enum_value:ColorDefault.COLOR_DEFAULT_WHITE",
+        "VisualShaderNodeTextureParameter::enum_value:TextureFilter.FILTER_DEFAULT",
+        "VisualShaderNodeTextureParameter::enum_value:TextureFilter.FILTER_LINEAR",
+        "VisualShaderNodeTextureParameter::enum_value:TextureFilter.FILTER_LINEAR_MIPMAP",
+        "VisualShaderNodeTextureParameter::enum_value:TextureFilter.FILTER_LINEAR_MIPMAP_ANISOTROPIC",
+        "VisualShaderNodeTextureParameter::enum_value:TextureFilter.FILTER_MAX",
+        "VisualShaderNodeTextureParameter::enum_value:TextureFilter.FILTER_NEAREST",
+        "VisualShaderNodeTextureParameter::enum_value:TextureFilter.FILTER_NEAREST_MIPMAP",
+        "VisualShaderNodeTextureParameter::enum_value:TextureFilter.FILTER_NEAREST_MIPMAP_ANISOTROPIC",
+        "VisualShaderNodeTextureParameter::enum_value:TextureRepeat.REPEAT_DEFAULT",
+        "VisualShaderNodeTextureParameter::enum_value:TextureRepeat.REPEAT_DISABLED",
+        "VisualShaderNodeTextureParameter::enum_value:TextureRepeat.REPEAT_ENABLED",
+        "VisualShaderNodeTextureParameter::enum_value:TextureRepeat.REPEAT_MAX",
+        "VisualShaderNodeTextureParameter::enum_value:TextureSource.SOURCE_MAX",
+        "VisualShaderNodeTextureParameter::enum_value:TextureSource.SOURCE_NONE",
+        "VisualShaderNodeTextureParameter::enum_value:TextureSource.SOURCE_SCREEN",
+        "VisualShaderNodeTextureParameter::enum_value:TextureType.TYPE_ANISOTROPY",
+        "VisualShaderNodeTextureParameter::enum_value:TextureType.TYPE_COLOR",
+        "VisualShaderNodeTextureParameter::enum_value:TextureType.TYPE_DATA",
+        "VisualShaderNodeTextureParameter::enum_value:TextureType.TYPE_MAX",
+        "VisualShaderNodeTextureParameter::enum_value:TextureType.TYPE_NORMAL_MAP",
+        "VisualShaderNodeTextureParameter::property:color_default",
+        "VisualShaderNodeTextureParameter::property:texture_filter",
+        "VisualShaderNodeTextureParameter::property:texture_repeat",
+        "VisualShaderNodeTextureParameter::property:texture_source",
+        "VisualShaderNodeTextureParameter::property:texture_type",
+        "VisualShaderNode::enum:PortType",
+        "VisualShaderNode::enum_value:PortType.PORT_TYPE_SAMPLER"
+      ],
+      "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "VisualShaderNodeTexture::enum_value:Source.SOURCE_3D_NORMAL",
+        "VisualShaderNodeTexture::enum_value:Source.SOURCE_DEPTH",
+        "VisualShaderNodeTexture::enum_value:Source.SOURCE_ROUGHNESS",
+        "VisualShaderNodeTextureParameter::enum_value:TextureSource.SOURCE_DEPTH",
+        "VisualShaderNodeTextureParameter::enum_value:TextureSource.SOURCE_NORMAL_ROUGHNESS"
+      ],
+      "reason": "ADR 0004: these pinned selectors sample three-dimensional scene depth, normal/roughness or roughness targets. Electron2D has no such scene producers; the numeric UV/layer array role remains applicable and implemented. No implementation trigger."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeImageParameter..ctor()",
+      "reason": "Typed Resource construction, duplicate/resource-edge policy and stored-property descriptors for the executing sampled-image graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeLayeredSample..ctor()",
+      "reason": "Typed Resource construction, duplicate/resource-edge policy and stored-property descriptors for the executing sampled-image graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeTexture..ctor()",
+      "reason": "Typed Resource construction, duplicate/resource-edge policy and stored-property descriptors for the executing sampled-image graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeTextureArray..ctor()",
+      "reason": "Typed Resource construction, duplicate/resource-edge policy and stored-property descriptors for the executing sampled-image graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeTextureArrayParameter..ctor()",
+      "reason": "Typed Resource construction, duplicate/resource-edge policy and stored-property descriptors for the executing sampled-image graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeTextureParameter..ctor()",
+      "reason": "Typed Resource construction, duplicate/resource-edge policy and stored-property descriptors for the executing sampled-image graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeImageParameter.CreateDuplicateInstance()",
+      "reason": "Typed Resource construction, duplicate/resource-edge policy and stored-property descriptors for the executing sampled-image graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeLayeredSample.GetPropertyDescriptors()",
+      "reason": "Typed Resource construction, duplicate/resource-edge policy and stored-property descriptors for the executing sampled-image graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed Resource construction, duplicate/resource-edge policy and stored-property descriptors for the executing sampled-image graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeTexture.CreateDuplicateInstance()",
+      "reason": "Typed Resource construction, duplicate/resource-edge policy and stored-property descriptors for the executing sampled-image graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeTexture.GetPropertyDescriptors()",
+      "reason": "Typed Resource construction, duplicate/resource-edge policy and stored-property descriptors for the executing sampled-image graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeTextureArray.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed Resource construction, duplicate/resource-edge policy and stored-property descriptors for the executing sampled-image graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeTextureArray.CreateDuplicateInstance()",
+      "reason": "Typed Resource construction, duplicate/resource-edge policy and stored-property descriptors for the executing sampled-image graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeTextureArray.GetPropertyDescriptors()",
+      "reason": "Typed Resource construction, duplicate/resource-edge policy and stored-property descriptors for the executing sampled-image graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeTextureArrayParameter.CreateDuplicateInstance()",
+      "reason": "Typed Resource construction, duplicate/resource-edge policy and stored-property descriptors for the executing sampled-image graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeTextureParameter.GetPropertyDescriptors()",
+      "reason": "Typed Resource construction, duplicate/resource-edge policy and stored-property descriptors for the executing sampled-image graph family under ADRs 0001/0013/0028."
+    }
+  ]
+}

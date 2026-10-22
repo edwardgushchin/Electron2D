@@ -1,6 +1,6 @@
 # GPUCanvasBackend
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 - Declaration: `internal sealed unsafe class GPUCanvasBackend : CanvasBackend`
 - Source: [GPUCanvasBackend.cs](../../src/Servers/Rendering/GPUCanvasBackend.cs)
@@ -136,3 +136,5 @@ Startup captures support for every format in each ordinary native BC upload fami
 A private ShaderSamplerCache prepares explicit per-image state before render/compute passes. Ordinary, global and layered images use the selected handle; TEXTURE/SCREEN_TEXTURE/SDF_TEXTURE preserve it while the renderer replaces the image. Canvas and particle execution share the configuration. BeginFrame advances cache retirement even after an earlier failed frame; teardown disposes retained samplers. See [explicit image sampler state](../components/shader-materials.md#explicit-image-sampler-state).
 
 Glyph program tracking now retains the previous frame use set. Alternating plain/MSDF modes reuse transformed bytecode and native pipelines instead of repeatedly composing a dropped program. The public retained-mode consumer measures 64 active and 64 idle complete frames after warmup. See [retained distance-field mode](../components/canvas-rendering.md#retained-distance-field-mode).
+
+Graph image policy resolves render-only ordinary/array fallback images and shader-domain sampling. Current canvas normal/specular channels use the existing producers, including missing-channel fallbacks. GPU color views refresh every used native array layer/mip before HDR sampling; prepared sampler/image caches share session retirement. Device clears and cold pixel checkpoints are verified separately from measured complete frames.

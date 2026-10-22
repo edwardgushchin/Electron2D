@@ -5,6 +5,10 @@ public static partial class ResourceFileTypes
     private static void RegisterVisualShaderResources()
     {
         RegisterResource("VisualShader", CreateVisualShaderFileResource);
+        RegisterResource("VisualShaderNodeTexture", CreateVisualShaderNodeTextureFileResource);
+        RegisterResource("VisualShaderNodeTextureArray", CreateVisualShaderNodeTextureArrayFileResource);
+        RegisterResource("VisualShaderNodeImageParameter", CreateVisualShaderNodeImageParameterFileResource);
+        RegisterResource("VisualShaderNodeTextureArrayParameter", CreateVisualShaderNodeTextureArrayParameterFileResource);
         RegisterResource("VisualShaderNodeDerivativeFunc", CreateVisualShaderNodeDerivativeFuncFileResource);
         RegisterResource("VisualShaderNodeFloatParameter", CreateVisualShaderNodeFloatParameterFileResource);
         RegisterResource("VisualShaderNodeIntParameter", CreateVisualShaderNodeIntParameterFileResource);
@@ -69,6 +73,10 @@ public static partial class ResourceFileTypes
     private static VisualShaderNodeVectorLen CreateVisualShaderNodeVectorLenFileResource() => new();
     private static VisualShaderNodeVectorRefract CreateVisualShaderNodeVectorRefractFileResource() => new();
     private static VisualShader CreateVisualShaderFileResource() => new();
+    private static VisualShaderNodeTexture CreateVisualShaderNodeTextureFileResource() => new();
+    private static VisualShaderNodeTextureArray CreateVisualShaderNodeTextureArrayFileResource() => new();
+    private static VisualShaderNodeImageParameter CreateVisualShaderNodeImageParameterFileResource() => new();
+    private static VisualShaderNodeTextureArrayParameter CreateVisualShaderNodeTextureArrayParameterFileResource() => new();
     private static VisualShaderNodeDerivativeFunc CreateVisualShaderNodeDerivativeFuncFileResource() => new();
     private static VisualShaderNodeOutput CreateVisualShaderNodeOutputFileResource() => new();
     private static VisualShaderNodeInput CreateVisualShaderNodeInputFileResource() => new();

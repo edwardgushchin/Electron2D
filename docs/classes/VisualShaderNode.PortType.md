@@ -10,7 +10,7 @@ public enum Electron2D.VisualShaderNode.PortType
 
 ## Description
 
-The numeric value role carried by a graph port.
+The value role carried by a graph port.
 
 ## Member summary
 
@@ -19,6 +19,7 @@ The numeric value role carried by a graph port.
 | [`public const Electron2D.VisualShaderNode.PortType Boolean = 6`](#member-bc51c1d68f30) | A Boolean scalar. |
 | [`public const Electron2D.VisualShaderNode.PortType Matrix = 7`](#member-f5aa6431158b) | A four-by-four numeric matrix carried by System.Numerics.Matrix4x4. |
 | [`public const Electron2D.VisualShaderNode.PortType Max = 9`](#member-042e6a654b2d) | The nonselectable upper bound of the complete logical port type table. |
+| [`public const Electron2D.VisualShaderNode.PortType Sampler = 8`](#member-9c81fa6cf67d) | An opaque sampled-image reference; it accepts no numeric default or conversion. |
 | [`public const Electron2D.VisualShaderNode.PortType Scalar = 0`](#member-bed930ad0a4f) | A single-precision scalar. |
 | [`public const Electron2D.VisualShaderNode.PortType ScalarInt = 1`](#member-a5ab7a2bf8c0) | A signed 32-bit scalar. |
 | [`public const Electron2D.VisualShaderNode.PortType ScalarUInt = 2`](#member-dc29b158f555) | An unsigned 32-bit scalar. |
@@ -52,6 +53,15 @@ public const Electron2D.VisualShaderNode.PortType Max = 9
 ```
 
 The nonselectable upper bound of the complete logical port type table.
+
+<a id="member-9c81fa6cf67d"></a>
+### `Sampler`
+
+```csharp
+public const Electron2D.VisualShaderNode.PortType Sampler = 8
+```
+
+An opaque sampled-image reference; it accepts no numeric default or conversion.
 
 <a id="member-bed930ad0a4f"></a>
 ### `Scalar`
@@ -111,7 +121,7 @@ Four numeric floating components.
 
 This selector has value lifetime and is not disposable. Max is a nonselectable logical bound; undefined values do not become selectable through numeric casts.
 
-The public VisualShader.Consumer covers typed requests, all sixteen matrix components, copy/archive state, row/column layout and real software-rendered pixels. See [the component contract](../components/visual-shaders.md#comparisons-and-conditional-results) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
+The public VisualShader.Consumer covers typed numeric and opaque ports, sampler policies, resource aliases and portable archives. Its image fixtures check real software-rendered pixels, color transfer, independent layers/mips and refreshed native storage. See [the component contract](../components/visual-shaders.md#sampled-images-and-canvas-channels) for exact profiles, arithmetic rules and outstanding hardware/platform/native-heap gates.
 
 ## Decisions
 

@@ -4,7 +4,7 @@ Last updated: 2026-10-18
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1221 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+1. Close 1220 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
 2. Complete 540 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [VisualShaderNodeColorFunc](classes/VisualShaderNodeColorFunc.md), [VisualShaderNodeColorOp](classes/VisualShaderNodeColorOp.md), [VisualShaderNodeDistanceFade](classes/VisualShaderNodeDistanceFade.md), [VisualShaderNodeFaceForward](classes/VisualShaderNodeFaceForward.md), [VisualShaderNodeFresnel](classes/VisualShaderNodeFresnel.md), [VisualShaderNodeProximityFade](classes/VisualShaderNodeProximityFade.md), [VisualShaderNodeRandomRange](classes/VisualShaderNodeRandomRange.md), [VisualShaderNodeReroute](classes/VisualShaderNodeReroute.md), [VisualShaderNodeRotationByAxis](classes/VisualShaderNodeRotationByAxis.md), [VisualShaderNodeUVFunc](classes/VisualShaderNodeUVFunc.md), [VisualShaderNodeUVPolarCoord](classes/VisualShaderNodeUVPolarCoord.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -81,7 +81,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [TileSetAtlasSource](classes/TileSetAtlasSource.md) | 0 | 1 |
 | [Timer](classes/Timer.md) | 0 | 1 |
 | [VisualShader](classes/VisualShader.md) | 0 | 1 |
-| [VisualShaderNode](classes/VisualShaderNode.md) | 0 | 1 |
 
 ## Blocked type families
 
@@ -89,8 +88,8 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | --- | ---: |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
 | Trigger: particle graph stage/output translation into the executing compute ABI under ADR 0028; the numeric canvas graph importer does not provide particle lifecycle stages. | 10 |
-| Trigger: graph sampled-image/screen/SDF expression roles and required fragment derivative/renderer producers in the shared offline importer under ADR 0028; this family enters its operation-specific graph integration. | 8 |
 | Trigger: an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001). | 7 |
+| Trigger: graph sampled-image/screen/SDF expression roles and required fragment derivative/renderer producers in the shared offline importer under ADR 0028; this family enters its operation-specific graph integration. | 7 |
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
 | Trigger: typed custom/group port declarations, source scopes and compiled provider/factory registration through the offline graph importer under ADRs 0001/0013/0028; no serialized delegates or runtime assembly loading. | 5 |
 | ADR 0046/0107: built-in buffers and service-owned fonts/caches now execute. Requires constructible external TextServerExtension virtual/callback dispatch for the complete family, provider-owned source/cache lifetimes, callback errors/reentry, retirement and public provider registration/replacement integration. This member enters that external implementation/dispatch slice. | 4 |
@@ -98,7 +97,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 3 |
 | Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. | 3 |
 | Trigger: typed custom graph varying declaration and native vertex/fragment/light transport beyond the fixed canvas/mesh ABI under ADR 0028; this family enters that first transport slice. | 3 |
-| Trigger: typed graph parameter declarations, qualifier/hint/default metadata and imported material/image ownership over the existing shader reflection under ADR 0028. | 3 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: graph-frame/comment authoring with a real editor graph layout/preview consumer under ADRs 0027/0028; numeric canvas graph import already executes. | 2 |
 | Navigation2D: trigger is the next operation-specific navigation link, agent/obstacle avoidance, source-geometry bake or typed query slice beyond the authored map/region backend (ADRs 0052/0097). | 1 |

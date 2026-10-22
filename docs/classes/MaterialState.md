@@ -1,6 +1,6 @@
 # MaterialState
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 - Declaration: `internal sealed class MaterialState`
 - Source: [Material.cs](../../src/Scene/Resources/Material.cs)
@@ -105,3 +105,7 @@ SamplerConfiguration?[] Samplers aligns with the immutable program image slots. 
 ## Compiled defaults
 
 `UniformOverrides` retains exact names written through numeric/matrix setters. A compatible program transition copies only those values; unset members are initialized from the new immutable ShaderUniform default. Reset writes the current default and removes its ownership flag. Fallback Instance buffers carry the same defaults when no per-item owner is supplied. See [authored uniform defaults](../components/shader-materials.md#authored-uniform-defaults).
+
+CopyTextures preserves authored/default/global absence for validated graph image policies, leaving render-only fallback selection to the GPU backend. Legacy unassigned images without such policy continue to reject. Renderer-owned channel/screen images do not acquire material ownership.
+
+Image value migration requires material ownership in both program versions. A screen-owned replacement drops the prior material resource instead of retaining a hidden override for a later reload. Caller-owned resources remain live.

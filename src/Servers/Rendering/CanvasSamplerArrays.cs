@@ -87,7 +87,7 @@ internal static partial class CanvasSamplerArrays
                 var binding = decorations.TryGetValue(resource[2], out var d) && d.TryGetValue(33, out var b) ? b : uint.MaxValue;
                 var first = Array.FindIndex(textures, t => t.Binding == binding);
                 declarations.Add(Instruction(43, integer, resource[2], (uint)Math.Max(0, first)));
-                if (first < 0 || Op(types[element]) == 26 || names.GetValueOrDefault(resource[2]) != textures[first].Name) continue;
+                if (first < 0 || Op(types[element]) == 26 || names.GetValueOrDefault(resource[2]) != textures[first].NativeName) continue;
                 for (var index = first; index < textures.Length && textures[index].Binding == binding; index++)
                 {
                     var variable = next++; declarations.Add(Instruction(59, Type(32, 0, element), variable, 0)); interfaces.Add(variable);

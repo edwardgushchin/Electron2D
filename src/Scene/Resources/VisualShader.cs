@@ -228,7 +228,8 @@ public sealed partial class VisualShader : Shader
         graph.Nodes.TryGetValue(c.FromNode, out var from) && graph.Nodes.TryGetValue(c.ToNode, out var to) && !from.Node.IsDisposed && !to.Node.IsDisposed &&
         (uint)c.FromPort < (uint)OutputTypes(from.Node).Length && (uint)c.ToPort < (uint)to.Node.Inputs.Length;
     private bool PortsCompatible(Graph graph, VisualShaderConnection c) =>
-        (OutputTypes(graph.Nodes[c.FromNode].Node)[c.FromPort] == VisualShaderNode.PortType.Matrix) == (graph.Nodes[c.ToNode].Node.Inputs[c.ToPort] == VisualShaderNode.PortType.Matrix);
+        (OutputTypes(graph.Nodes[c.FromNode].Node)[c.FromPort] == VisualShaderNode.PortType.Matrix) == (graph.Nodes[c.ToNode].Node.Inputs[c.ToPort] == VisualShaderNode.PortType.Matrix) &&
+        (OutputTypes(graph.Nodes[c.FromNode].Node)[c.FromPort] == VisualShaderNode.PortType.Sampler) == (graph.Nodes[c.ToNode].Node.Inputs[c.ToPort] == VisualShaderNode.PortType.Sampler);
     private void Watch(VisualShaderNode node)
     { if (_watched.TryGetValue(node, out var count)) _watched[node] = count + 1; else { _watched.Add(node, 1); node.Changed += _childChanged; } }
     private void Unwatch(VisualShaderNode node)
