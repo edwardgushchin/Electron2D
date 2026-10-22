@@ -390,3 +390,43 @@ strict publisher arguments and context-initial-validation.json/context-validatio
 record these separate scopes. Successful focused checks do not close the failed
 framed aggregate, the unattributed owner delta, native allocator, foreign-platform,
 network, mass-throughput, window-FPS or owner-acceptance gates. No API row changes.
+
+## Background allocation-context retirement (2026-10-22)
+
+The installed workstation CLR build fad253f51 maps through its source manifest to
+runtime commit 138d5fe8. Its per-thread counter adds SOH/UOH bytes and subtracts
+the unused allocation-context tail. At the end of background marking, the GC
+voids context pointers before sweeping. This can remove that subtraction without
+allocating an object or starting another collection inside the measured interval.
+Collection-count deltas alone therefore cannot exclude this counter transition.
+
+A standalone CPU control keeps a 500,000-object graph alive, starts background
+collection before the interval, allocates its seed before tracing, then only
+sleeps. Sixteen of sixteen calibrated background intervals report 8,136 counter
+bytes: exactly the prior unused tail. TLS, SOH and UOH stay unchanged while both
+pointers become zero. All three collection-count deltas are zero. Sixteen paired
+blocking-collection controls report zero and retain their contexts. Positive
+controls before and after report 64 counter bytes and raw ObjectAllocated size 61;
+the 32 empty intervals have no object event. All 34 native brackets balance with
+zero recursion. These controls contain no physics frames or GPU work.
+
+PhysicsPointGravityRangeTests now finishes two blocking full collections and
+their pending finalizers before each 128-frame warmup, for both the ordinary and
+wide-coordinate measurements. AllocationWarmupCheck verifies completion of the
+second finalization pass. Collection remains outside both warmup and measurement;
+the same 128 complete frames, native tracing and strict owner/all-thread zero-byte
+assertions remain. No bytes are subtracted, no interval is retried or filtered,
+and GC is not disabled. The standalone control does not retrospectively attribute
+the older 3,184/5,520-byte owner failures; their absent native context snapshots
+remain a limit. The already-running frozen aggregate retains its original code.
+
+The exact CLR sources, build mapping, controls, decoded events and hashes are
+retained under ignored bin/physics-report-ranges/2026-10-22/runtime-source-audit/.
+
+Six prepared CLR field profiles pass: ordinary CPU/GPU plus context-traced CPU/GPU
+on owner and separate numerical threads. All 2,304 measured complete frames retain
+owner/all-thread 0/0 bytes. The four traced profiles retain 660 balanced brackets,
+524 positive object events and no physical-interval object event. Their frozen
+cohort binds 2,541 runtime, 946 root and 269 consumer documents at 24e906cb4 plus
+the pending contact-range prototype. That prototype, the older failed aggregates,
+NativeAOT, native allocation totals and performance remain separately unaccepted.
