@@ -1,0 +1,84 @@
+{
+  "mappings": [
+    {
+      "godot": "class:VisualShaderNodeTextureSDF",
+      "electron2d": "T:Electron2D.VisualShaderNodeTextureSDF",
+      "reason": "ADRs 0001/0004/0013/0028: five canvas SDF graph families execute through the shared offline importer and renderer-owned pixel-space field. Preserve signed distances, central-difference normals, distance/hit/endpoint ray outputs, implicit screen UV, typed default absence, aliases, portable archives and live renderer policies. Reachable vertex use rejects; Light graph execution retains its existing dependency. Physical GPU, native heap, foreign hosts and owner visual acceptance remain separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeTextureSDFNormal",
+      "electron2d": "T:Electron2D.VisualShaderNodeTextureSDFNormal",
+      "reason": "ADRs 0001/0004/0013/0028: five canvas SDF graph families execute through the shared offline importer and renderer-owned pixel-space field. Preserve signed distances, central-difference normals, distance/hit/endpoint ray outputs, implicit screen UV, typed default absence, aliases, portable archives and live renderer policies. Reachable vertex use rejects; Light graph execution retains its existing dependency. Physical GPU, native heap, foreign hosts and owner visual acceptance remain separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeSDFRaymarch",
+      "electron2d": "T:Electron2D.VisualShaderNodeSDFRaymarch",
+      "reason": "ADRs 0001/0004/0013/0028: five canvas SDF graph families execute through the shared offline importer and renderer-owned pixel-space field. Preserve signed distances, central-difference normals, distance/hit/endpoint ray outputs, implicit screen UV, typed default absence, aliases, portable archives and live renderer policies. Reachable vertex use rejects; Light graph execution retains its existing dependency. Physical GPU, native heap, foreign hosts and owner visual acceptance remain separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeSDFToScreenUV",
+      "electron2d": "T:Electron2D.VisualShaderNodeSDFToScreenUV",
+      "reason": "ADRs 0001/0004/0013/0028: five canvas SDF graph families execute through the shared offline importer and renderer-owned pixel-space field. Preserve signed distances, central-difference normals, distance/hit/endpoint ray outputs, implicit screen UV, typed default absence, aliases, portable archives and live renderer policies. Reachable vertex use rejects; Light graph execution retains its existing dependency. Physical GPU, native heap, foreign hosts and owner visual acceptance remain separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeScreenUVToSDF",
+      "electron2d": "T:Electron2D.VisualShaderNodeScreenUVToSDF",
+      "reason": "ADRs 0001/0004/0013/0028: five canvas SDF graph families execute through the shared offline importer and renderer-owned pixel-space field. Preserve signed distances, central-difference normals, distance/hit/endpoint ray outputs, implicit screen UV, typed default absence, aliases, portable archives and live renderer policies. Reachable vertex use rejects; Light graph execution retains its existing dependency. Physical GPU, native heap, foreign hosts and owner visual acceptance remain separate."
+    }
+  ],
+  "statusGroups": [
+    {
+      "reason": "ADRs 0001/0004/0013/0028: five canvas SDF graph families execute through the shared offline importer and renderer-owned pixel-space field. Preserve signed distances, central-difference normals, distance/hit/endpoint ray outputs, implicit screen UV, typed default absence, aliases, portable archives and live renderer policies. Reachable vertex use rejects; Light graph execution retains its existing dependency. Physical GPU, native heap, foreign hosts and owner visual acceptance remain separate.",
+      "godot": [
+        "class:VisualShaderNodeTextureSDF",
+        "class:VisualShaderNodeTextureSDFNormal",
+        "class:VisualShaderNodeSDFRaymarch",
+        "class:VisualShaderNodeSDFToScreenUV",
+        "class:VisualShaderNodeScreenUVToSDF"
+      ],
+      "state": "Implemented"
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeTextureSDF..ctor()",
+      "reason": "Typed Resource constructor and protected duplicate factory for the executing SDF graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeTextureSDF.CreateDuplicateInstance()",
+      "reason": "Typed Resource constructor and protected duplicate factory for the executing SDF graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeTextureSDFNormal..ctor()",
+      "reason": "Typed Resource constructor and protected duplicate factory for the executing SDF graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeTextureSDFNormal.CreateDuplicateInstance()",
+      "reason": "Typed Resource constructor and protected duplicate factory for the executing SDF graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeSDFRaymarch..ctor()",
+      "reason": "Typed Resource constructor and protected duplicate factory for the executing SDF graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeSDFRaymarch.CreateDuplicateInstance()",
+      "reason": "Typed Resource constructor and protected duplicate factory for the executing SDF graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeSDFToScreenUV..ctor()",
+      "reason": "Typed Resource constructor and protected duplicate factory for the executing SDF graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeSDFToScreenUV.CreateDuplicateInstance()",
+      "reason": "Typed Resource constructor and protected duplicate factory for the executing SDF graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeScreenUVToSDF..ctor()",
+      "reason": "Typed Resource constructor and protected duplicate factory for the executing SDF graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeScreenUVToSDF.CreateDuplicateInstance()",
+      "reason": "Typed Resource constructor and protected duplicate factory for the executing SDF graph family under ADRs 0001/0013/0028."
+    }
+  ]
+}

@@ -13,6 +13,9 @@ try
     }
     else if (args[0] == "gpu") GraphChecks.Render(IOPath.GetFullPath(args[1]), args);
     else if (args[0] == "images-metadata") GraphChecks.ImageMetadataChecks(IOPath.GetFullPath(args[1]));
+    else if (args[0] == "sdf-author") GraphChecks.AuthorSDF(IOPath.GetFullPath(args[1]));
+    else if (args[0] == "sdf-metadata") GraphChecks.SDFMetadata(IOPath.GetFullPath(args[1]));
+    else if (args[0] == "sdf-gpu") GraphChecks.RenderSDF(IOPath.GetFullPath(args[1]), args);
     else if (args[0] == "effects-author") GraphChecks.AuthorEffects(IOPath.GetFullPath(args[1]));
     else if (args[0] == "images-author") GraphChecks.AuthorImages(IOPath.GetFullPath(args[1]));
     else if (args[0] == "derivatives-metadata") GraphChecks.DerivativeBytecodeChecks(IOPath.GetFullPath(args[1]));
@@ -42,6 +45,7 @@ internal static partial class GraphChecks
         DerivativesCPU();
         ImagesCPU();
         EffectsCPU();
+        SDFCPU();
         using var graph = new VisualShader();
         using var scalar = new VisualShaderNodeFloatConstant { Constant = .375f };
         using var operation = new VisualShaderNodeFloatOp();
@@ -125,6 +129,7 @@ internal static partial class GraphChecks
         try
         {
             Author(folder);
+            var sdfFolder = IOPath.Combine(folder, "sdf"); AuthorSDF(sdfFolder); SDFMetadata(sdfFolder, false);
             foreach (var source in Directory.GetFiles(folder, "fx-*.e2dres"))
             { using var effect = ResourceLoader.Load<VisualShader>(source, ResourceLoader.CacheMode.IgnoreDeep); VerifyEffectArchive(IOPath.GetFileNameWithoutExtension(source), effect); }
             using var loaded = ResourceLoader.Load<VisualShader>(IOPath.Combine(folder, "color.e2dres"), ResourceLoader.CacheMode.IgnoreDeep);

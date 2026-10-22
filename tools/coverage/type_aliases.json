@@ -117,7 +117,12 @@
     "VisualShaderNodeTexture2DParameter": "VisualShaderNodeImageParameter",
     "VisualShaderNodeTexture2DArrayParameter": "VisualShaderNodeTextureArrayParameter",
     "VisualShaderNodeSample3D": "VisualShaderNodeLayeredSample",
-    "VisualShaderNodeTexture2DArray": "VisualShaderNodeTextureArray"
+    "VisualShaderNodeTexture2DArray": "VisualShaderNodeTextureArray",
+    "VisualShaderNodeTextureSDF": "VisualShaderNodeTextureSDF",
+    "VisualShaderNodeTextureSDFNormal": "VisualShaderNodeTextureSDFNormal",
+    "VisualShaderNodeSDFRaymarch": "VisualShaderNodeSDFRaymarch",
+    "VisualShaderNodeSDFToScreenUV": "VisualShaderNodeSDFToScreenUV",
+    "VisualShaderNodeScreenUVToSDF": "VisualShaderNodeScreenUVToSDF"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",

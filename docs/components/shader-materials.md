@@ -477,3 +477,5 @@ source hint edits require reimport to produce new descriptors.
 ## Fragment derivative instructions
 
 Canvas and blit fragment SPIR-V may declare DerivativeControl for fine/coarse operations. The common payload validator retains its capability allowlist, accepts that capability only for fragment graphics, requires the declared capability for fine/coarse operations and validates their unary instruction width. Vertex and particle stages reject screen-space derivatives before native publication. Failed replacements retain both prior stages. Numeric graph authoring uses the same importer and validators; see [screen-space derivatives](visual-shaders.md#screen-space-derivatives). Native neighboring-invocation semantics and translation/device capability errors remain authoritative.
+
+[Canvas SDF graph operations](visual-shaders.md#canvas-sdf-graphs) use the existing renderer-owned field and reflected SDF bindings through the shared offline importer.

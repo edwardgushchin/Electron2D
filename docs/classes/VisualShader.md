@@ -377,3 +377,5 @@ Graph authoring, snapshots, import and file I/O are allocating cold operations. 
 
 - [Typed shader authoring and import](../decisions/rendering.md#adr-0028)
 - [Typed resource lifetime and archives](../decisions/resources.md#adr-0013)
+
+Canvas SDF graph operations now use the shared offline importer and renderer-owned pixel field: signed sampling, normals, three raymarch results and screen UV conversion. See [the SDF graph contract](../components/visual-shaders.md#canvas-sdf-graphs) for units, live field policies, stages and verification limits.

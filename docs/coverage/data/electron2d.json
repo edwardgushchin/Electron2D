@@ -15408,6 +15408,51 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.VisualShaderNodeSDFRaymarch",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeSDFRaymarch",
+    "name": "VisualShaderNodeSDFRaymarch",
+    "signature": "public sealed class Electron2D.VisualShaderNodeSDFRaymarch",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeSDFToScreenUV",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeSDFToScreenUV",
+    "name": "VisualShaderNodeSDFToScreenUV",
+    "signature": "public sealed class Electron2D.VisualShaderNodeSDFToScreenUV",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeScreenUVToSDF",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeScreenUVToSDF",
+    "name": "VisualShaderNodeScreenUVToSDF",
+    "signature": "public sealed class Electron2D.VisualShaderNodeScreenUVToSDF",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.VisualShaderNodeSmoothStep",
     "kind": "type",
     "declaringType": "Electron2D.VisualShaderNodeSmoothStep",
@@ -15633,6 +15678,36 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeTextureSDF",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeTextureSDF",
+    "name": "VisualShaderNodeTextureSDF",
+    "signature": "public sealed class Electron2D.VisualShaderNodeTextureSDF",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeTextureSDFNormal",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeTextureSDFNormal",
+    "name": "VisualShaderNodeTextureSDFNormal",
+    "signature": "public sealed class Electron2D.VisualShaderNodeTextureSDFNormal",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -27863,6 +27938,45 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.VisualShaderNodeSDFRaymarch..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeSDFRaymarch",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeSDFRaymarch()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeSDFToScreenUV..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeSDFToScreenUV",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeSDFToScreenUV()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeScreenUVToSDF..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeScreenUVToSDF",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeScreenUVToSDF()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.VisualShaderNodeSmoothStep..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.VisualShaderNodeSmoothStep",
@@ -27947,6 +28061,32 @@
     "name": ".ctor",
     "signature": "protected VisualShaderNodeTextureParameter()",
     "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeTextureSDF..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeTextureSDF",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeTextureSDF()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeTextureSDFNormal..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeTextureSDFNormal",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeTextureSDFNormal()",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -225505,6 +225645,45 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.VisualShaderNodeSDFRaymarch.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeSDFRaymarch",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeSDFToScreenUV.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeSDFToScreenUV",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeScreenUVToSDF.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeScreenUVToSDF",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.VisualShaderNodeSmoothStep.CreateDuplicateInstance()",
     "kind": "method",
     "declaringType": "Electron2D.VisualShaderNodeSmoothStep",
@@ -225736,6 +225915,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeTextureSDF.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeTextureSDF",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeTextureSDFNormal.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeTextureSDFNormal",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
     "value": null
   },
   {

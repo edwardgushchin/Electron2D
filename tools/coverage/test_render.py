@@ -240,7 +240,8 @@ def main():
     assert "VisualShaderNodeImageParameter" in pages[CLASS_PAGES / "VisualShaderNodeTexture2DParameter.md"]
     assert "TextureFilterEnum" in pages[CLASS_PAGES / "VisualShaderNodeTextureParameter.md"]
     for name, count in [("VisualShaderNodeUVFunc", 6), ("VisualShaderNodeUVPolarCoord", 1),
-                        ("VisualShaderNodeColorFunc", 10), ("VisualShaderNodeColorOp", 13)]:
+                        ("VisualShaderNodeColorFunc", 10), ("VisualShaderNodeColorOp", 13),
+                        ("VisualShaderNodeTextureSDF", 1), ("VisualShaderNodeTextureSDFNormal", 1), ("VisualShaderNodeSDFRaymarch", 1), ("VisualShaderNodeSDFToScreenUV", 1), ("VisualShaderNodeScreenUVToSDF", 1)]:
         rows = [row for row in pages[CLASS_PAGES / (name + ".md")].splitlines() if row.startswith("| [`")]
         assert len(rows) == count and all(" | Implemented | " in row for row in rows)
         assert all("Trigger:" not in row for row in rows)

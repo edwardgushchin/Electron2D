@@ -833,3 +833,74 @@ visual acceptance remain independent gates.
 The prior 2,454-program parameter checkpoint passed software Wayland, X11 and HDR/MSAA readback in CLR and strict full-trim NativeAOT. All 624 parameter programs also checked typed overrides and reset, with retained geometry and 64 active/64 idle complete frames at zero owner/all-thread managed bytes. NativeAOT, hardware, native heap, foreign platforms and owner acceptance use independent checks; an earlier checkpoint does not establish the new source set.
 
 The derivative corpus expands the shared regression set to 2,620 programs. Source fixtures are recreated with the shared floating enum schema before import. Separate source-scoped CLR/NativeAOT receipts establish which native profiles executed; earlier checkpoint results do not establish changed inputs.
+
+## Canvas SDF graphs
+
+Five resources use the existing [canvas signed-distance field](canvas-lights.md):
+
+| Definition | Inputs | Outputs |
+| --- | --- | --- |
+| [VisualShaderNodeTextureSDF](../classes/VisualShaderNodeTextureSDF.md) | Pixel position | Signed distance in pixels |
+| [VisualShaderNodeTextureSDFNormal](../classes/VisualShaderNodeTextureSDFNormal.md) | Pixel position | Normalized texture central-difference gradient |
+| [VisualShaderNodeSDFRaymarch](../classes/VisualShaderNodeSDFRaymarch.md) | From/to pixel positions | Distance, Boolean hit, pixel endpoint |
+| [VisualShaderNodeSDFToScreenUV](../classes/VisualShaderNodeSDFToScreenUV.md) | Pixel position | Screen UV |
+| [VisualShaderNodeScreenUVToSDF](../classes/VisualShaderNodeScreenUVToSDF.md) | Screen UV | Pixel position |
+
+These definitions have no constructor input defaults. Missing numeric inputs use
+zero. An unconnected ScreenUVToSDF input uses the fragment's screen UV even when
+a dormant numeric default is stored. Connected values override that implicit
+source. Pixel positions use the framebuffer origin and axes; conversion uses the
+current framebuffer size and does not clamp offscreen values. Conversion-only
+graphs do not request field generation. This uses the
+pixel-space SDF adaptation already established by ADR 0028, rather than adding
+another canvas/world transform. Geometry and occluders receive their ordinary
+canvas transforms before field production. Distance values remain pixel units
+when viewport field resolution or oversize changes.
+
+Sampling uses explicit LOD zero with the existing renderer-owned linear/clamped
+SDF_TEXTURE and SDF_COORDS. Materials cannot override their values. Existing
+Shader sampler metadata can still select a sampler. Normal sampling uses four
+texture samples offset by 0.001 in normalized field texture UV and normalizes the
+difference vector; a flat field has native undefined normalization semantics.
+The texture-axis gradient depends on the field aspect ratio. Open contours have
+unsigned distances; participating closed contours provide negative interiors.
+Absent contours use the existing finite positive field background. Overlapping
+contours retain internal distance features under the renderer contract.
+
+Raymarching computes its three outputs once. It starts at the from position,
+adds each signed sample to travelled distance, then stops when the sample is
+below 0.01 pixel or the accumulated length reaches the segment length. Distance
+is capped at segment length and hit means accumulated distance is strictly less
+than that length. The endpoint is from + direction × distance. Starting inside
+can produce a negative distance and an endpoint behind the start. A zero-length
+segment returns zero, false and its start without normalizing a zero vector.
+Positive steps that no longer increase the float accumulator terminate instead
+of hanging. Derived NaN/infinity and flat-field normal results retain native
+shader arithmetic limits; authored floating defaults and parameters stay finite.
+
+Only reachable fragment nodes execute. Reachable vertex uses reject before
+publishing an imported resource; unreachable definitions remain portable source
+data. Light graph execution retains its separate output/transport prerequisite.
+The importer allocates helper symbols around sampled-image identifiers and
+uses the same shader descriptor limits as other graph operations. SDL_Renderer
+continues to reject programmable materials explicitly.
+
+`VisualShader.Consumer sdf-author`, `sdf-metadata` and `sdf-gpu` exercise public
+API authoring, offline import, fresh load and actual rendering. The source set
+contains 21 programs and five rejected vertex imports. Verification receipts
+record executed backend profiles and source cohorts; previous graph checkpoints
+do not establish this changed source. Physical GPU, foreign hosts, native heap
+and human visual acceptance remain independent gates.
+
+The frozen 8,813-input source cohort passed 26 checks. All 21 new programs and
+3,291 retained compiled graph artifacts produced expected pixels in software
+Vulkan Wayland, X11 and HDR/MSAA in CLR and strict full-trim NativeAOT. Each SDF
+profile checked live parameters/reset, closed/open/moved/disabled/hidden contours,
+viewport resize, field scale/oversize and helper/image-name collisions. Both 64
+moving and 64 steady prepared frames measured zero owner/all-thread managed
+bytes and retained draw counts. Five vertex imports failed transactionally with
+the old target hash preserved. Public authoring, fresh source/compiled archives,
+metadata, root resource/particle contracts, SDK author/edit/error/recovery/publish/
+Clean, Release, coverage and wiki gates passed. Evidence remains under ignored
+`bin/visual-shader-sdf/2026-10-22/`; physical GPU, foreign platforms, native heap
+and owner visual acceptance were not established.

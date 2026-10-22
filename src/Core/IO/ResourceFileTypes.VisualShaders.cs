@@ -4,6 +4,11 @@ public static partial class ResourceFileTypes
 {
     private static void RegisterVisualShaderResources()
     {
+        RegisterResource("VisualShaderNodeTextureSDF", CreateVisualShaderNodeTextureSDFFileResource);
+        RegisterResource("VisualShaderNodeTextureSDFNormal", CreateVisualShaderNodeTextureSDFNormalFileResource);
+        RegisterResource("VisualShaderNodeSDFRaymarch", CreateVisualShaderNodeSDFRaymarchFileResource);
+        RegisterResource("VisualShaderNodeSDFToScreenUV", CreateVisualShaderNodeSDFToScreenUVFileResource);
+        RegisterResource("VisualShaderNodeScreenUVToSDF", CreateVisualShaderNodeScreenUVToSDFFileResource);
         RegisterResource("VisualShader", CreateVisualShaderFileResource);
         RegisterResource("VisualShaderNodeUVFunc", CreateVisualShaderNodeUVFuncFileResource);
         RegisterResource("VisualShaderNodeUVPolarCoord", CreateVisualShaderNodeUVPolarCoordFileResource);
@@ -67,6 +72,11 @@ public static partial class ResourceFileTypes
         RegisterResource("VisualShaderNodeVec4Constant", CreateVisualShaderNodeVec4ConstantFileResource);
         RegisterResource("VisualShaderNodeColorConstant", CreateVisualShaderNodeColorConstantFileResource);
     }
+    private static VisualShaderNodeTextureSDF CreateVisualShaderNodeTextureSDFFileResource() => new();
+    private static VisualShaderNodeTextureSDFNormal CreateVisualShaderNodeTextureSDFNormalFileResource() => new();
+    private static VisualShaderNodeSDFRaymarch CreateVisualShaderNodeSDFRaymarchFileResource() => new();
+    private static VisualShaderNodeSDFToScreenUV CreateVisualShaderNodeSDFToScreenUVFileResource() => new();
+    private static VisualShaderNodeScreenUVToSDF CreateVisualShaderNodeScreenUVToSDFFileResource() => new();
     private static VisualShaderNodeVectorOp CreateVisualShaderNodeVectorOpFileResource() => new();
     private static VisualShaderNodeFloatFunc CreateVisualShaderNodeFloatFuncFileResource() => new();
     private static VisualShaderNodeVectorFunc CreateVisualShaderNodeVectorFuncFileResource() => new();

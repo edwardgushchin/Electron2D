@@ -491,3 +491,5 @@ Compiled [authored uniform defaults](../components/shader-materials.md#authored-
 [Graph parameters and references](../components/visual-shaders.md#parameters-and-graph-local-references) connect editable typed definitions to shared material, global and per-item values. Both stages share symbols/defaults/hints, with sixteen explicit/automatic instance slots and graph-local reference types. Matrix values retain material/global ownership.
 
 Texture drawing checks the canvas recording scope before virtual size queries and revalidates the receiver and borrowed texture after the final callback. Callback disposal cannot append a command to a retired target. Object, RID and direct Texture calls share the boundary; the broader texture/canvas acceptance remains open. See [canvas recording](../components/canvas-rendering.md#draw-callback-recording).
+
+Canvas SDF graph operations now use the shared offline importer and renderer-owned pixel field: signed sampling, normals, three raymarch results and screen UV conversion. See [the SDF graph contract](../components/visual-shaders.md#canvas-sdf-graphs) for units, live field policies, stages and verification limits.

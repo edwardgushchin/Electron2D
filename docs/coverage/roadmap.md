@@ -89,7 +89,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
 | Trigger: particle graph stage/output translation into the executing compute ABI under ADR 0028; the numeric canvas graph importer does not provide particle lifecycle stages. | 10 |
 | Trigger: an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001). | 7 |
-| Trigger: graph sampled-image/screen/SDF expression roles and required fragment derivative/renderer producers in the shared offline importer under ADR 0028; this family enters its operation-specific graph integration. | 7 |
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
 | Trigger: typed custom/group port declarations, source scopes and compiled provider/factory registration through the offline graph importer under ADRs 0001/0013/0028; no serialized delegates or runtime assembly loading. | 5 |
 | ADR 0046/0107: built-in buffers and service-owned fonts/caches now execute. Requires constructible external TextServerExtension virtual/callback dispatch for the complete family, provider-owned source/cache lifetimes, callback errors/reentry, retirement and public provider registration/replacement integration. This member enters that external implementation/dispatch slice. | 4 |
@@ -98,6 +97,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. | 3 |
 | Trigger: typed custom graph varying declaration and native vertex/fragment/light transport beyond the fixed canvas/mesh ABI under ADR 0028; this family enters that first transport slice. | 3 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
+| Trigger: graph sampled-image/screen/SDF expression roles and required fragment derivative/renderer producers in the shared offline importer under ADR 0028; this family enters its operation-specific graph integration. | 2 |
 | Trigger: graph-frame/comment authoring with a real editor graph layout/preview consumer under ADRs 0027/0028; numeric canvas graph import already executes. | 2 |
 | Navigation2D: trigger is the next operation-specific navigation link, agent/obstacle avoidance, source-geometry bake or typed query slice beyond the authored map/region backend (ADRs 0052/0097). | 1 |
 | The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |

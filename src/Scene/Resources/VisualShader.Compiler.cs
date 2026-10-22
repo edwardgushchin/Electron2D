@@ -38,6 +38,8 @@ public sealed partial class VisualShader
             for (var port = 0; port < node.Inputs.Length; port++)
                 if (incoming.TryGetValue((id, port), out var edge)) stack.Push(edge.FromNode);
         }
+        if (stage != Type.Fragment && reachable.Any(id => IsSDFNode(graph.Nodes[id].Node)))
+            throw new NotSupportedException("Canvas SDF nodes require the fragment graph stage.");
         var remaining = reachable.ToDictionary(id => id, _ => 0);
         var dependents = reachable.ToDictionary(id => id, _ => new List<int>());
         foreach (var id in reachable)
@@ -58,6 +60,7 @@ public sealed partial class VisualShader
             if (!incoming.TryGetValue((id, port), out var edge))
             {
                 if (node.Inputs[port] == VisualShaderNode.PortType.Sampler) return "";
+                if (node is VisualShaderNodeScreenUVToSDF) return StageExpression("(gl_FragCoord.xy * e2d_values.SCREEN_PIXEL_SIZE)", aliases);
                 if (port == 0 && node is VisualShaderNodeUVFunc or VisualShaderNodeUVPolarCoord) return StageExpression("UV", aliases);
                 if (node is VisualShaderNodeTexture or VisualShaderNodeLayeredSample)
                 {
@@ -87,6 +90,13 @@ public sealed partial class VisualShader
             else
             {
                 var inputs = Enumerable.Range(0, node.Inputs.Length).Select(port => Input(id, port)).ToArray();
+                string? raymarch = null;
+                if (node is VisualShaderNodeSDFRaymarch)
+                {
+                    raymarch = "n" + id.ToString(CultureInfo.InvariantCulture) + "ray"; var stem = raymarch;
+                    for (var suffix = 2; !names.Add(raymarch); suffix++) raymarch = stem + "_" + suffix.ToString(CultureInfo.InvariantCulture);
+                    source.Append("    vec4 ").Append(raymarch).Append(" = ").Append(aliases["e2d_sdf_raymarch"]).Append('(').Append(inputs[0]).Append(", ").Append(inputs[1]).AppendLine(");");
+                }
                 for (var output = 0; output < OutputTypes(node).Length; output++)
                 {
                     var stem = "n" + id.ToString(CultureInfo.InvariantCulture) + "p" + output.ToString(CultureInfo.InvariantCulture); var name = stem;
@@ -102,6 +112,8 @@ public sealed partial class VisualShader
                     {
                         VisualShaderNodeInput input => StageExpression(input.Expression(stage), aliases).Replace("TIME", aliases["e2d_values"] + ".TIME", StringComparison.Ordinal).Replace("SCREEN_PIXEL_SIZE", aliases["e2d_values"] + ".SCREEN_PIXEL_SIZE", StringComparison.Ordinal),
                         VisualShaderNodeDerivativeFunc when stage != Type.Fragment => throw new NotSupportedException("Screen-space derivative nodes require the fragment graph stage."),
+                        VisualShaderNodeSDFRaymarch => raymarch + (output == 0 ? ".x" : output == 1 ? ".y != 0.0" : ".zw"),
+                        VisualShaderNodeTextureSDF or VisualShaderNodeTextureSDFNormal or VisualShaderNodeSDFToScreenUV or VisualShaderNodeScreenUVToSDF => SDFExpression(node.Expression(output, inputs), aliases),
                         VisualShaderNodeTexture or VisualShaderNodeLayeredSample => SampleImage(sampler, inputs),
                         VisualShaderNodeColorFunc color => color.Expression(output, inputs).Replace("e2d_rgb_to_hsv(", aliases["e2d_rgb_to_hsv"] + "(", StringComparison.Ordinal),
                         VisualShaderNodeTextureParameter => plan.Nodes[id],

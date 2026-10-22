@@ -991,11 +991,11 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeReroute](classes/VisualShaderNodeReroute.md) | VisualShaderNode | Unimplemented | 1 |
 | [VisualShaderNodeResizableBase](classes/VisualShaderNodeResizableBase.md) | VisualShaderNode | Blocked | 1 |
 | [VisualShaderNodeRotationByAxis](classes/VisualShaderNodeRotationByAxis.md) | VisualShaderNode | Unimplemented | 0 |
-| [VisualShaderNodeSDFRaymarch](classes/VisualShaderNodeSDFRaymarch.md) | VisualShaderNode | Blocked | 0 |
-| [VisualShaderNodeSDFToScreenUV](classes/VisualShaderNodeSDFToScreenUV.md) | VisualShaderNode | Blocked | 0 |
+| [VisualShaderNodeSDFRaymarch](classes/VisualShaderNodeSDFRaymarch.md) | VisualShaderNode | Implemented | 0 |
+| [VisualShaderNodeSDFToScreenUV](classes/VisualShaderNodeSDFToScreenUV.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeSample3D](classes/VisualShaderNodeSample3D.md) | VisualShaderNode | Implemented | 5 |
 | [VisualShaderNodeScreenNormalWorldSpace](classes/VisualShaderNodeScreenNormalWorldSpace.md) | VisualShaderNode | Excluded | 0 |
-| [VisualShaderNodeScreenUVToSDF](classes/VisualShaderNodeScreenUVToSDF.md) | VisualShaderNode | Blocked | 0 |
+| [VisualShaderNodeScreenUVToSDF](classes/VisualShaderNodeScreenUVToSDF.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeSmoothStep](classes/VisualShaderNodeSmoothStep.md) | VisualShaderNode | Implemented | 10 |
 | [VisualShaderNodeStep](classes/VisualShaderNodeStep.md) | VisualShaderNode | Implemented | 10 |
 | [VisualShaderNodeSwitch](classes/VisualShaderNodeSwitch.md) | VisualShaderNode | Implemented | 11 |
@@ -1007,8 +1007,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeTexture3DParameter](classes/VisualShaderNodeTexture3DParameter.md) | VisualShaderNodeTextureParameter | Excluded | 0 |
 | [VisualShaderNodeTextureParameter](classes/VisualShaderNodeTextureParameter.md) | VisualShaderNodeParameter | Implemented | 36 |
 | [VisualShaderNodeTextureParameterTriplanar](classes/VisualShaderNodeTextureParameterTriplanar.md) | VisualShaderNodeTextureParameter | Excluded | 0 |
-| [VisualShaderNodeTextureSDF](classes/VisualShaderNodeTextureSDF.md) | VisualShaderNode | Blocked | 0 |
-| [VisualShaderNodeTextureSDFNormal](classes/VisualShaderNodeTextureSDFNormal.md) | VisualShaderNode | Blocked | 0 |
+| [VisualShaderNodeTextureSDF](classes/VisualShaderNodeTextureSDF.md) | VisualShaderNode | Implemented | 0 |
+| [VisualShaderNodeTextureSDFNormal](classes/VisualShaderNodeTextureSDFNormal.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeTransformCompose](classes/VisualShaderNodeTransformCompose.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeTransformConstant](classes/VisualShaderNodeTransformConstant.md) | VisualShaderNodeConstant | Implemented | 1 |
 | [VisualShaderNodeTransformDecompose](classes/VisualShaderNodeTransformDecompose.md) | VisualShaderNode | Implemented | 0 |

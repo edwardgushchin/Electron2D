@@ -88,11 +88,13 @@ public sealed partial class VisualShader
         var selected = used.OrderBy(n => n, StringComparer.Ordinal).Select(n => symbols[n]).Where(p => p is not VisualShaderNodeTextureParameter).ToArray();
         var header = StageExpression(stage == Type.Vertex ? VertexHeader : FragmentHeader, aliases);
         var screenUV = reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeTexture { Source: VisualShaderNodeTexture.SourceEnum.Screen }) && stage == Type.Fragment;
-        var rendererValues = screenUV || selected.Any(p => p.Qualifier == Q.None) || reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeInput input &&
+        var sdf = reachable.Any(id => UsesSDFImage(graph.Nodes[id].Node));
+        var rendererValues = reachable.Any(id => IsSDFNode(graph.Nodes[id].Node)) || screenUV || selected.Any(p => p.Qualifier == Q.None) || reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeInput input &&
             (input.Expression(stage).Contains("TIME", StringComparison.Ordinal) || input.Expression(stage).Contains("SCREEN_PIXEL_SIZE", StringComparison.Ordinal)));
         var reserved = stage == Type.Vertex ? "float TIME;" : "float TIME; vec2 SCREEN_PIXEL_SIZE;";
+        var sdfFields = sdf ? " vec4 SDF_COORDS;" : "";
         var fields = string.Join(" ", selected.Where(p => p.Qualifier == Q.None).Select(p => VisualShaderValues.Name(p.Outputs[0]) + " " + p.ParameterName + ";"));
-        header = header.Replace(reserved + " };", reserved + " " + fields + " } " + aliases["e2d_values"] + ";", StringComparison.Ordinal);
+        header = header.Replace(reserved + " };", reserved + sdfFields + " " + fields + " } " + aliases["e2d_values"] + ";", StringComparison.Ordinal);
         if (!rendererValues)
         {
             var at = header.IndexOf("uniform RendererValues", StringComparison.Ordinal);
@@ -118,6 +120,7 @@ public sealed partial class VisualShader
                 .Append(image.IsArray ? "sampler2DArray " : "sampler2D ").Append(image.Name).AppendLine(";");
         if (reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeColorFunc { Function: VisualShaderNodeColorFunc.FunctionEnum.RGBToHSV }))
             extra.Append(VisualShaderNodeColorFunc.RGBToHSVDefinition(aliases["e2d_rgb_to_hsv"]));
+        if (sdf) extra.Append(SDFDefinitions(reachable.Select(id => graph.Nodes[id].Node), aliases));
         return header.Replace("void main() {", extra + "void main() {", StringComparison.Ordinal);
     }
 }
