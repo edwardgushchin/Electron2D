@@ -121,7 +121,11 @@ pair entry/return is observed. The next manual control makes portable BVH descen
 and advance explicit branches instead of continuing from the internal-node
 branch. It keeps the tree, culling, traversal order and complete numerical work;
 all portable recovery/translation/rest phases share that control. The default is
-false, and production sources remain unchanged until native verification.
+false. Run 39981853967 creates all four pipelines but returns the same miss,
+history 1103 and unconditional mask four. Explicit descent/advance therefore
+does not correct the native failure, and production sources remain unchanged.
+The next investigation needs source geometry/policy and root-node/culling data;
+these controls do not establish a control-flow, driver or compiler root cause.
 
 The earlier single portable traversal still aborted in Windows WARP 1.0.21
 `ScopeNestedCFG::runOnFunction`. Flattening motion phases and removing one sweep

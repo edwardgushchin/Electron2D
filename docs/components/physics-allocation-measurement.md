@@ -22,6 +22,14 @@ profiled CPU/GPU Area processes pass at 0/0 bytes. Each profiled process retains
 events in that interval, successful stacks and zero recursion. Evidence is in
 ignored `bin/release-audit/area-prepared/`; foreign execution remains separate.
 
+The current ordinary macOS ARM64 aggregate at `c847dc38d` passes its complete
+suite. The separate profiled aggregate passes the Area interval at 0/0 bytes,
+then fails `AudioCompressedTests.VerifyBoundaries` during idle compressed mixing.
+Its existing assertion retains no byte delta or format tag and has no physical
+audio bracket. The 20 warm and 64 measured owner-thread mixing blocks remain
+unchanged. That failure needs its own numeric/physical interval evidence; Area
+traces and the successful ordinary cohort do not identify its allocation source.
+
 The resting-body fixture drains the existing calibrated collection/finalization
 warmup before its first 64-frame counter interval. Its failure records both
 owner and all-thread bytes; the zero-byte assertions and physical frames remain.

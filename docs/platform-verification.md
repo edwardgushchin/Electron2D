@@ -19,8 +19,11 @@ and supports physical trace markers, retaining 64 measured cycles and strict
 zero counters. Four local ordinary/traced CPU/GPU controls pass at 0/0 bytes;
 neither they nor the preparation correction attribute the original 720 bytes.
 All four ordinary macOS CPU/GPU Area controls now pass too. Separate calibrated
-ARM64/x64 traces report 0/0 bytes and no physical-interval object events; the
-complete current ordinary/profiled macOS cohorts remain pending.
+ARM64/x64 traces report 0/0 bytes and no physical-interval object events. The
+complete ordinary ARM64 suite at `c847dc38d` passes in 32 minutes 41 seconds.
+Its separate profiled cohort passes the Area interval, then fails the idle
+compressed-audio owner-byte check. That assertion records neither a delta nor
+the format, so its producer remains unattributed. The x64 cohorts remain pending.
 Complete target verification remains required. Windows motion remains unresolved; manual compiler
 and staged SPIR-V optimization controls do not replace the ordinary release gate.
 Public packages, final CI, rendered consumers and release publication are separate
