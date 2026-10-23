@@ -96,6 +96,12 @@ jobs:
           ELECTRON2D_TEST_TEXT_PARAGRAPH=1 bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/text-paragraph.log
           ELECTRON2D_TEST_LINK=1 bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/link-button.log
           ELECTRON2D_TEST_PUBLIC_CONTACT_HISTORY=gpu bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/contact-history.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: macos-focused-${{ matrix.rid }}
+          path: bin/diagnostics/*.log
+          if-no-files-found: error
       - name: Run the complete ${{ inputs.allocation_trace && 'profiled' || 'untraced' }} suite
         id: fixture
         if: inputs.allocation_trace || steps.focused.outcome == 'success'

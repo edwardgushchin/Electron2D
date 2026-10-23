@@ -631,3 +631,13 @@ uploaded separately from ordinary logs. They do not replace an untraced target
 gate, retrospectively attribute the 64 bytes or establish native allocator totals.
 The local Linux calibration and traced/untraced CPU/GPU compound controls provide
 helper evidence; matching macOS execution remains required.
+
+The completed ARM64 untraced runs at 23fed8a78 and 16a65ea38 pass the earlier
+physics intervals but fail FrameMonitorContract's 256 prepared frames with
+0/6672 and 0/4416 owner/all-thread bytes respectively. Those failures are not
+explained by a successful x64 interval. The optional profiler now brackets that
+same 256-frame timing/navigation interval in its own scenario domain. Begin/end
+callbacks surround the original counters; frame count, warmup, collection and
+strict zero-byte assertions remain unchanged. Ordinary portability consumers
+supply no callbacks. The diagnostic workflow uploads focused logs before starting
+the longer full run so native URI failures can be inspected independently.

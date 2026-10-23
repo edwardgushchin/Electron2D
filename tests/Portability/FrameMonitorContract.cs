@@ -4,7 +4,7 @@ using Monitor = Electron2D.Performance.Monitor;
 
 internal static class FrameMonitorContract
 {
-    internal static void Run()
+    internal static void Run(Action? beginAllocationTrace = null, Action? endAllocationTrace = null)
     {
         Check((int)Monitor.TimeFPS == 0 && (int)Monitor.TimeProcess == 1 &&
             (int)Monitor.TimePhysicsProcess == 2 && (int)Monitor.TimeNavigationProcess == 3, "Timing identities.");
@@ -63,10 +63,16 @@ internal static class FrameMonitorContract
             GC.WaitForPendingFinalizers();
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: true);
             for (var i = 0; i < 128; i++) { Engine.AdvanceFrame(.1); _ = Values(); }
-            var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
-            for (var i = 0; i < 256; i++) { Engine.AdvanceFrame(.1); _ = Values(); }
-            var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner;
-            var allBytes = GC.GetTotalAllocatedBytes(true) - all;
+            beginAllocationTrace?.Invoke();
+            long ownerBytes, allBytes;
+            try
+            {
+                var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+                for (var i = 0; i < 256; i++) { Engine.AdvanceFrame(.1); _ = Values(); }
+                ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner;
+                allBytes = GC.GetTotalAllocatedBytes(true) - all;
+            }
+            finally { endAllocationTrace?.Invoke(); }
             Check(ownerBytes == 0 && allBytes == 0, $"Prepared timing/navigation frames: {ownerBytes}/{allBytes} owner/all-thread bytes.");
             // Keep unrelated ThreadPool startup/completion outside the all-thread allocation interval.
             var finalPublished = Values();

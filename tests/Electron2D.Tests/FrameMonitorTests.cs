@@ -7,7 +7,10 @@ internal static class FrameMonitorTests
     internal static void Run()
     {
         if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HOST_DELTA") == "1") { HostDeltaSmoothingTests.RunManaged(); return; }
-        FrameMonitorContract.Run();
+        using var trace = PhysicsAllocationTrace.Open(PhysicsServer.Backend.CPU, 0x3_0000_0000UL);
+        var tag = trace?.Tag(1) ?? 0;
+        if (trace is not null) Console.WriteLine($"Frame monitor trace {tag}: 256 complete timing/navigation frames.");
+        FrameMonitorContract.Run(trace is null ? null : () => trace.Begin(tag), trace is null ? null : trace.End);
         var service = Performance.Service;
         service.ResetFrameTiming();
         service.ObserveFrame(.4, 100, 200, 300);
