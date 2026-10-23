@@ -4,7 +4,7 @@
 
 [Coincident rounded-core contacts](../components/physics-contact-policy.md#coincident-rounded-cores) now use a perpendicular unit normal before CPU surface anchors are computed. Shared checks include either operand order, collapsed capsules, unequal masses and zero warmed allocations.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-23
 
 [Long contour pair checks](../components/physics-queries.md#long-pairs-of-flat-and-rounded-contours)
 verify rotated capsule contacts and continuous flat-core movement through real
@@ -118,6 +118,8 @@ owner/phase without repeating selected status hooks; ordinary post-solver edits
 retain their existing behavior.
 
 [CapsuleShapeTests](../../tests/Electron2D.Tests/CapsuleShapeTests.cs) now runs the full existing resource/solver/Area/lifetime suite on explicitly selected CPU/GPU worlds, including a real ray query after PackedScene instantiation and warmed zero owner/all-thread managed allocation. Original numerical tolerances remain unchanged. Native allocations, other platforms and visual acceptance remain unverified.
+
+After the existing 64 warmup frames, `AllocationWarmupCheck.Collect` completes two blocking collections and their pending finalizers before the allocation baseline. The same 64 measured active-contact/area frames retain strict zero owner/all-thread byte assertions. This preparation does not attribute the earlier macOS aggregate's 64 all-thread bytes, whose interval has no object trace; fresh target execution remains required.
 
 ## Rotating geometry acceptance
 

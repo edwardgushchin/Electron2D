@@ -195,6 +195,7 @@ internal sealed class PhysicsContactPersistenceTests(PhysicsServer.Backend backe
         for (var i = 0; i < 256; i++) r.Step();
         var selected = r.SelectedStore;
         var samples = new long[128]; var upload = selected?.UploadBytes ?? 0; var read = selected?.ReadbackBytes ?? 0; var uniforms = selected?.UniformBytes ?? 0; var wait = selected?.WaitMS ?? 0;
+        AllocationWarmupCheck.Collect();
         var ownerBefore = GC.GetAllocatedBytesForCurrentThread(); var before = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < samples.Length; i++) { var t = Stopwatch.GetTimestamp(); r.Set((i & 1) == 0 ? 10 : 0, 10); r.Step(); samples[i] = Stopwatch.GetTimestamp() - t; }
         var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - ownerBefore; var bytes = GC.GetTotalAllocatedBytes(true) - before; Array.Sort(samples); var ms = 1000d / Stopwatch.Frequency;

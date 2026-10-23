@@ -575,3 +575,22 @@ The focused CPU/GPU joint contracts pass with this preparation. The shared
 second-finalization calibration and both point-field runs also pass: six
 128-frame measured intervals retain 0/0 owner/all-thread bytes. A fresh ordinary
 aggregate remains required; these focused runs do not replace it.
+
+## Contact-history and capsule measurement preparation (2026-10-23)
+
+`PhysicsContactPersistenceTests` and `CapsuleShapeTests` now use the same
+`AllocationWarmupCheck.Collect` helper after their existing 256/64 warmup frames
+and before both allocation baselines. The contact sample array is allocated before
+preparation. Their original 128/64 complete measured frames, numerical assertions
+and strict zero owner/all-thread byte limits remain unchanged. No measured frame
+is skipped, no result is retried and GC remains enabled.
+
+An independent Linux x64 .NET 10.0.13 positive control runs the actual shared helper
+before allocating either one 64-byte object or two 32-byte objects. Both counters
+still report 64 bytes. A worker control reports owner/all-thread/worker bytes of
+0/64/64. The native prototype records all four objects with successful stack
+snapshots and zero recursive callbacks; receipts are retained under ignored
+`bin/release-audit/managed-allocation-prototype/`. This verifies continued detection
+of later real allocations on that runtime. It does not attribute the earlier
+macOS 64-byte failures or certify target execution; those intervals lack object
+and allocation-context traces. The corrected target aggregate remains required.

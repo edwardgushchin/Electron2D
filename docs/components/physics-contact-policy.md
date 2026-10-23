@@ -1,6 +1,6 @@
 # World and shape contact policy
 
-Last updated: 2026-10-20
+Last updated: 2026-10-23
 
 ## Crossed capsule response and portable contact state
 
@@ -409,7 +409,11 @@ sleep ordering and exact scalar boundary cases also execute.
 
 The warmed allocation probe alternates radius 10/0 before each full tick of one
 sliding body, with four substeps and sixteen sweeps. It measures 128 ticks after
-256 warmup ticks without pose/report readback inside the measured loop. Measurements
+256 warmup ticks without pose/report readback inside the measured loop. After warmup
+and sample-array setup, `AllocationWarmupCheck.Collect` completes two blocking
+collections and pending finalizers before both allocation baselines. The measured
+ticks, zero owner/all-thread byte assertions and GC policy remain unchanged.
+Measurements
 and remaining acceptance limits are recorded below; this tiny case measures dispatch
 overhead and does not establish GPU speedup at large body counts.
 

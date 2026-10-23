@@ -46,7 +46,7 @@ internal static class TextLineTests
         Reject<ArgumentOutOfRangeException>(() => line.HitTest(float.NaN)); Reject<ArgumentOutOfRangeException>(() => line.TryGetSpanMetadata<int>(99, out _));
         Task.Run(() => { Reject<InvalidOperationException>(() => line.GetRID()); Reject<InvalidOperationException>(() => line.Dispose()); }).GetAwaiter().GetResult(); Check(!line.IsDisposed, "Off-owner disposal cannot publish.");
         using var variation = new FontVariation { BaseFont = font };
-        line.Clear(); line.PreserveInvalid = true; line.PreserveControl = false; line.TextOverrunBehavior = TextOverrunBehavior.NoTrimming; line.AddString("abcd", variation, 18);
+        line.Clear(); line.PreserveInvalid = true; line.PreserveControl = false; line.TextOverrunBehavior = TextOverrunBehavior.NoTrimming; line.AddString("AAAA", variation, 18);
         var oldWidth = line.GetLineWidth(); variation.SpacingGlyph = 2; Check(line.GetLineWidth() > oldWidth, "Borrowed font generation invalidates buffers.");
         Collect();
         for (var i = 0; i < 128; i++) Queries(line);

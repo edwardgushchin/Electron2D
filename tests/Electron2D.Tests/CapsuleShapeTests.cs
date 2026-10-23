@@ -123,6 +123,7 @@ internal static class CapsuleShapeTests
             "A zero-size capsule fixture removes its sensor overlap on the next step.");
 
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
+        AllocationWarmupCheck.Collect();
         _ = GC.GetTotalAllocatedBytes(true);
         var before = GC.GetAllocatedBytesForCurrentThread();
         var allBefore = GC.GetTotalAllocatedBytes(true);

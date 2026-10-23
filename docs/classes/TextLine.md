@@ -1,6 +1,6 @@
 # TextLine
 
-Last updated: 2026-10-20
+Last updated: 2026-10-23
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -72,6 +72,8 @@ GetPropertyDescriptors exposes live nonstored policy descriptors. ValidateMutati
 Related paragraph preparation shares the typed span builder. All captured font read scopes must remain current before the shape/display pair is published; cross-font replacement retries preparation within the existing 64-attempt bound. [TextParagraph](TextParagraph.md) supplies wrapping and independent line/dropcap consumers.
 
 ## Verification
+
+The borrowed-font generation check shapes four `A` glyphs from the variable test font before changing its glyph spacing. That fixture contains only space and `A`; using unsupported letters would measure platform fallback spacing instead of the borrowed font's own generation. Both macOS architectures previously rejected that fallback-dependent assertion. The corrected check retains the width increase assertion and is also selected separately before the complete macOS suite.
 
 TextLineTests completes outstanding collections and drains finalizers after fixture preparation, before the unchanged 128 warmup and 128 measured metric/caret cycles. AllocationWarmupCheck exercises that same preparation helper with a controlled second finalization pass. The interval retains all eight queries and its strict zero-byte owner-thread assertion; failures report the observed delta. Collection setup stays outside the interval and production hosts retain their ordinary GC policy. See the [allocation measurement contract](../maintaining.md#native-enet-source-and-interoperability-checks).
 
