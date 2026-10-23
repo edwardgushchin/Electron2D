@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [current, native]
+        compiler: [current, bytecode, toolchain]
     runs-on: windows-2025
     timeout-minutes: 30
     defaults:
@@ -69,11 +69,12 @@ jobs:
           original_bytes = path.read_bytes()
           original = original_bytes.decode()
           mode = os.environ['DIAGNOSTIC_COMPILER']
-          assert mode in ('current', 'native')
-          if mode == 'native':
-              first = original.index('                if ((SDL.GetGPUShaderFormats(device) & SDL.GPUShaderFormat.DXIL) == 0)')
-              last = original.index('                finally { SDL.Free(compiled); }', first) + len('                finally { SDL.Free(compiled); }')
-              path.write_text(original[:first] + '                return ShaderCross.CompileComputePipelineFromSPIRV(device, in info, in metadata, 0);' + original[last:])
+          assert mode in ('current', 'bytecode', 'toolchain')
+          if mode != 'current':
+              release = 'finally { SDL.Free(compiled); }' if mode == 'bytecode' else 'finally { ShaderCross.Quit(); }'
+              assert original.count(release) == 1
+              # Diagnostic-only retention ends with this runner process.
+              path.write_bytes(original.replace(release, 'finally { }', 1).encode())
           Path('bin/diagnostics').mkdir(parents=True, exist_ok=True)
           receipt = {'compiler': mode, 'headSHA': os.environ['GITHUB_SHA'],
                      'originalSHA256': hashlib.sha256(original_bytes).hexdigest(),

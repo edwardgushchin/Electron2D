@@ -49,6 +49,14 @@ access violation without a second-chance stack, so native access violations now
 capture their first-chance context. The fresh public compound fixture and complete
 target suite remain required.
 
+Run `39891839718` also rejected the native convenience path: FXC failed to
+produce valid DXBC and its first-chance stack entered
+`d3dcompiler_47!ArrayData::GetArrayLocationAndValue`. The unchanged DXIL path
+failed in `d3d10warp!IsSubroutineCall` while parsing declarations. Neither path
+establishes Windows acceptance. Diagnostic-only controls separately retain the
+compiled bytecode and the compiler module until runner exit to test ownership
+before changing production lifetime or rewriting the query algorithm.
+
 The same full run missed a compound CastRay impact on Linux x64. Isolated local
 CI Mesa 26.0.8 with .NET 10.0.13 and offscreen video passed the unchanged public
 compound consumer, including CastRay/CastShape and 128 zero-allocation cycles.
