@@ -58,6 +58,18 @@ Portable geometry now returns both contact snapshots explicitly for consumption
 by recovery/final sampling. That new candidate still needs native and complete
 release gates.
 
+Profiled macOS run 40002310019 at `e942c331a` completes both full suites:
+ARM64 in 31 minutes 9 seconds and x64 in 53 minutes 57 seconds. Each root trace
+has 5,923 balanced boundaries, successful stacks and `SHUTDOWN recursive:0`.
+CPU/GPU contact-policy and serial/separate-thread joint-policy intervals each
+report 0/0 bytes with no physical allocation events. This is before the portable
+recovery changes; historical failed deltas remain unattributed and the ordinary
+final-source matrix is still required.
+The explicit-contact-pair Windows candidate at `a5749f3a9`, run 40012351791,
+repeats the zero-recovery failure in both focused processes. Optional temporary
+recovery tracing now observes the traversal/contact/reducer boundary through
+existing result padding; its output is diagnostic, not production acceptance.
+
 Final complete CI, public package restoration, rendered consumers and release
 publication remain pending. The current declaration register is not a substitute
 for those gates; no published 0.2.0-alpha release is claimed by these checks.

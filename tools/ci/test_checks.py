@@ -26,6 +26,7 @@ import run_apple
 import run_browser
 import run_macos_runtime
 import select_lavapipe
+import windows_recovery_trace
 
 
 class Checks(unittest.TestCase):
@@ -76,19 +77,27 @@ class Checks(unittest.TestCase):
         try:
             with tempfile.TemporaryDirectory(prefix='e2d motion diagnostics ') as directory:
                 os.chdir(directory)
-                for newline in (b'\n', b'\r\n'):
-                    with self.subTest(newline=newline):
+                for newline, tracing in ((n, t) for n in (b'\n', b'\r\n') for t in (False, True)):
+                    with self.subTest(newline=newline, tracing=tracing):
                         for name, original in originals.items():
                             path = Path(name); path.parent.mkdir(parents=True, exist_ok=True)
                             path.write_bytes(original.replace(b'\n', newline))
-                        with patch.dict(os.environ, GITHUB_SHA='self-check'), redirect_stdout(StringIO()):
+                        with patch.dict(os.environ, GITHUB_SHA='self-check', RECOVERY_TRACE=str(tracing).lower()), redirect_stdout(StringIO()):
                             exec(compile(code, 'windows-motion-workflow', 'exec'), {})
                         receipt = json.loads(Path('bin/diagnostics/compiler-source.json').read_text())
-                        self.assertFalse(receipt['motionSourceModified'])
+                        self.assertEqual(receipt['motionSourceModified'], tracing)
+                        self.assertEqual(receipt['recoveryTrace'], tracing)
                         for name in names[1:]:
                             expected = originals[name].replace(b'\n', newline)
-                            self.assertEqual(Path(name).read_bytes(), expected)
-                            self.assertEqual(receipt['sourceSHA256'][name], hashlib.sha256(expected).hexdigest())
+                            self.assertEqual(receipt['originalSourceSHA256'][name], hashlib.sha256(expected).hexdigest())
+                            if not tracing or name not in names[2:4]:
+                                self.assertEqual(Path(name).read_bytes(), expected)
+                            else:
+                                self.assertNotEqual(Path(name).read_bytes(), expected)
+                            self.assertEqual(receipt['sourceSHA256'][name], hashlib.sha256(Path(name).read_bytes()).hexdigest())
+                        if tracing:
+                            self.assertIn('Padding = 0xDEADC0DEu', Path(names[2]).read_text())
+                            self.assertIn('result.owner.w=outputWords[stateAt+6u].w;', Path(names[3]).read_text())
                         device = Path(names[0]).read_text()
                         self.assertIn('The expected app-local test WARP module was not selected.', device)
                         self.assertEqual(device.count('Cold GPU pipeline '), 1)
@@ -113,6 +122,14 @@ class Checks(unittest.TestCase):
         self.assertIn('timeout-minutes: 90', workflow)
         self.assertIn('python -m pip install --require-hashes -r tools/native/requirements-windows.txt', workflow)
         self.assertIn('choco install ffmpeg --yes --no-progress', workflow)
+
+    def test_recovery_trace_rejects_missing_ambiguous_and_repeated_sources(self):
+        shader = (rids.ROOT / 'src/Servers/Physics/Shaders/PhysicsResidentMotionQueries.comp.glsl').read_text()
+        anchor = '    bool converged=false;'
+        for invalid in (shader.replace(anchor, ''), shader + anchor,
+                        windows_recovery_trace.instrument_shader(shader)):
+            with self.assertRaises(ValueError): windows_recovery_trace.instrument_shader(invalid)
+        with self.assertRaises(ValueError): windows_recovery_trace.instrument_query('')
 
     def test_headless_linux_selects_one_installed_lavapipe_driver(self):
         for workflow in ('rid.yml', 'linux-tls-diagnostics.yml', 'linux-gpu-diagnostics.yml'):

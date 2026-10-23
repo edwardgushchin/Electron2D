@@ -157,6 +157,45 @@ Vulkan branch retains its previous interface. Shape evaluation, point order,
 filtering, projection, capacities and device transfers are unchanged. This return
 boundary is a new native candidate, not an accepted Windows correction.
 
+The explicit-pair boundary at `a5749f3a9` repeats the same native failure in run
+40012351791, artifact 12527516713. Both raw process exits are `0xE0434352`, and
+GPU recovery travel remains zero. It does not establish target acceptance.
+
+## Native recovery trace
+
+The manual Windows workflow has an optional `recovery_trace`, false by default.
+It rewrites only its temporary shader/query copies through
+[windows_recovery_trace.py](../../tools/ci/windows_recovery_trace.py). The ordinary
+mode preserves those source bytes. Original/actual source hashes and the trace
+mode are retained with each artifact. This diagnostic never constitutes a
+production execution gate, even if it changes the observed failure.
+
+The trace uses three existing private result words, with the same query buffers,
+workgroups, physical iterations and 128-byte readback. It observes recovery entry,
+source geometry, bounds, BVH category/leaf/candidate, evaluated contact validity,
+projection and changed correction. Both actual scan-role bits are recorded.
+Final sampling consumes its original source/blocked values before the diagnostic
+borrows their now-retired storage; public identity, contact and numerical fields
+remain unchanged. Raw metadata is added only when present in the comparison log.
+
+| Result field | Trace packing |
+| --- | --- |
+| Padding bits 0-15, 30-31 | Named traversal/role flags in the helper's `FLAGS` table |
+| Padding bits 16-21 | Last recovery plane count |
+| Padding bits 22-27 | Last rejected-key count |
+| Padding bits 28-29 | Retained recovered/converged flags |
+| Padding2 low/high 32 bits | Last primary-contact / maximum recovery-depth float bits |
+| Padding `0xDEADC0DE` | Host cleared the result because its returned query count was zero |
+
+The helper rejects missing, ambiguous and repeated instrumentation. LF/CRLF
+self-checks cover both modes and retain source receipts. The trace does not
+change allocation thresholds or substitute for an ordinary native rerun.
+Local ordered-Vulkan calibration passes the complete functional-motion and
+public-joint cohorts. The zero-motion sample at `(0, 82)` records `0x5001f7ff`,
+one recovery plane, no rejected keys, matching positive contact/maximum depths
+`0.45241356`, and travel `(0, -1.8069484)`. This calibrates the observer on Linux;
+it does not establish the failing Windows route.
+
 ## CPU corrections found by comparison
 
 Backend pieces of a large convex polygon previously produced opposite recovery

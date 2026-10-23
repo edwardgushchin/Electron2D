@@ -50,7 +50,15 @@ physical work. With `continue-on-error`, the API's step conclusion can be succes
 after a failed native exit. Read the raw exit/log and preserved final job result,
 not that intermediate conclusion.
 
-Historical DXBC, optimizer and result-lane source-copy controls are retired; their successful
+The optional false-default `recovery_trace` instruments only temporary motion
+shader/query copies, retaining original/actual hashes. Its private result padding
+encodes traversal/role flags, reducer counts/depths and a zero-count host fallback
+sentinel, with no additional buffer or readback. Read the packing in the
+[motion-query report](components/gpu-resident-motion-queries.md#native-recovery-trace).
+The instrumented result is diagnostic evidence; repeat the ordinary native gate
+after any correction.
+
+Historical DXBC, optimizer and earlier result-lane source-copy controls are retired; their successful
 focused results do not replace the complete production target gate.
 For a stalled CDB replay, the debugger interrupts only one exact executable child
 after six minutes and records every native thread stack at that breakpoint. The

@@ -38,6 +38,9 @@ internal static class GPUPhysicsMotionQueryTests
                                 var expected = PhysicsServer.BodyTestMotion(cpuMover, parameters, result);
                                 var actual = Test(s, new(mover, parameters.From, motion, RecoveryAsCollision: report));
                                 var label = $"oneWay={oneWay}, margin={margin}, from={position}, motion={motion}, recovery={report}";
+                                if (actual.Padding != 0) label += $", raw=0x{actual.Padding:X8}/0x{actual.Padding2:X16}";
+                                if (actual.Padding != 0 && !oneWay && margin == .08f && position == new Vector2(0, 82) && motion == Vector2.Zero && !report)
+                                    Console.WriteLine($"Recovery trace: {label}, travel={actual.Travel}.");
                                 Check(actual.Collided == expected, $"Motion membership {label}: {actual.Collided} vs {expected}");
                                 Near(actual.Travel, result.GetTravel(), .8f, $"Travel {label}"); Near(actual.Remainder, result.GetRemainder(), .8f, $"Remainder {label}");
                                 Check(MathF.Abs(actual.SafeFraction - result.GetCollisionSafeFraction()) < .008f && MathF.Abs(actual.UnsafeFraction - result.GetCollisionUnsafeFraction()) < .008f, $"Fractions {label}");
