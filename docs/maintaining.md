@@ -65,6 +65,13 @@ The source-header probe uses the existing unused object-result words for vertex
 count, geometry kind and policy flags, with root/category/culling bits in the
 diagnostic state. Earlier receipts retain their incoming-fraction interpretation;
 the current receipt names its source-header layout explicitly.
+
+Compressed-audio allocation diagnostics use `ELECTRON2D_TEST_AUDIO_COMPRESSED=cpu`
+for the aggregate's managed mixing mode and `1` for complete native output.
+Optional calibrated native markers retain all four MP3/Ogg active/idle intervals,
+their exact owner-byte deltas and the original warmup/workload/zero threshold.
+The macOS allocation workflow saves these standalone traces and the complete
+aggregate trace; one successful profile does not attribute another failed one.
 See [CDB command-line options](https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/cdb-command-line-options).
 The PowerShell self-check rejects missing, ambiguous, foreign and reused process identities.
 Compiler exceptions also record the first DWORD and one symbolic type pointer of

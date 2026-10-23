@@ -4,6 +4,7 @@ internal static class AudioCompressedTests
 {
     internal static void Run(bool native = true)
     {
+        using var trace = PhysicsAllocationTrace.Open(PhysicsServer.Backend.CPU, 7UL << 32);
         using var mp3 = AudioStreamMP3.LoadFromBuffer(Fixture("tone.mp3")); using var ogg = AudioStreamOggVorbis.LoadFromBuffer(Fixture("tone.ogg"));
         Console.WriteLine($"Compressed durations: MP3={mp3.GetLength()}, Ogg={ogg.GetLength()}, tags={ogg.Tags.Count}.");
         Check(Math.Abs(mp3.GetLength() - .4) < .005 && Math.Abs(ogg.GetLength() - .4) < .005, "Compressed durations.");
@@ -13,10 +14,22 @@ internal static class AudioCompressedTests
         {
             using var playback = stream.InstantiatePlayback(); playback.Start(.1); var frames = playback.MixAudio(1, 512); Check(frames.Any(v => MathF.Abs(v.X) > .03f), "Actual compressed PCM playback.");
             playback.LoopingOverride = true; playback.Start(); var target = new Vector2[512]; for (var i = 0; i < 50; i++) playback.MixInto(target, 1); Check(playback.GetLoopCount() > 0, "Compressed EOF looping.");
-            var allocation = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 64; i++) playback.MixInto(target, 1); Check(GC.GetAllocatedBytesForCurrentThread() == allocation, "Warmed compressed mixing zero allocation.");
+            var format = stream is AudioStreamMP3 ? "MP3" : "Ogg";
+            var tag = trace?.Tag(stream is AudioStreamMP3 ? 1UL : 2UL) ?? 0;
+            long allocated;
+            trace?.Begin(tag);
+            try
+            {
+                var before = GC.GetAllocatedBytesForCurrentThread();
+                for (var i = 0; i < 64; i++) playback.MixInto(target, 1);
+                allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+            }
+            finally { trace?.End(); }
+            Console.WriteLine($"Compressed active {format}: 64 measured blocks, owner={allocated} B, trace={tag}.");
+            Check(allocated == 0, $"Warmed compressed {format} mixing allocated {allocated} owner-thread B, trace={tag}.");
         }
         VerifyMetadataAndCorruption(mp3, ogg);
-        VerifyBoundaries(mp3, ogg);
+        VerifyBoundaries(mp3, ogg, trace);
         VerifyLoaderAndNative(mp3, ogg, native);
         Console.WriteLine(native ? "Compressed format/PCM/cursor/loop/loader/native and 64-pass allocation checks passed." : "Compressed CPU/cursor/loop/loader checks passed; native checks run separately.");
     }
@@ -33,7 +46,7 @@ internal static class AudioCompressedTests
         mp3.Loop = false; mp3.BPM = 0; mp3.BeatCount = 0; mp3.LoopOffset = 0;
         using var invalidated = oggCopy.InstantiatePlayback(); invalidated.Start(); var sequence = oggCopy.PacketSequence!; sequence.GranulePositions = sequence.GranulePositions; Reject<InvalidOperationException>(() => invalidated.MixAudio(1, 256));
     }
-    private static void VerifyBoundaries(AudioStreamMP3 mp3, AudioStreamOggVorbis ogg)
+    private static void VerifyBoundaries(AudioStreamMP3 mp3, AudioStreamOggVorbis ogg, PhysicsAllocationTrace? trace)
     {
         using var empty = new AudioStreamMP3(); Check(empty.GetLength() == 0, "Empty stream duration."); Reject<InvalidOperationException>(() => empty.InstantiatePlayback());
         foreach (var source in new AudioStream[] { mp3, ogg })
@@ -44,7 +57,19 @@ internal static class AudioCompressedTests
             playback.MixAudio(1, 40000); Check(!playback.IsPlaying(), "Natural completion.");
             playback.Start(); Check(playback.MixAudio(1, 512).Length == 512, "Restart resets the first-silence marker.");
             playback.Stop(); var target = new Vector2[512]; for (var i = 0; i < 20; i++) playback.MixInto(target, 1);
-            var before = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 64; i++) playback.MixInto(target, 1); Check(GC.GetAllocatedBytesForCurrentThread() == before, "Idle compressed mixing zero allocation.");
+            var format = source is AudioStreamMP3 ? "MP3" : "Ogg";
+            var tag = trace?.Tag(source is AudioStreamMP3 ? 3UL : 4UL) ?? 0;
+            long allocated;
+            trace?.Begin(tag);
+            try
+            {
+                var before = GC.GetAllocatedBytesForCurrentThread();
+                for (var i = 0; i < 64; i++) playback.MixInto(target, 1);
+                allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+            }
+            finally { trace?.End(); }
+            Console.WriteLine($"Compressed idle {format}: 20 warm/64 measured blocks, owner={allocated} B, trace={tag}.");
+            Check(allocated == 0, $"Idle compressed {format} mixing allocated {allocated} owner-thread B, trace={tag}.");
         }
         using var captured = mp3.InstantiatePlayback(); mp3.Data = mp3.Data; captured.Start(); Check(captured.MixAudio(1, 256).Length == 256, "MP3 captured immutable samples survive replacement.");
         var bytes = Fixture("tone.mp3"); Reject<FormatException>(() => AudioStreamMP3.LoadFromBuffer(bytes.AsSpan(0, bytes.Length / 2)));

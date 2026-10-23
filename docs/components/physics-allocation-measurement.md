@@ -25,10 +25,17 @@ ignored `bin/release-audit/area-prepared/`; foreign execution remains separate.
 The current ordinary macOS ARM64 aggregate at `c847dc38d` passes its complete
 suite. The separate profiled aggregate passes the Area interval at 0/0 bytes,
 then fails `AudioCompressedTests.VerifyBoundaries` during idle compressed mixing.
-Its existing assertion retains no byte delta or format tag and has no physical
-audio bracket. The 20 warm and 64 measured owner-thread mixing blocks remain
-unchanged. That failure needs its own numeric/physical interval evidence; Area
-traces and the successful ordinary cohort do not identify its allocation source.
+Its original assertion retained no byte delta or format tag and had no physical
+audio bracket. The fixture now records owner-byte deltas and MP3/Ogg active/idle
+tags through the existing calibrated recorder, using domain `7UL << 32` and
+scenario offsets one through four. Each native boundary closes in `finally`.
+The 50 active/20 idle warm blocks, 64 measured blocks, 512-frame buffer and strict
+owner-only zero-byte check remain unchanged; no collection or finalizer policy
+is added. `ELECTRON2D_TEST_AUDIO_COMPRESSED=cpu` selects the same non-native host
+mode as the aggregate, while `1` retains the complete native-output checks.
+The macOS diagnostic captures both the standalone audio intervals and their
+later aggregate execution. The older failure still needs its own matching
+numeric/physical evidence; successful controls do not identify its producer.
 
 The resting-body fixture drains the existing calibrated collection/finalization
 warmup before its first 64-frame counter interval. Its failure records both
