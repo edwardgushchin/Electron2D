@@ -43,8 +43,11 @@ Windows architectures. The focused x64 diagnostic in run `39888772956` captured
 heap corruption while `d3d10warp!ShaderJIT::ParseAllocaDecl` parsed DXIL local
 allocations, before dispatch execution. This motivates explicit simplex slots;
 matching reflection, offline compilation and local Vulkan checks cannot establish
-Windows acceptance. The fresh public compound fixture and complete target suite
-remain required.
+Windows acceptance. Focused run `39890372430` still failed at the first public
+shape intersection after this change. Its debugger log ended after a first-chance
+access violation without a second-chance stack, so native access violations now
+capture their first-chance context. The fresh public compound fixture and complete
+target suite remain required.
 
 The same full run missed a compound CastRay impact on Linux x64. Isolated local
 CI Mesa 26.0.8 with .NET 10.0.13 and offscreen video passed the unchanged public

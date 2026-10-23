@@ -26,7 +26,7 @@ $commands = Join-Path $Output 'commands.txt'
 @'
 sxe -c ".ecxr; k; lm; q" 0xc0000374
 sxe -c ".ecxr; k; lm; q" bpe
-sxd -c2 ".ecxr; k; lm; q" av
+sxe -c ".ecxr; k; lm; q" av
 sxd -c2 ".ecxr; k; lm; q" ii
 sxd -c2 ".ecxr; k; lm; q" clr
 sxd -c2 ".ecxr; k; lm; q" sbo
