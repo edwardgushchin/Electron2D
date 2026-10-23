@@ -39,20 +39,20 @@ class Checks(unittest.TestCase):
         try:
             with tempfile.TemporaryDirectory(prefix='e2d motion probe ') as directory:
                 os.chdir(directory)
-                for compiler, optimization in (('dxil', 'false'), ('dxbc', 'false'), ('dxil', 'true'), ('dxbc', 'true')):
+                for compiler, optimization, structured in ((c, o, s) for c in ('dxil', 'dxbc') for o in ('false', 'true') for s in ('false', 'true')):
                     for newline in (b'\n', b'\r\n'):
-                        with self.subTest(compiler=compiler, optimization=optimization, newline=newline):
+                        with self.subTest(compiler=compiler, optimization=optimization, structured=structured, newline=newline):
                             for name, original in originals.items():
                                 path = Path(name); path.parent.mkdir(parents=True, exist_ok=True)
                                 path.write_bytes(original.replace(b'\n', newline))
-                            with patch.dict(os.environ, RECOVERY_COMPILER=compiler, MOTION_SPIRV_OPTIMIZATION=optimization, GITHUB_SHA='self-check'), redirect_stdout(StringIO()):
+                            with patch.dict(os.environ, RECOVERY_COMPILER=compiler, MOTION_SPIRV_OPTIMIZATION=optimization, MOTION_STRUCTURED_SCAN=structured, GITHUB_SHA='self-check'), redirect_stdout(StringIO()):
                                 exec(compile(code, 'windows-motion-workflow', 'exec'), {})
                             query = Path(names[2]).read_text()
                             shader = Path(names[3]).read_text()
                             if compiler == 'dxil' and optimization == 'false':
                                 self.assertEqual(Path(names[1]).read_text(), originals[names[1]].decode())
                                 self.assertEqual(query, originals[names[2]].decode())
-                                self.assertEqual(shader, originals[names[3]].decode())
+                                if structured == 'false': self.assertEqual(shader, originals[names[3]].decode())
                             else:
                                 self.assertEqual(query.count('Motion stage receipt:'), 1)
                                 self.assertIn('result.objectID.zw=fractions.xy;', shader)
@@ -68,6 +68,8 @@ class Checks(unittest.TestCase):
                                     self.assertIn('finally { SDL.Free(diagnosticHLSL); }', Path(names[1]).read_text())
                             receipt = json.loads(Path('bin/diagnostics/compiler-source.json').read_text())
                             self.assertEqual(receipt['motionSPIRVOptimization'], optimization == 'true')
+                            self.assertEqual(receipt['motionStructuredScan'], structured == 'true')
+                            if structured == 'true': self.assertIn('if(at<int(leaves))descend=true;else', shader)
                             if optimization == 'false':
                                 self.assertEqual(Path(names[4]).read_text(), originals[names[4]].decode())
                             else:

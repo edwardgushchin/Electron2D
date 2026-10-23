@@ -115,6 +115,14 @@ transpilation byte for byte; their SPIR-V roundtrip passes the local compound an
 motion suites. This preserves the native failure and does not identify a driver
 or compiler root cause by itself.
 
+Run 39979520500 retains the same miss and history 1103. Its unconditional mask
+is four: source shapes are visited, while no BVH leaf, accepted candidate or
+pair entry/return is observed. The next manual control makes portable BVH descent
+and advance explicit branches instead of continuing from the internal-node
+branch. It keeps the tree, culling, traversal order and complete numerical work;
+all portable recovery/translation/rest phases share that control. The default is
+false, and production sources remain unchanged until native verification.
+
 The earlier single portable traversal still aborted in Windows WARP 1.0.21
 `ScopeNestedCFG::runOnFunction`. Flattening motion phases and removing one sweep
 unroll prohibition did not fix it; the FXC control rejected nested loop attributes.

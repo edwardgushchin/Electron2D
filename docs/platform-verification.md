@@ -4,7 +4,7 @@ Last updated: 2026-10-23
 
 ## Current release checks
 
-The complete ordinary Linux x64 suite at `9df050e6e` passed in 597.5 seconds
+The complete ordinary Linux x64 suite at `e8d1464dc` passed in 620.5 seconds
 with the audited native closure. The complete ordinary macOS ARM64 suite at
 `73c8a101f` passed, including native URI capture and prepared character checks.
 The same x64 macOS cohort failed the terrain child deadline at 30.359 seconds,
@@ -18,6 +18,9 @@ The Area fixture now drains its calibrated finalization boundary after warmup
 and supports physical trace markers, retaining 64 measured cycles and strict
 zero counters. Four local ordinary/traced CPU/GPU controls pass at 0/0 bytes;
 neither they nor the preparation correction attribute the original 720 bytes.
+All four ordinary macOS CPU/GPU Area controls now pass too. Separate calibrated
+ARM64/x64 traces report 0/0 bytes and no physical-interval object events; the
+complete current ordinary/profiled macOS cohorts remain pending.
 Complete target verification remains required. Windows motion remains unresolved; manual compiler
 and staged SPIR-V optimization controls do not replace the ordinary release gate.
 Public packages, final CI, rendered consumers and release publication are separate
