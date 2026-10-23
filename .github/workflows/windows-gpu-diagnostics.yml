@@ -175,7 +175,7 @@ jobs:
               uint motionProbe=outputWords[stateAt+2u].w;
               #endif'''
               text = text.replace(state, state + '\n' + history)
-              text = text.replace(translate, translate + '\n    motionProbe|=(safe==1&&unsafeFraction==1?4u:0u)|(q.motionMargin.xy!=vec2(0)?8u:0u);\n    outputWords[stateAt+3u].z=0u;')
+              text = text.replace(translate, translate + '\n    motionProbe|=(safe==1&&unsafeFraction==1?4u:0u)|(q.motionMargin.xy!=vec2(0)?8u:0u);\n    outputWords[stateAt+3u].zw=uvec2(0u);')
               scan = '    bool recovering=phase==0u,resting=phase==2u;'
               pair = '                            else movingPair(a,b,ga,gb);'
               assert text.count(scan) == text.count(pair) == 1
@@ -185,12 +185,24 @@ jobs:
               #if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2
                                               atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].z,safe==1?2u:0u);
               #endif
+              #if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2
+                                              atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,1u);
+              #endif
                                               movingPair(a,b,ga,gb);
+              #if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2
+                                              atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,2u);
+              #endif
               #if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2
                                               atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].z,(safe==0?4u:0u)|(blocked?8u:0u));
               #endif
                                           }'''
               text = text.replace(pair, traced_pair)
+              for marker, bit in [('        uvec2 token=payload[q.body.z+own];', 4),
+                                  ('                indexB=uint(node.shape);', 8),
+                                  ('                    if(shapeB.owner.x>=bodyCount', 16)]:
+                  assert text.count(marker) == 1
+                  trace = '#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2\n    atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,' + str(bit) + 'u);\n#endif\n'
+                  text = text.replace(marker, trace + marker)
               history = '''#if E2D_MOTION_STAGE == 0
               motionProbe=safe==1?1u:0u;
               #elif E2D_MOTION_STAGE == 1
@@ -203,7 +215,7 @@ jobs:
               #endif'''
               text = text.replace(publish, history + '\n' + publish)
               probe = '''#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 3
-              result.owner.w=state.w|(motionProbe<<8)|(blocked?1048576u:0u)|(rested?2097152u:0u);
+              result.owner.w=state.w|(motionProbe<<8)|(blocked?1048576u:0u)|(rested?2097152u:0u)|(outputWords[stateAt+3u].w<<22);
               result.objectID.zw=fractions.xy;
               #endif'''
               shader.write_text(text.replace(result, result + '\n' + probe))
@@ -231,7 +243,10 @@ jobs:
                                           '6': 'scan enters safe=1', '7': 'any pair enters safe=1',
                                           '8': 'any pair exits safe=0', '9': 'any pair exits blocked',
                                           '10': 'scan exits safe=0'},
-                     'probeResultBits': {'0-7': 'incoming state flags', '8-18': 'probe history', '20': 'final blocked', '21': 'rested'},
+                     'probeResultBits': {'0-7': 'incoming state flags', '8-18': 'probe history', '20': 'final blocked', '21': 'rested',
+                                         '22': 'any pair entered', '23': 'any pair returned',
+                                         '24': 'any source shape visited', '25': 'any BVH leaf visited',
+                                         '26': 'any candidate passed filters'},
                      'shaderSHA256': {name: hashlib.sha256(Path(name).read_bytes()).hexdigest() for name in
                          ['src/Servers/Rendering/ShaderCompiler.cs', 'src/Servers/Physics/GPUPhysicsBodyStore.MotionQueries.cs',
                           'src/Servers/Physics/Shaders/PhysicsResidentMotionQueries.comp.glsl']}}

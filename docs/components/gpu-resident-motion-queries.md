@@ -105,6 +105,16 @@ plus atomic observations at scan and pair boundaries in the existing unused
 result lanes. Those observations supplement the incoming-fraction receipt; no
 production kernel, physical iteration count, buffer or host readback changes.
 
+Run 39977297656 creates all four optimized DXIL pipelines but still returns the
+first motion miss. Its history mask 1103 records scan entry at safe one and exit
+at zero without a positive pair-predicate observation. Those conditional bits do
+not prove whether a pair was visited. The next diagnostic adds unconditional
+source-shape, BVH-leaf, accepted-candidate and pair entry/return marks in unused
+result padding. The exact four HLSL files captured on Windows match local
+transpilation byte for byte; their SPIR-V roundtrip passes the local compound and
+motion suites. This preserves the native failure and does not identify a driver
+or compiler root cause by itself.
+
 The earlier single portable traversal still aborted in Windows WARP 1.0.21
 `ScopeNestedCFG::runOnFunction`. Flattening motion phases and removing one sweep
 unroll prohibition did not fix it; the FXC control rejected nested loop attributes.
