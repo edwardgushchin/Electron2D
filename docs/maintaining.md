@@ -50,6 +50,10 @@ spent its deadline in `RtlDebugAllocateHeap` and WARP `ReducibilityAnalysis`. Th
 untraced fixture now runs directly under PowerShell and records the signed exit
 code and its full 32-bit hexadecimal representation before preserving failure;
 zero exit and an exact case-sensitive completion line are both required.
+The optimized DXIL diagnostic now saves its actual SPIR-V, transpiled HLSL and
+compiled DXIL. Both that control and DXBC use the existing result padding for
+phase and atomic scan/pair observations; these probes add no transfer or host
+fallback and do not alter production sources. Preserve their fixture failure.
 See [CDB command-line options](https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/cdb-command-line-options).
 The PowerShell self-check rejects missing, ambiguous, foreign and reused process identities.
 Compiler exceptions also record the first DWORD and one symbolic type pointer of

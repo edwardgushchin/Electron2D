@@ -49,7 +49,7 @@ class Checks(unittest.TestCase):
                                 exec(compile(code, 'windows-motion-workflow', 'exec'), {})
                             query = Path(names[2]).read_text()
                             shader = Path(names[3]).read_text()
-                            if compiler == 'dxil':
+                            if compiler == 'dxil' and optimization == 'false':
                                 self.assertEqual(Path(names[1]).read_text(), originals[names[1]].decode())
                                 self.assertEqual(query, originals[names[2]].decode())
                                 self.assertEqual(shader, originals[names[3]].decode())
@@ -58,8 +58,14 @@ class Checks(unittest.TestCase):
                                 self.assertIn('result.objectID.zw=fractions.xy;', shader)
                                 self.assertIn('result.owner.w=state.w|(motionProbe<<8)|(blocked?1048576u:0u)|(rested?2097152u:0u);', shader)
                                 self.assertIn('outputWords[stateAt+2u].w=motionProbe;', shader)
-                                self.assertIn('motionProbe|=(blocked?16u:0u)|(safe!=0?32u:0u);', shader)
-                                self.assertIn('Marshal.Copy(compiled, actualBytecode, 0, actualBytecode.Length);', Path(names[1]).read_text())
+                                self.assertIn('outputWords[stateAt+3u].z=0u;', shader)
+                                self.assertIn('atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].z,(safe==0?4u:0u)|(blocked?8u:0u));', shader)
+                                self.assertIn('((outputWords[stateAt+3u].z|(safe==0?16u:0u))<<6)', shader)
+                                if compiler == 'dxbc':
+                                    self.assertIn('Marshal.Copy(compiled, actualBytecode, 0, actualBytecode.Length);', Path(names[1]).read_text())
+                                else:
+                                    self.assertIn('Marshal.Copy(compiled, diagnosticCode, 0, diagnosticCode.Length);', Path(names[1]).read_text())
+                                    self.assertIn('finally { SDL.Free(diagnosticHLSL); }', Path(names[1]).read_text())
                             receipt = json.loads(Path('bin/diagnostics/compiler-source.json').read_text())
                             self.assertEqual(receipt['motionSPIRVOptimization'], optimization == 'true')
                             if optimization == 'false':

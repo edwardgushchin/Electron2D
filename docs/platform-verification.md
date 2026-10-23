@@ -12,6 +12,8 @@ despite its zero exit and successful physics/navigation marker; archive loading
 took 27.774 seconds. Its cold-process budget is now 60 seconds; the focused x64
 terrain workflow passes at `a5abef302`. That cohort's ARM64 aggregate instead
 fails the CPU Area frame/audio/field interval at 0/720 owner/all-thread bytes.
+Its complete ordinary x64 suite passes in 44 minutes 42 seconds with the final
+completion marker. These are separate architecture outcomes from run 39968402941.
 The Area fixture now drains its calibrated finalization boundary after warmup
 and supports physical trace markers, retaining 64 measured cycles and strict
 zero counters. Four local ordinary/traced CPU/GPU controls pass at 0/0 bytes;

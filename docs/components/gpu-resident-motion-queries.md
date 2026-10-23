@@ -97,6 +97,14 @@ and receipts remain diagnostic evidence. The staged optimizer remains a manual
 comparison; ordinary full suites are required and production compiler selection
 is unchanged.
 
+The optimized HLSL roundtrip control recompiles all four transpiled stages to
+SPIR-V with DXC and passes the local compound and motion suites. This checks that
+particular translated program on Vulkan, without establishing Windows execution.
+The manual optimized DXIL control now retains its actual HLSL, SPIR-V and DXIL,
+plus atomic observations at scan and pair boundaries in the existing unused
+result lanes. Those observations supplement the incoming-fraction receipt; no
+production kernel, physical iteration count, buffer or host readback changes.
+
 The earlier single portable traversal still aborted in Windows WARP 1.0.21
 `ScopeNestedCFG::runOnFunction`. Flattening motion phases and removing one sweep
 unroll prohibition did not fix it; the FXC control rejected nested loop attributes.
