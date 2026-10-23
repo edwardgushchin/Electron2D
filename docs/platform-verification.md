@@ -12,6 +12,15 @@ Scene/asset, font, animation, rendering, navigation and time consumers share the
 correction. SDK compilation and the independent decoder keep their separate host
 selection. Local launch checks cannot replace corrected x64 macOS execution.
 
+Run `39890302781` also aborted on Linux ARM64 in `libusb` after
+`pthread_key_create` failed when the next display opened. Local Linux x64 controls
+retain stable native TLS capacity after initialization across 1024 gamepad cycles,
+512 Mesa device cycles, 512 device/pipeline cycles and 512 completed zero-count
+physics dispatches. These bounded controls do not explain the full ARM64 failure.
+The separate manual TLS diagnostic retains the complete workload and identifies
+native key creators/deleters on ARM64; its result does not replace untraced target
+acceptance or justify weakening allocation assertions.
+
 This matrix records execution on hosts and devices available during this audit. A successful build or packaged native library is not a runtime check. A blocked backend is a measured result for this build and device, not a claim that an entire platform can never support it.
 
 | Runtime tested | SDL_Renderer canvas | SDL_GPU canvas | Shader pixels | Physics |

@@ -1,0 +1,102 @@
+name: Linux TLS diagnostics
+
+on:
+  workflow_dispatch:
+    inputs:
+      native_run_id:
+        description: Workflow run containing audited Linux native packages
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  full_suite:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 180
+    defaults:
+      run:
+        shell: bash
+    env:
+      RestoreAdditionalProjectSources: ${{ github.workspace }}/bin/native-feed
+      DOTNET_TieredCompilation: '0'
+      SDL_VIDEO_DRIVER: offscreen
+      SDL_VIDEODRIVER: offscreen
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install cmake==4.1.3 ninja==1.13.0
+      - uses: actions/cache@v4
+        with:
+          path: tools/shaders/obj/toolchain/
+          key: shader-tools-ubuntu-24.04-arm-${{ runner.arch }}-${{ hashFiles('tools/shaders/toolchain.lock.json', 'tools/shaders/build_toolchain.py') }}
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.native_run_id }}
+          github-token: ${{ github.token }}
+          name: private-native-package
+          path: bin/native-feed/
+      - name: Verify native source receipts
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('tools/native').resolve()))
+          import package, test_consumer
+          manifests = test_consumer.read_manifests(Path('bin/native-feed'))
+          assert set(manifests) == {'linux-x64', 'linux-arm64'}
+          for receipt in manifests.values():
+              assert receipt['sourceSHA256'] == package.source_hash()
+              assert receipt['minimumEngineVersion'] == receipt['version'] == package.configuration()['version']
+          PY
+      - name: Install runtime prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc libc6-dev libzstd1 libssl-dev ffmpeg libvulkan1 mesa-vulkan-drivers
+          uname -m | grep -Fx aarch64
+          python -c 'import ctypes; ctypes.CDLL("libcrypto.so.3").BIO_s_dgram_pair'
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          profile = Path(os.environ['RUNNER_TEMP']) / 'xdg-desktop'
+          profile.mkdir(exist_ok=True)
+          folders = {'DESKTOP': 'Desktop', 'DOCUMENTS': 'Documents', 'DOWNLOAD': 'Downloads', 'MUSIC': 'Music', 'PICTURES': 'Pictures', 'VIDEOS': 'Videos'}
+          (profile / 'user-dirs.dirs').write_text(''.join(f'XDG_{key}_DIR="$HOME/{value}"\n' for key, value in folders.items()))
+          with open(os.environ['GITHUB_ENV'], 'a') as output:
+              output.write(f'XDG_CONFIG_HOME={profile}\n')
+          PY
+      - name: Verify and build the key tracer
+        run: |
+          python3 -B tools/ci/test_tls_trace.py
+          mkdir -p bin/diagnostics
+          cc -std=c11 -O2 -Wall -Wextra -Werror -fPIC -shared -pthread tools/ci/trace_tls.c -ldl -o bin/diagnostics/trace-tls.so
+          sha256sum tools/ci/trace_tls.c bin/diagnostics/trace-tls.so > bin/diagnostics/tls-source.sha256
+      - name: Publish the complete test runner
+        run: dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r linux-arm64 --self-contained true -o bin/diagnostics/runner --nologo
+      - name: Run the complete suite with native key tracing
+        id: fixture
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          E2D_TLS_TRACE_FILE="$GITHUB_WORKSPACE/bin/diagnostics/tls-keys.log" LD_PRELOAD="$GITHUB_WORKSPACE/bin/diagnostics/trace-tls.so" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/full-runtime.log
+          grep -Fx 'Electron2D checks passed.' bin/diagnostics/full-runtime.log
+          grep -q '^E2D_TLS .* summary ' bin/diagnostics/tls-keys.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: linux-arm64-tls-diagnostics
+          path: |
+            bin/diagnostics/full-runtime.log
+            bin/diagnostics/tls-source.sha256
+            bin/diagnostics/tls-keys.log
+          if-no-files-found: error
+      - name: Preserve the full-suite failure
+        if: steps.fixture.outcome == 'failure'
+        run: exit 1

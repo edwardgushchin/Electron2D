@@ -100,6 +100,15 @@ Build-generation checks cover all eight module names, distinct operations/profil
 include invalidation, failure preservation, stale cleanup and fresh-consumer
 embedding. Target and full-suite acceptance remain open.
 
+The timed Windows DXIL control in run `39899286178` completed cold Intersect
+pipeline preparation in about 63 seconds, then entered Contacts preparation and
+did not complete within the ten-minute fixture deadline. The native convenience
+compiler control failed the first transformed logical-slot result; its separate
+CDB replay entered `d3dcompiler_47!ArrayData::GetArrayLocationAndValue` again.
+Specialization therefore has local functional evidence but does not yet provide
+acceptable Windows execution or cold preparation cost. The diagnostic timestamps
+are outside measured query intervals and are not shipped runtime logging.
+
 ## Boundary and ownership
 
 GPUPhysicsBodyStore.QueryShapes executes logical shape intersections, contact pairs,

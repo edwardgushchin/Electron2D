@@ -42,6 +42,16 @@ ten-minute deadline so a cold preparation stall can still reach CDB and artifact
 upload within the job deadline. Retired lifetime controls are not production fixes;
 both compiler controls retain current ownership and preserve the actual fixture failure.
 
+The manual Linux TLS diagnostic runs the complete ARM64 executable with a separate
+native `pthread_key_create`/`pthread_key_delete` interposer. It records process,
+key, result, live count and caller module/offset; a failed allocation includes a
+bounded native stack. A separate owner-only trace file preserves application
+stdout/stderr, including inherited child hosts. `python3 -B tools/ci/test_tls_trace.py` verifies real cleanup,
+intentional leakage, exhaustion, errno and thread-destructor preservation before
+use. The helper is outside all runtime/package projects. Traced execution is
+diagnostic evidence; final platform acceptance still requires the ordinary
+untraced full suite. Reused native packages must match current source receipts.
+
 The x64 macOS Tests job runs the unchanged `osx-x64` target on Apple Silicon through Rosetta for Metal availability. Keep native production and Build on their registered Intel host, verify the test app's x64 Mach-O architecture, and retain the full suite plus trimmed/NativeAOT checks. `tools/ci/test_checks.py` executes the actual Rosetta setup script for already available, installed, failed-install and wrong-architecture cases; these dispatch checks do not establish target execution or physical Intel GPU acceptance.
 
 Fresh-process fixtures restart `Environment.ProcessPath`, adding the test assembly
