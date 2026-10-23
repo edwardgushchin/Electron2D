@@ -17,6 +17,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             tolerance = CCDTolerance, degeneracy = 0.5f, axisTolerance = 0.00001f
         }));
         Copy(_bodies!, _highWater, sizeof(Body), "bodies");
+        Copy(_commands!, _highWater, sizeof(Command), "commands");
         Copy(_shapesGPU!, _shapeHighWater, sizeof(ShapeData), "shapes");
         Copy(_geometryGPU!, _geometryEntries.Count, sizeof(GeometryData), "geometries");
         Copy(_verticesGPU!, _vertexHighWater, sizeof(Vector2), "vertices");

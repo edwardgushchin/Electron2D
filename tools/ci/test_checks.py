@@ -195,7 +195,7 @@ class Checks(unittest.TestCase):
         self.assertIn('key: shader-tools-' + row['runner'] + '-', workflow)
         self.assertLess(workflow.index('Run the unchanged compound fixture'), workflow.index('Trace candidate and impact boundaries'))
         self.assertIn('cmp obj/Release/net10.0/linux-x64/shaders/manifest.json bin/diagnostics/baseline-shaders.json', workflow)
-        self.assertIn("if: steps.baseline.outcome == 'failure' || steps.simd_control.outcome == 'failure' || steps.portable_control.outcome == 'failure'\n        run: exit 1", workflow)
+        self.assertIn("if: steps.baseline.outcome == 'failure' || steps.simd_control.outcome == 'failure' || steps.managed_scalar.outcome == 'failure'\n        run: exit 1", workflow)
         step = workflow.partition('      - name: Trace candidate and impact boundaries')[2].split('\n      - ', 1)[0]
         inline = step.partition("          python - <<'PY'\n")[2].split('\n          PY', 1)[0]
         code = '\n'.join(line[10:] for line in inline.splitlines())
@@ -251,39 +251,31 @@ class Checks(unittest.TestCase):
         finally:
             os.chdir(previous)
 
-    def test_linux_portable_ccd_control_only_selects_the_existing_module(self):
+    def test_linux_managed_scalar_control_preserves_the_gpu_fixture_and_raw_failures(self):
         workflow = (rids.ROOT / '.github/workflows/linux-gpu-diagnostics.yml').read_text()
-        step = workflow.partition('      - name: Prepare the existing portable CCD compiler profile')[2].split('\n      - ', 1)[0]
-        inline = step.partition("          python - <<'PY'\n")[2].split('\n          PY', 1)[0]
-        code = '\n'.join(line[10:] for line in inline.splitlines())
-        path = Path('src/Servers/Physics/GPUPhysicsDevice.cs')
-        original = (rids.ROOT / path).read_bytes().replace(b'\r\n', b'\n')
+        step = workflow.partition('      - name: Run the complete GPU fixture without managed SIMD intrinsics')[2].split('\n      - ', 1)[0]
+        self.assertEqual(workflow.count('DOTNET_EnableHWIntrinsic=0'), 1)
+        self.assertNotIn('LP_NATIVE_VECTOR_WIDTH', step)
+        command = '\n'.join(line[10:] for line in step.partition('        run: |\n')[2].splitlines())
         previous = Path.cwd()
         try:
-            with tempfile.TemporaryDirectory(prefix='e2d CCD profile ') as directory, patch.dict(os.environ, GITHUB_SHA='self-check'):
+            with tempfile.TemporaryDirectory(prefix='e2d managed scalar ') as directory:
                 os.chdir(directory)
-                path.parent.mkdir(parents=True); Path('bin/diagnostics').mkdir(parents=True)
-                for newline in (b'\n', b'\r\n'):
-                    before = original.replace(b'\n', newline); path.write_bytes(before)
-                    exec(compile(code, 'linux-portable-ccd-workflow', 'exec'), {})
-                    after = path.read_bytes()
-                    self.assertNotIn(b'(Driver is "metal" or "direct3d12") && name is "PhysicsResidentCCD.comp.spv"', after)
-                    self.assertIn(b'name is "PhysicsResidentCCD.comp.spv"', after)
-                    self.assertIn(b'(Driver is "metal" or "direct3d12") && name is' + newline + b'            "PhysicsResidentShapeQueries0.comp.spv"', after)
-                    self.assertEqual(after.count(b'Diagnostic module:'), 1)
-                    self.assertEqual(b'\r\n' in after, newline == b'\r\n')
-                    receipt = json.loads(Path('bin/diagnostics/portable-ccd-source.json').read_text())
-                    self.assertEqual(receipt['originalSHA256'], hashlib.sha256(before).hexdigest())
-                    self.assertEqual(receipt['actualSHA256'], hashlib.sha256(after).hexdigest())
-                    with self.assertRaises(AssertionError): exec(compile(code, 'linux-portable-ccd-workflow', 'exec'), {})
-                    self.assertEqual(path.read_bytes(), after)
+                runner = Path('bin/diagnostics/runner/Electron2D.Tests'); runner.parent.mkdir(parents=True)
+                runner.write_text('#!/usr/bin/env python3\nimport os\n'
+                    'assert os.environ["DOTNET_EnableHWIntrinsic"] == "0"\n'
+                    'assert os.environ["ELECTRON2D_TEST_COMPOUND_PHYSICS"] == "gpu"\n'
+                    'print(os.environ["FAKE_MARKER"])\nraise SystemExit(int(os.environ["FAKE_EXIT"]))\n')
+                runner.chmod(0o755)
+                for code, marker, passed in ((0, 'Compound GPU: transformed slots, gaps and disabled indices passed.', True),
+                                             (7, 'Compound GPU: transformed slots, gaps and disabled indices passed.', False),
+                                             (0, 'Missing completion', False)):
+                    env = dict(os.environ, GITHUB_WORKSPACE=directory, ELECTRON2D_TEST_COMPOUND_PHYSICS='gpu', FAKE_EXIT=str(code), FAKE_MARKER=marker)
+                    result = subprocess.run(['bash', '-e', '-c', command], env=env, capture_output=True)
+                    self.assertEqual(result.returncode == 0, passed)
+                    self.assertIn(f'Runtime exit: {code}', Path('bin/diagnostics/managed-scalar.log').read_text())
         finally:
             os.chdir(previous)
-        run = workflow.partition('      - name: Run the complete compound fixture with the portable CCD module')[2].split('\n      - ', 1)[0]
-        self.assertIn('set -o pipefail', run)
-        self.assertIn('cache-portable', run)
-        self.assertIn("if grep -E '^Diagnostic module: PhysicsResidentShapeQueries.*\\.portable\\.spv$'", run)
-        self.assertIn("grep -Fx 'Compound GPU: transformed slots, gaps and disabled indices passed.'", run)
 
     def test_linux_simd_control_retains_raw_exits_driver_identity_and_both_workloads(self):
         workflow = (rids.ROOT / '.github/workflows/linux-gpu-diagnostics.yml').read_text()

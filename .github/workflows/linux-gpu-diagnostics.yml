@@ -182,41 +182,19 @@ jobs:
             if ! grep -E "^Diagnostic GPU: vulkan, .* $width bits" "$log"; then failed=1; fi
           done
           exit "$failed"
-      - name: Prepare the existing portable CCD compiler profile
-        run: |
-          python - <<'PY'
-          import hashlib, json, os
-          from pathlib import Path
-          path = Path('src/Servers/Physics/GPUPhysicsDevice.cs')
-          original = path.read_bytes()
-          source = original.decode()
-          newline = '\r\n' if b'\r\n' in original else '\n'
-          marker = '(Driver is "metal" or "direct3d12") && name is "PhysicsResidentCCD.comp.spv" or'
-          assert source.count(marker) == 1
-          source = source.replace(marker, 'name is "PhysicsResidentCCD.comp.spv" ||' + newline + '            (Driver is "metal" or "direct3d12") && name is', 1)
-          marker = '        using var source = typeof(GPUPhysicsDevice).Assembly.GetManifestResourceStream('
-          assert source.count(marker) == 1
-          source = source.replace(marker, '        if (name.StartsWith("PhysicsResidentCCD.", StringComparison.Ordinal) || name.StartsWith("PhysicsResidentShapeQueries", StringComparison.Ordinal)) Console.WriteLine("Diagnostic module: " + name);' + newline + marker, 1)
-          path.write_bytes(source.encode())
-          receipt = {'headSHA': os.environ['GITHUB_SHA'], 'source': str(path),
-                     'originalSHA256': hashlib.sha256(original).hexdigest(),
-                     'actualSHA256': hashlib.sha256(path.read_bytes()).hexdigest(),
-                     'profile': 'Only CCD uses its existing unoptimized portable module; shape queries retain their original Vulkan profiles.'}
-          Path('bin/diagnostics/portable-ccd-source.json').write_text(json.dumps(receipt, indent=2) + '\n')
-          PY
-          dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r linux-x64 --self-contained true -o bin/diagnostics/runner --nologo
-          cmp obj/Release/net10.0/linux-x64/shaders/manifest.json bin/diagnostics/baseline-shaders.json
-      - name: Run the complete compound fixture with the portable CCD module
-        id: portable_control
+      - name: Run the complete GPU fixture without managed SIMD intrinsics
+        id: managed_scalar
         continue-on-error: true
         timeout-minutes: 10
         run: |
           set -o pipefail
-          MESA_SHADER_CACHE_DIR="$GITHUB_WORKSPACE/bin/diagnostics/cache-portable" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/portable-ccd.log
-          grep -Fx 'Diagnostic module: PhysicsResidentCCD.comp.portable.spv' bin/diagnostics/portable-ccd.log
-          grep -E '^Diagnostic module: PhysicsResidentShapeQueries[0-3]\.comp\.spv$' bin/diagnostics/portable-ccd.log
-          if grep -E '^Diagnostic module: PhysicsResidentShapeQueries.*\.portable\.spv$' bin/diagnostics/portable-ccd.log; then exit 1; fi
-          grep -Fx 'Compound GPU: transformed slots, gaps and disabled indices passed.' bin/diagnostics/portable-ccd.log
+          set +e
+          DOTNET_EnableHWIntrinsic=0 GALLIUM_DUMP_CPU=1 MESA_SHADER_CACHE_DIR="$GITHUB_WORKSPACE/bin/diagnostics/cache-managed-scalar" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/managed-scalar.log
+          code=${PIPESTATUS[0]}
+          set -e
+          echo "Runtime exit: $code" | tee -a bin/diagnostics/managed-scalar.log
+          test "$code" -eq 0
+          grep -Fx 'Compound GPU: transformed slots, gaps and disabled indices passed.' bin/diagnostics/managed-scalar.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -228,5 +206,5 @@ jobs:
             bin/diagnostics/ccd-*.bin
           if-no-files-found: error
       - name: Preserve original and SIMD fixture failures
-        if: steps.baseline.outcome == 'failure' || steps.simd_control.outcome == 'failure' || steps.portable_control.outcome == 'failure'
+        if: steps.baseline.outcome == 'failure' || steps.simd_control.outcome == 'failure' || steps.managed_scalar.outcome == 'failure'
         run: exit 1

@@ -163,6 +163,30 @@ A local 512-bit Lavapipe control on the AVX2-only host
 also completes the unchanged fixture in 352.6 seconds with zero measured bytes;
 width alone does not reproduce the hosted failure.
 
+The isolated control `40038187291` at `2dd9c3cbe` fails on Intel Xeon Platinum
+8573C (artifact `12538870164`). Its default, traced, restored, SIMD128, SIMD256 and
+CCD-only portable processes retain the same `x=60` failure. Artifact `12538437863`
+from EPYC 9V74 run `40036438679` also retains four failing CCD input snapshots.
+Across the first three substeps, both hosts' settings and all geometry, vertices,
+shapes, pairs, centers and corrections are byte-identical to the passing local
+control. Bodies differ only at offset 184: the mover's flags are `90124` instead
+of `90508`, losing CCD bit 256 and reporting bit 128 before the CCD shader runs.
+The host still records one CCD body. This moves the investigation to body edits;
+changing CCD compiler profiles is not a fix. The completed compiler-profile probe
+is removed from the workflow; the next raw snapshot additionally retains the
+resident command buffer, without changing numerical work or production shaders.
+A separate unchanged GPU-fixture process disables managed JIT SIMD intrinsics
+with `DOTNET_EnableHWIntrinsic=0`; the native Vulkan driver keeps its normal CPU
+capabilities. This distinguishes managed staging from native command execution.
+Its raw exit and full completion marker remain required, and its failure also
+keeps the diagnostic red. This setting never applies to ordinary CI or production.
+
+The earlier profiled macOS x64 job `120680942051` in `40031605911` completes the
+full suite at `426798799` (artifact `12538297123`, 7,009 lines and final completion
+marker). Its idle-Ogg interval and owner/separate-thread joint policy intervals
+all report zero bytes. This is a profiled complete result on that revision; it
+does not attribute the earlier nonzero deltas or replace the final untraced gate.
+
 The corrected Windows ARM64 run `40029790832` at `3bddfb403` passes all three raw
 focused exits with app-local WARP 1.0.21 (artifact `12535550765`). Windows x86 run
 `40031574214` at `426798799` repeats those three zero exits, including shape cast
