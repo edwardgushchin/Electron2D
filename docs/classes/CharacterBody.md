@@ -118,6 +118,12 @@ packed scene property. See [typed state](PhysicsServer.md#body-state).
 now run CharacterBodyTests with explicit backend selection. The linked record
 separates verified motion/lifetime/allocation cases from remaining physics coverage.
 
+The idle allocation fixture completes the shared double collection/finalization
+preparation after 64 warm calls, then measures 64 calls at strict zero owner and
+all-thread bytes. Optional calibrated tracing records the exact interval. The
+macOS x64 aggregate at `ed0c3f4ef` failed the earlier unprepared all-thread gate
+without a numeric delta; the prepared target fixture still requires verification.
+
 All internal recovery, sweep and platform-motion queries use the [selected motion boundary](../components/physics-backends.md#selected-motion-result-publication). Returned geometry, fractions, logical slots and filtering are validated before that individual movement applies travel. A rejected query cannot move the body through malformed numerical output; earlier successful movements within a slide call are not rolled back.
 
 The complete shared PhysicsSurfaceVelocityTests and PhysicsServerStateTests now execute on explicitly selected public CPU/GPU worlds. Platform carry retains the stationary surface channel; the configured movement Velocity remains independent of low-level body/contact velocity through detach/reentry. Broader CharacterBody and inherited, platform and final performance acceptance remain open.

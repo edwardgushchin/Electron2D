@@ -831,6 +831,11 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_PHYSICS") is { } s
     var backend = sceneBackend switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for scene physics.") };
     PhysicsBodyTests.Run(backend); RigidBodyForceTests.Run(backend); RigidBodyContactTests.Run(backend); ShapePairEventTests.Run(backend); return;
 }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CHARACTER_BODY") is { } characterBackend)
+{
+    var backend = characterBackend switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for the character suite.") };
+    CharacterBodyTests.Run(backend); return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHARED_PHYSICS") is { } sharedBackend)
 {
     var backend = sharedBackend switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for the shared physics suite.") };

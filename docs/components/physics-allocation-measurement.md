@@ -673,3 +673,16 @@ after all 64 warm frames and before measuring the unchanged 64 active frames.
 This drains both finalization passes; it does not change the zero-byte assertion.
 Target untraced execution remains required. The earlier two-RID 6,304-byte
 failures remain retained separately.
+
+## Prepared idle character interval (2026-10-23)
+
+The untraced macOS x64 aggregate at ed0c3f4ef passes its focused GUI checks and
+CPU/GPU CCD and exception checks, then fails the CharacterBody idle all-thread
+allocation assertion. That assertion did not record its byte delta. The fixture
+now uses the existing calibrated double collection/finalization preparation after
+64 warm calls, records both counters over the same 64 measured MoveAndSlide calls,
+and requires both to be zero. Optional native tracing uses a separate character
+tag domain and closes on exceptions. Standalone CPU/GPU entry points let the
+macOS workflow exercise the complete character suite before the full aggregate.
+This preparation does not attribute the old failure; ordinary target acceptance
+and any matching failing trace remain required.

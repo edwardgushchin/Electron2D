@@ -617,11 +617,21 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
               character.Velocity == new Vector2(60, 0),
             "Tree reentry clears transient contacts while retaining stored desired velocity.");
         character.Velocity = Vector2.Zero;
+        using var trace = PhysicsAllocationTrace.Open(backend, 5UL << 32);
         for (var frame = 0; frame < 64; frame++) character.MoveAndSlide();
-        var before = GC.GetTotalAllocatedBytes(true);
-        for (var frame = 0; frame < 64; frame++) character.MoveAndSlide();
-        Check(GC.GetTotalAllocatedBytes(true) - before == 0,
-            "Warmed idle character slide calls allocate no managed bytes across managed threads.");
+        AllocationWarmupCheck.Collect();
+        long owner, all; var tag = trace?.Tag(1) ?? 0;
+        trace?.Begin(tag);
+        try
+        {
+            owner = GC.GetAllocatedBytesForCurrentThread(); all = GC.GetTotalAllocatedBytes(true);
+            for (var frame = 0; frame < 64; frame++) character.MoveAndSlide();
+            owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+        }
+        finally { trace?.End(); }
+        if (trace is not null) Console.WriteLine($"Character idle trace {tag}: {backend}, owner/all={owner}/{all} B.");
+        Check(owner == 0 && all == 0, $"Warmed idle character slide calls {backend} allocated {owner}/{all} owner/all-thread B.");
+        Console.WriteLine($"Character idle {backend}: 64 warmup/64 measured calls, {owner}/{all} owner/all-thread B passed.");
     }
 
     private sealed class DrivenCharacter : CharacterBody
