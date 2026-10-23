@@ -1,6 +1,6 @@
 # Joint solver policies
 
-Last updated: 2026-10-22
+Last updated: 2026-10-23
 
 Collision-policy publication now retains the latest requested flag and complete
 common pair contribution through selected errors. Equal setters and world
@@ -195,11 +195,24 @@ Two implementation defects were exposed and corrected:
   contradicted the common contact/motion contract in ADR 0087.
 - The GPU spring kernel applies a finite MaxForce cap before rejecting an
   unbounded intermediate elastic impulse. MaxForce=0 supplies no impulse. Decay
-  is multiplied before extreme stiffness so complete decay removes the elastic
-  term. NaN still rejects; an unrepresentable unlimited impulse still fails the
+  explicitly skips the elastic product when it reaches zero. This preserves
+  complete axial decay when backend compilation reassociates multiplication of
+  extreme stiffness and displacement. NaN still rejects; an unrepresentable unlimited impulse still fails the
   world. Tests use float.MaxValue stiffness, both force directions, complete
   axial decay, MaxForce 10 and zero over .1 s. The finite case changes unit-mass
   speed by at most one scene unit/s, within .002 roundoff allowance.
+
+CI run `39869572938` on macOS ARM64 passed the earlier query/compound/CCD checks
+but failed this complete-decay case at `PhysicsJointPolicyTests.cs:145` with an
+invalid-constraint status. The guarded product addresses that arithmetic path;
+the corrected Metal execution still requires its full target suite.
+
+The guarded kernel passes the existing complete shared CCD/joint-policy profile
+on local NVIDIA Vulkan and the isolated CI Mesa 26.0.8 library. Both execute the
+extreme-stiffness, complete-decay and zero-force cases, then 128 warmup/128 active
+policy frames with zero owner/all-thread managed bytes. Native translation
+retains the explicit zero-decay branch in generated MSL; this is compiler evidence,
+not Metal execution.
 
 No physical stage, body or solver iteration is removed. Query metadata adds one
 8-byte peer token per applicable incident joint, using retained request storage.

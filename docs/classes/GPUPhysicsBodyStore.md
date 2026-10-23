@@ -1,5 +1,11 @@
 # GPUPhysicsBodyStore
 
+[Query distance scratch](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
+retains only the three consumed difference vectors. The
+[spring force kernel](../components/physics-joint-policies.md) explicitly skips
+its elastic product after complete axial decay. Device records, physical budgets
+and public results retain their existing layouts and limits.
+
 [Portable pair hashing](../components/gpu-physics.md#portable-pair-hashing) preserves
 the canonical pair/history hash through half-word products and explicit carries.
 The shared kernels require neither shaderInt64 nor extended integer multiplication.
@@ -30,7 +36,7 @@ failed with device loss and remains open.
 
 [Buffer memory observations](../components/gpu-memory.md) are implemented in [GPUPhysicsBodyStore.Memory.cs](../../src/Servers/Physics/GPUPhysicsBodyStore.Memory.cs). They track all requested storage/transfer resources, growth overlap and checkpoint copies through native release, without a simulation mirror or extra GPU work. Complete driver/native and managed memory remains outside this counter.
 
-Last updated: 2026-10-22
+Last updated: 2026-10-23
 
 [Resident Area sorting](../components/physics-areas.md#resident-area-sorting-in-nativeaot) now uses one cached explicit comparison over the existing active prefix. This removes a reproduced 48-byte NativeAOT allocation per dirty-profile sort while retaining priority/traversal order, buffers and transfer/wait policy. The full changed-parameter fixture keeps a strict zero managed-byte gate; native allocation and target GPU performance remain separate.
 

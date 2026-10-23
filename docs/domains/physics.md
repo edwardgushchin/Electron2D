@@ -2,6 +2,12 @@
 
 # Physics domain
 
+[Resident query scratch](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
+uses three consumed difference vectors, and the [spring kernel](../components/physics-joint-policies.md)
+guards complete axial decay before evaluating extreme elastic coefficients.
+Public signatures, physical budgets and zero-allocation thresholds are unchanged;
+foreign-platform execution remains a release gate.
+
 [Shared pair/contact completion](../components/gpu-resident-bodies.md#shared-paircontact-completion-2026-10-22)
 records fresh pair discovery and contact generation together while retaining
 independent error records, one-way publication and bounded output growth. The
@@ -37,7 +43,7 @@ public callback order remain intact. API declaration counts are unchanged.
 
 [Inherited point/line drawing](../components/canvas-rendering.md#native-point-and-line-primitives) now reaches native GPU topology through both scene and server producers, including a moving physical receiver. The SDL_Renderer coverage gap remains open; declaration counts stay 1305/1369 (95.33%).
 
-Last updated: 2026-10-22
+Last updated: 2026-10-23
 
 [Kinematic synchronization in processing groups](../components/physics-bodies.md#kinematic-synchronization-from-processing-groups) now permits the current group to read and switch AnimatableBody presentation policy while retaining capture, ownership and physical-borrow guards. Declaration coverage stays 1305/1369 (95.33%); inherited and final acceptance gaps remain open.
 

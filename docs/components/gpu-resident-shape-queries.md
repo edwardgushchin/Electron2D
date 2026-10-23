@@ -7,12 +7,12 @@ Last updated: 2026-10-23
 ## Backend compiler profiles
 
 Resident shape queries, body-motion queries and CCD embed two modules from each
-unchanged source. Vulkan retains the `-O` module and its measured cold-pipeline
+shared source. Vulkan retains the `-O` module and its measured cold-pipeline
 improvement; Metal and Direct3D 12 use a function-preserving portable module.
-All 32 existing Vulkan modules remain byte-identical. The three additional
-modules pass `spirv-val` and native reflection reports the same nine resource and
-workgroup values as their optimized counterparts. Shape-query SPIR-V decreases
-from 1,314,532 to 153,452 bytes; generated backend source avoids the multi-megabyte
+The three additional modules pass `spirv-val` and native reflection reports the
+same nine resource and workgroup values as their optimized counterparts.
+Shape-query SPIR-V uses 1,310,952 optimized or 153,216 portable bytes;
+generated backend source avoids the multi-megabyte
 expansion measured with the optimized module. Native ShaderCross compiled all 35
 physics modules to DXIL locally. The common compute boundary selects DXIL when
 the device advertises it, retaining the mature translator and reflected bindings.
@@ -30,6 +30,33 @@ profile through Wayland with zero warmed managed bytes per tick. The isolated
 offscreen CCD run failed while creating a later device with no supported backend;
 it did not complete. This host/environment difference remains separate from the
 unverified Metal/Direct3D profile execution and the complete Linux Mesa CI suite.
+
+The query distance simplex now retains only its three Minkowski difference
+vectors. Its former support-point pair fields were never consumed. The distance,
+duplicate detection, barycentric reduction, iteration limits and sweep brackets
+are unchanged; no device record or public result layout changes. This reduces
+the private array element from a three-vector struct to one vector before backend
+translation. It is a portability candidate for the Windows query failure, not
+confirmed Windows acceptance. Run `39869572938` still crashed during the first
+GPU shape intersection on Windows x64/x86; the ARM64 diagnostic located
+`d3d10warp!PixelJITProcessor::ExecuteJIT` and a return-address authentication
+failure. The exact faulty operation remains unisolated.
+
+The same run missed a compound CastRay impact on Linux x64. Isolated local
+Lavapipe 26.2.4 and the CI Mesa 26.0.8 library both passed the unchanged public
+compound consumer, including CastRay/CastShape and 128 zero-allocation cycles.
+The compiled local and CI Linux runtime profile strings and query/CCD resource
+hashes match. Those controls do not explain or clear the CI failure.
+
+The reduced simplex and guarded spring product pass eight focused local profiles:
+CPU/GPU public compound checks, functional shape/motion queries, CPU/GPU shared
+CCD/joint policies, CPU scene physics and pipeline ownership/hash checks. The
+updated public compound and shared CCD/joint profiles also pass with the isolated
+CI Mesa 26.0.8 library. All 35 updated modules compile through native ShaderCross
+to DXIL, and each optimized/portable pair retains identical nine-value reflection.
+Three original modules change: shape queries, motion queries and joint preparation;
+the other 29 original module hashes match. These are local execution/compiler
+controls, not corrected Windows/Metal or complete target-suite acceptance.
 
 ## Boundary and ownership
 

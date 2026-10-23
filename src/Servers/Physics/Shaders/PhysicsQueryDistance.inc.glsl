@@ -1,18 +1,17 @@
 // Distance between convex cores, optionally extruded by each full translation.
-struct QuerySupport { vec2 a; vec2 b; vec2 w; };
 vec2 querySupportVertex(Hull h,vec2 d)
 {
     vec2 best=vertex(h,0u);float projection=dot2(best,d);
     for(uint i=1u;i<h.count;i++){vec2 candidate=vertex(h,i);float value=dot2(candidate,d);if(value>projection){best=candidate;projection=value;}}
     return best;
 }
-QuerySupport querySupport(Hull a,Hull b,vec2 sweepA,vec2 sweepB,vec2 d)
+vec2 querySupport(Hull a,Hull b,vec2 sweepA,vec2 sweepB,vec2 d)
 {
     // GJK requires an extreme vertex; tolerant contact-face selection can cycle near crossing segments.
     vec2 pa=querySupportVertex(a,-d),pb=querySupportVertex(b,d);
     if(dot2(sweepA,-d)>0)pa+=sweepA;
     if(dot2(sweepB,d)>0)pb+=sweepB;
-    return QuerySupport(pa,pb,pb-pa);
+    return pb-pa;
 }
 vec3 lineWeights(vec2 a,vec2 b)
 {
@@ -42,21 +41,21 @@ float queryDistance(Hull a,Hull b,vec2 sweepA,vec2 sweepB,out vec2 normal)
         for(uint i=1u;i<other.count;i++)minimum=min(minimum,dot2(line.xy,vertex(other,i)));
         normal=flip?-line.xy:line.xy;return max(0,minimum+min(0,dot2(line.xy,so))-line.z-max(0,dot2(line.xy,sp)));
     }
-    QuerySupport simplex[3];uint count=1u;vec3 weights=vec3(1,0,0);
+    vec2 simplex[3];uint count=1u;vec3 weights=vec3(1,0,0);
     simplex[0]=querySupport(a,b,sweepA,sweepB,vec2(1,0));
-    vec2 v=simplex[0].w;
+    vec2 v=simplex[0];
     [[dont_unroll]] for(uint iteration=0u;iteration<64u;iteration++)
     {
         float squared=dot2(v,v);if(!finite2(vec2(squared))){fail();normal=vec2(0);return 0;}
         if(squared<=1e-12)break;
-        QuerySupport next=querySupport(a,b,sweepA,sweepB,-v);
-        bool duplicate=false;for(uint i=0u;i<count;i++)if(next.w==simplex[i].w)duplicate=true;
-        if(duplicate||squared-dot2(v,next.w)<=max(1e-12,1e-7*squared))break;
+        vec2 next=querySupport(a,b,sweepA,sweepB,-v);
+        bool duplicate=false;for(uint i=0u;i<count;i++)if(next==simplex[i])duplicate=true;
+        if(duplicate||squared-dot2(v,next)<=max(1e-12,1e-7*squared))break;
         if(count==3u){failQuery(4u);break;}
         simplex[count++]=next;
-        weights=count==2u?lineWeights(simplex[0].w,simplex[1].w):triangleWeights(simplex[0].w,simplex[1].w,simplex[2].w);
+        weights=count==2u?lineWeights(simplex[0],simplex[1]):triangleWeights(simplex[0],simplex[1],simplex[2]);
         vec2 previous=v;v=vec2(0);uint kept=0u;vec3 reduced=vec3(0);
-        for(uint i=0u;i<count;i++)if(weights[i]>0){v+=weights[i]*simplex[i].w;simplex[kept]=simplex[i];reduced[kept++]=weights[i];}
+        for(uint i=0u;i<count;i++)if(weights[i]>0){v+=weights[i]*simplex[i];simplex[kept]=simplex[i];reduced[kept++]=weights[i];}
         count=kept;weights=reduced;
         if(count==3u){normal=vec2(0);return 0;}
         if(dot2(v,v)>=squared){v=previous;break;}

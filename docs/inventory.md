@@ -1,5 +1,10 @@
 # Engine inventory
 
+[GPUPhysicsBodyStore](classes/GPUPhysicsBodyStore.md) reduces private query simplex
+scratch to consumed difference vectors and guards the spring elastic product
+after complete axial decay. Existing types, device records and public API remain;
+the components distinguish local controls from pending target execution.
+
 Existing [OS](classes/OS.md) and [RenderingDevice](classes/RenderingDevice.md) helpers now enforce platform availability before console/process calls. Standard-input consumers check the documented unavailable-host contract; no production type or public declaration is added.
 
 [GPUPhysicsBodyStore](classes/GPUPhysicsBodyStore.md) now shares [fresh pair/contact completion](components/gpu-resident-bodies.md#shared-paircontact-completion-2026-10-22) with independent error records and bounded capacity recovery. It adds a contact status record and prepares contact scratch for cold empty pairs; the component records measured capacities. The existing type and public API remain.

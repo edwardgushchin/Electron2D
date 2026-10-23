@@ -134,6 +134,20 @@ jobs:
       - name: Verify x64 application architecture
         if: inputs.tests && inputs.rid == 'osx-x64'
         run: lipo -archs "bin/ci-tests/$CI_RID/Electron2D.Tests" | grep -Fx x86_64
+      - name: Run GPU compound control in a fresh process
+        id: compound_control
+        if: inputs.tests && inputs.suite == 'full'
+        env:
+          DOTNET_TieredCompilation: '0'
+          ELECTRON2D_TEST_COMPOUND_PHYSICS: gpu
+        run: |
+          executable="$GITHUB_WORKSPACE/bin/ci-tests/$CI_RID/Electron2D.Tests"
+          if [[ "$CI_RID" == win-* ]]; then executable="$executable.exe"; fi
+          if [[ "$CI_RID" == linux-* ]]; then
+            export SDL_VIDEO_DRIVER=offscreen SDL_VIDEODRIVER=offscreen
+          fi
+          "$executable" | tee "bin/ci/$CI_RID/compound-runtime.log"
+          grep -Fx 'Compound GPU: transformed slots, gaps and disabled indices passed.' "bin/ci/$CI_RID/compound-runtime.log"
       - name: Run full headless runtime suite
         id: full_suite
         if: inputs.tests && inputs.suite == 'full'
@@ -147,16 +161,16 @@ jobs:
           fi
           "$executable" | tee "bin/ci/$CI_RID/full-runtime.log"
           grep -Fx 'Electron2D checks passed.' "bin/ci/$CI_RID/full-runtime.log"
-      - name: Diagnose an ARM64 native test crash without hiding the failure
-        if: failure() && steps.full_suite.outcome == 'failure' && inputs.rid == 'win-arm64'
+      - name: Diagnose a native Windows test crash without hiding the failure
+        if: failure() && (steps.full_suite.outcome == 'failure' || steps.compound_control.outcome == 'failure') && startsWith(inputs.rid, 'win-')
         continue-on-error: true
         timeout-minutes: 10
         shell: pwsh
         env:
           DOTNET_TieredCompilation: '0'
-        run: ./tools/ci/debug_windows.ps1 "bin/ci-tests/$env:CI_RID/Electron2D.Tests.exe" "bin/ci/$env:CI_RID/diagnostics"
+        run: ./tools/ci/debug_windows.ps1 "bin/ci-tests/$env:CI_RID/Electron2D.Tests.exe" "bin/ci/$env:CI_RID/diagnostics" $env:CI_RID.Substring(4)
       - uses: actions/upload-artifact@v4
-        if: failure() && steps.full_suite.outcome == 'failure' && inputs.rid == 'win-arm64'
+        if: failure() && (steps.full_suite.outcome == 'failure' || steps.compound_control.outcome == 'failure') && startsWith(inputs.rid, 'win-')
         with:
           name: native-crash-${{ inputs.rid }}
           path: bin/ci/${{ inputs.rid }}/diagnostics/

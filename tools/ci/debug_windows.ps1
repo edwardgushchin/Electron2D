@@ -1,9 +1,10 @@
-param([Parameter(Mandatory)][string]$Executable, [Parameter(Mandatory)][string]$Output)
+param([Parameter(Mandatory)][string]$Executable, [Parameter(Mandatory)][string]$Output,
+      [ValidateSet('arm64', 'x64', 'x86')][string]$Architecture = 'arm64')
 $ErrorActionPreference = 'Stop'
 $Executable = (Resolve-Path $Executable).Path
 New-Item -ItemType Directory -Force $Output | Out-Null
 $Output = (Resolve-Path $Output).Path
-$cdb = "${env:ProgramFiles(x86)}\Windows Kits\10\Debuggers\arm64\cdb.exe"
+$cdb = "${env:ProgramFiles(x86)}\Windows Kits\10\Debuggers\$Architecture\cdb.exe"
 if (!(Test-Path $cdb)) {
     $sdk = Get-ItemProperty 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*' -ErrorAction SilentlyContinue |
         Where-Object { $_.DisplayName -like 'Windows Software Development Kit*' -and $_.BundleCachePath } |
@@ -19,7 +20,7 @@ if (!(Test-Path $cdb)) {
     if (!$setup.WaitForExit(360000)) { Stop-Process -Id $setup.Id -Force; throw 'Debugger installation deadline.' }
     if ($setup.ExitCode -notin 0, 3010) { throw "Debugger installation failed: $($setup.ExitCode)." }
 }
-if (!(Test-Path $cdb)) { throw 'Native ARM64 CDB is unavailable.' }
+if (!(Test-Path $cdb)) { throw "Native $Architecture CDB is unavailable." }
 # Keep only exception context, symbolic stacks and module identities, never a heap/key dump.
 $commands = Join-Path $Output 'commands.txt'
 @'

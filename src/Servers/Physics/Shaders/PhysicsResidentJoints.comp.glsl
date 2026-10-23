@@ -108,7 +108,8 @@ void main()
         float speed=dot2(b.velocity.xy-a.velocity.xy,n)+b.velocity.z*ab-a.velocity.z*aa;
         float decay=exp(-j.policy.x*time.x*k);
         // Decay can eliminate an extreme elastic term; finite caps saturate before range validation.
-        float impulse=((j.motorSpring.z-distance)*time.x*decay)*j.motorSpring.w-speed*(1-decay)/k;
+        float impulse=-speed*(1-decay)/k;
+        if(decay!=0)impulse+=((j.motorSpring.z-distance)*time.x*decay)*j.motorSpring.w;
         if(isnan(impulse)){fail();return;}
         float cap=impulseCap(j);
         if(j.solverPolicy.z<maximum)impulse=clamp(impulse,-cap,cap);

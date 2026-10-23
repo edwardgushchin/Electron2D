@@ -1,8 +1,21 @@
 # Physics allocation measurement
 
-Last updated: 2026-10-22
+Last updated: 2026-10-23
 
 ## Scope and ownership
+
+The resting-body fixture drains the existing calibrated collection/finalization
+warmup before its first 64-frame counter interval. Its failure records both
+owner and all-thread bytes; the zero-byte assertions and physical frames remain.
+An isolated CPU scene profile passed while an initial aggregate run failed this
+interval. A second aggregate passed the same interval before continuing; those
+controls do not attribute the original counter change to engine allocations.
+
+FontTests uses the same collection/finalization boundary after its sixteen
+prepared font/layout/recording cycles. Its sixty-four measured rebuilds retain
+their strict zero owner-thread-byte assertion. The Linux ARM64 aggregate's
+2,416-byte counter failure is retained as evidence, without assigning its cause
+or treating local controls as corrected target acceptance.
 
 This report calibrates allocation evidence for the warmed CPU/GPU contract. It
 changes no runtime type, numerical rule, public API or existing zero-byte gate.

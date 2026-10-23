@@ -190,6 +190,7 @@ internal static class FontTests
         painter.Paint = node => font.DrawString(node, new(0, 20), "AV ffi a\u0301");
         var vertices = new List<CanvasVertex>(); var batches = new List<CanvasBatch>();
         for (var i = 0; i < 16; i++) { font.InvalidateFont(); font.GetStringSize("AV ffi a\u0301"); Record(painter, vertices, batches); }
+        AllocationWarmupCheck.Collect();
         var before = GC.GetAllocatedBytesForCurrentThread();
         for (var i = 0; i < 64; i++)
         {

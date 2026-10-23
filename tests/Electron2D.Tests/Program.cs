@@ -821,6 +821,11 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTINUOUS_PHYSICS") is 
     var backend = continuousBackend switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for continuous physics.") };
     PhysicsCCDTests.Run(backend); PhysicsJointPolicyTests.Run(backend); WorldBoundaryTests.Run(backend); return;
 }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPOUND_PHYSICS") is { } compoundBackend)
+{
+    var backend = compoundBackend switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for compound physics.") };
+    BackendChecks.RunCompound(backend); return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_PHYSICS") is { } sceneBackend)
 {
     var backend = sceneBackend switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for scene physics.") };

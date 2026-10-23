@@ -32,10 +32,12 @@ internal sealed class PhysicsBodyTests(PhysicsServer.Backend backend)
             Reject<ArgumentOutOfRangeException>(() => body.Mass = float.MaxValue);
             Check(body.Mass == 1e-30f, "An unrepresentable geometry-derived inertia leaves the previous body state intact.");
             body.Mass = 1;
+            AllocationWarmupCheck.Collect();
             var allocatedBefore = GC.GetAllocatedBytesForCurrentThread(); var allBefore = GC.GetTotalAllocatedBytes(true);
             for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
             var allocated = GC.GetAllocatedBytesForCurrentThread() - allocatedBefore;
-            Check(allocated == 0 && GC.GetTotalAllocatedBytes(true) - allBefore == 0, "A warmed resting physics frame allocates no managed memory.");
+            var allAllocated = GC.GetTotalAllocatedBytes(true) - allBefore;
+            Check(allocated == 0 && allAllocated == 0, $"A warmed resting physics frame allocated {allocated}/{allAllocated} owner/all-thread B.");
 
             body.CanSleep = false;
             for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);

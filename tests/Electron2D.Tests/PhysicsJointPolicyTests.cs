@@ -147,6 +147,7 @@ internal sealed class PhysicsJointPolicyTests(bool gpu, PhysicsServer.Backend ba
         PhysicsServer.DampedSpringJointSetDamping(r.Joint, 0); PhysicsServer.JointSetMaxForce(r.Joint, 0);
         PhysicsServer.BodySetLinearVelocity(r.B, new(6, 8)); r.Step(.1);
         Near(r.Velocity, new(6, 8), .001f, "Zero force supplies zero spring impulse even for extreme finite coefficients");
+        Console.WriteLine($"Finite spring caps {backend}: extreme stiffness, complete axial decay and zero force passed.");
     }
 
     private void VerifyKinematicBudget(bool gpu)

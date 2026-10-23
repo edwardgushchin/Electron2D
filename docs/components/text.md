@@ -1,6 +1,13 @@
 # Text shaping and canvas fonts
 
-Last updated: 2026-10-21
+Last updated: 2026-10-23
+
+FontTests drains the existing calibrated collection/finalization warmup after its
+sixteen layout/recording warmups and before measuring the same sixty-four rebuilds.
+The zero owner-thread allocation requirement is unchanged. CI `39869572938` on
+Linux ARM64 reached this fixture after the physics and native font checks, then
+reported 2,416 counter bytes. Their cause is not attributed; the corrected warmup
+still requires that full target suite. Native allocator totals remain separate.
 
 Private native binaries come from versioned Linux/macOS/Windows packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; full Windows/macOS runtime verification is pending.
 
