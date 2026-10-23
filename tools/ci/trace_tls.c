@@ -19,6 +19,7 @@ static _Atomic(Delete) delete_function;
 static _Atomic unsigned char tracked[4096];
 static _Atomic unsigned created, deleted, live, peak, failures, untracked;
 static atomic_flag failure_stack = ATOMIC_FLAG_INIT;
+static atomic_flag key_gate = ATOMIC_FLAG_INIT;
 static _Atomic int output_descriptor = -1;
 
 static int output(void)
@@ -62,6 +63,8 @@ int pthread_key_create(pthread_key_t *key, void (*destructor)(void *))
         if (!function) _exit(127);
         atomic_store(&create_function, function);
     }
+    // Record deletion before another native call can reuse the same key slot.
+    while (atomic_flag_test_and_set_explicit(&key_gate, memory_order_acquire)) { }
     errno = initial_errno;
     int result = function(key, destructor), saved_errno = errno;
     if (!result) {
@@ -73,6 +76,7 @@ int pthread_key_create(pthread_key_t *key, void (*destructor)(void *))
             }
         } else atomic_fetch_add(&untracked, 1);
     } else atomic_fetch_add(&failures, 1);
+    atomic_flag_clear_explicit(&key_gate, memory_order_release);
     emit("create", result ? UINT_MAX : *key, result, __builtin_extract_return_addr(__builtin_return_address(0)));
     if (result && !atomic_flag_test_and_set(&failure_stack)) {
         void *frames[24];
@@ -92,12 +96,14 @@ int pthread_key_delete(pthread_key_t key)
         if (!function) _exit(127);
         atomic_store(&delete_function, function);
     }
+    while (atomic_flag_test_and_set_explicit(&key_gate, memory_order_acquire)) { }
     errno = initial_errno;
     int result = function(key), saved_errno = errno;
     if (!result && key < sizeof(tracked) / sizeof(tracked[0]) && atomic_exchange(&tracked[key], 0)) {
         atomic_fetch_add(&deleted, 1);
         atomic_fetch_sub(&live, 1);
     }
+    atomic_flag_clear_explicit(&key_gate, memory_order_release);
     emit("delete", key, result, __builtin_extract_return_addr(__builtin_return_address(0)));
     errno = saved_errno;
     return result;

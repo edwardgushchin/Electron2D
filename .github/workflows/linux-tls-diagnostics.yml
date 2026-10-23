@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   full_suite:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 180
     defaults:
       run:
@@ -36,7 +36,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: tools/shaders/obj/toolchain/
-          key: shader-tools-ubuntu-24.04-arm-${{ runner.arch }}-${{ hashFiles('tools/shaders/toolchain.lock.json', 'tools/shaders/build_toolchain.py') }}
+          key: shader-tools-ubuntu-26.04-arm-${{ runner.arch }}-${{ hashFiles('tools/shaders/toolchain.lock.json', 'tools/shaders/build_toolchain.py') }}
       - uses: actions/download-artifact@v4
         with:
           run-id: ${{ inputs.native_run_id }}

@@ -24,6 +24,17 @@ import run_browser
 
 
 class Checks(unittest.TestCase):
+    def test_tls_diagnostic_uses_the_registered_arm64_host_and_prerequisites(self):
+        workflow = (rids.ROOT / '.github/workflows/linux-tls-diagnostics.yml').read_text()
+        row = next(row for row in rids.matrix() if row['rid'] == 'linux-arm64')
+        self.assertIn('runs-on: ' + row['runner'], workflow)
+        self.assertIn('key: shader-tools-' + row['runner'] + '-', workflow)
+        standard = (rids.ROOT / '.github/workflows/rid.yml').read_text().partition('      - name: Install Linux native prerequisites\n')[2].split('\n      - ', 1)[0]
+        diagnostic = workflow.partition('      - name: Install runtime prerequisites\n')[2].split('\n      - ', 1)[0]
+        required = set(re.search(r'sudo apt-get install -y ([^\n]+)', standard)[1].split())
+        actual = set(re.search(r'sudo apt-get install -y ([^\n]+)', diagnostic)[1].split())
+        self.assertLessEqual(required, actual)
+
     def test_macos_x64_keeps_its_target_on_a_capable_gpu_host(self):
         workflow = (rids.ROOT / ".github/workflows/ci.yml").read_text()
         self.assertIn("runner: ${{ matrix.runner }}", workflow.partition("  tests:\n")[0])

@@ -48,7 +48,10 @@ key, result, live count and caller module/offset; a failed allocation includes a
 bounded native stack. A separate owner-only trace file preserves application
 stdout/stderr, including inherited child hosts. `python3 -B tools/ci/test_tls_trace.py` verifies real cleanup,
 intentional leakage, exhaustion, errno and thread-destructor preservation before
-use. The helper is outside all runtime/package projects. Traced execution is
+use. A delayed-delete control verifies that immediate cross-thread reuse of a key
+slot does not corrupt the counter; native mutation and bookkeeping share one short
+gate, released before logging. The diagnostic uses the registry's Ubuntu 26.04
+ARM64 host and its runtime prerequisites. The helper is outside all runtime/package projects. Traced execution is
 diagnostic evidence; final platform acceptance still requires the ordinary
 untraced full suite. Reused native packages must match current source receipts.
 
