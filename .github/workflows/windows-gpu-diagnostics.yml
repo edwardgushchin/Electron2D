@@ -7,6 +7,11 @@ on:
         description: Successful native package workflow run
         required: true
         type: string
+      recovery_compiler:
+        description: Compare the native DXBC recovery compiler; translation retains production DXIL
+        type: choice
+        default: dxil
+        options: [dxil, dxbc]
 
 permissions:
   contents: read
@@ -23,6 +28,7 @@ jobs:
       RestoreAdditionalProjectSources: ${{ github.workspace }}/bin/native-feed
       DOTNET_TieredCompilation: '0'
       ELECTRON2D_TEST_COMPOUND_PHYSICS: gpu
+      RECOVERY_COMPILER: ${{ inputs.recovery_compiler }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v6
@@ -87,10 +93,33 @@ jobs:
           assert original.count(finish) == 1
           ready = finish.replace('return new(', 'var pipeline = new RenderHandle(', 1) + newline + '        Console.WriteLine($"GPU pipeline ready {DateTime.UtcNow:O}: {name}");' + newline + '        return pipeline;'
           path.write_bytes(instrumented.replace(finish, ready, 1).encode())
+          compiler = Path('src/Servers/Rendering/ShaderCompiler.cs')
+          compiler_original = compiler.read_bytes()
+          selection = os.environ['RECOVERY_COMPILER']
+          assert selection in ('dxil', 'dxbc')
+          if selection == 'dxbc':
+              text = compiler_original.decode()
+              signature = 'CreateComputePipeline(nint device, byte[] code)'
+              compile = 'var compiled = ShaderCross.CompileDXILFromSPIRV(in info, out var size);'
+              condition = 'if ((SDL.GetGPUShaderFormats(device) & SDL.GPUShaderFormat.DXIL) == 0)'
+              assert text.count(signature) == text.count(compile) == text.count(condition) == 1
+              text = text.replace(signature, 'CreateComputePipeline(nint device, byte[] code, bool nativeRecovery = false)')
+              text = text.replace(condition, 'if (nativeRecovery && (SDL.GetGPUShaderFormats(device) & ShaderCross.GetSPIRVShaderFormats() & SDL.GPUShaderFormat.DXBC) == 0) throw new NotSupportedException("Native recovery requires DXBC support.");' + newline + '                ' + condition)
+              text = text.replace(compile, 'var compiled = nativeRecovery ? ShaderCross.CompileDXBCFromSPIRV(in info, out var size) : ShaderCross.CompileDXILFromSPIRV(in info, out size);')
+              text = text.replace('if (compiled == 0) return 0;', 'if (compiled == 0) { Console.WriteLine("Compute compilation failed: " + SDL.GetError()); return 0; }')
+              text = text.replace('Format = SDL.GPUShaderFormat.DXIL,', 'Format = nativeRecovery ? SDL.GPUShaderFormat.DXBC : SDL.GPUShaderFormat.DXIL,')
+              compiler.write_bytes(text.encode())
+              call = 'ShaderCompiler.CreateComputePipeline(Device, bytes.ToArray())'
+              text = path.read_text()
+              assert text.count(call) == 1
+              kinds = 'name is "PhysicsResidentMotionQueries0.comp.portable.spv" or "PhysicsResidentMotionQueries1.comp.portable.spv" or "PhysicsResidentMotionQueries3.comp.portable.spv"'
+              path.write_text(text.replace(call, 'ShaderCompiler.CreateComputePipeline(Device, bytes.ToArray(), ' + kinds + ')'))
           Path('bin/diagnostics').mkdir(parents=True, exist_ok=True)
-          receipt = {'compiler': 'production DXIL', 'headSHA': os.environ['GITHUB_SHA'], 'instrumentedSource': str(path),
+          receipt = {'compiler': selection + ' recovery; DXIL translation', 'headSHA': os.environ['GITHUB_SHA'], 'instrumentedSource': str(path),
                      'originalSHA256': hashlib.sha256(original_bytes).hexdigest(),
                      'actualSHA256': hashlib.sha256(path.read_bytes()).hexdigest(),
+                     'originalCompilerSHA256': hashlib.sha256(compiler_original).hexdigest(),
+                     'actualCompilerSHA256': hashlib.sha256(compiler.read_bytes()).hexdigest(),
                      'motionStages': ['initial recovery', 'continued recovery x3', 'translation', 'rest and result'],
                      'shaderSHA256': {name: hashlib.sha256(Path(name).read_bytes()).hexdigest() for name in
                          ['src/Servers/Rendering/ShaderCompiler.cs', 'src/Servers/Physics/Shaders/PhysicsResidentMotionQueries.comp.glsl']}}

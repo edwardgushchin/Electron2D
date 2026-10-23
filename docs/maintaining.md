@@ -405,3 +405,5 @@ For Custom graph dependency changes, run the root --visual-shader-custom-topolog
 probe and the Custom author/import/render corpus. Cover last incoming edges,
 selected versus overridden cycles, callback count and disconnected providers in
 the other stage; ordinary graph and provider traversal must select the same edges.
+
+The manual Windows recovery_compiler=dxbc control compiles only initial recovery, continued recovery and final-rest motion pipelines through explicit native DXBC. Translation and all other kernels retain DXIL. It records original/actual compiler hashes, requires advertised DXBC support and preserves compilation errors and bytecode ownership. This diagnostic does not change production selection or clear the failed DXIL gate.
