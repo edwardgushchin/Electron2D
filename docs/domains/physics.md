@@ -7,7 +7,8 @@ translation fractions after recovery instead of carrying unused fractions throug
 recovery passes. Existing iteration/transfer limits and public declarations stay
 unchanged; the component distinguishes the Windows failure from target acceptance.
 Portable recovery invokes its unchanged projection after the geometry scan;
-native acceptance remains pending after a trace reached contacts but not projection.
+ordinary Windows joint/motion preflights pass after a trace reached contacts but
+not projection. Complete native and final-source platform acceptance remain open.
 
 [Resident shape-query specialization](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
 compiles all four operations independently while retaining mixed batches in one

@@ -221,11 +221,21 @@ The projection formula, four attempts, 32-plane/key caps and six device passes
 are unchanged. The ordinary Vulkan scan retains its original projection location.
 This separates the reduction from the large traversal's early-return flow, the
 observed boundary that retained a plane but skipped projection. Target execution
-must establish whether it corrects the native failure; a driver/compiler root
-cause remains unproven.
+still requires the complete release gates; a driver/compiler root cause remains
+unproven.
 Local forced-ordered public joints, functional motion, compound and resident/
 public one-way cohorts pass with this boundary. All five modules retain their
 per-stage resource/workgroup reflection and the ordinary Vulkan hash above.
+
+Ordinary Windows run 40019553649 at `04a1071f4`, artifact 12530257587, passes
+both the complete public-joint and functional-motion preflights with raw exits
+`0 (0x00000000)`. Motion/compiler/generator source hashes are unchanged by the
+diagnostic host; recovery tracing is disabled. Joint-filter recovery now returns
+GPU travel `(0, 13.12215)` and depth `1.9578495`, against CPU travel
+`(0, 13.12215)` and depth `1.9578487`. The functional geometry/recovery/filter/
+lifetime/velocity/batch cohort and 64 warmed scene/compound queries pass, retaining
+0/0 owner/all-thread managed bytes. The full executable starts after both genuine
+focused outcomes succeed. Its completion and the final source matrix remain open.
 
 ## CPU corrections found by comparison
 

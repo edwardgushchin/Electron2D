@@ -74,10 +74,15 @@ one accepted recovery plane and positive depth 2.0799999237 but never enters
 projection, then marks the unchanged correction converged. The role-only
 specialization at `eec1e6dce` has identical initial-stage HLSL after temporary-name
 normalization and is retired as a correction. Portable recovery now calls
-projection after scan returns; this candidate still needs an ordinary Windows
-run and the final complete source matrix.
+projection after scan returns; its complete ordinary Windows run and final source
+matrix remain required.
 The ordinary role-only run 40018224090 repeats both zero-recovery failures,
 retaining unchanged source hashes and skipping the full suite after preflight.
+Run 40019553649 at `04a1071f4` passes both public-joint and functional-motion
+preflights with raw zero exits and unchanged production motion source hashes
+(artifact 12530257587). GPU joint-filter recovery matches CPU travel 13.12215;
+64 warmed public scene/compound motion queries retain 0/0 managed bytes. Its
+full executable begins at 20:39:17 UTC; completion and the final matrix remain open.
 
 Final complete CI, public package restoration, rendered consumers and release
 publication remain pending. The current declaration register is not a substitute

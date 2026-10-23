@@ -17,7 +17,8 @@ control and separates local checks from target acceptance of the return boundary
 Portable recovery projects its retained planes from the main stage after the
 geometry scan returns, preserving the same formula and device passes. The
 Windows trace reaches accepted planes but skips the former in-scan projection;
-target acceptance of the new call boundary remains required.
+ordinary Windows joint and functional-motion preflights now pass with the new
+call boundary. Full executable and final-source platform acceptance remain open.
 
 [Shape-query operation kernels](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
 retain separate Intersect/Contacts/Rest/Cast pipelines. Mixed batches use one
