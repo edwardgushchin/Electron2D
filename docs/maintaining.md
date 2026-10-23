@@ -34,6 +34,14 @@ Physics query/CCD compiler-profile changes must retain unchanged optimized Vulka
 
 An ARM64 Windows native crash reruns the same complete executable under CDB, without the historical DTLS-only selector. The diagnostic retains symbolic exception context/module identities and an eight-minute child deadline inside the ten-minute CI step. It cannot hide or replace the original failed full-suite status.
 
+The manual Windows GPU diagnostic records a timestamp before each cold pipeline
+creation in its temporary source copy, preserving original/instrumented source
+and compiler hashes. It compares the current DXIL path and the native convenience
+compiler with the operation-specific kernels. Its fresh compound fixture has a
+ten-minute deadline so a cold preparation stall can still reach CDB and artifact
+upload within the job deadline. Retired lifetime controls are not production fixes;
+both compiler controls retain current ownership and preserve the actual fixture failure.
+
 The x64 macOS Tests job runs the unchanged `osx-x64` target on Apple Silicon through Rosetta for Metal availability. Keep native production and Build on their registered Intel host, verify the test app's x64 Mach-O architecture, and retain the full suite plus trimmed/NativeAOT checks. `tools/ci/test_checks.py` executes the actual Rosetta setup script for already available, installed, failed-install and wrong-architecture cases; these dispatch checks do not establish target execution or physical Intel GPU acceptance.
 
 Fresh-process fixtures restart `Environment.ProcessPath`, adding the test assembly
