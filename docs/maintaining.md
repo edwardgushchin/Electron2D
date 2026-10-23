@@ -78,7 +78,7 @@ production compiler policy or package a test driver. The preceding convenience
 control reports invalid DXBC after compilation and exits `0xE0434352`; its replay
 ends with the same managed failure. Explicit bytecode compilation now records the
 compiler error before pipeline creation can replace it, and the existing explicit
-pipeline owner frees that bytecode on both success and failure.
+pipeline owner frees that bytecode on both success and failure. It identifies FXC error X3531 at the 128-iteration query sweep: the compiler wants to unroll a loop marked with a loop attribute. The current temporary control removes only that sweep prohibition under the portable motion definition; the 128-iteration limit and all eight refinements remain. Source receipts include the shared distance include before/after hashes. LF/CRLF and both compiler paths produce the same SPIR-V; the ordinary Vulkan control is byte-identical to the preceding linear/flat diagnostic. Offline DXIL is 201692 bytes/4294 blocks and compiles in 9.3 s. Target execution remains required.
 The fixture stays under tools/ci and changes only the temporary
 checkout copy. Source receipts include both motion shader hashes; this diagnostic
 rewrite does not change the production shader or establish target acceptance.

@@ -109,7 +109,18 @@ jobs:
           assert 'ga.data.z==5u&&gb.data.z==5u' in motion_text
           motion_text = motion_text.replace(nested, 'for(uint piece=0u;piece<(min(na,nb)==0u?0u:max(na,nb));piece++)')
           motion_text = motion_text.replace(pair, 'uint pa=na>1u?piece:0u,pb=nb>1u?piece:0u;' + motion_newline + '                            ' + pair)
+          include = '#include "PhysicsQueryDistance.inc.glsl"'
+          assert motion_text.count(include) == 1
+          motion_text = motion_text.replace(include, '#ifdef E2D_SHARED_MOTION_SCAN' + motion_newline + '#define E2D_SWEEP_HINT_CONTROL' + motion_newline + '#endif' + motion_newline + include)
           motion.write_bytes(motion_text.encode())
+          distance = motion.with_name('PhysicsQueryDistance.inc.glsl')
+          distance_original = distance.read_bytes()
+          distance_newline = '\r\n' if b'\r\n' in distance_original else '\n'
+          distance_text = distance_original.decode()
+          loop = '    [[dont_unroll]] for(uint i=0u;i<128u;i++)'
+          assert distance_text.count(loop) == 1
+          distance_text = distance_text.replace(loop, '#ifndef E2D_SWEEP_HINT_CONTROL' + distance_newline + '    [[dont_unroll]]' + distance_newline + '#endif' + distance_newline + '    for(uint i=0u;i<128u;i++)')
+          distance.write_bytes(distance_text.encode())
           compiler = Path('src/Servers/Rendering/ShaderCompiler.cs')
           compiler_bytes = compiler.read_bytes()
           if os.environ['MOTION_COMPILER'] == 'native-motion':
@@ -144,7 +155,9 @@ jobs:
                      'actualSHA256': hashlib.sha256(path.read_bytes()).hexdigest(),
                      'originalCompilerSHA256': hashlib.sha256(compiler_bytes).hexdigest(),
                      'actualCompilerSHA256': hashlib.sha256(compiler.read_bytes()).hexdigest(),
-                     'motionControl': 'linear motion and one concave-piece loop; excluded concave/concave and eight refinements unchanged',
+                     'motionControl': 'linear flat motion with portable sweep unroll prohibition removed; 128 sweep iterations and eight refinements unchanged',
+                     'originalDistanceSHA256': hashlib.sha256(distance_original).hexdigest(),
+                     'actualDistanceSHA256': hashlib.sha256(distance.read_bytes()).hexdigest(),
                      'originalMotionSHA256': hashlib.sha256(motion_original).hexdigest(),
                      'actualMotionSHA256': hashlib.sha256(motion.read_bytes()).hexdigest()}
           Path('bin/diagnostics/compiler-source.json').write_text(json.dumps(receipt, indent=2) + '\n')
