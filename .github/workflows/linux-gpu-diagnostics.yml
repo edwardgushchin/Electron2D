@@ -94,10 +94,17 @@ jobs:
           for marker, trace in markers.items():
               assert source.count(marker) == 1
               source = source.replace(marker, marker + newline + '                ' + trace, 1)
+          marker = 'if (pairs == 0) return 1;'
+          assert source.count(marker) == 1
+          source = source.replace(marker, marker + newline + '        TraceCCDInputs(pairs, delta);', 1)
+          helper = Path('src/Servers/Physics/GPUPhysicsBodyStore.CCDDiagnostic.cs')
+          assert not helper.exists()
+          helper.write_bytes(Path('tools/ci/LinuxCCDTrace.inc.cs').read_bytes())
           path.write_bytes(source.encode())
           receipt = {'headSHA': os.environ['GITHUB_SHA'], 'source': str(path),
                      'originalSHA256': hashlib.sha256(original).hexdigest(),
-                     'actualSHA256': hashlib.sha256(path.read_bytes()).hexdigest()}
+                     'actualSHA256': hashlib.sha256(path.read_bytes()).hexdigest(),
+                     'helperSHA256': hashlib.sha256(helper.read_bytes()).hexdigest()}
           Path('bin/diagnostics/trace-source.json').write_text(json.dumps(receipt, indent=2) + '\n')
           PY
           dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r linux-x64 --self-contained true -o bin/diagnostics/runner --nologo
@@ -122,7 +129,10 @@ jobs:
           assert hashlib.sha256(original).hexdigest() == receipt['originalSHA256']
           path = Path('src/Servers/Physics/GPUPhysicsBodyStore.Continuous.cs')
           assert str(path) == receipt['source']
+          helper = Path('src/Servers/Physics/GPUPhysicsBodyStore.CCDDiagnostic.cs')
+          assert hashlib.sha256(helper.read_bytes()).hexdigest() == receipt['helperSHA256']
           path.write_bytes(original)
+          helper.unlink()
           PY
           dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r linux-x64 --self-contained true -o bin/diagnostics/runner --nologo
           cmp obj/Release/net10.0/linux-x64/shaders/manifest.json bin/diagnostics/baseline-shaders.json
@@ -180,6 +190,7 @@ jobs:
             bin/diagnostics/*.log
             bin/diagnostics/*.json
             bin/diagnostics/*.txt
+            bin/diagnostics/ccd-*.bin
           if-no-files-found: error
       - name: Preserve original and SIMD fixture failures
         if: steps.baseline.outcome == 'failure' || steps.simd_control.outcome == 'failure'

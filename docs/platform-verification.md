@@ -128,6 +128,15 @@ executes both explicit-Lavapipe SIMD controls even after a passing baseline and
 preserves failure from either control. A separate local 256/512-bit comparison
 uses the isolated CI Mesa library without changing installed system packages.
 
+The failure-only temporary replay also records raw device inputs immediately
+before CCD dispatch: bodies, shapes, geometry, vertices, candidate pairs, centers
+and active position corrections, with scalar settings. It uses separate completed
+readbacks without changing those buffers or shader bytecode. The source receipt
+hashes the temporary helper, which is removed before untraced controls. A traced
+pass alone cannot clear a baseline failure. The local prepared-helper build and
+complete compound execution pass with 22 settings records and 154 raw buffers;
+body/shape/pair/center lengths match their recorded counts and strides.
+
 The corrected Windows ARM64 run `40029790832` at `3bddfb403` passes all three raw
 focused exits with app-local WARP 1.0.21 (artifact `12535550765`). Windows x86 run
 `40031574214` at `426798799` repeats those three zero exits, including shape cast
