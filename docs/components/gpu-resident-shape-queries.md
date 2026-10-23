@@ -122,6 +122,16 @@ Specialization therefore has local functional evidence but does not yet provide
 acceptable Windows execution or cold preparation cost. The diagnostic timestamps
 are outside measured query intervals and are not shipped runtime logging.
 
+Run `39905224904` separates creation from first use: Intersect and Contacts
+pipeline creation returned after about 1.08 and 2.44 seconds respectively. The
+first Intersect completion still took about 39 seconds after creation; Contacts
+did not complete before the ten-minute deadline. The owned six-minute CDB break
+captured a WARP worker inside `CProgram::OptimizePointersUsage` under repeated
+`CSpanNode::Reduce`/`Task_CompileShader` frames while the caller waited. This
+establishes deferred driver JIT work after pipeline creation, rather than a
+successful Contacts dispatch or acceptable cold execution. Local compiler-flow
+controls do not yet provide a verified correction.
+
 ## Boundary and ownership
 
 GPUPhysicsBodyStore.QueryShapes executes logical shape intersections, contact pairs,

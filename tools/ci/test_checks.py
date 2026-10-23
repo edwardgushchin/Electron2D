@@ -22,9 +22,37 @@ import rids
 import run_android
 import run_apple
 import run_browser
+import select_lavapipe
 
 
 class Checks(unittest.TestCase):
+    def test_headless_linux_selects_one_installed_lavapipe_driver(self):
+        for workflow in ('rid.yml', 'linux-tls-diagnostics.yml', 'linux-gpu-diagnostics.yml'):
+            self.assertIn('python -B tools/ci/select_lavapipe.py', (rids.ROOT / '.github/workflows' / workflow).read_text())
+        with tempfile.TemporaryDirectory(prefix='e2d Vulkan driver ') as directory:
+            root = Path(directory)
+            with self.assertRaises(ValueError): select_lavapipe.environment(root)
+            for name in ('lvp_icd.json', 'lvp_icd.aarch64.json'):
+                manifest = root / name
+                manifest.write_text(json.dumps({'ICD': {'library_path': 'libvulkan_lvp.so'}}))
+                expected = str(manifest.resolve())
+                self.assertEqual(select_lavapipe.environment(root), {'VK_DRIVER_FILES': expected, 'VK_ICD_FILENAMES': expected})
+                (root / 'lvp_icd.extra.json').write_text(manifest.read_text())
+                with self.assertRaises(ValueError): select_lavapipe.environment(root)
+                (root / 'lvp_icd.extra.json').unlink()
+                for library in ('libvulkan_gfxstream.so', None):
+                    manifest.write_text(json.dumps({'ICD': {'library_path': library}}))
+                    with self.assertRaises(ValueError): select_lavapipe.environment(root)
+                manifest.write_text('{broken')
+                with self.assertRaises(ValueError): select_lavapipe.environment(root)
+                manifest.unlink()
+            manifest = root / 'lvp_icd.json'
+            for configuration in ([], {'ICD': None}):
+                manifest.write_text(json.dumps(configuration))
+                with self.assertRaises(ValueError): select_lavapipe.environment(root)
+            with patch.object(Path, 'resolve', return_value=root / 'lvp_icd\nextra.json'):
+                with self.assertRaises(ValueError): select_lavapipe.environment(root)
+
     def test_linux_gpu_diagnostic_preserves_the_baseline_and_shader_identity(self):
         workflow = (rids.ROOT / '.github/workflows/linux-gpu-diagnostics.yml').read_text()
         row = next(row for row in rids.matrix() if row['rid'] == 'linux-x64')
@@ -36,6 +64,9 @@ class Checks(unittest.TestCase):
         step = workflow.partition('      - name: Trace candidate and impact boundaries')[2].split('\n      - ', 1)[0]
         inline = step.partition("          python - <<'PY'\n")[2].split('\n          PY', 1)[0]
         code = '\n'.join(line[10:] for line in inline.splitlines())
+        restore_step = workflow.partition('      - name: Prepare an untraced Lavapipe control')[2].split('\n      - ', 1)[0]
+        inline_restore = restore_step.partition("          python - <<'PY'\n")[2].split('\n          PY', 1)[0]
+        restore = '\n'.join(line[10:] for line in inline_restore.splitlines())
         path = Path('src/Servers/Physics/GPUPhysicsBodyStore.Continuous.cs')
         original = (rids.ROOT / path).read_bytes().replace(b'\r\n', b'\n')
         previous = Path.cwd()
@@ -56,6 +87,12 @@ class Checks(unittest.TestCase):
                         receipt = json.loads(Path('bin/diagnostics/trace-source.json').read_text())
                         self.assertEqual(receipt['originalSHA256'], hashlib.sha256(before).hexdigest())
                         self.assertEqual(receipt['actualSHA256'], hashlib.sha256(after).hexdigest())
+                        exec(compile(restore, 'linux-gpu-restore', 'exec'), {})
+                        self.assertEqual(path.read_bytes(), before)
+                        Path('bin/diagnostics/continuous-original.cs').write_bytes(b'changed')
+                        path.write_bytes(after)
+                        with self.assertRaises(AssertionError): exec(compile(restore, 'linux-gpu-restore', 'exec'), {})
+                        self.assertEqual(path.read_bytes(), after)
                 missing = original.replace(b'result = ((float*)mapped)[1];', b'/* missing marker */')
                 path.write_bytes(missing)
                 with self.assertRaises(AssertionError): exec(compile(code, 'linux-gpu-workflow', 'exec'), {})
@@ -73,6 +110,21 @@ class Checks(unittest.TestCase):
         required = set(re.search(r'sudo apt-get install -y ([^\n]+)', standard)[1].split())
         actual = set(re.search(r'sudo apt-get install -y ([^\n]+)', diagnostic)[1].split())
         self.assertLessEqual(required, actual)
+
+    def test_linux_driver_verification_runs_the_complete_untraced_command(self):
+        workflow = (rids.ROOT / '.github/workflows/linux-tls-diagnostics.yml').read_text()
+        step = workflow.partition('      - name: Run the complete untraced suite with Lavapipe\n')[2].split('\n      - ', 1)[0]
+        command = '\n'.join(line[10:] for line in step.partition('        run: |\n')[2].splitlines())
+        self.assertTrue(command)
+        with tempfile.TemporaryDirectory(prefix='e2d untraced Linux ') as directory:
+            root = Path(directory)
+            runner = root / 'bin/diagnostics/runner/Electron2D.Tests'
+            runner.parent.mkdir(parents=True)
+            for code, marker in ((0, 'Electron2D checks passed.'), (7, 'Electron2D checks passed.'), (0, 'Missing result')):
+                runner.write_text('#!/bin/sh\n[ -z "${LD_PRELOAD+x}${E2D_TLS_TRACE_FILE+x}" ] || exit 92\nprintf "%s\\n" "' + marker + '"\nexit ' + str(code) + '\n')
+                runner.chmod(0o755)
+                result = subprocess.run(['bash', '-e', '-o', 'pipefail', '-c', 'export LD_PRELOAD=must-be-cleared E2D_TLS_TRACE_FILE=must-be-cleared\n' + command], cwd=root, capture_output=True, text=True)
+                self.assertEqual(result.returncode == 0, code == 0 and marker == 'Electron2D checks passed.')
 
     def test_macos_x64_keeps_its_target_on_a_capable_gpu_host(self):
         workflow = (rids.ROOT / ".github/workflows/ci.yml").read_text()

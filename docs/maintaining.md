@@ -52,9 +52,11 @@ on the registered x64 host. A failed baseline is replayed with candidate-count a
 impact-fraction logging in a temporary source copy; the shader manifest must stay
 byte-identical. CPU/driver identities, both logs and source hashes are retained.
 Neither a traced replay nor a local pass replaces the failed untraced target gate.
+A further control restores the exact original source bytes and repeats the
+unchanged fixture with only the installed Lavapipe ICD selected. The original
+baseline still determines the diagnostic job's failure status.
 
-The manual Linux TLS diagnostic runs the complete ARM64 executable with a separate
-native `pthread_key_create`/`pthread_key_delete` interposer. It records process,
+The native `pthread_key_create`/`pthread_key_delete` interposer records process,
 key, result, live count and caller module/offset; a failed allocation includes a
 bounded native stack. A separate owner-only trace file preserves application
 stdout/stderr, including inherited child hosts. `python3 -B tools/ci/test_tls_trace.py` verifies real cleanup,
@@ -65,6 +67,20 @@ gate, released before logging. The diagnostic uses the registry's Ubuntu 26.04
 ARM64 host and its runtime prerequisites. The helper is outside all runtime/package projects. Traced execution is
 diagnostic evidence; final platform acceptance still requires the ordinary
 untraced full suite. Reused native packages must match current source receipts.
+
+Run `39904064029` attributed 1,011 unreleased keys in the main process to the
+system `libvulkan_gfxstream.so`; the later `libusb` assertion was the victim of
+the exhausted 1,024-key process limit. An isolated Vulkan instance create/destroy
+control reproduced one lost key per instance when the installed gfxstream ICD
+was also enumerated, without loading SDL or the engine. Lavapipe alone retained
+all 1,016 initially free keys over 2,048 successful instance lifetimes locally.
+Linux headless CI therefore selects the installed Lavapipe
+manifest explicitly through `select_lavapipe.py`, rejecting missing, ambiguous or
+foreign manifests. The full runtime/GPU assertions remain unchanged. This is CI
+driver selection, not a production workaround for the system gfxstream driver.
+The manual Linux driver verification workflow now repeats the complete ARM64
+suite without the interposer, recording the selected ICD and selector hash. Its
+untraced result is still separate from final CI on the exact release revision.
 
 The x64 macOS Tests job runs the unchanged `osx-x64` target on Apple Silicon through Rosetta for Metal availability. Keep native production and Build on their registered Intel host, verify the test app's x64 Mach-O architecture, and retain the full suite plus trimmed/NativeAOT checks. `tools/ci/test_checks.py` executes the actual Rosetta setup script for already available, installed, failed-install and wrong-architecture cases; these dispatch checks do not establish target execution or physical Intel GPU acceptance.
 

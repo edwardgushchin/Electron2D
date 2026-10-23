@@ -16,10 +16,14 @@ Run `39890302781` also aborted on Linux ARM64 in `libusb` after
 `pthread_key_create` failed when the next display opened. Local Linux x64 controls
 retain stable native TLS capacity after initialization across 1024 gamepad cycles,
 512 Mesa device cycles, 512 device/pipeline cycles and 512 completed zero-count
-physics dispatches. These bounded controls do not explain the full ARM64 failure.
-The separate manual TLS diagnostic retains the complete workload and identifies
-native key creators/deleters on ARM64; its result does not replace untraced target
-acceptance or justify weakening allocation assertions.
+physics dispatches. Full traced run `39904064029` attributed 1,011 live keys to
+the system `libvulkan_gfxstream.so`, with no matching deletion; `libusb` failed
+after all 1,024 slots were consumed. Isolated Vulkan instance lifetimes reproduce
+one lost key per instance with gfxstream also enumerated, without SDL or the
+engine. Lavapipe alone retains its initial capacity. Headless Linux CI now selects
+the installed Lavapipe ICD explicitly. This does not repair the system gfxstream
+driver or establish corrected full target execution; the untraced full suite and
+unchanged GPU/allocation assertions remain required.
 
 This matrix records execution on hosts and devices available during this audit. A successful build or packaged native library is not a runtime check. A blocked backend is a measured result for this build and device, not a claim that an entire platform can never support it.
 

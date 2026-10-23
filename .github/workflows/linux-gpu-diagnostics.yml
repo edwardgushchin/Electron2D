@@ -84,6 +84,7 @@ jobs:
           from pathlib import Path
           path = Path('src/Servers/Physics/GPUPhysicsBodyStore.Continuous.cs')
           original = path.read_bytes()
+          Path('bin/diagnostics/continuous-original.cs').write_bytes(original)
           source = original.decode()
           newline = '\r\n' if b'\r\n' in original else '\n'
           markers = {
@@ -108,6 +109,31 @@ jobs:
         run: |
           set -o pipefail
           bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/trace.log
+      - name: Prepare an untraced Lavapipe control
+        if: steps.baseline.outcome == 'failure'
+        run: |
+          python -B tools/ci/select_lavapipe.py > bin/diagnostics/selected-driver.json
+          python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          receipt = json.loads(Path('bin/diagnostics/trace-source.json').read_text())
+          original = Path('bin/diagnostics/continuous-original.cs').read_bytes()
+          assert receipt['headSHA'] == os.environ['GITHUB_SHA']
+          assert hashlib.sha256(original).hexdigest() == receipt['originalSHA256']
+          path = Path('src/Servers/Physics/GPUPhysicsBodyStore.Continuous.cs')
+          assert str(path) == receipt['source']
+          path.write_bytes(original)
+          PY
+          dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r linux-x64 --self-contained true -o bin/diagnostics/runner --nologo
+          cmp obj/Release/net10.0/linux-x64/shaders/manifest.json bin/diagnostics/baseline-shaders.json
+      - name: Run the untraced Lavapipe compound fixture
+        if: steps.baseline.outcome == 'failure'
+        continue-on-error: true
+        timeout-minutes: 10
+        run: |
+          set -o pipefail
+          bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/lavapipe.log
+          grep -Fx 'Compound GPU: transformed slots, gaps and disabled indices passed.' bin/diagnostics/lavapipe.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:

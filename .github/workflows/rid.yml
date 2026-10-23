@@ -84,6 +84,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libzstd1 libssl-dev ffmpeg libvulkan1 mesa-vulkan-drivers
+          python -B tools/ci/select_lavapipe.py
           openssl version
           python -c 'import ctypes; ctypes.CDLL("libcrypto.so.3").BIO_s_dgram_pair'
           python - <<'PY'

@@ -1,4 +1,4 @@
-name: Linux TLS diagnostics
+name: Linux driver verification
 
 on:
   workflow_dispatch:
@@ -60,6 +60,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y gcc libc6-dev libzstd1 libssl-dev ffmpeg libvulkan1 mesa-vulkan-drivers
+          mkdir -p bin/diagnostics
+          python -B tools/ci/select_lavapipe.py > bin/diagnostics/selected-driver.json
           uname -m | grep -Fx aarch64
           python -c 'import ctypes; ctypes.CDLL("libcrypto.so.3").BIO_s_dgram_pair'
           python - <<'PY'
@@ -72,30 +74,29 @@ jobs:
           with open(os.environ['GITHUB_ENV'], 'a') as output:
               output.write(f'XDG_CONFIG_HOME={profile}\n')
           PY
-      - name: Verify and build the key tracer
+      - name: Verify the key tracer and record driver selection
         run: |
           python3 -B tools/ci/test_tls_trace.py
           mkdir -p bin/diagnostics
-          cc -std=c11 -O2 -Wall -Wextra -Werror -fPIC -shared -pthread tools/ci/trace_tls.c -ldl -o bin/diagnostics/trace-tls.so
-          sha256sum tools/ci/trace_tls.c bin/diagnostics/trace-tls.so > bin/diagnostics/tls-source.sha256
+          sha256sum tools/ci/select_lavapipe.py > bin/diagnostics/driver-selector.sha256
       - name: Publish the complete test runner
         run: dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r linux-arm64 --self-contained true -o bin/diagnostics/runner --nologo
-      - name: Run the complete suite with native key tracing
+      - name: Run the complete untraced suite with Lavapipe
         id: fixture
         continue-on-error: true
         run: |
           set -o pipefail
-          E2D_TLS_TRACE_FILE="$GITHUB_WORKSPACE/bin/diagnostics/tls-keys.log" LD_PRELOAD="$GITHUB_WORKSPACE/bin/diagnostics/trace-tls.so" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/full-runtime.log
+          unset LD_PRELOAD E2D_TLS_TRACE_FILE
+          bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/full-runtime.log
           grep -Fx 'Electron2D checks passed.' bin/diagnostics/full-runtime.log
-          grep -q '^E2D_TLS .* summary ' bin/diagnostics/tls-keys.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: linux-arm64-tls-diagnostics
+          name: linux-arm64-driver-verification
           path: |
             bin/diagnostics/full-runtime.log
-            bin/diagnostics/tls-source.sha256
-            bin/diagnostics/tls-keys.log
+            bin/diagnostics/selected-driver.json
+            bin/diagnostics/driver-selector.sha256
           if-no-files-found: error
       - name: Preserve the full-suite failure
         if: steps.fixture.outcome == 'failure'
