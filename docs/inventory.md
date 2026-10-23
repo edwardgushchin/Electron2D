@@ -1,5 +1,10 @@
 # Engine inventory
 
+[GPUPhysicsBodyStore](classes/GPUPhysicsBodyStore.md) shares one portable body-motion
+traversal across recovery, sweep and resting phases. Existing types, GPU resources,
+iteration limits and public declarations remain; [verification](components/gpu-resident-motion-queries.md)
+distinguishes local execution from Windows/Metal acceptance.
+
 [GPUPhysicsBodyStore](classes/GPUPhysicsBodyStore.md) uses four operation-specific
 shape-query pipelines, each with Vulkan and portable modules from one source.
 Mixed batches share buffers and one submission; no production type, device record

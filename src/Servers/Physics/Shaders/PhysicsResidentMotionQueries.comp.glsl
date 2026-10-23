@@ -292,6 +292,28 @@ void main()
     if(q.body.x>=bodyCount){fail();return;}bodyA=bodies[q.body.x];
     if(bodyA.flags.x!=q.body.y||bodyA.flags.w==0u){fail();return;}
     bodyA.pose=q.pose;
+#ifdef E2D_SHARED_MOTION_SCAN
+    // Keep one traversal call site when the target driver expands geometry routines.
+    uint phase=0u,attempt=0u;
+    [[dont_unroll]] for(;;)
+    {
+        if(phase==1u&&q.motionMargin.xy==vec2(0))phase=2u;
+        if(phase==2u)
+        {
+            if(!blocked&&!(recovered&&(q.policy.z&1u)!=0u))break;
+            bodyA.pose.xy=q.pose.xy+recovery+unsafeFraction*q.motionMargin.xy;
+        }
+        vec2 before=recovery;scan(phase);
+        if(phase==0u)
+        {
+            if(before!=recovery)bodyA.pose.xy=q.pose.xy+recovery;
+            if(before==recovery||++attempt==4u)phase=1u;
+        }
+        else if(phase==1u)phase=2u;
+        else break;
+    }
+    Result result=Result(uvec4(0),uvec4(0),uvec4(0),uvec4(0),vec4(0),vec4(0),vec4(0),vec4(0));
+#else
     [[dont_unroll]] for(uint attempt=0u;attempt<4u;attempt++)
     {
         vec2 before=recovery;scan(0u);if(before==recovery)break;bodyA.pose.xy=q.pose.xy+recovery;
@@ -300,6 +322,7 @@ void main()
     Result result=Result(uvec4(0),uvec4(0),uvec4(0),uvec4(0),vec4(0),vec4(0),vec4(0),vec4(0));
     if(blocked||(recovered&&(q.policy.z&1u)!=0u))
     {bodyA.pose.xy=q.pose.xy+recovery+unsafeFraction*q.motionMargin.xy;scan(2u);}
+#endif
     if(rested)result=restResult;else safe=unsafeFraction=1;
     result.travelRemainder=vec4(recovery+safe*q.motionMargin.xy,(1-safe)*q.motionMargin.xy);
     result.fractions=vec4(safe,unsafeFraction,recovery);

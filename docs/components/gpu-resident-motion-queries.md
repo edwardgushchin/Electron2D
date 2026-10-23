@@ -1,6 +1,6 @@
 # Resident GPU body-motion queries
 
-Last updated: 2026-10-20
+Last updated: 2026-10-23
 
 The selected GPU world owner now receives engine-unit body motion and typed RID exclusions from common server/space code, then invokes this resident driver. CPU fixture lists no longer pass through that boundary. Platform point velocity resolves current body RID/world membership and uses the selected resident collider attachment. See [shared ownership checks](../classes/PhysicsWorldBackend.md#body-motion-and-platform-lookup).
 
@@ -60,6 +60,22 @@ ordinary geometry share one manifold call; either directed-ray argument uses one
 directed-query call. This limits repeated expansion during driver compilation.
 Recovery still makes four passes with the same plane cap; contact tolerances,
 shape families, GPU buffers and host transfers are unchanged.
+
+The portable Metal/DXIL module also shares one traversal call across recovery,
+motion and resting phases. Four recovery attempts, early convergence, optional
+zero-motion skipping and the final unsafe-pose scan retain the same order. The
+optimized Vulkan module remains byte-identical. The local offline DXIL control
+reduces 3653 blocks/178244 bytes to 2472 blocks/120104 bytes with identical resource
+and workgroup reflection. Local execution of the portable motion module and
+complete Windows/Metal target execution are separate gates; compiler size alone
+does not establish driver correctness.
+
+The scoped Linux/NVIDIA control selects this portable motion module explicitly:
+body motion (65536 obstacles), shape queries, one-way/CollisionPolygon, public
+priority and compound suites pass with their existing numerical and zero-managed
+allocation assertions. Selection is restored after the control. The active build
+manifest changes only this portable module; all other 164 modules retain their
+binary hashes. Complete Windows and Metal execution remains pending.
 
 ## CPU corrections found by comparison
 

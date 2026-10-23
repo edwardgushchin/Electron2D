@@ -1,5 +1,10 @@
 # GPUPhysicsBodyStore
 
+[Portable body-motion traversal](../components/gpu-resident-motion-queries.md)
+shares the recovery, sweep and resting scan call site while preserving iteration
+bounds, result buffers and the optimized Vulkan bytecode. Local numerical checks
+and complete target execution remain distinct acceptance evidence.
+
 [Shape-query operation kernels](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
 retain separate Intersect/Contacts/Rest/Cast pipelines. Mixed batches use one
 compute pass and submission with disjoint original result segments, unchanged
