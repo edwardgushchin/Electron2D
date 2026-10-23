@@ -1,6 +1,6 @@
 # LinkButton
 
-Last updated: 2026-10-14
+Last updated: 2026-10-23
 
 **Namespace:** `Electron2D`. **Declaration:** `public partial class LinkButton : BaseButton`. **Inherits:** [BaseButton](BaseButton.md). **Inherited By:** —. **Source:** [API/storage](../../src/Scene/GUI/LinkButton.cs), [layout](../../src/Scene/GUI/LinkButton.Layout.cs). **Component:** [GUI buttons](../components/gui-buttons.md).
 
@@ -107,6 +107,8 @@ The built-in type supplies `font`, `font_size`, `focus`, `outline_size = 0`, `un
 | `protected override void Dispose(bool disposing)` | Detaches borrowed font callbacks without disposing the font. |
 
 ## Verification and limits
+
+The fresh-process URI fixture registers a unique protocol for each run. Linux selects its isolated executable; macOS compiles and ad-hoc signs a temporary URL-handler application; Windows registers a command under the current user's unique protocol key. Native launch must deliver the exact stored URI. Capture files are published by rename after writing, and platform registration is removed before temporary files are deleted. The macOS workflow selects the LinkButton fixture before its complete suite; local Linux success alone does not establish the other native paths.
 
 LinkButtonTests covers concrete defaults, all stored fields, supplementary/malformed ellipsis, copying, real font geometry, RTL/clipping/BiDi/custom reentry, routed pointer/action/toggle/error states, worker edits, detach/reentry, borrowed disposal and fresh compressed big-endian file activation. Linux child isolation denies its session bus and supplies a private `xdg-open` fixture, proving the actual SDL URI handoff without opening the user's browser.
 

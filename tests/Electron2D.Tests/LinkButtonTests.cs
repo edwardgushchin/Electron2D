@@ -1,5 +1,7 @@
 using Electron2D;
 using System.Diagnostics;
+using System.Xml.Linq;
+using Microsoft.Win32;
 
 internal static class LinkButtonTests
 {
@@ -83,12 +85,50 @@ internal static class LinkButtonTests
     private static void FreshProcess()
     {
         var folder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "e2d-link-" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(folder);
+        var scheme = "e2d-link-" + Guid.NewGuid().ToString("N"); var uri = scheme + "://stored/path";
+        var registryPath = @"Software\Classes\" + scheme; var app = System.IO.Path.Combine(folder, "Handler.app");
+        const string register = "/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister";
+        var registered = false;
         try
         {
             var scenePath = System.IO.Path.Combine(folder, "link.e2dscene"); var capture = System.IO.Path.Combine(folder, "opened.txt"); var opener = System.IO.Path.Combine(folder, "xdg-open");
-            File.WriteAllText(opener, "#!/bin/sh\nprintf '%s\\n' \"$1\" >> \"$E2D_LINK_CAPTURE\"\n");
-            if (!OperatingSystem.IsWindows()) File.SetUnixFileMode(opener, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
-            using (var source = new LinkButton("Stored link") { URI = "e2d-test://stored/path", FocusMode = FocusMode.All, Underline = LinkButton.UnderlineMode.OnHover })
+            if (OperatingSystem.IsWindows())
+            {
+                using var existing = Registry.CurrentUser.OpenSubKey(registryPath); Check(existing is null, "The unique URI fixture must not replace an existing handler.");
+                var commandFile = System.IO.Path.Combine(folder, "open.cmd"); var outputFile = capture.Replace("%", "%%");
+                File.WriteAllText(commandFile, $"@echo off\r\n@chcp 65001 >nul\r\necho %~1>\"{outputFile}.pending\"\r\nmove /y \"{outputFile}.pending\" \"{outputFile}\" >nul\r\n");
+                using var key = Registry.CurrentUser.CreateSubKey(registryPath); registered = true;
+                key.SetValue("", "URL:" + scheme); key.SetValue("URL Protocol", "");
+                using var command = key.CreateSubKey(@"shell\open\command");
+                var shell = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "cmd.exe");
+                command.SetValue("", $"\"{shell}\" /d /c \"\"{commandFile}\" \"%1\"\"");
+            }
+            else if (OperatingSystem.IsMacOS())
+            {
+                var script = System.IO.Path.Combine(folder, "handler.applescript");
+                static string Literal(string value) => "\"" + value.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
+                File.WriteAllText(script, "on open location receivedURI\n do shell script \"/usr/bin/printf %s \" & quoted form of receivedURI & \" > \" & quoted form of " + Literal(capture + ".pending") + " & \" && /bin/mv \" & quoted form of " + Literal(capture + ".pending") + " & \" \" & quoted form of " + Literal(capture) + "\n quit\nend open location\n");
+                RunFixtureTool("/usr/bin/osacompile", "-o", app, script);
+                var plist = System.IO.Path.Combine(app, "Contents", "Info.plist"); var document = XDocument.Load(plist);
+                var dictionary = document.Root!.Element("dict")!;
+                void Set(string name, XElement value)
+                {
+                    var key = dictionary.Elements("key").SingleOrDefault(key => key.Value == name);
+                    if (key?.ElementsAfterSelf().FirstOrDefault() is { } previous) previous.ReplaceWith(value);
+                    else dictionary.Add(new XElement("key", name), value);
+                }
+                Set("CFBundleIdentifier", new XElement("string", "dev.electron2d.tests." + scheme));
+                Set("CFBundleURLTypes", new XElement("array", new XElement("dict", new XElement("key", "CFBundleTypeRole"), new XElement("string", "Viewer"), new XElement("key", "CFBundleURLSchemes"), new XElement("array", new XElement("string", scheme)))));
+                Set("LSUIElement", new XElement("true")); document.Save(plist);
+                RunFixtureTool("/usr/bin/codesign", "--force", "--sign", "-", app);
+                registered = true; RunFixtureTool(register, "-f", app);
+            }
+            else
+            {
+                File.WriteAllText(opener, "#!/bin/sh\nprintf '%s\\n' \"$1\" > \"$E2D_LINK_CAPTURE.pending\"\nmv \"$E2D_LINK_CAPTURE.pending\" \"$E2D_LINK_CAPTURE\"\n");
+                File.SetUnixFileMode(opener, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+            }
+            using (var source = new LinkButton("Stored link") { URI = uri, FocusMode = FocusMode.All, Underline = LinkButton.UnderlineMode.OnHover })
             using (var scene = new PackedScene()) { scene.Pack(source); ResourceSaver.Save(scene, scenePath, SaverFlags.Compress | SaverFlags.SaveBigEndian); }
             var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true };
             if (System.IO.Path.GetFileNameWithoutExtension(Environment.ProcessPath) == "dotnet") start.ArgumentList.Add(typeof(LinkButtonTests).Assembly.Location);
@@ -98,9 +138,25 @@ internal static class LinkButtonTests
             using var process = Process.Start(start)!; var output = process.StandardOutput.ReadToEndAsync(); var error = process.StandardError.ReadToEndAsync();
             if (!process.WaitForExit(30000)) { process.Kill(true); throw new TimeoutException("Fresh link consumer."); }
             Check(process.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh LinkButton passed"), "Fresh link: " + error.GetAwaiter().GetResult());
-            Check(File.ReadAllText(capture).Trim() == "e2d-test://stored/path", "Real SDL URL launch reached isolated native process with exact URI.");
+            Check(File.ReadAllText(capture).Trim() == uri, "Real SDL URL launch reached isolated native process with exact URI.");
         }
-        finally { Directory.Delete(folder, true); }
+        finally
+        {
+            try
+            {
+                if (registered && OperatingSystem.IsWindows()) Registry.CurrentUser.DeleteSubKeyTree(registryPath, false);
+                if (registered && OperatingSystem.IsMacOS()) RunFixtureTool(register, "-u", app);
+            }
+            finally { Directory.Delete(folder, true); }
+        }
+    }
+    private static void RunFixtureTool(string tool, params string[] arguments)
+    {
+        var start = new ProcessStartInfo(tool) { RedirectStandardOutput = true, RedirectStandardError = true };
+        foreach (var argument in arguments) start.ArgumentList.Add(argument);
+        using var process = Process.Start(start)!; var output = process.StandardOutput.ReadToEndAsync(); var error = process.StandardError.ReadToEndAsync();
+        if (!process.WaitForExit(30000)) { process.Kill(true); throw new TimeoutException("Native URI fixture tool: " + tool); }
+        Check(process.ExitCode == 0, $"Native URI fixture tool {tool}: {output.GetAwaiter().GetResult()}{error.GetAwaiter().GetResult()}");
     }
     internal static void RunChild(string path)
     {
