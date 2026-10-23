@@ -3,6 +3,13 @@ $errors = $null; $tokens = $null
 $path = Join-Path $PSScriptRoot 'debug_windows.ps1'
 $ast = [Management.Automation.Language.Parser]::ParseFile($path, [ref]$tokens, [ref]$errors)
 if ($errors.Count) { throw ($errors | Out-String) }
+$mapping = $ast.Find({ param($node) $node -is [Management.Automation.Language.AssignmentStatementAst] -and $node.Left.VariablePath.UserPath -eq 'throwObject' }, $true)
+if (!$mapping) { throw 'Compiler exception argument mapping is missing.' }
+foreach ($case in @(@('arm64', '@x0'), @('x64', '@rcx'), @('x86', 'poi(@esp+4)'))) {
+    $Architecture = $case[0]
+    . ([scriptblock]::Create($mapping.Extent.Text))
+    if ($throwObject -ne $case[1]) { throw "Incorrect $Architecture exception argument location." }
+}
 $definition = $ast.Find({ param($node) $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'Invoke-OwnedRuntimeBreak' }, $true)
 if (!$definition) { throw 'Owned runtime interruption function is missing.' }
 $native = $definition.Find({ param($node) $node -is [Management.Automation.Language.StringConstantExpressionAst] -and $node.Value.Contains('[DllImport') }, $true)

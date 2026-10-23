@@ -87,6 +87,18 @@ jobs:
           assert original.count(finish) == 1
           ready = finish.replace('return new(', 'var pipeline = new RenderHandle(', 1) + newline + '        Console.WriteLine($"GPU pipeline ready {DateTime.UtcNow:O}: {name}");' + newline + '        return pipeline;'
           path.write_bytes(instrumented.replace(finish, ready, 1).encode())
+          motion = Path('src/Servers/Physics/Shaders/PhysicsResidentMotionQueries.comp.glsl')
+          motion_original = motion.read_bytes()
+          motion_text = motion_original.decode()
+          motion_newline = '\r\n' if b'\r\n' in motion_original else '\n'
+          loop = 'Hull probe=a;Contact initial,full;\n    [[dont_unroll]] for(;;)'.replace('\n', motion_newline)
+          bounded = loop.replace('for(;;)', 'for(uint evaluation=0u;evaluation<11u;evaluation++)')
+          assert motion_text.count(loop) == 1
+          finish_motion = '    }\n}\nvec4 queryBounds'.replace('\n', motion_newline)
+          exhausted_motion = '    }\n    fail();\n}\nvec4 queryBounds'.replace('\n', motion_newline)
+          assert motion_text.count(finish_motion) == 1
+          motion_text = motion_text.replace(loop, bounded).replace(finish_motion, exhausted_motion)
+          motion.write_bytes(motion_text.encode())
           compiler = Path('src/Servers/Rendering/ShaderCompiler.cs')
           compiler_bytes = compiler.read_bytes()
           Path('bin/diagnostics').mkdir(parents=True, exist_ok=True)
@@ -94,7 +106,10 @@ jobs:
                      'originalSHA256': hashlib.sha256(original_bytes).hexdigest(),
                      'actualSHA256': hashlib.sha256(path.read_bytes()).hexdigest(),
                      'originalCompilerSHA256': hashlib.sha256(compiler_bytes).hexdigest(),
-                     'actualCompilerSHA256': hashlib.sha256(compiler.read_bytes()).hexdigest()}
+                     'actualCompilerSHA256': hashlib.sha256(compiler.read_bytes()).hexdigest(),
+                     'motionControl': 'eleven bounded geometry evaluations; exhausted state fails explicitly',
+                     'originalMotionSHA256': hashlib.sha256(motion_original).hexdigest(),
+                     'actualMotionSHA256': hashlib.sha256(motion.read_bytes()).hexdigest()}
           Path('bin/diagnostics/compiler-source.json').write_text(json.dumps(receipt, indent=2) + '\n')
           print(json.dumps(receipt))
           PY

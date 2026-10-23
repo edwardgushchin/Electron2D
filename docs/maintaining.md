@@ -46,6 +46,13 @@ after six minutes and records every native thread stack at that breakpoint. The
 process is checked again through its opened handle before interruption, and the
 original eight-minute debugger budget still bounds cleanup. The PowerShell
 self-check rejects missing, ambiguous, foreign and reused process identities.
+Compiler exceptions also record the first DWORD of the WARP exception object and
+its throwing stack; architecture-specific argument locations have executable
+PowerShell checks. No general heap dump is captured. The current temporary
+body-motion control adds an explicit eleven-evaluation loop bound (initial,
+reach, eight refinements and impact), preserving the phase workload and failing
+on exhaustion. Source receipts include both motion shader hashes; this diagnostic
+rewrite does not change the production shader or establish target acceptance.
 The next Windows control uses Microsoft's test-only WARP 1.0.21, whose release
 notes describe redesigned control-flow transforms. Its package and architecture
 DLL hashes are pinned; NuGet and Microsoft Authenticode signatures must validate.

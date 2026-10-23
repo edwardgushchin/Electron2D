@@ -48,8 +48,10 @@ if (!(Test-Path $cdb)) {
     if ($setup.ExitCode -notin 0, 3010) { throw "Debugger installation failed: $($setup.ExitCode)." }
 }
 if (!(Test-Path $cdb)) { throw "Native $Architecture CDB is unavailable." }
-# Keep only exception context, symbolic stacks and module identities, never a heap/key dump.
+# Keep exception context, one compiler exception word, symbolic stacks and module identities.
 $commands = Join-Path $Output 'commands.txt'
+$throwObject = @{ arm64 = '@x0'; x64 = '@rcx'; x86 = 'poi(@esp+4)' }[$Architecture]
+('bu d3d10warp!CxxThrowException ".echo WARP C++ exception first DWORD; dd ' + $throwObject + ' L1; k; g"') | Set-Content -Encoding ascii $commands
 @'
 sxe -c ".ecxr; k; lm; q" 0xc0000374
 sxe -c "~* k; lm; q" bpe
@@ -58,7 +60,7 @@ sxd -c2 ".ecxr; k; lm; q" ii
 sxd -c2 ".ecxr; k; lm; q" clr
 sxd -c2 ".ecxr; k; lm; q" sbo
 g
-'@ | Set-Content -Encoding ascii $commands
+'@ | Add-Content -Encoding ascii $commands
 $log = Join-Path $Output 'runtime-cdb.log'
 $debugger = Start-Process -FilePath $cdb -ArgumentList @('-G', '-cf', "`"$commands`"", '-logo', "`"$log`"", "`"$Executable`"") -PassThru -NoNewWindow
 $watch = [Diagnostics.Stopwatch]::StartNew()

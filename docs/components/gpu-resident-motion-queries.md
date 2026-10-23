@@ -75,7 +75,9 @@ body motion (65536 obstacles), shape queries, one-way/CollisionPolygon, public
 priority and compound suites pass with their existing numerical and zero-managed
 allocation assertions. Selection is restored after the control. The active build
 manifest changes only this portable module; all other 164 modules retain their
-binary hashes. Complete Windows and Metal execution remains pending.
+binary hashes. Windows WARP 1.0.21 run `39913764076` still aborts while creating
+this pipeline in `ScopeNestedCFG::runOnFunction`; the size reduction does not close
+that driver failure. Complete Metal execution remains pending.
 
 ## CPU corrections found by comparison
 

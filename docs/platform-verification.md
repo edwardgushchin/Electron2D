@@ -18,6 +18,18 @@ indentation assertion and runtime input behavior are unchanged. Corrected target
 execution remains required. The separate ARM64 full suite still reports 64
 all-thread managed bytes in the contact-history measurement, with zero owner
 bytes; that allocation failure remains unresolved.
+Manual run `39913767182` at `4d05b1fa` passes fresh CodeEdit and public GPU
+contact-history checks on both macOS ARM64 and x64. Both unchanged complete suites
+remain in progress; a fresh-process pass cannot resolve the earlier full-history
+allocation failure.
+
+Windows control `39913764076` confirms app-local WARP 1.0.21 and passes all four
+shape-query kernels and geometric casts with zero allocations. Body-motion
+pipeline creation still aborts in `ScopeNestedCFG::runOnFunction` after sharing
+one traversal call. The smaller DXIL is not a driver fix. A temporary diagnostic
+now bounds that state machine to its existing maximum eleven geometry calls and
+fails explicitly on exhaustion. This control is not a production numerical limit
+change or current Windows acceptance.
 
 Run `39890302781` also aborted on Linux ARM64 in `libusb` after
 `pthread_key_create` failed when the next display opened. Local Linux x64 controls
@@ -28,9 +40,11 @@ the system `libvulkan_gfxstream.so`, with no matching deletion; `libusb` failed
 after all 1,024 slots were consumed. Isolated Vulkan instance lifetimes reproduce
 one lost key per instance with gfxstream also enumerated, without SDL or the
 engine. Lavapipe alone retains its initial capacity. Headless Linux CI now selects
-the installed Lavapipe ICD explicitly. This does not repair the system gfxstream
-driver or establish corrected full target execution; the untraced full suite and
-unchanged GPU/allocation assertions remain required.
+the installed Lavapipe ICD explicitly. Untraced ARM64 run `39909054513` at
+`6e65b171` completes all 1085 log lines with `Electron2D checks passed.` and the
+unchanged GPU/allocation assertions. This establishes the scoped headless runner
+correction; the system gfxstream driver remains unchanged and the final release
+revision still requires its complete matrix.
 
 This matrix records execution on hosts and devices available during this audit. A successful build or packaged native library is not a runtime check. A blocked backend is a measured result for this build and device, not a claim that an entire platform can never support it.
 
@@ -42,7 +56,7 @@ This matrix records execution on hosts and devices available during this audit. 
 | MiTV-MSSP3, Android TV API 30, `armeabi-v7a` | Pass: `opengles2`, red readback `(1,0,0)` | Blocked: OpenGL ES 2 is advertised, Vulkan is not; SDL reports no supported GPU device even after optional features are disabled. `auto` falls back to `opengles2` and preserves the red pixel | Electron2D ShaderMaterial blocked before submission; standalone GLES2 fragment shader rendered red `(255,0,0,255)` with GL error `0` | Pass: dynamic rectangle rests at `Y=80.009`, vertical velocity `0` after 120 steps |
 | WebAssembly in the isolated SDL 3.4.16/Emscripten browser probe | Pass: direct SDL_Renderer red canvas in Chrome | Blocked: Chrome has WebGL2 and a WebGPU adapter/device, but this SDL build lists zero GPU drivers and `SDL_CreateGPUDevice(SPIRV)` returns null | Electron2D ShaderMaterial blocked; standalone Chrome WebGPU WGSL fragment shader rendered a red frame | Pass: managed Box2D contact at `Y=80.009` after 120 steps |
 | iOS/tvOS | Not run: native simulator contracts do not cover rendered canvas output | Not run | Not run | Pass: headless scene physics in all four simulator apps; no physical-device execution |
-| Windows/macOS | Not run: headless CI does not cover rendered canvas output | Not run | Not run | Pass: full headless suites on all five desktop RIDs; rendered interpolation remains separate |
+| Windows/macOS | Not run: headless CI does not cover rendered canvas output | Not run | Not run | Earlier full headless desktop passes; current alpha candidate still has the Windows pipeline and macOS full-history allocation gates described above. Rendered interpolation remains separate. |
 
 <a id="character-movement"></a>
 ## CharacterMovement application
