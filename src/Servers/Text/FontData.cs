@@ -50,7 +50,7 @@ internal sealed partial class FontData : IDisposable
     internal FontSupportPolicy SupportPolicy { get; set; } = FontSupportPolicy.Empty;
     internal HashSet<uint> SupportedScripts { get; private set; } = [];
     private bool _colorFont, _scalableFont;
-    internal int FallbackPriority(string language, uint script, bool emoji) { lock (_gate) { Check(); return emoji && _colorFont ? 0 : SupportPolicy.Priority(language, script, SupportedScripts); } }
+    internal int FallbackPriority(ReadOnlySpan<char> language, uint script, bool emoji) { lock (_gate) { Check(); return emoji && _colorFont ? 0 : SupportPolicy.Priority(language, script, SupportedScripts); } }
     internal bool IsLanguageSupported(string language) { lock (_gate) { Check(); return SupportPolicy.SupportsLanguage(language); } }
     internal bool IsScriptSupported(string script) { lock (_gate) { Check(); return SupportPolicy.SupportsScript(script, SupportedScripts); } }
     internal object Gate => _gate;

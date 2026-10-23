@@ -152,22 +152,23 @@ internal sealed partial class TextLayout
             for (var next = i + 1; next < _count && !IsHardBreak(_scalars[next]); next++)
                 if (TextScript.IsStrong(_scripts[next]) && TextScript.IsCompatible(_scalars[i], _scripts[next])) { _scripts[i] = _scripts[next]; break; }
         }
+        Span<char> languageKey = stackalloc char[3];
         for (var start = 0; start < _count;)
         {
             var end = start + 1; while (end < _count && !_grapheme[end]) end++;
             var style = StyleAt(start); var sources = style.Font.GetSources(); var primary = style.Font.PrimaryData;
-            var language = FontSupportPolicy.LanguageKey(style.Language); var script = TextScript.ToTag(_scripts[start]);
+            var language = FontSupportPolicy.LanguageKey(style.Language, languageKey); var script = TextScript.ToTag(_scripts[start]);
             var emoji = new Codepoint(_scalars[start]).HasEmojiPresentation;
             for (var i = start + 1; i < end; i++) { if (_scalars[i] == 0xFE0F) emoji = true; else if (_scalars[i] == 0xFE0E) emoji = false; }
             if (emoji) script = 0x5A737965;
             FontData? face = null;
             for (var tier = -1; tier <= 2 && face is null; tier++) foreach (var source in sources)
-                {
-                    if (ReferenceEquals(source, primary) ? tier != -1 : tier != source.FallbackPriority(language, script, emoji)) continue;
-                    var supported = true;
-                    for (var i = start; i < end; i++) if (!IsIgnorable(i) && source.GetGlyphIndex(_scalars[i]) == 0) { supported = false; break; }
-                    if (supported) { face = source; break; }
-                }
+            {
+                if (ReferenceEquals(source, primary) ? tier != -1 : tier != source.FallbackPriority(language, script, emoji)) continue;
+                var supported = true;
+                for (var i = start; i < end; i++) if (!IsIgnorable(i) && source.GetGlyphIndex(_scalars[i]) == 0) { supported = false; break; }
+                if (supported) { face = source; break; }
+            }
             if (face == null)
                 foreach (var source in sources) if (source.FindSystemFallback(_scalars.AsSpan(start, end - start), style.Language, style.Font) is { } fallback) { face = fallback; break; }
             for (var i = start; i < end; i++)
@@ -668,30 +669,30 @@ internal sealed partial class TextLayout
     private void PrepareJustificationGlyphs(int start, int end, bool word, bool kashida)
     {
         if (word) for (var i = 0; i < _lineGlyphs.Count; i++)
-            {
-                var glyph = _lineGlyphs[i];
-                if (glyph.Start <= start || glyph.Start >= end || !_wordEnds[glyph.Start] || glyph.Space || glyph.Virtual || IsCustomPunctuation(new Rune(_scalars[glyph.Start]))) continue;
-                var adjacent = !glyph.RTL ? i - 1 : i + 1; if (adjacent >= 0 && adjacent < _lineGlyphs.Count && _lineGlyphs[adjacent].Space) continue;
-                _lineGlyphs.Insert(i, new(glyph.Face, 0, glyph.Start, glyph.End, 0, Vector2.Zero, 0, true, false, glyph.RTL, Virtual: true, Size: GlyphSize(glyph), SourceRID: glyph.SourceRID)); i++;
-            }
+        {
+            var glyph = _lineGlyphs[i];
+            if (glyph.Start <= start || glyph.Start >= end || !_wordEnds[glyph.Start] || glyph.Space || glyph.Virtual || IsCustomPunctuation(new Rune(_scalars[glyph.Start]))) continue;
+            var adjacent = !glyph.RTL ? i - 1 : i + 1; if (adjacent >= 0 && adjacent < _lineGlyphs.Count && _lineGlyphs[adjacent].Space) continue;
+            _lineGlyphs.Insert(i, new(glyph.Face, 0, glyph.Start, glyph.End, 0, Vector2.Zero, 0, true, false, glyph.RTL, Virtual: true, Size: GlyphSize(glyph), SourceRID: glyph.SourceRID)); i++;
+        }
         if (!kashida) return;
         for (var wordStart = start; wordStart < end;)
         {
             var wordEnd = wordStart + 1; while (wordEnd < end && !_wordBoundaries[wordEnd]) wordEnd++;
             var position = _wordEnds[wordEnd] ? TextJustification.FindKashida(_scalars.AsSpan(0, _count), wordStart, wordEnd) : -1;
             if (position >= 0) for (var i = 0; i < _lineGlyphs.Count; i++)
-                {
-                    var glyph = _lineGlyphs[i]; if (glyph.Start != position || glyph.End <= glyph.Start || glyph.Face is null) continue;
-                    if (glyph.Elongation) break;
-                    if (_scalars[position] == 0x0640) { _lineGlyphs[i] = glyph with { Elongation = true }; break; }
-                    if (i > 0 && (_lineGlyphs[i - 1].Flags & 4) == 0) continue;
-                    var style = StyleAt(glyph.Start); _shaped.Clear();
-                    glyph.Face.Shape(ServerTatweelScalar, 0, 1, GlyphSize(glyph), NativeTextDirection.RTL, TextScript.ToTag(UnicodeScript.Arabic), style.Language, _shaped, features: style.Font.GetShapingFeatures(glyph.Face), textLength: 1);
-                    if (_shaped.Count == 0 || _shaped[0].GlyphIndex == 0) break;
-                    var shaped = _shaped[0]; var advance = (Key.Orientation == TextOrientation.Horizontal ? shaped.XAdvance : -shaped.YAdvance) / 64f;
-                    var offset = Key.Orientation == TextOrientation.Horizontal ? new Vector2(shaped.XOffset / 64f, glyph.Offset.Y) : new Vector2(glyph.Offset.X, -shaped.YOffset / 64f);
-                    _lineGlyphs.Insert(i, new(glyph.Face, shaped.GlyphIndex, glyph.Start, glyph.End, advance, offset, shaped.Flags, false, false, glyph.RTL, 0, true, Elongation: true, Size: GlyphSize(glyph), SourceRID: glyph.SourceRID)); break;
-                }
+            {
+                var glyph = _lineGlyphs[i]; if (glyph.Start != position || glyph.End <= glyph.Start || glyph.Face is null) continue;
+                if (glyph.Elongation) break;
+                if (_scalars[position] == 0x0640) { _lineGlyphs[i] = glyph with { Elongation = true }; break; }
+                if (i > 0 && (_lineGlyphs[i - 1].Flags & 4) == 0) continue;
+                var style = StyleAt(glyph.Start); _shaped.Clear();
+                glyph.Face.Shape(ServerTatweelScalar, 0, 1, GlyphSize(glyph), NativeTextDirection.RTL, TextScript.ToTag(UnicodeScript.Arabic), style.Language, _shaped, features: style.Font.GetShapingFeatures(glyph.Face), textLength: 1);
+                if (_shaped.Count == 0 || _shaped[0].GlyphIndex == 0) break;
+                var shaped = _shaped[0]; var advance = (Key.Orientation == TextOrientation.Horizontal ? shaped.XAdvance : -shaped.YAdvance) / 64f;
+                var offset = Key.Orientation == TextOrientation.Horizontal ? new Vector2(shaped.XOffset / 64f, glyph.Offset.Y) : new Vector2(glyph.Offset.X, -shaped.YOffset / 64f);
+                _lineGlyphs.Insert(i, new(glyph.Face, shaped.GlyphIndex, glyph.Start, glyph.End, advance, offset, shaped.Flags, false, false, glyph.RTL, 0, true, Elongation: true, Size: GlyphSize(glyph), SourceRID: glyph.SourceRID)); break;
+            }
             wordStart = wordEnd;
         }
     }

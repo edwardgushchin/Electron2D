@@ -240,6 +240,12 @@ Integer device image consumers now validate float/signed/unsigned sampled scalar
 
 ## Font support policy
 
+Regional/script fallback keys now borrow three stack characters through
+[FontSupportPolicy](../classes/FontSupportPolicy.md) and ordinal span dictionary
+lookup. Existing case, prefix, underscore removal, wildcard and fallback tier
+rules remain; prepared button text edits no longer create one string per glyph.
+
+
 FontFile owns exact language/script override dictionaries with copied query arrays and bounded typed archive storage. Font primary-source support queries combine explicit/wildcard policy with native script metadata, independently of fallback glyph coverage. Source reload, indexed authoring, duplication and FontVariation preserve policy. Changes invalidate cached text, and the existing canvas/Label/RichTextLabel pipeline executes stable support-aware fallback choice. The [text component](../components/text.md#support-policy-and-fallback-priority) records executable native and storage evidence.
 
 ## Native font raster preferences

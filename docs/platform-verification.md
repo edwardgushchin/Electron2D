@@ -19,9 +19,14 @@ execution remains required. The separate ARM64 full suite still reports 64
 all-thread managed bytes in the contact-history measurement, with zero owner
 bytes; that allocation failure remains unresolved.
 Manual run `39913767182` at `4d05b1fa` passes fresh CodeEdit and public GPU
-contact-history checks on both macOS ARM64 and x64. Both unchanged complete suites
-remain in progress; a fresh-process pass cannot resolve the earlier full-history
-allocation failure.
+contact-history checks on both macOS ARM64 and x64. ARM64's complete suite passes
+the earlier contact-history interval, then fails Button active frames with 12288
+owner-thread bytes. x64 instead fails CapsuleShape with 0 owner/64 all-thread
+bytes. The 64-byte source remains unresolved. The Button failure reproduces on
+Linux with `en_US.UTF-8`: six per-grapheme regional language substrings per frame
+account for all 192 bytes/frame across 64 frames. Stack-backed priority keys and
+ordinal span lookup remove those strings while preserving prefix/case/tier rules.
+Fresh complete macOS execution of that correction is still required.
 
 Windows control `39913764076` confirms app-local WARP 1.0.21 and passes all four
 shape-query kernels and geometric casts with zero allocations. Body-motion
@@ -29,7 +34,11 @@ pipeline creation still aborts in `ScopeNestedCFG::runOnFunction` after sharing
 one traversal call. The smaller DXIL is not a driver fix. A temporary diagnostic
 now bounds that state machine to its existing maximum eleven geometry calls and
 fails explicitly on exhaustion. This control is not a production numerical limit
-change or current Windows acceptance.
+change or current Windows acceptance. Bounded control `39915318856` also fails
+at the same return offset. Disassembly of the exact pinned DLL identifies the
+`0x80aa000a` throw block reached when loop-preheader lookup returns null; the
+single-backedge check uses a distinct throw site. Input DXIL already has canonical
+natural loops, so the preceding WARP transformation remains under investigation.
 
 Run `39890302781` also aborted on Linux ARM64 in `libusb` after
 `pthread_key_create` failed when the next display opened. Local Linux x64 controls

@@ -27,7 +27,7 @@ internal sealed class FontSupportPolicy
         var copy = new Dictionary<string, bool>(selected, StringComparer.Ordinal); if (supported is { } next) copy[key] = next; else copy.Remove(key);
         return script ? new(_languages, copy) : new(copy, _scripts);
     }
-    internal bool SupportsLanguage(string language) => _languages.TryGetValue(language, out var value) ? value : _languages.GetValueOrDefault("*", true);
+    internal bool SupportsLanguage(ReadOnlySpan<char> language) => _languages.GetAlternateLookup<ReadOnlySpan<char>>().TryGetValue(language, out var value) ? value : _languages.GetValueOrDefault("*", true);
     internal bool SupportsScript(string script, HashSet<uint> automaticScripts)
     {
         if (_scripts.TryGetValue(script, out var value)) return value;
@@ -35,17 +35,21 @@ internal sealed class FontSupportPolicy
         uint tag = 0; for (var i = 0; i < 4; i++) tag = tag << 8 | (uint)(i < script.Length && script[i] <= 127 ? script[i] : ' ');
         return automaticScripts.Contains(tag);
     }
-    internal int Priority(string language, uint script, HashSet<uint> automaticScripts)
+    internal int Priority(ReadOnlySpan<char> language, uint script, HashSet<uint> automaticScripts)
     {
         var scriptSupported = _tags.TryGetValue(script, out var explicitScript) ? explicitScript : _scripts.TryGetValue("*", out var wildcardScript) ? wildcardScript : automaticScripts.Contains(script);
         if (!scriptSupported) return 2;
         var languageSupported = SupportsLanguage(language);
         return languageSupported ? 0 : 1;
     }
-    internal static string LanguageKey(string language)
+    /// <summary>Preserves the first three UTF16 units without underscores, borrowing input or caller scratch.</summary>
+    internal static ReadOnlySpan<char> LanguageKey(string language, Span<char> scratch)
     {
-        var prefix = language.Length > 3 ? language[..3] : language;
-        return prefix.Contains('_') ? prefix.Replace("_", "", StringComparison.Ordinal) : prefix;
+        var prefix = language.AsSpan(0, Math.Min(3, language.Length));
+        if (!prefix.Contains('_')) return prefix;
+        var count = 0;
+        foreach (var value in prefix) if (value != '_') scratch[count++] = value;
+        return scratch[..count];
     }
     internal byte[] Save()
     {

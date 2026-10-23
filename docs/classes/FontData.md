@@ -24,7 +24,7 @@ Nonempty data accepts the packaged desktop and Android process architectures, in
 
 ## Support metadata
 
-Retains an immutable FontSupportPolicy snapshot and the native face's automatic script set. Primary support queries serialize with data lifetime checks; layout priority retains supported-script/supported-language, supported-script/unsupported-language and last-resort tiers. Color faces have preferred emoji presentation. Configuration copies and FontVariation realizations carry policy; FontFile commits changes to every realized indexed data object before notifying consumers.
+Retains an immutable FontSupportPolicy snapshot and the native face's automatic script set. Primary support queries serialize with data lifetime checks; layout priority retains supported-script/supported-language, supported-script/unsupported-language and last-resort tiers. Color faces have preferred emoji presentation. Configuration copies and FontVariation realizations carry policy; FontFile commits changes to every realized indexed data object before notifying consumers. Fallback-priority language lookup borrows a read-only span from the layout; public exact language queries and native font ownership remain unchanged.
 
 ## Raster policy snapshots
 

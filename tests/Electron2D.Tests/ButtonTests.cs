@@ -10,7 +10,7 @@ internal static class ButtonTests
         VerifyIndicators(fontBytes);
         VerifyResourceUpdates(fontBytes);
         VerifyResidency(fontBytes);
-        VerifyWarmFrames(fontBytes);
+        foreach (var language in new[] { "", "en-US", "en_US", "sr_Cyrl_RS" }) VerifyWarmFrames(fontBytes, language);
         Console.WriteLine("Buttons verify defaults, typed storage, state styles, icon/text layout, wrapping/clipping, check indicators, resource lifetime and warmed reuse.");
     }
     private static FontFile Font(byte[] bytes) => new() { Data = bytes, SubpixelPositioning = FontSubpixelPositioning.Quarter };
@@ -175,16 +175,16 @@ internal static class ButtonTests
         button.PrepareCanvas(); vertices.Clear(); batches.Clear(); button.AppendCanvas(vertices, batches, Transform.Identity);
         Check(vertices[0].UV.X == .5f, "Exact transitive polling refreshes nested atlas coordinates even when the outer revision does not advance.");
     }
-    private static void VerifyWarmFrames(byte[] bytes)
+    private static void VerifyWarmFrames(byte[] bytes, string language)
     {
         using var font = Font(bytes); using var style = new StyleBoxEmpty(); using var icon = Texture(8, 8);
-        var button = new Button("warm A") { Icon = icon, Size = new(120, 40), ToggleMode = true }; Configure(button, font, style); using var tree = new SceneTree(button);
+        var button = new Button("warm A") { Icon = icon, Size = new(120, 40), ToggleMode = true, Language = language }; Configure(button, font, style); using var tree = new SceneTree(button);
         var vertices = new List<CanvasVertex>(); var batches = new List<CanvasBatch>();
         for (var i = 0; i < 64; i++) { button.Text = (i & 1) == 0 ? "warm A" : "warm V"; button.ButtonPressed = (i & 1) == 0; tree.ProcessFrame(0); Record(button, vertices, batches); }
         var before = GC.GetAllocatedBytesForCurrentThread();
         for (var i = 0; i < 64; i++) { button.Text = (i & 1) == 0 ? "warm A" : "warm V"; button.ButtonPressed = (i & 1) == 0; tree.ProcessFrame(0); Record(button, vertices, batches); }
         var allocated = GC.GetAllocatedBytesForCurrentThread() - before;
-        Check(allocated == 0, $"Prepared active button frame/layout/recording must allocate no managed storage; actual={allocated}.");
+        Check(allocated == 0, $"Prepared active button frame/layout/recording must allocate no managed storage; language={language}, actual={allocated}.");
         before = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 64; i++) tree.ProcessFrame(0);
         Check(GC.GetAllocatedBytesForCurrentThread() - before == 0, "Idle button resource polling reuses prepared state.");
     }

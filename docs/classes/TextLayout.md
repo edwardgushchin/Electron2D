@@ -1,12 +1,17 @@
 # TextLayout
 
-Last updated: 2026-10-20
+Last updated: 2026-10-23
 
 **Visibility:** internal · **Source:** [TextLayout.cs](../../src/Servers/Text/TextLayout.cs) · **Component:** [Text](../components/text.md)
 
 ## Responsibilities and invariants
 
 Reusable layout buffer owned by Font caches or a text consumer. Converts text to Unicode scalars, determines grapheme/word/line boundaries and scripts, resolves fallback faces, shapes contextual runs, applies BiDi order, line breaks, clipping/ellipsis and permitted justification. Character bounds use shaped scalar clusters rather than ink boxes. Font revisions invalidate cached layout. Build leases every source face, repeats at most 64 times when a callback or concurrent replacement changes dependencies, and isolates nested queries from active cache entries. Drawing revalidates the built generation before recording and holds source leases through the complete draw. Retained canvas commands preserve immutable glyph-image snapshots after source retirement.
+
+Regional and script language tags use stack-backed fallback-priority keys across
+all ordinary and rich-style graphemes. [FontSupportPolicy](FontSupportPolicy.md)
+retains the existing prefix, separator and ordinal matching rules without creating
+one managed string per character.
 
 ## Integration and verification
 

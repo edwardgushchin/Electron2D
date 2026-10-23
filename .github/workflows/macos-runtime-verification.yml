@@ -77,6 +77,8 @@ jobs:
         run: |
           set -o pipefail
           ELECTRON2D_TEST_CODE_EDIT=1 bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/codeedit.log
+          ELECTRON2D_TEST_BUTTONS=1 bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/buttons.log
+          ELECTRON2D_TEST_FONT_SUPPORT=1 bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/font-support.log
           ELECTRON2D_TEST_PUBLIC_CONTACT_HISTORY=gpu bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/contact-history.log
       - name: Run the complete untraced suite
         id: fixture

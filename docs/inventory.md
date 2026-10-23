@@ -1,5 +1,10 @@
 # Engine inventory
 
+Existing [TextLayout](classes/TextLayout.md), [FontData](classes/FontData.md) and
+[FontSupportPolicy](classes/FontSupportPolicy.md) select fallback faces with a
+stack-backed regional language key and ordinal span lookup. This removes repeated
+per-grapheme strings without adding types, caches or public declarations.
+
 [GPUPhysicsBodyStore](classes/GPUPhysicsBodyStore.md) shares one portable body-motion
 traversal across recovery, sweep and resting phases. Existing types, GPU resources,
 iteration limits and public declarations remain; [verification](components/gpu-resident-motion-queries.md)

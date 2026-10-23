@@ -1,5 +1,12 @@
 # Text shaping and canvas fonts
 
+Prepared layout fallback selection now uses a three-character stack workspace and
+ordinal alternate dictionary keys for region/script language tags. The button
+active-frame regression reproduces 12288 bytes over 64 frames under `en-US` before
+the correction; its public test now covers automatic, hyphenated, underscored and
+script-qualified languages. Existing prefix/tier rules and glyph output remain.
+The corrected local `en-US` bracket retains zero allocations. Cross-platform runtime and rendered checks are separate from this local bracket.
+
 Last updated: 2026-10-23
 
 FontTests drains the existing calibrated collection/finalization warmup after its

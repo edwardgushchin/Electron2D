@@ -46,6 +46,9 @@ internal static partial class FontSupportTests
         root.Fallbacks = [first, second]; root.SetLanguageSupportOverride("en", false); Check(!root.IsLanguageSupported("en") && root.IsScriptSupported("Latn"), "Support queries use primary policy only.");
         Check(Width(root) == 7, "Equal tiers preserve authored order."); first.SetLanguageSupportOverride("en", false); Check(Width(root) == 11, "Language support ranks real fallback advances.");
         Check(Width(root, language: "en_US") == 11, "Regional language priority key matches the shaping contract.");
+        first.SetLanguageSupportOverride("en-", false);
+        Check(Width(root, language: "en-US") == 11 && Width(root, language: "EN_US") == 7, "Regional prefix separators and ordinal case retain actual fallback priority.");
+        first.RemoveLanguageSupportOverride("en-");
         first.SetLanguageSupportOverride("*", false); first.SetLanguageSupportOverride("en", true); Check(Width(root) == 7, "Exact overrides precede wildcard.");
         first.RemoveLanguageSupportOverride("en"); Check(Width(root) == 11, "Removal restores wildcard preference."); first.RemoveLanguageSupportOverride("*");
         first.SetScriptSupportOverride("Latn", false); Check(Width(root) == 11, "Script support has precedence over language.");
