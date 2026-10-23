@@ -73,7 +73,7 @@ Empieza con [CharacterMovement](examples/CharacterMovement/README.md). Mueve el 
 
 Instala mediante NuGet el paquete principal `Electron2D` y el paquete de tu plataforma con los [comandos de la tabla siguiente](#use-electron2d-in-your-game). NuGet restaura las dependencias nativas automáticamente. [Reglas de versiones de los paquetes de plataforma](docs/native-packaging.md).
 
-Los paquetes preliminares requieren `--prerelease`. Usa versiones coincidentes del motor y los paquetes de plataforma. Versión actual en NuGet: [`0.2.0-alpha`](https://www.nuget.org/packages/Electron2D/0.2.0-alpha).
+Los paquetes preliminares requieren `--prerelease`. Usa versiones coincidentes del motor y los paquetes de plataforma. Las versiones publicadas están en [NuGet](https://www.nuget.org/packages/Electron2D).
 
 ### Compilar y ejecutar
 
