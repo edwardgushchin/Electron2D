@@ -24,11 +24,12 @@ if (!(Test-Path $cdb)) { throw "Native $Architecture CDB is unavailable." }
 # Keep only exception context, symbolic stacks and module identities, never a heap/key dump.
 $commands = Join-Path $Output 'commands.txt'
 @'
+sxe -c ".ecxr; k; lm; q" 0xc0000374
+sxe -c ".ecxr; k; lm; q" bpe
 sxd -c2 ".ecxr; k; lm; q" av
 sxd -c2 ".ecxr; k; lm; q" ii
 sxd -c2 ".ecxr; k; lm; q" clr
 sxd -c2 ".ecxr; k; lm; q" sbo
-sxd -c2 ".ecxr; k; lm; q" *
 g
 '@ | Set-Content -Encoding ascii $commands
 $log = Join-Path $Output 'runtime-cdb.log'

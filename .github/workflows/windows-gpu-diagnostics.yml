@@ -1,0 +1,83 @@
+name: Windows GPU diagnostics
+
+on:
+  workflow_dispatch:
+    inputs:
+      native_run_id:
+        description: Successful native package workflow run
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  compound:
+    runs-on: windows-2025
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    env:
+      RestoreAdditionalProjectSources: ${{ github.workspace }}/bin/native-feed
+      DOTNET_TieredCompilation: '0'
+      ELECTRON2D_TEST_COMPOUND_PHYSICS: gpu
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install cmake==4.1.3 ninja==1.13.0
+      - uses: actions/cache@v4
+        with:
+          path: tools/shaders/obj/toolchain/
+          key: shader-tools-windows-2025-${{ runner.arch }}-${{ hashFiles('tools/shaders/toolchain.lock.json', 'tools/shaders/build_toolchain.py') }}
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.native_run_id }}
+          github-token: ${{ github.token }}
+          name: private-native-package-windows
+          path: bin/native-feed/
+      - name: Verify reused native payloads against current source
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('tools/native').resolve()))
+          import package, test_consumer
+          manifests = test_consumer.read_manifests(Path('bin/native-feed'))
+          assert set(manifests) == {'win-x86', 'win-x64', 'win-arm64'}
+          for receipt in manifests.values():
+              assert receipt['sourceSHA256'] == package.source_hash()
+              assert receipt['minimumEngineVersion'] == receipt['version'] == package.configuration()['version']
+          PY
+      - name: Publish the existing test runner
+        run: dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r win-x64 --self-contained true -o bin/diagnostics/runner --nologo
+      - name: Run the public compound fixture
+        id: fixture
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          bin/diagnostics/runner/Electron2D.Tests.exe 2>&1 | tee bin/diagnostics/compound.log
+          grep -Fx 'Compound GPU: transformed slots, gaps and disabled indices passed.' bin/diagnostics/compound.log
+      - name: Capture native exception context
+        if: steps.fixture.outcome == 'failure'
+        continue-on-error: true
+        timeout-minutes: 15
+        shell: pwsh
+        run: ./tools/ci/debug_windows.ps1 bin/diagnostics/runner/Electron2D.Tests.exe bin/diagnostics/cdb x64
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-gpu-diagnostics
+          path: |
+            bin/diagnostics/compound.log
+            bin/diagnostics/cdb/
+          if-no-files-found: error
+      - name: Preserve the fixture failure
+        if: steps.fixture.outcome == 'failure'
+        run: exit 1
