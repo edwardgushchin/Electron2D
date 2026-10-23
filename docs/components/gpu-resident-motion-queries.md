@@ -96,8 +96,9 @@ zero-motion recovery assertion after releasing the last joint contribution.
 Its first-query receipt describes the earlier vetoed request, not this failure.
 The fixture now reports both conditions separately and retains travel/depth/normal.
 That control includes diagnostic result-lane observations. The production port
-removes them; its full Windows run 40003829560 at `1401a95ff` remains in progress
-and complete Windows/Metal execution gates are still required.
+removes them; its full Windows run 40003829560 at `1401a95ff` subsequently fails
+the same recovery assertion. Complete Windows/Metal
+execution gates are still required.
 
 Earlier DXBC, explicit pair-result, traversal and bounds-only controls did not
 correct the Windows miss. The pair/scan observations narrowed lost state to the
@@ -195,6 +196,25 @@ public-joint cohorts. The zero-motion sample at `(0, 82)` records `0x5001f7ff`,
 one recovery plane, no rejected keys, matching positive contact/maximum depths
 `0.45241356`, and travel `(0, -1.8069484)`. This calibrates the observer on Linux;
 it does not establish the failing Windows route.
+
+Windows run 40016536236 at `8cdedf1b3`, artifact 12528134434, preserves both
+focused failures. The same sample records `0x600137ff`: traversal, valid contact
+and acceptance are set, with one plane, no rejected keys and matching positive
+primary/maximum depths `2.0799999237`. Projection and changed-correction flags
+are absent; recovery remains zero and the retained state marks convergence
+without recovery. This narrows the failure to the boundary after contact
+retention and before projection; it does not identify a compiler root cause.
+
+Each portable module now fixes its scan role from `E2D_MOTION_STAGE`: initial/
+continued stages recover, translation sweeps, and final output samples rest.
+They no longer carry dynamic phase-role flags through geometry calls. The
+ordinary Vulkan scan still takes its original phase argument. This candidate
+preserves visits, projection, buffers, passes and thresholds and requires an
+ordinary native rerun.
+Local forced-ordered joint, functional-motion, compound and resident/public
+one-way cohorts pass. All five modules retain their per-stage resource/workgroup
+reflection and the ordinary Vulkan hash above. Generation checks verify 168
+embedded resources plus invalidation, failure retention and cleanup.
 
 ## CPU corrections found by comparison
 

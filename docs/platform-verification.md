@@ -69,6 +69,11 @@ The explicit-contact-pair Windows candidate at `a5749f3a9`, run 40012351791,
 repeats the zero-recovery failure in both focused processes. Optional temporary
 recovery tracing now observes the traversal/contact/reducer boundary through
 existing result padding; its output is diagnostic, not production acceptance.
+Run 40016536236 at `8cdedf1b3` fails both focused processes. Its trace retains
+one accepted recovery plane and positive depth 2.0799999237 but never enters
+projection, then marks the unchanged correction converged. Portable scan roles
+are now specialized by their module stage; this candidate still needs an ordinary
+Windows run and the final complete source matrix.
 
 Final complete CI, public package restoration, rendered consumers and release
 publication remain pending. The current declaration register is not a substitute

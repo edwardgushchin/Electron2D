@@ -21,7 +21,7 @@ def instrument_shader(text):
         raise ValueError('Recovery source is already instrumented.')
     target = 'outputWords[gl_GlobalInvocationID.x*8u+2u].w'
     markers = (
-        ('    bool recovering=phase==0u,resting=phase==2u;',
+        ('    recoveryCount=0u;if(recovering)rejectedCount=0u;',
          '4u|(recovering?0x40000000u:0u)|(resting?0x80000000u:0u)'),
         ('        uvec2 token=payload[q.body.z+own];', '8u'),
         ('if(ga.data.y==0u)continue;', '16u'),

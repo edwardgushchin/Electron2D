@@ -14,6 +14,10 @@ geometry calls in the existing prefix. Portable geometry returns both contact
 snapshots by value to recovery/final sampling, with the primary point used for
 moving refinement. The linked component retains the failed storage-only native
 control and separates local checks from target acceptance of the return boundary.
+Each portable module fixes its recovery/sweep/rest role from its compile-time
+stage; the ordinary Vulkan module retains the dynamic phase argument. The
+Windows trace reaches accepted recovery planes but skips projection, so target
+acceptance of this specialization remains required.
 
 [Shape-query operation kernels](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
 retain separate Intersect/Contacts/Rest/Cast pipelines. Mixed batches use one

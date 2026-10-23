@@ -247,7 +247,11 @@ bool rejectedMotionPair()
 }
 void scan(uint phase)
 {
+#ifdef E2D_MOTION_STAGE
+    const bool recovering=E2D_MOTION_STAGE<2,resting=E2D_MOTION_STAGE==3;
+#else
     bool recovering=phase==0u,resting=phase==2u;
+#endif
     recoveryCount=0u;if(recovering)rejectedCount=0u;
 #if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE < 2
     uint recoveryAt=gl_GlobalInvocationID.x*8u;
