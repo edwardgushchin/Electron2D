@@ -12,6 +12,10 @@ on:
         type: choice
         default: dxil
         options: [dxil, dxbc]
+      optimize_motion_spirv:
+        description: Compare optimized SPIR-V for the four motion stages
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -29,6 +33,7 @@ jobs:
       DOTNET_TieredCompilation: '0'
       ELECTRON2D_TEST_COMPOUND_PHYSICS: gpu
       RECOVERY_COMPILER: ${{ inputs.recovery_compiler }}
+      MOTION_SPIRV_OPTIMIZATION: ${{ inputs.optimize_motion_spirv }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v6
@@ -95,6 +100,16 @@ jobs:
           path.write_bytes(instrumented.replace(finish, ready, 1).encode())
           compiler = Path('src/Servers/Rendering/ShaderCompiler.cs')
           compiler_original = compiler.read_bytes()
+          generator = Path('tools/shaders/build_runtime.py')
+          generator_original = generator.read_bytes()
+          optimization = os.environ.get('MOTION_SPIRV_OPTIMIZATION', 'false')
+          assert optimization in ('false', 'true')
+          if optimization == 'true':
+              text = generator_original.decode()
+              condition = "and not stem.endswith('.portable'):"
+              assert text.count(condition) == 1
+              text = text.replace(condition, "and (not stem.endswith('.portable') or source.name == 'PhysicsResidentMotionQueries.comp.glsl'):")
+              generator.write_bytes(text.encode())
           selection = os.environ['RECOVERY_COMPILER']
           assert selection in ('dxil', 'dxbc')
           if selection == 'dxbc':
@@ -173,6 +188,9 @@ jobs:
                      'actualSHA256': hashlib.sha256(path.read_bytes()).hexdigest(),
                      'originalCompilerSHA256': hashlib.sha256(compiler_original).hexdigest(),
                      'actualCompilerSHA256': hashlib.sha256(compiler.read_bytes()).hexdigest(),
+                     'motionSPIRVOptimization': optimization == 'true',
+                     'originalGeneratorSHA256': hashlib.sha256(generator_original).hexdigest(),
+                     'actualGeneratorSHA256': hashlib.sha256(generator.read_bytes()).hexdigest(),
                      'motionStages': ['initial recovery', 'continued recovery x3', 'translation', 'rest and result'],
                      'probeHistoryBits': {'0': 'initial recovery safe=1', '1': 'last continued recovery safe=1',
                                           '2': 'translation starts safe=unsafe=1', '3': 'translation input motion nonzero',

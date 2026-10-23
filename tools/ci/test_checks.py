@@ -33,19 +33,19 @@ class Checks(unittest.TestCase):
         code = '\n'.join(line[10:] for line in inline.splitlines())
         names = ('src/Servers/Physics/GPUPhysicsDevice.cs', 'src/Servers/Rendering/ShaderCompiler.cs',
                  'src/Servers/Physics/GPUPhysicsBodyStore.MotionQueries.cs',
-                 'src/Servers/Physics/Shaders/PhysicsResidentMotionQueries.comp.glsl')
+                 'src/Servers/Physics/Shaders/PhysicsResidentMotionQueries.comp.glsl', 'tools/shaders/build_runtime.py')
         originals = {name: (rids.ROOT / name).read_bytes().replace(b'\r\n', b'\n') for name in names}
         previous = Path.cwd()
         try:
             with tempfile.TemporaryDirectory(prefix='e2d motion probe ') as directory:
                 os.chdir(directory)
-                for compiler in ('dxil', 'dxbc'):
+                for compiler, optimization in (('dxil', 'false'), ('dxbc', 'false'), ('dxil', 'true'), ('dxbc', 'true')):
                     for newline in (b'\n', b'\r\n'):
-                        with self.subTest(compiler=compiler, newline=newline):
+                        with self.subTest(compiler=compiler, optimization=optimization, newline=newline):
                             for name, original in originals.items():
                                 path = Path(name); path.parent.mkdir(parents=True, exist_ok=True)
                                 path.write_bytes(original.replace(b'\n', newline))
-                            with patch.dict(os.environ, RECOVERY_COMPILER=compiler, GITHUB_SHA='self-check'), redirect_stdout(StringIO()):
+                            with patch.dict(os.environ, RECOVERY_COMPILER=compiler, MOTION_SPIRV_OPTIMIZATION=optimization, GITHUB_SHA='self-check'), redirect_stdout(StringIO()):
                                 exec(compile(code, 'windows-motion-workflow', 'exec'), {})
                             query = Path(names[2]).read_text()
                             shader = Path(names[3]).read_text()
@@ -61,6 +61,11 @@ class Checks(unittest.TestCase):
                                 self.assertIn('motionProbe|=(blocked?16u:0u)|(safe!=0?32u:0u);', shader)
                                 self.assertIn('Marshal.Copy(compiled, actualBytecode, 0, actualBytecode.Length);', Path(names[1]).read_text())
                             receipt = json.loads(Path('bin/diagnostics/compiler-source.json').read_text())
+                            self.assertEqual(receipt['motionSPIRVOptimization'], optimization == 'true')
+                            if optimization == 'false':
+                                self.assertEqual(Path(names[4]).read_text(), originals[names[4]].decode())
+                            else:
+                                self.assertIn("or source.name == 'PhysicsResidentMotionQueries.comp.glsl'", Path(names[4]).read_text())
                             self.assertEqual(receipt['actualSHA256'], hashlib.sha256(Path(names[0]).read_bytes()).hexdigest())
                             self.assertEqual(receipt['headSHA'], 'self-check')
         finally:

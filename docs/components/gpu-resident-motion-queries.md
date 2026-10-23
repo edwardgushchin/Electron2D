@@ -86,6 +86,9 @@ miss, so this simplification does not correct the Windows failure. The next
 diagnostic records bracket/blocked flags at each phase boundary in unused result
 padding and retains actual compiled DXBC plus separate compiler/pipeline timing.
 Ordinary full suites remain required; production compiler selection is unchanged.
+The staged optimization control applies the existing SPIR-V optimizer separately
+to the four motion stages, keeping the ordinary optimized Vulkan module and other
+portable shader profiles unchanged. It remains a manual diagnostic comparison.
 
 The earlier single portable traversal still aborted in Windows WARP 1.0.21
 `ScopeNestedCFG::runOnFunction`. Flattening motion phases and removing one sweep
