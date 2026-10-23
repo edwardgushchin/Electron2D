@@ -123,3 +123,5 @@ an explicit foreign claim. Cleanup unregisters the app and deletes its files.
 Native launch remains an open target gate: earlier valid-plist/universal-app
 runs still returned LSOpenCFURLRef -10814, and the first preferred-handler guard
 stopped run 39947670388. The revised claims check uses direct CoreFoundation/CoreServices calls with balanced CF/native library ownership. Native run 39950803043 reports zero registered claims after the CLI command, so the fixture now registers its actual file URL with LSRegisterURL before checking claims. Run 39949194585 rejected a JXA bridge value before native binding; that interpreter path has been removed. Target execution remains required.
+
+Run 39952942294 ARM64 reports zero registered claims even after a successful LSRegisterURL for the temporary-directory app. The owned fixture now lives beneath the user Applications directory during the check; cleanup deletes only its unique directory and removes the parent only if the fixture created it and it stays empty. This location control still needs native verification.

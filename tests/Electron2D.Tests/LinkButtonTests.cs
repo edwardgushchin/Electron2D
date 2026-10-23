@@ -85,7 +85,9 @@ internal static class LinkButtonTests
     }
     private static void FreshProcess()
     {
-        var folder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "e2d-link-" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(folder);
+        var fixtureRoot = OperatingSystem.IsMacOS() ? System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Applications") : System.IO.Path.GetTempPath();
+        var createdAppRoot = OperatingSystem.IsMacOS() && !Directory.Exists(fixtureRoot);
+        var folder = System.IO.Path.Combine(fixtureRoot, "e2d-link-" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(folder);
         var scheme = "e2d-link-" + Guid.NewGuid().ToString("N"); var uri = scheme + "://stored/path";
         var registryPath = @"Software\Classes\" + scheme; var app = System.IO.Path.Combine(folder, "Handler.app");
         const string register = "/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister";
@@ -157,7 +159,13 @@ internal static class LinkButtonTests
                 if (registered && OperatingSystem.IsWindows()) Registry.CurrentUser.DeleteSubKeyTree(registryPath, false);
                 if (registered && OperatingSystem.IsMacOS()) RunFixtureTool(register, "-u", app);
             }
-            finally { Directory.Delete(folder, true); }
+            finally
+            {
+                Directory.Delete(folder, true);
+                if (createdAppRoot)
+                    try { Directory.Delete(fixtureRoot); }
+                    catch (IOException) when (Directory.EnumerateFileSystemEntries(fixtureRoot).Any()) { }
+            }
         }
     }
     private static unsafe void BindMacURI(string app, string scheme, string bundleID)
