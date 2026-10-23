@@ -117,13 +117,22 @@ internal static class LinkButtonTests
                     if (key?.ElementsAfterSelf().FirstOrDefault() is { } previous) previous.ReplaceWith(value);
                     else dictionary.Add(new XElement("key", name), value);
                 }
-                Set("CFBundleIdentifier", new XElement("string", "dev.electron2d.tests." + scheme));
-                Set("CFBundleURLTypes", new XElement("array", new XElement("dict", new XElement("key", "CFBundleTypeRole"), new XElement("string", "Editor"), new XElement("key", "CFBundleURLName"), new XElement("string", "dev.electron2d.tests." + scheme), new XElement("key", "CFBundleURLSchemes"), new XElement("array", new XElement("string", scheme)))));
+                var bundleID = "dev.electron2d.tests." + scheme;
+                Set("CFBundleIdentifier", new XElement("string", bundleID));
+                Set("CFBundleURLTypes", new XElement("array", new XElement("dict", new XElement("key", "CFBundleTypeRole"), new XElement("string", "Editor"), new XElement("key", "CFBundleURLName"), new XElement("string", bundleID), new XElement("key", "CFBundleURLSchemes"), new XElement("array", new XElement("string", scheme)))));
                 Set("LSUIElement", new XElement("true")); document.DocumentType?.Remove(); document.Save(plist);
                 RunFixtureTool("/usr/bin/plutil", "-lint", plist);
                 RunFixtureTool("/usr/bin/lipo", "-info", System.IO.Path.Combine(app, "Contents", "MacOS", "applet"));
                 RunFixtureTool("/usr/bin/codesign", "--force", "--sign", "-", app);
                 registered = true; RunFixtureTool(register, "-f", "-v", app);
+                var bind = "ObjC.import('CoreServices');\n" +
+                    $"var scheme=$('{scheme}'), bundle=$('{bundleID}');\n" +
+                    "var previous=ObjC.unwrap($.LSCopyDefaultHandlerForURLScheme(scheme));\n" +
+                    "if(previous && previous!==ObjC.unwrap(bundle)) throw new Error('The unique URI scheme already has a foreign handler.');\n" +
+                    "var status=$.LSSetDefaultHandlerForURLScheme(scheme,bundle); if(status!==0) throw new Error('URI binding failed: '+status);\n" +
+                    "var current=ObjC.unwrap($.LSCopyDefaultHandlerForURLScheme(scheme)); if(current!==ObjC.unwrap(bundle)) throw new Error('URI binding readback differs.');\n" +
+                    "current;";
+                RunFixtureTool("/usr/bin/osascript", "-l", "JavaScript", "-e", bind);
             }
             else
             {

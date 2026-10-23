@@ -637,8 +637,8 @@ physics intervals but fail FrameMonitorContract's 256 prepared frames with
 0/6672 and 0/4416 owner/all-thread bytes respectively. Those failures are not
 explained by a successful x64 interval. The optional profiler now brackets that
 same 256-frame timing/navigation interval in its own scenario domain. Begin/end
-callbacks surround the original counters; frame count, warmup, collection and
-strict zero-byte assertions remain unchanged. Ordinary portability consumers
+callbacks surround the original counters; frame count, warmup and strict zero-byte assertions remain unchanged. Its
+existing second collection now waits for finalizers before the 128 warm frames. Ordinary portability consumers
 supply no callbacks. The diagnostic workflow uploads focused logs before starting
 the longer full run so native URI failures can be inspected independently.
 
@@ -660,3 +660,16 @@ attribute the earlier untraced 64-byte deltas. That diagnostic instead stops in
 a fresh terrain child after 30.354 seconds (exit 137, loading archive). ARM64's
 same diagnostic reaches the later native URI failure. Neither is a complete
 untraced platform pass.
+
+The early x64 object trace in run 39945830574 catches the en-US failure: the
+owner counter increases by 4,496 bytes. Seventeen recorded objects total 2,976
+bytes on native thread 22795, while begin/end identify owner 22721. Matching
+CoreLib metadata resolves their stacks to GC.RunFinalizers, Gen2GcCallback.Finalize,
+SharedArrayPool.Trim, GC.GetGCMemoryInfo and PortableThreadPool.OnGen2GCCallback.
+The trace records no object on the owner; these other-thread events do not by
+themselves explain its counter delta. The four ARM64 traced intervals are zero.
+The button fixture now uses the existing calibrated AllocationWarmupCheck.Collect
+after all 64 warm frames and before measuring the unchanged 64 active frames.
+This drains both finalization passes; it does not change the zero-byte assertion.
+Target untraced execution remains required. The earlier two-RID 6,304-byte
+failures remain retained separately.

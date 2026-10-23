@@ -62,6 +62,7 @@ internal static class FrameMonitorContract
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: true);
             GC.WaitForPendingFinalizers();
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: true);
+            GC.WaitForPendingFinalizers();
             for (var i = 0; i < 128; i++) { Engine.AdvanceFrame(.1); _ = Values(); }
             beginAllocationTrace?.Invoke();
             long ownerBytes, allBytes;

@@ -182,6 +182,7 @@ internal static class ButtonTests
         var button = new Button("warm A") { Icon = icon, Size = new(120, 40), ToggleMode = true, Language = language }; Configure(button, font, style); using var tree = new SceneTree(button);
         var vertices = new List<CanvasVertex>(); var batches = new List<CanvasBatch>();
         for (var i = 0; i < 64; i++) { button.Text = (i & 1) == 0 ? "warm A" : "warm V"; button.ButtonPressed = (i & 1) == 0; tree.ProcessFrame(0); Record(button, vertices, batches); }
+        AllocationWarmupCheck.Collect();
         var tag = trace?.Tag(1) ?? 0; trace?.Begin(tag);
         long before, allocated;
         try
