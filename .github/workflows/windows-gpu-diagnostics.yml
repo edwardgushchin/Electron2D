@@ -18,7 +18,7 @@ on:
         default: false
 
       seed_motion_bounds:
-        description: Compare first-vertex initialization in motion query bounds
+        description: Compare first-vertex bounds and persisted sweep state between candidate visits
         type: boolean
         default: false
 
@@ -261,7 +261,23 @@ jobs:
                   for(uint i=1u;i<g.data.y;i++)
               #else
               ''' + original + '\n#endif'
-              shader.write_text(text.replace(original, candidate))
+              text = text.replace(original, candidate)
+              save_sweep = '    outputWords[gl_GlobalInvocationID.x*8u+7u]=uvec4(floatBitsToUint(vec2(safe,unsafeFraction)),motionShape,blocked?1u:0u);'
+              load_sweep = '''    uvec4 savedSweep=outputWords[gl_GlobalInvocationID.x*8u+7u];
+                  safe=uintBitsToFloat(savedSweep.x);unsafeFraction=uintBitsToFloat(savedSweep.y);
+                  motionShape=savedSweep.z;blocked=savedSweep.w!=0u;'''
+              pair_call = 'movingPair(a,b,ga,gb);'
+              plain_pair = 'else ' + pair_call
+              if plain_pair in text:
+                  text = text.replace(plain_pair, 'else\n                            {\n                                ' + pair_call + '\n                            }')
+              translate = '    safe=unsafeFraction=1;motionShape=0u;blocked=false;'
+              assert text.count(pair_call) == 1 and text.count(translate) == 1
+              text = text.replace(pair_call, '#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2\n' + load_sweep + '\n#endif\n' + pair_call + '\n#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2\n' + save_sweep + '\n#endif')
+              text = text.replace(translate, translate + '\n' + save_sweep)
+              sweep_scan = '    if(q.motionMargin.xy!=vec2(0))scan(1u);'
+              assert text.count(sweep_scan) == 2
+              text = text.replace(sweep_scan, sweep_scan + '\n' + load_sweep, 1)
+              shader.write_text(text)
           Path('bin/diagnostics').mkdir(parents=True, exist_ok=True)
           receipt = {'compiler': selection + ' motion; DXIL remaining kernels', 'headSHA': os.environ['GITHUB_SHA'], 'instrumentedSource': str(path),
                      'originalSHA256': hashlib.sha256(original_bytes).hexdigest(),
@@ -270,6 +286,7 @@ jobs:
                      'actualCompilerSHA256': hashlib.sha256(compiler.read_bytes()).hexdigest(),
                      'motionSPIRVOptimization': optimization == 'true',
                      'motionSeededBounds': seeded == 'true',
+                     'motionPersistentSweep': seeded == 'true',
                      'originalGeneratorSHA256': hashlib.sha256(generator_original).hexdigest(),
                      'actualGeneratorSHA256': hashlib.sha256(generator.read_bytes()).hexdigest(),
                      'motionStages': ['initial recovery', 'continued recovery x3', 'translation', 'rest and result'],

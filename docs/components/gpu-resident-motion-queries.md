@@ -347,3 +347,15 @@ exit and public result still miss. Unoptimized run 39990539157 still exits
 does not close either target gate. The next receipt captures safe fractions
 immediately after a pair and at the end of the source scan, using existing result
 padding; no numerical result is replaced or accepted from these observations.
+
+Run 39992096151 at b407ae189 records pair safe `0.49609375` but the end-of-scan
+slot remains at its initial value `1`; the public result is still a miss. This
+proves that the pair's valid fraction is not present in the final phase state,
+without proving that the end-of-scan marker itself executed. The next diagnostic
+loads and saves the translation accumulator around each candidate pair using the
+existing phase-state word, then restores it after scan. Seeded bounds remain in
+that candidate; recovery, traversal, geometry work and the ordinary Vulkan branch
+are unchanged. Native execution is required before adopting either change.
+The local ordered compound and functional motion controls pass with persistence;
+their pair/end-of-scan fractions both remain `0.49609375`, and ordinary Vulkan
+retains SHA-256 `79fb6af39ee14df2d86e25cbc419dfc1596ad1275211eb97258c165cab41d87f`.

@@ -111,7 +111,11 @@ class Checks(unittest.TestCase):
                             receipt = json.loads(Path('bin/diagnostics/compiler-source.json').read_text())
                             self.assertEqual(receipt['motionSPIRVOptimization'], optimization == 'true')
                             self.assertEqual(receipt['motionSeededBounds'], seeded == 'true')
-                            if seeded == 'true': self.assertIn('for(uint i=1u;i<g.data.y;i++)', shader)
+                            self.assertEqual(receipt['motionPersistentSweep'], seeded == 'true')
+                            if seeded == 'true':
+                                self.assertIn('for(uint i=1u;i<g.data.y;i++)', shader)
+                                self.assertEqual(shader.count('uvec4 savedSweep=outputWords[gl_GlobalInvocationID.x*8u+7u];'), 2)
+                                self.assertEqual(shader.count('outputWords[gl_GlobalInvocationID.x*8u+7u]=uvec4(floatBitsToUint(vec2(safe,unsafeFraction)),motionShape,blocked?1u:0u);'), 2)
                             if optimization == 'false':
                                 self.assertEqual(Path(names[4]).read_text(), originals[names[4]].decode())
                             else:

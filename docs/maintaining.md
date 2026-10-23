@@ -61,7 +61,11 @@ The optional seed_motion_bounds input initializes portable query bounds from the
 first vertex, then visits the remaining vertices in the original order. The only
 caller already excludes zero-vertex geometry. The ordinary Vulkan source keeps
 its original branch. This replaces the failed explicit descent/advance control;
-its default is false and it changes only the diagnostic checkout copy.
+its default is false and it changes only the diagnostic checkout copy. It now
+also retains the translation accumulator in the existing phase-state word before
+and after each candidate pair, restoring it after the complete scan. This keeps
+safe/unsafe fractions, source identity and blocked state together without adding
+a buffer, host transfer or numerical operation.
 The fraction probe uses the existing unused object-result words for the last
 pair-return and end-of-scan safe fractions. Diagnostic state bits retain
 query-bound entry/return and any BVH node/category read. Earlier receipts retain
