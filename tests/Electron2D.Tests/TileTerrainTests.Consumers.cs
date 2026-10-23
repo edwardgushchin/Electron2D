@@ -48,11 +48,12 @@ internal static partial class TileTerrainTests
             var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(TileTerrainTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_TILE_TERRAINS"); start.Environment.Remove("ELECTRON2D_TEST_TILE_TERRAINS_NATIVE"); start.Environment["ELECTRON2D_TEST_TILE_TERRAINS_FILE"] = path;
             var elapsed = Stopwatch.StartNew();
             using var process = Process.Start(start)!; var output = process.StandardOutput.ReadToEndAsync(); var errors = process.StandardError.ReadToEndAsync();
-            var exited = process.WaitForExit(30000);
+            // Rosetta cold archive loading plus native consumers can exceed 30 seconds.
+            var exited = process.WaitForExit(60_000);
             if (!exited)
             {
                 process.Kill(true);
-                if (!process.WaitForExit(5000)) throw new TimeoutException($"Fresh terrain scene process {process.Id} did not terminate after the 30-second deadline and kill.");
+                if (!process.WaitForExit(5000)) throw new TimeoutException($"Fresh terrain scene process {process.Id} did not terminate after the 60-second deadline and kill.");
             }
             var stdout = output.GetAwaiter().GetResult(); var stderr = errors.GetAwaiter().GetResult();
             var details = $"Fresh terrain scene process {process.Id}: {elapsed.Elapsed.TotalSeconds:F3} s, exit {process.ExitCode}.\nstdout:\n{stdout}\nstderr:\n{stderr}";

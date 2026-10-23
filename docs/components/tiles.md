@@ -168,6 +168,12 @@ TileAnimationTests covers frame reservations and overlaps, columns/gaps, origina
 
 ## Terrain authoring and painting
 
+Fresh terrain scene checks allow 60 seconds for cold archive loading, scene
+instantiation and native physics/navigation consumers. On x64 macOS at
+`73c8a101f`, the child completed its checks and exited zero around the former
+30-second deadline; the parent still failed. Exit-zero and the completion marker
+remain mandatory, with kill/reap on timeout. The longer target gate is pending.
+
 TileSet stores ordered terrain sets, their TerrainMode and terrain names/opaque colors. New terrains receive a generated name and palette color. Insertion, movement, removal and clearing remap all source alternatives' center and peering identities coherently. Structural edits commit all remapping before data notifications, reject recursive structural edits and attempt parent publication even when a listener throws. Changing mode or grid shape filters available peering directions while retaining inactive authored values.
 
 TileData TerrainSet selects a set or -1; changing it while attached clears center/peering assignments. Terrain selects a center or -1. Get/SetTerrainPeeringBit operate on the active shape/mode directions; IsValidTerrainPeeringBit returns false for undefined/unassigned/unavailable directions. Probability is finite, nonnegative and defaults to one. Zero weights do not displace positive alternatives; all-zero candidates use the first sorted candidate. Exact random sequences are not a contract.

@@ -2,6 +2,21 @@
 
 Last updated: 2026-10-23
 
+## Current release checks
+
+The complete ordinary Linux x64 suite at `9df050e6e` passed in 597.5 seconds
+with the audited native closure. The complete ordinary macOS ARM64 suite at
+`73c8a101f` passed, including native URI capture and prepared character checks.
+The same x64 macOS cohort failed the terrain child deadline at 30.359 seconds,
+despite its zero exit and successful physics/navigation marker; archive loading
+took 27.774 seconds. Its cold-process budget is now 60 seconds, with target
+verification still required. Windows motion remains unresolved; manual compiler
+and staged SPIR-V optimization controls do not replace the ordinary release gate.
+Public packages, final CI, rendered consumers and release publication are separate
+pending checks.
+
+## Earlier release checks
+
 Fresh-process desktop fixtures now restart the current executable and add their
 assembly only for a framework `dotnet` host. Run `39890302781` reached terrain
 scene persistence on the x64 macOS apphost, then failed because its child selected

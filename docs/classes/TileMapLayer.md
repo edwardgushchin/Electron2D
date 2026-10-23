@@ -1,12 +1,17 @@
 # TileMapLayer
 
-Last updated: 2026-10-18
+Last updated: 2026-10-23
 
 **Namespace:** `Electron2D`. **Source:** [TileMapLayer.cs](../../src/Scene/2D/TileMapLayer.cs).
 
 ## Overview
 
 Draws an atlas tile layer and generates tile-owned collision bodies and navigation regions in its selected world.
+
+The terrain persistence fixture retains real fresh-process physics/navigation
+checks, zero exit and its completion marker, with a 60-second cold-process budget.
+The x64 macOS run at `73c8a101f` completed the child at the prior 30-second
+boundary but the parent timed out; corrected target execution remains required.
 
 ## Syntax
 
