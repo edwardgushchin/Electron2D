@@ -270,3 +270,5 @@ State styles are `normal`, `pressed`, `hover`, `disabled`, optional `hover_press
 [Dropdown choices](../components/dropdown-choices.md) add OptionButton as an executable Button/PopupMenu consumer with three arrow theme keys and an exact scene/file factory. Selected item translation uses the shared Button text path. Disposed borrowed button icons read as null and clear on owner processing, avoiding the internal-process/deferred-cleanup race. Public shared-owner signatures remain unchanged.
 
 Automatic button captions use [Control.TranslationContext](Control.md#automatic-translation-context) when automatic translation supplies no explicit context. Set it before assigning text; changing the context alone preserves prepared text until a translation-change notification or another layout invalidation.
+
+The macOS focused allocation failure and optional object trace remain open in [the measurement record](../components/physics-allocation-measurement.md#prepared-button-diagnostics-2026-10-23). Earlier local passes do not clear that target failure.

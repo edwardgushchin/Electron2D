@@ -84,6 +84,33 @@ jobs:
           lipo -info bin/diagnostics/libManagedAllocationTrace.dylib
           dotnet publish tools/ci/managed-allocation/Calibration.csproj -c Release -r '${{ matrix.rid }}' --self-contained true -o bin/diagnostics/calibration-runner --nologo
           python3 -B tools/ci/test_managed_allocation_trace.py bin/diagnostics/libManagedAllocationTrace.dylib bin/diagnostics/calibration-runner/Calibration bin/diagnostics/allocation-calibration
+      - uses: actions/upload-artifact@v4
+        if: always() && inputs.allocation_trace
+        with:
+          name: macos-allocation-modules-${{ matrix.rid }}
+          path: |
+            bin/diagnostics/allocation-calibration/
+            bin/diagnostics/libManagedAllocationTrace.dylib
+            bin/diagnostics/runner/System.Private.CoreLib.dll
+            bin/diagnostics/runner/Electron2D.dll
+            bin/diagnostics/runner/Electron2D.Tests.dll
+            bin/diagnostics/runner/PhysicsBackendExtension.Consumer.dll
+          if-no-files-found: error
+      - name: Profile the prepared button interval
+        id: button_trace
+        if: inputs.allocation_trace
+        continue-on-error: true
+        env:
+          CORECLR_ENABLE_PROFILING: '1'
+          CORECLR_PROFILER: '{4CB0917C-5E03-4787-83BC-98C86DC7BE4C}'
+          CORECLR_PROFILER_PATH: ${{ github.workspace }}/bin/diagnostics/libManagedAllocationTrace.dylib
+          ELECTRON2D_POINT_ALLOCATION_TRACE: ${{ github.workspace }}/bin/diagnostics/libManagedAllocationTrace.dylib
+          E2D_ALLOCATION_TRACE: ${{ github.workspace }}/bin/diagnostics/buttons-allocation.trace
+          ELECTRON2D_TEST_BUTTONS: '1'
+        run: |
+          set -o pipefail
+          umask 077
+          bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/buttons-trace.log
       - name: Check platform input and fresh-process contact history
         id: focused
         continue-on-error: true
@@ -100,7 +127,9 @@ jobs:
         if: always()
         with:
           name: macos-focused-${{ matrix.rid }}
-          path: bin/diagnostics/*.log
+          path: |
+            bin/diagnostics/*.log
+            bin/diagnostics/buttons-allocation.trace.*
           if-no-files-found: error
       - name: Run the complete ${{ inputs.allocation_trace && 'profiled' || 'untraced' }} suite
         id: fixture
@@ -131,13 +160,8 @@ jobs:
           name: macos-allocation-${{ matrix.rid }}
           path: |
             bin/diagnostics/full-allocation.trace.*
-            bin/diagnostics/allocation-calibration/
-            bin/diagnostics/libManagedAllocationTrace.dylib
-            bin/diagnostics/runner/System.Private.CoreLib.dll
-            bin/diagnostics/runner/Electron2D.dll
-            bin/diagnostics/runner/Electron2D.Tests.dll
-            bin/diagnostics/runner/PhysicsBackendExtension.Consumer.dll
+            bin/diagnostics/buttons-allocation.trace.*
           if-no-files-found: error
       - name: Preserve the full-suite failure
-        if: steps.fixture.outcome == 'failure' || steps.focused.outcome == 'failure'
+        if: steps.fixture.outcome == 'failure' || steps.focused.outcome == 'failure' || steps.button_trace.outcome == 'failure'
         run: exit 1

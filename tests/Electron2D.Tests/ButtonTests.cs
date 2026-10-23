@@ -177,13 +177,21 @@ internal static class ButtonTests
     }
     private static void VerifyWarmFrames(byte[] bytes, string language)
     {
+        using var trace = PhysicsAllocationTrace.Open(PhysicsServer.Backend.CPU, 0x4_0000_0000UL);
         using var font = Font(bytes); using var style = new StyleBoxEmpty(); using var icon = Texture(8, 8);
         var button = new Button("warm A") { Icon = icon, Size = new(120, 40), ToggleMode = true, Language = language }; Configure(button, font, style); using var tree = new SceneTree(button);
         var vertices = new List<CanvasVertex>(); var batches = new List<CanvasBatch>();
         for (var i = 0; i < 64; i++) { button.Text = (i & 1) == 0 ? "warm A" : "warm V"; button.ButtonPressed = (i & 1) == 0; tree.ProcessFrame(0); Record(button, vertices, batches); }
-        var before = GC.GetAllocatedBytesForCurrentThread();
-        for (var i = 0; i < 64; i++) { button.Text = (i & 1) == 0 ? "warm A" : "warm V"; button.ButtonPressed = (i & 1) == 0; tree.ProcessFrame(0); Record(button, vertices, batches); }
-        var allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+        var tag = trace?.Tag(1) ?? 0; trace?.Begin(tag);
+        long before, allocated;
+        try
+        {
+            before = GC.GetAllocatedBytesForCurrentThread();
+            for (var i = 0; i < 64; i++) { button.Text = (i & 1) == 0 ? "warm A" : "warm V"; button.ButtonPressed = (i & 1) == 0; tree.ProcessFrame(0); Record(button, vertices, batches); }
+            allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+        }
+        finally { trace?.End(); }
+        if (trace is not null) Console.WriteLine($"Button frame trace {tag}: language={language}, owner={allocated} B.");
         Check(allocated == 0, $"Prepared active button frame/layout/recording must allocate no managed storage; language={language}, actual={allocated}.");
         before = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 64; i++) tree.ProcessFrame(0);
         Check(GC.GetAllocatedBytesForCurrentThread() - before == 0, "Idle button resource polling reuses prepared state.");

@@ -641,3 +641,22 @@ callbacks surround the original counters; frame count, warmup, collection and
 strict zero-byte assertions remain unchanged. Ordinary portability consumers
 supply no callbacks. The diagnostic workflow uploads focused logs before starting
 the longer full run so native URI failures can be inspected independently.
+
+## Prepared button diagnostics (2026-10-23)
+
+Untraced focused macOS run 39943239574 at fa022b225 rejects a 6,304-byte owner
+counter delta on both RIDs: en_US on x64 and automatic language on ARM64. The
+regional-language fix and earlier successful runs do not explain this failure.
+ButtonTests now brackets the same 64 changed-text/toggle/layout/recording cycles
+with an optional native object trace. The four language roles, 64 warmups and
+strict zero-byte owner assertion remain unchanged. The diagnostic workflow runs
+this focused trace separately after native calibration, then keeps the ordinary
+focused checks and complete diagnostic run with their original outcomes.
+
+The completed x64 b055b6fc diagnostic records 20 general-cast and 16 dense-contact
+intervals with 0/0 counters and no object events inside their exact tags. The
+calibrated trace is retained with the matching managed modules. This does not
+attribute the earlier untraced 64-byte deltas. That diagnostic instead stops in
+a fresh terrain child after 30.354 seconds (exit 137, loading archive). ARM64's
+same diagnostic reaches the later native URI failure. Neither is a complete
+untraced platform pass.

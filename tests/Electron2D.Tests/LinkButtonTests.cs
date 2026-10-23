@@ -118,10 +118,12 @@ internal static class LinkButtonTests
                     else dictionary.Add(new XElement("key", name), value);
                 }
                 Set("CFBundleIdentifier", new XElement("string", "dev.electron2d.tests." + scheme));
-                Set("CFBundleURLTypes", new XElement("array", new XElement("dict", new XElement("key", "CFBundleTypeRole"), new XElement("string", "Viewer"), new XElement("key", "CFBundleURLName"), new XElement("string", "dev.electron2d.tests." + scheme), new XElement("key", "CFBundleURLSchemes"), new XElement("array", new XElement("string", scheme)))));
-                Set("LSUIElement", new XElement("true")); document.Save(plist);
+                Set("CFBundleURLTypes", new XElement("array", new XElement("dict", new XElement("key", "CFBundleTypeRole"), new XElement("string", "Editor"), new XElement("key", "CFBundleURLName"), new XElement("string", "dev.electron2d.tests." + scheme), new XElement("key", "CFBundleURLSchemes"), new XElement("array", new XElement("string", scheme)))));
+                Set("LSUIElement", new XElement("true")); document.DocumentType?.Remove(); document.Save(plist);
+                RunFixtureTool("/usr/bin/plutil", "-lint", plist);
+                RunFixtureTool("/usr/bin/lipo", "-info", System.IO.Path.Combine(app, "Contents", "MacOS", "applet"));
                 RunFixtureTool("/usr/bin/codesign", "--force", "--sign", "-", app);
-                registered = true; RunFixtureTool(register, "-f", app);
+                registered = true; RunFixtureTool(register, "-f", "-v", app);
             }
             else
             {
@@ -163,6 +165,7 @@ internal static class LinkButtonTests
         using var process = Process.Start(start)!; var output = process.StandardOutput.ReadToEndAsync(); var error = process.StandardError.ReadToEndAsync();
         if (!process.WaitForExit(30000)) { process.Kill(true); throw new TimeoutException("Native URI fixture tool: " + tool); }
         Check(process.ExitCode == 0, $"Native URI fixture tool {tool}: {output.GetAwaiter().GetResult()}{error.GetAwaiter().GetResult()}");
+        if (output.Result.Length + error.Result.Length != 0) Console.WriteLine($"Native URI fixture {tool}: {output.Result}{error.Result}");
     }
     internal static void RunChild(string path)
     {
