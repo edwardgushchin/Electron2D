@@ -4,32 +4,37 @@ Last updated: 2026-10-23
 
 ## Current release checks
 
-The complete ordinary Linux x64 suite at `e8d1464dc` passed in 620.5 seconds
+The complete ordinary Linux x64 suite at `58bbb2439` passes in 651.6 seconds
 with the audited native closure. The complete ordinary macOS ARM64 suite at
-`73c8a101f` passed, including native URI capture and prepared character checks.
-The same x64 macOS cohort failed the terrain child deadline at 30.359 seconds,
-despite its zero exit and successful physics/navigation marker; archive loading
-took 27.774 seconds. Its cold-process budget is now 60 seconds; the focused x64
-terrain workflow passes at `a5abef302`. That cohort's ARM64 aggregate instead
-fails the CPU Area frame/audio/field interval at 0/720 owner/all-thread bytes.
-Its complete ordinary x64 suite passes in 44 minutes 42 seconds with the final
-completion marker. These are separate architecture outcomes from run 39968402941.
-The Area fixture now drains its calibrated finalization boundary after warmup
-and supports physical trace markers, retaining 64 measured cycles and strict
-zero counters. Four local ordinary/traced CPU/GPU controls pass at 0/0 bytes;
-neither they nor the preparation correction attribute the original 720 bytes.
-All four ordinary macOS CPU/GPU Area controls now pass too. Separate calibrated
-ARM64/x64 traces report 0/0 bytes and no physical-interval object events. The
-complete ordinary ARM64 suite at `c847dc38d` passes in 32 minutes 41 seconds.
-Its separate profiled cohort passes the Area interval, then fails the idle
-compressed-audio owner-byte check. That assertion records neither a delta nor
-the format, so its producer remains unattributed. The separate profiled x64
-cohort passes its complete suite in 49 minutes 17 seconds; its ordinary cohort
-remains pending.
-Complete target verification remains required. Windows motion remains unresolved; manual compiler
-and staged SPIR-V optimization controls do not replace the ordinary release gate.
-Public packages, final CI, rendered consumers and release publication are separate
-pending checks.
+`4a80378d0` passes in 37 minutes 43 seconds, including the final separate-thread
+CPU cohort. Its x64 job in run 39991319732 remains in progress. The preceding
+ordinary x64 run 39976121450 at `c847dc38d` reached the CPU sleeping-Area field
+check, then expired at the 90-minute job budget; it is not a successful gate.
+The manual macOS runner now retains native thread samples during prolonged
+silent intervals without replacing the original exit/marker checks.
+
+Profiled run 39987153000 at `3fa842b13` completes ARM64 successfully. Both
+architectures pass all four MP3/Ogg active/idle owner-byte checks; their physical
+intervals contain no object events. The x64 aggregate instead fails later in
+separate-thread joint-policy edits at 2,784/19,336 owner/all-thread bytes. That
+interval lacked a physical marker and remains unattributed. The joint fixture
+now retains exact physical boundaries, while standalone ordinary/traced controls
+remain separate from complete target acceptance. Profiling does not replace an
+ordinary platform gate or explain an older untraced allocation delta.
+
+Windows diagnostic run 39997310087 at `dbbfc9c2b` passes the complete public GPU
+compound fixture, including scene/raw/Area slots, momentum, private history and
+128 cycles at 0/0 bytes. Its temporary optimized portable motion candidate seeds
+query bounds from the first vertex and retains sweep/final-contact state in the
+existing device buffer. The first real result has safe/unsafe fractions
+0.49609375/0.5 and travel 9.921875, matching the local control. Production shader
+sources remain unchanged at this stage. The next diagnostic runs the complete
+untraced Windows executable with that candidate; the focused pass alone does
+not establish full Windows acceptance.
+
+Final complete CI, public package restoration, rendered consumers and release
+publication remain pending. The current declaration register is not a substitute
+for those gates; no published 0.2.0-alpha release is claimed by these checks.
 
 ## Earlier release checks
 

@@ -128,6 +128,12 @@ class Checks(unittest.TestCase):
         finally:
             os.chdir(previous)
         self.assertLess(workflow.index('name: windows-gpu-fixture'), workflow.index('name: Capture native exception context'))
+        self.assertNotIn('ELECTRON2D_TEST_', workflow)
+        self.assertIn('Run the complete untraced runtime suite', workflow)
+        self.assertIn("-ccontains 'Electron2D checks passed.'", workflow)
+        self.assertIn('timeout-minutes: 90', workflow)
+        self.assertIn('python -m pip install --require-hashes -r tools/native/requirements-windows.txt', workflow)
+        self.assertIn('choco install ffmpeg --yes --no-progress', workflow)
 
     def test_headless_linux_selects_one_installed_lavapipe_driver(self):
         for workflow in ('rid.yml', 'linux-tls-diagnostics.yml', 'linux-gpu-diagnostics.yml'):

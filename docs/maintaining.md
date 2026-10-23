@@ -37,9 +37,10 @@ An ARM64 Windows native crash reruns the same complete executable under CDB, wit
 The manual Windows GPU diagnostic records timestamps before and after each cold
 pipeline creation in its temporary source copy, preserving original/instrumented
 source and compiler hashes. It exercises the current DXIL path after the native
-convenience compiler failed its separate controls. Its fresh compound fixture has a
-ten-minute deadline so a cold preparation stall can still reach CDB and artifact
-upload within the job deadline. Retired lifetime controls are not production fixes;
+convenience compiler failed its separate controls. After the complete compound
+fixture passes, the same candidate runs the entire untraced executable without
+a test selector. Its 65-minute fixture budget fits the ordinary 90-minute target
+job budget while leaving time for CDB and artifact upload. Retired lifetime controls are not production fixes;
 the current compiler retains production ownership and preserves the actual fixture failure.
 For a stalled CDB replay, the debugger interrupts only one exact executable child
 after six minutes and records every native thread stack at that breakpoint. The
