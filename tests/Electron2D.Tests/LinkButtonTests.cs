@@ -118,7 +118,7 @@ internal static class LinkButtonTests
                     else dictionary.Add(new XElement("key", name), value);
                 }
                 Set("CFBundleIdentifier", new XElement("string", "dev.electron2d.tests." + scheme));
-                Set("CFBundleURLTypes", new XElement("array", new XElement("dict", new XElement("key", "CFBundleTypeRole"), new XElement("string", "Viewer"), new XElement("key", "CFBundleURLSchemes"), new XElement("array", new XElement("string", scheme)))));
+                Set("CFBundleURLTypes", new XElement("array", new XElement("dict", new XElement("key", "CFBundleTypeRole"), new XElement("string", "Viewer"), new XElement("key", "CFBundleURLName"), new XElement("string", "dev.electron2d.tests." + scheme), new XElement("key", "CFBundleURLSchemes"), new XElement("array", new XElement("string", scheme)))));
                 Set("LSUIElement", new XElement("true")); document.Save(plist);
                 RunFixtureTool("/usr/bin/codesign", "--force", "--sign", "-", app);
                 registered = true; RunFixtureTool(register, "-f", app);
@@ -139,6 +139,12 @@ internal static class LinkButtonTests
             if (!process.WaitForExit(30000)) { process.Kill(true); throw new TimeoutException("Fresh link consumer."); }
             Check(process.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh LinkButton passed"), "Fresh link: " + error.GetAwaiter().GetResult());
             Check(File.ReadAllText(capture).Trim() == uri, "Real SDL URL launch reached isolated native process with exact URI.");
+        }
+        catch
+        {
+            var plist = System.IO.Path.Combine(app, "Contents", "Info.plist");
+            if (OperatingSystem.IsMacOS() && File.Exists(plist)) Console.Error.WriteLine(File.ReadAllText(plist));
+            throw;
         }
         finally
         {
