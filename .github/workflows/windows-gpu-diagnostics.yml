@@ -125,7 +125,12 @@ jobs:
                               Console.WriteLine("Motion compiler control: native FXC/DXBC.");
                           }
                           '''.replace('\n', '\r\n' if b'\r\n' in compiler_bytes else '\n')
-              text = text.replace(condition, probe + condition.replace('if (', 'if (nativeMotion || ', 1))
+              text = text.replace(condition, probe + condition)
+              compile = 'var compiled = ShaderCross.CompileDXILFromSPIRV(in info, out var size);'
+              assert text.count(compile) == 1
+              text = text.replace(compile, 'var compiled = nativeMotion ? ShaderCross.CompileDXBCFromSPIRV(in info, out var size) : ShaderCross.CompileDXILFromSPIRV(in info, out size);')
+              text = text.replace('if (compiled == 0) return 0;', 'if (compiled == 0) { Console.WriteLine("Compute bytecode compilation failed: " + SDL.GetError()); return 0; }')
+              text = text.replace('Format = SDL.GPUShaderFormat.DXIL,', 'Format = nativeMotion ? SDL.GPUShaderFormat.DXBC : SDL.GPUShaderFormat.DXIL,')
               compiler.write_bytes(text.encode())
               call = 'ShaderCompiler.CreateComputePipeline(Device, bytes.ToArray())'
               text = path.read_text()

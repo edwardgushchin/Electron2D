@@ -68,13 +68,17 @@ The next control flattens the two piece loops into one: concave/concave candidat
 are already excluded, so only one operand can have multiple pieces. Zero counts,
 both operand orders and enumeration order remain unchanged, without multiplying
 counts. Its offline DXIL is 201736 bytes/4294 blocks and compiles in 13.0 s.
-The two diagnostic jobs compare the current DXIL path with native FXC/DXBC only
+The two diagnostic jobs compare the current DXIL path with explicit FXC/DXBC only
 for this motion pipeline. All other compute pipelines keep the production
 compiler. The latter control requires advertised DXBC support from both the
 device and ShaderCross and records that selection; source receipts identify the
 temporary compiler and device edits. Both jobs preserve their original failure
 and retain ordinary native ownership. This comparison does not select a new
-production compiler policy or package a test driver.
+production compiler policy or package a test driver. The preceding convenience
+control reports invalid DXBC after compilation and exits `0xE0434352`; its replay
+ends with the same managed failure. Explicit bytecode compilation now records the
+compiler error before pipeline creation can replace it, and the existing explicit
+pipeline owner frees that bytecode on both success and failure.
 The fixture stays under tools/ci and changes only the temporary
 checkout copy. Source receipts include both motion shader hashes; this diagnostic
 rewrite does not change the production shader or establish target acceptance.
