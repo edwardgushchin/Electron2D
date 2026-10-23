@@ -1,5 +1,6 @@
 using Electron2D;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Xml.Linq;
 using Microsoft.Win32;
 
@@ -125,15 +126,7 @@ internal static class LinkButtonTests
                 RunFixtureTool("/usr/bin/lipo", "-info", System.IO.Path.Combine(app, "Contents", "MacOS", "applet"));
                 RunFixtureTool("/usr/bin/codesign", "--force", "--sign", "-", app);
                 registered = true; RunFixtureTool(register, "-f", "-v", app);
-                var bind = "ObjC.import('CoreServices');\n" +
-                    $"var scheme=$('{scheme}'), identifier='{bundleID}', bundle=$(identifier);\n" +
-                    "var handlers=ObjC.deepUnwrap($.LSCopyAllHandlersForURLScheme(scheme))||[];\n" +
-                    "if(handlers.some(function(id){return id!==identifier;})) throw new Error('The unique URI scheme has foreign claims: '+JSON.stringify(handlers));\n" +
-                    "if(handlers.indexOf(identifier)<0) throw new Error('The owned URI app is not registered: '+JSON.stringify(handlers));\n" +
-                    "var status=$.LSSetDefaultHandlerForURLScheme(scheme,bundle); if(status!==0) throw new Error('URI binding failed: '+status);\n" +
-                    "var current=ObjC.unwrap($.LSCopyDefaultHandlerForURLScheme(scheme)); if(current!==identifier) throw new Error('URI binding readback differs: '+current);\n" +
-                    "current;";
-                RunFixtureTool("/usr/bin/osascript", "-l", "JavaScript", "-e", bind);
+                BindMacURI(scheme, bundleID);
             }
             else
             {
@@ -166,6 +159,48 @@ internal static class LinkButtonTests
                 if (registered && OperatingSystem.IsMacOS()) RunFixtureTool(register, "-u", app);
             }
             finally { Directory.Delete(folder, true); }
+        }
+    }
+    private static unsafe void BindMacURI(string scheme, string bundleID)
+    {
+        var core = NativeLibrary.Load("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation");
+        nint services = 0, schemeRef = 0, bundleRef = 0, handlers = 0, current = 0;
+        delegate* unmanaged[Cdecl]<nint, void> release = null;
+        try
+        {
+            release = (delegate* unmanaged[Cdecl]<nint, void>)NativeLibrary.GetExport(core, "CFRelease");
+            var create = (delegate* unmanaged[Cdecl]<nint, nint, uint, nint>)NativeLibrary.GetExport(core, "CFStringCreateWithCString");
+            var equal = (delegate* unmanaged[Cdecl]<nint, nint, byte>)NativeLibrary.GetExport(core, "CFEqual");
+            var count = (delegate* unmanaged[Cdecl]<nint, nint>)NativeLibrary.GetExport(core, "CFArrayGetCount");
+            var item = (delegate* unmanaged[Cdecl]<nint, nint, nint>)NativeLibrary.GetExport(core, "CFArrayGetValueAtIndex");
+            var copyText = (delegate* unmanaged[Cdecl]<nint, nint, nint, uint, byte>)NativeLibrary.GetExport(core, "CFStringGetCString");
+            services = NativeLibrary.Load("/System/Library/Frameworks/CoreServices.framework/CoreServices");
+            var claims = (delegate* unmanaged[Cdecl]<nint, nint>)NativeLibrary.GetExport(services, "LSCopyAllHandlersForURLScheme");
+            var bind = (delegate* unmanaged[Cdecl]<nint, nint, int>)NativeLibrary.GetExport(services, "LSSetDefaultHandlerForURLScheme");
+            var read = (delegate* unmanaged[Cdecl]<nint, nint>)NativeLibrary.GetExport(services, "LSCopyDefaultHandlerForURLScheme");
+            fixed (byte* a = System.Text.Encoding.UTF8.GetBytes(scheme + '\0')) schemeRef = create(0, (nint)a, 0x08000100);
+            fixed (byte* b = System.Text.Encoding.UTF8.GetBytes(bundleID + '\0')) bundleRef = create(0, (nint)b, 0x08000100);
+            Check(schemeRef != 0 && bundleRef != 0, "Native URI strings must be created.");
+            handlers = claims(schemeRef);
+            var registeredCount = handlers == 0 ? 0 : count(handlers);
+            Console.WriteLine("Native URI registered app count: " + registeredCount);
+            Check(registeredCount == 1, "The unique URI scheme must have exactly one registered app.");
+            var handler = item(handlers, 0); var text = stackalloc byte[1024];
+            Check(copyText(handler, (nint)text, 1024, 0x08000100) != 0, "Native URI claim must decode.");
+            Console.WriteLine("Native URI claim: " + Marshal.PtrToStringUTF8((nint)text));
+            Check(equal(handler, bundleRef) != 0, "The unique URI scheme must belong to the owned app.");
+            var status = bind(schemeRef, bundleRef); Check(status == 0, "Native URI binding failed: " + status);
+            current = read(schemeRef);
+            Check(current != 0 && equal(current, bundleRef) != 0, "Native URI preferred-handler readback must match.");
+        }
+        finally
+        {
+            if (release != null)
+            {
+                if (current != 0) release(current); if (handlers != 0) release(handlers);
+                if (bundleRef != 0) release(bundleRef); if (schemeRef != 0) release(schemeRef);
+            }
+            if (services != 0) NativeLibrary.Free(services); NativeLibrary.Free(core);
         }
     }
     private static void RunFixtureTool(string tool, params string[] arguments)
