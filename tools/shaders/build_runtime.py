@@ -51,8 +51,11 @@ def generate(output, source_root=ROOT):
                 for stem, defines in variants:
                     programs.append((source, stem, defines))
                     if domain == 'Physics' and source.name in VULKAN_OPTIMIZED_PHYSICS:
-                        portable_defines = [*defines, '-DE2D_SHARED_MOTION_SCAN=1'] if source.name == 'PhysicsResidentMotionQueries.comp.glsl' else defines
-                        programs.append((source, stem + '.portable', portable_defines))
+                        if source.name == 'PhysicsResidentMotionQueries.comp.glsl':
+                            for phase in range(3):
+                                programs.append((source, f'PhysicsResidentMotionQueries{phase}.comp.portable', [f'-DE2D_MOTION_STAGE={phase}']))
+                        else:
+                            programs.append((source, stem + '.portable', defines))
                 if source.name in ('Canvas.vert.hlsl', 'CanvasInstanced.vert.hlsl'):
                     programs.append((source, source.stem.replace('Canvas', 'CanvasLighting'), ['-DE2D_LIGHTING=1']))
                 if source.name == 'Lighting.frag.hlsl':

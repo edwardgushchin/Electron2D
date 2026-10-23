@@ -61,23 +61,21 @@ directed-query call. This limits repeated expansion during driver compilation.
 Recovery still makes four passes with the same plane cap; contact tolerances,
 shape families, GPU buffers and host transfers are unchanged.
 
-The portable Metal/DXIL module also shares one traversal call across recovery,
-motion and resting phases. Four recovery attempts, early convergence, optional
-zero-motion skipping and the final unsafe-pose scan retain the same order. The
-optimized Vulkan module remains byte-identical. The local offline DXIL control
-reduces 3653 blocks/178244 bytes to 2472 blocks/120104 bytes with identical resource
-and workgroup reflection. Local execution of the portable motion module and
-complete Windows/Metal target execution are separate gates; compiler size alone
-does not establish driver correctness.
+Metal/DXIL uses three ordered device passes: four recovery attempts, translation,
+then rest sampling and final output. Two vectors in the existing result prefix
+carry recovery, rejected-key count, fractions, source slot and flags between
+passes. The same command buffer ends each compute pass before beginning its
+consumer, providing storage-buffer visibility without an intermediate host wait.
+The 32 recovery planes and 32 rejected keys remain in the existing device scratch;
+only the final 128-byte result is downloaded. Vulkan retains its single optimized
+module. Numerical limits, early recovery convergence, zero-motion skipping and
+the eight directed refinements are unchanged.
 
-The scoped Linux/NVIDIA control selects this portable motion module explicitly:
-body motion (65536 obstacles), shape queries, one-way/CollisionPolygon, public
-priority and compound suites pass with their existing numerical and zero-managed
-allocation assertions. Selection is restored after the control. The active build
-manifest changes only this portable module; all other 164 modules retain their
-binary hashes. Windows WARP 1.0.21 run `39913764076` still aborts while creating
-this pipeline in `ScopeNestedCFG::runOnFunction`; the size reduction does not close
-that driver failure. Complete Metal execution remains pending.
+The earlier single portable traversal still aborted in Windows WARP 1.0.21
+`ScopeNestedCFG::runOnFunction`. Flattening motion phases and removing one sweep
+unroll prohibition did not fix it; the FXC control rejected nested loop attributes.
+Splitting the existing phases removes the outer phase loop from each translated
+program. Target Windows/Metal execution remains a separate required gate.
 
 ## CPU corrections found by comparison
 

@@ -30,7 +30,7 @@ void main() { data.value = VALUE; }
     motion = physics / 'PhysicsResidentMotionQueries.comp.glsl'
     motion.write_text((physics / 'Test.comp.glsl').read_text().replace(
         'void main() { data.value = VALUE; }',
-        '#ifdef E2D_SHARED_MOTION_SCAN\nvoid main() { data.value = VALUE + 3.0; }\n#else\nvoid main() { data.value = VALUE; }\n#endif'))
+        '#ifdef E2D_MOTION_STAGE\nvoid main() { data.value = VALUE + float(E2D_MOTION_STAGE + 1); }\n#else\nvoid main() { data.value = VALUE; }\n#endif'))
     include.write_text('#define VALUE 1.0\n')
     output = root / 'generated'
     first = generate(output, root)
@@ -39,8 +39,9 @@ void main() { data.value = VALUE; }
     for mode in range(4):
         assert first[variants[mode * 2]]['binary'] != first[variants[mode * 2 + 1]]['binary'], 'Portable shader reused Vulkan optimization'
     assert len({first[name]['binary'] for name in variants}) == 8, 'Query operation reused another specialization'
-    motion_variant = 'Physics/PhysicsResidentMotionQueries.comp.portable.spv'
-    assert first[motion_variant]['binary'] != first['Physics/PhysicsResidentMotionQueries.comp.spv']['binary'], 'Portable motion definition was not applied'
+    motion_variants = tuple(f'Physics/PhysicsResidentMotionQueries{phase}.comp.portable.spv' for phase in range(3))
+    assert all(name in first for name in motion_variants), 'Missing ordered motion stage'
+    assert len({first[name]['binary'] for name in (*motion_variants, 'Physics/PhysicsResidentMotionQueries.comp.spv')}) == 4, 'Motion stage reused another phase'
     stamps = {key: (output / key).stat().st_mtime_ns for key in first}
     assert generate(output, root) == first
     assert stamps == {key: (output / key).stat().st_mtime_ns for key in first}, 'No-op generation rewrote outputs'
@@ -48,7 +49,7 @@ void main() { data.value = VALUE; }
     second = generate(output, root)
     assert first['Physics/Test.comp.spv']['binary'] != second['Physics/Test.comp.spv']['binary']
     assert all(first[name]['binary'] != second[name]['binary'] for name in variants), 'Include edit retained a stale backend variant'
-    assert first[motion_variant]['binary'] != second[motion_variant]['binary'], 'Motion include retained a stale portable variant'
+    assert all(first[name]['binary'] != second[name]['binary'] for name in motion_variants), 'Motion include retained a stale stage'
     assert (output / 'Rendering/Test.frag.spv').stat().st_mtime_ns == stamps['Rendering/Test.frag.spv']
     good = (output / 'Physics/Test.comp.spv').read_bytes()
     include.write_text('invalid shader\n')
@@ -69,7 +70,7 @@ void main() { data.value = VALUE; }
     motion.unlink()
     generate(output, root)
     assert all(not (output / name).exists() for name in variants), 'Removed shader retained a backend variant'
-    assert not (output / motion_variant).exists(), 'Removed motion shader retained its portable variant'
+    assert all(not (output / name).exists() for name in motion_variants), 'Removed motion shader retained a stage'
     # A fresh MSBuild consumer embeds generated resources and ships no compiler/toolchain.
     (root / 'Probe.csproj').write_text(f'''<Project Sdk="Microsoft.NET.Sdk">
 <PropertyGroup><TargetFramework>net10.0</TargetFramework><OutputType>Exe</OutputType>

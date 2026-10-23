@@ -36,7 +36,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         internal uint BodiesStart, BodiesCount, ObjectsStart, ObjectsCount;
         internal uint ExceptionsStart, ExceptionsCount, Flags, Padding;
     }
-    private RenderHandle? _motionQueryPipeline;
+    private readonly RenderHandle?[] _motionQueryPipelines = new RenderHandle?[3];
     private MotionQueryInput[] _motionQueryInputs = [];
     private ulong[] _motionPayload = [];
     private int[] _motionQueryCounts = [];
@@ -102,8 +102,10 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             }
             input.ExceptionsCount = (uint)at - input.ExceptionsStart; _motionQueryInputs[i] = input; _queryLimits[i] = 1;
         }
+        var ordered = Driver is "metal" or "direct3d12";
         ExecuteQueries<MotionQueryInput, MotionQueryResult>(_motionQueryInputs.AsSpan(0, queries.Length), _motionPayload.AsSpan(0, at), _motionQueryCounts, results, queries.Length,
-            MemoryMarshal.CreateSpan(ref _motionQueryPipeline, 1), "PhysicsResidentMotionQueries.comp.spv", centers: true, scratchBytesPerQuery: 64 * 16);
+            ordered ? _motionQueryPipelines : _motionQueryPipelines.AsSpan(0, 1), ordered ? "PhysicsResidentMotionQueries" : "PhysicsResidentMotionQueries.comp.spv",
+            centers: true, scratchBytesPerQuery: 64 * 16, pipelineMask: ordered ? 7u : 1u, dependentPasses: ordered);
         for (var i = 0; i < queries.Length; i++)
             if (_motionQueryCounts[i] == 0) results[i] = new() { TravelRemainder = new(queries[i].Motion.X, queries[i].Motion.Y, 0, 0), Fractions = new(1, 1, 0, 0) };
     }

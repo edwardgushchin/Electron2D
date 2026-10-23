@@ -121,7 +121,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         Array.Resize(ref _queryReadbackLimits, capacity); Array.Resize(ref _queryFound, capacity);
     }
     private void ExecuteQueries<TInput, THit>(ReadOnlySpan<TInput> queries, ReadOnlySpan<ulong> exclusions, Span<int> counts, Span<THit> hits,
-        int total, Span<RenderHandle?> pipelines, string shader, bool centers = false, int scratchBytesPerQuery = 0, uint pipelineMask = 1) where TInput : unmanaged where THit : unmanaged
+        int total, Span<RenderHandle?> pipelines, string shader, bool centers = false, int scratchBytesPerQuery = 0, uint pipelineMask = 1, bool dependentPasses = false) where TInput : unmanaged where THit : unmanaged
     {
         PrepareQuerySpatial();
         if (ShapeCount == 0 || total == 0) { counts[..queries.Length].Clear(); _queryFound.AsSpan(0, queries.Length).Clear(); return; }
@@ -184,6 +184,12 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             for (var i = 0; i < pipelines.Length; i++)
                 if ((pipelineMask & (1u << i)) != 0)
                 {
+                    if (dependentPasses && i > 0)
+                    {
+                        SDL.EndGPUComputePass(compute);
+                        compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, centers ? 4u : 3u);
+                        if (compute == 0) throw GPUPhysicsDevice.Failure("begin dependent resident query stage");
+                    }
                     SDL.BindGPUComputePipeline(compute, pipelines[i]!.DangerousGetHandle());
                     SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 8);
                     SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(QuerySettings));
@@ -273,6 +279,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private void DisposeQueries()
     {
         foreach (var pipeline in _shapeQueryPipelines) pipeline?.Dispose();
-        _motionQueryPipeline?.Dispose(); _queryPipeline?.Dispose(); _queryMappingGPU?.Dispose(); _queryInputGPU?.Dispose(); _queryExcludedGPU?.Dispose(); _queryOutputGPU?.Dispose(); _queryCountsGPU?.Dispose(); _queryStatus?.Dispose(); _queryUpload?.Dispose(); _queryDownload?.Dispose();
+        foreach (var pipeline in _motionQueryPipelines) pipeline?.Dispose();
+        _queryPipeline?.Dispose(); _queryMappingGPU?.Dispose(); _queryInputGPU?.Dispose(); _queryExcludedGPU?.Dispose(); _queryOutputGPU?.Dispose(); _queryCountsGPU?.Dispose(); _queryStatus?.Dispose(); _queryUpload?.Dispose(); _queryDownload?.Dispose();
     }
 }

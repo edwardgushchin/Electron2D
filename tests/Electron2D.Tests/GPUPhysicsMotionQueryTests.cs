@@ -186,11 +186,13 @@ internal static class GPUPhysicsMotionQueryTests
         var queries = new Query[batch]; var results = new Store.MotionQueryResult[batch];
         for (var i = 0; i < batch; i++) queries[i] = new(mover, new(0, new(i * 20, 990)), new(0, 12));
         for (var i = 0; i < 96; i++) s.TestMotion(queries, [], [], results);
-        var times = new double[128]; var up = s.UploadBytes; var down = s.ReadbackBytes; var wait = s.WaitMS;
+        var times = new double[128]; var up = s.UploadBytes; var down = s.ReadbackBytes; var wait = s.WaitMS; var submissions = s.QuerySubmissionCount;
         var all = GC.GetTotalAllocatedBytes(true); var owner = GC.GetAllocatedBytesForCurrentThread();
         for (var i = 0; i < times.Length; i++) { var start = Stopwatch.GetTimestamp(); s.TestMotion(queries, [], [], results); times[i] = Stopwatch.GetElapsedTime(start).TotalMilliseconds; }
         owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
         Check(owner == 0 && all == 0, $"Warmed body motion allocates zero managed bytes: {owner}/{all}");
+        Check(s.QuerySubmissionCount - submissions == 128 && s.ReadbackBytes - down == 128L * (8 + batch * (4 + 128)),
+            "Every motion batch uses one submission and downloads only status, counts and final results.");
         for (var i = 0; i < batch; i++) Check(results[i].Collided && results[i].Normal.Y < -.99f && results[i].Travel.Y is > 5 and < 7, "Every full-population motion result stops at its floor");
         Array.Sort(times); Console.WriteLine($"Resident body motion: {population} obstacles + 1 mover, {batch} supplied-pose tests/batch, 96 warmup/128 samples; p50/p95/p99={times[64]:F4}/{times[121]:F4}/{times[126]:F4} ms, wait={(s.WaitMS - wait) / 128:F4} ms, {owner}/{all} owner/all-thread managed B, upload={(s.UploadBytes - up) / 128}, readback={(s.ReadbackBytes - down) / 128} B/batch; {s.Driver}, {s.DeviceName}.");
     }

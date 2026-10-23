@@ -344,6 +344,14 @@ pixels. Invalidated output edges must fail import without replacing a valid
 artifact. Recheck the earlier arithmetic/unary graph consumers after changes to
 the shared default-slot/width implementation.
 
+Resident body-motion changes also run `python3 -B tools/shaders/check_runtime.py`
+to check all three portable phase variants, dependency invalidation and removal.
+Exercise `ELECTRON2D_TEST_GPU_MOTION_QUERIES=1` and adjacent shape, one-way,
+priority and compound profiles. Metal/DXIL recovery, translation and final-rest
+passes share one submission and existing device scratch; verify target execution
+and strict zero-byte intervals separately from offline compilation. Windows GPU
+diagnostics now runs the production DXIL shaders with only cold-pipeline logging.
+
 For resident pair/contact completion, run ELECTRON2D_TEST_GPU_RESIDENT_CONTACTS=1 with the Release runner, plus the adjacent solver, one-way, CCD, sleep, spatial/shape/motion-query and checkpoint profiles. Preserve the shared/separate submission control, independent error records, bounded capacity recovery, cold empty-world capacity/release checks and strict allocation gates. PhysicsPipelinePerformance accepts ELECTRON2D_PHYSICS_PERFORMANCE_SEPARATE_CONTACT_SUBMISSIONS=1 only for GPU physics and records separateContactSubmissions; CPU use rejects before simulation. This is a stage control inside a complete physics path. Compare standalone CPU/GPU full scenes separately and keep concurrent diagnostic times distinct from accepted hardware throughput and native-window FPS.
 
 PhysicsPipelinePerformance measurements retain the backend process sequence as part of their cohort: ELECTRON2D_PHYSICS_PERFORMANCE_BACKEND=both executes CPU then GPU in one process; cpu/gpu select one backend per invocation. Run each standalone control in a fresh process. Keep those histories distinct, preserve all physical/feature/allocation gates, and require standalone controls before generalizing a paired ratio to ordinary single-backend games. The [scene gate comparison](components/gpu-resident-reports.md#scene-transform-publication-gate-2026-10-21) records a substantial paired/standalone GPU timing difference whose process-history versus time/environment cause remains unisolated. Full physical frames, native window FPS, sampling diagnostics and native allocator totals retain their separate scopes.
