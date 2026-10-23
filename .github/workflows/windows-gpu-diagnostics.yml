@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       recovery_compiler:
-        description: Compare the native DXBC recovery compiler; translation retains production DXIL
+        description: Compare native DXBC for all motion stages; other kernels retain production DXIL
         type: choice
         default: dxil
         options: [dxil, dxbc]
@@ -112,10 +112,10 @@ jobs:
               call = 'ShaderCompiler.CreateComputePipeline(Device, bytes.ToArray())'
               text = path.read_text()
               assert text.count(call) == 1
-              kinds = 'name is "PhysicsResidentMotionQueries0.comp.portable.spv" or "PhysicsResidentMotionQueries1.comp.portable.spv" or "PhysicsResidentMotionQueries3.comp.portable.spv"'
+              kinds = 'name is "PhysicsResidentMotionQueries0.comp.portable.spv" or "PhysicsResidentMotionQueries1.comp.portable.spv" or "PhysicsResidentMotionQueries2.comp.portable.spv" or "PhysicsResidentMotionQueries3.comp.portable.spv"'
               path.write_text(text.replace(call, 'ShaderCompiler.CreateComputePipeline(Device, bytes.ToArray(), ' + kinds + ')'))
           Path('bin/diagnostics').mkdir(parents=True, exist_ok=True)
-          receipt = {'compiler': selection + ' recovery; DXIL translation', 'headSHA': os.environ['GITHUB_SHA'], 'instrumentedSource': str(path),
+          receipt = {'compiler': selection + ' motion; DXIL remaining kernels', 'headSHA': os.environ['GITHUB_SHA'], 'instrumentedSource': str(path),
                      'originalSHA256': hashlib.sha256(original_bytes).hexdigest(),
                      'actualSHA256': hashlib.sha256(path.read_bytes()).hexdigest(),
                      'originalCompilerSHA256': hashlib.sha256(compiler_original).hexdigest(),

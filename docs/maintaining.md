@@ -407,3 +407,5 @@ selected versus overridden cycles, callback count and disconnected providers in
 the other stage; ordinary graph and provider traversal must select the same edges.
 
 The manual Windows recovery_compiler=dxbc control compiles only initial recovery, continued recovery and final-rest motion pipelines through explicit native DXBC. Translation and all other kernels retain DXIL. It records original/actual compiler hashes, requires advertised DXBC support and preserves compilation errors and bytecode ownership. This diagnostic does not change production selection or clear the failed DXIL gate.
+
+Recovery-only DXBC run 39946866011 creates both initial/continued recovery pipelines (about 88/85 seconds cold), then repeats the WARP exception in DXIL translation. The next recovery_compiler=dxbc control includes all four motion stages, keeping other kernels unchanged. Production selection remains DXIL until a complete native control passes.
