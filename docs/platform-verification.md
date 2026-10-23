@@ -84,6 +84,18 @@ preflights with raw zero exits and unchanged production motion source hashes
 64 warmed public scene/compound motion queries retain 0/0 managed bytes. Its
 full executable begins at 20:39:17 UTC; completion and the final matrix remain open.
 
+Final-source matrix [40021281291](https://github.com/edwardgushchin/Electron2D/actions/runs/40021281291)
+at `2ba2f42fd` passes all six desktop native consumers. Its Windows ARM64 job
+`120658099378` fails the complete public GPU compound preflight while mapping
+resident shape-query results. The error includes a missing optional PIX runtime,
+but that message has not been established as causal. CDB artifact `12532238180`
+records the system `C:\Windows\SYSTEM32\d3d10warp.dll` and an access violation
+in `d3d10warp!PixelJITProcessor::ExecuteJIT+0x2c`. The ordinary RID workflow does
+not install the diagnostic's pinned driver. A paired ARM64 control now runs the
+same compound, joint and motion cohorts with app-local WARP 1.0.21 and confirms
+its actual loaded identity. That control and ordinary target acceptance remain
+pending; neither an exception location nor a driver version proves root cause.
+
 Final complete CI, public package restoration, rendered consumers and release
 publication remain pending. The current declaration register is not a substitute
 for those gates; no published 0.2.0-alpha release is claimed by these checks.

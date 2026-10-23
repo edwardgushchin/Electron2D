@@ -7,6 +7,11 @@ on:
         description: Successful native package workflow run
         required: true
         type: string
+      rid:
+        description: Native Windows target for the unchanged runtime cohorts
+        type: choice
+        options: [win-x64, win-x86, win-arm64]
+        default: win-x64
       recovery_trace:
         description: Trace recovery traversal in temporary shader result padding; not a production gate
         type: boolean
@@ -18,7 +23,7 @@ permissions:
 
 jobs:
   full_suite:
-    runs-on: windows-2025
+    runs-on: ${{ inputs.rid == 'win-arm64' && 'windows-11-arm' || 'windows-2025' }}
     timeout-minutes: 90
     defaults:
       run:
@@ -27,8 +32,15 @@ jobs:
       RestoreAdditionalProjectSources: ${{ github.workspace }}/bin/native-feed
       DOTNET_TieredCompilation: '0'
       RECOVERY_TRACE: ${{ inputs.recovery_trace }}
+      CI_RID: ${{ inputs.rid }}
     steps:
       - uses: actions/checkout@v4
+      - name: Validate Windows diagnostic target
+        run: |
+          case "$CI_RID" in
+            win-x64|win-x86|win-arm64) ;;
+            *) echo "Unsupported Windows diagnostic RID: $CI_RID" >&2; exit 1 ;;
+          esac
       - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
@@ -44,7 +56,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: tools/shaders/obj/toolchain/
-          key: shader-tools-windows-2025-${{ runner.arch }}-${{ hashFiles('tools/shaders/toolchain.lock.json', 'tools/shaders/build_toolchain.py') }}
+          key: shader-tools-${{ inputs.rid == 'win-arm64' && 'windows-11-arm' || 'windows-2025' }}-${{ runner.arch }}-${{ hashFiles('tools/shaders/toolchain.lock.json', 'tools/shaders/build_toolchain.py') }}
       - uses: actions/download-artifact@v4
         with:
           run-id: ${{ inputs.native_run_id }}
@@ -109,7 +121,7 @@ jobs:
                   target = Path(name)
                   target.write_text(rewrite(target.read_text()))
           Path('bin/diagnostics').mkdir(parents=True, exist_ok=True)
-          receipt = {'headSHA': os.environ['GITHUB_SHA'], 'instrumentedSource': str(path),
+          receipt = {'headSHA': os.environ['GITHUB_SHA'], 'rid': os.environ['CI_RID'], 'instrumentedSource': str(path),
                      'originalSHA256': hashlib.sha256(original_bytes).hexdigest(),
                      'actualSHA256': hashlib.sha256(path.read_bytes()).hexdigest(),
                      'motionSourceModified': recovery_trace == 'true', 'recoveryTrace': recovery_trace == 'true',
@@ -119,10 +131,23 @@ jobs:
           print(json.dumps(receipt))
           PY
       - name: Publish the existing test runner
-        run: dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r win-x64 --self-contained true -o bin/diagnostics/runner --nologo
+        run: dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r "$CI_RID" --self-contained true -o bin/diagnostics/runner --nologo
       - name: Install the pinned app-local test WARP
         shell: pwsh
-        run: ./tools/ci/install_test_warp.ps1 bin/diagnostics/runner bin/diagnostics x64
+        run: ./tools/ci/install_test_warp.ps1 bin/diagnostics/runner bin/diagnostics ($env:CI_RID.Substring(4))
+      - name: Check the complete public GPU compound cohort
+        id: compound
+        continue-on-error: true
+        timeout-minutes: 10
+        shell: pwsh
+        run: |
+          $env:ELECTRON2D_TEST_COMPOUND_PHYSICS = 'gpu'
+          try {
+              & bin/diagnostics/runner/Electron2D.Tests.exe 2>&1 | Tee-Object -FilePath bin/diagnostics/compound.log
+              $code = [int]$LASTEXITCODE
+              ('Runtime exit: {0} (0x{0:X8})' -f $code) | Tee-Object -FilePath bin/diagnostics/compound.log -Append
+          } finally { Remove-Item Env:ELECTRON2D_TEST_COMPOUND_PHYSICS }
+          if ($code -ne 0) { exit 1 }
       - name: Check the complete public joint cohort
         id: joints
         continue-on-error: true
@@ -156,12 +181,13 @@ jobs:
           path: |
             bin/diagnostics/compiler-source.json
             bin/diagnostics/warp-source.json
+            bin/diagnostics/compound.log
             bin/diagnostics/joints.log
             bin/diagnostics/motion.log
           if-no-files-found: error
       - name: Run the complete untraced runtime suite
         id: fixture
-        if: steps.joints.outcome == 'success' && steps.motion.outcome == 'success'
+        if: steps.compound.outcome == 'success' && steps.joints.outcome == 'success' && steps.motion.outcome == 'success'
         continue-on-error: true
         timeout-minutes: 65
         shell: pwsh
@@ -185,11 +211,11 @@ jobs:
             bin/diagnostics/full-runtime.log
           if-no-files-found: error
       - name: Capture native exception context
-        if: steps.fixture.outcome == 'failure'
+        if: steps.fixture.outcome == 'failure' || steps.compound.outcome == 'failure'
         continue-on-error: true
         timeout-minutes: 15
         shell: pwsh
-        run: ./tools/ci/debug_windows.ps1 bin/diagnostics/runner/Electron2D.Tests.exe bin/diagnostics/cdb x64
+        run: ./tools/ci/debug_windows.ps1 bin/diagnostics/runner/Electron2D.Tests.exe bin/diagnostics/cdb ($env:CI_RID.Substring(4))
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -201,5 +227,5 @@ jobs:
             bin/diagnostics/cdb/
           if-no-files-found: error
       - name: Preserve the fixture failure
-        if: steps.fixture.outcome == 'failure' || steps.joints.outcome == 'failure' || steps.motion.outcome == 'failure'
+        if: steps.fixture.outcome == 'failure' || steps.compound.outcome == 'failure' || steps.joints.outcome == 'failure' || steps.motion.outcome == 'failure'
         run: exit 1

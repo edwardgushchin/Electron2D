@@ -40,10 +40,10 @@ device hashes and the unchanged motion/compiler/generator source hashes. It runs
 the current production DXIL shaders and the entire untraced executable without
 a test selector. Its 65-minute fixture budget fits the ordinary 90-minute target
 job budget while leaving time for CDB and artifact upload. Before the full run,
-two standalone existing selectors exercise the complete public joint and
-functional motion cohorts. Each selector is process-local and removed in
+three standalone existing selectors exercise the complete public GPU compound,
+public joint and functional motion cohorts. Each selector is process-local and removed in
 `finally`; each raw exit/log is retained in an early focused artifact. Any focused
-failure remains a failed job. The complete suite runs only after both focused
+failure remains a failed job. The complete suite runs only after all three focused
 outcomes succeed; a failed preflight cannot produce a green complete gate.
 These controls consume the same overall 90-minute job budget and do not shorten
 physical work. With `continue-on-error`, the API's step conclusion can be success
@@ -146,6 +146,11 @@ The temporary source probe also requires the actual loaded module to match the
 app-local test DLL. This development/test driver is never added to runtime
 projects, native packages or release consumers; its result cannot establish a
 correction in the operating system's older WARP driver.
+The manual diagnostic selects `win-x64`, `win-x86` or `win-arm64`, using the native
+ARM64 runner for the latter and carrying the same validated RID through publish,
+driver installation, source receipts and CDB. The default remains x64. Ordinary
+Windows RID jobs still use the system driver; a passing app-local control does
+not replace their result or establish a correction for that driver.
 
 The manual Linux GPU diagnostic first runs the unchanged public compound fixture
 on the registered x64 host. A failed baseline is replayed with candidate-count and

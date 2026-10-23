@@ -77,12 +77,13 @@ class Checks(unittest.TestCase):
         try:
             with tempfile.TemporaryDirectory(prefix='e2d motion diagnostics ') as directory:
                 os.chdir(directory)
-                for newline, tracing in ((n, t) for n in (b'\n', b'\r\n') for t in (False, True)):
-                    with self.subTest(newline=newline, tracing=tracing):
+                for newline, tracing, rid in ((n, t, r) for n in (b'\n', b'\r\n') for t in (False, True)
+                                              for r in ('win-x64', 'win-x86', 'win-arm64')):
+                    with self.subTest(newline=newline, tracing=tracing, rid=rid):
                         for name, original in originals.items():
                             path = Path(name); path.parent.mkdir(parents=True, exist_ok=True)
                             path.write_bytes(original.replace(b'\n', newline))
-                        with patch.dict(os.environ, GITHUB_SHA='self-check', RECOVERY_TRACE=str(tracing).lower()), redirect_stdout(StringIO()):
+                        with patch.dict(os.environ, GITHUB_SHA='self-check', RECOVERY_TRACE=str(tracing).lower(), CI_RID=rid), redirect_stdout(StringIO()):
                             exec(compile(code, 'windows-motion-workflow', 'exec'), {})
                         receipt = json.loads(Path('bin/diagnostics/compiler-source.json').read_text())
                         self.assertEqual(receipt['motionSourceModified'], tracing)
@@ -106,6 +107,7 @@ class Checks(unittest.TestCase):
                         self.assertEqual(receipt['actualSHA256'], hashlib.sha256(Path(names[0]).read_bytes()).hexdigest())
                         self.assertNotEqual(receipt['originalSHA256'], receipt['actualSHA256'])
                         self.assertEqual(receipt['headSHA'], 'self-check')
+                        self.assertEqual(receipt['rid'], rid)
         finally:
             os.chdir(previous)
         for retired in ('recovery_compiler', 'optimize_motion_spirv', 'seed_motion_bounds'):
@@ -113,8 +115,8 @@ class Checks(unittest.TestCase):
         self.assertLess(workflow.index('name: windows-gpu-fixture'), workflow.index('name: Capture native exception context'))
         complete = workflow.partition('      - name: Run the complete untraced runtime suite')[2].split('\n      - ', 1)[0]
         self.assertNotIn('ELECTRON2D_TEST_', complete)
-        self.assertIn("if: steps.joints.outcome == 'success' && steps.motion.outcome == 'success'", complete)
-        for selector in ('ELECTRON2D_TEST_GPU_JOINT_CONTRACT', 'ELECTRON2D_TEST_GPU_MOTION_QUERIES'):
+        self.assertIn("if: steps.compound.outcome == 'success' && steps.joints.outcome == 'success' && steps.motion.outcome == 'success'", complete)
+        for selector in ('ELECTRON2D_TEST_COMPOUND_PHYSICS', 'ELECTRON2D_TEST_GPU_JOINT_CONTRACT', 'ELECTRON2D_TEST_GPU_MOTION_QUERIES'):
             self.assertIn('finally { Remove-Item Env:' + selector + ' }', workflow)
         self.assertIn("steps.joints.outcome == 'failure' || steps.motion.outcome == 'failure'", workflow)
         self.assertIn('Run the complete untraced runtime suite', workflow)
@@ -122,6 +124,22 @@ class Checks(unittest.TestCase):
         self.assertIn('timeout-minutes: 90', workflow)
         self.assertIn('python -m pip install --require-hashes -r tools/native/requirements-windows.txt', workflow)
         self.assertIn('choco install ffmpeg --yes --no-progress', workflow)
+
+    def test_windows_diagnostic_target_reaches_runner_publish_driver_and_debugger(self):
+        workflow = (rids.ROOT / '.github/workflows/windows-gpu-diagnostics.yml').read_text()
+        self.assertIn('options: [win-x64, win-x86, win-arm64]', workflow)
+        self.assertIn('default: win-x64', workflow)
+        self.assertIn("runs-on: ${{ inputs.rid == 'win-arm64' && 'windows-11-arm' || 'windows-2025' }}", workflow)
+        self.assertIn('CI_RID: ${{ inputs.rid }}', workflow)
+        self.assertIn('-c Release -r "$CI_RID" --self-contained true', workflow)
+        self.assertIn('install_test_warp.ps1 bin/diagnostics/runner bin/diagnostics ($env:CI_RID.Substring(4))', workflow)
+        self.assertIn('debug_windows.ps1 bin/diagnostics/runner/Electron2D.Tests.exe bin/diagnostics/cdb ($env:CI_RID.Substring(4))', workflow)
+        step = workflow.partition('      - name: Validate Windows diagnostic target')[2].split('\n      - ', 1)[0]
+        inline = step.partition('        run: |\n')[2]
+        command = '\n'.join(line[10:] for line in inline.splitlines())
+        for rid in ('win-x64', 'win-x86', 'win-arm64', '', 'linux-x64', 'win-arm64; exit 0'):
+            result = subprocess.run(['bash', '-c', command], env=dict(os.environ, CI_RID=rid), capture_output=True)
+            self.assertEqual(result.returncode, 0 if rid in ('win-x64', 'win-x86', 'win-arm64') else 1, rid)
 
     def test_recovery_trace_rejects_missing_ambiguous_and_repeated_sources(self):
         shader = (rids.ROOT / 'src/Servers/Physics/Shaders/PhysicsResidentMotionQueries.comp.glsl').read_text()
