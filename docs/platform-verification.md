@@ -148,16 +148,20 @@ restored-Lavapipe and explicit 256-bit controls reach `x=60`, velocity `(1200, 0
 The explicit 128-bit control instead fails earlier in compound contact generation
 with invalid geometry/contact state; both SIMD processes exit 134 and report the
 requested device width. Reducing SIMD width therefore does not clear this gate.
-The next control selects the already generated portable CCD module on that same
-Vulkan fixture. Its numerical GLSL, iteration limits, inputs, bindings and test
-workload stay unchanged; only the existing compiler profile differs. The source
-receipt and identical shader manifest distinguish this temporary selection from
-a production shader change. A local 512-bit Lavapipe control on the AVX2-only host
+The first compiler-profile control at `c64fdd639` also selects portable shape-query
+modules because its C# `or` pattern joins them to CCD. Its local complete compound
+pass on Mesa 26.0.8/LLVM 21 in 96.3 seconds, including 128 cycles at `0/0 B`, is a
+combined-profile result, not a CCD-only comparison. The shader manifest remains
+identical. The corrected temporary selector splits the CCD condition from the
+driver-qualified shape-query family. It records selected CCD and shape-query
+module names and rejects any portable shape-query module on Vulkan, retaining
+the same numerical GLSL, iteration limits, inputs, bindings and full workload.
+An executable C# predicate probe checks 18 driver/module cases. The corrected
+local full compound control passes with all four original Vulkan shape-query
+modules and portable CCD explicitly observed, retaining 128 cycles at `0/0 B`.
+A local 512-bit Lavapipe control on the AVX2-only host
 also completes the unchanged fixture in 352.6 seconds with zero measured bytes;
 width alone does not reproduce the hosted failure.
-The local portable-module control passes the same complete compound fixture on
-Mesa 26.0.8/LLVM 21 in 96.3 seconds, including 128 cycles at `0/0 B`; the diagnostic
-confirms the selected module and the existing shader manifest remains identical.
 
 The corrected Windows ARM64 run `40029790832` at `3bddfb403` passes all three raw
 focused exits with app-local WARP 1.0.21 (artifact `12535550765`). Windows x86 run

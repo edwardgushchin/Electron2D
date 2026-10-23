@@ -190,18 +190,18 @@ jobs:
           path = Path('src/Servers/Physics/GPUPhysicsDevice.cs')
           original = path.read_bytes()
           source = original.decode()
-          marker = '(Driver is "metal" or "direct3d12") && name is "PhysicsResidentCCD.comp.spv"'
+          newline = '\r\n' if b'\r\n' in original else '\n'
+          marker = '(Driver is "metal" or "direct3d12") && name is "PhysicsResidentCCD.comp.spv" or'
           assert source.count(marker) == 1
-          source = source.replace(marker, 'name is "PhysicsResidentCCD.comp.spv"', 1)
+          source = source.replace(marker, 'name is "PhysicsResidentCCD.comp.spv" ||' + newline + '            (Driver is "metal" or "direct3d12") && name is', 1)
           marker = '        using var source = typeof(GPUPhysicsDevice).Assembly.GetManifestResourceStream('
           assert source.count(marker) == 1
-          newline = '\r\n' if b'\r\n' in original else '\n'
-          source = source.replace(marker, '        if (name == "PhysicsResidentCCD.comp.portable.spv") Console.WriteLine("Diagnostic CCD module: " + name);' + newline + marker, 1)
+          source = source.replace(marker, '        if (name.StartsWith("PhysicsResidentCCD.", StringComparison.Ordinal) || name.StartsWith("PhysicsResidentShapeQueries", StringComparison.Ordinal)) Console.WriteLine("Diagnostic module: " + name);' + newline + marker, 1)
           path.write_bytes(source.encode())
           receipt = {'headSHA': os.environ['GITHUB_SHA'], 'source': str(path),
                      'originalSHA256': hashlib.sha256(original).hexdigest(),
                      'actualSHA256': hashlib.sha256(path.read_bytes()).hexdigest(),
-                     'profile': 'Existing unoptimized portable CCD module; unchanged numerical source and work.'}
+                     'profile': 'Only CCD uses its existing unoptimized portable module; shape queries retain their original Vulkan profiles.'}
           Path('bin/diagnostics/portable-ccd-source.json').write_text(json.dumps(receipt, indent=2) + '\n')
           PY
           dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r linux-x64 --self-contained true -o bin/diagnostics/runner --nologo
@@ -213,7 +213,9 @@ jobs:
         run: |
           set -o pipefail
           MESA_SHADER_CACHE_DIR="$GITHUB_WORKSPACE/bin/diagnostics/cache-portable" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/portable-ccd.log
-          grep -Fx 'Diagnostic CCD module: PhysicsResidentCCD.comp.portable.spv' bin/diagnostics/portable-ccd.log
+          grep -Fx 'Diagnostic module: PhysicsResidentCCD.comp.portable.spv' bin/diagnostics/portable-ccd.log
+          grep -E '^Diagnostic module: PhysicsResidentShapeQueries[0-3]\.comp\.spv$' bin/diagnostics/portable-ccd.log
+          if grep -E '^Diagnostic module: PhysicsResidentShapeQueries.*\.portable\.spv$' bin/diagnostics/portable-ccd.log; then exit 1; fi
           grep -Fx 'Compound GPU: transformed slots, gaps and disabled indices passed.' bin/diagnostics/portable-ccd.log
       - uses: actions/upload-artifact@v4
         if: always()

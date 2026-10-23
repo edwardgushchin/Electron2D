@@ -269,7 +269,8 @@ class Checks(unittest.TestCase):
                     after = path.read_bytes()
                     self.assertNotIn(b'(Driver is "metal" or "direct3d12") && name is "PhysicsResidentCCD.comp.spv"', after)
                     self.assertIn(b'name is "PhysicsResidentCCD.comp.spv"', after)
-                    self.assertEqual(after.count(b'Diagnostic CCD module:'), 1)
+                    self.assertIn(b'(Driver is "metal" or "direct3d12") && name is' + newline + b'            "PhysicsResidentShapeQueries0.comp.spv"', after)
+                    self.assertEqual(after.count(b'Diagnostic module:'), 1)
                     self.assertEqual(b'\r\n' in after, newline == b'\r\n')
                     receipt = json.loads(Path('bin/diagnostics/portable-ccd-source.json').read_text())
                     self.assertEqual(receipt['originalSHA256'], hashlib.sha256(before).hexdigest())
@@ -281,6 +282,7 @@ class Checks(unittest.TestCase):
         run = workflow.partition('      - name: Run the complete compound fixture with the portable CCD module')[2].split('\n      - ', 1)[0]
         self.assertIn('set -o pipefail', run)
         self.assertIn('cache-portable', run)
+        self.assertIn("if grep -E '^Diagnostic module: PhysicsResidentShapeQueries.*\\.portable\\.spv$'", run)
         self.assertIn("grep -Fx 'Compound GPU: transformed slots, gaps and disabled indices passed.'", run)
 
     def test_linux_simd_control_retains_raw_exits_driver_identity_and_both_workloads(self):
