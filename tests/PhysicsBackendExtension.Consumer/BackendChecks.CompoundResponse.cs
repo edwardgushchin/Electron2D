@@ -110,10 +110,11 @@ public static partial class BackendChecks
             void Motion()
             {
                 var before = mover.GlobalTransform;
-                Check(PhysicsServer.BodyTestMotion(mover.GetRID(), motion, result) && result.GetColliderRID() == obstacle &&
+                var hit = PhysicsServer.BodyTestMotion(mover.GetRID(), motion, result);
+                if (!(hit && result.GetColliderRID() == obstacle &&
                     result.GetCollisionLocalShape() is 1 or 2 && result.GetColliderShape() == result.GetCollisionLocalShape() &&
-                    MathF.Abs(result.GetTravel().X - 10) < .1f && mover.GlobalTransform == before,
-                    "Compound body-motion tests preserve real local/peer slots and leave simulation pose unchanged");
+                    MathF.Abs(result.GetTravel().X - 10) < .1f && mover.GlobalTransform == before))
+                    throw new InvalidOperationException($"Compound body-motion tests preserve real local/peer slots and leave simulation pose unchanged: hit={hit}, collider={result.GetColliderRID()}/{obstacle}, slots={result.GetCollisionLocalShape()}/{result.GetColliderShape()}, travel={result.GetTravel()}, unchanged={mover.GlobalTransform == before}.");
             }
             void Verify()
             {

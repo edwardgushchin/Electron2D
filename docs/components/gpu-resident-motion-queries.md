@@ -67,6 +67,10 @@ continued recovery (reused three times), translation and final output. Two vecto
 carry recovery, rejected-key count, fractions, source slot, convergence and flags between
 passes. The same command buffer ends each compute pass before beginning its
 consumer, providing storage-buffer visibility without an intermediate host wait.
+The portable result/scratch buffer stores uint words. Floating fields explicitly
+bitcast at numeric reads/writes, while flags, counters and identities remain
+integers through storage and final result publication. This avoids expressing
+small integer bit patterns as floating subnormal values in legacy compilers.
 The 32 recovery planes and 32 rejected keys remain in the existing device scratch;
 only the final 128-byte result is downloaded. Vulkan retains its single optimized
 module. Numerical limits, early recovery convergence, zero-motion skipping and
@@ -253,3 +257,5 @@ retains that complete measurement. Software execution is not hardware performanc
 ## One-way impact admission
 
 The resident motion kernel separates initial-overlap departure from [new impact side selection](physics-queries.md#one-way-body-motion-entry). A new one-way impact evaluates its normal at the unsafe pose before committing the earliest fraction, including tangent/receding front-corner approaches. Ordinary prospective geometry includes the query margin in its local hull radius, preventing a rounded cast root from losing its validation contact. Directed source bypass and recovery/final-depth checks retain their existing policy. The extra narrow contact evaluation stays on device; request/result layouts, scratch storage, uploads, readbacks and fence count are unchanged. This is a functional change, with no new hardware performance claim.
+
+All-motion native DXBC run 39948784588 creates the four pipelines, then rejects the first compound response motion result. The integer-word transport change is a candidate correction; it retains the numerical workload and requires target verification. Failure messages now report hit, actual/expected RID, local/peer slots, travel and unchanged pose without allocating in successful measured cycles.

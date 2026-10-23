@@ -17,7 +17,19 @@ layout(std430,set=0,binding=5) readonly buffer Mappings { Mapping mappings[]; };
 layout(std430,set=0,binding=6) readonly buffer Inputs { Query queries[]; };
 layout(std430,set=0,binding=7) readonly buffer Payload { uvec2 payload[]; };
 // Result records occupy the prefix; recovery planes and rejected keys stay device-only.
+#ifdef E2D_MOTION_STAGE
+layout(std430,set=1,binding=0) buffer Results { uvec4 outputWords[]; };
+#define READ_FLOAT(index) uintBitsToFloat(outputWords[index])
+#define WRITE_FLOAT(index,value) outputWords[index]=floatBitsToUint(value)
+#define READ_UINT(index) outputWords[index]
+#define WRITE_UINT(index,value) outputWords[index]=value
+#else
 layout(std430,set=1,binding=0) buffer Results { vec4 outputData[]; };
+#define READ_FLOAT(index) outputData[index]
+#define WRITE_FLOAT(index,value) outputData[index]=value
+#define READ_UINT(index) floatBitsToUint(outputData[index])
+#define WRITE_UINT(index,value) outputData[index]=uintBitsToFloat(value)
+#endif
 layout(std430,set=1,binding=1) buffer Counts { uint counts[]; };
 layout(std430,set=1,binding=2) buffer Status { uvec2 status; };
 layout(std430,set=1,binding=3) buffer Centers { vec2 centers[]; };
@@ -40,10 +52,10 @@ void retainRecovery(Contact c)
 {
     if(c.depth<=0||!oneWayContact(c))return;
     vec4 plane=vec4(c.normal,c.depth,bodyB.surface.w);
-    if(recoveryCount<32u){outputData[scratchStart+recoveryCount++]=plane;return;}
+    if(recoveryCount<32u){WRITE_FLOAT(scratchStart+recoveryCount++,plane);return;}
     uint shallowest=0u;
-    [[dont_unroll]] for(uint j=1u;j<32u;j++)if(outputData[scratchStart+j].z<outputData[scratchStart+shallowest].z)shallowest=j;
-    if(c.depth>outputData[scratchStart+shallowest].z)outputData[scratchStart+shallowest]=plane;
+    [[dont_unroll]] for(uint j=1u;j<32u;j++)if(READ_FLOAT(scratchStart+j).z<READ_FLOAT(scratchStart+shallowest).z)shallowest=j;
+    if(c.depth>READ_FLOAT(scratchStart+shallowest).z)WRITE_FLOAT(scratchStart+shallowest,plane);
 }
 float relativePriority(float value,float maximum)
 {
@@ -202,7 +214,7 @@ vec4 queryBounds(Shape shape,Geometry g,bool recovering)
 bool rejectedMotionPair()
 {
     uvec4 key=uvec4(shapeA.owner.zw,indexB,shapeB.policy.x);
-    for(uint i=0u;i<rejectedCount;i++)if(floatBitsToUint(outputData[scratchStart+32u+i])==key)return true;
+    for(uint i=0u;i<rejectedCount;i++)if(READ_UINT(scratchStart+32u+i)==key)return true;
     return false;
 }
 void scan(uint phase)
@@ -259,7 +271,7 @@ void scan(uint phase)
                             else movingPair(a,b,ga,gb);
                         }
                         if(recovering&&invalid&&!accepted&&rejectedCount<32u)
-                            outputData[scratchStart+32u+rejectedCount++]=uintBitsToFloat(uvec4(shapeA.owner.zw,indexB,shapeB.policy.x));
+                            WRITE_UINT(scratchStart+32u+rejectedCount++,uvec4(shapeA.owner.zw,indexB,shapeB.policy.x));
                     }
                 }
             }
@@ -271,14 +283,14 @@ void scan(uint phase)
     {
         recovered=true;
         float maximum=0,scaledTotal=0;
-        [[dont_unroll]] for(uint j=0u;j<recoveryCount;j++)maximum=max(maximum,outputData[scratchStart+j].w);
+        [[dont_unroll]] for(uint j=0u;j<recoveryCount;j++)maximum=max(maximum,READ_FLOAT(scratchStart+j).w);
         if(maximum==0)return;
-        [[dont_unroll]] for(uint j=0u;j<recoveryCount;j++)scaledTotal+=relativePriority(outputData[scratchStart+j].w,maximum);
+        [[dont_unroll]] for(uint j=0u;j<recoveryCount;j++)scaledTotal+=relativePriority(READ_FLOAT(scratchStart+j).w,maximum);
         bool tiny=maximum<0.00001/scaledTotal;
         vec2 correction=vec2(0);
         [[dont_unroll]] for(uint j=0u;j<recoveryCount;j++)
         {
-            vec4 plane=outputData[scratchStart+j];float depth=plane.z-dot2(plane.xy,correction)-q.motionMargin.z*0.05;
+            vec4 plane=READ_FLOAT(scratchStart+j);float depth=plane.z-dot2(plane.xy,correction)-q.motionMargin.z*0.05;
             float weight=tiny?plane.w:relativePriority(plane.w,maximum)*(float(recoveryCount)/scaledTotal);
             if(depth>0.00001)correction+=plane.xy*(depth*0.4*weight);
         }
@@ -297,9 +309,9 @@ void main()
     uint stateAt=i*8u;
     bool converged=false;
 #if E2D_MOTION_STAGE > 0
-    vec4 state=outputData[stateAt+6u],fractions=outputData[stateAt+7u];
-    recovery=state.xy;rejectedCount=floatBitsToUint(state.z);recovered=(floatBitsToUint(state.w)&1u)!=0u;converged=(floatBitsToUint(state.w)&2u)!=0u;
-    safe=fractions.x;unsafeFraction=fractions.y;motionShape=floatBitsToUint(fractions.z);blocked=floatBitsToUint(fractions.w)!=0u;
+    uvec4 state=outputWords[stateAt+6u],fractions=outputWords[stateAt+7u];
+    recovery=uintBitsToFloat(state.xy);rejectedCount=state.z;recovered=(state.w&1u)!=0u;converged=(state.w&2u)!=0u;
+    safe=uintBitsToFloat(fractions.x);unsafeFraction=uintBitsToFloat(fractions.y);motionShape=fractions.z;blocked=fractions.w!=0u;
     bodyA.pose.xy=q.pose.xy+recovery;
 #endif
 #if E2D_MOTION_STAGE < 2
@@ -311,8 +323,8 @@ void main()
     {bodyA.pose.xy+=unsafeFraction*q.motionMargin.xy;scan(2u);}
 #endif
 #if E2D_MOTION_STAGE < 3
-    outputData[stateAt+6u]=vec4(recovery,uintBitsToFloat(rejectedCount),uintBitsToFloat((recovered?1u:0u)|(converged?2u:0u)));
-    outputData[stateAt+7u]=vec4(safe,unsafeFraction,uintBitsToFloat(motionShape),uintBitsToFloat(blocked?1u:0u));
+    outputWords[stateAt+6u]=uvec4(floatBitsToUint(recovery),rejectedCount,(recovered?1u:0u)|(converged?2u:0u));
+    outputWords[stateAt+7u]=uvec4(floatBitsToUint(vec2(safe,unsafeFraction)),motionShape,blocked?1u:0u);
     return;
 #endif
     Result result=Result(uvec4(0),uvec4(0),uvec4(0),uvec4(0),vec4(0),vec4(0),vec4(0),vec4(0));
@@ -331,8 +343,8 @@ void main()
     result.fractions=vec4(safe,unsafeFraction,recovery);
     if(!finiteField(result.travelRemainder)||!finiteField(result.pointNormal)||!finiteField(result.velocityDepth)||!finiteField(result.fractions)){fail();return;}
     uint at=i*8u;
-    outputData[at]=uintBitsToFloat(result.identity);outputData[at+1u]=uintBitsToFloat(result.shapes);
-    outputData[at+2u]=uintBitsToFloat(result.owner);outputData[at+3u]=uintBitsToFloat(result.objectID);
-    outputData[at+4u]=result.pointNormal;outputData[at+5u]=result.velocityDepth;
-    outputData[at+6u]=result.travelRemainder;outputData[at+7u]=result.fractions;
+    WRITE_UINT(at,result.identity);WRITE_UINT(at+1u,result.shapes);
+    WRITE_UINT(at+2u,result.owner);WRITE_UINT(at+3u,result.objectID);
+    WRITE_FLOAT(at+4u,result.pointNormal);WRITE_FLOAT(at+5u,result.velocityDepth);
+    WRITE_FLOAT(at+6u,result.travelRemainder);WRITE_FLOAT(at+7u,result.fractions);
 }
