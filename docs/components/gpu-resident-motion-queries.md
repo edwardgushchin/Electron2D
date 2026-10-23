@@ -143,6 +143,20 @@ pass with the correction, including their existing zero-byte intervals. The five
 modules retain their expected per-stage resource/workgroup reflection, and the
 ordinary Vulkan bytecode hash above remains unchanged. Native acceptance is pending.
 
+The storage-only recovery correction at `cb7ddac24` still fails the native
+Windows joint and direct-motion controls in run 40009263183, artifact 12525862689.
+Both raw exits remain `0xE0434352`, with zero GPU recovery travel. The fail-fast
+workflow preserves overall failure and correctly skips its full executable.
+Storage retention alone therefore does not close the recovery defect.
+
+Portable geometry now returns both primary and secondary contacts by value.
+Recovery and final sampling consume that pair explicitly; moving refinement uses
+its primary contact. Their previous call discarded the returned primary contact
+and depended on the helper's private global fields for both points. The ordinary
+Vulkan branch retains its previous interface. Shape evaluation, point order,
+filtering, projection, capacities and device transfers are unchanged. This return
+boundary is a new native candidate, not an accepted Windows correction.
+
 ## CPU corrections found by comparison
 
 Backend pieces of a large convex polygon previously produced opposite recovery

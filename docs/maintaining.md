@@ -69,7 +69,10 @@ source slot, rejected keys, six device passes and single final readback. Recover
 retains plane/key counts, maximum depth, accepted/rejected pair flags, accumulated
 correction and convergence input in the existing prefix across geometry calls.
 The first two prefix words are phase-local scratch; final sampling replaces them
-with its actual contact. All four portable stages use offline optimization. Complete target execution must
+with its actual contact. Portable geometry returns both contact snapshots by
+value; recovery/final sampling consume both and moving refinement uses the first.
+Retain both points and all existing ordering/filtering rules when changing that
+boundary. All four portable stages use offline optimization. Complete target execution must
 use the production shader source without diagnostic result-lane writes.
 
 Compressed-audio allocation diagnostics use `ELECTRON2D_TEST_AUDIO_COMPRESSED=cpu`

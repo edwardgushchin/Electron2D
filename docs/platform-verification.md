@@ -52,7 +52,11 @@ with zero remaining exceptions, and zero direct recovery travel versus CPU
 (0, -1.8069474). Both native exits are -532462766 (`0xE0434352`); API step success
 under `continue-on-error` does not supersede these failures. Recovery state now
 uses the existing prefix across geometry calls, preserving its numerical work.
-This correction still requires its own native and complete release gates.
+Run 40009263183 at `cb7ddac24` repeats both zero-travel failures after storage
+retention; its full executable is correctly skipped and the final job fails.
+Portable geometry now returns both contact snapshots explicitly for consumption
+by recovery/final sampling. That new candidate still needs native and complete
+release gates.
 
 Final complete CI, public package restoration, rendered consumers and release
 publication remain pending. The current declaration register is not a substitute

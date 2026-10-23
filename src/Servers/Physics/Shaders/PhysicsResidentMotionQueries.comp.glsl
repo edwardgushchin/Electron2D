@@ -94,26 +94,34 @@ vec2 recovery=vec2(0);
 Result restResult;
 uint motionShape=0u;
 bool recovered=false,blocked=false,rested=false;
-Contact evaluate(Hull a,Hull b,Geometry ga,Geometry gb,vec2 extension,float margin)
+#ifdef E2D_MOTION_STAGE
+struct MotionContactPair { Contact first; Contact second; };
+#define MOTION_CONTACTS MotionContactPair
+#define MOTION_CONTACT_RESULT MotionContactPair(pairContact,pairSecond)
+#else
+#define MOTION_CONTACTS Contact
+#define MOTION_CONTACT_RESULT pairContact
+#endif
+MOTION_CONTACTS evaluate(Hull a,Hull b,Geometry ga,Geometry gb,vec2 extension,float margin)
 {
     pairContact=Contact(vec2(0),vec2(0),0,false);pairSecond=pairContact;contactLimit=2;
     bool boundary=a.boundary||b.boundary;
     if(boundary)
     {
-        if(a.boundary&&b.boundary)return pairContact;
-        if(ga.data.z==6u){vec2 axis=vertex(a,1u)-vertex(a,0u);if(axis==vec2(0))return pairContact;a.extension=normalized(axis)*margin;}
-        if(gb.data.z==6u&&vertex(b,1u)==vertex(b,0u))return pairContact;
+        if(a.boundary&&b.boundary)return MOTION_CONTACT_RESULT;
+        if(ga.data.z==6u){vec2 axis=vertex(a,1u)-vertex(a,0u);if(axis==vec2(0))return MOTION_CONTACT_RESULT;a.extension=normalized(axis)*margin;}
+        if(gb.data.z==6u&&vertex(b,1u)==vertex(b,0u))return MOTION_CONTACT_RESULT;
         a.pose.xy+=extension;
     }
     if(!boundary&&(ga.data.z==6u||gb.data.z==6u))
     {
-        if(ga.data.z==6u&&gb.data.z==6u)return pairContact;
+        if(ga.data.z==6u&&gb.data.z==6u)return MOTION_CONTACT_RESULT;
         bool flip=gb.data.z==6u;
         directedQuery(flip?b:a,flip?a:b,vec2(0),flip?0:margin,
             (flip?gb.parameters.y:ga.parameters.y)!=0,flip,flip?vec2(0):extension,0u,0u,true);
     }
     else ordinary(a,b,uvec2(0));
-    return pairContact;
+    return MOTION_CONTACT_RESULT;
 }
 vec2 passDirection(){return rotate(bodyB.pose.zw,rotate(shapeB.pose.zw,shapeB.oneWay.xy));}
 bool oneWayContact(Contact c)
@@ -155,7 +163,11 @@ void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
     Hull probe=a;Contact initial,full;
     [[dont_unroll]] for(;;)
     {
+#ifdef E2D_MOTION_STAGE
+        Contact contact=evaluate(probe,b,ga,gb,extension,margin).first;
+#else
         Contact contact=evaluate(probe,b,ga,gb,extension,margin);
+#endif
         contact.valid=contact.valid&&contact.depth>=0;
         if(phase==initialPhase)
         {
@@ -279,10 +291,18 @@ void scan(uint phase)
                             if(recovering||resting)
                             {
                                 if(ga.data.z!=6u)a.radius+=q.motionMargin.z;
+#ifdef E2D_MOTION_STAGE
+                                MotionContactPair contacts=evaluate(a,b,ga,gb,vec2(0),q.motionMargin.z);
+#else
                                 evaluate(a,b,ga,gb,vec2(0),q.motionMargin.z);
+#endif
                                 for(uint point=0u;point<2u;point++)
                                 {
+#ifdef E2D_MOTION_STAGE
+                                    Contact contact=point==0u?contacts.first:contacts.second;
+#else
                                     Contact contact=point==0u?pairContact:pairSecond;
+#endif
                                     if(!contact.valid||contact.depth<0)continue;
                                     if(resting&&blocked&&unsafeFraction>0&&ga.data.z!=6u&&gb.data.z!=6u&&dot2(contact.normal,q.motionMargin.xy)>0)contact.normal=-contact.normal;
                                     if(!oneWayContact(contact))

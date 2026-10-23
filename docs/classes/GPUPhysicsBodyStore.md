@@ -10,9 +10,10 @@ across candidate calls in the existing result prefix; final sampling retains the
 deepest accepted contact there before result publication. The four portable
 stages use offline optimization and first-vertex bounds. Recovery also retains
 its reduction counts/depth, pair flags, correction and convergence input across
-geometry calls in the existing prefix. The linked component retains the native
-zero-recovery failure and separates local controls from pending target acceptance
-of this correction.
+geometry calls in the existing prefix. Portable geometry returns both contact
+snapshots by value to recovery/final sampling, with the primary point used for
+moving refinement. The linked component retains the failed storage-only native
+control and separates local checks from target acceptance of the return boundary.
 
 [Shape-query operation kernels](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
 retain separate Intersect/Contacts/Rest/Cast pipelines. Mixed batches use one
