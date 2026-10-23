@@ -1,6 +1,6 @@
 # TextParagraph
 
-Last updated: 2026-10-20
+Last updated: 2026-10-23
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -623,6 +623,8 @@ Draws only the dropcap outline.
 Dispose releases only owned buffers and registered identities, never borrowed fonts/tokens/metadata. Repeated disposal follows ElectronObject. The protected GetPropertyDescriptors override supplies live nonstored typed settings; ValidateMutation and ValidateDisposal enforce owner/reentry guards, and Dispose(bool) releases paragraph-owned state. Numeric notifications and typed tooling inherit ElectronObject. Invalid line/span indices throw ArgumentOutOfRangeException; null text/font/key/language throws ArgumentNullException; invalid flags, sizes, geometry and nonfinite input throw typed argument exceptions. Unrepresentable derived geometry throws OverflowException. Disposed fonts fail explicitly. Rendering requires a live recording CanvasItem under the ordinary Font drawing contract.
 
 ## Dependencies and verification
+
+The borrowed-font invalidation fixture uses `AAAA AAAA`, preserving its two four-glyph words and separator while selecting glyphs actually present in the variable test font. Its spacing increase therefore measures the borrowed font's generation, independently of system fallback. The strict width increase and 128 warmup/128 measured zero-byte query cycles remain unchanged. The macOS workflow also selects this fixture separately before its complete suite; target acceptance still requires those actual logs.
 
 [Text objects](../components/text-objects.md) and [ADR 0107](../decisions/text-objects.md#adr-0107) own the typed buffer, lifecycle and coordinate contract. TextParagraphTests exercises the complete query/authoring family and native preparation, including Unicode ranges, wrapping/visibility, inline/dropcap, duplicates, both axes, font generations and failure/reentry. TextParagraphRenderingTests exercises actual paragraph/line/dropcap draw variants, outline, vertical text, clipping, live reflow and the warmed full-frame allocation gate on each selected backend. These local gates do not establish foreign platform execution, native allocator totals, large-input performance or owner acceptance. Independent package/fresh-process scene reconstruction has its own evidence.
 

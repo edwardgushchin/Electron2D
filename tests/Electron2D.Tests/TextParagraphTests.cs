@@ -49,7 +49,7 @@ internal static class TextParagraphTests
         Reject<ArgumentOutOfRangeException>(() => p.Width = float.NaN); Reject<ArgumentOutOfRangeException>(() => p.LineSpacing = float.PositiveInfinity); Reject<ArgumentOutOfRangeException>(() => p.HitTest(new(float.NaN, 0)));
         Reject<ArgumentException>(() => p.SetDropcap("x", font, 20, new(new(float.NaN, 0), default)));
         Task.Run(() => { Reject<InvalidOperationException>(() => p.GetRID()); Reject<InvalidOperationException>(() => p.Dispose()); }).GetAwaiter().GetResult(); Check(!p.IsDisposed, "Wrong-thread disposal cannot publish.");
-        using var variation = new FontVariation { BaseFont = font }; p.Clear(); p.AddString("abcd efgh", variation, 18); var oldWidth = p.GetLineWidth(0); variation.SpacingGlyph = 2; Check(p.GetLineWidth(0) > oldWidth, "Font generation invalidates paragraph buffers.");
+        using var variation = new FontVariation { BaseFont = font }; p.Clear(); p.AddString("AAAA AAAA", variation, 18); var oldWidth = p.GetLineWidth(0); variation.SpacingGlyph = 2; Check(p.GetLineWidth(0) > oldWidth, "Font generation invalidates paragraph buffers.");
         for (var i = 0; i < 128; i++) Queries(p);
         var before = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 128; i++) Queries(p); Check(GC.GetAllocatedBytesForCurrentThread() == before, "128 prepared paragraph scalar-query cycles allocate zero bytes.");
         using var hook = new HookFont { Fallbacks = [font] }; using var reentrant = new TextParagraph(); reentrant.AddString("ABC", hook, 20);
