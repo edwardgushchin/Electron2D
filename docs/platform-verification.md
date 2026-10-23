@@ -23,7 +23,9 @@ ARM64/x64 traces report 0/0 bytes and no physical-interval object events. The
 complete ordinary ARM64 suite at `c847dc38d` passes in 32 minutes 41 seconds.
 Its separate profiled cohort passes the Area interval, then fails the idle
 compressed-audio owner-byte check. That assertion records neither a delta nor
-the format, so its producer remains unattributed. The x64 cohorts remain pending.
+the format, so its producer remains unattributed. The separate profiled x64
+cohort passes its complete suite in 49 minutes 17 seconds; its ordinary cohort
+remains pending.
 Complete target verification remains required. Windows motion remains unresolved; manual compiler
 and staged SPIR-V optimization controls do not replace the ordinary release gate.
 Public packages, final CI, rendered consumers and release publication are separate

@@ -181,7 +181,7 @@ jobs:
               uint motionProbe=outputWords[stateAt+2u].w;
               #endif'''
               text = text.replace(state, state + '\n' + history)
-              text = text.replace(translate, translate + '\n    motionProbe|=(safe==1&&unsafeFraction==1?4u:0u)|(q.motionMargin.xy!=vec2(0)?8u:0u);\n    outputWords[stateAt+3u].zw=uvec2(0u);')
+              text = text.replace(translate, translate + '\n    motionProbe|=(safe==1&&unsafeFraction==1?4u:0u)|(q.motionMargin.xy!=vec2(0)?8u:0u);\n    outputWords[stateAt+3u]=uvec4(0u);')
               scan = '    bool recovering=phase==0u,resting=phase==2u;'
               pair = '                            else movingPair(a,b,ga,gb);'
               assert text.count(scan) == text.count(pair) == 1
@@ -209,6 +209,22 @@ jobs:
                   assert text.count(marker) == 1
                   trace = '#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2\n    atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,' + str(bit) + 'u);\n#endif\n'
                   text = text.replace(marker, trace + marker)
+              policy = '        if((shapeA.policy.w&2u)!=0u)continue;'
+              node = '            Node node=nodes[at];'
+              assert text.count(policy) == text.count(node) == 1
+              source = '''#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2
+                      uvec4 sourceGeometry=geometries[shapeA.owner.z].data;
+                      outputWords[gl_GlobalInvocationID.x*8u+3u].xy=uvec2(sourceGeometry.y,shapeA.policy.w|(sourceGeometry.z<<8));
+              #endif
+              '''
+              text = text.replace(policy, source + policy)
+              root = '''#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2
+                          if(at==1)atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,32u|
+                              (node.hasCategory!=0?64u:0u)|
+                              (ga.data.z==7u||(node.typeMask&16)!=0||(all(lessThanEqual(node.bounds.xy,bounds.zw))&&all(greaterThanEqual(node.bounds.zw,bounds.xy)))?128u:0u)|
+                              (at<int(leaves)?256u:0u));
+              #endif'''
+              text = text.replace(node, node + '\n' + root)
               history = '''#if E2D_MOTION_STAGE == 0
               motionProbe=safe==1?1u:0u;
               #elif E2D_MOTION_STAGE == 1
@@ -222,7 +238,7 @@ jobs:
               text = text.replace(publish, history + '\n' + publish)
               probe = '''#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 3
               result.owner.w=state.w|(motionProbe<<8)|(blocked?1048576u:0u)|(rested?2097152u:0u)|(outputWords[stateAt+3u].w<<22);
-              result.objectID.zw=fractions.xy;
+              result.objectID.zw=outputWords[stateAt+3u].xy;
               #endif'''
               shader.write_text(text.replace(result, result + '\n' + probe))
               query = Path('src/Servers/Physics/GPUPhysicsBodyStore.MotionQueries.cs')
@@ -231,7 +247,7 @@ jobs:
               field = 'private int[] _motionQueryCounts = [];'
               assert text.count(returned) == text.count(field) == 1
               text = text.replace(field, field + '\n    private bool _motionProbeWritten;')
-              probe = '        if (!_motionProbeWritten) { _motionProbeWritten = true; Console.WriteLine($"Motion stage receipt: count={_motionQueryCounts[0]}, flags={results[0].Flags}, state={results[0].Padding}, incomingFractions=0x{results[0].Padding2:X16}, finalFractions={results[0].Fractions}, travel={results[0].TravelRemainder}"); }\n'
+              probe = '        if (!_motionProbeWritten) { _motionProbeWritten = true; Console.WriteLine($"Motion stage receipt: count={_motionQueryCounts[0]}, flags={results[0].Flags}, state={results[0].Padding}, sourceGeometry=0x{results[0].Padding2:X16}, finalFractions={results[0].Fractions}, travel={results[0].TravelRemainder}"); }\n'
               query.write_text(text.replace(returned, probe + returned))
           structured = os.environ.get('MOTION_STRUCTURED_SCAN', 'false')
           assert structured in ('false', 'true')
@@ -275,7 +291,11 @@ jobs:
                      'probeResultBits': {'0-7': 'incoming state flags', '8-18': 'probe history', '20': 'final blocked', '21': 'rested',
                                          '22': 'any pair entered', '23': 'any pair returned',
                                          '24': 'any source shape visited', '25': 'any BVH leaf visited',
-                                         '26': 'any candidate passed filters'},
+                                         '26': 'any candidate passed filters', '27': 'root node read',
+                                         '28': 'root category nonzero', '29': 'root broad test passes',
+                                         '30': 'root is internal'},
+                     'probeSourceHeader': {'low32': 'last visited source vertex count',
+                                           'high32': 'source policy flags in low8, geometry kind above bit7'},
                      'shaderSHA256': {name: hashlib.sha256(Path(name).read_bytes()).hexdigest() for name in
                          ['src/Servers/Rendering/ShaderCompiler.cs', 'src/Servers/Physics/GPUPhysicsBodyStore.MotionQueries.cs',
                           'src/Servers/Physics/Shaders/PhysicsResidentMotionQueries.comp.glsl']}}

@@ -127,6 +127,13 @@ does not correct the native failure, and production sources remain unchanged.
 The next investigation needs source geometry/policy and root-node/culling data;
 these controls do not establish a control-flow, driver or compiler root cause.
 
+The next diagnostic replaces the historical incoming-fraction padding receipt
+with the last visited source's vertex count, geometry kind and policy flags.
+Additional root-read, category, broad-test and internal-node bits distinguish
+pre-traversal rejection from tree culling. These observations use the same unused
+result lanes and existing readback; numerical behavior and production sources
+remain unchanged.
+
 The earlier single portable traversal still aborted in Windows WARP 1.0.21
 `ScopeNestedCFG::runOnFunction`. Flattening motion phases and removing one sweep
 unroll prohibition did not fix it; the FXC control rejected nested loop attributes.

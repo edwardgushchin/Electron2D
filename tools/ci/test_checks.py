@@ -55,10 +55,10 @@ class Checks(unittest.TestCase):
                                 if structured == 'false': self.assertEqual(shader, originals[names[3]].decode())
                             else:
                                 self.assertEqual(query.count('Motion stage receipt:'), 1)
-                                self.assertIn('result.objectID.zw=fractions.xy;', shader)
+                                self.assertIn('result.objectID.zw=outputWords[stateAt+3u].xy;', shader)
                                 self.assertIn('result.owner.w=state.w|(motionProbe<<8)|(blocked?1048576u:0u)|(rested?2097152u:0u)|(outputWords[stateAt+3u].w<<22);', shader)
                                 self.assertIn('outputWords[stateAt+2u].w=motionProbe;', shader)
-                                self.assertIn('outputWords[stateAt+3u].zw=uvec2(0u);', shader)
+                                self.assertIn('outputWords[stateAt+3u]=uvec4(0u);', shader)
                                 self.assertIn('atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].z,(safe==0?4u:0u)|(blocked?8u:0u));', shader)
                                 self.assertIn('((outputWords[stateAt+3u].z|(safe==0?16u:0u))<<6)', shader)
                                 if compiler == 'dxbc':
