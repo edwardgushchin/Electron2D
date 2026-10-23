@@ -5,9 +5,12 @@ shares the recovery, sweep and resting scan call site while preserving iteration
 bounds, result buffers and the optimized Vulkan bytecode. Local numerical checks
 and complete target execution remain distinct acceptance evidence.
 
-Portable recovery carries recovery state only; translation initializes the full
-motion bracket and publishes fractions for final rest sampling. The linked
-component records the Windows zero-fraction failure and pending target correction.
+Portable recovery carries recovery state only. Translation retains its bracket
+across candidate calls in the existing result prefix; final sampling retains the
+deepest accepted contact there before result publication. The four portable
+stages use offline optimization and first-vertex bounds. The linked component
+separates the passing instrumented compound fixture from pending complete target
+execution of this production port.
 
 [Shape-query operation kernels](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
 retain separate Intersect/Contacts/Rest/Cast pipelines. Mixed batches use one

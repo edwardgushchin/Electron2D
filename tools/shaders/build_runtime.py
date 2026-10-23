@@ -87,7 +87,7 @@ def generate(output, source_root=ROOT):
                 with tempfile.TemporaryDirectory(dir=target.parent) as temporary:
                     compiled = Path(temporary) / 'shader.spv'
                     command = [str(compiler), '-V', '--target-env', 'vulkan1.0', '-S', stage, '-e', 'main']
-                    if domain == 'Physics' and source.name in VULKAN_OPTIMIZED_PHYSICS and not stem.endswith('.portable'):
+                    if domain == 'Physics' and source.name in VULKAN_OPTIMIZED_PHYSICS and (not stem.endswith('.portable') or source.name == 'PhysicsResidentMotionQueries.comp.glsl'):
                         # Reduce cold driver compilation before these sweeps block a live simulation.
                         command += ['-O']
                     if source.suffix == '.hlsl':

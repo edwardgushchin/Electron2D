@@ -31,10 +31,12 @@ compound fixture, including scene/raw/Area slots, momentum, private history and
 128 cycles at 0/0 bytes. Its temporary optimized portable motion candidate seeds
 query bounds from the first vertex and retains sweep/final-contact state in the
 existing device buffer. The first real result has safe/unsafe fractions
-0.49609375/0.5 and travel 9.921875, matching the local control. Production shader
-sources remain unchanged at this stage. The next diagnostic runs the complete
-untraced Windows executable with that candidate; the focused pass alone does
-not establish full Windows acceptance.
+0.49609375/0.5 and travel 9.921875, matching the local control. The complete instrumented Windows control is run 39999737324 at `7e186ac72`;
+its final result is pending. The source now contains the corresponding portable
+bounds, sweep and final-contact retention, with offline optimization. Temporary
+shader rewrites and result-lane observations are removed from the manual
+workflow. This production port still needs its own complete target execution;
+the focused instrumented pass alone does not establish Windows acceptance.
 
 Final complete CI, public package restoration, rendered consumers and release
 publication remain pending. The current declaration register is not a substitute

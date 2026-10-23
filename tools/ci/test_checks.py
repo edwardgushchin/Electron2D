@@ -63,7 +63,7 @@ class Checks(unittest.TestCase):
         self.assertIn('python3 -B tools/ci/run_macos_runtime.py bin/diagnostics/runner/Electron2D.Tests bin/diagnostics/full-runtime.log', workflow)
         self.assertIn('timeout-minutes: 90', workflow)
 
-    def test_windows_motion_probe_preserves_default_shader_and_reports_device_state(self):
+    def test_windows_motion_diagnostics_preserve_production_shaders_and_report_device_state(self):
         workflow = (rids.ROOT / '.github/workflows/windows-gpu-diagnostics.yml').read_text()
         step = workflow.partition('      - name: Record source and trace cold pipeline preparation')[2].split('\n      - ', 1)[0]
         inline = step.partition("          python - <<'PY'\n")[2].split('\n          PY', 1)[0]
@@ -74,59 +74,33 @@ class Checks(unittest.TestCase):
         originals = {name: (rids.ROOT / name).read_bytes().replace(b'\r\n', b'\n') for name in names}
         previous = Path.cwd()
         try:
-            with tempfile.TemporaryDirectory(prefix='e2d motion probe ') as directory:
+            with tempfile.TemporaryDirectory(prefix='e2d motion diagnostics ') as directory:
                 os.chdir(directory)
-                for compiler, optimization, seeded in ((c, o, s) for c in ('dxil', 'dxbc') for o in ('false', 'true') for s in ('false', 'true')):
-                    for newline in (b'\n', b'\r\n'):
-                        with self.subTest(compiler=compiler, optimization=optimization, seeded=seeded, newline=newline):
-                            for name, original in originals.items():
-                                path = Path(name); path.parent.mkdir(parents=True, exist_ok=True)
-                                path.write_bytes(original.replace(b'\n', newline))
-                            with patch.dict(os.environ, RECOVERY_COMPILER=compiler, MOTION_SPIRV_OPTIMIZATION=optimization, MOTION_SEED_BOUNDS=seeded, GITHUB_SHA='self-check'), redirect_stdout(StringIO()):
-                                exec(compile(code, 'windows-motion-workflow', 'exec'), {})
-                            query = Path(names[2]).read_text()
-                            shader = Path(names[3]).read_text()
-                            if compiler == 'dxil' and optimization == 'false':
-                                self.assertEqual(Path(names[1]).read_text(), originals[names[1]].decode())
-                                self.assertEqual(query, originals[names[2]].decode())
-                                if seeded == 'false': self.assertEqual(shader, originals[names[3]].decode())
-                            else:
-                                self.assertEqual(query.count('Motion stage receipt:'), 1)
-                                self.assertIn('result.objectID.zw=outputWords[scratchStart].xy;', shader)
-                                self.assertIn('result.owner.w=state.w|(motionProbe<<8)|(blocked?1048576u:0u)|(rested?2097152u:0u)|(outputWords[scratchStart].w<<22);', shader)
-                                self.assertIn('outputWords[stateAt+2u].w=motionProbe;', shader)
-                                self.assertIn('outputWords[stateAt+3u]=uvec4(0u);', shader)
-                                self.assertIn('atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].z,(safe==0?4u:0u)|(blocked?8u:0u));', shader)
-                                self.assertIn('((outputWords[stateAt+3u].z|(safe==0?16u:0u))<<6)', shader)
-                                self.assertIn('outputWords[gl_GlobalInvocationID.x*8u+2u].x=floatBitsToUint(safe);', shader)
-                                self.assertIn('outputWords[gl_GlobalInvocationID.x*8u+2u].y=floatBitsToUint(safe);', shader)
-                                bounds = shader.index('vec4 bounds=queryBounds(shapeA,ga,recovering||resting);int at=1;')
-                                self.assertLess(shader.index('atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,128u);'), bounds)
-                                self.assertGreater(shader.index('atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,256u);'), bounds)
-                                if compiler == 'dxbc':
-                                    self.assertIn('Marshal.Copy(compiled, actualBytecode, 0, actualBytecode.Length);', Path(names[1]).read_text())
-                                else:
-                                    self.assertIn('Marshal.Copy(compiled, diagnosticCode, 0, diagnosticCode.Length);', Path(names[1]).read_text())
-                                    self.assertIn('finally { SDL.Free(diagnosticHLSL); }', Path(names[1]).read_text())
-                            receipt = json.loads(Path('bin/diagnostics/compiler-source.json').read_text())
-                            self.assertEqual(receipt['motionSPIRVOptimization'], optimization == 'true')
-                            self.assertEqual(receipt['motionSeededBounds'], seeded == 'true')
-                            self.assertEqual(receipt['motionPersistentSweep'], seeded == 'true')
-                            self.assertEqual(receipt['motionPersistentRest'], seeded == 'true')
-                            if seeded == 'true':
-                                self.assertIn('for(uint i=1u;i<g.data.y;i++)', shader)
-                                self.assertIn('rested=outputWords[stateAt+2u].z!=0u;', shader)
-                                self.assertIn('if(contact.depth>uintBitsToFloat(outputWords[restAt+5u].z))', shader)
-                                self.assertEqual(shader.count('uvec4 savedSweep=outputWords[gl_GlobalInvocationID.x*8u+7u];'), 3)
-                                self.assertEqual(shader.count('outputWords[gl_GlobalInvocationID.x*8u+7u]=uvec4(floatBitsToUint(vec2(safe,unsafeFraction)),motionShape,blocked?1u:0u);'), 2)
-                            if optimization == 'false':
-                                self.assertEqual(Path(names[4]).read_text(), originals[names[4]].decode())
-                            else:
-                                self.assertIn("or source.name == 'PhysicsResidentMotionQueries.comp.glsl'", Path(names[4]).read_text())
-                            self.assertEqual(receipt['actualSHA256'], hashlib.sha256(Path(names[0]).read_bytes()).hexdigest())
-                            self.assertEqual(receipt['headSHA'], 'self-check')
+                for newline in (b'\n', b'\r\n'):
+                    with self.subTest(newline=newline):
+                        for name, original in originals.items():
+                            path = Path(name); path.parent.mkdir(parents=True, exist_ok=True)
+                            path.write_bytes(original.replace(b'\n', newline))
+                        with patch.dict(os.environ, GITHUB_SHA='self-check'), redirect_stdout(StringIO()):
+                            exec(compile(code, 'windows-motion-workflow', 'exec'), {})
+                        receipt = json.loads(Path('bin/diagnostics/compiler-source.json').read_text())
+                        self.assertFalse(receipt['motionSourceModified'])
+                        for name in names[1:]:
+                            expected = originals[name].replace(b'\n', newline)
+                            self.assertEqual(Path(name).read_bytes(), expected)
+                            self.assertEqual(receipt['sourceSHA256'][name], hashlib.sha256(expected).hexdigest())
+                        device = Path(names[0]).read_text()
+                        self.assertIn('The expected app-local test WARP module was not selected.', device)
+                        self.assertEqual(device.count('Cold GPU pipeline '), 1)
+                        self.assertEqual(device.count('GPU pipeline ready '), 1)
+                        self.assertEqual(receipt['originalSHA256'], hashlib.sha256(originals[names[0]].replace(b'\n', newline)).hexdigest())
+                        self.assertEqual(receipt['actualSHA256'], hashlib.sha256(Path(names[0]).read_bytes()).hexdigest())
+                        self.assertNotEqual(receipt['originalSHA256'], receipt['actualSHA256'])
+                        self.assertEqual(receipt['headSHA'], 'self-check')
         finally:
             os.chdir(previous)
+        for retired in ('recovery_compiler', 'optimize_motion_spirv', 'seed_motion_bounds'):
+            self.assertNotIn(retired, workflow)
         self.assertLess(workflow.index('name: windows-gpu-fixture'), workflow.index('name: Capture native exception context'))
         self.assertNotIn('ELECTRON2D_TEST_', workflow)
         self.assertIn('Run the complete untraced runtime suite', workflow)

@@ -7,20 +7,6 @@ on:
         description: Successful native package workflow run
         required: true
         type: string
-      recovery_compiler:
-        description: Compare native DXBC for all motion stages; other kernels retain production DXIL
-        type: choice
-        default: dxil
-        options: [dxil, dxbc]
-      optimize_motion_spirv:
-        description: Compare optimized SPIR-V for the four motion stages
-        type: boolean
-        default: false
-
-      seed_motion_bounds:
-        description: Compare first-vertex bounds and persisted motion/contact state
-        type: boolean
-        default: false
 
 permissions:
   contents: read
@@ -36,9 +22,6 @@ jobs:
     env:
       RestoreAdditionalProjectSources: ${{ github.workspace }}/bin/native-feed
       DOTNET_TieredCompilation: '0'
-      RECOVERY_COMPILER: ${{ inputs.recovery_compiler }}
-      MOTION_SPIRV_OPTIMIZATION: ${{ inputs.optimize_motion_spirv }}
-      MOTION_SEED_BOUNDS: ${{ inputs.seed_motion_bounds }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v6
@@ -108,236 +91,14 @@ jobs:
           assert original.count(finish) == 1
           ready = finish.replace('return new(', 'var pipeline = new RenderHandle(', 1) + newline + '        Console.WriteLine($"GPU pipeline ready {DateTime.UtcNow:O}: {name}");' + newline + '        return pipeline;'
           path.write_bytes(instrumented.replace(finish, ready, 1).encode())
-          compiler = Path('src/Servers/Rendering/ShaderCompiler.cs')
-          compiler_original = compiler.read_bytes()
-          generator = Path('tools/shaders/build_runtime.py')
-          generator_original = generator.read_bytes()
-          optimization = os.environ.get('MOTION_SPIRV_OPTIMIZATION', 'false')
-          assert optimization in ('false', 'true')
-          if optimization == 'true':
-              text = generator_original.decode()
-              condition = "and not stem.endswith('.portable'):"
-              assert text.count(condition) == 1
-              text = text.replace(condition, "and (not stem.endswith('.portable') or source.name == 'PhysicsResidentMotionQueries.comp.glsl'):")
-              generator.write_bytes(text.encode())
-          selection = os.environ['RECOVERY_COMPILER']
-          assert selection in ('dxil', 'dxbc')
-          if selection == 'dxbc':
-              text = compiler_original.decode()
-              signature = 'CreateComputePipeline(nint device, byte[] code)'
-              compile = 'var compiled = ShaderCross.CompileDXILFromSPIRV(in info, out var size);'
-              condition = 'if ((SDL.GetGPUShaderFormats(device) & SDL.GPUShaderFormat.DXIL) == 0)'
-              assert text.count(signature) == text.count(compile) == text.count(condition) == 1
-              text = text.replace(signature, 'CreateComputePipeline(nint device, byte[] code, bool nativeRecovery = false)')
-              text = text.replace(condition, 'if (nativeRecovery && (SDL.GetGPUShaderFormats(device) & ShaderCross.GetSPIRVShaderFormats() & SDL.GPUShaderFormat.DXBC) == 0) throw new NotSupportedException("Native recovery requires DXBC support.");' + newline + '                ' + condition)
-              text = text.replace(compile, 'if (nativeRecovery) Console.WriteLine($"Native motion compiler begin {DateTime.UtcNow:O}");' + newline + '                var compiled = nativeRecovery ? ShaderCross.CompileDXBCFromSPIRV(in info, out var size) : ShaderCross.CompileDXILFromSPIRV(in info, out size);')
-              text = text.replace('if (compiled == 0) return 0;', 'if (compiled == 0) { Console.WriteLine("Compute compilation failed: " + SDL.GetError()); return 0; }')
-              text = text.replace('Format = SDL.GPUShaderFormat.DXIL,', 'Format = nativeRecovery ? SDL.GPUShaderFormat.DXBC : SDL.GPUShaderFormat.DXIL,')
-              pipeline = 'var pipeline = new SDL.GPUComputePipelineCreateInfo'
-              assert text.count(pipeline) == 1
-              dump = '''if (nativeRecovery)
-                          {
-                              var actualBytecode = new byte[checked((int)size)];
-                              Marshal.Copy(compiled, actualBytecode, 0, actualBytecode.Length);
-                              var directory = System.IO.Path.Combine(Environment.CurrentDirectory, "bin", "diagnostics", "motion-bytecode");
-                              System.IO.Directory.CreateDirectory(directory);
-                              var key = Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(code));
-                              System.IO.File.WriteAllBytes(System.IO.Path.Combine(directory, key + ".dxbc"), actualBytecode);
-                              Console.WriteLine($"Native motion compiler ready {DateTime.UtcNow:O}: {key}, {actualBytecode.Length} B");
-                          }
-                          '''.replace('\n', newline)
-              text = text.replace(pipeline, dump + pipeline)
-              compiler.write_bytes(text.encode())
-              call = 'ShaderCompiler.CreateComputePipeline(Device, bytes.ToArray())'
-              text = path.read_text()
-              assert text.count(call) == 1
-              kinds = 'name is "PhysicsResidentMotionQueries0.comp.portable.spv" or "PhysicsResidentMotionQueries1.comp.portable.spv" or "PhysicsResidentMotionQueries2.comp.portable.spv" or "PhysicsResidentMotionQueries3.comp.portable.spv"'
-              path.write_text(text.replace(call, 'ShaderCompiler.CreateComputePipeline(Device, bytes.ToArray(), ' + kinds + ')'))
-          if selection == 'dxil' and optimization == 'true':
-              text = compiler.read_text()
-              pipeline = 'var pipeline = new SDL.GPUComputePipelineCreateInfo'
-              assert text.count(pipeline) == 1
-              dump = '''var diagnosticCode = new byte[checked((int)size)];
-                          Marshal.Copy(compiled, diagnosticCode, 0, diagnosticCode.Length);
-                          var diagnosticDirectory = System.IO.Path.Combine(Environment.CurrentDirectory, "bin", "diagnostics", "motion-bytecode");
-                          System.IO.Directory.CreateDirectory(diagnosticDirectory);
-                          var diagnosticKey = Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(code));
-                          System.IO.File.WriteAllBytes(System.IO.Path.Combine(diagnosticDirectory, diagnosticKey + ".dxil"), diagnosticCode);
-                          System.IO.File.WriteAllBytes(System.IO.Path.Combine(diagnosticDirectory, diagnosticKey + ".spv"), code);
-                          var diagnosticHLSL = ShaderCross.TranspileHLSLFromSPIRV(in info);
-                          if (diagnosticHLSL == 0) throw new InvalidOperationException("Diagnostic HLSL transpilation failed: " + SDL.GetError());
-                          try { System.IO.File.WriteAllText(System.IO.Path.Combine(diagnosticDirectory, diagnosticKey + ".hlsl"), Marshal.PtrToStringUTF8(diagnosticHLSL)!); }
-                          finally { SDL.Free(diagnosticHLSL); }
-                          '''.replace('\n', newline)
-              compiler.write_bytes(text.replace(pipeline, dump + pipeline).encode())
-          if selection == 'dxbc' or optimization == 'true':
-              shader = Path('src/Servers/Physics/Shaders/PhysicsResidentMotionQueries.comp.glsl')
-              text = shader.read_text()
-              result = 'if(rested)result=restResult;else safe=unsafeFraction=1;'
-              assert text.count(result) == 1
-              state = '    bool converged=false;'
-              translate = '    safe=unsafeFraction=1;motionShape=0u;blocked=false;'
-              publish = '#if E2D_MOTION_STAGE < 3'
-              assert text.count(state) == text.count(translate) == text.count(publish) == 1
-              history = '''#if E2D_MOTION_STAGE == 0
-              uint motionProbe=0u;
-              #else
-              uint motionProbe=outputWords[stateAt+2u].w;
-              #if E2D_MOTION_STAGE == 3
-              outputWords[scratchStart]=uvec4(outputWords[stateAt+2u].xy,outputWords[stateAt+3u].zw);
-              #endif
-              #endif'''
-              text = text.replace(state, state + '\n' + history)
-              text = text.replace(translate, translate + '\n    motionProbe|=(safe==1&&unsafeFraction==1?4u:0u)|(q.motionMargin.xy!=vec2(0)?8u:0u);\n    outputWords[stateAt+3u]=uvec4(0u);\n    outputWords[stateAt+2u].xy=floatBitsToUint(vec2(1));')
-              scan = '    bool recovering=phase==0u,resting=phase==2u;'
-              pair = '                            else movingPair(a,b,ga,gb);'
-              assert text.count(scan) == text.count(pair) == 1
-              text = text.replace(scan, scan + '\n#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2\n    atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].z,safe==1?1u:0u);\n#endif')
-              traced_pair = '''                            else
-                                          {
-              #if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2
-                                              atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].z,safe==1?2u:0u);
-              #endif
-              #if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2
-                                              atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,1u);
-              #endif
-                                              movingPair(a,b,ga,gb);
-              #if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2
-                                              outputWords[gl_GlobalInvocationID.x*8u+2u].x=floatBitsToUint(safe);
-                                              atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,2u);
-              #endif
-              #if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2
-                                              atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].z,(safe==0?4u:0u)|(blocked?8u:0u));
-              #endif
-                                          }'''
-              text = text.replace(pair, traced_pair)
-              for marker, bit in [('        uvec2 token=payload[q.body.z+own];', 4),
-                                  ('                indexB=uint(node.shape);', 8),
-                                  ('                    if(shapeB.owner.x>=bodyCount', 16)]:
-                  assert text.count(marker) == 1
-                  trace = '#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2\n    atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,' + str(bit) + 'u);\n#endif\n'
-                  text = text.replace(marker, trace + marker)
-              node = '            Node node=nodes[at];'
-              assert text.count(node) == 1
-              root = '''#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2
-                          atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,32u|(node.hasCategory!=0?64u:0u));
-              #endif'''
-              text = text.replace(node, node + '\n' + root)
-              bounds = '        vec4 bounds=queryBounds(shapeA,ga,recovering||resting);int at=1;'
-              assert text.count(bounds) == 1
-              entered = '#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2\n        atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,128u);\n#endif\n'
-              returned_bounds = '\n#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2\n        atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,256u);\n#endif'
-              text = text.replace(bounds, entered + bounds + returned_bounds)
-              end_scan = '    if(resting){rested=found;if(found)restResult=best;return;}'
-              assert text.count(end_scan) == 1
-              text = text.replace(end_scan, '#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2\n    outputWords[gl_GlobalInvocationID.x*8u+2u].y=floatBitsToUint(safe);\n#endif\n' + end_scan)
-
-              history = '''#if E2D_MOTION_STAGE == 0
-              motionProbe=safe==1?1u:0u;
-              #elif E2D_MOTION_STAGE == 1
-              motionProbe=(motionProbe&~2u)|(safe==1?2u:0u);
-              #elif E2D_MOTION_STAGE == 2
-              motionProbe|=(blocked?16u:0u)|(safe!=0?32u:0u)|((outputWords[stateAt+3u].z|(safe==0?16u:0u))<<6);
-              #endif
-              #if E2D_MOTION_STAGE < 3
-              outputWords[stateAt+2u].w=motionProbe;
-              #endif'''
-              text = text.replace(publish, history + '\n' + publish)
-              probe = '''#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 3
-              result.owner.w=state.w|(motionProbe<<8)|(blocked?1048576u:0u)|(rested?2097152u:0u)|(outputWords[scratchStart].w<<22);
-              result.objectID.zw=outputWords[scratchStart].xy;
-              #endif'''
-              shader.write_text(text.replace(result, result + '\n' + probe))
-              query = Path('src/Servers/Physics/GPUPhysicsBodyStore.MotionQueries.cs')
-              text = query.read_text()
-              returned = '        for (var i = 0; i < queries.Length; i++)\n            if (_motionQueryCounts[i] == 0)'
-              field = 'private int[] _motionQueryCounts = [];'
-              assert text.count(returned) == text.count(field) == 1
-              text = text.replace(field, field + '\n    private bool _motionProbeWritten;')
-              probe = '        if (!_motionProbeWritten) { _motionProbeWritten = true; Console.WriteLine($"Motion stage receipt: count={_motionQueryCounts[0]}, flags={results[0].Flags}, state={results[0].Padding}, pairSafe={BitConverter.UInt32BitsToSingle((uint)(results[0].Padding2 & uint.MaxValue))}, scanSafe={BitConverter.UInt32BitsToSingle((uint)(results[0].Padding2 >> 32))}, pairScanFractions=0x{results[0].Padding2:X16}, finalFractions={results[0].Fractions}, travel={results[0].TravelRemainder}"); }\n'
-              query.write_text(text.replace(returned, probe + returned))
-          seeded = os.environ.get('MOTION_SEED_BOUNDS', 'false')
-          assert seeded in ('false', 'true')
-          if seeded == 'true':
-              shader = Path('src/Servers/Physics/Shaders/PhysicsResidentMotionQueries.comp.glsl')
-              text = shader.read_text()
-              original = '    vec2 lo=vec2(3.402823466e38),hi=-lo;\n    for(uint i=0u;i<g.data.y;i++)'
-              assert text.count(original) == 1
-              candidate = '''#ifdef E2D_MOTION_STAGE
-                  vec2 lo=rotate(bodyA.pose.zw,shape.pose.xy+rotate(shape.pose.zw,vertices[g.data.x])),hi=lo;
-                  for(uint i=1u;i<g.data.y;i++)
-              #else
-              ''' + original + '\n#endif'
-              text = text.replace(original, candidate)
-              save_sweep = '    outputWords[gl_GlobalInvocationID.x*8u+7u]=uvec4(floatBitsToUint(vec2(safe,unsafeFraction)),motionShape,blocked?1u:0u);'
-              load_sweep = '''    uvec4 savedSweep=outputWords[gl_GlobalInvocationID.x*8u+7u];
-                  safe=uintBitsToFloat(savedSweep.x);unsafeFraction=uintBitsToFloat(savedSweep.y);
-                  motionShape=savedSweep.z;blocked=savedSweep.w!=0u;'''
-              pair_call = 'movingPair(a,b,ga,gb);'
-              plain_pair = 'else ' + pair_call
-              if plain_pair in text:
-                  text = text.replace(plain_pair, 'else\n                            {\n                                ' + pair_call + '\n                            }')
-              translate = '    safe=unsafeFraction=1;motionShape=0u;blocked=false;'
-              assert text.count(pair_call) == 1 and text.count(translate) == 1
-              text = text.replace(pair_call, '#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2\n' + load_sweep + '\n#endif\n' + pair_call + '\n#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2\n' + save_sweep + '\n#endif')
-              text = text.replace(translate, translate + '\n' + save_sweep)
-              sweep_scan = '    if(q.motionMargin.xy!=vec2(0))scan(1u);'
-              assert text.count(sweep_scan) == 2
-              text = text.replace(sweep_scan, sweep_scan + '\n' + load_sweep, 1)
-              best_contact = '                                    if(contact.depth>bestDepth)\n                                    {bestDepth=contact.depth;if(resting)best=snapshot(contact);found=true;}'
-              assert text.count(best_contact) == 1
-              retained_contact = '''#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 3
-                                                  uint restAt=gl_GlobalInvocationID.x*8u;
-                                                  if(contact.depth>uintBitsToFloat(outputWords[restAt+5u].z))
-                                                  {
-                                                      Result restSample=snapshot(contact);
-                                                      outputWords[restAt]=restSample.identity;outputWords[restAt+1u]=restSample.shapes;
-                                                      outputWords[restAt+2u]=restSample.owner;outputWords[restAt+3u]=restSample.objectID;
-                                                      outputWords[restAt+4u]=floatBitsToUint(restSample.pointNormal);
-                                                      outputWords[restAt+5u]=floatBitsToUint(restSample.velocityDepth);
-                                                  }
-              #else
-              ''' + best_contact + '\n#endif'
-              text = text.replace(best_contact, retained_contact)
-              rest_scan = '    if(blocked||(recovered&&(q.policy.z&1u)!=0u))\n    {bodyA.pose.xy+=unsafeFraction*q.motionMargin.xy;scan(2u);}'
-              assert text.count(rest_scan) == 1
-              restore_contact = '''
-                  recovery=uintBitsToFloat(state.xy);
-                  rested=outputWords[stateAt+2u].z!=0u;
-                  if(rested)restResult=Result(outputWords[stateAt],outputWords[stateAt+1u],
-                      outputWords[stateAt+2u],outputWords[stateAt+3u],uintBitsToFloat(outputWords[stateAt+4u]),
-                      uintBitsToFloat(outputWords[stateAt+5u]),vec4(0),vec4(0));'''
-              text = text.replace(rest_scan, '    outputWords[stateAt+2u].z=0u;\n    outputWords[stateAt+5u].z=floatBitsToUint(min(length(q.motionMargin.xy),q.motionMargin.z*0.05));\n' + rest_scan + '\n' + load_sweep + restore_contact)
-              shader.write_text(text)
           Path('bin/diagnostics').mkdir(parents=True, exist_ok=True)
-          receipt = {'compiler': selection + ' motion; DXIL remaining kernels', 'headSHA': os.environ['GITHUB_SHA'], 'instrumentedSource': str(path),
+          receipt = {'headSHA': os.environ['GITHUB_SHA'], 'instrumentedSource': str(path),
                      'originalSHA256': hashlib.sha256(original_bytes).hexdigest(),
                      'actualSHA256': hashlib.sha256(path.read_bytes()).hexdigest(),
-                     'originalCompilerSHA256': hashlib.sha256(compiler_original).hexdigest(),
-                     'actualCompilerSHA256': hashlib.sha256(compiler.read_bytes()).hexdigest(),
-                     'motionSPIRVOptimization': optimization == 'true',
-                     'motionSeededBounds': seeded == 'true',
-                     'motionPersistentSweep': seeded == 'true',
-                     'motionPersistentRest': seeded == 'true',
-                     'originalGeneratorSHA256': hashlib.sha256(generator_original).hexdigest(),
-                     'actualGeneratorSHA256': hashlib.sha256(generator.read_bytes()).hexdigest(),
-                     'motionStages': ['initial recovery', 'continued recovery x3', 'translation', 'rest and result'],
-                     'probeHistoryBits': {'0': 'initial recovery safe=1', '1': 'last continued recovery safe=1',
-                                          '2': 'translation starts safe=unsafe=1', '3': 'translation input motion nonzero',
-                                          '4': 'translation exits blocked', '5': 'translation exits safe nonzero',
-                                          '6': 'scan enters safe=1', '7': 'any pair enters safe=1',
-                                          '8': 'any pair exits safe=0', '9': 'any pair exits blocked',
-                                          '10': 'scan exits safe=0'},
-                     'probeResultBits': {'0-7': 'incoming state flags', '8-18': 'probe history', '20': 'final blocked', '21': 'rested',
-                                         '22': 'any pair entered', '23': 'any pair returned',
-                                         '24': 'any source shape visited', '25': 'any BVH leaf visited',
-                                         '26': 'any candidate passed filters', '27': 'any BVH node read',
-                                         '28': 'any read node category nonzero', '29': 'query bounds entered',
-                                         '30': 'query bounds returned'},
-                     'probeFractions': {'low32': 'last pair-return safe fraction bits, defaults to one',
-                                        'high32': 'last end-of-scan safe fraction bits, defaults to one'},
-                     'shaderSHA256': {name: hashlib.sha256(Path(name).read_bytes()).hexdigest() for name in
-                         ['src/Servers/Rendering/ShaderCompiler.cs', 'src/Servers/Physics/GPUPhysicsBodyStore.MotionQueries.cs',
+                     'motionSourceModified': False,
+                     'sourceSHA256': {name: hashlib.sha256(Path(name).read_bytes()).hexdigest() for name in
+                         ['tools/shaders/build_runtime.py', 'src/Servers/Rendering/ShaderCompiler.cs',
+                          'src/Servers/Physics/GPUPhysicsBodyStore.MotionQueries.cs',
                           'src/Servers/Physics/Shaders/PhysicsResidentMotionQueries.comp.glsl']}}
           Path('bin/diagnostics/compiler-source.json').write_text(json.dumps(receipt, indent=2) + '\n')
           print(json.dumps(receipt))
@@ -362,19 +123,6 @@ jobs:
           if (!((Get-Content $log) -ccontains 'Electron2D checks passed.')) {
               throw 'The complete runtime completion marker is missing.'
           }
-      - name: Disassemble actual native motion bytecode
-        if: always() && inputs.recovery_compiler == 'dxbc'
-        continue-on-error: true
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $compiler = Get-ChildItem "${env:ProgramFiles(x86)}/Windows Kits/10/bin" -Filter fxc.exe -Recurse |
-              Where-Object { $_.Directory.Name -eq 'x64' } | Sort-Object FullName | Select-Object -Last 1
-          if (!$compiler) { throw 'The SDK FXC disassembler is unavailable.' }
-          foreach ($module in Get-ChildItem bin/diagnostics/motion-bytecode/*.dxbc) {
-              & $compiler.FullName /dumpbin /nologo $module.FullName 2>&1 | Set-Content ($module.FullName + '.asm')
-              if ($LASTEXITCODE -ne 0) { throw "Native bytecode disassembly failed: $($module.Name)" }
-          }
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -383,7 +131,6 @@ jobs:
             bin/diagnostics/compiler-source.json
             bin/diagnostics/warp-source.json
             bin/diagnostics/full-runtime.log
-            bin/diagnostics/motion-bytecode/
           if-no-files-found: error
       - name: Capture native exception context
         if: steps.fixture.outcome == 'failure'
@@ -400,7 +147,6 @@ jobs:
             bin/diagnostics/warp-source.json
             bin/diagnostics/full-runtime.log
             bin/diagnostics/cdb/
-            bin/diagnostics/motion-bytecode/
           if-no-files-found: error
       - name: Preserve the fixture failure
         if: steps.fixture.outcome == 'failure'

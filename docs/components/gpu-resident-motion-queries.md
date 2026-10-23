@@ -76,72 +76,43 @@ only the final 128-byte result is downloaded. Vulkan retains its single optimize
 module. Numerical limits, early recovery convergence, zero-motion skipping and
 the eight directed refinements are unchanged.
 
-Recovery passes carry only recovery state. Translation initializes its own
-full-motion bracket and source/blocked fields; only translation writes the
-fractions record consumed by final rest sampling. The Windows DXBC probe at
-`a3e869b03` observed zero incoming fractions with no blocked flag, causing sweep
-to skip. The revised ownership removes those unused recovery-stage fraction
-reads/writes. The target probe at `f46bdc94b` still observes the same zero-fraction
-miss, so this simplification does not correct the Windows failure. The completed
-`9df050e6e` diagnostic records history mask 15: translation enters with a full
-bracket and nonzero motion, then exits scan with safe zero and blocked false.
-Actual diagnostic DXBC and SDK assembly are retained; compilation dominates cold
-pipeline cost. Staged SPIR-V optimization lets DXIL create all four pipelines,
-but its first public motion query still misses.
+Recovery passes carry only recovery state. Translation initializes its full-motion
+bracket in the existing final prefix word, loads it before each candidate pair
+and stores it immediately afterwards. The caller reloads that same record after
+the complete scan. Final rest sampling retains each accepted deeper contact in
+the first six prefix words, using the original depth threshold; final output
+reloads the sweep, recovery and retained contact records. Portable query bounds
+start with the first transformed vertex, then visit all remaining vertices in
+order. The caller already excludes empty geometry. All four portable stages now
+use offline SPIR-V optimization. No buffer, transfer, fence, geometry visit or
+physical refinement is added or removed; the ordinary Vulkan branch is unchanged.
 
-An explicit pair-result refactor passed fifteen local numerical/allocation groups
-across three compiler profiles, but `a88b26ee5` still fails Windows: ordinary DXIL
-aborts in initial pipeline creation; optimized DXIL creates all pipelines and
-returns the same miss. That refactor is removed from production. Its prototype
-and receipts remain diagnostic evidence. The staged optimizer remains a manual
-comparison; ordinary full suites are required and production compiler selection
-is unchanged.
+The preceding optimized DXIL diagnostic passes the complete public GPU compound
+fixture in run 39997310087 at `dbbfc9c2b`, including scene/raw/Area slots, momentum,
+private history and 128 cycles at 0/0 bytes. The first hit retains safe/unsafe
+fractions 0.49609375/0.5 and travel 9.921875. The corresponding complete Windows
+control is run 39999737324 at `7e186ac72`; its final result is still pending.
+That control includes diagnostic result-lane observations. The production port
+removes them and requires its own complete Windows/Metal execution gate.
 
-The optimized HLSL roundtrip control recompiles all four transpiled stages to
-SPIR-V with DXC and passes the local compound and motion suites. This checks that
-particular translated program on Vulkan, without establishing Windows execution.
-The manual optimized DXIL control now retains its actual HLSL, SPIR-V and DXIL,
-plus atomic observations at scan and pair boundaries in the existing unused
-result lanes. Those observations supplement the incoming-fraction receipt; no
-production kernel, physical iteration count, buffer or host readback changes.
+Earlier DXBC, explicit pair-result, traversal and bounds-only controls did not
+correct the Windows miss. The pair/scan observations narrowed lost state to the
+translation accumulator and final contact. They do not establish a definitive
+driver/compiler root cause. Those temporary source rewrites are retired from the
+manual workflow, which now runs the production motion source with cold-pipeline
+logging and the existing failure-preserving debugger replay.
 
-Run 39977297656 creates all four optimized DXIL pipelines but still returns the
-first motion miss. Its history mask 1103 records scan entry at safe one and exit
-at zero without a positive pair-predicate observation. Those conditional bits do
-not prove whether a pair was visited. The next diagnostic adds unconditional
-source-shape, BVH-leaf, accepted-candidate and pair entry/return marks in unused
-result padding. The exact four HLSL files captured on Windows match local
-transpilation byte for byte; their SPIR-V roundtrip passes the local compound and
-motion suites. This preserves the native failure and does not identify a driver
-or compiler root cause by itself.
-
-Run 39979520500 retains the same miss and history 1103. Its unconditional mask
-is four: source shapes are visited, while no BVH leaf, accepted candidate or
-pair entry/return is observed. The next manual control makes portable BVH descent
-and advance explicit branches instead of continuing from the internal-node
-branch. It keeps the tree, culling, traversal order and complete numerical work;
-all portable recovery/translation/rest phases share that control. The default is
-false. Run 39981853967 creates all four pipelines but returns the same miss,
-history 1103 and unconditional mask four. Explicit descent/advance therefore
-does not correct the native failure, and production sources remain unchanged.
-The next investigation needs source geometry/policy and root-node/culling data;
-these controls do not establish a control-flow, driver or compiler root cause.
-
-The next diagnostic replaces the historical incoming-fraction padding receipt
-with the last visited source's vertex count, geometry kind and policy flags.
-Additional root-read, category, broad-test and internal-node bits distinguish
-pre-traversal rejection from tree culling. These observations use the same unused
-result lanes and existing readback; numerical behavior and production sources
-remain unchanged.
-
-The earlier single portable traversal still aborted in Windows WARP 1.0.21
-`ScopeNestedCFG::runOnFunction`. Flattening motion phases and removing one sweep
-unroll prohibition did not fix it; the FXC control rejected nested loop attributes.
-Run 39943168703 still fails in the initial recovery pipeline after the three-pass
-split. Each recovery attempt now executes separately, retaining early convergence
-as device state. This removes the remaining outer recovery loop without unrolling
-or duplicating geometry code. Target Windows/Metal execution remains a separate
-required gate.
+Local production-port controls force the ordered path on Linux Vulkan without
+shader probes and pass the complete compound, functional motion and resident/
+public one-way cohorts. Warmed intervals remain 0/0 bytes. The ordinary Vulkan
+module retains SHA-256
+`79fb6af39ee14df2d86e25cbc419dfc1596ad1275211eb97258c165cab41d87f`.
+All five modules retain eight readonly buffers, one uniform and 64x1x1 workgroups.
+Optimization removes the unused center binding from the first three portable
+stages, which reflect three writable buffers; final output and ordinary Vulkan
+reflect four. Host storage, binding positions and final result size are unchanged.
+Generation checks pass include invalidation, phase separation, cleanup and
+fresh-consumer embedding. These are local checks, not Windows/Metal acceptance.
 
 ## CPU corrections found by comparison
 

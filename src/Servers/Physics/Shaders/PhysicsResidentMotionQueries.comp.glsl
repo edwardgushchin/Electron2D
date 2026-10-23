@@ -196,8 +196,13 @@ void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
 }
 vec4 queryBounds(Shape shape,Geometry g,bool recovering)
 {
+#ifdef E2D_MOTION_STAGE
+    vec2 lo=rotate(bodyA.pose.zw,shape.pose.xy+rotate(shape.pose.zw,vertices[g.data.x])),hi=lo;
+    for(uint i=1u;i<g.data.y;i++)
+#else
     vec2 lo=vec2(3.402823466e38),hi=-lo;
     for(uint i=0u;i<g.data.y;i++)
+#endif
     {
         vec2 point=rotate(bodyA.pose.zw,shape.pose.xy+rotate(shape.pose.zw,vertices[g.data.x+i]));lo=min(lo,point);hi=max(hi,point);
     }
@@ -264,11 +269,34 @@ void scan(uint phase)
                                     if(!oneWayContact(contact)){invalid=true;continue;}
                                     accepted=true;
                                     if(recovering)retainRecovery(contact);
+#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 3
+                                    uint restAt=gl_GlobalInvocationID.x*8u;
+                                    if(contact.depth>uintBitsToFloat(outputWords[restAt+5u].z))
+                                    {
+                                        Result restSample=snapshot(contact);
+                                        outputWords[restAt]=restSample.identity;outputWords[restAt+1u]=restSample.shapes;
+                                        outputWords[restAt+2u]=restSample.owner;outputWords[restAt+3u]=restSample.objectID;
+                                        outputWords[restAt+4u]=floatBitsToUint(restSample.pointNormal);
+                                        outputWords[restAt+5u]=floatBitsToUint(restSample.velocityDepth);
+                                    }
+#else
                                     if(contact.depth>bestDepth)
                                     {bestDepth=contact.depth;if(resting)best=snapshot(contact);found=true;}
+#endif
                                 }
                             }
-                            else movingPair(a,b,ga,gb);
+                            else
+                            {
+#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2
+                                uvec4 sweep=outputWords[gl_GlobalInvocationID.x*8u+7u];
+                                safe=uintBitsToFloat(sweep.x);unsafeFraction=uintBitsToFloat(sweep.y);
+                                motionShape=sweep.z;blocked=sweep.w!=0u;
+#endif
+                                movingPair(a,b,ga,gb);
+#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2
+                                outputWords[gl_GlobalInvocationID.x*8u+7u]=uvec4(floatBitsToUint(vec2(safe,unsafeFraction)),motionShape,blocked?1u:0u);
+#endif
+                            }
                         }
                         if(recovering&&invalid&&!accepted&&rejectedCount<32u)
                             WRITE_UINT(scratchStart+32u+rejectedCount++,uvec4(shapeA.owner.zw,indexB,shapeB.policy.x));
@@ -305,7 +333,7 @@ void main()
     if(bodyA.flags.x!=q.body.y||bodyA.flags.w==0u){fail();return;}
     bodyA.pose=q.pose;
 #ifdef E2D_MOTION_STAGE
-    // Persist only phase state in the existing result prefix between ordered device passes.
+    // Retain phase and contact state in the existing result prefix across geometry calls.
     uint stateAt=i*8u;
     bool converged=false;
 #if E2D_MOTION_STAGE > 0
@@ -321,10 +349,23 @@ void main()
     if(!converged){vec2 before=recovery;scan(0u);converged=before==recovery;}
 #elif E2D_MOTION_STAGE == 2
     safe=unsafeFraction=1;motionShape=0u;blocked=false;
+    outputWords[stateAt+7u]=uvec4(floatBitsToUint(vec2(safe,unsafeFraction)),motionShape,blocked?1u:0u);
     if(q.motionMargin.xy!=vec2(0))scan(1u);
+    uvec4 sweep=outputWords[stateAt+7u];
+    safe=uintBitsToFloat(sweep.x);unsafeFraction=uintBitsToFloat(sweep.y);
+    motionShape=sweep.z;blocked=sweep.w!=0u;
 #else
+    outputWords[stateAt+2u].z=0u;
+    outputWords[stateAt+5u].z=floatBitsToUint(min(length(q.motionMargin.xy),q.motionMargin.z*0.05));
     if(blocked||(recovered&&(q.policy.z&1u)!=0u))
     {bodyA.pose.xy+=unsafeFraction*q.motionMargin.xy;scan(2u);}
+    uvec4 sweep=outputWords[stateAt+7u];
+    safe=uintBitsToFloat(sweep.x);unsafeFraction=uintBitsToFloat(sweep.y);
+    motionShape=sweep.z;blocked=sweep.w!=0u;recovery=uintBitsToFloat(state.xy);
+    rested=outputWords[stateAt+2u].z!=0u;
+    if(rested)restResult=Result(outputWords[stateAt],outputWords[stateAt+1u],
+        outputWords[stateAt+2u],outputWords[stateAt+3u],uintBitsToFloat(outputWords[stateAt+4u]),
+        uintBitsToFloat(outputWords[stateAt+5u]),vec4(0),vec4(0));
 #endif
 #if E2D_MOTION_STAGE < 3
     outputWords[stateAt+6u]=uvec4(floatBitsToUint(recovery),rejectedCount,(recovered?1u:0u)|(converged?2u:0u));

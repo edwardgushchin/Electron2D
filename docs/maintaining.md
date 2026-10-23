@@ -30,18 +30,18 @@ The macOS producer uses that package project with `NativePackagePlatform=MacOS`;
 
 ## CI matrix
 
-Physics query/CCD compiler-profile changes must retain unchanged optimized Vulkan module hashes and equal native resource/workgroup reflection for each portable pair. Shape queries compile all four operation constants from one numerical source; verify every operation and mixed batches, preserving iteration limits, result segments and one submission without extra readback. Run `python3 -B tools/shaders/check_runtime.py` for variant invalidation, cleanup and embedding, then the focused GPU pipeline, shape, motion and CCD contracts. Offline DXIL compilation is a compiler check; it cannot replace the complete Windows and Metal execution gates. The portable motion phase definitions are profile-specific; its generation self-check covers definition selection, include invalidation and removed-module cleanup. The manual macOS runtime verification repeats the unchanged complete suite for both ARM64 and x64 on the registered Apple Silicon host, using native source receipts and retaining the original failure status. Its optional allocation_trace mode first calibrates the versioned native profiling ABI on the target RID, then retains general-cast object/stack traces and managed assemblies in a separate artifact. The input defaults to false; a profiled run is diagnostic evidence. See [allocation measurement](components/physics-allocation-measurement.md#general-cast-allocation-diagnostics-on-macos-2026-10-23).
+Physics query/CCD compiler-profile changes must retain unchanged optimized Vulkan module hashes and verify native resource/workgroup reflection for each operation or ordered stage. Shape queries compile all four operation constants from one numerical source; verify every operation and mixed batches, preserving iteration limits, result segments and one submission without extra readback. Run `python3 -B tools/shaders/check_runtime.py` for variant invalidation, cleanup and embedding, then the focused GPU pipeline, shape, motion and CCD contracts. Offline DXIL compilation is a compiler check; it cannot replace the complete Windows and Metal execution gates. Optimized portable motion reflection retains eight readonly buffers, one uniform and 64x1x1 workgroups. Initial/continued recovery and translation expose three writable buffers; final output exposes four because it also reads collider centers. The unused center binding is removed by optimization in the first three stages; host buffers and their binding positions remain unchanged. The portable motion phase definitions are profile-specific; its generation self-check covers definition selection, include invalidation and removed-module cleanup. The manual macOS runtime verification repeats the unchanged complete suite for both ARM64 and x64 on the registered Apple Silicon host, using native source receipts and retaining the original failure status. Its optional allocation_trace mode first calibrates the versioned native profiling ABI on the target RID, then retains general-cast object/stack traces and managed assemblies in a separate artifact. The input defaults to false; a profiled run is diagnostic evidence. See [allocation measurement](components/physics-allocation-measurement.md#general-cast-allocation-diagnostics-on-macos-2026-10-23).
 
 An ARM64 Windows native crash reruns the same complete executable under CDB, without the historical DTLS-only selector. The diagnostic retains symbolic exception context/module identities and an eight-minute child deadline inside the ten-minute CI step. It cannot hide or replace the original failed full-suite status.
 
 The manual Windows GPU diagnostic records timestamps before and after each cold
 pipeline creation in its temporary source copy, preserving original/instrumented
-source and compiler hashes. It exercises the current DXIL path after the native
-convenience compiler failed its separate controls. After the complete compound
-fixture passes, the same candidate runs the entire untraced executable without
+device hashes and the unchanged motion/compiler/generator source hashes. It runs
+the current production DXIL shaders and the entire untraced executable without
 a test selector. Its 65-minute fixture budget fits the ordinary 90-minute target
-job budget while leaving time for CDB and artifact upload. Retired lifetime controls are not production fixes;
-the current compiler retains production ownership and preserves the actual fixture failure.
+job budget while leaving time for CDB and artifact upload. Historical DXBC,
+optimizer and result-lane source-copy controls are retired; their successful
+focused results do not replace the complete production target gate.
 For a stalled CDB replay, the debugger interrupts only one exact executable child
 after six minutes and records every native thread stack at that breakpoint. The
 process is checked again through its opened handle before interruption, and the
@@ -51,31 +51,13 @@ spent its deadline in `RtlDebugAllocateHeap` and WARP `ReducibilityAnalysis`. Th
 untraced fixture now runs directly under PowerShell and records the signed exit
 code and its full 32-bit hexadecimal representation before preserving failure;
 zero exit and an exact case-sensitive completion line are both required.
-The optimized DXIL diagnostic now saves its actual SPIR-V, transpiled HLSL and
-compiled DXIL. Both that control and DXBC use the existing result padding for
-phase and atomic scan/pair observations; these probes add no transfer or host
-fallback and do not alter production sources. Preserve their fixture failure.
-Conditional fraction observations are supplemented by unconditional source/leaf/
-candidate and pair entry/return bits. Use those reachability marks before
-attributing missing predicate bits to skipped work.
-The optional seed_motion_bounds input initializes portable query bounds from the
-first vertex, then visits the remaining vertices in the original order. The only
-caller already excludes zero-vertex geometry. The ordinary Vulkan source keeps
-its original branch. This replaces the failed explicit descent/advance control;
-its default is false and it changes only the diagnostic checkout copy. It now
-also retains the translation accumulator in the existing phase-state word before
-and after each candidate pair, restoring it after the complete scan. This keeps
-safe/unsafe fractions, source identity and blocked state together without adding
-a buffer, host transfer or numerical operation. The next control also retains
-accepted deepest rest contacts in the existing result prefix, comparing the same
-depth threshold in device memory. It restores that record and phase state after
-scan. Diagnostic observations use a retired recovery-plane word during the final
-phase so contact writes cannot erase them; rejected-pair keys remain intact.
-The fraction probe uses the existing unused object-result words for the last
-pair-return and end-of-scan safe fractions. Diagnostic state bits retain
-query-bound entry/return and any BVH node/category read. Earlier receipts retain
-their incoming-fraction, source-header or root-predicate interpretation;
-the current receipt names its pair/scan fraction layout explicitly.
+Portable motion initializes bounds from its first vertex after the existing
+empty-geometry rejection, retaining the remaining vertex order. Translation loads
+and saves its bracket around every candidate, and final sampling retains accepted
+deeper contacts in the existing result prefix. Preserve the depth threshold,
+source slot, rejected keys, six device passes and single final readback. All four
+portable stages use offline optimization. Their complete target execution must
+use the production shader source without diagnostic result-lane writes.
 
 Compressed-audio allocation diagnostics use `ELECTRON2D_TEST_AUDIO_COMPRESSED=cpu`
 for the aggregate's managed mixing mode and `1` for complete native output.
@@ -453,7 +435,3 @@ For Custom graph dependency changes, run the root --visual-shader-custom-topolog
 probe and the Custom author/import/render corpus. Cover last incoming edges,
 selected versus overridden cycles, callback count and disconnected providers in
 the other stage; ordinary graph and provider traversal must select the same edges.
-
-The manual Windows recovery_compiler=dxbc control compiles only initial recovery, continued recovery and final-rest motion pipelines through explicit native DXBC. Translation and all other kernels retain DXIL. It records original/actual compiler hashes, requires advertised DXBC support and preserves compilation errors and bytecode ownership. This diagnostic does not change production selection or clear the failed DXIL gate.
-
-Recovery-only DXBC run 39946866011 creates both initial/continued recovery pipelines (about 88/85 seconds cold), then repeats the WARP exception in DXIL translation. The next recovery_compiler=dxbc control includes all four motion stages, keeping other kernels unchanged. Production selection remains DXIL until a complete native control passes.
