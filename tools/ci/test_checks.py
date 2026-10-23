@@ -50,12 +50,16 @@ class Checks(unittest.TestCase):
                             query = Path(names[2]).read_text()
                             shader = Path(names[3]).read_text()
                             if compiler == 'dxil':
+                                self.assertEqual(Path(names[1]).read_text(), originals[names[1]].decode())
                                 self.assertEqual(query, originals[names[2]].decode())
                                 self.assertEqual(shader, originals[names[3]].decode())
                             else:
                                 self.assertEqual(query.count('Motion stage receipt:'), 1)
                                 self.assertIn('result.objectID.zw=fractions.xy;', shader)
-                                self.assertIn('result.owner.w=state.w|(blocked?256u:0u)|(rested?65536u:0u);', shader)
+                                self.assertIn('result.owner.w=state.w|(motionProbe<<8)|(blocked?1048576u:0u)|(rested?2097152u:0u);', shader)
+                                self.assertIn('outputWords[stateAt+2u].w=motionProbe;', shader)
+                                self.assertIn('motionProbe|=(blocked?16u:0u)|(safe!=0?32u:0u);', shader)
+                                self.assertIn('Marshal.Copy(compiled, actualBytecode, 0, actualBytecode.Length);', Path(names[1]).read_text())
                             receipt = json.loads(Path('bin/diagnostics/compiler-source.json').read_text())
                             self.assertEqual(receipt['actualSHA256'], hashlib.sha256(Path(names[0]).read_bytes()).hexdigest())
                             self.assertEqual(receipt['headSHA'], 'self-check')

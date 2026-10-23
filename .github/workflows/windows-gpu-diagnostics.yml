@@ -105,9 +105,23 @@ jobs:
               assert text.count(signature) == text.count(compile) == text.count(condition) == 1
               text = text.replace(signature, 'CreateComputePipeline(nint device, byte[] code, bool nativeRecovery = false)')
               text = text.replace(condition, 'if (nativeRecovery && (SDL.GetGPUShaderFormats(device) & ShaderCross.GetSPIRVShaderFormats() & SDL.GPUShaderFormat.DXBC) == 0) throw new NotSupportedException("Native recovery requires DXBC support.");' + newline + '                ' + condition)
-              text = text.replace(compile, 'var compiled = nativeRecovery ? ShaderCross.CompileDXBCFromSPIRV(in info, out var size) : ShaderCross.CompileDXILFromSPIRV(in info, out size);')
+              text = text.replace(compile, 'if (nativeRecovery) Console.WriteLine($"Native motion compiler begin {DateTime.UtcNow:O}");' + newline + '                var compiled = nativeRecovery ? ShaderCross.CompileDXBCFromSPIRV(in info, out var size) : ShaderCross.CompileDXILFromSPIRV(in info, out size);')
               text = text.replace('if (compiled == 0) return 0;', 'if (compiled == 0) { Console.WriteLine("Compute compilation failed: " + SDL.GetError()); return 0; }')
               text = text.replace('Format = SDL.GPUShaderFormat.DXIL,', 'Format = nativeRecovery ? SDL.GPUShaderFormat.DXBC : SDL.GPUShaderFormat.DXIL,')
+              pipeline = 'var pipeline = new SDL.GPUComputePipelineCreateInfo'
+              assert text.count(pipeline) == 1
+              dump = '''if (nativeRecovery)
+                          {
+                              var actualBytecode = new byte[checked((int)size)];
+                              Marshal.Copy(compiled, actualBytecode, 0, actualBytecode.Length);
+                              var directory = System.IO.Path.Combine(Environment.CurrentDirectory, "bin", "diagnostics", "motion-bytecode");
+                              System.IO.Directory.CreateDirectory(directory);
+                              var key = Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(code));
+                              System.IO.File.WriteAllBytes(System.IO.Path.Combine(directory, key + ".dxbc"), actualBytecode);
+                              Console.WriteLine($"Native motion compiler ready {DateTime.UtcNow:O}: {key}, {actualBytecode.Length} B");
+                          }
+                          '''.replace('\n', newline)
+              text = text.replace(pipeline, dump + pipeline)
               compiler.write_bytes(text.encode())
               call = 'ShaderCompiler.CreateComputePipeline(Device, bytes.ToArray())'
               text = path.read_text()
@@ -118,8 +132,30 @@ jobs:
               text = shader.read_text()
               result = 'if(rested)result=restResult;else safe=unsafeFraction=1;'
               assert text.count(result) == 1
+              state = '    bool converged=false;'
+              translate = '    safe=unsafeFraction=1;motionShape=0u;blocked=false;'
+              publish = '#if E2D_MOTION_STAGE < 3'
+              assert text.count(state) == text.count(translate) == text.count(publish) == 1
+              history = '''#if E2D_MOTION_STAGE == 0
+              uint motionProbe=0u;
+              #else
+              uint motionProbe=outputWords[stateAt+2u].w;
+              #endif'''
+              text = text.replace(state, state + '\n' + history)
+              text = text.replace(translate, translate + '\n    motionProbe|=(safe==1&&unsafeFraction==1?4u:0u)|(q.motionMargin.xy!=vec2(0)?8u:0u);')
+              history = '''#if E2D_MOTION_STAGE == 0
+              motionProbe=safe==1?1u:0u;
+              #elif E2D_MOTION_STAGE == 1
+              motionProbe=(motionProbe&~2u)|(safe==1?2u:0u);
+              #elif E2D_MOTION_STAGE == 2
+              motionProbe|=(blocked?16u:0u)|(safe!=0?32u:0u);
+              #endif
+              #if E2D_MOTION_STAGE < 3
+              outputWords[stateAt+2u].w=motionProbe;
+              #endif'''
+              text = text.replace(publish, history + '\n' + publish)
               probe = '''#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 3
-              result.owner.w=state.w|(blocked?256u:0u)|(rested?65536u:0u);
+              result.owner.w=state.w|(motionProbe<<8)|(blocked?1048576u:0u)|(rested?2097152u:0u);
               result.objectID.zw=fractions.xy;
               #endif'''
               shader.write_text(text.replace(result, result + '\n' + probe))
@@ -138,8 +174,13 @@ jobs:
                      'originalCompilerSHA256': hashlib.sha256(compiler_original).hexdigest(),
                      'actualCompilerSHA256': hashlib.sha256(compiler.read_bytes()).hexdigest(),
                      'motionStages': ['initial recovery', 'continued recovery x3', 'translation', 'rest and result'],
+                     'probeHistoryBits': {'0': 'initial recovery safe=1', '1': 'last continued recovery safe=1',
+                                          '2': 'translation starts safe=unsafe=1', '3': 'translation input motion nonzero',
+                                          '4': 'translation exits blocked', '5': 'translation exits safe nonzero'},
+                     'probeResultBits': {'0-7': 'incoming state flags', '8-13': 'probe history', '20': 'final blocked', '21': 'rested'},
                      'shaderSHA256': {name: hashlib.sha256(Path(name).read_bytes()).hexdigest() for name in
-                         ['src/Servers/Rendering/ShaderCompiler.cs', 'src/Servers/Physics/Shaders/PhysicsResidentMotionQueries.comp.glsl']}}
+                         ['src/Servers/Rendering/ShaderCompiler.cs', 'src/Servers/Physics/GPUPhysicsBodyStore.MotionQueries.cs',
+                          'src/Servers/Physics/Shaders/PhysicsResidentMotionQueries.comp.glsl']}}
           Path('bin/diagnostics/compiler-source.json').write_text(json.dumps(receipt, indent=2) + '\n')
           print(json.dumps(receipt))
           PY
@@ -163,6 +204,19 @@ jobs:
           if (!((Get-Content $log) -ccontains 'Compound GPU: transformed slots, gaps and disabled indices passed.')) {
               throw 'The compound completion marker is missing.'
           }
+      - name: Disassemble actual native motion bytecode
+        if: always() && inputs.recovery_compiler == 'dxbc'
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $compiler = Get-ChildItem "${env:ProgramFiles(x86)}/Windows Kits/10/bin" -Filter fxc.exe -Recurse |
+              Where-Object { $_.Directory.Name -eq 'x64' } | Sort-Object FullName | Select-Object -Last 1
+          if (!$compiler) { throw 'The SDK FXC disassembler is unavailable.' }
+          foreach ($module in Get-ChildItem bin/diagnostics/motion-bytecode/*.dxbc) {
+              & $compiler.FullName /dumpbin /nologo $module.FullName 2>&1 | Set-Content ($module.FullName + '.asm')
+              if ($LASTEXITCODE -ne 0) { throw "Native bytecode disassembly failed: $($module.Name)" }
+          }
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -171,6 +225,7 @@ jobs:
             bin/diagnostics/compiler-source.json
             bin/diagnostics/warp-source.json
             bin/diagnostics/compound.log
+            bin/diagnostics/motion-bytecode/
           if-no-files-found: error
       - name: Capture native exception context
         if: steps.fixture.outcome == 'failure'
@@ -187,6 +242,7 @@ jobs:
             bin/diagnostics/warp-source.json
             bin/diagnostics/compound.log
             bin/diagnostics/cdb/
+            bin/diagnostics/motion-bytecode/
           if-no-files-found: error
       - name: Preserve the fixture failure
         if: steps.fixture.outcome == 'failure'

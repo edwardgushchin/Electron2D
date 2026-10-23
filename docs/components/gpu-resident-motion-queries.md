@@ -81,8 +81,11 @@ full-motion bracket and source/blocked fields; only translation writes the
 fractions record consumed by final rest sampling. The Windows DXBC probe at
 `a3e869b03` observed zero incoming fractions with no blocked flag, causing sweep
 to skip. The revised ownership removes those unused recovery-stage fraction
-reads/writes. This is a candidate correction until the target probe and ordinary
-full suites pass; production compiler selection remains unchanged.
+reads/writes. The target probe at `f46bdc94b` still observes the same zero-fraction
+miss, so this simplification does not correct the Windows failure. The next
+diagnostic records bracket/blocked flags at each phase boundary in unused result
+padding and retains actual compiled DXBC plus separate compiler/pipeline timing.
+Ordinary full suites remain required; production compiler selection is unchanged.
 
 The earlier single portable traversal still aborted in Windows WARP 1.0.21
 `ScopeNestedCFG::runOnFunction`. Flattening motion phases and removing one sweep
