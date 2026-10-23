@@ -125,8 +125,7 @@ internal static class LinkButtonTests
                 RunFixtureTool("/usr/bin/plutil", "-lint", plist);
                 RunFixtureTool("/usr/bin/lipo", "-info", System.IO.Path.Combine(app, "Contents", "MacOS", "applet"));
                 RunFixtureTool("/usr/bin/codesign", "--force", "--sign", "-", app);
-                registered = true; RunFixtureTool(register, "-f", "-v", app);
-                BindMacURI(scheme, bundleID);
+                registered = true; BindMacURI(app, scheme, bundleID);
             }
             else
             {
@@ -161,10 +160,10 @@ internal static class LinkButtonTests
             finally { Directory.Delete(folder, true); }
         }
     }
-    private static unsafe void BindMacURI(string scheme, string bundleID)
+    private static unsafe void BindMacURI(string app, string scheme, string bundleID)
     {
         var core = NativeLibrary.Load("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation");
-        nint services = 0, schemeRef = 0, bundleRef = 0, handlers = 0, current = 0;
+        nint services = 0, appRef = 0, schemeRef = 0, bundleRef = 0, handlers = 0, current = 0;
         delegate* unmanaged[Cdecl]<nint, void> release = null;
         try
         {
@@ -174,10 +173,16 @@ internal static class LinkButtonTests
             var count = (delegate* unmanaged[Cdecl]<nint, nint>)NativeLibrary.GetExport(core, "CFArrayGetCount");
             var item = (delegate* unmanaged[Cdecl]<nint, nint, nint>)NativeLibrary.GetExport(core, "CFArrayGetValueAtIndex");
             var copyText = (delegate* unmanaged[Cdecl]<nint, nint, nint, uint, byte>)NativeLibrary.GetExport(core, "CFStringGetCString");
+            var createURL = (delegate* unmanaged[Cdecl]<nint, nint, nint, byte, nint>)NativeLibrary.GetExport(core, "CFURLCreateFromFileSystemRepresentation");
             services = NativeLibrary.Load("/System/Library/Frameworks/CoreServices.framework/CoreServices");
+            var registerApp = (delegate* unmanaged[Cdecl]<nint, byte, int>)NativeLibrary.GetExport(services, "LSRegisterURL");
             var claims = (delegate* unmanaged[Cdecl]<nint, nint>)NativeLibrary.GetExport(services, "LSCopyAllHandlersForURLScheme");
             var bind = (delegate* unmanaged[Cdecl]<nint, nint, int>)NativeLibrary.GetExport(services, "LSSetDefaultHandlerForURLScheme");
             var read = (delegate* unmanaged[Cdecl]<nint, nint>)NativeLibrary.GetExport(services, "LSCopyDefaultHandlerForURLScheme");
+            var pathBytes = System.Text.Encoding.UTF8.GetBytes(app);
+            fixed (byte* path = pathBytes) appRef = createURL(0, (nint)path, pathBytes.Length, 1);
+            Check(appRef != 0, "Native URI app URL must be created.");
+            var registered = registerApp(appRef, 1); Check(registered == 0, "Native URI app registration failed: " + registered);
             fixed (byte* a = System.Text.Encoding.UTF8.GetBytes(scheme + '\0')) schemeRef = create(0, (nint)a, 0x08000100);
             fixed (byte* b = System.Text.Encoding.UTF8.GetBytes(bundleID + '\0')) bundleRef = create(0, (nint)b, 0x08000100);
             Check(schemeRef != 0 && bundleRef != 0, "Native URI strings must be created.");
@@ -199,6 +204,7 @@ internal static class LinkButtonTests
             {
                 if (current != 0) release(current); if (handlers != 0) release(handlers);
                 if (bundleRef != 0) release(bundleRef); if (schemeRef != 0) release(schemeRef);
+                if (appRef != 0) release(appRef);
             }
             if (services != 0) NativeLibrary.Free(services); NativeLibrary.Free(core);
         }
