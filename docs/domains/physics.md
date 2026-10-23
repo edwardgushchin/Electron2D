@@ -6,7 +6,7 @@
 translation fractions after recovery instead of carrying unused fractions through
 recovery passes. Existing iteration/transfer limits and public declarations stay
 unchanged; the component distinguishes the Windows failure from target acceptance.
-Portable modules fix their recovery/sweep/rest role from the compile-time stage;
+Portable recovery invokes its unchanged projection after the geometry scan;
 native acceptance remains pending after a trace reached contacts but not projection.
 
 [Resident shape-query specialization](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)

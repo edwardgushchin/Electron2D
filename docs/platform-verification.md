@@ -71,9 +71,13 @@ recovery tracing now observes the traversal/contact/reducer boundary through
 existing result padding; its output is diagnostic, not production acceptance.
 Run 40016536236 at `8cdedf1b3` fails both focused processes. Its trace retains
 one accepted recovery plane and positive depth 2.0799999237 but never enters
-projection, then marks the unchanged correction converged. Portable scan roles
-are now specialized by their module stage; this candidate still needs an ordinary
-Windows run and the final complete source matrix.
+projection, then marks the unchanged correction converged. The role-only
+specialization at `eec1e6dce` has identical initial-stage HLSL after temporary-name
+normalization and is retired as a correction. Portable recovery now calls
+projection after scan returns; this candidate still needs an ordinary Windows
+run and the final complete source matrix.
+The ordinary role-only run 40018224090 repeats both zero-recovery failures,
+retaining unchanged source hashes and skipping the full suite after preflight.
 
 Final complete CI, public package restoration, rendered consumers and release
 publication remain pending. The current declaration register is not a substitute

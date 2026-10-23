@@ -247,11 +247,7 @@ bool rejectedMotionPair()
 }
 void scan(uint phase)
 {
-#ifdef E2D_MOTION_STAGE
-    const bool recovering=E2D_MOTION_STAGE<2,resting=E2D_MOTION_STAGE==3;
-#else
     bool recovering=phase==0u,resting=phase==2u;
-#endif
     recoveryCount=0u;if(recovering)rejectedCount=0u;
 #if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE < 2
     uint recoveryAt=gl_GlobalInvocationID.x*8u;
@@ -371,12 +367,18 @@ void scan(uint phase)
         }
     }
 #if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE < 2
+}
+void projectRecovery()
+{
+    uint recoveryAt=gl_GlobalInvocationID.x*8u;
     uvec4 recoveryState=outputWords[recoveryAt];
-    recoveryCount=recoveryState.x;rejectedCount=recoveryState.y;bestDepth=uintBitsToFloat(recoveryState.z);
+    recoveryCount=recoveryState.x;rejectedCount=recoveryState.y;float bestDepth=uintBitsToFloat(recoveryState.z);
     outputWords[recoveryAt+6u].z=rejectedCount;
-#endif
+    if(bestDepth>0)
+#else
     if(resting){rested=found;if(found)restResult=best;return;}
     if(recovering&&bestDepth>0)
+#endif
     {
         recovered=true;
 #if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE < 2
@@ -429,6 +431,7 @@ void main()
         outputWords[stateAt+1u].xy=floatBitsToUint(recovery);
         outputWords[stateAt+6u]=uvec4(floatBitsToUint(recovery),rejectedCount,recovered?1u:0u);
         scan(0u);
+        projectRecovery();
         uvec4 recoveryState=outputWords[stateAt+6u];
         recovery=uintBitsToFloat(recoveryState.xy);rejectedCount=recoveryState.z;recovered=(recoveryState.w&1u)!=0u;
         converged=uintBitsToFloat(outputWords[stateAt+1u].xy)==recovery;

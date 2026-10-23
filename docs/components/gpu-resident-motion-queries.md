@@ -205,16 +205,27 @@ are absent; recovery remains zero and the retained state marks convergence
 without recovery. This narrows the failure to the boundary after contact
 retention and before projection; it does not identify a compiler root cause.
 
-Each portable module now fixes its scan role from `E2D_MOTION_STAGE`: initial/
-continued stages recover, translation sweeps, and final output samples rest.
-They no longer carry dynamic phase-role flags through geometry calls. The
-ordinary Vulkan scan still takes its original phase argument. This candidate
-preserves visits, projection, buffers, passes and thresholds and requires an
-ordinary native rerun.
-Local forced-ordered joint, functional-motion, compound and resident/public
-one-way cohorts pass. All five modules retain their per-stage resource/workgroup
-reflection and the ordinary Vulkan hash above. Generation checks verify 168
-embedded resources plus invalidation, failure retention and cleanup.
+The role-only specialization at `eec1e6dce` passes local forced-ordered joint,
+functional-motion, compound and resident/public one-way cohorts, but its initial
+stage emits identical HLSL after normalizing temporary identifiers. It is retired
+as a correction; compile-time roles were already folded by optimization.
+Its ordinary Windows run 40018224090, artifact 12529174613, repeats both zero-
+recovery failures with raw `0xE0434352` exits. Motion/compiler/generator source
+hashes are unchanged by diagnostics, and the full suite is correctly skipped.
+
+Portable initial/continued stages now call recovery projection from their main
+body after the geometry scan returns, reloading the retained plane count and
+maximum depth and publishing the retained rejected-key count. Scan validation
+failures still set the poisoned-store status.
+The projection formula, four attempts, 32-plane/key caps and six device passes
+are unchanged. The ordinary Vulkan scan retains its original projection location.
+This separates the reduction from the large traversal's early-return flow, the
+observed boundary that retained a plane but skipped projection. Target execution
+must establish whether it corrects the native failure; a driver/compiler root
+cause remains unproven.
+Local forced-ordered public joints, functional motion, compound and resident/
+public one-way cohorts pass with this boundary. All five modules retain their
+per-stage resource/workgroup reflection and the ordinary Vulkan hash above.
 
 ## CPU corrections found by comparison
 

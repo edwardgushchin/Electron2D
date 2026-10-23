@@ -31,7 +31,7 @@ def instrument_shader(text):
         ('                    if(shapeB.owner.x>=bodyCount||mapB.identity.w!=shapeB.policy.x){fail();return;}', '256u'),
         ('                                    if(!contact.valid||contact.depth<0)continue;', '4096u'),
         ('                                    accepted=true;', '8192u'),
-        ('    if(recovering&&bestDepth>0)\n    {', '16384u'),
+        ('        recovered=true;', '16384u'),
         ('        converged=uintBitsToFloat(outputWords[stateAt+1u].xy)==recovery;', 'converged?0u:32768u'),
     )
     for anchor, value in markers:
