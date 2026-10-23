@@ -4,6 +4,29 @@ Last updated: 2026-10-23
 
 ## Scope and ownership
 
+### Runtime lock initialization (2026-10-23)
+
+Profiled macOS ARM64 run `40031605911` at `426798799` fails the complete suite's
+GPU SegmentShape/CapsuleShape cast interval at owner/all-thread `0/64 B`.
+Artifacts `12535108294` and `12535661639` retain the physical trace, calibrated
+recorder and matching CoreLib. Tag `281479272679959` has one 64-byte allocation
+on worker thread `58378`, while the measured owner is `57792`. Its successful
+stack resolves to `System.Threading.LowLevelLock..cctor`, `WaitAndAcquire`,
+`WorkerThreadStart` and `Thread.StartCallback`; the allocated type is
+``System.Func`2``. Both interval boundaries and `STACK_END 0` are present. The
+assertion abort leaves no process-wide shutdown record.
+
+The desktop test entry point now runs that static constructor before selectors,
+fixture creation or allocation intervals. It retains the existing physical
+workloads, warmup counts, positive controls and strict zero-byte assertions.
+The lookup fails explicitly if the runtime no longer exposes the recorded type.
+No production code depends on this internal CLR type. Corrected native execution
+remains required. A local .NET 10.0.13 probe measures 64 B for the first constructor
+call and 0 B for 128 repeated calls. The prepared executable passes the compressed
+CPU audio and GPU compound selectors locally, retaining their zero-byte checks.
+This evidence does not explain the earlier idle-Ogg owner
+`3360 B` or separate-thread joint-policy `2712/19264 B` failures.
+
 The selected-backend Area fixture now uses the calibrated collection/finalization
 helper both before and after its 64 warm full-frame/audio/field cycles. Its former
 private collector did not wait for finalizers after the second collection. The

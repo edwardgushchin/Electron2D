@@ -9,6 +9,10 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+// Prepare the traced one-time CoreCLR lock delegate before strict warmed allocation intervals.
+System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(
+    typeof(object).Assembly.GetType("System.Threading.LowLevelLock", throwOnError: true)!.TypeHandle);
+
 if (args.Length == 3 && args[0] == "--visual-shader-source-hashes") { VisualShaderSourceRegressionTests.Write(args[1], args[2]); return; }
 if (args.SequenceEqual(new[] { "--visual-shader-custom-topology" }))
 {

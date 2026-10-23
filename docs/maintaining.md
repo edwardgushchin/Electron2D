@@ -290,6 +290,15 @@ Before committing an ENet integration change, run `python3 -B tools/enet-native/
 
 Release executable checks set `TieredCompilation=false` in the test project so warmed allocation intervals use a stable optimized JIT profile. Production hosts retain their own runtime configuration. This does not change allocation budgets, operation counts, warm-up/capacity requirements or native/foreign acceptance boundaries. Test runs with tiered compilation enabled are a separate runtime profile and must be labelled explicitly.
 
+The full desktop test executable prepares CoreCLR's `System.Threading.LowLevelLock`
+static constructor at process startup. A calibrated macOS trace attributes one
+64-byte `System.Func` allocation to that constructor on a ThreadPool worker during
+a later GPU-cast interval. This moves known one-time test-host initialization
+before warmed measurements; counters, warmup frames and zero limits remain
+unchanged. The internal type lookup fails explicitly if the tested runtime changes.
+This preparation is confined to the test executable and does not attribute other
+historical allocation deltas. See [the physical evidence](components/physics-allocation-measurement.md#runtime-lock-initialization-2026-10-23).
+
 For strict allocation brackets on runtimes affected by [dotnet/runtime#134724](https://github.com/dotnet/runtime/issues/134724), complete any outstanding background collection with a blocking collection after fixture preparation and before warmup. The upstream [accounting fix](https://github.com/dotnet/runtime/pull/134855) concerns unused allocation-context bytes being counted as allocations. Collection-start counters alone do not detect a background collection already in flight. Preserve the measured operations and the zero-byte assertion; do not subtract a guessed allowance or retry until a sample passes. This setup belongs only in tests, not the runtime frame loop.
 
 When explicitly forcing collection during allocation-test setup, drain finalizers

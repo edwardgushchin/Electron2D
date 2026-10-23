@@ -128,6 +128,23 @@ executes both explicit-Lavapipe SIMD controls even after a passing baseline and
 preserves failure from either control. A separate local 256/512-bit comparison
 uses the isolated CI Mesa library without changing installed system packages.
 
+The corrected Windows ARM64 run `40029790832` at `3bddfb403` passes all three raw
+focused exits with app-local WARP 1.0.21 (artifact `12535550765`). Windows x86 run
+`40031574214` at `426798799` repeats those three zero exits, including shape cast
+and 128 compound cycles at `0/0 B` (artifact `12536460017`). Their full untraced
+executables remain separate gates. Ordinary system-WARP x64/x86 jobs in the older
+matrix instead return shape-cast fractions `1/1`.
+
+The same older matrix finishes with all 18 Build profiles successful and failed
+Tests. Its macOS ARM64 idle-Ogg interval reports `3360` owner bytes; macOS x64
+separate-thread joint edits report `2712/19264` owner/all-thread bytes. Profiled
+ARM64 run `40031605911` fails earlier at GPU SegmentShape/CapsuleShape casts with
+`0/64 B`. Its physical trace identifies a worker's one-time CLR lock constructor,
+so the test entry point now prepares that constructor before measurements; the
+[allocation report](components/physics-allocation-measurement.md#runtime-lock-initialization-2026-10-23)
+retains the exact scope. This does not attribute the older Ogg or joint deltas,
+and corrected complete platform execution remains required.
+
 Final complete CI, public package restoration, rendered consumers and release
 publication remain pending. The current declaration register is not a substitute
 for those gates; no published 0.2.0-alpha release is claimed by these checks.
