@@ -24,7 +24,7 @@ permissions:
 jobs:
   full_suite:
     runs-on: ${{ inputs.rid == 'win-arm64' && 'windows-11-arm' || 'windows-2025' }}
-    timeout-minutes: 90
+    timeout-minutes: 180
     defaults:
       run:
         shell: bash
@@ -189,7 +189,7 @@ jobs:
         id: fixture
         if: steps.compound.outcome == 'success' && steps.joints.outcome == 'success' && steps.motion.outcome == 'success'
         continue-on-error: true
-        timeout-minutes: 65
+        timeout-minutes: 150
         shell: pwsh
         run: |
           $executable = (Resolve-Path 'bin/diagnostics/runner/Electron2D.Tests.exe').Path

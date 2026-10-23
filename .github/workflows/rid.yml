@@ -29,7 +29,7 @@ jobs:
   rid:
     name: ${{ inputs.label }}
     runs-on: ${{ inputs.runner }}
-    timeout-minutes: 90
+    timeout-minutes: ${{ inputs.tests && inputs.suite == 'full' && startsWith(inputs.rid, 'win-') && 180 || 90 }}
     defaults:
       run:
         shell: bash
@@ -135,6 +135,10 @@ jobs:
       - name: Verify x64 application architecture
         if: inputs.tests && inputs.rid == 'osx-x64'
         run: lipo -archs "bin/ci-tests/$CI_RID/Electron2D.Tests" | grep -Fx x86_64
+      - name: Install audited Windows software GPU for runtime checks
+        if: inputs.tests && inputs.suite == 'full' && startsWith(inputs.rid, 'win-')
+        shell: pwsh
+        run: ./tools/ci/install_test_warp.ps1 "bin/ci-tests/$env:CI_RID" "bin/ci/$env:CI_RID/warp" ($env:CI_RID.Substring(4))
       - name: Run GPU compound control in a fresh process
         id: compound_control
         if: inputs.tests && inputs.suite == 'full'

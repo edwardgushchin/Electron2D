@@ -148,9 +148,17 @@ projects, native packages or release consumers; its result cannot establish a
 correction in the operating system's older WARP driver.
 The manual diagnostic selects `win-x64`, `win-x86` or `win-arm64`, using the native
 ARM64 runner for the latter and carrying the same validated RID through publish,
-driver installation, source receipts and CDB. The default remains x64. Ordinary
-Windows RID jobs still use the system driver; a passing app-local control does
-not replace their result or establish a correction for that driver.
+driver installation, source receipts and CDB. The default remains x64. Full
+Windows RID jobs now install the same audited WARP version only in the published
+test runner directory before executing the complete compound and full suites.
+The package remains outside runtime/native/public consumer dependencies. Previous
+system-driver failures remain recorded; the new software-driver baseline requires
+its own complete ordinary CI results and does not establish hardware acceptance.
+Windows full RID jobs have a 180-minute job budget; the manual full fixture has
+150 minutes within a 180-minute job. The prior 65-minute x64 diagnostic still made
+progress at its deadline. These budgets retain every operation and strict
+allocation assertion, require the final completion marker and preserve timeouts
+as failures.
 
 The manual Linux GPU diagnostic first runs the unchanged public compound fixture
 on the registered x64 host. A failed baseline is replayed with candidate-count and

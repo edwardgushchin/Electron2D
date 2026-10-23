@@ -108,6 +108,11 @@ matrix execution remain required.
 The separate x64 full run `40019553649` reaches its 65-minute fixture deadline
 while continuing cold pipeline creation (artifact `12534012054`, 9,274 log lines).
 It has no zero exit or completion marker and does not establish full acceptance.
+Full Windows RID checks now use the audited app-local WARP 1.0.21 test fixture
+with a 180-minute job budget. Manual diagnostics allow 150 minutes for the full
+executable within a 180-minute job. No tests or zero-byte limits are removed;
+complete results on this software-driver baseline remain required. The test DLL
+is absent from engine packages and public consumers.
 
 Linux x64 job `120658099003` in matrix `40021281291` fails the complete compound
 CastRay check at `x=60`, velocity `(1200, 0)`, instead of stopping at the wall.
@@ -136,6 +141,13 @@ hashes the temporary helper, which is removed before untraced controls. A traced
 pass alone cannot clear a baseline failure. The local prepared-helper build and
 complete compound execution pass with 22 settings records and 154 raw buffers;
 body/shape/pair/center lengths match their recorded counts and strides.
+
+Run `40035835749` at `d5c677614` reproduces the same CCD failure on another
+AVX-512-capable CPU, EPYC 9V74 (artifact `12536933573`). The default, traced,
+restored-Lavapipe and explicit 256-bit controls reach `x=60`, velocity `(1200, 0)`.
+The explicit 128-bit control instead fails earlier in compound contact generation
+with invalid geometry/contact state; both SIMD processes exit 134 and report the
+requested device width. Reducing SIMD width therefore does not clear this gate.
 
 The corrected Windows ARM64 run `40029790832` at `3bddfb403` passes all three raw
 focused exits with app-local WARP 1.0.21 (artifact `12535550765`). Windows x86 run

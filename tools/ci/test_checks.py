@@ -121,9 +121,21 @@ class Checks(unittest.TestCase):
         self.assertIn("steps.joints.outcome == 'failure' || steps.motion.outcome == 'failure'", workflow)
         self.assertIn('Run the complete untraced runtime suite', workflow)
         self.assertIn("-ccontains 'Electron2D checks passed.'", workflow)
-        self.assertIn('timeout-minutes: 90', workflow)
+        self.assertIn('timeout-minutes: 180', workflow)
+        self.assertIn('timeout-minutes: 150', complete)
         self.assertIn('python -m pip install --require-hashes -r tools/native/requirements-windows.txt', workflow)
         self.assertIn('choco install ffmpeg --yes --no-progress', workflow)
+
+    def test_windows_runtime_uses_the_audited_driver_only_in_its_test_runner(self):
+        workflow = (rids.ROOT / '.github/workflows/rid.yml').read_text()
+        install = workflow.partition('      - name: Install audited Windows software GPU for runtime checks\n')[2].split('\n      - ', 1)[0]
+        self.assertIn("if: inputs.tests && inputs.suite == 'full' && startsWith(inputs.rid, 'win-')", install)
+        self.assertIn('install_test_warp.ps1 "bin/ci-tests/$env:CI_RID" "bin/ci/$env:CI_RID/warp" ($env:CI_RID.Substring(4))', install)
+        self.assertLess(workflow.index('Publish desktop test runner'), workflow.index('Install audited Windows software GPU'))
+        self.assertLess(workflow.index('Install audited Windows software GPU'), workflow.index('Run GPU compound control'))
+        self.assertIn("timeout-minutes: ${{ inputs.tests && inputs.suite == 'full' && startsWith(inputs.rid, 'win-') && 180 || 90 }}", workflow)
+        for path in ('Electron2D.csproj', '.github/workflows/native.yml', '.github/workflows/publish-native.yml'):
+            self.assertNotIn('install_test_warp', (rids.ROOT / path).read_text())
 
     def test_windows_diagnostic_target_reaches_runner_publish_driver_and_debugger(self):
         workflow = (rids.ROOT / '.github/workflows/windows-gpu-diagnostics.yml').read_text()
