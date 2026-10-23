@@ -57,10 +57,11 @@ fallback and do not alter production sources. Preserve their fixture failure.
 Conditional fraction observations are supplemented by unconditional source/leaf/
 candidate and pair entry/return bits. Use those reachability marks before
 attributing missing predicate bits to skipped work.
-The optional structured_motion_scan input compares explicit BVH descent/advance
-branches across the four portable phases. It retains internal-node pruning and
-leaf order, rather than replacing the tree or changing collision iterations.
-Its default is false; it changes only the diagnostic checkout copy.
+The optional seed_motion_bounds input initializes portable query bounds from the
+first vertex, then visits the remaining vertices in the original order. The only
+caller already excludes zero-vertex geometry. The ordinary Vulkan source keeps
+its original branch. This replaces the failed explicit descent/advance control;
+its default is false and it changes only the diagnostic checkout copy.
 The source-header probe uses the existing unused object-result words for the live
 geometry vertex count, geometry kind and policy flags. Diagnostic state bits mark
 query-bound entry/return and any BVH node/category read. Earlier receipts retain

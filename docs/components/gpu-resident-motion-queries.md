@@ -327,3 +327,14 @@ to source validation through the first node read, without establishing a compile
 or driver cause. The next diagnostic brackets query-bound evaluation and reads
 the vertex count from the live local geometry. Its unchanged compound control
 passes locally with all reachability bits, but Windows execution remains required.
+
+The query-bound probe in run 39988589701 at 58bbb2439 records state
+`0x21044F02`: the call-entry mark is present, its return and all node marks are
+absent, and the live source vertex count remains one. The fixture still fails.
+The next diagnostic seeds bounds from the first vertex and starts its loop at
+one, preserving the nonempty caller contract and vertex order. Its ordinary
+Vulkan branch remains unchanged; this candidate is not a production correction.
+The local ordered compound and functional motion controls pass with this change.
+The ordinary Vulkan module keeps SHA-256
+`79fb6af39ee14df2d86e25cbc419dfc1596ad1275211eb97258c165cab41d87f`.
+Target execution and the complete platform gates remain required.

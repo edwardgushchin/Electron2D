@@ -17,8 +17,8 @@ on:
         type: boolean
         default: false
 
-      structured_motion_scan:
-        description: Compare explicit descent and advance branches in the motion BVH traversal
+      seed_motion_bounds:
+        description: Compare first-vertex initialization in motion query bounds
         type: boolean
         default: false
 
@@ -39,7 +39,7 @@ jobs:
       ELECTRON2D_TEST_COMPOUND_PHYSICS: gpu
       RECOVERY_COMPILER: ${{ inputs.recovery_compiler }}
       MOTION_SPIRV_OPTIMIZATION: ${{ inputs.optimize_motion_spirv }}
-      MOTION_STRUCTURED_SCAN: ${{ inputs.structured_motion_scan }}
+      MOTION_SEED_BOUNDS: ${{ inputs.seed_motion_bounds }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v6
@@ -254,28 +254,19 @@ jobs:
               text = text.replace(field, field + '\n    private bool _motionProbeWritten;')
               probe = '        if (!_motionProbeWritten) { _motionProbeWritten = true; Console.WriteLine($"Motion stage receipt: count={_motionQueryCounts[0]}, flags={results[0].Flags}, state={results[0].Padding}, sourceGeometry=0x{results[0].Padding2:X16}, finalFractions={results[0].Fractions}, travel={results[0].TravelRemainder}"); }\n'
               query.write_text(text.replace(returned, probe + returned))
-          structured = os.environ.get('MOTION_STRUCTURED_SCAN', 'false')
-          assert structured in ('false', 'true')
-          if structured == 'true':
+          seeded = os.environ.get('MOTION_SEED_BOUNDS', 'false')
+          assert seeded in ('false', 'true')
+          if seeded == 'true':
               shader = Path('src/Servers/Physics/Shaders/PhysicsResidentMotionQueries.comp.glsl')
               text = shader.read_text()
-              node = '            Node node=nodes[at];'
-              descent = '                if(at<int(leaves)){at*=2;continue;}'
-              advance = '            }\n            while(at>1&&(at&1)!=0)at/=2;at=at==1?0:at+1;'
-              assert text.count(node) == text.count(descent) == text.count(advance) == 1
-              text = text.replace(node, '#ifdef E2D_MOTION_STAGE\n            bool descend=false;\n#endif\n' + node)
-              text = text.replace(descent, '#ifdef E2D_MOTION_STAGE\n                if(at<int(leaves))descend=true;else\n                {\n#else\n' + descent + '\n#endif')
-              text = text.replace(advance, '''#ifdef E2D_MOTION_STAGE
-                              }
-              #endif
-                          }
-              #ifdef E2D_MOTION_STAGE
-                          if(descend)at*=2;else
-              #endif
-                          {
-                              while(at>1&&(at&1)!=0)at/=2;at=at==1?0:at+1;
-                          }''')
-              shader.write_text(text)
+              original = '    vec2 lo=vec2(3.402823466e38),hi=-lo;\n    for(uint i=0u;i<g.data.y;i++)'
+              assert text.count(original) == 1
+              candidate = '''#ifdef E2D_MOTION_STAGE
+                  vec2 lo=rotate(bodyA.pose.zw,shape.pose.xy+rotate(shape.pose.zw,vertices[g.data.x])),hi=lo;
+                  for(uint i=1u;i<g.data.y;i++)
+              #else
+              ''' + original + '\n#endif'
+              shader.write_text(text.replace(original, candidate))
           Path('bin/diagnostics').mkdir(parents=True, exist_ok=True)
           receipt = {'compiler': selection + ' motion; DXIL remaining kernels', 'headSHA': os.environ['GITHUB_SHA'], 'instrumentedSource': str(path),
                      'originalSHA256': hashlib.sha256(original_bytes).hexdigest(),
@@ -283,7 +274,7 @@ jobs:
                      'originalCompilerSHA256': hashlib.sha256(compiler_original).hexdigest(),
                      'actualCompilerSHA256': hashlib.sha256(compiler.read_bytes()).hexdigest(),
                      'motionSPIRVOptimization': optimization == 'true',
-                     'motionStructuredScan': structured == 'true',
+                     'motionSeededBounds': seeded == 'true',
                      'originalGeneratorSHA256': hashlib.sha256(generator_original).hexdigest(),
                      'actualGeneratorSHA256': hashlib.sha256(generator.read_bytes()).hexdigest(),
                      'motionStages': ['initial recovery', 'continued recovery x3', 'translation', 'rest and result'],
