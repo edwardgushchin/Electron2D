@@ -5,6 +5,7 @@ $ast = [Management.Automation.Language.Parser]::ParseFile($path, [ref]$tokens, [
 if ($errors.Count) { throw ($errors | Out-String) }
 $launch = $ast.Find({ param($node) $node -is [Management.Automation.Language.CommandAst] -and $node.GetCommandName() -eq 'Start-Process' -and $node.Extent.Text.Contains('$cdb') }, $true)
 if (!$launch -or !$launch.Extent.Text.Contains("'-hd'")) { throw 'CDB replay must retain the ordinary process heap.' }
+if (!$ast.Extent.Text.Contains("' L1; dps '")) { throw 'Compiler exception type lookup must remain bounded to one pointer.' }
 $mapping = $ast.Find({ param($node) $node -is [Management.Automation.Language.AssignmentStatementAst] -and $node.Left.VariablePath.UserPath -eq 'throwObject' }, $true)
 if (!$mapping) { throw 'Compiler exception argument mapping is missing.' }
 foreach ($case in @(@('arm64', '@x0'), @('x64', '@rcx'), @('x86', 'poi(@esp+4)'))) {

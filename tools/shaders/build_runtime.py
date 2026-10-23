@@ -52,7 +52,7 @@ def generate(output, source_root=ROOT):
                     programs.append((source, stem, defines))
                     if domain == 'Physics' and source.name in VULKAN_OPTIMIZED_PHYSICS:
                         if source.name == 'PhysicsResidentMotionQueries.comp.glsl':
-                            for phase in range(3):
+                            for phase in range(4):
                                 programs.append((source, f'PhysicsResidentMotionQueries{phase}.comp.portable', [f'-DE2D_MOTION_STAGE={phase}']))
                         else:
                             programs.append((source, stem + '.portable', defines))

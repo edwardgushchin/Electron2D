@@ -121,7 +121,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         Array.Resize(ref _queryReadbackLimits, capacity); Array.Resize(ref _queryFound, capacity);
     }
     private void ExecuteQueries<TInput, THit>(ReadOnlySpan<TInput> queries, ReadOnlySpan<ulong> exclusions, Span<int> counts, Span<THit> hits,
-        int total, Span<RenderHandle?> pipelines, string shader, bool centers = false, int scratchBytesPerQuery = 0, uint pipelineMask = 1, bool dependentPasses = false) where TInput : unmanaged where THit : unmanaged
+        int total, Span<RenderHandle?> pipelines, string shader, bool centers = false, int scratchBytesPerQuery = 0, uint pipelineMask = 1, bool dependentPasses = false, ReadOnlySpan<byte> pipelineOrder = default) where TInput : unmanaged where THit : unmanaged
     {
         PrepareQuerySpatial();
         if (ShapeCount == 0 || total == 0) { counts[..queries.Length].Clear(); _queryFound.AsSpan(0, queries.Length).Clear(); return; }
@@ -133,6 +133,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 pipelines[i] ??= _context.CreatePipeline(pipelines.Length == 1 ? shader : $"{shader}{i}.comp.spv");
                 dispatches++;
             }
+        if (!pipelineOrder.IsEmpty) dispatches = pipelineOrder.Length;
         var mappingBytes = _queryMappingDirty ? checked(_shapeHighWater * sizeof(QueryMapping)) : 0;
         var inputBytes = checked(queries.Length * sizeof(TInput)); var excludedBytes = checked(exclusions.Length * 8);
         var outputBytes = checked(total * sizeof(THit)); var countBytes = checked(queries.Length * 4);
@@ -181,10 +182,12 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             var inputs = stackalloc nint[8] { _bodies!.DangerousGetHandle(), _verticesGPU!.DangerousGetHandle(), _geometryGPU!.DangerousGetHandle(), _shapesGPU!.DangerousGetHandle(),
                 _nodesGPU!.DangerousGetHandle(), _queryMappingGPU!.DangerousGetHandle(), _queryInputGPU!.DangerousGetHandle(), _queryExcludedGPU!.DangerousGetHandle() };
             var settings = new QuerySettings { Count = (uint)queries.Length, Leaves = (uint)_shapeCapacity, Shapes = (uint)_shapeHighWater, Bodies = (uint)_highWater };
-            for (var i = 0; i < pipelines.Length; i++)
+            for (var pass = 0; pass < (pipelineOrder.IsEmpty ? pipelines.Length : pipelineOrder.Length); pass++)
+            {
+                var i = pipelineOrder.IsEmpty ? pass : pipelineOrder[pass];
                 if ((pipelineMask & (1u << i)) != 0)
                 {
-                    if (dependentPasses && i > 0)
+                    if (dependentPasses && pass > 0)
                     {
                         SDL.EndGPUComputePass(compute);
                         compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, centers ? 4u : 3u);
@@ -195,6 +198,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                     SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(QuerySettings));
                     SDL.DispatchGPUCompute(compute, ((uint)queries.Length + 63) / 64, 1, 1);
                 }
+            }
             SDL.EndGPUComputePass(compute);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin resident query results");

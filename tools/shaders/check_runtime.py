@@ -39,9 +39,9 @@ void main() { data.value = VALUE; }
     for mode in range(4):
         assert first[variants[mode * 2]]['binary'] != first[variants[mode * 2 + 1]]['binary'], 'Portable shader reused Vulkan optimization'
     assert len({first[name]['binary'] for name in variants}) == 8, 'Query operation reused another specialization'
-    motion_variants = tuple(f'Physics/PhysicsResidentMotionQueries{phase}.comp.portable.spv' for phase in range(3))
+    motion_variants = tuple(f'Physics/PhysicsResidentMotionQueries{phase}.comp.portable.spv' for phase in range(4))
     assert all(name in first for name in motion_variants), 'Missing ordered motion stage'
-    assert len({first[name]['binary'] for name in (*motion_variants, 'Physics/PhysicsResidentMotionQueries.comp.spv')}) == 4, 'Motion stage reused another phase'
+    assert len({first[name]['binary'] for name in (*motion_variants, 'Physics/PhysicsResidentMotionQueries.comp.spv')}) == 5, 'Motion stage reused another phase'
     stamps = {key: (output / key).stat().st_mtime_ns for key in first}
     assert generate(output, root) == first
     assert stamps == {key: (output / key).stat().st_mtime_ns for key in first}, 'No-op generation rewrote outputs'

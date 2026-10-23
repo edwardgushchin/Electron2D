@@ -61,9 +61,10 @@ directed-query call. This limits repeated expansion during driver compilation.
 Recovery still makes four passes with the same plane cap; contact tolerances,
 shape families, GPU buffers and host transfers are unchanged.
 
-Metal/DXIL uses three ordered device passes: four recovery attempts, translation,
-then rest sampling and final output. Two vectors in the existing result prefix
-carry recovery, rejected-key count, fractions, source slot and flags between
+Metal/DXIL uses six ordered device passes: four recovery attempts, translation,
+then rest sampling and final output. Four pipelines cover initial recovery,
+continued recovery (reused three times), translation and final output. Two vectors in the existing result prefix
+carry recovery, rejected-key count, fractions, source slot, convergence and flags between
 passes. The same command buffer ends each compute pass before beginning its
 consumer, providing storage-buffer visibility without an intermediate host wait.
 The 32 recovery planes and 32 rejected keys remain in the existing device scratch;
@@ -74,8 +75,11 @@ the eight directed refinements are unchanged.
 The earlier single portable traversal still aborted in Windows WARP 1.0.21
 `ScopeNestedCFG::runOnFunction`. Flattening motion phases and removing one sweep
 unroll prohibition did not fix it; the FXC control rejected nested loop attributes.
-Splitting the existing phases removes the outer phase loop from each translated
-program. Target Windows/Metal execution remains a separate required gate.
+Run 39943168703 still fails in the initial recovery pipeline after the three-pass
+split. Each recovery attempt now executes separately, retaining early convergence
+as device state. This removes the remaining outer recovery loop without unrolling
+or duplicating geometry code. Target Windows/Metal execution remains a separate
+required gate.
 
 ## CPU corrections found by comparison
 

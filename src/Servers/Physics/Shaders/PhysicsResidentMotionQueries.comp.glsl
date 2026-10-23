@@ -295,25 +295,23 @@ void main()
 #ifdef E2D_MOTION_STAGE
     // Persist only phase state in the existing result prefix between ordered device passes.
     uint stateAt=i*8u;
-#if E2D_MOTION_STAGE == 0
-    [[dont_unroll]] for(uint attempt=0u;attempt<4u;attempt++)
-    {
-        vec2 before=recovery;scan(0u);if(before==recovery)break;bodyA.pose.xy=q.pose.xy+recovery;
-    }
-#else
+    bool converged=false;
+#if E2D_MOTION_STAGE > 0
     vec4 state=outputData[stateAt+6u],fractions=outputData[stateAt+7u];
-    recovery=state.xy;rejectedCount=floatBitsToUint(state.z);recovered=floatBitsToUint(state.w)!=0u;
+    recovery=state.xy;rejectedCount=floatBitsToUint(state.z);recovered=(floatBitsToUint(state.w)&1u)!=0u;converged=(floatBitsToUint(state.w)&2u)!=0u;
     safe=fractions.x;unsafeFraction=fractions.y;motionShape=floatBitsToUint(fractions.z);blocked=floatBitsToUint(fractions.w)!=0u;
     bodyA.pose.xy=q.pose.xy+recovery;
-#if E2D_MOTION_STAGE == 1
+#endif
+#if E2D_MOTION_STAGE < 2
+    if(!converged){vec2 before=recovery;scan(0u);converged=before==recovery;}
+#elif E2D_MOTION_STAGE == 2
     if(q.motionMargin.xy!=vec2(0))scan(1u);
 #else
     if(blocked||(recovered&&(q.policy.z&1u)!=0u))
     {bodyA.pose.xy+=unsafeFraction*q.motionMargin.xy;scan(2u);}
 #endif
-#endif
-#if E2D_MOTION_STAGE < 2
-    outputData[stateAt+6u]=vec4(recovery,uintBitsToFloat(rejectedCount),uintBitsToFloat(recovered?1u:0u));
+#if E2D_MOTION_STAGE < 3
+    outputData[stateAt+6u]=vec4(recovery,uintBitsToFloat(rejectedCount),uintBitsToFloat((recovered?1u:0u)|(converged?2u:0u)));
     outputData[stateAt+7u]=vec4(safe,unsafeFraction,uintBitsToFloat(motionShape),uintBitsToFloat(blocked?1u:0u));
     return;
 #endif

@@ -44,7 +44,7 @@ internal sealed class GPUPhysicsDevice : IDisposable
     internal RenderHandle CreatePipeline(string name)
     {
         PipelineCreationForTesting?.Invoke(name, _ownerThreadID, Environment.CurrentManagedThreadId);
-        if (name is "PhysicsResidentMotionQueries0.comp.spv" or "PhysicsResidentMotionQueries1.comp.spv" or "PhysicsResidentMotionQueries2.comp.spv" ||
+        if (name is "PhysicsResidentMotionQueries0.comp.spv" or "PhysicsResidentMotionQueries1.comp.spv" or "PhysicsResidentMotionQueries2.comp.spv" or "PhysicsResidentMotionQueries3.comp.spv" ||
             (Driver is "metal" or "direct3d12") && name is "PhysicsResidentCCD.comp.spv" or
             "PhysicsResidentShapeQueries0.comp.spv" or "PhysicsResidentShapeQueries1.comp.spv" or
             "PhysicsResidentShapeQueries2.comp.spv" or "PhysicsResidentShapeQueries3.comp.spv")

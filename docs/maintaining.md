@@ -30,7 +30,7 @@ The macOS producer uses that package project with `NativePackagePlatform=MacOS`;
 
 ## CI matrix
 
-Physics query/CCD compiler-profile changes must retain unchanged optimized Vulkan module hashes and equal native resource/workgroup reflection for each portable pair. Shape queries compile all four operation constants from one numerical source; verify every operation and mixed batches, preserving iteration limits, result segments and one submission without extra readback. Run `python3 -B tools/shaders/check_runtime.py` for variant invalidation, cleanup and embedding, then the focused GPU pipeline, shape, motion and CCD contracts. Offline DXIL compilation is a compiler check; it cannot replace the complete Windows and Metal execution gates. The portable motion traversal definition is profile-specific; its generation self-check covers definition selection, include invalidation and removed-module cleanup. The manual macOS runtime verification repeats the unchanged complete suite for both ARM64 and x64 on the registered Apple Silicon host, using native source receipts and retaining the original failure status. Its optional allocation_trace mode first calibrates the versioned native profiling ABI on the target RID, then retains general-cast object/stack traces and managed assemblies in a separate artifact. The input defaults to false; a profiled run is diagnostic evidence. See [allocation measurement](components/physics-allocation-measurement.md#general-cast-allocation-diagnostics-on-macos-2026-10-23).
+Physics query/CCD compiler-profile changes must retain unchanged optimized Vulkan module hashes and equal native resource/workgroup reflection for each portable pair. Shape queries compile all four operation constants from one numerical source; verify every operation and mixed batches, preserving iteration limits, result segments and one submission without extra readback. Run `python3 -B tools/shaders/check_runtime.py` for variant invalidation, cleanup and embedding, then the focused GPU pipeline, shape, motion and CCD contracts. Offline DXIL compilation is a compiler check; it cannot replace the complete Windows and Metal execution gates. The portable motion phase definitions are profile-specific; its generation self-check covers definition selection, include invalidation and removed-module cleanup. The manual macOS runtime verification repeats the unchanged complete suite for both ARM64 and x64 on the registered Apple Silicon host, using native source receipts and retaining the original failure status. Its optional allocation_trace mode first calibrates the versioned native profiling ABI on the target RID, then retains general-cast object/stack traces and managed assemblies in a separate artifact. The input defaults to false; a profiled run is diagnostic evidence. See [allocation measurement](components/physics-allocation-measurement.md#general-cast-allocation-diagnostics-on-macos-2026-10-23).
 
 An ARM64 Windows native crash reruns the same complete executable under CDB, without the historical DTLS-only selector. The diagnostic retains symbolic exception context/module identities and an eight-minute child deadline inside the ten-minute CI step. It cannot hide or replace the original failed full-suite status.
 
@@ -52,8 +52,8 @@ code and its full 32-bit hexadecimal representation before preserving failure;
 zero exit and an exact case-sensitive completion line are both required.
 See [CDB command-line options](https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/cdb-command-line-options).
 The PowerShell self-check rejects missing, ambiguous, foreign and reused process identities.
-Compiler exceptions also record the first DWORD of the WARP exception object and
-its throwing stack; architecture-specific argument locations have executable
+Compiler exceptions also record the first DWORD and one symbolic type pointer of
+the WARP exception object and its throwing stack; architecture-specific argument locations have executable
 PowerShell checks. No general heap dump is captured. The current temporary
 body-motion control uses explicit overlap, directed reach/eight refinements and a
 common impact block, preserving the operation order and shared numerical helpers.
@@ -345,9 +345,9 @@ artifact. Recheck the earlier arithmetic/unary graph consumers after changes to
 the shared default-slot/width implementation.
 
 Resident body-motion changes also run `python3 -B tools/shaders/check_runtime.py`
-to check all three portable phase variants, dependency invalidation and removal.
+to check all four portable phase variants, dependency invalidation and removal.
 Exercise `ELECTRON2D_TEST_GPU_MOTION_QUERIES=1` and adjacent shape, one-way,
-priority and compound profiles. Metal/DXIL recovery, translation and final-rest
+priority and compound profiles. Metal/DXIL four-attempt recovery, translation and final-rest
 passes share one submission and existing device scratch; verify target execution
 and strict zero-byte intervals separately from offline compilation. Windows GPU
 diagnostics now runs the production DXIL shaders with only cold-pipeline logging.
