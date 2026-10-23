@@ -45,7 +45,9 @@ internal sealed class GPUPhysicsDevice : IDisposable
     {
         PipelineCreationForTesting?.Invoke(name, _ownerThreadID, Environment.CurrentManagedThreadId);
         if ((Driver is "metal" or "direct3d12") && name is
-            "PhysicsResidentCCD.comp.spv" or "PhysicsResidentShapeQueries.comp.spv" or "PhysicsResidentMotionQueries.comp.spv")
+            "PhysicsResidentCCD.comp.spv" or "PhysicsResidentMotionQueries.comp.spv" or
+            "PhysicsResidentShapeQueries0.comp.spv" or "PhysicsResidentShapeQueries1.comp.spv" or
+            "PhysicsResidentShapeQueries2.comp.spv" or "PhysicsResidentShapeQueries3.comp.spv")
             name = name.Replace(".spv", ".portable.spv", StringComparison.Ordinal);
         using var source = typeof(GPUPhysicsDevice).Assembly.GetManifestResourceStream("Electron2D.PhysicsShaders." + name)
             ?? throw new InvalidOperationException("The physics shader is missing: " + name);

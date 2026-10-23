@@ -26,13 +26,15 @@ void main() { data.value = VALUE; }
     query = physics / 'PhysicsResidentShapeQueries.comp.glsl'
     query.write_text((physics / 'Test.comp.glsl').read_text().replace(
         'void main() { data.value = VALUE; }',
-        'float square(float value) { return value * value; }\nvoid main() { data.value = square(VALUE); }'))
+        'float square(float value) { return value * value; }\nvoid main() { data.value = square(VALUE) + float(E2D_SHAPE_QUERY_MODE); }'))
     include.write_text('#define VALUE 1.0\n')
     output = root / 'generated'
     first = generate(output, root)
-    variants = ('Physics/PhysicsResidentShapeQueries.comp.spv', 'Physics/PhysicsResidentShapeQueries.comp.portable.spv')
+    variants = tuple(f'Physics/PhysicsResidentShapeQueries{mode}.comp{profile}.spv' for mode in range(4) for profile in ('', '.portable'))
     assert all(name in first for name in variants), 'Missing backend shader variant'
-    assert first[variants[0]]['binary'] != first[variants[1]]['binary'], 'Portable shader reused Vulkan optimization'
+    for mode in range(4):
+        assert first[variants[mode * 2]]['binary'] != first[variants[mode * 2 + 1]]['binary'], 'Portable shader reused Vulkan optimization'
+    assert len({first[name]['binary'] for name in variants}) == 8, 'Query operation reused another specialization'
     stamps = {key: (output / key).stat().st_mtime_ns for key in first}
     assert generate(output, root) == first
     assert stamps == {key: (output / key).stat().st_mtime_ns for key in first}, 'No-op generation rewrote outputs'

@@ -2,6 +2,11 @@
 
 # Physics domain
 
+[Resident shape-query specialization](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
+compiles all four operations independently while retaining mixed batches in one
+submission. Query algorithms, output segments, public declarations and allocation
+thresholds are unchanged; Windows and full target acceptance remain required.
+
 [Resident query scratch](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
 uses three explicit difference-vector slots without dynamic private-array indexing, and the [spring kernel](../components/physics-joint-policies.md)
 guards complete axial decay before evaluating extreme elastic coefficients.

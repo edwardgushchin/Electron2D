@@ -61,7 +61,9 @@ compiler handles both built-in languages (`main`, Vulkan 1.0); `spirv-val` valid
 each result. This bootstrap has no dependency on Electron2D.dll or SDL, so it can
 run before the runtime exists and when cross-compiling the runtime.
 
-The resident CCD, shape-query and body-motion-query programs retain the pinned
+The resident shape-query source compiles Intersect, Contacts, Rest and Cast into
+separate operation modules; mixed requests retain their original result segments
+and share one submission. These modules, CCD and body-motion queries use the pinned
 compiler's `-O` performance optimization for Vulkan. Each also embeds a
 `.comp.portable.spv` variant from the same source without that optimization for
 Metal and Direct3D 12. This keeps the translator's generated source bounded while

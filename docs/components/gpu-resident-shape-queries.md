@@ -6,16 +6,30 @@ Last updated: 2026-10-23
 
 ## Backend compiler profiles
 
-Resident shape queries, body-motion queries and CCD embed two modules from each
-shared source. Vulkan retains the `-O` module and its measured cold-pipeline
-improvement; Metal and Direct3D 12 use a function-preserving portable module.
-The three additional modules pass `spirv-val` and native reflection reports the
-same nine resource and workgroup values as their optimized counterparts.
-Shape-query SPIR-V uses 1,322,876 optimized or 153,616 portable bytes;
-generated backend source avoids the multi-megabyte
-expansion measured with the optimized module. Native ShaderCross compiled all 35
-physics modules to DXIL locally. The common compute boundary selects DXIL when
+Resident shape queries compile the shared source separately for Intersect,
+Contacts, Rest and Cast. Each operation has an optimized Vulkan module and a
+function-preserving portable module for Metal and Direct3D 12. Body-motion queries
+and CCD retain their existing optimized/portable pairs. All eight shape modules
+pass `spirv-val`; native reflection retains the same nine resource and workgroup
+values, including all eight read-only and four writable storage bindings.
+Native ShaderCross compiles all 41 physics modules to DXIL locally.
+The common compute boundary selects DXIL when
 the device advertises it, retaining the mature translator and reflected bindings.
+
+The operation is a compile-time constant in numerical/result paths. Each kernel
+checks the original request mode before clearing its count or writing results;
+mixed batches retain their original indices and disjoint capped result segments.
+Only requested operations prepare pipelines. All selected dispatches share one
+compute pass, upload, submission and completion, with 16 uniform bytes accounted
+per dispatch. No query grouping, host result mirror or extra readback is added.
+Empty/all-zero-cap batches retain their existing fast exit.
+
+The earlier common portable shape kernel produced 54,033 DXIL intermediate-code
+lines. Specialization reduces the Intersect/Contacts/Rest/Cast portable modules to
+11,133/19,272/18,281/37,241 lines and 55,712/97,864/91,440/182,736 bytes respectively.
+This bounds each driver compilation without reducing geometry, query operations,
+iteration budgets or precision. It is a portability candidate, not evidence of
+successful Windows execution.
 
 CI run `39858176735` failed at shape-query creation on Windows x64/x86 and returned
 an invalid collider identity on macOS ARM64. These failures motivate the profile
@@ -53,9 +67,11 @@ Run `39891839718` also rejected the native convenience path: FXC failed to
 produce valid DXBC and its first-chance stack entered
 `d3dcompiler_47!ArrayData::GetArrayLocationAndValue`. The unchanged DXIL path
 failed in `d3d10warp!IsSubroutineCall` while parsing declarations. Neither path
-establishes Windows acceptance. Diagnostic-only controls separately retain the
-compiled bytecode and the compiler module until runner exit to test ownership
-before changing production lifetime or rewriting the query algorithm.
+establishes Windows acceptance. Run `39893704655` separately retained compiled
+bytecode and the compiler module until runner exit. Both controls and the unchanged
+baseline still failed at the first shape intersection in
+`d3d10warp!ShaderJIT::ParseDclsDXIL`. These controls reject lifetime retention as
+a fix; production resource ownership remains unchanged.
 
 The same full run missed a compound CastRay impact on Linux x64. Isolated local
 CI Mesa 26.0.8 with .NET 10.0.13 and offscreen video passed the unchanged public
@@ -69,9 +85,20 @@ The explicit-slot candidate passes six local profiles on .NET 10.0.13: CPU/GPU
 public compound consumers, functional shape/motion queries, pipeline ownership
 and the public compound consumer with the isolated CI Mesa library. Compound
 controls retain 128 measured cycles at zero owner/all-thread managed bytes. All
-35 modules compile to DXIL, each optimized/portable pair retains the same nine
+35 pre-specialization modules compile to DXIL, each optimized/portable pair retains the same nine
 reflection values, and the translated query HLSL has no three-element vector
 array. These local controls do not clear the foreign-platform release gate.
+
+The specialization passes five local profiles on .NET 10.0.13: functional
+shape/motion queries, pipeline ownership, public compound consumers and resident
+CCD. The shape suite includes CPU overlap/cast/contact/rest comparisons and mixed
+all-operation batches with misses, zero caps, physical contact depths/normals and
+earliest impact brackets. After 128 warmup batches, 128 measured mixed batches
+retain zero owner/all-thread managed bytes, one submission per batch, four
+accounted uniform pushes and the unchanged result-only download size.
+Build-generation checks cover all eight module names, distinct operations/profiles,
+include invalidation, failure preservation, stale cleanup and fresh-consumer
+embedding. Target and full-suite acceptance remain open.
 
 ## Boundary and ownership
 

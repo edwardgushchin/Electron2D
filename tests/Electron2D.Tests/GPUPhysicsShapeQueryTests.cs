@@ -130,7 +130,7 @@ internal static class GPUPhysicsShapeQueryTests
         using var store = new Store(); using var circle = new CircleShape { Radius = 10 }; using var probe = store.RetainQueryGeometry(circle);
         var body = store.Add(new(PhysicsServer.BodyMode.Kinematic, new(100, 0), 0, new(10, 20), 2, CenterOfMass: new(2, 3)));
         var shape = store.AddShape(body, circle); store.SetQueryIdentity(shape, 7, 0);
-        Span<Store.ShapeQueryHit> hits = stackalloc Store.ShapeQueryHit[4];
+        Span<Store.ShapeQueryHit> hits = stackalloc Store.ShapeQueryHit[8];
         var query = new Query(probe, new(0, new(100, -18)), Mode: Mode.Rest, Limit: 1);
         Check(Query(store, query, hits) == 1, "Surface rest hit");
         var offset = hits[0].ColliderPoint - new Vector2(102, 3);
@@ -140,10 +140,26 @@ internal static class GPUPhysicsShapeQueryTests
         store.SetShapeFilter(shape, 1, 0, false);
         var deeper = Target(store, circle, new(100, -8)); store.SetQueryIdentity(deeper, 99, 0);
         Check(Query(store, query, hits) == 1 && hits[0].Collider == 99 && hits[0].Depth > 9.9f, "Rest chooses deeper geometry over a lower logical identity");
-        Span<Query> batch = [query, query with { Mode = Mode.Intersect, Limit = 2 }, query with { Limit = 0 }];
-        Span<int> counts = stackalloc int[4]; counts.Fill(777); hits.Fill(new() { Collider = 777 });
+        Span<Query> batch = [query, query with { Mode = Mode.Intersect, Limit = 2 }, query with { Mode = Mode.Contacts, Limit = 2 },
+            query with { Mode = Mode.Cast, Pose = new(0, new(100, -50)), Motion = new(0, 80) }, query with { Limit = 0 }, query with { Mask = 0 }];
+        Span<int> counts = stackalloc int[7]; counts.Fill(777); hits.Fill(new() { Collider = 777 });
         store.QueryShapes(batch, [], counts, hits);
-        Check(counts[0] == 1 && counts[1] == 2 && counts[2] == 0 && counts[3] == 777 && hits[0].Collider == 99 && hits[1].Collider == 7 && hits[2].Collider == 99 && hits[3].Collider == 777, "Mixed mode/cap batches preserve segment offsets and unwritten tails");
+        Check(counts[0] == 1 && counts[1] == 2 && counts[2] == 2 && counts[3] == 1 && counts[4] == 0 && counts[5] == 0 && counts[6] == 777 &&
+            hits[0].Collider == 99 && hits[1].Collider == 7 && hits[2].Collider == 99 && hits[3].Collider == 7 && hits[4].Collider == 99 &&
+            hits[5].Collider == 99 && hits[6].Collider == 777 && hits[7].Collider == 777, "All four modes, zero caps and misses preserve segment offsets and unwritten tails");
+        Check(hits[3].Depth > 1.9f && hits[4].Depth > 9.9f, "Mixed contact kernels retain physical depths");
+        Near(hits[3].Normal, new(0, -1), .001f, "Mixed contact outward normal");
+        Check(hits[5].SafeFraction > .26f && hits[5].SafeFraction < .28f && hits[5].UnsafeFraction >= hits[5].SafeFraction && hits[5].UnsafeFraction < .29f, "Mixed cast retains the earliest impact bracket");
+        for (var i = 0; i < 128; i++) store.QueryShapes(batch, [], counts, hits);
+        var submissions = store.QuerySubmissionCount; var spatial = store.QuerySpatialSubmissionCount;
+        var uniform = store.UniformBytes; var readback = store.ReadbackBytes;
+        var all = GC.GetTotalAllocatedBytes(true); var owner = GC.GetAllocatedBytesForCurrentThread();
+        for (var i = 0; i < 128; i++) store.QueryShapes(batch, [], counts, hits);
+        owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+        Check(owner == 0 && all == 0, $"Warm mixed query modes allocate zero managed bytes: {owner}/{all}");
+        Check(store.QuerySubmissionCount - submissions == 128 && store.QuerySpatialSubmissionCount == spatial &&
+            store.UniformBytes - uniform == 128 * 4 * 16 && store.ReadbackBytes - readback == 128 * (8 + 6 * 4 + 7 * 96),
+            "Mixed operations share one submission and retain result-only transfers with four accounted uniform pushes");
         Span<Store.QueryHit> points = stackalloc Store.QueryHit[2];
         store.Query([new(new(100, 0), Limit: 2)], [], counts, points);
         Check(counts[0] == 2 && Query(store, query, hits) == 1 && hits[0].Collider == 99, "Ray/point and shape queries can alternate shared buffers with different record strides");

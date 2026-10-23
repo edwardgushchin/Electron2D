@@ -1,6 +1,9 @@
 #version 450
 #extension GL_GOOGLE_include_directive : require
 #extension GL_EXT_control_flow_attributes : require
+#ifndef E2D_SHAPE_QUERY_MODE
+#error Missing shape query operation
+#endif
 #include "PhysicsResidentBody.inc.glsl"
 #include "PhysicsResidentGeometry.inc.glsl"
 layout(local_size_x=64) in;
@@ -40,7 +43,7 @@ bool lessKey(uvec4 a,uvec4 b){return a.y<b.y||(a.y==b.y&&(a.x<b.x||(a.x==b.x&&(a
 void emitPoint(vec2 a,vec2 b,vec2 normal,uvec4 features)
 {
     float depth=-dot2(b-a,normal);if(depth<-contactLimit-tolerances.z)return;
-    uint mode=activeQuery.geometry.z,offset=activeQuery.policy.w,limit=activeQuery.policy.z,position=0u;
+    uint mode=E2D_SHAPE_QUERY_MODE,offset=activeQuery.policy.w,limit=activeQuery.policy.z,position=0u;
     if(mode==2u||mode==3u)
     {
         if(used!=0u)
@@ -76,13 +79,13 @@ bool piecesContact(Hull a,Hull b,Geometry ga,Geometry gb,vec2 motion,bool emit,u
         if(a.boundary&&b.boundary)return false;
         if(ga.data.z==6u){vec2 axis=vertex(a,1u)-vertex(a,0u);if(axis==vec2(0))return false;a.extension=normalized(axis)*activeQuery.rotationMargin.z;}
         if(gb.data.z==6u&&vertex(b,1u)==vertex(b,0u))return false;
-        if(activeQuery.geometry.z!=3u){a.pose.xy+=motion;motion=vec2(0);}
+        if(E2D_SHAPE_QUERY_MODE!=3u){a.pose.xy+=motion;motion=vec2(0);}
     }
     if(!boundary&&ga.data.z==6u)return gb.data.z!=6u&&directedQuery(a,b,vec2(0),activeQuery.rotationMargin.z,ga.parameters.y!=0,false,motion,pieceA,pieceB,emit);
     if(!boundary&&gb.data.z==6u)return directedQuery(b,a,motion,0,gb.parameters.y!=0,true,vec2(0),pieceA,pieceB,emit);
     vec2 normal;float distance=queryDistance(a,b,vec2(0),vec2(0),normal),radii=a.radius+b.radius;
     bool initial=distance-radii<=tolerances.z;
-    if(activeQuery.geometry.z==3u&&initial)return false;
+    if(E2D_SHAPE_QUERY_MODE==3u&&initial)return false;
     float fraction=0;
     if(!initial)
     {
@@ -92,15 +95,15 @@ bool piecesContact(Hull a,Hull b,Geometry ga,Geometry gb,vec2 motion,bool emit,u
     activeFraction=fraction;activeBracket=querySweepBracket(fraction);
     if(emit)
     {
-        if(activeQuery.geometry.z==0u||activeQuery.geometry.z==3u){contactLimit=3.402823466e38;emitPoint(vec2(0),vec2(0),vec2(0),uvec4(0,0,pieceA,pieceB));}
+        if(E2D_SHAPE_QUERY_MODE==0u||E2D_SHAPE_QUERY_MODE==3u){contactLimit=3.402823466e38;emitPoint(vec2(0),vec2(0),vec2(0),uvec4(0,0,pieceA,pieceB));}
         else{contactLimit=2;ordinary(a,b,uvec2(pieceA,pieceB));}
     }
     return true;
 }
 void main()
 {
-    uint i=gl_GlobalInvocationID.x;if(i>=queryCount)return;counts[i]=0u;
-    activeQuery=queries[i];Query q=activeQuery;if(q.policy.z==0u||q.policy.x==0u||(q.policy.y&3u)==0u)return;
+    uint i=gl_GlobalInvocationID.x;if(i>=queryCount)return;
+    Query q=queries[i];if(q.geometry.z!=E2D_SHAPE_QUERY_MODE)return;counts[i]=0u;activeQuery=q;if(q.policy.z==0u||q.policy.x==0u||(q.policy.y&3u)==0u)return;
     Geometry ga=geometries[q.geometry.x];if(ga.data.w!=q.geometry.y){fail();return;}if(ga.data.y==0u)return;
     bodyA=ResidentBody(vec4(q.ray.xy,q.rotationMargin.xy),vec4(0),vec4(0),vec4(0),vec4(0),uvec4(0));
     Shape sa=Shape(vec4(0,0,1,0),uvec4(0),uvec4(0),vec2(0),uvec2(0),vec4(0));
@@ -135,7 +138,7 @@ void main()
                     activeShape=sb;activeKey=uvec4(mapping.identity.xyz,index);
                     uint na=ga.data.z==5u?ga.data.y/2u:1u,nb=gb.data.z==5u?gb.data.y/2u:1u;
                     bool initialOverlap=false;
-                    if(q.geometry.z==3u)for(uint pa=0u;pa<na&&!initialOverlap;pa++)for(uint pb=0u;pb<nb&&!initialOverlap;pb++)
+                    if(E2D_SHAPE_QUERY_MODE==3u)for(uint pa=0u;pa<na&&!initialOverlap;pa++)for(uint pb=0u;pb<nb&&!initialOverlap;pb++)
                     {
                         Hull a=hull(sa,ga,bodyA,pa),b=hull(sb,gb,bodyB,pb);if(ga.data.z!=6u)a.radius+=q.rotationMargin.z;
                         if(ga.data.z==6u||gb.data.z==6u)initialOverlap=piecesContact(a,b,ga,gb,vec2(0),false,pa,pb);
@@ -145,7 +148,7 @@ void main()
                     {
                         Hull a=hull(sa,ga,bodyA,pa),b=hull(sb,gb,bodyB,pb);
                         if(ga.data.z!=6u)a.radius+=q.rotationMargin.z;
-                        if((ga.data.z==6u||gb.data.z==6u)&&q.geometry.z==3u)
+                        if((ga.data.z==6u||gb.data.z==6u)&&E2D_SHAPE_QUERY_MODE==3u)
                         {
                             if(piecesContact(a,b,ga,gb,vec2(0),false,pa,pb)||q.ray.zw==vec2(0)||!piecesContact(a,b,ga,gb,q.ray.zw,false,pa,pb))continue;
                             float low=0,high=1,coefficient=0.5,arrival=directedArrival;

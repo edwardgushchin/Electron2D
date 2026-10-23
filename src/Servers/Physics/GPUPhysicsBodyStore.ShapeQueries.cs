@@ -73,16 +73,16 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         internal uint Geometry, Generation, Mode, Padding;
     }
     private ShapeQueryInput[] _shapeQueryInputs = [];
-    private RenderHandle? _shapeQueryPipeline;
+    private readonly RenderHandle?[] _shapeQueryPipelines = new RenderHandle?[4];
     internal QueryGeometry RetainQueryGeometry(Shape shape) => new(this, shape);
     private static int ShapeQueryLimit(in ShapeQuery query) => query.Mode is ShapeQueryMode.Cast or ShapeQueryMode.Rest ? Math.Min(1, query.Limit) : query.Limit;
 
-    /// <summary>Queries current resident geometry, returning capped logical intersections, contact pairs, deepest rest information or motion brackets.</summary>
+    /// <summary>Queries current resident geometry through operation-specific kernels in one submission, returning capped logical intersections, contact pairs, deepest rest information or motion brackets.</summary>
     internal void QueryShapes(ReadOnlySpan<ShapeQuery> queries, ReadOnlySpan<ulong> exclusions, Span<int> counts, Span<ShapeQueryHit> hits)
     {
         EnsureAccess();
         if (counts.Length < queries.Length) throw new ArgumentException("The query count destination is too small.", nameof(counts));
-        var total = 0;
+        var total = 0; uint pipelineMask = 0;
         foreach (ref readonly var q in queries)
         {
             ArgumentNullException.ThrowIfNull(q.Geometry); q.Geometry.Validate(this); ValidateShapePose(q.Pose);
@@ -90,6 +90,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 q.ExclusionStart < 0 || q.ExclusionStart > exclusions.Length || q.ExclusionCount < 0 || q.ExclusionCount > exclusions.Length - q.ExclusionStart)
                 throw new ArgumentOutOfRangeException(nameof(queries));
             total = checked(total + ShapeQueryLimit(q));
+            pipelineMask |= 1u << (int)q.Mode;
         }
         if (hits.Length < total) throw new ArgumentException("The query hit destination is too small.", nameof(hits));
         if (queries.IsEmpty) return;
@@ -119,6 +120,6 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             offset += (uint)limit;
         }
         ExecuteQueries<ShapeQueryInput, ShapeQueryHit>(_shapeQueryInputs.AsSpan(0, queries.Length), exclusions, counts, hits, total,
-            ref _shapeQueryPipeline, "PhysicsResidentShapeQueries.comp.spv", centers: true);
+            _shapeQueryPipelines, "PhysicsResidentShapeQueries", centers: true, pipelineMask: pipelineMask);
     }
 }

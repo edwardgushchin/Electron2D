@@ -1,5 +1,10 @@
 # GPUPhysicsBodyStore
 
+[Shape-query operation kernels](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
+retain separate Intersect/Contacts/Rest/Cast pipelines. Mixed batches use one
+compute pass and submission with disjoint original result segments, unchanged
+device layouts and result transfers, and accounted per-operation uniforms.
+
 [Query distance scratch](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
 retains three explicit difference-vector slots without dynamic private-array indexing. The
 [spring force kernel](../components/physics-joint-policies.md) explicitly skips

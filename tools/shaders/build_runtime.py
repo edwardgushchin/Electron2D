@@ -41,10 +41,17 @@ def generate(output, source_root=ROOT):
                 if dependency.is_file() and dependency.suffix != '.spv':
                     digest.update(dependency.relative_to(directory).as_posix().encode())
                     digest.update(dependency.read_bytes())
-            programs = [(source, source.stem, []) for source in sources if '.inc.' not in source.name]
+            programs = []
             for source in sources:
-                if domain == 'Physics' and source.name in VULKAN_OPTIMIZED_PHYSICS:
-                    programs.append((source, source.stem + '.portable', []))
+                if '.inc.' in source.name:
+                    continue
+                variants = [(source.stem, [])]
+                if source.name == 'PhysicsResidentShapeQueries.comp.glsl':
+                    variants = [(f'PhysicsResidentShapeQueries{mode}.comp', [f'-DE2D_SHAPE_QUERY_MODE={mode}u']) for mode in range(4)]
+                for stem, defines in variants:
+                    programs.append((source, stem, defines))
+                    if domain == 'Physics' and source.name in VULKAN_OPTIMIZED_PHYSICS:
+                        programs.append((source, stem + '.portable', defines))
                 if source.name in ('Canvas.vert.hlsl', 'CanvasInstanced.vert.hlsl'):
                     programs.append((source, source.stem.replace('Canvas', 'CanvasLighting'), ['-DE2D_LIGHTING=1']))
                 if source.name == 'Lighting.frag.hlsl':
@@ -76,7 +83,7 @@ def generate(output, source_root=ROOT):
                 with tempfile.TemporaryDirectory(dir=target.parent) as temporary:
                     compiled = Path(temporary) / 'shader.spv'
                     command = [str(compiler), '-V', '--target-env', 'vulkan1.0', '-S', stage, '-e', 'main']
-                    if domain == 'Physics' and source.name in VULKAN_OPTIMIZED_PHYSICS and stem == source.stem:
+                    if domain == 'Physics' and source.name in VULKAN_OPTIMIZED_PHYSICS and not stem.endswith('.portable'):
                         # Reduce cold driver compilation before these sweeps block a live simulation.
                         command += ['-O']
                     if source.suffix == '.hlsl':

@@ -30,7 +30,7 @@ The macOS producer uses that package project with `NativePackagePlatform=MacOS`;
 
 ## CI matrix
 
-Physics query/CCD compiler-profile changes must retain the existing optimized Vulkan module hashes and equal native resource/workgroup reflection for the portable variants. Run `python3 -B tools/shaders/check_runtime.py` for variant invalidation, cleanup and embedding, then the focused GPU pipeline, shape, motion and CCD contracts. Offline DXIL compilation is a compiler check; it cannot replace the complete Windows and Metal execution gates.
+Physics query/CCD compiler-profile changes must retain unchanged optimized Vulkan module hashes and equal native resource/workgroup reflection for each portable pair. Shape queries compile all four operation constants from one numerical source; verify every operation and mixed batches, preserving iteration limits, result segments and one submission without extra readback. Run `python3 -B tools/shaders/check_runtime.py` for variant invalidation, cleanup and embedding, then the focused GPU pipeline, shape, motion and CCD contracts. Offline DXIL compilation is a compiler check; it cannot replace the complete Windows and Metal execution gates.
 
 An ARM64 Windows native crash reruns the same complete executable under CDB, without the historical DTLS-only selector. The diagnostic retains symbolic exception context/module identities and an eight-minute child deadline inside the ten-minute CI step. It cannot hide or replace the original failed full-suite status.
 

@@ -1,5 +1,11 @@
 # Engine inventory
 
+[GPUPhysicsBodyStore](classes/GPUPhysicsBodyStore.md) uses four operation-specific
+shape-query pipelines, each with Vulkan and portable modules from one source.
+Mixed batches share buffers and one submission; no production type, device record
+or public declaration is added. [Verification](components/gpu-resident-shape-queries.md#backend-compiler-profiles)
+separates local controls from target acceptance.
+
 [GPUPhysicsBodyStore](classes/GPUPhysicsBodyStore.md) retains the query simplex
 in three explicit vector slots without dynamic private-array indexing and guards the spring elastic product
 after complete axial decay. Existing types, device records and public API remain;

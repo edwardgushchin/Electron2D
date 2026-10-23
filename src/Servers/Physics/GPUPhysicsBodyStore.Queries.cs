@@ -112,7 +112,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             };
             offset += (uint)limit;
         }
-        ExecuteQueries<QueryInput, QueryHit>(_queryInputs.AsSpan(0, queries.Length), exclusions, counts, hits, total, ref _queryPipeline, "PhysicsResidentQueries.comp.spv");
+        ExecuteQueries<QueryInput, QueryHit>(_queryInputs.AsSpan(0, queries.Length), exclusions, counts, hits, total, MemoryMarshal.CreateSpan(ref _queryPipeline, 1), "PhysicsResidentQueries.comp.spv");
     }
     private void PrepareQueryRequests(int count)
     {
@@ -121,12 +121,18 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         Array.Resize(ref _queryReadbackLimits, capacity); Array.Resize(ref _queryFound, capacity);
     }
     private void ExecuteQueries<TInput, THit>(ReadOnlySpan<TInput> queries, ReadOnlySpan<ulong> exclusions, Span<int> counts, Span<THit> hits,
-        int total, ref RenderHandle? pipeline, string shader, bool centers = false, int scratchBytesPerQuery = 0) where TInput : unmanaged where THit : unmanaged
+        int total, Span<RenderHandle?> pipelines, string shader, bool centers = false, int scratchBytesPerQuery = 0, uint pipelineMask = 1) where TInput : unmanaged where THit : unmanaged
     {
         PrepareQuerySpatial();
         if (ShapeCount == 0 || total == 0) { counts[..queries.Length].Clear(); _queryFound.AsSpan(0, queries.Length).Clear(); return; }
         EnsureQueryMappings();
-        pipeline ??= _context.CreatePipeline(shader);
+        var dispatches = 0;
+        for (var i = 0; i < pipelines.Length; i++)
+            if ((pipelineMask & (1u << i)) != 0)
+            {
+                pipelines[i] ??= _context.CreatePipeline(pipelines.Length == 1 ? shader : $"{shader}{i}.comp.spv");
+                dispatches++;
+            }
         var mappingBytes = _queryMappingDirty ? checked(_shapeHighWater * sizeof(QueryMapping)) : 0;
         var inputBytes = checked(queries.Length * sizeof(TInput)); var excludedBytes = checked(exclusions.Length * 8);
         var outputBytes = checked(total * sizeof(THit)); var countBytes = checked(queries.Length * 4);
@@ -172,13 +178,18 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             if (centers) outputs[3] = new() { Buffer = _centers!.DangerousGetHandle() };
             var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, centers ? 4u : 3u);
             if (compute == 0) throw GPUPhysicsDevice.Failure("begin resident queries");
-            SDL.BindGPUComputePipeline(compute, pipeline.DangerousGetHandle());
             var inputs = stackalloc nint[8] { _bodies!.DangerousGetHandle(), _verticesGPU!.DangerousGetHandle(), _geometryGPU!.DangerousGetHandle(), _shapesGPU!.DangerousGetHandle(),
                 _nodesGPU!.DangerousGetHandle(), _queryMappingGPU!.DangerousGetHandle(), _queryInputGPU!.DangerousGetHandle(), _queryExcludedGPU!.DangerousGetHandle() };
-            SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 8);
             var settings = new QuerySettings { Count = (uint)queries.Length, Leaves = (uint)_shapeCapacity, Shapes = (uint)_shapeHighWater, Bodies = (uint)_highWater };
-            SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(QuerySettings));
-            SDL.DispatchGPUCompute(compute, ((uint)queries.Length + 63) / 64, 1, 1); SDL.EndGPUComputePass(compute);
+            for (var i = 0; i < pipelines.Length; i++)
+                if ((pipelineMask & (1u << i)) != 0)
+                {
+                    SDL.BindGPUComputePipeline(compute, pipelines[i]!.DangerousGetHandle());
+                    SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 8);
+                    SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(QuerySettings));
+                    SDL.DispatchGPUCompute(compute, ((uint)queries.Length + 63) / 64, 1, 1);
+                }
+            SDL.EndGPUComputePass(compute);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin resident query results");
             SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _queryStatus.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _queryDownload!.DangerousGetHandle() });
@@ -195,7 +206,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 }
             }
             SDL.EndGPUCopyPass(copy); _failed = true; Finish(ref command);
-            UploadBytes += 8 + mappingBytes + inputBytes + excludedBytes; ReadbackBytes += 8 + countBytes + prefixBytes; UniformBytes += sizeof(QuerySettings); QuerySubmissionCount++;
+            UploadBytes += 8 + mappingBytes + inputBytes + excludedBytes; ReadbackBytes += 8 + countBytes + prefixBytes; UniformBytes += dispatches * sizeof(QuerySettings); QuerySubmissionCount++;
             var missingBytes = 0;
             mapped = SDL.MapGPUTransferBuffer(Device, _queryDownload!.DangerousGetHandle(), false);
             if (mapped == 0) throw GPUPhysicsDevice.Failure("map resident query results");
@@ -260,5 +271,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private void UploadQuery(nint copy, RenderHandle target, int offset, int bytes) => SDL.UploadToGPUBuffer(copy,
         new() { TransferBuffer = _queryUpload!.DangerousGetHandle(), Offset = (uint)offset }, new() { Buffer = target.DangerousGetHandle(), Size = (uint)bytes }, false);
     private void DisposeQueries()
-    { _motionQueryPipeline?.Dispose(); _shapeQueryPipeline?.Dispose(); _queryPipeline?.Dispose(); _queryMappingGPU?.Dispose(); _queryInputGPU?.Dispose(); _queryExcludedGPU?.Dispose(); _queryOutputGPU?.Dispose(); _queryCountsGPU?.Dispose(); _queryStatus?.Dispose(); _queryUpload?.Dispose(); _queryDownload?.Dispose(); }
+    {
+        foreach (var pipeline in _shapeQueryPipelines) pipeline?.Dispose();
+        _motionQueryPipeline?.Dispose(); _queryPipeline?.Dispose(); _queryMappingGPU?.Dispose(); _queryInputGPU?.Dispose(); _queryExcludedGPU?.Dispose(); _queryOutputGPU?.Dispose(); _queryCountsGPU?.Dispose(); _queryStatus?.Dispose(); _queryUpload?.Dispose(); _queryDownload?.Dispose();
+    }
 }
