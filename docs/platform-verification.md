@@ -11,6 +11,13 @@ apphost, while the framework-host control retains its own executable directory.
 Scene/asset, font, animation, rendering, navigation and time consumers share the
 correction. SDK compilation and the independent decoder keep their separate host
 selection. Local launch checks cannot replace corrected x64 macOS execution.
+Run `39899252158` progressed through those child workflows and reached CodeEdit,
+where the test sent Control+Shift+Enter although the action uses Command on
+macOS. The fixture now uses the existing command-or-control remapping; its
+indentation assertion and runtime input behavior are unchanged. Corrected target
+execution remains required. The separate ARM64 full suite still reports 64
+all-thread managed bytes in the contact-history measurement, with zero owner
+bytes; that allocation failure remains unresolved.
 
 Run `39890302781` also aborted on Linux ARM64 in `libusb` after
 `pthread_key_create` failed when the next display opened. Local Linux x64 controls
