@@ -42,7 +42,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private int[] _motionQueryCounts = [];
 
     /// <summary>Tests each body's shapes at a supplied pose, including recovery and first impact; the live bodies stay unchanged.</summary>
-    /// <remarks>Exclusion keys and object IDs are authored query identities. Explicit pair exceptions and collision-disabled joints suppress either endpoint. Results include recovery travel even on a miss; collision fields then clear. A moving one-way obstacle extends recovery depth by its linear approach over the supplied last-step duration, defaulting to the retained simulation tick.</remarks>
+    /// <remarks>Exclusion keys and object IDs are authored query identities. Explicit pair exceptions and collision-disabled joints suppress either endpoint. Results include recovery travel even on a miss; collision fields then clear. Portable translation starts with a fresh full-motion bracket after recovery; only its final rest pass consumes the stored fractions. A moving one-way obstacle extends recovery depth by its linear approach over the supplied last-step duration, defaulting to the retained simulation tick.</remarks>
     internal void TestMotion(ReadOnlySpan<MotionQuery> queries, ReadOnlySpan<ulong> excludedBodies, ReadOnlySpan<ulong> excludedObjects, Span<MotionQueryResult> results, float? lastStep = null)
     {
         EnsureAccess();

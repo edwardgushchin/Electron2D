@@ -309,14 +309,18 @@ void main()
     uint stateAt=i*8u;
     bool converged=false;
 #if E2D_MOTION_STAGE > 0
-    uvec4 state=outputWords[stateAt+6u],fractions=outputWords[stateAt+7u];
+    uvec4 state=outputWords[stateAt+6u];
     recovery=uintBitsToFloat(state.xy);rejectedCount=state.z;recovered=(state.w&1u)!=0u;converged=(state.w&2u)!=0u;
+#if E2D_MOTION_STAGE == 3
+    uvec4 fractions=outputWords[stateAt+7u];
     safe=uintBitsToFloat(fractions.x);unsafeFraction=uintBitsToFloat(fractions.y);motionShape=fractions.z;blocked=fractions.w!=0u;
+#endif
     bodyA.pose.xy=q.pose.xy+recovery;
 #endif
 #if E2D_MOTION_STAGE < 2
     if(!converged){vec2 before=recovery;scan(0u);converged=before==recovery;}
 #elif E2D_MOTION_STAGE == 2
+    safe=unsafeFraction=1;motionShape=0u;blocked=false;
     if(q.motionMargin.xy!=vec2(0))scan(1u);
 #else
     if(blocked||(recovered&&(q.policy.z&1u)!=0u))
@@ -324,7 +328,9 @@ void main()
 #endif
 #if E2D_MOTION_STAGE < 3
     outputWords[stateAt+6u]=uvec4(floatBitsToUint(recovery),rejectedCount,(recovered?1u:0u)|(converged?2u:0u));
+#if E2D_MOTION_STAGE == 2
     outputWords[stateAt+7u]=uvec4(floatBitsToUint(vec2(safe,unsafeFraction)),motionShape,blocked?1u:0u);
+#endif
     return;
 #endif
     Result result=Result(uvec4(0),uvec4(0),uvec4(0),uvec4(0),vec4(0),vec4(0),vec4(0),vec4(0));

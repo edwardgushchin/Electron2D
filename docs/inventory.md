@@ -8,7 +8,8 @@ per-grapheme strings without adding types, caches or public declarations.
 [GPUPhysicsBodyStore](classes/GPUPhysicsBodyStore.md) shares one portable body-motion
 traversal across recovery, sweep and resting phases. Existing types, GPU resources,
 iteration limits and public declarations remain; [verification](components/gpu-resident-motion-queries.md)
-distinguishes local execution from Windows/Metal acceptance.
+distinguishes local execution from Windows/Metal acceptance. Translation owns the
+fresh motion bracket; recovery no longer transports unused fractions.
 
 [GPUPhysicsBodyStore](classes/GPUPhysicsBodyStore.md) uses four operation-specific
 shape-query pipelines, each with Vulkan and portable modules from one source.

@@ -76,6 +76,14 @@ only the final 128-byte result is downloaded. Vulkan retains its single optimize
 module. Numerical limits, early recovery convergence, zero-motion skipping and
 the eight directed refinements are unchanged.
 
+Recovery passes carry only recovery state. Translation initializes its own
+full-motion bracket and source/blocked fields; only translation writes the
+fractions record consumed by final rest sampling. The Windows DXBC probe at
+`a3e869b03` observed zero incoming fractions with no blocked flag, causing sweep
+to skip. The revised ownership removes those unused recovery-stage fraction
+reads/writes. This is a candidate correction until the target probe and ordinary
+full suites pass; production compiler selection remains unchanged.
+
 The earlier single portable traversal still aborted in Windows WARP 1.0.21
 `ScopeNestedCFG::runOnFunction`. Flattening motion phases and removing one sweep
 unroll prohibition did not fix it; the FXC control rejected nested loop attributes.
